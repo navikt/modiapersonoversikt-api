@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>no.nav.sbl.dialogarena</groupId>
+		<artifactId>modiabrukerdialog</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+    <artifactId>modiabrukerdialog-jee</artifactId>
+    <name>${project.artifactId}</name>
+	<packaging>ear</packaging>
+	
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>modiabrukerdialog-web</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+            <type>war</type>
+			<scope>runtime</scope>
+		</dependency>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>modiabrukerdialog-wsmock-web</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <type>war</type>
+            <scope>runtime</scope>
+        </dependency>        
+	</dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-ear-plugin</artifactId>
+                <configuration>
+                    <version>6</version>
+                    <modules>
+                        <webModule>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>modiabrukerdialog-web</artifactId>
+                            <contextRoot>/modiabrukerdialog</contextRoot>
+                        </webModule>
+                        <webModule>
+                            <groupId>${project.groupId}</groupId>
+                            <artifactId>modiabrukerdialog-wsmock-web</artifactId>
+                            <contextRoot>/modiabrukerdialog-mock</contextRoot>
+                        </webModule>                        
+                    </modules>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+</project>
