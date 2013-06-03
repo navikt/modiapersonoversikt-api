@@ -12,7 +12,7 @@
     <packaging>jar</packaging>
     <name>${project.artifactId} metadata artifact</name>
     <build>
-        <pluings>
+        <plugins>
             <plugin>
                 <groupId>no.nav.maven.plugins</groupId>
                 <artifactId>jboss-maven-plugin</artifactId>
@@ -23,6 +23,6 @@
                     <password>***REMOVED***</password>
                 </configuration>
             </plugin>
-        </pluings>
+        </plugins>
     </build>
 </project>
