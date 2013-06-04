@@ -305,9 +305,7 @@
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <configuration>
-                        <environmentVariables>
-                            <JAVA_TOOL_OPTIONS>${jacoco.agent.argLine}</JAVA_TOOL_OPTIONS>
-                        </environmentVariables>
+                        <argLine>${jacoco.agent.argLine}</argLine>
                     </configuration>
                 </plugin>
             </plugins>
@@ -369,6 +367,7 @@
                 </property>
             </activation>
             <properties>
+                <sonar.jacoco.excludes>*SelfTestPage.*</sonar.jacoco.excludes>
             </properties>
         </profile>
     </profiles>
