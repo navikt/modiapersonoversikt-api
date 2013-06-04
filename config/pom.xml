@@ -17,7 +17,7 @@
                 <groupId>no.nav.maven.plugins</groupId>
                 <artifactId>jboss-maven-plugin</artifactId>
                 <configuration>
-                    <apps>modiabrukerdialog:${project.version}</apps>
+                    <apps>${project.parent.artifactId}:${project.version}</apps>
                     <envConfigUrl>http://envconfig.adeo.no:8080/conf</envConfigUrl>
                     <username>admin</username>
                     <password>***REMOVED***</password>
