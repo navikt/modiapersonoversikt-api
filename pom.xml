@@ -378,6 +378,6 @@
     <module>web</module>
     <module>jee</module>
     <module>wsmock</module>
-    <module>wsmock-web</module>
+    <module>example-component</module>
   </modules>
 </project>
