@@ -30,8 +30,43 @@
             <artifactId>modiabrukerdialog-wsmock</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>test</scope>
-        </dependency>        
-        
+        </dependency>
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>modiabrukerdialog-config</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+            <type>test-jar</type>
+        </dependency>
+
+        <!-- Modia kompoenter -->
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kontrakter-panel</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>personsok-panel</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-hentperson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-panel</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>sykmeldingsperioder-panel</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
@@ -91,12 +126,12 @@
 
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-frontend-bootstrap</artifactId>
+            <artifactId>modig-frontend-wicket</artifactId>
         </dependency>
 
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-frontend-wicket</artifactId>
+            <artifactId>modig-frontend-ressurser</artifactId>
         </dependency>
 
         <dependency>

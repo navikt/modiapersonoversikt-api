@@ -14,7 +14,7 @@ public class BasePage extends WebPage {
 
     public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(HomePage.class, "lokal.js");
     public static final CssResourceReference CSS_RESOURCE = new CssResourceReference(HomePage.class, "lokal.css");
-
+    public static final CssResourceReference CSS_MODUS = new CssResourceReference(BasePage.class, "modus.css");
     private final WebMarkupContainer body;
     private FeedbackPanel feedback;
 

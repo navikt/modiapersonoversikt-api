@@ -10,7 +10,9 @@
 		<ear groupId="no.nav.sbl.dialogarena" artifactId="modiabrukerdialog-jee" />
 	</artifacts>
 
-	<resources>
-	</resources>
+    <resources>
+        <baseUrl alias="personsokendpoint" mapToProperty="personsokendpoint"/>
+        <baseUrl alias="servicegateway" mapToProperty="servicegateway"/>
+    </resources>
 
 </application>

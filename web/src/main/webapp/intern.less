@@ -1,0 +1,1318 @@
+/* Variabler & generelle mixins */
+.border-box   { box-sizing: border-box; -webkit-box-sizing: border-box; -moz-box-sizing: border-box; }
+.clearfix     { &::before, &::after {display:table;content:"";line-height:0;} &::after {clear:both;}}
+.vekk         { position: absolute; left: -3000px; }
+
+
+/* MODIG/Twitter Bootstrap overwrite */
+.close 				{ opacity: 1; text-shadow: none; }
+.close:hover 		{ opacity: 1; filter: alpha(opacity=100);}
+.close:focus        { opacity: 1; filter: alpha(opacity=100);}
+
+/* Generelle element */
+
+HTML {
+	height: 100%;
+	overflow-y: scroll;
+	
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	background-color: #3E3832 ;
+	
+	@media (max-width: 1199px) {
+		font-size: 12px;
+	}
+}
+
+BODY {
+	height: 100%;
+	.clearfix;
+	position: relative;
+	display: table;
+	
+	font-size: 1rem;
+	background-color: #3E3832;
+}
+
+H1, H2, H3 {
+	font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	line-height: 1.2em;
+}
+
+H1 {
+	font-size: 2.5rem;
+}
+
+H2 {
+	font-size: 2.0rem;
+}
+
+H3 {
+	font-size: 1.43rem;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+INPUT[type=text] {
+	margin-bottom: 0;
+}
+
+INPUT[type=button] {
+	text-transform: uppercase;
+}
+
+.kolonne {
+	.border-box;
+	float: left;
+	display: block;
+	min-height: 30px;
+	width: 47.93617021276595%;
+	margin-left: 2.564102564102564%;
+	
+	&:first-of-type {
+		margin-left: 0;
+	}
+	
+	&:last-child {
+		margin-left: 3.8%;
+	}
+}
+
+.arrow-down {
+	width: 0;
+	height: 0;
+	top: 50px;
+	margin: 0 auto; 
+	
+	border-left: 10px solid transparent;
+	border-right: 10px solid transparent;
+}
+
+.main {
+	position: relative;
+	padding: auto 0;
+	height: 100%;
+	.border-box;
+	.clearfix;
+	display: table-cell;
+	
+	background-color: #FFF;
+}
+
+.navbar {
+	margin-bottom: 0;
+	height: 100px;
+	padding: 20px 30px 10px 102px;
+	.border-box;
+	
+	z-index: 1030;
+	background-color: #3E3832 ;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	border-radius: 0;
+	white-space: no-wrap;
+	
+	FORM {
+		margin: 0; 
+	}
+ }
+
+.personsok-button {
+	position: absolute;
+	left: 30px;
+	width: 52px;
+	height: 52px;
+	
+	text-align: center;
+	border-radius: 52px;
+	background-color: #a1a1a1;
+	background-image: none;
+	border: none;
+	font-size: 1.43rem;
+	
+	&:hover {
+		background-color: #919191;
+		background-image: none;
+		border: none;
+	}
+	
+	&:active {
+		background-color: #818181;
+		background-image: none;
+		border: none;
+		box-shadow: none;
+	}
+	
+	&:after {
+		width: 0;
+		height: 0;
+		bottom: 10px;
+		left: 21px;
+		margin: 0 auto;
+		position: absolute; 
+		
+		border-left: 5px solid transparent;
+		border-right: 5px solid transparent;
+		content: ""; 
+		border-top: 5px solid #333; }
+	
+	&.active:after {
+		bottom: 11px; 
+		
+		border-top: none;
+		border-bottom: 5px solid #333;
+	}					
+}
+
+.search-intern {
+	.border-box;
+	width: 43.9%;
+	display: block;
+	position: relative;
+	 
+  	INPUT[type=text] {
+  		.border-box;
+  		float: left;
+  		height: 52px;
+  		width: 100%; 
+  		margin-top: 0;
+  		padding-right: 40px;
+	}
+	
+    INPUT[type=button], SUBMIT {
+    	margin: 0;
+    	height: 52px;
+    	padding: 4px 0;
+    	position: absolute; 
+    	right: 0;
+    	width: 40px;
+    	
+    	text-align: center;
+    	color: transparent;
+    	text-shadow: none;
+  		background: transparent url(/modiabrukerdialog/gfx/lupe.png) no-repeat 10px center;
+  		border: none;
+  		background-size: 21px; 
+  	}
+  	
+  	INPUT[type=button]:hover, INPUT[type=button].hover, INPUT[type=button]:active, SUBMIT:hover, SUBMIT:active {
+  		right: 0;
+  		width: 40px;
+  		position: absolute;
+  		
+  		background: transparent url(/modiabrukerdialog/gfx/lupe-hover.png) no-repeat 10px center;
+  		border: none;
+  		background-size: 21px;
+  	}
+}
+
+.sidebar {
+	.border-box;
+	overflow: visible;
+	height: 100%;
+	display: table-cell;
+	
+	color: #FFF;
+	background-color: #3E3832 ;
+	vertical-align: top;
+	
+	 > * {
+	 	.border-box;
+	 	margin: 0 30px;
+	 }
+	 
+	 HR {
+	 	height: 1px;
+	 	width: 20px;
+	 	margin: -5px auto 0;
+	 	
+	 	border: 0;
+	 	color: #fff;
+	 	background-color: #fff;
+	 }
+	 
+	 P {
+	 	margin: 0;
+	 	line-height: 1.2em;
+	 }
+	 
+	 DL {
+	 	margin-bottom: 10px;
+	 	overflow: auto;
+	 	
+	 	font-weight: bold;
+	 }
+	 
+	 DT {
+	 	width: 120px;
+	 	position: absolute;
+	 	
+	 	color: #ACA397;
+	 	font-weight: normal;
+	 }
+	 
+	 DD {
+	 	margin: 0;
+	 	display: block;
+	 	padding-left: 120px;
+	 	
+	 	text-overflow: ellips;
+	 }
+	 
+	 P.dato {
+	 	text-align: center;
+	 }
+	 
+	 .visittkort {
+	 	margin: 100px 30px 30px 30px;
+	 	border: 1px solid #626262;
+	 	padding: 15px 15px 15px 65px;
+	 	min-height: 266px;
+	 	
+	 	background-repeat: no-repeat;
+	 	background-position: 15px 15px;
+	 	background-size: 40px;
+	 	color: #ACA397;
+	 
+	 	A, A:visited {
+	 		color: white;
+	 		text-decoration: none;
+	 	}
+	 	
+	 	A:hover, A:active {
+	 		color: #00a9E0;
+	 		text-decoration: none;
+	 	}
+	 	
+		&.mann {
+			background-image: url(/modiabrukerdialog/svg/mann.svg);
+		}
+		
+		&.kvinne {
+			background-image: url(/modiabrukerdialog/svg/kvinne.svg);
+		}
+		
+		H2 {
+			margin: 2px 0 5px 0;
+			color: #ACA397;
+		}
+		
+		BUTTON {
+			padding: 0;
+			position: relative;
+			
+			background: none;
+			color: #00a9E0;
+			border: none;
+			background: none;
+			font-weight: bold;
+			
+			&:before {
+				bottom: 4px;
+				left: -10px;
+				margin: 0 auto;
+				position: absolute;
+				width: 0;
+				height: 0;
+				
+				content: "";
+				border-top: 5px solid transparent;
+				border-bottom: 5px solid transparent;
+				border-right: 5px solid #00a9E0;
+			}	
+			
+			&:active {
+				box-shadow: none;
+			}	
+		}
+		
+		&.active {
+			margin: 100px 0 16px 0;
+			padding: 15px 30px 30px 96px;
+			
+			border: none;
+			border-top: 1px solid #626262;
+			background-position: 46px 15px;
+		
+			BUTTON:before {
+				left: -12px;
+				
+				border-right: none;
+				border-left: 4px solid #00a9E0;
+			}
+		}
+	}
+}
+
+/* =personsokPanel */
+#personsok {
+	display: none;
+	box-sizing: border-box;
+		padding-bottom: 14px;
+		padding-top: 30px;
+		position: absolute;
+		width: 100%;
+		padding: 0 30px;
+		left: 0;
+		right: 0;
+		min-width: 100%;
+		
+		background: #3E3832 ;
+		color: #fff;
+		line-height: 1.2em;
+		z-index: 3000;
+		border-top: 1px solid #000;
+		box-shadow: 0px 8px 6px -6px #555;
+		-webkit-box-shadow: -0px 8px 6px -6px #555;
+		-moz-box-shadow: 0px 8px 6px -6px #555;
+		
+		H1, H2, H3 {
+			color: #a69d92;
+		}
+		
+	#personsokPanel {
+		UL.feedbackPanel {
+			padding: 1rem 1rem 1rem 3rem;
+		
+			background-color: #da153a;
+			font: 1.43rem Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+			
+			A, A:visited {
+				color: #FFF;
+				font-weight: bold;
+				text-decoration: underline;
+			}
+		}
+	
+		LABEL {
+			.border-box;
+			width: 48%;		
+			text-transform: uppercase;
+			position: relative;
+			margin-top: 1em;
+			
+			color: #a69d92;
+			font-size: 0.857rem;
+		}
+		
+		.description {
+			color: #a69d92;
+			font-size: 0.714rem;
+			white-space:nowrap;
+		}
+		
+		INPUT[type=text], INPUT.hasDatepicker, SELECT {
+			.border-box;
+			height: 30px;
+			margin-top: 3px;
+			width: 100%;
+		}
+		
+		.dateGroup INPUT[type=text] {
+			background: white url(/modiabrukerdialog/svg/kalender.svg) no-repeat right center;
+			background-size: 21px;
+		}
+		
+		.navnogadresse {
+			.border-box;
+			width: 66%;
+			padding-right: 4%;
+			float: left;
+			
+			LABEL[for^=etternavn], LABEL[for^=kontonummer] {
+				padding-left: 4%;
+			}
+			
+			LABEL[for^=gatenavn], LABEL[for^=poststed],LABEL[for^=postnummer] {
+				clear: left;
+			}
+			
+			LABEL[for^=husnummer] {
+				width: 24%;
+				padding-left: 4%;
+			}
+			
+			LABEL[for^=husbokstav] {
+				width: 16%;
+				padding-left: 4%;
+			}
+		}
+		
+		.begrenssoket {
+			.border-box;
+			width: 33%;
+			float: left;
+			
+			LABEL[for^=navenhet] {
+				width: 52%;
+				padding-right: 4%;
+			}
+			
+			LABEL[for^=navenhet], LABEL[for^=fodselsdatoFra], LABEL[for^=alderFra],LABEL[for^=kjonn] {
+				clear: left;
+			}
+			
+			LABEL[for^=fodselsdatoTil], LABEL[for^=alderTil] {
+				padding-left: 4%;
+			}
+		}
+	}
+	
+	P#searchErrorMessage {
+		padding: 1.43rem 0;
+	
+		color: #a69d92;
+		font: 1.43rem Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+		text-transform: uppercase;
+		border-top: 1px solid #a69d92; 
+	}
+	
+	#personsokResult #resultDataTable {
+		color: #988f86;
+		width: 100%;
+		border-collapse:collapse;
+		
+		THEAD, TR {
+			border-bottom: 1px solid #000;
+		}
+		
+		TH, TD {
+			.border-box;
+			padding: 0.5rem 0 0.5rem 1rem;
+			overflow: hidden;
+			white-space:nowrap;
+		}
+	
+		TR.headers TH {
+			text-transform: uppercase;
+			font-weight: normal;
+			color: #333;
+			background-color: #988f86;
+		}
+		
+		TR.header TH A, TR.header TH A:visited,
+		A.wicket_orderUp, A.wicket_orderUp:visited,
+		A.wicket_orderNone, A.wicket_orderNone:visited,
+		A.wicket_orderDown, A.wicket_orderDown:visited {
+			text-decoration: none;
+			font-weight: bold;
+			color: #111;
+		}
+		
+		TR.header TH A:hover, A.wicket_orderUp:hover {
+			text-decoration: none;
+		 	font-weight: bold;
+		}
+		
+		TBODY {
+			A {
+				font-weight: bold;
+				color: #FFF;
+				text-decoration: none;
+			}
+		
+			TR:hover, TR:focus {
+				background-color: #00a9e0;
+				color: #FFF;
+				
+				TD.addressColumn {
+					&:after {
+						background: -moz-linear-gradient(left, rgba(0,169,224,0) 0%, rgba(0,169,224,1) 56%, rgba(0,169,224,1) 100%);
+						background: -webkit-linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
+						background: -ms-linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
+						background: linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
+						filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='#003E3832 ', endColorstr='#3E3832 ',GradientType=1 )";
+						content: "";
+					}
+				}
+			}
+			
+			TD.addressColumn {				
+				position: relative;
+				
+				&:after {
+					display: block;
+					position: absolute;
+					right: 0;
+					top: 0;
+					bottom: 0;
+					width: 50px;
+					background: -moz-linear-gradient(left, rgba(39,39,39,0) 0%, rgba(39,39,39,1) 56%, rgba(39,39,39,1) 100%);
+					background: -webkit-linear-gradient(left, rgba(39,39,39,0) 0%,rgba(39,39,39,1) 56%,rgba(39,39,39,1) 100%);
+					background: -ms-linear-gradient(left, rgba(39,39,39,0) 0%,rgba(39,39,39,1) 56%,rgba(39,39,39,1) 100%);
+					background: linear-gradient(left, rgba(39,39,39,0) 0%,rgba(39,39,39,1) 56%,rgba(39,39,39,1) 100%);
+					filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorStr='#003E3832 ', endColorStr='#FF3E3832 ',GradientType=1)";
+					content: "";
+					height: 100%;
+				}
+			}
+		}
+		
+		TD A, TD A:visited {
+			color: #ececec;
+			font-weight: bold;
+		}
+		
+		DL.adresseList {
+			width: auto;
+			padding-top: 0;
+			position: relative;
+			clear: both;
+			
+			DT {
+				margin-right: 0.5rem;
+				display: inline-block;
+				width: auto;
+				float: none;
+			}
+			
+			DD {
+				max-width: 0;
+				min-width: 0;
+				display: inline-block;
+				width: auto;
+				float: none;
+			}
+		}
+		
+		.navnColumn, .navnColumn div, .addressColumn {
+			width: auto;
+			min-width: 13rem;
+		}		
+		
+		.fodselsnummerColumn {
+			width: 11rem;
+		}
+		
+		.diskresjonskodeColumn {
+			/*display: none;*/
+		}
+		
+		.navenhetColumn {
+			width: 9rem;
+		}
+	}
+}
+
+
+.kjerneinfo	{
+	.clearfix;
+	box-sizing: border-box;
+	padding: 30px 0;
+	min-height: 265px;
+	
+	background: #3E3832 ;
+	color: #ACA397;
+	line-height: 1.2em;
+	border-top: 1px solid #626262;
+	 
+	A, A:visited {
+		color: white;
+		text-decoration: none;
+		font-weight: bold;
+	}
+	
+	A:hover	{
+		color: #00a9E0;
+		text-decoration: none;
+	}
+	 
+	.info {
+		float: left;
+		margin: 0 2% 0 0;
+		padding-top: 40px;
+		
+		text-align: center;
+		
+		P {
+			margin: 0;
+		}
+		
+		A {
+			display: block;
+			margin-bottom: 10px;
+		}
+	}
+	 
+	.grafikk {
+		IMG {
+			width: 110px;
+			height: 60px;
+		}
+		 
+		.years {
+			width: 150px;
+			margin: 0 auto;
+			
+			.year {
+				float: left;
+				width: 25%;
+				margin: 0 4%;
+				text-align: center;
+				
+				P {
+					margin: 0;
+					white-space: nowrap;
+					
+					font-size: 0.857rem;
+				}
+				
+				P:last-of-type {
+					margin-top: 2px; padding-top: 2px;
+					
+					border-top: 1px solid #444;
+				}
+			}
+		}
+	}
+	  
+	.foreldre {
+		width: 22%;
+		margin-left: 4%;
+		
+		background: url(/modiabrukerdialog/gfx/hus.png) no-repeat center 10px;
+		background-size: 20px;
+		 
+	 	DT {
+	 		display: inline;
+	 		margin: 0;
+	 		
+	 		font-weight: normal;
+	 		line-height: 1.2em;
+	 	}
+	 	
+	 	DD {
+	 		width: auto;
+	 		margin: 0 0 0 8px;
+	 		display: inline;
+	 		
+	 		line-height: 1.2em;
+	 	}
+	 	
+	 	DD:nth-of-type(2n) {
+	 		float: none;
+	 		clear: both;
+	 		margin: 0 0 10px 0;
+		}
+	}
+	 
+	.ektefelle {
+		width: 22%;
+		
+		background: url(/modiabrukerdialog/svg/hjerte.svg) no-repeat center 10px;
+		background-size: 20px;
+	}
+	
+	.barn {
+		width: 22%;
+		
+		background: url(/modiabrukerdialog/gfx/person.png) no-repeat center 0;
+		background-size: 17px;
+	}
+	
+	.grafikk {
+		width: 20%;
+		margin-right: auto;
+		
+		background: url(/modiabrukerdialog/gfx/data.png) no-repeat center 10px;
+		background-size: 20px;
+	}
+}
+
+.lameller {
+	min-height: 100%;
+	margin-bottom: 128px; 
+	position: relative;
+	
+	background-color: #FFF;
+	border-top: 1px solid #626262;
+	
+	.lamell {
+		.border-box;
+		position: relative;
+		
+		&.bunn {
+			position: fixed;
+			padding-right: 1px;
+			 
+			> HEADER {
+				height: 64px;
+				
+				background-image: -webkit-linear-gradient(bottom, #e5e5e3 1px, #F1F1EF 14px);
+				background-image: linear-gradient(bottom, #e5e5e3 1px, #F1F1EF 14px);
+				background-image: -moz-linear-gradient(top, #e5e5e3 1px, #F1F1EF 14px);
+				-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#e5e5e3', endColorstr='#F1F1EF')"; /* IE8+ */
+				
+				H1 {
+					line-height: 59px;
+					font-size: 1.8rem;
+				}
+			}
+		}
+		
+		.person {
+			margin-left: 0;
+		}
+		
+		.close {
+			display: block;
+			position: absolute;
+			right: 30px;
+			top: 15px;
+			padding: 2px;
+			width: 21px;
+			height: 20px;
+			overflow: hidden;
+			
+			text-align: center;
+			color: transparent;
+			background: transparent url(/modiabrukerdialog/gfx/kryss_blaa.png) no-repeat 4px center;
+			border: 1px solid #CCC;
+		}
+  		
+  		.close:focus, .close:hover {
+			border-color: #00A9E0;
+			background: #00A9E0 url(/modiabrukerdialog/gfx/kryss_hvit.png) no-repeat 4px center;
+			color: transparent;
+			outline: none;
+		}
+
+		> HEADER {
+			display: block;
+			height: 64px;
+			
+			background-image: -webkit-linear-gradient(bottom, #e5e5e3 1px, #F1F1EF 14px);
+			background-image: linear-gradient(bottom, #e5e5e3 1px, #F1F1EF 14px);
+			background-image: -moz-linear-gradient(bottom, #e5e5e3 1px, #F1F1EF 14px);
+			-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#F1F1EF', endColorstr='#e5e5e3')"; /* IE8+ */
+			background-color: #F1F1EF;
+			
+			H1 {
+				margin: 0 auto auto 30px;
+				
+				line-height: 59px;
+				font-size: 1.8rem;
+			}
+			
+			A H1, A:visited H1 {
+				color: #333;
+			}
+			
+			A, A:hover {
+				text-decoration: none;
+				color: #111;
+			}
+		}
+		
+		> HEADER:hover {
+			background-image: none;
+			background-color: #DADADA;
+			-ms-filter: "";
+			
+			A H1, A:visited H1 {
+				color: #00A9E0;
+			}
+		}
+		
+		> HEADER > A:focus {
+			outline: none;
+			
+			H1 {
+				color: #00A9E0;
+			}
+		}
+		
+		&.selected > HEADER {
+			height: 84px;
+			
+			background: none;
+			cursor: default;
+			border-bottom: none;
+			-ms-filter: "";
+			 
+			h1 {
+				font-size: 2.5rem;
+				line-height: 79px;
+			}
+		}
+		
+		.lerret {
+			.border-box;
+			padding: 2rem 30px 0 30px;
+			width: 100%;
+			min-height: 30px;
+			float: left;
+          h1 {
+              font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+              font-weight: normal;
+              line-height: 1.2em;
+              font-size: 1.43rem;
+              font-weight: 600;
+              text-transform: uppercase;
+
+          }
+		}
+	}
+}
+
+.logg .infoting {
+	padding: 10px 10px 5px 20px;
+	
+	border-top: 1px solid #ccc;
+}
+
+/* Lameller */
+
+ARTICLE.lamell {
+	H1 {
+		margin: 1em 0 0.5em 0;
+	}
+	
+	SMALL {
+		color: #666;
+	}
+	
+	UL.oversikt {
+		list-style-type: none;
+		margin: 1em 0;
+		
+		LI	{
+			margin-top: 1em;
+			
+			SMALL {
+				text-transform: uppercase;
+				font-size: 1rem;
+			}
+			
+			STRONG {
+				display: block;
+				
+				font-weight: bold;
+				font-size: 1.29rem;
+			}
+		}
+	}
+	
+	ARTICLE[role=region] {
+		margin-bottom: 4em;
+		
+		word-wrap: break-word;
+	}
+}
+
+.fra-til {
+	display: block;
+	position: relative;
+	margin-bottom: 1em;
+	width: 100%;
+	overflow: auto;
+	margin-left: 0;
+	
+	INPUT[type=text] {
+		width: 6em;
+		display: block;
+		margin-right: 0;
+	}
+	
+	INPUT[type=button] {
+		margin: 21px 0 0 10px;
+		float: left;
+	}
+	
+	LABEL {
+		float: left;
+		margin-left: 10px;
+		width: auto;
+	}
+	
+	LABEL:first-of-type	{
+		margin-left: 0;
+	}
+}
+
+.flytflate {
+	line-height: 14px;
+	
+	DIV {
+		width: 50%;
+		margin-bottom: 20px;
+	}
+	
+	H3 {
+		text-transform: uppercase;
+		color: #888;
+		margin: 0;
+	}
+	
+	P {
+		font-weight: bold;
+		margin: 0;
+	}
+}
+
+.default-error {
+  padding-top: 10px;
+  
+  SVG {
+    height: 30px;
+    width: 30px;
+    margin: auto;
+    display: block;
+    PATH {
+      fill: #f88c01;
+    }
+  }
+  
+  P {
+    padding-top: 20px;
+    margin: 0;
+    font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align: center;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+  
+  HR {
+    margin: 25px auto;
+    border-top: 1px solid #808080;
+    width: 30px;
+  }
+
+}
+
+.error-panel {
+  background-color: #F5F5F5;
+  padding: 10px 0px;
+  
+  P {
+    padding-top: 10px;
+  }
+}
+
+.feil-lamell {
+  H1 {
+    color: #9B9B9B !important;
+  }
+  background-color: #F1F1EF;
+  min-height: 400px;
+
+  SVG {
+    height: 120px;
+    width: 120px;
+    margin: auto;
+    display: block;
+    PATH {
+      fill: #C8C5C3;
+    }
+  }
+  
+  P {
+    padding-top: 20px; 
+    font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif; 
+    text-align: center;
+    font-size: 2.1rem;
+    color: #9B9B9B;
+  }
+  
+  HR {
+    margin: 30px auto;
+    border-top: 1px solid #ADAEAF;
+    width: 40px;
+  }
+}
+
+/* Sykepenger */
+ARTICLE[id^="sykepenger"]:not(.widget-navigasjon), ARTICLE[id^="kontrakter"]:not(.widget-navigasjon) {
+	overflow: auto;
+	width: 100%;
+	
+	SECTION.oppsummering, SECTION[title="Arbeidssituasjon"] {
+		.kolonne;
+		margin-left: 3.8%;
+	}
+	
+	.liste {
+		LI {
+			overflow: auto;
+			position: relative;
+		}
+	
+		P.overskrift, LI.expandable A {
+			font-weight: 600;
+			font-size: 1.16rem;
+			font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+			position: relative;
+			padding-right: 30px;
+			
+			SPAN {
+				position: absolute;
+				right: 0;
+				top: 0;
+			}
+		}
+		
+		/* Fiks til at utførte betalinger har en DL-liste med to DT/DD par (ej to DL med en DT/DD) */
+		LI.expandable {
+			DL {
+				margin-top: 1rem;
+				width: 100%;
+				
+				DT {
+					margin-top: 0;
+				}
+			}
+		}
+		
+		DL {
+			float: left;
+			width: 50%;
+		}
+		
+		TABLE {
+			float: none;
+			display: inline-block;
+			clear: both;
+			width: 100%;
+			padding-top: 1rem;
+			border-collapse: collapse;
+			
+			TH, TD {
+				text-align: left;
+				padding: 0 1rem 0 0;
+			}
+		}
+	}
+	
+	.liste.sykmeldinger {
+		.kolonne;
+		clear: left;
+		margin: 1.43rem 0 0 0;
+		float: left;
+	}
+	
+	DL {
+		margin: 0;
+		overflow: auto;
+		
+		> * {
+			width: 50%;
+			float: left;
+		}
+		
+		> *:nth-child(4n+3),> *:nth-child(4n+4) {
+			position: relative;
+			top: -1rem;
+		}
+		
+		> *:nth-child(4n+1) {
+			margin-top: 1rem;
+			clear: left;
+			
+			&:before {
+				content: "";
+				display: table;
+				width: 100%;
+			}
+		}
+		
+		> *:nth-child(4n+2) {
+			clear: left;
+		}
+		
+		DT {
+			text-transform: uppercase;
+			font-size: 0.857rem;
+		}
+		
+		DD {
+			margin: 3px 0 0 0;
+			position: relative;
+			
+			font-weight: bold;
+		}
+	}
+	
+	UL.arbeisdgiver {
+		padding-left: 0;
+		margin-top: 2rem;
+		list-style-type: none;
+	}
+	
+	SECTION.utbetalinger {
+		.kolonne;
+		float: right;
+		margin: 1.47rem 0 0 0;
+	}
+}
+
+/* MEDIA QUERIES */
+
+
+@media (min-width: 1200px) {  
+    BODY {
+    	width: 100%;
+    }
+    
+    .sidebar {
+    	width: 30.2%;
+    }
+    
+    .main, .bunn, #personsok {
+    	width: 69.8%;
+    }
+}
+
+@media (min-width: 960px) and (max-width: 1199px) {
+    .sidebar {
+    	width: 32.1%;
+    }
+    
+    .main, .bunn, #personsok {
+    	width: 67.9%;
+    }
+    
+    .search-intern {
+    	margin-right: 1%;
+    }
+    
+    .sidebar .visittkort, .sidebar .visittkort.mann, .sidebar .visittkort.kvinne {
+    	padding-left: 25px;
+    	background-image: none;
+    }
+    
+    .sidebar .visittkort.active {
+    	padding-left: 56px;
+    	padding-right: 55px;
+    }
+    
+    #personsok #personsokPanel .description {
+    	display: none;
+    }
+}
+
+@media (max-width: 959px) {
+	BODY {
+		padding: 0;
+		overflow-x: hidden;
+		position: relative;
+	}
+	
+    .navbar {
+    	position: relative;
+    	}
+    	
+    .main {
+    	margin-top: 0;
+    	width: 100%;
+    }
+    
+    .bunn {
+    	width: 100%;
+    }
+    
+    .navbar FORM .taskbox, .navbar FORM NAV.menu {
+    	width: 26.7%;
+    }
+    
+    .search-intern {
+    	width: 40%;
+    }
+    
+    .navbar {
+    	padding-left: 82px;
+    }
+	
+	.personsok-button {
+		width: 32px;
+		height: 32px;
+		
+		border-radius: 32px;
+	}
+    
+    .navbar {
+    	height: 80px;
+    }
+    
+    .search-intern INPUT[type=text] {
+    	height: 32px;
+    }
+    
+    .search-intern INPUT[type=button], .search-intern SUBMIT {
+    	height: 32px;
+    	
+    	background-position: 10px center;
+    }
+   	
+	.navbar FORM NAV.menu, .navbar FORM .taskbox {
+		height: 32px;
+	}
+	
+	.personsok-button:after, .personsok-button.active:after {
+		bottom: 3px;
+		left: 11px;
+	}
+	
+	#personsok #personsokPanel .description {
+    	display: none;
+    }
+    
+    .kjerneinfo .grafikk .year P:first-child {
+    	display: none;
+    }
+    
+    .kjerneinfo .grafikk .year HR {
+    	display: none;
+    }
+    
+    .sidebar {
+    	display: block;
+    	position: absolute;
+    	top: 0;
+    	right: -380px;
+    	width: 400px;
+    	height: 100%;
+    	overflow-x: hidden;
+    	
+    	z-index: 2500;
+    	background: #3E3832  url(/modiabrukerdialog/gfx/tapp_liten.png) no-repeat 0px 175px;
+    	
+    	.visittkort, .visittkort.active {
+    		margin-top: 80px;
+    	}
+   }			 
+}
+
+@media (max-width: 767px) {
+	.lameller .lamell .lerret .kolonne {
+		width: 100%;
+		float: none;
+		display: block;
+	}
+    
+    .lameller .lamell .lerret .kolonne:last-child {
+    	margin-left: 0;
+    }
+    
+    #personsok #personsokPanel .description {
+    	display: none;
+    }
+    
+    #personsok #personsokPanel .navnogadresse {
+    	float: none;
+    	width: 100%;
+    }
+    
+    #personsok #personsokPanel .begrenssoket {
+    	float: none;
+    	width: 100%;
+    	margin: 2rem 0;
+    }
+    
+    #personsok #personsokResult #resultDataTable {
+    	TH, TD {
+			padding: 0.5rem 0 0.5rem 0.5rem;
+    	}
+    }
+}
