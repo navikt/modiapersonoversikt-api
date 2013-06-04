@@ -19,7 +19,9 @@ public class SelfTestPage extends WebPage {
     public SelfTestPage() {
         logger.info("entered SelfTestPage!");
         List<ServiceStatus> statusList = new ArrayList<>();
-        statusList.add(new ServiceStatus("name", "status", 0));
+
+        //Add servicestatus' as needed, e.g. statusList.add(new ServiceStatus("name", "status", 0));
+
         add(new ServiceStatusListView("serviceStatusTable", statusList));
     }
 
