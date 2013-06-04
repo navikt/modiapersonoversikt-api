@@ -3,9 +3,6 @@ package no.nav.sbl.dialogarena;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.sbl.dialogarena.pages.HomePage;
-import no.nav.sbl.dialogarena.pages.error.DeniedPage;
-import no.nav.sbl.dialogarena.pages.error.ErrorPage;
-import no.nav.sbl.dialogarena.pages.error.NotFoundPage;
 import no.nav.sbl.dialogarena.selftest.SelfTestPage;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
@@ -60,17 +57,12 @@ public class WicketApplication extends WebApplication {
 
         // Innstillinger vi kan ha
         IApplicationSettings applicationSettings = getApplicationSettings();
-        applicationSettings.setInternalErrorPage(ErrorPage.class);
         applicationSettings.setPageExpiredErrorPage(getHomePage());
-        applicationSettings.setAccessDeniedPage(DeniedPage.class);
 
         getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
 
         mountPage("internal/selftest", SelfTestPage.class);
-        mountPage("error/ikke-adgang", DeniedPage.class);
-        mountPage("error/server-feil", ErrorPage.class);
-        mountPage("error/ikke-funnet", NotFoundPage.class);
 
         setSpringComponentInjector();
     }
