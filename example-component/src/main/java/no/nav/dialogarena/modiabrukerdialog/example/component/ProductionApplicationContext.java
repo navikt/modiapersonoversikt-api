@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ProductionApplicationContext {
 
-    @Value("service.url")
+    @Value("service")
     private String url;
 
     @Bean
