@@ -1,0 +1,17 @@
+package no.nav.dialogarena.modiabrukerdialog.example.config;
+
+import no.nav.dialogarena.modiabrukerdialog.example.service.DefaultExampleService;
+import no.nav.dialogarena.modiabrukerdialog.example.service.ExampleService;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class ExampleProdContext {
+
+    @Bean
+    public ExampleService exampleService() {
+        return new DefaultExampleService();
+    }
+
+}
