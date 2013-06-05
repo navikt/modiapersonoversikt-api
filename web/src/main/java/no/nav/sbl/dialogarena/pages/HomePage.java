@@ -20,10 +20,15 @@ import static no.nav.kjerneinfo.eventpayload.HentPerson.FODSELSNUMMER_FUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 
-
 public class HomePage extends BasePage {
+
+    private static final String FNR = "fnr";
+    private static final String LAMELLER = "lameller";
+    private static final String SAKER = "saker";
+    private static final String SAK = "sak";
+
     public HomePage(PageParameters pageParameters) {
-        final String fnrFromRequest = pageParameters.get("fnr").toString(null);
+        final String fnrFromRequest = pageParameters.get(FNR).toString(null);
 
         add(
                 new HentPersonPanel("searchPanel"),
@@ -43,13 +48,13 @@ public class HomePage extends BasePage {
     public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
         throw new RestartResponseException(
                 HomePage.class,
-                new PageParameters().set("fnr", query)
+                new PageParameters().set(FNR, query)
         );
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent event, FeedItemPayload feedItemPayload) {
-        LamellPanel lameller = (LamellPanel) get("lameller");
+        LamellPanel lameller = (LamellPanel) get(LAMELLER);
         String lamellId = feedItemPayload.getWidgetId();
         lameller.goToLamell(lamellId);
         lameller.sendToLamell(lamellId, event.getPayload());
@@ -57,16 +62,14 @@ public class HomePage extends BasePage {
 
     @RunOnEvents(WIDGET_LINK_CLICKED)
     public void widgetLinkClicked(AjaxRequestTarget target, String linkId) {
-
-        if ("saker".equals(linkId)) {
-            LamellPanel lameller = (LamellPanel) get("lameller");
-            lameller.goToLamell("sak");
+        if (SAKER.equals(linkId)) {
+            ((LamellPanel) get(LAMELLER)).goToLamell(SAK);
         } else {
             target.appendJavaScript("alert('Lenke med id " + linkId + " klikket');");
         }
     }
 
-    private List<LamellFactory> createLamellFactories(final String fnrFromRequest) {
+    private List<LamellFactory> createLamellFactories() {//final String fnrFromRequest) {
         return asList(
                 //                newLamellFactory("oversikt", "O", false, new LerretFactory() {
                 //                    @Override

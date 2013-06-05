@@ -19,7 +19,6 @@ import org.springframework.context.ApplicationContext;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
 
-
 public class WicketApplication extends WebApplication {
 
     @Autowired
@@ -48,9 +47,6 @@ public class WicketApplication extends WebApplication {
                         MetaTag.CHARSET_UTF8,
                         MetaTag.VIEWPORT_SCALE_1,
                         MetaTag.XUA_IE_EDGE)
-                        //                .addCss(BasePage.CSS_RESOURCE)
-                        //                .addCss(BasePage.CSS_MODUS)
-                        //                .addScripts(BasePage.JS_RESOURCE)
                 .withResourcePacking(this.usesDeploymentConfig())
                 .addScripts(ShortcutListenerResourceReference.get())
                 .configure(this);
@@ -72,7 +68,6 @@ public class WicketApplication extends WebApplication {
 
         mountPage("/person/${fnr}", HomePage.class);
         mountPage("internal/selftest", SelfTestPage.class);
-
 
         setSpringComponentInjector();
     }

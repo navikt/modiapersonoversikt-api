@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modia.config;
 
-import no.nav.modig.pagelet.spi.utils.SPIResources;
 import no.nav.sbl.dialogarena.WicketApplication;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
@@ -10,6 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.PriorityOrdered;
 
+import static no.nav.modig.pagelet.spi.utils.SPIResources.getSpringConfiguration;
+
 
 @Configuration
 //@Import({KjerneinfoConfig.class})
@@ -18,7 +19,7 @@ public class ApplicationContext implements BeanDefinitionRegistryPostProcessor, 
     @Override
     public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry beanDefinitionRegistry) {
         AnnotatedBeanDefinitionReader reader = new AnnotatedBeanDefinitionReader(beanDefinitionRegistry);
-        Class<?>[] springReferences = SPIResources.getSpringConfiguration();
+        Class<?>[] springReferences = getSpringConfiguration();
 
         for (int i = 0; i < springReferences.length; i++) {
             reader.register(springReferences);

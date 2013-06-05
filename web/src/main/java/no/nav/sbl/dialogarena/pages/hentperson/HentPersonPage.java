@@ -11,7 +11,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 public class HentPersonPage extends WebPage {
 
     public HentPersonPage() {
-
         add(new HentPersonPanel("searchPanel"));
     }
 
