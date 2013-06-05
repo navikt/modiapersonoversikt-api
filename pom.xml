@@ -357,6 +357,16 @@
                 <scope>provided</scope>
             </dependency>
 
+
+
+
+            <!-- CXF/WS DEPENDENCIES -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-api</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-frontend-jaxws</artifactId>
@@ -365,8 +375,20 @@
 
             <dependency>
                 <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-ws-security</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-transports-http</artifactId>
                 <version>${cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>xml-apis</groupId>
+                <artifactId>xml-apis</artifactId>
+                <version>1.4.01</version>
             </dependency>
 
             <!-- Test dependencies -->
@@ -380,6 +402,12 @@
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-fitnesse</artifactId>
                 <version>${modig.fitnesse.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-testcertificates</artifactId>
+                <version>0.5.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

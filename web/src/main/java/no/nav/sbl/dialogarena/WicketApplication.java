@@ -4,6 +4,7 @@ import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.modia.shortcuts.ShortcutListenerResourceReference;
 import no.nav.sbl.dialogarena.pages.HomePage;
+import no.nav.sbl.dialogarena.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.selftest.SelfTestPage;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
@@ -30,7 +31,7 @@ public class WicketApplication extends WebApplication {
 
     @Override
     public Class<? extends Page> getHomePage() {
-        return HomePage.class;
+        return HentPersonPage.class;
     }
 
     @Override
