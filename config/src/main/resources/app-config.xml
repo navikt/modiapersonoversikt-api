@@ -11,8 +11,8 @@
 	</artifacts>
 
     <resources>
-        <baseUrl alias="personsokendpoint" mapToProperty="personsokendpoint"/>
-        <baseUrl alias="servicegateway" mapToProperty="servicegateway"/>
+<!--         <baseUrl alias="personsokendpoint" mapToProperty="personsokendpoint"/> -->
+<!--         <baseUrl alias="servicegateway" mapToProperty="servicegateway"/> -->
     </resources>
 
 </application>
