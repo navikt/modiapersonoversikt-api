@@ -66,7 +66,7 @@ public class Intern extends BasePage {
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
-    public void feedItemClicked(AjaxRequestTarget target, IEvent event, FeedItemPayload feedItemPayload) {
+    public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
         LamellPanel lameller = (LamellPanel) get(LAMELLER);
         String lamellId = feedItemPayload.getWidgetId();
         lameller.goToLamell(lamellId);
