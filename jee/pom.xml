@@ -21,13 +21,6 @@
             <type>war</type>
 			<scope>runtime</scope>
 		</dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>modiabrukerdialog-wsmock-web</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <type>war</type>
-            <scope>runtime</scope>
-        </dependency>        
 	</dependencies>
 
     <build>
@@ -42,11 +35,6 @@
                             <artifactId>modiabrukerdialog-web</artifactId>
                             <contextRoot>/modiabrukerdialog</contextRoot>
                         </webModule>
-                        <webModule>
-                            <groupId>${project.groupId}</groupId>
-                            <artifactId>modiabrukerdialog-wsmock-web</artifactId>
-                            <contextRoot>/modiabrukerdialog-mock</contextRoot>
-                        </webModule>                        
                     </modules>
                     <encoding>UTF-8</encoding>
                 </configuration>
