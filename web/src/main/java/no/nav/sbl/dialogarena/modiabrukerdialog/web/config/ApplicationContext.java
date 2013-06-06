@@ -14,4 +14,5 @@ public class ApplicationContext {
     public WicketApplication modiaApplication() {
         return new WicketApplication();
     }
+
 }
