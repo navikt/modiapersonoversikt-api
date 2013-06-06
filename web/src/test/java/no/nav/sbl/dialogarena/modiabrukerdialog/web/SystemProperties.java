@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import java.io.IOException;
 import java.io.InputStream;

@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.pages.lameller;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller;
 
 import no.nav.modig.modia.lamell.Lerret;
 import org.apache.wicket.markup.html.panel.Panel;

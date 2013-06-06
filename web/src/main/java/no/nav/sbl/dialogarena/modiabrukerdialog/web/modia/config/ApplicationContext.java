@@ -1,6 +1,7 @@
-package no.nav.sbl.dialogarena.modia.config;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.modia.config;
 
-import no.nav.sbl.dialogarena.WicketApplication;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketApplication;
+
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;

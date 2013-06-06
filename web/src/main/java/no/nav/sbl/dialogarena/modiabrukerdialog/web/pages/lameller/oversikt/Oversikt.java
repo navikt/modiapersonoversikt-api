@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.pages.lameller.oversikt;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.widget.LenkeWidget;

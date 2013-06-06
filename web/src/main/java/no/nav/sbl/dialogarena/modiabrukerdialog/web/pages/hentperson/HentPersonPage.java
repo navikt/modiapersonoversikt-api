@@ -1,8 +1,9 @@
-package no.nav.sbl.dialogarena.pages.hentperson;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.pages.intern.Intern;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
+
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebPage;

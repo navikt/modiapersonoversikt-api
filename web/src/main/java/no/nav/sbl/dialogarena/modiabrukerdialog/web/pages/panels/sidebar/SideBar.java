@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.pages.panels.sidebar;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar;
 
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
 import org.apache.wicket.markup.html.panel.Panel;

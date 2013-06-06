@@ -1,6 +1,7 @@
-package no.nav.sbl.dialogarena;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
-import no.nav.sbl.dialogarena.pages.intern.Intern;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
+
 import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;

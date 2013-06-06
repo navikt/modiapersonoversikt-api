@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
@@ -8,9 +8,10 @@ import no.nav.modig.modia.navigation.KeyNavigationResourceReference;
 import no.nav.modig.modia.shortcuts.ShortcutListenerResourceReference;
 import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.pagelet.spi.utils.SPIResources;
-import no.nav.sbl.dialogarena.pages.hentperson.HentPersonPage;
-import no.nav.sbl.dialogarena.pages.intern.Intern;
-import no.nav.sbl.dialogarena.selftest.SelfTestPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;

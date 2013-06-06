@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.selftest;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest;
 
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;

@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.pages.intern;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
 import no.nav.dialogarena.modiabrukerdialog.example.component.ExamplePanel;
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
@@ -11,10 +11,10 @@ import no.nav.modig.modia.lamell.LerretFactory;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.BasePage;
-import no.nav.sbl.dialogarena.pages.lameller.GenericLerret;
-import no.nav.sbl.dialogarena.pages.lameller.oversikt.Oversikt;
-import no.nav.sbl.dialogarena.pages.panels.sidebar.SideBar;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.GenericLerret;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.Oversikt;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;

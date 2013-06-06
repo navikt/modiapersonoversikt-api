@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import static org.kohsuke.args4j.ExampleMode.ALL;
 import no.nav.modig.test.fitnesse.run.FitnesseTestRunner;
