@@ -11,7 +11,6 @@ import no.nav.modig.pagelet.spi.utils.SPIResources;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -55,13 +54,14 @@ public class WicketApplication extends WebApplication {
                         MetaTag.XUA_IE_EDGE)
                 .withResourcePacking(this.usesDeploymentConfig())
                 .addCss(SPIResources.getCss())
+                .addCss(BasePage.CSS_MODUS)
                 .addScripts(SPIResources.getScripts())
-                .addScripts(ShortcutListenerResourceReference.get())
-                .addScripts(KeyNavigationResourceReference.get())
                 .addScripts(BasePage.JS_RESOURCE)
-                .addScripts(Widget.JS_RESOURCE)
-                .addScripts(EkspanderingsListe.JS_RESOURCE)
-                .addScripts(Liste.JS_RESOURCE)
+                .addScripts(ShortcutListenerResourceReference.get()) //TODO: Flytt til MODIA modul ?
+                .addScripts(KeyNavigationResourceReference.get())    //TODO: Flytt til MODIA modul ?
+                .addScripts(Widget.JS_RESOURCE)                      //TODO: Flytt til MODIA modul ?
+                .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
+                .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
                 .configure(this);
 
         // Innstillinger vi bør ha
