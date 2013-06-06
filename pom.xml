@@ -552,11 +552,8 @@
     </profiles>
   <modules>
     <module>config</module>
-    <module>consumer-ws</module>
-    <module>service</module>
     <module>web</module>
     <module>jee</module>
-    <module>wsmock</module>
     <module>example-component</module>
   </modules>
 </project>
