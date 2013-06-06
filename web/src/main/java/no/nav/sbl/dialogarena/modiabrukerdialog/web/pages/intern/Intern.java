@@ -98,7 +98,7 @@ public class Intern extends BasePage {
                         return new Oversikt(id);
                     }
                 }),
-                newLamellFactory("example", "", false, new LerretFactory() {
+                newLamellFactory("example", "", true, new LerretFactory() {
                     @Override
                     public Lerret createLerret(String id) {
                         return new ExamplePanel(id);
