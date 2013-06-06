@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 
+import no.nav.dialogarena.modiabrukerdialog.example.component.ExampleWidget;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.widget.LenkeWidget;
 import no.nav.modig.modia.widget.Widget;
@@ -27,7 +28,8 @@ public class Oversikt extends Lerret {
                 //                new TestFeedWidget("dialog", "D"),
                 //                new TestFeedWidget("sak", "K"),
                 new SykepengerWidget("sykepenger", "Y", new Model<>("12345123456")),
-                new LenkeWidget("lenker", "E", new ListModel<>(asList("saker", "lenkea", "lenkeb")))
+                new LenkeWidget("lenker", "E", new ListModel<>(asList("saker", "lenkea", "lenkeb"))),
+                new ExampleWidget("example", "X")
         );
 
         timer = new AbstractAjaxTimerBehavior(Duration.minutes(30)) {

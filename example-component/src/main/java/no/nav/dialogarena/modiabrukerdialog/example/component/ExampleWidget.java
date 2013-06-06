@@ -8,21 +8,29 @@ import no.nav.dialogarena.modiabrukerdialog.example.service.ExampleService;
 import no.nav.modig.modia.widget.InfoFeedWidget;
 import no.nav.modig.modia.widget.panels.InfoPanelVM;
 
+import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.LoadableDetachableModel;
 
 public class ExampleWidget extends InfoFeedWidget {
 
-    public <T> ExampleWidget(String id, String initial) {
-        super(id, initial, new LoadableDetachableModel<List<InfoPanelVM>>() {
+    public ExampleWidget(String id, String initial) {
+        super(id, initial, new WicketModel());
+    }
 
-            @Inject
-            private ExampleService exampleService;
+    private static class WicketModel extends LoadableDetachableModel<List<InfoPanelVM>> {
 
-            @Override
-            protected List<InfoPanelVM> load() {
-                return exampleService.getWidgetContent();
-            }
-        });
+        @Inject
+        private ExampleService exampleService;
+
+        public WicketModel() {
+            Injector.get().inject(this);
+        }
+
+        @Override
+        protected List<InfoPanelVM> load() {
+            return exampleService.getWidgetContent();
+        }
+
     }
 
 }
