@@ -6,11 +6,13 @@
         <artifactId>dialogarena</artifactId>
         <version>1.5.2</version>
     </parent>
+
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+
     <properties>
         <wicket.version>6.8.0</wicket.version>
         <spring.version>3.2.0.RELEASE</spring.version>
@@ -73,13 +75,9 @@
                 <version>1.0.14</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>no.nav.sbl.felles</groupId>
-                <artifactId>nav-sbl-felles-commons-security</artifactId>
-                <version>${nav.sbl.felles.commons.security.version}</version>
-            </dependency>
-            <!-- MODIA-komponenter -->
 
+
+            <!-- MODIA-komponenter -->
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>kontrakter-panel</artifactId>
@@ -223,11 +221,6 @@
                 <version>${hamcrest.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.jaxb2_commons</groupId>
-                <artifactId>jaxb2-basics-runtime</artifactId>
-                <version>${jaxb2.basics.runtime.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-core</artifactId>
                 <version>${wicket.version}</version>
@@ -244,11 +237,6 @@
             </dependency>
             <dependency>
                 <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-datetime</artifactId>
-                <version>${wicket.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-spring</artifactId>
                 <version>${wicket.version}</version>
             </dependency>
@@ -256,31 +244,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons.lang3.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-io</groupId>
-                <artifactId>commons-io</artifactId>
-                <version>${commons.io.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>net.sourceforge.collections</groupId>
-                <artifactId>collections-generic</artifactId>
-                <version>${collections.generic.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-core</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
-                <version>${spring.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -294,17 +257,7 @@
             </dependency>
             <dependency>
                 <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-core</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
-                <version>${spring.security.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.security</groupId>
-                <artifactId>spring-security-web</artifactId>
                 <version>${spring.security.version}</version>
             </dependency>
             <dependency>
@@ -333,11 +286,6 @@
                 <scope>test</scope>
                 <version>${spring.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.jsoup</groupId>
-                <artifactId>jsoup</artifactId>
-                <version>${jsoup.version}</version>
-            </dependency>
 
             <dependency>
                 <groupId>javax.inject</groupId>
@@ -350,40 +298,6 @@
                 <artifactId>servlet-api</artifactId>
                 <version>${servlet.api.version}</version>
                 <scope>provided</scope>
-            </dependency>
-
-
-
-
-            <!-- CXF/WS DEPENDENCIES -->
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-api</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-frontend-jaxws</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-ws-security</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.cxf</groupId>
-                <artifactId>cxf-rt-transports-http</artifactId>
-                <version>${cxf.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>xml-apis</groupId>
-                <artifactId>xml-apis</artifactId>
-                <version>1.4.01</version>
             </dependency>
 
             <!-- Test dependencies -->
@@ -430,12 +344,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-log4j12</artifactId>
-                <version>${slf4j.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.fitnesse</groupId>
                 <artifactId>fitnesse</artifactId>
                 <version>${fitnesse.version}</version>
@@ -452,12 +360,6 @@
                 <groupId>org.webbitserver</groupId>
                 <artifactId>webbit</artifactId>
                 <version>${webbit.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.reflections</groupId>
-                <artifactId>reflections</artifactId>
-                <version>${reflections.version}</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
