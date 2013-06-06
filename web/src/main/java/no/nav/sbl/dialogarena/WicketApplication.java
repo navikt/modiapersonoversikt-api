@@ -2,7 +2,11 @@ package no.nav.sbl.dialogarena;
 
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
+import no.nav.modig.modia.liste.EkspanderingsListe;
+import no.nav.modig.modia.liste.Liste;
+import no.nav.modig.modia.navigation.KeyNavigationResourceReference;
 import no.nav.modig.modia.shortcuts.ShortcutListenerResourceReference;
+import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.pagelet.spi.utils.SPIResources;
 import no.nav.sbl.dialogarena.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.pages.intern.Intern;
@@ -49,9 +53,14 @@ public class WicketApplication extends WebApplication {
                         MetaTag.VIEWPORT_SCALE_1,
                         MetaTag.XUA_IE_EDGE)
                 .withResourcePacking(this.usesDeploymentConfig())
-                .addScripts(ShortcutListenerResourceReference.get())
                 .addCss(SPIResources.getCss())
                 .addScripts(SPIResources.getScripts())
+                .addScripts(ShortcutListenerResourceReference.get())
+                .addScripts(KeyNavigationResourceReference.get())
+                .addScripts(BasePage.JS_RESOURCE)
+                .addScripts(Widget.JS_RESOURCE)
+                .addScripts(EkspanderingsListe.JS_RESOURCE)
+                .addScripts(Liste.JS_RESOURCE)
                 .configure(this);
 
         // Innstillinger vi bør ha

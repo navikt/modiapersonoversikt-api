@@ -21,7 +21,7 @@
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>1.0.0-alpha.2</modig.lang.version>
         <!--<modig.frontend.bootstrap.version>0.3.0</modig.frontend.bootstrap.version>-->
-        <modig.frontend.wicket.version>1.0.0-alpha.7</modig.frontend.wicket.version>
+        <modig.frontend.wicket.version>1.0.0-SNAPSHOT</modig.frontend.wicket.version>
         <nav.sbl.felles.commons.security.version>3.24</nav.sbl.felles.commons.security.version>
         <hamcrest.version>1.3</hamcrest.version>
         <jaxb2.basics.runtime.version>0.6.4</jaxb2.basics.runtime.version>
