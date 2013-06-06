@@ -1,30 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-	
-	<parent>
-		<groupId>no.nav.sbl.dialogarena</groupId>
-		<artifactId>modiabrukerdialog</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
-	</parent>
-
+    <parent>
+        <groupId>no.nav.sbl.dialogarena</groupId>
+        <artifactId>modiabrukerdialog</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
     <artifactId>modiabrukerdialog-web</artifactId>
     <name>${project.artifactId}</name>
     <packaging>war</packaging>
-    
     <properties>
         <fitnesse.port>9977</fitnesse.port>
     </properties>
-
     <dependencies>
-
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>modiabrukerdialog-example-component</artifactId>
             <version>${project.version}</version>
         </dependency>
-
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>modiabrukerdialog-config</artifactId>
@@ -32,203 +26,160 @@
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
-
         <!-- Modia kompoenter -->
-
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kontrakter-panel</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>personsok-panel</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-hentperson</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-panel</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>sykmeldingsperioder-panel</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-request</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-devutils</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-jetty</artifactId>
             <scope>test</scope>
         </dependency>
-        
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>
         </dependency>
-        
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket-test</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-frontend-wicket</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.fitnesse</groupId>
             <artifactId>fitnesse</artifactId>
             <classifier>embedded</classifier>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.fitnesse</groupId>
             <artifactId>fitlibrary</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-fitnesse</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>args4j</groupId>
             <artifactId>args4j</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit-dep</artifactId>
         </dependency>
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
-        
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
             <scope>test</scope>
         </dependency>
-        
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
-        </dependency>        
-        
+        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
             <scope>runtime</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
             <scope>runtime</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
             <scope>runtime</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-expression</artifactId>
             <scope>runtime</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-aop</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        
         <dependency>
             <groupId>org.webbitserver</groupId>
             <artifactId>webbit</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-testcertificates</artifactId>
         </dependency>
-
     </dependencies>
-
     <build>
         <resources>
             <resource>
@@ -259,7 +210,6 @@
             </testResource>
         </testResources>
     </build>
-    
     <profiles>
         <profile>
             <id>fitnesse</id>
@@ -293,6 +243,5 @@
                 </pluginManagement>
             </build>
         </profile>
-    </profiles>    
-
+    </profiles>
 </project>
