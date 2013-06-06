@@ -1,16 +1,25 @@
-package no.nav.sbl.dialogarena.pages;
+package no.nav.sbl.dialogarena.pages.intern;
 
+import no.nav.dialogarena.modiabrukerdialog.example.component.ExamplePanel;
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.LamellFactory;
 import no.nav.modig.modia.lamell.LamellPanel;
+import no.nav.modig.modia.lamell.Lerret;
+import no.nav.modig.modia.lamell.LerretFactory;
+import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.BasePage;
+import no.nav.sbl.dialogarena.pages.lameller.GenericLerret;
+import no.nav.sbl.dialogarena.pages.lameller.oversikt.Oversikt;
+import no.nav.sbl.dialogarena.pages.panels.sidebar.SideBar;
+import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.List;
@@ -19,23 +28,27 @@ import static java.util.Arrays.asList;
 import static no.nav.kjerneinfo.eventpayload.HentPerson.FODSELSNUMMER_FUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 
-public class HomePage extends BasePage {
 
+public class Intern extends BasePage {
     private static final String FNR = "fnr";
     private static final String LAMELLER = "lameller";
     private static final String SAKER = "saker";
     private static final String SAK = "sak";
 
-    public HomePage(PageParameters pageParameters) {
-        final String fnrFromRequest = pageParameters.get(FNR).toString(null);
+    public Intern(PageParameters pageParameters) {
+        final String fnrFromRequest = pageParameters.get("fnr").toString(null);
 
         add(
                 new HentPersonPanel("searchPanel"),
                 new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
-                new PersonsokPanel("personsokPanel").setVisible(true)
-                //                                new TokenLamellPanel("lameller", createLamellFactories(fnrFromRequest))
-                //new SideBar("sideBar", fnrFromRequest).setVisible(true)
+                new PersonsokPanel("personsokPanel").setVisible(true),
+                new TokenLamellPanel("lameller", createLamellFactories(fnrFromRequest)),
+                new SideBar("sideBar", fnrFromRequest).setVisible(true)
+//                new ExamplePanel("examplecomponent")
+
+
         );
     }
 
@@ -47,7 +60,7 @@ public class HomePage extends BasePage {
     @RunOnEvents(FODSELSNUMMER_FUNNET)
     public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
         throw new RestartResponseException(
-                HomePage.class,
+                Intern.class,
                 new PageParameters().set(FNR, query)
         );
     }
@@ -62,6 +75,7 @@ public class HomePage extends BasePage {
 
     @RunOnEvents(WIDGET_LINK_CLICKED)
     public void widgetLinkClicked(AjaxRequestTarget target, String linkId) {
+
         if (SAKER.equals(linkId)) {
             ((LamellPanel) get(LAMELLER)).goToLamell(SAK);
         } else {
@@ -69,14 +83,20 @@ public class HomePage extends BasePage {
         }
     }
 
-    private List<LamellFactory> createLamellFactories() {//final String fnrFromRequest) {
+    private List<LamellFactory> createLamellFactories(final String fnrFromRequest) {
         return asList(
-                //                newLamellFactory("oversikt", "O", false, new LerretFactory() {
-                //                    @Override
-                //                    public Lerret createLerret(String id) {
-                //                        return new Oversikt(id);
-                //                    }
-                //                }),
+                newLamellFactory("oversikt", "O", false, new LerretFactory() {
+                    @Override
+                    public Lerret createLerret(String id) {
+                        return new Oversikt(id);
+                    }
+                }),
+                newLamellFactory("example", "", false, new LerretFactory() {
+                    @Override
+                    public Lerret createLerret(String id) {
+                        return new ExamplePanel(id);
+                    }
+                }),
                 //                newLamellFactory("oppfolging", "P", new LerretFactory() {
                 //                    @Override
                 //                    public Lerret createLerret(String id) {
@@ -97,13 +117,15 @@ public class HomePage extends BasePage {
                 //                    }
                 //                }),
                 //
-                //                newLamellFactory("sykepenger", "5", new LerretFactory() {
-                //                    @Override
-                //                    public Lerret createLerret(String id) {
-                //                        return new GenericLerret(id, new SykmeldingsperiodePanel("panel", new Model<>(fnrFromRequest)));
-                //                    }
-                //                }),
-                //
+                newLamellFactory("sykepenger", "5", new LerretFactory() {
+                    @Override
+                    public Lerret createLerret(String id) {
+                        return new GenericLerret(id, new SykmeldingsperiodePanel("panel", new Model<>(fnrFromRequest), new Model<String>()));
+
+                                //"panel", new Model<String>(fnrFromRequest)));
+                    }
+                })
+
                 //                newLamellFactory("oversikt2", "2", new LerretFactory() {
                 //                    @Override
                 //                    public Lerret createLerret(String id) {

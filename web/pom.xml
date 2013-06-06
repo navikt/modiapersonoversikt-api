@@ -24,7 +24,13 @@
             <artifactId>modiabrukerdialog-service</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>modiabrukerdialog-example-component</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>modiabrukerdialog-wsmock</artifactId>
@@ -96,17 +102,12 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
         </dependency>
-        
+
         <dependency>
-            <groupId>no.nav.sbl.felles</groupId>
-            <artifactId>nav-sbl-felles-commons-jetty</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-jetty</artifactId>
+            <version>1.0.14</version>
             <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.mortbay.jetty</groupId>
-                    <artifactId>servlet-api</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         
         <dependency>

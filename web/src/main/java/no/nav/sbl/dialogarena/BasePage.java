@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena;
 
-import no.nav.sbl.dialogarena.pages.HomePage;
+import no.nav.sbl.dialogarena.pages.intern.Intern;
 import org.apache.wicket.devutils.debugbar.DebugBar;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -11,8 +11,8 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 public class BasePage extends WebPage {
 
-    public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(HomePage.class, "lokal.js");
-    public static final CssResourceReference CSS_RESOURCE = new CssResourceReference(HomePage.class, "lokal.css");
+    public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(Intern.class, "lokal.js");
+    public static final CssResourceReference CSS_RESOURCE = new CssResourceReference(Intern.class, "lokal.css");
     public static final CssResourceReference CSS_MODUS = new CssResourceReference(BasePage.class, "modus.css");
 
     private final WebMarkupContainer body;

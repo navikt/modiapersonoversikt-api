@@ -3,8 +3,9 @@ package no.nav.sbl.dialogarena;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.modia.shortcuts.ShortcutListenerResourceReference;
-import no.nav.sbl.dialogarena.pages.HomePage;
+import no.nav.modig.pagelet.spi.utils.SPIResources;
 import no.nav.sbl.dialogarena.pages.hentperson.HentPersonPage;
+import no.nav.sbl.dialogarena.pages.intern.Intern;
 import no.nav.sbl.dialogarena.selftest.SelfTestPage;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
@@ -49,6 +50,8 @@ public class WicketApplication extends WebApplication {
                         MetaTag.XUA_IE_EDGE)
                 .withResourcePacking(this.usesDeploymentConfig())
                 .addScripts(ShortcutListenerResourceReference.get())
+                .addCss(SPIResources.getCss())
+                .addScripts(SPIResources.getScripts())
                 .configure(this);
 
         // Innstillinger vi bør ha
@@ -66,7 +69,7 @@ public class WicketApplication extends WebApplication {
         getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
 
-        mountPage("/person/${fnr}", HomePage.class);
+        mountPage("/person/${fnr}", Intern.class);
         mountPage("internal/selftest", SelfTestPage.class);
 
         setSpringComponentInjector();
