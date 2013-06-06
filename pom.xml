@@ -49,33 +49,37 @@
 
     <dependencyManagement>
         <dependencies>
+
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-wicket</artifactId>
                 <version>${modig.wicket.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-lang</artifactId>
                 <version>${modig.lang.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-frontend-wicket</artifactId>
                 <version>${modig.frontend.wicket.version}</version>
             </dependency>
+
             <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-frontend-ressurser</artifactId>
-                <version>1.0.0-alpha.7</version>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-ioc</artifactId>
+                <version>${wicket.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-jetty</artifactId>
                 <version>1.0.14</version>
                 <scope>test</scope>
             </dependency>
-
 
             <!-- MODIA-komponenter -->
             <dependency>
@@ -121,7 +125,7 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>personsok-webcommon</artifactId>
-                <version>0.0.35</version>
+                <version>${personsok.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>ch.qos.logback</groupId>
@@ -137,7 +141,7 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>personsok-datepicker</artifactId>
-                <version>0.0.35</version>
+                <version>${personsok.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>ch.qos.logback</groupId>
@@ -215,71 +219,85 @@
                 <artifactId>hamcrest-library</artifactId>
                 <version>${hamcrest.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-core</artifactId>
                 <version>${hamcrest.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-core</artifactId>
                 <version>${wicket.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-request</artifactId>
                 <version>${wicket.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-devutils</artifactId>
                 <version>${wicket.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-spring</artifactId>
                 <version>${wicket.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-beans</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-config</artifactId>
                 <version>${spring.security.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-tx</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-jdbc</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-expression</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
                 <version>${spring.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-test</artifactId>
@@ -307,42 +325,49 @@
                 <version>${modig.wicket.test.version}</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-fitnesse</artifactId>
                 <version>${modig.fitnesse.version}</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-testcertificates</artifactId>
                 <version>0.5.0</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit-dep</artifactId>
                 <version>${junit.dep.version}</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>args4j</groupId>
                 <artifactId>args4j</artifactId>
                 <version>${args4j.version}</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito.core.version}</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>org.fitnesse</groupId>
                 <artifactId>fitnesse</artifactId>
@@ -350,12 +375,14 @@
                 <classifier>embedded</classifier>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>org.fitnesse</groupId>
                 <artifactId>fitlibrary</artifactId>
                 <version>${fitlibrary.version}</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>org.webbitserver</groupId>
                 <artifactId>webbit</artifactId>
@@ -367,11 +394,6 @@
     <build>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>org.apache.cxf</groupId>
-                    <artifactId>cxf-codegen-plugin</artifactId>
-                    <version>2.4.9</version>
-                </plugin>
                 <plugin>
                     <groupId>no.nav.maven.plugins</groupId>
                     <artifactId>jboss-maven-plugin</artifactId>
