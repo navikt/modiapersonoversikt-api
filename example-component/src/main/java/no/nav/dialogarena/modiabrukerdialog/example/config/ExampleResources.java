@@ -22,7 +22,7 @@ public class ExampleResources implements ResourceReferences {
 
     @Override
     public List<Class<?>> getSpringConfiguration() {
-        return Arrays.asList(new Class<?>[] {ExampleProdContext.class});
+        return Arrays.asList(new Class<?>[] {ExampleContext.class});
     }
 
 }

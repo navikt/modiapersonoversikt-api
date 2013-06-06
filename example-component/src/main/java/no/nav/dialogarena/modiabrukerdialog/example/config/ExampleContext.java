@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ExampleProdContext {
+public class ExampleContext {
 
     @Bean
     public ExampleService exampleService() {
