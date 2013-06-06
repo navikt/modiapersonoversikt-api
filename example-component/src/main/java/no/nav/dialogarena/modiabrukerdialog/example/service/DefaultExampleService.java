@@ -14,24 +14,20 @@ public class DefaultExampleService implements ExampleService {
 
     public static final String EXAMPLE_TYPE = "example-type";
 
-    @Value("${content.label:Content}")
-    private String contentLabel;
+    @Value("${example.content}")
+    private String content;
 
     @Override
     public String getContent() {
-        return new StringBuilder(contentLabel).append(" ").append(new Date().toString()).toString();
-    }
-
-    public void setContentLabel(String contentLabel) {
-        this.contentLabel = contentLabel;
+        return new StringBuilder(content).append(" ").append(new Date().toString()).toString();
     }
 
     @Override
     public List<InfoPanelVM> getWidgetContent() {
-        List<InfoPanelVM> content = new ArrayList<>();
-        content.add(new InfoPanelVM("example1", EXAMPLE_TYPE, "metaheading1", "heading1", Arrays.asList("metadata1")));
-        content.add(new InfoPanelVM("example2", EXAMPLE_TYPE, "metaheading2", "heading2", Arrays.asList("metadata2")));
-        return content;
+        List<InfoPanelVM> infoPanel = new ArrayList<>();
+        infoPanel.add(new InfoPanelVM("example1", EXAMPLE_TYPE, content, "heading1", Arrays.asList("metadata1")));
+        infoPanel.add(new InfoPanelVM("example2", EXAMPLE_TYPE, content, "heading2", Arrays.asList("metadata2")));
+        return infoPanel;
     }
 
 }
