@@ -46,6 +46,7 @@
         <kjerneinfo.versjon>0.0.31-SNAPSHOT</kjerneinfo.versjon>
         <sykmeldinger.versjon>0.0.24-SNAPSHOT</sykmeldinger.versjon>
     </properties>
+
     <dependencyManagement>
         <dependencies>
             <dependency>
