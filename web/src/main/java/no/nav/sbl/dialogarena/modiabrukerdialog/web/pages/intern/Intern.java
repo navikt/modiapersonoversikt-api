@@ -46,9 +46,6 @@ public class Intern extends BasePage {
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new TokenLamellPanel("lameller", createLamellFactories(fnrFromRequest)),
                 new SideBar("sideBar", fnrFromRequest).setVisible(true)
-//                new ExamplePanel("examplecomponent")
-
-
         );
     }
 
