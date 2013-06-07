@@ -29,14 +29,14 @@ public class ExamplePanel extends GenericPanel<String> implements Pingable {
     @Inject
     private ExampleService exampleService;
 
-    private Component content, error;
+    private Component error;
 
     public ExamplePanel(String id) {
         super(id, Model.of(""));
 
         setOutputMarkupId(true);
 
-        content = new Label("content", getModel());
+        Component content = new Label("content", getModel());
         error = new Label("error") {
             @Override
             public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
