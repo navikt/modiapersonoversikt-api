@@ -13,7 +13,6 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 public class BasePage extends WebPage {
 
     public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(Intern.class, "lokal.js");
-    public static final CssResourceReference CSS_RESOURCE = new CssResourceReference(Intern.class, "lokal.css");
     public static final CssResourceReference CSS_MODUS = new CssResourceReference(BasePage.class, "modus.css");
 
     private final WebMarkupContainer body;

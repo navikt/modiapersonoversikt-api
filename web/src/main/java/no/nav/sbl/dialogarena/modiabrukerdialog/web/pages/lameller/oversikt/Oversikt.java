@@ -3,16 +3,16 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 import no.nav.dialogarena.modiabrukerdialog.example.component.ExampleWidget;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.widget.LenkeWidget;
-import no.nav.modig.modia.widget.Widget;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
-import org.apache.wicket.util.time.Duration;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.modia.widget.Widget.EVENT_UPDATE_WIDGET;
+import static org.apache.wicket.event.Broadcast.BREADTH;
+import static org.apache.wicket.util.time.Duration.minutes;
 
 
 public class Oversikt extends Lerret {
@@ -28,10 +28,10 @@ public class Oversikt extends Lerret {
                 new ExampleWidget("example", "X")
         );
 
-        timer = new AbstractAjaxTimerBehavior(Duration.minutes(30)) {
+        timer = new AbstractAjaxTimerBehavior(minutes(30)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
-                send(Oversikt.this, Broadcast.BREADTH, Widget.EVENT_UPDATE_WIDGET);
+                send(Oversikt.this, BREADTH, EVENT_UPDATE_WIDGET);
             }
         };
         add(timer);
@@ -46,4 +46,5 @@ public class Oversikt extends Lerret {
     public void onOpening(AjaxRequestTarget target) {
         timer.restart(target);
     }
+
 }

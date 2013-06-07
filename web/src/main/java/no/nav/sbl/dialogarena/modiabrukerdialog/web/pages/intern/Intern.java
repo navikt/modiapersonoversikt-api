@@ -30,8 +30,8 @@ import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 
-
 public class Intern extends BasePage {
+
     private static final String FNR = "fnr";
     private static final String LAMELLER = "lameller";
     private static final String SAKER = "saker";
@@ -72,7 +72,6 @@ public class Intern extends BasePage {
 
     @RunOnEvents(WIDGET_LINK_CLICKED)
     public void widgetLinkClicked(AjaxRequestTarget target, String linkId) {
-
         if (SAKER.equals(linkId)) {
             ((LamellPanel) get(LAMELLER)).goToLamell(SAK);
         } else {
