@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest;
 
+import no.nav.dialogarena.modiabrukerdialog.example.PingResult;
 import no.nav.dialogarena.modiabrukerdialog.example.Pingable;
 import no.nav.modig.core.exception.SystemException;
 import org.apache.wicket.markup.html.WebPage;
@@ -22,22 +23,27 @@ public class SelfTestPage extends WebPage {
         logger.info("entered SelfTestPage!");
         List<ServiceStatus> statusList = new ArrayList<>();
 
-//        Add servicestatus' as needed, e.g.
-//        statusList.add(getPingableComponentStatus("search", null, "SEARCH_OK", "SEARCH_ERROR"));
+        //        Add servicestatus' as needed, e.g.
+        //                statusList.addAll(getPingableComponentStatus("search", null, "SEARCH_OK", "SEARCH_ERROR"));
 
         add(new ServiceStatusListView("serviceStatusTable", statusList));
     }
 
-    private ServiceStatus getPingableComponentStatus(String name, Pingable pingable, String okCode, String errorCode) {
-        String status = errorCode;
-        long time = 0;
+    private List<ServiceStatus> getPingableComponentStatus(String name, Pingable pingable, String okCode, String errorCode) {
+        List<ServiceStatus> serviceStatuses = new ArrayList<>();
         try {
-            time = pingable.ping();
-            status = okCode;
+            List<PingResult> pingResults = pingable.ping();
+            if (pingResults.size() > 0) {
+                for (PingResult pingResult : pingResults) {
+                    serviceStatuses.add(new ServiceStatus(pingResult.getServiceName(),
+                            pingResult.getServiceStatus().equals(PingResult.SERVICE_OK) ? okCode : errorCode,
+                            pingResult.getElapsedTime()));
+                }
+            }
         } catch (SystemException se) {
             logger.warn(name + " was not retrievable. Class canonical name: " + pingable.getClass().getCanonicalName() + ". Exception message: " + se.getMessage());
         }
-        return new ServiceStatus(name, status, time);
+        return serviceStatuses;
     }
 
     private static class ServiceStatusListView extends PropertyListView<ServiceStatus> {
@@ -57,7 +63,6 @@ public class SelfTestPage extends WebPage {
     private static class ServiceStatus implements Serializable {
 
         private static final long serialVersionUID = 1L;
-
         private final String name;
         private final String status;
         private final long durationMilis;
