@@ -239,10 +239,6 @@
                 <version>${spring.version}</version>
             </dependency>
 
-
-
-
-
             <!-- TEST dependency -->
             <dependency>
                 <groupId>org.springframework</groupId>
@@ -341,6 +337,27 @@
                 <artifactId>fitlibrary</artifactId>
                 <version>${fitlibrary.version}</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>log4j</groupId>
+                        <artifactId>log4j</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>junit</groupId>
+                        <artifactId>junit-dep</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>1.7.5</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -356,6 +373,11 @@
             <plugins>
                 <plugin>
                     <groupId>no.nav.maven.plugins</groupId>
+                    <artifactId>modig-scm-plugin</artifactId>
+                    <version>1.1.7</version>
+                </plugin>
+                <plugin>
+                    <groupId>no.nav.maven.plugins</groupId>
                     <artifactId>jboss-maven-plugin</artifactId>
                     <version>3.1.2</version>
                 </plugin>
@@ -369,6 +391,20 @@
         </pluginManagement>
 
         <plugins>
+            <plugin>
+                <groupId>no.nav.maven.plugins</groupId>
+                <artifactId>modig-scm-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>Check illegal or unwanted dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>failon-unwanted-dependencies</goal>
+                            <goal>report-unapproved-dependencies</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
