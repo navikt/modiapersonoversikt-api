@@ -90,7 +90,7 @@ public class Intern extends BasePage {
                 newLamellFactory("example", "", true, new LerretFactory() {
                     @Override
                     public Lerret createLerret(String id) {
-                        return new ExamplePanel(id);
+                        return new GenericLerret(id, new ExamplePanel("panel"));
                     }
                 }),
                 //                newLamellFactory("oppfolging", "P", new LerretFactory() {

@@ -1,59 +1,66 @@
 package no.nav.dialogarena.modiabrukerdialog.example.component;
 
+import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
+
+import java.io.IOException;
+
+import javax.inject.Inject;
+
 import no.nav.dialogarena.modiabrukerdialog.example.Pingable;
 import no.nav.dialogarena.modiabrukerdialog.example.service.ExampleService;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.modia.events.FeedItemPayload;
-import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
+import org.apache.wicket.model.Model;
 
-import javax.inject.Inject;
-import java.io.IOException;
 
-import static java.lang.System.currentTimeMillis;
+public class ExamplePanel extends GenericPanel<String> implements Pingable {
 
-public class ExamplePanel extends Lerret implements Pingable {
-
-    public static final String EXAMPLE_EVENT = "example";
+    public static final String EXAMPLE_TYPE = "example";
 
     @Inject
     private ExampleService exampleService;
 
-    private Label content = new Label("content", new ContentModel());
-
     public ExamplePanel(String id) {
-        super(id);
+        super(id, Model.of(""));
 
-        add(content);
+        setOutputMarkupId(true);
+        add(new Label("content", getModel()));
     }
 
-    @RunOnEvents(EXAMPLE_EVENT)
-    public void updateModel(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
-        if (feedItemPayload.getType().equals(EXAMPLE_EVENT)) {
-            target.add(content);
+    @RunOnEvents(FEED_ITEM_CLICKED)
+    public void handleEvent(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
+        if (feedItemPayload.getType().equals(EXAMPLE_TYPE)) {
+            updateModel(feedItemPayload.getItemId());
+            target.add(this);
         }
     }
 
-    @Override
+	@Override
     public long ping() {
-        long startTime = currentTimeMillis();
+        long startTime = System.currentTimeMillis();
         if (exampleService.isAvailable()) {
-            return currentTimeMillis() - startTime;
+            return System.currentTimeMillis() - startTime;
         }
         throw new SystemException("examplePanel unavailable because exampleService cannot be reached", new IOException());
     }
 
-    private class ContentModel extends AbstractReadOnlyModel<String> {
-
-        @Override
-        public String getObject() {
-            return exampleService.getContent();
+    private void updateModel(String itemId) {
+        // setModelObject(exampleService.getContent());
+        if ("noerror".equals(itemId)) {
+            setModelObject("Fungerer OK");
         }
-
+        if ("renderingerror".equals(itemId)) {
+            add(new Label("rendererror"));
+        }
+        if ("systemerror".equals(itemId)) {
+            throw new RuntimeException();
+        }
     }
 
 }

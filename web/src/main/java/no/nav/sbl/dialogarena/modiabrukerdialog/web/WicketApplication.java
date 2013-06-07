@@ -84,7 +84,7 @@ public class WicketApplication extends WebApplication {
         getFrameworkSettings().add(new NamedEventDispatcher());
 
         new ModiaApplicationConfigurator()
-                .withExceptionHandler(this.usesDeploymentConfig())
+                .withExceptionHandler(true)
                 .configure(this);
 
         mountPage("/person/${fnr}", Intern.class);
