@@ -33,7 +33,7 @@ public class SelfTestPage extends WebPage {
         List<ServiceStatus> serviceStatuses = new ArrayList<>();
         try {
             List<PingResult> pingResults = pingable.ping();
-            if (pingResults.size() > 0) {
+            if (!pingResults.isEmpty()) {
                 for (PingResult pingResult : pingResults) {
                     serviceStatuses.add(new ServiceStatus(pingResult.getServiceName(),
                             pingResult.getServiceStatus().equals(PingResult.SERVICE_OK) ? okCode : errorCode,
