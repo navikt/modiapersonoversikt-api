@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true" scanPeriod="60 seconds">
-    <property name="MAIN_APPLICATION" value="inngangsporten" />
+    <property name="MAIN_APPLICATION" value="modiabrukerdialog" />
 
     <appender name="exceptionlog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${APP_LOG_HOME}/${MAIN_APPLICATION}_error.log</File>
