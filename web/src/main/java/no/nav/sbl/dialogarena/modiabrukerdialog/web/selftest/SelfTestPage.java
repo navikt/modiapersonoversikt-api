@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest;
 
+import no.nav.dialogarena.modiabrukerdialog.example.Pingable;
+import no.nav.modig.core.exception.SystemException;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -20,9 +22,22 @@ public class SelfTestPage extends WebPage {
         logger.info("entered SelfTestPage!");
         List<ServiceStatus> statusList = new ArrayList<>();
 
-        //Add servicestatus' as needed, e.g. statusList.add(new ServiceStatus("name", "status", 0));
+        //Add servicestatus' as needed, e.g.
+//        statusList.add(getPingableComponentStatus("search", null, "SEARCH_OK", "SEARCH_ERROR"));
 
         add(new ServiceStatusListView("serviceStatusTable", statusList));
+    }
+
+    private ServiceStatus getPingableComponentStatus(String name, Pingable pingable, String OK_CODE, String ERROR_CODE) {
+        String status = ERROR_CODE;
+        long time = 0;
+        try {
+            time = pingable.ping();
+            status = OK_CODE;
+        } catch (SystemException se) {
+            logger.warn(name + " was not retrievable. Class canonical name: " + pingable.getClass().getCanonicalName() + ". Exception message: " + se.getMessage());
+        }
+        return new ServiceStatus(name, status, time);
     }
 
     private static class ServiceStatusListView extends PropertyListView<ServiceStatus> {
