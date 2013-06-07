@@ -478,7 +478,7 @@
                 </property>
             </activation>
             <properties>
-                <sonar.jacoco.excludes>*SelfTestPage.*</sonar.jacoco.excludes>
+                <sonar.jacoco.excludes>*SelfTestPage.*:*/example/*</sonar.jacoco.excludes>
             </properties>
         </profile>
     </profiles>
