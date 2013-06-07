@@ -27,10 +27,6 @@
             <type>test-jar</type>
         </dependency>
         <!-- Modia kompoenter -->
-        <!--<dependency>-->
-            <!--<groupId>no.nav</groupId>-->
-            <!--<artifactId>kontrakter-panel</artifactId>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>personsok-panel</artifactId>
@@ -138,12 +134,10 @@
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
@@ -191,7 +185,6 @@
         <dependency>
             <groupId>org.webbitserver</groupId>
             <artifactId>webbit</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
