@@ -28,12 +28,12 @@ public class SelfTestPage extends WebPage {
         add(new ServiceStatusListView("serviceStatusTable", statusList));
     }
 
-    private ServiceStatus getPingableComponentStatus(String name, Pingable pingable, String OK_CODE, String ERROR_CODE) {
-        String status = ERROR_CODE;
+    private ServiceStatus getPingableComponentStatus(String name, Pingable pingable, String okCode, String errorCode) {
+        String status = errorCode;
         long time = 0;
         try {
             time = pingable.ping();
-            status = OK_CODE;
+            status = okCode;
         } catch (SystemException se) {
             logger.warn(name + " was not retrievable. Class canonical name: " + pingable.getClass().getCanonicalName() + ". Exception message: " + se.getMessage());
         }
