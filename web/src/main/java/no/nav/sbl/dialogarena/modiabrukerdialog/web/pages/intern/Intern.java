@@ -57,13 +57,6 @@ public class Intern extends BasePage {
         return false;
     }
 
-//    @Override
-//    public void onEvent(IEvent<?> event){
-//        if(event.getPayload().equals("")){
-//
-//        }
-//    }
-
     @RunOnEvents(FODSELSNUMMER_FUNNET)
     public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
         throw new RestartResponseException(
