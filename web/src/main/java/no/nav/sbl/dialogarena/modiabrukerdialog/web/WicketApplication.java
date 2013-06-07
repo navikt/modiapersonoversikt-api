@@ -21,14 +21,15 @@ import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.time.Duration;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+
+import javax.inject.Inject;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
 
 public class WicketApplication extends WebApplication {
 
-    @Autowired
+    @Inject
     private ApplicationContext applicationContext;
 
     public static WicketApplication get() {
