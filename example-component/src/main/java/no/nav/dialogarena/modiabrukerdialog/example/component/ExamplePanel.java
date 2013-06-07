@@ -12,8 +12,11 @@ import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.ComponentTag;
+import org.apache.wicket.markup.MarkupStream;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.Model;
@@ -26,11 +29,23 @@ public class ExamplePanel extends GenericPanel<String> implements Pingable {
     @Inject
     private ExampleService exampleService;
 
+    private Component content, error;
+
     public ExamplePanel(String id) {
         super(id, Model.of(""));
 
         setOutputMarkupId(true);
-        add(new Label("content", getModel()));
+
+        content = new Label("content", getModel());
+        error = new Label("error") {
+            @Override
+            public void onComponentTagBody(MarkupStream markupStream, ComponentTag openTag) {
+                throw new RuntimeException();
+            }
+        }.setVisible(false);
+
+
+        add(content, error);
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
@@ -56,7 +71,7 @@ public class ExamplePanel extends GenericPanel<String> implements Pingable {
             setModelObject("Fungerer OK");
         }
         if ("renderingerror".equals(itemId)) {
-            add(new Label("rendererror"));
+            error.setVisible(true);
         }
         if ("systemerror".equals(itemId)) {
             throw new RuntimeException();
