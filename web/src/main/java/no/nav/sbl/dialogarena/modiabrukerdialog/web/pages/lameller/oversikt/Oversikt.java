@@ -23,10 +23,6 @@ public class Oversikt extends Lerret {
 
         super(id);
         add(
-                //                new TestFeedWidget("logg", "L"),
-                //                new TestFeedWidget("soknad", "S"),
-                //                new TestFeedWidget("dialog", "D"),
-                //                new TestFeedWidget("sak", "K"),
                 new SykepengerWidget("sykepenger", "Y", new Model<>("12345123456")),
                 new LenkeWidget("lenker", "E", new ListModel<>(asList("saker", "lenkea", "lenkeb"))),
                 new ExampleWidget("example", "X")
