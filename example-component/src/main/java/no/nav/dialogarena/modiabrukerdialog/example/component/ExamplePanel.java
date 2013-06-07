@@ -39,11 +39,12 @@ public class ExamplePanel extends Lerret implements Pingable {
     }
 
     @Override
-    public long ping() throws SystemException {
+    public long ping() {
         long startTime = currentTimeMillis();
         if (exampleService.isAvailable()) {
             return currentTimeMillis() - startTime;
-        } throw new SystemException("examplePanel unavailable because exampleService cannot be reached", new IOException());
+        }
+        throw new SystemException("examplePanel unavailable because exampleService cannot be reached", new IOException());
     }
 
     private class ContentModel extends AbstractReadOnlyModel<String> {
