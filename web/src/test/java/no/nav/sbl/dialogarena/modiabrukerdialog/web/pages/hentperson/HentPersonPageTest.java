@@ -4,7 +4,6 @@ import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
