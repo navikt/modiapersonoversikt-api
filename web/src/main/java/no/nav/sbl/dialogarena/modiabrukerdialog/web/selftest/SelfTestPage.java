@@ -22,7 +22,7 @@ public class SelfTestPage extends WebPage {
         logger.info("entered SelfTestPage!");
         List<ServiceStatus> statusList = new ArrayList<>();
 
-        //Add servicestatus' as needed, e.g.
+//        Add servicestatus' as needed, e.g.
 //        statusList.add(getPingableComponentStatus("search", null, "SEARCH_OK", "SEARCH_ERROR"));
 
         add(new ServiceStatusListView("serviceStatusTable", statusList));
