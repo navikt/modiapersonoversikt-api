@@ -47,6 +47,10 @@
 
         <dependency>
             <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-consumer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
             <artifactId>sykmeldingsperioder-panel</artifactId>
         </dependency>
 
@@ -67,6 +71,10 @@
 
         <dependency>
             <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-util</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
         </dependency>
 
@@ -81,6 +89,10 @@
             <artifactId>modig-lang</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-core</artifactId>
+        </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket-test</artifactId>
@@ -105,6 +117,8 @@
             <artifactId>logback-core</artifactId>
         </dependency>
 
+
+
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
@@ -115,6 +129,11 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
         </dependency>
 
         <dependency>
@@ -249,6 +268,25 @@
                 </excludes>
             </testResource>
         </testResources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                        <configuration>
+                            <usedDependencies>
+                                <usedDependency>ch.qos.logback:logback-core</usedDependency>
+                                <usedDependency>ch.qos.logback:logback-classic</usedDependency>
+                            </usedDependencies>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
     <profiles>
         <profile>
