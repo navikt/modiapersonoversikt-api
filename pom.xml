@@ -262,7 +262,7 @@
                 <artifactId>spring-context</artifactId>
                 <version>${spring.version}</version>
             </dependency>
-			
+
 			<dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-web</artifactId>
@@ -431,6 +431,16 @@
                 <artifactId>webbit</artifactId>
                 <version>${webbit.version}</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+              <groupId>no.nav.modig</groupId>
+              <artifactId>modig-security-core</artifactId>
+              <version>1.0.0-alpha.4</version>
+            </dependency>
+            <dependency>
+              <groupId>no.nav.modig</groupId>
+              <artifactId>modig-security-loginmodule</artifactId>
+              <version>1.0.0-alpha.4</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

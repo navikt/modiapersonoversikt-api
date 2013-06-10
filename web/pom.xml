@@ -253,6 +253,15 @@
             <artifactId>modig-testcertificates</artifactId>
         </dependency>
 
+        <dependency>
+              <groupId>no.nav.modig</groupId>
+              <artifactId>modig-security-core</artifactId>
+            </dependency>
+        <dependency>
+          <groupId>no.nav.modig</groupId>
+          <artifactId>modig-security-loginmodule</artifactId>
+        </dependency>
+
     </dependencies>
     <build>
         <resources>
@@ -297,6 +306,8 @@
                                 <usedDependency>ch.qos.logback:logback-core</usedDependency>
                                 <usedDependency>ch.qos.logback:logback-classic</usedDependency>
                                 <usedDependency>org.springframework:spring-web</usedDependency>
+                                <usedDependency>no.nav.modig:modig-security-core</usedDependency>
+                                <usedDependency>no.nav.modig:modig-security-loginmodule</usedDependency>
                             </usedDependencies>
                         </configuration>
                     </execution>

@@ -1,0 +1,7 @@
+<jboss-web>
+    <security-domain>SPNEGO</security-domain>
+    <valve>
+        <class-name>org.jboss.security.negotiation.NegotiationAuthenticator</class-name>
+    </valve>
+    <context-root>modiabrukerdialog</context-root>
+</jboss-web>
