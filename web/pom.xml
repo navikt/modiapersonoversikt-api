@@ -49,10 +49,13 @@
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-consumer</artifactId>
         </dependency>
+
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>sykmeldingsperioder-panel</artifactId>
         </dependency>
+
+        <!-- End modia komponenter -->
 
         <dependency>
             <groupId>org.apache.wicket</groupId>
@@ -73,6 +76,7 @@
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-util</artifactId>
         </dependency>
+
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-spring</artifactId>
@@ -93,10 +97,12 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-core</artifactId>
         </dependency>
+
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket-test</artifactId>
         </dependency>
+
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-frontend-wicket</artifactId>
@@ -116,8 +122,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
         </dependency>
-
-
 
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
