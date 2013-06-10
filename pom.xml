@@ -440,7 +440,7 @@
                 <plugin>
                     <groupId>no.nav.maven.plugins</groupId>
                     <artifactId>modig-scm-plugin</artifactId>
-                    <version>1.1.7</version>
+                    <version>1.1.9</version>
                 </plugin>
                 <plugin>
                     <groupId>no.nav.maven.plugins</groupId>
