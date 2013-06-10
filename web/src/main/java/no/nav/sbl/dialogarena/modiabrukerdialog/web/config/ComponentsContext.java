@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({
         no.nav.dialogarena.modiabrukerdialog.example.config.ExampleContext.class
-        ,no.nav.kjerneinfo.consumer.config.ConsumerConfig.class
-        ,no.nav.kjerneinfo.consumer.config.MockConsumerConfig.class
+//        ,no.nav.kjerneinfo.consumer.config.ConsumerConfig.class
+//        ,no.nav.kjerneinfo.consumer.config.MockConsumerConfig.class
         ,no.nav.sykmeldingsperioder.config.SykmeldingsperioderPanelConfig.class
 })
 public class ComponentsContext {
