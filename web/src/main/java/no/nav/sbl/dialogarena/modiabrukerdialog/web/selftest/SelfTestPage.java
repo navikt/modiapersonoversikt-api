@@ -13,6 +13,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static no.nav.dialogarena.modiabrukerdialog.example.PingResult.ServiceResult.SERVICE_OK;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SelfTestPage extends WebPage {
@@ -36,7 +37,7 @@ public class SelfTestPage extends WebPage {
             if (!pingResults.isEmpty()) {
                 for (PingResult pingResult : pingResults) {
                     serviceStatuses.add(new ServiceStatus(pingResult.getServiceName(),
-                            pingResult.getServiceStatus().equals(PingResult.SERVICE_OK) ? okCode : errorCode,
+                            pingResult.getServiceStatus().equals(SERVICE_OK) ? okCode : errorCode,
                             pingResult.getElapsedTime()));
                 }
             }

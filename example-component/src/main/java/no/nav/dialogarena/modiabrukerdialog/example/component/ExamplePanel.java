@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static no.nav.dialogarena.modiabrukerdialog.example.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 
 
@@ -62,7 +63,7 @@ public class ExamplePanel extends GenericPanel<String> implements Pingable {
         List<PingResult> results = new ArrayList<>();
         long startTime = System.currentTimeMillis();
         if (exampleService.isAvailable()) {
-            results.add(new PingResult("exampleService",PingResult.SERVICE_OK, System.currentTimeMillis() -startTime));
+            results.add(new PingResult("exampleService", SERVICE_OK, System.currentTimeMillis() -startTime));
             return results;
         }
         throw new SystemException("examplePanel unavailable because exampleService cannot be reached", new IOException());
