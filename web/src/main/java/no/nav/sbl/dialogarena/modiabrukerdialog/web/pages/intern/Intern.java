@@ -1,5 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
+import static java.util.Arrays.asList;
+import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
+
+import java.util.List;
+
 import no.nav.dialogarena.modiabrukerdialog.example.component.ExamplePanel;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.LamellFactory;
@@ -8,23 +15,14 @@ import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.lamell.LerretFactory;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.GenericLerret;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.Oversikt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
-import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
-import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 
 public class Intern extends BasePage {
 
@@ -39,7 +37,7 @@ public class Intern extends BasePage {
         add(
                 //                new HentPersonPanel("searchPanel"),
                 //                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
-                new PersonsokPanel("personsokPanel").setVisible(true),
+//                new PersonsokPanel("personsokPanel").setVisible(true),
                 new TokenLamellPanel("lameller", createLamellFactories(fnrFromRequest)),
                 new SideBar("sideBar", fnrFromRequest).setVisible(true)
         );
@@ -88,7 +86,7 @@ public class Intern extends BasePage {
                     public Lerret createLerret(String id) {
                         return new GenericLerret(id, new ExamplePanel("panel"));
                     }
-                }),
+                })
                 //                newLamellFactory("oppfolging", "P", new LerretFactory() {
                 //                    @Override
                 //                    public Lerret createLerret(String id) {
@@ -109,14 +107,14 @@ public class Intern extends BasePage {
                 //                    }
                 //                }),
                 //
-                newLamellFactory("sykepenger", "5", new LerretFactory() {
-                    @Override
-                    public Lerret createLerret(String id) {
-                        return new GenericLerret(id, new SykmeldingsperiodePanel("panel", new Model<>(fnrFromRequest), new Model<String>()));
-
-                        //"panel", new Model<String>(fnrFromRequest)));
-                    }
-                })
+//                newLamellFactory("sykepenger", "5", new LerretFactory() {
+//                    @Override
+//                    public Lerret createLerret(String id) {
+//                        return new GenericLerret(id, new SykmeldingsperiodePanel("panel", new Model<>(fnrFromRequest), new Model<String>()));
+//
+//                        //"panel", new Model<String>(fnrFromRequest)));
+//                    }
+//                })
 
                 //                newLamellFactory("oversikt2", "2", new LerretFactory() {
                 //                    @Override
