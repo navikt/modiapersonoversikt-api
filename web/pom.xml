@@ -35,6 +35,11 @@
             <artifactId>personsok-panel</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kontrakter-panel</artifactId>
+        </dependency>
+
         <!--<dependency>-->
             <!--<groupId>no.nav</groupId>-->
             <!--<artifactId>kjerneinfo-hentperson</artifactId>-->
@@ -45,10 +50,10 @@
             <!--<artifactId>kjerneinfo-panel</artifactId>-->
         <!--</dependency>-->
 
-        <!--<dependency>-->
-            <!--<groupId>no.nav</groupId>-->
-            <!--<artifactId>kjerneinfo-consumer</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-consumer</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>no.nav</groupId>

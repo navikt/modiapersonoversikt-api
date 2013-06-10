@@ -44,7 +44,8 @@
         <!-- Modia komponenter-->
         <personsok.version>0.0.35</personsok.version>
         <kjerneinfo.versjon>0.0.31-SNAPSHOT</kjerneinfo.versjon>
-        <sykmeldinger.versjon>0.0.24</sykmeldinger.versjon>
+        <sykmeldinger.versjon>0.0.25</sykmeldinger.versjon>
+        <kontrakter.version>0.0.25</kontrakter.version>
     </properties>
 
     <dependencyManagement>
@@ -105,6 +106,22 @@
                 </exclusions>
             </dependency>
 
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>kontrakter-panel</artifactId>
+                <version>${kontrakter.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
             <!--<dependency>-->
                 <!--<groupId>no.nav</groupId>-->
                 <!--<artifactId>kjerneinfo-hentperson</artifactId>-->
@@ -145,25 +162,25 @@
                 <!--</exclusions>-->
             <!--</dependency>-->
 
-            <!--<dependency>-->
-                <!--<groupId>no.nav</groupId>-->
-                <!--<artifactId>kjerneinfo-consumer</artifactId>-->
-                <!--<version>${kjerneinfo.versjon}</version>-->
-                <!--<exclusions>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>ch.qos.logback</groupId>-->
-                        <!--<artifactId>logback-core</artifactId>-->
-                    <!--</exclusion>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>ch.qos.logback</groupId>-->
-                        <!--<artifactId>logback-classic</artifactId>-->
-                    <!--</exclusion>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>no.nav</groupId>-->
-                        <!--<artifactId>personsok-consumer</artifactId>-->
-                    <!--</exclusion>-->
-                <!--</exclusions>-->
-            <!--</dependency>-->
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>kjerneinfo-consumer</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>no.nav</groupId>
+                        <artifactId>personsok-consumer</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
 
             <dependency>
                 <groupId>no.nav</groupId>
