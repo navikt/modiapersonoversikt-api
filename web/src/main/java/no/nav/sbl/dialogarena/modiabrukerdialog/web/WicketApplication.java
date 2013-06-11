@@ -12,6 +12,7 @@ import no.nav.modig.pagelet.spi.utils.SPIResources;
 import no.nav.modig.wicket.events.NamedEventDispatcher;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.login.LoginPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
@@ -89,6 +90,7 @@ public class WicketApplication extends WebApplication {
                 .configure(this);
 
         mountPage("/person/${fnr}", Intern.class);
+        mountPage("/login", LoginPage.class);
         mountPage("internal/selftest", SelfTestPage.class);
 
         setSpringComponentInjector();
