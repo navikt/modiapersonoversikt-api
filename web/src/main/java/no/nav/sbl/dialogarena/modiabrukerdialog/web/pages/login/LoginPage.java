@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory;
 
 public class LoginPage extends WebPage {
 
-    private static Logger LOG = LoggerFactory.getLogger(LoginPage.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LoginPage.class);
 
     public LoginPage() {
         LOG.info("LOGIN");
