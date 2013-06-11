@@ -34,10 +34,10 @@
 <!--             <artifactId>personsok-panel</artifactId> -->
 <!--         </dependency> -->
 
-<!--         <dependency> -->
-<!--             <groupId>no.nav</groupId> -->
-<!--             <artifactId>kontrakter-panel</artifactId> -->
-<!--         </dependency> -->
+         <dependency>
+             <groupId>no.nav</groupId>
+             <artifactId>kontrakter-panel</artifactId>
+         </dependency>
 
         <!--<dependency>-->
             <!--<groupId>no.nav</groupId>-->
@@ -49,15 +49,15 @@
             <!--<artifactId>kjerneinfo-panel</artifactId>-->
         <!--</dependency>-->
 
-<!--         <dependency> -->
-<!--             <groupId>no.nav</groupId> -->
-<!--             <artifactId>kjerneinfo-consumer</artifactId> -->
-<!--         </dependency> -->
+         <!--<dependency>-->
+             <!--<groupId>no.nav</groupId>-->
+             <!--<artifactId>kjerneinfo-consumer</artifactId>-->
+         <!--</dependency>-->
 
-<!--         <dependency> -->
-<!--             <groupId>no.nav</groupId> -->
-<!--             <artifactId>sykmeldingsperioder-panel</artifactId> -->
-<!--         </dependency> -->
+         <dependency>
+             <groupId>no.nav</groupId>
+             <artifactId>sykmeldingsperioder-panel</artifactId>
+         </dependency>
 
         <!-- End modia komponenter -->
 
@@ -292,6 +292,25 @@
             </testResource>
         </testResources>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>1.2</version>
+                <executions>
+                    <execution>
+                        <id>enforce-dependency</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <fail>false</fail>
+                            <rules>
+                                <DependencyConvergence />
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>

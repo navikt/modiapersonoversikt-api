@@ -1,13 +1,18 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 
+import no.nav.dialogarena.modiabrukerdialog.example.component.ExampleWidget;
+import no.nav.modig.modia.lamell.Lerret;
+import no.nav.modig.modia.widget.LenkeWidget;
+import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
+import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.util.ListModel;
+
+import static java.util.Arrays.asList;
 import static no.nav.modig.modia.widget.Widget.EVENT_UPDATE_WIDGET;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.util.time.Duration.minutes;
-import no.nav.dialogarena.modiabrukerdialog.example.component.ExampleWidget;
-import no.nav.modig.modia.lamell.Lerret;
-
-import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 
 
 public class Oversikt extends Lerret {
@@ -18,10 +23,10 @@ public class Oversikt extends Lerret {
 
         super(id);
         add(
-        // new SykepengerWidget("sykepenger", "Y", new Model<>("12345123456")),
-        // new LenkeWidget("lenker", "E", new ListModel<>(asList("saker",
-        // "lenkea", "lenkeb"))),
-        new ExampleWidget("example", "X"));
+                new SykepengerWidget("sykepenger", "Y", new Model<>("12345123456")),
+                new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
+                new ExampleWidget("example", "X")
+        );
 
         timer = new AbstractAjaxTimerBehavior(minutes(30)) {
             @Override
