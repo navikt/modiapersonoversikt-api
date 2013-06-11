@@ -36,6 +36,12 @@
             <transport-guarantee>NONE</transport-guarantee>
         </user-data-constraint>
     </security-constraint>
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Selftest</web-resource-name>
+            <url-pattern>/internal/selftest</url-pattern>
+        </web-resource-collection>
+    </security-constraint>
     <login-config>
         <auth-method>SPNEGO</auth-method>
     </login-config>
