@@ -1,7 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
+import static java.util.Arrays.asList;
+import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
+
+import java.util.List;
+
 import no.nav.dialogarena.modiabrukerdialog.example.component.ExamplePanel;
-import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.LamellFactory;
@@ -14,19 +20,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.GenericLerret;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.Oversikt;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
-import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
-import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
-import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 
 public class Intern extends BasePage {
 
