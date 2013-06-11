@@ -27,10 +27,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class Intern extends BasePage {
 
-    private static final String FNR = "fnr";
     private static final String LAMELLER = "lameller";
-    private static final String SAKER = "saker";
-    private static final String SAK = "sak";
     public static final String LAMELL_KONTRAKTER = "kontrakter";
     public static final String LAMELL_FORELDREPENGER = "foreldrepenger";
     public static final String LAMELL_SYKEPENGER = "sykepenger";
@@ -42,9 +39,6 @@ public class Intern extends BasePage {
         final String fnrFromRequest = pageParameters.get("fnr").toString(null);
 
         add(
-                //                new HentPersonPanel("searchPanel"),
-                //                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
-                //                new PersonsokPanel("personsokPanel").setVisible(true),
                 new TokenLamellPanel("lameller", createLamellFactories(fnrFromRequest)),
                 new SideBar("sideBar", fnrFromRequest).setVisible(true)
         );
@@ -54,14 +48,6 @@ public class Intern extends BasePage {
     public boolean isVersioned() {
         return false;
     }
-
-    //    @RunOnEvents(FODSELSNUMMER_FUNNET)
-    //    public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
-    //        throw new RestartResponseException(
-    //                Intern.class,
-    //                new PageParameters().set(FNR, query)
-    //        );
-    //    }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
@@ -98,60 +84,6 @@ public class Intern extends BasePage {
                         return new GenericLerret(id, new ExamplePanel("panel"));
                     }
                 })
-//                newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
-//                    @Override
-//                    public Lerret createLerret(String id) {
-//                        return new GenericLerret(id, new KontrakterPanel("panel", new Model<>("28105343770")));
-//                    }
-//                }),
-//                newLamellFactory(LAMELL_FORELDREPENGER, "4", new LerretFactory() {
-//                    @Override
-//                    public Lerret createLerret(String id) {
-//                        return new GenericLerret(id, new ForeldrepengerPanel("panel", new Model<>(fnrFromRequest), new Model<String>()));
-//                    }
-//                }),
-//                newLamellFactory(LAMELL_SYKEPENGER, "5", new LerretFactory() {
-//                    @Override
-//                    public Lerret createLerret(String id) {
-//                        return new GenericLerret(id, new SykmeldingsperiodePanel("panel", new Model<>(fnrFromRequest), new Model<String>()));
-//                    }
-//                })
-                //                newLamellFactory("oppfolging", "P", new LerretFactory() {
-                //                    @Override
-                //                    public Lerret createLerret(String id) {
-                //                        return new Oppfolging(id);
-                //                    }
-                //                }),
-                //                newLamellFactory("feilhandtering", "F", new LerretFactory() {
-                //                    @Override
-                //                    public Lerret createLerret(String id) {
-                //                        return new Feilhandtering(id);
-                //                    }
-                //                }),
-                //                newLamellFactory("logg", "L", new LerretFactory() {
-                //                    @Override
-                //                    public Lerret createLerret(String id) {
-                //                        return new LoggLerret(id);
-                //                    }
-                //                }),
-                //                newLamellFactory("dialog", "D", new LerretFactory() {
-                //                    @Override
-                //                    public Lerret createLerret(String id) {
-                //                        return new DialogLerret(id);
-                //                    }
-                //                }),
-                //                newLamellFactory("soknad", "S", new LerretFactory() {
-                //                    @Override
-                //                    public Lerret createLerret(String id) {
-                //                        return new SoknadLerret(id);
-                //                    }
-                //                }),
-                //                newLamellFactory("sak", "K", new LerretFactory() {
-                //                    @Override
-                //                    public Lerret createLerret(String id) {
-                //                        return new SakerLerret(id);
-                //                    }
-                //                })
         );
     }
 
