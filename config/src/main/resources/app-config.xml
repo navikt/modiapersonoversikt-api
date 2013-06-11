@@ -6,11 +6,11 @@
     <artifacts>
         <ear groupId="no.nav.sbl.dialogarena" artifactId="modiabrukerdialog-jee" />
     </artifacts>
-    <security serviceUserResourceAlias="srvModiabrukerdialog">
-        <logins>
-            <spnego />
-        </logins>
-    </security>
+    <!--<security serviceUserResourceAlias="srvModiabrukerdialog">-->
+        <!--<logins>-->
+            <!--<spnego />-->
+        <!--</logins>-->
+    <!--</security>-->
     <resources>
         <!-- <baseUrl alias="personsokendpoint" mapToProperty="personsokendpoint"/> -->
         <!-- <baseUrl alias="servicegateway" mapToProperty="servicegateway"/> -->
