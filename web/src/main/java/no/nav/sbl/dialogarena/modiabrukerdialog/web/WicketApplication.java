@@ -90,7 +90,7 @@ public class WicketApplication extends WebApplication {
                 .configure(this);
 
         mountPage("/person/${fnr}", Intern.class);
-        mountPage("/login/", LoginPage.class);
+        mountPage("/login", LoginPage.class);
         mountPage("internal/selftest", SelfTestPage.class);
 
         setSpringComponentInjector();
