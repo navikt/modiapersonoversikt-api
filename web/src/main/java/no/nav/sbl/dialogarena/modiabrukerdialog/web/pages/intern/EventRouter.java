@@ -6,34 +6,21 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.LamellPanel;
 import org.apache.wicket.event.IEvent;
 
+
 public class EventRouter {
 
-    public static void handleFeedItemEvent(LamellPanel lameller, IEvent<?> event, FeedItemPayload feedItemPayload){
+    public static void handleFeedItemEvent(LamellPanel lameller, IEvent<?> event, FeedItemPayload feedItemPayload) {
         final String type = feedItemPayload.getType();
-//        if (type.equals(SykepengerWidgetServiceImpl.FORELDREPENGER)) {
-//            lameller.goToLamell(Intern.LAMELL_FORELDREPENGER);
-//            lameller.sendToLamell(Intern.LAMELL_FORELDREPENGER, event.getPayload());
-//            return;
-//        } else if (type.equals(SykepengerWidgetServiceImpl.SYKEPENGER)) {
-//            lameller.goToLamell(Intern.LAMELL_SYKEPENGER);
-//            lameller.sendToLamell(Intern.LAMELL_SYKEPENGER, event.getPayload());
-//            return;
-//        } else
-            if(type.equals(ExamplePanel.EXAMPLE_TYPE)) {
+        if (type.equals(ExamplePanel.EXAMPLE_TYPE)) {
             lameller.goToLamell(Intern.LAMELL_EXAMPLE);
             lameller.sendToLamell(Intern.LAMELL_EXAMPLE, event.getPayload());
             return;
-        }else{
+        } else {
             throw new ApplicationException("Lenke med ukjent type <" + type + "> klikket");
         }
     }
 
-
     public static void handleWidgetItemEvent(LamellPanel lameller, String linkId) {
-        if (Intern.LAMELL_KONTRAKTER.equals(linkId)) {
-            lameller.goToLamell(Intern.LAMELL_KONTRAKTER);
-        } else {
-            throw new ApplicationException("Lenke med ukjent id <" + linkId + "> klikket');");
-        }
+        throw new ApplicationException("Lenke med ukjent id <" + linkId + "> klikket');");
     }
 }

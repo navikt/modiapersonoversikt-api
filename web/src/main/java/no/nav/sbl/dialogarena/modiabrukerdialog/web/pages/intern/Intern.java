@@ -28,9 +28,6 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 public class Intern extends BasePage {
 
     private static final String LAMELLER = "lameller";
-    public static final String LAMELL_KONTRAKTER = "kontrakter";
-    public static final String LAMELL_FORELDREPENGER = "foreldrepenger";
-    public static final String LAMELL_SYKEPENGER = "sykepenger";
     public static final String LAMELL_EXAMPLE = "example";
     public static final String LAMELL_OVERSIKT = "oversikt";
 
