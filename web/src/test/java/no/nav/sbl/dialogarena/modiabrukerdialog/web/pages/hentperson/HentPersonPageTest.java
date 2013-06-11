@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson;
 
 import no.nav.modig.wicket.test.FluentWicketTester;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import org.junit.Test;
@@ -12,7 +13,8 @@ import javax.inject.Inject;
 
 @ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class HentPersonPageTest {
+public class HentPersonPageTest extends TestSecurityBaseClass {
+
 
     @Inject
     private FluentWicketTester fluentWicketTester;
