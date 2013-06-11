@@ -23,7 +23,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class Intern extends BasePage {
 
@@ -32,7 +31,7 @@ public class Intern extends BasePage {
     public static final String LAMELL_OVERSIKT = "oversikt";
 
 
-    public Intern(PageParameters pageParameters) {
+    public Intern() {
         add(
                 new TokenLamellPanel("lameller", createLamellFactories()),
                 new SideBar("sideBar").setVisible(true)
