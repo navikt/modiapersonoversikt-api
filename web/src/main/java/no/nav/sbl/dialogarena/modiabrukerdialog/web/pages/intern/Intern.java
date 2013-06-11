@@ -33,11 +33,9 @@ public class Intern extends BasePage {
 
 
     public Intern(PageParameters pageParameters) {
-        final String fnrFromRequest = pageParameters.get("fnr").toString(null);
-
         add(
-                new TokenLamellPanel("lameller", createLamellFactories(fnrFromRequest)),
-                new SideBar("sideBar", fnrFromRequest).setVisible(true)
+                new TokenLamellPanel("lameller", createLamellFactories()),
+                new SideBar("sideBar").setVisible(true)
         );
     }
 
@@ -67,7 +65,7 @@ public class Intern extends BasePage {
 
     }
 
-    private List<LamellFactory> createLamellFactories(final String fnrFromRequest) {
+    private List<LamellFactory> createLamellFactories() {
         return asList(
                 newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
                     @Override

@@ -4,7 +4,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 public class SideBar extends Panel {
 
-    public SideBar(String id, String fnr) {
+    public SideBar(String id) {
         super(id);
     }
 
