@@ -1,11 +1,15 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.login;
 
 import org.apache.wicket.markup.html.WebPage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LoginPage extends WebPage {
 
+    private static Logger LOG = LoggerFactory.getLogger(LoginPage.class);
+
     public LoginPage() {
-        System.out.println("kommer hit");
+        LOG.info("LOGIN");
     }
 
 }
