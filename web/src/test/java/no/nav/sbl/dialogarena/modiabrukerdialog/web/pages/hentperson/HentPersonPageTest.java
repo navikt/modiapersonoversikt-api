@@ -17,7 +17,7 @@ public class HentPersonPageTest extends TestSecurityBaseClass {
 
 
     @Inject
-    private FluentWicketTester fluentWicketTester;
+    private FluentWicketTester fluentWicketTester;       //NOPMD
 
     @Test
     public void shouldRenderHentPersonPage() {

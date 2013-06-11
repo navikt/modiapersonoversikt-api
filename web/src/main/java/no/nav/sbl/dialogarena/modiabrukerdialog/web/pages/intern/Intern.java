@@ -30,10 +30,7 @@ import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 
 public class Intern extends BasePage {
 
-    private static final String FNR = "fnr";
     private static final String LAMELLER = "lameller";
-    private static final String SAKER = "saker";
-    private static final String SAK = "sak";
     public static final String LAMELL_KONTRAKTER = "kontrakter";
     public static final String LAMELL_FORELDREPENGER = "foreldrepenger";
     public static final String LAMELL_SYKEPENGER = "sykepenger";
