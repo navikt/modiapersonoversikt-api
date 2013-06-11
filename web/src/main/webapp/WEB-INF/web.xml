@@ -45,8 +45,8 @@
     <login-config>
         <auth-method>SPNEGO</auth-method>
         <form-login-config>
-            <form-login-page>/login/</form-login-page>
-            <form-error-page>/login/</form-error-page>
+            <form-login-page>/login</form-login-page>
+            <form-error-page>/login</form-error-page>
         </form-login-config>
     </login-config>
     <security-role>
