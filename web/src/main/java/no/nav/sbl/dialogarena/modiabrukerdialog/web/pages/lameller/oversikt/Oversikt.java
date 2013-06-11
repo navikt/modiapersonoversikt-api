@@ -23,7 +23,7 @@ public class Oversikt extends Lerret {
 
         super(id);
         add(
-                new SykepengerWidget("sykepenger", "Y", new Model<>("12345123456")),
+//                new SykepengerWidget("sykepenger", "Y", new Model<>("12345123456")),
                 new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
                 new ExampleWidget("example", "X")
         );

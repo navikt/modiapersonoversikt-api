@@ -100,25 +100,25 @@ public class Intern extends BasePage {
                     public Lerret createLerret(String id) {
                         return new GenericLerret(id, new ExamplePanel("panel"));
                     }
-                }),
-                newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
-                    @Override
-                    public Lerret createLerret(String id) {
-                        return new GenericLerret(id, new KontrakterPanel("panel", new Model<>("28105343770")));
-                    }
-                }),
-                newLamellFactory(LAMELL_FORELDREPENGER, "4", new LerretFactory() {
-                    @Override
-                    public Lerret createLerret(String id) {
-                        return new GenericLerret(id, new ForeldrepengerPanel("panel", new Model<>(fnrFromRequest), new Model<String>()));
-                    }
-                }),
-                newLamellFactory(LAMELL_SYKEPENGER, "5", new LerretFactory() {
-                    @Override
-                    public Lerret createLerret(String id) {
-                        return new GenericLerret(id, new SykmeldingsperiodePanel("panel", new Model<>(fnrFromRequest), new Model<String>()));
-                    }
                 })
+//                newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
+//                    @Override
+//                    public Lerret createLerret(String id) {
+//                        return new GenericLerret(id, new KontrakterPanel("panel", new Model<>("28105343770")));
+//                    }
+//                }),
+//                newLamellFactory(LAMELL_FORELDREPENGER, "4", new LerretFactory() {
+//                    @Override
+//                    public Lerret createLerret(String id) {
+//                        return new GenericLerret(id, new ForeldrepengerPanel("panel", new Model<>(fnrFromRequest), new Model<String>()));
+//                    }
+//                }),
+//                newLamellFactory(LAMELL_SYKEPENGER, "5", new LerretFactory() {
+//                    @Override
+//                    public Lerret createLerret(String id) {
+//                        return new GenericLerret(id, new SykmeldingsperiodePanel("panel", new Model<>(fnrFromRequest), new Model<String>()));
+//                    }
+//                })
                 //                newLamellFactory("oppfolging", "P", new LerretFactory() {
                 //                    @Override
                 //                    public Lerret createLerret(String id) {
