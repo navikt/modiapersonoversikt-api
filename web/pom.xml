@@ -181,15 +181,7 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <type>test-jar</type>
-        </dependency>
+
 
         <dependency>
             <groupId>junit</groupId>
@@ -275,9 +267,14 @@
         </dependency>
 
         <dependency>
-              <groupId>no.nav.modig</groupId>
-              <artifactId>modig-security-core</artifactId>
-            </dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-core</artifactId>
+            <type>test-jar</type>
+        </dependency>
         <dependency>
           <groupId>no.nav.modig</groupId>
           <artifactId>modig-security-loginmodule</artifactId>
