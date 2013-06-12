@@ -25,7 +25,7 @@
         <spring.version>3.2.2.RELEASE</spring.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0-alpha.1</modig.wicket.test.version>
-        <modig.wicket.version>1.0.0-alpha.3</modig.wicket.version>
+        <modig.wicket.version>1.0.0-SNAPSHOT</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>1.0.0-alpha.2</modig.lang.version>
         <modig.frontend.wicket.version>1.0.0-alpha.8</modig.frontend.wicket.version>
@@ -43,7 +43,7 @@
         <webbit.version>0.4.14</webbit.version>
         <junit.dep.version>4.10</junit.dep.version>
         <!-- Modia komponenter-->
-        <personsok.version>0.0.35</personsok.version>
+        <personsok.version>0.0.38</personsok.version>
         <!--<kjerneinfo.versjon>0.0.31-SNAPSHOT</kjerneinfo.versjon>-->
         <sykmeldinger.versjon>0.0.25</sykmeldinger.versjon>
         <kontrakter.version>0.0.25</kontrakter.version>
@@ -105,6 +105,12 @@
                         <artifactId>logback-classic</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>personsok-webcommon</artifactId>
+                <version>0.0.37</version>
             </dependency>
 
             <dependency>
@@ -437,6 +443,13 @@
               <groupId>no.nav.modig</groupId>
               <artifactId>modig-security-core</artifactId>
               <version>${modig.security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-security-core</artifactId>
+                <type>test-jar</type>
+                <version>${modig.security.version}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
               <groupId>no.nav.modig</groupId>
