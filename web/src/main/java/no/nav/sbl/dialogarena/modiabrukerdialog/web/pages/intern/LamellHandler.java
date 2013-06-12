@@ -37,51 +37,49 @@ public class LamellHandler implements Serializable {
 
     }
 
-
-
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         final String type = feedItemPayload.getType().toLowerCase();
         String lamellId = feedItemPayload.getType().toLowerCase();
         if (canHaveMoreThanOneFactory(type)) {
             String itemId = feedItemPayload.getItemId();
             String factoryId = type + itemId;
-            if(!lamellPanel.hasFactory(factoryId)){
+            if (!lamellPanel.hasFactory(factoryId)) {
                 lamellPanel.addNewFactory(createFactory(type, itemId));
             }
             lamellId = type + itemId;
         }
-        if(lamellPanel.hasFactory(lamellId)){
+        if (lamellPanel.hasFactory(lamellId)) {
             lamellPanel.goToLamell(lamellId);
             lamellPanel.sendToLamell(lamellId, event.getPayload());
-        }else{
+        } else {
             throw new ApplicationException("Feedlenke med ukjent type <" + lamellId + "> klikket');");
         }
     }
+
     public void handleWidgetItemEvent(String linkId) {
-        if (LAMELL_KONTRAKTER.equals(linkId)) {
+        if (LAMELL_KONTRAKTER.equalsIgnoreCase(linkId)) {
             lamellPanel.goToLamell(LAMELL_KONTRAKTER);
         } else {
             throw new ApplicationException("Widgetlenke med ukjent id <" + linkId + "> klikket');");
         }
     }
 
-
     public TokenLamellPanel createLamellPanel(String lameller, String fnrFromRequest) {
         this.fnrFromRequest = fnrFromRequest;
         return lamellPanel = new TokenLamellPanel(lameller, createLamellFactories(fnrFromRequest));
     }
 
-    private LamellFactory createFactory(String type, String itemId){
+    private LamellFactory createFactory(String type, String itemId) {
         final Panel panel;
-        if (SykepengerWidgetServiceImpl.SYKEPENGER.toLowerCase().equals(type)){
+        if (SykepengerWidgetServiceImpl.SYKEPENGER.equalsIgnoreCase(type)) {
             panel = new SykmeldingsperiodePanel("panel", new Model<>(fnrFromRequest), new Model<>(itemId));
-        } else if (SykepengerWidgetServiceImpl.FORELDREPENGER.toLowerCase().equals(type)) {
+        } else if (SykepengerWidgetServiceImpl.FORELDREPENGER.equalsIgnoreCase(type)) {
             panel = new ForeldrepengerPanel("panel", new Model<>(fnrFromRequest), new Model<>(itemId));
         } else {
-            throw new RuntimeException("Unknown type in payload: " + type );
+            throw new RuntimeException("Unknown type in payload: " + type);
         }
 
-        return newLamellFactory(type,itemId, "", true, new LerretFactory() {
+        return newLamellFactory(type, itemId, "", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
                 return new GenericLerret(id, panel);
@@ -90,15 +88,16 @@ public class LamellHandler implements Serializable {
     }
 
     private boolean canHaveMoreThanOneFactory(String type) {
-        if (SykepengerWidgetServiceImpl.SYKEPENGER.toLowerCase().equals(type)) {
+        if (SykepengerWidgetServiceImpl.SYKEPENGER.equalsIgnoreCase(type)) {
             return true;
         }
-        if (SykepengerWidgetServiceImpl.FORELDREPENGER.toLowerCase().equals(type)) {
+        if (SykepengerWidgetServiceImpl.FORELDREPENGER.equalsIgnoreCase(type)) {
             return true;
         }
         return false;
     }
 
+    @SuppressWarnings("PMD.UnusedFormalParameter")
     private List<LamellFactory> createLamellFactories(final String fnrFromRequest) {
         return asList(
                 newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
@@ -121,5 +120,4 @@ public class LamellHandler implements Serializable {
                 })
         );
     }
-
 }
