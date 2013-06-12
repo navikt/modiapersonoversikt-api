@@ -24,14 +24,14 @@ import static org.mockito.Mockito.mock;
 
 @ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class LamellHandlerTest  extends TestSecurityBaseClass{
+public class LamellHandlerTest extends TestSecurityBaseClass {
 
     private LamellHandler lamellHandler;
 
     @Before
     public void setupLamellHandler() {
         lamellHandler = new LamellHandler();
-        lamellHandler.createLamellPanel("lameller","22222222222");
+        lamellHandler.createLamellPanel("lameller", "22222222222");
     }
 
     @Test(expected = ApplicationException.class)
@@ -65,7 +65,7 @@ public class LamellHandlerTest  extends TestSecurityBaseClass{
         FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", ExamplePanel.EXAMPLE_TYPE);
         lamellHandler.handleFeedItemEvent(event, payload);
         final String selectedLamell = getSelectedLamell();
-        Assert.assertThat(selectedLamell, equalTo(LamellHandler.LAMELL_EXAMPLE ));
+        Assert.assertThat(selectedLamell, equalTo(LamellHandler.LAMELL_EXAMPLE));
     }
 
     @Test(expected = ApplicationException.class)
