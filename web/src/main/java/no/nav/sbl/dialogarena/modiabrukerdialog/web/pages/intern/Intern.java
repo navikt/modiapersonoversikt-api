@@ -15,8 +15,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -26,7 +24,6 @@ import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 public class Intern extends BasePage {
 
     private final SjekkForlateSideAnswer answer;
-    private Logger logger = LoggerFactory.getLogger(Intern.class);
     @Inject
     private LamellHandler lamellHandler;
 
