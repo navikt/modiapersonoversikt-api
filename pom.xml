@@ -76,20 +76,16 @@
                 <version>${modig.core.version}</version>
             </dependency>
 
-
-
-
-
             <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-ioc</artifactId>
-                <version>${wicket.version}</version>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-security-core</artifactId>
+                <version>${modig.security.version}</version>
             </dependency>
 
             <dependency>
-                <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-extensions</artifactId>
-                <version>${wicket.version}</version>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-security-loginmodule</artifactId>
+                <version>${modig.security.version}</version>
             </dependency>
 
             <dependency>
@@ -142,66 +138,6 @@
                 </exclusions>
             </dependency>
 
-            <!--<dependency>-->
-                <!--<groupId>no.nav</groupId>-->
-                <!--<artifactId>kjerneinfo-hentperson</artifactId>-->
-                <!--<version>${kjerneinfo.versjon}</version>-->
-                <!--<exclusions>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>ch.qos.logback</groupId>-->
-                        <!--<artifactId>logback-core</artifactId>-->
-                    <!--</exclusion>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>ch.qos.logback</groupId>-->
-                        <!--<artifactId>logback-classic</artifactId>-->
-                    <!--</exclusion>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>no.nav</groupId>-->
-                        <!--<artifactId>personsok-consumer</artifactId>-->
-                    <!--</exclusion>-->
-                <!--</exclusions>-->
-            <!--</dependency>-->
-
-            <!--<dependency>-->
-                <!--<groupId>no.nav</groupId>-->
-                <!--<artifactId>kjerneinfo-panel</artifactId>-->
-                <!--<version>${kjerneinfo.versjon}</version>-->
-                <!--<exclusions>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>ch.qos.logback</groupId>-->
-                        <!--<artifactId>logback-core</artifactId>-->
-                    <!--</exclusion>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>ch.qos.logback</groupId>-->
-                        <!--<artifactId>logback-classic</artifactId>-->
-                    <!--</exclusion>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>no.nav</groupId>-->
-                        <!--<artifactId>personsok-consumer</artifactId>-->
-                    <!--</exclusion>-->
-                <!--</exclusions>-->
-            <!--</dependency>-->
-
-            <!--<dependency>-->
-                <!--<groupId>no.nav</groupId>-->
-                <!--<artifactId>kjerneinfo-consumer</artifactId>-->
-                <!--<version>${kjerneinfo.versjon}</version>-->
-                <!--<exclusions>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>ch.qos.logback</groupId>-->
-                        <!--<artifactId>logback-core</artifactId>-->
-                    <!--</exclusion>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>ch.qos.logback</groupId>-->
-                        <!--<artifactId>logback-classic</artifactId>-->
-                    <!--</exclusion>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>no.nav</groupId>-->
-                        <!--<artifactId>personsok-consumer</artifactId>-->
-                    <!--</exclusion>-->
-                <!--</exclusions>-->
-            <!--</dependency>-->
-
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>sykmeldingsperioder-panel</artifactId>
@@ -250,19 +186,25 @@
 
             <dependency>
                 <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-request</artifactId>
-                <version>${wicket.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-devutils</artifactId>
                 <version>${wicket.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>org.apache.wicket</groupId>
-                <artifactId>wicket-util</artifactId>
+                <artifactId>wicket-extensions</artifactId>
+                <version>${wicket.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-ioc</artifactId>
+                <version>${wicket.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-request</artifactId>
                 <version>${wicket.version}</version>
             </dependency>
 
@@ -272,16 +214,40 @@
                 <version>${wicket.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-util</artifactId>
+                <version>${wicket.version}</version>
+            </dependency>
+
             <!-- Spring -->
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-aop</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-beans</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-context</artifactId>
                 <version>${spring.version}</version>
             </dependency>
 
-			<dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
-                <artifactId>spring-web</artifactId>
+                <artifactId>spring-expression</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jdbc</artifactId>
                 <version>${spring.version}</version>
             </dependency>
 
@@ -299,26 +265,21 @@
 
             <dependency>
                 <groupId>org.springframework</groupId>
-                <artifactId>spring-jdbc</artifactId>
+                <artifactId>spring-web</artifactId>
                 <version>${spring.version}</version>
             </dependency>
 
+            <!-- Logback -->
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-expression</artifactId>
-                <version>${spring.version}</version>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-core</artifactId>
+                <version>1.0.11</version>
             </dependency>
 
             <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-aop</artifactId>
-                <version>${spring.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.springframework</groupId>
-                <artifactId>spring-beans</artifactId>
-                <version>${spring.version}</version>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.0.11</version>
             </dependency>
 
             <!-- TEST dependency -->
@@ -327,20 +288,6 @@
                 <artifactId>spring-test</artifactId>
                 <scope>test</scope>
                 <version>${spring.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-core</artifactId>
-                <version>1.0.11</version>
-                <!--<scope>test</scope>-->
-            </dependency>
-
-            <dependency>
-                <groupId>ch.qos.logback</groupId>
-                <artifactId>logback-classic</artifactId>
-                <version>1.0.11</version>
-                <!--<scope>test</scope>-->
             </dependency>
 
             <dependency>
@@ -448,11 +395,7 @@
                 <version>${webbit.version}</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-              <groupId>no.nav.modig</groupId>
-              <artifactId>modig-security-core</artifactId>
-              <version>${modig.security.version}</version>
-            </dependency>
+
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-security-core</artifactId>
@@ -460,11 +403,7 @@
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-              <groupId>no.nav.modig</groupId>
-              <artifactId>modig-security-loginmodule</artifactId>
-              <version>${modig.security.version}</version>
-            </dependency>
+
         </dependencies>
     </dependencyManagement>
     <build>
