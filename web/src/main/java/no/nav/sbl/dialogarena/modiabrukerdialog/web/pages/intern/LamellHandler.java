@@ -123,4 +123,8 @@ public class LamellHandler implements Serializable {
                 })
         );
     }
+
+    public boolean hasUnsavedChanges() {
+        return true;
+    }
 }

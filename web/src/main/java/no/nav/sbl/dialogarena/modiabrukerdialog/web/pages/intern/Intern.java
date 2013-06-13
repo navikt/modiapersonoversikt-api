@@ -2,10 +2,13 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSide;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -22,14 +25,15 @@ import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 
 public class Intern extends BasePage {
 
+    private final SjekkForlateSideAnswer answer;
     private Logger logger = LoggerFactory.getLogger(Intern.class);
     @Inject
     private LamellHandler lamellHandler;
 
-
     public Intern(PageParameters pageParameters) {
         final String fnrFromRequest = pageParameters.get("fnr").toString(null);
-
+        answer = new SjekkForlateSideAnswer();
+        final ModigModalWindow modalWindow = createModalWindow("modal");
         add(
                 //                new HentPersonPanel("searchPanel"),
                 //                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
@@ -37,18 +41,38 @@ public class Intern extends BasePage {
                 lamellHandler.createLamellPanel("lameller", fnrFromRequest),
                 new SideBar("sideBar", fnrFromRequest).setVisible(true),
                 new AjaxLink<Boolean>("nullstill") {
-
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        logger.info("-------------");
-                        logger.info("Nullstill trykket");
-                        throw new RestartResponseException(
-                                HentPersonPage.class
-                        );
+                        if (lamellHandler.hasUnsavedChanges()) {
+                            modalWindow.show(target);
+                        } else {
+                            gotoHentPersonPage();
+                        }
                     }
-                }
-
+                },
+                modalWindow
         );
+    }
+
+    private void gotoHentPersonPage() {
+        throw new RestartResponseException(
+                HentPersonPage.class
+        );
+    }
+
+    private ModigModalWindow createModalWindow(String id) {
+        final ModigModalWindow modalWindow = new ModigModalWindow(id);
+        modalWindow.setInitialHeight(150);
+        modalWindow.setWindowClosedCallback(new ModigModalWindow.WindowClosedCallback() {
+            @Override
+            public void onClose(AjaxRequestTarget ajaxRequestTarget) {
+                if (answer.getAnswer().equals("OK")) {
+                    gotoHentPersonPage();
+                }
+            }
+        });
+        modalWindow.setContent(new SjekkForlateSide(modalWindow.getContentId(), modalWindow, this.answer));
+        return modalWindow;
     }
 
     @Override
