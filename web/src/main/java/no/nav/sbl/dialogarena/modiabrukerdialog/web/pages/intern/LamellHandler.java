@@ -41,12 +41,7 @@ public class LamellHandler implements Serializable {
         final String type = feedItemPayload.getType().toLowerCase();
         String lamellId = feedItemPayload.getType().toLowerCase();
         if (canHaveMoreThanOneFactory(type)) {
-            String itemId = feedItemPayload.getItemId();
-            String factoryId = type + itemId;
-            if (!lamellPanel.hasFactory(factoryId)) {
-                lamellPanel.addNewFactory(createFactory(type, itemId));
-            }
-            lamellId = type + itemId;
+            lamellId = createFactoryIfMissing(type, feedItemPayload.getItemId());
         }
         if (lamellPanel.hasFactory(lamellId)) {
             lamellPanel.goToLamell(lamellId);
@@ -54,6 +49,14 @@ public class LamellHandler implements Serializable {
         } else {
             throw new ApplicationException("Feedlenke med ukjent type <" + lamellId + "> klikket');");
         }
+    }
+
+    private String createFactoryIfMissing(String type, String itemId) {
+        String factoryId = type + itemId;
+        if (!lamellPanel.hasFactory(factoryId)) {
+            lamellPanel.addNewFactory(createFactory(type, itemId));
+        }
+        return factoryId;
     }
 
     public void handleWidgetItemEvent(String linkId) {
@@ -66,7 +69,7 @@ public class LamellHandler implements Serializable {
 
     public TokenLamellPanel createLamellPanel(String lameller, String fnrFromRequest) {
         this.fnrFromRequest = fnrFromRequest;
-        lamellPanel = new TokenLamellPanel(lameller, createLamellFactories(fnrFromRequest));
+        lamellPanel = new TokenLamellPanel(lameller, createLamellFactories());
         return lamellPanel;
     }
 
@@ -77,7 +80,7 @@ public class LamellHandler implements Serializable {
         } else if (SykepengerWidgetServiceImpl.FORELDREPENGER.equalsIgnoreCase(type)) {
             panel = new ForeldrepengerPanel("panel", new Model<>(fnrFromRequest), new Model<>(itemId));
         } else {
-            throw new RuntimeException("Unknown type in payload: " + type);
+            throw new ApplicationException("Ukjent type panel: " + type);
         }
 
         return newLamellFactory(type, itemId, "", true, new LerretFactory() {
@@ -98,8 +101,7 @@ public class LamellHandler implements Serializable {
         return false;
     }
 
-    @SuppressWarnings("PMD.UnusedFormalParameter")
-    private List<LamellFactory> createLamellFactories(final String fnrFromRequest) {
+    private List<LamellFactory> createLamellFactories() {
         return asList(
                 newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
                     @Override
