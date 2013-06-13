@@ -9,6 +9,7 @@ import no.nav.modig.modia.navigation.KeyNavigationResourceReference;
 import no.nav.modig.modia.shortcuts.ShortcutListenerResourceReference;
 import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.pagelet.spi.utils.SPIResources;
+import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.modig.wicket.events.NamedEventDispatcher;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
@@ -76,9 +77,7 @@ public class WicketApplication extends WebApplication {
         markupSettings.setCompressWhitespace(true);
         markupSettings.setDefaultMarkupEncoding("UTF-8");
 
-        // Innstillinger vi kan ha
-        IApplicationSettings applicationSettings = getApplicationSettings();
-        applicationSettings.setPageExpiredErrorPage(getHomePage());
+        new ApplicationSettingsConfig().configure(this);
 
         getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
@@ -90,7 +89,6 @@ public class WicketApplication extends WebApplication {
                 .configure(this);
 
         mountPage("/person/${fnr}", Intern.class);
-        mountPage("login", LoginPage.class);
         mountPage("internal/selftest", SelfTestPage.class);
 
         setSpringComponentInjector();

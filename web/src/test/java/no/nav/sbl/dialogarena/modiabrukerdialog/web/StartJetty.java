@@ -6,6 +6,7 @@ import static no.nav.modig.lang.collections.RunnableUtils.waitFor;
 import static no.nav.modig.test.util.FilesAndDirs.WEBAPP_SOURCE;
 import static no.nav.sbl.dialogarena.common.jetty.Jetty.usingWar;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -23,7 +24,8 @@ public final class StartJetty {
         SystemProperties.load("/environment-test.properties");
         TestCertificates.setupKeyAndTrustStore();
 
-        Jetty jetty = usingWar(WEBAPP_SOURCE).at("modiabrukerdialog").port(PORT).buildJetty();
+        Jetty jetty = usingWar(WEBAPP_SOURCE).at("modiabrukerdialog")
+            .overrideWebXml(new File("src/test/resources/jetty-web.xml")).port(PORT).buildJetty();
         jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
     }
 
