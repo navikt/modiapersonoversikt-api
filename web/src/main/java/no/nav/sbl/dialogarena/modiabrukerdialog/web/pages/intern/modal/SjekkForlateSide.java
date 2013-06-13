@@ -16,7 +16,6 @@ public class SjekkForlateSide extends Panel {
                     public void onClick(AjaxRequestTarget target){
                         answer.setAnswer("OK");
                         window.close(target);
-
                     }
                 }   ,
                 new AjaxLink<Void>("closeCancel") {

@@ -60,6 +60,7 @@ public class Intern extends BasePage {
     private ModigModalWindow createModalWindow(String id) {
         final ModigModalWindow modalWindow = new ModigModalWindow(id);
         modalWindow.setInitialHeight(150);
+        modalWindow.setContent(new SjekkForlateSide(modalWindow.getContentId(), modalWindow, this.answer));
         modalWindow.setWindowClosedCallback(new ModigModalWindow.WindowClosedCallback() {
             @Override
             public void onClose(AjaxRequestTarget ajaxRequestTarget) {
@@ -68,7 +69,13 @@ public class Intern extends BasePage {
                 }
             }
         });
-        modalWindow.setContent(new SjekkForlateSide(modalWindow.getContentId(), modalWindow, this.answer));
+        modalWindow.setCloseButtonCallback(new ModigModalWindow.CloseButtonCallback() {
+            @Override
+            public boolean onCloseButtonClicked(AjaxRequestTarget ajaxRequestTarget) {
+                // slik at man kan lukke vinduet med krysset i høyre hjørne.
+                return true;
+            }
+        });
         return modalWindow;
     }
 
