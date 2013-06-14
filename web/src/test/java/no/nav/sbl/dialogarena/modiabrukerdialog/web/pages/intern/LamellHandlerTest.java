@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
 
 import no.nav.dialogarena.modiabrukerdialog.example.component.ExamplePanel;
+import no.nav.modig.common.MDCOperations;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
@@ -29,9 +30,11 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
     private LamellHandler lamellHandler;
 
     @Before
-    public void setupLamellHandler() {
+    public void setup() {
         lamellHandler = new LamellHandler();
         lamellHandler.createLamellPanel("lameller", "22222222222");
+        final String callID = MDCOperations.generateCallId();
+        MDCOperations.putToMDC(MDCOperations.MDC_CALL_ID, callID);
     }
 
     @Test(expected = ApplicationException.class)
