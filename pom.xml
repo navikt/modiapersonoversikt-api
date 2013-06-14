@@ -42,11 +42,12 @@
         <fitlibrary.version>2.0</fitlibrary.version>
         <webbit.version>0.4.14</webbit.version>
         <junit.dep.version>4.10</junit.dep.version>
-        <!-- Modia komponenter-->
-        <personsok.version>0.0.38</personsok.version>
+        <!-- Modia-komponenter-->
+        <personsok.version>0.0.40-SNAPSHOT</personsok.version>
         <personsok.webcommon.version>0.0.37</personsok.webcommon.version>
-        <sykmeldinger.versjon>0.0.25</sykmeldinger.versjon>
-        <kontrakter.version>0.0.25</kontrakter.version>
+        <sykmeldinger.versjon>0.0.32</sykmeldinger.versjon>
+        <kontrakter.version>0.0.32</kontrakter.version>
+        <kjerneinfo.versjon>0.0.32</kjerneinfo.versjon>
     </properties>
 
     <dependencyManagement>
@@ -140,6 +141,66 @@
 
             <dependency>
                 <groupId>no.nav</groupId>
+                <artifactId>kjerneinfo-hentperson</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>no.nav</groupId>
+                        <artifactId>personsok-consumer</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>kjerneinfo-panel</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>no.nav</groupId>
+                        <artifactId>personsok-consumer</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>kjerneinfo-consumer</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>no.nav</groupId>
+                        <artifactId>personsok-consumer</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
                 <artifactId>sykmeldingsperioder-panel</artifactId>
                 <version>${sykmeldinger.versjon}</version>
                 <exclusions>
@@ -221,7 +282,7 @@
             </dependency>
 
             <!-- Spring -->
-            <dependency>
+			<dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
                 <version>${spring.version}</version>
@@ -397,9 +458,9 @@
             </dependency>
 
             <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-security-core</artifactId>
-                <version>${modig.security.version}</version>
+              <groupId>no.nav.modig</groupId>
+              <artifactId>modig-security-core</artifactId>
+              <version>${modig.security.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>

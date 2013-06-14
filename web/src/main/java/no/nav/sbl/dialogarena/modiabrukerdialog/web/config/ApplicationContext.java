@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
-@Import({ComponentsContext.class, TemporaryEnvironmentContext.class})
+@Import({TemporaryEnvironmentContext.class, ComponentsContext.class})
 public class ApplicationContext {
 
     @Bean

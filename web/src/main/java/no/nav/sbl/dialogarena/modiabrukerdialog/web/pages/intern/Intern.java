@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
+import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
+import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
@@ -32,8 +34,8 @@ public class Intern extends BasePage {
         answer = new SjekkForlateSideAnswer();
         final ModigModalWindow modalWindow = createModalWindow("modal");
         add(
-                //                new HentPersonPanel("searchPanel"),
-                //                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
+                new HentPersonPanel("searchPanel"),
+                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 lamellHandler.createLamellPanel("lameller", fnrFromRequest),
                 new SideBar("sideBar", fnrFromRequest).setVisible(true),
