@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
+import no.nav.brukerprofil.BrukerprofilPanel;
 import no.nav.dialogarena.modiabrukerdialog.example.component.ExamplePanel;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.core.exception.ApplicationException;
@@ -30,6 +31,7 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_SYKEPENGER = "sykepenger";
     public static final String LAMELL_EXAMPLE = "example";
     public static final String LAMELL_OVERSIKT = "oversikt";
+    public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     private TokenLamellPanel lamellPanel;
     private String fnrFromRequest;
 
@@ -119,6 +121,12 @@ public class LamellHandler implements Serializable {
                     @Override
                     public Lerret createLerret(String id) {
                         return new GenericLerret(id, new KontrakterPanel("panel", new Model<>("28105343770")));
+                    }
+                }),
+                newLamellFactory(LAMELL_BRUKERPROFIL,"B",new LerretFactory() {
+                    @Override
+                    public Lerret createLerret(String id) {
+                        return new GenericLerret(id, new BrukerprofilPanel("panel", new Model<>(fnrFromRequest)));
                     }
                 })
         );

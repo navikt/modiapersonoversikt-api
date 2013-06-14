@@ -16,14 +16,7 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext</param-value>
     </context-param>
-    <filter>
-        <filter-name>wicket</filter-name>
-        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
-        <init-param>
-            <param-name>applicationFactoryClassName</param-name>
-            <param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
-        </init-param>
-    </filter>
+
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Restricted</web-resource-name>
@@ -59,6 +52,14 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>wicket</filter-name>
+        <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
+        <init-param>
+            <param-name>applicationFactoryClassName</param-name>
+            <param-value>org.apache.wicket.spring.SpringWebApplicationFactory</param-value>
+        </init-param>
+    </filter>
 
     <filter-mapping>
         <filter-name>wicket</filter-name>

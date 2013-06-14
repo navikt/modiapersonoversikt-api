@@ -64,6 +64,16 @@
              <artifactId>sykmeldingsperioder-panel</artifactId>
          </dependency>
 
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-panel</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>behandlebrukerprofil-consumer</artifactId>
+        </dependency>
+
         <!-- End modia komponenter -->
 
         <!-- Modig avhengigheter -->
