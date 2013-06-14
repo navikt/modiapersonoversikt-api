@@ -31,7 +31,7 @@ public class Intern extends BasePage {
 
     public Intern(PageParameters pageParameters) {
         final String fnrFromRequest = pageParameters.get("fnr").toString(null);
-        answer = new SjekkForlateSideAnswer();
+        this.answer = new SjekkForlateSideAnswer();
         final ModigModalWindow modalWindow = createModalWindow("modal");
         add(
                 new HentPersonPanel("searchPanel"),
@@ -86,13 +86,13 @@ public class Intern extends BasePage {
         return false;
     }
 
-    //        @RunOnEvents(FODSELSNUMMER_FUNNET)
-    //        public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
-    //            throw new RestartResponseException(
-    //                    Intern.class,
-    //                    new PageParameters().set(FNR, query)
-    //            );
-    //        }
+            @RunOnEvents(HentPersonPanel.FODSELSNUMMER_FUNNET)
+            public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
+                throw new RestartResponseException(
+                        Intern.class,
+                        new PageParameters().set("fnr", query)
+                );
+            }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
