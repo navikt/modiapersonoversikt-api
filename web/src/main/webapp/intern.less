@@ -44,11 +44,11 @@ H1 {
 	font-size: 2.5rem;
 }
 
-H2 {
+H2, ._H2 {
 	font-size: 2.0rem;
 }
 
-H3 {
+H3, ._H3 {
 	font-size: 1.43rem;
 	font-weight: 600;
 	text-transform: uppercase;
@@ -116,6 +116,10 @@ INPUT[type=button] {
 	FORM {
 		margin: 0; 
 	}
+
+	H1 {
+		display: none;
+ }
  }
 
 .personsok-button {
@@ -295,7 +299,7 @@ INPUT[type=button] {
 	 	width: 120px;
 	 	position: absolute;
 	 	
-	 	color: #ACA397;
+	 	color: #B7B1A9;
 	 	font-weight: normal;
 	 }
 	 
@@ -320,7 +324,7 @@ INPUT[type=button] {
 	 	background-repeat: no-repeat;
 	 	background-position: 15px 15px;
 	 	background-size: 40px;
-	 	color: #ACA397;
+	 	color: #B7B1A9;
 	 
 	 	A, A:visited {
 	 		color: white;
@@ -339,11 +343,19 @@ INPUT[type=button] {
 		&.kvinne {
 			background-image: url(/modiabrukerdialog/svg/kvinne.svg);
 		}
+
+       .navn {
+         color: #B7B1A9;
+       }
 		
 		H2 {
 			margin: 2px 0 5px 0;
-			color: #ACA397;
+			color: #B7B1A9;
 		}
+
+       DIV {
+            color: #B7B1A9;
+       }
 		
 		BUTTON {
 			padding: 0;
@@ -420,11 +432,17 @@ INPUT[type=button] {
 		
 	#personsokPanel {
 		UL.feedbackPanel {
-			padding: 1rem 1rem 1rem 3rem;
+			padding: 1rem 1rem 1rem 2rem;
 		
+			list-style-type: none;
+			color: #FFF;
 			background-color: #da153a;
 			font: 1.43rem Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
 			
+			LI:before {
+				content: "* ";
+			}
+
 			A, A:visited {
 				color: #FFF;
 				font-weight: bold;
@@ -443,10 +461,26 @@ INPUT[type=button] {
 			font-size: 0.857rem;
 		}
 		
+		INPUT.errorJS {
+			background-color: #f7cece;
+			border: 1px solid #de1842;
+		}
+
+		LABEL.errorJS {
+			position: absolute;
+			left: 0;
+			bottom: -1.62em;
+			white-space: nowrap;
+
+			color: #de1842;
+			text-transform: none;
+		}
+
 		.description {
 			color: #a69d92;
 			font-size: 0.714rem;
 			white-space:nowrap;
+			text-transform: none;
 		}
 		
 		INPUT[type=text], INPUT.hasDatepicker, SELECT {
@@ -467,45 +501,72 @@ INPUT[type=button] {
 			padding-right: 4%;
 			float: left;
 			
-			LABEL[for^=etternavn], LABEL[for^=kontonummer] {
+			LABEL.etternavn, LABEL.kontonummer {
 				padding-left: 4%;
+
+				LABEL.errorJS {
+					width: 100%;
+					padding-left: 9%;
 			}
-			
-			LABEL[for^=gatenavn], LABEL[for^=poststed],LABEL[for^=postnummer] {
+			}
+
+			LABEL.gatenavn, LABEL.poststed,LABEL.postnummer {
 				clear: left;
 			}
 			
-			LABEL[for^=husnummer] {
+			LABEL.husnummer {
 				width: 24%;
 				padding-left: 4%;
+
+				LABEL.errorJS {
+					width: 100%;
+					padding-left: 20%;
 			}
-			
-			LABEL[for^=husbokstav] {
+			}
+
+			LABEL.husbokstav {
 				width: 16%;
 				padding-left: 4%;
+
+				LABEL.errorJS {
+					width: 100%;
+					padding-left: 33%;
 			}
 		}
-		
+		}
+
 		.begrenssoket {
 			.border-box;
 			width: 33%;
 			float: left;
 			
-			LABEL[for^=navenhet] {
-				width: 52%;
-				padding-right: 4%;
+			LABEL {
+				float: left;
+				width: 46%;
+				display: inline;
 			}
 			
-			LABEL[for^=navenhet], LABEL[for^=fodselsdatoFra], LABEL[for^=alderFra],LABEL[for^=kjonn] {
+			LABEL.navenhet {
+				width: 54%;
+				padding-right: 8%;
+			}
+
+			LABEL.navenhet, LABEL.fodselsdatoFra, LABEL.alderFra, LABEL.kjonn {
 				clear: left;
 			}
 			
-			LABEL[for^=fodselsdatoTil], LABEL[for^=alderTil] {
-				padding-left: 4%;
+			LABEL.fodselsdatoTil, LABEL.alderTil {
+				padding-left: 8%;
+				width: 53%;
+
+				LABEL.errorJS {
+					width: 100%;
+					padding-left: 9%;
 			}
 		}
 	}
-	
+	}
+
 	P#searchErrorMessage {
 		padding: 1.43rem 0;
 	
@@ -529,6 +590,7 @@ INPUT[type=button] {
 			padding: 0.5rem 0 0.5rem 1rem;
 			overflow: hidden;
 			white-space:nowrap;
+            color: #988f86;
 		}
 	
 		TR.headers TH {
@@ -562,7 +624,12 @@ INPUT[type=button] {
 			TR:hover, TR:focus {
 				background-color: #00a9e0;
 				color: #FFF;
-				
+				outline: 0;
+
+				TD {
+					color: #FFF;
+				}
+
 				TD.addressColumn {
 					&:after {
 						background: -moz-linear-gradient(left, rgba(0,169,224,0) 0%, rgba(0,169,224,1) 56%, rgba(0,169,224,1) 100%);
@@ -585,10 +652,10 @@ INPUT[type=button] {
 					top: 0;
 					bottom: 0;
 					width: 50px;
-					background: -moz-linear-gradient(left, rgba(39,39,39,0) 0%, rgba(39,39,39,1) 56%, rgba(39,39,39,1) 100%);
-					background: -webkit-linear-gradient(left, rgba(39,39,39,0) 0%,rgba(39,39,39,1) 56%,rgba(39,39,39,1) 100%);
-					background: -ms-linear-gradient(left, rgba(39,39,39,0) 0%,rgba(39,39,39,1) 56%,rgba(39,39,39,1) 100%);
-					background: linear-gradient(left, rgba(39,39,39,0) 0%,rgba(39,39,39,1) 56%,rgba(39,39,39,1) 100%);
+					background: -moz-linear-gradient(left, rgba(62,56,50,0) 0%, rgba(62,56,50,1) 56%, rgba(62,56,50,1) 100%);
+					background: -webkit-linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
+					background: -ms-linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
+					background: linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
 					filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorStr='#003E3832 ', endColorStr='#FF3E3832 ',GradientType=1)";
 					content: "";
 					height: 100%;
@@ -650,9 +717,40 @@ INPUT[type=button] {
 	min-height: 265px;
 	
 	background: #3E3832 ;
-	color: #ACA397;
+	color: #B7B1A9;
 	line-height: 1.2em;
 	border-top: 1px solid #626262;
+
+  DL {
+    margin-bottom: 10px;
+    overflow: auto;
+
+    font-weight: bold;
+  }
+
+  DT {
+    width: 120px;
+    position: absolute;
+
+    color: #ACA397;
+    font-weight: normal;
+
+    text-align: left;
+  }
+
+  DD {
+    margin: 0;
+    display: block;
+    padding-left: 120px;
+
+    text-overflow: ellips;
+
+    text-align: left;
+  }
+
+    H2, H3 {
+      color: #ACA397;
+    }
 	 
 	A, A:visited {
 		color: white;
@@ -718,7 +816,7 @@ INPUT[type=button] {
 		width: 22%;
 		margin-left: 4%;
 		
-		background: url(/modiabrukerdialog/gfx/hus.png) no-repeat center 10px;
+		background: url(/modiabrukerdialog/gfx/hjerte.svg) no-repeat center 10px;
 		background-size: 20px;
 		 
 	 	DT {
@@ -754,19 +852,125 @@ INPUT[type=button] {
 	.barn {
 		width: 22%;
 		
-		background: url(/modiabrukerdialog/gfx/person.png) no-repeat center 0;
+		background: url(/modiabrukerdialog/svg/hjerte.svg) no-repeat center 0;
 		background-size: 17px;
 	}
 	
-	.grafikk {
+	.status {
 		width: 20%;
 		margin-right: auto;
 		
-		background: url(/modiabrukerdialog/gfx/data.png) no-repeat center 10px;
+		background: url(/modiabrukerdialog/svg/info.svg) no-repeat center 10px;
 		background-size: 20px;
 	}
 }
 
+.logg .infoting {
+	padding: 10px 10px 5px 20px;
+
+	border-top: 1px solid #ccc;
+}
+
+.fra-til {
+	display: block;
+	position: relative;
+	margin-bottom: 1em;
+	width: 100%;
+	overflow: auto;
+	margin-left: 0;
+
+	INPUT[type=text] {
+		width: 6em;
+		display: block;
+		margin-right: 0;
+	}
+
+	INPUT[type=button] {
+		margin: 21px 0 0 10px;
+		float: left;
+	}
+
+	LABEL {
+		float: left;
+		margin-left: 10px;
+		width: auto;
+	}
+
+	LABEL:first-of-type	{
+		margin-left: 0;
+	}
+}
+
+.flytflate {
+	line-height: 14px;
+
+	DIV {
+		width: 50%;
+		margin-bottom: 20px;
+	}
+
+	H3 {
+		text-transform: uppercase;
+		color: #888;
+		margin: 0;
+	}
+
+	P {
+		font-weight: bold;
+		margin: 0;
+	}
+}
+
+.default-error {
+  padding-top: 10px;
+
+  SVG {
+    height: 30px;
+    width: 30px;
+    margin: auto;
+    display: block;
+    PATH {
+      fill: #f88c01;
+    }
+  }
+
+  P {
+    padding-top: 20px;
+    margin: 0;
+    font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    text-align: center;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  HR {
+    margin: 25px auto;
+    border-top: 1px solid #808080;
+    width: 30px;
+  }
+
+}
+
+.error-panel {
+  background-color: #F5F5F5;
+  padding: 10px 0px;
+
+  P {
+    padding-top: 10px;
+  }
+}
+
+.feil-lamell {
+  H1 {
+    color: #9B9B9B !important;
+  }
+  background-color: #F1F1EF;
+  min-height: 400px;
+
+}
+
+/* Generell styling til lamell-stacken (ej innholdet i en lerret) */
 .lameller {
 	min-height: 100%;
 	margin-bottom: 128px; 
@@ -878,7 +1082,7 @@ INPUT[type=button] {
 			border-bottom: none;
 			-ms-filter: "";
 			 
-			h1 {
+			H1 {
 				font-size: 2.5rem;
 				line-height: 79px;
 			}
@@ -890,200 +1094,102 @@ INPUT[type=button] {
 			width: 100%;
 			min-height: 30px;
 			float: left;
-          h1 {
-              font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-              font-weight: normal;
-              line-height: 1.2em;
-              font-size: 1.43rem;
-              font-weight: 600;
-              text-transform: uppercase;
-
           }
 		}
 	}
-}
 
-.logg .infoting {
-	padding: 10px 10px 5px 20px;
-	
-	border-top: 1px solid #ccc;
-}
-
-/* Lameller */
-
-ARTICLE.lamell {
-	H1 {
-		margin: 1em 0 0.5em 0;
-	}
-	
-	SMALL {
-		color: #666;
-	}
-	
-	UL.oversikt {
+/* Individuelle lameller */
+.lamell {
+	UL.arbeisdgiver {
+		padding-left: 0;
 		list-style-type: none;
-		margin: 1em 0;
-		
-		LI	{
-			margin-top: 1em;
-			
-			SMALL {
-				text-transform: uppercase;
-				font-size: 1rem;
-			}
-			
-			STRONG {
-				display: block;
-				
-				font-weight: bold;
-				font-size: 1.29rem;
-			}
-		}
+		margin: 0;
+	
+		LI:not(:first-child) {
+			margin-top: 2rem;
+}
 	}
 	
-	ARTICLE[role=region] {
-		margin-bottom: 4em;
+	/* Oversikt */
+	&[id^=oversikt] {
+		.kolonne:first-of-type {
+			margin-left: 0;
+	}
+	
+		.kolonne:last-child {
+			margin-left: 3.8%;
+			}
+			}
+
+	/* Sykepenger */
+	&.sykepenger, &[id^="sykepenger"]:not(.widget-navigasjon) {
+		SECTION {
+			margin-top: 0;
 		
-		word-wrap: break-word;
+			> SECTION H1 {
+				._H2;
+				margin-bottom: 2rem;
 	}
 }
 
-.fra-til {
-	display: block;
-	position: relative;
-	margin-bottom: 1em;
-	width: 100%;
-	overflow: auto;
-	margin-left: 0;
-	
-	INPUT[type=text] {
-		width: 6em;
-		display: block;
-		margin-right: 0;
+		.liste {
+			float: right;
+			margin: 2rem 0 0 3.8%;
 	}
 	
-	INPUT[type=button] {
-		margin: 21px 0 0 10px;
+		.arbeidssituasjon {
+			clear: left;
+	}
+	
+		.sykmeldinger {
+			clear: left;
 		float: left;
-	}
-	
-	LABEL {
-		float: left;
-		margin-left: 10px;
-		width: auto;
-	}
-	
-	LABEL:first-of-type	{
 		margin-left: 0;
 	}
 }
 
-.flytflate {
-	line-height: 14px;
-	
-	DIV {
-		width: 50%;
-		margin-bottom: 20px;
+
+	/* FORELDREPENGER */
+	&.foreldrepenger, &[id^="foreldrepenger"]:not(.widget-navigasjon) {
+		SECTION > H1 {
+			._H2;
+			margin-bottom: 2rem;
 	}
 	
-	H3 {
-		text-transform: uppercase;
-		color: #888;
-		margin: 0;
-	}
+		.arbeidssituasjon {
+			margin: 0 0 2rem 3.8%;
+			float: right;
 	
-	P {
-		font-weight: bold;
-		margin: 0;
+			.arbeisdgiver {
+				margin-top: 2rem;
 	}
 }
 
-.default-error {
-  padding-top: 10px;
-  
-  SVG {
-    height: 30px;
-    width: 30px;
-    margin: auto;
-    display: block;
-    PATH {
-      fill: #f88c01;
-    }
-  }
-  
-  P {
-    padding-top: 20px;
-    margin: 0;
-    font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-    text-align: center;
-    font-size: 1.2rem;
-    text-transform: uppercase;
-    font-weight: 600;
-  }
-  
-  HR {
-    margin: 25px auto;
-    border-top: 1px solid #808080;
-    width: 30px;
-  }
-
-}
-
-.error-panel {
-  background-color: #F5F5F5;
-  padding: 10px 0px;
-  
-  P {
-    padding-top: 10px;
-  }
-}
-
-.feil-lamell {
-  H1 {
-    color: #9B9B9B !important;
-  }
-  background-color: #F1F1EF;
-  min-height: 400px;
-
-  SVG {
-    height: 120px;
-    width: 120px;
-    margin: auto;
-    display: block;
-    PATH {
-      fill: #C8C5C3;
-    }
-  }
-  
-  P {
-    padding-top: 20px; 
-    font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif; 
-    text-align: center;
-    font-size: 2.1rem;
-    color: #9B9B9B;
-  }
-  
-  HR {
-    margin: 30px auto;
-    border-top: 1px solid #ADAEAF;
-    width: 40px;
-  }
-}
-
-/* Sykepenger */
-ARTICLE[id^="sykepenger"]:not(.widget-navigasjon), ARTICLE[id^="kontrakter"]:not(.widget-navigasjon) {
-
-	SECTION.oppsummering, SECTION[title="Arbeidssituasjon"] {
-		.kolonne;
-		margin-left: 3.8%;
-	}
-	
-	.liste {
-		LI {
-			overflow: auto;
-			position: relative;
+		.barnet {
+			margin: 0 0 2rem 0;
 		}
-	
+  
+		SECTION.periode, SECTION[title=Periode] {
+			clear: both;
+    display: block;
+			padding-top: 2rem;
+  
+			border-top: 1px solid #CCC;
+  
+			DL.oppsummering, ARTICLE.liste {
+				.kolonne;
+				margin-left: 0;
+  }
+
+			ARTICLE.liste {
+				margin-left: 3.8%;
+}
+  }
+}
+
+	.liste {
+		.kolonne;
+
 		P.overskrift, LI.expandable A {
 			font-weight: 600;
 			font-size: 1.16rem;
@@ -1091,104 +1197,22 @@ ARTICLE[id^="sykepenger"]:not(.widget-navigasjon), ARTICLE[id^="kontrakter"]:not
 			position: relative;
 			padding-right: 30px;
 			
-			SPAN {
-				position: absolute;
-				right: 0;
-				top: 0;
-			}
-		}
-		
-		/* Fiks til at utførte betalinger har en DL-liste med to DT/DD par (ej to DL med en DT/DD) */
-		LI.expandable {
-			DL {
-				margin-top: 1rem;
-				width: 100%;
-				
-				DT {
-					margin-top: 0;
-				}
-			}
-		}
-		
-		DL {
-			float: left;
-			width: 50%;
-		}
-		
-		TABLE {
-			float: none;
-			display: inline-block;
-			clear: both;
-			width: 100%;
-			padding-top: 1rem;
-			border-collapse: collapse;
-			
-			TH, TD {
-				text-align: left;
-				padding: 0 1rem 0 0;
-			}
-		}
-	}
-	
-	.liste.sykmeldinger {
-		.kolonne;
-		clear: left;
-		margin: 1.43rem 0 0 0;
-		float: left;
-	}
-	
-	DL {
-		margin: 0;
-		overflow: auto;
-		
-		> * {
-			width: 50%;
-			float: left;
-		}
-		
-		> *:nth-child(4n+3),> *:nth-child(4n+4) {
-			position: relative;
-			top: -1rem;
-		}
-		
-		> *:nth-child(4n+1) {
-			margin-top: 1rem;
-			clear: left;
-			
-			&:before {
-				content: "";
-				display: table;
-				width: 100%;
-			}
-		}
-		
-		> *:nth-child(4n+2) {
-			clear: left;
-		}
-		
-		DT {
+			.dato {
+				display: block;
+				font: 0.857rem Helvetica, Arial, sans-serif;
 			text-transform: uppercase;
-			font-size: 0.857rem;
 		}
 		
-		DD {
-			margin: 3px 0 0 0;
-			position: relative;
-			
-			font-weight: bold;
+			.belop {
+				position: absolute;
+				left: 50%;
 		}
 	}
 	
-	UL.arbeisdgiver {
-		padding-left: 0;
-		margin-top: 2rem;
-		list-style-type: none;
+		.gradering {
+			position: absolute;
+			right: 0;
 	}
-	
-	SECTION.utbetalinger {
-		.kolonne;
-		float: right;
-		margin: 1.47rem 0 0 0;
 	}
 }
 
@@ -1360,4 +1384,4 @@ ARTICLE[id^="sykepenger"]:not(.widget-navigasjon), ARTICLE[id^="kontrakter"]:not
 			padding: 0.5rem 0 0.5rem 0.5rem;
     	}
     }
-}
+} 

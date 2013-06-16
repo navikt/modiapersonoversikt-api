@@ -13,7 +13,7 @@
     </security>
     <resources>
         <!-- <baseUrl alias="personsokendpoint" mapToProperty="personsokendpoint"/> -->
-        <!-- <baseUrl alias="servicegateway" mapToProperty="servicegateway"/> -->
+        <baseUrl alias="servicegateway" mapToProperty="servicegateway"/>
         <applicationCertificate alias="srvModiabrukerdialog"  />
     </resources>
 </application>

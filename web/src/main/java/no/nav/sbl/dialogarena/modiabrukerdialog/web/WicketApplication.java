@@ -9,6 +9,7 @@ import no.nav.modig.modia.navigation.KeyNavigationResourceReference;
 import no.nav.modig.modia.shortcuts.ShortcutListenerResourceReference;
 import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.pagelet.spi.utils.SPIResources;
+import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.events.NamedEventDispatcher;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
@@ -20,6 +21,7 @@ import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.time.Duration;
 import org.springframework.context.ApplicationContext;
 
@@ -56,6 +58,7 @@ public class WicketApplication extends WebApplication {
                         MetaTag.VIEWPORT_SCALE_1,
                         MetaTag.XUA_IE_EDGE)
                 .withResourcePacking(this.usesDeploymentConfig())
+		        .addConditionalJavascript(Intern.RESPOND_JS)
                 .addCss(SPIResources.getCss())
                 .addCss(BasePage.CSS_MODUS)
                 .addScripts(SPIResources.getScripts())
@@ -65,6 +68,9 @@ public class WicketApplication extends WebApplication {
                 .addScripts(Widget.JS_RESOURCE)                      //TODO: Flytt til MODIA modul ?
                 .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
                 .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
+		        .addScripts(Intern.JQUERY_UI_JS,
+				        DatePicker.JQUERY_PLACEHOLDER)
+
                 .configure(this);
 
         // Innstillinger vi bør ha
