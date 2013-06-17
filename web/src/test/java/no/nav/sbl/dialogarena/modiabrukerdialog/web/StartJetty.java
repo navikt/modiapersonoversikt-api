@@ -29,9 +29,8 @@ public final class StartJetty {
 //		System.setProperty("brukerprofilendpoint.url", "http://10.33.44.182:9080/tpsws/Brukerprofil_v1");
 //		System.setProperty("behandleBrukerprofilendpoint.url", "https://d26apvl173.test.local:9451/tpsws/BehandleBrukerprofil_v1");
 //		System.setProperty("kjerneinfoendpoint.url", "http://e26apvl091.test.local:9081/tpsws/Person_v1");
-		System.setProperty("spring.profiles.active","test");
-		TestCertificates.setupKeyAndTrustStore();
 
+		TestCertificates.setupKeyAndTrustStore();
 
 		Jetty jetty = usingWar(WEBAPP_SOURCE).at("modiabrukerdialog").port(PORT).buildJetty();
 		jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
