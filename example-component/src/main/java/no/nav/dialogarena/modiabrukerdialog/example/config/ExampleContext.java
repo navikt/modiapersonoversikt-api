@@ -5,7 +5,9 @@ import no.nav.dialogarena.modiabrukerdialog.example.service.ExampleService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
+@Profile({"test", "default", "exampleProfile"})
 @Configuration
 public class ExampleContext {
 

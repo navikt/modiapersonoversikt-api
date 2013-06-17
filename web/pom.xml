@@ -28,32 +28,65 @@
             <type>test-jar</type>
         </dependency>
 
+        <!-- Modia-komponenter -->
+         <dependency>
+             <groupId>no.nav</groupId>
+             <artifactId>personsok-panel</artifactId>
+         </dependency>
+
         <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-core</artifactId>
+            <groupId>no.nav</groupId>
+            <artifactId>personsok-webcommon</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-devutils</artifactId>
+            <groupId>no.nav</groupId>
+            <artifactId>personsok-consumer</artifactId>
+        </dependency>
+
+         <dependency>
+             <groupId>no.nav</groupId>
+             <artifactId>kontrakter-panel</artifactId>
+         </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-hentperson</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-util</artifactId>
+            <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-panel</artifactId>
         </dependency>
+
+         <dependency>
+             <groupId>no.nav</groupId>
+             <artifactId>kjerneinfo-consumer</artifactId>
+         </dependency>
+
+         <dependency>
+             <groupId>no.nav</groupId>
+             <artifactId>sykmeldingsperioder-panel</artifactId>
+         </dependency>
 
         <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-spring</artifactId>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-panel</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-jetty</artifactId>
-            <scope>test</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>no.nav</groupId>-->
+            <!--<artifactId>behandlebrukerprofil-consumer</artifactId>-->
+        <!--</dependency>-->
 
+        <!--<dependency>-->
+            <!--<groupId>no.nav</groupId>-->
+            <!--<artifactId>brukerprofil-consumer</artifactId>-->
+        <!--</dependency>-->
+
+        <!-- End modia komponenter -->
+
+        <!-- Modig avhengigheter -->
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>
@@ -62,6 +95,11 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-log-common</artifactId>
         </dependency>
 
         <dependency>
@@ -80,89 +118,79 @@
         </dependency>
 
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>2.1.1</version>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-log-filter</artifactId>
+            <version>1.0.0-alpha.3</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-testcertificates</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.fitnesse</groupId>
-            <artifactId>fitnesse</artifactId>
-            <classifier>embedded</classifier>
-            <scope>test</scope>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-loginmodule</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.fitnesse</groupId>
-            <artifactId>fitlibrary</artifactId>
-            <scope>test</scope>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-jetty</artifactId>
         </dependency>
 
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-fitnesse</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>args4j</groupId>
-            <artifactId>args4j</artifactId>
-            <scope>test</scope>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-core</artifactId>
+            <type>test-jar</type>
+        </dependency>
+
+        <!-- End Modig avhengigheter -->
+
+        <!-- Wicket -->
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit-dep</artifactId>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-request</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-devutils</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-util</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-spring</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-extensions</artifactId>
         </dependency>
+        <!-- End Wicket -->
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-            <scope>test</scope>
-        </dependency>
 
+        <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -205,22 +233,25 @@
         </dependency>
 
         <dependency>
-            <groupId>org.webbitserver</groupId>
-            <artifactId>webbit</artifactId>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+        </dependency>
+        <!-- End spring -->
+
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-testcertificates</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
         </dependency>
 
         <dependency>
-              <groupId>no.nav.modig</groupId>
-              <artifactId>modig-security-core</artifactId>
-            </dependency>
-        <dependency>
-          <groupId>no.nav.modig</groupId>
-          <artifactId>modig-security-loginmodule</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
 
         <dependency>
@@ -236,6 +267,63 @@
             </exclusions>
         </dependency>
 
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.1.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fitnesse</groupId>
+            <artifactId>fitnesse</artifactId>
+            <classifier>embedded</classifier>
+        </dependency>
+
+        <dependency>
+            <groupId>org.fitnesse</groupId>
+            <artifactId>fitlibrary</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>args4j</groupId>
+            <artifactId>args4j</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit-dep</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.webbitserver</groupId>
+            <artifactId>webbit</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -301,6 +389,8 @@
                                 <usedDependency>org.springframework:spring-web</usedDependency>
                                 <usedDependency>no.nav.modig:modig-security-core</usedDependency>
                                 <usedDependency>no.nav.modig:modig-security-loginmodule</usedDependency>
+                                <usedDependency>no.nav:kjerneinfo-consumer</usedDependency>
+                                <usedDependency>no.nav:personsok-consumer</usedDependency>
                             </usedDependencies>
                         </configuration>
                     </execution>

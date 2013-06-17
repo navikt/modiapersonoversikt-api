@@ -5,14 +5,16 @@
 </wicket:head>
 <wicket:extend>
     <body>
+        <div wicket:id="modal"></div>
         <div class="main">
             <section class="navbar menu-intern active">
                 <button class="personsok-button" id="toggle-personsok"
                         wicket:message="aria-label:personsok.hjelpetekst, title:personsok.hjelpetekst">A</button>
-                <!--<wicket:container wicket:id="searchPanel"/>-->
+                <button class="nullstill-button" wicket:id="nullstill">N</button>
+                <wicket:container wicket:id="searchPanel"/>
             </section>
-<!--             <wicket:container wicket:id="personsokPanel"/> -->
-            <!--<wicket:container wicket:id="personKjerneinfoPanel"/>-->
+             <wicket:container wicket:id="personsokPanel"/>
+            <wicket:container wicket:id="personKjerneinfoPanel"/>
             <!--<wicket:container wicket:id="examplecomponent" />-->
             <section class="lameller" wicket:id="lameller"/>
         </div>
