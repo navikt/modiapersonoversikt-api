@@ -29,9 +29,8 @@
             <web-resource-name>Restricted</web-resource-name>
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
-        <!-- Det er mulig at denne skal fjernes, men første test er kun gjort med rolle -->
         <auth-constraint>
-            <role-name>2990-GF-Felles</role-name>
+            <role-name>*</role-name>
         </auth-constraint>
         <user-data-constraint>
             <transport-guarantee>NONE</transport-guarantee>
