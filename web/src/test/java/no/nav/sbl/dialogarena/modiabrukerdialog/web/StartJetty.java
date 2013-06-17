@@ -22,13 +22,13 @@ public final class StartJetty {
 	public static void main(String[] args) throws IOException, URISyntaxException {
 		SystemProperties.load("/environment-test.properties");
 		System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", "no.nav.modig.core.context.JettySubjectHandler");
-		System.setProperty("servicegateway.url", "https://service-gw-t8.test.local:443/");
-		System.setProperty("personsokendpoint.url", "https://d26apvl173.test.local:9451/tpsws/Personsok_v1");
-		System.setProperty("ytelseskontraktendpoint.url", "https://service-gw-t8.test.local:443/");
-		System.setProperty("kodeverkendpoint.url", "http://d26jbsl00068.test.local:8080/kodeverk-ws/Kodeverk");
-		System.setProperty("brukerprofilendpoint.url", "http://10.33.44.182:9080/tpsws/Brukerprofil_v1");
-		System.setProperty("behandleBrukerprofilendpoint.url", "https://d26apvl173.test.local:9451/tpsws/BehandleBrukerprofil_v1");
-		System.setProperty("kjerneinfoendpoint.url", "http://e26apvl091.test.local:9081/tpsws/Person_v1");
+//		System.setProperty("servicegateway.url", "https://service-gw-t8.test.local:443/");
+//		System.setProperty("personsokendpoint.url", "https://d26apvl173.test.local:9451/tpsws/Personsok_v1");
+//		System.setProperty("ytelseskontraktendpoint.url", "https://service-gw-t8.test.local:443/");
+//		System.setProperty("kodeverkendpoint.url", "http://d26jbsl00068.test.local:8080/kodeverk-ws/Kodeverk");
+//		System.setProperty("brukerprofilendpoint.url", "http://10.33.44.182:9080/tpsws/Brukerprofil_v1");
+//		System.setProperty("behandleBrukerprofilendpoint.url", "https://d26apvl173.test.local:9451/tpsws/BehandleBrukerprofil_v1");
+//		System.setProperty("kjerneinfoendpoint.url", "http://e26apvl091.test.local:9081/tpsws/Person_v1");
 		System.setProperty("spring.profiles.active","test");
 		TestCertificates.setupKeyAndTrustStore();
 
