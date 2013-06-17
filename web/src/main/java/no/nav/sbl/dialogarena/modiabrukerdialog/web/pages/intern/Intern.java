@@ -17,8 +17,6 @@ import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -31,17 +29,15 @@ import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 
 public class Intern extends BasePage {
 
+    public static final JavaScriptResourceReference JQUERY_UI_JS
+            = new JavaScriptResourceReference(Intern.class, "jquery-ui-1.10.2.custom.min.js");
+    public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
+    private static final ResourceReference MEDIA_QUERIES = new PackageResourceReference(Intern.class, "respond.min.js");
     private final SjekkForlateSideAnswer answer;
     @Inject
     private LamellHandler lamellHandler;
 
-	public static final JavaScriptResourceReference JQUERY_UI_JS
-			= new JavaScriptResourceReference(Intern.class, "jquery-ui-1.10.2.custom.min.js");
-
-	private static final ResourceReference MEDIA_QUERIES = new PackageResourceReference(Intern.class, "respond.min.js");
-	public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
-
-	public Intern(PageParameters pageParameters) {
+    public Intern(PageParameters pageParameters) {
         final String fnrFromRequest = pageParameters.get("fnr").toString(null);
         this.answer = new SjekkForlateSideAnswer();
         final ModigModalWindow modalWindow = createModalWindow("modal");
@@ -86,7 +82,7 @@ public class Intern extends BasePage {
         modalWindow.setCloseButtonCallback(new ModigModalWindow.CloseButtonCallback() {
             @Override
             public boolean onCloseButtonClicked(AjaxRequestTarget ajaxRequestTarget) {
-                // slik at man kan lukke vinduet med krysset i høyre hjørne.
+                // slik at man kan lukke vinduet med krysset i hï¿½yre hjï¿½rne.
                 return true;
             }
         });
@@ -98,13 +94,13 @@ public class Intern extends BasePage {
         return false;
     }
 
-            @RunOnEvents(HentPersonPanel.FODSELSNUMMER_FUNNET)
-            public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
-                throw new RestartResponseException(
-                        Intern.class,
-                        new PageParameters().set("fnr", query)
-                );
-            }
+    @RunOnEvents(HentPersonPanel.FODSELSNUMMER_FUNNET)
+    public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
+        throw new RestartResponseException(
+                Intern.class,
+                new PageParameters().set("fnr", query)
+        );
+    }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {

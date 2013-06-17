@@ -1,9 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
-import static no.nav.modig.frontend.FrontendModules.MODIA;
-
-import javax.inject.Inject;
-
 import no.nav.modig.errorhandling.ModiaApplicationConfigurator;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
@@ -19,16 +15,18 @@ import no.nav.modig.wicket.events.NamedEventDispatcher;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
-
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.time.Duration;
 import org.springframework.context.ApplicationContext;
+
+import javax.inject.Inject;
+
+import static no.nav.modig.frontend.FrontendModules.MODIA;
 
 public class WicketApplication extends WebApplication {
 
@@ -59,7 +57,7 @@ public class WicketApplication extends WebApplication {
                         MetaTag.VIEWPORT_SCALE_1,
                         MetaTag.XUA_IE_EDGE)
                 .withResourcePacking(this.usesDeploymentConfig())
-		        .addConditionalJavascript(Intern.RESPOND_JS)
+                .addConditionalJavascript(Intern.RESPOND_JS)
                 .addCss(SPIResources.getCss())
                 .addCss(BasePage.CSS_MODUS)
                 .addScripts(SPIResources.getScripts())
@@ -69,8 +67,8 @@ public class WicketApplication extends WebApplication {
                 .addScripts(Widget.JS_RESOURCE)                      //TODO: Flytt til MODIA modul ?
                 .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
                 .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
-		        .addScripts(Intern.JQUERY_UI_JS,
-				        DatePicker.JQUERY_PLACEHOLDER)
+                .addScripts(Intern.JQUERY_UI_JS,
+                        DatePicker.JQUERY_PLACEHOLDER)
 
                 .configure(this);
 
