@@ -4,7 +4,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>0.0.2-SNAPSHOT</version>
+        <version>0.0.3-SNAPSHOT</version>
     </parent>
     <artifactId>modiabrukerdialog-web</artifactId>
     <name>${project.artifactId}</name>
@@ -33,6 +33,11 @@
              <groupId>no.nav</groupId>
              <artifactId>personsok-panel</artifactId>
          </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>personsok-webcommon</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>no.nav</groupId>
@@ -69,15 +74,15 @@
             <artifactId>brukerprofil-panel</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>behandlebrukerprofil-consumer</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>no.nav</groupId>-->
+            <!--<artifactId>behandlebrukerprofil-consumer</artifactId>-->
+        <!--</dependency>-->
 
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>brukerprofil-consumer</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>no.nav</groupId>-->
+            <!--<artifactId>brukerprofil-consumer</artifactId>-->
+        <!--</dependency>-->
 
         <!-- End modia komponenter -->
 
@@ -250,6 +255,19 @@
         </dependency>
 
         <dependency>
+            <groupId>org.jboss.resteasy</groupId>
+            <artifactId>resteasy-jaxrs</artifactId>
+            <version>3.0-beta-6</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
             <version>2.1.1</version>
@@ -371,6 +389,8 @@
                                 <usedDependency>org.springframework:spring-web</usedDependency>
                                 <usedDependency>no.nav.modig:modig-security-core</usedDependency>
                                 <usedDependency>no.nav.modig:modig-security-loginmodule</usedDependency>
+                                <usedDependency>no.nav:kjerneinfo-consumer</usedDependency>
+                                <usedDependency>no.nav:personsok-consumer</usedDependency>
                             </usedDependencies>
                         </configuration>
                     </execution>

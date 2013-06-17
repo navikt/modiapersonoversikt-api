@@ -86,7 +86,7 @@ public class Intern extends BasePage {
         modalWindow.setCloseButtonCallback(new ModigModalWindow.CloseButtonCallback() {
             @Override
             public boolean onCloseButtonClicked(AjaxRequestTarget ajaxRequestTarget) {
-                // slik at man kan lukke vinduet med krysset i hÃ¸yre hjÃ¸rne.
+                // slik at man kan lukke vinduet med krysset i høyre hjørne.
                 return true;
             }
         });

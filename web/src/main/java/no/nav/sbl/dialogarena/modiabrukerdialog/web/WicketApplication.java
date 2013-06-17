@@ -1,5 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
+import static no.nav.modig.frontend.FrontendModules.MODIA;
+
+import javax.inject.Inject;
+
 import no.nav.modig.errorhandling.ModiaApplicationConfigurator;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
@@ -10,24 +14,21 @@ import no.nav.modig.modia.shortcuts.ShortcutListenerResourceReference;
 import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.pagelet.spi.utils.SPIResources;
 import no.nav.modig.wicket.component.datepicker.DatePicker;
+import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.modig.wicket.events.NamedEventDispatcher;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
+
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.settings.IApplicationSettings;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.util.file.Path;
 import org.apache.wicket.util.time.Duration;
 import org.springframework.context.ApplicationContext;
-
-import javax.inject.Inject;
-
-import static no.nav.modig.frontend.FrontendModules.MODIA;
 
 public class WicketApplication extends WebApplication {
 
@@ -81,9 +82,7 @@ public class WicketApplication extends WebApplication {
         markupSettings.setCompressWhitespace(true);
         markupSettings.setDefaultMarkupEncoding("UTF-8");
 
-        // Innstillinger vi kan ha
-        IApplicationSettings applicationSettings = getApplicationSettings();
-        applicationSettings.setPageExpiredErrorPage(getHomePage());
+        new ApplicationSettingsConfig().configure(this);
 
         getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);

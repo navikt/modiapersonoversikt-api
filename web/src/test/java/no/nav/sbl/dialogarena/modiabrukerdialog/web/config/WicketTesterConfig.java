@@ -12,10 +12,8 @@ public class WicketTesterConfig {
     private WicketApplication application;
 
     @Bean
-    public FluentWicketTester fluentWicketTester() {
-        return new FluentWicketTester(application);
+    public FluentWicketTester<WicketApplication> fluentWicketTester() {
+        return new FluentWicketTester<WicketApplication>(application);
     }
-
-
 
 }

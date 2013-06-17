@@ -4,6 +4,7 @@ import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -21,7 +22,6 @@ public class HentPersonPageTest extends TestSecurityBaseClass {
 
     @Test
     public void shouldRenderHentPersonPage() {
-        //        fluentWicketTester.goTo(HentPersonPage.class).should().containComponent(withId("searchPanel").and(ofType(HentPersonPanel.class)));
     }
 
 }

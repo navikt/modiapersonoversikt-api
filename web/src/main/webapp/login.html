@@ -1,0 +1,71 @@
+<html>
+<head>
+<title>Modia brukerdialog - innlogging</title>
+</head>
+<style>
+html {
+	margin: auto;
+}
+
+h1 {
+	font-size: 18px;
+	text-transform: uppercase;
+	margin: 15px 0px;
+}
+
+td.centered {
+	text-align: center;
+}
+
+td.form-label {
+	width: 150px;
+}
+
+body {
+	font-family: Modus, Arial, Helvetica, sans-serif;
+}
+
+#container {
+	margin: 0 auto;
+	width: 600px;
+	background-color: lightgrey;
+	padding: 25px;
+}
+
+table {
+	margin: 0 auto;
+	font-size: 12px;
+}
+
+input[type="submit"] {
+	padding: 5px 25px;
+	font-size: 12px;
+	margin: 15px 0px;
+}
+
+</style>
+<body>
+	<form name="login" action="j_security_check" method="post">
+	<div id="container">
+        <table>
+            <tbody>
+                <tr>
+                    <td class="centered" colspan="100%"><h1>Logg deg p&aring; MODIA<h1></td>
+                </tr>
+                <tr>
+                    <td class="form-label">Brukerident:</td>
+                    <td><input type="text" name="j_username" /></td>
+                </tr>
+                <tr>
+                    <td class="form-label">Passord:</td>
+                    <td><input type="password" name="j_password" /></td>
+                </tr>
+                <tr>
+                    <td class="centered" colspan="100%"><input type="submit" value="Logg inn" /></td>
+                </tr>
+            </tbody>
+        </table>
+	</div>
+	</form>
+</body>
+</html>

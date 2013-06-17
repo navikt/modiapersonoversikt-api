@@ -10,7 +10,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>0.0.2-SNAPSHOT</version>
+    <version>0.0.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -30,8 +30,8 @@
         <modig.lang.version>1.0.0-alpha.2</modig.lang.version>
         <modig.frontend.wicket.version>1.0.0-alpha.10</modig.frontend.wicket.version>
         <modig.core.version>1.0.0-alpha.1</modig.core.version>
-        <modig.log.version>1.0.0-alpha.3</modig.log.version>
-        <modig.security.version>1.0.0-alpha.3</modig.security.version>
+        <modig.security.version>1.0.0-alpha.4</modig.security.version>
+		<modig.log.version>1.0.0-alpha.3</modig.log.version>
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>4.11</junit.version>
         <args4j.version>2.0.23</args4j.version>

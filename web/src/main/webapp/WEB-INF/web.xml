@@ -36,8 +36,8 @@
             <web-resource-name>Restricted</web-resource-name>
             <url-pattern>/*</url-pattern>
         </web-resource-collection>
-        <auth-constraint> <!-- Det er mulig at denne skal fjernes, men første test er kun gjort med rolle -->
-            <role-name>2990-GF-Felles</role-name>
+        <auth-constraint>
+            <role-name>*</role-name>
         </auth-constraint>
         <user-data-constraint>
             <transport-guarantee>NONE</transport-guarantee>
@@ -51,6 +51,10 @@
     </security-constraint>
     <login-config>
         <auth-method>SPNEGO</auth-method>
+        <form-login-config>
+        	<form-login-page>/login.html</form-login-page>
+        	<form-error-page>/login.html</form-error-page>
+        </form-login-config>
     </login-config>
     <security-role>
         <role-name>2990-GF-Felles</role-name>
@@ -81,16 +85,4 @@
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>ERROR</dispatcher>
     </filter-mapping>
-    <error-page>
-        <error-code>403</error-code>
-        <location>/error/ikke-adgang</location>
-    </error-page>
-    <error-page>
-        <error-code>404</error-code>
-        <location>/error/ikke-funnet</location>
-    </error-page>
-    <error-page>
-        <error-code>500</error-code>
-        <location>/error/server-feil</location>
-    </error-page>
 </web-app>
