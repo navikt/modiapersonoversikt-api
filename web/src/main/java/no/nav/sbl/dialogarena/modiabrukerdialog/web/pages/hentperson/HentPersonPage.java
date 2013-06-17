@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import org.apache.wicket.RestartResponseException;
@@ -12,6 +13,7 @@ public class HentPersonPage extends BasePage {
 
     public HentPersonPage() {
         add(new HentPersonPanel("searchPanel"));
+        add(new PersonsokPanel("personsokPanel").setVisible(true));
         //add(new Label("searchPanel","Her skal søk komme"));
     }
 
