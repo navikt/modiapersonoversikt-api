@@ -3,8 +3,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 import no.nav.modig.testcertificates.TestCertificates;
 import org.junit.BeforeClass;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ActiveProfiles;
 
 @DirtiesContext
+@ActiveProfiles("test")
 public class TestSecurityBaseClass {
     @BeforeClass
     public static void setupStatic() {
