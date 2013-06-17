@@ -26,7 +26,7 @@ public final class StartJetty {
     public static void main(String[] args) throws IOException, URISyntaxException {
         SystemProperties.load("/environment-test.properties");
         System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
-        System.setProperty("spring.profiles.active", "test");
+//        System.setProperty("spring.profiles.active", "test");
         TestCertificates.setupKeyAndTrustStore();
 
         Jetty jetty = usingWar(WEBAPP_SOURCE).at("modiabrukerdialog")
