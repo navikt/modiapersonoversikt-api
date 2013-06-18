@@ -54,6 +54,11 @@ H3, ._H3 {
 	text-transform: uppercase;
 }
 
+._MODUS {
+    font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: normal;
+}
+
 INPUT[type=text] {
 	margin-bottom: 0;
 }
@@ -175,8 +180,15 @@ INPUT[type=button] {
 }
 
 .nullstill-button {
-  .personsok-button;
-  left: 700px;
+    margin-top: 20px;
+    width: 32px;
+    height: 32px;
+    float: left;
+
+    border: none;
+    background: transparent url(/modiabrukerdialog/svg/nullstill.svg) no-repeat right bottom;
+    background-size: 32px;
+    color: transparent;
 }
 
 .search-intern {
@@ -184,6 +196,7 @@ INPUT[type=button] {
 	width: 43.9%;
 	display: block;
 	position: relative;
+	float: left;
 	 
   	INPUT[type=text] {
   		.border-box;
@@ -252,7 +265,8 @@ INPUT[type=button] {
 	 }
 	 
 	 DL {
-	 	margin-bottom: 10px;
+	    .border-box;
+	 	padding-bottom: 10px;
 	 	overflow: auto;
 	 	
 	 	font-weight: bold;
@@ -311,7 +325,8 @@ INPUT[type=button] {
          color: #B7B1A9;
        }
 		
-		H2 {
+		H1, H2 {
+		    ._H2;
 			margin: 2px 0 5px 0;
 			color: #B7B1A9;
 		}
@@ -678,41 +693,41 @@ INPUT[type=button] {
 	box-sizing: border-box;
 	padding: 30px 0;
 	min-height: 265px;
-	
-	background: #3E3832 ;
+
+	background: #3E3832;
 	color: #B7B1A9;
 	line-height: 1.2em;
 	border-top: 1px solid #626262;
 
-  DL {
-    margin-bottom: 10px;
-    overflow: auto;
+    DL {
+        .border-box;
+        padding-bottom: 10px;
+        overflow: auto;
+        width: 100%;
 
-    font-weight: bold;
-  }
+        font-weight: bold;
 
-  DT {
-    width: 120px;
-    position: absolute;
+        DT {
+            width: 120px;
+            position: absolute;
 
-    color: #ACA397;
-    font-weight: normal;
+            color: #ACA397;
+            font-weight: normal;
+            text-align: left;
+        }
 
-    text-align: left;
-  }
+        DD {
+            margin: 0;
+            display: block;
+            padding-left: 120px;
 
-  DD {
-    margin: 0;
-    display: block;
-    padding-left: 120px;
+            text-overflow: ellips;
+            text-align: left;
+        }
+    }
 
-    text-overflow: ellips;
-
-    text-align: left;
-  }
-
-    H2, H3 {
-      color: #ACA397;
+    H1, H2, H3 {
+        color: #ACA397;
     }
 	 
 	A, A:visited {
@@ -727,12 +742,20 @@ INPUT[type=button] {
 	}
 	 
 	.info {
-		float: left;
-		margin: 0 2% 0 0;
+	    .border-box;
+		float: right;
+		margin: 0 0 0 30px;
 		padding-top: 40px;
+		width: 33%;
+		display: block;
+		height: 100%;
 		
 		text-align: center;
-		
+
+		H1 {
+		    ._H3;
+		}
+
 		P {
 			margin: 0;
 		}
@@ -742,87 +765,8 @@ INPUT[type=button] {
 			margin-bottom: 10px;
 		}
 	}
-	 
-	.grafikk {
-		IMG {
-			width: 110px;
-			height: 60px;
-		}
-		 
-		.years {
-			width: 150px;
-			margin: 0 auto;
-			
-			.year {
-				float: left;
-				width: 25%;
-				margin: 0 4%;
-				text-align: center;
-				
-				P {
-					margin: 0;
-					white-space: nowrap;
-					
-					font-size: 0.857rem;
-				}
-				
-				P:last-of-type {
-					margin-top: 2px; padding-top: 2px;
-					
-					border-top: 1px solid #444;
-				}
-			}
-		}
-	}
-	  
-	.foreldre {
-		width: 22%;
-		margin-left: 4%;
-		
-		background: url(/modiabrukerdialog/gfx/hjerte.svg) no-repeat center 10px;
-		background-size: 20px;
-		 
-	 	DT {
-	 		display: inline;
-	 		margin: 0;
-	 		
-	 		font-weight: normal;
-	 		line-height: 1.2em;
-	 	}
-	 	
-	 	DD {
-	 		width: auto;
-	 		margin: 0 0 0 8px;
-	 		display: inline;
-	 		
-	 		line-height: 1.2em;
-	 	}
-	 	
-	 	DD:nth-of-type(2n) {
-	 		float: none;
-	 		clear: both;
-	 		margin: 0 0 10px 0;
-		}
-	}
-	 
-	.ektefelle {
-		width: 22%;
-		
-		background: url(/modiabrukerdialog/svg/hjerte.svg) no-repeat center 10px;
-		background-size: 20px;
-	}
-	
-	.barn {
-		width: 22%;
-		
-		background: url(/modiabrukerdialog/svg/hjerte.svg) no-repeat center 0;
-		background-size: 17px;
-	}
 	
 	.status {
-		width: 20%;
-		margin-right: auto;
-		
 		background: url(/modiabrukerdialog/svg/info.svg) no-repeat center 10px;
 		background-size: 20px;
 	}
@@ -1262,6 +1206,10 @@ INPUT[type=button] {
 		
 		border-radius: 32px;
 	}
+
+	.nullstill-button {
+        margin-top: 0;
+    }
     
     .navbar {
     	height: 80px;
@@ -1347,4 +1295,4 @@ INPUT[type=button] {
 			padding: 0.5rem 0 0.5rem 0.5rem;
     	}
     }
-} 
+}
