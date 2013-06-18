@@ -17,20 +17,6 @@
         <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext</param-value>
     </context-param>
 
-    <!--<context-param>-->
-        <!--<description>Brukes for å velge kontekst</description>-->
-        <!--<param-name>spring.profiles.active</param-name>-->
-        <!--<param-value>-->
-              <!--exampleProfile-->
-            <!--, kjerneinfoTest-->
-            <!--, sykemeldingsperioderTest-->
-            <!--, kontrakterTest-->
-            <!--, personsokTest-->
-            <!--, brukerprofilTest-->
-            <!--, behandleBrukerprofilTest-->
-        <!--</param-value>-->
-    <!--</context-param>-->
-
     <security-constraint>
         <web-resource-collection>
             <web-resource-name>Restricted</web-resource-name>
@@ -57,7 +43,7 @@
         </form-login-config>
     </login-config>
     <security-role>
-        <role-name>2990-GF-Felles</role-name>
+        <role-name>*</role-name>
     </security-role>
 
 

@@ -4,11 +4,11 @@
          version="3.0">
 
     <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>Restricted</web-resource-name>
-            <url-pattern>/*</url-pattern>
-        </web-resource-collection>
-    </security-constraint>
+    <web-resource-collection>
+        <web-resource-name>Restricted</web-resource-name>
+        <url-pattern>/*</url-pattern>
+    </web-resource-collection>
+</security-constraint>
 
     <context-param>
         <description>Brukes for å velge kontekst</description>
