@@ -10,12 +10,15 @@
 </wicket:head>
 <wicket:extend>
     <body>
-    <button class="personsok-button" id="toggle-personsok"
-            >A</button>
-        <section class="navbar menu-intern" style="color:white;">
-            <wicket:container wicket:id="searchPanel" />
-        </section>
-        <wicket:container wicket:id="personsokPanel"/>
+        <div class="hentpersonmain">
+            <section class="navbar menu-intern" style="color:white;">
+                <button class="personsok-button" id="toggle-personsok"
+                        wicket:message="aria-label:personsok.hjelpetekst, title:personsok.hjelpetekst">A
+                </button>
+                <wicket:container wicket:id="searchPanel"/>
+                <wicket:container wicket:id="personsokPanel"/>
+            </section>
+        </div>
     </body>
 </wicket:extend>
 </html>
