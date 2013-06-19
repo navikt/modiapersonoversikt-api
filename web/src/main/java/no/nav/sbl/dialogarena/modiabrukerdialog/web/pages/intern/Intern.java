@@ -70,6 +70,7 @@ public class Intern extends BasePage {
     private ModigModalWindow createModalWindow(String id) {
         final ModigModalWindow modalWindow = new ModigModalWindow(id);
         modalWindow.setInitialHeight(150);
+        modalWindow.setInitialWidth(800);
         modalWindow.setContent(new SjekkForlateSide(modalWindow.getContentId(), modalWindow, this.answer));
         modalWindow.setWindowClosedCallback(new ModigModalWindow.WindowClosedCallback() {
             @Override

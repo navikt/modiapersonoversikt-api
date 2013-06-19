@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal;
 import java.io.Serializable;
 
 public class SjekkForlateSideAnswer implements Serializable{
-    private String answer;
+    private String answer ="";
 
     public String getAnswer() {
         return answer;
