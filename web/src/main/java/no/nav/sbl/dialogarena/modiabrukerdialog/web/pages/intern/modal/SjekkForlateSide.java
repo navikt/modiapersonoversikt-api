@@ -12,12 +12,18 @@ public class SjekkForlateSide extends Panel {
     public SjekkForlateSide(String id, final ModigModalWindow window, final SjekkForlateSideAnswer answer) {
         super(id);
         add(
-                new AjaxLink<Void>("closeOK") {
+                new AjaxLink<Void>("closeSave") {
                     public void onClick(AjaxRequestTarget target){
-                        answer.setAnswer("OK");
+                        answer.setAnswer("SAVE");
                         window.close(target);
                     }
                 }   ,
+                new AjaxLink<Void>("closeDiscard") {
+                    public void onClick(AjaxRequestTarget target){
+                        answer.setAnswer("DISCARD");
+                        window.close(target);
+                    }
+                } ,
                 new AjaxLink<Void>("closeCancel") {
                     public void onClick(AjaxRequestTarget target){
                         answer.setAnswer("CANCEL");

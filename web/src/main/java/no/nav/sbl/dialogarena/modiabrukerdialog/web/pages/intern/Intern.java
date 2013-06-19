@@ -74,7 +74,7 @@ public class Intern extends BasePage {
         modalWindow.setWindowClosedCallback(new ModigModalWindow.WindowClosedCallback() {
             @Override
             public void onClose(AjaxRequestTarget ajaxRequestTarget) {
-                if (answer.getAnswer().equals("OK")) {
+                if (answer.getAnswer().equals("DISCARD")) {
                     gotoHentPersonPage();
                 }
             }
