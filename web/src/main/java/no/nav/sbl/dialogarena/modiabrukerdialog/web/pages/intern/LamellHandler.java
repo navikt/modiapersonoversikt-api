@@ -29,7 +29,6 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_KONTRAKTER = "kontrakter";
     public static final String LAMELL_FORELDREPENGER = "foreldrepenger";
     public static final String LAMELL_SYKEPENGER = "sykepenger";
-    public static final String LAMELL_EXAMPLE = "example";
     public static final String LAMELL_OVERSIKT = "oversikt";
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     private TokenLamellPanel lamellPanel;
@@ -109,12 +108,6 @@ public class LamellHandler implements Serializable {
                     @Override
                     public Lerret createLerret(String id) {
                         return new Oversikt(id);
-                    }
-                }),
-                newLamellFactory(LAMELL_EXAMPLE, "", true, new LerretFactory() {
-                    @Override
-                    public Lerret createLerret(String id) {
-                        return new GenericLerret(id, new ExamplePanel("panel"));
                     }
                 }),
                 newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {

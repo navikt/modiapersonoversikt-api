@@ -48,22 +48,28 @@ jQuery(document).ready(function ($) {
 
     function toggleAvansertSok() {
         var personsokElement = $("#personsok"), toppmeny = $(".main > .menu-intern"),
-            fornavnInput = $("#utvidetPersonsokForm input[name='fornavn']"), sokKnapp = $("#toggle-personsok");
+            fornavnInput = $("#utvidetPersonsokForm input[name='fornavn']"), sokKnapp = $("#toggle-personsok"),
+            dataApne = sokKnapp.attr("data-apne"),
+            dataLukke = sokKnapp.attr("data-lukke");
         if (personsokElement.is(":visible")) {
             personsokElement.hide();
             toppmeny.removeClass("active");
             sokKnapp.removeClass("active");
+            sokKnapp.attr("title", dataApne);
+            sokKnapp.attr("aria-label", dataApne);
         } else {
             personsokElement.show();
             toppmeny.addClass("active");
             sokKnapp.addClass("active");
+            sokKnapp.attr("title", dataLukke);
+            sokKnapp.attr("aria-label", dataLukke);
 
             if (fornavnInput.length != 0) {
                 fornavnInput.focus();
             }
-            
+
             if ($(".main > .kjerneinfo").is(":visible")) {
-            	toggleKjerneinfo();
+                toggleKjerneinfo();
             }
         }
     }

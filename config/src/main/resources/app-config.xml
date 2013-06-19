@@ -20,4 +20,9 @@
 <!--         <webservice alias="virksomhet:Kodeverk_v1" mapToProperty="kodeverkendpoint"/> -->
         <applicationCertificate alias="srvModiabrukerdialog" />
     </resources>
+    <security serviceUserResourceAlias="srvDraco">
+        <logins>
+            <spnego/>
+        </logins>
+    </security>
 </application>

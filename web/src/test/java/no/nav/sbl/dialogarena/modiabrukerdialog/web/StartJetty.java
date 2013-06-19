@@ -1,37 +1,83 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.modig.security.loginmodule.DummyRole;
 import no.nav.modig.testcertificates.TestCertificates;
-import no.nav.sbl.dialogarena.common.jetty.Jetty;
+import org.apache.wicket.util.time.Duration;
+import org.eclipse.jetty.plus.jaas.JAASLoginService;
+import org.eclipse.jetty.security.SecurityHandler;
+import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.server.bio.SocketConnector;
+import org.eclipse.jetty.webapp.WebAppContext;
+import org.eclipse.jetty.webapp.WebInfConfiguration;
 
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
-
-import static no.nav.modig.lang.collections.FactoryUtils.gotKeypress;
-import static no.nav.modig.lang.collections.RunnableUtils.first;
-import static no.nav.modig.lang.collections.RunnableUtils.waitFor;
-import static no.nav.modig.test.util.FilesAndDirs.WEBAPP_SOURCE;
-import static no.nav.sbl.dialogarena.common.jetty.Jetty.usingWar;
-
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Properties;
 
 public final class StartJetty {
 
+	private StartJetty() {
+	}
 
-    public static final int PORT = 8080;
+	public static final int PORT = 9090;
 
-    private StartJetty() {
-    }
+	public static void main(final String[] args) throws Exception { // NOPMD
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
-        SystemProperties.load("/environment-test.properties");
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
-//        System.setProperty("spring.profiles.active", "test");
-        TestCertificates.setupKeyAndTrustStore();
+		final int timeout = (int) Duration.ONE_HOUR.getMilliseconds();
+		TestCertificates.setupKeyAndTrustStore();
 
-        Jetty jetty = usingWar(WEBAPP_SOURCE).at("modiabrukerdialog")
-                .overrideWebXml(new File("src/test/resources/jetty-web.xml")).port(PORT).buildJetty();
-        jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
-    }
+		final Server server = new Server();
+		final SocketConnector connector = new SocketConnector();
 
+		// Set some timeout options to make debugging easier.
+		connector.setMaxIdleTime(timeout);
+		connector.setSoLingerTime(-1);
+		connector.setPort(PORT);
+		server.addConnector(connector);
+
+		final WebAppContext context = new WebAppContext();
+		context.setServer(server);
+		context.setContextPath("/modiabrukerdialog");
+		context.addOverrideDescriptor("jetty-web.xml");
+		context.setResourceBase("web/src/main/webapp");
+		context.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, ".*");
+
+		// init system properties
+		initSystemProperties();
+
+		System.out.println(">>> Set up loginmodule");
+		SecurityHandler securityHandler = context.getSecurityHandler();
+		JAASLoginService jaasLoginService = new JAASLoginService("Simple Login Realm");
+		jaasLoginService.setLoginModuleName("simplelogin");
+		jaasLoginService.setRoleClassNames(new String[]{DummyRole.class.getName()});
+		securityHandler.setLoginService(jaasLoginService);
+		securityHandler.setRealmName("Simple Login Realm");
+
+		server.setHandler(context);
+
+		try {
+			System.out.println(">>> STARTING EMBEDDED JETTY SERVER on port " + PORT + " , PRESS ANY KEY TO STOP");
+			server.start();
+			System.in.read();
+			System.out.println(">>> STOPPING EMBEDDED JETTY SERVER");
+			server.stop();
+			server.join();
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+	}
+
+	private static final String PROPERTIES_FILE = "jetty-environment.properties";
+
+	public static void initSystemProperties() throws FileNotFoundException, IOException {
+		Properties props = new Properties();
+		InputStream inputStream = props.getClass().getResourceAsStream("/" + PROPERTIES_FILE);
+		props.load(inputStream);
+		for (Map.Entry<Object, Object> entry : props.entrySet()) {
+			System.setProperty((String) entry.getKey(), (String) entry.getValue());
+		}
+	}
 }

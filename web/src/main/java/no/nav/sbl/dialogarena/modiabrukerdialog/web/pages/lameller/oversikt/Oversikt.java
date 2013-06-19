@@ -22,8 +22,7 @@ public class Oversikt extends Lerret {
         super(id);
         add(
 //                new SykepengerWidget("sykepenger", "Y", new Model<>("12345123456")),
-                new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
-                new ExampleWidget("example", "X")
+                new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter")))
         );
 
         timer = new AbstractAjaxTimerBehavior(minutes(30)) {

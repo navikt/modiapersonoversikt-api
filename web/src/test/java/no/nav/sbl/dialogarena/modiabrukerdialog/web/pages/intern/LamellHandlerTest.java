@@ -62,6 +62,7 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
         Assert.assertThat(selectedLamell, equalTo(LamellHandler.LAMELL_SYKEPENGER + "itemId"));
     }
 
+/*
     @Test
     public void handleFeedItemEventsShouldGotoExampleLamellWhenExampleEventHappens() {
         IEvent<String> event = createEvent();
@@ -70,6 +71,7 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
         final String selectedLamell = getSelectedLamell();
         Assert.assertThat(selectedLamell, equalTo(LamellHandler.LAMELL_EXAMPLE));
     }
+*/
 
     @Test(expected = ApplicationException.class)
     public void handleWidgetItemEventshouldThrowWhenUnknownEventhappens() {

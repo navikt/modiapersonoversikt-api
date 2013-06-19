@@ -30,22 +30,27 @@
         <modig.lang.version>1.0.0-alpha.2</modig.lang.version>
         <modig.frontend.wicket.version>1.0.0-alpha.10</modig.frontend.wicket.version>
         <modig.core.version>1.0.0-alpha.1</modig.core.version>
-        <modig.security.version>1.0.0-alpha.4</modig.security.version>
+        <modig.security.version>1.0.0-alpha.5</modig.security.version>
 		<modig.log.version>1.0.0-alpha.3</modig.log.version>
+        <modig-testcertificates-version>1.0.0</modig-testcertificates-version>
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>4.11</junit.version>
         <args4j.version>2.0.23</args4j.version>
         <mockito.core.version>1.9.5</mockito.core.version>
         <slf4j.version>1.7.5</slf4j.version>
         <jsoup.version>1.7.2</jsoup.version>
+        <jetty.version>8.1.5.v20120716</jetty.version>
+        <jetty-plus.version>7.0.0pre3</jetty-plus.version>
+        <jetty-naming.version>6.1H.8</jetty-naming.version>
+        <jetty-util.version>6.1.26</jetty-util.version>
         <servlet.api.version>2.5</servlet.api.version>
         <fitnesse.version>20111026</fitnesse.version>
         <fitlibrary.version>2.0</fitlibrary.version>
         <webbit.version>0.4.14</webbit.version>
         <junit.dep.version>4.10</junit.dep.version>
         <!-- Modia-komponenter-->
-        <personsok.version>0.0.41-SNAPSHOT</personsok.version>
-        <personsok.webcommon.version>0.0.41-SNAPSHOT</personsok.webcommon.version>
+        <personsok.version>0.0.43-SNAPSHOT</personsok.version>
+        <personsok.webcommon.version>0.0.43-SNAPSHOT</personsok.webcommon.version>
         <sykmeldinger.versjon>0.0.34-SNAPSHOT</sykmeldinger.versjon>
         <kontrakter.version>0.0.34-SNAPSHOT</kontrakter.version>
         <kjerneinfo.versjon>0.0.34-SNAPSHOT</kjerneinfo.versjon>
@@ -58,12 +63,6 @@
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-wicket</artifactId>
                 <version>${modig.wicket.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-lang</artifactId>
-                <version>${modig.lang.version}</version>
             </dependency>
 
             <dependency>
@@ -86,7 +85,7 @@
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
-                <artifactId>modig-security-core</artifactId>
+                <artifactId>modig-security-loginmodule</artifactId>
                 <version>${modig.security.version}</version>
             </dependency>
 
@@ -94,12 +93,45 @@
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-security-loginmodule</artifactId>
                 <version>${modig.security.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
             </dependency>
 
+            <!-- Jetty -->
             <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>common-jetty</artifactId>
-                <version>1.0.14</version>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-server</artifactId>
+                <version>${jetty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-plus</artifactId>
+                <version>${jetty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-security</artifactId>
+                <version>${jetty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-webapp</artifactId>
+                <version>${jetty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-annotations</artifactId>
+                <version>${jetty.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.mortbay.jetty</groupId>
+                <artifactId>jetty-util</artifactId>
+                <version>${jetty-util.version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -441,7 +473,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-testcertificates</artifactId>
-                <version>0.5.0</version>
+                <version>${modig-testcertificates-version}</version>
                 <scope>test</scope>
             </dependency>
 
@@ -544,6 +576,10 @@
                     <configuration>
                         <argLine>${jacoco.agent.argLine}</argLine>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>maven-jetty-plugin</artifactId>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -5,15 +5,13 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(value = {
-        no.nav.dialogarena.modiabrukerdialog.example.config.ExampleContext.class
-
-        , no.nav.sykmeldingsperioder.config.SykmeldingsperioderPanelConfig.class
+		no.nav.sykmeldingsperioder.config.SykmeldingsperioderPanelConfig.class
 
         , no.nav.kjerneinfo.kontrakter.config.KontrakterPanelConfig.class
 
         , no.nav.personsok.config.spring.PersonsokConfig.class
 
-		//, no.nav.kjerneinfo.hent.config.spring.HentPersonPanelConfig.class
+		// kjerneinfo/visittkort/hentPerson
         , no.nav.kjerneinfo.config.spring.KjerneinfoPanelConfig.class
 
         //brukerProfil/behandleBrukerprofil
