@@ -10,7 +10,6 @@ import org.eclipse.jetty.server.bio.SocketConnector;
 import org.eclipse.jetty.webapp.WebAppContext;
 import org.eclipse.jetty.webapp.WebInfConfiguration;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
@@ -21,7 +20,7 @@ public final class StartJetty {
 	private StartJetty() {
 	}
 
-	public static final int PORT = 9090;
+	public static final int PORT = 8080;
 
 	public static void main(final String[] args) throws Exception { // NOPMD
 
@@ -41,7 +40,7 @@ public final class StartJetty {
 		context.setServer(server);
 		context.setContextPath("/modiabrukerdialog");
 		context.addOverrideDescriptor("jetty-web.xml");
-		context.setResourceBase("web/src/main/webapp");
+		context.setResourceBase("src/main/webapp");
 		context.setAttribute(WebInfConfiguration.CONTAINER_JAR_PATTERN, ".*");
 
 		// init system properties
@@ -72,7 +71,7 @@ public final class StartJetty {
 
 	private static final String PROPERTIES_FILE = "jetty-environment.properties";
 
-	public static void initSystemProperties() throws FileNotFoundException, IOException {
+	public static void initSystemProperties() throws IOException {
 		Properties props = new Properties();
 		InputStream inputStream = props.getClass().getResourceAsStream("/" + PROPERTIES_FILE);
 		props.load(inputStream);
