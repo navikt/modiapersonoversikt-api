@@ -46,7 +46,7 @@ public final class StartJetty {
 		// init system properties
 		initSystemProperties();
 
-		System.out.println(">>> Set up loginmodule");
+		System.out.println(">>> Set up loginmodule");         // NOPMD
 		SecurityHandler securityHandler = context.getSecurityHandler();
 		JAASLoginService jaasLoginService = new JAASLoginService("Simple Login Realm");
 		jaasLoginService.setLoginModuleName("simplelogin");
@@ -57,14 +57,14 @@ public final class StartJetty {
 		server.setHandler(context);
 
 		try {
-			System.out.println(">>> STARTING EMBEDDED JETTY SERVER on port " + PORT + " , PRESS ANY KEY TO STOP");
+			System.out.println(">>> STARTING EMBEDDED JETTY SERVER on port " + PORT + " , PRESS ANY KEY TO STOP");// NOPMD
 			server.start();
 			System.in.read();
-			System.out.println(">>> STOPPING EMBEDDED JETTY SERVER");
+			System.out.println(">>> STOPPING EMBEDDED JETTY SERVER");                                                     // NOPMD
 			server.stop();
 			server.join();
 		} catch (Exception e) {
-			e.printStackTrace();
+			e.printStackTrace();// NOPMD
 			System.exit(1);
 		}
 	}

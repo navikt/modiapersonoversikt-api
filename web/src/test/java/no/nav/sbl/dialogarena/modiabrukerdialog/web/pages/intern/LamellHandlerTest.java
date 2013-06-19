@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
 
-import no.nav.dialogarena.modiabrukerdialog.example.component.ExamplePanel;
 import no.nav.modig.common.MDCOperations;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
