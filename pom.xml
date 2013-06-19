@@ -621,7 +621,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--TODO: Lagt inn forel?pig for ? unng? at bygget feiler n? som vi har tom kodebase-->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>2.6</version>
