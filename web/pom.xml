@@ -168,6 +168,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>personsok-pdp</artifactId>
+            <version>${personsok.version}</version>
+        </dependency>
+
         <!-- End Modig avhengigheter -->
 
         <!-- Wicket -->
