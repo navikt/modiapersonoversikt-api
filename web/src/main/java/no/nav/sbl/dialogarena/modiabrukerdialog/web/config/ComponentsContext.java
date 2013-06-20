@@ -5,17 +5,18 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(value = {
-		no.nav.sykmeldingsperioder.config.SykmeldingsperioderPanelConfig.class
+        no.nav.sykmeldingsperioder.config.SykmeldingsperioderPanelConfig.class
 
-//        , no.nav.kjerneinfo.kontrakter.config.KontrakterPanelConfig.class
+        //        , no.nav.kjerneinfo.kontrakter.config.KontrakterPanelConfig.class
 
         , no.nav.personsok.config.spring.PersonsokConfig.class
-
-//		kjerneinfo/visittkort/hentPerson
+        , no.nav.personsok.config.spring.SecurityPolicyConfig.class    // flytt inn i PersonsokConfig på ett vis
+        //		kjerneinfo/visittkort/hentPerson
         , no.nav.kjerneinfo.config.spring.KjerneinfoPanelConfig.class
 
+
         //brukerProfil/behandleBrukerprofil
-//		, no.nav.brukerprofil.config.BrukerprofilPanelConfig.class
+        //		, no.nav.brukerprofil.config.BrukerprofilPanelConfig.class
 })
 public class ComponentsContext {
 
