@@ -50,9 +50,6 @@
         <junit.dep.version>4.10</junit.dep.version>
         <!-- Modia-komponenter-->
         <personsok.version>0.0.44-SNAPSHOT</personsok.version>
-        <personsok.webcommon.version>0.0.44-SNAPSHOT</personsok.webcommon.version>
-        <sykmeldinger.versjon>0.0.39</sykmeldinger.versjon>
-        <kontrakter.version>0.0.39</kontrakter.version>
         <kjerneinfo.versjon>0.0.39</kjerneinfo.versjon>
     </properties>
 
@@ -167,7 +164,7 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>kontrakter-panel</artifactId>
-                <version>${kontrakter.version}</version>
+                <version>${kjerneinfo.versjon}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>ch.qos.logback</groupId>
@@ -247,7 +244,7 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>sykmeldingsperioder-panel</artifactId>
-                <version>${sykmeldinger.versjon}</version>
+                <version>${kjerneinfo.versjon}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>ch.qos.logback</groupId>
