@@ -51,9 +51,9 @@
         <!-- Modia-komponenter-->
         <personsok.version>0.0.44-SNAPSHOT</personsok.version>
         <personsok.webcommon.version>0.0.44-SNAPSHOT</personsok.webcommon.version>
-        <sykmeldinger.versjon>0.0.40-SNAPSHOT</sykmeldinger.versjon>
-        <kontrakter.version>0.0.40-SNAPSHOT</kontrakter.version>
-        <kjerneinfo.versjon>0.0.40-SNAPSHOT</kjerneinfo.versjon>
+        <sykmeldinger.versjon>0.0.39</sykmeldinger.versjon>
+        <kontrakter.version>0.0.39</kontrakter.version>
+        <kjerneinfo.versjon>0.0.39</kjerneinfo.versjon>
     </properties>
 
     <dependencyManagement>
