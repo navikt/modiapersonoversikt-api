@@ -30,8 +30,8 @@
         <modig.lang.version>1.0.0-alpha.2</modig.lang.version>
         <modig.frontend.wicket.version>1.0.0-alpha.10</modig.frontend.wicket.version>
         <modig.core.version>1.0.0-alpha.1</modig.core.version>
-        <modig.security.version>1.0.0-alpha.5</modig.security.version>
-		<modig.log.version>1.0.0-alpha.3</modig.log.version>
+        <modig.security.version>1.0.0</modig.security.version>
+		<modig.log.version>1.0.0</modig.log.version>
         <modig-testcertificates-version>1.0.0</modig-testcertificates-version>
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>4.11</junit.version>
@@ -74,6 +74,20 @@
                 <version>${modig.core.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-log-filter</artifactId>
+                <version>${modig.log.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+			
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.1.0</version>
+				<scope>provided</scope>
+			</dependency>
+	
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-log-common</artifactId>

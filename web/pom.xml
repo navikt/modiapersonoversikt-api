@@ -116,8 +116,13 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-log-filter</artifactId>
-            <version>1.0.0-alpha.3</version>
-            <scope>runtime</scope>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

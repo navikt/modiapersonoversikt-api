@@ -1,10 +1,12 @@
 <jboss-deployment-structure xmlns="urn:jboss:deployment-structure:1.2">
     <deployment>
-        <dependencies>
-            <module name="org.jboss.security.negotiation"/>
-        </dependencies>
+        <exclude-subsystems>
+            <subsystem name="webservices"/>
+            <subsystem name="jaxrs"/>
+        </exclude-subsystems>
         <exclusions>
-            <module name="org.slf4j"/>
+            <module name="org.slf4j" />
+            <module name="org.slf4j.impl" />
         </exclusions>
     </deployment>
     <sub-deployment name="modiabrukerdialog-web.war">
@@ -13,9 +15,7 @@
         </dependencies>
         <exclusions>
             <module name="org.slf4j"/>
+            <module name="org.slf4j.impl" />
         </exclusions>
-        <dependencies>
-            <module name="org.jboss.security.negotiation"/>
-        </dependencies>
     </sub-deployment>
 </jboss-deployment-structure>
