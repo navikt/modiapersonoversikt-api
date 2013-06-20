@@ -1173,10 +1173,15 @@ INPUT[type=button] {
 }
 
 @media (max-width: 959px) {
+    HTML {
+        overflow-y: hidden;
+    }
 	BODY {
 		padding: 0;
 		overflow-x: hidden;
 		position: relative;
+		display: block;
+		overflow-y: auto;
 	}
 	
     .navbar {
@@ -1186,6 +1191,7 @@ INPUT[type=button] {
     .main {
     	margin-top: 0;
     	width: 100%;
+    	display: block;
     }
     
     .bunn {
@@ -1256,10 +1262,13 @@ INPUT[type=button] {
     	overflow-x: hidden;
     	
     	z-index: 2500;
-    	background: #3E3832  url(/modiabrukerdialog/gfx/tapp_liten.png) no-repeat 0px 175px;
+    	background: transparent  url(/modiabrukerdialog/gfx/tapp_liten.png) no-repeat 0px 175px;
     	
     	.visittkort, .visittkort.active {
     		margin-top: 80px;
+    		margin-right: 0;
+    		border: none;
+    		background-color: #3E3832;
     	}
     }
 }
