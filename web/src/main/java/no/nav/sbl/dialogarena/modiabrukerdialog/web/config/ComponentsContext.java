@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Import;
 
         //        , no.nav.kjerneinfo.kontrakter.config.KontrakterPanelConfig.class
 
-        , no.nav.personsok.config.spring.SecurityPolicyConfig.class    // flytt inn i PersonsokConfig på ett vis
         , no.nav.personsok.config.spring.PersonsokConfig.class
 
         //		kjerneinfo/visittkort/hentPerson
