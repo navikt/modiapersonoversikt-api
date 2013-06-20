@@ -13,11 +13,8 @@
     </security>
     <resources>
         <webservice alias="virksomhet:Personsok_v1" mapToProperty="personsokendpoint" />
-        <!-- <webservice alias="virksomhet:Person_v1" mapToProperty="kjerneinfoendpoint"/> -->
-        <!-- <webservice alias="virksomhet:Brukerprofil_v1" mapToProperty="brukerprofilendpoint"/> -->
-        <!-- <webservice alias="virksomhet:BehandleBrukerprofil_v1" mapToProperty="behandlebrukerprofilendpoint" /> -->
-        <!-- <webservice alias="virksomhet:Ytelseskontrakt_v1" mapToProperty="ytelseskontraktendpoint"/> -->
-        <!-- <webservice alias="virksomhet:Kodeverk_v1" mapToProperty="kodeverkendpoint"/> -->
+        <webservice alias="virksomhet:Person_v1" mapToProperty="kjerneinfoendpoint"/>
+        <webservice alias="virksomhet:Kodeverk_v1" mapToProperty="kodeverkendpoint"/>
         <applicationCertificate alias="srvModiabrukerdialog" />
     </resources>
 </application>
