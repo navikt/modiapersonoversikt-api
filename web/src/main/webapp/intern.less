@@ -180,20 +180,19 @@ INPUT[type=button] {
 }
 
 .nullstill-button {
-    margin-top: 20px;
+    margin: 12px 0 0 30px;
     width: 32px;
     height: 32px;
     float: left;
 
     border: none;
-    background: transparent url(/modiabrukerdialog/svg/nullstill.svg) no-repeat right bottom;
+    background: transparent url(/modiabrukerdialog/svg/nullstill.svg) no-repeat right center;
     background-size: 32px;
     color: transparent;
 }
 
 .search-intern {
-	.border-box;
-	width: 43.9%;
+	width: 140px;
 	display: block;
 	position: relative;
 	float: left;
@@ -609,34 +608,38 @@ INPUT[type=button] {
 				}
 
 				TD.addressColumn {
-					&:after {
-						background: -moz-linear-gradient(left, rgba(0,169,224,0) 0%, rgba(0,169,224,1) 56%, rgba(0,169,224,1) 100%);
-						background: -webkit-linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
-						background: -ms-linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
-						background: linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
-						filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='#003E3832 ', endColorstr='#3E3832 ',GradientType=1 )";
-						content: "";
-					}
+				    DL:after {
+                        background: -moz-linear-gradient(left, rgba(0,169,224,0) 0%, rgba(0,169,224,1) 56%, rgba(0,169,224,1) 100%);
+                        background: -webkit-linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
+                        background: -ms-linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
+                        background: linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
+                        filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='#003E3832 ', endColorstr='#3E3832 ',GradientType=1 )";
+                        content: "";
+                    }
 				}
 			}
 			
 			TD.addressColumn {				
 				position: relative;
+
+				 DL {
+                    position: relative;
 				
-				&:after {
-					display: block;
-					position: absolute;
-					right: 0;
-					top: 0;
-					bottom: 0;
-					width: 50px;
-					background: -moz-linear-gradient(left, rgba(62,56,50,0) 0%, rgba(62,56,50,1) 56%, rgba(62,56,50,1) 100%);
-					background: -webkit-linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
-					background: -ms-linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
-					background: linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
-					filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorStr='#003E3832 ', endColorStr='#FF3E3832 ',GradientType=1)";
-					content: "";
-					height: 100%;
+                    &:after {
+                        display: block;
+                        position: absolute;
+                        right: 0;
+                        top: 0;
+                        bottom: 0;
+                        width: 50px;
+                        background: -moz-linear-gradient(left, rgba(62,56,50,0) 0%, rgba(62,56,50,1) 56%, rgba(62,56,50,1) 100%);
+                        background: -webkit-linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
+                        background: -ms-linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
+                        background: linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
+                        filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorStr='#003E3832 ', endColorStr='#FF3E3832 ',GradientType=1)";
+                        content: "";
+                        height: 100%;
+                    }
 				}
 			}
 		}
@@ -1154,10 +1157,6 @@ INPUT[type=button] {
     	width: 67.9%;
     }
     
-    .search-intern {
-    	margin-right: 1%;
-    }
-    
     .sidebar .visittkort, .sidebar .visittkort.mann, .sidebar .visittkort.kvinne {
     	padding-left: 25px;
     	background-image: none;
@@ -1182,7 +1181,7 @@ INPUT[type=button] {
 	
     .navbar {
     	position: relative;
-    	}
+    }
     	
     .main {
     	margin-top: 0;
@@ -1195,10 +1194,6 @@ INPUT[type=button] {
     
     .navbar FORM .taskbox, .navbar FORM NAV.menu {
     	width: 26.7%;
-    }
-    
-    .search-intern {
-    	width: 40%;
     }
     
     .navbar {
@@ -1266,7 +1261,7 @@ INPUT[type=button] {
     	.visittkort, .visittkort.active {
     		margin-top: 80px;
     	}
-   }			 
+    }
 }
 
 @media (max-width: 767px) {
