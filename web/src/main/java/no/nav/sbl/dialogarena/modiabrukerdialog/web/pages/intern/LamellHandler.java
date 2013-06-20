@@ -112,7 +112,7 @@ public class LamellHandler implements Serializable {
                 newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
                     @Override
                     public Lerret createLerret(String id) {
-                        return new GenericLerret(id, new KontrakterPanel("panel", new Model<>("28105343770")));
+                        return new GenericLerret(id, new KontrakterPanel("panel", new Model<>(fnrFromRequest)));
                     }
                 }),
                 newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
