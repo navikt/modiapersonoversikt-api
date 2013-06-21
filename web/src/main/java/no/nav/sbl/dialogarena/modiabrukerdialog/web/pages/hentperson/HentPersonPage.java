@@ -14,7 +14,6 @@ public class HentPersonPage extends BasePage {
     public HentPersonPage() {
         add(new HentPersonPanel("searchPanel"));
         add(new PersonsokPanel("personsokPanel").setVisible(true));
-        //add(new Label("searchPanel","Her skal søk komme"));
     }
 
     @Override
