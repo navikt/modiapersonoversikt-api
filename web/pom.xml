@@ -74,15 +74,10 @@
             <artifactId>brukerprofil-panel</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>no.nav</groupId>-->
-            <!--<artifactId>behandlebrukerprofil-consumer</artifactId>-->
-        <!--</dependency>-->
-
-        <!--<dependency>-->
-            <!--<groupId>no.nav</groupId>-->
-            <!--<artifactId>brukerprofil-consumer</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-lang</artifactId>
+        </dependency>
 
         <!-- End modia komponenter -->
 
@@ -153,6 +148,11 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-annotations</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-jaas</artifactId>
         </dependency>
 
         <dependency>
