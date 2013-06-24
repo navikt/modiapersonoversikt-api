@@ -7,7 +7,7 @@
         <description>Brukes for å velge kontekst</description>
         <param-name>spring.profiles.active</param-name>
         <param-value>
-            kjerneinfoTest
+            kjerneinfoDefault
             , sykemeldingsperioderTest
             , kontrakterTest
             , personsokDefault

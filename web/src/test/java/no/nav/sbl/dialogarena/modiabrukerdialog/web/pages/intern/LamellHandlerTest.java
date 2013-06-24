@@ -61,16 +61,32 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
         Assert.assertThat(selectedLamell, equalTo(LamellHandler.LAMELL_SYKEPENGER + "itemId"));
     }
 
-/*
     @Test
-    public void handleFeedItemEventsShouldGotoExampleLamellWhenExampleEventHappens() {
+    public void handleFeedItemEventsShouldReuseFactory() {
         IEvent<String> event = createEvent();
-        FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", ExamplePanel.EXAMPLE_TYPE);
+        FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SykepengerWidgetServiceImpl.SYKEPENGER);
         lamellHandler.handleFeedItemEvent(event, payload);
-        final String selectedLamell = getSelectedLamell();
-        Assert.assertThat(selectedLamell, equalTo(LamellHandler.LAMELL_EXAMPLE));
+        String selectedLamell = getSelectedLamell();
+        Assert.assertThat(selectedLamell, equalTo(LamellHandler.LAMELL_SYKEPENGER + "itemId"));
+        lamellHandler.handleFeedItemEvent(event, payload);
+        selectedLamell = getSelectedLamell();
+        Assert.assertThat(selectedLamell, equalTo(LamellHandler.LAMELL_SYKEPENGER + "itemId"));
+
     }
-*/
+
+    @Test
+    public void handleFeedItemEventsShouldGotoDiffenrentLammelWhenDifferentItemIsClicked() {
+        IEvent<String> event = createEvent();
+        FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SykepengerWidgetServiceImpl.SYKEPENGER);
+        lamellHandler.handleFeedItemEvent(event, payload);
+        String selectedLamell = getSelectedLamell();
+        Assert.assertThat(selectedLamell, equalTo(LamellHandler.LAMELL_SYKEPENGER + "itemId"));
+        payload = new FeedItemPayload("widgetid", "itemId2", SykepengerWidgetServiceImpl.SYKEPENGER);
+        lamellHandler.handleFeedItemEvent(event, payload);
+        selectedLamell = getSelectedLamell();
+        Assert.assertThat(selectedLamell, equalTo(LamellHandler.LAMELL_SYKEPENGER + "itemId2"));
+
+    }
 
     @Test(expected = ApplicationException.class)
     public void handleWidgetItemEventshouldThrowWhenUnknownEventhappens() {

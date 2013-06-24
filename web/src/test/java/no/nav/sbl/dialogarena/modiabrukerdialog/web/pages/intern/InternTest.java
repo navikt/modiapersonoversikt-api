@@ -38,6 +38,4 @@ public class InternTest extends TestSecurityBaseClass {
                 .should().containComponent(withId("sideBar").and(ofType(SideBar.class)))
                 .should().containComponent(withId("nullstill").and(ofType(AjaxLink.class)));
     }
-
-
 }
