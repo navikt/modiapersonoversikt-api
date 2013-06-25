@@ -9,10 +9,10 @@
         <param-value>
             kjerneinfoDefault
             , sykemeldingsperioderTest
-            , kontrakterTest
+            , kontrakterDefault
             , personsokDefault
-            , brukerprofilTest
-            , behandleBrukerprofilTest
+            , brukerprofilDefault
+            , behandleBrukerprofilDefault
         </param-value>
     </context-param>
 </web-app>

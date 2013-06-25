@@ -12,9 +12,26 @@
         </logins>
     </security>
     <resources>
+        <!-- Felles -->
         <webservice alias="virksomhet:Personsok_v1" mapToProperty="personsokendpoint" />
+        <ldap alias="ldap" mapToProperty="ldap"/>
+        <!-- Slutt felles -->
+        <!-- Fra personsok -->
+        <!-- TOMT -->
+        <!-- Slutt personsok -->
+        <!-- Fra kjerneinfo -->
+        <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
+        <baseUrl alias="server.arena" mapToProperty="server.arena"/>
         <webservice alias="virksomhet:Person_v1" mapToProperty="kjerneinfoendpoint"/>
         <webservice alias="virksomhet:Kodeverk_v1" mapToProperty="kodeverkendpoint"/>
+        <webservice alias="virksomhet:Brukerprofil_v1" mapToProperty="brukerprofilendpoint"/>
+        <webservice alias="virksomhet:BehandleBrukerprofil_v1" mapToProperty="behandlebrukerprofilendpoint"/>
+        <webservice alias="virksomhet:Ytelseskontrakt_v1" mapToProperty="ytelseskontraktendpoint"/>     <!-- mangler i T8 ?-->
+        <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>   <!-- mangler i T8 ?-->
+        <webservice alias="virksomhet:foreldrepenger_v1" mapToProperty="foreldrepengerendpoint"/>
+        <webservice alias="virksomhet:sykepenger_v1" mapToProperty="sykepengerendpoint"/>
+        <!-- Slutt kjerneinfo -->
+        <!-- App-->
         <applicationCertificate alias="srvModiabrukerdialog" />
     </resources>
 </application>
