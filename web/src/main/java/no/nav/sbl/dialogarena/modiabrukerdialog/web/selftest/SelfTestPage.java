@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest;
 
-import no.nav.brukerprofil.ping.BrukerprofilPing;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
@@ -25,8 +24,8 @@ public class SelfTestPage extends WebPage {
     @Inject
     private Pingable personsokPing;
 
-    @Inject
-    private BrukerprofilPing brukerprofilPing;
+//    @Inject
+//    private BrukerprofilPing brukerprofilPing;
 
     public SelfTestPage() {
         logger.info("entered SelfTestPage!");
