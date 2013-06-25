@@ -1,14 +1,18 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest;
 
-import no.nav.dialogarena.modiabrukerdialog.example.PingResult;
-import no.nav.dialogarena.modiabrukerdialog.example.Pingable;
+//import no.nav.dialogarena.modiabrukerdialog.example.PingResult;
+//import no.nav.dialogarena.modiabrukerdialog.example.Pingable;
+import no.nav.brukerprofil.ping.BrukerprofilPing;
 import no.nav.modig.core.exception.SystemException;
+import no.nav.modig.modia.ping.PingResult;
+import no.nav.modig.modia.ping.Pingable;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.slf4j.Logger;
 
+import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +24,19 @@ public class SelfTestPage extends WebPage {
 
     private static final Logger logger = getLogger(SelfTestPage.class);
 
+    @Inject
+    private Pingable personsokPing;
+
+    @Inject
+    private BrukerprofilPing brukerprofilPing;
+
     public SelfTestPage() {
         logger.info("entered SelfTestPage!");
         List<ServiceStatus> statusList = new ArrayList<>();
 
         //        Add servicestatus' as needed, e.g.
         //                statusList.addAll(getPingableComponentStatus("search", null, "SEARCH_OK", "SEARCH_ERROR"));
+        statusList.addAll(getPingableComponentStatus("Personsøk", personsokPing, "SEARCH_OK", "SEARCH_ERROR"));
 
         add(new ServiceStatusListView("serviceStatusTable", statusList));
     }
