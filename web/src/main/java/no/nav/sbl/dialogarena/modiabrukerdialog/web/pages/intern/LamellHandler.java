@@ -33,10 +33,6 @@ public class LamellHandler implements Serializable {
     private TokenLamellPanel lamellPanel;
     private String fnrFromRequest;
 
-    public LamellHandler() {
-
-    }
-
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         final String type = feedItemPayload.getType().toLowerCase();
         String lamellId = feedItemPayload.getType().toLowerCase();

@@ -29,11 +29,12 @@ import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 
 public class Intern extends BasePage {
 
-    public static final JavaScriptResourceReference JQUERY_UI_JS
-            = new JavaScriptResourceReference(Intern.class, "jquery-ui-1.10.2.custom.min.js");
+    public static final JavaScriptResourceReference JQUERY_UI_JS = new JavaScriptResourceReference(Intern.class, "jquery-ui-1.10.2.custom.min.js");
     private static final ResourceReference MEDIA_QUERIES = new PackageResourceReference(Intern.class, "respond.min.js");
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
+
     private final SjekkForlateSideAnswer answer;
+
     @Inject
     private LamellHandler lamellHandler;
 
@@ -47,18 +48,22 @@ public class Intern extends BasePage {
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 lamellHandler.createLamellPanel("lameller", fnrFromRequest),
                 new SideBar("sideBar", fnrFromRequest).setVisible(true),
-                new AjaxLink<Boolean>("nullstill") {
-                    @Override
-                    public void onClick(AjaxRequestTarget target) {
-                        if (lamellHandler.hasUnsavedChanges()) {
-                            modalWindow.show(target);
-                        } else {
-                            gotoHentPersonPage();
-                        }
-                    }
-                },
+                createNullstillLink(modalWindow),
                 modalWindow
         );
+    }
+
+    private AjaxLink<Boolean> createNullstillLink(final ModigModalWindow modalWindow) {
+        return new AjaxLink<Boolean>("nullstill") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                if (lamellHandler.hasUnsavedChanges()) {
+                    modalWindow.show(target);
+                } else {
+                    gotoHentPersonPage();
+                }
+            }
+        };
     }
 
     private void gotoHentPersonPage() {
@@ -121,6 +126,5 @@ public class Intern extends BasePage {
         }
 
     }
-
 
 }

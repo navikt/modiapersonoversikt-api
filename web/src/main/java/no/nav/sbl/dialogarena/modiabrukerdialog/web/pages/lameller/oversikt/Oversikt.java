@@ -13,26 +13,27 @@ import static no.nav.modig.modia.widget.Widget.EVENT_UPDATE_WIDGET;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.util.time.Duration.minutes;
 
-
 public class Oversikt extends Lerret {
 
     private final AbstractAjaxTimerBehavior timer;
 
     public Oversikt(String id, String fnr) {
-
         super(id);
+        timer = createTimer();
+        add(timer);
         add(
                 new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
                 new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter")))
         );
+    }
 
-        timer = new AbstractAjaxTimerBehavior(minutes(30)) {
+    private AbstractAjaxTimerBehavior createTimer() {
+        return new AbstractAjaxTimerBehavior(minutes(30)) {
             @Override
             protected void onTimer(AjaxRequestTarget target) {
                 send(Oversikt.this, BREADTH, EVENT_UPDATE_WIDGET);
             }
         };
-        add(timer);
     }
 
     @Override

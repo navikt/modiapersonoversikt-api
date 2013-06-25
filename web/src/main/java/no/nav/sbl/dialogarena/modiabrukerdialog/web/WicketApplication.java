@@ -44,7 +44,6 @@ public class WicketApplication extends WebApplication {
 
     @Override
     protected void init() {
-
         super.init();
         if (usesDevelopmentConfig()) {
             getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
@@ -67,8 +66,7 @@ public class WicketApplication extends WebApplication {
                 .addScripts(Widget.JS_RESOURCE)                      //TODO: Flytt til MODIA modul ?
                 .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
                 .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
-                .addScripts(Intern.JQUERY_UI_JS,
-                        DatePicker.JQUERY_PLACEHOLDER)
+                .addScripts(Intern.JQUERY_UI_JS, DatePicker.JQUERY_PLACEHOLDER)
 
                 .configure(this);
 

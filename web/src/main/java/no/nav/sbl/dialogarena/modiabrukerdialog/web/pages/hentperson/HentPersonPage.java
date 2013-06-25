@@ -12,8 +12,9 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 public class HentPersonPage extends BasePage {
 
     public HentPersonPage() {
-        add(new HentPersonPanel("searchPanel"));
-        add(new PersonsokPanel("personsokPanel").setVisible(true));
+        add(
+                new HentPersonPanel("searchPanel"),
+                new PersonsokPanel("personsokPanel").setVisible(true));
     }
 
     @Override
