@@ -1,10 +1,10 @@
 package no.nav.dialogarena.modiabrukerdialog.example.component;
 
-import no.nav.dialogarena.modiabrukerdialog.example.PingResult;
-import no.nav.dialogarena.modiabrukerdialog.example.Pingable;
 import no.nav.dialogarena.modiabrukerdialog.example.service.ExampleService;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.modia.ping.PingResult;
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -20,8 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.dialogarena.modiabrukerdialog.example.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 
 
 public class ExamplePanel extends GenericPanel<String> implements Pingable {

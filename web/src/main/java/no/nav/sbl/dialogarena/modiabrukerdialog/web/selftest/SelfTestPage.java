@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest;
 
-//import no.nav.dialogarena.modiabrukerdialog.example.PingResult;
-//import no.nav.dialogarena.modiabrukerdialog.example.Pingable;
 import no.nav.brukerprofil.ping.BrukerprofilPing;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.modia.ping.PingResult;
@@ -17,7 +15,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.dialogarena.modiabrukerdialog.example.PingResult.ServiceResult.SERVICE_OK;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SelfTestPage extends WebPage {
