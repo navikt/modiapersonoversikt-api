@@ -3,36 +3,7 @@
 .clearfix     { &::before, &::after {display:table;content:"";line-height:0;} &::after {clear:both;}}
 .vekk         { position: absolute; left: -3000px; }
 
-
-/* MODIG/Twitter Bootstrap overwrite */
-.close 				{ opacity: 1; text-shadow: none; }
-.close:hover 		{ opacity: 1; filter: alpha(opacity=100);}
-.close:focus        { opacity: 1; filter: alpha(opacity=100);}
-
 /* Generelle element */
-
-HTML {
-	height: 100%;
-	overflow-y: scroll;
-	
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 14px;
-	background-color: #3E3832 ;
-	
-	@media (max-width: 1199px) {
-		font-size: 12px;
-	}
-}
-
-BODY {
-	height: 100%;
-	.clearfix;
-	position: relative;
-	display: table;
-	
-	font-size: 1rem;
-	background-color: #3E3832;
-}
 
 H1, H2, H3 {
 	font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -54,44 +25,12 @@ H3, ._H3 {
 	text-transform: uppercase;
 }
 
-._MODUS {
-    font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-	font-weight: normal;
-}
-
-INPUT[type=text] {
-	margin-bottom: 0;
-}
-
-INPUT[type=button] {
-	text-transform: uppercase;
-}
-
 .kolonne {
 	.border-box;
 	float: left;
 	display: block;
 	min-height: 30px;
 	width: 47.93617021276595%;
-	margin-left: 2.564102564102564%;
-	
-	&:first-of-type {
-		margin-left: 0;
-	}
-	
-	&:last-child {
-		margin-left: 3.8%;
-	}
-}
-
-.arrow-down {
-	width: 0;
-	height: 0;
-	top: 50px;
-	margin: 0 auto; 
-	
-	border-left: 10px solid transparent;
-	border-right: 10px solid transparent;
 }
 
 .main {
@@ -101,11 +40,11 @@ INPUT[type=button] {
 	.border-box;
 	.clearfix;
 	display: table-cell;
-	
+
 	background-color: #FFF;
 }
 
-.hentpersonmain {
+.hentpersonmain, .hentperson.main {
   .main;
   background-color: #3E3832;
 }
@@ -115,21 +54,21 @@ INPUT[type=button] {
 	height: 100px;
 	padding: 20px 30px 10px 102px;
 	.border-box;
-	
+
 	z-index: 1030;
 	background-color: #3E3832 ;
 	-moz-border-radius: 0;
 	-webkit-border-radius: 0;
 	border-radius: 0;
 	white-space: no-wrap;
-	
+
 	FORM {
-		margin: 0; 
+		margin: 0;
 	}
 
 	H1 {
 		display: none;
- }
+    }
  }
 
 .personsok-button {
@@ -137,46 +76,46 @@ INPUT[type=button] {
 	left: 30px;
 	width: 52px;
 	height: 52px;
-	
+
 	text-align: center;
 	border-radius: 52px;
 	background-color: #a1a1a1;
 	background-image: none;
 	border: none;
 	font-size: 1.43rem;
-	
+
 	&:hover {
 		background-color: #919191;
 		background-image: none;
 		border: none;
 	}
-	
+
 	&:active {
 		background-color: #818181;
 		background-image: none;
 		border: none;
 		box-shadow: none;
 	}
-	
+
 	&:after {
 		width: 0;
 		height: 0;
 		bottom: 10px;
 		left: 21px;
 		margin: 0 auto;
-		position: absolute; 
-		
+		position: absolute;
+
 		border-left: 5px solid transparent;
 		border-right: 5px solid transparent;
-		content: ""; 
+		content: "";
 		border-top: 5px solid #333; }
-	
+
 	&.active:after {
-		bottom: 11px; 
-		
+		bottom: 11px;
+
 		border-top: none;
 		border-bottom: 5px solid #333;
-	}					
+	}
 }
 
 .nullstill-button {
@@ -385,27 +324,25 @@ INPUT[type=button] {
 #personsok {
 	display: none;
 	box-sizing: border-box;
-		padding-bottom: 14px;
-		padding-top: 30px;
-		position: absolute;
-		width: 100%;
-		padding: 0 30px;
-		left: 0;
-		right: 0;
-		min-width: 100%;
-		
-		background: #3E3832 ;
-		color: #fff;
-		line-height: 1.2em;
-		z-index: 3000;
-		border-top: 1px solid #000;
-		box-shadow: 0px 8px 6px -6px #555;
-		-webkit-box-shadow: -0px 8px 6px -6px #555;
-		-moz-box-shadow: 0px 8px 6px -6px #555;
-		
-		H1, H2, H3 {
-			color: #a69d92;
-		}
+    position: absolute;
+    width: 100%;
+    padding: 0 30px 14px 30px;
+    left: 0;
+    right: 0;
+    min-width: 100%;
+
+    background-color: #3E3832;
+    color: #fff;
+    line-height: 1.2em;
+    z-index: 3000;
+    border-top: 1px solid #000;
+    box-shadow: 0px 8px 6px -6px #555;
+    -webkit-box-shadow: -0px 8px 6px -6px #555;
+    -moz-box-shadow: 0px 8px 6px -6px #555;
+
+    H1, H2, H3 {
+        color: #a69d92;
+    }
 		
 	#personsokPanel {
 		UL.feedbackPanel {
@@ -484,7 +421,7 @@ INPUT[type=button] {
 				LABEL.errorJS {
 					width: 100%;
 					padding-left: 9%;
-			}
+			    }
 			}
 
 			LABEL.gatenavn, LABEL.poststed,LABEL.postnummer {
@@ -498,7 +435,7 @@ INPUT[type=button] {
 				LABEL.errorJS {
 					width: 100%;
 					padding-left: 20%;
-			}
+			    }
 			}
 
 			LABEL.husbokstav {
@@ -508,8 +445,8 @@ INPUT[type=button] {
 				LABEL.errorJS {
 					width: 100%;
 					padding-left: 33%;
-			}
-		}
+                }
+            }
 		}
 
 		.begrenssoket {
@@ -539,9 +476,9 @@ INPUT[type=button] {
 				LABEL.errorJS {
 					width: 100%;
 					padding-left: 9%;
-			}
-		}
-	}
+                }
+            }
+        }
 	}
 
 	P#searchErrorMessage {
@@ -553,140 +490,176 @@ INPUT[type=button] {
 		border-top: 1px solid #a69d92; 
 	}
 	
-	#personsokResult #resultDataTable {
-		color: #988f86;
-		width: 100%;
-		border-collapse:collapse;
-		
-		THEAD, TR {
-			border-bottom: 1px solid #000;
-		}
-		
-		TH, TD {
-			.border-box;
-			padding: 0.5rem 0 0.5rem 1rem;
-			overflow: hidden;
-			white-space:nowrap;
+    #personsokResult {
+        padding-top: 30px;
+        clear: both;
+
+        #resultDataTable {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+
             color: #988f86;
-		}
-	
-		TR.headers TH {
-			text-transform: uppercase;
-			font-weight: normal;
-			color: #333;
-			background-color: #988f86;
-		}
-		
-		TR.header TH A, TR.header TH A:visited,
-		A.wicket_orderUp, A.wicket_orderUp:visited,
-		A.wicket_orderNone, A.wicket_orderNone:visited,
-		A.wicket_orderDown, A.wicket_orderDown:visited {
-			text-decoration: none;
-			font-weight: bold;
-			color: #111;
-		}
-		
-		TR.header TH A:hover, A.wicket_orderUp:hover {
-			text-decoration: none;
-		 	font-weight: bold;
-		}
-		
-		TBODY {
-			A {
-				font-weight: bold;
-				color: #FFF;
-				text-decoration: none;
-			}
-		
-			TR:hover, TR:focus {
-				background-color: #00a9e0;
-				color: #FFF;
-				outline: 0;
 
-				TD {
-					color: #FFF;
-				}
+            THEAD, TR {
+                border-bottom: 1px solid #000;
 
-				TD.addressColumn {
-				    DL:after {
-                        background: -moz-linear-gradient(left, rgba(0,169,224,0) 0%, rgba(0,169,224,1) 56%, rgba(0,169,224,1) 100%);
-                        background: -webkit-linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
-                        background: -ms-linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
-                        background: linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
-                        filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='#003E3832 ', endColorstr='#3E3832 ',GradientType=1 )";
-                        content: "";
-                    }
-				}
-			}
-			
-			TD.addressColumn {				
-				position: relative;
-
-				 DL {
+                TH, TD {
+                    .border-box;
+                    padding: 0.8rem 0 0.8rem 1rem;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    color: #FFF;
                     position: relative;
-				
-                    &:after {
-                        display: block;
-                        position: absolute;
-                        right: 0;
-                        top: 0;
-                        bottom: 0;
-                        width: 50px;
-                        background: -moz-linear-gradient(left, rgba(62,56,50,0) 0%, rgba(62,56,50,1) 56%, rgba(62,56,50,1) 100%);
-                        background: -webkit-linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
-                        background: -ms-linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
-                        background: linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
-                        filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorStr='#003E3832 ', endColorStr='#FF3E3832 ',GradientType=1)";
-                        content: "";
-                        height: 100%;
+                }
+
+                &.ikkeTilgang TD {
+                    color: #988f86;
+                }
+            }
+
+            TR.headers TH {
+                text-transform: uppercase;
+                font-weight: normal;
+                color: #333;
+                background-color: #988f86;
+                text-align: left;
+            }
+
+            TR.header TH A, TR.header TH A:visited,
+            A.wicket_orderUp, A.wicket_orderUp:visited,
+            A.wicket_orderNone, A.wicket_orderNone:visited,
+            A.wicket_orderDown, A.wicket_orderDown:visited {
+                text-decoration: none;
+                color: #111;
+                margin-right: 1rem;
+
+                &:after {
+                    width: 0;
+                    height: 0;
+                    position: relative;
+                    top: 0.8rem;
+                    left: 0.2rem;
+
+                    border-left: 5px solid transparent;
+                    border-right: 5px solid transparent;
+                    content: "";
+                    border-top: 5px solid #333; }
+            }
+
+            A.wicket_orderDown, A.wicket_orderUp {
+                font-weight: bold;
+            }
+
+            TR.header TH A:hover, A.wicket_orderUp:hover {
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+            TBODY {
+                A {
+                    font-weight: bold;
+                    color: #FFF;
+                    text-decoration: none;
+                }
+
+                TR:hover:not(.ikkeTilgang), TR:focus:not(.ikkeTilgang) {
+                    background-color: #00a9e0;
+                    color: #FFF;
+                    outline: 0;
+                    cursor: pointer;
+
+                    TD {
+                        color: #FFF;
                     }
-				}
-			}
-		}
-		
-		TD A, TD A:visited {
-			color: #ececec;
-			font-weight: bold;
-		}
-		
-		DL.adresseList {
-			width: auto;
-			padding-top: 0;
-			position: relative;
-			clear: both;
-			
-			DT {
-				margin-right: 0.5rem;
-				display: inline-block;
-				width: auto;
-				float: none;
-			}
-			
-			DD {
-				max-width: 0;
-				min-width: 0;
-				display: inline-block;
-				width: auto;
-				float: none;
-			}
-		}
-		
-		.navnColumn, .navnColumn div, .addressColumn {
-			width: auto;
-			min-width: 13rem;
-		}		
-		
-		.fodselsnummerColumn {
-			width: 11rem;
-		}
-		
-		.diskresjonskodeColumn {
-			/*display: none;*/
-		}
-		
-		.navenhetColumn {
-			width: 9rem;
-		}
+
+                    TD.addressColumn, TD.navnColumn {
+                        > *:after {
+                            background: -moz-linear-gradient(left, rgba(0,169,224,0) 0%, rgba(0,169,224,1) 56%, rgba(0,169,224,1) 100%);
+                            background: -webkit-linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
+                            background: -ms-linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
+                            background: linear-gradient(left, rgba(0,169,224,0) 0%,rgba(0,169,224,1) 56%,rgba(0,169,224,1) 100%);
+                            filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='#003E3832 ', endColorstr='#3E3832 ',GradientType=1 )";
+                            content: "";
+                        }
+                    }
+                }
+
+                TD.addressColumn, TD.navnColumn {
+                    position: relative;
+
+                     > * {
+                        position: relative;
+                        margin: 0;
+                        padding-top: 0.4rem;
+
+                        &:first-of-type {
+                            padding-top: 0;
+                        }
+
+                        &:after {
+                            display: block;
+                            position: absolute;
+                            right: 0;
+                            top: 0;
+                            bottom: 0;
+                            width: 50px;
+                            background: -moz-linear-gradient(left, rgba(62,56,50,0) 0%, rgba(62,56,50,1) 56%, rgba(62,56,50,1) 100%);
+                            background: -webkit-linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
+                            background: -ms-linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
+                            background: linear-gradient(left, rgba(62,56,50,0) 0%,rgba(62,56,50,1) 56%,rgba(62,56,50,1) 100%);
+                            filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorStr='#003E3832 ', endColorStr='#FF3E3832 ',GradientType=1)";
+                            content: "";
+                            height: 100%;
+                        }
+                    }
+                }
+            }
+
+            TD A, TD A:visited {
+                color: #ececec;
+                font-weight: bold;
+            }
+
+            SPAN.personstatus {
+                color: #f89406;
+            }
+
+            DL.adresseList {
+                width: auto;
+                padding-top: 0;
+                margin: 0;
+                position: relative;
+                clear: both;
+
+                DT {
+                    margin-right: 0.5rem;
+                    display: inline-block;
+                    width: auto;
+                    float: none;
+                }
+
+                DD {
+                    max-width: 0;
+                    min-width: 0;
+                    display: inline-block;
+                    width: auto;
+                    float: none;
+                }
+            }
+
+            .navnColumn, .navnColumn div, .addressColumn {
+                width: auto;
+            }
+
+            .fodselsnummerColumn {
+                width: 11rem;
+            }
+
+            .navenhetColumn {
+                width: 8rem;
+            }
+        }
 	}
 }
 
@@ -1086,7 +1059,7 @@ INPUT[type=button] {
   
 		SECTION.periode, SECTION[title=Periode] {
 			clear: both;
-    display: block;
+            display: block;
 			padding-top: 2rem;
   
 			border-top: 1px solid #CCC;
@@ -1094,12 +1067,12 @@ INPUT[type=button] {
 			DL.oppsummering, ARTICLE.liste {
 				.kolonne;
 				margin-left: 0;
-  }
+            }
 
 			ARTICLE.liste {
 				margin-left: 3.8%;
-}
-  }
+            }
+        }
 }
 
 	.liste {
@@ -1290,6 +1263,7 @@ INPUT[type=button] {
     
     #personsok #personsokPanel .navnogadresse {
     	float: none;
+    	display: block;
     	width: 100%;
     }
     
@@ -1297,6 +1271,8 @@ INPUT[type=button] {
     	float: none;
     	width: 100%;
     	margin: 2rem 0;
+    	display: block;
+    	overflow: auto;
     }
     
     #personsok #personsokResult #resultDataTable {
