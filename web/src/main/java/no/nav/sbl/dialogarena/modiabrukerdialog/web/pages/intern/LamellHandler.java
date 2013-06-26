@@ -32,6 +32,7 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     private TokenLamellPanel lamellPanel;
     private String fnrFromRequest;
+    private boolean begrunnelse = false;
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         final String type = feedItemPayload.getType().toLowerCase();
@@ -65,6 +66,13 @@ public class LamellHandler implements Serializable {
 
     public TokenLamellPanel createLamellPanel(String lameller, String fnrFromRequest) {
         this.fnrFromRequest = fnrFromRequest;
+        lamellPanel = new TokenLamellPanel(lameller, createLamellFactories());
+        return lamellPanel;
+    }
+
+    public TokenLamellPanel createLamellPanel(String lameller, String fnrFromRequest, boolean begrunnelse) {
+        this.fnrFromRequest = fnrFromRequest;
+        this.begrunnelse = begrunnelse;
         lamellPanel = new TokenLamellPanel(lameller, createLamellFactories());
         return lamellPanel;
     }

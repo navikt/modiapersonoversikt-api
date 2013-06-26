@@ -38,17 +38,30 @@ public class Intern extends BasePage {
 
     public Intern(PageParameters pageParameters) {
         final String fnrFromRequest = pageParameters.get("fnr").toString(null);
+        final boolean begrunnelse = pageParameters.get("begrunnelse").toBoolean(false);
         this.answer = new SjekkForlateSideAnswer();
         final ModigModalWindow modalWindow = createModalWindow("modal");
-        add(
-                new HentPersonPanel("searchPanel"),
-                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
-                new PersonsokPanel("personsokPanel").setVisible(true),
-                lamellHandler.createLamellPanel("lameller", fnrFromRequest),
-                new SideBar("sideBar", fnrFromRequest).setVisible(true),
-                createNullstillLink(modalWindow),
-                modalWindow
-        );
+        if (begrunnelse) {
+          /*  add(
+                    new HentPersonPanel("searchPanel",begrunnelse),
+                    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest,begrunnelse).setVisible(true),
+                    new PersonsokPanel("personsokPanel",begrunnelse).setVisible(true),
+                    lamellHandler.createLamellPanel("lameller", fnrFromRequest,begrunnelse),
+                    new SideBar("sideBar", fnrFromRequest,begrunnelse).setVisible(true),
+                    createNullstillLink(modalWindow),
+                    modalWindow
+            );*/
+        } else {
+            add(
+                    new HentPersonPanel("searchPanel"),
+                    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
+                    new PersonsokPanel("personsokPanel").setVisible(true),
+                    lamellHandler.createLamellPanel("lameller", fnrFromRequest),
+                    new SideBar("sideBar", fnrFromRequest).setVisible(true),
+                    createNullstillLink(modalWindow),
+                    modalWindow
+            );
+        }
     }
 
     private AjaxLink<Boolean> createNullstillLink(final ModigModalWindow modalWindow) {
@@ -103,6 +116,14 @@ public class Intern extends BasePage {
         throw new RestartResponseException(
                 Intern.class,
                 new PageParameters().set("fnr", query)
+        );
+    }
+
+    @RunOnEvents(HentPersonPanel.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
+    public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
+        throw new RestartResponseException(
+                Intern.class,
+                new PageParameters().set("fnr", query).set("begrunnelse", true)
         );
     }
 
