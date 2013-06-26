@@ -32,7 +32,7 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     private TokenLamellPanel lamellPanel;
     private String fnrFromRequest;
-    private boolean begrunnelse = false;
+    private boolean begrunnelse = false;          //NOPMD
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         final String type = feedItemPayload.getType().toLowerCase();

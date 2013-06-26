@@ -42,15 +42,15 @@ public class Intern extends BasePage {
         this.answer = new SjekkForlateSideAnswer();
         final ModigModalWindow modalWindow = createModalWindow("modal");
         if (begrunnelse) {
-          /*  add(
-                    new HentPersonPanel("searchPanel",begrunnelse),
-                    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest,begrunnelse).setVisible(true),
-                    new PersonsokPanel("personsokPanel",begrunnelse).setVisible(true),
+            add(
+//                    new HentPersonPanel("searchPanel",begrunnelse),
+//                    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest,begrunnelse).setVisible(true),
+//                    new PersonsokPanel("personsokPanel",begrunnelse).setVisible(true),
                     lamellHandler.createLamellPanel("lameller", fnrFromRequest,begrunnelse),
-                    new SideBar("sideBar", fnrFromRequest,begrunnelse).setVisible(true),
+//                    new SideBar("sideBar", fnrFromRequest,begrunnelse).setVisible(true),
                     createNullstillLink(modalWindow),
                     modalWindow
-            );*/
+            );
         } else {
             add(
                     new HentPersonPanel("searchPanel"),
