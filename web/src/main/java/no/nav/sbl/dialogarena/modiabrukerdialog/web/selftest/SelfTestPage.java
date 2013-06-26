@@ -1,9 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest;
 
+import no.nav.kjerneinfo.kontrakter.ping.KontrakterPing;
 import no.nav.kjerneinfo.ping.KjerneinfoPing;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
+import no.nav.sykmeldingsperioder.ping.SykmeldingsperioderPing;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -30,6 +32,12 @@ public class SelfTestPage extends WebPage {
     @Inject
     private KjerneinfoPing kjerneinfoPing;
 
+    @Inject
+    private KontrakterPing kontrakterPing;
+
+    @Inject
+    private SykmeldingsperioderPing sykmeldingsperioderPing;
+
     public SelfTestPage() {
         logger.info("entered SelfTestPage!");
         List<ServiceStatus> statusList = new ArrayList<>();
@@ -38,6 +46,8 @@ public class SelfTestPage extends WebPage {
         //                statusList.addAll(getPingableComponentStatus("search", null, "SEARCH_OK", "SEARCH_ERROR"));
         statusList.addAll(getPingableComponentStatus("Personsøk", personsokPing, "SEARCH_OK", "SEARCH_ERROR"));
         statusList.addAll(getPingableComponentStatus("Brukerprofil", kjerneinfoPing, "BRUKERPROFIL_OK", "BRUKERPROFIL_ERROR"));
+        statusList.addAll(getPingableComponentStatus("Kontrakter", kontrakterPing, "KONTRAKTER_OK", "KONTRAKTER_ERROR"));
+        statusList.addAll(getPingableComponentStatus("Sykemeldinger", sykmeldingsperioderPing, "SYKEMELDINGER_OK", "SYKEMELDINGER_ERROR"));
 
         add(new ServiceStatusListView("serviceStatusTable", statusList));
     }
