@@ -122,7 +122,7 @@ public class LamellHandler implements Serializable {
                 newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
                     @Override
                     public Lerret createLerret(String id) {
-                        return new GenericLerret(id, new BrukerprofilPanel("panel", new Model<>(fnrFromRequest)));
+                        return new BrukerprofilPanel(id, new Model<>(fnrFromRequest));
                     }
                 })
         );
