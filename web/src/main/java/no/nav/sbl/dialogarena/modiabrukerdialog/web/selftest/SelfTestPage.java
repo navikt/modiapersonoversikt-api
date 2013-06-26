@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest;
 
+import no.nav.kjerneinfo.ping.KjerneinfoPing;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
@@ -10,6 +11,7 @@ import org.apache.wicket.markup.html.list.PropertyListView;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +24,11 @@ public class SelfTestPage extends WebPage {
     private static final Logger logger = getLogger(SelfTestPage.class);
 
     @Inject
+    @Named("personsokPing")
     private Pingable personsokPing;
 
-//    @Inject
-//    private BrukerprofilPing brukerprofilPing;
+    @Inject
+    private KjerneinfoPing kjerneinfoPing;
 
     public SelfTestPage() {
         logger.info("entered SelfTestPage!");
@@ -34,6 +37,7 @@ public class SelfTestPage extends WebPage {
         //        Add servicestatus' as needed, e.g.
         //                statusList.addAll(getPingableComponentStatus("search", null, "SEARCH_OK", "SEARCH_ERROR"));
         statusList.addAll(getPingableComponentStatus("Personsøk", personsokPing, "SEARCH_OK", "SEARCH_ERROR"));
+        statusList.addAll(getPingableComponentStatus("Brukerprofil", kjerneinfoPing, "BRUKERPROFIL_OK", "BRUKERPROFIL_ERROR"));
 
         add(new ServiceStatusListView("serviceStatusTable", statusList));
     }

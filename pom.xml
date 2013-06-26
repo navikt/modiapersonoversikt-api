@@ -50,7 +50,7 @@
         <junit.dep.version>4.10</junit.dep.version>
         <!-- Modia-komponenter-->
         <personsok.version>0.0.49</personsok.version>
-        <kjerneinfo.versjon>0.0.45</kjerneinfo.versjon>
+        <kjerneinfo.versjon>0.0.46</kjerneinfo.versjon>
     </properties>
 
     <dependencyManagement>
