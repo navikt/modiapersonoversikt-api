@@ -10,7 +10,7 @@
     <name>Dialogarena - modiabrukerdialog</name>
     <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>0.0.3-SNAPSHOT</version>
+    <version>0.0.3</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -672,9 +672,9 @@
         </plugins>
     </build>
     <scm>
-        <developerConnection>scm:svn:https://versjonskontroll.adeo.no/svn/nav-sbl/dialogarena/modiabrukerdialog/trunk
+        <developerConnection>scm:svn:https://versjonskontroll.adeo.no/svn/nav-sbl/dialogarena/modiabrukerdialog/tags/modiabrukerdialog-0.0.3
         </developerConnection>
-        <url>https://versjonskontroll.adeo.no/wsvn/nav-sbl/dialogarena/modiabrukerdialog/trunk</url>
+        <url>https://versjonskontroll.adeo.no/wsvn/nav-sbl/dialogarena/modiabrukerdialog/tags/modiabrukerdialog-0.0.3</url>
     </scm>
 
     <profiles>
