@@ -5,6 +5,7 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.modia.events.InternalEvents;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
@@ -111,7 +112,7 @@ public class Intern extends BasePage {
         return false;
     }
 
-    @RunOnEvents(HentPersonPanel.FODSELSNUMMER_FUNNET)
+    @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET)
     public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
         throw new RestartResponseException(
                 Intern.class,
@@ -119,7 +120,7 @@ public class Intern extends BasePage {
         );
     }
 
-    @RunOnEvents(HentPersonPanel.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
+    @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
     public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
         throw new RestartResponseException(
                 Intern.class,

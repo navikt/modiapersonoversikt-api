@@ -8,8 +8,8 @@
         <param-name>spring.profiles.active</param-name>
         <param-value>
             kjerneinfoDefault
-            , sykemeldingsperioderTest
-            , kontrakterDefault
+            , sykemeldingsperioderDefault
+            , kontrakterTest
             , personsokDefault
             , brukerprofilDefault
             , behandleBrukerprofilDefault

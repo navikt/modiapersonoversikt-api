@@ -6,20 +6,15 @@
             outline: 1px solid orange;
         }
     </style>
-    <title>HentPerson Intern arbeidsflate</title>
+    <title>Brukerdialog</title>
 </wicket:head>
 <wicket:extend>
-    <body>
-        <div class="hentpersonmain">
-            <section class="navbar menu-intern" style="color:white;">
-                <button class="personsok-button" id="toggle-personsok"
-                        wicket:message="aria-label:personsok.hjelpetekst, title:personsok.hjelpetekst">A
-                </button>
+        <div class="main hentperson">
+            <section class="navbar menu-intern active">
+                <button class="personsok-button" id="toggle-personsok" wicket:message="aria-label:personsok.apnetekst, title:personsok.apnetekst, data-apne:personsok.apnetekst, data-lukke:personsok.lukketekst">A</button>
                 <wicket:container wicket:id="searchPanel"/>
-
             </section>
             <wicket:container wicket:id="personsokPanel"/>
         </div>
-    </body>
 </wicket:extend>
 </html>
