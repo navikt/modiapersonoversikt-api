@@ -43,7 +43,6 @@ public class SelfTestPage extends WebPage {
         List<ServiceStatus> statusList = new ArrayList<>();
 
         //        Add servicestatus' as needed, e.g.
-        //                statusList.addAll(getPingableComponentStatus("search", null, "SEARCH_OK", "SEARCH_ERROR"));
         statusList.addAll(getPingableComponentStatus("Personsøk", personsokPing, "SEARCH_OK", "SEARCH_ERROR"));
         statusList.addAll(getPingableComponentStatus("Brukerprofil", kjerneinfoPing, "BRUKERPROFIL_OK", "BRUKERPROFIL_ERROR"));
         statusList.addAll(getPingableComponentStatus("Kontrakter", kontrakterPing, "KONTRAKTER_OK", "KONTRAKTER_ERROR"));

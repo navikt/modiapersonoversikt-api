@@ -30,6 +30,7 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_SYKEPENGER = "sykepenger";
     public static final String LAMELL_OVERSIKT = "oversikt";
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
+    public static final String PANEL = "panel";
     private TokenLamellPanel lamellPanel;
     private String fnrFromRequest;
     private boolean begrunnelse = false;          //NOPMD
@@ -48,14 +49,6 @@ public class LamellHandler implements Serializable {
         }
     }
 
-    private String createFactoryIfMissing(String type, String itemId) {
-        String factoryId = type + itemId;
-        if (!lamellPanel.hasFactory(factoryId)) {
-            lamellPanel.addNewFactory(createFactory(type, itemId));
-        }
-        return factoryId;
-    }
-
     public void handleWidgetItemEvent(String linkId) {
         if (LAMELL_KONTRAKTER.equalsIgnoreCase(linkId)) {
             lamellPanel.goToLamell(LAMELL_KONTRAKTER);
@@ -65,24 +58,30 @@ public class LamellHandler implements Serializable {
     }
 
     public TokenLamellPanel createLamellPanel(String lameller, String fnrFromRequest) {
-        this.fnrFromRequest = fnrFromRequest;
-        lamellPanel = new TokenLamellPanel(lameller, createLamellFactories());
-        return lamellPanel;
+        return createLamellPanel(lameller, fnrFromRequest, false);
     }
 
     public TokenLamellPanel createLamellPanel(String lameller, String fnrFromRequest, boolean begrunnelse) {
         this.fnrFromRequest = fnrFromRequest;
         this.begrunnelse = begrunnelse;
-        lamellPanel = new TokenLamellPanel(lameller, createLamellFactories());
+        lamellPanel = new TokenLamellPanel(lameller, createStaticLamellFactories());
         return lamellPanel;
+    }
+
+    private String createFactoryIfMissing(String type, String itemId) {
+        String factoryId = type + itemId;
+        if (!lamellPanel.hasFactory(factoryId)) {
+            lamellPanel.addNewFactory(createFactory(type, itemId));
+        }
+        return factoryId;
     }
 
     private LamellFactory createFactory(String type, String itemId) {
         final Panel panel;
         if (SykepengerWidgetServiceImpl.SYKEPENGER.equalsIgnoreCase(type)) {
-            panel = new SykmeldingsperiodePanel("panel", new Model<>(fnrFromRequest), new Model<>(itemId));
+            panel = new SykmeldingsperiodePanel(PANEL, new Model<>(fnrFromRequest), new Model<>(itemId));
         } else if (SykepengerWidgetServiceImpl.FORELDREPENGER.equalsIgnoreCase(type)) {
-            panel = new ForeldrepengerPanel("panel", new Model<>(fnrFromRequest), new Model<>(itemId));
+            panel = new ForeldrepengerPanel(PANEL, new Model<>(fnrFromRequest), new Model<>(itemId));
         } else {
             throw new ApplicationException("Ukjent type panel: " + type);
         }
@@ -105,7 +104,7 @@ public class LamellHandler implements Serializable {
         return false;
     }
 
-    private List<LamellFactory> createLamellFactories() {
+    private List<LamellFactory> createStaticLamellFactories() {
         return asList(
                 newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
                     @Override
@@ -116,7 +115,7 @@ public class LamellHandler implements Serializable {
                 newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
                     @Override
                     public Lerret createLerret(String id) {
-                        return new GenericLerret(id, new KontrakterPanel("panel", new Model<>(fnrFromRequest)));
+                        return new GenericLerret(id, new KontrakterPanel(PANEL, new Model<>(fnrFromRequest)));
                     }
                 }),
                 newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
