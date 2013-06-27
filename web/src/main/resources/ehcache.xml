@@ -1,0 +1,22 @@
+<ehcache>
+    <diskStore path="java.io.tmpdir" />
+
+    <!--timeToIdleSeconds er tiden cachen lever etter at den har blitt brukt
+        timeToLiveSeconds er tiden cachen lever uavhengig av hvis den blir brukt
+
+        I vårt tilfelle ønsker vi at cachen lever en viss tid uavhengig av om den blir brukt
+        derfor må timeToIdleSeconds være minst like stor som timeToLiveSeconds
+    -->
+    <cache name="kodeverkversjonCache" maxElementsInMemory="100"
+        eternal="false"
+        timeToIdleSeconds="3600"
+        timeToLiveSeconds="3600"
+        overflowToDisk="true"
+        maxElementsOnDisk="10000000"
+        diskPersistent="false"
+        diskExpiryThreadIntervalSeconds="120"
+        memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="pip.attribute" maxElementsInMemory="100" overflowToDisk="false" eternal="true" />
+
+</ehcache>
