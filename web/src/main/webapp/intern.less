@@ -48,8 +48,8 @@ H3, ._H3 {
 	
 		LI:not(:first-child) {
 			margin-top: 2rem;
-}
-	}
+        }
+    }
 	
 	/* Oversikt */
 	&[id^=oversikt] {
@@ -61,6 +61,143 @@ H3, ._H3 {
 			margin-left: 3.8%;
 		}
 	}
+
+	/* Kontrakter */
+    &.kontrakter, &[id^="kontrakter"]:not(.widget-navigasjon) {
+        > FORM {
+            display: block;
+
+            LABEL {
+                width: 12rem;
+            }
+        }
+
+        .kontrakt {
+            .kolonne;
+            float: left;
+
+            &.sykeoppfolging {
+                float: right;
+                margin-left: 3.8%;
+            }
+        }
+    }
+
+    /* Brukerprofil */
+    &.brukerprofil, &[id^="brukerprofil"]:not(.widget-navigasjon) {
+        FIELDSET {
+            border: 0;
+            padding: 0;
+            margin: 0 0 30px 0;
+
+            LEGEND {
+                ._H2;
+                margin: 1rem 0;
+            }
+
+            .endringsinformasjon {
+                padding: 0.8rem 0;
+
+                color: #999;
+                border-bottom: 1px solid #999;
+                border-top: 1px solid #999;
+            }
+
+            UL {
+                list-style-type: none;
+                padding: 0;
+                margin: 30px 0 0 0;
+
+                LI LABEL:first-child {
+                    font-size: 1rem;
+                }
+            }
+
+            P {
+                font-weight: bold;
+            }
+
+            LABEL {
+                .kolonne;
+                float: none;
+                clear: both;
+                color: #3e3832;
+
+                &.selected {
+                    font-weight: bold;
+                }
+
+                &.errorJS {
+                    width: 100%;
+                    padding-left: 20%;
+                }
+            }
+
+            LABEL.husnummer {
+                width: 16%;
+                padding-left: 4%;
+                float: left;
+            }
+
+            LABEL.husbokstav {
+                width: 14%;
+                padding-left: 4%;
+                float: left;
+            }
+
+            LABEL.bolignummer {
+                width: 18%;
+                padding-left: 4%;
+                float: left;
+            }
+
+            LABEL.postnummer {
+                width: 33%
+                clear: left;
+                float: left;
+            }
+
+            LABEL.poststed {
+                width: 16.5%:
+                float: left;
+                padding-left: 4%;
+            }
+
+            .midlertidigUtland {
+                INPUT {
+                    .kolonne;
+                    float: none;
+                    clear: both;
+                }
+            }
+
+            #kontaktinformasjon {
+                LABEL, .label {
+                    width: 25%;
+
+                    &:nth-child(2n+1) {
+                        float: left;
+                        padding-left: 4%;
+                    }
+
+                    SELECT {
+                        float: left;
+                        width: 31%;
+                    }
+
+                    INPUT {
+                        float: left;
+                        width: 64%;
+                        padding-left: 4%;
+                    }
+
+                    &.epostadresse INPUT {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
 
 	/* Sykepenger */
 	&.sykepenger, &[id^="sykepenger"]:not(.widget-navigasjon) {
