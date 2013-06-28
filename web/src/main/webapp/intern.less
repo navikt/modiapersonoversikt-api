@@ -74,11 +74,38 @@ H3, ._H3 {
 
         .kontrakt {
             .kolonne;
-            float: left;
 
             &.sykeoppfolging {
                 float: right;
                 margin-left: 3.8%;
+            }
+
+            &.ytelser {
+                float: none;
+                clear: left;
+            }
+
+            .liste {
+                width: 100%;
+
+                LI {
+                    .border-box;
+                    overflow: auto;
+                    width: 100%;
+                }
+
+                .overskrift {
+                    float: left;
+                    width: 80%;
+                }
+
+                .status {
+                    .border-box;
+                    width: 20%;
+                    float: left;
+                    padding: 0.4rem 0 0.4rem 0.8rem;
+                    overflow: hidden;
+                }
             }
         }
     }
