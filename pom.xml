@@ -159,31 +159,6 @@
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-no-checkstyle-violations</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>checkstyle</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>enforce-no-pmd-cpd-violations</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>pmd</goal>
-                            <goal>cpd</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>no.nav.maven.plugins</groupId>
                 <artifactId>modig-scm-plugin</artifactId>
                 <version>${modig.scm.plugin.version}</version>
@@ -199,6 +174,7 @@
             </plugin>
         </plugins>
     </build>
+
     <scm>
         <developerConnection>scm:svn:https://versjonskontroll.adeo.no/svn/nav-sbl/dialogarena/besvare-sporsmaal/trunk</developerConnection>
         <url>https://versjonskontroll.adeo.no/wsvn/nav-sbl/dialogarena/besvare-sporsmaal/trunk</url>
