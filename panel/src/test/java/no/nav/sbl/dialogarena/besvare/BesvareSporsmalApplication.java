@@ -16,6 +16,7 @@ public class BesvareSporsmalApplication extends WebApplication {
     @Override
     protected void init() {
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
+        getMarkupSettings().setStripWicketTags(true);
     }
 
     @Override

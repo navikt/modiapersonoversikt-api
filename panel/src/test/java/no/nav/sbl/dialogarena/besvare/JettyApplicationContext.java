@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.besvare;
 
-import no.nav.sbl.dialogarena.besvare.config.BesvareSporsmaalConfig;
+import no.nav.sbl.dialogarena.besvare.config.BesvareSporsmalConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 
-@Import(BesvareSporsmaalConfig.class)
+@Import(BesvareSporsmalConfig.class)
 public class JettyApplicationContext {
 
     @Bean

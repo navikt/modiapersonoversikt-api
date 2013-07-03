@@ -13,7 +13,7 @@ import static no.nav.sbl.dialogarena.test.path.FilesAndDirs.TEST_RESOURCES;
 public final class JettyBesvareSporsmal {
 
     public static void main(String ... args) {
-        Jetty jetty = Jetty.usingWar(new File(TEST_RESOURCES, "webapp")).buildJetty();
+        Jetty jetty = Jetty.usingWar(new File(TEST_RESOURCES, "webapp")).at("besvar").buildJetty();
         jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
     }
 }

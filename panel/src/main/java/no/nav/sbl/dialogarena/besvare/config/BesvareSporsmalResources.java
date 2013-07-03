@@ -10,7 +10,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 
-public class BesvareSporsmaalResources implements ResourceReferences {
+public class BesvareSporsmalResources implements ResourceReferences {
 
     @Override
     public List<CssResourceReference> getCssResourceReferences() {
@@ -24,7 +24,7 @@ public class BesvareSporsmaalResources implements ResourceReferences {
 
     @Override
     public List<Class<?>> getSpringConfiguration() {
-        return asList(new Class<?>[] {BesvareSporsmaalConfig.class});
+        return asList(new Class<?>[] {BesvareSporsmalConfig.class});
     }
 
 }
