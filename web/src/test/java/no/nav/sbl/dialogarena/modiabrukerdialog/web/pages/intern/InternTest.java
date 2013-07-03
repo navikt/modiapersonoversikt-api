@@ -26,7 +26,7 @@ public class InternTest extends TestSecurityBaseClass {
 
 
     @Inject
-    private FluentWicketTester fluentWicketTester;
+    private FluentWicketTester<?> fluentWicketTester;
 
 
     @Test

@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +83,7 @@ public class SelfTestPage extends WebPage {
         }
     }
 
-    private static class ServiceStatus implements Serializable {
+    public static class ServiceStatus implements Serializable {
 
         private static final long serialVersionUID = 1L;
         private final String name;

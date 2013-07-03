@@ -22,7 +22,7 @@ public class HentPersonPageTest extends TestSecurityBaseClass {
 
 
     @Inject
-    private FluentWicketTester fluentWicketTester;
+    private FluentWicketTester<?> fluentWicketTester;
 
     @Test
     public void shouldRenderHentPersonPage() {
