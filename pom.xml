@@ -76,6 +76,13 @@
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
+                <artifactId>modig-core-test</artifactId>
+                <version>1.0.0</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.modig</groupId>
                 <artifactId>modig-wicket</artifactId>
                 <version>1.0.1</version>
             </dependency>
