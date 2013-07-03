@@ -29,7 +29,7 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
     class AlleSporsmalOgSvar extends LoadableDetachableModel<List<SporsmalOgSvar>> {
         @Override
         protected List<SporsmalOgSvar> load() {
-            return webservice.hentAlleSporsmalOgSvar(new HentAlleSporsmalOgSvarRequest().withAktorId("balle")).getSporsmalOgSvar();
+            return webservice.hentAlleSporsmalOgSvar(new HentAlleSporsmalOgSvarRequest().withAktorId("12345678901")).getSporsmalOgSvar();
         }
     }
 
