@@ -48,7 +48,13 @@
         </form-login-config>
     </login-config>
     <security-role>
-        <role-name>*</role-name>
+        <role-name>0000-GA-BD06_EndreKontaktAdresse</role-name>
+    </security-role>
+    <security-role>
+        <role-name>0000-GA-BD06_ModiaGenerellTilgang</role-name>
+    </security-role>
+    <security-role>
+        <role-name>0000-GA-BD06_EndreKontonummer</role-name>
     </security-role>
 
     <filter>
