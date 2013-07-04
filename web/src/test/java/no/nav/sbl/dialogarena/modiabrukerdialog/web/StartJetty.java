@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.modig.security.loginmodule.DummyRole;
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
+import no.nav.sbl.dialogarena.test.SystemProperties;
 import org.eclipse.jetty.jaas.JAASLoginService;
 
 import java.io.File;
@@ -20,8 +21,8 @@ public class StartJetty {
     private static final int PORT = 8080;
 
     public static void main(String[] args) throws IOException {
-        SystemProperties.load("/jetty-environment.properties");
-        SystemProperties.load("/environment-t8.properties");
+        SystemProperties.setFrom("jetty-environment.properties");
+        SystemProperties.setFrom("environment-t8.properties");
         setupKeyAndTrustStore();
         Jetty jetty = usingWar(WEBAPP_SOURCE)
                 .at("modiabrukerdialog")

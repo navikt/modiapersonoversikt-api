@@ -156,6 +156,13 @@
                 <version>1.0.16</version>
             </dependency>
 
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>common-test</artifactId>
+                <version>1.2-SNAPSHOT</version>
+                <scope>test</scope>
+            </dependency>
+
             <!-- MODIA-komponenter -->
             <dependency>
                 <groupId>no.nav</groupId>
