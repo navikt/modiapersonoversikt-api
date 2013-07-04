@@ -10,6 +10,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(classes = ApplicationContext.class)
 public class ApplicationContextTest extends TestSecurityBaseClass {
 
+    static {
+        System.setProperty("tjenestebuss.url", "http://changeme");
+        System.setProperty("ctjenestebuss.username", "me");
+        System.setProperty("ctjenestebuss.password", "secret");
+    }
+
     @Test
     public void shouldSetupAppContext() {
     }

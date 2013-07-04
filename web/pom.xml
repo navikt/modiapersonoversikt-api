@@ -75,7 +75,7 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>besvare-sporsmaal-panel</artifactId>
+            <artifactId>besvare-sporsmal-panel</artifactId>
         </dependency>
 
         <!-- End modia komponenter -->
@@ -304,7 +304,7 @@
         <dependency>
             <groupId>org.codehaus.groovy</groupId>
             <artifactId>groovy-all</artifactId>
-            <version>2.1.1</version>
+            <version>2.1.5</version>
             <scope>runtime</scope>
         </dependency>
 
@@ -327,11 +327,6 @@
         <dependency>
             <groupId>args4j</groupId>
             <artifactId>args4j</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit-dep</artifactId>
         </dependency>
 
         <dependency>
