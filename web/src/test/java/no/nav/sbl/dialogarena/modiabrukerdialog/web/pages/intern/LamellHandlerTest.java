@@ -38,7 +38,7 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
 
     @Test(expected = ApplicationException.class)
     public void handleFeedItemEventshouldThrowWhenUnknownEventhappens() {
-        IEvent event = mock(IEvent.class);
+        IEvent<?> event = mock(IEvent.class);
         FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", "type");
         lamellHandler.handleFeedItemEvent(event, payload);
     }
@@ -107,6 +107,7 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
     }
 
     private IEvent<String> createEvent() {
+        @SuppressWarnings("unchecked")
         IEvent<String> event = mock(IEvent.class);
         Mockito.when(event.getPayload()).thenReturn("payload");
         return event;
