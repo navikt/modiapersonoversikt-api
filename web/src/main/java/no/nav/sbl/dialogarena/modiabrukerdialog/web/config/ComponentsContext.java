@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
         , no.nav.kjerneinfo.config.spring.KjerneinfoPanelConfig.class
         , no.nav.kjerneinfo.kontrakter.config.KontrakterPanelConfig.class
         , no.nav.brukerprofil.config.BrukerprofilPanelConfig.class
-        , no.nav.sbl.dialogarena.besvare.config.BesvareSporsmalConfig.class
+        //, no.nav.sbl.dialogarena.besvare.config.BesvareSporsmalConfig.class
 })
 public class ComponentsContext {
 
