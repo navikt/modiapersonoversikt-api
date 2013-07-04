@@ -28,7 +28,7 @@ public class BesvareSporsmalConfig {
     @Inject
     private JaxWsFeatures jaxwsFeatures;
 
-    @Value("${spormalogsvarendpoint.url:}")
+    @Value("${spormalogsvarendpoint.url}")
     protected String spmSvarEndpoint;
 
     @Bean
