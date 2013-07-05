@@ -12,6 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -20,14 +21,13 @@ import javax.inject.Inject;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 
+@ActiveProfiles("test")
 @ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InternTest extends TestSecurityBaseClass {
 
-
     @Inject
     private FluentWicketTester<?> fluentWicketTester;
-
 
     @Test
     public void shouldLoadPage(){

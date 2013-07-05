@@ -11,7 +11,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class ApplicationContextTest extends TestSecurityBaseClass {
 
     @Test
-    public void shouldSetupAppContext() {
-    }
+    public void shouldSetupAppContext() { }
 
 }

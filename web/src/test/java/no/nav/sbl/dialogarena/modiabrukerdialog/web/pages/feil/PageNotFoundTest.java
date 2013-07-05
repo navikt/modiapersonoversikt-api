@@ -16,6 +16,7 @@ public class PageNotFoundTest {
         wicket().goTo(PageNotFound.class).should().containComponent(withId("errorPanel"));
         
     }
+
     protected FluentWicketTester<? extends WebApplication> wicket() {
         if (wicketTester == null) {
             wicketTester = new FluentWicketTester<WebApplication>(new WebApplication() {
@@ -27,4 +28,5 @@ public class PageNotFoundTest {
         }
         return wicketTester;
     }
+
 }
