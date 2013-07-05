@@ -2,18 +2,18 @@
 <configuration scan="true" scanPeriod="10 seconds">
     <property name="MAIN_APPLICATION" value="minehenvendelser" />
 
-    <appender name="consoleAppender" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%date %level [%thread] - [%file:%line] - %m%n</pattern>
+            <pattern>%-6level %date{HH:mm:ss,SSS} ~%thread~ [%logger{10}] - %message%n</pattern>
         </encoder>
-        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
-        </filter>
     </appender>
 
+    <logger name="org.apache.cxf.services" level="WARN" />
+    <logger name="org.apache.cxf" level="WARN" additivity="false" />
 
-    <root >
-        <appender-ref ref="consoleAppender"/>
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
     </root>
 
 </configuration>
