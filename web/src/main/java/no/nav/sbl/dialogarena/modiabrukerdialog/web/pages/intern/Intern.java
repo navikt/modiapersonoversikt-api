@@ -27,6 +27,7 @@ import javax.inject.Inject;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 
 public class Intern extends BasePage {
 
@@ -102,7 +103,7 @@ public class Intern extends BasePage {
         modalWindow.setWindowClosedCallback(new ModigModalWindow.WindowClosedCallback() {
             @Override
             public void onClose(AjaxRequestTarget ajaxRequestTarget) {
-                if (answer.getAnswer().equals("DISCARD")) {
+                if (answer.getAnswerType() == DISCARD) {
                     gotoHentPersonPage();
                 }
             }

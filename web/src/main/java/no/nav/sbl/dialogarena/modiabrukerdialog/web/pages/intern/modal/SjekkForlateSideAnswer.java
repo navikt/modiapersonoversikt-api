@@ -4,14 +4,16 @@ import java.io.Serializable;
 
 public class SjekkForlateSideAnswer implements Serializable {
 
-    private String answer ="";
+    public static enum AnswerType {DISCARD, CANCEL, SAVE}
 
-    public String getAnswer() {
-        return answer;
+    private AnswerType answerType;
+
+    public AnswerType getAnswerType() {
+        return answerType;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public void setAnswerType(AnswerType answerType) {
+        this.answerType = answerType;
     }
 
 }
