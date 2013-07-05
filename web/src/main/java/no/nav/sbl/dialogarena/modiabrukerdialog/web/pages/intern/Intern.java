@@ -29,11 +29,15 @@ import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 
+/**
+ *  Denne klassen brukes til å vise informasjon om en bruker. Instansiering skjer implisitt via events.
+ */
 public class Intern extends BasePage {
 
     public static final JavaScriptResourceReference JQUERY_UI_JS = new JavaScriptResourceReference(Intern.class, "jquery-ui-1.10.2.custom.min.js");
     private static final ResourceReference MEDIA_QUERIES = new PackageResourceReference(Intern.class, "respond.min.js");
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
+    private static final String BEGRUNNELSE = "begrunnelse";
     private final SjekkForlateSideAnswer answer;
 
     @Inject
@@ -49,7 +53,7 @@ public class Intern extends BasePage {
     }
 
     private boolean erBegrunnet(PageParameters pageParameters) {
-        return pageParameters.get("begrunnelse").toBoolean(false);
+        return pageParameters.get(BEGRUNNELSE).toBoolean(false);
     }
 
     private void instantiateComponentsWithoutBegrunnelse(String fnrFromRequest, ModigModalWindow modalWindow) {
