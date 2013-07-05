@@ -33,6 +33,8 @@ public class Intern extends BasePage {
     public static final JavaScriptResourceReference JQUERY_UI_JS = new JavaScriptResourceReference(Intern.class, "jquery-ui-1.10.2.custom.min.js");
     private static final ResourceReference MEDIA_QUERIES = new PackageResourceReference(Intern.class, "respond.min.js");
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
+    public static final JavaScriptResourceReference JS_SNURR = new JavaScriptResourceReference(Intern.class, "snurr.js");
+
     private final SjekkForlateSideAnswer answer;
     @Inject
     private LamellHandler lamellHandler;
