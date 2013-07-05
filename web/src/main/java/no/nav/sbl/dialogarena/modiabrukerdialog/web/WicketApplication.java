@@ -76,7 +76,6 @@ public class WicketApplication extends WebApplication {
 
                 .configure(this);
 
-        // Test
         // Innstillinger vi bør ha
         getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
         IMarkupSettings markupSettings = getMarkupSettings();
