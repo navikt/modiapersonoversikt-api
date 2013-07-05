@@ -25,9 +25,6 @@ public class HentPersonPage extends BasePage {
 
 	@RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET)
 	public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
-		throw new RestartResponseException(
-				Intern.class,
-				new PageParameters().set("fnr", query)
-		);
+		throw new RestartResponseException(Intern.class, new PageParameters().set("fnr", query));
 	}
 }

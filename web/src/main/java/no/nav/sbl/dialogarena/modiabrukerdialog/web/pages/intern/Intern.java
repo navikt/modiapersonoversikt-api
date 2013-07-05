@@ -34,35 +34,45 @@ public class Intern extends BasePage {
     private static final ResourceReference MEDIA_QUERIES = new PackageResourceReference(Intern.class, "respond.min.js");
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
     private final SjekkForlateSideAnswer answer;
+
     @Inject
     private LamellHandler lamellHandler;
 
     public Intern(PageParameters pageParameters) {
-        final String fnrFromRequest = pageParameters.get("fnr").toString(null);
-        final boolean begrunnelse = pageParameters.get("begrunnelse").toBoolean(false);
         this.answer = new SjekkForlateSideAnswer();
-        final ModigModalWindow modalWindow = createModalWindow("modal");
-        if (begrunnelse) {
-            add(
-//                    new HentPersonPanel("searchPanel",begrunnelse),
-//                    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest,begrunnelse).setVisible(true),
-//                    new PersonsokPanel("personsokPanel",begrunnelse).setVisible(true),
-                    lamellHandler.createLamellPanel("lameller", fnrFromRequest,begrunnelse),
-//                    new SideBar("sideBar", fnrFromRequest,begrunnelse).setVisible(true),
-                    createNullstillLink(modalWindow),
-                    modalWindow
-            );
+        if (erBegrunnet(pageParameters)) {
+            instantiateComponentsWithBegrunnelse(pageParameters.get("fnr").toString(null), true, createModalWindow("modal"));
         } else {
-            add(
-                    new HentPersonPanel("searchPanel"),
-                    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
-                    new PersonsokPanel("personsokPanel").setVisible(true),
-                    lamellHandler.createLamellPanel("lameller", fnrFromRequest),
-                    new SideBar("sideBar", fnrFromRequest).setVisible(true),
-                    createNullstillLink(modalWindow),
-                    modalWindow
-            );
+            instantiateComponentsWithoutBegrunnelse(pageParameters.get("fnr").toString(null), createModalWindow("modal"));
         }
+    }
+
+    private boolean erBegrunnet(PageParameters pageParameters) {
+        return pageParameters.get("begrunnelse").toBoolean(false);
+    }
+
+    private void instantiateComponentsWithoutBegrunnelse(String fnrFromRequest, ModigModalWindow modalWindow) {
+        add(
+                new HentPersonPanel("searchPanel"),
+                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
+                new PersonsokPanel("personsokPanel").setVisible(true),
+                lamellHandler.createLamellPanel("lameller", fnrFromRequest),
+                new SideBar("sideBar", fnrFromRequest).setVisible(true),
+                createNullstillLink(modalWindow),
+                modalWindow
+        );
+    }
+
+    private void instantiateComponentsWithBegrunnelse(String fnrFromRequest, boolean begrunnelse, ModigModalWindow modalWindow) {
+        add(
+                new HentPersonPanel("searchPanel", begrunnelse),
+                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
+                new PersonsokPanel("personsokPanel").setVisible(true),
+                lamellHandler.createLamellPanel("lameller", fnrFromRequest),
+                new SideBar("sideBar", fnrFromRequest).setVisible(true),
+                createNullstillLink(modalWindow),
+                modalWindow
+        );
     }
 
     private AjaxLink<Boolean> createNullstillLink(final ModigModalWindow modalWindow) {
@@ -100,7 +110,6 @@ public class Intern extends BasePage {
         modalWindow.setCloseButtonCallback(new ModigModalWindow.CloseButtonCallback() {
             @Override
             public boolean onCloseButtonClicked(AjaxRequestTarget ajaxRequestTarget) {
-                // slik at man kan lukke vinduet med krysset i h�yre hj�rne.
                 return true;
             }
         });
@@ -144,7 +153,6 @@ public class Intern extends BasePage {
         } catch (ApplicationException e) {
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
-
     }
 
 }

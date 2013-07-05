@@ -31,9 +31,9 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_OVERSIKT = "oversikt";
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     public static final String PANEL = "panel";
+
     private TokenLamellPanel lamellPanel;
     private String fnrFromRequest;
-    private boolean begrunnelse = false;          //NOPMD
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         final String type = feedItemPayload.getType().toLowerCase();
@@ -58,12 +58,7 @@ public class LamellHandler implements Serializable {
     }
 
     public TokenLamellPanel createLamellPanel(String lameller, String fnrFromRequest) {
-        return createLamellPanel(lameller, fnrFromRequest, false);
-    }
-
-    public TokenLamellPanel createLamellPanel(String lameller, String fnrFromRequest, boolean begrunnelse) {
         this.fnrFromRequest = fnrFromRequest;
-        this.begrunnelse = begrunnelse;
         lamellPanel = new TokenLamellPanel(lameller, createStaticLamellFactories());
         return lamellPanel;
     }
@@ -106,28 +101,41 @@ public class LamellHandler implements Serializable {
 
     private List<LamellFactory> createStaticLamellFactories() {
         return asList(
-                newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
-                    @Override
-                    public Lerret createLerret(String id) {
-                        return new Oversikt(id, fnrFromRequest);
-                    }
-                }),
-                newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
-                    @Override
-                    public Lerret createLerret(String id) {
-                        return new GenericLerret(id, new KontrakterPanel(PANEL, new Model<>(fnrFromRequest)));
-                    }
-                }),
-                newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
-                    @Override
-                    public Lerret createLerret(String id) {
-                        return new BrukerprofilPanel(id, new Model<>(fnrFromRequest));
-                    }
-                })
+                createOversiktLamell(),
+                createKontrakterLamell(),
+                createBrukerprofilLamell()
         );
+    }
+
+    private LamellFactory createBrukerprofilLamell() {
+        return newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
+            @Override
+            public Lerret createLerret(String id) {
+                return new BrukerprofilPanel(id, new Model<>(fnrFromRequest));
+            }
+        });
+    }
+
+    private LamellFactory createKontrakterLamell() {
+        return newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
+            @Override
+            public Lerret createLerret(String id) {
+                return new GenericLerret(id, new KontrakterPanel(PANEL, new Model<>(fnrFromRequest)));
+            }
+        });
+    }
+
+    private LamellFactory createOversiktLamell() {
+        return newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
+            @Override
+            public Lerret createLerret(String id) {
+                return new Oversikt(id, fnrFromRequest);
+            }
+        });
     }
 
     public boolean hasUnsavedChanges() {
         return true;
     }
+
 }

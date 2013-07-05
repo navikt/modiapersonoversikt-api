@@ -18,7 +18,7 @@ public class SjekkForlateSide extends Panel {
 
     private AjaxLink<Void> createLink(final ModigModalWindow window, final SjekkForlateSideAnswer answer, String linkName, final String answerString) {
         return new AjaxLink<Void>(linkName) {
-            public void onClick(AjaxRequestTarget target){
+            public void onClick(AjaxRequestTarget target) {
                 answer.setAnswer(answerString);
                 window.close(target);
             }

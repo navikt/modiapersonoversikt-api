@@ -2,7 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal;
 
 import java.io.Serializable;
 
-public class SjekkForlateSideAnswer implements Serializable{
+public class SjekkForlateSideAnswer implements Serializable {
+
     private String answer ="";
 
     public String getAnswer() {
@@ -12,4 +13,5 @@ public class SjekkForlateSideAnswer implements Serializable{
     public void setAnswer(String answer) {
         this.answer = answer;
     }
+
 }
