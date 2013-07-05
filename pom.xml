@@ -28,7 +28,7 @@
         <modig.wicket.version>1.0.2-SNAPSHOT</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>1.0.0</modig.lang.version>
-        <modig.frontend.wicket.version>1.0.2-SNAPSHOT</modig.frontend.wicket.version>
+        <modig.frontend.wicket.version>1.0.3-SNAPSHOT</modig.frontend.wicket.version>
         <modig.core.version>1.0.0-alpha.1</modig.core.version>
         <modig.security.version>1.0.0</modig.security.version>
 		<modig.log.version>1.0.0</modig.log.version>

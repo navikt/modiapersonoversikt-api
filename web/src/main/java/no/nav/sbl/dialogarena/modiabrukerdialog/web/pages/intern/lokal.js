@@ -35,16 +35,20 @@ jQuery(document).ready(function ($) {
 
     function movePersonsok() {
         var navbar = $(".navbar");
+        var logo = $(".modia-logo");
+        var nullstill = $(".nullstill");
 
         if (navbar[0].style.top == "1%") {
             toggleAvansertSok();
             navbar.animate({top: "25%"}, 500, 'linear');
-            //navbar.css("position", "absolute");
             navbar.css("margin", "-50px auto auto -146px");
+            logo.css("display", "block");
+            // Nullstiller søket
+            nullstill.click();
         } else {
             navbar.animate({top: "1%"}, 800, 'linear', toggleAvansertSok);
-            //navbar.css("position", "relative");
             navbar.css("margin", "0 auto auto -146px");
+            logo.css("display", "none");
         }
     };
 
