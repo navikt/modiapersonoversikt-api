@@ -16,6 +16,14 @@ import static no.nav.modig.test.util.FilesAndDirs.TEST_RESOURCES;
 import static no.nav.modig.test.util.FilesAndDirs.WEBAPP_SOURCE;
 import static no.nav.sbl.dialogarena.common.jetty.Jetty.usingWar;
 
+
+/**
+ * Starter MODIA Brukerdialog lokalt på Jetty.
+ *
+ * - logg på med bruker/passord: Z000001/Gosys017,
+ * - søk etter fornavn: 'aaa'
+ * - go nuts!
+ */
 public class StartJetty {
 
     public static void main(String[] args) throws IOException {
