@@ -1,6 +1,6 @@
 $(function() {
-    $('#utvidetPersonsokForm').navAjaxLoader({
-        event       : 'submit',
+    $('#hiddenSubmit').navAjaxLoader({
+        event       : 'click',
         placeElement: '#personsokResult',
         placement   : 'before',
         loadImage   : 'img/ajaxloader/svart/loader_svart_96.gif',
