@@ -46,7 +46,7 @@ public class Intern extends BasePage {
     public Intern(PageParameters pageParameters) {
         this.answer = new SjekkForlateSideAnswer();
         if (erBegrunnet(pageParameters)) {
-            instantiateComponentsWithBegrunnelse(pageParameters.get("fnr").toString(null), true, createModalWindow("modal"));
+            instantiateComponentsWithBegrunnelse(pageParameters.get("fnr").toString(null), createModalWindow("modal"));
         } else {
             instantiateComponentsWithoutBegrunnelse(pageParameters.get("fnr").toString(null), createModalWindow("modal"));
         }
@@ -68,9 +68,9 @@ public class Intern extends BasePage {
         );
     }
 
-    private void instantiateComponentsWithBegrunnelse(String fnrFromRequest, boolean begrunnelse, ModigModalWindow modalWindow) {
+    private void instantiateComponentsWithBegrunnelse(String fnrFromRequest, ModigModalWindow modalWindow) {
         add(
-                new HentPersonPanel("searchPanel", begrunnelse),
+                new HentPersonPanel("searchPanel", true),
                 new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 lamellHandler.createLamellPanel("lameller", fnrFromRequest),
@@ -94,9 +94,7 @@ public class Intern extends BasePage {
     }
 
     private void gotoHentPersonPage() {
-        throw new RestartResponseException(
-                HentPersonPage.class
-        );
+        throw new RestartResponseException(HentPersonPage.class);
     }
 
     private ModigModalWindow createModalWindow(String id) {
@@ -128,18 +126,12 @@ public class Intern extends BasePage {
 
     @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET)
     public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
-        throw new RestartResponseException(
-                Intern.class,
-                new PageParameters().set("fnr", query)
-        );
+        throw new RestartResponseException(Intern.class, new PageParameters().set("fnr", query));
     }
 
     @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
     public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
-        throw new RestartResponseException(
-                Intern.class,
-                new PageParameters().set("fnr", query).set("begrunnelse", true)
-        );
+        throw new RestartResponseException(Intern.class, new PageParameters().set("fnr", query).set("begrunnelse", true));
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
