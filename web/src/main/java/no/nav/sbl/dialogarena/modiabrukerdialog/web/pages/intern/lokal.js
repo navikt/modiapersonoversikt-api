@@ -36,7 +36,7 @@ jQuery(document).ready(function ($) {
     function movePersonsok() {
         var navbar = $(".navbar");
         var logo = $(".modia-logo");
-        var nullstill = $(".nullstill");
+        var nullstill = $(".knapp-nullstill");
 
         if (navbar[0].style.top == "1%") {
             toggleAvansertSok();
