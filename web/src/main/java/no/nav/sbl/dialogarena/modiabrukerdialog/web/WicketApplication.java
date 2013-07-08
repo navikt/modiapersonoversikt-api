@@ -64,7 +64,6 @@ public class WicketApplication extends WebApplication {
                 .withResourcePacking(this.usesDeploymentConfig())
                 .addConditionalJavascript(Intern.RESPOND_JS)
                 .addCss(SPIResources.getCss())
-                .addCss(BasePage.CSS_MODUS)
                 .addScripts(SPIResources.getScripts())
                 .addScripts(BasePage.JS_RESOURCE)
                 .addScripts(ShortcutListenerResourceReference.get()) //TODO: Flytt til MODIA modul ?
@@ -72,7 +71,7 @@ public class WicketApplication extends WebApplication {
                 .addScripts(Widget.JS_RESOURCE)                      //TODO: Flytt til MODIA modul ?
                 .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
                 .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
-                .addScripts(Intern.JQUERY_UI_JS, DatePicker.JQUERY_PLACEHOLDER)
+                .addScripts(DatePicker.JQUERY_PLACEHOLDER)
 
                 .configure(this);
 
