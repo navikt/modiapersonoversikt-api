@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 public class SjekkForlateSideAnswer implements Serializable {
 
-    public static enum AnswerType {DISCARD, CANCEL, SAVE}
+    public static enum AnswerType {DISCARD, CANCEL}
 
     private AnswerType answerType;
 
