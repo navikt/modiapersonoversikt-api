@@ -12,16 +12,18 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.GenericLerret
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.Oversikt;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
-import no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
+import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER;
+import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
 
 public class LamellHandler implements Serializable {
 
@@ -34,6 +36,7 @@ public class LamellHandler implements Serializable {
 
     private TokenLamellPanel lamellPanel;
     private String fnrFromRequest;
+    private List<Lerret> lerretList = new ArrayList<>();
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         final String type = feedItemPayload.getType().toLowerCase();
@@ -57,9 +60,9 @@ public class LamellHandler implements Serializable {
         }
     }
 
-    public TokenLamellPanel createLamellPanel(String lameller, String fnrFromRequest) {
+    public TokenLamellPanel createLamellPanel(String id, String fnrFromRequest) {
         this.fnrFromRequest = fnrFromRequest;
-        lamellPanel = new TokenLamellPanel(lameller, createStaticLamellFactories());
+        lamellPanel = new TokenLamellPanel(id, createStaticLamellFactories());
         return lamellPanel;
     }
 
@@ -73,9 +76,9 @@ public class LamellHandler implements Serializable {
 
     private LamellFactory createFactory(String type, String itemId) {
         final Panel panel;
-        if (SykepengerWidgetServiceImpl.SYKEPENGER.equalsIgnoreCase(type)) {
+        if (SYKEPENGER.equalsIgnoreCase(type)) {
             panel = new SykmeldingsperiodePanel(PANEL, new Model<>(fnrFromRequest), new Model<>(itemId));
-        } else if (SykepengerWidgetServiceImpl.FORELDREPENGER.equalsIgnoreCase(type)) {
+        } else if (FORELDREPENGER.equalsIgnoreCase(type)) {
             panel = new ForeldrepengerPanel(PANEL, new Model<>(fnrFromRequest), new Model<>(itemId));
         } else {
             throw new ApplicationException("Ukjent type panel: " + type);
@@ -90,10 +93,10 @@ public class LamellHandler implements Serializable {
     }
 
     private boolean canHaveMoreThanOneFactory(String type) {
-        if (SykepengerWidgetServiceImpl.SYKEPENGER.equalsIgnoreCase(type)) {
+        if (SYKEPENGER.equalsIgnoreCase(type)) {
             return true;
         }
-        if (SykepengerWidgetServiceImpl.FORELDREPENGER.equalsIgnoreCase(type)) {
+        if (FORELDREPENGER.equalsIgnoreCase(type)) {
             return true;
         }
         return false;
@@ -111,7 +114,7 @@ public class LamellHandler implements Serializable {
         return newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return new BrukerprofilPanel(id, new Model<>(fnrFromRequest));
+                return addLerretToListAndReturn(new BrukerprofilPanel(id, new Model<>(fnrFromRequest)));
             }
         });
     }
@@ -120,7 +123,7 @@ public class LamellHandler implements Serializable {
         return newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return new GenericLerret(id, new KontrakterPanel(PANEL, new Model<>(fnrFromRequest)));
+                return addLerretToListAndReturn(new GenericLerret(id, new KontrakterPanel(PANEL, new Model<>(fnrFromRequest))));
             }
         });
     }
@@ -129,13 +132,23 @@ public class LamellHandler implements Serializable {
         return newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return new Oversikt(id, fnrFromRequest);
+                return addLerretToListAndReturn(new Oversikt(id, fnrFromRequest));
             }
         });
     }
 
+    private Lerret addLerretToListAndReturn(Lerret lerret) {
+        lerretList.add(lerret);
+        return lerret;
+    }
+
     public boolean hasUnsavedChanges() {
-        return true;
+        for (Lerret lerret : lerretList) {
+            if (lerret.isModified()) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
