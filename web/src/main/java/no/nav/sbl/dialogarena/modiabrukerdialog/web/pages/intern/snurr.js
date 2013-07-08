@@ -3,7 +3,7 @@ $(function() {
         event       : 'click',
         placeElement: '#personsokResult',
         placement   : 'before',
-        loadImage   : 'img/ajaxloader/svart/loader_svart_96.gif',
+        loadImage   : '../img/ajaxloader/svart/loader_svart_96.gif',
         css         : 'margin-bottom: 20px;'
     });
 
@@ -11,7 +11,7 @@ $(function() {
         event       : 'change',
         placeElement: '.lamell',
         placement   : 'before',
-        loadImage   : 'img/ajaxloader/hvit/loader_hvit_96.gif',
+        loadImage   : '../img/ajaxloader/hvit/loader_hvit_96.gif',
         css         : 'margin: 30px 0 0 30px;'
     });
 
