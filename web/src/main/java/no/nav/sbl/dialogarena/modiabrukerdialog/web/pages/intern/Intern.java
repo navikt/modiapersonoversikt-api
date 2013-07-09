@@ -134,13 +134,13 @@ public class Intern extends BasePage {
     }
 
     private ModiaModalWindow createModalWindow(String id) {
-        final ModiaModalWindow modalWindow = new ModiaModalWindow(id);
-        modalWindow.setInitialHeight(150);
-        modalWindow.setInitialWidth(800);
-        modalWindow.setContent(new SjekkForlateSide(modalWindow.getContentId(), modalWindow, this.answer));
-        modalWindow.setWindowClosedCallback(createWindowClosedCallback(modalWindow));
-        modalWindow.setCloseButtonCallback(createCloseButtonCallback());
-        return modalWindow;
+        final ModiaModalWindow modiaModalWindow = new ModiaModalWindow(id);
+        modiaModalWindow.setInitialHeight(150);
+        modiaModalWindow.setInitialWidth(800);
+        modiaModalWindow.setContent(new SjekkForlateSide(modiaModalWindow.getContentId(), modiaModalWindow, this.answer));
+        modiaModalWindow.setWindowClosedCallback(createWindowClosedCallback(modiaModalWindow));
+        modiaModalWindow.setCloseButtonCallback(createCloseButtonCallback());
+        return modiaModalWindow;
     }
 
     private void handleNewFnrFoundEvent(AjaxRequestTarget target, PageParameters pageParameters, Class clazz) {
