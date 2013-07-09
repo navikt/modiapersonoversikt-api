@@ -23,8 +23,6 @@ public class SjekkForlateSide extends Panel {
         return new AjaxLink<Void>(linkName) {
             public void onClick(AjaxRequestTarget ajaxRequestTarget) {
                 answer.setAnswerType(answerType);
-                String string = "[name=\"brukerprofil\"] #lagreButton";
-                modalWindow.setOnCloseJavaScript("$('" + string + "').get(0).focus();");
                 modalWindow.close(ajaxRequestTarget);
             }
         };
