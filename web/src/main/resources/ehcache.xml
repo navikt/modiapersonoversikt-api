@@ -1,6 +1,8 @@
 <ehcache>
     <diskStore path="java.io.tmpdir" />
 
+    <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false" />
+
     <!--timeToIdleSeconds er tiden cachen lever etter at den har blitt brukt
         timeToLiveSeconds er tiden cachen lever uavhengig av hvis den blir brukt
 

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -14,4 +15,9 @@ import org.springframework.context.annotation.Import;
 })
 public class ComponentsContext {
 
+    static {
+        // Sikkerhetsrammeverkene logger til java.util.logging
+        SLF4JBridgeHandler.removeHandlersForRootLogger();
+        SLF4JBridgeHandler.install();
+    }
 }

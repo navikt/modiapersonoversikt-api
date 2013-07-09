@@ -4,13 +4,15 @@
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%-6level %date{HH:mm:ss,SSS} ~%thread~ [%logger{10}] - %message%n</pattern>
+            <pattern>Logback: %-6level %date{HH:mm:ss,SSS} ~%thread~ [%logger{10}] - %message%n</pattern>
         </encoder>
     </appender>
 
     <logger name="org.apache.cxf.services" level="WARN" />
-    <logger name="org.apache.cxf" level="WARN" additivity="false" />
-
+    <logger name="org.apache.cxf" level="WARN" additivity="true" />
+    <logger name="no.nav.modig" level="ERROR" additivity="false" />
+    <logger name="org.apache.wicket" level="ERROR" additivity="false" />
+    <logger name="org.springframework" level="ERROR" additivity="false" />
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
