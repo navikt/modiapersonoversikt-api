@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.besvare.config;
 
 import org.apache.cxf.feature.Feature;
 import org.apache.cxf.feature.LoggingFeature;
+import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -23,7 +24,7 @@ public interface JaxWsFeatures {
         public List<Feature> jaxwsFeatures() {
             List<Feature> features = new ArrayList<>();
             features.add(new LoggingFeature());
-//            features.add(new WSAddressingFeature());
+            features.add(new WSAddressingFeature());
             return features;
         }
     }

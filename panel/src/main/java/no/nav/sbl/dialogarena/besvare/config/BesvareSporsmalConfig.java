@@ -1,15 +1,8 @@
 package no.nav.sbl.dialogarena.besvare.config;
 
+import no.nav.modig.security.sts.utility.STSConfigurationUtility;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.HenvendelseSporsmalOgSvarPortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.meldinger.BesvarSporsmalRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.meldinger.BesvarSporsmalResponse;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.meldinger.HentAlleSporsmalOgSvarRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.meldinger.HentAlleSporsmalOgSvarResponse;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.meldinger.HentSporsmalOgSvarRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.meldinger.HentSporsmalOgSvarResponse;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.meldinger.OpprettSporsmalRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.meldinger.OpprettSporsmalResponse;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.meldinger.SporsmalOgSvar;
+import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +10,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import javax.inject.Inject;
-
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,34 +25,9 @@ public class BesvareSporsmalConfig {
 
     @Bean
     public HenvendelseSporsmalOgSvarPortType sporsmalOgSvarPortType() {
-//        return henvendelseSporsmalOgSvarPortTypeFactory().create(HenvendelseSporsmalOgSvarPortType.class);
-        return new HenvendelseSporsmalOgSvarPortType() {
-
-            @Override
-            public OpprettSporsmalResponse opprettSporsmal(OpprettSporsmalRequest parameters) {
-                return null;
-            }
-
-
-            @Override
-            public HentSporsmalOgSvarResponse hentSporsmalOgSvar(HentSporsmalOgSvarRequest parameters) {
-                return null;
-            }
-
-
-            @Override
-            public HentAlleSporsmalOgSvarResponse hentAlleSporsmalOgSvar(HentAlleSporsmalOgSvarRequest parameters) {
-                return new HentAlleSporsmalOgSvarResponse().withSporsmalOgSvar(
-                        new SporsmalOgSvar().withSporsmal("Kor e pængan?"),
-                        new SporsmalOgSvar().withSporsmal("Kor e dæm henne? I sjarken?"));
-            }
-
-
-            @Override
-            public BesvarSporsmalResponse besvarSporsmal(BesvarSporsmalRequest parameters) {
-                return null;
-            }
-        };
+        HenvendelseSporsmalOgSvarPortType hnvSpsmSvarPortType = henvendelseSporsmalOgSvarPortTypeFactory().create(HenvendelseSporsmalOgSvarPortType.class);
+        STSConfigurationUtility.configureStsForSystemUser(ClientProxy.getClient(hnvSpsmSvarPortType));
+        return hnvSpsmSvarPortType;
     }
 
     @Bean
