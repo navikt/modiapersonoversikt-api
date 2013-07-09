@@ -54,6 +54,44 @@ public class Intern extends BasePage {
         }
     }
 
+    @Override
+    public boolean isVersioned() {
+        return false;
+    }
+
+    @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET)
+    public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
+        PageParameters pageParameters = new PageParameters();
+        pageParameters.set("fnr", query);
+        handleNewFnrFoundEvent(target, pageParameters, Intern.class);
+    }
+
+    @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
+    public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
+        PageParameters pageParameters = new PageParameters();
+        pageParameters.set("fnr", query);
+        pageParameters.set("begrunnelse", true);
+        handleNewFnrFoundEvent(target, pageParameters, Intern.class);
+    }
+
+    @RunOnEvents(FEED_ITEM_CLICKED)
+    public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
+        try {
+            lamellHandler.handleFeedItemEvent(event, feedItemPayload);
+        } catch (ApplicationException e) {
+            target.appendJavaScript("alert('" + e.getMessage() + "');");
+        }
+    }
+
+    @RunOnEvents(WIDGET_LINK_CLICKED)
+    public void widgetLinkClicked(AjaxRequestTarget target, String linkId) {
+        try {
+            lamellHandler.handleWidgetItemEvent(linkId);
+        } catch (ApplicationException e) {
+            target.appendJavaScript("alert('" + e.getMessage() + "');");
+        }
+    }
+
     private boolean erBegrunnet(PageParameters pageParameters) {
         return pageParameters.get(BEGRUNNELSE).toBoolean(false);
     }
@@ -100,60 +138,9 @@ public class Intern extends BasePage {
         modalWindow.setInitialHeight(150);
         modalWindow.setInitialWidth(800);
         modalWindow.setContent(new SjekkForlateSide(modalWindow.getContentId(), modalWindow, this.answer));
-        modalWindow.setWindowClosedCallback(new ModigModalWindow.WindowClosedCallback() {
-            @Override
-            public void onClose(AjaxRequestTarget ajaxRequestTarget) {
-                if (answer.getAnswerType() == DISCARD) {
-                    modalWindow.redirect();
-                }
-                ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
-            }
-        });
-        modalWindow.setCloseButtonCallback(new ModigModalWindow.CloseButtonCallback() {
-            @Override
-            public boolean onCloseButtonClicked(AjaxRequestTarget ajaxRequestTarget) {
-                ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
-                return true;
-            }
-        });
+        modalWindow.setWindowClosedCallback(createWindowClosedCallback(modalWindow));
+        modalWindow.setCloseButtonCallback(createCloseButtonCallback());
         return modalWindow;
-    }
-
-    @Override
-    public boolean isVersioned() {
-        return false;
-    }
-
-    @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET)
-    public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
-        PageParameters pageParameters = new PageParameters();
-        pageParameters.set("fnr", query);
-        handleNewFnrFoundEvent(target, pageParameters, Intern.class);
-    }
-
-    @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
-    public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
-        PageParameters pageParameters = new PageParameters().set("fnr", query);
-        pageParameters.set("begrunnelse", true);
-        handleNewFnrFoundEvent(target, pageParameters, Intern.class);
-    }
-
-    @RunOnEvents(FEED_ITEM_CLICKED)
-    public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
-        try {
-            lamellHandler.handleFeedItemEvent(event, feedItemPayload);
-        } catch (ApplicationException e) {
-            target.appendJavaScript("alert('" + e.getMessage() + "');");
-        }
-    }
-
-    @RunOnEvents(WIDGET_LINK_CLICKED)
-    public void widgetLinkClicked(AjaxRequestTarget target, String linkId) {
-        try {
-            lamellHandler.handleWidgetItemEvent(linkId);
-        } catch (ApplicationException e) {
-            target.appendJavaScript("alert('" + e.getMessage() + "');");
-        }
     }
 
     private void handleNewFnrFoundEvent(AjaxRequestTarget target, PageParameters pageParameters, Class clazz) {
@@ -164,6 +151,28 @@ public class Intern extends BasePage {
         } else {
             modalWindow.redirect();
         }
+    }
+
+    private ModigModalWindow.WindowClosedCallback createWindowClosedCallback(final ModiaModalWindow modalWindow) {
+        return new ModigModalWindow.WindowClosedCallback() {
+            @Override
+            public void onClose(AjaxRequestTarget ajaxRequestTarget) {
+                if (answer.getAnswerType() == DISCARD) {
+                    modalWindow.redirect();
+                }
+                ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
+            }
+        };
+    }
+
+    private ModigModalWindow.CloseButtonCallback createCloseButtonCallback() {
+        return new ModigModalWindow.CloseButtonCallback() {
+            @Override
+            public boolean onCloseButtonClicked(AjaxRequestTarget ajaxRequestTarget) {
+                ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
+                return true;
+            }
+        };
     }
 
 }
