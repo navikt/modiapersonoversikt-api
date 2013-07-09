@@ -31,7 +31,8 @@ public class InternTest extends TestSecurityBaseClass {
 
     @Test
     public void shouldLoadPage(){
-        fluentWicketTester.goTo(Intern.class).should().containComponent(withId("searchPanel").and(ofType(HentPersonPanel.class)))
+        fluentWicketTester.goTo(Intern.class)
+                .should().containComponent(withId("searchPanel").and(ofType(HentPersonPanel.class)))
                 .should().containComponent(withId("personKjerneinfoPanel").and(ofType(PersonKjerneinfoPanel.class)))
                 .should().containComponent(withId("personsokPanel").and(ofType(PersonsokPanel.class)))
                 .should().containComponent(withId("lameller").and(ofType(TokenLamellPanel.class)))
