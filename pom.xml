@@ -22,7 +22,7 @@
         <slf4j.version>1.7.5</slf4j.version>
         <logback.version>1.0.13</logback.version>
         <modig.scm.plugin.version>1.1.10</modig.scm.plugin.version>
-        <modig-security.version>1.0.1</modig-security.version>
+        <modig-security.version>1.0.2</modig-security.version>
         <sonar.skippedModules></sonar.skippedModules>
     </properties>
 
@@ -77,7 +77,22 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-security-sts</artifactId>
-                <version>1.0.1</version>
+                <version>${modig-security.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-security-core</artifactId>
+                <version>${modig-security.version}</version>
+                <type>test-jar</type>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-testcertificates</artifactId>
+                <version>1.0.0</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -164,7 +179,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-test</artifactId>
-                <version>1.1</version>
+                <version>1.2-SNAPSHOT</version>
                 <scope>test</scope>
             </dependency>
 

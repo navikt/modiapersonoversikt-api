@@ -6,17 +6,29 @@
 </head>
 <body>
 
-    <wicket:panel>
-        <h1>Besvare spørsmål</h1>
+<wicket:panel>
+    <h1>Besvare spørsmål</h1>
 
-        <div wicket:id="alle-sporsmaal">
-            <p wicket:id="sporsmal">[Hvor er pengene mine??]</p>
-        </div>
+    <form wicket:id="svar-form">
+        <textarea wicket:id="svar"></textarea>
+        <button wicket:id="send">Send svar</button>
+    </form>
 
-        <form wicket:id="svar-form">
-            <textarea wicket:id="svartekst"></textarea>
-            <button wicket:id="submit">Send svar</button>
-        </form>
-    </wicket:panel>
+
+    <div wicket:id="liste">
+        <article wicket:id="sporsmal-med-svar" class="traad">
+            <section class="melding">
+                <h1>Svar</h1>
+                <p wicket:id="svar"></p>
+            </section>
+
+            <section class="melding">
+                <h1>Spørsmål</h1>
+                <p wicket:id="sporsmal"></p>
+            </section>
+        </article>
+    </div>
+
+</wicket:panel>
 </body>
 </html>

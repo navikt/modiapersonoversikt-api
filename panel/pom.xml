@@ -55,7 +55,18 @@
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-core</artifactId>
+            <type>test-jar</type>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-testcertificates</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.wicket</groupId>

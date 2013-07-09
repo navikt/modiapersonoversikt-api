@@ -7,7 +7,6 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Import(BesvareSporsmalConfig.class)
-@PropertySource("classpath:webservices.properties")
 public class JettyApplicationContext {
 
     @Bean

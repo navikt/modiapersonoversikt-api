@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.besvare;
 
+import no.nav.modig.testcertificates.TestCertificates;
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
+import no.nav.sbl.dialogarena.test.SystemProperties;
 
 import java.io.File;
 
@@ -13,7 +15,10 @@ import static no.nav.sbl.dialogarena.test.path.FilesAndDirs.TEST_RESOURCES;
 public final class JettyBesvareSporsmal {
 
     public static void main(String ... args) {
-        Jetty jetty = Jetty.usingWar(new File(TEST_RESOURCES, "webapp")).at("besvar").buildJetty();
+        SystemProperties.setFrom("jetty.properties");
+        TestCertificates.setupKeyAndTrustStore();
+
+        Jetty jetty = Jetty.usingWar(new File(TEST_RESOURCES, "webapp")).port(8383).at("besvar").buildJetty();
         jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
     }
 }
