@@ -7,13 +7,13 @@ $(function() {
         css         : 'margin-bottom: 20px;'
     });
 
-    $('.search-intern input[name="foedselsnummerInput"]').navAjaxLoader({
-        event       : 'change',
-        placeElement: '.lamell',
-        placement   : 'before',
-        loadImage   : '/modiabrukerdialog/img/ajaxloader/hvit/loader_hvit_96.gif',
-        css         : 'margin: 30px 0 0 30px;'
-    });
+//    $('.search-intern input[name="foedselsnummerInput"]').navAjaxLoader({
+//        event       : 'change',
+//        placeElement: '.lamell',
+//        placement   : 'before',
+//        loadImage   : '/modiabrukerdialog/img/ajaxloader/hvit/loader_hvit_96.gif',
+//        css         : 'margin: 30px 0 0 30px;'
+//    });
 
 });
 
