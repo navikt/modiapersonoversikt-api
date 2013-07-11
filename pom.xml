@@ -28,8 +28,8 @@
         <modig.wicket.version>1.1.0-SNAPSHOT</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>1.0.0</modig.lang.version>
-        <modig.frontend.wicket.version>1.0.4</modig.frontend.wicket.version>
-        <modig.core.version>1.0.0-alpha.1</modig.core.version>
+        <modig.frontend.wicket.version>1.0.5-SNAPSHOT</modig.frontend.wicket.version>
+        <modig.core.version>1.0.1</modig.core.version>
         <modig.security.version>1.0.0</modig.security.version>
 		<modig.log.version>1.1.0</modig.log.version>
         <modig-testcertificates-version>1.0.0</modig-testcertificates-version>
@@ -50,7 +50,7 @@
         <junit.dep.version>4.10</junit.dep.version>
         <!-- Modia-komponenter-->
         <personsok.version>0.0.59</personsok.version>
-        <kjerneinfo.versjon>0.0.61</kjerneinfo.versjon>
+        <kjerneinfo.versjon>0.0.62-SNAPSHOT</kjerneinfo.versjon>
     </properties>
 
     <dependencyManagement>
