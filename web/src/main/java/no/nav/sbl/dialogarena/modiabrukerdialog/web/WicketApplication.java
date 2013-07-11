@@ -12,7 +12,6 @@ import no.nav.modig.pagelet.spi.utils.SPIResources;
 import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.modig.wicket.events.NamedEventDispatcher;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.feil.PageNotFound;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
@@ -71,6 +70,7 @@ public class WicketApplication extends WebApplication {
                 .addScripts(Widget.JS_RESOURCE)                      //TODO: Flytt til MODIA modul ?
                 .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
                 .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
+		        //.addScripts(Intern.JS_SNURR)
                 .addScripts(DatePicker.JQUERY_PLACEHOLDER)
 
                 .configure(this);
@@ -96,7 +96,6 @@ public class WicketApplication extends WebApplication {
 
         mountPage("/person/${fnr}", Intern.class);
         mountPage("internal/selftest", SelfTestPage.class);
-        mountPage("/404", PageNotFound.class);
 
         setSpringComponentInjector();
     }
