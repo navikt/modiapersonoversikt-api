@@ -34,7 +34,7 @@ public class CacheConfig {
     @Bean
     public FactoryBean<net.sf.ehcache.CacheManager> ehCacheCacheManager() {
         EhCacheManagerFactoryBean factoryBean = new EhCacheManagerFactoryBean();
-        factoryBean.setConfigLocation( new ClassPathResource("ehcache.xml") );
+        factoryBean.setConfigLocation(new ClassPathResource("ehcache.xml"));
         return factoryBean;
     }
 
