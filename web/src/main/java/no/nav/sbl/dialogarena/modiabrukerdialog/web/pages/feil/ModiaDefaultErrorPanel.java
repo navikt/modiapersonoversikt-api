@@ -6,12 +6,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
-import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.model.IModel;
 
 public class ModiaDefaultErrorPanel extends ErrorPanel {
-
-    private final Class goToClass;
 
     public ModiaDefaultErrorPanel(String id, IModel<ErrorPanelVM> exceptionPanelVM) {
         this(id, exceptionPanelVM, HentPersonPage.class);
@@ -19,15 +16,9 @@ public class ModiaDefaultErrorPanel extends ErrorPanel {
 
     public ModiaDefaultErrorPanel(String id, IModel<ErrorPanelVM> exceptionPanelVM, Class goToClass) {
         super(id, exceptionPanelVM);
-        this.goToClass = goToClass;
-
         add(
-                createGoToLink()
+                new BookmarkablePageLink("goToLink", goToClass)
         );
-    }
-
-    private Link createGoToLink() {
-        return new BookmarkablePageLink("goToLink", goToClass);
     }
 
     @Override

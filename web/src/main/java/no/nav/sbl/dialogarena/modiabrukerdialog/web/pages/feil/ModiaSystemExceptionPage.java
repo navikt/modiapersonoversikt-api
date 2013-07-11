@@ -8,25 +8,21 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.http.WebResponse;
 
-import javax.servlet.http.HttpServletResponse;
-
 import static java.util.Arrays.asList;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static no.nav.modig.wicket.errorhandling.panels.ErrorPanelVM.Icon.UTROPSTEGN;
 
 public class ModiaSystemExceptionPage extends AbstractErrorPage {
 
-
     public ModiaSystemExceptionPage() {
-        final String exceptionUniqueId = Session.get().getMetaData(ModigExceptionListener.EXCEPTION_UID_KEY);
-        StringResourceModel errorCode = getErrorCode();
-
         add(
-                createDefaultErrorPanel(createErrorPanelVM(errorCode.toString(), exceptionUniqueId))
+                createDefaultErrorPanel(createErrorPanelVM(getErrorCode().getObject(), Session.get().getMetaData(ModigExceptionListener.EXCEPTION_UID_KEY)))
         );
     }
 
     @Override
     protected void setHeaders(final WebResponse response) {
-        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        response.setStatus(SC_INTERNAL_SERVER_ERROR);
     }
 
     private ModiaDefaultErrorPanel createDefaultErrorPanel(ErrorPanelVM errorPanelVM) {
@@ -34,11 +30,11 @@ public class ModiaSystemExceptionPage extends AbstractErrorPage {
     }
 
     private StringResourceModel getErrorCode() {
-        return new StringResourceModel("system.error.code.message", this, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        return new StringResourceModel("system.error.code.message", this, null, SC_INTERNAL_SERVER_ERROR);
     }
 
     private ErrorPanelVM createErrorPanelVM(String errorCode, String exceptionUniqueId) {
-        return new ErrorPanelVM(ErrorPanelVM.Icon.UTROPSTEGN, asList(errorCode, exceptionUniqueId));
+        return new ErrorPanelVM(UTROPSTEGN, asList(errorCode, exceptionUniqueId));
     }
 
 }
