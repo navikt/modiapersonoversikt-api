@@ -1,12 +1,15 @@
 package no.nav.sbl.dialogarena.besvare;
 
-import no.nav.sbl.dialogarena.besvare.config.BesvareSporsmalConfig;
+import no.nav.sbl.dialogarena.besvare.config.JaxWsFeatures;
+import no.nav.sbl.dialogarena.besvare.config.ServicesConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-@Import(BesvareSporsmalConfig.class)
+@Import({
+        JaxWsFeatures.Mock.class,
+        ServicesConfig.class
+})
 public class JettyApplicationContext {
 
     @Bean

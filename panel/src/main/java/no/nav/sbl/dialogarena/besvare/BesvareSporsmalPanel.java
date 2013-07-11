@@ -48,11 +48,11 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
     private class AlleSporsmalOgSvar extends LoadableDetachableModel<List<SporsmalOgSvar>> {
         @Override
         protected List<SporsmalOgSvar> load() {
-            return webservice.hentAlleSporsmalOgSvar(new HentAlleSporsmalOgSvarRequest().withAktorId("12345678901")).getSporsmalOgSvar();
+            return webservice.hentAlleSporsmalOgSvar(new HentAlleSporsmalOgSvarRequest().withAktorId("28088834986")).getSporsmalOgSvar();
         }
     }
 
-    private class SporsmalOgSvarListe extends PropertyListView<SporsmalOgSvar> {
+    private static class SporsmalOgSvarListe extends PropertyListView<SporsmalOgSvar> {
 
         public SporsmalOgSvarListe(String id, IModel<? extends List<SporsmalOgSvar>> sporsmalOgSvar) {
             super(id, sporsmalOgSvar);
@@ -66,7 +66,7 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
 
     }
 
-    private class SvarForm extends Form<Svar> {
+    private final class SvarForm extends Form<Svar> {
         private final TextArea<Object> textarea;
 
         public SvarForm(String id, IModel<Svar> model) {
