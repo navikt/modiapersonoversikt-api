@@ -1,9 +1,11 @@
 package no.nav.sbl.dialogarena.besvare;
 
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.HenvendelseSporsmalOgSvarPortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.meldinger.BesvarSporsmalRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.meldinger.HentAlleSporsmalOgSvarRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesporsmalogsvar.v1.meldinger.SporsmalOgSvar;
+import java.io.Serializable;
+import java.util.List;
+import javax.inject.Inject;
+import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
+import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSporsmalOgSvar;
+import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSvar;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -17,49 +19,40 @@ import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.inject.Inject;
-import java.io.Serializable;
-import java.util.List;
 
 public class BesvareSporsmalPanel extends GenericPanel<Void> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(BesvareSporsmalPanel.class);
-
     @Inject
-    private HenvendelseSporsmalOgSvarPortType webservice;
-    private final SporsmalOgSvarListe sporsmalMedSvar;
+    private SporsmalOgSvarPortType webservice;
     private final WebMarkupContainer liste = new WebMarkupContainer("liste");
 
     public BesvareSporsmalPanel(String id) {
         super(id);
-        sporsmalMedSvar = new SporsmalOgSvarListe("sporsmal-med-svar", new AlleSporsmalOgSvar());
+        final SporsmalOgSvarListe sporsmalMedSvar = new SporsmalOgSvarListe("sporsmal-med-svar", new AlleSporsmalOgSvar());
         liste.setOutputMarkupId(true);
         liste.add(sporsmalMedSvar);
         add(liste);
-        SporsmalOgSvar ss = this.sporsmalMedSvar.getModelObject().get(0);
+        WSSporsmalOgSvar ss = sporsmalMedSvar.getModelObject().get(0);
         add(new SvarForm("svar-form", new CompoundPropertyModel<>(new Svar(ss.getBehandlingsId(), ss.getTema()))));
         add(new AttributeAppender("class", "visittkort"));
     }
 
 
-    private class AlleSporsmalOgSvar extends LoadableDetachableModel<List<SporsmalOgSvar>> {
+    private class AlleSporsmalOgSvar extends LoadableDetachableModel<List<WSSporsmalOgSvar>> {
         @Override
-        protected List<SporsmalOgSvar> load() {
-            return webservice.hentAlleSporsmalOgSvar(new HentAlleSporsmalOgSvarRequest().withAktorId("28088834986")).getSporsmalOgSvar();
+        protected List<WSSporsmalOgSvar> load() {
+            return webservice.hentSporsmalOgSvarListe("28088834986");
         }
     }
 
-    private static class SporsmalOgSvarListe extends PropertyListView<SporsmalOgSvar> {
+    private static class SporsmalOgSvarListe extends PropertyListView<WSSporsmalOgSvar> {
 
-        public SporsmalOgSvarListe(String id, IModel<? extends List<SporsmalOgSvar>> sporsmalOgSvar) {
+        public SporsmalOgSvarListe(String id, IModel<? extends List<WSSporsmalOgSvar>> sporsmalOgSvar) {
             super(id, sporsmalOgSvar);
         }
 
         @Override
-        protected void populateItem(ListItem<SporsmalOgSvar> item) {
+        protected void populateItem(ListItem<WSSporsmalOgSvar> item) {
             item.add(new Label("sporsmal"));
             item.add(new Label("svar"));
         }
@@ -77,7 +70,7 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
                 @Override
                 protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form) {
                     Svar svar = getModelObject();
-                    webservice.besvarSporsmal(new BesvarSporsmalRequest().withSvar(svar.svar).withBehandlingsId(svar.behandlingsid).withTema(svar.tema));
+                    webservice.besvarSporsmal(new WSSvar().withFritekst(svar.fritekst).withTema(svar.tema).withBehandlingsId(svar.behandlingsid));
                     target.add(liste);
                 }
             });
@@ -85,7 +78,7 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
     }
 
     private static class Svar implements Serializable {
-        String svar, behandlingsid, tema;
+        String fritekst, behandlingsid, tema;
 
         private Svar(String behandlingsid, String tema) {
             this.behandlingsid = behandlingsid;

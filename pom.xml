@@ -64,8 +64,8 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>henvendelse-sporsmalogsvar-jaxws</artifactId>
-                <version>1.0.21-SNAPSHOT</version>
+                <artifactId>sporsmalogsvar-jaxws</artifactId>
+                <version>1.1.0</version>
             </dependency>
 
             <dependency>
@@ -141,6 +141,12 @@
             <dependency>
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-rt-frontend-simple</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
                 <version>${cxf.version}</version>
             </dependency>
 
