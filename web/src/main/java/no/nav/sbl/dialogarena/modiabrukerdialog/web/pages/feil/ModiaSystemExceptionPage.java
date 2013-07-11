@@ -38,7 +38,7 @@ public class ModiaSystemExceptionPage extends AbstractErrorPage {
     }
 
     private ErrorPanelVM createErrorPanelVM(String errorCode, String exceptionUniqueId) {
-        return new ErrorPanelVM(ErrorPanelVM.Icon.UTROPSTEGN, asList(errorCode.toString(), exceptionUniqueId));
+        return new ErrorPanelVM(ErrorPanelVM.Icon.UTROPSTEGN, asList(errorCode, exceptionUniqueId));
     }
 
 }
