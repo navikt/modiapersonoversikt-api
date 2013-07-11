@@ -144,9 +144,9 @@ public class Intern extends BasePage {
     }
 
     private void handleNewFnrFoundEvent(AjaxRequestTarget target, PageParameters pageParameters, Class clazz) {
+        modalWindow.setRedirectClass(clazz);
+        modalWindow.setPageParameters(pageParameters);
         if (lamellHandler.hasUnsavedChanges()) {
-            modalWindow.setRedirectClass(clazz);
-            modalWindow.setPageParameters(pageParameters);
             modalWindow.show(target);
         } else {
             modalWindow.redirect();
