@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
-@Import({ComponentsContext.class})
+@Import({ComponentsContext.class, CacheConfig.class})
 public class ApplicationContext {
 
     @Bean
