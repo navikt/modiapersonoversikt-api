@@ -33,7 +33,7 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
         liste.add(sporsmalMedSvar);
         add(liste);
         WSSporsmalOgSvar ss = sporsmalMedSvar.getModelObject().get(0);
-        add(new SvarForm("svar-form", new CompoundPropertyModel<>(new Svar(ss.getBehandlingsId(), ss.getTema()))));
+        add(new SvarForm("svar-form", new CompoundPropertyModel<>(new SvarWrapper(ss.getBehandlingsId(), ss.getTema()))));
         add(new AttributeAppender("class", "visittkort"));
     }
 
@@ -59,28 +59,28 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
 
     }
 
-    private final class SvarForm extends Form<Svar> {
+    private final class SvarForm extends Form<SvarWrapper> {
         private final TextArea<Object> textarea;
 
-        public SvarForm(String id, IModel<Svar> model) {
+        public SvarForm(String id, IModel<SvarWrapper> model) {
             super(id, model);
             this.textarea = new TextArea<>("svar");
             add(textarea);
             add(new AjaxSubmitLink("send") {
                 @Override
                 protected void onAfterSubmit(AjaxRequestTarget target, Form<?> form) {
-                    Svar svar = getModelObject();
-                    webservice.besvarSporsmal(new WSSvar().withFritekst(svar.fritekst).withTema(svar.tema).withBehandlingsId(svar.behandlingsid));
+                    SvarWrapper svar = getModelObject();
+                    webservice.besvarSporsmal(new WSSvar().withFritekst(svar.svar).withTema(svar.tema).withBehandlingsId(svar.behandlingsid));
                     target.add(liste);
                 }
             });
         }
     }
 
-    private static final class Svar implements Serializable {
-        String fritekst, behandlingsid, tema;
+    private static final class SvarWrapper implements Serializable {
+        String svar, behandlingsid, tema;
 
-        private Svar(String behandlingsid, String tema) {
+        private SvarWrapper(String behandlingsid, String tema) {
             this.behandlingsid = behandlingsid;
             this.tema = tema;
         }

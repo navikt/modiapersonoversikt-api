@@ -24,7 +24,7 @@ public class ServicesConfig {
 
     @Bean
     public SporsmalOgSvarPortType sporsmalOgSvarPortType() {
-        SporsmalOgSvarPortType hnvSpsmSvarPortType = henvendelseSporsmalOgSvarPortTypeFactory().create(SporsmalOgSvarPortType.class);
+        SporsmalOgSvarPortType hnvSpsmSvarPortType = sporsmalOgSvarPortTypeFactory().create(SporsmalOgSvarPortType.class);
         Client client = ClientProxy.getClient(hnvSpsmSvarPortType);
         HTTPConduit httpConduit = (HTTPConduit) client.getConduit();
         httpConduit.setTlsClientParameters(jaxwsFeatures.tlsClientParameters());
@@ -33,18 +33,18 @@ public class ServicesConfig {
     }
 
     @Bean
-    public JaxWsProxyFactoryBean henvendelseSporsmalOgSvarPortTypeFactory() {
+    public JaxWsProxyFactoryBean sporsmalOgSvarPortTypeFactory() {
         JaxWsProxyFactoryBean jaxwsClient = commonJaxWsConfig();
         jaxwsClient.setServiceClass(SporsmalOgSvarPortType.class);
         jaxwsClient.setAddress(spmSvarEndpoint);
-        jaxwsClient.setWsdlURL(classpathUrl("HenvendelseSporsmalOgSvar.wsdl"));
+        jaxwsClient.setWsdlURL(classpathUrl("SporsmalOgSvar.wsdl"));
         return jaxwsClient;
     }
 
     @Bean
     public JaxWsProxyFactoryBean commonJaxWsConfig() {
         JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
-        Map<String, Object> properties = new HashMap<String, Object>();
+        Map<String, Object> properties = new HashMap<>();
         properties.put("schema-validation-enabled", true);
         factoryBean.setProperties(properties);
         factoryBean.getFeatures().addAll(jaxwsFeatures.jaxwsFeatures());
