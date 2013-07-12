@@ -109,6 +109,16 @@
         </dependency>
 
         <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-wicket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-authorization</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
@@ -147,6 +157,12 @@
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-jaas</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jetty.orbit</groupId>
+            <artifactId>javax.annotation</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
