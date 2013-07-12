@@ -77,7 +77,7 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
         }
     }
 
-    private static class Svar implements Serializable {
+    private static final class Svar implements Serializable {
         String fritekst, behandlingsid, tema;
 
         private Svar(String behandlingsid, String tema) {
