@@ -78,7 +78,6 @@ public class WicketApplication extends WebApplication {
                 .addScripts(Widget.JS_RESOURCE)                      //TODO: Flytt til MODIA modul ?
                 .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
                 .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
-		        //.addScripts(Intern.JS_SNURR)
                 .addScripts(DatePicker.JQUERY_PLACEHOLDER)
 
                 .configure(this);
