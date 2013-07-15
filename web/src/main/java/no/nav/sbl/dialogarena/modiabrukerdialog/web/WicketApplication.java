@@ -29,7 +29,6 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.time.Duration;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Resource;
@@ -37,6 +36,7 @@ import javax.inject.Inject;
 import java.util.Locale;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
+import static org.apache.wicket.util.time.Duration.ONE_SECOND;
 
 public class WicketApplication extends WebApplication {
 
@@ -59,7 +59,7 @@ public class WicketApplication extends WebApplication {
     protected void init() {
         super.init();
         if (usesDevelopmentConfig()) {
-            getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
+            getResourceSettings().setResourcePollFrequency(ONE_SECOND);
         }
 
         new FrontendConfigurator()
