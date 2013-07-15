@@ -11,12 +11,13 @@
 
     <form wicket:id="svar-form">
         <wicket:container wicket:id="header">
+            <div wicket:id="opprettet"/>
             <div wicket:id="tema"/>
             <div wicket:id="sporsmal"/>
         </wicket:container>
         <textarea wicket:id="svar"></textarea>
         <div>
-            <!--<input type="checkbox" wicket:id="sensitiv"/>-->
+            <input type="checkbox" wicket:id="sensitiv"/>
             <label>Inneholder sensitiv informasjon</label>
         </div>
         <button wicket:id="send">Send</button>

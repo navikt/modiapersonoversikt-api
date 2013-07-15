@@ -19,9 +19,9 @@ public class AlleSporsmalOgSvarPanel extends Panel {
     @Inject
     private SporsmalOgSvarPortType webservice;
 
-    private IModel<SporsmalOgSvar> modell;
+    private IModel<BesvareSporsmalVM> modell;
 
-    public AlleSporsmalOgSvarPanel(String id, IModel<SporsmalOgSvar> modell) {
+    public AlleSporsmalOgSvarPanel(String id, IModel<BesvareSporsmalVM> modell) {
         super(id);
         this.modell = modell;
         WebMarkupContainer liste = new WebMarkupContainer("liste");
@@ -51,7 +51,9 @@ public class AlleSporsmalOgSvarPanel extends Panel {
                 @Override
                 protected void onEvent(AjaxRequestTarget target) {
                     WSSporsmalOgSvar wsSporsmalOgSvar = item.getModelObject();
-                    modell.setObject(new SporsmalOgSvar(wsSporsmalOgSvar.getBehandlingsId(), wsSporsmalOgSvar.getTema(), wsSporsmalOgSvar.getSporsmal(), wsSporsmalOgSvar.getSvar()));
+                    modell.setObject(
+                            new BesvareSporsmalVM(wsSporsmalOgSvar.getBehandlingsId(), wsSporsmalOgSvar.getTema(), wsSporsmalOgSvar.getSporsmal(),
+                                    wsSporsmalOgSvar.getSvar(), wsSporsmalOgSvar.getOpprettet().toLocalDate(), wsSporsmalOgSvar.isSensitiv()));
                     target.add(getPage());
                 }
             });
