@@ -10,24 +10,18 @@
     <h1>Besvare spørsmål</h1>
 
     <form wicket:id="svar-form">
+        <wicket:container wicket:id="header">
+            <div wicket:id="tema"/>
+            <div wicket:id="sporsmal"/>
+        </wicket:container>
         <textarea wicket:id="svar"></textarea>
-        <button wicket:id="send">Send svar</button>
+        <div>
+            <!--<input type="checkbox" wicket:id="sensitiv"/>-->
+            <label>Inneholder sensitiv informasjon</label>
+        </div>
+        <button wicket:id="send">Send</button>
+        <button wicket:id="avbryt">Avbryt</button>
     </form>
-
-
-    <div wicket:id="liste">
-        <article wicket:id="sporsmal-med-svar" class="traad">
-            <section class="melding">
-                <h1>Svar</h1>
-                <p wicket:id="svar"></p>
-            </section>
-
-            <section class="melding">
-                <h1>Spørsmål</h1>
-                <p wicket:id="sporsmal"></p>
-            </section>
-        </article>
-    </div>
 
 </wicket:panel>
 </body>

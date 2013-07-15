@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.besvare;
 
+import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -17,6 +18,7 @@ public class BesvareSporsmalApplication extends WebApplication {
     protected void init() {
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
         getMarkupSettings().setStripWicketTags(true);
+        new ApplicationSettingsConfig().configure(this);
     }
 
     @Override
