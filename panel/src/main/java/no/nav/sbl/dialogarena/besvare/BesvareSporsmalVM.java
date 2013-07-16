@@ -9,9 +9,7 @@ public class BesvareSporsmalVM implements Serializable {
     public LocalDate opprettet;
     public boolean sensitiv;
 
-    public BesvareSporsmalVM() {
-        this(null, null, null, null, null, false);
-    }
+    public BesvareSporsmalVM() {}
 
     public BesvareSporsmalVM(String behandlingsId, String tema, String sporsmal, String svar, LocalDate opprettet, boolean sensitiv) {
         this.behandlingsId = behandlingsId;
@@ -20,10 +18,6 @@ public class BesvareSporsmalVM implements Serializable {
         this.svar = svar;
         this.opprettet = opprettet;
         this.sensitiv = sensitiv;
-    }
-
-    public boolean erSynlig() {
-        return behandlingsId != null;
     }
 
 }

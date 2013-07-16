@@ -42,6 +42,7 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     BesvareSporsmalVM sos = getModelObject();
                     webservice.besvarSporsmal(new WSSvar().withBehandlingsId(sos.behandlingsId).withTema(sos.tema).withFritekst(sos.svar).withSensitiv(sos.sensitiv));
+                    model.setObject(new BesvareSporsmalVM());
                     target.add(this.getPage());
                 }
             });
