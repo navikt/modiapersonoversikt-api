@@ -33,6 +33,11 @@ H3, ._H3 {
 	width: 47.93617021276595%;
 }
 
+input:disabled {
+  color: #a9a9a9;
+  background-color: #778899;
+}
+
 /* Spesifike sider */
 
 .hentperson.main {
@@ -201,6 +206,15 @@ H3, ._H3 {
                 font-weight: bold;
             }
 
+            SELECT {
+                box-sizing: border-box;
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                height: 30px;
+                margin-top: 3px;
+                width: 100% !important;
+            }
+
             LABEL {
                 .kolonne;
                 float: none;
@@ -271,12 +285,15 @@ H3, ._H3 {
 
                     SELECT {
                         float: left;
-                        width: 31%;
+                        width: 90% !important;
+                    }
+
+                    DIV {
+                        width: 7%;
                     }
 
                     INPUT {
-                        float: left;
-                        width: 64%;
+                        width: 70% !important;
                         padding-left: 4%;
                     }
 
