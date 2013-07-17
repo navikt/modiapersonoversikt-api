@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.besvare;
 
 import javax.inject.Inject;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
-import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSMelding;
+import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSvar;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -22,10 +22,11 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
     @Inject
     private SporsmalOgSvarPortType webservice;
 
-    public BesvareSporsmalPanel(String id, WSMelding melding) {
+    public BesvareSporsmalPanel(String id, WSSporsmalOgSvar sos) {
         super(id);
         add(new SvarForm("svar-form", new CompoundPropertyModel<>(new BesvareSporsmalVM(
-                melding.getId(), melding.getTema(), melding.getFritekst(), "", melding.getOpprettet().toLocalDate(), false))));
+                sos.getSvar().getId(), sos.getSporsmal().getTema(), sos.getSporsmal().getFritekst(), sos.getSvar().getFritekst(),
+                sos.getSporsmal().getOpprettet().toLocalDate(), false))));
         add(new AttributeAppender("class", "visittkort"));
     }
 

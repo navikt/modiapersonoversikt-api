@@ -28,7 +28,7 @@ public class AlleMeldingerPanel extends Panel {
     private class AlleMeldinger extends LoadableDetachableModel<List<WSMelding>> {
         @Override
         protected List<WSMelding> load() {
-            return webservice.hentSporsmalOgSvarListe("28088834986");
+            return webservice.hentMeldingListe("28088834986");
         }
     }
 
