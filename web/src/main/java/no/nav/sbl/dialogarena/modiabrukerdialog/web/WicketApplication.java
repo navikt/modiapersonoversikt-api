@@ -12,7 +12,8 @@ import no.nav.modig.pagelet.spi.utils.SPIResources;
 import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.modig.wicket.events.NamedEventDispatcher;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.feil.PageNotFound;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.feil.ModiaApplicationExceptionPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.feil.ModiaSystemExceptionPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
@@ -64,7 +65,6 @@ public class WicketApplication extends WebApplication {
                 .withResourcePacking(this.usesDeploymentConfig())
                 .addConditionalJavascript(Intern.RESPOND_JS)
                 .addCss(SPIResources.getCss())
-                .addCss(BasePage.CSS_MODUS)
                 .addScripts(SPIResources.getScripts())
                 .addScripts(BasePage.JS_RESOURCE)
                 .addScripts(ShortcutListenerResourceReference.get()) //TODO: Flytt til MODIA modul ?
@@ -72,8 +72,8 @@ public class WicketApplication extends WebApplication {
                 .addScripts(Widget.JS_RESOURCE)                      //TODO: Flytt til MODIA modul ?
                 .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
                 .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
-                .addScripts(Intern.JQUERY_UI_JS, DatePicker.JQUERY_PLACEHOLDER)
-                .addScripts(Intern.JS_SNURR)
+		        //.addScripts(Intern.JS_SNURR)
+                .addScripts(DatePicker.JQUERY_PLACEHOLDER)
 
                 .configure(this);
 
@@ -85,7 +85,10 @@ public class WicketApplication extends WebApplication {
         markupSettings.setCompressWhitespace(true);
         markupSettings.setDefaultMarkupEncoding("UTF-8");
 
-        new ApplicationSettingsConfig().configure(this);
+        new ApplicationSettingsConfig()
+                .withApplicationExceptionPage(ModiaApplicationExceptionPage.class)
+                .withInternFeilSide(ModiaSystemExceptionPage.class)
+                .configure(this);
 
         getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
@@ -98,7 +101,6 @@ public class WicketApplication extends WebApplication {
 
         mountPage("/person/${fnr}", Intern.class);
         mountPage("internal/selftest", SelfTestPage.class);
-        mountPage("/404", PageNotFound.class);
 
         setSpringComponentInjector();
     }

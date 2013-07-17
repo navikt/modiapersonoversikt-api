@@ -20,7 +20,6 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class HentPersonPageTest extends TestSecurityBaseClass {
 
-
     @Inject
     private FluentWicketTester<?> fluentWicketTester;
 

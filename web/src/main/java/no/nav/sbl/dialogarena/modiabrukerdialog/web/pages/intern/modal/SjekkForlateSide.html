@@ -1,17 +1,17 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-<section class="default-modal">
-    <p>
+<section class="bekreft-dialog">
+    <h1 class="robust-ikon-hjelp-strek">
         Ønsker du å lagre endringene i Brukerprofil?
-    </p>
-    <div style="width: auto; margin-left: 175px;">
-        <a href="#" wicket:id="closeSave" class="knapp-hoved">Lagre endringer</a>
-        <a href="#" wicket:id="closeDiscard" class="knapp-stor">Forkast endringer</a>
-        <a href="#" wicket:id="closeCancel" class="knapp-stor">Avbryt</a>
-        <!--Lagre endringer-->
-        <!--Forkast endringer-->
-        <!--Avbryt-->
-    </div>
+    </h1>
+    <ul>
+        <li>
+            <a href="#" wicket:id="closeDiscard" class="knapp-stor">Forkast endringer</a>
+        </li>
+        <li>
+            <a href="#" wicket:id="closeCancel" class="knapp-stor">Gå tilbake for å lagre</a>
+        </li>
+    </ul>
 </section>
 </wicket:panel>
 </html>

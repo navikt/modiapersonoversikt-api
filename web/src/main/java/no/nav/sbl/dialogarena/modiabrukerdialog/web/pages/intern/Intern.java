@@ -10,11 +10,10 @@ import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
-import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
@@ -27,86 +26,33 @@ import javax.inject.Inject;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow.getJavascriptSaveButtonFocus;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 
+/**
+ *  Denne klassen brukes til å vise informasjon om en bruker. Instansiering skjer implisitt via events.
+ */
 public class Intern extends BasePage {
 
     public static final JavaScriptResourceReference JQUERY_UI_JS = new JavaScriptResourceReference(Intern.class, "jquery-ui-1.10.2.custom.min.js");
     private static final ResourceReference MEDIA_QUERIES = new PackageResourceReference(Intern.class, "respond.min.js");
-    public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
-    public static final JavaScriptResourceReference JS_SNURR = new JavaScriptResourceReference(Intern.class, "snurr.js");
+    public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");    public static final JavaScriptResourceReference JS_SNURR = new JavaScriptResourceReference(Intern.class, "snurr.js");
 
+    private static final String BEGRUNNELSE = "begrunnelse";
     private final SjekkForlateSideAnswer answer;
+    private final ModiaModalWindow modalWindow;
+
     @Inject
     private LamellHandler lamellHandler;
 
     public Intern(PageParameters pageParameters) {
-        final String fnrFromRequest = pageParameters.get("fnr").toString(null);
-        final boolean begrunnelse = pageParameters.get("begrunnelse").toBoolean(false);
         this.answer = new SjekkForlateSideAnswer();
-        final ModigModalWindow modalWindow = createModalWindow("modal");
-        if (begrunnelse) {
-            add(
-//                    new HentPersonPanel("searchPanel",begrunnelse),
-//                    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest,begrunnelse).setVisible(true),
-//                    new PersonsokPanel("personsokPanel",begrunnelse).setVisible(true),
-                    lamellHandler.createLamellPanel("lameller", fnrFromRequest,begrunnelse),
-//                    new SideBar("sideBar", fnrFromRequest,begrunnelse).setVisible(true),
-                    createNullstillLink(modalWindow),
-                    modalWindow
-            );
+        this.modalWindow = createModalWindow("modal");
+        if (erBegrunnet(pageParameters)) {
+            instantiateComponentsWithBegrunnelse(pageParameters.get("fnr").toString(null));
         } else {
-            add(
-                    new HentPersonPanel("searchPanel"),
-                    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
-                    new PersonsokPanel("personsokPanel").setVisible(true),
-                    lamellHandler.createLamellPanel("lameller", fnrFromRequest),
-                    new SideBar("sideBar", fnrFromRequest).setVisible(true),
-                    createNullstillLink(modalWindow),
-                    modalWindow
-            );
+            instantiateComponentsWithoutBegrunnelse(pageParameters.get("fnr").toString(null));
         }
-    }
-
-    private AjaxLink<Boolean> createNullstillLink(final ModigModalWindow modalWindow) {
-        return new AjaxLink<Boolean>("nullstill") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                if (lamellHandler.hasUnsavedChanges()) {
-                    modalWindow.show(target);
-                } else {
-                    gotoHentPersonPage();
-                }
-            }
-        };
-    }
-
-    private void gotoHentPersonPage() {
-        throw new RestartResponseException(
-                HentPersonPage.class
-        );
-    }
-
-    private ModigModalWindow createModalWindow(String id) {
-        final ModigModalWindow modalWindow = new ModigModalWindow(id);
-        modalWindow.setInitialHeight(150);
-        modalWindow.setInitialWidth(800);
-        modalWindow.setContent(new SjekkForlateSide(modalWindow.getContentId(), modalWindow, this.answer));
-        modalWindow.setWindowClosedCallback(new ModigModalWindow.WindowClosedCallback() {
-            @Override
-            public void onClose(AjaxRequestTarget ajaxRequestTarget) {
-                if (answer.getAnswer().equals("DISCARD")) {
-                    gotoHentPersonPage();
-                }
-            }
-        });
-        modalWindow.setCloseButtonCallback(new ModigModalWindow.CloseButtonCallback() {
-            @Override
-            public boolean onCloseButtonClicked(AjaxRequestTarget ajaxRequestTarget) {
-                // slik at man kan lukke vinduet med krysset i hï¿½yre hjï¿½rne.
-                return true;
-            }
-        });
-        return modalWindow;
     }
 
     @Override
@@ -116,18 +62,17 @@ public class Intern extends BasePage {
 
     @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET)
     public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
-        throw new RestartResponseException(
-                Intern.class,
-                new PageParameters().set("fnr", query)
-        );
+        PageParameters pageParameters = new PageParameters();
+        pageParameters.set("fnr", query);
+        handleNewFnrFoundEvent(target, pageParameters, Intern.class);
     }
 
     @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
     public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
-        throw new RestartResponseException(
-                Intern.class,
-                new PageParameters().set("fnr", query).set("begrunnelse", true)
-        );
+        PageParameters pageParameters = new PageParameters();
+        pageParameters.set("fnr", query);
+        pageParameters.set("begrunnelse", true);
+        handleNewFnrFoundEvent(target, pageParameters, Intern.class);
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
@@ -146,7 +91,89 @@ public class Intern extends BasePage {
         } catch (ApplicationException e) {
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
+    }
 
+    private boolean erBegrunnet(PageParameters pageParameters) {
+        return pageParameters.get(BEGRUNNELSE).toBoolean(false);
+    }
+
+    private void instantiateComponentsWithoutBegrunnelse(String fnrFromRequest) {
+        add(
+                new HentPersonPanel("searchPanel"),
+                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
+                new PersonsokPanel("personsokPanel").setVisible(true),
+                lamellHandler.createLamellPanel("lameller", fnrFromRequest),
+                new SideBar("sideBar", fnrFromRequest).setVisible(true),
+                createNullstillLink(modalWindow),
+                modalWindow
+        );
+    }
+
+    private void instantiateComponentsWithBegrunnelse(String fnrFromRequest) {
+        add(
+                new HentPersonPanel("searchPanel", true),
+                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
+                new PersonsokPanel("personsokPanel").setVisible(true),
+                lamellHandler.createLamellPanel("lameller", fnrFromRequest),
+                new SideBar("sideBar", fnrFromRequest).setVisible(true),
+                createNullstillLink(modalWindow),
+                modalWindow
+        );
+    }
+
+    private AjaxLink<Boolean> createNullstillLink(final ModiaModalWindow modalWindow) {
+        return new AjaxLink<Boolean>("nullstill") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                if (lamellHandler.hasUnsavedChanges()) {
+                    modalWindow.show(target);
+                } else {
+                    modalWindow.redirect();
+                }
+            }
+        };
+    }
+
+    private ModiaModalWindow createModalWindow(String id) {
+        final ModiaModalWindow modiaModalWindow = new ModiaModalWindow(id);
+        modiaModalWindow.setInitialHeight(150);
+        modiaModalWindow.setInitialWidth(800);
+        modiaModalWindow.setContent(new SjekkForlateSide(modiaModalWindow.getContentId(), modiaModalWindow, this.answer));
+        modiaModalWindow.setWindowClosedCallback(createWindowClosedCallback(modiaModalWindow));
+        modiaModalWindow.setCloseButtonCallback(createCloseButtonCallback());
+        return modiaModalWindow;
+    }
+
+    private void handleNewFnrFoundEvent(AjaxRequestTarget target, PageParameters pageParameters, Class clazz) {
+        modalWindow.setRedirectClass(clazz);
+        modalWindow.setPageParameters(pageParameters);
+        if (lamellHandler.hasUnsavedChanges()) {
+            modalWindow.show(target);
+        } else {
+            modalWindow.redirect();
+        }
+    }
+
+    private ModigModalWindow.WindowClosedCallback createWindowClosedCallback(final ModiaModalWindow modalWindow) {
+        return new ModigModalWindow.WindowClosedCallback() {
+            @Override
+            public void onClose(AjaxRequestTarget ajaxRequestTarget) {
+                if (answer.getAnswerType() == DISCARD) {
+                    modalWindow.redirect();
+                }
+                ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
+            }
+        };
+    }
+
+    private ModigModalWindow.CloseButtonCallback createCloseButtonCallback() {
+        return new ModigModalWindow.CloseButtonCallback() {
+            @Override
+            public boolean onCloseButtonClicked(AjaxRequestTarget ajaxRequestTarget) {
+                ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
+                return true;
+            }
+        };
     }
 
 }

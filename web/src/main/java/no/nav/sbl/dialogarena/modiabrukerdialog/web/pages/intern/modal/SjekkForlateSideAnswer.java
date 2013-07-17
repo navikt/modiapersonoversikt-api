@@ -2,14 +2,18 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal;
 
 import java.io.Serializable;
 
-public class SjekkForlateSideAnswer implements Serializable{
-    private String answer ="";
+public class SjekkForlateSideAnswer implements Serializable {
 
-    public String getAnswer() {
-        return answer;
+    public static enum AnswerType {DISCARD, CANCEL}
+
+    private AnswerType answerType;
+
+    public AnswerType getAnswerType() {
+        return answerType;
     }
 
-    public void setAnswer(String answer) {
-        this.answer = answer;
+    public void setAnswerType(AnswerType answerType) {
+        this.answerType = answerType;
     }
+
 }

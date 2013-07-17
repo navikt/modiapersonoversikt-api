@@ -13,7 +13,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.PriorityOrdered;
 
 @Configuration
-@Import(ComponentsContext.class)
+@Import({ComponentsContext.class, CacheConfig.class})
 public class ApplicationContext implements BeanDefinitionRegistryPostProcessor, PriorityOrdered {
 
     @Bean

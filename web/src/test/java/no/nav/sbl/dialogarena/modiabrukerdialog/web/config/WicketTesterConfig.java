@@ -10,12 +10,18 @@ import javax.inject.Inject;
 @Configuration
 public class WicketTesterConfig {
 
+    static {
+        System.setProperty("tjenestebuss.url", "http://changeme");
+        System.setProperty("ctjenestebuss.username", "me");
+        System.setProperty("ctjenestebuss.password", "secret");
+    }
+
     @Inject
     private WicketApplication application;
 
     @Bean
     public FluentWicketTester<WicketApplication> fluentWicketTester() {
-        return new FluentWicketTester<WicketApplication>(application);
+        return new FluentWicketTester<>(application);
     }
 
 }

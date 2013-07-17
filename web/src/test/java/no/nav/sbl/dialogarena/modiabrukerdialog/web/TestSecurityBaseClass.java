@@ -9,9 +9,11 @@ import org.springframework.test.context.ActiveProfiles;
 @DirtiesContext
 @ActiveProfiles("test")
 public class TestSecurityBaseClass {
+
     @BeforeClass
     public static void setupStatic() {
         SystemProperties.setFrom("environment-test.properties");
         TestCertificates.setupKeyAndTrustStore();
     }
+
 }

@@ -33,6 +33,35 @@
         </triggeringPolicy>
     </appender>
 
+    <!-- The sporingslogg-Appender- Logs access to sensitive information -->
+    <appender name="sporinglog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}.sporing</File>
+        <encoder>
+            <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{userId}] - %m%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}.sporing.%d</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="personaccessappender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}_personaccess.log</File>
+        <encoder>
+            <pattern>%date %level [%thread] - [%file:%line] - %m%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}_personaccess.log.%d</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <logger name="no.nav.modig.common.SporingsLogger" level="INFO">
+        <appender-ref ref="sporinglog"/>
+    </logger>
+
+    <logger name="personaccess" level="warn" additivity="false">
+        <appender-ref ref="personaccessappender"/>
+    </logger>
+
     <root level="${ROOT_LOG_LEVEL:-INFO}">
         <appender-ref ref="exceptionlog"/>
         <appender-ref ref="infolog"/>
