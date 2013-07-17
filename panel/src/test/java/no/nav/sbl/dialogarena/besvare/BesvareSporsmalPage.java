@@ -1,26 +1,23 @@
 package no.nav.sbl.dialogarena.besvare;
 
+import java.util.List;
+import javax.inject.Inject;
+import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
+import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSMelding;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.CompoundPropertyModel;
-
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 
 
 public class BesvareSporsmalPage extends WebPage {
 
+    @Inject
+    private SporsmalOgSvarPortType webservice;
+
     public BesvareSporsmalPage() {
-        final CompoundPropertyModel<BesvareSporsmalVM> modell = new CompoundPropertyModel<>(new BesvareSporsmalVM());
-        BesvareSporsmalPanel besvareSporsmalPanel = new BesvareSporsmalPanel("besvare-sporsmal", modell);
-        besvareSporsmalPanel.add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return modell.getObject().behandlingsId != null;
-            }
-        }));
+        List<WSMelding> meldinger = webservice.hentSporsmalOgSvarListe("28088834986");
         add(
-                besvareSporsmalPanel,
-                new AlleSporsmalOgSvarPanel("sporsmal-og-svar-liste", modell));
+                new BesvareSporsmalPanel("besvare-sporsmal",
+                        meldinger.isEmpty() ? new WSMelding() : meldinger.get(0)),
+                new AlleMeldingerPanel("sporsmal-og-svar-liste"));
     }
 
 }

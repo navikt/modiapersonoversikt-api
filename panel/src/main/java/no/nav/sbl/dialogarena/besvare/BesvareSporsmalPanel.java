@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.besvare;
 
 import javax.inject.Inject;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
+import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSvar;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -13,6 +14,7 @@ import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.GenericPanel;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 
 public class BesvareSporsmalPanel extends GenericPanel<Void> {
@@ -20,9 +22,10 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
     @Inject
     private SporsmalOgSvarPortType webservice;
 
-    public BesvareSporsmalPanel(String id, IModel<BesvareSporsmalVM> modell) {
+    public BesvareSporsmalPanel(String id, WSMelding melding) {
         super(id);
-        add(new SvarForm("svar-form", modell));
+        add(new SvarForm("svar-form", new CompoundPropertyModel<>(new BesvareSporsmalVM(
+                melding.getId(), melding.getTema(), melding.getFritekst(), "", melding.getOpprettet().toLocalDate(), false))));
         add(new AttributeAppender("class", "visittkort"));
     }
 
@@ -41,7 +44,8 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     BesvareSporsmalVM sos = getModelObject();
-                    webservice.besvarSporsmal(new WSSvar().withBehandlingsId(sos.behandlingsId).withTema(sos.tema).withFritekst(sos.svar).withSensitiv(sos.sensitiv));
+                    webservice.besvarSporsmal(new WSSvar()
+                            .withBehandlingsId(sos.behandlingsId).withTema(sos.tema).withFritekst(sos.svar).withSensitiv(sos.sensitiv));
                     model.setObject(new BesvareSporsmalVM());
                     target.add(this.getPage());
                 }
