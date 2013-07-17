@@ -22,8 +22,9 @@ public class BesvareSporsmalPanel extends GenericPanel<Void> {
     @Inject
     private SporsmalOgSvarPortType webservice;
 
-    public BesvareSporsmalPanel(String id, WSSporsmalOgSvar sos) {
+    public BesvareSporsmalPanel(String id) {
         super(id);
+        WSSporsmalOgSvar sos = webservice.plukkMeldingForBesvaring();
         add(new SvarForm("svar-form", new CompoundPropertyModel<>(new BesvareSporsmalVM(
                 sos.getSvar().getId(), sos.getSporsmal().getTema(), sos.getSporsmal().getFritekst(), sos.getSvar().getFritekst(),
                 sos.getSporsmal().getOpprettet().toLocalDate(), false))));
