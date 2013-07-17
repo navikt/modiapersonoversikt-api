@@ -30,11 +30,9 @@ public class HentPersonPage extends BasePage {
         throw new RestartResponseException(Intern.class, new PageParameters().set("fnr", query));
 	}
 
-
     @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
     public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
         throw new RestartResponseException(Intern.class, new PageParameters().set("fnr", query).set("begrunnelse", true));
     }
-
 
 }

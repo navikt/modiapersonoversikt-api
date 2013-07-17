@@ -6,9 +6,8 @@ import org.apache.wicket.markup.html.pages.AbstractErrorPage;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
-import javax.servlet.http.HttpServletResponse;
-
 import static java.util.Arrays.asList;
+import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
 import static no.nav.modig.wicket.errorhandling.listeners.ModigExceptionListener.EXCEPTION_MESSAGE;
 import static no.nav.modig.wicket.errorhandling.listeners.ModigExceptionListener.EXCEPTION_UID_KEY;
 import static no.nav.modig.wicket.errorhandling.panels.ErrorPanelVM.Icon.UTROPSTEGN;
@@ -32,7 +31,7 @@ public class ModiaApplicationExceptionPage extends AbstractErrorPage {
     }
 
     private String createErrorCodeString() {
-        return new StringResourceModel("errorpanel.errorcode", this, null, HttpServletResponse.SC_INTERNAL_SERVER_ERROR).toString();
+        return new StringResourceModel("errorpanel.errorcode", this, null, SC_INTERNAL_SERVER_ERROR).toString();
     }
 
     private String createExceptionString(String internasjonaliseringsnokkel) {

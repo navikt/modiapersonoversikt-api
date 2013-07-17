@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.feil;
 
-import no.nav.modig.wicket.errorhandling.listeners.ModigExceptionListener;
 import no.nav.modig.wicket.errorhandling.panels.ErrorPanelVM;
 import org.apache.wicket.Session;
 import org.apache.wicket.markup.html.pages.AbstractErrorPage;
@@ -10,13 +9,14 @@ import org.apache.wicket.request.http.WebResponse;
 
 import static java.util.Arrays.asList;
 import static javax.servlet.http.HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+import static no.nav.modig.wicket.errorhandling.listeners.ModigExceptionListener.EXCEPTION_UID_KEY;
 import static no.nav.modig.wicket.errorhandling.panels.ErrorPanelVM.Icon.UTROPSTEGN;
 
 public class ModiaSystemExceptionPage extends AbstractErrorPage {
 
     public ModiaSystemExceptionPage() {
         add(
-                createDefaultErrorPanel(createErrorPanelVM(getErrorCode().getObject(), Session.get().getMetaData(ModigExceptionListener.EXCEPTION_UID_KEY)))
+                createDefaultErrorPanel(createErrorPanelVM(getErrorCode().getObject(), Session.get().getMetaData(EXCEPTION_UID_KEY)))
         );
     }
 
