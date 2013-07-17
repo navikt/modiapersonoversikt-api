@@ -50,7 +50,7 @@ jQuery(document).ready(function ($) {
             navbar.css("margin", "0 auto auto -146px");
             logo.css("display", "none");
         }
-    };
+    }
 
     $(".sidebar > *").on("click", function (e) {
         e.stopPropagation();
@@ -116,5 +116,21 @@ jQuery(document).ready(function ($) {
     }, function() {
     	$(this).removeClass("hover");
     });
-});
+    
+    /** Registrer ajax loadere **/
+    
+    Modig.ajaxLoader.register({
+        urlPattern  : /utvidetPersonsokForm-hiddenSumbitLink/,
+        placeElement: '#personsokResult',
+        imageUrl   : '/modiabrukerdialog/img/ajaxloader/svart/loader_svart_96.gif',
+        css         : 'margin-bottom: 20px;'
+    });
 
+    Modig.ajaxLoader.register({
+        urlPattern  : /searchPanel-hentPersonForm-submitFodselsnummer/,
+        placeElement: '.search-intern',
+        placement   : 'after',
+        imageUrl   : '/modiabrukerdialog/img/ajaxloader/svart/loader_svart_32.gif',
+        css         : 'margin: 10px 0 10px 10px; float: left;'
+    });
+});

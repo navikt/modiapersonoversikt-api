@@ -13,10 +13,12 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 public class HentPersonPage extends BasePage {
 
 	public HentPersonPage() {
+
         add(
 				new HentPersonPanel("searchPanel"),
-				new PersonsokPanel("personsokPanel").setVisible(true));
-	}
+				new PersonsokPanel("personsokPanel").setVisible(true)
+        );
+    }
 
 	@Override
 	public boolean isVersioned() {
@@ -27,4 +29,10 @@ public class HentPersonPage extends BasePage {
 	public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
         throw new RestartResponseException(Intern.class, new PageParameters().set("fnr", query));
 	}
+
+    @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
+    public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
+        throw new RestartResponseException(Intern.class, new PageParameters().set("fnr", query).set("begrunnelse", true));
+    }
+
 }

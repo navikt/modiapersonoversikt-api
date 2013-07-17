@@ -9,6 +9,7 @@
         I vårt tilfelle ønsker vi at cachen lever en viss tid uavhengig av om den blir brukt
         derfor må timeToIdleSeconds være minst like stor som timeToLiveSeconds
     -->
+
     <cache name="kodeverkversjonCache" maxElementsInMemory="100"
         eternal="false"
         timeToIdleSeconds="3600"

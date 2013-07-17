@@ -9,6 +9,8 @@ import no.nav.modig.modia.navigation.KeyNavigationResourceReference;
 import no.nav.modig.modia.shortcuts.ShortcutListenerResourceReference;
 import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.pagelet.spi.utils.SPIResources;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.modig.security.tilgangskontroll.wicket.BehaviorPolicyAuthorizationStrategy;
 import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.modig.wicket.events.NamedEventDispatcher;
@@ -20,25 +22,29 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
+import org.apache.wicket.authorization.strategies.CompoundAuthorizationStrategy;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
-import org.apache.wicket.util.time.Duration;
 import org.springframework.context.ApplicationContext;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
-
 import java.util.Locale;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
+import static org.apache.wicket.util.time.Duration.ONE_SECOND;
 
 public class WicketApplication extends WebApplication {
 
     @Inject
     private ApplicationContext applicationContext;
+
+	@Resource(name="kjerneinfoPep")
+	private EnforcementPoint kjerneinfoPep;
 
     public static WicketApplication get() {
         return (WicketApplication) Application.get();
@@ -53,7 +59,7 @@ public class WicketApplication extends WebApplication {
     protected void init() {
         super.init();
         if (usesDevelopmentConfig()) {
-            getResourceSettings().setResourcePollFrequency(Duration.ONE_SECOND);
+            getResourceSettings().setResourcePollFrequency(ONE_SECOND);
         }
 
         new FrontendConfigurator()
@@ -72,7 +78,6 @@ public class WicketApplication extends WebApplication {
                 .addScripts(Widget.JS_RESOURCE)                      //TODO: Flytt til MODIA modul ?
                 .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
                 .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
-		        //.addScripts(Intern.JS_SNURR)
                 .addScripts(DatePicker.JQUERY_PLACEHOLDER)
 
                 .configure(this);
@@ -84,6 +89,10 @@ public class WicketApplication extends WebApplication {
         markupSettings.setStripComments(true);
         markupSettings.setCompressWhitespace(true);
         markupSettings.setDefaultMarkupEncoding("UTF-8");
+
+		CompoundAuthorizationStrategy compoundAuthorizationStrategy = new CompoundAuthorizationStrategy();
+		compoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(kjerneinfoPep));
+		getSecuritySettings().setAuthorizationStrategy(compoundAuthorizationStrategy);
 
         new ApplicationSettingsConfig()
                 .withApplicationExceptionPage(ModiaApplicationExceptionPage.class)

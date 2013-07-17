@@ -20,6 +20,8 @@
         <!-- TOMT -->
         <!-- Slutt personsok -->
         <!-- Fra kjerneinfo -->
+        <baseUrl alias="tjenestebuss" mapToProperty="tjenestebuss"/>
+        <credential alias="srv_kjerneinfo_tjenestebuss" mapToProperty="ctjenestebuss" />
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
         <webservice alias="virksomhet:Person_v1" mapToProperty="kjerneinfoendpoint"/>

@@ -22,8 +22,8 @@ public class Oversikt extends Lerret {
         timer = createTimer();
         add(timer);
         add(
-                new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
-                new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter")))
+                new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
+		        new SykepengerWidget("sykepenger", "Y", new Model<>(fnr))
         );
     }
 

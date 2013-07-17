@@ -5,7 +5,6 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.events.FeedItemPayload;
-import no.nav.modig.modia.events.InternalEvents;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
@@ -25,18 +24,20 @@ import org.apache.wicket.request.resource.ResourceReference;
 import javax.inject.Inject;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 
 /**
- *  Denne klassen brukes til å vise informasjon om en bruker. Instansiering skjer implisitt via events.
+ *  Denne klassen brukes til Ã¥ vise informasjon om en bruker. Instansiering skjer implisitt via events.
  */
 public class Intern extends BasePage {
 
-    public static final JavaScriptResourceReference JQUERY_UI_JS = new JavaScriptResourceReference(Intern.class, "jquery-ui-1.10.2.custom.min.js");
     private static final ResourceReference MEDIA_QUERIES = new PackageResourceReference(Intern.class, "respond.min.js");
-    public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");    public static final JavaScriptResourceReference JS_SNURR = new JavaScriptResourceReference(Intern.class, "snurr.js");
+    public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
+    public static final JavaScriptResourceReference JS_SNURR = new JavaScriptResourceReference(Intern.class, "snurr.js");
 
     private static final String BEGRUNNELSE = "begrunnelse";
     private final SjekkForlateSideAnswer answer;
@@ -60,14 +61,14 @@ public class Intern extends BasePage {
         return false;
     }
 
-    @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET)
+    @RunOnEvents(FODSELSNUMMER_FUNNET)
     public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
         PageParameters pageParameters = new PageParameters();
         pageParameters.set("fnr", query);
         handleNewFnrFoundEvent(target, pageParameters, Intern.class);
     }
 
-    @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
+    @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
     public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
         PageParameters pageParameters = new PageParameters();
         pageParameters.set("fnr", query);
@@ -112,10 +113,10 @@ public class Intern extends BasePage {
     private void instantiateComponentsWithBegrunnelse(String fnrFromRequest) {
         add(
                 new HentPersonPanel("searchPanel", true),
-                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
+                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest, true).setVisible(true),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 lamellHandler.createLamellPanel("lameller", fnrFromRequest),
-                new SideBar("sideBar", fnrFromRequest).setVisible(true),
+                new SideBar("sideBar", fnrFromRequest, true).setVisible(true),
                 createNullstillLink(modalWindow),
                 modalWindow
         );
@@ -136,7 +137,7 @@ public class Intern extends BasePage {
 
     private ModiaModalWindow createModalWindow(String id) {
         final ModiaModalWindow modiaModalWindow = new ModiaModalWindow(id);
-        modiaModalWindow.setInitialHeight(150);
+        modiaModalWindow.setInitialHeight(220);
         modiaModalWindow.setInitialWidth(800);
         modiaModalWindow.setContent(new SjekkForlateSide(modiaModalWindow.getContentId(), modiaModalWindow, this.answer));
         modiaModalWindow.setWindowClosedCallback(createWindowClosedCallback(modiaModalWindow));
