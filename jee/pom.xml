@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>no.nav.sbl.dialogarena</groupId>
 		<artifactId>modiabrukerdialog</artifactId>
-		<version>0.0.6</version>
+		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 
     <artifactId>modiabrukerdialog-jee</artifactId>
@@ -17,7 +17,7 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>modiabrukerdialog-web</artifactId>
-			<version>0.0.6</version>
+			<version>1.0.0-SNAPSHOT</version>
             <type>war</type>
 			<scope>runtime</scope>
 		</dependency>
