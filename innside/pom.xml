@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
-        <artifactId>besvare-sporsmal</artifactId>
+        <artifactId>sporsmal-og-svar</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>besvare-sporsmal-panel</artifactId>
+    <artifactId>sporsmal-og-svar-innside</artifactId>
     <name>${project.artifactId}</name>
 
 

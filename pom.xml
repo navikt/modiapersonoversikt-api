@@ -7,11 +7,13 @@
         <version>2.1</version>
     </parent>
     <modules>
-        <module>panel</module>
+        <module>common</module>
+        <module>innside</module>
+        <module>utside</module>
     </modules>
-    <name>Dialogarena - Besvare spørsmål</name>
-    <description>Modia-komponent hvor saksbehandler kan svare på spørsmål fra bruker.</description>
-    <artifactId>besvare-sporsmal</artifactId>
+    <name>Dialogarena - Spørsmål og svar</name>
+    <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål Og Svar - innside og utside.</description>
+    <artifactId>sporsmal-og-svar</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -233,8 +235,8 @@
     </build>
 
     <scm>
-        <developerConnection>scm:svn:https://versjonskontroll.adeo.no/svn/nav-sbl/dialogarena/besvare-sporsmaal/trunk</developerConnection>
-        <url>https://versjonskontroll.adeo.no/wsvn/nav-sbl/dialogarena/besvare-sporsmaal/trunk</url>
+        <developerConnection>scm:svn:https://versjonskontroll.adeo.no/svn/nav-sbl/dialogarena/sporsmal-og-svar/trunk</developerConnection>
+        <url>https://versjonskontroll.adeo.no/wsvn/nav-sbl/dialogarena/sporsmal-og-svar/trunk</url>
     </scm>
 
     <reporting>
