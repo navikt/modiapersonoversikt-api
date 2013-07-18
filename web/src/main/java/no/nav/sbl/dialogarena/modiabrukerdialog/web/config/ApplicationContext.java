@@ -49,7 +49,7 @@ public class ApplicationContext implements BeanDefinitionRegistryPostProcessor, 
     }
 
     @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) {
     }
 
     @Override
