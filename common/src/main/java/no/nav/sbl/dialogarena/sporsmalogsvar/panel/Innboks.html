@@ -6,13 +6,18 @@
 </head>
 <body>
 <wicket:panel>
-    <div wicket:id="liste">
+    <div wicket:id="meldingsliste" class="pane meldingsliste">
         <article wicket:id="meldinger" class="melding">
             <p wicket:id="type"></p>
             <p wicket:id="fritekst"></p>
         </article>
     </div>
-    <div wicket:id="traad" />
+    <div wicket:id="meldingsdetaljer" class="pane meldingsdetaljer">
+        <article wicket:id="meldinger" class="melding">
+            <p wicket:id="type"></p>
+            <p wicket:id="fritekst"></p>
+        </article>
+     </div>
 </wicket:panel>
 
 </body>

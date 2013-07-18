@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSMelding;
+import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSvar;
 import org.apache.commons.collections15.Transformer;
@@ -16,6 +17,10 @@ public class MeldingService implements Serializable {
 
     @Inject
     private SporsmalOgSvarPortType webservice;
+
+    public String stillSporsmal(String fritekst, String overskrift, String tema, String aktorId) {
+        return webservice.opprettSporsmal(new WSSporsmal().withFritekst(fritekst).withTema(tema).withOverskrift(overskrift), "28088834986", null);
+    }
 
     public List<Melding> hentAlleMeldinger(String aktorId) {
         return on(webservice.hentMeldingListe(aktorId)).map(TIL_MELDING).collect();

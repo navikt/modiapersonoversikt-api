@@ -103,6 +103,16 @@
                 <version>1.0.0</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-frontend-ressurser</artifactId>
+                <version>1.0.5</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-frontend-wicket</artifactId>
+                <version>1.0.5</version>
+            </dependency>
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
@@ -125,6 +135,12 @@
             <dependency>
                 <groupId>org.apache.wicket</groupId>
                 <artifactId>wicket-spring</artifactId>
+                <version>${wicket.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.wicket</groupId>
+                <artifactId>wicket-request</artifactId>
                 <version>${wicket.version}</version>
             </dependency>
 
