@@ -1,7 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
-import javax.inject.Inject;
+import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.modia.events.InternalEvents;
+import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.BesvareSporsmalVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.SporsmalOgSvar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Svar;
@@ -9,26 +12,40 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
-import org.apache.wicket.markup.html.panel.GenericPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 
-public class BesvareSporsmalPanel extends GenericPanel<Void> {
+import javax.inject.Inject;
+
+public class BesvareSporsmalPanel extends Panel {
 
     @Inject
     private MeldingService service;
 
-    public BesvareSporsmalPanel(String id, SporsmalOgSvar sos) {
+    public BesvareSporsmalPanel(String id) { //}, SporsmalOgSvar sos) {
         super(id);
+        SporsmalOgSvar sos = service.plukkMelding();
         add(new SvarForm("svar-form", new CompoundPropertyModel<>(new BesvareSporsmalVM(
                 sos.svar.id, sos.sporsmal.tema, sos.sporsmal.fritekst, sos.svar.fritekst,
                 sos.sporsmal.opprettet, false))));
         add(new AttributeAppender("class", "visittkort"));
+
+        AjaxLink brukerhenvendelserLink = new AjaxLink("brukerhenvendelserLink") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                send(getPage(), Broadcast.BUBBLE, new NamedEventPayload(InternalEvents.FEED_ITEM_CLICKED, new FeedItemPayload(null, null, "brukerhenvendelser")));
+            }
+        };
+
+        add(brukerhenvendelserLink);
+
     }
 
 

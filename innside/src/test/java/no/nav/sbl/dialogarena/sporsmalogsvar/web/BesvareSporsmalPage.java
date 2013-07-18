@@ -16,7 +16,7 @@ public class BesvareSporsmalPage extends WebPage {
     public BesvareSporsmalPage() {
         SporsmalOgSvar sporsmalOgSvar = service.plukkMelding();
         add(
-                new BesvareSporsmalPanel("sporsmalogsvar-sporsmal", sporsmalOgSvar),
+                new BesvareSporsmalPanel("sporsmalogsvar-sporsmal"), //, sporsmalOgSvar),
                 new Innboks("sporsmalogsvar-liste", sporsmalOgSvar.sporsmal, "28088834986"));
     }
 
