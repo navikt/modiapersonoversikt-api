@@ -1,10 +1,7 @@
-package no.nav.sbl.dialogarena.besvare.config;
+package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.inject.Inject;
 import no.nav.modig.security.sts.utility.STSConfigurationUtility;
-import no.nav.sbl.dialogarena.besvare.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
@@ -13,6 +10,10 @@ import org.apache.cxf.transport.http.HTTPConduit;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class ServicesConfig {

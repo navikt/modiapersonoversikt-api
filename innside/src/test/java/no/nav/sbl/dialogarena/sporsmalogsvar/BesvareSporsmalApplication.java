@@ -1,8 +1,8 @@
-package no.nav.sbl.dialogarena.besvare;
+package no.nav.sbl.dialogarena.sporsmalogsvar;
 
 import javax.inject.Inject;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
-import no.nav.sbl.dialogarena.besvare.web.BesvareSporsmalPage;
+import no.nav.sbl.dialogarena.sporsmalogsvar.web.BesvareSporsmalPage;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;

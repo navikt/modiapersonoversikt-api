@@ -1,6 +1,7 @@
-package no.nav.sbl.dialogarena.besvare.config;
+package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
 import no.nav.modig.pagelet.spi.ResourceReferences;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareSporsmalConfig;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
@@ -10,7 +11,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 
 
-public class BesvareSporsmalResources implements ResourceReferences {
+public class Resources implements ResourceReferences {
 
     @Override
     public List<CssResourceReference> getCssResourceReferences() {

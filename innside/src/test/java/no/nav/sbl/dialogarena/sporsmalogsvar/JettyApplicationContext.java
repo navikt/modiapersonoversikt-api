@@ -1,7 +1,7 @@
-package no.nav.sbl.dialogarena.besvare;
+package no.nav.sbl.dialogarena.sporsmalogsvar;
 
-import no.nav.sbl.dialogarena.besvare.config.JaxWsFeatures;
-import no.nav.sbl.dialogarena.besvare.config.ServicesConfig;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.JaxWsFeatures;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServicesConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;

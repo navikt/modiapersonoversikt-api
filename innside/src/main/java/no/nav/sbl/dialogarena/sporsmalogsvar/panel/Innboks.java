@@ -1,11 +1,8 @@
-package no.nav.sbl.dialogarena.besvare.web;
+package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
-import java.util.Comparator;
-import java.util.List;
-import javax.inject.Inject;
 import no.nav.modig.lang.collections.IterUtils;
-import no.nav.sbl.dialogarena.besvare.consumer.Melding;
-import no.nav.sbl.dialogarena.besvare.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -18,7 +15,11 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 
-public class AlleMeldingerPanel extends Panel {
+import javax.inject.Inject;
+import java.util.Comparator;
+import java.util.List;
+
+public class Innboks extends Panel {
 
     @Inject
     private MeldingService service;
@@ -28,7 +29,7 @@ public class AlleMeldingerPanel extends Panel {
     private IModel<List<Melding>> traad;
     private String aktorId;
 
-    public AlleMeldingerPanel(String id, Melding melding, String aktorId) {
+    public Innboks(String id, Melding melding, String aktorId) {
         super(id);
         this.melding = new CompoundPropertyModel<>(melding);
         this.aktorId = aktorId;

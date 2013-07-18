@@ -1,13 +1,14 @@
-package no.nav.sbl.dialogarena.besvare.consumer;
+package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import java.io.Serializable;
-import java.util.List;
-import javax.inject.Inject;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSvar;
 import org.apache.commons.collections15.Transformer;
+
+import javax.inject.Inject;
+import java.io.Serializable;
+import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 

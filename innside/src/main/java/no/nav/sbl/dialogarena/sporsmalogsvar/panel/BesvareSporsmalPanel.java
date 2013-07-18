@@ -1,10 +1,10 @@
-package no.nav.sbl.dialogarena.besvare.web;
+package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
 import javax.inject.Inject;
-import no.nav.sbl.dialogarena.besvare.consumer.BesvareSporsmalVM;
-import no.nav.sbl.dialogarena.besvare.consumer.MeldingService;
-import no.nav.sbl.dialogarena.besvare.consumer.SporsmalOgSvar;
-import no.nav.sbl.dialogarena.besvare.consumer.Svar;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.BesvareSporsmalVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.SporsmalOgSvar;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Svar;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;

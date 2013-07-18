@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.besvare.consumer;
+package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import java.io.Serializable;
 

@@ -1,7 +1,8 @@
-package no.nav.sbl.dialogarena.besvare.consumer;
+package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
+
+import org.joda.time.LocalDate;
 
 import java.io.Serializable;
-import org.joda.time.LocalDate;
 
 public class BesvareSporsmalVM implements Serializable {
 

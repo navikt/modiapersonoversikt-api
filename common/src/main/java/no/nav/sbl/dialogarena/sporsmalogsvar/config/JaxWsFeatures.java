@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.besvare.config;
+package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.feature.Feature;

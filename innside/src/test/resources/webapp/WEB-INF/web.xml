@@ -17,11 +17,11 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>no.nav.sbl.dialogarena.besvare.JettyApplicationContext</param-value>
+        <param-value>no.nav.sbl.dialogarena.sporsmalogsvar.JettyApplicationContext</param-value>
     </context-param>
 
     <filter>
-        <filter-name>wicket.besvaresporsmal</filter-name>
+        <filter-name>wicket.innside</filter-name>
         <filter-class>org.apache.wicket.protocol.http.WicketFilter</filter-class>
         <init-param>
             <param-name>applicationFactoryClassName</param-name>
@@ -30,7 +30,7 @@
     </filter>
 
     <filter-mapping>
-        <filter-name>wicket.besvaresporsmal</filter-name>
+        <filter-name>wicket.innside</filter-name>
         <url-pattern>/*</url-pattern>
         <dispatcher>REQUEST</dispatcher>
         <dispatcher>ERROR</dispatcher>
