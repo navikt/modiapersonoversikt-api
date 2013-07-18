@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.inject.Inject;
 import no.nav.modig.security.sts.utility.STSConfigurationUtility;
+import no.nav.sbl.dialogarena.besvare.consumer.MeldingService;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
@@ -21,6 +22,11 @@ public class ServicesConfig {
 
     @Value("${spormalogsvarendpoint.url}")
     protected String spmSvarEndpoint;
+
+    @Bean
+    public MeldingService meldingService() {
+        return new MeldingService();
+    }
 
     @Bean
     public SporsmalOgSvarPortType sporsmalOgSvarPortType() {

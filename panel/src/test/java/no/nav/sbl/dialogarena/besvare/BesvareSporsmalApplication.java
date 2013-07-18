@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.besvare;
 
+import javax.inject.Inject;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
+import no.nav.sbl.dialogarena.besvare.web.BesvareSporsmalPage;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.context.ApplicationContext;
-
-import javax.inject.Inject;
 
 
 public class BesvareSporsmalApplication extends WebApplication {

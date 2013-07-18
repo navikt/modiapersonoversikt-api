@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.besvare;
+package no.nav.sbl.dialogarena.besvare.consumer;
 
 import java.io.Serializable;
 import org.joda.time.LocalDate;
