@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import({
-        JaxWsFeatures.Mock.class,
+        JaxWsFeatures.Integration.class,
         ServicesConfig.class
 })
 public class BesvareSporsmalConfig {
