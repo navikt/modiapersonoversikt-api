@@ -73,10 +73,10 @@
             <artifactId>modig-lang</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>no.nav.sbl.dialogarena</groupId>-->
-            <!--<artifactId>besvare-sporsmal-panel</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sporsmal-og-svar-innside</artifactId>
+        </dependency>
 
         <!-- End modia komponenter -->
 
