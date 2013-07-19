@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
-import no.nav.modig.security.sts.utility.STSConfigurationUtility;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
 import org.apache.cxf.endpoint.Client;
@@ -35,7 +34,6 @@ public class ServicesConfig {
         Client client = ClientProxy.getClient(hnvSpsmSvarPortType);
         HTTPConduit httpConduit = (HTTPConduit) client.getConduit();
         httpConduit.setTlsClientParameters(jaxwsFeatures.tlsClientParameters());
-        STSConfigurationUtility.configureStsForSystemUser(ClientProxy.getClient(hnvSpsmSvarPortType));
         return hnvSpsmSvarPortType;
     }
 

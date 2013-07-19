@@ -103,11 +103,13 @@
                 <version>1.0.0</version>
                 <scope>test</scope>
             </dependency>
+
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-frontend-ressurser</artifactId>
                 <version>1.0.5</version>
             </dependency>
+
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-frontend-wicket</artifactId>
