@@ -19,7 +19,7 @@ public class MeldingService implements Serializable {
     private SporsmalOgSvarPortType webservice;
 
     public String stillSporsmal(String fritekst, String overskrift, String tema, String aktorId) {
-        return webservice.opprettSporsmal(new WSSporsmal().withFritekst(fritekst).withTema(tema).withOverskrift(overskrift), "28088834986", null);
+        return webservice.opprettSporsmal(new WSSporsmal().withFritekst(fritekst).withTema(tema).withOverskrift(overskrift), aktorId);
     }
 
     public List<Melding> hentAlleMeldinger(String aktorId) {

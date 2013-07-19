@@ -3,11 +3,10 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 import java.util.Comparator;
 import java.util.List;
 import javax.inject.Inject;
-import no.nav.modig.lang.collections.IterUtils;
-import no.nav.modig.wicket.conditional.ConditionalUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import org.apache.commons.collections15.Predicate;
+import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -18,6 +17,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 
 import static java.util.Collections.emptyList;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 
 public class Innboks extends Panel {
 
@@ -39,7 +40,7 @@ public class Innboks extends Panel {
 
         detaljer = new WebMarkupContainer("meldingsdetaljer");
         detaljer.setOutputMarkupId(true);
-        meldingsdetaljer = new Meldingsdetaljer("meldinger");
+        meldingsdetaljer = new Meldingsdetaljer("meldinger", valgtTraad());
         meldingsdetaljer.oppdaterView();
         detaljer.add(meldingsdetaljer);
 
@@ -58,7 +59,7 @@ public class Innboks extends Panel {
         protected void populateItem(final ListItem<Melding> item) {
             item.add(new Label("type"));
             item.add(new Label("fritekst"));
-            item.add(ConditionalUtils.hasCssClassIf("valgt", new AbstractReadOnlyModel<Boolean>() {
+            item.add(hasCssClassIf("valgt", new AbstractReadOnlyModel<Boolean>() {
                 @Override
                 public Boolean getObject() {
                     return item.getModelObject() == valgtMelding;
@@ -88,34 +89,51 @@ public class Innboks extends Panel {
         }
     }
 
-    private class Meldingsdetaljer extends PropertyListView<Melding> {
+    private class Meldingsdetaljer extends PropertyListView<ExpandableMelding> {
 
-        public Meldingsdetaljer(String id) {
-            super(id, alleMeldinger);
+
+        public Meldingsdetaljer(String id, List<? extends ExpandableMelding> list) {
+            super(id, list);
         }
 
         public void oppdaterView() {
             this.setList(valgtTraad());
         }
 
-        public List<Melding> valgtTraad() {
-            if (valgtMelding != null) {
-                return IterUtils.on(alleMeldinger).filter(harTraadId(valgtMelding.traadId)).collect(nyesteNederst);
-            } else {
-                return emptyList();
-            }
-        }
-
         @Override
-        protected void populateItem(final ListItem<Melding> item) {
-            item.add(new Label("type"));
-            item.add(new Label("fritekst"));
-            item.add(ConditionalUtils.hasCssClassIf("valgt", new AbstractReadOnlyModel<Boolean>() {
+        protected void populateItem(final ListItem<ExpandableMelding> item) {
+            item.add(new Label("melding.type"));
+            item.add(new Label("melding.fritekst"));
+            item.add(hasCssClassIf("valgt", new AbstractReadOnlyModel<Boolean>() {
                 @Override
                 public Boolean getObject() {
-                    return item.getModelObject() == valgtMelding;
+                    return item.getModelObject().melding == valgtMelding;
                 }
             }));
+            item.add(hasCssClassIf("expanded", new AbstractReadOnlyModel<Boolean>() {
+                @Override
+                public Boolean getObject() {
+                    return item.getModelObject().expanded;
+                }
+            }));
+            item.add(new AjaxEventBehavior("onclick") {
+                @Override
+                protected void onEvent(AjaxRequestTarget target) {
+                    ExpandableMelding expandableMelding = item.getModelObject();
+                    if (expandableMelding.melding != valgtMelding) {
+                        expandableMelding.expanded ^= true;
+                        target.add(item);
+                    }
+                }
+            });
+        }
+    }
+
+    public List<ExpandableMelding> valgtTraad() {
+        if (valgtMelding != null) {
+            return on(alleMeldinger).filter(harTraadId(valgtMelding.traadId)).map(toExpandable(valgtMelding)).collect(nyesteNederst);
+        } else {
+            return emptyList();
         }
     }
 
@@ -128,11 +146,20 @@ public class Innboks extends Panel {
         };
     }
 
-    private Comparator<Melding> nyesteNederst = new Comparator<Melding>() {
-        public int compare(Melding o1, Melding o2) {
-            return Long.valueOf(o1.id, Character.MAX_RADIX).compareTo(Long.valueOf(o2.id, Character.MAX_RADIX));
+    private Comparator<ExpandableMelding> nyesteNederst = new Comparator<ExpandableMelding>() {
+        public int compare(ExpandableMelding o1, ExpandableMelding o2) {
+            return Long.valueOf(o1.melding.id, Character.MAX_RADIX).compareTo(Long.valueOf(o2.melding.id, Character.MAX_RADIX));
         }
     };
+
+    private Transformer<Melding, ExpandableMelding> toExpandable(final Melding valgtMelding) {
+        return new Transformer<Melding, ExpandableMelding>() {
+            @Override
+            public ExpandableMelding transform(Melding melding) {
+                return new ExpandableMelding(melding, melding == valgtMelding);
+            }
+        };
+    }
 
 
 }
