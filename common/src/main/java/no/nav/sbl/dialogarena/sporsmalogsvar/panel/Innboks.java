@@ -18,9 +18,7 @@ import java.util.List;
 
 public class Innboks extends Panel {
 
-    private List<Melding> meldinger;
     private Melding valgtMelding;
-    private final WebMarkupContainer liste;
     private final WebMarkupContainer detaljer;
     private final Meldingsdetaljer meldingsdetaljer;
     private ListItem<Melding> valgtItem;
@@ -28,8 +26,7 @@ public class Innboks extends Panel {
     public Innboks(String id, Melding valgtMelding, List<Melding> meldinger) {
         super(id);
         this.valgtMelding = valgtMelding;
-        this.meldinger = meldinger;
-        liste = new WebMarkupContainer("meldingsliste");
+        WebMarkupContainer liste = new WebMarkupContainer("meldingsliste");
         liste.setOutputMarkupId(true);
         liste.add(new MeldingerListe("meldinger", meldinger));
 
@@ -97,18 +94,6 @@ public class Innboks extends Panel {
             item.add(new Label("type"));
             item.add(new Label("fritekst"));
         }
-    }
-
-    private class Traad extends WebMarkupContainer {
-
-        public Traad(String id) {
-            super(id);
-        }
-
-    }
-
-    private List<Melding> hentTraad(String traadId) {
-        return IterUtils.on(meldinger).filter(harTraadId(traadId)).collect(byBehandlingsIdAsc);
     }
 
     private Predicate<Melding> harTraadId(final String traadId) {
