@@ -86,7 +86,9 @@ public class Innboks extends Panel {
         }
 
         public void valgteMelding(Melding melding) {
-            this.setList(IterUtils.on(alle).filter(harTraadId(melding.traadId)).collect());
+            if (melding != null) {
+                this.setList(IterUtils.on(alle).filter(harTraadId(melding.traadId)).collect());
+            }
         }
 
         @Override
