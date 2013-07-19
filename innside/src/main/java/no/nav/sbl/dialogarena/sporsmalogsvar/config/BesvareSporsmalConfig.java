@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Import({BesvareSporsmalConfig.Default.class, BesvareSporsmalConfig.Test.class})
+@Import({BesvareSporsmalConfig.Default.class, BesvareSporsmalConfig.DefaultWithoutCNCheck.class, BesvareSporsmalConfig.Test.class})
 public class BesvareSporsmalConfig {
 
     @Profile({"default", "brukerhenvendelserDefault"})
@@ -19,6 +19,15 @@ public class BesvareSporsmalConfig {
             ServicesConfig.class
     })
     public static class Default { }
+
+    @Profile({"default", "brukerhenvendelserDefaultWithoutCNCheck"})
+    @Configuration
+    @Import({
+            JaxWsFeatures.Mock.class,
+            StsConfig.class,
+            ServicesConfig.class
+    })
+    public static class DefaultWithoutCNCheck { }
 
     @Profile({"test", "brukerhenvendelserTest"})
     @Configuration

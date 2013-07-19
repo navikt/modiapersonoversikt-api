@@ -6,7 +6,7 @@ import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.InnboksPage;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
-import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.context.ApplicationContext;
 
@@ -34,7 +34,8 @@ public class BesvareSporsmalApplication extends WebApplication {
                                 .attribute("http-equiv", "X-UA-Compatible")
                                 .attribute("content", "IE=edge,chrome=1")
                                 .done())
-                .addLess(new PackageResourceReference(BesvareSporsmalApplication.class, "stylesheets/innboks.less"))
+//                .addLess(new PackageResourceReference(BesvareSporsmalApplication.class, "stylesheets/innboks.css"))
+                .addCss(new CssResourceReference(BesvareSporsmalApplication.class, "stylesheets/innboks.css"))
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
     }

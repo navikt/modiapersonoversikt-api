@@ -55,6 +55,7 @@ public class Innboks extends Panel {
             super(id, alleMeldinger);
         }
 
+
         @Override
         protected void populateItem(final ListItem<Melding> item) {
             item.add(new Label("type"));
