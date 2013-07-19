@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
+import java.util.List;
 import no.nav.modig.lang.collections.IterUtils;
 import no.nav.modig.wicket.conditional.ConditionalUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
@@ -12,9 +13,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-
-import java.util.Comparator;
-import java.util.List;
 
 public class Innboks extends Panel {
 
@@ -106,11 +104,5 @@ public class Innboks extends Panel {
             }
         };
     }
-
-    private Comparator<Melding> byBehandlingsIdAsc = new Comparator<Melding>() {
-        public int compare(Melding o1, Melding o2) {
-            return Long.valueOf(o1.id).compareTo(Long.valueOf(o2.id));
-        }
-    };
 
 }
