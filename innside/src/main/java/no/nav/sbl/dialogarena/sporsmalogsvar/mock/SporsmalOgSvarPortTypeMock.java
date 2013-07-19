@@ -1,15 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.mock;
 
+import java.util.List;
+import javax.jws.WebParam;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSMelding;
-import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSMeldingstype;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSvar;
 import org.joda.time.DateTime;
-
-import javax.jws.WebParam;
-import java.util.List;
 
 import static no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSMeldingstype.SPORSMAL;
 import static no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSMeldingstype.SVAR;
@@ -39,7 +37,7 @@ public class SporsmalOgSvarPortTypeMock implements SporsmalOgSvarPortType {
     }
 
     @Override
-    public String opprettSporsmal(@WebParam(name = "sporsmal", targetNamespace = "") WSSporsmal wsSporsmal, @WebParam(name = "aktorId", targetNamespace = "") String s, @WebParam(name = "traadId", targetNamespace = "") String s2) {
+    public String opprettSporsmal(@WebParam(name = "sporsmal", targetNamespace = "") WSSporsmal wsSporsmal, @WebParam(name = "aktorId", targetNamespace = "") String s) {
         return null;
     }
 

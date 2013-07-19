@@ -129,7 +129,7 @@ public class Innboks extends Panel {
         }
     }
 
-    public List<ExpandableMelding> valgtTraad() {
+    protected List<ExpandableMelding> valgtTraad() {
         if (valgtMelding != null) {
             return on(alleMeldinger).filter(harTraadId(valgtMelding.traadId)).map(toExpandable(valgtMelding)).collect(nyesteNederst);
         } else {
