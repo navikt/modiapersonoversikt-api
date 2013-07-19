@@ -13,7 +13,7 @@
             , personsokDefault
             , brukerprofilDefault
             , behandleBrukerprofilDefault
-            , brukerhenvendelserDefault
+            , brukerhenvendelserDefaultWithoutCNCheck
         </param-value>
     </context-param>
 </web-app>
