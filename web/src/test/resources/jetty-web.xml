@@ -13,6 +13,7 @@
             , personsokDefault
             , brukerprofilDefault
             , behandleBrukerprofilDefault
+            , brukerhenvendelserDefault
         </param-value>
     </context-param>
 </web-app>
