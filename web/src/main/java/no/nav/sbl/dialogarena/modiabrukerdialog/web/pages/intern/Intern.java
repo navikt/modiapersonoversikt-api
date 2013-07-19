@@ -4,6 +4,7 @@ import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
+import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -46,11 +47,7 @@ public class Intern extends BasePage {
     public Intern(PageParameters pageParameters) {
         this.answer = new SjekkForlateSideAnswer();
         this.modalWindow = createModalWindow("modal");
-        if (erBegrunnet(pageParameters)) {
-            instantiateComponentsWithBegrunnelse(pageParameters.get("fnr").toString(null));
-        } else {
-            instantiateComponentsWithoutBegrunnelse(pageParameters.get("fnr").toString(null));
-        }
+        instantiateComponents(pageParameters.get("fnr").toString(null));
     }
 
     @Override
@@ -69,7 +66,7 @@ public class Intern extends BasePage {
     public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
         PageParameters pageParameters = new PageParameters();
         pageParameters.set("fnr", query);
-        pageParameters.set("begrunnelse", true);
+	    getSession().setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, true);
         handleNewFnrFoundEvent(target, pageParameters, Intern.class);
     }
 
@@ -91,29 +88,13 @@ public class Intern extends BasePage {
         }
     }
 
-    private boolean erBegrunnet(PageParameters pageParameters) {
-        return pageParameters.get(BEGRUNNELSE).toBoolean(false);
-    }
-
-    private void instantiateComponentsWithoutBegrunnelse(String fnrFromRequest) {
+    private void instantiateComponents(String fnrFromRequest) {
         add(
                 new HentPersonPanel("searchPanel"),
                 new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 lamellHandler.createLamellPanel("lameller", fnrFromRequest),
                 new SideBar("sideBar", fnrFromRequest).setVisible(true),
-                createNullstillLink(modalWindow),
-                modalWindow
-        );
-    }
-
-    private void instantiateComponentsWithBegrunnelse(String fnrFromRequest) {
-        add(
-                new HentPersonPanel("searchPanel", true),
-                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest, true).setVisible(true),
-                new PersonsokPanel("personsokPanel").setVisible(true),
-                lamellHandler.createLamellPanel("lameller", fnrFromRequest),
-                new SideBar("sideBar", fnrFromRequest, true).setVisible(true),
                 createNullstillLink(modalWindow),
                 modalWindow
         );
