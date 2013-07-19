@@ -6,6 +6,10 @@
     background-color: green;
 }
 
+.meldingsdetalj.expanded {
+    font-weight: bold;
+}
+
 .pane {
     float:left;
 }
