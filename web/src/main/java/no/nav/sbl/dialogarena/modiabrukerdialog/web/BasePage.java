@@ -13,20 +13,13 @@ public class BasePage extends WebPage {
     public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(Intern.class, "lokal.js");
 
     private final WebMarkupContainer body;
-    private FeedbackPanel feedback;
 
     public BasePage() {
-        feedback = new FeedbackPanel("feedback");
         body = (WebMarkupContainer) new TransparentWebMarkupContainer("body").setOutputMarkupId(true);
-        body.add(new DebugBar("debug"), feedback);
         add(body);
     }
 
     public WebMarkupContainer getBody() {
         return body;
-    }
-
-    public FeedbackPanel getFeedback() {
-        return feedback;
     }
 }
