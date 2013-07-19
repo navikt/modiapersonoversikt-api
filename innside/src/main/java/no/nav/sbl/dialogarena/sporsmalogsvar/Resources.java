@@ -16,7 +16,7 @@ public class Resources implements ResourceReferences {
 
     @Override
     public List<CssResourceReference> getCssResourceReferences() {
-        return asList(new CssResourceReference(Resources.class, "stylesheets/innboks.less"));
+        return asList(new CssResourceReference(Resources.class, "stylesheets/innboks.css"));
     }
 
     @Override
