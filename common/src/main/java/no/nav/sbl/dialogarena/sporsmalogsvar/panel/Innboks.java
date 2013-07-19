@@ -129,7 +129,7 @@ public class Innboks extends Panel {
         }
     }
 
-    protected List<ExpandableMelding> valgtTraad() {
+    private List<ExpandableMelding> valgtTraad() {
         if (valgtMelding != null) {
             return on(alleMeldinger).filter(harTraadId(valgtMelding.traadId)).map(toExpandable(valgtMelding)).collect(nyesteNederst);
         } else {
@@ -156,7 +156,7 @@ public class Innboks extends Panel {
         return new Transformer<Melding, ExpandableMelding>() {
             @Override
             public ExpandableMelding transform(Melding melding) {
-                return new ExpandableMelding(melding, melding == valgtMelding);
+                return new ExpandableMelding(melding, melding.equals(valgtMelding));
             }
         };
     }
