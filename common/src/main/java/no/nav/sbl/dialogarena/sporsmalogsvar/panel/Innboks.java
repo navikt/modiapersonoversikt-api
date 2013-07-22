@@ -138,7 +138,7 @@ public class Innboks extends Panel {
         }
     }
 
-    private Predicate<Melding> harTraadId(final String traadId) {
+    private static Predicate<Melding> harTraadId(final String traadId) {
         return new Predicate<Melding>() {
             @Override
             public boolean evaluate(Melding melding) {
@@ -147,13 +147,13 @@ public class Innboks extends Panel {
         };
     }
 
-    private Comparator<ExpandableMelding> nyesteNederst = new Comparator<ExpandableMelding>() {
+    private static Comparator<ExpandableMelding> nyesteNederst = new Comparator<ExpandableMelding>() {
         public int compare(ExpandableMelding o1, ExpandableMelding o2) {
             return Long.valueOf(o1.melding.id, Character.MAX_RADIX).compareTo(Long.valueOf(o2.melding.id, Character.MAX_RADIX));
         }
     };
 
-    private Transformer<Melding, ExpandableMelding> toExpandable(final Melding valgtMelding) {
+    private static Transformer<Melding, ExpandableMelding> toExpandable(final Melding valgtMelding) {
         return new Transformer<Melding, ExpandableMelding>() {
             @Override
             public ExpandableMelding transform(Melding melding) {
