@@ -1,10 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
-import java.io.Serializable;
-import java.util.Comparator;
-import java.util.List;
-import javax.inject.Inject;
-
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
@@ -19,6 +14,10 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
+
+import javax.inject.Inject;
+import java.util.Comparator;
+import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -38,6 +37,7 @@ public class Innboks extends Panel {
 
     public Innboks(String id, String fodselsnr) {
         super(id);
+        setOutputMarkupId(true);
         this.fodselsnr = fodselsnr;
         alleMeldinger = service.hentAlleMeldinger(fodselsnr);
         valgtMelding = alleMeldinger.isEmpty() ? null : alleMeldinger.get(0);
@@ -60,9 +60,8 @@ public class Innboks extends Panel {
 
     @RunOnEvents("events.messages_updated")
     public void messagesUpdated(AjaxRequestTarget target) {
-        System.err.println("Prøver å oppdatere innboksen.");
         alleMeldinger = service.hentAlleMeldinger(fodselsnr);
-        target.add(meldingerListView);
+        target.add(this);
     }
 
     private class MeldingerListe extends PropertyListView<Melding> {

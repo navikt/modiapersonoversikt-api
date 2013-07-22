@@ -84,7 +84,7 @@ public class BesvareSporsmalPanel extends Panel {
                     service.besvar(new Svar().withId(sos.behandlingsId).withTema(sos.tema).withFritekst(sos.svar).withSensitiv(sos.sensitiv));
                     model.setObject(new BesvareSporsmalVM());
                     info("Svaret er sendt.");
-                    send(getPage(), Broadcast.BUBBLE, new NamedEventPayload("events.messages_updated"));
+                    send(getPage(), Broadcast.BREADTH, new NamedEventPayload("events.messages_updated"));
                     target.add(feedbackPanel);
                 }
             });
