@@ -27,7 +27,8 @@ public class MeldingService implements Serializable {
     }
 
     public SporsmalOgSvar plukkMelding() {
-        return TIL_SPORSMALOGSVAR.transform(webservice.plukkMeldingForBesvaring());
+        WSSporsmalOgSvar wsSporsmalOgSvar = webservice.plukkMeldingForBesvaring();
+        return wsSporsmalOgSvar == null ? null : TIL_SPORSMALOGSVAR.transform(wsSporsmalOgSvar);
     }
 
     public void besvar(Svar svar) {

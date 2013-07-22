@@ -1,8 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 import javax.inject.Inject;
+
+import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import org.apache.commons.collections15.Predicate;
@@ -12,6 +15,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -25,18 +29,25 @@ public class Innboks extends Panel {
     @Inject
     MeldingService service;
 
+    private final String fodselsnr;
     private Melding valgtMelding;
     private List<Melding> alleMeldinger;
     private final WebMarkupContainer detaljer;
     private final Meldingsdetaljer meldingsdetaljer;
+    private final ListView<Melding> meldingerListView;
 
     public Innboks(String id, String fodselsnr) {
         super(id);
+        this.fodselsnr = fodselsnr;
         alleMeldinger = service.hentAlleMeldinger(fodselsnr);
         valgtMelding = alleMeldinger.isEmpty() ? null : alleMeldinger.get(0);
+
         WebMarkupContainer liste = new WebMarkupContainer("meldingsliste");
         liste.setOutputMarkupId(true);
-        liste.add(new MeldingerListe("meldinger"));
+
+        meldingerListView = new MeldingerListe("meldinger");
+        meldingerListView.setOutputMarkupId(true);
+        liste.add(meldingerListView);
 
         detaljer = new WebMarkupContainer("meldingsdetaljer");
         detaljer.setOutputMarkupId(true);
@@ -45,6 +56,13 @@ public class Innboks extends Panel {
         detaljer.add(meldingsdetaljer);
 
         add(liste, detaljer);
+    }
+
+    @RunOnEvents("events.messages_updated")
+    public void messagesUpdated(AjaxRequestTarget target) {
+        System.err.println("Prøver å oppdatere innboksen.");
+        alleMeldinger = service.hentAlleMeldinger(fodselsnr);
+        target.add(meldingerListView);
     }
 
     private class MeldingerListe extends PropertyListView<Melding> {

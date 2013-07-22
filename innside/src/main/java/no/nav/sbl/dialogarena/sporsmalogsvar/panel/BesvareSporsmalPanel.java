@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
-import javax.inject.Inject;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.InternalEvents;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.BesvareSporsmalVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.SporsmalOgSvar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Svar;
@@ -18,22 +18,42 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+
+import javax.inject.Inject;
 
 public class BesvareSporsmalPanel extends Panel {
 
     @Inject
     private MeldingService service;
 
+    private final FeedbackPanel feedbackPanel;
+
     public BesvareSporsmalPanel(String id) { //}, SporsmalOgSvar sos) {
         super(id);
         SporsmalOgSvar sos = service.plukkMelding();
-        add(new SvarForm("svar-form", new CompoundPropertyModel<>(new BesvareSporsmalVM(
+        if (sos == null) {
+            sos = new SporsmalOgSvar().withSporsmal(new Melding()).withSvar(new Melding());
+        }
+        SvarForm svarForm = new SvarForm("svar-form", new CompoundPropertyModel<>(new BesvareSporsmalVM(
                 sos.svar.id, sos.sporsmal.tema, sos.sporsmal.fritekst, sos.svar.fritekst,
-                sos.sporsmal.opprettet, false))));
+                sos.sporsmal.opprettet, false)));
+        Label ingenSporsmal = new Label("ingen-sporsmal", "Ingen spørsmål å besvare.");
+
+        if (sos.sporsmal.id == null) {
+            svarForm.setVisible(false);
+        } else {
+            ingenSporsmal.setVisible(false);
+        }
+        add(ingenSporsmal);
+        add(svarForm);
         add(new AttributeAppender("class", "visittkort"));
+        feedbackPanel = new FeedbackPanel("feedback");
+        feedbackPanel.setOutputMarkupId(true);
+        add(feedbackPanel);
 
         AjaxLink brukerhenvendelserLink = new AjaxLink("brukerhenvendelserLink") {
             @Override
@@ -63,7 +83,9 @@ public class BesvareSporsmalPanel extends Panel {
                     BesvareSporsmalVM sos = getModelObject();
                     service.besvar(new Svar().withId(sos.behandlingsId).withTema(sos.tema).withFritekst(sos.svar).withSensitiv(sos.sensitiv));
                     model.setObject(new BesvareSporsmalVM());
-                    target.add(this.getPage());
+                    info("Svaret er sendt.");
+                    send(getPage(), Broadcast.BUBBLE, new NamedEventPayload("events.messages_updated"));
+                    target.add(feedbackPanel);
                 }
             });
             add(new AjaxLink<Void>("avbryt") {

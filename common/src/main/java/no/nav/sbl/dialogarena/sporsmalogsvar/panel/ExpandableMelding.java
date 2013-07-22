@@ -2,7 +2,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 
-public class ExpandableMelding {
+import java.io.Serializable;
+
+public class ExpandableMelding implements Serializable {
     public Melding melding;
     boolean expanded;
 
