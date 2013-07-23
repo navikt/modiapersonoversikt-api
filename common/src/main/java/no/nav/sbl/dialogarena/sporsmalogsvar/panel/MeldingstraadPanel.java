@@ -50,21 +50,11 @@ public class MeldingstraadPanel extends Panel {
             };
             Label overskrift = new Label("overskrift");
             Label fritekst = new Label("fritekst");
-            fritekst.add(visibleIf(valgt));
 
             item.add(overskrift, fritekst);
 
             item.add(hasCssClassIf("valgt", valgt));
             item.add(hasCssClassIf("expanded", valgt));
-            item.add(new AjaxEventBehavior("onclick") {
-                @Override
-                protected void onEvent(AjaxRequestTarget target) {
-                    Melding melding = item.getModelObject();
-                    if (melding != valgtMeldingModel.getObject()) {
-                        target.add(item);
-                    }
-                }
-            });
         }
     }
 }

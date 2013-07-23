@@ -8,24 +8,40 @@ h2.liten {
 
 .innboks {
     max-height: 500px;
-    border: solid #ddd;
-    border-width: 1px 1px 1px 0;
+    border: solid 1px #ddd;
     background: white;
 }
 
-.melding, .meldingsdetalj {
+.melding {
     padding: 1em;
     position: relative;
+}
+
+.meldingliste > .melding {
     border-bottom: solid 1px #ddd;
 }
 
-.melding:last-child, .meldingsdetalj:last-child {
+.melding:last-child, .meldingsdetaljer:last-child {
     border-bottom: none;
 }
 
 .melding > p {
     color: #333;
     margin: 0;
+}
+
+.meldingliste > .melding {
+
+}
+
+.meldingsliste > .melding > P {
+    max-width : 500px;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    word-wrap: break-word;
+
 }
 
 .meldingsliste > .melding.valgt {
@@ -36,24 +52,21 @@ h2.liten {
     color: white;
 }
 
-.meldingsdetalj > .melding:not(.valgt) > P {
+.meldingsdetaljer > .melding:not(.valgt) > P {
     text-overflow: ellipsis;
     white-space: nowrap;
-    width: 100%;
+    max-width: 500px;
     overflow: hidden;
+    margin: 0 auto;
+    border: solid 1px #ddd;
+    padding: 1em;
 }
 
-.meldingsdetalj > .melding.valgt > P {
+.meldingsdetaljer > .melding.valgt > P {
 }
 
 .melding:not(.valgt) {
     cursor: pointer;
-}
-
-.meldingsdetalj.valgt {
-}
-
-.meldingsdetalj.expanded {
 }
 
 .pane {
