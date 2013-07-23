@@ -1,16 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.AbstractWrapModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.util.ListModel;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
+import org.apache.wicket.model.AbstractWrapModel;
+import org.apache.wicket.model.IModel;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.harTraadId;

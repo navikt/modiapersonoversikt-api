@@ -19,14 +19,12 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 public class MeldingstraadPanel extends Panel {
 
     private final IModel<Melding> valgtMeldingModel;
-    private final Traad traad;
 
     public MeldingstraadPanel(final String id, final IModel<Melding> valgtMeldingModel, final IModel<? extends List<? extends Melding>> model) {
         super(id, model);
         setOutputMarkupId(true);
         this.valgtMeldingModel = valgtMeldingModel;
-        this.traad = new Traad("melding", model);
-        add(traad);
+        add(new Traad("melding", model));
     }
 
     @RunOnEvents(Innboks.VALGT_MELDING_EVENT)

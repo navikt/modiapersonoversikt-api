@@ -1,10 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
+import java.util.List;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
-import org.apache.commons.collections15.Predicate;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
@@ -12,13 +10,9 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.markup.repeater.data.ListDataProvider;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
-
-import java.util.List;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -45,7 +39,7 @@ public class AlleMeldingerPanel extends Panel {
             valgtItemModel = new Model<>();
         }
 
-        private class OverskriftModel extends AbstractReadOnlyModel<String> {
+        private final class OverskriftModel extends AbstractReadOnlyModel<String> {
 
             private IModel<Melding> meldingModel;
 
