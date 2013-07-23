@@ -1,0 +1,72 @@
+package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
+
+import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.PropertyListView;
+import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.IModel;
+
+import java.util.List;
+
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+
+public class MeldingstraadPanel extends Panel {
+
+    private final IModel<Melding> valgtMeldingModel;
+    private final Traad traad;
+
+    public MeldingstraadPanel(final String id, final IModel<Melding> valgtMeldingModel, final IModel<? extends List<? extends Melding>> model) {
+        super(id, model);
+        setOutputMarkupId(true);
+        this.valgtMeldingModel = valgtMeldingModel;
+        this.traad = new Traad("melding", model);
+        add(traad);
+    }
+
+    @RunOnEvents(Innboks.VALGT_MELDING_EVENT)
+    public void valgteMelding(AjaxRequestTarget target, Melding melding) {
+        target.add(this);
+    }
+
+    private class Traad extends PropertyListView<Melding> {
+
+        public Traad(String id, final IModel<? extends List<? extends Melding>> model) {
+            super(id, model);
+            setOutputMarkupId(true);
+        }
+
+        @Override
+        protected void populateItem(final ListItem<Melding> item) {
+            item.setOutputMarkupId(true);
+            IModel<Boolean> valgt = new AbstractReadOnlyModel<Boolean>() {
+                @Override
+                public Boolean getObject() {
+                    return item.getModelObject() == valgtMeldingModel.getObject();
+                }
+            };
+            Label overskrift = new Label("overskrift");
+            Label fritekst = new Label("fritekst");
+            fritekst.add(visibleIf(valgt));
+
+            item.add(overskrift, fritekst);
+
+            item.add(hasCssClassIf("valgt", valgt));
+            item.add(hasCssClassIf("expanded", valgt));
+            item.add(new AjaxEventBehavior("onclick") {
+                @Override
+                protected void onEvent(AjaxRequestTarget target) {
+                    Melding melding = item.getModelObject();
+                    if (melding != valgtMeldingModel.getObject()) {
+                        target.add(item);
+                    }
+                }
+            });
+        }
+    }
+}

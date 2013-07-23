@@ -1,13 +1,59 @@
-.melding.valgt {
-    background-color: red;
+h1 {
+    text-transform: uppercase;
+}
+h2.liten {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.innboks {
+    max-height: 500px;
+    border: solid #ddd;
+    border-width: 1px 1px 1px 0;
+    background: white;
+}
+
+.melding, .meldingsdetalj {
+    padding: 1em;
+    position: relative;
+    border-bottom: solid 1px #ddd;
+}
+
+.melding:last-child, .meldingsdetalj:last-child {
+    border-bottom: none;
+}
+
+.melding > p {
+    color: #333;
+    margin: 0;
+}
+
+.meldingsliste > .melding.valgt {
+    background-color: #5bc0de;
+}
+
+.meldingsliste > .melding.valgt * {
+    color: white;
+}
+
+.meldingsdetalj > .melding:not(.valgt) > P {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+    overflow: hidden;
+}
+
+.meldingsdetalj > .melding.valgt > P {
+}
+
+.melding:not(.valgt) {
+    cursor: pointer;
 }
 
 .meldingsdetalj.valgt {
-    background-color: green;
 }
 
 .meldingsdetalj.expanded {
-    font-weight: bold;
 }
 
 .pane {
@@ -15,10 +61,20 @@
 }
 
 .pane.meldingsliste {
-    width: 20%;
-    overflow: scroll;
+    width: 40%;
+    overflow-y: scroll;
+    border-right: solid 1px #ddd;
     max-height: 500px;
 }
 .pane.meldingsdetaljer {
-    width: 80%;
+    width: 60%;
+    max-height: 500px;
+}
+
+.opprettet {
+    position: absolute;
+    top: 1.5em;
+    right: 1.5em;
+    font-size: 80%;
+    font-weight: bold;
 }

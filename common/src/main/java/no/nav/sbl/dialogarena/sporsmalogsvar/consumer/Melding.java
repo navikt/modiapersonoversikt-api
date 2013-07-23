@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import org.apache.commons.collections15.Predicate;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
@@ -43,6 +44,23 @@ public class Melding implements Serializable {
     public Melding withType(Meldingstype type) {
         this.type = type;
         return this;
+    }
+
+    public boolean erSvar() {
+        return this.type == Meldingstype.SVAR;
+    }
+
+    public boolean erSporsmal() {
+        return this.type == Meldingstype.SPORSMAL;
+    }
+
+    public static Predicate<Melding> harTraadId(final String traadId) {
+        return new Predicate<Melding>() {
+            @Override
+            public boolean evaluate(Melding melding) {
+                return traadId.equals(melding.traadId);
+            }
+        };
     }
 
 }

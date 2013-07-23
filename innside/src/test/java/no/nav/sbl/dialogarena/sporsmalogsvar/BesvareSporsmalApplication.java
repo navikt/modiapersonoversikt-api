@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
 import no.nav.modig.frontend.FrontendConfigurator;
+import no.nav.modig.frontend.FrontendModules;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.InnboksPage;
@@ -11,8 +12,6 @@ import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.context.ApplicationContext;
 
 import javax.inject.Inject;
-
-import static no.nav.modig.frontend.FrontendModules.EKSTERNFLATE;
 
 
 public class BesvareSporsmalApplication extends WebApplication {
@@ -26,7 +25,7 @@ public class BesvareSporsmalApplication extends WebApplication {
         getMarkupSettings().setStripWicketTags(true);
         new ApplicationSettingsConfig().configure(this);
         new FrontendConfigurator()
-                .withModules(EKSTERNFLATE)
+                .withModules(FrontendModules.MODIA)
                 .addMetas(
                         MetaTag.CHARSET_UTF8,
                         MetaTag.VIEWPORT_SCALE_1,
