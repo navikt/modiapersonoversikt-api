@@ -106,18 +106,18 @@ input:disabled {
 		padding-left: 0;
 		list-style-type: none;
 		margin: 0;
-	
+
 		LI:not(:first-child) {
 			margin-top: 2rem;
         }
     }
-	
+
 	/* Oversikt */
 	&[id^=oversikt] {
 		.kolonne:first-of-type {
 			margin-left: 0;
 	    }
-	
+
 		.kolonne:last-child {
 			margin-left: 3.8%;
 		}
@@ -173,6 +173,10 @@ input:disabled {
 
     /* Brukerprofil */
     &.brukerprofil, &[id^="brukerprofil"]:not(.widget-navigasjon) {
+        INPUT[type="submit"]:disabled, INPUT[type="button"]:disabled {
+          cursor: default !important;
+        }
+
         FIELDSET {
             border: 0;
             padding: 0;
@@ -274,34 +278,38 @@ input:disabled {
                 }
             }
 
+            .hasDatepicker {
+                display: inline !important;
+            }
+
             #kontaktinformasjon {
                 LABEL {
                     width: 25%;
                     float: left;
 
                     &:nth-child(2n+1) {
-                        padding-left: 4%;
+                      margin-left: 4%;
                     }
-                    
+
                     &:nth-child(odd) {
-                        clear: none;
+                      clear: none;
                     }
 
                     SELECT {
-                        float: left;
+                      float: left;
                     }
 
                     DIV {
-                        width: 22%;
+                      width: 22%;
                     }
 
                     INPUT {
-                        width: 70% !important;
-                        padding-left: 4%;
+                      width: 70% !important;
+                      padding-left: 4%;
                     }
 
                     &.epostadresse INPUT {
-                        width: 100%;
+                      width: 92% !important;
                     }
                 }
             }
@@ -312,7 +320,7 @@ input:disabled {
 	&.sykepenger, &[id^="sykepenger"]:not(.widget-navigasjon) {
 		SECTION {
 			margin-top: 0;
-		
+
 			> SECTION H1 {
 				._H2;
 				margin-bottom: 2rem;
@@ -323,11 +331,11 @@ input:disabled {
 			float: right;
 			margin: 2rem 0 0 3.8%;
 	    }
-	
+
 		.arbeidssituasjon {
 			clear: left;
 	    }
-	
+
 		.sykmeldinger {
 			clear: left;
             float: left;
@@ -342,11 +350,11 @@ input:disabled {
 			._H2;
 			margin-bottom: 2rem;
 	    }
-	
+
 		.arbeidssituasjon {
 			margin: 0 0 2rem 3.8%;
 			float: right;
-	
+
 			.arbeisdgiver {
 				margin-top: 2rem;
             }
@@ -355,14 +363,14 @@ input:disabled {
 		.barnet {
 			margin: 0 0 2rem 0;
 		}
-  
+
 		SECTION.periode, SECTION[title=Periode] {
 			clear: both;
             display: block;
 			padding-top: 2rem;
-  
+
 			border-top: 1px solid #CCC;
-  
+
 			DL.oppsummering, ARTICLE.liste {
 				.kolonne;
 				margin-left: 0;
@@ -383,7 +391,7 @@ input:disabled {
 			font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
 			position: relative;
 			padding-right: 30px;
-			
+
 			.dato {
 				display: block;
 				font-size: 0.857rem;
@@ -391,13 +399,13 @@ input:disabled {
 				font-family: Helvetica, Arial, sans-serif;
 			    text-transform: uppercase;
 		    }
-		
+
 			.belop {
 				position: absolute;
 				left: 50%;
             }
         }
-	
+
 		.gradering {
 			position: absolute;
 			right: 0;
