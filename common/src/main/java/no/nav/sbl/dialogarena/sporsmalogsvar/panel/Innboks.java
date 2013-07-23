@@ -1,5 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
+import java.util.Comparator;
+import java.util.List;
+import javax.inject.Inject;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
@@ -10,14 +13,9 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-
-import javax.inject.Inject;
-import java.util.Comparator;
-import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -33,7 +31,6 @@ public class Innboks extends Panel {
     private List<Melding> alleMeldinger;
     private final WebMarkupContainer detaljer;
     private final Meldingsdetaljer meldingsdetaljer;
-    private final ListView<Melding> meldingerListView;
 
     public Innboks(String id, String fodselsnr) {
         super(id);
@@ -45,7 +42,7 @@ public class Innboks extends Panel {
         WebMarkupContainer liste = new WebMarkupContainer("meldingsliste");
         liste.setOutputMarkupId(true);
 
-        meldingerListView = new MeldingerListe("meldinger");
+        MeldingerListe meldingerListView = new MeldingerListe("meldinger");
         meldingerListView.setOutputMarkupId(true);
         liste.add(meldingerListView);
 
