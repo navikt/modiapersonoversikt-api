@@ -61,7 +61,7 @@ public class AlleMeldingerPanel extends Panel implements IHeaderContributor, Har
             item.add(new Label("fritekst"));
             item.add(hasCssClassIf("valgt", delegat.erMeldingValgt(item.getModelObject())));
 
-            item.add(new AjaxEventBehavior("onclick") {
+            item.add(new AjaxEventBehavior("click") {
                 @Override
                 protected void onEvent(AjaxRequestTarget target) {
                     delegat.meldingValgt(target, item.getModelObject(), false);
