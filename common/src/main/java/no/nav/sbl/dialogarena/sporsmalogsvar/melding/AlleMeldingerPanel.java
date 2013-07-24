@@ -1,12 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.melding;
 
-import no.nav.modig.wicket.events.NamedEventPayload;
-import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
-import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.InnboksModell;
+import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.HarMeldingsliste;
+import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.MeldingslisteDelegat;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.html.IHeaderContributor;
@@ -14,36 +11,37 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 
-public class AlleMeldingerPanel extends Panel implements IHeaderContributor {
-
-    private final InnboksModell innboksModell;
+public class AlleMeldingerPanel extends Panel implements IHeaderContributor, HarMeldingsliste {
 
     private Meldingsliste meldingsliste;
 
-    public AlleMeldingerPanel(String id, InnboksModell innboksModell) {
-        super(id, innboksModell);
+    private final MeldingslisteDelegat delegat;
+
+    public AlleMeldingerPanel(String id, MeldingslisteDelegat delegat) {
+        super(id);
         setOutputMarkupId(true);
-        this.innboksModell = innboksModell;
+        this.delegat = delegat;
         this.meldingsliste = new Meldingsliste("meldinger");
         add(meldingsliste);
     }
 
-    @RunOnEvents(Innboks.VALGT_MELDING_EVENT)
-    public void valgteMelding(AjaxRequestTarget target, ValgtMeldingOppdatert valgtMeldingOppdatert) {
-        for (int i = 0; i < meldingsliste.size(); i++) {
-            ListItem<MeldingVM> item = (ListItem<MeldingVM>) meldingsliste.get(i);
-            if (item.getModelObject() == valgtMeldingOppdatert.forrige) {
+    @Override
+    @SuppressWarnings("unchecked")
+    public void valgteMelding(AjaxRequestTarget target, MeldingVM forrigeMelding, MeldingVM valgteMelding, boolean oppdaterScroll) {
+        for (ListItem<MeldingVM> item : on(meldingsliste).map(castTo(ListItem.class))) {
+            if (item.getModelObject() == forrigeMelding) {
                 target.add(item);
             }
 
-            if (item.getModelObject() == valgtMeldingOppdatert.valgt) {
+            if (item.getModelObject() == valgteMelding) {
                 target.add(item);
-                if (valgtMeldingOppdatert.scroll) {
+                if (oppdaterScroll) {
                     target.appendJavaScript("$('#" + getMarkupId() + "').scrollTo(0, '#" + item.getMarkupId() + "');");
                 }
             }
@@ -61,16 +59,12 @@ public class AlleMeldingerPanel extends Panel implements IHeaderContributor {
         protected void populateItem(final ListItem<MeldingVM> item) {
             item.add(new MeldingsHeader("header"));
             item.add(new Label("fritekst"));
-            IModel<Boolean> erValgtMelding = innboksModell.erValgtMelding(item.getModelObject());
-            item.add(hasCssClassIf("valgt", erValgtMelding));
+            item.add(hasCssClassIf("valgt", delegat.erMeldingValgt(item.getModelObject())));
 
             item.add(new AjaxEventBehavior("onclick") {
                 @Override
                 protected void onEvent(AjaxRequestTarget target) {
-                    MeldingVM forrige = innboksModell.getInnboksVM().getValgtMelding();
-                    MeldingVM valgte = item.getModelObject();
-                    innboksModell.getInnboksVM().setValgtMelding(valgte);
-                    send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Innboks.VALGT_MELDING_EVENT, new ValgtMeldingOppdatert(forrige, valgte, false)));
+                    delegat.meldingValgt(target, item.getModelObject(), false);
                 }
             });
         }

@@ -1,12 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.melding;
 
-import no.nav.modig.wicket.events.NamedEventPayload;
-import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
-import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.InnboksModell;
+import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.HarMeldingsliste;
+import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.MeldingslisteDelegat;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
@@ -14,19 +11,19 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 
-public class MeldingstraadPanel extends Panel {
+public class MeldingstraadPanel extends Panel implements HarMeldingsliste {
 
-    private final InnboksModell innboksModell;
+    private final MeldingslisteDelegat delegat;
 
-    public MeldingstraadPanel(String id, InnboksModell innboksModell) {
+    public MeldingstraadPanel(String id, MeldingslisteDelegat delegat) {
         super(id);
-        this.innboksModell = innboksModell;
+        this.delegat = delegat;
         setOutputMarkupId(true);
         add(new Traad("traad"));
     }
 
-    @RunOnEvents(Innboks.VALGT_MELDING_EVENT)
-    public void valgteMelding(AjaxRequestTarget target, ValgtMeldingOppdatert valgtMeldingOppdatert) {
+    @Override
+    public void valgteMelding(AjaxRequestTarget target, MeldingVM forrigeMelding, MeldingVM valgteMelding, boolean oppdaterScroll) {
         target.add(this);
     }
 
@@ -43,15 +40,13 @@ public class MeldingstraadPanel extends Panel {
             item.add(new MeldingsHeader("header"));
             item.add(new Label("fritekst"));
 
-            item.add(hasCssClassIf("valgt", innboksModell.erValgtMelding(item.getModelObject())));
-            item.add(hasCssClassIf("ekspandert", innboksModell.erValgtMelding(item.getModelObject())));
+            item.add(hasCssClassIf("valgt", delegat.erMeldingValgt(item.getModelObject())));
+            item.add(hasCssClassIf("ekspandert", delegat.erMeldingValgt(item.getModelObject())));
 
             item.add(new AjaxEventBehavior("click") {
                 @Override
                 protected void onEvent(AjaxRequestTarget target) {
-                    MeldingVM forrige = innboksModell.getInnboksVM().getValgtMelding();
-                    innboksModell.getObject().setValgtMelding(item.getModelObject());
-                    send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Innboks.VALGT_MELDING_EVENT, new ValgtMeldingOppdatert(forrige, item.getModelObject(), true)));
+                    delegat.meldingValgt(target, item.getModelObject(), true);
                 }
             });
         }

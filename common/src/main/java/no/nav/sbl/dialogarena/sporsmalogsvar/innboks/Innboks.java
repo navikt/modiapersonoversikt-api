@@ -1,15 +1,20 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.innboks;
 
-import javax.inject.Inject;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.AlleMeldingerPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingstraadPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 
-public class Innboks extends Panel {
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Innboks extends Panel implements MeldingslisteDelegat {
 
     public static final String VALGT_MELDING_EVENT = "hendelser.valgte_melding";
     public static final String MELDINGER_OPPDATERT = "hendelser.meldinger_oppdatert";
@@ -20,6 +25,8 @@ public class Innboks extends Panel {
     private final InnboksModell innboksModell;
     private final String fodselsnr;
 
+    private List<HarMeldingsliste> meldingslister = new ArrayList<>();
+
     public Innboks(String id, String fodselsnr) {
         super(id);
         this.fodselsnr = fodselsnr;
@@ -27,8 +34,13 @@ public class Innboks extends Panel {
         setDefaultModel(this.innboksModell);
         setOutputMarkupId(true);
 
-        add(new AlleMeldingerPanel("meldinger", this.innboksModell));
-        add(new MeldingstraadPanel("traad", this.innboksModell));
+        AlleMeldingerPanel alleMeldinger = new AlleMeldingerPanel("meldinger", this);
+        add(alleMeldinger);
+        meldingslister.add(alleMeldinger);
+        MeldingstraadPanel traad = new MeldingstraadPanel("traad", this);
+        meldingslister.add(traad);
+
+        add(alleMeldinger, traad);
 
         add(new AttributeAppender("class", " innboks clearfix"));
     }
@@ -37,5 +49,19 @@ public class Innboks extends Panel {
     public void messagesUpdated(AjaxRequestTarget target) {
         this.innboksModell.getObject().oppdaterMeldingerFra(service.hentAlleMeldinger(fodselsnr));
         target.add(this);
+    }
+
+    @Override
+    public void meldingValgt(AjaxRequestTarget target, MeldingVM valgteMelding, boolean oppdaterScroll) {
+        MeldingVM forrigeMelding = innboksModell.getInnboksVM().getValgtMelding();
+        innboksModell.getInnboksVM().setValgtMelding(valgteMelding);
+        for (HarMeldingsliste meldingsliste : meldingslister) {
+            meldingsliste.valgteMelding(target, forrigeMelding, valgteMelding, oppdaterScroll);
+        }
+    }
+
+    @Override
+    public IModel<Boolean> erMeldingValgt(MeldingVM melding) {
+        return innboksModell.erValgtMelding(melding);
     }
 }
