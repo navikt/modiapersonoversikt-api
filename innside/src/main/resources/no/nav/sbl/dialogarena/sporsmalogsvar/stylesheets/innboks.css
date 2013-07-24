@@ -52,14 +52,18 @@ h2.liten {
     color: white;
 }
 
-.meldingsdetaljer > .melding:not(.valgt) > P {
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.meldingsdetaljer > .melding:not(.valgt) {
     max-width: 500px;
-    overflow: hidden;
     margin: 0 auto;
     border: solid 1px #ddd;
     padding: 1em;
+    margin-top: 1em;
+}
+
+.meldingsdetaljer > .melding:not(.valgt) > P {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
 }
 
 .meldingsdetaljer > .melding.valgt > P {

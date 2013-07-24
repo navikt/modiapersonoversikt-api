@@ -34,8 +34,7 @@ public class AlleMeldingerPanel extends Panel {
 
         @Override
         protected void populateItem(final ListItem<MeldingVM> item) {
-            item.add(new Label("overskrift"));
-            item.add(new Label("opprettetDato"));
+            item.add(new MeldingsHeader("header"));
             item.add(new Label("fritekst"));
             IModel<Boolean> erValgtMelding = innboksModell.erValgtMelding(item.getModelObject());
             item.add(hasCssClassIf("valgt", erValgtMelding));

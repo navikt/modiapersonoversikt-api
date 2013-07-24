@@ -37,10 +37,8 @@ public class MeldingstraadPanel extends Panel {
         @Override
         protected void populateItem(final ListItem<MeldingVM> item) {
             item.setOutputMarkupId(true);
-            Label overskrift = new Label("overskrift");
-            Label fritekst = new Label("fritekst");
-
-            item.add(overskrift, fritekst);
+            item.add(new MeldingsHeader("header"));
+            item.add(new Label("fritekst"));
 
             item.add(hasCssClassIf("valgt", innboksModell.erValgtMelding(item.getModelObject())));
             item.add(hasCssClassIf("expanded", innboksModell.erValgtMelding(item.getModelObject())));
