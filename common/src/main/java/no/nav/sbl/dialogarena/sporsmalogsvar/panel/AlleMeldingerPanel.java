@@ -25,7 +25,7 @@ public class AlleMeldingerPanel extends Panel {
         super(id, model);
         add(new Meldingsliste("melding", model));
         this.valgtMeldingModel = valgtMeldingModel;
-        if (this.valgtMeldingModel.getObject() == null) {
+        if (this.valgtMeldingModel.getObject() == null && !model.getObject().isEmpty()) {
             this.valgtMeldingModel.setObject(model.getObject().get(0));
         }
     }
