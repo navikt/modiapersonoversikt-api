@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.web;
 
 import javax.inject.Inject;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.panel.Innboks;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
