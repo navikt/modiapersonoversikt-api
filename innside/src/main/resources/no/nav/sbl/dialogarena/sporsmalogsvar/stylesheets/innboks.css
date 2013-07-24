@@ -1,7 +1,8 @@
-h1 {
+.innboks H1 {
     text-transform: uppercase;
+    margin: 0;
 }
-h2.liten {
+.innboks H2.liten {
     text-transform: uppercase;
     font-weight: bold;
 }
@@ -10,6 +11,10 @@ h2.liten {
     max-height: 500px;
     border: solid 1px #ddd;
     background: white;
+}
+
+.innboks SECTION {
+    padding-top: 0;
 }
 
 .melding {
