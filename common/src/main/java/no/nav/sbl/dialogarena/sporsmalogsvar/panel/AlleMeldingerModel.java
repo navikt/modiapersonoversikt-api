@@ -1,9 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
+import no.nav.modig.lang.collections.IterUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import org.apache.wicket.model.LoadableDetachableModel;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class AlleMeldingerModel extends LoadableDetachableModel<List<Melding>> {
@@ -25,6 +27,13 @@ public class AlleMeldingerModel extends LoadableDetachableModel<List<Melding>> {
 
     @Override
     protected List<Melding> load() {
-        return meldingService.hentAlleMeldinger(fodselsnummer);
+        return IterUtils.on(meldingService.hentAlleMeldinger(fodselsnummer)).collect(nyesteOverst);
     }
+
+    private static Comparator<Melding> nyesteOverst = new Comparator<Melding>() {
+        public int compare(Melding m1, Melding m2) {
+            return m2.opprettet.compareTo(m1.opprettet);
+        }
+    };
+
 }

@@ -36,7 +36,7 @@ public class MeldingstraadModel extends AbstractWrapModel<List<Melding>> {
 
     private static Comparator<Melding> nyesteNederst = new Comparator<Melding>() {
         public int compare(Melding o1, Melding o2) {
-            return Long.valueOf(o1.id, Character.MAX_RADIX).compareTo(Long.valueOf(o2.id, Character.MAX_RADIX));
+            return o1.opprettet.compareTo(o2.opprettet);
         }
     };
 

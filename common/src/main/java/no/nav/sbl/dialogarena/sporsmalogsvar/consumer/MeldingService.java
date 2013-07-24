@@ -41,7 +41,7 @@ public class MeldingService implements Serializable {
             return new Melding()
                     .withId(wsMelding.getId())
                     .withTraadId(wsMelding.getTraadId())
-                    .withOpprettet(wsMelding.getOpprettet().toLocalDate())
+                    .withOpprettet(wsMelding.getOpprettet())
                     .withType(Meldingstype.valueOf(wsMelding.getType().toString()))
                     .withTema(wsMelding.getTema())
                     .withOverskrift(wsMelding.getOverskrift())

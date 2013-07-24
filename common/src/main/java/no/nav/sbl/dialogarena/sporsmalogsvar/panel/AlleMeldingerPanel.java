@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.panel;
 
 import java.util.List;
+import java.util.Locale;
+
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -13,6 +15,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.joda.time.format.DateTimeFormat;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -65,10 +68,31 @@ public class AlleMeldingerPanel extends Panel {
             }
         }
 
+        private final class DatoOpprettetModel extends AbstractReadOnlyModel<String> {
+
+            private IModel<Melding> meldingModel;
+
+            private DatoOpprettetModel(IModel<Melding> meldingModel) {
+                this.meldingModel = meldingModel;
+            }
+
+            @Override
+            public String getObject() {
+                return DateTimeFormat.forPattern("dd.MM.yyyy")
+                        .withLocale(Locale.getDefault())
+                        .print(meldingModel.getObject().opprettet);
+            }
+
+            @Override
+            public void detach() {
+                meldingModel.detach();
+            }
+        }
+
         @Override
         protected void populateItem(final ListItem<Melding> item) {
             item.add(new Label("overskrift", new OverskriftModel(item.getModel())));
-            item.add(new Label("opprettet"));
+            item.add(new Label("opprettet", new DatoOpprettetModel(item.getModel())));
             item.add(new Label("fritekst"));
             item.add(hasCssClassIf("valgt", new AbstractReadOnlyModel<Boolean>() {
                 @Override

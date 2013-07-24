@@ -1,14 +1,15 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import org.apache.commons.collections15.Predicate;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 
-public class Melding implements Serializable {
+public class Melding implements Serializable, Comparable<Melding> {
 
     public String id, traadId, tema, overskrift, fritekst;
-    public LocalDate opprettet;
+    public DateTime opprettet;
     public Meldingstype type;
 
     public Melding withId(String id) {
@@ -36,7 +37,7 @@ public class Melding implements Serializable {
         return this;
     }
 
-    public Melding withOpprettet(LocalDate opprettet) {
+    public Melding withOpprettet(DateTime opprettet) {
         this.opprettet = opprettet;
         return this;
     }
@@ -63,4 +64,8 @@ public class Melding implements Serializable {
         };
     }
 
+    @Override
+    public int compareTo(Melding o) {
+        return this.opprettet.compareTo(o.opprettet);
+    }
 }
