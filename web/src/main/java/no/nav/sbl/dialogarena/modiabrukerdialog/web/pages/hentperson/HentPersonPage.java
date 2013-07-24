@@ -6,7 +6,6 @@ import no.nav.modig.modia.events.InternalEvents;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketApplication;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;

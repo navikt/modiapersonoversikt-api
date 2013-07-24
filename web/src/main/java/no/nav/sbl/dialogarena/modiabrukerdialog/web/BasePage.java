@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 public class BasePage extends WebPage {

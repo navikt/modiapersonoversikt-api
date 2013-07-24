@@ -37,7 +37,6 @@ public class Intern extends BasePage {
 
     private static final ResourceReference MEDIA_QUERIES = new PackageResourceReference(Intern.class, "respond.min.js");
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
-    private static final String BEGRUNNELSE = "begrunnelse";
     private final SjekkForlateSideAnswer answer;
     private final ModiaModalWindow modalWindow;
 
