@@ -60,7 +60,7 @@ h2.liten {
     margin-top: 1em;
 }
 
-.meldingsdetaljer > .melding:not(.valgt) > P {
+.meldingsdetaljer > .melding:not(.ekspandert) > P {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
