@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.melding;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
+import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.InnboksModell;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
