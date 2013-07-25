@@ -15,5 +15,5 @@ public interface HarMeldingsliste {
      * @param valgteMelding meldingen brukeren valgte
      * @param oppdaterScroll om valget skal føre til en scroll i meldingslisten
      */
-    public void valgteMelding(AjaxRequestTarget target, MeldingVM forrigeMelding, MeldingVM valgteMelding, boolean oppdaterScroll);
+    void valgteMelding(AjaxRequestTarget target, MeldingVM forrigeMelding, MeldingVM valgteMelding, boolean oppdaterScroll);
 }

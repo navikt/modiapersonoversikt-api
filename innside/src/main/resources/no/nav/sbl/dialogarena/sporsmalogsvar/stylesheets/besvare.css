@@ -1,0 +1,31 @@
+.besvare-panel {
+    background: white;
+    margin: 0;
+    padding: 1em;
+    border: 1px solid black;
+}
+
+.besvare-panel .sporsmal header > h1 {
+    text-transform: uppercase;
+    margin-bottom: 0.5em;
+}
+
+.besvare-panel .sporsmal header > h2 {
+    text-transform: uppercase;
+    margin-top: 0;
+    margin-bottom: 0.2em;
+    font-size: 0.9em;
+    color: grey;
+}
+
+.besvare-panel .sporsmal > p {
+    font-size: 0.8em;
+    color: grey;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    word-wrap: break-word;
+    max-width: 90%;
+
+}

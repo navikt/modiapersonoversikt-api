@@ -4,7 +4,7 @@ import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.FrontendModules;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.web.InnboksPage;
+import no.nav.sbl.dialogarena.sporsmalogsvar.web.SporsmalOgSvarPage;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.resource.CssResourceReference;
@@ -33,7 +33,6 @@ public class BesvareSporsmalApplication extends WebApplication {
                                 .attribute("http-equiv", "X-UA-Compatible")
                                 .attribute("content", "IE=edge,chrome=1")
                                 .done())
-//                .addLess(new PackageResourceReference(BesvareSporsmalApplication.class, "stylesheets/innboks.css"))
                 .addCss(new CssResourceReference(BesvareSporsmalApplication.class, "stylesheets/innboks.css"))
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
@@ -41,7 +40,7 @@ public class BesvareSporsmalApplication extends WebApplication {
 
     @Override
     public Class<? extends Page> getHomePage() {
-        return InnboksPage.class;
+        return SporsmalOgSvarPage.class;
     }
 
 }

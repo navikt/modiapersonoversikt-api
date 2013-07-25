@@ -16,7 +16,7 @@ public interface MeldingslisteDelegat {
      * @param valgtMelding den valgte meldingen
      * @param oppdaterScroll gir beskjed om at andre paneler bør oppdatere scrollposisjonen sin
      */
-    public void meldingValgt(AjaxRequestTarget target, MeldingVM valgtMelding, boolean oppdaterScroll);
+    void meldingValgt(AjaxRequestTarget target, MeldingVM valgtMelding, boolean oppdaterScroll);
 
     /**
      * Paneler kan trenge å vite om en gitt melding er valgt for å vise den.
@@ -24,5 +24,5 @@ public interface MeldingslisteDelegat {
      * @param melding som skal sjekkes om er valgt
      * @return om meldingen er valgt
      */
-    public IModel<Boolean> erMeldingValgt(MeldingVM melding);
+    IModel<Boolean> erMeldingValgt(MeldingVM melding);
 }

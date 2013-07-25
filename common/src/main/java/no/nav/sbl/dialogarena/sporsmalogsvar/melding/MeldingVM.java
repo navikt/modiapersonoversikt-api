@@ -42,6 +42,10 @@ public class MeldingVM implements Serializable {
         return melding.erSvar() ? "Nav: " + tekst : tekst;
     }
 
+    public String getTema() {
+        return melding.tema;
+    }
+
     public boolean erSvar() {
         return melding.type == Meldingstype.SVAR;
     }
@@ -60,6 +64,10 @@ public class MeldingVM implements Serializable {
         return melding.opprettet;
     }
 
+    public void setFritekst(String fritekst) {
+        melding.fritekst = fritekst;
+    }
+
     public static final Transformer<Melding, MeldingVM> TIL_MELDING_VM = new Transformer<Melding, MeldingVM>() {
         @Override
         public MeldingVM transform(Melding melding) {
@@ -76,7 +84,7 @@ public class MeldingVM implements Serializable {
         };
     }
 
-    public static Comparator<MeldingVM> nyesteNederst = new Comparator<MeldingVM>() {
+    public static final Comparator<MeldingVM> NYESTE_NEDERST = new Comparator<MeldingVM>() {
         public int compare(MeldingVM o1, MeldingVM o2) {
             return o1.getOpprettet().compareTo(o2.getOpprettet());
         }

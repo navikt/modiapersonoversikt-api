@@ -26,12 +26,12 @@ public class InnboksVM implements Serializable {
     }
 
     public List<MeldingVM> getTraad() {
-        return on(meldinger).filter(harTraadId(valgtMelding.getTraadId())).collect(MeldingVM.nyesteNederst);
+        return on(meldinger).filter(harTraadId(valgtMelding.getTraadId())).collect(MeldingVM.NYESTE_NEDERST);
     }
 
     public final void oppdaterMeldingerFra(List<Melding> meldinger) {
         this.meldinger = on(meldinger).map(TIL_MELDING_VM).collect(nyesteOverst);
-        this.valgtMelding = this.meldinger.get(0);
+        this.valgtMelding = meldinger.isEmpty() ? new MeldingVM(new Melding()) : this.meldinger.get(0);
     }
 
     public MeldingVM getValgtMelding() {
