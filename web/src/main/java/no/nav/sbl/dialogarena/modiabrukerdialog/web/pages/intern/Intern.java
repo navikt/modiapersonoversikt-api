@@ -112,8 +112,8 @@ public class Intern extends BasePage {
 
     private void instantiateComponentsWithBegrunnelse(String fnrFromRequest) {
         add(
-                new HentPersonPanel("searchPanel", true),
-                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest, true).setVisible(true),
+                new HentPersonPanel("searchPanel"),
+                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 lamellHandler.createLamellPanel("lameller", fnrFromRequest),
                 new SideBar("sideBar", fnrFromRequest, true).setVisible(true),
