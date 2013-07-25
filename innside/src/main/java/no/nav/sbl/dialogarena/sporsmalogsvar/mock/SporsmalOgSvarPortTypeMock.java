@@ -15,7 +15,7 @@ import static no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.
 public class SporsmalOgSvarPortTypeMock implements SporsmalOgSvarPortType {
 
     @Override
-    public WSSporsmalOgSvar plukkMeldingForBesvaring() {
+    public WSSporsmalOgSvar plukkMeldingForBesvaring(String aktorId) {
         WSMelding sporsmal = new WSMelding()
                 .withFritekst("Jeg lurer på ... ???")
                 .withOverskrift("Et spørsmål")

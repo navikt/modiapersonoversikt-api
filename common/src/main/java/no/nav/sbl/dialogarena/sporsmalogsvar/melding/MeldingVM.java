@@ -39,7 +39,7 @@ public class MeldingVM implements Serializable {
         } else {
             tekst = melding.overskrift;
         }
-        return melding.erSvar() ? "Nav: " + tekst : tekst;
+        return tekst;
     }
 
     public String getTema() {

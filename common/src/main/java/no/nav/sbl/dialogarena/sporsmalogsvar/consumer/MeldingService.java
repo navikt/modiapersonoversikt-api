@@ -26,8 +26,8 @@ public class MeldingService implements Serializable {
         return on(webservice.hentMeldingListe(aktorId)).map(TIL_MELDING).collect();
     }
 
-    public SporsmalOgSvar plukkMelding() {
-        WSSporsmalOgSvar wsSporsmalOgSvar = webservice.plukkMeldingForBesvaring();
+    public SporsmalOgSvar plukkMelding(String aktorId) {
+        WSSporsmalOgSvar wsSporsmalOgSvar = webservice.plukkMeldingForBesvaring(aktorId);
         return wsSporsmalOgSvar == null ? null : TIL_SPORSMALOGSVAR.transform(wsSporsmalOgSvar);
     }
 

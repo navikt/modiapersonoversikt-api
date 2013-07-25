@@ -24,7 +24,7 @@ public class SporsmalOgSvarPanel extends Panel {
     private MeldingService service;
     private final BesvareModell model;
 
-    public SporsmalOgSvarPanel(String id) {
+    public SporsmalOgSvarPanel(String id, final String aktorId) {
         super(id);
         setOutputMarkupId(true);
         add(new AttributeAppender("class", "besvare-panel"));
@@ -37,7 +37,7 @@ public class SporsmalOgSvarPanel extends Panel {
         AjaxLink plukk = new AjaxLink("plukk") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                model.setObject(plukk());
+                model.setObject(plukk(aktorId));
                 target.add(SporsmalOgSvarPanel.this);
             }
         };
@@ -55,8 +55,8 @@ public class SporsmalOgSvarPanel extends Panel {
                 });
     }
 
-    private SporsmalOgSvarVM plukk() {
-        SporsmalOgSvar sporsmalOgSvar = service.plukkMelding();
+    private SporsmalOgSvarVM plukk(String aktorId) {
+        SporsmalOgSvar sporsmalOgSvar = service.plukkMelding(aktorId);
         if (sporsmalOgSvar == null) {
             info("Bruker har ingen ubesvarte spørsmål.");
             return new SporsmalOgSvarVM();
