@@ -6,6 +6,7 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
@@ -14,6 +15,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModa
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
+import org.apache.wicket.Component;
+import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
@@ -31,7 +34,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.Mo
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 
 /**
- *  Denne klassen brukes til å vise informasjon om en bruker. Instansiering skjer implisitt via events.
+ * Denne klassen brukes til å vise informasjon om en bruker. Instansiering skjer implisitt via events.
  */
 public class Intern extends BasePage {
 
@@ -39,7 +42,6 @@ public class Intern extends BasePage {
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
     private final SjekkForlateSideAnswer answer;
     private final ModiaModalWindow modalWindow;
-
     @Inject
     private LamellHandler lamellHandler;
 
@@ -65,14 +67,16 @@ public class Intern extends BasePage {
     public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
         PageParameters pageParameters = new PageParameters();
         pageParameters.set("fnr", query);
-	    getSession().setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, true);
+        getSession().setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, true);
         handleNewFnrFoundEvent(target, pageParameters, Intern.class);
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
         try {
-            lamellHandler.handleFeedItemEvent(event, feedItemPayload);
+            Page page = target.getPage();
+            String fnr = page.getPageParameters().get("fnr").toString();
+            lamellHandler.handleFeedItemEvent(event, feedItemPayload, fnr);
         } catch (ApplicationException e) {
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
@@ -81,7 +85,9 @@ public class Intern extends BasePage {
     @RunOnEvents(WIDGET_LINK_CLICKED)
     public void widgetLinkClicked(AjaxRequestTarget target, String linkId) {
         try {
-            lamellHandler.handleWidgetItemEvent(linkId);
+            Page page = target.getPage();
+            String fnr = page.getPageParameters().get("fnr").toString();
+            lamellHandler.handleWidgetItemEvent(linkId, fnr);
         } catch (ApplicationException e) {
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }

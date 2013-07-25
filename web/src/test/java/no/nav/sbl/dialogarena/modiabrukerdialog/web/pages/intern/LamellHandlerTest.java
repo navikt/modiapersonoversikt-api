@@ -16,6 +16,9 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static no.nav.modig.common.MDCOperations.generateCallId;
 import static no.nav.modig.common.MDCOperations.putToMDC;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.LamellHandler.LAMELL_KONTRAKTER;
@@ -34,6 +37,7 @@ import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
 public class LamellHandlerTest extends TestSecurityBaseClass {
 
     private LamellHandler lamellHandler;
+    private String fnr = "22222222222";
 
     @Before
     public void setup() {
@@ -44,18 +48,18 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
 
     @Test(expected = ApplicationException.class)
     public void handleFeedItemEventshouldThrowWhenUnknownEventhappens() {
-        lamellHandler.handleFeedItemEvent(mock(IEvent.class), new FeedItemPayload("widgetid", "itemId", "type"));
+        lamellHandler.handleFeedItemEvent(mock(IEvent.class), new FeedItemPayload("widgetid", "itemId", "type"), fnr);
     }
 
     @Test
     public void handleFeedItemEventsShouldGotoForeldrePengerLamellWhenForeeldrePengerEventHappens() {
-        lamellHandler.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", SykepengerWidgetServiceImpl.FORELDREPENGER));
+        lamellHandler.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", SykepengerWidgetServiceImpl.FORELDREPENGER), fnr);
         assertThat(getSelectedLamell(), equalTo(LamellHandler.LAMELL_FORELDREPENGER + "itemId"));
     }
 
     @Test
     public void handleFeedItemEventsShouldGotoSykePengerLamellWhenSykePengerEventHappens() {
-        lamellHandler.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", SYKEPENGER));
+        lamellHandler.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", SYKEPENGER), fnr);
         assertThat(getSelectedLamell(), equalTo(LAMELL_SYKEPENGER + "itemId"));
     }
 
@@ -63,11 +67,11 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
     public void handleFeedItemEventsShouldReuseFactory() {
         IEvent<String> event = createEvent();
         FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SYKEPENGER);
-        lamellHandler.handleFeedItemEvent(event, payload);
+        lamellHandler.handleFeedItemEvent(event, payload, fnr);
         String selectedLamell = getSelectedLamell();
 
         assertThat(selectedLamell, equalTo(LAMELL_SYKEPENGER + "itemId"));
-        lamellHandler.handleFeedItemEvent(event, payload);
+        lamellHandler.handleFeedItemEvent(event, payload, fnr);
         selectedLamell = getSelectedLamell();
         assertThat(selectedLamell, equalTo(LAMELL_SYKEPENGER + "itemId"));
     }
@@ -76,31 +80,33 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
     public void handleFeedItemEventsShouldGotoDiffenrentLammelWhenDifferentItemIsClicked() {
         IEvent<String> event = createEvent();
         FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SYKEPENGER);
-        lamellHandler.handleFeedItemEvent(event, payload);
+        lamellHandler.handleFeedItemEvent(event, payload, fnr);
         String selectedLamell = getSelectedLamell();
 
         assertThat(selectedLamell, equalTo(LAMELL_SYKEPENGER + "itemId"));
         payload = new FeedItemPayload("widgetid", "itemId2", SYKEPENGER);
-        lamellHandler.handleFeedItemEvent(event, payload);
+        lamellHandler.handleFeedItemEvent(event, payload, fnr);
         selectedLamell = getSelectedLamell();
         assertThat(selectedLamell, equalTo(LAMELL_SYKEPENGER + "itemId2"));
     }
 
     @Test(expected = ApplicationException.class)
     public void handleWidgetItemEventshouldThrowWhenUnknownEventhappens() {
-        lamellHandler.handleWidgetItemEvent("ukjent");
+        lamellHandler.handleWidgetItemEvent("ukjent", fnr);
     }
 
     @Test
     public void handleWidgetItemEventshouldGotoKontrakterLamellWhenKontrakterEventHappens() {
         TokenLamellPanel panel = createPanel();
-        lamellHandler.handleWidgetItemEvent(LAMELL_KONTRAKTER);
+        lamellHandler.handleWidgetItemEvent(LAMELL_KONTRAKTER, fnr);
         verify(panel).goToLamell(LAMELL_KONTRAKTER);
     }
 
     private TokenLamellPanel createPanel() {
         TokenLamellPanel panel = mock(TokenLamellPanel.class);
-        setInternalState(lamellHandler, "lamellPanel", panel);
+        Map<String, TokenLamellPanel> lamellPanelMap = new HashMap<>();
+        lamellPanelMap.put(fnr, panel);
+        setInternalState(lamellHandler, "lamellPanelMap", lamellPanelMap);
         return panel;
     }
 
@@ -112,7 +118,8 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
     }
 
     private String getSelectedLamell() {
-        TokenLamellPanel panel = (TokenLamellPanel) getInternalState(lamellHandler, "lamellPanel");
+        Map<String, TokenLamellPanel> lamellPanelMap = (Map<String, TokenLamellPanel>) getInternalState(lamellHandler, "lamellPanelMap");
+        TokenLamellPanel panel = lamellPanelMap.get(fnr);
         return panel.getSelectedLamell();
     }
 
