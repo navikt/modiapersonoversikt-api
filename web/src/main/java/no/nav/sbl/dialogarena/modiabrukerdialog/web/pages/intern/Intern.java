@@ -6,7 +6,6 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.FeedItemPayload;
-import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
@@ -15,7 +14,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModa
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
