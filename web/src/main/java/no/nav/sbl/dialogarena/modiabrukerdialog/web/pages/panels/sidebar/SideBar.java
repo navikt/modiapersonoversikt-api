@@ -13,7 +13,7 @@ public class SideBar extends Panel {
     public SideBar(String id, String fnr, boolean erBegrunnet) {
         super(id);
         add(new VisittkortPanel("visittkortPanel", fnr, erBegrunnet));
-        add(new SporsmalOgSvarPanel("besvarePanel"));
+        add(new SporsmalOgSvarPanel("besvarePanel", fnr));
     }
 
 }
