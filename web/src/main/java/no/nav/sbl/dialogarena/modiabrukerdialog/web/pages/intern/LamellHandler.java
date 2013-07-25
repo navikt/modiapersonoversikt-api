@@ -1,5 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import no.nav.brukerprofil.BrukerprofilPanel;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.core.exception.ApplicationException;
@@ -10,16 +13,12 @@ import no.nav.modig.modia.lamell.LerretFactory;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.GenericLerret;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.Oversikt;
-import no.nav.sbl.dialogarena.sporsmalogsvar.panel.BrukerhenvendelserPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.BrukerhenvendelserPanel;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
