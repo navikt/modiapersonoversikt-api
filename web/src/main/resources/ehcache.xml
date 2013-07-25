@@ -10,19 +10,29 @@
     <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false" />
 
     <cache name="kodeverkversjonCache" maxElementsInMemory="100"
-        eternal="false"
-        timeToIdleSeconds="3600"
-        timeToLiveSeconds="3600"
-        overflowToDisk="true"
-        maxElementsOnDisk="10000000"
-        diskPersistent="false"
-        diskExpiryThreadIntervalSeconds="120"
-        memoryStoreEvictionPolicy="LRU"/>
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
 
     <cache name="kodeverkCache" maxElementsInMemory="100"
            eternal="false"
            timeToIdleSeconds="3600"
            timeToLiveSeconds="3600"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="ytelseskontrakter" maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="600"
+           timeToLiveSeconds="600"
            overflowToDisk="true"
            maxElementsOnDisk="10000000"
            diskPersistent="false"

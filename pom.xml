@@ -50,8 +50,8 @@
         <webbit.version>0.4.14</webbit.version>
         <junit.dep.version>4.10</junit.dep.version>
         <!-- Modia-komponenter-->
-        <personsok.version>0.0.67</personsok.version>
-        <kjerneinfo.versjon>0.0.68</kjerneinfo.versjon>
+        <personsok.version>0.0.68</personsok.version>
+        <kjerneinfo.versjon>0.0.69</kjerneinfo.versjon>
     </properties>
 
     <dependencyManagement>
