@@ -113,8 +113,8 @@ public class Intern extends BasePage {
 
     private ModiaModalWindow createModalWindow(String id) {
         final ModiaModalWindow modiaModalWindow = new ModiaModalWindow(id);
-        modiaModalWindow.setInitialHeight(220);
-        modiaModalWindow.setInitialWidth(800);
+        modiaModalWindow.setInitialHeight(260);
+        modiaModalWindow.setInitialWidth(600);
         modiaModalWindow.setContent(new SjekkForlateSide(modiaModalWindow.getContentId(), modiaModalWindow, this.answer));
         modiaModalWindow.setWindowClosedCallback(createWindowClosedCallback(modiaModalWindow));
         modiaModalWindow.setCloseButtonCallback(createCloseButtonCallback());
