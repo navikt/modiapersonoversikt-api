@@ -38,10 +38,7 @@ public class LamellHandler implements Serializable {
 
 
     private Map<String, TokenLamellPanel> lamellPanelMap = new HashMap<>();
-
-    //private TokenLamellPanel lamellPanel;
-//    private String fnrFromRequest;
-    private List<Lerret> lerretList = new ArrayList<>();
+    private Map<String, List<Lerret>> lerretList = new HashMap<>();
 
     private TokenLamellPanel getTokenLamellPanelForFnr(String fnr){
         if(!lamellPanelMap.containsKey(fnr)){
@@ -127,11 +124,11 @@ public class LamellHandler implements Serializable {
         );
     }
 
-    private LamellFactory createBrukerprofilLamell(final String fnrFromRequest) {
+    private LamellFactory createBrukerprofilLamell(final String fnr) {
         return newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new BrukerprofilPanel(id, new Model<>(fnrFromRequest)));
+                return addLerretToListAndReturn(new BrukerprofilPanel(id, new Model<>(fnr)), fnr);
             }
         });
     }
@@ -140,7 +137,7 @@ public class LamellHandler implements Serializable {
         return newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new GenericLerret(id, new KontrakterPanel(PANEL, new Model<>(fnr))));
+                return addLerretToListAndReturn(new GenericLerret(id, new KontrakterPanel(PANEL, new Model<>(fnr))), fnr);
             }
         });
     }
@@ -149,18 +146,26 @@ public class LamellHandler implements Serializable {
         return newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new Oversikt(id, fnr));
+                return addLerretToListAndReturn(new Oversikt(id, fnr),fnr);
             }
         });
     }
 
-    private Lerret addLerretToListAndReturn(Lerret lerret) {
-        lerretList.add(lerret);
+    private Lerret addLerretToListAndReturn(Lerret lerret, String fnr) {
+        if(!lerretList.containsKey(fnr)){
+            lerretList.put(fnr,new ArrayList<Lerret>());
+        }
+        List<Lerret> lerreter = lerretList.get(fnr);
+        lerreter.add(lerret);
         return lerret;
     }
 
-    public boolean hasUnsavedChanges() {
-        for (Lerret lerret : lerretList) {
+    public boolean hasUnsavedChanges(String fnr) {
+        if(!lerretList.containsKey(fnr)){
+            lerretList.put(fnr,new ArrayList<Lerret>());
+        }
+        List<Lerret> lerreter = lerretList.get(fnr);
+        for (Lerret lerret : lerreter) {
             if (lerret.isModified()) {
                 return true;
             }
@@ -168,4 +173,12 @@ public class LamellHandler implements Serializable {
         return false;
     }
 
+    public void removeFnrState(String fnr) {
+        if(lerretList.containsKey(fnr)){
+            lerretList.remove(fnr);
+        }
+        if(lamellPanelMap.containsKey(fnr)){
+            lamellPanelMap.remove(fnr);
+        }
+    }
 }

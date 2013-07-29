@@ -72,8 +72,7 @@ public class Intern extends BasePage {
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
         try {
-            Page page = target.getPage();
-            String fnr = page.getPageParameters().get("fnr").toString();
+            String fnr = getFnrFromTarget(target);
             lamellHandler.handleFeedItemEvent(event, feedItemPayload, fnr);
         } catch (ApplicationException e) {
             target.appendJavaScript("alert('" + e.getMessage() + "');");
@@ -83,12 +82,16 @@ public class Intern extends BasePage {
     @RunOnEvents(WIDGET_LINK_CLICKED)
     public void widgetLinkClicked(AjaxRequestTarget target, String linkId) {
         try {
-            Page page = target.getPage();
-            String fnr = page.getPageParameters().get("fnr").toString();
+            String fnr = getFnrFromTarget(target);
             lamellHandler.handleWidgetItemEvent(linkId, fnr);
         } catch (ApplicationException e) {
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
+    }
+
+    private String getFnrFromTarget(AjaxRequestTarget target) {
+        Page page = target.getPage();
+        return page.getPageParameters().get("fnr").toString();
     }
 
     private void instantiateComponents(String fnrFromRequest) {
@@ -98,18 +101,19 @@ public class Intern extends BasePage {
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 lamellHandler.createLamellPanel("lameller", fnrFromRequest),
                 new SideBar("sideBar", fnrFromRequest).setVisible(true),
-                createNullstillLink(modalWindow),
+                createNullstillLink(modalWindow, fnrFromRequest),
                 modalWindow
         );
     }
 
-    private AjaxLink<Boolean> createNullstillLink(final ModiaModalWindow modalWindow) {
+    private AjaxLink<Boolean> createNullstillLink(final ModiaModalWindow modalWindow, final String fnr) {
         return new AjaxLink<Boolean>("nullstill") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                if (lamellHandler.hasUnsavedChanges()) {
+                if (lamellHandler.hasUnsavedChanges(fnr)) {
                     modalWindow.show(target);
                 } else {
+                    lamellHandler.removeFnrState(fnr);
                     modalWindow.redirect();
                 }
             }
@@ -129,9 +133,11 @@ public class Intern extends BasePage {
     private void handleNewFnrFoundEvent(AjaxRequestTarget target, PageParameters pageParameters, Class clazz) {
         modalWindow.setRedirectClass(clazz);
         modalWindow.setPageParameters(pageParameters);
-        if (lamellHandler.hasUnsavedChanges()) {
+        String fnr = getFnrFromTarget(target);
+        if (lamellHandler.hasUnsavedChanges(fnr)) {
             modalWindow.show(target);
         } else {
+            lamellHandler.removeFnrState(fnr);
             modalWindow.redirect();
         }
     }
