@@ -14,15 +14,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModa
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
-import org.apache.wicket.Page;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
-
-import javax.inject.Inject;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
@@ -40,12 +37,13 @@ public class Intern extends BasePage {
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
     private final SjekkForlateSideAnswer answer;
     private final ModiaModalWindow modalWindow;
-    @Inject
+
     private LamellHandler lamellHandler;
 
     public Intern(PageParameters pageParameters) {
         this.answer = new SjekkForlateSideAnswer();
         this.modalWindow = createModalWindow("modal");
+        lamellHandler = new LamellHandler();
         instantiateComponents(pageParameters.get("fnr").toString(null));
     }
 
@@ -72,8 +70,7 @@ public class Intern extends BasePage {
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
         try {
-            String fnr = getFnrFromTarget(target);
-            lamellHandler.handleFeedItemEvent(event, feedItemPayload, fnr);
+            lamellHandler.handleFeedItemEvent(event, feedItemPayload);
         } catch (ApplicationException e) {
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
@@ -82,17 +79,12 @@ public class Intern extends BasePage {
     @RunOnEvents(WIDGET_LINK_CLICKED)
     public void widgetLinkClicked(AjaxRequestTarget target, String linkId) {
         try {
-            String fnr = getFnrFromTarget(target);
-            lamellHandler.handleWidgetItemEvent(linkId, fnr);
+            lamellHandler.handleWidgetItemEvent(linkId);
         } catch (ApplicationException e) {
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
     }
 
-    private String getFnrFromTarget(AjaxRequestTarget target) {
-        Page page = target.getPage();
-        return page.getPageParameters().get("fnr").toString();
-    }
 
     private void instantiateComponents(String fnrFromRequest) {
         add(
@@ -101,19 +93,18 @@ public class Intern extends BasePage {
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 lamellHandler.createLamellPanel("lameller", fnrFromRequest),
                 new SideBar("sideBar", fnrFromRequest).setVisible(true),
-                createNullstillLink(modalWindow, fnrFromRequest),
+                createNullstillLink(modalWindow),
                 modalWindow
         );
     }
 
-    private AjaxLink<Boolean> createNullstillLink(final ModiaModalWindow modalWindow, final String fnr) {
+    private AjaxLink<Boolean> createNullstillLink(final ModiaModalWindow modalWindow) {
         return new AjaxLink<Boolean>("nullstill") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                if (lamellHandler.hasUnsavedChanges(fnr)) {
+                if (lamellHandler.hasUnsavedChanges()) {
                     modalWindow.show(target);
                 } else {
-                    lamellHandler.removeFnrState(fnr);
                     modalWindow.redirect();
                 }
             }
@@ -133,11 +124,9 @@ public class Intern extends BasePage {
     private void handleNewFnrFoundEvent(AjaxRequestTarget target, PageParameters pageParameters, Class clazz) {
         modalWindow.setRedirectClass(clazz);
         modalWindow.setPageParameters(pageParameters);
-        String fnr = getFnrFromTarget(target);
-        if (lamellHandler.hasUnsavedChanges(fnr)) {
+        if (lamellHandler.hasUnsavedChanges()) {
             modalWindow.show(target);
         } else {
-            lamellHandler.removeFnrState(fnr);
             modalWindow.redirect();
         }
     }

@@ -18,9 +18,7 @@ import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
@@ -37,63 +35,53 @@ public class LamellHandler implements Serializable {
     public static final String PANEL = "panel";
 
 
-    private Map<String, TokenLamellPanel> lamellPanelMap = new HashMap<>();
-    private Map<String, List<Lerret>> lerretList = new HashMap<>();
+    private TokenLamellPanel lamellPanel;
+    private List<Lerret> lerretList = new  ArrayList<>();
+    private String fnrFromRequest;
 
-    private TokenLamellPanel getTokenLamellPanelForFnr(String fnr){
-        if(!lamellPanelMap.containsKey(fnr)){
-            throw new ApplicationException("TokenLamellPanel for ukjent fnr <" + fnr + "> forsøkt funnet");
-        }
-        return lamellPanelMap.get(fnr);
-    }
 
-    public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload, String fnr) {
-        TokenLamellPanel panel = getTokenLamellPanelForFnr(fnr);
+    public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         final String type = feedItemPayload.getType().toLowerCase();
         String lamellId = feedItemPayload.getType().toLowerCase();
         if (canHaveMoreThanOneFactory(type)) {
-            lamellId = createFactoryIfMissing(panel, type, feedItemPayload.getItemId(), fnr);
+            lamellId = createFactoryIfMissing(lamellPanel, type, feedItemPayload.getItemId());
         }
-        if (panel.hasFactory(lamellId)) {
-            panel.goToLamell(lamellId);
-            panel.sendToLamell(lamellId, event.getPayload());
+        if (lamellPanel.hasFactory(lamellId)) {
+            lamellPanel.goToLamell(lamellId);
+            lamellPanel.sendToLamell(lamellId, event.getPayload());
         } else {
             throw new ApplicationException("Feedlenke med ukjent type <" + lamellId + "> klikket");
         }
     }
 
-    public void handleWidgetItemEvent(String linkId, String fnr) {
-        TokenLamellPanel panel = getTokenLamellPanelForFnr(fnr);
+    public void handleWidgetItemEvent(String linkId) {
         if (LAMELL_KONTRAKTER.equalsIgnoreCase(linkId)) {
-            panel.goToLamell(LAMELL_KONTRAKTER);
+            lamellPanel.goToLamell(LAMELL_KONTRAKTER);
         } else {
             throw new ApplicationException("Widgetlenke med ukjent id <" + linkId + "> klikket');");
         }
     }
 
     public TokenLamellPanel createLamellPanel(String id, String fnrFromRequest) {
-        if(lamellPanelMap.containsKey(fnrFromRequest)){
-            return lamellPanelMap.get(fnrFromRequest);
-        }
-        TokenLamellPanel tokenLamellPanel = new TokenLamellPanel(id, createStaticLamellFactories(fnrFromRequest));
-        lamellPanelMap.put(fnrFromRequest, tokenLamellPanel);
-        return tokenLamellPanel;
+        this.fnrFromRequest = fnrFromRequest;
+        lamellPanel = new TokenLamellPanel(id, createStaticLamellFactories());
+        return lamellPanel;
     }
 
-    private String createFactoryIfMissing(TokenLamellPanel panel, String type, String itemId,String fnr) {
+    private String createFactoryIfMissing(TokenLamellPanel panel, String type, String itemId) {
         String factoryId = type + itemId;
         if (!panel.hasFactory(factoryId)) {
-            panel.addNewFactory(createFactory(type, itemId, fnr));
+            panel.addNewFactory(createFactory(type, itemId));
         }
         return factoryId;
     }
 
-    private LamellFactory createFactory(String type, String itemId, String fnr) {
+    private LamellFactory createFactory(String type, String itemId) {
         final Panel panel;
         if (SYKEPENGER.equalsIgnoreCase(type)) {
-            panel = new SykmeldingsperiodePanel(PANEL, new Model<>(fnr), new Model<>(itemId));
+            panel = new SykmeldingsperiodePanel(PANEL, new Model<>(fnrFromRequest), new Model<>(itemId));
         } else if (FORELDREPENGER.equalsIgnoreCase(type)) {
-            panel = new ForeldrepengerPanel(PANEL, new Model<>(fnr), new Model<>(itemId));
+            panel = new ForeldrepengerPanel(PANEL, new Model<>(fnrFromRequest), new Model<>(itemId));
         } else {
             throw new ApplicationException("Ukjent type panel: " + type);
         }
@@ -116,69 +104,52 @@ public class LamellHandler implements Serializable {
         return false;
     }
 
-    private List<LamellFactory> createStaticLamellFactories(String fnr) {
+    private List<LamellFactory> createStaticLamellFactories() {
         return asList(
-                createOversiktLamell(fnr),
-                createKontrakterLamell(fnr),
-                createBrukerprofilLamell(fnr)
+                createOversiktLamell(),
+                createKontrakterLamell(),
+                createBrukerprofilLamell()
         );
     }
 
-    private LamellFactory createBrukerprofilLamell(final String fnr) {
+    private LamellFactory createBrukerprofilLamell() {
         return newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new BrukerprofilPanel(id, new Model<>(fnr)), fnr);
+                return addLerretToListAndReturn(new BrukerprofilPanel(id, new Model<>(fnrFromRequest)));
             }
         });
     }
 
-    private LamellFactory createKontrakterLamell(final String fnr) {
+    private LamellFactory createKontrakterLamell() {
         return newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new GenericLerret(id, new KontrakterPanel(PANEL, new Model<>(fnr))), fnr);
+                return addLerretToListAndReturn(new GenericLerret(id, new KontrakterPanel(PANEL, new Model<>(fnrFromRequest))));
             }
         });
     }
 
-    private LamellFactory createOversiktLamell(final String fnr) {
+    private LamellFactory createOversiktLamell() {
         return newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new Oversikt(id, fnr),fnr);
+                return addLerretToListAndReturn(new Oversikt(id, fnrFromRequest));
             }
         });
     }
 
-    private Lerret addLerretToListAndReturn(Lerret lerret, String fnr) {
-        if(!lerretList.containsKey(fnr)){
-            lerretList.put(fnr,new ArrayList<Lerret>());
-        }
-        List<Lerret> lerreter = lerretList.get(fnr);
-        lerreter.add(lerret);
+    private Lerret addLerretToListAndReturn(Lerret lerret) {
+        lerretList.add(lerret);
         return lerret;
     }
 
-    public boolean hasUnsavedChanges(String fnr) {
-        if(!lerretList.containsKey(fnr)){
-            lerretList.put(fnr,new ArrayList<Lerret>());
-        }
-        List<Lerret> lerreter = lerretList.get(fnr);
-        for (Lerret lerret : lerreter) {
+    public boolean hasUnsavedChanges() {
+        for (Lerret lerret : lerretList) {
             if (lerret.isModified()) {
                 return true;
             }
         }
         return false;
-    }
-
-    public void removeFnrState(String fnr) {
-        if(lerretList.containsKey(fnr)){
-            lerretList.remove(fnr);
-        }
-        if(lamellPanelMap.containsKey(fnr)){
-            lamellPanelMap.remove(fnr);
-        }
     }
 }
