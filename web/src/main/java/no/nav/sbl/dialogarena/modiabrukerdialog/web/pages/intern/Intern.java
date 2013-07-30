@@ -7,6 +7,7 @@ import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
+import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
@@ -16,6 +17,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForl
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -24,6 +26,7 @@ import org.apache.wicket.request.resource.ResourceReference;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
+import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
@@ -86,7 +89,13 @@ public class Intern extends BasePage {
     }
 
 
-    private void instantiateComponents(String fnrFromRequest) {
+	@RunOnEvents(PERSONSOK_FNR_CLICKED)
+	public void personsokresultatClicked(AjaxRequestTarget target, String query) {
+		send(getPage(), Broadcast.BREADTH, new NamedEventPayload(PERSONSOK_FNR_CLICKED, query));
+	}
+
+
+	private void instantiateComponents(String fnrFromRequest) {
         add(
                 new HentPersonPanel("searchPanel"),
                 new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
