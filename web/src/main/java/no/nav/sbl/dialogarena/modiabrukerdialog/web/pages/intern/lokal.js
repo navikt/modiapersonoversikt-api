@@ -40,7 +40,7 @@ jQuery(document).ready(function ($) {
 
         if (navbar[0].style.top == "1%") {
             toggleAvansertSok();
-            navbar.animate({top: "25%"}, 300, 'linear');
+            navbar.animate({top: "15%"}, 300, 'linear');
             navbar.css("margin", "-50px auto auto -146px");
             logo.css("display", "block");
             // Nullstiller søket
