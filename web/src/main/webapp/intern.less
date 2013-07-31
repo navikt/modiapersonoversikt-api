@@ -53,14 +53,26 @@ input:disabled {
   }
 
   .search-intern {
-    display: block;
+   .clearfix;
     position: relative;
-    padding-left: 80px;
+    padding: 0 0 2rem 80px;
     margin: 0 auto 0 auto;
     float: none;
     clear: both;
-    overflow: auto;
+    overflow: visible;
     width: auto;
+
+    label.errorJS {
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        left: auto;
+        width: auto;
+    }
+
+    span.errorJS {
+        display: none;
+    }
   }
 
   .navbar {
@@ -80,7 +92,7 @@ input:disabled {
   .personsok-button {
     position: absolute;
     left: 0px;
-    bottom: 0px;
+    bottom: 2rem;
     width: 52px;
     height: 52px;
     text-align: center;
