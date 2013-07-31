@@ -47,9 +47,13 @@ input:disabled {
 
   .modia-logo {
     width: 150px;
-    zoom: 100%;
     display: block;
     margin: 0 auto 200px auto;
+
+    @media (max-width: 959px) {
+        width: 150px;
+        margin-bottom: 150px;
+    }
   }
 
   .search-intern {
@@ -73,6 +77,10 @@ input:disabled {
     span.errorJS {
         display: none;
     }
+
+    @media (max-width: 959px) {
+        padding-left: 40px;
+    }
   }
 
   .navbar {
@@ -87,14 +95,16 @@ input:disabled {
     background-color: #3e3832;
     -webkit-border-radius: 0;
     border-radius: 0;
+
+    @media (max-width: 959px) {
+        width: 200px;
+    }
   }
 
   .personsok-button {
     position: absolute;
     left: 0px;
     bottom: 2rem;
-    width: 52px;
-    height: 52px;
     text-align: center;
     border-radius: 52px;
     font-size: 1.43rem;
