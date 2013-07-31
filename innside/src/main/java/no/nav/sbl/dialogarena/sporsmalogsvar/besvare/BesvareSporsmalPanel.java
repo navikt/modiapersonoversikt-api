@@ -1,11 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
+import java.util.List;
 import javax.inject.Inject;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Svar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.tema.Temastruktur;
+import no.nav.sbl.dialogarena.sporsmalogsvar.tema.TemastrukturVelger;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -16,10 +19,13 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
+
+import static java.util.Arrays.asList;
 
 public class BesvareSporsmalPanel extends Panel {
 
@@ -28,6 +34,9 @@ public class BesvareSporsmalPanel extends Panel {
 
     public static final String SPORSMAL_OPPDATERT = "hendelser.sporsmal_oppdatert";
     private final FeedbackPanel feedbackPanel;
+    private List<Temastruktur> temastrukturListe = asList(
+            new Temastruktur("Pensjon", "Alderspensjon", "Krigspensjon", "Uførepensjon"),
+            new Temastruktur("Trygd", "Barnetrygd", "Uføretrygd"));
 
     public BesvareSporsmalPanel(String id, BesvareModell model) {
         super(id, model);
@@ -54,7 +63,8 @@ public class BesvareSporsmalPanel extends Panel {
                     new Label("svar.overskrift"),
                     new TextArea<>("svar.fritekst"),
                     new CheckBox("svar.sensitiv", new Model<>(false)),
-                    new Label("svar.tema"),
+                    new TextField<>("svar.tema"),
+                    new TemastrukturVelger("tema-velger", temastrukturListe),
                     new AjaxSubmitLink("send") {
                         @Override
                         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {

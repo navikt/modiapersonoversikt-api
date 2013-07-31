@@ -1,0 +1,21 @@
+.temavelger {
+    float: left;
+    padding-right: 1em;
+}
+
+.temavelger ul {
+    -webkit-padding-start: 1em;
+}
+
+.temastruktur, .tema {
+    list-style: none;
+}
+
+.selected {
+    background-color: dodgerblue;
+    color: white;
+}
+
+.tema {
+    padding-left: 1em;
+}

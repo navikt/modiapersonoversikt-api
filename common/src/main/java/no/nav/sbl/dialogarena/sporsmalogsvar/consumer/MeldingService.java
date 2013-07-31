@@ -52,7 +52,10 @@ public class MeldingService implements Serializable {
     private static final Transformer<WSSporsmalOgSvar, SporsmalOgSvar> TIL_SPORSMALOGSVAR = new Transformer<WSSporsmalOgSvar, SporsmalOgSvar>() {
         @Override
         public SporsmalOgSvar transform(WSSporsmalOgSvar wsSporsmalOgSvar) {
-            return new SporsmalOgSvar().withSporsmal(TIL_MELDING.transform(wsSporsmalOgSvar.getSporsmal())).withSvar(TIL_MELDING.transform(wsSporsmalOgSvar.getSvar()));
+            Melding sporsmal = TIL_MELDING.transform(wsSporsmalOgSvar.getSporsmal());
+            Melding svar = TIL_MELDING.transform(wsSporsmalOgSvar.getSvar());
+            svar.tema = null;
+            return new SporsmalOgSvar().withSporsmal(sporsmal).withSvar(svar);
         }
     };
 

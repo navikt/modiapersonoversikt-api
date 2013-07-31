@@ -3,6 +3,7 @@
     margin: 0;
     padding: 1em;
     border: 1px solid black;
+    max-width: 700px;
 }
 
 .besvare-panel .sporsmal header > h1 {
@@ -29,3 +30,12 @@
     max-width: 90%;
 
 }
+
+.besvare-panel #tema-textfield {
+    display: block;
+}
+
+.besvare-panel .feedbackPanel {
+    color: red;
+}
+

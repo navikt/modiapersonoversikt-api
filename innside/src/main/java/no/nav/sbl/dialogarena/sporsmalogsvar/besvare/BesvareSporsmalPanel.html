@@ -13,19 +13,20 @@
     <section wicket:id="sporsmal" class="sporsmal"/>
 
     <form wicket:id="svar" class="svar">
-        <label>
+        <div>
             <label>Overskrift:</label>
             <label wicket:id="svar.overskrift"/>
-        </label>
+        </div>
         <textarea wicket:id="svar.fritekst"/>
         <div>
             <input type="checkbox" wicket:id="svar.sensitiv"/>
             <label>Inneholder sensitiv informasjon</label>
         </div>
-        <label>
-            <label>Generell sak</label>
-            <label wicket:id="svar.tema"/>
-        </label>
+        <div style="overflow: hidden">
+            <label style="display: block">Generell sak</label>
+            <input id="tema-textfield" wicket:id="svar.tema" type="text" autocomplete="off"/>
+            <wicket:container wicket:id="tema-velger"/>
+        </div>
         <a wicket:id="send" href="#">Send</a>
         <a wicket:id="avbryt" href="#">Avbryt</a>
     </form>
