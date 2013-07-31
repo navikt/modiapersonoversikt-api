@@ -38,16 +38,16 @@ jQuery(document).ready(function ($) {
         var logo = $(".modia-logo");
         var nullstill = $(".knapp-nullstill");
 
-        if (navbar[0].style.top == "1%") {
+        if (navbar[0].style.marginTop == "1%") {
             toggleAvansertSok();
-            navbar.animate({top: "15%"}, 300, 'linear');
-            navbar.css("margin", "-50px auto auto -146px");
+            navbar.animate({marginTop: "15%"}, 300, 'linear');
+            navbar.css("marginBottom", "0");
             logo.css("display", "block");
             // Nullstiller søket
             nullstill.click();
         } else {
-            navbar.animate({top: "1%"}, 400, 'linear', toggleAvansertSok);
-            navbar.css("margin", "0 auto auto -146px");
+            navbar.animate({marginTop: "1%"}, 400, 'linear', toggleAvansertSok);
+            navbar.css("marginBottom", "20px");
             logo.css("display", "none");
         }
     }
