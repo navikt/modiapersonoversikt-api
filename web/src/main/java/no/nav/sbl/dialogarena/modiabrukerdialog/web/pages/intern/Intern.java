@@ -24,8 +24,11 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGANG;
+import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
 import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow.getJavascriptSaveButtonFocus;
@@ -41,7 +44,7 @@ public class Intern extends BasePage {
     private final SjekkForlateSideAnswer answer;
     private final ModiaModalWindow modalWindow;
 
-    private LamellHandler lamellHandler;
+	private LamellHandler lamellHandler;
 
     public Intern(PageParameters pageParameters) {
         this.answer = new SjekkForlateSideAnswer();
@@ -88,12 +91,15 @@ public class Intern extends BasePage {
         }
     }
 
-
 	@RunOnEvents(PERSONSOK_FNR_CLICKED)
 	public void personsokresultatClicked(AjaxRequestTarget target, String query) {
-		send(getPage(), Broadcast.BREADTH, new NamedEventPayload(PERSONSOK_FNR_CLICKED, query));
+		send(getPage(), Broadcast.DEPTH, new NamedEventPayload(FNR_CHANGED, query));
 	}
 
+	@RunOnEvents(HENTPERSON_FODSELSNUMMER_IKKE_TILGANG)
+	public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
+		send(getPage(), Broadcast.BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
+	}
 
 	private void instantiateComponents(String fnrFromRequest) {
         add(
