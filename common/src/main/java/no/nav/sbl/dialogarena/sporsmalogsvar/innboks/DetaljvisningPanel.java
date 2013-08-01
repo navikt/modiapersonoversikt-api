@@ -18,7 +18,6 @@ public class DetaljvisningPanel extends Panel implements HarMeldingsliste {
 		super(id);
 		setOutputMarkupId(true);
 		meldingstraadPanel = new MeldingstraadPanel("traad", delegat);
-		System.out.println("yo");
 		dokumentinnsendingDetaljPanel = new DokumentinnsendingDetaljPanel("dokumentinnsendingDetaljPanel", new CompoundPropertyModel<>(valgtMelding));
 		visValgtMelding(valgtMelding);
 		add(meldingstraadPanel, dokumentinnsendingDetaljPanel);
