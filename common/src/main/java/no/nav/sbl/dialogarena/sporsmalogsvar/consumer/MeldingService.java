@@ -1,19 +1,26 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
+
+import java.io.Serializable;
+import java.util.List;
+
+import javax.inject.Inject;
+
+import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSvar;
+
 import org.apache.commons.collections15.Transformer;
 
-import javax.inject.Inject;
-import java.io.Serializable;
-import java.util.List;
-
-import static no.nav.modig.lang.collections.IterUtils.on;
-
 public class MeldingService implements Serializable {
+
+    @Inject
+    HenvendelsePortType henvendelseWebservice;
 
     @Inject
     private SporsmalOgSvarPortType webservice;
@@ -23,7 +30,26 @@ public class MeldingService implements Serializable {
     }
 
     public List<Melding> hentAlleMeldinger(String aktorId) {
-        return on(webservice.hentMeldingListe(aktorId)).map(TIL_MELDING).collect();
+    	Transformer<WSHenvendelse, Melding> somMelding = new Transformer<WSHenvendelse, Melding>() {
+			public Melding transform(WSHenvendelse input) {
+				Melding melding = new Melding()
+					.withId(input.getBehandlingsId())
+					.withFritekst(input.getBeskrivelse())
+					.withOpprettet(input.getSistEndretDato())
+					.withOverskrift(input.getOverskrift())
+					.withTema(input.getTema());
+				if (input instanceof no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMelding) {
+					no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMelding wsMelding = (no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMelding) input;
+					melding.withType(Meldingstype.valueOf(wsMelding.getType().name()));
+					melding.withTraadId(wsMelding.getTraadId());					
+				} else {
+					melding.withType(Meldingstype.SPORSMAL);
+					melding.withTraadId("0");
+				}
+				return melding;
+			}
+		};
+        return on(henvendelseWebservice.hentHenvendelseListe(aktorId)).map(somMelding).collect();
     }
 
     public SporsmalOgSvar plukkMelding(String aktorId) {

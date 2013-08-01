@@ -16,6 +16,12 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sporsmalogsvar-jaxws</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>no.nav.modig</groupId>
