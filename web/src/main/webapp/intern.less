@@ -196,13 +196,14 @@ input:disabled {
     /* Brukerprofil */
     &.brukerprofil, &[id^="brukerprofil"]:not(.widget-navigasjon) {
         INPUT[type="submit"]:disabled, INPUT[type="button"]:disabled {
-          cursor: default !important;
+          cursor: default;
         }
 
         FIELDSET {
             border: 0;
             padding: 0;
             margin: 0 0 30px 0;
+            max-width: 50rem;
 
             LEGEND {
                 ._H2;
@@ -230,6 +231,10 @@ input:disabled {
 
             P {
                 font-weight: bold;
+
+                SPAN {
+                    display: block;
+                }
             }
 
             SELECT {
@@ -238,10 +243,18 @@ input:disabled {
                 -moz-box-sizing: border-box;
                 height: 30px;
                 margin-top: 3px;
-                width: 100% !important;
+                width: 100%;
             }
 
-            LABEL {
+            DIV.label-wrapper {
+                font-size: 0.8rem;
+                line-height: 1.4rem;
+                margin-top: 1rem;
+                text-transform: uppercase;
+                position: relative;
+            }
+
+            LABEL, DIV.label-wrapper {
                 .kolonne;
                 float: none;
                 clear: both;
@@ -249,11 +262,6 @@ input:disabled {
 
                 &.selected {
                     font-weight: bold;
-                }
-
-                &:first-child {
-                    font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-                    font-size: 1.14rem;
                 }
 
                 &.errorJS {
@@ -292,22 +300,31 @@ input:disabled {
                 padding-left: 4%;
             }
 
-            .midlertidigUtland {
-                INPUT {
-                    .kolonne;
-                    float: none;
-                    clear: both;
-                }
+            /* Begrense inputs til adresse uten label */
+            INPUT[aria-label*=adresse] {
+                .kolonne;
+                float: none;
+                clear: both;
             }
 
             .hasDatepicker {
-                display: inline !important;
+                display: inline;
             }
 
             #kontaktinformasjon {
-                LABEL {
-                    width: 25%;
+                LABEL, DIV.label-wrapper {
+                    width: 17rem;
                     float: left;
+                    font-size: 0.8rem;
+                    line-height: 1.4rem;
+                    margin-top: 1rem;
+                    text-transform: uppercase;
+                    position: relative;
+
+                    .errorJS {
+                        bottom: -2.5rem;
+                        left: -3rem;
+                    }
 
                     &:nth-child(2n+1) {
                       margin-left: 4%;
@@ -317,21 +334,19 @@ input:disabled {
                       clear: none;
                     }
 
-                    SELECT {
-                      float: left;
-                    }
-
                     DIV {
-                      width: 22%;
+                        position: absolute;
+                        width: 5rem;
                     }
 
                     INPUT {
-                      width: 70% !important;
-                      padding-left: 4%;
+                        width: 11.5rem;
+                        margin-left: 5.5rem;
                     }
 
                     &.epostadresse INPUT {
-                      width: 92% !important;
+                      width: 100%;
+                      margin-left: 0;
                     }
                 }
             }
