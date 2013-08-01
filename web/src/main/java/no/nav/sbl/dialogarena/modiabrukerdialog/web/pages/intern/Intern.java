@@ -44,7 +44,6 @@ public class Intern extends BasePage {
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
     public static final JavaScriptResourceReference JS_SNURR = new JavaScriptResourceReference(Intern.class, "snurr.js");
 
-    private static final String BEGRUNNELSE = "begrunnelse";
     private final SjekkForlateSideAnswer answer;
     private final ModiaModalWindow modalWindow;
 
