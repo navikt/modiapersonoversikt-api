@@ -59,7 +59,7 @@
 
     <filter>
         <filter-name>MDCFilter</filter-name>
-        <filter-class>no.nav.sbl.dialogarena.modiabrukerdialog.web.filter.MDCInternalSelftestFilter</filter-class>
+        <filter-class>no.nav.modig.presentation.logging.session.MDCFilter</filter-class>
     </filter>
     <filter-mapping>
         <filter-name>MDCFilter</filter-name>

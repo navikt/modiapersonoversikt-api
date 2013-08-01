@@ -35,21 +35,23 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_BRUKERHENVENDELSER = "brukerhenvendelser";
     public static final String PANEL = "panel";
 
+
     private TokenLamellPanel lamellPanel;
+    private List<Lerret> lerretList = new  ArrayList<>();
     private String fnrFromRequest;
-    private List<Lerret> lerretList = new ArrayList<>();
+
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         final String type = feedItemPayload.getType().toLowerCase();
         String lamellId = feedItemPayload.getType().toLowerCase();
         if (canHaveMoreThanOneFactory(type)) {
-            lamellId = createFactoryIfMissing(type, feedItemPayload.getItemId());
+            lamellId = createFactoryIfMissing(lamellPanel, type, feedItemPayload.getItemId());
         }
         if (lamellPanel.hasFactory(lamellId)) {
             lamellPanel.goToLamell(lamellId);
             lamellPanel.sendToLamell(lamellId, event.getPayload());
         } else {
-            throw new ApplicationException("Feedlenke med ukjent type <" + lamellId + "> klikket');");
+            throw new ApplicationException("Feedlenke med ukjent type <" + lamellId + "> klikket");
         }
     }
 
@@ -67,10 +69,10 @@ public class LamellHandler implements Serializable {
         return lamellPanel;
     }
 
-    private String createFactoryIfMissing(String type, String itemId) {
+    private String createFactoryIfMissing(TokenLamellPanel panel, String type, String itemId) {
         String factoryId = type + itemId;
-        if (!lamellPanel.hasFactory(factoryId)) {
-            lamellPanel.addNewFactory(createFactory(type, itemId));
+        if (!panel.hasFactory(factoryId)) {
+            panel.addNewFactory(createFactory(type, itemId));
         }
         return factoryId;
     }
@@ -161,5 +163,4 @@ public class LamellHandler implements Serializable {
         }
         return false;
     }
-
 }

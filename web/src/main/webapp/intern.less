@@ -46,52 +46,74 @@ input:disabled {
   width: 100%;
 
   .modia-logo {
-    background: transparent url(img/modiaLogo.png) no-repeat center;
-    width: 400px;
-    height: 400px;
-    zoom: 30%;
+    width: 150px;
     display: block;
+    margin: 0 auto 200px auto;
+
+    @media (max-width: 959px) {
+        width: 100px;
+        margin-bottom: 150px;
+    }
   }
 
   .search-intern {
-    display: block;
+   .clearfix;
     position: relative;
-    float: left;
-    margin-left: 20px;
+    padding: 0 0 2rem 80px;
+    margin: 0 auto 0 auto;
+    float: none;
+    clear: both;
+    overflow: visible;
+    width: auto;
+
+    LABEL.errorJS, SPAN.errorJS {
+        position: absolute;
+        bottom: 0;
+        left: 80px;
+        width: auto;
+    }
+
+    @media (max-width: 959px) {
+        padding-left: 40px;
+    }
   }
 
   .navbar {
-    margin-bottom: 0;
-    height: 100px;
-    position: absolute;
-    top: 25%;
-    left: 50%;
-    margin: -50px auto auto -146px;
+    height: auto;
+    position: relative;
+    display: block;
+    padding: 0;
+    width: 400px;
+    margin: 15% auto 0 auto;
     -webkit-box-sizing: border-box;
     z-index: 5000;
     background-color: #3e3832;
     -webkit-border-radius: 0;
     border-radius: 0;
+
+    @media (max-width: 959px) {
+        width: 200px;
+    }
   }
 
   .personsok-button {
     position: absolute;
-    left: 60px;
-    width: 52px;
-    height: 52px;
+    left: 0px;
+    bottom: 2rem;
     text-align: center;
     border-radius: 52px;
     font-size: 1.43rem;
+    z-index: 5001;
   }
 
   .personsok {
-    margin-top: 0%;
-    margin-left: 15%;
-    margin-right: 15%;
+    margin: 0 15%;
   }
 
   #personsok {
     padding-top: 80px;
+    box-shadow: none;
+    -webkit-box-shadow: none;
   }
 
   #personsokResult {
@@ -106,18 +128,18 @@ input:disabled {
 		padding-left: 0;
 		list-style-type: none;
 		margin: 0;
-	
+
 		LI:not(:first-child) {
 			margin-top: 2rem;
         }
     }
-	
+
 	/* Oversikt */
 	&[id^=oversikt] {
 		.kolonne:first-of-type {
 			margin-left: 0;
 	    }
-	
+
 		.kolonne:last-child {
 			margin-left: 3.8%;
 		}
@@ -173,6 +195,10 @@ input:disabled {
 
     /* Brukerprofil */
     &.brukerprofil, &[id^="brukerprofil"]:not(.widget-navigasjon) {
+        INPUT[type="submit"]:disabled, INPUT[type="button"]:disabled {
+          cursor: default !important;
+        }
+
         FIELDSET {
             border: 0;
             padding: 0;
@@ -274,31 +300,38 @@ input:disabled {
                 }
             }
 
+            .hasDatepicker {
+                display: inline !important;
+            }
+
             #kontaktinformasjon {
-                LABEL, .label {
+                LABEL {
                     width: 25%;
+                    float: left;
 
                     &:nth-child(2n+1) {
-                        float: left;
-                        padding-left: 4%;
+                      margin-left: 4%;
+                    }
+
+                    &:nth-child(odd) {
+                      clear: none;
                     }
 
                     SELECT {
-                        float: left;
-                        width: 90% !important;
+                      float: left;
                     }
 
                     DIV {
-                        width: 7%;
+                      width: 22%;
                     }
 
                     INPUT {
-                        width: 70% !important;
-                        padding-left: 4%;
+                      width: 70% !important;
+                      padding-left: 4%;
                     }
 
                     &.epostadresse INPUT {
-                        width: 100%;
+                      width: 92% !important;
                     }
                 }
             }
@@ -309,7 +342,7 @@ input:disabled {
 	&.sykepenger, &[id^="sykepenger"]:not(.widget-navigasjon) {
 		SECTION {
 			margin-top: 0;
-		
+
 			> SECTION H1 {
 				._H2;
 				margin-bottom: 2rem;
@@ -320,11 +353,11 @@ input:disabled {
 			float: right;
 			margin: 2rem 0 0 3.8%;
 	    }
-	
+
 		.arbeidssituasjon {
 			clear: left;
 	    }
-	
+
 		.sykmeldinger {
 			clear: left;
             float: left;
@@ -339,11 +372,11 @@ input:disabled {
 			._H2;
 			margin-bottom: 2rem;
 	    }
-	
+
 		.arbeidssituasjon {
 			margin: 0 0 2rem 3.8%;
 			float: right;
-	
+
 			.arbeisdgiver {
 				margin-top: 2rem;
             }
@@ -352,14 +385,14 @@ input:disabled {
 		.barnet {
 			margin: 0 0 2rem 0;
 		}
-  
+
 		SECTION.periode, SECTION[title=Periode] {
 			clear: both;
             display: block;
 			padding-top: 2rem;
-  
+
 			border-top: 1px solid #CCC;
-  
+
 			DL.oppsummering, ARTICLE.liste {
 				.kolonne;
 				margin-left: 0;
@@ -380,7 +413,7 @@ input:disabled {
 			font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
 			position: relative;
 			padding-right: 30px;
-			
+
 			.dato {
 				display: block;
 				font-size: 0.857rem;
@@ -388,13 +421,13 @@ input:disabled {
 				font-family: Helvetica, Arial, sans-serif;
 			    text-transform: uppercase;
 		    }
-		
+
 			.belop {
 				position: absolute;
 				left: 50%;
             }
         }
-	
+
 		.gradering {
 			position: absolute;
 			right: 0;

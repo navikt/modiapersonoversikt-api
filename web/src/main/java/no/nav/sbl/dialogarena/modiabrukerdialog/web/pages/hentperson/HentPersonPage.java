@@ -1,13 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
+import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.InternalEvents;
+import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class HentPersonPage extends BasePage {
@@ -32,7 +35,18 @@ public class HentPersonPage extends BasePage {
 
     @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
     public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
-        throw new RestartResponseException(Intern.class, new PageParameters().set("fnr", query).set("begrunnelse", true));
+		getSession().setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, true);
+	    refreshKjerneinfo(target, query);
     }
+
+	@RunOnEvents(InternalEvents.PERSONSOK_FNR_CLICKED)
+	public void personsokresultatClicked(AjaxRequestTarget target, String query) {
+		send(getPage(), Broadcast.DEPTH, new NamedEventPayload(InternalEvents.FNR_CHANGED, query));
+	}
+
+	@RunOnEvents(InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG)
+	public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
+		send(getPage(), Broadcast.BREADTH, new NamedEventPayload(InternalEvents.FODSELSNUMMER_IKKE_TILGANG, query));
+	}
 
 }

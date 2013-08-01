@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 import no.nav.modig.errorhandling.ModiaApplicationConfigurator;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
+import no.nav.modig.modia.constants.ModiaConstants;
+import no.nav.modig.modia.lamell.ModalErrorPanel;
 import no.nav.modig.modia.liste.EkspanderingsListe;
 import no.nav.modig.modia.liste.Liste;
 import no.nav.modig.modia.navigation.KeyNavigationResourceReference;
@@ -79,6 +81,8 @@ public class WicketApplication extends WebApplication {
                 .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
                 .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
                 .addScripts(DatePicker.JQUERY_PLACEHOLDER)
+                .addScripts(ModalErrorPanel.JS_RESOURCE)
+
 
                 .configure(this);
 
@@ -118,6 +122,7 @@ public class WicketApplication extends WebApplication {
     public Session newSession(Request request, Response response) {
         Session session = super.newSession(request, response);
         session.setLocale(new Locale("nb")); // Vis kun bokmaal i leveranse 1
+	    session.setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, false);
         return session;
     }
 

@@ -10,14 +10,20 @@ import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
+import org.apache.wicket.request.cycle.RequestCycle;
+import org.apache.wicket.request.http.WebRequest;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Manifest;
 
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -39,7 +45,7 @@ public class SelfTestPage extends WebPage {
     @Inject
     private SykmeldingsperioderPing sykmeldingsperioderPing;
 
-    public SelfTestPage() {
+    public SelfTestPage() throws IOException {
         logger.info("entered SelfTestPage!");
         List<ServiceStatus> statusList = new ArrayList<>();
 
@@ -49,8 +55,24 @@ public class SelfTestPage extends WebPage {
         statusList.addAll(getPingableComponentStatus("Kontrakter", kontrakterPing, "KONTRAKTER_OK", "KONTRAKTER_ERROR"));
         statusList.addAll(getPingableComponentStatus("Sykemeldinger", sykmeldingsperioderPing, "SYKEMELDINGER_OK", "SYKEMELDINGER_ERROR"));
 
-        add(new ServiceStatusListView("serviceStatusTable", statusList));
+        add(new ServiceStatusListView("serviceStatusTable", statusList),
+                new Label("application", getApplicationVersion()));
     }
+
+    private String getApplicationVersion() throws IOException {
+        String version;
+        WebRequest req = (WebRequest) RequestCycle.get().getRequest();
+        ServletContext servletContext = ((HttpServletRequest) req.getContainerRequest()).getServletContext();
+        InputStream inputStream = servletContext.getResourceAsStream(("/META-INF/MANIFEST.MF"));
+        if (inputStream != null) {
+            Manifest manifest = new Manifest(inputStream);
+            version = manifest.getMainAttributes().getValue("Implementation-Version");
+        } else {
+            version = "cannot locate manifest, version unknown";
+        }
+        return "modiabrukerdialog - " + version;
+    }
+
 
     private List<ServiceStatus> getPingableComponentStatus(String name, Pingable pingable, String okCode, String errorCode) {
         List<ServiceStatus> serviceStatuses = new ArrayList<>();
