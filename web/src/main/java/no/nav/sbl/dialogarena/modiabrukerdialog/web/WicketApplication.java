@@ -15,9 +15,9 @@ import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.wicket.BehaviorPolicyAuthorizationStrategy;
 import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
+import no.nav.modig.wicket.errorhandling.pages.ApplicationExceptionPage;
+import no.nav.modig.wicket.errorhandling.pages.SystemExceptionPage;
 import no.nav.modig.wicket.events.NamedEventDispatcher;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.feil.ModiaApplicationExceptionPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.feil.ModiaSystemExceptionPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
@@ -99,8 +99,8 @@ public class WicketApplication extends WebApplication {
 		getSecuritySettings().setAuthorizationStrategy(compoundAuthorizationStrategy);
 
         new ApplicationSettingsConfig()
-                .withApplicationExceptionPage(ModiaApplicationExceptionPage.class)
-                .withInternFeilSide(ModiaSystemExceptionPage.class)
+                .withApplicationExceptionPage(ApplicationExceptionPage.class)
+                .withInternFeilSide(SystemExceptionPage.class)
                 .configure(this);
 
         getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
