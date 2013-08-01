@@ -5,7 +5,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import no.nav.modig.security.sts.utility.STSConfigurationUtility;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;

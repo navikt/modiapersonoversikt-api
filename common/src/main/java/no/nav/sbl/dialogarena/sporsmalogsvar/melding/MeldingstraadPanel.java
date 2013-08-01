@@ -1,7 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.melding;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.HarMeldingsliste;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.MeldingslisteDelegat;
+
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
@@ -9,9 +10,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-
-public class MeldingstraadPanel extends Panel implements HarMeldingsliste {
+public class MeldingstraadPanel extends Panel {
 
     private final MeldingslisteDelegat delegat;
 
@@ -20,11 +19,6 @@ public class MeldingstraadPanel extends Panel implements HarMeldingsliste {
         this.delegat = delegat;
         setOutputMarkupId(true);
         add(new Traad("traad"));
-    }
-
-    @Override
-    public void valgteMelding(AjaxRequestTarget target, MeldingVM forrigeMelding, MeldingVM valgteMelding, boolean oppdaterScroll) {
-        target.add(this);
     }
 
     private class Traad extends PropertyListView<MeldingVM> {

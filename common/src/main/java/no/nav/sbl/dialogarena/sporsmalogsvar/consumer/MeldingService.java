@@ -43,7 +43,7 @@ public class MeldingService implements Serializable {
 					melding.withType(Meldingstype.valueOf(wsMelding.getType().name()));
 					melding.withTraadId(wsMelding.getTraadId());					
 				} else {
-					melding.withType(Meldingstype.SPORSMAL);
+					melding.withType(Meldingstype.DOKUMENTINNSENDING);
 					melding.withTraadId("0");
 				}
 				return melding;

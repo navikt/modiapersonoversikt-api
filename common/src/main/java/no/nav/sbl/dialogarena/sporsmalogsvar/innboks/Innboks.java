@@ -1,18 +1,19 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.innboks;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.AlleMeldingerPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingstraadPanel;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
 public class Innboks extends Panel implements MeldingslisteDelegat {
 
@@ -37,10 +38,11 @@ public class Innboks extends Panel implements MeldingslisteDelegat {
         AlleMeldingerPanel alleMeldinger = new AlleMeldingerPanel("meldinger", this);
         add(alleMeldinger);
         meldingslister.add(alleMeldinger);
-        MeldingstraadPanel traad = new MeldingstraadPanel("traad", this);
-        meldingslister.add(traad);
+        
+        DetaljvisningPanel detaljvisning = new DetaljvisningPanel("detaljpanel", this, innboksModell.getInnboksVM().getValgtMelding());
+        meldingslister.add(detaljvisning);
 
-        add(alleMeldinger, traad);
+        add(alleMeldinger, detaljvisning);
 
         add(new AttributeAppender("class", " innboks clearfix"));
     }

@@ -14,7 +14,8 @@ import java.util.Locale;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class MeldingVM implements Serializable {
-    private final Melding melding;
+	
+    public final Melding melding;
 
     public MeldingVM(Melding melding) {
         this.melding = melding;

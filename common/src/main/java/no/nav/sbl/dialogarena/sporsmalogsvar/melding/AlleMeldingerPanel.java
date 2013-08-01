@@ -32,7 +32,6 @@ public class AlleMeldingerPanel extends Panel implements IHeaderContributor, Har
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void valgteMelding(AjaxRequestTarget target, MeldingVM forrigeMelding, MeldingVM valgteMelding, boolean oppdaterScroll) {
         for (ListItem<MeldingVM> item : on(meldingsliste).map(castTo(ListItem.class))) {
             if (item.getModelObject() == forrigeMelding) {
