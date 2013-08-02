@@ -72,15 +72,18 @@ public class WicketApplication extends WebApplication {
                         MetaTag.XUA_IE_EDGE)
                 .withResourcePacking(this.usesDeploymentConfig())
                 .addConditionalJavascript(Intern.RESPOND_JS)
-                .addCss(SPIResources.getCss())
+		        .addLess(BasePage.LESS_RESOURCE)
+		        .addCss(SPIResources.getCss())
                 .addScripts(SPIResources.getScripts())
-                .addScripts(BasePage.JS_RESOURCE)
-                .addScripts(ShortcutListenerResourceReference.get()) //TODO: Flytt til MODIA modul ?
-                .addScripts(KeyNavigationResourceReference.get())    //TODO: Flytt til MODIA modul ?
-                .addScripts(Widget.JS_RESOURCE)                      //TODO: Flytt til MODIA modul ?
-                .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
-                .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
-                .addScripts(DatePicker.JQUERY_PLACEHOLDER)
+		        .addScripts(
+				        BasePage.JS_RESOURCE,
+				        ShortcutListenerResourceReference.get(), //TODO: Flytt til MODIA modul ?
+			            KeyNavigationResourceReference.get(),    //TODO: Flytt til MODIA modul ?
+			            Widget.JS_RESOURCE,                      //TODO: Flytt til MODIA modul ?
+			            EkspanderingsListe.JS_RESOURCE,          //TODO: Flytt til MODIA modul ?
+			            Liste.JS_RESOURCE,                       //TODO: Flytt til MODIA modul ? 03059947797
+			            DatePicker.JQUERY_PLACEHOLDER
+                )
                 .addScripts(ModalErrorPanel.JS_RESOURCE)
 
 
