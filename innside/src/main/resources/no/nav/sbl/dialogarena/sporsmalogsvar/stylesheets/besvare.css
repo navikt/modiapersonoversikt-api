@@ -39,3 +39,30 @@
     color: red;
 }
 
+.besvare-panel textarea {
+    width: 100%;
+    resize: none;
+    overflow: hidden;
+    margin-bottom: 1em;
+    min-height: 100px;
+}
+
+.besvare-panel input[type="text"] {
+    width: 100%;
+}
+
+.besvare-panel .knapp {
+    padding: 0.5em 2em;
+    text-transform: uppercase;
+}
+
+.besvare-panel .send {
+    background-color: #0067c5;
+    color: white;
+    margin-right: 0.2em;
+}
+
+.besvare-panel .avbryt {
+    background-color: darkgrey;
+    color: white;
+}

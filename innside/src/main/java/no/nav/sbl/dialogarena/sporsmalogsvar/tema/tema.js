@@ -1,3 +1,11 @@
+const TAB = 9;
+const ENTER = 13;
+const ESC = 27;
+const LEFT_ARROW = 37;
+const UP_ARROW = 38;
+const RIGHT_ARROW = 39;
+const DOWN_ARROW = 40;
+
 function temavelger() {
     var $alleTema = $('li.temastruktur, li.tema');
     $alleTema.hide();
@@ -7,37 +15,65 @@ function temavelger() {
         oppdaterTemavisning(this);
     });
 
-    $tekstfelt.focusout(function() {
-        $alleTema.hide();
+    $('body').click(function(e) {
+        if ($(e.target).hasClass('temastruktur') || $(e.target).hasClass('tema')){
+
+        } else if (e.target.id !== 'tema-textfield') {
+            $alleTema.hide();
+        }
     });
 
-    $tekstfelt.keypress(function(e) {
-        // enter
-        if (e.keyCode == '13') {
+    $tekstfelt.keydown(function(e) {
+        var keyCode = e.keyCode;
+        if ([ENTER, UP_ARROW, DOWN_ARROW].indexOf(keyCode) !== -1) {
             e.preventDefault();
+        } else if (keyCode == TAB) {
+            $alleTema.hide();
         }
     });
 
     $tekstfelt.keyup(function(e) {
-        var index = $('li.selected').index();
-        // enter
-        if (e.keyCode == '13') {
-            this.value = $('li.selected').eq(0).text();
-            $alleTema.hide();
+        var $selected = $('li.selected');
+        switch (e.keyCode) {
+            case ENTER:
+                this.value = $selected.text();
+                $alleTema.hide();
+                break;
+            case LEFT_ARROW:
+                break;
+            case UP_ARROW:
+                var prev = $selected.prevAll(':visible:first');
+                if (prev.length) {
+                    $selected.removeClass('selected');
+                    prev.addClass('selected');
+                }
+                break;
+            case RIGHT_ARROW:
+                break;
+            case DOWN_ARROW:
+                var next = $selected.nextAll(':visible:first');
+                if (next.length) {
+                    $selected.removeClass('selected');
+                    next.addClass('selected');
+                }
+                break;
+            case ESC:
+                $alleTema.hide();
+                break;
+            default:
+                oppdaterTemavisning(this);
         }
-        // up arrow
-        else if (e.keyCode == '38') {
-            $alleTema.eq(index).removeClass('selected');
-            $alleTema.eq(index > 0 ? --index : $alleTema.length - 1).addClass('selected');
-        }
-        // down arrow
-        else if (e.keyCode == '40') {
-            $alleTema.eq(index).removeClass('selected');
-            $alleTema.eq(index < ($alleTema.length - 1) ? ++index : 0).addClass('selected');
-        }
-        else {
-            oppdaterTemavisning(this);
-        }
+    });
+
+    $alleTema.click(function(e) {
+        $tekstfelt.focus();
+        velg($(e.target));
+    });
+
+    $alleTema.dblclick(function(e) {
+        $tekstfelt.val($(e.target).text());
+        $alleTema.hide();
+
     });
 
     function oppdaterTemavisning(tekstfelt) {
@@ -45,15 +81,20 @@ function temavelger() {
             var tekst = $alleTema[i].innerText;
             var index = tekst.toLowerCase().indexOf(tekstfelt.value.toLowerCase());
             if (index == -1) {
-                $($alleTema[i]).hide();
+                $alleTema.eq(i).hide();
             } else {
-                $($alleTema[i]).html(tekst.substring(0, index) +
+                $alleTema.eq(i).html(tekst.substring(0, index) +
                     '<span style="font-weight: bold">' + tekst.substr(index, tekstfelt.value.length) + '</span>' +
                     tekst.substring(index + tekstfelt.value.length, tekst.length));
-                $($alleTema[i]).show();
+                $alleTema.eq(i).show();
             }
-            $alleTema.eq(i).removeClass('selected');
         }
-        $('li.temastruktur:visible, li.tema:visible').eq(0).addClass('selected');
+        velg($('li.temastruktur:visible, li.tema:visible').eq(0));
     }
+
+    function velg(tema) {
+        $alleTema.removeClass('selected');
+        tema.addClass('selected');
+    }
+
 }
