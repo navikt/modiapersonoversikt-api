@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
+
 public class ModiaModalWindow extends ModigModalWindow {
 
     private Class clazz = HentPersonPage.class;
