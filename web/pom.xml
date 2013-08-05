@@ -178,7 +178,6 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-security-core</artifactId>
-            <type>test-jar</type>
         </dependency>
 
         <dependency>
