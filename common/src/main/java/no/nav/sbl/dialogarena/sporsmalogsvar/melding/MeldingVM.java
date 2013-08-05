@@ -47,6 +47,10 @@ public class MeldingVM implements Serializable {
         return melding.tema;
     }
 
+    public void setTema(String tema) {
+        melding.tema = tema;
+    }
+
     public boolean erSvar() {
         return melding.type == Meldingstype.SVAR;
     }
