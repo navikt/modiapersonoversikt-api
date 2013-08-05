@@ -6,6 +6,7 @@ import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;

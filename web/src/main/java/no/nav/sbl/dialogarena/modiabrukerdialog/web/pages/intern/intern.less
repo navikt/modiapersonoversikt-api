@@ -1,0 +1,445 @@
+/* Variabler & generelle mixins */
+.clearfix {
+	&::before, &::after {
+		display: table;
+		content: "";
+		line-height: 0;
+	}
+	&::after {
+		clear: both;
+	}
+}
+
+.vekk {
+	position: absolute;
+	left: -3000px;
+}
+
+/* Generelle element */
+
+H1, H2, H3 {
+	font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	line-height: 1.2em;
+}
+
+H1 {
+	font-size: 2.5rem;
+}
+
+H2, ._H2 {
+	font-size: 2.0rem;
+}
+
+H3, ._H3 {
+	font-size: 10.43rem;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.kolonne {
+	float: left;
+	display: block;
+	min-height: 30px;
+	width: 47.93617021276595%;
+}
+
+/* Spesifike sider */
+
+.hentperson.main {
+	background-color: #3E3832;
+	position: absolute;
+	width: 100%;
+
+	.modia-logo {
+		width: 150px;
+		display: block;
+		margin: 0 auto 200px auto;
+
+		@media (max-width: 959px) {
+			width: 100px;
+			margin-bottom: 150px;
+		}
+	}
+
+	.search-intern {
+		.clearfix;
+		position: relative;
+		padding: 0 0 2rem 80px;
+		margin: 0 auto 0 auto;
+		float: none;
+		clear: both;
+		overflow: visible;
+		width: auto;
+
+		LABEL.errorJS, SPAN.errorJS {
+			position: absolute;
+			bottom: 0;
+			left: 80px;
+			width: auto;
+		}
+
+		@media (max-width: 959px) {
+			padding-left: 40px;
+		}
+	}
+
+	.navbar {
+		height: auto;
+		position: relative;
+		display: block;
+		padding: 0;
+		width: 400px;
+		margin: 8% auto 0 auto;
+		z-index: 5000;
+		background-color: #3e3832;
+
+		@media (max-width: 959px) {
+			width: 200px;
+		}
+	}
+
+	.personsok-button {
+		position: absolute;
+		left: 0px;
+		bottom: 2rem;
+		text-align: center;
+		font-size: 1.43rem;
+		z-index: 5001;
+	}
+
+	.personsok {
+		margin: 0 15%;
+	}
+
+	#personsok {
+		padding-top: 80px;
+		box-shadow: none;
+		-webkit-box-shadow: none;
+	}
+
+	#personsokResult {
+		margin-left: 15%;
+		margin-right: 15%;
+	}
+}
+
+/* Individuelle lameller */
+.lamell {
+	UL.arbeisdgiver {
+		padding-left: 0;
+		list-style-type: none;
+		margin: 0;
+
+		LI:not(:first-child) {
+			margin-top: 2rem;
+		}
+	}
+
+	/* Oversikt */
+	&[id^=oversikt] {
+		.kolonne:first-of-type {
+			margin-left: 0;
+		}
+
+		.kolonne:last-child {
+			margin-left: 3.8%;
+		}
+	}
+
+	/* Kontrakter */
+	&.kontrakter, &[id^="kontrakter"]:not(.widget-navigasjon) {
+		> FORM {
+			display: block;
+
+			LABEL {
+				width: 12rem;
+			}
+		}
+
+		.kontrakt {
+			.kolonne;
+
+			&.sykeoppfolging {
+				float: right;
+				margin-left: 3.8%;
+			}
+
+			&.ytelser {
+				float: none;
+				clear: left;
+			}
+
+			.liste {
+				width: 100%;
+
+				LI {
+					overflow: auto;
+					width: 100%;
+				}
+
+				.overskrift {
+					float: left;
+					width: 80%;
+				}
+
+				.status {
+					width: 20%;
+					float: left;
+					padding: 0.4rem 0 0.4rem 0.8rem;
+					overflow: hidden;
+				}
+			}
+		}
+	}
+
+	/* Brukerprofil */
+	&.brukerprofil, &[id^="brukerprofil"]:not(.widget-navigasjon) {
+		INPUT[type="submit"]:disabled, INPUT[type="button"]:disabled {
+			cursor: default;
+		}
+
+		FIELDSET {
+			border: 0;
+			padding: 0;
+			margin: 0 0 30px 0;
+			max-width: 50rem;
+
+			LEGEND {
+				._H2;
+				padding: 1rem 0;
+			}
+
+			.endringsinformasjon {
+				padding: 0.8rem 0;
+
+				font-size: 0.857rem;
+				color: #999;
+				border-bottom: 1px solid #999;
+				border-top: 1px solid #999;
+			}
+
+			UL {
+				list-style-type: none;
+				padding: 0;
+				margin: 30px 0 0 0;
+
+				LI LABEL:first-child {
+					font-size: 1rem;
+				}
+			}
+
+			P {
+				font-weight: bold;
+
+				SPAN {
+					display: block;
+				}
+			}
+
+			SELECT {
+				height: 30px;
+				margin-top: 3px;
+				width: 100%;
+			}
+
+			DIV.label-wrapper {
+				font-size: 0.8rem;
+				line-height: 1.4rem;
+				margin-top: 1rem;
+				text-transform: uppercase;
+				position: relative;
+			}
+
+			LABEL, DIV.label-wrapper {
+				.kolonne;
+				float: none;
+				clear: both;
+				color: #3e3832;
+
+				&.selected {
+					font-weight: bold;
+				}
+			}
+
+			LABEL.errorJS {
+				position: absolute;
+				bottom: -28px;
+				padding-left: 0;
+				margin-left: 0;
+			}
+
+			LABEL.husnummer {
+				width: 16%;
+				padding-left: 4%;
+				float: left;
+			}
+
+			LABEL.husbokstav {
+				width: 14%;
+				padding-left: 4%;
+				float: left;
+			}
+
+			LABEL.bolignummer {
+				width: 18%;
+				padding-left: 4%;
+				float: left;
+			}
+
+			LABEL.postnummer {
+				width: 33%;
+				clear: left;
+				float: left;
+			}
+
+			LABEL.poststed {
+				width: 16.5%: float: left;
+				padding-left: 4%;
+			}
+
+			/* Begrense inputs til adresse uten label */
+			INPUT[aria-label*=adresse] {
+				.kolonne;
+				float: none;
+				clear: both;
+			}
+
+			.hasDatepicker {
+				display: inline;
+			}
+
+			#kontaktinformasjon {
+				LABEL:not(.errorJS), DIV.label-wrapper {
+					width: 17rem;
+					float: left;
+					font-size: 0.8rem;
+					line-height: 1.4rem;
+					margin-top: 1rem;
+					text-transform: uppercase;
+					position: relative;
+
+					&:nth-child(2n+1) {
+						margin-left: 4%;
+					}
+
+					&:nth-child(odd) {
+						clear: none;
+					}
+
+					DIV {
+						position: absolute;
+						width: 5rem;
+					}
+
+					INPUT {
+						width: 11.5rem;
+						margin-left: 5.5rem;
+					}
+
+					&.epostadresse {
+						INPUT {
+							width: 100%;
+							margin-left: 0;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/* Sykepenger */
+	&.sykepenger, &[id^="sykepenger"]:not(.widget-navigasjon) {
+		SECTION {
+			margin-top: 0;
+
+			> SECTION H1 {
+				._H2;
+				margin-bottom: 2rem;
+			}
+		}
+
+		.liste {
+			float: right;
+			margin: 2rem 0 0 3.8%;
+		}
+
+		.arbeidssituasjon {
+			clear: left;
+		}
+
+		.sykmeldinger {
+			clear: left;
+			float: left;
+			margin-left: 0;
+		}
+	}
+
+	/* FORELDREPENGER */
+	&.foreldrepenger, &[id^="foreldrepenger"]:not(.widget-navigasjon) {
+		SECTION > H1 {
+			._H2;
+			margin-bottom: 2rem;
+		}
+
+		.arbeidssituasjon {
+			margin: 0 0 2rem 3.8%;
+			float: right;
+
+			.arbeisdgiver {
+				margin-top: 2rem;
+			}
+		}
+
+		.barnet {
+			margin: 0 0 2rem 0;
+		}
+
+		SECTION.periode, SECTION[title=Periode] {
+			clear: both;
+			display: block;
+			padding-top: 2rem;
+
+			border-top: 1px solid #CCC;
+
+			DL.oppsummering, ARTICLE.liste {
+				.kolonne;
+				margin-left: 0;
+			}
+
+			ARTICLE.liste {
+				margin-left: 3.8%;
+			}
+		}
+	}
+
+	.liste {
+		.kolonne;
+
+		P.overskrift, LI.expandable A {
+			font-weight: 600;
+			font-size: 1.16rem;
+			font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+			position: relative;
+			padding-right: 30px;
+
+			.dato {
+				display: block;
+				font-size: 0.857rem;
+				font-weight: normal;
+				font-family: Helvetica, Arial, sans-serif;
+				text-transform: uppercase;
+			}
+
+			.belop {
+				position: absolute;
+				left: 50%;
+			}
+		}
+
+		.gradering {
+			position: absolute;
+			right: 0;
+		}
+	}
+}

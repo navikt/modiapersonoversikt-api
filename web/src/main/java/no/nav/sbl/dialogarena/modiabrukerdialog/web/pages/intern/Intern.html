@@ -1,23 +1,25 @@
 <!DOCTYPE html>
 <html lang="no" xmlns:wicket="http://wicket.apache.org">
-<wicket:head>
-    <title>Intern arbeidsflate</title>
-</wicket:head>
-<wicket:extend>
-    <body>
-        <div wicket:id="modal"></div>
-        <div class="main">
-            <section class="navbar menu-intern active">
-                <button class="personsok-button" id="toggle-personsok" wicket:message="aria-label:personsok.apnetekst, title:personsok.apnetekst, data-apne:personsok.apnetekst, data-lukke:personsok.lukketekst">A</button>
-                <wicket:container wicket:id="searchPanel"/>
-                <button class="nullstill-button" wicket:message="aria-label:hentperson.nullstillbruker, title:hentperson.nullstillbruker" wicket:id="nullstill"></button>
-            </section>
-             <wicket:container wicket:id="personsokPanel"/>
-            <wicket:container wicket:id="personKjerneinfoPanel"/>
-            <!--<wicket:container wicket:id="examplecomponent" />-->
-            <section class="lameller" wicket:id="lameller"/>
-        </div>
-        <wicket:container wicket:id="sideBar"/>
-    </body>
-</wicket:extend>
+	<wicket:head>
+		<title>Intern arbeidsflate</title>
+	</wicket:head>
+	<wicket:extend>
+		<body>
+			<div wicket:id="modal"></div>
+			<div class="main">
+				<section class="navbar menu-intern active">
+					<button class="personsok-button" id="toggle-personsok"
+							wicket:message="aria-label:personsok.apnetekst, title:personsok.apnetekst, data-apne:personsok.apnetekst, data-lukke:personsok.lukketekst">A
+					</button>
+					<wicket:container wicket:id="searchPanel"/>
+					<button class="nullstill-button" wicket:message="aria-label:hentperson.nullstillbruker, title:hentperson.nullstillbruker" wicket:id="nullstill">[]</button>
+				</section>
+				<wicket:container wicket:id="personsokPanel"/>
+				<wicket:container wicket:id="personKjerneinfoPanel"/>
+				<!--<wicket:container wicket:id="examplecomponent" />-->
+				<section class="lameller" wicket:id="lameller">[]</section>
+			</div>
+			<wicket:container wicket:id="sideBar"/>
+		</body>
+	</wicket:extend>
 </html>

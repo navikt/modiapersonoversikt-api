@@ -69,21 +69,27 @@ public class WicketApplication extends WebApplication {
                 .addMetas(
                         MetaTag.CHARSET_UTF8,
                         MetaTag.VIEWPORT_SCALE_1,
-                        MetaTag.XUA_IE_EDGE)
-                .withResourcePacking(this.usesDeploymentConfig())
+                        MetaTag.XUA_IE_EDGE
+                )
                 .addConditionalJavascript(Intern.RESPOND_JS)
-                .addCss(SPIResources.getCss())
+		        .addLess(BasePage.INTERN_LESS)
+                .addCss(
+		                BasePage.PERSONSOKRESULT,
+		                BasePage.PERSONSOKSEARCH,
+		                BasePage.PERSONKJERNEINFO
+                )
                 .addScripts(SPIResources.getScripts())
-                .addScripts(BasePage.JS_RESOURCE)
-                .addScripts(ShortcutListenerResourceReference.get()) //TODO: Flytt til MODIA modul ?
-                .addScripts(KeyNavigationResourceReference.get())    //TODO: Flytt til MODIA modul ?
-                .addScripts(Widget.JS_RESOURCE)                      //TODO: Flytt til MODIA modul ?
-                .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
-                .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
-                .addScripts(DatePicker.JQUERY_PLACEHOLDER)
-                .addScripts(ModalErrorPanel.JS_RESOURCE)
-
-
+		        .addScripts(
+		                BasePage.JS_RESOURCE,
+		                ShortcutListenerResourceReference.get(), //TODO: Flytt til MODIA modul ?
+                        KeyNavigationResourceReference.get(),    //TODO: Flytt til MODIA modul ?
+                        Widget.JS_RESOURCE,                      //TODO: Flytt til MODIA modul ?
+                        EkspanderingsListe.JS_RESOURCE,          //TODO: Flytt til MODIA modul ?
+                        Liste.JS_RESOURCE,                       //TODO: Flytt til MODIA modul ?
+                        DatePicker.JQUERY_PLACEHOLDER,
+                        ModalErrorPanel.JS_RESOURCE
+	            )
+		        .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
 
         // Innstillinger vi bør ha
