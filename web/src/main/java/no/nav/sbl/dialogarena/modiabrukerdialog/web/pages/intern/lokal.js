@@ -36,7 +36,7 @@ jQuery(document).ready(function ($) {
     function movePersonsok() {
         var navbar = $(".navbar");
         var logo = $(".modia-logo");
-        var nullstill = $(".knapp-nullstill");
+        var nullstill = $("INPUT[name=nullstillSok]");
 
         if (navbar[0].style.marginTop == "1%") {
             toggleAvansertSok();
