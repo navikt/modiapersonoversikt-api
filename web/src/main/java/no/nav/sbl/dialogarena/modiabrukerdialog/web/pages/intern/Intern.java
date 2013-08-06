@@ -105,7 +105,7 @@ public class Intern extends BasePage {
 
 	private void instantiateComponents(String fnrFromRequest) {
         add(
-		        new Button("toggle-sok").add(new ContextPathGenerator("img/sok.svg")),
+		        new Button("toggle-sok"),
 		        new HentPersonPanel("searchPanel"),
 		        new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
 		        new PersonsokPanel("personsokPanel").setVisible(true),
