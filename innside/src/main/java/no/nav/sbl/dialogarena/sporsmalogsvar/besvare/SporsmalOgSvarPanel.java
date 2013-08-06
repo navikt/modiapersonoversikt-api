@@ -35,7 +35,7 @@ public class SporsmalOgSvarPanel extends Panel {
         final BesvareSporsmalPanel besvare = new BesvareSporsmalPanel("besvare-sporsmal", model, feedbackPanel);
         besvare.add(visibleIf(model.besvarerSporsmal()));
 
-        AjaxLink plukk = new AjaxLink("plukk") {
+        AjaxLink<Void> plukk = new AjaxLink<Void>("plukk") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 model.setObject(plukk(aktorId));
@@ -48,7 +48,7 @@ public class SporsmalOgSvarPanel extends Panel {
                 feedbackPanel,
                 plukk,
                 besvare,
-                new AjaxLink("brukerhenvendelser-link") {
+                new AjaxLink<Void>("brukerhenvendelser-link") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         send(getPage(), Broadcast.BUBBLE, new NamedEventPayload(InternalEvents.FEED_ITEM_CLICKED, new FeedItemPayload(null, null, "brukerhenvendelser")));
