@@ -4,7 +4,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
-        <version>1.0.7-SNAPSHOT</version>
+        <version>1.0.7</version>
     </parent>
     <artifactId>modiabrukerdialog-web</artifactId>
     <name>${project.artifactId}</name>
