@@ -5,29 +5,28 @@
     border: 1px solid darkgrey;
     border-top: 0;
     margin-top: 0;
-}
-
-.temavelger {
     overflow: auto;
     max-height: 25em;
+    background-color: white;
 }
 
-.temastruktur, .tema {
+.temavelger .temastruktur, .temavelger .tema {
     list-style: none;
     width: 100%;
     padding-top: 0.2em;
     padding-bottom: 0.2em;
+    color: black;
 }
 
-.selected {
+.temavelger .selected {
     background-color: dodgerblue;
     color: white;
 }
 
-.temastruktur {
+.temavelger .temastruktur {
     padding-left: 1em;
 }
-.tema {
+.temavelger .tema {
     padding-left: 2em;
 }
 

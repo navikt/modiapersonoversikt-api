@@ -1,9 +1,13 @@
 .besvare-panel {
-    background: white;
     margin: 0;
     padding: 1em;
-    border: 1px solid black;
     max-width: 700px;
+}
+
+.besvare-panel .sporsmal {
+    background-color: #cccccc;
+    padding: 1em;
+    position: relative;
 }
 
 .besvare-panel .sporsmal header > h1 {
@@ -16,12 +20,19 @@
     margin-top: 0;
     margin-bottom: 0.2em;
     font-size: 0.9em;
-    color: grey;
+}
+
+.besvare-panel .sporsmal .opprettet {
+    position: absolute;
+    top: 1.5em;
+    right: 1.5em;
+    font-size: 80%;
+    font-weight: bold;
+    color: black;
 }
 
 .besvare-panel .sporsmal > p {
     font-size: 0.8em;
-    color: grey;
     text-overflow: ellipsis;
     -o-text-overflow: ellipsis;
     overflow: hidden;
@@ -65,4 +76,8 @@
 .besvare-panel .avbryt {
     background-color: darkgrey;
     color: white;
+}
+
+.besvare-panel label {
+    width: auto;
 }

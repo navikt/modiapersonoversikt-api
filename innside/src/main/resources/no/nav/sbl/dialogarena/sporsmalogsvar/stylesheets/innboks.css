@@ -84,7 +84,7 @@
 
 .pane.meldingsliste {
     width: 40%;
-    overflow-y: scroll;
+    overflow-y: auto;
     border-right: solid 1px #ddd;
     max-height: 500px;
 }

@@ -34,8 +34,8 @@ public class BesvareSporsmalPanel extends Panel {
     @Inject
     private MeldingService service;
 
+    private FeedbackPanel feedbackPanel;
     public static final String SPORSMAL_OPPDATERT = "hendelser.sporsmal_oppdatert";
-    private final FeedbackPanel feedbackPanel;
     private List<Temastruktur> temastrukturListe = asList(
             new Temastruktur("Barnetrygd",  "EØS", "Informasjon", "Klage/anke", "Ordinær", "Tilbakebetaling/tilbakekreving EØS", "Tilbakebetaling/tilbakekreving",
                     "Utbetaling", "Utvidet", "Vedtak", "Tilbakekreving - Klage", "Tilbakekreving - Anke", "Tilbakekreving - Omgjøring"),
@@ -46,12 +46,11 @@ public class BesvareSporsmalPanel extends Panel {
                     "Krigspensjon", "Omsorgspoeng", "Uførepensjon", "Veteransak"),
             new Temastruktur("Ukjent"));
 
-    public BesvareSporsmalPanel(String id, BesvareModell model) {
+    public BesvareSporsmalPanel(String id, BesvareModell model, FeedbackPanel feedbackPanel) {
         super(id, model);
+        this.feedbackPanel = feedbackPanel;
         setOutputMarkupId(true);
-        feedbackPanel = new FeedbackPanel("feedback");
         add(
-                feedbackPanel,
                 new SporsmalPanel("sporsmal", model),
                 new SvarForm("svar", model));
     }
@@ -69,13 +68,22 @@ public class BesvareSporsmalPanel extends Panel {
 
         public SvarForm(String id, final BesvareModell model) {
             super(id, model);
+            TextArea<Object> fritekst = new TextArea<>("svar.fritekst");
+            fritekst.setRequired(true);
+            TextField<Object> tema = new TextField<>("svar.tema");
+            tema.setRequired(true);
             add(
                     new TextField<>("svar.overskrift"),
-                    new TextArea<>("svar.fritekst"),
+                    fritekst,
                     new CheckBox("svar.sensitiv", Model.of(Boolean.FALSE)),
-                    new TextField<>("svar.tema"),
+                    tema,
                     new TemastrukturVelger("tema-velger", temastrukturListe),
                     new AjaxSubmitLink("send") {
+                        @Override
+                        protected void onError(AjaxRequestTarget target, Form<?> form) {
+                            target.add(feedbackPanel);
+                        }
+
                         @Override
                         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                             MeldingVM svar = model.getSvar();
@@ -93,7 +101,8 @@ public class BesvareSporsmalPanel extends Panel {
                             model.nullstill();
                             send(getPage(), Broadcast.BREADTH, SPORSMAL_OPPDATERT);
                         }
-                    });
+                    }
+            );
         }
     }
 

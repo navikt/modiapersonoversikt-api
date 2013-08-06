@@ -10,8 +10,10 @@ function temavelger() {
     var $alleTema = $('li.temastruktur, li.tema');
     $alleTema.hide();
     var $tekstfelt = $('#tema-textfield');
+    var expanded = 'expanded';
 
     $tekstfelt.focusin(function() {
+        $alleTema.removeClass(expanded);
         oppdaterTemavisning(this);
     });
 
@@ -40,6 +42,7 @@ function temavelger() {
                 $alleTema.hide();
                 break;
             case LEFT_ARROW:
+                $selected.removeClass(expanded);
                 break;
             case UP_ARROW:
                 var prev = $selected.prevAll(':visible:first');
@@ -49,6 +52,9 @@ function temavelger() {
                 }
                 break;
             case RIGHT_ARROW:
+                if ($selected.hasClass('temastruktur')) {
+                    $selected.addClass(expanded);
+                }
                 break;
             case DOWN_ARROW:
                 var next = $selected.nextAll(':visible:first');
@@ -78,7 +84,7 @@ function temavelger() {
 
     function oppdaterTemavisning(tekstfelt) {
         for (var i = 0; i < $alleTema.length; i++) {
-            var tekst = $alleTema[i].innerText;
+            var tekst = $alleTema.eq(i).text();
             var index = tekst.toLowerCase().indexOf(tekstfelt.value.toLowerCase());
             if (index == -1) {
                 $alleTema.eq(i).hide();

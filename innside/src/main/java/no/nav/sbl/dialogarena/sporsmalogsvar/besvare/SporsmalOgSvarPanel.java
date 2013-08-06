@@ -30,8 +30,9 @@ public class SporsmalOgSvarPanel extends Panel {
         add(new AttributeAppender("class", "besvare-panel"));
 
         FeedbackPanel feedbackPanel = new FeedbackPanel("feedback-panel");
+        feedbackPanel.setOutputMarkupId(true);
         model = new BesvareModell();
-        final BesvareSporsmalPanel besvare = new BesvareSporsmalPanel("besvare-sporsmal", model);
+        final BesvareSporsmalPanel besvare = new BesvareSporsmalPanel("besvare-sporsmal", model, feedbackPanel);
         besvare.add(visibleIf(model.besvarerSporsmal()));
 
         AjaxLink plukk = new AjaxLink("plukk") {
