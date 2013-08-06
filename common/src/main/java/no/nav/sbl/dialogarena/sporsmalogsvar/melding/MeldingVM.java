@@ -60,7 +60,7 @@ public class MeldingVM implements Serializable {
     }
 
     public String getOpprettetDato() {
-        return DateTimeFormat.forPattern("dd.MM.yyyy")
+        return DateTimeFormat.forPattern("dd.MM.yyyy, HH:mm:ss")
                 .withLocale(Locale.getDefault())
                 .print(melding.opprettet);
     }
