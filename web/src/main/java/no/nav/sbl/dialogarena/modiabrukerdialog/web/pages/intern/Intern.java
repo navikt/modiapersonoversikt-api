@@ -19,6 +19,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.markup.html.image.ContextPathGenerator;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.request.resource.ResourceReference;
@@ -103,13 +105,14 @@ public class Intern extends BasePage {
 
 	private void instantiateComponents(String fnrFromRequest) {
         add(
-                new HentPersonPanel("searchPanel"),
-                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
-                new PersonsokPanel("personsokPanel").setVisible(true),
-                lamellHandler.createLamellPanel("lameller", fnrFromRequest),
-                new SideBar("sideBar", fnrFromRequest).setVisible(true),
-                createNullstillLink(modalWindow),
-                modalWindow
+		        new Button("toggle-sok").add(new ContextPathGenerator("img/sok.svg")),
+		        new HentPersonPanel("searchPanel"),
+		        new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
+		        new PersonsokPanel("personsokPanel").setVisible(true),
+		        lamellHandler.createLamellPanel("lameller", fnrFromRequest),
+		        new SideBar("sideBar", fnrFromRequest).setVisible(true),
+		        createNullstillLink(modalWindow),
+		        modalWindow
         );
     }
 

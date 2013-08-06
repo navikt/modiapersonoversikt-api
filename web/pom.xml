@@ -83,6 +83,16 @@
             <artifactId>modig-lang</artifactId>
         </dependency>
 
+	    <dependency>
+		    <groupId>no.nav</groupId>
+		    <artifactId>personsok-search</artifactId>
+	    </dependency>
+
+	    <dependency>
+		    <groupId>no.nav</groupId>
+		    <artifactId>personsok-result</artifactId>
+	    </dependency>
+
         <!-- End modia komponenter -->
 
         <!-- Modig avhengigheter -->

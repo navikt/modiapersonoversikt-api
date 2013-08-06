@@ -40,7 +40,7 @@ jQuery(document).ready(function ($) {
 
         if (navbar[0].style.marginTop == "1%") {
             toggleAvansertSok();
-            navbar.animate({marginTop: "15%"}, 300, 'linear');
+            navbar.animate({marginTop: "8%"}, 300, 'linear');
             navbar.css("marginBottom", "0");
             logo.css("display", "block");
             // Nullstiller søket
