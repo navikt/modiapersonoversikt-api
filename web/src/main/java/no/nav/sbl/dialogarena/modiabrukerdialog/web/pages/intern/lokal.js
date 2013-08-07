@@ -25,10 +25,10 @@ jQuery(document).ready(function ($) {
     $(".sidebar").on("click", function () {
         var sidebar = $(this);
         if (sidebar.css("position") == "absolute") {
-            if (sidebar.css("right") == "-380px") {
+            if (sidebar.css("right") == "-385px") {
                 sidebar.animate({right: "0"}, "25");
             } else {
-                sidebar.animate({right: "-380px"}, "25");
+                sidebar.animate({right: "-385px"}, "25");
             }
         }
     });
@@ -41,13 +41,11 @@ jQuery(document).ready(function ($) {
         if (navbar[0].style.marginTop == "1%") {
             toggleAvansertSok();
             navbar.animate({marginTop: "8%"}, 300, 'linear');
-            navbar.css("marginBottom", "0");
             logo.css("display", "block");
             // Nullstiller søket
             nullstill.click();
         } else {
             navbar.animate({marginTop: "1%"}, 400, 'linear', toggleAvansertSok);
-            navbar.css("marginBottom", "20px");
             logo.css("display", "none");
         }
     }

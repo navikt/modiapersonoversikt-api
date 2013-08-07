@@ -60,12 +60,24 @@ H3, ._H3 {
 	.search-intern {
 		.clearfix;
 		position: relative;
-		padding: 0 0 2rem 80px;
+		padding: 0 0 30px 80px;
 		margin: 0 auto 0 auto;
 		float: none;
 		clear: both;
 		overflow: visible;
 		width: auto;
+
+		INPUT[type=text] {
+		    height: 66px;
+		    padding: 0 70px 0 20px;
+            font-size: 2.14rem;
+		}
+
+		INPUT[type=button], SUBMIT, INPUT[type=image], #submitFodselsnummer {
+            height: 36px;
+            right: 8px;
+            top: 18px;
+        }
 
 		LABEL.errorJS, SPAN.errorJS {
 			position: absolute;
@@ -78,6 +90,10 @@ H3, ._H3 {
 			padding-left: 40px;
 		}
 	}
+
+	.nullstill-button {
+    	margin: 20px 0 0 30px;
+    }
 
 	.navbar {
 		height: auto;
@@ -95,13 +111,29 @@ H3, ._H3 {
 	}
 
 	.personsok-button {
-		position: absolute;
 		left: 0px;
 		bottom: 2rem;
-		text-align: center;
-		font-size: 2.13rem;
-		font-weight: bold;
-		z-index: 5001;
+		font-size: 2.0rem;
+        width: 66px;
+        height: 66px;
+        border-radius: 66px;
+        z-index: 5001;
+
+		&:after {
+            bottom: 14px;
+            left: 26px;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-top: 7px solid #333;
+        }
+
+        &.active:after {
+            bottom: 14px;
+            border-top: none;
+            border-left: 7px solid transparent;
+            border-right: 7px solid transparent;
+            border-bottom: 7px solid #333;
+        }
 	}
 
 	.personsok {
