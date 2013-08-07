@@ -63,8 +63,11 @@ H3, ._H3 {
 		width: auto;
 
 		INPUT[type=text] {
-		    height: 66px;
+		    /*height: 66px;
 		    padding: 0 70px 0 20px;
+            font-size: 2.14rem;*/
+            height: auto;
+            padding: 16px 70px 16px 20px;
             font-size: 2.14rem;
 		}
 
@@ -72,6 +75,10 @@ H3, ._H3 {
             height: 36px;
             right: 8px;
             top: 18px;
+
+            @media (max-width: 959px) {
+                margin-top: 0;
+            }
         }
 
 		LABEL.errorJS, SPAN.errorJS {
