@@ -67,9 +67,9 @@ public class WicketApplication extends WebApplication {
         new FrontendConfigurator()
                 .withModules(MODIA)
                 .addMetas(
+                        MetaTag.XUA_IE_EDGE,
                         MetaTag.CHARSET_UTF8,
-                        MetaTag.VIEWPORT_SCALE_1,
-                        MetaTag.XUA_IE_EDGE
+                        MetaTag.VIEWPORT_SCALE_1
                 )
                 .addConditionalJavascript(Intern.RESPOND_JS)
 		        .addLess(BasePage.INTERN_LESS)
