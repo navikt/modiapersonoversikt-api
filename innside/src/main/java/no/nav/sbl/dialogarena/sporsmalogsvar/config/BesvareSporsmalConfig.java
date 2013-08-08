@@ -17,6 +17,7 @@ public class BesvareSporsmalConfig {
     @Configuration
     @Import({
             JaxWsFeatures.Integration.class,
+            StsConfig.class,
             ServicesConfig.class
     })
     public static class Default { }
