@@ -80,7 +80,6 @@ public class MeldingService implements Serializable {
         public SporsmalOgSvar transform(WSSporsmalOgSvar wsSporsmalOgSvar) {
             Melding sporsmal = TIL_MELDING.transform(wsSporsmalOgSvar.getSporsmal());
             Melding svar = TIL_MELDING.transform(wsSporsmalOgSvar.getSvar());
-            svar.tema = null;
             return new SporsmalOgSvar().withSporsmal(sporsmal).withSvar(svar);
         }
     };

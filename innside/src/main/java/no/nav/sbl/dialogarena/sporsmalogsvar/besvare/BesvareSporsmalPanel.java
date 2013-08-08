@@ -1,14 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
-import java.util.List;
 import javax.inject.Inject;
+
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Svar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.tema.Temastruktur;
-import no.nav.sbl.dialogarena.sporsmalogsvar.tema.TemastrukturVelger;
+
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -27,8 +26,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
-import static java.util.Arrays.asList;
-
 public class BesvareSporsmalPanel extends Panel {
 
     @Inject
@@ -36,15 +33,6 @@ public class BesvareSporsmalPanel extends Panel {
 
     private FeedbackPanel feedbackPanel;
     public static final String SPORSMAL_OPPDATERT = "hendelser.sporsmal_oppdatert";
-    private List<Temastruktur> temastrukturListe = asList(
-            new Temastruktur("Barnetrygd",  "EØS", "Informasjon", "Klage/anke", "Ordinær", "Tilbakebetaling/tilbakekreving EØS", "Tilbakebetaling/tilbakekreving",
-                    "Utbetaling", "Utvidet", "Vedtak", "Tilbakekreving - Klage", "Tilbakekreving - Anke", "Tilbakekreving - Omgjøring"),
-            new Temastruktur("Generell", "Veteransak"),
-            new Temastruktur("Kontantstøtte", "Veteransak", "Adopsjon", "EU", "Informasjon", "Klage/anke", "Ordinær", "Tilbakebetaling/tilbakekreving EØS",
-                    "Tilbakebetaling/tilbakekreving", "Utbetaling", "Vedtak", "Tilbakekreving - Klage", "Tilbakekreving - Anke", "Tilbakekreving - Omgjøring"),
-            new Temastruktur("Pensjon", "AFP", "AFP Privat", "Alderspensjon", "Barnepensjon", "Familiepleier", "Gammel yrkesskade", "Gjenlevende ektefelle",
-                    "Krigspensjon", "Omsorgspoeng", "Uførepensjon", "Veteransak"),
-            new Temastruktur("Ukjent"));
 
     public BesvareSporsmalPanel(String id, BesvareModell model, FeedbackPanel feedbackPanel) {
         super(id, model);
@@ -70,14 +58,10 @@ public class BesvareSporsmalPanel extends Panel {
             super(id, model);
             TextArea<Object> fritekst = new TextArea<>("svar.fritekst");
             fritekst.setRequired(true);
-            TextField<Object> tema = new TextField<>("svar.tema");
-            tema.setRequired(true);
             add(
                     new TextField<>("svar.overskrift"),
                     fritekst,
                     new CheckBox("svar.sensitiv", Model.of(Boolean.FALSE)),
-                    tema,
-                    new TemastrukturVelger("tema-velger", temastrukturListe),
                     new AjaxSubmitLink("send") {
                         @Override
                         protected void onError(AjaxRequestTarget target, Form<?> form) {
