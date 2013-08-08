@@ -1,17 +1,16 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.melding;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
-import org.apache.commons.collections15.Predicate;
-import org.apache.commons.collections15.Transformer;
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Locale;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
+
+import org.apache.commons.collections15.Predicate;
+import org.apache.commons.collections15.Transformer;
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
 public class MeldingVM implements Serializable {
 	
@@ -34,13 +33,11 @@ public class MeldingVM implements Serializable {
     }
 
     public String getOverskrift() {
-        String tekst;
-        if (isBlank(melding.overskrift)) {
-            tekst = melding.erSporsmal() ? "Spørsmål om " + melding.tema : "Svar fra NAV";
-        } else {
-            tekst = melding.overskrift;
-        }
-        return tekst;
+    	return melding.overskrift;
+    }
+    
+    public void setOverskrift(String overskrift) {
+    	melding.overskrift = overskrift;
     }
 
     public String getTema() {
