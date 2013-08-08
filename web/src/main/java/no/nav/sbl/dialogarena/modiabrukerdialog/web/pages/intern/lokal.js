@@ -181,7 +181,7 @@ function createTabHandler(application){
         var currentActiveTab = window.localStorage.getItem(localStorageId);
         if(!currentActiveTab){
             var tabGuid = getTabGuid();
-            console.log("Ingen aktiv tab, setter den nå. Guid = " + tabGuid);
+//            console.log("Ingen aktiv tab, setter den nå. Guid = " + tabGuid);
             setActiveTab(tabGuid);
             currentActiveTab = tabGuid;
         }
@@ -189,7 +189,7 @@ function createTabHandler(application){
     };
 
     var setActiveTab = function(tabGuid){
-        console.log("Setter aktiv tab: "+ tabGuid);
+//        console.log("Setter aktiv tab: "+ tabGuid);
         window.localStorage.setItem(localStorageId, tabGuid);
     };
 
@@ -252,7 +252,7 @@ function createTabHandler(application){
     };
 
     var unloadListener = function(){
-        console.log("Unload");
+//        console.log("Unload");
         var tabGuid = getTabGuid();
         var currentActiveTab = getCurrentActiveTab();
         if(tabGuid == currentActiveTab){
@@ -269,7 +269,7 @@ function createTabHandler(application){
             currentActiveTab = tabGuid;
         }
         if(currentActiveTab !== tabGuid && !isReloading()){
-            console.log("Dette er ikke aktiv tab. Viser dialog")
+//            console.log("Dette er ikke aktiv tab. Viser dialog")
             createModalDialog();
         }else{
             setActiveTab(tabGuid);
