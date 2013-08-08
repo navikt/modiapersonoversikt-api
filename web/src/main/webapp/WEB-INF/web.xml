@@ -21,14 +21,14 @@
         <description>Brukes for å velge kontekst</description>
         <param-name>spring.profiles.active</param-name>
         <param-value>
-            kjerneinfoTest
+            kjerneinfoDefault
             , sykemeldingsperioderTest
             , kontrakterTest
-            , personsokDefault
             , brukerprofilTest
             , behandleBrukerprofilTest
+            , personsokDefault
             , brukerhenvendelserDefault
-        </param-value>
+        </param-value> ?
     </context-param>
 
     <!-- exposes the request to current thread -->
