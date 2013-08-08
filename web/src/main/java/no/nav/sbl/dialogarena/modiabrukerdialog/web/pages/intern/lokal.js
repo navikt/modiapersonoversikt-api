@@ -3,6 +3,8 @@ jQuery(document).ready(function ($) {
 
 	Modig.shortcutListener.on({ alt: true, shift: false, key: 'V' }, toggleKjerneinfo);
 
+    createTabHandler("modiabrukerdialog");
+
 	$('.brukerprofil').on('keydown', function (e) {
 		var keyCode = e.keyCode || e.which;
 		if (keyCode === 13) {
@@ -143,3 +145,96 @@ function gjennomfoerAvansertSok() {
 	}
 }
 
+function createTabHandler(application){
+    var localStorageId = application + ".activeTab";
+    var sessionStorageId = application + ".tabGuid";
+    var greyBackground = '<div class="wicket-mask-dark" style="z-index: 20000; background-image: none; position: absolute; top: 0px; left: 0px;"></div>';
+    var modalDialog ='<div class="wicket-modal" id="_wicket_window_0" tabindex="-1" role="dialog" style="position: absolute; width: 600px; left: 660px; top: 180.5px; visibility: visible;"><form><div class="w_content_1" ><div class="w_caption" id="_wicket_window_1"><a class="w_close" role="button" style="z-index:1" href="#"></a></div><div id="_wicket_window_2" class="w_content_container" style="overflow: auto; height: 248px;"><div id="content5c"><section class="bekreft-dialog"><h1 class="robust-ikon-hjelp-strek">Ønsker du å aktivere denne siden?</h1><ul><li><button class="knapp-stor" id="confirmActivateTab">Ja</button></li></ul></section></div></div></div></form></div>';
+
+    /**
+     * Generates a GUID string, according to RFC4122 standards.
+     * @returns {String} The generated guid
+     * @example eff5d22c-74fa-7139-d4e8-6879736b04fa
+     * @author Slavik Meltser (slavik@meltser.info)
+     * @link http://slavik.meltser.info/?p=142
+     */
+    var createGuid = function(){
+        function _p8(s){
+            var p =(Math.random().toString(16)+"000000000").substr(2,8);
+            return s ? "-" + p.substr(0,4) + "-" + p.substr(4,4) : p;
+        }
+        return _p8(false) + _p8(true) + _p8(true) + _p8(false);
+    };
+
+
+    var getTabGuid = function(){
+        var tabGuid = window.sessionStorage.getItem(sessionStorageId);
+        if(tabGuid === null || tabGuid === undefined){
+            tabGuid = createGuid();
+            window.sessionStorage.setItem(sessionStorageId, tabGuid);
+        }
+        return tabGuid;
+    };
+
+    var getCurrentActiveTab = function(){
+        var currentActiveTab = window.localStorage.getItem(localStorageId);
+        if(currentActiveTab === null || currentActiveTab === undefined){
+            var tabGuid = getTabGuid();
+            console.log("Ingen aktiv tab, setter den nå. Guid = " + tabGuid);
+            setActiveTab(tabGuid);
+            currentActiveTab = tabGuid;
+        }
+        return currentActiveTab;
+    };
+
+    var setActiveTab = function(tabGuid){
+        window.localStorage.setItem(localStorageId, tabGuid);
+    };
+
+    var activateTab = function(){
+        removeModalDialog();
+        setActiveTab(getTabGuid());
+        window.location.reload();
+    };
+
+    var isModalDialogVisible = function(){
+        var backGround = $('.wicket-mask-dark');
+        if(backGround.length == 0){
+            return false;
+        }
+        return true;
+    };
+
+    var createModalDialog = function() {
+        $("body").append(modalDialog).append(greyBackground);
+        $("#confirmActivateTab").click(activateTab);
+    };
+
+    var removeModalDialog = function(){
+        $('.wicket-mask-dark').remove();
+        $('wicket-modal').remove();
+    };
+
+    var storageEventListener = function(e){
+        if(e.key === localStorageId){
+            if(e.newValue === null)
+                return;
+            var tabGuid = getTabGuid();
+            if(e.newValue !== tabGuid && !isModalDialogVisible()){
+                createModalDialog();
+            }
+        }
+    };
+
+    var init = function(){
+        var tabGuid = getTabGuid();
+        var currentActiveTab = getCurrentActiveTab();
+        if(currentActiveTab !== tabGuid){
+            console.log("Dette er ikke aktiv tab. Setter aktiv tab")
+            setActiveTab(tabGuid);
+        }
+        window.addEventListener("storage", storageEventListener);
+    };
+
+    init();
+}
