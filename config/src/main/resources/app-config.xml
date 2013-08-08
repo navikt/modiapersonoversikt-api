@@ -32,6 +32,9 @@
         <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>   <!-- mangler i T8 ?-->
         <webservice alias="virksomhet:foreldrepenger_v1" mapToProperty="foreldrepengerendpoint"/>
         <webservice alias="virksomhet:sykepenger_v1" mapToProperty="sykepengerendpoint"/>
+        <webservice alias="domene.Brukerdialog:SporsmalOgSvarService_v1" mapToProperty="spormalogsvarendpoint"/>
+        <webservice alias="domene.Brukerdialog:HenvendelseService_v1" mapToProperty="henvendelseendpoint"/>
+
         <!-- Slutt kjerneinfo -->
         <!-- App-->
         <applicationCertificate alias="srvModiabrukerdialog" />
