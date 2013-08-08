@@ -28,7 +28,7 @@
             , behandleBrukerprofilTest
             , personsokDefault
             , brukerhenvendelserDefault
-        </param-value> ?
+        </param-value>
     </context-param>
 
     <!-- exposes the request to current thread -->
