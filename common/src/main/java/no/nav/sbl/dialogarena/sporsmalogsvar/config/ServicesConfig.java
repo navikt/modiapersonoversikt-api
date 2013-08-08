@@ -26,7 +26,7 @@ public class ServicesConfig {
     @Value("${spormalogsvarendpoint.url}")
     protected String spmSvarEndpoint;
     
-    @Value("${henvendelse.endpoint.url}")
+    @Value("${henvendelseendpoint.url}")
     protected String henvendelseEndpoint;
 
     @Bean

@@ -21,7 +21,7 @@ public class BesvareSporsmalConfig {
     })
     public static class Default { }
 
-    @Profile({"default", "brukerhenvendelserDefaultWithoutCNCheck"})
+    @Profile({"brukerhenvendelserDefaultWithoutCNCheck"})
     @Configuration
     @Import({
             JaxWsFeatures.Mock.class,
