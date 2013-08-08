@@ -148,8 +148,9 @@ function gjennomfoerAvansertSok() {
 function createTabHandler(application){
     var localStorageId = application + ".activeTab";
     var sessionStorageId = application + ".tabGuid";
+    var isReloadingId = application  + ".reloading";
     var greyBackground = '<div class="wicket-mask-dark" style="z-index: 20000; background-image: none; position: absolute; top: 0px; left: 0px;"></div>';
-    var modalDialog ='<div class="wicket-modal" id="_wicket_window_0" tabindex="-1" role="dialog" style="position: absolute; width: 600px; left: 660px; top: 180.5px; visibility: visible;"><form><div class="w_content_1" ><div class="w_caption" id="_wicket_window_1"><a class="w_close" role="button" style="z-index:1" href="#"></a></div><div id="_wicket_window_2" class="w_content_container" style="overflow: auto; height: 248px;"><div id="content5c"><section class="bekreft-dialog"><h1 class="robust-ikon-hjelp-strek">Ønsker du å aktivere denne siden?</h1><ul><li><button class="knapp-stor" id="confirmActivateTab">Ja</button></li></ul></section></div></div></div></form></div>';
+    var modalDialog ='<div class="wicket-modal" id="_wicket_window_0" tabindex="-1" role="dialog" style="position: absolute; width: 600px; left: 660px; top: 180.5px; visibility: visible;"><form><div class="w_content_1" ><div class="w_caption" id="_wicket_window_1"><a class="w_close" role="button" id="closeModalButton" style="z-index:1" href="#"></a></div><div id="_wicket_window_2" class="w_content_container" style="overflow: auto; height: 248px;"><div id="content5c"><section class="bekreft-dialog"><h1 class="robust-ikon-hjelp-strek">Du har allerede et vindu med ModiaBrukerDialog åpent. Hvis du fortsetter i dette vinduet så vil du miste ulagret arbeide i det andre vinduet. Ønsker du å fortsette med dette vinduet?</h1><ul><li><submit class="knapp-stor" id="confirmCloseTab" >Avbryt, jeg vil ikke miste ulagret arbeide</submit></li><li><a id="confirmActivateTab" href="#">Fortsett med dette vinduet</a></li></ul></section></div></div></div></form></div>';
 
     /**
      * Generates a GUID string, according to RFC4122 standards.
@@ -169,7 +170,7 @@ function createTabHandler(application){
 
     var getTabGuid = function(){
         var tabGuid = window.sessionStorage.getItem(sessionStorageId);
-        if(tabGuid === null || tabGuid === undefined){
+        if(!tabGuid){
             tabGuid = createGuid();
             window.sessionStorage.setItem(sessionStorageId, tabGuid);
         }
@@ -178,7 +179,7 @@ function createTabHandler(application){
 
     var getCurrentActiveTab = function(){
         var currentActiveTab = window.localStorage.getItem(localStorageId);
-        if(currentActiveTab === null || currentActiveTab === undefined){
+        if(!currentActiveTab){
             var tabGuid = getTabGuid();
             console.log("Ingen aktiv tab, setter den nå. Guid = " + tabGuid);
             setActiveTab(tabGuid);
@@ -188,14 +189,35 @@ function createTabHandler(application){
     };
 
     var setActiveTab = function(tabGuid){
+        console.log("Setter aktiv tab: "+ tabGuid);
         window.localStorage.setItem(localStorageId, tabGuid);
     };
 
     var activateTab = function(){
         removeModalDialog();
         setActiveTab(getTabGuid());
+        setIsReloadingFlag();
         window.location.reload();
     };
+
+    var closeTab = function(){
+        window.close();
+    };
+
+    var isReloading = function(){
+        var isReloading = window.sessionStorage.getItem(isReloadingId);
+        if(isReloading === "true")
+            return true;
+        return false;
+    };
+
+    var setIsReloadingFlag = function(){
+        window.sessionStorage.setItem(isReloadingId, "true");
+    }
+
+    var clearIsReloadingFlag = function(){
+        window.sessionStorage.removeItem(isReloadingId);
+    }
 
     var isModalDialogVisible = function(){
         var backGround = $('.wicket-mask-dark');
@@ -208,6 +230,8 @@ function createTabHandler(application){
     var createModalDialog = function() {
         $("body").append(modalDialog).append(greyBackground);
         $("#confirmActivateTab").click(activateTab);
+        $('#confirmCloseTab').click(closeTab);
+        $('#closeModalButton').click(closeTab);
     };
 
     var removeModalDialog = function(){
@@ -217,23 +241,42 @@ function createTabHandler(application){
 
     var storageEventListener = function(e){
         if(e.key === localStorageId){
-            if(e.newValue === null)
+            if(e.newValue === null || e.newValue === ""){
                 return;
+            }
             var tabGuid = getTabGuid();
-            if(e.newValue !== tabGuid && !isModalDialogVisible()){
+            if(e.newValue !== tabGuid && !isModalDialogVisible() && !isReloading()){
                 createModalDialog();
             }
+        }
+    };
+
+    var unloadListener = function(){
+        console.log("Unload");
+        var tabGuid = getTabGuid();
+        var currentActiveTab = getCurrentActiveTab();
+        if(tabGuid == currentActiveTab){
+            window.localStorage.removeItem(localStorageId);
         }
     };
 
     var init = function(){
         var tabGuid = getTabGuid();
         var currentActiveTab = getCurrentActiveTab();
-        if(currentActiveTab !== tabGuid){
-            console.log("Dette er ikke aktiv tab. Setter aktiv tab")
+
+        if(!currentActiveTab){
+            setActiveTab(tabGuid);
+            currentActiveTab = tabGuid;
+        }
+        if(currentActiveTab !== tabGuid && !isReloading()){
+            console.log("Dette er ikke aktiv tab. Viser dialog")
+            createModalDialog();
+        }else{
             setActiveTab(tabGuid);
         }
         window.addEventListener("storage", storageEventListener);
+        window.addEventListener("unload", unloadListener);
+        clearIsReloadingFlag();
     };
 
     init();
