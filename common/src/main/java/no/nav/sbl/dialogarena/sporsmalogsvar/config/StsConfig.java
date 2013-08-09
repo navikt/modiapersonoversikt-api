@@ -21,8 +21,10 @@ public class StsConfig {
 
     @PostConstruct
     public void setupSts() {
-        STSConfigurationUtility.configureStsForExternalSSO(ClientProxy.getClient(sosPT));
-        STSConfigurationUtility.configureStsForExternalSSO(ClientProxy.getClient(hPT));
+//        STSConfigurationUtility.configureStsForExternalSSO(ClientProxy.getClient(sosPT));
+//        STSConfigurationUtility.configureStsForExternalSSO(ClientProxy.getClient(hPT));
+        STSConfigurationUtility.configureStsForSystemUser(ClientProxy.getClient(sosPT));
+//        STSConfigurationUtility.configureStsForExternalSSO(ClientProxy.getClient(hPT));
     }
     
 }
