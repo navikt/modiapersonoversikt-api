@@ -150,7 +150,7 @@ function createTabHandler(application){
     var sessionStorageId = application + ".tabGuid";
     var isReloadingId = application  + ".reloading";
     var greyBackground = '<div class="wicket-mask-dark" style="z-index: 20000; background-image: none; position: absolute; top: 0px; left: 0px;"></div>';
-    var modalDialog ='<div class="wicket-modal" id="_wicket_window_0" tabindex="-1" role="dialog" style="position: absolute; width: 600px; left: 660px; top: 180.5px; visibility: visible;"><form><div class="w_content_1" ><div class="w_caption" id="_wicket_window_1"><a class="w_close" role="button" id="closeModalButton" style="z-index:1" href="#"></a></div><div id="_wicket_window_2" class="w_content_container" style="overflow: auto; height: 248px;"><div id="content5c"><section class="bekreft-dialog"><h1 class="robust-ikon-hjelp-strek">Du har allerede et vindu med ModiaBrukerDialog åpent. Hvis du fortsetter i dette vinduet så vil du miste ulagret arbeide i det andre vinduet. Ønsker du å fortsette med dette vinduet?</h1><ul><li><submit class="knapp-stor" id="confirmCloseTab" >Avbryt, jeg vil ikke miste ulagret arbeide</submit></li><li><a id="confirmActivateTab" href="#">Fortsett med dette vinduet</a></li></ul></section></div></div></div></form></div>';
+    var modalDialog ='<div class="wicket-modal" id="_wicket_window_0" tabindex="-1" role="dialog" style="position: absolute; width: 600px; left: 660px; top: 180.5px; visibility: visible;"><form><div class="w_content_1" ><div class="w_caption" id="_wicket_window_1"><a class="w_close" role="button" id="closeModalButton" style="z-index:1" href="#"></a></div><div id="_wicket_window_2" class="w_content_container" style="overflow: auto; height: 300px;"><div id="content5c"><section class="bekreft-dialog"><h1 class="robust-ikon-hjelp-strek">Du har allerede et vindu med ModiaBrukerDialog åpent. Hvis du fortsetter i dette vinduet så vil du miste ulagret arbeide i det andre vinduet. Ønsker du å fortsette med dette vinduet?</h1><ul><li><submit class="knapp-stor" id="confirmCloseTab" >Avbryt, jeg vil ikke miste ulagret arbeide</submit></li><li><a id="confirmActivateTab" href="#">Fortsett med dette vinduet</a></li></ul></section></div></div></div></form></div>';
 
     /**
      * Generates a GUID string, according to RFC4122 standards.
@@ -170,7 +170,7 @@ function createTabHandler(application){
 
     var getTabGuid = function(){
         var tabGuid = window.sessionStorage.getItem(sessionStorageId);
-        if(!tabGuid){
+        if (!tabGuid) {
             tabGuid = createGuid();
             window.sessionStorage.setItem(sessionStorageId, tabGuid);
         }
@@ -178,18 +178,10 @@ function createTabHandler(application){
     };
 
     var getCurrentActiveTab = function(){
-        var currentActiveTab = window.localStorage.getItem(localStorageId);
-        if(!currentActiveTab){
-            var tabGuid = getTabGuid();
-//            console.log("Ingen aktiv tab, setter den nå. Guid = " + tabGuid);
-            setActiveTab(tabGuid);
-            currentActiveTab = tabGuid;
-        }
-        return currentActiveTab;
+        return window.localStorage.getItem(localStorageId);
     };
 
     var setActiveTab = function(tabGuid){
-//        console.log("Setter aktiv tab: "+ tabGuid);
         window.localStorage.setItem(localStorageId, tabGuid);
     };
 
@@ -201,30 +193,29 @@ function createTabHandler(application){
     };
 
     var closeTab = function(){
+        //funker i IE og Chrome
+        //funker ikke i Firefox
+        window.open('', '_self', '');
         window.close();
     };
 
     var isReloading = function(){
         var isReloading = window.sessionStorage.getItem(isReloadingId);
-        if(isReloading === "true")
-            return true;
-        return false;
+        return isReloading === "true";
     };
 
     var setIsReloadingFlag = function(){
         window.sessionStorage.setItem(isReloadingId, "true");
-    }
+    };
 
     var clearIsReloadingFlag = function(){
         window.sessionStorage.removeItem(isReloadingId);
-    }
+    };
 
     var isModalDialogVisible = function(){
         var backGround = $('.wicket-mask-dark');
-        if(backGround.length == 0){
-            return false;
-        }
-        return true;
+        return backGround.length != 0;
+
     };
 
     var createModalDialog = function() {
@@ -240,22 +231,22 @@ function createTabHandler(application){
     };
 
     var storageEventListener = function(e){
-        if(e.key === localStorageId){
-            if(e.newValue === null || e.newValue === ""){
+        var tabGuid;
+        if (e.key === localStorageId) { // bryr oss bare om localStorage events
+            if (!e.newValue) { // hvis ny verdi er null eller tom, ignorer event
                 return;
             }
-            var tabGuid = getTabGuid();
-            if(e.newValue !== tabGuid && !isModalDialogVisible() && !isReloading()){
+            tabGuid = getTabGuid();
+            if (e.newValue !== tabGuid && !isModalDialogVisible() && !isReloading()) {  // dette er en forskjellig verdi og vi ikke viser dialog fra før, og vi ikke er i en refresh, vis dialog
                 createModalDialog();
             }
         }
     };
 
     var unloadListener = function(){
-//        console.log("Unload");
         var tabGuid = getTabGuid();
         var currentActiveTab = getCurrentActiveTab();
-        if(tabGuid == currentActiveTab){
+        if (tabGuid == currentActiveTab) { //hvis det er aktiv tab som lukkes, slette fra localStorage
             window.localStorage.removeItem(localStorageId);
         }
     };
@@ -263,16 +254,16 @@ function createTabHandler(application){
     var init = function(){
         var tabGuid = getTabGuid();
         var currentActiveTab = getCurrentActiveTab();
-
-        if(!currentActiveTab){
+        if(isReloading()){
             setActiveTab(tabGuid);
-            currentActiveTab = tabGuid;
-        }
-        if(currentActiveTab !== tabGuid && !isReloading()){
-//            console.log("Dette er ikke aktiv tab. Viser dialog")
-            createModalDialog();
         }else{
-            setActiveTab(tabGuid);
+            if (!currentActiveTab) { //ingen aktiv tab fra før, setter denne som aktiv
+                setActiveTab(tabGuid);
+                currentActiveTab = tabGuid;
+            }
+            if(currentActiveTab !== tabGuid){//Aktiv tab er en annen en denne. Spør bruker om vi skal bruke denne tab
+                createModalDialog();
+            }
         }
         window.addEventListener("storage", storageEventListener);
         window.addEventListener("unload", unloadListener);
