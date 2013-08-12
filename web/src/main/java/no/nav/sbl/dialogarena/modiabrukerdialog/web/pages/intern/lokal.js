@@ -5,15 +5,6 @@ jQuery(document).ready(function ($) {
 
     createTabHandler("modiabrukerdialog");
 
-	$('.brukerprofil').on('keydown', function (e) {
-		var keyCode = e.keyCode || e.which;
-		if (keyCode === 13) {
-			if (!e.shiftKey) {
-				e.preventDefault();
-			}
-		}
-	});
-
 	$('#toggle-kjerneinfo').on('click', toggleKjerneinfo);
 
 	$('.sidebar').on('click', function () {
