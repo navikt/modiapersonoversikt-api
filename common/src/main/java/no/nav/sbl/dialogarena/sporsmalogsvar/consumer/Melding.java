@@ -1,10 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import java.io.Serializable;
-import java.util.Comparator;
-
 import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
+
+import java.io.Serializable;
 
 public class Melding implements Serializable {
 

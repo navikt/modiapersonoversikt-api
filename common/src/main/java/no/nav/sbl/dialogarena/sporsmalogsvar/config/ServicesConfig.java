@@ -1,15 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.inject.Inject;
-
-import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
-
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -18,6 +11,10 @@ import org.apache.cxf.ws.security.SecurityConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.inject.Inject;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class ServicesConfig {

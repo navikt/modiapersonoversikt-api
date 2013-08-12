@@ -7,7 +7,6 @@ import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortT
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeSet;
 
 /**
  * Kaller ping()-operasjon på angitte webservice-grensesnitt
