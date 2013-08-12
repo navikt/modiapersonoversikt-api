@@ -39,7 +39,7 @@
         <mockito.core.version>1.9.5</mockito.core.version>
         <slf4j.version>1.7.5</slf4j.version>
         <jsoup.version>1.7.2</jsoup.version>
-        <jetty.version>9.0.3.v20130506</jetty.version>
+        <jetty.version>9.0.4.v20130625</jetty.version>
         <jetty-plus.version>7.0.0pre3</jetty-plus.version>
         <jetty-naming.version>6.1H.8</jetty-naming.version>
         <jetty-util.version>6.1.26</jetty-util.version>
