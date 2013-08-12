@@ -62,7 +62,7 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmalogsvar-jaxws</artifactId>
+            <artifactId>sporsmalogsvar-tjenestespesifikasjon</artifactId>
         </dependency>
 
         <dependency>

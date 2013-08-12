@@ -1,10 +1,19 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import java.io.Serializable;
+import java.util.Comparator;
+
 import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 
-public class Melding implements Serializable, Comparable<Melding> {
+public class Melding implements Serializable {
+
+//    public static class EtterOpprettetDato implements Comparator<Melding> {
+//        @Override
+//        public int compare(Melding first, Melding second) {
+//            return first.opprettet.compareTo(second.opprettet);
+//        }
+//    }
 
     public String id, traadId, tema, overskrift, fritekst;
     public DateTime opprettet;
@@ -62,8 +71,4 @@ public class Melding implements Serializable, Comparable<Melding> {
         };
     }
 
-    @Override
-    public int compareTo(Melding o) {
-        return this.opprettet.compareTo(o.opprettet);
-    }
 }

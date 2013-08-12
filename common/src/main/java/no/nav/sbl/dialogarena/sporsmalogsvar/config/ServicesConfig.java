@@ -5,6 +5,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
@@ -29,6 +30,11 @@ public class ServicesConfig {
     
     @Value("${henvendelseendpoint.url}")
     protected String henvendelseEndpoint;
+
+//    @Bean
+//    public Pingable spmOgSvarPing() {
+//        return new PingableImpl(sporsmalOgSvarPortType(), henvendelsePortType());
+//    }
 
     @Bean
     public MeldingService meldingService() {

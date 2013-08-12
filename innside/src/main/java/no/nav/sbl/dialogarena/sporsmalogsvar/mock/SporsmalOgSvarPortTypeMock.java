@@ -46,6 +46,11 @@ public class SporsmalOgSvarPortTypeMock implements SporsmalOgSvarPortType {
     }
 
     @Override
+    public boolean ping() {
+        return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
     public WSMelding hentMelding(@WebParam(name = "behandlingsId", targetNamespace = "") String s) {
         return null;
     }
