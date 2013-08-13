@@ -55,7 +55,7 @@ H3, ._H3 {
 	.search-intern {
 		.clearfix;
 		position: relative;
-		padding: 0 0 30px 80px;
+		padding-left: 80px;
 		margin: 0 auto 0 auto;
 		float: none;
 		clear: both;
@@ -83,10 +83,22 @@ H3, ._H3 {
 
 		LABEL.errorJS, SPAN.errorJS {
 			position: absolute;
-			bottom: 0;
+            font-size: 15.04px !important;
+			bottom: -20px;
 			left: 80px;
 			width: auto;
 		}
+
+        SPAN.feedbackPanelERROR {
+            color: #ff6666;
+            background: transparent;
+            font-size: 15.04px !important;
+            white-space: nowrap;
+            content: "" !important;
+            position: absolute;
+            left: 0;
+            bottom: 0.5em;
+        }
 	}
 
 	.nullstill-button {
@@ -105,8 +117,8 @@ H3, ._H3 {
 	}
 
 	.personsok-button {
-		left: 0px;
-		bottom: 30px;
+		left: 0;
+		bottom: 0;
 		font-size: 2.0rem;
         width: 66px;
         height: 66px;
