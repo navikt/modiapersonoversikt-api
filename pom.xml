@@ -11,7 +11,7 @@
         <module>innside</module>
         <module>utside</module>
     </modules>
-    <name>Dialogarena - Spørsmål og svar</name>
+    <name>sporsmal-og-svar</name>
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål Og Svar - innside og utside.</description>
     <artifactId>sporsmal-og-svar</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -65,10 +65,10 @@
             </dependency>
 
             <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmalogsvar-tjenestespesifikasjon</artifactId>
-                <version>0.0.3-SNAPSHOT</version>
-            </dependency>
+	      <groupId>no.nav.sbl.dialogarena</groupId>
+	      <artifactId>sporsmalogsvar-tjenestespesifikasjon</artifactId>
+	      <version>0.0.4-SNAPSHOT</version>
+	    </dependency>
 
             <dependency>
                 <groupId>no.nav.modig</groupId>

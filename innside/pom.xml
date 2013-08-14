@@ -64,6 +64,12 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sporsmalogsvar-tjenestespesifikasjon</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sakogbehandling-jaxws</artifactId>
+            <version>1.0.0</version>
+        </dependency>
 
         <dependency>
             <groupId>javax.inject</groupId>
