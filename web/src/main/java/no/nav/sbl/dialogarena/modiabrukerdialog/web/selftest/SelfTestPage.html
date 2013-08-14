@@ -21,22 +21,26 @@
 
 <body>
 
-<h1>Service status</h1>
+
+<h1 wicket:id="application"><!-- Navn og versjon --></h1>
+
+<h2>Service status</h2>
 
 <table>
     <tr>
+        <th>Komponent</th>
         <th>Tjeneste</th>
         <th>Status</th>
         <th>Tidsbruk i ms</th>
     </tr>
     <tr wicket:id="serviceStatusTable">
+        <td wicket:id="komponent"/>
         <td wicket:id="name"></td>
         <td wicket:id="status"></td>
         <td wicket:id="durationMilis"></td>
     </tr>
 </table>
 
-<h6 wicket:id="application">[]</h6>
 
 </body>
 

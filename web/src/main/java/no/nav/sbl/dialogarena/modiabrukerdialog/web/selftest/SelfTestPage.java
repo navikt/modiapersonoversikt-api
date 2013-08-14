@@ -45,18 +45,18 @@ public class SelfTestPage extends WebPage {
     @Inject
     private SykmeldingsperioderPing sykmeldingsperioderPing;
 
+    @Inject
+    @Named("spmOgSvarPing")
+    private Pingable spmOgSvarPing;
+
     public SelfTestPage() throws IOException {
-        logger.info("entered SelfTestPage!");
         List<ServiceStatus> statusList = new ArrayList<>();
-
-        //        Add servicestatus' as needed, e.g.
-        statusList.addAll(getPingableComponentStatus("Personsøk", personsokPing, "SEARCH_OK", "SEARCH_ERROR"));
-        statusList.addAll(getPingableComponentStatus("Brukerprofil", kjerneinfoPing, "BRUKERPROFIL_OK", "BRUKERPROFIL_ERROR"));
-        statusList.addAll(getPingableComponentStatus("Kontrakter", kontrakterPing, "KONTRAKTER_OK", "KONTRAKTER_ERROR"));
-        statusList.addAll(getPingableComponentStatus("Sykemeldinger", sykmeldingsperioderPing, "SYKEMELDINGER_OK", "SYKEMELDINGER_ERROR"));
-
-        add(new ServiceStatusListView("serviceStatusTable", statusList),
-                new Label("application", getApplicationVersion()));
+        statusList.addAll(getPingableComponentStatus("Personsok", personsokPing));
+        statusList.addAll(getPingableComponentStatus("Kjerneinfo", kjerneinfoPing));
+        statusList.addAll(getPingableComponentStatus("Kontrakter", kontrakterPing));
+        statusList.addAll(getPingableComponentStatus("Sykemeldinger", sykmeldingsperioderPing));
+        statusList.addAll(getPingableComponentStatus("SpmOgSvar", spmOgSvarPing));
+        add(new ServiceStatusListView("serviceStatusTable", statusList), new Label("application", getApplicationVersion()));
     }
 
     private String getApplicationVersion() throws IOException {
@@ -73,20 +73,19 @@ public class SelfTestPage extends WebPage {
         return "modiabrukerdialog - " + version;
     }
 
-
-    private List<ServiceStatus> getPingableComponentStatus(String name, Pingable pingable, String okCode, String errorCode) {
+    private List<ServiceStatus> getPingableComponentStatus(String komponent, Pingable pingable) {
         List<ServiceStatus> serviceStatuses = new ArrayList<>();
         try {
             List<PingResult> pingResults = pingable.ping();
             if (!pingResults.isEmpty()) {
                 for (PingResult pingResult : pingResults) {
-                    serviceStatuses.add(new ServiceStatus(pingResult.getServiceName(),
-                            pingResult.getServiceStatus().equals(SERVICE_OK) ? okCode : errorCode,
+                    serviceStatuses.add(new ServiceStatus(komponent, pingResult.getServiceName(),
+                            pingResult.getServiceStatus().equals(SERVICE_OK) ? pingResult.getServiceName() + "_OK" : pingResult.getServiceName() + "_ERROR",
                             pingResult.getElapsedTime()));
                 }
             }
         } catch (SystemException se) {
-            logger.warn(name + " was not retrievable. Class canonical name: " + pingable.getClass().getCanonicalName() + ". Exception message: " + se.getMessage());
+            logger.warn(komponent + " was not retrievable. Class canonical name: " + pingable.getClass().getCanonicalName() + ". Exception message: " + se.getMessage());
         }
         return serviceStatuses;
     }
@@ -101,21 +100,27 @@ public class SelfTestPage extends WebPage {
 
         @Override
         protected void populateItem(ListItem<ServiceStatus> listItem) {
-            listItem.add(new Label("name"), new Label("status"), new Label("durationMilis"));
+            listItem.add(new Label("komponent"), new Label("name"), new Label("status"), new Label("durationMilis"));
         }
     }
 
     public static class ServiceStatus implements Serializable {
 
         private static final long serialVersionUID = 1L;
+        private final String komponent;
         private final String name;
         private final String status;
         private final long durationMilis;
 
-        public ServiceStatus(String name, String status, long durationMilis) {
+        public ServiceStatus(String komponent, String name, String status, long durationMilis) {
+            this.komponent = komponent;
             this.name = name;
             this.status = status;
             this.durationMilis = durationMilis;
+        }
+
+        public String getKomponent() {
+            return komponent;
         }
 
         public String getName() {
