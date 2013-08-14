@@ -62,7 +62,7 @@ public class SporsmalOgSvarPanel extends Panel {
             info("Bruker har ingen ubesvarte spørsmål.");
             return new SporsmalOgSvarVM();
         }
-        return new SporsmalOgSvarVM(new MeldingVM(sporsmalOgSvar.sporsmal), new MeldingVM(sporsmalOgSvar.svar));
+        return new SporsmalOgSvarVM(new MeldingVM(sporsmalOgSvar.sporsmal), new SvarMeldingVM(sporsmalOgSvar.svar));
     }
 
     @RunOnEvents(BesvareSporsmalPanel.SPORSMAL_OPPDATERT)

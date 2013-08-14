@@ -57,8 +57,8 @@ public class MeldingService implements Serializable {
         return wsSporsmalOgSvar == null ? null : TIL_SPORSMALOGSVAR.transform(wsSporsmalOgSvar);
     }
 
-    public void besvar(Svar svar) {
-        webservice.besvarSporsmal(TIL_WSSVAR.transform(svar));
+    public void besvar(WSSvar svar) {
+        webservice.besvarSporsmal(svar);
     }
 
     private static final Transformer<WSMelding, Melding> TIL_MELDING = new Transformer<WSMelding, Melding>() {
@@ -81,13 +81,6 @@ public class MeldingService implements Serializable {
             Melding sporsmal = TIL_MELDING.transform(wsSporsmalOgSvar.getSporsmal());
             Melding svar = TIL_MELDING.transform(wsSporsmalOgSvar.getSvar());
             return new SporsmalOgSvar().withSporsmal(sporsmal).withSvar(svar);
-        }
-    };
-
-    private static final Transformer<Svar, WSSvar> TIL_WSSVAR = new Transformer<Svar, WSSvar>() {
-        @Override
-        public WSSvar transform(Svar svar) {
-            return new WSSvar().withBehandlingsId(svar.id).withTema(svar.tema).withOverskrift(svar.overskrift).withFritekst(svar.fritekst).withSensitiv(svar.sensitiv);
         }
     };
 

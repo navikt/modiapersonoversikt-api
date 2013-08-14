@@ -10,7 +10,7 @@ public class BesvareModell extends CompoundPropertyModel<SporsmalOgSvarVM> {
     public BesvareModell() {
         this(new SporsmalOgSvarVM());
     }
-
+    
     public BesvareModell(SporsmalOgSvarVM sos) {
         super(sos);
     }
@@ -19,7 +19,7 @@ public class BesvareModell extends CompoundPropertyModel<SporsmalOgSvarVM> {
         return getObject().sporsmal;
     }
 
-    public MeldingVM getSvar() {
+    public SvarMeldingVM getSvar() {
         return getObject().svar;
     }
 
@@ -31,7 +31,7 @@ public class BesvareModell extends CompoundPropertyModel<SporsmalOgSvarVM> {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return getSvar().getId() != null;
+                return getSvar().behandlingsId != null;
             }
         };
     }

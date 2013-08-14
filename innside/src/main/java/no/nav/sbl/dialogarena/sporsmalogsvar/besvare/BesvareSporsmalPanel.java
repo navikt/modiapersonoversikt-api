@@ -4,9 +4,8 @@ import javax.inject.Inject;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Svar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
-import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
+import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSvar;
 
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -70,8 +69,9 @@ public class BesvareSporsmalPanel extends Panel {
 
                         @Override
                         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                            MeldingVM svar = model.getSvar();
-                            service.besvar(new Svar().withId(svar.getId()).withOverskrift(svar.getOverskrift()).withFritekst(svar.getFritekst()).withTema(svar.getTema()));
+                            SvarMeldingVM svar = model.getSvar();
+                            WSSvar wssvar = new WSSvar().withBehandlingsId(svar.behandlingsId).withTema(svar.saksid).withSaksid(svar.saksid).withOverskrift(svar.overskrift).withFritekst(svar.fritekst).withSensitiv(svar.sensitiv);
+                            service.besvar(wssvar);
                             model.nullstill();
                             info("Svaret er sendt.");
                             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Innboks.MELDINGER_OPPDATERT));

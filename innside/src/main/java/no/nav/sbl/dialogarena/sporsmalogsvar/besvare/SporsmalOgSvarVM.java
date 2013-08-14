@@ -6,14 +6,16 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
 
 public class SporsmalOgSvarVM implements Serializable {
 
-    MeldingVM sporsmal, svar;
+    MeldingVM sporsmal;
+    SvarMeldingVM svar;
 
     public SporsmalOgSvarVM() {
-        this(new MeldingVM(new Melding()), new MeldingVM(new Melding()));
+        this(new MeldingVM(new Melding()), new SvarMeldingVM());
     }
 
-    public SporsmalOgSvarVM(MeldingVM sporsmal, MeldingVM svar) {
+    public SporsmalOgSvarVM(MeldingVM sporsmal, SvarMeldingVM svar) {
         this.sporsmal = sporsmal;
         this.svar = svar;
     }
+    
 }
