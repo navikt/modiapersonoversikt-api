@@ -50,10 +50,10 @@ public class SelfTestPage extends WebPage {
         List<ServiceStatus> statusList = new ArrayList<>();
 
         //        Add servicestatus' as needed, e.g.
-        statusList.addAll(getPingableComponentStatus("Personsøk", personsokPing, "SEARCH_OK", "SEARCH_ERROR"));
-        statusList.addAll(getPingableComponentStatus("Brukerprofil", kjerneinfoPing, "BRUKERPROFIL_OK", "BRUKERPROFIL_ERROR"));
-        statusList.addAll(getPingableComponentStatus("Kontrakter", kontrakterPing, "KONTRAKTER_OK", "KONTRAKTER_ERROR"));
-        statusList.addAll(getPingableComponentStatus("Sykemeldinger", sykmeldingsperioderPing, "SYKEMELDINGER_OK", "SYKEMELDINGER_ERROR"));
+        statusList.addAll(getPingableComponentStatus("Personsøk", personsokPing ));
+        statusList.addAll(getPingableComponentStatus("Brukerprofil", kjerneinfoPing));
+        statusList.addAll(getPingableComponentStatus("Kontrakter", kontrakterPing));
+        statusList.addAll(getPingableComponentStatus("Sykemeldinger", sykmeldingsperioderPing));
 
         add(new ServiceStatusListView("serviceStatusTable", statusList),
                 new Label("application", getApplicationVersion()));
@@ -74,12 +74,14 @@ public class SelfTestPage extends WebPage {
     }
 
 
-    private List<ServiceStatus> getPingableComponentStatus(String name, Pingable pingable, String okCode, String errorCode) {
+    private List<ServiceStatus> getPingableComponentStatus(String name, Pingable pingable) {
         List<ServiceStatus> serviceStatuses = new ArrayList<>();
         try {
             List<PingResult> pingResults = pingable.ping();
             if (!pingResults.isEmpty()) {
                 for (PingResult pingResult : pingResults) {
+                    String okCode = "UNI_" + pingResult.getServiceName().toUpperCase() + "_OK";
+                    String errorCode =  "UNI_" + pingResult.getServiceName().toUpperCase() + "_ERROR";
                     serviceStatuses.add(new ServiceStatus(pingResult.getServiceName(),
                             pingResult.getServiceStatus().equals(SERVICE_OK) ? okCode : errorCode,
                             pingResult.getElapsedTime()));
