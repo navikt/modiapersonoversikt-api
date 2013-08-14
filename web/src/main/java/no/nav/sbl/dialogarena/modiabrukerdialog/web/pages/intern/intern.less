@@ -173,7 +173,7 @@ H3, ._H3 {
 	}
 
 	/* Oversikt */
-	&[id^=oversikt], &.oversikt {
+	&.oversikt {
 		.kolonne:first-of-type {
 			margin-left: 0;
 		}
@@ -184,7 +184,7 @@ H3, ._H3 {
 	}
 
 	/* Kontrakter */
-	&.kontrakter, &[id^="kontrakter"]:not(.widget-navigasjon) {
+	&.kontrakter {
 		> FORM {
 			display: block;
 
@@ -230,7 +230,7 @@ H3, ._H3 {
 	}
 
 	/* Brukerprofil */
-	&.brukerprofil, &[id^="brukerprofil"]:not(.widget-navigasjon) {
+	&.brukerprofil {
 		INPUT[type="submit"]:disabled, INPUT[type="button"]:disabled {
 			cursor: default;
 		}
@@ -385,7 +385,7 @@ H3, ._H3 {
 	}
 
 	/* Sykepenger */
-	&.sykepenger, &[id^="sykepenger"]:not(.widget-navigasjon) {
+	&.sykepenger {
 		SECTION {
 			margin-top: 0;
 
@@ -412,7 +412,7 @@ H3, ._H3 {
 	}
 
 	/* FORELDREPENGER */
-	&.foreldrepenger, &[id^="foreldrepenger"]:not(.widget-navigasjon) {
+	&.foreldrepenger {
 		SECTION > H1 {
 			._H2;
 			margin-bottom: 2rem;
