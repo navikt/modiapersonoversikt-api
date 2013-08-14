@@ -19,6 +19,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -106,13 +107,14 @@ public class Intern extends BasePage {
 
 	private void instantiateComponents(String fnrFromRequest) {
         add(
-                new HentPersonPanel("searchPanel"),
-                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
-                new PersonsokPanel("personsokPanel").setVisible(true),
-                lamellHandler.createLamellPanel("lameller", fnrFromRequest),
-                new SideBar("sideBar", fnrFromRequest).setVisible(true),
-                createNullstillLink(modalWindow),
-                modalWindow
+		        new Button("toggle-sok"),
+		        new HentPersonPanel("searchPanel"),
+		        new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
+		        new PersonsokPanel("personsokPanel").setVisible(true),
+		        lamellHandler.createLamellPanel("lameller", fnrFromRequest),
+		        new SideBar("sideBar", fnrFromRequest).setVisible(true),
+		        createNullstillLink(modalWindow),
+		        modalWindow
         );
     }
 
@@ -131,7 +133,7 @@ public class Intern extends BasePage {
 
     private ModiaModalWindow createModalWindow(String id) {
         final ModiaModalWindow modiaModalWindow = new ModiaModalWindow(id);
-        modiaModalWindow.setInitialHeight(260);
+        modiaModalWindow.setInitialHeight(280);
         modiaModalWindow.setInitialWidth(600);
         modiaModalWindow.setContent(new SjekkForlateSide(modiaModalWindow.getContentId(), modiaModalWindow, this.answer));
         modiaModalWindow.setWindowClosedCallback(createWindowClosedCallback(modiaModalWindow));

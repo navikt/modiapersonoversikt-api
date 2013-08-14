@@ -11,6 +11,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 public class HentPersonPage extends BasePage {
@@ -18,6 +19,7 @@ public class HentPersonPage extends BasePage {
 	public HentPersonPage() {
 
         add(
+		        new ContextImage("modia-logo", "img/modiaLogo.svg"),
 				new HentPersonPanel("searchPanel"),
 				new PersonsokPanel("personsokPanel").setVisible(true)
         );

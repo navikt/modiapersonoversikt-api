@@ -38,6 +38,16 @@
             <artifactId>personsok-consumer</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>personsok-search</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>personsok-result</artifactId>
+        </dependency>
+
          <dependency>
              <groupId>no.nav</groupId>
              <artifactId>kontrakter-panel</artifactId>
@@ -77,6 +87,16 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sporsmal-og-svar-innside</artifactId>
         </dependency>
+
+	    <dependency>
+		    <groupId>no.nav</groupId>
+		    <artifactId>personsok-search</artifactId>
+	    </dependency>
+
+	    <dependency>
+		    <groupId>no.nav</groupId>
+		    <artifactId>personsok-result</artifactId>
+	    </dependency>
 
         <!-- End modia komponenter -->
 
@@ -165,6 +185,12 @@
         </dependency>
 
         <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-util</artifactId>
+        </dependency>
+
+
+        <dependency>
             <groupId>org.eclipse.jetty.orbit</groupId>
             <artifactId>javax.annotation</artifactId>
             <scope>test</scope>
@@ -184,6 +210,11 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-fitnesse</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-core</artifactId>
         </dependency>
 
         <dependency>

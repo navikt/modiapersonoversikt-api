@@ -8,7 +8,6 @@
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
-    <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog</artifactId>
     <version>1.1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -21,16 +20,16 @@
     </modules>
 
     <properties>
-        <wicket.version>6.8.0</wicket.version>
+        <wicket.version>6.9.1</wicket.version>
         <spring.version>3.2.3.RELEASE</spring.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
-        <modig.wicket.version>1.0.9</modig.wicket.version>
+        <modig.wicket.version>1.0.16-SNAPSHOT</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.lang.version>1.0.1</modig.lang.version>
-        <modig.frontend.wicket.version>1.0.7</modig.frontend.wicket.version>
+        <modig.frontend.wicket.version>1.0.17-SNAPSHOT</modig.frontend.wicket.version>
         <modig.core.version>1.0.1</modig.core.version>
-        <modig.security.version>1.0.3</modig.security.version>
+        <modig.security.version>1.0.6</modig.security.version>
 		<modig.log.version>1.1.0</modig.log.version>
         <modig-testcertificates-version>1.0.0</modig-testcertificates-version>
         <hamcrest.version>1.3</hamcrest.version>
@@ -39,7 +38,7 @@
         <mockito.core.version>1.9.5</mockito.core.version>
         <slf4j.version>1.7.5</slf4j.version>
         <jsoup.version>1.7.2</jsoup.version>
-        <jetty.version>9.0.3.v20130506</jetty.version>
+        <jetty.version>9.0.4.v20130625</jetty.version>
         <jetty-plus.version>7.0.0pre3</jetty-plus.version>
         <jetty-naming.version>6.1H.8</jetty-naming.version>
         <jetty-util.version>6.1.26</jetty-util.version>
@@ -49,8 +48,8 @@
         <fitlibrary.version>2.0</fitlibrary.version>
         <webbit.version>0.4.14</webbit.version>
         <!-- Modia-komponenter-->
-        <personsok.version>0.0.70</personsok.version>
-        <kjerneinfo.versjon>0.0.72</kjerneinfo.versjon>
+        <personsok.version>0.0.79</personsok.version>
+        <kjerneinfo.versjon>1.0.17-SNAPSHOT</kjerneinfo.versjon>
     </properties>
 
     <dependencyManagement>
@@ -188,6 +187,13 @@
                 <version>${jetty.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-util</artifactId>
+                <version>${jetty.version}</version>
+                <scope>test</scope>
+            </dependency>
+
 
 
             <dependency>
@@ -230,6 +236,18 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>personsok-consumer</artifactId>
+                <version>${personsok.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>personsok-search</artifactId>
+                <version>${personsok.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>personsok-result</artifactId>
                 <version>${personsok.version}</version>
             </dependency>
 
@@ -648,6 +666,13 @@
                 <artifactId>webbit</artifactId>
                 <version>${webbit.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-security-core</artifactId>
+                <version>${modig.security.version}</version>
+                <scope>runtime</scope>
             </dependency>
 
             <dependency>

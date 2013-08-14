@@ -1,0 +1,559 @@
+/* Variabler & generelle mixins */
+.clearfix {
+	&::before, &::after {
+		display: table;
+		content: "";
+		line-height: 0;
+	}
+	&::after {
+		clear: both;
+	}
+}
+
+/* Generelle element */
+
+H1, H2, H3 {
+	font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	line-height: 1.2em;
+}
+
+H1 {
+	font-size: 2.5rem;
+}
+
+H2, ._H2 {
+	font-size: 2.0rem;
+}
+
+H3, ._H3 {
+	font-size: 1.43rem;
+	font-weight: 600;
+	text-transform: uppercase;
+}
+
+.kolonne {
+	float: left;
+	display: block;
+	min-height: 30px;
+	width: 47.93617021276595%;
+}
+
+/* Spesifike sider */
+
+.hentperson.main {
+	background-color: #3e3832;
+	position: absolute;
+	width: 100%;
+
+	.modia-logo {
+		width: 170px;
+		display: block;
+		margin: 0 auto 220px auto;
+	}
+
+	#hentPerson {
+		position: relative;
+		margin-left: 40px;
+	}
+	.search-intern {
+		.clearfix;
+		position: relative;
+		padding-right: 80px;
+		margin: 0 auto 0 auto;
+		float: none;
+		clear: both;
+		overflow: visible;
+		width: auto;
+
+		INPUT[type=text] {
+			height: auto;
+			padding: 16px 70px 16px 20px;
+			font-size: 2.14rem;
+		}
+
+		INPUT[type=button], SUBMIT, INPUT[type=image], #submitFodselsnummer {
+			height: 48px;
+			right: 90px;
+			top: 14px;
+
+			@media (max-width: 959px) {
+				margin-top: 0;
+			}
+		}
+
+		LABEL.errorJS, SPAN.errorJS {
+			position: absolute;
+			font-size: 15.04px !important;
+			bottom: -20px;
+			left: 0;
+			width: auto;
+		}
+
+		SPAN.feedbackPanelERROR {
+			color: #ff6666;
+			background: transparent;
+			font-size: 15.04px !important;
+			white-space: nowrap;
+			content: "" !important;
+			position: absolute;
+			left: 0;
+			bottom: 0.5em;
+		}
+	}
+
+	.nullstill-button {
+		margin: 20px 0 0 30px;
+	}
+
+	.navbar {
+		height: auto;
+		position: relative;
+		display: block;
+		padding: 0;
+		width: 400px;
+		margin: 5% auto 0 auto;
+		z-index: 5000;
+		background-color: #3e3832;
+	}
+
+	.personsok-button {
+		right: 0;
+		left: auto;
+		bottom: 0;
+		font-size: 2.0rem;
+		width: 66px;
+		height: 66px;
+		border-radius: 66px;
+		z-index: 5001;
+
+		&:after {
+			bottom: 14px;
+			left: 26px;
+			border-left: 7px solid transparent;
+			border-right: 7px solid transparent;
+			border-top: 7px solid #333;
+		}
+
+		&.active:after {
+			bottom: 14px;
+			border-top: none;
+			border-left: 7px solid transparent;
+			border-right: 7px solid transparent;
+			border-bottom: 7px solid #333;
+		}
+	}
+
+	.personsok {
+		margin: 0 15%;
+	}
+
+	#personsok {
+		padding-top: 80px;
+		box-shadow: none;
+		-webkit-box-shadow: none;
+	}
+
+	#personsokResult {
+		margin-left: 15%;
+		margin-right: 15%;
+	}
+}
+
+/* Individuelle lameller */
+.lamell {
+	UL.arbeisdgiver {
+		padding-left: 0;
+		list-style-type: none;
+		margin: 0;
+
+		LI:not(:first-child) {
+			margin-top: 2rem;
+		}
+	}
+
+	/* Oversikt */
+	&.oversikt {
+		.kolonne:first-of-type {
+			margin-left: 0;
+		}
+
+		.kolonne:last-child {
+			margin-left: 3.8%;
+		}
+	}
+
+	/* Kontrakter */
+	&.kontrakter {
+		> FORM {
+			display: block;
+
+			LABEL {
+				width: 12rem;
+			}
+		}
+
+		.kontrakt {
+			.kolonne;
+
+			&.sykeoppfolging {
+				float: right;
+				margin-left: 3.8%;
+			}
+
+			&.ytelser {
+				float: none;
+				clear: left;
+			}
+
+			.liste {
+				width: 100%;
+
+				LI {
+					overflow: auto;
+					width: 100%;
+				}
+
+				.overskrift {
+					float: left;
+					width: 80%;
+				}
+
+				.status {
+					width: 20%;
+					float: left;
+					padding: 0.4rem 0 0.4rem 0.8rem;
+					overflow: hidden;
+				}
+			}
+		}
+	}
+
+	/* Brukerprofil */
+	&.brukerprofil {
+		INPUT[type="submit"]:disabled, INPUT[type="button"]:disabled {
+			cursor: default;
+		}
+
+		FIELDSET {
+			border: 0;
+			padding: 0;
+			margin: 0 0 30px 0;
+			max-width: 50rem;
+
+			LEGEND {
+				._H2;
+				padding: 1rem 0;
+			}
+
+			.endringsinformasjon {
+				padding: 0.8rem 0;
+
+				font-size: 0.857rem;
+				color: #999;
+				border-bottom: 1px solid #999;
+				border-top: 1px solid #999;
+			}
+
+			UL {
+				list-style-type: none;
+				padding: 0;
+				margin: 30px 0 0 0;
+
+				LI LABEL:first-child {
+					font-size: 1rem;
+				}
+			}
+
+			P {
+				font-weight: bold;
+
+				SPAN {
+					display: block;
+				}
+			}
+
+			SELECT {
+				height: 30px;
+				margin-top: 3px;
+				width: 100%;
+			}
+
+			DIV.label-wrapper {
+				font-size: 0.8rem;
+				line-height: 1.4rem;
+				margin-top: 1rem;
+				text-transform: uppercase;
+				position: relative;
+			}
+
+			LABEL, DIV.label-wrapper {
+				.kolonne;
+				float: none;
+				clear: both;
+				color: #3e3832;
+
+				&.selected {
+					font-weight: bold;
+				}
+			}
+
+			LABEL.errorJS {
+				position: absolute;
+				bottom: -28px;
+				padding-left: 0;
+				margin-left: 0;
+			}
+
+			LABEL.husnummer {
+				width: 16%;
+				padding-left: 4%;
+				float: left;
+			}
+
+			LABEL.husbokstav {
+				width: 14%;
+				padding-left: 4%;
+				float: left;
+			}
+
+			LABEL.bolignummer {
+				width: 18%;
+				padding-left: 4%;
+				float: left;
+			}
+
+			LABEL.postnummer {
+				width: 33%;
+				clear: left;
+				float: left;
+			}
+
+			LABEL.poststed {
+				width: 16.5%: float: left;
+				padding-left: 4%;
+			}
+
+			/* Begrense inputs til adresse uten label */
+			INPUT[aria-label*=adresse] {
+				.kolonne;
+				float: none;
+				clear: both;
+			}
+
+			.hasDatepicker {
+				display: inline;
+			}
+
+			#kontaktinformasjon {
+				LABEL:not(.errorJS), DIV.label-wrapper {
+					width: 17rem;
+					float: left;
+					font-size: 0.8rem;
+					line-height: 1.4rem;
+					margin-top: 1rem;
+					text-transform: uppercase;
+					position: relative;
+
+					&:nth-child(2n+1) {
+						margin-left: 4%;
+					}
+
+					&:nth-child(odd) {
+						clear: none;
+					}
+
+					DIV {
+						position: absolute;
+						width: 5rem;
+					}
+
+					INPUT:not(.fallback) {
+						width: 11.5rem;
+						margin-left: 5.5rem;
+					}
+
+					&.epostadresse {
+						INPUT {
+							width: 100%;
+							margin-left: 0;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	/* Sykepenger */
+	&.sykepenger {
+		SECTION {
+			margin-top: 0;
+
+			> SECTION H1 {
+				._H2;
+				margin-bottom: 2rem;
+			}
+		}
+
+		.liste {
+			float: right;
+			margin: 2rem 0 0 3.8%;
+		}
+
+		.arbeidssituasjon {
+			clear: left;
+		}
+
+		.sykmeldinger {
+			clear: left;
+			float: left;
+			margin-left: 0;
+		}
+	}
+
+	/* FORELDREPENGER */
+	&.foreldrepenger {
+		SECTION > H1 {
+			._H2;
+			margin-bottom: 2rem;
+		}
+
+		.arbeidssituasjon {
+			margin: 0 0 2rem 3.8%;
+			float: right;
+
+			.arbeisdgiver {
+				margin-top: 2rem;
+			}
+		}
+
+		.barnet {
+			margin: 0 0 2rem 0;
+		}
+
+		SECTION.periode, SECTION[title=Periode] {
+			clear: both;
+			display: block;
+			padding-top: 2rem;
+
+			border-top: 1px solid #CCC;
+
+			DL.oppsummering, ARTICLE.liste {
+				.kolonne;
+				margin-left: 0;
+			}
+
+			ARTICLE.liste {
+				margin-left: 3.8%;
+			}
+		}
+	}
+
+	.liste {
+		.kolonne;
+
+		P.overskrift, LI.expandable A {
+			font-weight: 600;
+			font-size: 1.16rem;
+			font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+			position: relative;
+			padding-right: 30px;
+
+			.dato {
+				display: block;
+				font-size: 0.857rem;
+				font-weight: normal;
+				font-family: Helvetica, Arial, sans-serif;
+				text-transform: uppercase;
+			}
+
+			.belop {
+				position: absolute;
+				left: 50%;
+			}
+		}
+
+		.gradering {
+			position: absolute;
+			right: 0;
+		}
+	}
+}
+
+.sidebar {
+	table {
+		border-collapse: collapse;
+		margin: 1rem 0;
+		tbody {
+			tr:first-child {
+				th, td {
+					padding-top: 0.5rem;
+				}
+			}
+			tr:last-child {
+				th, td {
+					padding-bottom: 0.5rem;
+				}
+			}
+		}
+		th {
+			font-weight: normal;
+			text-align: left;
+		}
+		td {
+			font-weight: bold;
+			padding-left: 0.5rem;
+			text-align: left;
+		}
+	}
+	.visittkort {
+		padding-bottom: 35px;
+		padding: 20px 15px 15px 70px;
+		background-position: 20px 20px;
+		H1 {
+			margin-top: 7px;
+		}
+		#toggle-kjerneinfo {
+			display: block;
+			width: 34px;
+			height: 34px;
+			background: url(../img/aapne_nokkelinfo.png) no-repeat;
+		}
+		.knapp-lenke.brukerprofillink {
+			text-align: left;
+			padding: 0;
+		}
+	}
+}
+
+.kjerneinfo {
+	.info {
+		width: auto;
+		margin: 0 30px;
+		table {
+			border-collapse: collapse;
+			margin: 1rem auto;
+			tbody {
+				tr:first-child {
+					th, td {
+						padding-top: 0.5rem;
+					}
+				}
+				tr:last-child {
+					th, td {
+						padding-bottom: 0.5rem;
+					}
+				}
+			}
+			th {
+				font-weight: normal;
+				text-align: left;
+			}
+			td {
+				font-weight: bold;
+				padding-left: 0.5rem;
+				text-align: left;
+			}
+		}
+	}
+}

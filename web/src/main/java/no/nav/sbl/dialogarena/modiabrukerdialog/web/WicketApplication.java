@@ -15,9 +15,9 @@ import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.wicket.BehaviorPolicyAuthorizationStrategy;
 import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
+import no.nav.modig.wicket.errorhandling.pages.ApplicationExceptionPage;
+import no.nav.modig.wicket.errorhandling.pages.SystemExceptionPage;
 import no.nav.modig.wicket.events.NamedEventDispatcher;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.feil.ModiaApplicationExceptionPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.feil.ModiaSystemExceptionPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
@@ -67,23 +67,29 @@ public class WicketApplication extends WebApplication {
         new FrontendConfigurator()
                 .withModules(MODIA)
                 .addMetas(
+                        MetaTag.XUA_IE_EDGE,
                         MetaTag.CHARSET_UTF8,
-                        MetaTag.VIEWPORT_SCALE_1,
-                        MetaTag.XUA_IE_EDGE)
-                .withResourcePacking(this.usesDeploymentConfig())
+                        MetaTag.VIEWPORT_SCALE_1
+                )
                 .addConditionalJavascript(Intern.RESPOND_JS)
-                .addCss(SPIResources.getCss())
+		        .addLess(BasePage.INTERN_LESS)
+                .addCss(
+		                BasePage.PERSONSOKRESULT,
+		                BasePage.PERSONSOKSEARCH,
+		                BasePage.PERSONKJERNEINFO
+                )
                 .addScripts(SPIResources.getScripts())
-                .addScripts(BasePage.JS_RESOURCE)
-                .addScripts(ShortcutListenerResourceReference.get()) //TODO: Flytt til MODIA modul ?
-                .addScripts(KeyNavigationResourceReference.get())    //TODO: Flytt til MODIA modul ?
-                .addScripts(Widget.JS_RESOURCE)                      //TODO: Flytt til MODIA modul ?
-                .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
-                .addScripts(Liste.JS_RESOURCE)                       //TODO: Flytt til MODIA modul ?
-                .addScripts(DatePicker.JQUERY_PLACEHOLDER)
-                .addScripts(ModalErrorPanel.JS_RESOURCE)
-
-
+		        .addScripts(
+		                BasePage.JS_RESOURCE,
+		                ShortcutListenerResourceReference.get(), //TODO: Flytt til MODIA modul ?
+                        KeyNavigationResourceReference.get(),    //TODO: Flytt til MODIA modul ?
+                        Widget.JS_RESOURCE,                      //TODO: Flytt til MODIA modul ?
+                        EkspanderingsListe.JS_RESOURCE,          //TODO: Flytt til MODIA modul ?
+                        Liste.JS_RESOURCE,                       //TODO: Flytt til MODIA modul ?
+                        DatePicker.JQUERY_PLACEHOLDER,
+                        ModalErrorPanel.JS_RESOURCE
+	            )
+		        .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
 
         // Innstillinger vi bør ha
@@ -99,8 +105,8 @@ public class WicketApplication extends WebApplication {
 		getSecuritySettings().setAuthorizationStrategy(compoundAuthorizationStrategy);
 
         new ApplicationSettingsConfig()
-                .withApplicationExceptionPage(ModiaApplicationExceptionPage.class)
-                .withInternFeilSide(ModiaSystemExceptionPage.class)
+                .withApplicationExceptionPage(ApplicationExceptionPage.class)
+                .withInternFeilSide(SystemExceptionPage.class)
                 .configure(this);
 
         getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
