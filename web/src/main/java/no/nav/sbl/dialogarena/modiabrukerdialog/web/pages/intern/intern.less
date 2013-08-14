@@ -508,9 +508,52 @@ H3, ._H3 {
 	}
 	.visittkort {
 		padding-bottom: 35px;
-		A, A:visited {
+		padding: 20px 15px 15px 70px;
+		background-position: 20px 20px;
+		H1 {
+			margin-top: 7px;
+		}
+		#toggle-kjerneinfo {
 			display: block;
-			margin-bottom: 2px;
+			width: 34px;
+			height: 34px;
+			background: url(../img/aapne_nokkelinfo.png) no-repeat;
+		}
+		.knapp-lenke.brukerprofillink {
+			text-align: left;
+			padding: 0;
+		}
+	}
+}
+
+.kjerneinfo {
+	.info {
+		width: auto;
+		margin: 0 30px;
+		table {
+			border-collapse: collapse;
+			margin: 1rem auto;
+			tbody {
+				tr:first-child {
+					th, td {
+						padding-top: 0.5rem;
+					}
+				}
+				tr:last-child {
+					th, td {
+						padding-bottom: 0.5rem;
+					}
+				}
+			}
+			th {
+				font-weight: normal;
+				text-align: left;
+			}
+			td {
+				font-weight: bold;
+				padding-left: 0.5rem;
+				text-align: left;
+			}
 		}
 	}
 }
