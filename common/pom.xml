@@ -29,7 +29,7 @@
 
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-sts</artifactId>
+            <artifactId>modig-security-ws</artifactId>
         </dependency>
 
         <dependency>
