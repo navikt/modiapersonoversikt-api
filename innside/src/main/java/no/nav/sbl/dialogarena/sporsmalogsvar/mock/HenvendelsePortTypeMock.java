@@ -12,6 +12,11 @@ import java.util.List;
  */
 public class HenvendelsePortTypeMock implements HenvendelsePortType {
     @Override
+    public boolean ping() {
+        return true;
+    }
+
+    @Override
     public List<WSHenvendelse> hentHenvendelseListe(@WebParam(name = "fodselsnummer", targetNamespace = "") String s) {
         return new ArrayList<>();
     }

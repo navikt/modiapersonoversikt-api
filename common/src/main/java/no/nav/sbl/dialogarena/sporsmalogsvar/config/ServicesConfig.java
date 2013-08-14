@@ -31,7 +31,7 @@ public class ServicesConfig {
 
     @Bean
     public Pingable spmOgSvarPing() {
-        return new PingableImpl(sporsmalOgSvarPortType());
+        return new SpmOgSvarPingImpl(selftestSporsmalOgSvarPortType(), selftestHenvendelsePortType());
     }
 
     @Bean
@@ -41,6 +41,15 @@ public class ServicesConfig {
 
     @Bean
     public HenvendelsePortType henvendelsePortType() {
+        return opprettHenvendelsePortType();
+    }
+
+    @Bean
+    public HenvendelsePortType selftestHenvendelsePortType() {
+        return opprettHenvendelsePortType();
+    }
+
+    public HenvendelsePortType opprettHenvendelsePortType() {
     	JaxWsProxyFactoryBean jaxwsClient = commonJaxWsConfig();
     	jaxwsClient.setServiceClass(HenvendelsePortType.class);
     	jaxwsClient.setAddress(henvendelseEndpoint);
@@ -52,6 +61,15 @@ public class ServicesConfig {
     
     @Bean
     public SporsmalOgSvarPortType sporsmalOgSvarPortType() {
+        return opprettSporsmalOgSvarPortType();
+    }
+
+    @Bean
+    public SporsmalOgSvarPortType selftestSporsmalOgSvarPortType() {
+        return opprettSporsmalOgSvarPortType();
+    }
+
+    public SporsmalOgSvarPortType opprettSporsmalOgSvarPortType() {
     	JaxWsProxyFactoryBean jaxwsClient = commonJaxWsConfig();
     	jaxwsClient.setServiceClass(SporsmalOgSvarPortType.class);
     	jaxwsClient.setAddress(spmSvarEndpoint);

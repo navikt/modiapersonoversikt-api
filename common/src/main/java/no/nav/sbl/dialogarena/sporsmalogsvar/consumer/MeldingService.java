@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
@@ -20,9 +21,11 @@ import org.apache.commons.collections15.Transformer;
 public class MeldingService implements Serializable {
 
     @Inject
+    @Named("henvendelsePortType")
     HenvendelsePortType henvendelseWebservice;
 
     @Inject
+    @Named("sporsmalOgSvarPortType")
     private SporsmalOgSvarPortType webservice;
 
     public String stillSporsmal(String fritekst, String overskrift, String tema, String aktorId) {
