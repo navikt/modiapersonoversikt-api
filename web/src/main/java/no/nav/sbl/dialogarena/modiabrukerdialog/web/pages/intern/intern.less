@@ -518,18 +518,29 @@ H3, ._H3 {
 			width: 34px;
 			height: 34px;
 			background: url(../img/aapne_nokkelinfo.png) no-repeat;
+			margin-top: 13px;
 		}
 		.knapp-lenke.brukerprofillink {
 			text-align: left;
 			padding: 0;
 		}
+		&.kvinne {
+			background-size: 55px;
+			background-position: 10px 12px;
+		}
 	}
 }
 
 .kjerneinfo {
+	border-top: none;
+	padding: 0;
 	.info {
 		width: auto;
 		margin: 0 30px;
+		padding-top: 47px;
+		&.barna, &.foreldre, &.status {
+			background-size: 26px;
+		}
 		table {
 			border-collapse: collapse;
 			margin: 1rem auto;
