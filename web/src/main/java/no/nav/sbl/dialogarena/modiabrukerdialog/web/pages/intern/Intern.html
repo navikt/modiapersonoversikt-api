@@ -8,11 +8,11 @@
 			<div wicket:id="modal">[]</div>
 			<div class="main">
 				<section class="navbar menu-intern active">
+                    <wicket:container wicket:id="searchPanel"/>
 					<button wicket:id="toggle-sok" class="personsok-button personsok-movable" id="toggle-personsok"
 							wicket:message="aria-label:personsok.apnetekst, title:personsok.apnetekst, data-apne:personsok.apnetekst, data-lukke:personsok.lukketekst">
 						A
 					</button>
-					<wicket:container wicket:id="searchPanel"/>
 					<button class="nullstill-button" wicket:message="aria-label:hentperson.nullstillbruker, title:hentperson.nullstillbruker" wicket:id="nullstill">[]</button>
 				</section>
 				<wicket:container wicket:id="personsokPanel"/>
