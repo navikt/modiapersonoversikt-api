@@ -1,19 +1,17 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.innboks;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.AlleMeldingerPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Innboks extends Panel implements MeldingslisteDelegat {
 
@@ -55,7 +53,7 @@ public class Innboks extends Panel implements MeldingslisteDelegat {
 
     @Override
     public void meldingValgt(AjaxRequestTarget target, MeldingVM valgteMelding, boolean oppdaterScroll) {
-        MeldingVM forrigeMelding = innboksModell.getInnboksVM().getValgtMelding();
+        MeldingVM forrigeMelding = innboksModell.getInnboksVM().getValgtMelding().get();
         innboksModell.getInnboksVM().setValgtMelding(valgteMelding);
         for (HarMeldingsliste meldingsliste : meldingslister) {
             meldingsliste.valgteMelding(target, forrigeMelding, valgteMelding, oppdaterScroll);

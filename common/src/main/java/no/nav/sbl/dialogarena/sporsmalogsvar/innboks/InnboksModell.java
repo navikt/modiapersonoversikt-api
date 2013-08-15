@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.innboks;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -19,7 +20,8 @@ public class InnboksModell extends CompoundPropertyModel<InnboksVM> {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return getInnboksVM().getValgtMelding() == melding;
+                Optional<MeldingVM> valgtMelding = getInnboksVM().getValgtMelding();
+                return valgtMelding.isSome() && valgtMelding.get() == melding;
             }
         };
     }
