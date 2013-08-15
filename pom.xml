@@ -209,6 +209,13 @@
             </dependency>
 
             <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-jaas</artifactId>
+                <version>9.0.4.v20130625</version>
+                <scope>test</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-test</artifactId>
                 <version>1.2-SNAPSHOT</version>
