@@ -217,35 +217,43 @@ H3, ._H3 {
 	}
 
 	/* Brukerprofil */
-	&.brukerprofil {
+	.brukerprofil {
+
+		padding-left: 28px;
+
+		INPUT[type=radio]~LABEL {
+			margin-left: -28px;
+		}
+
 		INPUT[type="submit"]:disabled, INPUT[type="button"]:disabled {
 			cursor: default;
 		}
 
 		FIELDSET {
-			border: 0;
-			padding: 0;
+			border: none;
+			border-top: 1px solid #ddd;
+			padding-top: 3rem;
 			margin: 0 0 30px 0;
 			max-width: 50rem;
 
 			LEGEND {
 				._H2;
-				padding: 1rem 0;
+				position: absolute;
 			}
 
 			.endringsinformasjon {
-				padding: 0.8rem 0;
-
 				font-size: 0.857rem;
 				color: #999;
-				border-bottom: 1px solid #999;
-				border-top: 1px solid #999;
+			}
+
+			.sublegend {
+				margin-top: 4rem;
 			}
 
 			UL {
 				list-style-type: none;
 				padding: 0;
-				margin: 30px 0 0 0;
+				margin: 4rem 0 0 0;
 
 				LI LABEL:first-child {
 					font-size: 1rem;
@@ -329,6 +337,12 @@ H3, ._H3 {
 
 			.hasDatepicker {
 				display: inline;
+			}
+
+			.gyldigTil {
+				SPAN {
+					display: block;
+				}
 			}
 
 			#kontaktinformasjon {
