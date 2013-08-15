@@ -23,7 +23,8 @@ jQuery(document).ready(function ($) {
 	});
 
 	$('#toggle-personsok').on('click', checkIfToggleAvansertSok);
-	Modig.shortcutListener.on({alt: true, shift: true, key: 'A'}, checkIfToggleAvansertSok);
+	Modig.shortcutListener.on({key: 'A'}, checkIfToggleAvansertSok);
+	Modig.shortcutListener.on({alt: true, keyCode: 113}, checkIfToggleAvansertSok);
 
 	$('body').on('click', '.lamell .lamellhode > a', function () {
 		if ($('.main > .personsok').is(':visible')) {
