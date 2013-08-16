@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal;
 
-import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
