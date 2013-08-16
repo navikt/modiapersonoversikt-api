@@ -1,5 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
@@ -16,11 +19,14 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
@@ -50,7 +56,7 @@ public class BesvareSporsmalPanel extends Panel {
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(BesvareSporsmalPanel.class, "textarea.js")));
         response.render(OnDomReadyHeaderItem.forScript("textarea();"));
     }
-
+    
     private final class SvarForm extends Form<SporsmalOgSvarVM> {
 
         public SvarForm(String id, final BesvareModell model) {
@@ -61,6 +67,7 @@ public class BesvareSporsmalPanel extends Panel {
                     new TextField<>("svar.overskrift"),
                     fritekst,
                     new CheckBox("svar.sensitiv", Model.of(Boolean.FALSE)),
+                    new MapBasedDropDownChoice("svar.saksid", model),
                     new AjaxSubmitLink("send") {
                         @Override
                         protected void onError(AjaxRequestTarget target, Form<?> form) {
@@ -70,7 +77,8 @@ public class BesvareSporsmalPanel extends Panel {
                         @Override
                         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                             SvarMeldingVM svar = model.getSvar();
-                            WSSvar wssvar = new WSSvar().withBehandlingsId(svar.behandlingsId).withTema(svar.saksid).withSaksid(svar.saksid).withOverskrift(svar.overskrift).withFritekst(svar.fritekst).withSensitiv(svar.sensitiv);
+                            String tema = model.getObject().sakTemaMapping.get(svar.saksid);
+                            WSSvar wssvar = new WSSvar().withBehandlingsId(svar.behandlingsId).withTema(tema).withSaksid(svar.saksid).withOverskrift(svar.overskrift).withFritekst(svar.fritekst).withSensitiv(svar.sensitiv);
                             service.besvar(wssvar);
                             model.nullstill();
                             info("Svaret er sendt.");
@@ -88,6 +96,39 @@ public class BesvareSporsmalPanel extends Panel {
                     }
             );
         }
+    }
+    
+    private static final class MapBasedDropDownChoice extends DropDownChoice<String> {
+    	public MapBasedDropDownChoice(String id, final BesvareModell model) {
+    		super(id);
+    		setChoices(new IModel<List<String>>() {
+				@Override
+				public void detach() {
+					System.out.println("Detach");
+				}
+
+				@Override
+				public List<String> getObject() {
+					System.out.println("GetObject");
+					return new ArrayList<>(model.getObject().sakTemaMapping.keySet());
+				}
+
+				@Override
+				public void setObject(List<String> object) {
+					System.out.println("SetObject: " + object);
+				}
+			});
+    		setChoiceRenderer(new ChoiceRenderer<String>() {
+    			@Override
+    			public Object getDisplayValue(String key) {
+    				return model.getObject().sakTemaMapping.get(key);
+    			}
+    			@Override
+    			public String getIdValue(String key, int index) {
+    				return key;
+    			}
+    		});
+    	}
     }
 
 }

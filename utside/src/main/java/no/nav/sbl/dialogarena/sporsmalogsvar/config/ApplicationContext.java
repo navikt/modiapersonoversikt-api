@@ -1,12 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
-import static java.util.Arrays.asList;
-
-import java.lang.reflect.Constructor;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import no.nav.modig.content.CmsContentRetriever;
