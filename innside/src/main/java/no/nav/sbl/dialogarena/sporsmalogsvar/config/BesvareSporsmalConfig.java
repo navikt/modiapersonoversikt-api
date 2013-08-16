@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.mock.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.sporsmalogsvar.mock.SporsmalOgSvarPortTypeMock;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingskjedetyper;
@@ -95,8 +96,8 @@ public class BesvareSporsmalConfig {
         }
 
         @Bean
-        public MeldingService meldingService() {
-            return new MeldingService();
+        public MeldingService meldingService(HenvendelsePortType hpt, SporsmalOgSvarPortType spt) {
+            return new MeldingService(hpt, spt);
         }
     }
 }

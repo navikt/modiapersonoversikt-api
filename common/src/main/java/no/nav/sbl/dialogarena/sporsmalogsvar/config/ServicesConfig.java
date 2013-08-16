@@ -38,8 +38,8 @@ public class ServicesConfig {
     }
 
     @Bean
-    public MeldingService meldingService() {
-        return new MeldingService();
+    public MeldingService meldingService(HenvendelsePortType henvendelse, SporsmalOgSvarPortType sospt) {
+        return new MeldingService(henvendelse, sospt);
     }
 
     @Bean

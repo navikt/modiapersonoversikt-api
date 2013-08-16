@@ -31,18 +31,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationContext {
 
-	private static final String DEFAULT_LOCALE = "nb";
-	private static final String SBL_WEBKOMPONENTER_NB_NO_REMOTE = "/site/16/sbl-webkomponenter/nb/tekster";
-	private static final String SBL_WEBKOMPONENTER_NB_NO_LOCAL = "content.sbl-webkomponenter";
-	
 	@Bean
 	public CmsContentRetriever cmsContentRetriever() throws URISyntaxException {
 		String cmsBaseUrl = System.getProperty("dialogarena.cms.url");
-		Map<String, URI> uris = Utils.map(DEFAULT_LOCALE, new URI(cmsBaseUrl + SBL_WEBKOMPONENTER_NB_NO_REMOTE));
+		Map<String, URI> uris = Utils.map("nb", new URI(cmsBaseUrl + "/site/16/sbl-webkomponenter/nb/tekster"));
 		ContentRetriever contentRetriever = new HttpContentRetriever();
-		ValueRetriever valueRetriever = new ValuesFromContentWithResourceBundleFallback(SBL_WEBKOMPONENTER_NB_NO_LOCAL, contentRetriever, uris, DEFAULT_LOCALE);
+		ValueRetriever valueRetriever = new ValuesFromContentWithResourceBundleFallback("content.sbl-webkomponenter", contentRetriever, uris, "nb");
 		CmsContentRetriever cmsContentRetriever = new CmsContentRetriever();
-		cmsContentRetriever.setDefaultLocale(DEFAULT_LOCALE);
+		cmsContentRetriever.setDefaultLocale("nb");
 		cmsContentRetriever.setTeksterRetriever(valueRetriever);
 		return cmsContentRetriever;
 	}
@@ -65,8 +61,8 @@ public class ApplicationContext {
 	}
 
 	@Bean
-	public MeldingService meldingService() {
-		return new MeldingService();
+	public MeldingService meldingService(HenvendelsePortType hpt, SporsmalOgSvarPortType sospt) {
+		return new MeldingService(hpt, sospt);
 	}
 
 	private static <T> T createPortType(String address, String wsdlUrl, Class<T> serviceClass) {

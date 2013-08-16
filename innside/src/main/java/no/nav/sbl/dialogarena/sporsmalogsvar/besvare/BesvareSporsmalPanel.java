@@ -104,18 +104,15 @@ public class BesvareSporsmalPanel extends Panel {
     		setChoices(new IModel<List<String>>() {
 				@Override
 				public void detach() {
-					System.out.println("Detach");
 				}
 
 				@Override
 				public List<String> getObject() {
-					System.out.println("GetObject");
 					return new ArrayList<>(model.getObject().sakTemaMapping.keySet());
 				}
 
 				@Override
 				public void setObject(List<String> object) {
-					System.out.println("SetObject: " + object);
 				}
 			});
     		setChoiceRenderer(new ChoiceRenderer<String>() {

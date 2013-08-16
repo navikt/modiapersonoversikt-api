@@ -5,9 +5,6 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
@@ -20,16 +17,16 @@ import org.apache.commons.collections15.Transformer;
 
 public class MeldingService implements Serializable {
 
-    @Inject
-    @Named("henvendelsePortType")
-    HenvendelsePortType henvendelseWebservice;
+    private final HenvendelsePortType henvendelseWS;
+    private final SporsmalOgSvarPortType spsmogsvarWS;
 
-    @Inject
-    @Named("sporsmalOgSvarPortType")
-    private SporsmalOgSvarPortType webservice;
+    public MeldingService(HenvendelsePortType henvendelseWS, SporsmalOgSvarPortType spsmogsvarWS) {
+		this.henvendelseWS = henvendelseWS;
+		this.spsmogsvarWS = spsmogsvarWS;
+	}
 
-    public String stillSporsmal(String fritekst, String overskrift, String tema, String aktorId) {
-        return webservice.opprettSporsmal(new WSSporsmal().withFritekst(fritekst).withTema(tema).withOverskrift(overskrift), aktorId);
+	public String stillSporsmal(String fritekst, String overskrift, String tema, String aktorId) {
+        return spsmogsvarWS.opprettSporsmal(new WSSporsmal().withFritekst(fritekst).withTema(tema).withOverskrift(overskrift), aktorId);
     }
 
     public List<Melding> hentAlleMeldinger(String aktorId) {
@@ -52,16 +49,16 @@ public class MeldingService implements Serializable {
 				return melding;
 			}
 		};
-        return on(henvendelseWebservice.hentHenvendelseListe(aktorId)).map(somMelding).collect();
+        return on(henvendelseWS.hentHenvendelseListe(aktorId)).map(somMelding).collect();
     }
 
     public SporsmalOgSvar plukkMelding(String aktorId) {
-        WSSporsmalOgSvar wsSporsmalOgSvar = webservice.plukkMeldingForBesvaring(aktorId);
+        WSSporsmalOgSvar wsSporsmalOgSvar = spsmogsvarWS.plukkMeldingForBesvaring(aktorId);
         return wsSporsmalOgSvar == null ? null : TIL_SPORSMALOGSVAR.transform(wsSporsmalOgSvar);
     }
 
     public void besvar(WSSvar svar) {
-        webservice.besvarSporsmal(svar);
+        spsmogsvarWS.besvarSporsmal(svar);
     }
 
     private static final Transformer<WSMelding, Melding> TIL_MELDING = new Transformer<WSMelding, Melding>() {
