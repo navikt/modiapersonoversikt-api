@@ -24,6 +24,8 @@ public class SecurityFilterMock implements Filter {
         LOG.warn("Aktivert " + getClass().getSimpleName() + "! Skal ikke opptre i produksjon!");
     }
 
+    // Checkstyle tror det er redundante Exceptions
+    // CHECKSTYLE:OFF
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest req = (HttpServletRequest) servletRequest;
