@@ -15,15 +15,13 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 
 public class DetaljvisningPanel extends Panel implements HarMeldingsliste {
 
-	private MeldingstraadPanel meldingstraadPanel;
-	private DokumentinnsendingDetaljPanel dokumentinnsendingDetaljPanel;
     private Optional<MeldingVM> valgtMelding = Optional.none();
 
 	public DetaljvisningPanel(String id, MeldingslisteDelegat delegat, Optional<MeldingVM> valgtMelding) {
 		super(id);
 		setOutputMarkupId(true);
-		meldingstraadPanel = new MeldingstraadPanel("traad", delegat);
-		dokumentinnsendingDetaljPanel = new DokumentinnsendingDetaljPanel("dokumentinnsendingDetaljPanel", valgtMelding);
+        MeldingstraadPanel meldingstraadPanel = new MeldingstraadPanel("traad", delegat);
+        DokumentinnsendingDetaljPanel dokumentinnsendingDetaljPanel = new DokumentinnsendingDetaljPanel("dokumentinnsendingDetaljPanel", valgtMelding);
         dokumentinnsendingDetaljPanel.add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
