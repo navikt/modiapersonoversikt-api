@@ -20,7 +20,7 @@ public class SecurityFilterMock implements Filter {
     private static final Logger LOG = LoggerFactory.getLogger(SecurityFilterMock.class);
 
     @Override
-    public void init(FilterConfig filterConfig) throws ServletException {
+    public void init(FilterConfig filterConfig) {
         LOG.warn("Aktivert " + getClass().getSimpleName() + "! Skal ikke opptre i produksjon!");
     }
 
