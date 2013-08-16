@@ -1,48 +1,341 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>no.nav.sbl.dialogarena</groupId>
-        <artifactId>sporsmal-og-svar</artifactId>
-        <version>1.0-SNAPSHOT</version>
-    </parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>no.nav.sbl.dialogarena</groupId>
+		<artifactId>sporsmal-og-svar</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
 
-    <artifactId>sporsmal-og-svar-utside</artifactId>
-    <name>${project.artifactId}</name>
+	<artifactId>sporsmal-og-svar-utside</artifactId>
+	<name>${project.artifactId}</name>
 
+	<properties>
+		<slf4j.version>1.7.5</slf4j.version>
+		<modig.wicket.version>1.0.2</modig.wicket.version>
+		<wicket.version>6.8.0</wicket.version>
+		<modig-core.version>1.0.0</modig-core.version>
+		<modig-content.version>1.2.1</modig-content.version>
+		<modig.frontend.version>1.0.5</modig.frontend.version>
+		<modig.lang.version>1.0.1</modig.lang.version>
+		<modig-security.version>1.0.7</modig-security.version>
+		<nav.sbl.felles.commons.security.version>3.24
+		</nav.sbl.felles.commons.security.version>
+		<cxf.version>2.7.5</cxf.version>
+		<spring.version>3.2.3.RELEASE</spring.version>
+	</properties>
 
-    <dependencies>
+	<dependencies>
 
-    </dependencies>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${spring.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.2</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-core-test</artifactId>
+			<version>${modig-core.version}</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.eclipse.jetty.orbit</groupId>
+			<artifactId>javax.servlet</artifactId>
+			<version>3.0.0.v201112011016</version>
+			<scope>test</scope>
+		</dependency>
+	
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-simple</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-frontend-jaxws</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-api</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.cxf</groupId>
+			<artifactId>cxf-rt-transports-http</artifactId>
+			<version>${cxf.version}</version>
+		</dependency>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-            </resource>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**</include>
-                </includes>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </resource>
-        </resources>
-        <testResources>
-            <testResource>
-                <directory>src/test/resources</directory>
-            </testResource>
-            <testResource>
-                <directory>src/test/java</directory>
-                <includes>
-                    <include>**</include>
-                </includes>
-                <excludes>
-                    <exclude>**/*.java</exclude>
-                </excludes>
-            </testResource>
-        </testResources>
-    </build>
+		<dependency>
+			<groupId>javax.inject</groupId>
+			<artifactId>javax.inject</artifactId>
+			<version>1</version>
+		</dependency>
+
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>sporsmal-og-svar-common</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.sbl.dialogarena</groupId>
+			<artifactId>sbl-webkomponent-footer</artifactId>
+			<version>1.0.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.sbl.dialogarena</groupId>
+			<artifactId>sbl-webkomponent-navigasjon</artifactId>
+			<version>1.0.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.sbl.dialogarena</groupId>
+			<artifactId>sbl-webkomponent-innstillinger</artifactId>
+			<version>1.0.10</version>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.sbl.dialogarena</groupId>
+			<artifactId>sbl-webkomponent-tilbakemelding</artifactId>
+			<version>1.0.8</version>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.sbl.dialogarena</groupId>
+			<artifactId>sporsmal-og-svar-common</artifactId>
+			<version>1.0-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.sbl.dialogarena</groupId>
+			<artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
+			<version>0.0.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.sbl.dialogarena</groupId>
+			<artifactId>sporsmalogsvar-tjenestespesifikasjon</artifactId>
+			<version>0.0.3</version>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-wicket</artifactId>
+			<version>${modig.wicket.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-spring</artifactId>
+			<version>${wicket.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.apache.wicket</groupId>
+			<artifactId>wicket-core</artifactId>
+			<version>${wicket.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-lang</artifactId>
+			<version>${modig.lang.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-frontend-wicket</artifactId>
+			<version>${modig.frontend.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-frontend-ressurser</artifactId>
+			<version>${modig.frontend.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-core</artifactId>
+			<version>${modig-core.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-content</artifactId>
+			<version>${modig-content.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.apache.httpcomponents</groupId>
+					<artifactId>httpcore</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-security-ws</artifactId>
+			<version>${modig-security.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-security-core</artifactId>
+			<version>${modig-security.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-security-sts</artifactId>
+			<version>${modig-security.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-security-filter</artifactId>
+			<version>${modig-security.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-security-loginmodule</artifactId>
+			<version>${modig-security.version}</version>
+			<scope>runtime</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-log-filter</artifactId>
+			<scope>runtime</scope>
+			<version>1.1.2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.sbl.felles</groupId>
+			<artifactId>nav-sbl-felles-commons-security</artifactId>
+			<version>${nav.sbl.felles.commons.security.version}</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.sbl.dialogarena</groupId>
+			<artifactId>common-web</artifactId>
+			<version>1.0.13</version>
+			<scope>runtime</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-testcertificates</artifactId>
+			<version>1.0.0</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.modig</groupId>
+			<artifactId>modig-security-core</artifactId>
+			<version>${modig-security.version}</version>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>no.nav.sbl.dialogarena</groupId>
+			<artifactId>common-jetty</artifactId>
+			<version>1.0.19</version>
+			<scope>test</scope>
+		</dependency>
+		
+		<dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+
+		<dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+	</dependencies>
+
+	<build>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+			<resource>
+				<directory>src/main/java</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</resource>
+		</resources>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+			<testResource>
+				<directory>src/test/java</directory>
+				<includes>
+					<include>**</include>
+				</includes>
+				<excludes>
+					<exclude>**/*.java</exclude>
+				</excludes>
+			</testResource>
+		</testResources>
+	</build>
 </project>
