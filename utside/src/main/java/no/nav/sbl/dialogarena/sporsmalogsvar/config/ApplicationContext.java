@@ -1,9 +1,21 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
+import static java.util.Arrays.asList;
+
+import java.lang.reflect.Constructor;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.ContentRetriever;
+import no.nav.modig.content.ValueRetriever;
+import no.nav.modig.content.ValuesFromContentWithResourceBundleFallback;
+import no.nav.modig.content.enonic.HttpContentRetriever;
 import no.nav.modig.security.sts.utility.STSConfigurationUtility;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Utils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.WicketApplication;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
@@ -23,28 +35,37 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class ApplicationContext {
 
+	private static final String DEFAULT_LOCALE = "nb";
+	private static final String SBL_WEBKOMPONENTER_NB_NO_REMOTE = "/site/16/sbl-webkomponenter/nb/tekster";
+	private static final String SBL_WEBKOMPONENTER_NB_NO_LOCAL = "content.sbl-webkomponenter";
+	
+	@Bean
+	public CmsContentRetriever cmsContentRetriever() throws URISyntaxException {
+		String cmsBaseUrl = System.getProperty("dialogarena.cms.url");
+		Map<String, URI> uris = Utils.map(DEFAULT_LOCALE, new URI(cmsBaseUrl + SBL_WEBKOMPONENTER_NB_NO_REMOTE));
+		ContentRetriever contentRetriever = new HttpContentRetriever();
+		ValueRetriever valueRetriever = new ValuesFromContentWithResourceBundleFallback(SBL_WEBKOMPONENTER_NB_NO_LOCAL, contentRetriever, uris, DEFAULT_LOCALE);
+		CmsContentRetriever cmsContentRetriever = new CmsContentRetriever();
+		cmsContentRetriever.setDefaultLocale(DEFAULT_LOCALE);
+		cmsContentRetriever.setTeksterRetriever(valueRetriever);
+		return cmsContentRetriever;
+	}
+	
 	@Bean
 	public WicketApplication wicket() {
 		return new WicketApplication();
 	}
 
 	@Bean
-	public CmsContentRetriever cmsContentRetriever() {
-		return new CmsContentRetriever() {
-			public String hentTekst(String key) {
-				return "${placeholder}";
-			}
-		};
-	}
-
-	@Bean
 	public SporsmalOgSvarPortType sporsmalOgSvarPortType() {
-		return createPortType(System.getProperty("henvendelser.webservice.sporsmal.url"), "classpath:SporsmalOgSvar.wsdl", SporsmalOgSvarPortType.class);
+		return createPortType(System.getProperty("henvendelser.webservice.sporsmal.url"), "classpath:SporsmalOgSvar.wsdl",
+				SporsmalOgSvarPortType.class);
 	}
 
 	@Bean
 	public HenvendelsePortType henvendelsePortType() {
-		return createPortType(System.getProperty("henvendelser.webservice.felles.url"), "classpath:Henvendelse.wsdl", HenvendelsePortType.class);
+		return createPortType(System.getProperty("henvendelser.webservice.felles.url"), "classpath:Henvendelse.wsdl",
+				HenvendelsePortType.class);
 	}
 
 	@Bean
