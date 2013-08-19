@@ -50,13 +50,19 @@ jQuery(document).ready(function ($) {
 		css: 'margin-bottom: 20px;'
 	});
 
-	Modig.ajaxLoader.register({
-		urlPattern: /searchPanel-hentPersonForm-submitFodselsnummer/,
-		placeElement: '.search-intern',
-		placement: 'after',
-		imageUrl: '/modiabrukerdialog/img/ajaxloader/svart/loader_svart_64.gif',
-		css: 'margin: 30px 0 10px 130px; float: left;'
-	});
+    if ($('#submitFodselsnummer').length > 0) {
+        var top = $('#submitFodselsnummer').position().top + "px";
+        var left = $('#submitFodselsnummer').position().left + "px";
+        var height = $('#submitFodselsnummer').innerHeight() + "px";
+
+        Modig.ajaxLoader.register({
+            urlPattern: /searchPanel-hentPersonForm-submitFodselsnummer/,
+            placeElement: '#submitFodselsnummer',
+            placement: 'hide',
+            imageUrl: '/modiabrukerdialog/img/ajaxloader/hvit/loader_hvit_48.gif',
+            css: 'position: absolute; top:' + top + '; left:' + left + '; height:' + height
+        });
+    }
 });
 
 function toggleKjerneinfo() {
