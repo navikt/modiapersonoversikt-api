@@ -13,6 +13,7 @@ import org.apache.commons.collections15.Transformer;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.option.Optional.optional;
 
 public interface MeldingService {
 
@@ -22,7 +23,7 @@ public interface MeldingService {
     void besvar(WSSvar svar);
 
 
-    public static class Default implements MeldingService {
+    class Default implements MeldingService {
 
         private final HenvendelsePortType henvendelseWS;
         private final SporsmalOgSvarPortType spsmogsvarWS;
@@ -64,7 +65,7 @@ public interface MeldingService {
 
         @Override
         public Optional<SporsmalOgSvar> plukkMelding(String aktorId) {
-            return Optional.optional(spsmogsvarWS.plukkMeldingForBesvaring(aktorId)).map(TIL_SPORSMALOGSVAR);
+            return optional(spsmogsvarWS.plukkMeldingForBesvaring(aktorId)).map(TIL_SPORSMALOGSVAR);
         }
 
         @Override
