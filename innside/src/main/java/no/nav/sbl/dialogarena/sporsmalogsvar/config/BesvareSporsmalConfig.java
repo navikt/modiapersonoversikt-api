@@ -19,7 +19,6 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingReq
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingResponse;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerResponse;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -28,25 +27,25 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @Import({BesvareSporsmalConfig.Default.class, BesvareSporsmalConfig.DefaultWithoutCNCheck.class, BesvareSporsmalConfig.Test.class})
 public class BesvareSporsmalConfig {
-	
+
 	@Bean
 	public SakOgBehandlingPortType sakOgBehandlingPortType() {
 		return new SakOgBehandlingPortType() {
-			
+
 			@Override
 			public void ping() {
 			}
-			
+
 			@Override
 			public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(HentBehandlingskjedensBehandlingerRequest request) {
 				return null;
 			}
-			
+
 			@Override
 			public HentBehandlingResponse hentBehandling(HentBehandlingRequest request) {
 				return null;
 			}
-			
+
 			@Override
 			public FinnSakOgBehandlingskjedeListeResponse finnSakOgBehandlingskjedeListe(FinnSakOgBehandlingskjedeListeRequest request) {
 		    	Behandlingskjede kjede = new Behandlingskjede()
@@ -62,7 +61,7 @@ public class BesvareSporsmalConfig {
 		                                withSak(new Sak().withTema(new Temaer().withKodeverksRef("Alderspensjon")).withBehandlingskjede(kjede),
 		                                		new Sak().withTema(new Temaer().withKodeverksRef("Foreldrepenger")).withBehandlingskjede(kjede));
 		    }
-			
+
 		};
 	}
 
@@ -97,7 +96,7 @@ public class BesvareSporsmalConfig {
 
         @Bean
         public MeldingService meldingService(HenvendelsePortType hpt, SporsmalOgSvarPortType spt) {
-            return new MeldingService(hpt, spt);
+            return new MeldingService.Default(hpt, spt);
         }
     }
 }

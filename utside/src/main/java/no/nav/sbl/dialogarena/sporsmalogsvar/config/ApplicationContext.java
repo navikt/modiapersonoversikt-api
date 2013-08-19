@@ -1,10 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
-
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.content.ValueRetriever;
@@ -16,7 +11,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.WicketApplication;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
-
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.feature.LoggingFeature;
@@ -27,6 +21,11 @@ import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.apache.cxf.ws.security.SecurityConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class ApplicationContext {
@@ -42,7 +41,7 @@ public class ApplicationContext {
 		cmsContentRetriever.setTeksterRetriever(valueRetriever);
 		return cmsContentRetriever;
 	}
-	
+
 	@Bean
 	public WicketApplication wicket() {
 		return new WicketApplication();
@@ -62,7 +61,7 @@ public class ApplicationContext {
 
 	@Bean
 	public MeldingService meldingService(HenvendelsePortType hpt, SporsmalOgSvarPortType sospt) {
-		return new MeldingService(hpt, sospt);
+		return new MeldingService.Default(hpt, sospt);
 	}
 
 	private static <T> T createPortType(String address, String wsdlUrl, Class<T> serviceClass) {
