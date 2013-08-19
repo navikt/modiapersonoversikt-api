@@ -4,15 +4,11 @@ import java.io.Serializable;
 
 public class SporsmalOgSvar implements Serializable {
 
-    public Melding sporsmal, svar;
+    public final Melding sporsmal, svar;
 
-    public SporsmalOgSvar withSporsmal(Melding sporsmal) {
+    public SporsmalOgSvar(Melding sporsmal, Melding svar) {
         this.sporsmal = sporsmal;
-        return this;
+        this.svar = svar;
     }
 
-    public SporsmalOgSvar withSvar(Melding svar) {
-        this.svar = svar;
-        return this;
-    }
 }

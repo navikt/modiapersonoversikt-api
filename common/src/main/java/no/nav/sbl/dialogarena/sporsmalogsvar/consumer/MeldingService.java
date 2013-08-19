@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
@@ -17,12 +18,11 @@ public interface MeldingService {
 
     String stillSporsmal(String fritekst, String overskrift, String tema, String aktorId);
     List<Melding> hentAlleMeldinger(String aktorId);
-    SporsmalOgSvar plukkMelding(String aktorId);
+    Optional<SporsmalOgSvar> plukkMelding(String aktorId);
     void besvar(WSSvar svar);
 
 
     public static class Default implements MeldingService {
-
 
         private final HenvendelsePortType henvendelseWS;
         private final SporsmalOgSvarPortType spsmogsvarWS;
@@ -63,9 +63,8 @@ public interface MeldingService {
         }
 
         @Override
-        public SporsmalOgSvar plukkMelding(String aktorId) {
-            WSSporsmalOgSvar wsSporsmalOgSvar = spsmogsvarWS.plukkMeldingForBesvaring(aktorId);
-            return wsSporsmalOgSvar == null ? null : TIL_SPORSMALOGSVAR.transform(wsSporsmalOgSvar);
+        public Optional<SporsmalOgSvar> plukkMelding(String aktorId) {
+            return Optional.optional(spsmogsvarWS.plukkMeldingForBesvaring(aktorId)).map(TIL_SPORSMALOGSVAR);
         }
 
         @Override
@@ -92,7 +91,7 @@ public interface MeldingService {
             public SporsmalOgSvar transform(WSSporsmalOgSvar wsSporsmalOgSvar) {
                 Melding sporsmal = TIL_MELDING.transform(wsSporsmalOgSvar.getSporsmal());
                 Melding svar = TIL_MELDING.transform(wsSporsmalOgSvar.getSvar());
-                return new SporsmalOgSvar().withSporsmal(sporsmal).withSvar(svar);
+                return new SporsmalOgSvar(sporsmal, svar);
             }
         };
 
