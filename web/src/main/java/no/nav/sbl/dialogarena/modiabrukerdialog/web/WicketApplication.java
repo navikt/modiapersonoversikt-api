@@ -28,7 +28,6 @@ import org.apache.wicket.authorization.strategies.CompoundAuthorizationStrategy;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.context.ApplicationContext;
@@ -109,7 +108,6 @@ public class WicketApplication extends WebApplication {
                 .withInternFeilSide(SystemExceptionPage.class)
                 .configure(this);
 
-        getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
 
         getFrameworkSettings().add(new NamedEventDispatcher());
