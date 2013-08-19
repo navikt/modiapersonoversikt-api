@@ -6,7 +6,6 @@ import no.nav.modig.content.ValueRetriever;
 import no.nav.modig.content.ValuesFromContentWithResourceBundleFallback;
 import no.nav.modig.content.enonic.HttpContentRetriever;
 import no.nav.modig.security.sts.utility.STSConfigurationUtility;
-import no.nav.sbl.dialogarena.sporsmalogsvar.Utils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.WicketApplication;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
@@ -33,7 +32,8 @@ public class ApplicationContext {
 	@Bean
 	public CmsContentRetriever cmsContentRetriever() throws URISyntaxException {
 		String cmsBaseUrl = System.getProperty("dialogarena.cms.url");
-		Map<String, URI> uris = Utils.map("nb", new URI(cmsBaseUrl + "/site/16/sbl-webkomponenter/nb/tekster"));
+		Map<String, URI> uris = new HashMap<>();
+		uris.put("nb", new URI(cmsBaseUrl + "/site/16/sbl-webkomponenter/nb/tekster"));
 		ContentRetriever contentRetriever = new HttpContentRetriever();
 		ValueRetriever valueRetriever = new ValuesFromContentWithResourceBundleFallback("content.sbl-webkomponenter", contentRetriever, uris, "nb");
 		CmsContentRetriever cmsContentRetriever = new CmsContentRetriever();
