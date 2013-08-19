@@ -350,13 +350,21 @@ H3, ._H3 {
 					font-size: 0.8rem;
 					line-height: 1.4rem;
 					margin-top: 1rem;
-					text-transform: uppercase;
 					position: relative;
 
-					DIV {
+                    DIV:not(.endringsinformasjon) {
 						position: absolute;
 						width: 10rem;
 					}
+
+                    .endringsinformasjon {
+                        text-transform: none;
+                        display: inline;
+                    }
+
+                    :not(.endringsinformasjon) {
+                        text-transform: uppercase;
+                    }
 
 					INPUT:not(.fallback) {
 						width: 12.5rem;
