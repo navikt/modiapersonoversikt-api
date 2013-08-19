@@ -505,18 +505,57 @@ H3, ._H3 {
 		}
 		#toggle-kjerneinfo {
 			display: block;
-			width: 34px;
-			height: 34px;
-			background: url(../img/aapne_nokkelinfo.png) no-repeat;
-			margin-top: 13px;
+
+            span {
+                margin-left: 12px;
+                padding-left: 0px;
+                &:before {
+                    content: url(../img/pil-hoyre.svg);
+                    position: absolute;
+                    margin-left: -12px;
+                }
+            }
 		}
 		.knapp-lenke.brukerprofillink {
 			text-align: left;
 			padding: 0;
+            margin-top: 13px;
 		}
 		&.kvinne {
 			background-size: 55px;
 			background-position: 10px 12px;
+		}
+
+        &.active {
+            #toggle-kjerneinfo span:before {
+                -moz-transform: scaleX(-1);
+                -o-transform: scaleX(-1);
+                -webkit-transform: scaleX(-1);
+                transform: scaleX(-1);
+                filter: FlipH;
+                -ms-filter: "FlipH";
+            }
+        }
+	}
+}
+
+.kjerneinfo {
+	.info {
+
+	}
+}
+
+.lerret {
+	SECTION {
+		H1 {
+			font-size: 1.8rem;
+			margin-bottom: 1rem;
+		}
+		.liste {
+			H1 {
+				font-size: 1.14rem;
+				font-weight: 600;
+			}
 		}
 	}
 }
