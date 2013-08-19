@@ -58,6 +58,13 @@
             </dependency>
 
             <dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>3.0.1</version>
+                <scope>provided</scope>
+            </dependency>
+
+            <dependency>
                 <groupId>javax.inject</groupId>
                 <artifactId>javax.inject</artifactId>
                 <version>1</version>
@@ -86,7 +93,43 @@
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-security-ws</artifactId>
                 <version>${modig-security.version}</version>
+	            <exclusions>
+	                <exclusion>
+	                    <groupId>commons-logging</groupId>
+	                    <artifactId>commons-logging</artifactId>
+	                </exclusion>
+	            </exclusions>
             </dependency>
+
+	        <dependency>
+	            <groupId>no.nav.modig</groupId>
+	            <artifactId>modig-security-sts</artifactId>
+	            <version>${modig-security.version}</version>
+	            <exclusions>
+	                <exclusion>
+	                    <groupId>commons-logging</groupId>
+	                    <artifactId>commons-logging</artifactId>
+	                </exclusion>
+	            </exclusions>
+            </dependency>
+
+	        <dependency>
+	            <groupId>no.nav.modig</groupId>
+	            <artifactId>modig-security-loginmodule</artifactId>
+	            <version>${modig-security.version}</version>
+	            <exclusions>
+	                <exclusion>
+	                    <groupId>commons-logging</groupId>
+	                    <artifactId>commons-logging</artifactId>
+	                </exclusion>
+	            </exclusions>
+	        </dependency>
+
+	        <dependency>
+	            <groupId>no.nav.modig</groupId>
+	            <artifactId>modig-security-filter</artifactId>
+	            <version>${modig-security.version}</version>
+	        </dependency>
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
@@ -121,6 +164,18 @@
                 <artifactId>modig-frontend-wicket</artifactId>
                 <version>1.0.5</version>
             </dependency>
+
+	        <dependency>
+	            <groupId>no.nav.modig</groupId>
+	            <artifactId>modig-content</artifactId>
+	            <version>1.2.1</version>
+	            <exclusions>
+	                <exclusion>
+	                    <groupId>commons-logging</groupId>
+	                    <artifactId>commons-logging</artifactId>
+	                </exclusion>
+	            </exclusions>
+	        </dependency>
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
