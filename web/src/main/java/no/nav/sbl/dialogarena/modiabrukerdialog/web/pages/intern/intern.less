@@ -300,6 +300,8 @@ H3, ._H3 {
 				position: absolute;
 				bottom: -28px;
 				margin-left: 0;
+                color: #ff6666;
+                min-height: 25px;
 			}
 
 			LABEL.husnummer {
@@ -344,6 +346,22 @@ H3, ._H3 {
 				}
 			}
 
+            .adresselinjer {
+                INPUT {
+                    margin-bottom: 5px;
+                }
+            }
+
+            #adresseUtlandLand {
+                margin-bottom: 5px;
+            }
+
+            #kontonummer {
+                &.errorJS {
+                    margin-bottom: 18px;
+                }
+            }
+
 			#kontaktinformasjon {
 				LABEL:not(.errorJS), DIV.label-wrapper {
 					float: left;
@@ -376,6 +394,10 @@ H3, ._H3 {
 							width: 100%;
 							margin-left: 0;
 						}
+
+                        LABEL.errorJS {
+                            bottom: -23px;
+                        }
 					}
 				}
 			}
