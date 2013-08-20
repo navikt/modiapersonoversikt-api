@@ -62,7 +62,7 @@ public class InnboksTest {
     public void skalViseInfotekstNaarInnboksErTom() {
         when(henvendelsetjeneste.hentHenvendelseListe(FODSELSNUMMER)).thenReturn(new ArrayList<WSHenvendelse>());
         tester.goToPageWith(new Innboks("innboks", FODSELSNUMMER, meldingService));
-        tester.get().component(ofType(Label.class).withId(INGEN_MELDINGER_ID).and(containedInComponent(ofType(AlleMeldingerPanel.class))));
+        tester.should().containComponent(ofType(Label.class).withId(INGEN_MELDINGER_ID).and(containedInComponent(ofType(AlleMeldingerPanel.class))));
     }
 
     @Test
@@ -94,6 +94,6 @@ public class InnboksTest {
     }
 
     private static WSMelding lagSporsmal(String tema, String overskrift) {
-        return new WSMelding().withType(WSMeldingstype.SPORSMAL).withTema(tema).withOverskrift(overskrift);
+        return new WSMelding().withType(WSMeldingstype.SPORSMAL).withTema(tema).withOverskrift(overskrift).withTraadId("1");
     }
 }
