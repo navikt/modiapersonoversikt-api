@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.innboks;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
@@ -15,5 +16,5 @@ public interface HarMeldingsliste {
      * @param valgteMelding meldingen brukeren valgte
      * @param oppdaterScroll om valget skal føre til en scroll i meldingslisten
      */
-    void valgteMelding(AjaxRequestTarget target, MeldingVM forrigeMelding, MeldingVM valgteMelding, boolean oppdaterScroll);
+    void valgteMelding(AjaxRequestTarget target, Optional<MeldingVM> forrigeMelding, MeldingVM valgteMelding, boolean oppdaterScroll);
 }

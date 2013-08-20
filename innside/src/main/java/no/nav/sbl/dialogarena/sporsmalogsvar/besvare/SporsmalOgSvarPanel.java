@@ -14,8 +14,6 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import javax.inject.Inject;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -24,19 +22,19 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class SporsmalOgSvarPanel extends Panel {
 
-    @Inject
     private MeldingService service;
     private final BesvareModell model;
 
-    public SporsmalOgSvarPanel(String id, final String aktorId) {
+    public SporsmalOgSvarPanel(String id, final String aktorId, MeldingService service) {
         super(id);
         setOutputMarkupId(true);
+        this.service = service;
         add(new AttributeAppender("class", "besvare-panel"));
 
         FeedbackPanel feedbackPanel = new FeedbackPanel("feedback-panel");
         feedbackPanel.setOutputMarkupId(true);
         model = new BesvareModell();
-        final BesvareSporsmalPanel besvare = new BesvareSporsmalPanel("besvare-sporsmal", model, feedbackPanel);
+        final BesvareSporsmalPanel besvare = new BesvareSporsmalPanel("besvare-sporsmal", model, feedbackPanel, service);
         besvare.add(visibleIf(model.besvarerSporsmal()));
 
         AjaxLink<Void> plukk = new AjaxLink<Void>("plukk") {
@@ -62,11 +60,11 @@ public class SporsmalOgSvarPanel extends Panel {
 
     private SporsmalOgSvarVM plukk(String aktorId) {
         for (SporsmalOgSvar sporsmalOgSvar : service.plukkMelding(aktorId)) {
-            Map<String, String> sakTemaMapping = new LinkedHashMap<String, String>() {{
+            Map<String, String> sakTemaMapping = new LinkedHashMap<String, String>() { {
                 put("sak-324", "Uføre");
                 put("sak-33", "Alderspensjon");
                 put("sak-123", "Foreldrepenger");
-            }};
+            } };
             return new SporsmalOgSvarVM(new MeldingVM(sporsmalOgSvar.sporsmal), new SvarMeldingVM(sporsmalOgSvar.svar), sakTemaMapping);
         }
 
@@ -74,6 +72,7 @@ public class SporsmalOgSvarPanel extends Panel {
         return new SporsmalOgSvarVM();
     }
 
+    @SuppressWarnings("unused")
     @RunOnEvents(BesvareSporsmalPanel.SPORSMAL_OPPDATERT)
     public void sporsmalAvbrutt(AjaxRequestTarget target) {
         target.add(this);

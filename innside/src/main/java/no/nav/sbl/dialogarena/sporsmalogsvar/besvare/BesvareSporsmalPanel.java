@@ -1,15 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.inject.Inject;
-
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSvar;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -31,17 +25,20 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class BesvareSporsmalPanel extends Panel {
 
-    @Inject
     private MeldingService service;
 
     private FeedbackPanel feedbackPanel;
     public static final String SPORSMAL_OPPDATERT = "hendelser.sporsmal_oppdatert";
 
-    public BesvareSporsmalPanel(String id, BesvareModell model, FeedbackPanel feedbackPanel) {
+    public BesvareSporsmalPanel(String id, BesvareModell model, FeedbackPanel feedbackPanel, MeldingService service) {
         super(id, model);
         this.feedbackPanel = feedbackPanel;
+        this.service = service;
         setOutputMarkupId(true);
         add(
                 new SporsmalPanel("sporsmal", model),
@@ -116,15 +113,16 @@ public class BesvareSporsmalPanel extends Panel {
 				}
 			});
     		setChoiceRenderer(new ChoiceRenderer<String>() {
-    			@Override
-    			public Object getDisplayValue(String key) {
-    				return model.getObject().sakTemaMapping.get(key);
-    			}
-    			@Override
-    			public String getIdValue(String key, int index) {
-    				return key;
-    			}
-    		});
+                @Override
+                public Object getDisplayValue(String key) {
+                    return model.getObject().sakTemaMapping.get(key);
+                }
+
+                @Override
+                public String getIdValue(String key, int index) {
+                    return key;
+                }
+            });
     	}
     }
 

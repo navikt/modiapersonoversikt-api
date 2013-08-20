@@ -69,7 +69,7 @@ public class BesvareSporsmalConfig {
     @Configuration
     @Import({
             JaxWsFeatures.Integration.class,
-            ServicesConfig.class
+            Tjenesteoppsett.class
     })
     public static class Default { }
 
@@ -77,7 +77,7 @@ public class BesvareSporsmalConfig {
     @Configuration
     @Import({
             JaxWsFeatures.Mock.class,
-            ServicesConfig.class
+            Tjenesteoppsett.class
     })
     public static class DefaultWithoutCNCheck { }
 

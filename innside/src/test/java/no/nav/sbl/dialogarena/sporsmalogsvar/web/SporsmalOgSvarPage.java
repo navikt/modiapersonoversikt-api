@@ -14,7 +14,7 @@ public class SporsmalOgSvarPage extends WebPage {
     public SporsmalOgSvarPage() {
         super();
         add(
-                new Innboks("innboks", "28088834986"),
-                new SporsmalOgSvarPanel("besvar", "28088834986"));
+                new Innboks("innboks", "28088834986", service),
+                new SporsmalOgSvarPanel("besvar", "28088834986", service));
     }
 }

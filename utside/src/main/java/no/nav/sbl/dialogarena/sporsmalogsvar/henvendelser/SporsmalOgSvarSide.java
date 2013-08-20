@@ -1,18 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser;
 
-import static java.util.Arrays.asList;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.modig.wicket.model.ModelUtils.not;
-
-import java.util.List;
-
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.sendsporsmal.SendSporsmalPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.sendsporsmal.SideNavigerer;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.sendsporsmal.Sporsmal;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.sendsporsmal.SporsmalBekreftelsePanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.sendsporsmal.TemavelgerPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
-
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -21,10 +15,20 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
+import javax.inject.Inject;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
+
 /**
  * Gir bruker mulighet til å sende inn spørsmål til NAV
  */
 public class SporsmalOgSvarSide extends BasePage implements SideNavigerer {
+
+    @Inject
+    MeldingService meldingService;
 
     private static final String FODSELSNUMMER = "28088834986";
 
@@ -35,13 +39,13 @@ public class SporsmalOgSvarSide extends BasePage implements SideNavigerer {
     CompoundPropertyModel<Sporsmal> model = new CompoundPropertyModel<>(new Sporsmal());
 
 	public SporsmalOgSvarSide() {
-        Innboks innboks = new Innboks("innboks-bruker", FODSELSNUMMER);
+        Innboks innboks = new Innboks("innboks-bruker", FODSELSNUMMER, meldingService);
         innboks.add(visibleIf(aktivSideEr(Side.INNBOKS_BRUKER)));
 
         TemavelgerPanel temavelger = new TemavelgerPanel("temavelger", alleTema, model, this);
         temavelger.add(visibleIf(aktivSideEr(Side.TEMAVELGER)));
 
-        SendSporsmalPanel sendSporsmal = new SendSporsmalPanel("send-sporsmal", model, FODSELSNUMMER, this);
+        SendSporsmalPanel sendSporsmal = new SendSporsmalPanel("send-sporsmal", model, FODSELSNUMMER, this, meldingService);
         sendSporsmal.add(visibleIf(aktivSideEr(Side.SEND_SPORSMAL)));
 
         SporsmalBekreftelsePanel sporsmalBekreftelse = new SporsmalBekreftelsePanel("sporsmal-bekreftelse", model, this);

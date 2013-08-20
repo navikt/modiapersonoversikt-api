@@ -17,12 +17,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
-
 import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
-public class ServicesConfig {
+public class Tjenesteoppsett {
 
     @Inject
     private JaxWsFeatures jaxwsFeatures;
@@ -53,17 +52,6 @@ public class ServicesConfig {
         return opprettHenvendelsePortType(new SystemSAMLOutInterceptor());
     }
 
-    public HenvendelsePortType opprettHenvendelsePortType(AbstractSAMLOutInterceptor samlOutInterceptor) {
-    	JaxWsProxyFactoryBean jaxwsClient = commonJaxWsConfig();
-    	jaxwsClient.setServiceClass(HenvendelsePortType.class);
-    	jaxwsClient.setAddress(henvendelseEndpoint);
-    	jaxwsClient.setWsdlURL("classpath:Henvendelse.wsdl");
-        jaxwsClient.getProperties().put(SecurityConstants.MUSTUNDERSTAND, false);
-        jaxwsClient.getOutInterceptors().add(samlOutInterceptor);
-    	HenvendelsePortType henvendelsePortType = jaxwsClient.create(HenvendelsePortType.class);
-    	return konfigurerMedHttps(henvendelsePortType);
-    }
-
     @Bean
     public SporsmalOgSvarPortType sporsmalOgSvarSso() {
         return opprettSporsmalOgSvarPortType(new UserSAMLOutInterceptor());
@@ -74,13 +62,20 @@ public class ServicesConfig {
         return opprettSporsmalOgSvarPortType(new SystemSAMLOutInterceptor());
     }
 
+    private HenvendelsePortType opprettHenvendelsePortType(AbstractSAMLOutInterceptor samlOutInterceptor) {
+    	JaxWsProxyFactoryBean jaxwsClient = commonJaxWsConfig(samlOutInterceptor);
+    	jaxwsClient.setServiceClass(HenvendelsePortType.class);
+    	jaxwsClient.setAddress(henvendelseEndpoint);
+    	jaxwsClient.setWsdlURL("classpath:Henvendelse.wsdl");
+    	HenvendelsePortType henvendelsePortType = jaxwsClient.create(HenvendelsePortType.class);
+    	return konfigurerMedHttps(henvendelsePortType);
+    }
+
     public SporsmalOgSvarPortType opprettSporsmalOgSvarPortType(AbstractSAMLOutInterceptor samlOutInterceptor) {
-    	JaxWsProxyFactoryBean jaxwsClient = commonJaxWsConfig();
+    	JaxWsProxyFactoryBean jaxwsClient = commonJaxWsConfig(samlOutInterceptor);
     	jaxwsClient.setServiceClass(SporsmalOgSvarPortType.class);
     	jaxwsClient.setAddress(spmSvarEndpoint);
     	jaxwsClient.setWsdlURL("classpath:SporsmalOgSvar.wsdl");
-        jaxwsClient.getProperties().put(SecurityConstants.MUSTUNDERSTAND, false);
-        jaxwsClient.getOutInterceptors().add(samlOutInterceptor);
     	SporsmalOgSvarPortType hnvSpsmSvarPortType = jaxwsClient.create(SporsmalOgSvarPortType.class);
     	return konfigurerMedHttps(hnvSpsmSvarPortType);
     }
@@ -92,12 +87,14 @@ public class ServicesConfig {
         return portType;
 	}
 
-    public JaxWsProxyFactoryBean commonJaxWsConfig() {
+    private JaxWsProxyFactoryBean commonJaxWsConfig(AbstractSAMLOutInterceptor samlOutInterceptor) {
         JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
         Map<String, Object> properties = new HashMap<>();
         properties.put("schema-validation-enabled", true);
+        properties.put(SecurityConstants.MUSTUNDERSTAND, false);
         factoryBean.setProperties(properties);
         factoryBean.getFeatures().addAll(jaxwsFeatures.jaxwsFeatures());
+        factoryBean.getOutInterceptors().add(samlOutInterceptor);
         return factoryBean;
     }
 
