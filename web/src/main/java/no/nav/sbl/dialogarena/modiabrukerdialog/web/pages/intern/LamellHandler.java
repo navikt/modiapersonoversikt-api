@@ -95,13 +95,7 @@ public class LamellHandler implements Serializable {
     }
 
     private boolean canHaveMoreThanOneFactory(String type) {
-        if (SYKEPENGER.equalsIgnoreCase(type)) {
-            return true;
-        }
-        if (FORELDREPENGER.equalsIgnoreCase(type)) {
-            return true;
-        }
-        return false;
+        return SYKEPENGER.equalsIgnoreCase(type) || FORELDREPENGER.equalsIgnoreCase(type);
     }
 
     private List<LamellFactory> createStaticLamellFactories() {
