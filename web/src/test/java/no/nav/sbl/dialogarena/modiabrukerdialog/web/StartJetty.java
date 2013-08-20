@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.modig.security.loginmodule.DummyRole;
+import no.nav.modig.testcertificates.TestCertificates;
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
 import org.eclipse.jetty.jaas.JAASLoginService;
 import org.eclipse.jetty.util.resource.ResourceCollection;
@@ -25,6 +26,8 @@ public class StartJetty {
         SystemProperties.load("/jetty-environment.properties");
         SystemProperties.load("/environment-t8.properties");
         setupKeyAndTrustStore();
+//        TestCertificates.setupTemporaryKeyStore("keystore.jks", "P0dHoOgDIC");
+//        TestCertificates.setupTemporaryTrustStore("no/nav/modig/testcertificates/truststore.jts", "changeit");
         Jetty jetty = usingWar(WEBAPP_SOURCE)
                 .at("modiabrukerdialog")
                 .port(PORT)
