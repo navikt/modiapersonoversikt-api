@@ -24,7 +24,8 @@
         <slf4j.version>1.7.5</slf4j.version>
         <logback.version>1.0.13</logback.version>
         <modig.scm.plugin.version>1.1.10</modig.scm.plugin.version>
-        <modig-security.version>1.0.2</modig-security.version>
+        <modig.frontend.version>1.0.18</modig.frontend.version>
+        <modig-security.version>1.0.9</modig-security.version>
         <sonar.skippedModules></sonar.skippedModules>
     </properties>
 
@@ -156,13 +157,13 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-frontend-ressurser</artifactId>
-                <version>1.0.5</version>
+                <version>${modig.frontend.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-frontend-wicket</artifactId>
-                <version>1.0.5</version>
+                <version>${modig.frontend.version}</version>
             </dependency>
 
 	        <dependency>
