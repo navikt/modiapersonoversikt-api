@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
+import no.nav.modig.cache.CacheConfig;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.content.ValueRetriever;
@@ -20,6 +21,7 @@ import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.apache.cxf.ws.security.SecurityConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -27,14 +29,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Configuration
+@Import(CacheConfig.class)
 public class ApplicationContext {
+	
+	@Bean
+	public ContentRetriever contentRetriever() {
+		// Egen bønne for å hooke opp @Cachable
+		return new HttpContentRetriever();
+	}
 
 	@Bean
-	public CmsContentRetriever cmsContentRetriever() throws URISyntaxException {
+	public CmsContentRetriever cmsContentRetriever(ContentRetriever contentRetriever) throws URISyntaxException {
 		String cmsBaseUrl = System.getProperty("dialogarena.cms.url");
 		Map<String, URI> uris = new HashMap<>();
 		uris.put("nb", new URI(cmsBaseUrl + "/site/16/sbl-webkomponenter/nb/tekster"));
-		ContentRetriever contentRetriever = new HttpContentRetriever();
 		ValueRetriever valueRetriever = new ValuesFromContentWithResourceBundleFallback("content.sbl-webkomponenter", contentRetriever, uris, "nb");
 		CmsContentRetriever cmsContentRetriever = new CmsContentRetriever();
 		cmsContentRetriever.setDefaultLocale("nb");
