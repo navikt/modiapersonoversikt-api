@@ -20,4 +20,7 @@ public class HenvendelsePortTypeMock implements HenvendelsePortType {
     public List<WSHenvendelse> hentHenvendelseListe(@WebParam(name = "fodselsnummer", targetNamespace = "") String s) {
         return new ArrayList<>();
     }
+    @Override
+    public void merkMeldingSomLest(@WebParam(name = "behandlingsId", targetNamespace = "") String behandlingsId) {
+    }
 }

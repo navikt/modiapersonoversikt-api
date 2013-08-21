@@ -19,6 +19,7 @@ public interface MeldingService {
 
     String stillSporsmal(String fritekst, String overskrift, String tema, String aktorId);
     List<Melding> hentAlleMeldinger(String aktorId);
+    void merkMeldingSomHelst(String behandlingsId);
     Optional<SporsmalOgSvar> plukkMelding(String aktorId);
     void besvar(WSSvar svar);
 
@@ -61,6 +62,11 @@ public interface MeldingService {
     			}
     		};
             return on(henvendelseWS.hentHenvendelseListe(aktorId)).map(somMelding).collect();
+        }
+
+        @Override
+        public void merkMeldingSomHelst(String behandlingsId) {
+            henvendelseWS.merkMeldingSomLest(behandlingsId);
         }
 
         @Override

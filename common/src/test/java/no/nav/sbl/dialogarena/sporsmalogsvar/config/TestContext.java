@@ -47,6 +47,10 @@ public class TestContext {
                 liste.add(new no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMelding().withType(no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMeldingstype.SPORSMAL));
                 return liste;
             }
+
+            @Override
+            public void merkMeldingSomLest(@WebParam(name = "behandlingsId", targetNamespace = "") String behandlingsId) {
+            }
         };
     }
 
