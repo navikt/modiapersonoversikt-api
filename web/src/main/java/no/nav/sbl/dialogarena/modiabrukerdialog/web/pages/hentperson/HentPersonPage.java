@@ -15,16 +15,24 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.apache.wicket.util.string.StringValue;
 
 public class HentPersonPage extends BasePage {
 
-	public HentPersonPage() {
 
+	public HentPersonPage(PageParameters pageParameters) {
+
+        HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel");
+        StringValue errorText = pageParameters.get("error");
+        if(!errorText.isEmpty()){
+            hentPersonPanel.setErrorText(errorText.toString());
+        }
         add(
 		        new ContextImage("modia-logo", "img/modiaLogo.svg"),
-				new HentPersonPanel("searchPanel"),
+                hentPersonPanel,
 				new PersonsokPanel("personsokPanel").setVisible(true)
         );
+
     }
 
     @Override
