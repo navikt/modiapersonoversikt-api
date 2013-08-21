@@ -11,7 +11,7 @@ import java.io.InputStream;
 
 public class Brukerindeks extends HttpServlet {
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         resp.setContentType("text/html");
         try (InputStream htmlFileStream = Brukerindeks.class.getResourceAsStream("/brukere.html")) {
             IOUtils.copy(htmlFileStream, resp.getOutputStream());
