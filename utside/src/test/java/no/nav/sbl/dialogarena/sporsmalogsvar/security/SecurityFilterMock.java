@@ -1,4 +1,4 @@
-package sporsmalogsvar;
+package no.nav.sbl.dialogarena.sporsmalogsvar.security;
 
 import java.io.IOException;
 

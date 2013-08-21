@@ -57,13 +57,13 @@ public class ApplicationContext {
 
 	@Bean
 	public SporsmalOgSvarPortType sporsmalOgSvarPortType() {
-		return createPortType(System.getProperty("henvendelser.webservice.sporsmal.url"), "classpath:SporsmalOgSvar.wsdl",
+		return createPortType(System.getProperty("spormalogsvarendpoint.url"), "classpath:SporsmalOgSvar.wsdl",
 				SporsmalOgSvarPortType.class);
 	}
 
 	@Bean
 	public HenvendelsePortType henvendelsePortType() {
-		return createPortType(System.getProperty("henvendelser.webservice.felles.url"), "classpath:Henvendelse.wsdl",
+		return createPortType(System.getProperty("henvendelseendpoint.url"), "classpath:Henvendelse.wsdl",
 				HenvendelsePortType.class);
 	}
 

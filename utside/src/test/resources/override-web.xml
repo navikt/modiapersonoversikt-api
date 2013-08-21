@@ -9,9 +9,19 @@
 <!--         <param-value>no.nav.sbl.dialogarena.minehenvendelser.config.MockApplicationContext</param-value> -->
 <!--     </context-param> -->
 
+    <servlet>
+        <servlet-name>Brukerindeks</servlet-name>
+        <servlet-class>no.nav.sbl.dialogarena.sporsmalogsvar.servlet.Brukerindeks</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Brukerindeks</servlet-name>
+        <url-pattern>/index.html</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>HttpSessionSecurityIntegrationFilter</filter-name>
-        <filter-class>sporsmalogsvar.SecurityFilterMock</filter-class>
+        <filter-class>no.nav.sbl.dialogarena.sporsmalogsvar.security.SecurityFilterMock</filter-class>
     </filter>
 
     <filter-mapping>
