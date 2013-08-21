@@ -51,16 +51,19 @@ jQuery(document).ready(function ($) {
 	});
 
     if ($('#submitFodselsnummer').length > 0) {
-        var top = $('#submitFodselsnummer').position().top + "px";
-        var left = $('#submitFodselsnummer').position().left + "px";
-        var height = $('#submitFodselsnummer').innerHeight() + "px";
+        var scaling = 0.8;
+        var height = $('#submitFodselsnummer').innerHeight();
+        var posDiff = (height*(1-scaling)/2);
+        var top = $('#submitFodselsnummer').position().top + posDiff + "px";
+        var left = $('#submitFodselsnummer').position().left + posDiff + "px";
+        height = height*scaling;
 
         Modig.ajaxLoader.register({
             urlPattern: /searchPanel-hentPersonForm-submitFodselsnummer/,
             placeElement: '#submitFodselsnummer',
             placement: 'hide',
             imageUrl: '/modiabrukerdialog/img/ajaxloader/hvit/loader_hvit_48.gif',
-            css: 'position: absolute; top:' + top + '; left:' + left + '; height:' + height
+            css: 'position: absolute; top:' + top + '; left:' + left + '; height:' + height + 'px'
         });
     }
 });

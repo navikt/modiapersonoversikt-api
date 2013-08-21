@@ -179,7 +179,11 @@ H3, ._H3 {
             font-size: 1.8rem;
             margin-bottom: 1rem;
         }
-        
+
+        .dobbeldato LABEL {
+            color: #3e3832;
+        }
+
 		FORM {
             width: 50%;
             H2 {
@@ -221,31 +225,85 @@ H3, ._H3 {
 	/* Brukerprofil */
 	.brukerprofil {
 
-		padding-left: 28px;
+		padding-left: 32px;
 
 		INPUT[type=radio]~LABEL {
-			margin-left: -28px;
+			margin-left: -30px;
+            padding-left: 30px;
 		}
 
 		INPUT[type="submit"]:disabled, INPUT[type="button"]:disabled {
 			cursor: default;
 		}
 
+        #forkastButton {
+            margin-left: 10px;
+        }
+
 		FIELDSET {
 			border: none;
 			border-top: 1px solid #ddd;
-			padding-top: 3rem;
-			margin: 0 0 30px 0;
-			max-width: 50rem;
+			padding-top: 2rem;
+            padding-bottom: 0;
+			margin: 0 0 2rem 0;
+			max-width: 45rem;
+            padding-left: 0;
+
+            &:first-of-type {
+                border-top: none;
+                padding-top: 1px;
+            }
+
+            &:last-of-type {
+                margin-bottom: 40px;
+            }
 
 			LEGEND {
 				._H2;
 				position: absolute;
 			}
 
+            .gatenavn, .husnummer, .husbokstav, .bolignummer, .poststed, .postnummer {
+                display: inline-block;
+                float: none !important;
+            }
+
+            .gyldigTil {
+                width: 20%;
+                min-width: 125px;
+            }
+
+            .poststed {
+                width: 33.5%;
+            }
+
+            .husnummer, .husbokstav, .bolignummer, .postnummer {
+                width: 12% !important;
+            }
+
+            .husnummer, .husbokstav, .bolignummer, .poststed {
+                margin-left: 10px;
+            }
+
+
+            .bostedfolkeregistre {
+                p {
+                    margin-top: 5px;
+                    margin-bottom: 19px;
+                }
+            }
+
+            .midlertidigNorge {
+                INPUT[type="radio"]:checked + label + div {
+                    margin-bottom: 24px;
+                }
+            }
+
 			.endringsinformasjon {
-				font-size: 0.857rem;
+				font-size: 0.8rem;
 				color: #999;
+                position: relative;
+                top: -7px;
 			}
 
 			.sublegend {
@@ -278,6 +336,7 @@ H3, ._H3 {
 				margin-top: 1rem;
 				text-transform: uppercase;
 				position: relative;
+                min-height: 20px !important;
 			}
 
 			LABEL, DIV.label-wrapper {
@@ -342,12 +401,12 @@ H3, ._H3 {
 
             .adresselinjer {
                 INPUT {
-                    margin-bottom: 5px;
+                    margin-bottom: 10px;
                 }
             }
 
             #adresseUtlandLand {
-                margin-bottom: 5px;
+                margin-bottom: 10px;
             }
 
             #kontonummer {
@@ -530,16 +589,26 @@ H3, ._H3 {
 		H1 {
 			margin-top: 7px;
 		}
+
+        [class*="knapp-lenke"] {
+            font-weight: 600;
+        }
+
 		#toggle-kjerneinfo {
 			display: block;
 
             span {
-                margin-left: 12px;
                 padding-left: 0px;
                 &:before {
                     content: url(../img/pil-hoyre.svg);
                     position: absolute;
                     margin: 1px 0 0 -12px;
+                    -moz-transform: scaleX(-1);
+                    -o-transform: scaleX(-1);
+                    -webkit-transform: scaleX(-1);
+                    transform: scaleX(-1);
+                    filter: FlipH;
+                    -ms-filter: "FlipH";
                 }
             }
 		}
@@ -547,6 +616,7 @@ H3, ._H3 {
 			text-align: left;
 			padding: 0;
             margin-top: 13px;
+            margin-bottom: 15px;
 		}
 		&.kvinne {
 			background-size: 55px;
@@ -555,12 +625,12 @@ H3, ._H3 {
 
         &.active {
             #toggle-kjerneinfo span:before {
-                -moz-transform: scaleX(-1);
-                -o-transform: scaleX(-1);
-                -webkit-transform: scaleX(-1);
-                transform: scaleX(-1);
-                filter: FlipH;
-                -ms-filter: "FlipH";
+                -moz-transform: none;
+                -o-transform: none;
+                -webkit-transform: none;
+                transform: none;
+                filter: none;
+                -ms-filter: none;
             }
         }
 	}
