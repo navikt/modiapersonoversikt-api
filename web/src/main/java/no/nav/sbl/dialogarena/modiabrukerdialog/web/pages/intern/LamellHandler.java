@@ -1,8 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 import no.nav.brukerprofil.BrukerprofilPanel;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.core.exception.ApplicationException;
@@ -19,6 +16,10 @@ import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
@@ -145,7 +146,7 @@ public class LamellHandler implements Serializable {
         return newLamellFactory(LAMELL_BRUKERHENVENDELSER, "H", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new BrukerhenvendelserPanel(id, fnrFromRequest));
+                return addLerretToListAndReturn(new BrukerhenvendelserPanel(id, fnrFromRequest, null)); //TODO: Missing MeldingService
             }
         });
     }

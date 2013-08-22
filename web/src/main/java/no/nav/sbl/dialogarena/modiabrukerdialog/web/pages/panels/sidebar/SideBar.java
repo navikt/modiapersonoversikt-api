@@ -9,7 +9,7 @@ public class SideBar extends Panel {
     public SideBar(String id, String fnr) {
         super(id);
         add(new VisittkortPanel("visittkortPanel", fnr));
-        add(new SporsmalOgSvarPanel("besvarePanel", fnr));
+        add(new SporsmalOgSvarPanel("besvarePanel", fnr, null)); //TODO: Missing MeldingService
     }
 
 }
