@@ -152,6 +152,25 @@ H3, ._H3 {
 
 /* Individuelle lameller */
 .lamell {
+    .lerret {
+        .oppfolging-lenker {
+            padding-bottom: 2rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid #d1d1d1;
+
+            DIV {
+                display: inline-block;
+                width: auto;
+                float: none;
+                margin-right: 5rem;
+
+                DT, DD {
+                    width: auto;
+                }
+            }
+        }
+    }
+
 	UL.arbeisdgiver {
 		padding-left: 0;
 		list-style-type: none;
@@ -175,9 +194,14 @@ H3, ._H3 {
 
 	/* Kontrakter */
 	&.kontrakter {
+
+        H3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.7rem;
+        }
+
         SECTION > H1 {
             font-size: 1.8rem;
-            margin-bottom: 1rem;
         }
 
         .dobbeldato LABEL {
@@ -219,6 +243,14 @@ H3, ._H3 {
 					width: 100%;
 				}
 			}
+
+            SECTION {
+                padding-top: 0;
+            }
+
+            H1 {
+                margin: 2rem 0;
+            }
 		}
 	}
 
@@ -459,8 +491,7 @@ H3, ._H3 {
 			margin-top: 0;
 
 			> SECTION H1 {
-				._H2;
-				margin-bottom: 2rem;
+				margin-bottom: 1rem;
 			}
 		}
 
@@ -495,7 +526,8 @@ H3, ._H3 {
 		}
 
 		.arbeidssituasjon {
-			margin: 0 0 2rem 3.8%;
+			margin: 0 0 0 3.8%;
+            padding-bottom: 1.3rem;
 			float: right;
 
 			.arbeisdgiver {
@@ -504,7 +536,7 @@ H3, ._H3 {
 		}
 
 		.barnet {
-			margin: 0 0 2rem 0;
+			margin: 0;
 		}
 
 		SECTION.periode, SECTION[title=Periode] {
@@ -547,6 +579,11 @@ H3, ._H3 {
 				position: absolute;
 				left: 50%;
 			}
+
+            DL {
+                font-family: Arial, Helvetica, sans-serif;
+                font-weight: normal;
+            }
 		}
 
 		.gradering {
@@ -600,15 +637,9 @@ H3, ._H3 {
             span {
                 padding-left: 0px;
                 &:before {
-                    content: url(../img/pil-hoyre.svg);
+                    content: url(../img/pil-venstre.svg);
                     position: absolute;
-                    margin: 1px 0 0 -12px;
-                    -moz-transform: scaleX(-1);
-                    -o-transform: scaleX(-1);
-                    -webkit-transform: scaleX(-1);
-                    transform: scaleX(-1);
-                    filter: FlipH;
-                    -ms-filter: "FlipH";
+                    margin: 1px 0 0 -15px;
                 }
             }
 		}
@@ -625,12 +656,7 @@ H3, ._H3 {
 
         &.active {
             #toggle-kjerneinfo span:before {
-                -moz-transform: none;
-                -o-transform: none;
-                -webkit-transform: none;
-                transform: none;
-                filter: none;
-                -ms-filter: none;
+                content: url(../img/pil-hoyre.svg);
             }
         }
 	}
