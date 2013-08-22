@@ -11,8 +11,10 @@ jQuery(document).ready(function ($) {
 		var sidebar = $(this);
 		if (sidebar.css('position') == 'absolute') {
 			if (sidebar.css('right') == '-385px') {
+                sidebar.addClass('expanded');
 				sidebar.animate({right: '0'}, '25');
 			} else {
+                sidebar.removeClass('expanded');
 				sidebar.animate({right: '-385px'}, '25');
 			}
 		}
