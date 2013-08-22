@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.melding;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.HarMeldingsliste;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.InnboksModell;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.MeldingslisteDelegat;
@@ -29,10 +30,14 @@ public class AlleMeldingerPanel extends Panel implements IHeaderContributor, Har
 
     private final MeldingslisteDelegat delegat;
 
-    public AlleMeldingerPanel(String id, final InnboksModell innboksModell, MeldingslisteDelegat delegat) {
+    private final MeldingService service;
+
+    public AlleMeldingerPanel(String id, final InnboksModell innboksModell, MeldingslisteDelegat delegat,
+                              MeldingService service) {
         super(id);
         setOutputMarkupId(true);
         this.delegat = delegat;
+        this.service = service;
 
         add(new Label(INGEN_MELDINGER_ID, new StringResourceModel("ingen-meldinger", this, null))
                 .add(visibleIf(innboksModell.ingenMeldinger())));
