@@ -48,8 +48,7 @@ public class Intern extends BasePage {
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
     private final SjekkForlateSideAnswer answer;
     private final ModiaModalWindow modalWindow;
-
-	private LamellHandler lamellHandler;
+    private LamellHandler lamellHandler;
 
     public Intern(PageParameters pageParameters) {
         this.answer = new SjekkForlateSideAnswer();
@@ -78,7 +77,6 @@ public class Intern extends BasePage {
         handleNewFnrFoundEvent(target, pageParameters, Intern.class);
     }
 
-
     @RunOnEvents(GOTO_HENT_PERSONPAGE)
     public void gotoHentPersonPage(AjaxRequestTarget target, String query) {
         PageParameters pageParameters = new PageParameters();
@@ -104,26 +102,26 @@ public class Intern extends BasePage {
         }
     }
 
-	@RunOnEvents(PERSONSOK_FNR_CLICKED)
-	public void personsokresultatClicked(AjaxRequestTarget target, String query) {
-		send(getPage(), Broadcast.DEPTH, new NamedEventPayload(FNR_CHANGED, query));
-	}
+    @RunOnEvents(PERSONSOK_FNR_CLICKED)
+    public void personsokresultatClicked(AjaxRequestTarget target, String query) {
+        send(getPage(), Broadcast.DEPTH, new NamedEventPayload(FNR_CHANGED, query));
+    }
 
-	@RunOnEvents(HENTPERSON_FODSELSNUMMER_IKKE_TILGANG)
-	public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
-		send(getPage(), Broadcast.BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
-	}
+    @RunOnEvents(HENTPERSON_FODSELSNUMMER_IKKE_TILGANG)
+    public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
+        send(getPage(), Broadcast.BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
+    }
 
-	private void instantiateComponents(String fnrFromRequest) {
+    private void instantiateComponents(String fnrFromRequest) {
         add(
-		        new Button("toggle-sok"),
-		        new HentPersonPanel("searchPanel"),
-		        new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
-		        new PersonsokPanel("personsokPanel").setVisible(true),
-		        lamellHandler.createLamellPanel("lameller", fnrFromRequest),
-		        new SideBar("sideBar", fnrFromRequest).setVisible(true),
-		        createNullstillLink(modalWindow),
-		        modalWindow
+                new Button("toggle-sok"),
+                new HentPersonPanel("searchPanel"),
+                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
+                new PersonsokPanel("personsokPanel").setVisible(true),
+                lamellHandler.createLamellPanel("lameller", fnrFromRequest),
+                new SideBar("sideBar", fnrFromRequest).setVisible(true),
+                createNullstillLink(modalWindow),
+                modalWindow
         );
     }
 
