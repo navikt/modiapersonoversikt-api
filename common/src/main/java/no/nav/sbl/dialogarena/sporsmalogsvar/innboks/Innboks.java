@@ -32,7 +32,7 @@ public class Innboks extends Panel implements MeldingslisteDelegat {
         setDefaultModel(this.innboksModell);
         setOutputMarkupId(true);
 
-        AlleMeldingerPanel alleMeldinger = new AlleMeldingerPanel("meldinger", innboksModell, this, service);
+        AlleMeldingerPanel alleMeldinger = new AlleMeldingerPanel("meldinger", innboksModell, this);
         add(alleMeldinger);
         meldingslister.add(alleMeldinger);
         
