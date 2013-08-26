@@ -15,9 +15,6 @@ import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.wicket.BehaviorPolicyAuthorizationStrategy;
 import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
-import no.nav.modig.wicket.errorhandling.pages.ApplicationExceptionPage;
-import no.nav.modig.wicket.errorhandling.pages.SystemExceptionPage;
-import no.nav.modig.wicket.events.NamedEventDispatcher;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
@@ -35,6 +32,7 @@ import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+
 import java.util.Locale;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
@@ -104,15 +102,11 @@ public class WicketApplication extends WebApplication {
 		compoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(kjerneinfoPep));
 		getSecuritySettings().setAuthorizationStrategy(compoundAuthorizationStrategy);
 
-        new ApplicationSettingsConfig()
-                .withApplicationExceptionPage(ApplicationExceptionPage.class)
-                .withInternFeilSide(SystemExceptionPage.class)
-                .configure(this);
+        new ApplicationSettingsConfig().configure(this);
 
         getExceptionSettings().setUnexpectedExceptionDisplay(IExceptionSettings.SHOW_INTERNAL_ERROR_PAGE);
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
 
-        getFrameworkSettings().add(new NamedEventDispatcher());
 
         new ModiaApplicationConfigurator()
                 .withExceptionHandler(true)
