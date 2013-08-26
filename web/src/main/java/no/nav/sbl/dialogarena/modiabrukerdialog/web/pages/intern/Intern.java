@@ -19,7 +19,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -54,7 +53,8 @@ public class Intern extends BasePage {
         this.answer = new SjekkForlateSideAnswer();
         this.modalWindow = createModalWindow("modal");
         lamellHandler = new LamellHandler();
-        instantiateComponents(pageParameters.get("fnr").toString(null));
+        instantiateComponents(pageParameters.get("fnr").toString(null),
+                pageParameters.get("oppgaveId").toString(null));
     }
 
     @Override
@@ -105,14 +105,13 @@ public class Intern extends BasePage {
 		send(getPage(), Broadcast.BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
 	}
 
-	private void instantiateComponents(String fnrFromRequest) {
+	private void instantiateComponents(String fnrFromRequest, String oppgaveIdFromRequest) {
         add(
-		        new Button("toggle-sok"),
 		        new HentPersonPanel("searchPanel"),
 		        new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
 		        new PersonsokPanel("personsokPanel").setVisible(true),
 		        lamellHandler.createLamellPanel("lameller", fnrFromRequest),
-		        new SideBar("sideBar", fnrFromRequest).setVisible(true),
+		        new SideBar("sideBar", fnrFromRequest, oppgaveIdFromRequest).setVisible(true),
 		        createNullstillLink(modalWindow),
 		        modalWindow
         );

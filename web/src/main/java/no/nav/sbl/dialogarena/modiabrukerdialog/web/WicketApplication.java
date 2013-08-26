@@ -22,9 +22,11 @@ import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.authorization.strategies.CompoundAuthorizationStrategy;
+import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.settings.IExceptionSettings;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -113,6 +115,7 @@ public class WicketApplication extends WebApplication {
                 .configure(this);
 
         mountPage("/person/${fnr}", Intern.class);
+        mountPage("/brukerdialog/${oppgaveId}", BrukerdialogRedirect.class);
         mountPage("internal/selftest", SelfTestPage.class);
 
         setSpringComponentInjector();
@@ -128,5 +131,15 @@ public class WicketApplication extends WebApplication {
 
     protected void setSpringComponentInjector() {
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
+    }
+
+    public static class BrukerdialogRedirect extends WebPage {
+
+        public BrukerdialogRedirect(PageParameters parameters) {
+            super(parameters);
+            //TODO kall til besvareHenvendelse, hent fnr for oppgaveId
+            parameters.set("fnr", "28088834986");
+            setResponsePage(Intern.class, parameters);
+        }
     }
 }

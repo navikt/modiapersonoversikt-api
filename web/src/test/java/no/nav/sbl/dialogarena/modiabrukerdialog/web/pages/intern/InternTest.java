@@ -11,7 +11,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.junit.Ignore;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,6 +20,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
+import static no.nav.modig.common.MDCOperations.MDC_CALL_ID;
+import static no.nav.modig.common.MDCOperations.generateCallId;
+import static no.nav.modig.common.MDCOperations.putToMDC;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 
@@ -31,8 +34,12 @@ public class InternTest extends TestSecurityBaseClass {
     @Inject
     private FluentWicketTester<?> fluentWicketTester;
 
+    @Before
+    public void setupMDC() {
+        putToMDC(MDC_CALL_ID, generateCallId());
+    }
+
     @Test
-    @Ignore
     public void shouldLoadPage(){
         Parameters param = new Parameters();
         param.pageParameters.set("fnr", "12037649749");

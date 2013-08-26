@@ -28,10 +28,10 @@
             kjerneinfoDefault
             , personsokDefault
             , brukerhenvendelserDefault
-            , sykemeldingsperioderTest
-            , kontrakterTest
-            , brukerprofilTest
-            , behandleBrukerprofilTest
+            , sykemeldingsperioderDefaultPelsd4r21
+            , kontrakterDefault
+            , brukerprofilDefault
+            , behandleBrukerprofilDefault
         </param-value>
     </context-param>
 

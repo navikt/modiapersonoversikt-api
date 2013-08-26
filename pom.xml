@@ -200,7 +200,7 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-jetty</artifactId>
                 <scope>test</scope>
-                <version>1.0.16</version>
+                <version>1.0.17</version>
             </dependency>
 
             <dependency>

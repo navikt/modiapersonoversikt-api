@@ -6,10 +6,12 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 public class SideBar extends Panel {
 
-    public SideBar(String id, String fnr) {
+    public SideBar(String id, String fnr, String oppgaveIdFromRequest) {
         super(id);
-        add(new VisittkortPanel("visittkortPanel", fnr));
-        add(new SporsmalOgSvarPanel("besvarePanel", fnr, null)); //TODO: Missing MeldingService
+        VisittkortPanel visittkortPanel = new VisittkortPanel("visittkortPanel", fnr);
+        SporsmalOgSvarPanel besvarePanel = new SporsmalOgSvarPanel("besvarePanel", fnr, null);
+        besvarePanel.setVisible(null != oppgaveIdFromRequest);
+        add(visittkortPanel, besvarePanel);
     }
 
 }
