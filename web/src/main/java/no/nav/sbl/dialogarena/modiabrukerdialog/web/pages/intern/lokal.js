@@ -94,7 +94,6 @@ function widthChanged() {
     if (sidebar.css('position') == 'absolute') {
         sidebar.addClass('expanded');
         sidebar.css('right', '0px');
-        setTimeout(closeSidebar, 3000);
     }
 }
 
