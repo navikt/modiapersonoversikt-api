@@ -27,7 +27,7 @@
         <modig.wicket.version>1.0.21</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>1.0.0</modig.lang.version>
-        <modig.frontend.wicket.version>1.0.22</modig.frontend.wicket.version>
+        <modig.frontend.wicket.version>1.0.23-SNAPSHOT</modig.frontend.wicket.version>
         <modig.core.version>1.0.1</modig.core.version>
         <modig.security.version>1.0.10</modig.security.version>
 		<modig.log.version>1.1.0</modig.log.version>
@@ -50,7 +50,7 @@
         <junit.dep.version>4.10</junit.dep.version>
         <!-- Modia-komponenter-->
         <personsok.version>0.0.86</personsok.version>
-		<kjerneinfo.versjon>1.0.24</kjerneinfo.versjon>
+		<kjerneinfo.versjon>1.0.25-SNAPSHOT</kjerneinfo.versjon>
     </properties>
 
     <dependencyManagement>
