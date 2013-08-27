@@ -9,9 +9,7 @@
     <artifactId>modiabrukerdialog-web</artifactId>
     <name>${project.artifactId}</name>
     <packaging>war</packaging>
-    <properties>
-        <fitnesse.port>9977</fitnesse.port>
-    </properties>
+
     <dependencies>
 
         <dependency>
@@ -88,15 +86,6 @@
             <artifactId>sporsmal-og-svar-innside</artifactId>
         </dependency>
 
-	    <dependency>
-		    <groupId>no.nav</groupId>
-		    <artifactId>personsok-search</artifactId>
-	    </dependency>
-
-	    <dependency>
-		    <groupId>no.nav</groupId>
-		    <artifactId>personsok-result</artifactId>
-	    </dependency>
 
         <!-- End modia komponenter -->
 
@@ -105,6 +94,12 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-core-test</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
@@ -150,6 +145,12 @@
         </dependency>
 
         <dependency>
+            <groupId>javax.annotation</groupId>
+            <artifactId>jsr250-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-testcertificates</artifactId>
         </dependency>
@@ -159,57 +160,22 @@
             <artifactId>modig-security-loginmodule</artifactId>
         </dependency>
 
-        <!-- Jetty -->
-
         <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-webapp</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-annotations</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-jetty</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-jaas</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-util</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>org.eclipse.jetty.orbit</groupId>
-            <artifactId>javax.annotation</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-jetty</artifactId>
         </dependency>
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-fitnesse</artifactId>
         </dependency>
 
         <dependency>
@@ -288,7 +254,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-web</artifactId>
-            <version>${spring.version}</version>
         </dependency>
 
         <dependency>
@@ -348,17 +313,6 @@
             <artifactId>jul-to-slf4j</artifactId>
         </dependency>
 
-        <!-- Jetty -->
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-plus</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-security</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
@@ -378,57 +332,35 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.groovy</groupId>
-            <artifactId>groovy-all</artifactId>
-            <version>2.1.5</version>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.fitnesse</groupId>
-            <artifactId>fitnesse</artifactId>
-            <classifier>embedded</classifier>
-        </dependency>
-
-        <dependency>
-            <groupId>org.fitnesse</groupId>
-            <artifactId>fitlibrary</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>args4j</groupId>
-            <artifactId>args4j</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-core</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.webbitserver</groupId>
-            <artifactId>webbit</artifactId>
-        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -461,7 +393,6 @@
         </testResources>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>1.2</version>
                 <executions>
@@ -479,28 +410,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <!--<plugin>-->
-                <!--<groupId>org.eclipse.jetty</groupId>-->
-                <!--<artifactId>jetty-maven-plugin</artifactId>-->
-                <!--<version>${jetty.version}</version>-->
-                <!--<configuration>-->
-                    <!--<connectors>-->
-                        <!--<connector implementation="org.eclipse.jetty.server.nio.SelectChannelConnector">-->
-                            <!--<port>9081</port>-->
-                            <!--<maxIdleTime>3600000</maxIdleTime>-->
-                        <!--</connector>-->
-                    <!--</connectors>-->
-                    <!--<scanIntervalSeconds>10</scanIntervalSeconds>-->
-                    <!--<systemPropertiesFile>${project.basedir}/target/test-classes/jetty-environment.properties-->
-                    <!--</systemPropertiesFile>-->
-                    <!--<systemProperties>-->
-                        <!--<systemProperty>-->
-                            <!--<name>logback.configurationFile</name>-->
-                            <!--<value>${project.basedir}/target/test-classes/logback-test.xml</value>-->
-                        <!--</systemProperty>-->
-                    <!--</systemProperties>-->
-                <!--</configuration>-->
-            <!--</plugin>-->
 
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
@@ -526,38 +435,5 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>fitnesse</id>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.codehaus.mojo</groupId>
-                            <artifactId>exec-maven-plugin</artifactId>
-                            <executions>
-                                <execution>
-                                    <goals>
-                                        <goal>exec</goal>
-                                    </goals>
-                                </execution>
-                            </executions>
-                            <configuration>
-                                <classpathScope>test</classpathScope>
-                                <executable>java</executable>
-                                <arguments>
-                                    <argument>-cp</argument>
-                                    <classpath />
-                                    <argument>no.nav.sbl.dialogarena.dokumentinnsending.FitNesseMain</argument>
-                                    <argument>-restart-server</argument>
-                                    <argument>-port</argument>
-                                    <argument>${fitnesse.port}</argument>
-                                </arguments>
-                            </configuration>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-    </profiles>
+
 </project>

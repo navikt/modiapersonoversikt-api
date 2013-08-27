@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
+import no.nav.modig.core.test.FilesAndDirs;
 import no.nav.modig.security.loginmodule.DummyRole;
 import no.nav.modig.testcertificates.TestCertificates;
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
@@ -12,8 +13,6 @@ import java.io.IOException;
 import static no.nav.modig.lang.collections.FactoryUtils.gotKeypress;
 import static no.nav.modig.lang.collections.RunnableUtils.first;
 import static no.nav.modig.lang.collections.RunnableUtils.waitFor;
-import static no.nav.modig.test.util.FilesAndDirs.TEST_RESOURCES;
-import static no.nav.modig.test.util.FilesAndDirs.WEBAPP_SOURCE;
 import static no.nav.sbl.dialogarena.common.jetty.Jetty.usingWar;
 
 
@@ -31,12 +30,13 @@ public class StartJetty {
         SystemProperties.setFrom("environment-t8.properties");
         TestCertificates.setupKeyAndTrustStore();
 
-        Jetty jetty = usingWar(WEBAPP_SOURCE)
+        Jetty jetty = usingWar(FilesAndDirs.WEBAPP_SOURCE)
                 .at("modiabrukerdialog")
                 .port(8080)
-                .overrideWebXml(new File(TEST_RESOURCES, "jetty-web.xml"))
+                .overrideWebXml(new File(FilesAndDirs.TEST_RESOURCES, "jetty-web.xml"))
                 .withLoginService(createLoginService())
                 .buildJetty();
+
         jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
     }
 

@@ -26,9 +26,8 @@
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
         <modig.wicket.version>1.0.20</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
-        <modig.lang.version>1.0.1</modig.lang.version>
+        <modig.lang.version>1.1.0</modig.lang.version>
         <modig.frontend.wicket.version>1.0.20</modig.frontend.wicket.version>
-        <modig.core.version>1.0.1</modig.core.version>
         <modig.security.version>1.0.6</modig.security.version>
 		<modig.log.version>1.1.0</modig.log.version>
         <modig-testcertificates-version>1.0.0</modig-testcertificates-version>
@@ -38,14 +37,6 @@
         <mockito.core.version>1.9.5</mockito.core.version>
         <slf4j.version>1.7.5</slf4j.version>
         <jsoup.version>1.7.2</jsoup.version>
-        <jetty.version>9.0.4.v20130625</jetty.version>
-        <jetty-plus.version>7.0.0pre3</jetty-plus.version>
-        <jetty-naming.version>6.1H.8</jetty-naming.version>
-        <jetty-util.version>6.1.26</jetty-util.version>
-        <javax.annotation.version>1.1.0.v201108011116</javax.annotation.version>
-        <servlet.api.version>2.5</servlet.api.version>
-        <fitnesse.version>20111026</fitnesse.version>
-        <fitlibrary.version>2.0</fitlibrary.version>
         <webbit.version>0.4.14</webbit.version>
         <!-- Modia-komponenter-->
         <personsok.version>0.0.79</personsok.version>
@@ -94,7 +85,13 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-core</artifactId>
-                <version>${modig.core.version}</version>
+                <version>1.0.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-core-test</artifactId>
+                <version>1.0.0</version>
             </dependency>
 
             <dependency>
@@ -118,16 +115,10 @@
 			</dependency>
 
             <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-log-common</artifactId>
-                <version>${modig.log.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.eclipse.jetty.orbit</groupId>
-                <artifactId>javax.annotation</artifactId>
-                <version>${javax.annotation.version}</version>
-                <scope>test</scope>
+                <groupId>javax.annotation</groupId>
+                <artifactId>jsr250-api</artifactId>
+                <version>1.0</version>
+                <scope>provided</scope>
             </dependency>
 
             <dependency>
@@ -135,6 +126,7 @@
                 <artifactId>modig-log-common</artifactId>
                 <version>${modig.log.version}</version>
             </dependency>
+
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
@@ -150,57 +142,19 @@
                 <scope>test</scope>
             </dependency>
 
-            <!-- Jetty -->
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-server</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-plus</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-security</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-webapp</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-annotations</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-jaas</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty</groupId>
-                <artifactId>jetty-util</artifactId>
-                <version>${jetty.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-jetty</artifactId>
+                <version>1.0.20-SNAPSHOT</version>
                 <scope>test</scope>
-                <version>1.0.17</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-jaas</artifactId>
+                <version>9.0.5.v20130815</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
@@ -579,13 +533,6 @@
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
-                <artifactId>modig-fitnesse</artifactId>
-                <version>${modig.fitnesse.version}</version>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.modig</groupId>
                 <artifactId>modig-testcertificates</artifactId>
                 <version>${modig-testcertificates-version}</version>
                 <scope>test</scope>
@@ -613,35 +560,6 @@
             </dependency>
 
             <dependency>
-                <groupId>org.fitnesse</groupId>
-                <artifactId>fitnesse</artifactId>
-                <version>${fitnesse.version}</version>
-                <classifier>embedded</classifier>
-                <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>org.fitnesse</groupId>
-                <artifactId>fitlibrary</artifactId>
-                <version>${fitlibrary.version}</version>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>commons-logging</groupId>
-                        <artifactId>commons-logging</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>log4j</groupId>
-                        <artifactId>log4j</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>junit</groupId>
-                        <artifactId>junit-dep</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-
-            <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>1.7.5</version>
@@ -659,13 +577,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>jul-to-slf4j</artifactId>
                 <version>${slf4j.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.webbitserver</groupId>
-                <artifactId>webbit</artifactId>
-                <version>${webbit.version}</version>
-                <scope>test</scope>
             </dependency>
 
             <dependency>
