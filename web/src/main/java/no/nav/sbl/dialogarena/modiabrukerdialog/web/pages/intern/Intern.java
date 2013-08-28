@@ -129,6 +129,8 @@ public class Intern extends BasePage {
         return new AjaxLink<Boolean>("nullstill") {
             @Override
             public void onClick(AjaxRequestTarget target) {
+                modalWindow.setRedirectClass(HentPersonPage.class);
+                modalWindow.setPageParameters(new PageParameters());
                 if (lamellHandler.hasUnsavedChanges()) {
                     modalWindow.show(target);
                 } else {
