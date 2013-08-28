@@ -5,25 +5,27 @@ jQuery(document).ready(function ($) {
 
 	createTabHandler("modiabrukerdialog");
 
-	$('#toggle-kjerneinfo').on('click', toggleKjerneinfo);
+	$('#toggle-kjerneinfo, .kjerneinfo .lukk').on('click', toggleKjerneinfo);
+
+	$('.brukerprofillink').on('click', closeSidebar);
 
 	$('.sidebar').on('click', function () {
 		var sidebar = $(this);
-		if (sidebar.css('position') == 'absolute') {
-			if (sidebar.css('right') == '-385px') {
-				sidebar.animate({right: '0'}, '25');
-			} else {
-				sidebar.animate({right: '-385px'}, '25');
-			}
-		}
+        if (sidebar.css('right') == '-385px') {
+            openSidebar();
+        } else {
+            closeSidebar();
+        }
 	});
+
 
 	$('.sidebar > *').on('click', function (e) {
 		e.stopPropagation();
 	});
 
 	$('#toggle-personsok').on('click', checkIfToggleAvansertSok);
-	Modig.shortcutListener.on({alt: true, shift: true, key: 'A'}, checkIfToggleAvansertSok);
+	Modig.shortcutListener.on({key: 'A'}, checkIfToggleAvansertSok);
+	Modig.shortcutListener.on({alt: true, keyCode: 113}, checkIfToggleAvansertSok);
 
 	$('body').on('click', '.lamell .lamellhode > a', function () {
 		if ($('.main > .personsok').is(':visible')) {
@@ -49,17 +51,77 @@ jQuery(document).ready(function ($) {
 		css: 'margin-bottom: 20px;'
 	});
 
-	Modig.ajaxLoader.register({
-		urlPattern: /searchPanel-hentPersonForm-submitFodselsnummer/,
-		placeElement: '.search-intern',
-		placement: 'after',
-		imageUrl: '/modiabrukerdialog/img/ajaxloader/svart/loader_svart_64.gif',
-		css: 'margin: 30px 0 10px 130px; float: left;'
-	});
+    if ($('#submitFodselsnummer').length > 0) {
+        var scaling = 0.8;
+        var height = $('#submitFodselsnummer').innerHeight();
+        var posDiff = (height*(1-scaling)/2);
+        var top = $('#submitFodselsnummer').position().top + posDiff + "px";
+        var left = $('#submitFodselsnummer').position().left + posDiff + "px";
+        height = height*scaling;
+
+        Modig.ajaxLoader.register({
+            urlPattern: /searchPanel-hentPersonForm-submitFodselsnummer/,
+            placeElement: '#submitFodselsnummer',
+            placement: 'hide',
+            imageUrl: '/modiabrukerdialog/img/ajaxloader/hvit/loader_hvit_48.gif',
+            css: 'position: absolute; top:' + top + '; left:' + left + '; height:' + height + 'px'
+        });
+    }
+
+    detectWidthChange();
 });
 
+function detectWidthChange() {
+    var win = $(window);
+
+    /*
+     * Media queries i JS fungerer ikke i IE9. Vi vil oppdage når sidebaren glir ut til siden,
+     * som skjer når den er absolutt posisjonert. Sjekker derfor for dette.
+     */
+    var sidebarPositionedAbsolute = isSidebarPositionAbsolute();
+
+    win.resize(function () {
+        if (!sidebarPositionedAbsolute) {
+            widthChanged();
+        }
+        sidebarPositionedAbsolute = isSidebarPositionAbsolute();
+    });
+    widthChanged();
+}
+
+function widthChanged() {
+    var sidebar = $('aside.sidebar');
+    if (sidebar.css('position') == 'absolute') {
+        sidebar.addClass('expanded');
+        sidebar.css('right', '0px');
+    }
+}
+
+function openSidebar() {
+    var sidebar = $('aside.sidebar');
+    if (isSidebarPositionAbsolute()) {
+        sidebar.addClass('expanded');
+        sidebar.animate({right: '0'}, '25');
+    }
+}
+
+function closeSidebar() {
+    var sidebar = $('aside.sidebar');
+    if (isSidebarPositionAbsolute()) {
+        sidebar.removeClass('expanded');
+        sidebar.animate({right: '-385px'}, '25');
+    }
+}
+
+function isSidebarPositionAbsolute() {
+    return $('aside.sidebar').css('position') == 'absolute';
+}
+
 function toggleKjerneinfo() {
-	var kjerneInfoElement = $('.main > .kjerneinfo'), toggleElement = $('#toggle-kjerneinfo'), visittkort = $('aside.sidebar > .visittkort');
+	var kjerneInfoElement = $('.main > .kjerneinfo');
+    var toggleElement = $('#toggle-kjerneinfo');
+    var visittkort = $('aside.sidebar > .visittkort');
+
 	if (kjerneInfoElement.is(':visible')) {
 		kjerneInfoElement.hide();
 		toggleElement.attr('title', (toggleElement.attr('data-show-text')));
@@ -68,6 +130,7 @@ function toggleKjerneinfo() {
 		kjerneInfoElement.show();
 		toggleElement.attr('title', (toggleElement.attr('data-hide-text')));
 		visittkort.addClass('active');
+        closeSidebar();
 
 		if ($('#personsokPanel').is(':visible')) {
 			toggleAvansertSok();

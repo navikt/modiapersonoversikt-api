@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +36,7 @@ public class SelfTestPage extends SelfTestBase {
     @Inject
     private SykmeldingsperioderPing sykmeldingsperioderPing;
 
-    public SelfTestPage(PageParameters params) {
+    public SelfTestPage(PageParameters params) throws IOException {
         super("Modiabrukerdialog", params);
     }
 

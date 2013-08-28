@@ -17,10 +17,10 @@ import static no.nav.sbl.dialogarena.common.jetty.Jetty.usingWar;
 
 
 /**
- * Starter MODIA Brukerdialog lokalt p� Jetty.
+ * Starter MODIA Brukerdialog lokalt p? Jetty.
  *
- * - logg p� med bruker/passord: Z000001/Gosys017,
- * - s�k etter fornavn: 'aaa'
+ * - logg p? med bruker/passord: Z000001/Gosys017,
+ * - s?k etter fornavn: 'aaa'
  * - go nuts!
  */
 public class StartJetty {
@@ -29,6 +29,7 @@ public class StartJetty {
         SystemProperties.setFrom("jetty-environment.properties");
         SystemProperties.setFrom("environment-t8.properties");
         TestCertificates.setupKeyAndTrustStore();
+
 
         Jetty jetty = usingWar(FilesAndDirs.WEBAPP_SOURCE)
                 .at("modiabrukerdialog")

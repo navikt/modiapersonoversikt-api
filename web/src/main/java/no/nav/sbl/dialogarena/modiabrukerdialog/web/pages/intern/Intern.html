@@ -1,15 +1,18 @@
 <!DOCTYPE html>
 <html lang="no" xmlns:wicket="http://wicket.apache.org">
 <wicket:head>
-    <title>Intern arbeidsflate</title>
+		<title>Modia</title>
 </wicket:head>
 <wicket:extend>
     <body>
         <div wicket:id="modal"></div>
-        <div class="main">
+			<div class="main intern">
             <section class="navbar menu-intern active">
-                <button class="personsok-button" id="toggle-personsok" wicket:message="aria-label:personsok.apnetekst, title:personsok.apnetekst, data-apne:personsok.apnetekst, data-lukke:personsok.lukketekst">A</button>
-                <wicket:container wicket:id="searchPanel"/>
+                    <wicket:container wicket:id="searchPanel"/>
+					<button wicket:id="toggle-sok" class="personsok-button" id="toggle-personsok"
+							wicket:message="aria-label:personsok.apnetekst, title:personsok.apnetekst, data-apne:personsok.apnetekst, data-lukke:personsok.lukketekst">
+						A
+					</button>
                 <button class="nullstill-button" wicket:message="aria-label:hentperson.nullstillbruker, title:hentperson.nullstillbruker" wicket:id="nullstill"></button>
             </section>
              <wicket:container wicket:id="personsokPanel"/>

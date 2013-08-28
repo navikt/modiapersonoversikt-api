@@ -125,7 +125,6 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-log-filter</artifactId>
-            <scope>compile</scope>
         </dependency>
 
         <dependency>

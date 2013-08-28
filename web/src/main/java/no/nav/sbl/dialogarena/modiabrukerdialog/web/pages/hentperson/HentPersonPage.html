@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
 	<wicket:head>
-		<title>Brukerdialog</title>
+		<title>Modia</title>
 	</wicket:head>
 	<wicket:extend>
 		<body class="main hentperson">
 			<section class="navbar menu-intern active">
 				<img class="modia-logo" wicket:id="modia-logo"/>
 				<div id="hentPerson">
-					<button class="personsok-button personsok-movable" id="toggle-personsok"
-							wicket:message="aria-label:personsok.apnetekst, title:personsok.apnetekst, data-apne:personsok.apnetekst, data-lukke:personsok.lukketekst">
-						A
-					</button>
+                    <label class="ledetekst" for="foedselsnummerInput"><wicket:message key="personsok.ledetekst">[]</wicket:message></label>
 					<wicket:container wicket:id="searchPanel"/>
+                    <button class="personsok-button personsok-movable" id="toggle-personsok"
+                            wicket:message="aria-label:personsok.apnetekst, title:personsok.apnetekst, data-apne:personsok.apnetekst, data-lukke:personsok.lukketekst">
+                        A
+                    </button>
 				</div>
 			</section>
 			<wicket:container wicket:id="personsokPanel"/>
