@@ -4,16 +4,20 @@ import no.nav.modig.errorhandling.ModiaApplicationConfigurator;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.modia.constants.ModiaConstants;
+import no.nav.modig.modia.lamell.LamellPanel;
 import no.nav.modig.modia.lamell.ModalErrorPanel;
 import no.nav.modig.modia.liste.EkspanderingsListe;
 import no.nav.modig.modia.liste.Liste;
 import no.nav.modig.modia.navigation.KeyNavigationResourceReference;
 import no.nav.modig.modia.shortcuts.ShortcutListenerResourceReference;
+import no.nav.modig.modia.token.JqueryTokenValueChangeBehavior;
 import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.pagelet.spi.utils.SPIResources;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.wicket.BehaviorPolicyAuthorizationStrategy;
 import no.nav.modig.wicket.component.datepicker.DatePicker;
+import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
+import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.modig.wicket.errorhandling.pages.ApplicationExceptionPage;
 import no.nav.modig.wicket.errorhandling.pages.SystemExceptionPage;
@@ -28,6 +32,7 @@ import org.apache.wicket.authorization.strategies.CompoundAuthorizationStrategy;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.context.ApplicationContext;
@@ -82,7 +87,12 @@ public class WicketApplication extends WebApplication {
 		                BasePage.JS_RESOURCE,
 		                ShortcutListenerResourceReference.get(), //TODO: Flytt til MODIA modul ?
                         KeyNavigationResourceReference.get(),    //TODO: Flytt til MODIA modul ?
-                        Widget.JS_RESOURCE,                      //TODO: Flytt til MODIA modul ?
+                        Widget.JS_RESOURCE,
+                        LamellPanel.JS_RESOURCE,
+                        DatePicker.DATEPICKER_JS,
+                        DateRangePicker.JS_REFERENCE,
+                        JqueryTokenValueChangeBehavior.JS_REFERENCE,
+                        (JavaScriptResourceReference)ModigModalWindow.JS,
                         EkspanderingsListe.JS_RESOURCE,          //TODO: Flytt til MODIA modul ?
                         Liste.JS_RESOURCE,                       //TODO: Flytt til MODIA modul ?
                         DatePicker.JQUERY_PLACEHOLDER,
