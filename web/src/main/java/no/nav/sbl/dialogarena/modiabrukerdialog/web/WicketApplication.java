@@ -123,7 +123,7 @@ public class WicketApplication extends WebApplication {
                 .configure(this);
 
         mountPage("/person/${fnr}", Intern.class);
-        mountPage("/brukerdialog/${oppgaveId}", BrukerdialogRedirect.class);
+        mountPage("/person/${fnr}/besvaresporsmal/${oppgaveId}", Intern.class);
         mountPage("internal/selftest", SelfTestPage.class);
 
         setSpringComponentInjector();
@@ -141,13 +141,4 @@ public class WicketApplication extends WebApplication {
         getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
     }
 
-    public static class BrukerdialogRedirect extends WebPage {
-
-        public BrukerdialogRedirect(PageParameters parameters) {
-            super(parameters);
-            //TODO kall til besvareHenvendelse, hent fnr for oppgaveId
-            parameters.set("fnr", "28088834986");
-            setResponsePage(Intern.class, parameters);
-        }
-    }
 }
