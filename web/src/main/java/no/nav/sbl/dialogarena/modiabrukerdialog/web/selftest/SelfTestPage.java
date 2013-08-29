@@ -6,12 +6,12 @@ import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.wicket.selftest.SelfTestBase;
+import no.nav.personsok.consumer.utils.ping.PersonsokPing;
 import no.nav.sykmeldingsperioder.ping.SykmeldingsperioderPing;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,7 @@ public class SelfTestPage extends SelfTestBase {
     private static final Logger logger = getLogger(SelfTestPage.class);
 
     @Inject
-    @Named("personsokPing")
-    private Pingable personsokPing;
+    private PersonsokPing personsokPing;
 
     @Inject
     private KjerneinfoPing kjerneinfoPing;
@@ -42,10 +41,10 @@ public class SelfTestPage extends SelfTestBase {
 
     @Override
     protected void addToStatusList(List<AvhengighetStatus> statusList) {
-        statusList.addAll(getPingableComponentStatus(personsokPing));
         statusList.addAll(getPingableComponentStatus(kjerneinfoPing));
         statusList.addAll(getPingableComponentStatus(kontrakterPing));
         statusList.addAll(getPingableComponentStatus(sykmeldingsperioderPing));
+        statusList.addAll(getPingableComponentStatus(personsokPing));
     }
 
     private List<AvhengighetStatus> getPingableComponentStatus(Pingable pingable) {
