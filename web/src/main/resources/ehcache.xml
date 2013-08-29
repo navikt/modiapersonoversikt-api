@@ -9,6 +9,26 @@
     -->
     <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false" />
 
+    <cache name="kontaktinformasjonOgPreferanserCache" maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="60"
+           timeToLiveSeconds="60"
+           overflowToDisk="true"
+           maxElementsOnDisk="1000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="kjerneinformasjonCache" maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="60"
+           timeToLiveSeconds="60"
+           overflowToDisk="true"
+           maxElementsOnDisk="1000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+
     <cache name="kodeverkversjonCache" maxElementsInMemory="100"
            eternal="false"
            timeToIdleSeconds="3600"
