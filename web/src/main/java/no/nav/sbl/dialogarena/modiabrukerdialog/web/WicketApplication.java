@@ -32,7 +32,6 @@ import org.apache.wicket.authorization.strategies.CompoundAuthorizationStrategy;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.context.ApplicationContext;
@@ -92,7 +91,7 @@ public class WicketApplication extends WebApplication {
                         DatePicker.DATEPICKER_JS,
                         DateRangePicker.JS_REFERENCE,
                         JqueryTokenValueChangeBehavior.JS_REFERENCE,
-                        (JavaScriptResourceReference)ModigModalWindow.JS,
+                        ModigModalWindow.JS,
                         EkspanderingsListe.JS_RESOURCE,          //TODO: Flytt til MODIA modul ?
                         Liste.JS_RESOURCE,                       //TODO: Flytt til MODIA modul ?
                         DatePicker.JQUERY_PLACEHOLDER,
