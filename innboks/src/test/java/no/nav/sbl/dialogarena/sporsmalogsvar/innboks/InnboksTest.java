@@ -1,5 +1,15 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.innboks;
 
+import static java.util.Arrays.asList;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.containedInComponent;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.melding.AlleMeldingerPanel.INGEN_MELDINGER_ID;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.sporsmalogsvar.TestApplication;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.TestContext;
@@ -10,29 +20,19 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingsHeader;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
+
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.hamcrest.Matchers;
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.containedInComponent;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.melding.AlleMeldingerPanel.INGEN_MELDINGER_ID;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestContext.class)
@@ -73,7 +73,6 @@ public class InnboksTest {
     }
 
     @Test
-    @Ignore
     public void skalViseMeldingsoverskrifter() {
         when(henvendelsetjeneste.hentHenvendelseListe(FODSELSNUMMER))
                 .thenReturn(asList(lagSporsmalMedOpprettetDato(STANDARD_DATO), lagSporsmalMedOpprettetDato(STANDARD_DATO)));
@@ -136,6 +135,7 @@ public class InnboksTest {
                 .withHenvendelseType(Meldingstype.SPORSMAL.name())
                 .withTema(STANDARD_TEMA)
                 .withTraad("1")
+                .withBehandlingsresultat("overskrift#spsm")
                 .withOpprettetDato(opprettet);
     }
 
