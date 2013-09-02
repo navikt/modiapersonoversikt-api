@@ -7,9 +7,8 @@
         <version>2.1</version>
     </parent>
     <modules>
-        <module>common</module>
-        <module>innside</module>
-        <module>utside</module>
+        <module>besvare</module>
+        <module>innboks</module>
     </modules>
     <name>sporsmal-og-svar</name>
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål Og Svar - innside og utside.</description>
