@@ -83,7 +83,12 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar-innside</artifactId>
+            <artifactId>sporsmal-og-svar-innboks</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sporsmal-og-svar-besvare</artifactId>
         </dependency>
 
 
