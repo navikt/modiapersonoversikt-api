@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class Tjenesteoppsett {
+public class BesvareHenvendelseContext {
 
     @Inject
     private JaxWsFeatures jaxwsFeatures;
@@ -30,7 +30,7 @@ public class Tjenesteoppsett {
     }
 
     @Bean
-    public BesvareHenvendelsePortType besvareHenvendelsePortType() {
+    public BesvareHenvendelsePortType besvareSso() {
         return opprettBesvareHenvendelsePortType(new UserSAMLOutInterceptor());
     }
 

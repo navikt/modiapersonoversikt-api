@@ -42,8 +42,8 @@
 
 }
 
-.besvare-panel .feedbackPanel {
-    color: red;
+.besvare-panel .svar .temavelger {
+    margin-bottom: 1em;
 }
 
 .besvare-panel textarea {

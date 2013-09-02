@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare;
 import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
+import javax.inject.Named;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.BesvareModell;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.BesvareVM;
@@ -33,33 +34,37 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 public class BesvareSporsmalPanel extends Panel {
 
     @Inject
+    @Named("besvareSso")
     BesvareHenvendelsePortType service;
 
-    private FeedbackPanel feedbackPanel;
     public static final String SPORSMAL_OPPDATERT = "hendelser.sporsmal_oppdatert";
 
-    public BesvareSporsmalPanel(String id, BesvareModell model, FeedbackPanel feedbackPanel) {
-        super(id, model);
-        this.feedbackPanel = feedbackPanel;
+    public BesvareSporsmalPanel(String id) {
+        super(id);
         setOutputMarkupId(true);
+        BesvareModell besvareModell = new BesvareModell();
+        setDefaultModel(besvareModell);
+        FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+        feedbackPanel.setOutputMarkupId(true);
         add(
-                new SporsmalPanel("sporsmal", model),
-                new SvarForm("svar", model));
+                feedbackPanel,
+                new SporsmalPanel("sporsmal"),
+                new SvarForm("svar", besvareModell, feedbackPanel));
     }
 
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
         response.render(CssReferenceHeaderItem.forReference(
-                new CssResourceReference(BesvareSporsmalPanel.class, "../stylesheets/besvare.css")));
+                new CssResourceReference(BesvareSporsmalPanel.class, "../../stylesheets/besvare.css")));
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(BesvareSporsmalPanel.class, "textarea.js")));
         response.render(OnDomReadyHeaderItem.forScript("textarea();"));
     }
     
     private final class SvarForm extends Form<BesvareVM> {
 
-        public SvarForm(String id, final BesvareModell model) {
-            super(id, model);
+        public SvarForm(String id, final BesvareModell model, final FeedbackPanel feedbackPanel) {
+            super(id);
             TextArea<Object> fritekst = new TextArea<>("svar.fritekst");
             fritekst.setRequired(true);
             add(

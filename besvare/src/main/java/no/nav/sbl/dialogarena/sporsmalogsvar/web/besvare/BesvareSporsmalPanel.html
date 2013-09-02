@@ -8,6 +8,8 @@
 
 <wicket:panel>
 
+    <div wicket:id="feedback"></div>
+
     <section wicket:id="sporsmal" class="sporsmal"/>
 
     <form wicket:id="svar" class="svar">
@@ -21,7 +23,7 @@
             <input id="sensitiv" type="checkbox" wicket:id="svar.sensitiv"/>
             <label for="sensitiv">Inneholder sensitiv informasjon</label>
         </div>
-        <select wicket:id="svar.saksid" />        
+        <select wicket:id="svar.saksid" class="temavelger"/>
         <div>
             <a wicket:id="send" href="#" class="knapp send">Send</a>
             <a wicket:id="avbryt" href="#" class="knapp avbryt">Avbryt</a>
