@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.mock.BesvareHenvendelsePortTypeMock;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingskjedetyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingsstegtyper;
@@ -20,7 +22,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Import({BesvareHenvendelseConfig.Default.class, BesvareHenvendelseConfig.DefaultWithoutCNCheck.class})
+@Import({BesvareHenvendelseConfig.Default.class, BesvareHenvendelseConfig.DefaultWithoutCNCheck.class, BesvareHenvendelseConfig.Test.class})
 public class BesvareHenvendelseConfig {
 
     @Bean
@@ -76,4 +78,12 @@ public class BesvareHenvendelseConfig {
     })
     public static class DefaultWithoutCNCheck { }
 
+    @Profile({"test", "brukerhenvendelserTest"})
+    @Configuration
+    public static class Test {
+        @Bean
+        public BesvareHenvendelsePortType besvareSso() {
+            return new BesvareHenvendelsePortTypeMock();
+        }
+    }
 }
