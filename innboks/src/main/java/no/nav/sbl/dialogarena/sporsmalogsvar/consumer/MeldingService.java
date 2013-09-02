@@ -1,11 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
+
 import java.util.List;
+
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
-import org.apache.commons.collections15.Transformer;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
+import org.apache.commons.collections15.Transformer;
 
 public interface MeldingService {
 
@@ -22,25 +24,24 @@ public interface MeldingService {
         @Override
         public List<Melding> hentAlleMeldinger(String aktorId) {
         	Transformer<WSHenvendelse, Melding> somMelding = new Transformer<WSHenvendelse, Melding>() {
-    			@Override
-                public Melding transform(WSHenvendelse input) {
-    				Melding melding = new Melding()
-    					.withId(input.getBehandlingsId())
-    					.withFritekst(input.getBeskrivelse())
-    					.withOpprettet(input.getSistEndretDato())
-    					.withOverskrift(input.getOverskrift())
-    					.withTema(input.getTema());
-    				if (input instanceof no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMelding) {
-    					no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMelding wsMelding = (no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMelding) input;
-    					melding.withType(Meldingstype.valueOf(wsMelding.getType().name()));
-    					melding.withTraadId(wsMelding.getTraadId());
-    				} else {
-    					melding.withType(Meldingstype.DOKUMENTINNSENDING);
-    					melding.withTraadId("0");
-    				}
-    				return melding;
-    			}
-    		};
+                @Override
+                public Melding transform(WSHenvendelse wsMelding) {
+                	String henvendelseType = wsMelding.getHenvendelseType();
+                	if (!"SPORSMAL".equals(henvendelseType) && !"SVAR".equals(henvendelseType)) {
+                		return null;
+                	}
+                    Melding melding = new Melding()
+                            .withId(wsMelding.getBehandlingsId())
+                            .withType(Meldingstype.valueOf(henvendelseType))
+                            .withTraadId(wsMelding.getTraad());
+                    melding.opprettet = wsMelding.getOpprettetDato();
+                    melding.tema = wsMelding.getTema();
+                    String[] parts = ((String) wsMelding.getBehandlingsresultat()).split("#");
+                    melding.overskrift = parts[0];
+                    melding.fritekst = parts[1];
+                    return melding;
+                }
+            };
             return on(henvendelseWS.hentHenvendelseListe(aktorId)).map(somMelding).collect();
         }
 
