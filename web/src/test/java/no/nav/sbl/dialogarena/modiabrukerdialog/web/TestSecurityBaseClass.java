@@ -7,7 +7,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 
 @DirtiesContext
-@ActiveProfiles("test")
+@ActiveProfiles({"test", "brukerhenvendelserDefaultWithoutCNCheck"})
 public class TestSecurityBaseClass {
 
     @BeforeClass

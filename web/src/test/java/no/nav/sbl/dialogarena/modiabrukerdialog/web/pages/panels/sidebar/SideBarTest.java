@@ -22,7 +22,7 @@ import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 
-@ActiveProfiles("test")
+@ActiveProfiles("brukerhenvendelserDefaultWithoutCNCheck")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
 public class SideBarTest extends TestSecurityBaseClass {
