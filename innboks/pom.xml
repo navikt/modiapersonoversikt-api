@@ -14,11 +14,6 @@
     <dependencies>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmalogsvar-tjenestespesifikasjon</artifactId>
-        </dependency>
-        
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
         </dependency>
 

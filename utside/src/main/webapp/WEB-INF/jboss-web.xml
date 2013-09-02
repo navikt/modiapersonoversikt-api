@@ -1,4 +1,0 @@
-<jboss-web>
-    <context-root>sporsmalogsvar</context-root>
-    <security-domain>java:/jaas/NavOpenAM</security-domain>
-</jboss-web>

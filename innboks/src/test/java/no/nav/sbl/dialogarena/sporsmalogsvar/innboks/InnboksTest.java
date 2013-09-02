@@ -11,7 +11,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortT
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMeldingstype;
-import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.DummyHomePage;
@@ -51,13 +50,10 @@ public class InnboksTest {
     @Mock
     HenvendelsePortType henvendelsetjeneste;
 
-    @Mock
-    SporsmalOgSvarPortType sporsmalstjeneste;
-
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        meldingService = new MeldingService.Default(henvendelsetjeneste, sporsmalstjeneste);
+        meldingService = new MeldingService.Default(henvendelsetjeneste);
         tester = new FluentWicketTester<>(new TestApplication() {
             @Override
             protected void init() {

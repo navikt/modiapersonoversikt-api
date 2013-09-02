@@ -4,9 +4,6 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.InternalEvents;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.SporsmalOgSvar;
-import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -22,25 +19,22 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class SporsmalOgSvarPanel extends Panel {
 
-    private MeldingService service;
     private final BesvareModell model;
 
-    public SporsmalOgSvarPanel(String id, final String aktorId, MeldingService service) {
+    public SporsmalOgSvarPanel(String id, final String aktorId) {
         super(id);
         setOutputMarkupId(true);
-        this.service = service;
         add(new AttributeAppender("class", "besvare-panel"));
 
         FeedbackPanel feedbackPanel = new FeedbackPanel("feedback-panel");
         feedbackPanel.setOutputMarkupId(true);
         model = new BesvareModell();
-        final BesvareSporsmalPanel besvare = new BesvareSporsmalPanel("besvare-sporsmal", model, feedbackPanel, service);
+        final BesvareSporsmalPanel besvare = new BesvareSporsmalPanel("besvare-sporsmal", model, feedbackPanel);
         besvare.add(visibleIf(model.besvarerSporsmal()));
 
         AjaxLink<Void> plukk = new AjaxLink<Void>("plukk") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                model.setObject(plukk(aktorId));
                 target.add(SporsmalOgSvarPanel.this);
             }
         };
@@ -56,20 +50,6 @@ public class SporsmalOgSvarPanel extends Panel {
                         send(getPage(), Broadcast.BUBBLE, new NamedEventPayload(InternalEvents.FEED_ITEM_CLICKED, new FeedItemPayload(null, null, "brukerhenvendelser")));
                     }
                 });
-    }
-
-    private SporsmalOgSvarVM plukk(String aktorId) {
-        for (SporsmalOgSvar sporsmalOgSvar : service.plukkMelding(aktorId)) {
-            Map<String, String> sakTemaMapping = new LinkedHashMap<String, String>() { {
-                put("sak-324", "Uføre");
-                put("sak-33", "Alderspensjon");
-                put("sak-123", "Foreldrepenger");
-            } };
-            return new SporsmalOgSvarVM(new MeldingVM(sporsmalOgSvar.sporsmal), new SvarMeldingVM(sporsmalOgSvar.svar), sakTemaMapping);
-        }
-
-        info("Bruker har ingen ubesvarte spørsmål.");
-        return new SporsmalOgSvarVM();
     }
 
     @SuppressWarnings("unused")

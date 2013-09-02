@@ -1,24 +1,17 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
 
 import java.io.Serializable;
-import java.util.HashMap;
 import java.util.Map;
 
 public class SporsmalOgSvarVM implements Serializable {
 
-    MeldingVM sporsmal;
     SvarMeldingVM svar;
 	Map<String, String> sakTemaMapping;
 
-    public SporsmalOgSvarVM() {
-        this(new MeldingVM(new Melding()), new SvarMeldingVM(), new HashMap<String, String>());
-    }
+    public SporsmalOgSvarVM() {}
 
-    public SporsmalOgSvarVM(MeldingVM sporsmal, SvarMeldingVM svar, Map<String, String> sakTemaMapping) {
-        this.sporsmal = sporsmal;
+    public SporsmalOgSvarVM(SvarMeldingVM svar, Map<String, String> sakTemaMapping) {
         this.svar = svar;
 		this.sakTemaMapping = sakTemaMapping;
     }

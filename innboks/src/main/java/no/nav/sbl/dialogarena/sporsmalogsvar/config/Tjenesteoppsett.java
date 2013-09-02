@@ -1,12 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
+import java.util.HashMap;
+import java.util.Map;
+import javax.inject.Inject;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.SporsmalOgSvarPortType;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
@@ -15,10 +17,6 @@ import org.apache.cxf.ws.security.SecurityConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 
 @Configuration
 public class Tjenesteoppsett {
@@ -34,12 +32,12 @@ public class Tjenesteoppsett {
 
     @Bean
     public Pingable spmOgSvarPing() {
-        return new SpmOgSvarPingImpl(sporsmalOgSvarSystemUser(), henvendelseSystemUser());
+        return new SpmOgSvarPingImpl(henvendelseSystemUser());
     }
 
     @Bean
     public MeldingService meldingService() {
-        return new MeldingService.Default(henvendelseSso(), sporsmalOgSvarSso());
+        return new MeldingService.Default(henvendelseSso());
     }
 
     @Bean
@@ -52,16 +50,6 @@ public class Tjenesteoppsett {
         return opprettHenvendelsePortType(new SystemSAMLOutInterceptor());
     }
 
-    @Bean
-    public SporsmalOgSvarPortType sporsmalOgSvarSso() {
-        return opprettSporsmalOgSvarPortType(new UserSAMLOutInterceptor());
-    }
-
-    @Bean
-    public SporsmalOgSvarPortType sporsmalOgSvarSystemUser() {
-        return opprettSporsmalOgSvarPortType(new SystemSAMLOutInterceptor());
-    }
-
     private HenvendelsePortType opprettHenvendelsePortType(AbstractSAMLOutInterceptor samlOutInterceptor) {
     	JaxWsProxyFactoryBean jaxwsClient = commonJaxWsConfig(samlOutInterceptor);
     	jaxwsClient.setServiceClass(HenvendelsePortType.class);
@@ -69,15 +57,6 @@ public class Tjenesteoppsett {
     	jaxwsClient.setWsdlURL("classpath:Henvendelse.wsdl");
     	HenvendelsePortType henvendelsePortType = jaxwsClient.create(HenvendelsePortType.class);
     	return konfigurerMedHttps(henvendelsePortType);
-    }
-
-    public SporsmalOgSvarPortType opprettSporsmalOgSvarPortType(AbstractSAMLOutInterceptor samlOutInterceptor) {
-    	JaxWsProxyFactoryBean jaxwsClient = commonJaxWsConfig(samlOutInterceptor);
-    	jaxwsClient.setServiceClass(SporsmalOgSvarPortType.class);
-    	jaxwsClient.setAddress(spmSvarEndpoint);
-    	jaxwsClient.setWsdlURL("classpath:SporsmalOgSvar.wsdl");
-    	SporsmalOgSvarPortType hnvSpsmSvarPortType = jaxwsClient.create(SporsmalOgSvarPortType.class);
-    	return konfigurerMedHttps(hnvSpsmSvarPortType);
     }
 
     private <T> T konfigurerMedHttps(T portType) {

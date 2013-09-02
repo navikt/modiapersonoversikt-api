@@ -1,9 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
-import no.nav.tjeneste.domene.brukerdialog.sporsmalogsvar.v1.informasjon.WSSvar;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -30,15 +28,12 @@ import java.util.List;
 
 public class BesvareSporsmalPanel extends Panel {
 
-    private MeldingService service;
-
     private FeedbackPanel feedbackPanel;
     public static final String SPORSMAL_OPPDATERT = "hendelser.sporsmal_oppdatert";
 
-    public BesvareSporsmalPanel(String id, BesvareModell model, FeedbackPanel feedbackPanel, MeldingService service) {
+    public BesvareSporsmalPanel(String id, BesvareModell model, FeedbackPanel feedbackPanel) {
         super(id, model);
         this.feedbackPanel = feedbackPanel;
-        this.service = service;
         setOutputMarkupId(true);
         add(
                 new SporsmalPanel("sporsmal", model),
@@ -76,10 +71,9 @@ public class BesvareSporsmalPanel extends Panel {
                             SvarMeldingVM svar = model.getSvar();
                             String tema = model.getObject().sakTemaMapping.get(svar.saksid);
                             WSSvar wssvar = new WSSvar().withBehandlingsId(svar.behandlingsId).withTema(tema).withSaksid(svar.saksid).withOverskrift(svar.overskrift).withFritekst(svar.fritekst).withSensitiv(svar.sensitiv);
-                            service.besvar(wssvar);
                             model.nullstill();
                             info("Svaret er sendt.");
-                            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Innboks.MELDINGER_OPPDATERT));
+//                            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Innboks.MELDINGER_OPPDATERT));
                             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(SPORSMAL_OPPDATERT));
                             target.add(BesvareSporsmalPanel.this);
                         }

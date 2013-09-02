@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<ehcache>
-    <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false" />
-    <cache name="cms.content" maxElementsInMemory="10" overflowToDisk="false" timeToLiveSeconds="1800"  />
-    <cache name="cms.article" maxElementsInMemory="100" overflowToDisk="false" timeToLiveSeconds="1800" />
-</ehcache>

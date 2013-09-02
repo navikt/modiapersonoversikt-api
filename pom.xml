@@ -73,8 +73,8 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmalogsvar-tjenestespesifikasjon</artifactId>
-                <version>0.0.4</version>
+                <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
             </dependency>
 
             <dependency>
