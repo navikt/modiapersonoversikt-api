@@ -30,9 +30,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.containedInComponent;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.melding.AlleMeldingerPanel.INGEN_MELDINGER_ID;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -42,7 +40,7 @@ public class InnboksTest {
     public static final String STANDARD_OVERSKRIFT = "overskrift";
     public static final String STANDARD_TEMA = "tema";
     public static final String STANDARD_FRITEKST = "fritekst";
-    public static final DateTime STANDARD_DATO = DateTime.parse("20130828");
+    public static final DateTime STANDARD_DATO = DateTime.parse("2013-08-28T16:00Z");
     private FluentWicketTester<? extends WebApplication> tester;
 
     MeldingService meldingService;
@@ -115,9 +113,12 @@ public class InnboksTest {
                 .components(ofType(MeldingsHeader.class)
                         .and(containedInComponent(ofType(AlleMeldingerPanel.Meldingsliste.class))));
 
-        for (int i = overskrifter.size() - 1; i >= 0; i--) {
-            String opprettetdato = overskrifter.get(i).getOpprettetDato().getDefaultModelObjectAsString();
-            assertThat(opprettetdato, is(equalTo(STANDARD_DATO.plus(i).toString())));
+        for (int i = 0; i < overskrifter.size() - 2; i++) {
+            // Ikke så lett å komme oss tilbake til DateTime basert på label outputen, pga. hardkodet datoformatering.
+            // Vi sammenligner dermed bare dag-komponenten i tidspunktet, siden testdataene varierer kun i dager.
+            int opprettet1 = Integer.parseInt(overskrifter.get(i).getOpprettetDato().getDefaultModelObjectAsString().substring(0, 2));
+            int opprettet2 = Integer.parseInt(overskrifter.get(i + 1).getOpprettetDato().getDefaultModelObjectAsString().substring(0, 2));
+            assertTrue(opprettet1 > opprettet2);
         }
     }
 
