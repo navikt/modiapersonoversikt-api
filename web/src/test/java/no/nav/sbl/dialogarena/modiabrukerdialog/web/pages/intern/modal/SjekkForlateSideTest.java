@@ -22,7 +22,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-@ActiveProfiles({"test", "brukerhenvendelserDefaultWithoutCNCheck"})
+@ActiveProfiles({"test"})
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
 public class SjekkForlateSideTest extends TestSecurityBaseClass {

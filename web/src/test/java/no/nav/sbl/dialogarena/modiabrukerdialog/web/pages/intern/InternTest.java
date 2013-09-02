@@ -26,7 +26,7 @@ import static no.nav.modig.common.MDCOperations.putToMDC;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 
-@ActiveProfiles({"test", "brukerhenvendelserDefaultWithoutCNCheck"})
+@ActiveProfiles({"test"})
 @ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InternTest extends TestSecurityBaseClass {
