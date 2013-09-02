@@ -1,6 +1,13 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
+package no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.inject.Inject;
 import no.nav.modig.wicket.events.NamedEventPayload;
+import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.BesvareModell;
+import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.BesvareVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.SvarVM;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -23,10 +30,10 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class BesvareSporsmalPanel extends Panel {
+
+    @Inject
+    BesvareHenvendelsePortType service;
 
     private FeedbackPanel feedbackPanel;
     public static final String SPORSMAL_OPPDATERT = "hendelser.sporsmal_oppdatert";
@@ -49,7 +56,7 @@ public class BesvareSporsmalPanel extends Panel {
         response.render(OnDomReadyHeaderItem.forScript("textarea();"));
     }
     
-    private final class SvarForm extends Form<SporsmalOgSvarVM> {
+    private final class SvarForm extends Form<BesvareVM> {
 
         public SvarForm(String id, final BesvareModell model) {
             super(id, model);
@@ -68,9 +75,10 @@ public class BesvareSporsmalPanel extends Panel {
 
                         @Override
                         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                            SvarMeldingVM svar = model.getSvar();
+                            SvarVM svar = model.getSvar();
                             String tema = model.getObject().sakTemaMapping.get(svar.saksid);
                             WSSvar wssvar = new WSSvar().withBehandlingsId(svar.behandlingsId).withTema(tema).withSaksid(svar.saksid).withOverskrift(svar.overskrift).withFritekst(svar.fritekst).withSensitiv(svar.sensitiv);
+                            service.besvarSporsmal(wssvar);
                             model.nullstill();
                             info("Svaret er sendt.");
 //                            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(Innboks.MELDINGER_OPPDATERT));

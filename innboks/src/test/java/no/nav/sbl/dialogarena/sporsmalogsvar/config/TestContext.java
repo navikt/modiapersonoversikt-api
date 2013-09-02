@@ -1,16 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.jws.WebParam;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-
-import javax.jws.WebParam;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 @Import({
         JaxWsFeatures.Mock.class

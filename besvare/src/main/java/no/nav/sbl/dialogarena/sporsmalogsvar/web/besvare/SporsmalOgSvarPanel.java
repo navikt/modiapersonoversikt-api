@@ -1,18 +1,16 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
+package no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare;
 
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.InternalEvents;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.BesvareModell;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
@@ -21,7 +19,7 @@ public class SporsmalOgSvarPanel extends Panel {
 
     private final BesvareModell model;
 
-    public SporsmalOgSvarPanel(String id, final String aktorId) {
+    public SporsmalOgSvarPanel(String id) {
         super(id);
         setOutputMarkupId(true);
         add(new AttributeAppender("class", "besvare-panel"));

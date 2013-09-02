@@ -1,5 +1,6 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
+package no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.BesvareModell;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 

@@ -45,20 +45,6 @@ public interface MeldingService {
             return on(henvendelseWS.hentHenvendelseListe(aktorId)).map(somMelding).collect();
         }
 
-        private static final Transformer<WSMelding, Melding> TIL_MELDING = new Transformer<WSMelding, Melding>() {
-            @Override
-            public Melding transform(WSMelding wsMelding) {
-                return new Melding()
-                        .withId(wsMelding.getBehandlingsId())
-                        .withTraadId(wsMelding.getTraadId())
-                        .withOpprettet(wsMelding.getSistEndretDato())
-                        .withType(Meldingstype.valueOf(wsMelding.getType().toString()))
-                        .withTema(wsMelding.getTema())
-                        .withOverskrift(wsMelding.getOverskrift())
-                        .withFritekst(wsMelding.getBeskrivelse());
-            }
-        };
-
     }
 
 }
