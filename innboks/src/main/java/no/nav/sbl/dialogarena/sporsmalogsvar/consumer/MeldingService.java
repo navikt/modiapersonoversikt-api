@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 import java.util.List;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMelding;
 import org.apache.commons.collections15.Transformer;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
