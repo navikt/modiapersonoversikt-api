@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 
 @Configuration
-@Import({BesvareHenvendelseConfig.Default.class, BesvareHenvendelseConfig.DefaultWithoutCNCheck.class, BesvareHenvendelseTjenester.class, BesvareHenvendelseConfig.Test.class})
+@Import({BesvareHenvendelseConfig.Default.class, BesvareHenvendelseConfig.DefaultWithoutCNCheck.class, BesvareHenvendelseConfig.Test.class})
 public class BesvareHenvendelseConfig {
 
     @Bean
@@ -64,12 +64,12 @@ public class BesvareHenvendelseConfig {
 
     @Profile({"default", "brukerhenvendelserDefault"})
     @Configuration
-    @Import({JaxWsFeatures.Integration.class})
+    @Import({BesvareHenvendelseTjenester.class, JaxWsFeatures.Integration.class})
     public static class Default { }
 
     @Profile({"brukerhenvendelserDefaultWithoutCNCheck"})
     @Configuration
-    @Import({JaxWsFeatures.Mock.class})
+    @Import({BesvareHenvendelseTjenester.class, JaxWsFeatures.Mock.class})
     public static class DefaultWithoutCNCheck { }
 
     @Profile({"test", "brukerhenvendelserTest"})
