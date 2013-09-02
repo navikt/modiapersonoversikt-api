@@ -1,13 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
+import org.apache.commons.collections15.Transformer;
 
 import java.util.List;
 
-import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
-
-import org.apache.commons.collections15.Transformer;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.TransformerUtils.asString;
+import static no.nav.modig.lang.option.Optional.optional;
 
 public interface MeldingService {
 
@@ -36,9 +37,11 @@ public interface MeldingService {
                             .withTraadId(wsMelding.getTraad());
                     melding.opprettet = wsMelding.getOpprettetDato();
                     melding.tema = wsMelding.getTema();
-                    String[] parts = ((String) wsMelding.getBehandlingsresultat()).split("#");
-                    melding.overskrift = parts[0];
-                    melding.fritekst = parts[1];
+                    for (String behandlinsresultat : optional(wsMelding.getBehandlingsresultat()).map(asString())) {
+                        String[] parts = behandlinsresultat.split("#");
+                        melding.overskrift = parts[0];
+                        melding.fritekst = parts[1];
+                    }
                     return melding;
                 }
             };
