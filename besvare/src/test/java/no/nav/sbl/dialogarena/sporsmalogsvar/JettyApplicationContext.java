@@ -1,12 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareHenvendelseContext;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.JaxWsFeatures;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareHenvendelseConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-@Import({BesvareHenvendelseContext.class, JaxWsFeatures.Mock.class})
+@Import(BesvareHenvendelseConfig.class)
 public class JettyApplicationContext {
 
     @Bean

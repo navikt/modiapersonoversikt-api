@@ -2,13 +2,21 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.innboks;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.TestContext;
 
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static org.junit.Assert.assertTrue;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestContext.class)
 public class InnboksTest {
+
+    @Test
+    public void dummy() {
+        assertTrue(true);
+    }
 //    private static final String FODSELSNUMMER = "14108643790";
 //    public static final String STANDARD_OVERSKRIFT = "overskrift";
 //    public static final String STANDARD_TEMA = "tema";

@@ -17,7 +17,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class BesvareHenvendelseContext {
+public class BesvareHenvendelseTjenester {
 
     @Inject
     private JaxWsFeatures jaxwsFeatures;
