@@ -2,10 +2,13 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.jws.WebParam;
+
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -36,7 +39,7 @@ public class TestContext {
             @Override
             public List<WSHenvendelse> hentHenvendelseListe(@WebParam(name = "fodselsnummer", targetNamespace = "") String s) {
                 List<WSHenvendelse> liste = new ArrayList<>();
-                liste.add(new no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMelding().withType(no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSMeldingstype.SPORSMAL));
+                liste.add(new WSHenvendelse().withHenvendelseType("SPORSMAL"));
                 return liste;
             }
 
