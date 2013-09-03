@@ -46,11 +46,15 @@ public class WicketApplication extends WebApplication {
     @Inject
     private ApplicationContext applicationContext;
 
-	@Resource(name="kjerneinfoPep")
+	@Resource(name = "kjerneinfoPep")
 	private EnforcementPoint kjerneinfoPep;
 
     public static WicketApplication get() {
         return (WicketApplication) Application.get();
+    }
+
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 
     @Override
@@ -89,7 +93,7 @@ public class WicketApplication extends WebApplication {
                         DatePicker.DATEPICKER_JS,
                         DateRangePicker.JS_REFERENCE,
                         JqueryTokenValueChangeBehavior.JS_REFERENCE,
-                        (JavaScriptResourceReference)ModigModalWindow.JS,
+                        (JavaScriptResourceReference) ModigModalWindow.JS,
                         EkspanderingsListe.JS_RESOURCE,          //TODO: Flytt til MODIA modul ?
                         Liste.JS_RESOURCE,                       //TODO: Flytt til MODIA modul ?
                         DatePicker.JQUERY_PLACEHOLDER,
