@@ -31,7 +31,7 @@ public class MeldingstraadPanel extends Panel {
         @Override
         protected void populateItem(final ListItem<MeldingVM> item) {
             item.setOutputMarkupId(true);
-            item.add(new MeldingsHeader("header"));
+            item.add(new MeldingsHeader("header", item.getModel()));
             item.add(new Label("fritekst"));
 
             item.add(hasCssClassIf("valgt", delegat.erMeldingValgt(item.getModelObject())));

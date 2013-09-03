@@ -1,0 +1,102 @@
+.innboks H1 {
+    text-transform: uppercase;
+    margin: 0;
+}
+.innboks H2.liten {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.innboks {
+    max-height: 500px;
+    border: solid 1px #ddd;
+    background: white;
+}
+
+.innboks SECTION {
+    padding-top: 0;
+}
+
+.melding {
+    padding: 1em;
+    position: relative;
+}
+
+.meldingliste > .melding {
+    border-bottom: solid 1px #ddd;
+}
+
+.melding:last-child, .meldingsdetaljer:last-child {
+    border-bottom: none;
+}
+
+.melding > p {
+    color: #333;
+    margin: 0;
+}
+
+.meldingliste > .melding {
+
+}
+
+.meldingsliste > .melding > P {
+    max-width : 500px;
+    text-overflow: ellipsis;
+    -o-text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    word-wrap: break-word;
+
+}
+
+.meldingsliste > .melding.valgt {
+    background-color: #5bc0de;
+}
+
+.meldingsliste > .melding.valgt * {
+    color: white;
+}
+
+.meldingsdetaljer > .melding:not(.valgt) {
+    max-width: 500px;
+    margin: 0 auto;
+    border: solid 1px #ddd;
+    padding: 1em;
+    margin-top: 1em;
+}
+
+.meldingsdetaljer > .melding:not(.ekspandert) > P {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.meldingsdetaljer > .melding.valgt > P {
+}
+
+.melding:not(.valgt) {
+    cursor: pointer;
+}
+
+.pane {
+    float:left;
+}
+
+.pane.meldingsliste {
+    width: 40%;
+    overflow-y: auto;
+    border-right: solid 1px #ddd;
+    max-height: 500px;
+}
+.pane.meldingsdetaljer {
+    width: 60%;
+    max-height: 500px;
+}
+
+.opprettet {
+    position: absolute;
+    top: 1.5em;
+    right: 1.5em;
+    font-size: 80%;
+    font-weight: bold;
+}

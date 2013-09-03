@@ -1,15 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.innboks;
 
-import static java.util.Arrays.asList;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.containedInComponent;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.melding.AlleMeldingerPanel.INGEN_MELDINGER_ID;
-import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.sporsmalogsvar.TestApplication;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.TestContext;
@@ -18,10 +8,11 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.AlleMeldingerPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingsHeader;
+import no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingstraadPanel;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
-
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.util.tester.DummyHomePage;
 import org.hamcrest.Matchers;
@@ -34,6 +25,16 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.containedInComponent;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.melding.AlleMeldingerPanel.INGEN_MELDINGER_ID;
+import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestContext.class)
 public class InnboksTest {
@@ -42,6 +43,7 @@ public class InnboksTest {
     public static final String STANDARD_TEMA = "tema";
     public static final String STANDARD_FRITEKST = "fritekst";
     public static final DateTime STANDARD_DATO = DateTime.parse("2013-08-28T16:00Z");
+    public static final String INNBOKS_ID = "innboks";
     private FluentWicketTester<? extends WebApplication> tester;
 
     MeldingService meldingService;
@@ -66,7 +68,7 @@ public class InnboksTest {
     public void skalViseInfotekstNaarInnboksErTom() {
         when(henvendelsetjeneste.hentHenvendelseListe(FODSELSNUMMER)).thenReturn(new ArrayList<WSHenvendelse>());
 
-        tester.goToPageWith(new Innboks("innboks", FODSELSNUMMER, meldingService));
+        tester.goToPageWith(new Innboks(INNBOKS_ID, FODSELSNUMMER, meldingService));
 
         tester.should().containComponent(
                 ofType(Label.class).withId(INGEN_MELDINGER_ID).and(containedInComponent(ofType(AlleMeldingerPanel.class))));
@@ -77,7 +79,7 @@ public class InnboksTest {
         when(henvendelsetjeneste.hentHenvendelseListe(FODSELSNUMMER))
                 .thenReturn(asList(lagSporsmalMedOpprettetDato(STANDARD_DATO), lagSporsmalMedOpprettetDato(STANDARD_DATO)));
 
-        tester.goToPageWith(new Innboks("innboks", FODSELSNUMMER, meldingService));
+        tester.goToPageWith(new Innboks(INNBOKS_ID, FODSELSNUMMER, meldingService));
 
         tester.should().inComponent(AlleMeldingerPanel.Meldingsliste.class).containComponents(2, ofType(MeldingsHeader.class));
 
@@ -92,7 +94,7 @@ public class InnboksTest {
         when(henvendelsetjeneste.hentHenvendelseListe(FODSELSNUMMER))
                 .thenReturn(asList(lagSporsmalMedFritekst(STANDARD_TEMA, STANDARD_OVERSKRIFT, STANDARD_FRITEKST)));
 
-        tester.goToPageWith(new Innboks("innboks", FODSELSNUMMER, meldingService));
+        tester.goToPageWith(new Innboks(INNBOKS_ID, FODSELSNUMMER, meldingService));
 
         tester.should()
                 .inComponent(AlleMeldingerPanel.Meldingsliste.class)
@@ -100,14 +102,38 @@ public class InnboksTest {
     }
 
     @Test
-    public void skalViseMeldingeneKronologisk() {
+    public void skalViseIngenMeldingValgt() {
+        when(henvendelsetjeneste.hentHenvendelseListe(FODSELSNUMMER))
+                .thenReturn(asList(lagSporsmalMedFritekst(STANDARD_TEMA, STANDARD_OVERSKRIFT, STANDARD_FRITEKST)));
+        tester.goToPageWith(new Innboks(INNBOKS_ID, FODSELSNUMMER, meldingService));
+
+        tester.should()
+                .containComponent(ofType(Label.class).withId(DetaljvisningPanel.INGEN_VALGT_ID)
+                        .and(containedInComponent(ofType(DetaljvisningPanel.class))));
+    }
+
+    @Test
+    public void skalViseDetaljerForValgtMelding() {
+        when(henvendelsetjeneste.hentHenvendelseListe(FODSELSNUMMER))
+                .thenReturn(asList(lagSporsmalMedFritekst(STANDARD_TEMA, STANDARD_OVERSKRIFT, STANDARD_FRITEKST)));
+        tester.goToPageWith(new Innboks(INNBOKS_ID, FODSELSNUMMER, meldingService));
+
+        tester.tester.executeAjaxEvent(tester.get()
+                .component(containedInComponent(ofType(AlleMeldingerPanel.Meldingsliste.class))
+                        .and(ofType(ListItem.class))), "click");
+
+        tester.should().inComponent(MeldingstraadPanel.class).containLabelsSaying(STANDARD_OVERSKRIFT, STANDARD_FRITEKST);
+    }
+
+    @Test
+    public void skalViseMeldingeneIOmvendtKronologiskRekkefolge() {
         when(henvendelsetjeneste.hentHenvendelseListe(FODSELSNUMMER))
                 .thenReturn(
                         asList(lagSporsmalMedOpprettetDato(STANDARD_DATO),
                                 lagSporsmalMedOpprettetDato(STANDARD_DATO.plusDays(3)),
                                 lagSporsmalMedOpprettetDato(STANDARD_DATO.plusDays(1))));
 
-        tester.goToPageWith(new Innboks("innboks", FODSELSNUMMER, meldingService));
+        tester.goToPageWith(new Innboks(INNBOKS_ID, FODSELSNUMMER, meldingService));
 
         List<MeldingsHeader> overskrifter = tester.get()
                 .components(ofType(MeldingsHeader.class)

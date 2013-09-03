@@ -17,6 +17,8 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SVAR;
 
 public class DetaljvisningPanel extends Panel implements HarMeldingsliste {
 
+    public static final String INGEN_VALGT_ID = "ingen-valgt";
+
     public DetaljvisningPanel(String id, InnboksModell innboksModell, MeldingslisteDelegat delegat) {
 		super(id);
 		setOutputMarkupId(true);
@@ -25,7 +27,7 @@ public class DetaljvisningPanel extends Panel implements HarMeldingsliste {
         dokumentinnsendingDetaljPanel.add(visibleIf(innboksModell.valgtMeldingAvType(DOKUMENTINNSENDING)));
         meldingstraadPanel.add(visibleIf(either(innboksModell.valgtMeldingAvType(SPORSMAL))
                 .or(innboksModell.valgtMeldingAvType(SVAR))));
-        add(new Label("ingen-valgt", new StringResourceModel("ingen-melding-valgt", this, null))
+        add(new Label(INGEN_VALGT_ID, new StringResourceModel("ingen-melding-valgt", this, null))
                 .add(visibleIf(innboksModell.ingenMeldingValgt())));
 		add(meldingstraadPanel, dokumentinnsendingDetaljPanel);
 	}

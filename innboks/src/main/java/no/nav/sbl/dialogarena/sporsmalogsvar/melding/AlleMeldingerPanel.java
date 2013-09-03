@@ -58,6 +58,7 @@ public class AlleMeldingerPanel extends Panel implements IHeaderContributor, Har
     public static class Meldingsliste extends PropertyListView<MeldingVM> {
         private final MeldingslisteDelegat delegat;
 
+
         public Meldingsliste(final String id, MeldingslisteDelegat delegat) {
             super(id);
             setOutputMarkupId(true);
@@ -66,7 +67,7 @@ public class AlleMeldingerPanel extends Panel implements IHeaderContributor, Har
 
         @Override
         protected void populateItem(final ListItem<MeldingVM> item) {
-            item.add(new MeldingsHeader("header"));
+            item.add(new MeldingsHeader("header", item.getModel()));
             item.add(new Label("fritekst"));
             item.add(hasCssClassIf("valgt", delegat.erMeldingValgt(item.getModelObject())));
 
