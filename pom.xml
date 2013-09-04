@@ -332,6 +332,12 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>oppgavebehandling-tjenestespesifikasjon</artifactId>
+                <version>0.0.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sporsmal-og-svar-besvare</artifactId>
                 <version>${sporsmalogsvar.version}</version>
             </dependency>
