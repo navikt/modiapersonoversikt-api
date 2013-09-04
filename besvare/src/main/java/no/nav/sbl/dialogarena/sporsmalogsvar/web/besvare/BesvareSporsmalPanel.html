@@ -8,27 +8,29 @@
 
 <wicket:panel>
 
-    <div wicket:id="feedback"></div>
+    <div class="besvare-panel">
+        <div wicket:id="feedback"></div>
 
-    <section wicket:id="sporsmal" class="sporsmal"/>
+        <section wicket:id="sporsmal" class="sporsmal"/>
 
-    <form wicket:id="svar" class="svar">
-        <div style="margin-bottom: 1em">
-            <label>Overskrift:</label>
-            <input wicket:id="svar.overskrift" type="text"/>
-        </div>
-        <textarea id="tekst" wicket:id="svar.fritekst"/>
-        <label id="antall" style="display: block; text-align: center;"/>
-        <div>
-            <input id="sensitiv" type="checkbox" wicket:id="svar.sensitiv"/>
-            <label for="sensitiv">Inneholder sensitiv informasjon</label>
-        </div>
-        <select wicket:id="svar.saksid" class="temavelger"/>
-        <div>
-            <a wicket:id="send" href="#" class="knapp send">Send</a>
-            <a wicket:id="avbryt" href="#" class="knapp avbryt">Avbryt</a>
-        </div>
-    </form>
+        <form wicket:id="svar" class="svar">
+            <div style="margin-bottom: 1em">
+                <label>Overskrift:</label>
+                <input wicket:id="svar.overskrift" type="text"/>
+            </div>
+            <textarea id="tekst" wicket:id="svar.fritekst"/>
+            <label id="antall" style="display: block; text-align: center;"/>
+            <div>
+                <input id="sensitiv" type="checkbox" wicket:id="svar.sensitiv"/>
+                <label for="sensitiv">Inneholder sensitiv informasjon</label>
+            </div>
+            <select wicket:id="svar.saksid" class="temavelger"/>
+            <div>
+                <a wicket:id="send" href="#" class="knapp send">Send</a>
+                <a wicket:id="avbryt" href="#" class="knapp avbryt">Avbryt</a>
+            </div>
+        </form>
+    </div>
 
 </wicket:panel>
 </body>

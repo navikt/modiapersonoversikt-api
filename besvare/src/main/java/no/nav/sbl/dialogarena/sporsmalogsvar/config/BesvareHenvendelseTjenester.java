@@ -33,7 +33,7 @@ public class BesvareHenvendelseTjenester {
     @Value("${besvarehenvendelseendpoint.url}")
     protected String besvareHenvendelseEndpoint;
 
-    protected String oppgavebehandlingEndpoint = "https://d26jbsl00251.test.local:8443/besvarehenvendelse/services/domene.Brukerdialog/GsakOppgavebehandling_v1";
+    protected String oppgavebehandlingEndpoint = "https://localhost:30103/besvarehenvendelse/services/domene.Brukerdialog/GsakOppgavebehandling_v1";
 
     @Bean
     public Pingable besvareHenvendelsePing() {
