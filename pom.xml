@@ -20,14 +20,14 @@
     </modules>
 
     <properties>
-        <wicket.version>6.9.1</wicket.version>
+        <wicket.version>6.10.0</wicket.version>
         <spring.version>3.2.2.RELEASE</spring.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
-        <modig.wicket.test.version>1.0.0-alpha.1</modig.wicket.test.version>
+        <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
         <modig.wicket.version>1.0.23</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>1.0.0</modig.lang.version>
-        <modig.frontend.wicket.version>1.0.23</modig.frontend.wicket.version>
+        <modig.frontend.wicket.version>1.0.24</modig.frontend.wicket.version>
         <modig.core.version>1.0.1</modig.core.version>
         <modig.security.version>1.0.11</modig.security.version>
 		<modig.log.version>1.1.0</modig.log.version>
@@ -50,7 +50,7 @@
         <junit.dep.version>4.10</junit.dep.version>
         <!-- Modia-komponenter-->
         <personsok.version>0.0.88</personsok.version>
-		<kjerneinfo.versjon>1.0.27</kjerneinfo.versjon>
+		<kjerneinfo.versjon>1.0.28</kjerneinfo.versjon>
     </properties>
 
     <dependencyManagement>

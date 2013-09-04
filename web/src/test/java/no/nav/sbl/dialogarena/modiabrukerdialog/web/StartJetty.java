@@ -36,7 +36,7 @@ public class StartJetty {
 	    Field contextField = jetty.getClass().getDeclaredField("context");
 	    contextField.setAccessible(true);
 	    WebAppContext context = (WebAppContext) contextField.get(jetty);
-	    String[] resources = {"web/src/main/webapp", "../modig/modig-frontend/modig-frontend-ressurser/src/main/resources/META-INF/resources"};
+	    String[] resources = {"web/src/main/webapp", "../zmodig/modig-frontend/modig-frontend-ressurser/src/main/resources/META-INF/resources"};
 	    ResourceCollection resourceCollection = new ResourceCollection(resources);
 	    context.setBaseResource(resourceCollection);
         jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
