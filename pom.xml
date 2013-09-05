@@ -38,6 +38,7 @@
         <slf4j.version>1.7.5</slf4j.version>
         <jsoup.version>1.7.2</jsoup.version>
         <webbit.version>0.4.14</webbit.version>
+        <cxf.version>2.7.6</cxf.version>
         <!-- Modia-komponenter-->
         <personsok.version>0.0.79</personsok.version>
         <kjerneinfo.versjon>1.0.21</kjerneinfo.versjon>
@@ -163,6 +164,12 @@
                 <artifactId>common-test</artifactId>
                 <version>1.2-SNAPSHOT</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>oppgavebehandling-tjenestespesifikasjon</artifactId>
+                <version>0.0.2</version>
             </dependency>
 
             <!-- MODIA-komponenter -->
@@ -513,6 +520,31 @@
                 <groupId>net.sf.ehcache</groupId>
                 <artifactId>ehcache-core</artifactId>
                 <version>2.6.5</version>
+            </dependency>
+
+            <!-- CXF -->
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-simple</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-frontend-jaxws</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-transports-http</artifactId>
+                <version>${cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-api</artifactId>
+                <version>${cxf.version}</version>
             </dependency>
 
             <!-- TEST dependency -->
