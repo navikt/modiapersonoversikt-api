@@ -32,6 +32,7 @@
             , kontrakterDefault
             , brukerprofilDefault
             , behandleBrukerprofilDefault
+            , oppgavebehandlingDefault
         </param-value>
     </context-param>
 
