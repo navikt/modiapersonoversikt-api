@@ -1,15 +1,19 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.BesvareModell;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.BesvareVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.SporsmalVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.SvarVM;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
+import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -39,10 +43,11 @@ public class BesvareSporsmalPanel extends Panel {
 
     public static final String SPORSMAL_OPPDATERT = "hendelser.sporsmal_oppdatert";
 
-    public BesvareSporsmalPanel(String id) {
+    public BesvareSporsmalPanel(String id, String oppgaveId) {
         super(id);
         setOutputMarkupId(true);
-        BesvareModell besvareModell = new BesvareModell();
+
+        BesvareModell besvareModell = new BesvareModell(oppgaveId == null ? new BesvareVM() : TIL_BESVAREVM.transform(service.hentSporsmalOgSvar(oppgaveId)));
         setDefaultModel(besvareModell);
         FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);
@@ -132,5 +137,21 @@ public class BesvareSporsmalPanel extends Panel {
             });
     	}
     }
+
+    private static final Transformer<WSSporsmalOgSvar, BesvareVM> TIL_BESVAREVM = new Transformer<WSSporsmalOgSvar, BesvareVM>() {
+        @Override
+        public BesvareVM transform(WSSporsmalOgSvar wsSporsmalOgSvar) {
+            SporsmalVM sporsmalVM = new SporsmalVM();
+            sporsmalVM.behandlingsId = wsSporsmalOgSvar.getSporsmal().getBehandlingsId();
+            sporsmalVM.fritekst = wsSporsmalOgSvar.getSporsmal().getFritekst();
+            sporsmalVM.opprettetDato = wsSporsmalOgSvar.getSporsmal().getOpprettet().toLocalDate();
+            sporsmalVM.overskrift = wsSporsmalOgSvar.getSporsmal().getOverskrift();
+
+            SvarVM svarVM = new SvarVM();
+            svarVM.behandlingsId = wsSporsmalOgSvar.getSvar().getBehandlingsId();
+
+            return new BesvareVM(sporsmalVM, svarVM, new HashMap<String, String>());
+        }
+    };
 
 }

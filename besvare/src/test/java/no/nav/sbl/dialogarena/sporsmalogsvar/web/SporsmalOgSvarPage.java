@@ -8,6 +8,6 @@ public class SporsmalOgSvarPage extends WebPage {
     public SporsmalOgSvarPage() {
         super();
 //        add(new SporsmalOgSvarPanel("besvar"));
-        add(new BesvareSporsmalPanel("besvar"));
+        add(new BesvareSporsmalPanel("besvar", "1"));
     }
 }
