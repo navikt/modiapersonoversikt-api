@@ -25,7 +25,7 @@ public class HentOppgaveConfig {
         JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
         Map<String, Object> properties = new HashMap<>();
         properties.put("schema-validation-enabled", true);
-        properties.put(SecurityConstants.MUSTUNDERSTAND, false);
+        properties.put(SecurityConstants.MUST_UNDERSTAND, false);
         factoryBean.setProperties(properties);
         factoryBean.getFeatures().add(new LoggingFeature());
         factoryBean.getOutInterceptors().add(new SystemSAMLOutInterceptor());

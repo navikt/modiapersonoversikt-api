@@ -632,6 +632,12 @@
             </dependency>
 
             <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-security-ws</artifactId>
+                <version>${modig.security.version}</version>
+            </dependency>
+
+            <dependency>
               <groupId>no.nav.modig</groupId>
               <artifactId>modig-security-core</artifactId>
               <version>${modig.security.version}</version>
