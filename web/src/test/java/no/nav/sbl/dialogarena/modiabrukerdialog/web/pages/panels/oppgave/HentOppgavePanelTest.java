@@ -19,9 +19,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static no.nav.modig.common.MDCOperations.MDC_CALL_ID;
-import static no.nav.modig.common.MDCOperations.generateCallId;
-import static no.nav.modig.common.MDCOperations.putToMDC;
 import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
@@ -39,8 +36,7 @@ public class HentOppgavePanelTest extends TestSecurityBaseClass {
     private FluentWicketTester<?> fluentWicketTester;
 
     @Before
-    public void setupMDC() {
-        putToMDC(MDC_CALL_ID, generateCallId());
+    public void hentOppgave() {
         fluentWicketTester.goTo(Intern.class).click().link(withId("plukk-oppgave"));
     }
 
