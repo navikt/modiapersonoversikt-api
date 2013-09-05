@@ -1,7 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import no.nav.modig.modia.ping.PingResult;
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.informasjon.WSPlukkOppgaveResultat;
@@ -16,6 +19,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+
+import static java.util.Arrays.asList;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 
 @Configuration
 public class HentOppgaveConfig {
@@ -47,6 +54,11 @@ public class HentOppgaveConfig {
 
             return oppgavebehandlingPortType;
         }
+
+        @Bean
+        public Pingable oppgavebehandlingPing() {
+            return new OppgaveBehandlingPing(oppgavebehandlingPortType());
+        }
     }
 
     @Profile({"test", "oppgavebehandlingTest"})
@@ -72,5 +84,22 @@ public class HentOppgaveConfig {
             };
         }
 
+    }
+
+    private static class OppgaveBehandlingPing implements Pingable {
+
+        OppgavebehandlingPortType oppgavebehandlingPortType;
+
+        public OppgaveBehandlingPing(OppgavebehandlingPortType oppgavebehandlingPortType) {
+            this.oppgavebehandlingPortType = oppgavebehandlingPortType;
+        }
+
+        @Override
+        public List<PingResult> ping() {
+            long start = System.currentTimeMillis();
+            boolean ping = oppgavebehandlingPortType.ping();
+            long timeElapsed = System.currentTimeMillis() - start;
+            return asList(new PingResult("Oppgavebehandling_v1", ping ? SERVICE_OK : SERVICE_FAIL, timeElapsed));
+        }
     }
 }
