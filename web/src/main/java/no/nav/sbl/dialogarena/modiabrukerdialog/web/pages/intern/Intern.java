@@ -16,6 +16,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.timeout.TimeoutBoks;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -124,6 +125,7 @@ public class Intern extends BasePage {
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 lamellHandler.createLamellPanel("lameller", fnrFromRequest),
                 new SideBar("sideBar", fnrFromRequest).setVisible(true),
+                new TimeoutBoks("timeoutBoks", fnrFromRequest),
                 createNullstillLink(modalWindow),
                 modalWindow
         );

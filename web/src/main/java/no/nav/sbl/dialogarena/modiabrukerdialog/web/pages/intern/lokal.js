@@ -209,6 +209,25 @@ function gjennomfoerAvansertSok() {
 	}
 }
 
+function setSessionTimeoutBox() {
+    var timeoutValue = 1000 * 60 * 55;
+    var timeout = setTimeout(function () {
+        createTimeoutBox();
+    }, timeoutValue);
+
+    Wicket.Event.subscribe('/ajax/call/after', function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+            createTimeoutBox();
+        }, timeoutValue);
+    });
+}
+
+function createTimeoutBox() {
+    $('body').append($('<div/>').addClass('wicket-mask-dark'));
+    $('.informasjonsboks.timeout').show();
+}
+
 function createTabHandler(application) {
 	var localStorageId = application + ".activeTab";
 	var sessionStorageId = application + ".tabGuid";
