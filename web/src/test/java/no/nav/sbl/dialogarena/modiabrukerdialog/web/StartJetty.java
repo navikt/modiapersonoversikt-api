@@ -6,9 +6,12 @@ import no.nav.modig.testcertificates.TestCertificates;
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
 import no.nav.sbl.dialogarena.test.SystemProperties;
 import org.eclipse.jetty.jaas.JAASLoginService;
+import org.eclipse.jetty.util.resource.ResourceCollection;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 
 import static no.nav.modig.lang.collections.FactoryUtils.gotKeypress;
 import static no.nav.modig.lang.collections.RunnableUtils.first;
@@ -37,7 +40,12 @@ public class StartJetty {
                 .overrideWebXml(new File(FilesAndDirs.TEST_RESOURCES, "jetty-web.xml"))
                 .withLoginService(createLoginService())
                 .buildJetty();
-
+	    Field contextField = jetty.getClass().getDeclaredField("context");
+	    contextField.setAccessible(true);
+	    WebAppContext context = (WebAppContext) contextField.get(jetty);
+	    String[] resources = {"web/src/main/webapp", "../zmodig/modig-frontend/modig-frontend-ressurser/src/main/resources/META-INF/resources"};
+	    ResourceCollection resourceCollection = new ResourceCollection(resources);
+	    context.setBaseResource(resourceCollection);
         jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
     }
 

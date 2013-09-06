@@ -41,6 +41,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}.sporing.%d</fileNamePattern>
+            <maxHistory>95</maxHistory>
         </rollingPolicy>
     </appender>
 
@@ -51,6 +52,7 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}_personaccess.log.%d</fileNamePattern>
+            <maxHistory>95</maxHistory>
         </rollingPolicy>
     </appender>
 
