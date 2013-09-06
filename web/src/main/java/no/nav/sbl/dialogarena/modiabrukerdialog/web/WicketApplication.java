@@ -74,6 +74,7 @@ public class WicketApplication extends WebApplication {
                         MetaTag.CHARSET_UTF8,
                         MetaTag.VIEWPORT_SCALE_1
                 )
+		        .addConditionalCss(Intern.INTERN_IE)
                 .addConditionalJavascript(Intern.RESPOND_JS)
 		        .addLess(BasePage.INTERN_LESS)
                 .addCss(

@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>dialogarena</artifactId>
@@ -21,7 +24,7 @@
 
     <properties>
         <wicket.version>6.10.0</wicket.version>
-        <spring.version>3.2.2.RELEASE</spring.version>
+        <spring.version>3.2.3.RELEASE</spring.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
         <modig.wicket.version>1.0.23</modig.wicket.version>
@@ -38,7 +41,7 @@
         <mockito.core.version>1.9.5</mockito.core.version>
         <slf4j.version>1.7.5</slf4j.version>
         <jsoup.version>1.7.2</jsoup.version>
-        <jetty.version>9.0.4.v20130625</jetty.version>
+        <jetty.version>9.0.5.v20130815</jetty.version>
         <jetty-plus.version>7.0.0pre3</jetty-plus.version>
         <jetty-naming.version>6.1H.8</jetty-naming.version>
         <jetty-util.version>6.1.26</jetty-util.version>
