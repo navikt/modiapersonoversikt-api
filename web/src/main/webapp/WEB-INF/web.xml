@@ -28,7 +28,7 @@
             kjerneinfoDefault
             , personsokDefault
             , brukerhenvendelserDefault
-            , sykemeldingsperioderDefaultPelsd4r21
+            , sykemeldingsperioderDefault
             , kontrakterDefault
             , brukerprofilDefault
             , behandleBrukerprofilDefault
