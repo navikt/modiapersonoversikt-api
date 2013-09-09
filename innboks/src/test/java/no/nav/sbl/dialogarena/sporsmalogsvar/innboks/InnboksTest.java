@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.innboks;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.sporsmalogsvar.TestApplication;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.TestContext;
@@ -26,7 +28,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.containedInComponent;
@@ -149,9 +153,13 @@ public class InnboksTest {
     }
 
     private static WSHenvendelse lagSporsmal(String tema, String overskrift) {
+        return lagSporsmalMedFritekst(tema, overskrift, "fritekst");
+    }
+
+    private static WSHenvendelse lagSporsmalMedFritekst(String tema, String overskrift, String fritekst) {
         return new WSHenvendelse().withHenvendelseType(Meldingstype.SPORSMAL.name())
                 .withTema(tema)
-                .withBehandlingsresultat(overskrift + "#fritekst")
+                .withBehandlingsresultat(lagBehandlingsresultat(overskrift, fritekst))
                 .withTraad("1")
                 .withOpprettetDato(DateTime.now());
     }
@@ -161,11 +169,21 @@ public class InnboksTest {
                 .withHenvendelseType(Meldingstype.SPORSMAL.name())
                 .withTema(STANDARD_TEMA)
                 .withTraad("1")
-                .withBehandlingsresultat("overskrift#spsm")
+                .withBehandlingsresultat(lagBehandlingsresultat("overskrift", "fritekst"))
                 .withOpprettetDato(opprettet);
     }
 
-    private static WSHenvendelse lagSporsmalMedFritekst(String tema, String overskrift, String fritekst) {
-        return lagSporsmal(tema, overskrift).withBehandlingsresultat(overskrift + "#" + fritekst);
+    private static String lagBehandlingsresultat(String overskrift, String fritekst) {
+        ObjectMapper mapper = new ObjectMapper();
+        Map<String, String> behandlingsresultat = new HashMap<>();
+        behandlingsresultat.put("overskrift", overskrift);
+        behandlingsresultat.put("fritekst", fritekst);
+        String json = null;
+        try {
+            json = mapper.writeValueAsString(behandlingsresultat);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        return json;
     }
 }
