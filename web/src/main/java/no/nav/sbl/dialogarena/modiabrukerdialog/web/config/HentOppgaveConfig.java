@@ -1,11 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
+import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.informasjon.WSPlukkOppgaveResultat;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
@@ -19,6 +16,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
@@ -42,7 +43,7 @@ public class HentOppgaveConfig {
             properties.put(SecurityConstants.MUST_UNDERSTAND, false);
             factoryBean.setProperties(properties);
             factoryBean.getFeatures().add(new LoggingFeature());
-            factoryBean.getOutInterceptors().add(new SystemSAMLOutInterceptor());
+            factoryBean.getOutInterceptors().add(new UserSAMLOutInterceptor());
             factoryBean.setServiceClass(OppgavebehandlingPortType.class);
             factoryBean.setAddress(oppgavebehandlingEndpoint);
             OppgavebehandlingPortType oppgavebehandlingPortType = factoryBean.create(OppgavebehandlingPortType.class);
