@@ -97,9 +97,14 @@ public class HentOppgaveConfig {
         @Override
         public List<PingResult> ping() {
             long start = System.currentTimeMillis();
-            boolean ping = oppgavebehandlingPortType.ping();
-            long timeElapsed = System.currentTimeMillis() - start;
-            return asList(new PingResult("Oppgavebehandling_v1", ping ? SERVICE_OK : SERVICE_FAIL, timeElapsed));
+            try {
+                boolean ping = oppgavebehandlingPortType.ping();
+                long timeElapsed = System.currentTimeMillis() - start;
+                return asList(new PingResult("Oppgavebehandling_v1", ping ? SERVICE_OK : SERVICE_FAIL, timeElapsed));
+            } catch (Exception e) {
+                long timeElapsed = System.currentTimeMillis() - start;
+                return asList(new PingResult("Oppgavebehandling_v1", SERVICE_FAIL, timeElapsed));
+            }
         }
     }
 }
