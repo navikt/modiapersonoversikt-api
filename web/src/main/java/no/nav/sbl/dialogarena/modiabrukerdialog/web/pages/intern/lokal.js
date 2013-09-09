@@ -224,7 +224,9 @@ function setSessionTimeoutBox() {
 }
 
 function createTimeoutBox() {
-    $('body').append($('<div/>').addClass('wicket-mask-dark'));
+    if (!$('.wicket-mask-dark')[0]) {
+        $('body').append($('<div/>').addClass('wicket-mask-dark'));
+    }
     $('.informasjonsboks.timeout').show();
 }
 
