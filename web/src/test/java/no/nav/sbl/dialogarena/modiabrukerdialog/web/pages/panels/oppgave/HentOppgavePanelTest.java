@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave;
 
-import javax.inject.Inject;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
@@ -11,6 +10,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare.BesvareSporsmalPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.BesvareModell;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.SporsmalVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.modell.SvarVM;
+import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +19,10 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.inject.Inject;
+
 import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.containedInComponent;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
@@ -41,18 +44,17 @@ public class HentOppgavePanelTest extends TestSecurityBaseClass {
     }
 
     @Test
-    public void skalAapneBesvarePanelNaarDuPlukkerOppgaver() {
-        fluentWicketTester.should().containComponent(both(ofType(BesvareSporsmalPanel.class)).and(thatIsVisible()));
+    public void skalViseTemavelgerNaarDuPlukkerOppgave() {
+        fluentWicketTester.should().containComponent(both(ofType(HentOppgavePanel.class)).and(thatIsVisible()));
     }
 
     @Test
-    public void skalAapneInternsideTilRiktigBruker() {
+    public void besvarePanelSkalHaVerdierNaarManHarValgtTema() {
+        fluentWicketTester.tester.executeAjaxEvent(fluentWicketTester.get().components(ofType(ListItem.class).and(containedInComponent(ofType(VelgTemaPanel.class)))).get(0), "click");
+
         PageParameters pageParameters = fluentWicketTester.tester.getLastRenderedPage().getPageParameters();
         assertThat(pageParameters.get("fnr").toString(), equalTo(HentOppgaveConfig.OppgavebehandlingTest.FODESELSNR));
-    }
 
-    @Test
-    public void besvarePanelSkalHaVerdierNaarManPlukkerOppgave() {
         BesvareModell modell = (BesvareModell) fluentWicketTester.get().component(ofType(BesvareSporsmalPanel.class)).getDefaultModel();
         SporsmalVM sporsmal = modell.getObject().sporsmal;
         assertNotNull(sporsmal.fritekst);
