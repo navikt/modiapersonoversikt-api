@@ -17,7 +17,6 @@ public class BesvareHenvendelsePortTypeMock implements BesvareHenvendelsePortTyp
     public WSSporsmalOgSvar hentSporsmalOgSvar(String oppgaveId) {
         Random random = new Random();
         WSSporsmal spsm = new WSSporsmal()
-                .withBehandlingsId("" + random.nextInt())
                 .withFritekst("Fritekst")
                 .withOpprettet(DateTime.now())
                 .withOverskrift("overskrift")

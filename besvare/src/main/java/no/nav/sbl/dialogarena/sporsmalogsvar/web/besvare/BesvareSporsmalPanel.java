@@ -142,7 +142,6 @@ public class BesvareSporsmalPanel extends Panel {
         @Override
         public BesvareVM transform(WSSporsmalOgSvar wsSporsmalOgSvar) {
             SporsmalVM sporsmalVM = new SporsmalVM();
-            sporsmalVM.behandlingsId = wsSporsmalOgSvar.getSporsmal().getBehandlingsId();
             sporsmalVM.fritekst = wsSporsmalOgSvar.getSporsmal().getFritekst();
             sporsmalVM.opprettetDato = wsSporsmalOgSvar.getSporsmal().getOpprettet().toLocalDate();
             sporsmalVM.overskrift = wsSporsmalOgSvar.getSporsmal().getOverskrift();
