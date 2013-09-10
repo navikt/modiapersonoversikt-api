@@ -26,12 +26,12 @@
         <param-name>spring.profiles.active</param-name>
         <param-value>
             kjerneinfoDefault
-            , personsokDefault
-            , brukerhenvendelserDefault
             , sykemeldingsperioderDefault
             , kontrakterDefault
+            , personsokDefault
             , brukerprofilDefault
             , behandleBrukerprofilDefault
+            , brukerhenvendelserDefault
             , oppgavebehandlingDefault
         </param-value>
     </context-param>
