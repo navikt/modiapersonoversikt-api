@@ -142,6 +142,8 @@ function movePersonsok() {
 	var navbar = $('.navbar');
 	var logo = $('.modia-logo');
 	var nullstill = $('INPUT[name=nullstillSok]');
+    var error = $('.feedbackPanelERROR');
+    error.remove();
 
 	if (navbar[0].style.marginTop == '1%') {
 		toggleAvansertSok();
