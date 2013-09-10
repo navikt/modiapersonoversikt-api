@@ -55,7 +55,6 @@ public class HentOppgavePanelTest extends TestSecurityBaseClass {
     public void besvarePanelSkalHaVerdierNaarManPlukkerOppgave() {
         BesvareModell modell = (BesvareModell) fluentWicketTester.get().component(ofType(BesvareSporsmalPanel.class)).getDefaultModel();
         SporsmalVM sporsmal = modell.getObject().sporsmal;
-        assertNotNull(sporsmal.behandlingsId);
         assertNotNull(sporsmal.fritekst);
         assertNotNull(sporsmal.opprettetDato);
         assertNotNull(sporsmal.overskrift);
