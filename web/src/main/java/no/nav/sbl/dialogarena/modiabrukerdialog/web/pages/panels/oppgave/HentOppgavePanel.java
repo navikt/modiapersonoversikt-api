@@ -4,6 +4,7 @@ import javax.inject.Inject;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.informasjon.WSPlukkOppgaveResultat;
+import org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow;
 import org.apache.wicket.markup.html.link.Link;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -19,6 +20,9 @@ public class HentOppgavePanel extends Panel {
             @Override
             public void onClick() {
                 WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave("tema");
+                if (oppgaveResultat == null) {
+                    return;
+                }
                 PageParameters pageParameters = new PageParameters();
                 pageParameters.add("fnr", oppgaveResultat.getFodselsnummer());
                 pageParameters.add("oppgaveId", oppgaveResultat.getOppgaveId());
