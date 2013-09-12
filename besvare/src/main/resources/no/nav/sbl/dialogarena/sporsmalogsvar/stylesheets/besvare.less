@@ -1,0 +1,151 @@
+@bakgrunnsfarge: #f1f1f1;
+@rammeborder: #ccc;
+@sidepadding: 2em;
+@dodgerblue: #1E90FF;
+
+.besvare-panel {
+  background-color: @bakgrunnsfarge;
+  max-width: 100%;
+  box-sizing: border-box;
+  .tema-seksjon {
+    border-bottom: 1px solid @rammeborder;
+    padding: 0.5em @sidepadding;
+    h3 {
+      font-size: 1em;
+      color: @dodgerblue;
+      font-weight: bold;
+      margin: 0;
+    }
+  }
+  .svar-seksjon {
+    padding: 0 @sidepadding;
+    margin: 2em 0;
+    h2 {
+      font-size: 1.2em;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    form {
+      textarea {
+        width: 100%;
+        resize: none;
+        overflow: hidden;
+        margin-top: 1em;
+      }
+      input[type="submit"] {
+        background-color: @dodgerblue;
+        color: white;
+        border-style: none;
+        display: none;
+        font-size: 1.2em;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 0.25em 0.75em;
+        margin: 1em 0;
+        &:hover {
+          text-decoration: none;
+          background: (@dodgerblue * 1.1);
+          color: white;
+        }
+      }
+    }
+  }
+  .sporsmal-seksjon {
+    position: relative;
+    padding: 0 @sidepadding;
+    border-bottom: 1px solid @rammeborder;
+    padding-bottom: 2em;
+    h2 {
+      font-size: 1.2em;
+      font-weight: bold;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    aside {
+      float: right;
+      padding-rigth: @sidepadding;
+      text-transform: uppercase;
+      font-size: 0.8em;
+    }
+    p {
+      text-align: justify;
+      line-height: 1.5em;
+      margin-bottom: 0;
+    }
+  }
+  .tidligere-dialog-seksjon {
+    text-align: center;
+    padding: 2em @sidepadding;
+    header {
+      text-transform: uppercase;
+      font-size: 0.8em;
+      margin-bottom: 1em;
+    }
+    article {
+      margin-bottom: 3em;
+      .dialog-innhold {
+        background-color: white;
+        border: 1px solid @rammeborder;
+        padding: @sidepadding;
+        position: relative;
+        h2 {
+          font-size: 1.3em;
+          text-transform: uppercase;
+          font-weight: bold;
+        }
+        .utvide-tekst-pil {
+          position: absolute;
+          height: 0;
+          width: 0;
+          top: 2em;
+          right: 2em;
+          border-left: 8px solid transparent;
+          border-right: 8px solid transparent;
+          border-top: 8px solid @dodgerblue;
+          &.rotert {
+            -webkit-transform: rotate(-180deg);
+            -moz-transform: rotate(-180deg);
+            -ms-transform: rotate(-180deg);
+            -o-transform: rotate(-180deg);
+            transform: rotate(-180deg);
+          }
+        }
+        hr {
+          width: 3em;
+          border: 0;
+          height: 1px;
+          background: black;
+        }
+        p {
+          text-align: justify;
+          line-height: 1.5em;
+          overflow: hidden;
+          margin-bottom: 0;
+        }
+        // CSS magi for å tegne pil
+        &:before, &:after {
+          position: absolute;
+          top: 100%;
+          border: solid transparent;
+          content: " ";
+          height: 0;
+          width: 0;
+        }
+        &:after {
+          border-top-color: white;
+          border-width: 20px;
+          left: 50%;
+          margin-left: -20px;
+        }
+        &:before {
+          border-top-color: @rammeborder;
+          border-width: 21px;
+          left: 50%;
+          margin-left: -21px;
+        }
+        // Ferdig med CSS magi
+      }
+    }
+  }
+}

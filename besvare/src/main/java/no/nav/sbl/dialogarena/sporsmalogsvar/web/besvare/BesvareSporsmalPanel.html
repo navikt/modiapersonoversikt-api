@@ -7,26 +7,27 @@
 <body>
 
 <wicket:panel>
-    <section>
+    <section class="tema-seksjon">
         <h3 wicket:id="tema"/>
     </section>
-    <section>
+    <section class="svar-seksjon">
         <h2>Svar bruker</h2>
         <form wicket:id="svar">
-            <textarea id="tekst" wicket:id="fritekst"/>
-            <input type="submit" wicket:id="send" value="Send"/>
+            <textarea id="tekstfelt" wicket:id="fritekst"/>
+            <input type="submit" class="send-svar-knapp" wicket:id="send" value="Send"/>
         </form>
     </section>
-    <section wicket:id="sporsmal">
+    <section wicket:id="sporsmal" class="sporsmal-seksjon">
         <h2>Fra bruker</h2>
         <aside wicket:id="sendtDato"/>
         <p wicket:id="fritekst"/>
     </section>
-    <section>
+    <section class="tidligere-dialog-seksjon">
         <article wicket:id="tidligere-dialog">
             <header wicket:id="sendtDato"/>
-            <div>
+            <div class="dialog-innhold">
                 <h2 wicket:id="overskrift"/>
+                <div class="utvide-tekst-pil"></div>
                 <hr/>
                 <p wicket:id="fritekst"/>
             </div>
