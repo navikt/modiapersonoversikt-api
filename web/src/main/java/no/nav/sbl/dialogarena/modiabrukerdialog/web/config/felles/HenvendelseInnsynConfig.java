@@ -115,8 +115,9 @@ public class HenvendelseInnsynConfig {
                 }
 
                 WSHenvendelse createWSHenvendelse(String type, DateTime opprettet) {
+                    Random random = new Random();
                     WSHenvendelse wsHenvendelse =
-                            new WSHenvendelse().withBehandlingsId("" + new Random().nextInt()).withHenvendelseType(type)
+                            new WSHenvendelse().withBehandlingsId("" + random.nextInt()).withHenvendelseType(type)
                                     .withOpprettetDato(opprettet).withTraad(BesvareHenvendelsePortTypeMock.TRAAD);
                     ObjectMapper mapper = new ObjectMapper();
                     try {
