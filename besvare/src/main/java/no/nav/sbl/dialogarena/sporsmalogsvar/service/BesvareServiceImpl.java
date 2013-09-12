@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import javax.inject.Inject;
+import javax.inject.Named;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
@@ -25,6 +26,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 public class BesvareServiceImpl implements BesvareService {
 
     @Inject
+    @Named("besvareSso")
     BesvareHenvendelsePortType besvareHenvendelsePortType;
     @Inject
     HenvendelsePortType henvendelsePortType;
