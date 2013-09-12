@@ -12,7 +12,7 @@ public class TestSecurityBaseClass {
 
     @BeforeClass
     public static void setupStatic() {
-        SystemProperties.setFrom("environment-test.properties");
+        SystemProperties.setFrom("environment-local.properties");
         TestCertificates.setupKeyAndTrustStore();
     }
 

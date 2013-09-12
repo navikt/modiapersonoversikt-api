@@ -27,7 +27,7 @@ public class StartJetty {
 
     public static void main(String[] args) throws IOException, NoSuchFieldException, IllegalAccessException {
         SystemProperties.setFrom("jetty-environment.properties");
-        SystemProperties.setFrom("environment-t8.properties");
+        SystemProperties.setFrom("environment-integration.properties");
         TestCertificates.setupKeyAndTrustStore();
 
         Jetty jetty = usingWar(FilesAndDirs.WEBAPP_SOURCE)

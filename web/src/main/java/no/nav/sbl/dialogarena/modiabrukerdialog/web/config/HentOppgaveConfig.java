@@ -2,15 +2,19 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
+import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.informasjon.WSPlukkOppgaveResultat;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
+import org.apache.cxf.feature.Feature;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
+import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.apache.cxf.ws.security.SecurityConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -37,16 +41,21 @@ public class HentOppgaveConfig {
 
         @Bean
         public OppgavebehandlingPortType oppgavebehandlingPortType() {
-            JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("schema-validation-enabled", true);
-            properties.put(SecurityConstants.MUST_UNDERSTAND, false);
-            factoryBean.setProperties(properties);
-            factoryBean.getFeatures().add(new LoggingFeature());
-            factoryBean.getOutInterceptors().add(new UserSAMLOutInterceptor());
+            return opprettOppgavebehandlingPortType(new UserSAMLOutInterceptor());
+        }
+
+        @Bean
+        public Pingable oppgavebehandlingPing() {
+            return new OppgaveBehandlingPing(opprettOppgavebehandlingPortType(new SystemSAMLOutInterceptor()));
+        }
+
+        private OppgavebehandlingPortType opprettOppgavebehandlingPortType(AbstractSAMLOutInterceptor samlOutInterceptor) {
+            JaxWsProxyFactoryBean factoryBean = commonJaxWsConfig(samlOutInterceptor);
             factoryBean.setServiceClass(OppgavebehandlingPortType.class);
             factoryBean.setAddress(oppgavebehandlingEndpoint);
+            factoryBean.setWsdlURL("classpath:Oppgavebehandling.wsdl");
             OppgavebehandlingPortType oppgavebehandlingPortType = factoryBean.create(OppgavebehandlingPortType.class);
+
             Client client = ClientProxy.getClient(oppgavebehandlingPortType);
             HTTPConduit conduit = (HTTPConduit) client.getConduit();
             TLSClientParameters params = new TLSClientParameters();
@@ -56,10 +65,19 @@ public class HentOppgaveConfig {
             return oppgavebehandlingPortType;
         }
 
-        @Bean
-        public Pingable oppgavebehandlingPing() {
-            return new OppgaveBehandlingPing(oppgavebehandlingPortType());
+        private JaxWsProxyFactoryBean commonJaxWsConfig(AbstractSAMLOutInterceptor samlOutInterceptor) {
+            JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
+            Map<String, Object> properties = new HashMap<>();
+            properties.put("schema-validation-enabled", true);
+            properties.put(SecurityConstants.MUST_UNDERSTAND, false);
+            factoryBean.setProperties(properties);
+            List<Feature> features = factoryBean.getFeatures();
+            features.add(new LoggingFeature());
+            features.add(new WSAddressingFeature());
+            factoryBean.getOutInterceptors().add(samlOutInterceptor);
+            return factoryBean;
         }
+
     }
 
     @Profile({"test", "oppgavebehandlingTest"})

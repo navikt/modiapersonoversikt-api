@@ -194,7 +194,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>oppgavebehandling-tjenestespesifikasjon</artifactId>
-                <version>0.0.3</version>
+                <version>0.0.4</version>
             </dependency>
 
             <!-- MODIA-komponenter -->
