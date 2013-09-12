@@ -17,7 +17,13 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>no.nav.sbl.dialogarena.sporsmalogsvar.JettyApplicationContext</param-value>
+        <param-value>no.nav.sbl.dialogarena.sporsmalogsvar.BesvareJettyApplicationContext</param-value>
+    </context-param>
+
+    <context-param>
+        <description>Brukes for å velge kontekst</description>
+        <param-name>spring.profiles.active</param-name>
+        <param-value>test</param-value>
     </context-param>
 
     <filter>

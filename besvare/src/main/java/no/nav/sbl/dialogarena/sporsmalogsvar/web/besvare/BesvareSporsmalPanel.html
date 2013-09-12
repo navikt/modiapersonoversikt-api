@@ -7,31 +7,31 @@
 <body>
 
 <wicket:panel>
-
-    <div class="besvare-panel">
-        <div wicket:id="feedback"></div>
-
-        <section wicket:id="sporsmal" class="sporsmal"/>
-
-        <form wicket:id="svar" class="svar">
-            <div style="margin-bottom: 1em">
-                <label>Overskrift:</label>
-                <input wicket:id="svar.overskrift" type="text"/>
-            </div>
-            <textarea id="tekst" wicket:id="svar.fritekst"/>
-            <label id="antall" style="display: block; text-align: center;"/>
-            <div>
-                <input id="sensitiv" type="checkbox" wicket:id="svar.sensitiv"/>
-                <label for="sensitiv">Inneholder sensitiv informasjon</label>
-            </div>
-            <select wicket:id="svar.saksid" class="temavelger"/>
-            <div>
-                <a wicket:id="send" href="#" class="knapp send">Send</a>
-                <a wicket:id="avbryt" href="#" class="knapp avbryt">Avbryt</a>
-            </div>
+    <section>
+        <h3 wicket:id="tema"/>
+    </section>
+    <section>
+        <h2>Svar bruker</h2>
+        <form wicket:id="svar">
+            <textarea id="tekst" wicket:id="fritekst"/>
+            <input type="submit" wicket:id="send" value="Send"/>
         </form>
-    </div>
-
+    </section>
+    <section wicket:id="sporsmal">
+        <h2>Fra bruker</h2>
+        <aside wicket:id="sendtDato"/>
+        <p wicket:id="fritekst"/>
+    </section>
+    <section>
+        <article wicket:id="tidligere-dialog">
+            <header wicket:id="sendtDato"/>
+            <div>
+                <h2 wicket:id="overskrift"/>
+                <hr/>
+                <p wicket:id="fritekst"/>
+            </div>
+        </article>
+    </section>
 </wicket:panel>
 </body>
 </html>
