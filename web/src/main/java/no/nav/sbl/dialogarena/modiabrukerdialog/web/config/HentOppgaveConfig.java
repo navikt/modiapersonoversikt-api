@@ -84,7 +84,7 @@ public class HentOppgaveConfig {
     @Configuration
     public static class OppgavebehandlingTest {
 
-        public static final String FODESELSNR = "11111111111";
+        public static final String FODESELSNR = "28088834986";
         public static final String OPPGAVEID = "1";
 
         @Bean

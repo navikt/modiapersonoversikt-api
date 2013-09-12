@@ -15,6 +15,7 @@
             , behandleBrukerprofilDefault
             , brukerhenvendelserDefaultWithoutCNCheck
             , oppgavebehandlingDefault
+            , henvendelseInnsynDefault
         </param-value>
     </context-param>
 
