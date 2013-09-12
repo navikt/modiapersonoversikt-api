@@ -1,5 +1,5 @@
 $(document).ready(function() {
-    function attachToggleHoydeListener() {
+    var attachToggleHoydeListener = function() {
         var $dialogInnholdTekst = $('.dialog-innhold p');
         var minHoyde = parseInt($dialogInnholdTekst.css('line-height')) * 2;
 
@@ -22,17 +22,33 @@ $(document).ready(function() {
         });
     };
 
-    function attachJusterTekstfeltListener() {
-        $('#tekstfelt').on('keyup', function() {
+    var attachJusterTekstfeltListener = function() {
+        var $tekstfelt = $('#tekstfelt');
+        var orginalHoyde = $tekstfelt.height();
+        $tekstfelt.on('keyup', function() {
             this.style.height = 'auto';
             $(this).height(this.scrollHeight);
-
-            var $svarKnapp = $('.send-svar-knapp');
-            this.value.length == 0 ? $svarKnapp.hide() : $svarKnapp.show();
         });
-    }
 
-    attachJusterTekstfeltListener();
-    attachToggleHoydeListener();
+        $tekstfelt.on('focusout', function() {
+            if(this.value.length == 0) {
+                $(this).height(orginalHoyde);
+            }
+        });
+    };
+
+
+    var attachAjaxCompleteListener = function() {
+        $(document).on('ajaxComplete', function() {
+            attachListeners();
+        });
+    };
+
+    var attachListeners = function() {
+        attachJusterTekstfeltListener();
+        attachToggleHoydeListener();
+    };
+
+    attachAjaxCompleteListener();
+    attachListeners();
 });
-

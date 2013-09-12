@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare;
 
-import java.util.List;
-import javax.inject.Inject;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareSporsmalDetaljer;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelse;
@@ -17,9 +15,13 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+
+import javax.inject.Inject;
+import java.util.List;
 
 import static java.util.Collections.emptyList;
 
@@ -59,13 +61,21 @@ public class BesvareSporsmalPanel extends Panel {
 
         public SvarForm(String id, final CompoundPropertyModel<Svar> modell) {
             super(id, modell);
+            setOutputMarkupId(true);
+            final FeedbackPanel feedback = new FeedbackPanel("feedback");
             add(
+                    feedback,
                     new TextArea<>("fritekst").setRequired(true),
                     new AjaxSubmitLink("send") {
                         @Override
                         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                             service.besvareSporsmal(modell.getObject());
                             target.add(BesvareSporsmalPanel.this);
+                        }
+
+                        @Override
+                        protected void onError(AjaxRequestTarget target, Form<?> form) {
+                            target.add(SvarForm.this);
                         }
                     }
             );

@@ -11,6 +11,7 @@ import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.cycle.AbstractRequestCycleListener;
 import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.context.ApplicationContext;
 
@@ -48,6 +49,7 @@ public class BesvareSporsmalApplication extends WebApplication {
                                 .attribute("content", "IE=edge,chrome=1")
                                 .done())
                 .addCss(new CssResourceReference(BesvareSporsmalApplication.class, "stylesheets/innboks.css"))
+                .addLess(new PackageResourceReference(BesvareSporsmalApplication.class, "stylesheets/besvare.less"))
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
     }
