@@ -5,7 +5,7 @@
     <parent>
         <artifactId>modiabrukerdialog</artifactId>
         <groupId>no.nav.sbl.dialogarena</groupId>
-        <version>1.0.33-SNAPSHOT</version>
+        <version>1.0.33</version>
     </parent>
 
     <artifactId>modiabrukerdialog-example-component</artifactId>
