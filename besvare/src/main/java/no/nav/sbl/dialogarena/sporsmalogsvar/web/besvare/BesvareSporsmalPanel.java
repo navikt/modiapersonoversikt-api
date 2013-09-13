@@ -19,16 +19,23 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelsestype.SPORSMAL;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelsestype.SVAR;
 
 public class BesvareSporsmalPanel extends Panel {
 
     @Inject
     private BesvareService service;
+
+    private TidligereDialog tidligereDialog;
+    private SporsmalDetaljer sporsmalDetaljer;
 
     public BesvareSporsmalPanel(String id, String oppgaveId, String fnr) {
         super(id);
@@ -41,14 +48,16 @@ public class BesvareSporsmalPanel extends Panel {
             besvareSporsmalDetaljer = new BesvareSporsmalDetaljer();
             besvareSporsmalDetaljer.tema = "";
             besvareSporsmalDetaljer.svar = new Svar("1");
-            besvareSporsmalDetaljer.sporsmal = new Sporsmal();
+            besvareSporsmalDetaljer.sporsmal = new Sporsmal("", DateTime.now());
             besvareSporsmalDetaljer.tildligereDialog = emptyList();
         }
+        tidligereDialog = new TidligereDialog("tidligere-dialog", new ArrayList<>(besvareSporsmalDetaljer.tildligereDialog));
+        sporsmalDetaljer = new SporsmalDetaljer("sporsmal", new CompoundPropertyModel<>(besvareSporsmalDetaljer.sporsmal));
         add(
                 new Label("tema", besvareSporsmalDetaljer.tema),
                 new SvarForm("svar", new CompoundPropertyModel<>(besvareSporsmalDetaljer.svar)),
-                new SporsmalDetaljer("sporsmal", new CompoundPropertyModel<>(besvareSporsmalDetaljer.sporsmal)),
-                new TidligereDialog("tidligere-dialog", besvareSporsmalDetaljer.tildligereDialog));
+                sporsmalDetaljer,
+                tidligereDialog);
     }
 
     @Override
@@ -62,20 +71,33 @@ public class BesvareSporsmalPanel extends Panel {
         public SvarForm(String id, final CompoundPropertyModel<Svar> modell) {
             super(id, modell);
             setOutputMarkupId(true);
-            final FeedbackPanel feedback = new FeedbackPanel("feedback");
+
+            final TextArea<String> fritekst = new TextArea<>("fritekst");
+            fritekst.setRequired(true);
             add(
-                    feedback,
-                    new TextArea<>("fritekst").setRequired(true),
+                    new FeedbackPanel("feedback"),
+                    fritekst,
                     new AjaxSubmitLink("send") {
+
                         @Override
                         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                             service.besvareSporsmal(modell.getObject());
+
+                            Sporsmal sporsmal = (Sporsmal) sporsmalDetaljer.getDefaultModelObject();
+                            tidligereDialog.prependHenvendelse(new Henvendelse(SPORSMAL, sporsmal.getSendtDato(), sporsmal.getFritekst()));
+
+                            Svar svar = modell.getObject();
+                            tidligereDialog.prependHenvendelse(new Henvendelse(SVAR, DateTime.now(), svar.fritekst));
+
+                            sporsmalDetaljer.setVisible(false);
+                            SvarForm.this.setVisible(false);
+
                             target.add(BesvareSporsmalPanel.this);
                         }
 
                         @Override
                         protected void onError(AjaxRequestTarget target, Form<?> form) {
-                            target.add(SvarForm.this);
+                            target.add(BesvareSporsmalPanel.this);
                         }
                     }
             );
@@ -86,7 +108,7 @@ public class BesvareSporsmalPanel extends Panel {
 
         public SporsmalDetaljer(String id, CompoundPropertyModel<Sporsmal> modell) {
             super(id, modell);
-            add(new Label("sendtDato"), new Label("fritekst"));
+            add(new Label("sendtDatoAsString"), new Label("fritekst"));
         }
     }
 
@@ -99,6 +121,12 @@ public class BesvareSporsmalPanel extends Panel {
         @Override
         protected void populateItem(ListItem<Henvendelse> item) {
             item.add(new Label("sendtDato"), new Label("overskrift"), new Label("fritekst"));
+        }
+
+        public void prependHenvendelse(Henvendelse henvendelse) {
+            List<Henvendelse> henvendelser = getModelObject();
+            henvendelser.add(0, henvendelse);
+            setModelObject(henvendelser);
         }
     }
 

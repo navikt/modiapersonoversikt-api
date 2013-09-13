@@ -9,7 +9,12 @@ $(document).ready(function() {
 
         $dialogInnholdTekst.height(minHoyde);
 
-        $('.dialog-innhold').on('click', function() {
+        var $dialogInnhold = $('.dialog-innhold');
+
+        // I tilfelle AJAX events fra andre deler av Modia
+        $dialogInnhold.off('click');
+
+        $dialogInnhold.on('click', function() {
             var $tekstFelt = $(this).find('p');
             var animasjonsHastighet = 100;
 
@@ -44,6 +49,7 @@ $(document).ready(function() {
     var attachAjaxCompleteListener = function() {
         $(document).on('ajaxComplete', function() {
             attachJusterTekstfeltListener();
+            attachToggleHoydeListener();
         });
     };
 
