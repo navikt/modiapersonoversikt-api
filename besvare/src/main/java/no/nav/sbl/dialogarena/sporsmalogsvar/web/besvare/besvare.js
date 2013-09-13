@@ -25,6 +25,10 @@ $(document).ready(function() {
     var attachJusterTekstfeltListener = function() {
         var $tekstfelt = $('#tekstfelt');
         var orginalHoyde = $tekstfelt.height();
+
+        // I tilfelle AJAX events fra andre deler av Modia
+        $tekstfelt.off('keyup focusout');
+
         $tekstfelt.on('keyup', function() {
             this.style.height = 'auto';
             $(this).height(this.scrollHeight);
@@ -37,18 +41,13 @@ $(document).ready(function() {
         });
     };
 
-
     var attachAjaxCompleteListener = function() {
         $(document).on('ajaxComplete', function() {
-            attachListeners();
+            attachJusterTekstfeltListener();
         });
     };
 
-    var attachListeners = function() {
-        attachJusterTekstfeltListener();
-        attachToggleHoydeListener();
-    };
-
     attachAjaxCompleteListener();
-    attachListeners();
+    attachJusterTekstfeltListener();
+    attachToggleHoydeListener();
 });

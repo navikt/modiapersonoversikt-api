@@ -7,33 +7,35 @@
 <body>
 
 <wicket:panel>
-    <section class="tema-seksjon">
-        <h3 wicket:id="tema"/>
-    </section>
-    <section class="svar-seksjon">
-        <h2>Svar bruker</h2>
-        <form wicket:id="svar">
-            <span wicket:id="feedback"></span>
-            <textarea id="tekstfelt" wicket:id="fritekst" rows="1"/>
-            <input type="submit" class="send-svar-knapp" wicket:id="send" value="Send"/>
-        </form>
-    </section>
-    <section wicket:id="sporsmal" class="sporsmal-seksjon">
-        <h2>Fra bruker</h2>
-        <aside wicket:id="sendtDato"/>
-        <p wicket:id="fritekst"/>
-    </section>
-    <section class="tidligere-dialog-seksjon">
-        <article wicket:id="tidligere-dialog">
-            <header wicket:id="sendtDato"/>
-            <div class="dialog-innhold">
-                <h2 wicket:id="overskrift"/>
-                <div class="utvide-tekst-pil"></div>
-                <hr/>
-                <p wicket:id="fritekst"/>
-            </div>
-        </article>
-    </section>
+    <div class="besvare-panel">
+        <section class="tema-seksjon">
+            <h3 wicket:id="tema"/>
+        </section>
+        <section class="svar-seksjon">
+            <h2>Svar bruker</h2>
+            <form wicket:id="svar">
+                <span wicket:id="feedback"></span>
+                <textarea id="tekstfelt" wicket:id="fritekst" rows="1"/>
+                <input type="submit" class="send-svar-knapp" wicket:id="send" value="Send"/>
+            </form>
+        </section>
+        <section wicket:id="sporsmal" class="sporsmal-seksjon">
+            <h2>Fra bruker</h2>
+            <aside wicket:id="sendtDato"/>
+            <p wicket:id="fritekst"/>
+        </section>
+        <section class="tidligere-dialog-seksjon">
+            <article wicket:id="tidligere-dialog">
+                <header wicket:id="sendtDato"/>
+                <div class="dialog-innhold">
+                    <h2 wicket:id="overskrift"/>
+                    <div class="utvide-tekst-pil"></div>
+                    <hr/>
+                    <p wicket:id="fritekst"/>
+                </div>
+            </article>
+        </section>
+    </div>
 </wicket:panel>
 </body>
 </html>
