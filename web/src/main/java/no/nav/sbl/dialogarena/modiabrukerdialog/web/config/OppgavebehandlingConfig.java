@@ -30,11 +30,11 @@ import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 
 @Configuration
-public class HentOppgaveConfig {
+public class OppgavebehandlingConfig {
 
     @Profile({"default", "oppgavebehandlingDefault"})
     @Configuration
-    public static class OppgavebehandlingDefault {
+    public static class Default {
 
         @Value("${oppgavebehandlingendpoint.url}")
         protected String oppgavebehandlingEndpoint;
@@ -46,7 +46,7 @@ public class HentOppgaveConfig {
 
         @Bean
         public Pingable oppgavebehandlingPing() {
-            return new OppgaveBehandlingPing(opprettOppgavebehandlingPortType(new SystemSAMLOutInterceptor()));
+            return new OppgavebehandlingPing(opprettOppgavebehandlingPortType(new SystemSAMLOutInterceptor()));
         }
 
         private OppgavebehandlingPortType opprettOppgavebehandlingPortType(AbstractSAMLOutInterceptor samlOutInterceptor) {
@@ -77,14 +77,13 @@ public class HentOppgaveConfig {
             factoryBean.getOutInterceptors().add(samlOutInterceptor);
             return factoryBean;
         }
-
     }
 
     @Profile({"test", "oppgavebehandlingTest"})
     @Configuration
-    public static class OppgavebehandlingTest {
+    public static class Test {
 
-        public static final String FODESELSNR = "28088834986";
+        public static final String FODESELSNR = "12345678901";
         public static final String OPPGAVEID = "1";
 
         @Bean
@@ -102,14 +101,13 @@ public class HentOppgaveConfig {
 
             };
         }
-
     }
 
-    private static class OppgaveBehandlingPing implements Pingable {
+    private static class OppgavebehandlingPing implements Pingable {
 
         OppgavebehandlingPortType oppgavebehandlingPortType;
 
-        public OppgaveBehandlingPing(OppgavebehandlingPortType oppgavebehandlingPortType) {
+        public OppgavebehandlingPing(OppgavebehandlingPortType oppgavebehandlingPortType) {
             this.oppgavebehandlingPortType = oppgavebehandlingPortType;
         }
 

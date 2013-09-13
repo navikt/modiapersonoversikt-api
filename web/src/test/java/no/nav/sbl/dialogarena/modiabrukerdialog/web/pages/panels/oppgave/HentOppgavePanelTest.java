@@ -4,7 +4,7 @@ import javax.inject.Inject;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.HentOppgaveConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Sporsmal;
@@ -51,7 +51,7 @@ public class HentOppgavePanelTest extends TestSecurityBaseClass {
         fluentWicketTester.tester.executeAjaxEvent(fluentWicketTester.get().components(ofType(ListItem.class).and(containedInComponent(ofType(VelgTemaPanel.class)))).get(0), "click");
 
         PageParameters pageParameters = fluentWicketTester.tester.getLastRenderedPage().getPageParameters();
-        assertThat(pageParameters.get("fnr").toString(), equalTo(HentOppgaveConfig.OppgavebehandlingTest.FODESELSNR));
+        assertThat(pageParameters.get("fnr").toString(), equalTo(OppgavebehandlingConfig.Test.FODESELSNR));
 
         Sporsmal sporsmal = (Sporsmal) fluentWicketTester.get()
                 .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("sporsmal")))

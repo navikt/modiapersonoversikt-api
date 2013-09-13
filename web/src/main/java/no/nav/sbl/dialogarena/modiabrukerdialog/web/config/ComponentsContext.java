@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.HenvendelseInnsynConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -14,9 +12,9 @@ import org.springframework.context.annotation.Import;
         no.nav.kjerneinfo.kontrakter.config.KontrakterPanelConfig.class,
         no.nav.brukerprofil.config.BrukerprofilPanelConfig.class,
         no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareHenvendelseConfig.class,
-        HentOppgaveConfig.class,
-        HenvendelseInnsynConfig.class,
-        BesvareServiceConfig.class
+        no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.HenvendelseinnsynConfig.class,
+        no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig.class,
+        OppgavebehandlingConfig.class
 })
 public class ComponentsContext {
 

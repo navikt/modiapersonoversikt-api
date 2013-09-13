@@ -30,13 +30,13 @@ import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.Utils.konfigurerMedHttps;
 
 @Configuration
-public class HenvendelseInnsynConfig {
+public class HenvendelseinnsynConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(HenvendelseInnsynConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(HenvendelseinnsynConfig.class);
 
-    @Profile({"default", "henvendelseInnsynDefault"})
+    @Profile({"default", "henvendelseinnsynDefault"})
     @Configuration
-    public static class HenvendelseInnsynDefault {
+    public static class Default {
 
         @Value("${henvendelseendpoint.url}")
         protected String henvendelseEndpoint;
@@ -81,9 +81,9 @@ public class HenvendelseInnsynConfig {
         }
     }
 
-    @Profile({"test", "henvendelseInnsynTest"})
+    @Profile({"test", "henvendelseinnsynTest"})
     @Configuration
-    public static class HenvendelseInnsynTest {
+    public static class Test {
 
         @Bean
         public HenvendelsePortType henvendelsePortType() {

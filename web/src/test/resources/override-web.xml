@@ -14,8 +14,9 @@
             , brukerprofilDefault
             , behandleBrukerprofilDefault
             , brukerhenvendelserDefaultWithoutCNCheck
-            , oppgavebehandlingDefault
-            , henvendelseInnsynDefault
+            , henvendelseinnsynTest
+            , besvarehenvendelseTest
+            , oppgavebehandlingTest
         </param-value>
     </context-param>
 
