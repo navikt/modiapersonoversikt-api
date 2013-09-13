@@ -56,8 +56,8 @@ public class HentOppgavePanelTest extends TestSecurityBaseClass {
         Sporsmal sporsmal = (Sporsmal) fluentWicketTester.get()
                 .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("sporsmal")))
                 .getDefaultModelObject();
-        assertNotNull(sporsmal.fritekst);
-        assertNotNull(sporsmal.sendtDato);
+        assertNotNull(sporsmal.getFritekst());
+        assertNotNull(sporsmal.getSendtDato());
 
         Svar svar = (Svar) fluentWicketTester.get()
                 .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("svar"))).getDefaultModelObject();
