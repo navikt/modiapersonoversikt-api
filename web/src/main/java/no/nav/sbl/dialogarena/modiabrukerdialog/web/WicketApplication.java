@@ -77,7 +77,9 @@ public class WicketApplication extends WebApplication {
                 )
 		        .addConditionalCss(Intern.INTERN_IE)
                 .addConditionalJavascript(Intern.RESPOND_JS)
-		        .addLess(BasePage.INTERN_LESS)
+		        .addLess(
+                        BasePage.INTERN_LESS,
+                        BasePage.BESVARESPORSALPANEL)
                 .addCss(
 		                BasePage.PERSONSOKRESULT,
 		                BasePage.PERSONSOKSEARCH,
