@@ -10,7 +10,7 @@
 
     <name>Dialogarena - modiabrukerdialog</name>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>1.0.35-SNAPSHOT</version>
+    <version>1.0.35</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -742,9 +742,9 @@
         </plugins>
     </build>
     <scm>
-        <developerConnection>scm:svn:https://versjonskontroll.adeo.no/svn/nav-sbl/dialogarena/modiabrukerdialog/branches/leveranse1
+        <developerConnection>scm:svn:https://versjonskontroll.adeo.no/svn/nav-sbl/dialogarena/modiabrukerdialog/tags/1.0.35-modiabrukerdialog
         </developerConnection>
-        <url>https://versjonskontroll.adeo.no/wsvn/nav-sbl/dialogarena/modiabrukerdialog/branches/leveranse1</url>
+        <url>https://versjonskontroll.adeo.no/wsvn/nav-sbl/dialogarena/modiabrukerdialog/tags/1.0.35-modiabrukerdialog</url>
     </scm>
 
     <profiles>
