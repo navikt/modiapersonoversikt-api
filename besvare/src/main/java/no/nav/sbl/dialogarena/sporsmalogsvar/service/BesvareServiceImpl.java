@@ -43,7 +43,7 @@ public class BesvareServiceImpl implements BesvareService {
 
         List<WSHenvendelse> wsHenvendelser = on(henvendelsePortType.hentHenvendelseListe(fnr)).collect(NYESTE_FORST);
 
-        besvareSporsmalDetaljer.tildligereDialog = on(wsHenvendelser)
+        besvareSporsmalDetaljer.tidligereDialog = on(wsHenvendelser)
                 .filter(where(TRAAD_ID, equalTo(wsSporsmalOgSvar.getSporsmal().getTraad())))
                 .filter(where(BEHANDLINGS_ID, not(equalTo(wsSporsmalOgSvar.getSporsmal().getBehandlingsId()))))
                 .map(TIL_HENVENDELSE).collect();

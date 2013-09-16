@@ -6,5 +6,5 @@ public class BesvareSporsmalDetaljer {
     public String tema;
     public Svar svar;
     public Sporsmal sporsmal;
-    public List<Henvendelse> tildligereDialog;
+    public List<Henvendelse> tidligereDialog;
 }
