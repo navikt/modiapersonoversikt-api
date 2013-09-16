@@ -32,7 +32,7 @@ public class VelgTemaPanel extends Panel {
             item.add(new AjaxEventBehavior("click") {
                 @Override
                 protected void onEvent(AjaxRequestTarget target) {
-                    VelgTemaPanel.this.delegat.valgteTema(item.getModelObject());
+                    VelgTemaPanel.this.delegat.valgteTema(item.getModelObject(), target);
                 }
             });
         }
