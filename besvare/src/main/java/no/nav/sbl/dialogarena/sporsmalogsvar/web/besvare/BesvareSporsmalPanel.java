@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareService;
@@ -24,6 +25,7 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.joda.time.DateTime;
 
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelsestype.SPORSMAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelsestype.SVAR;
 
@@ -83,7 +85,9 @@ public class BesvareSporsmalPanel extends Panel {
                             Sporsmal sporsmal = (Sporsmal) sporsmalDetaljer.getDefaultModelObject();
                             tidligereDialog.prependHenvendelse(new Henvendelse(SPORSMAL, sporsmal.getSendtDato(), sporsmal.getFritekst()));
 
-                            tidligereDialog.prependHenvendelse(new Henvendelse(SVAR, DateTime.now(), svar.fritekst));
+                            Henvendelse svarkvittering = new Henvendelse(SVAR, DateTime.now(), svar.fritekst);
+                            svarkvittering.tidligereHenvendelse.setObject(false);
+                            tidligereDialog.prependHenvendelse(svarkvittering);
 
                             sporsmalDetaljer.setVisible(false);
                             SvarForm.this.setVisible(false);
@@ -117,13 +121,13 @@ public class BesvareSporsmalPanel extends Panel {
         @Override
         protected void populateItem(ListItem<Henvendelse> item) {
             item.add(new Label("sendtDato"), new Label("overskrift"), new Label("fritekst"));
+            item.add(hasCssClassIf("tidligere-dialog", item.getModelObject().tidligereHenvendelse));
         }
 
         public void prependHenvendelse(Henvendelse henvendelse) {
-            List<Henvendelse> henvendelser = getModelObject();
+            List<Henvendelse> henvendelser = new ArrayList<>(getModelObject());
             henvendelser.add(0, henvendelse);
             setModelObject(henvendelser);
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.service;
 
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -27,4 +28,7 @@ public class Henvendelse implements Serializable {
     public String getFritekst() {
         return fritekst;
     }
+
+    public CompoundPropertyModel<Boolean> tidligereHenvendelse = new CompoundPropertyModel<>(true);
+
 }

@@ -11,14 +11,12 @@
         <section class="tema-seksjon">
             <h3 wicket:id="tema"/>
         </section>
-        <section class="svar-seksjon">
-            <form wicket:id="svar">
-                <h2>Svar bruker</h2>
-                <span wicket:id="feedback"></span>
-                <textarea id="tekstfelt" wicket:id="svar.fritekst" rows="1"/>
-                <input type="submit" class="send-svar-knapp" wicket:id="send" value="Send"/>
-            </form>
-        </section>
+        <form wicket:id="svar" class="svar-seksjon">
+            <h2>Svar bruker</h2>
+            <span wicket:id="feedback"></span>
+            <textarea id="tekstfelt" wicket:id="svar.fritekst" rows="1"/>
+            <input type="submit" class="send-svar-knapp" wicket:id="send" value="Send"/>
+        </form>
         <section wicket:id="sporsmal" class="sporsmal-seksjon">
             <h2>Fra bruker</h2>
             <aside wicket:id="sporsmal.sendtDatoAsString"/>

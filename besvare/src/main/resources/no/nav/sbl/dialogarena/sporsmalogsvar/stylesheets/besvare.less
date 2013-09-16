@@ -30,27 +30,25 @@
       text-transform: uppercase;
       margin: 0;
     }
-    form {
-      textarea {
-        width: 100%;
-        resize: none;
-        overflow: hidden;
-        margin-top: 1em;
-      }
-      input[type="submit"] {
-        background-color: @dodgerblue;
+    textarea {
+      width: 100%;
+      resize: none;
+      overflow: hidden;
+      margin-top: 1em;
+    }
+    input[type="submit"] {
+      background-color: @dodgerblue;
+      color: white;
+      border: 1px solid (@dodgerblue * 0.8);
+      font-size: 1.2em;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding: 0.75em 2em;
+      margin-top: 1em;
+      &:hover {
+        text-decoration: none;
+        background: (@dodgerblue * 1.1);
         color: white;
-        border: 1px solid (@dodgerblue * 0.8);
-        font-size: 1.2em;
-        font-weight: bold;
-        text-transform: uppercase;
-        padding: 0.75em 2em;
-        margin-top: 1em;
-        &:hover {
-          text-decoration: none;
-          background: (@dodgerblue * 1.1);
-          color: white;
-        }
       }
     }
   }
@@ -100,23 +98,6 @@
           font-weight: bold;
           margin: 0;
         }
-        .utvide-tekst-pil {
-          position: absolute;
-          height: 0;
-          width: 0;
-          top: 2em;
-          right: 2em;
-          border-left: 8px solid transparent;
-          border-right: 8px solid transparent;
-          border-top: 8px solid @dodgerblue;
-          &.rotert {
-            -webkit-transform: rotate(-180deg);
-            -moz-transform: rotate(-180deg);
-            -ms-transform: rotate(-180deg);
-            -o-transform: rotate(-180deg);
-            transform: rotate(-180deg);
-          }
-        }
         hr {
           width: 3em;
           border: 0;
@@ -153,6 +134,27 @@
           margin-left: -21px;
         }
         // Ferdig med CSS magi
+      }
+      &.tidligere-dialog {
+        .dialog-innhold {
+          .utvide-tekst-pil {
+            position: absolute;
+            height: 0;
+            width: 0;
+            top: 2em;
+            right: 2em;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-top: 8px solid @dodgerblue;
+            &.rotert {
+              -webkit-transform: rotate(-180deg);
+              -moz-transform: rotate(-180deg);
+              -ms-transform: rotate(-180deg);
+              -o-transform: rotate(-180deg);
+              transform: rotate(-180deg);
+            }
+          }
+        }
       }
     }
   }

@@ -1,15 +1,17 @@
 $(document).ready(function() {
     var attachToggleHoydeListener = function() {
-        var $dialogInnholdTekst = $('.dialog-innhold p');
+        var $dialogInnholdTekst = $('.tidligere-dialog .dialog-innhold p');
         var minHoyde = parseInt($dialogInnholdTekst.css('line-height')) * 2;
 
         $dialogInnholdTekst.each(function() {
-            $(this).data('height', $(this).height());
+            if(!$(this).data('height') && $(this).height() >= minHoyde) {
+                $(this).data('height', $(this).height());
+            }
         });
 
         $dialogInnholdTekst.height(minHoyde);
 
-        var $dialogInnhold = $('.dialog-innhold');
+        var $dialogInnhold = $('.tidligere-dialog .dialog-innhold');
 
         // I tilfelle AJAX events fra andre deler av Modia
         $dialogInnhold.off('click');
