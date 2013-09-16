@@ -50,7 +50,7 @@
         <!-- Modia-komponenter-->
         <personsok.version>0.0.91</personsok.version>
 		<kjerneinfo.versjon>1.0.31</kjerneinfo.versjon>
-        <sporsmalogsvar.version>1.0</sporsmalogsvar.version>
+        <sporsmalogsvar.version>1.1</sporsmalogsvar.version>
     </properties>
 
     <dependencyManagement>
