@@ -33,7 +33,7 @@
             , behandleBrukerprofilDefault
             , brukerhenvendelserDefault
             , oppgavebehandlingDefault
-            , henvendelseInnsynDefault
+            , henvendelseinnsynDefault
         </param-value>
     </context-param>
 

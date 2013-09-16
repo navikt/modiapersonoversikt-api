@@ -15,6 +15,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortT
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
+import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.apache.cxf.ws.security.SecurityConstants;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -48,7 +49,9 @@ public class HenvendelseinnsynConfig {
             properties.put("schema-validation-enabled", true);
             properties.put(SecurityConstants.MUST_UNDERSTAND, false);
             factoryBean.setProperties(properties);
+            factoryBean.setWsdlURL("classpath:Henvendelse.wsdl");
             factoryBean.getFeatures().add(new LoggingFeature());
+            factoryBean.getFeatures().add(new WSAddressingFeature());
             factoryBean.getOutInterceptors().add(new SystemSAMLOutInterceptor());
             factoryBean.getOutInterceptors().add(new UserSAMLOutInterceptor());
             factoryBean.setServiceClass(HenvendelsePortType.class);
