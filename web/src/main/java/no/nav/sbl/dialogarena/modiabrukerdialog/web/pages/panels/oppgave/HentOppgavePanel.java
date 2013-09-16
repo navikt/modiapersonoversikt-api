@@ -26,7 +26,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-public class HentOppgavePanel extends Panel implements Temavelgerdelegat {
+public class HentOppgavePanel extends Panel {
 
     @Inject
     OppgavebehandlingPortType service;
@@ -109,7 +109,6 @@ public class HentOppgavePanel extends Panel implements Temavelgerdelegat {
         }
     }
 
-    @Override
     public void valgteTema(String tema, AjaxRequestTarget target) {
         WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema);
         if (oppgaveResultat == null) {

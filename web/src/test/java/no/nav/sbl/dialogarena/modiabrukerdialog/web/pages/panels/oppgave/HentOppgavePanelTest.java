@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave;
 
-import javax.inject.Inject;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
@@ -18,6 +17,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.inject.Inject;
 
 import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.containedInComponent;
@@ -48,7 +49,7 @@ public class HentOppgavePanelTest extends TestSecurityBaseClass {
 
     @Test
     public void besvarePanelSkalHaVerdierNaarManHarValgtTema() {
-        fluentWicketTester.tester.executeAjaxEvent(fluentWicketTester.get().components(ofType(ListItem.class).and(containedInComponent(ofType(VelgTemaPanel.class)))).get(0), "click");
+        fluentWicketTester.tester.executeAjaxEvent(fluentWicketTester.get().components(ofType(ListItem.class).and(containedInComponent(ofType(HentOppgavePanel.class)))).get(0), "click");
 
         PageParameters pageParameters = fluentWicketTester.tester.getLastRenderedPage().getPageParameters();
         assertThat(pageParameters.get("fnr").toString(), equalTo(OppgavebehandlingConfig.Test.FODESELSNR));
