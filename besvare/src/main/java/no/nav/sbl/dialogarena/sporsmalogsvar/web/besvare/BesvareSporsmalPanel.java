@@ -23,6 +23,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.validation.validator.StringValidator;
 import org.joda.time.DateTime;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
@@ -66,12 +67,15 @@ public class BesvareSporsmalPanel extends Panel {
 
     private final class SvarForm extends Form<Svar> {
 
+        private static final int FRITEKST_MAKS_LENGDE = 5000;
+
         public SvarForm(String id) {
             super(id);
             setOutputMarkupId(true);
 
             final TextArea<String> fritekst = new TextArea<>("svar.fritekst");
             fritekst.setRequired(true);
+            fritekst.add(StringValidator.maximumLength(FRITEKST_MAKS_LENGDE));
             add(
                     new FeedbackPanel("feedback"),
                     fritekst,
