@@ -56,9 +56,9 @@ $(document).ready(function() {
         var padding = $tekstfelt.innerHeight() - $tekstfelt.height();
 
         // I tilfelle AJAX events fra andre deler av Modia
-        $tekstfelt.off('keyup focusin focusout');
+        $tekstfelt.off('input focusin focusout');
 
-        $tekstfelt.on('keyup', function() {
+        $tekstfelt.on('input', function() {
             if (this.scrollHeight - padding > utvidetHoyde) {
                 this.style.height = 'auto';
                 $(this).height(this.scrollHeight);
