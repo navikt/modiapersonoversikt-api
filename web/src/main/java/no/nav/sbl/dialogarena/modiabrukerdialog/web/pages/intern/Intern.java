@@ -16,6 +16,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.timeout.TimeoutBoks;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -123,14 +124,14 @@ public class Intern extends BasePage {
 	private void instantiateComponents(String fnrFromRequest, String oppgaveIdFromRequest) {
         add(
                 new Button("toggle-sok"),
-		        new HentPersonPanel("searchPanel"),
-
-		        new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
-		        new PersonsokPanel("personsokPanel").setVisible(true),
-		        lamellHandler.createLamellPanel("lameller", fnrFromRequest),
-		        new SideBar("sideBar", fnrFromRequest, oppgaveIdFromRequest).setVisible(true),
-		        createNullstillLink(modalWindow),
-		        modalWindow
+                new HentPersonPanel("searchPanel"),
+                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
+                new PersonsokPanel("personsokPanel").setVisible(true),
+                lamellHandler.createLamellPanel("lameller", fnrFromRequest),
+                new SideBar("sideBar", fnrFromRequest, oppgaveIdFromRequest).setVisible(true),
+                new TimeoutBoks("timeoutBoks", fnrFromRequest),
+                createNullstillLink(modalWindow),
+                modalWindow
         );
     }
 

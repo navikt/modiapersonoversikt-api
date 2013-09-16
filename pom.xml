@@ -17,7 +17,6 @@
         <module>config</module>
         <module>web</module>
         <module>jee</module>
-        <module>example-component</module>
     </modules>
 
     <properties>
@@ -25,10 +24,10 @@
         <spring.version>3.2.3.RELEASE</spring.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
-        <modig.wicket.version>1.0.23</modig.wicket.version>
+        <modig.wicket.version>1.0.25</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.lang.version>1.1.0</modig.lang.version>
-        <modig.frontend.wicket.version>1.0.27</modig.frontend.wicket.version>
+        <modig.frontend.wicket.version>1.0.29</modig.frontend.wicket.version>
         <modig.security.version>1.0.11</modig.security.version>
 		<modig.log.version>1.1.2</modig.log.version>
         <modig-testcertificates-version>1.0.0</modig-testcertificates-version>
@@ -49,8 +48,8 @@
         <webbit.version>0.4.14</webbit.version>
         <cxf.version>2.7.6</cxf.version>
         <!-- Modia-komponenter-->
-        <personsok.version>0.0.88</personsok.version>
-		<kjerneinfo.versjon>1.0.28</kjerneinfo.versjon>
+        <personsok.version>0.0.91</personsok.version>
+		<kjerneinfo.versjon>1.0.31</kjerneinfo.versjon>
         <sporsmalogsvar.version>1.0</sporsmalogsvar.version>
     </properties>
 
@@ -588,6 +587,12 @@
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-api</artifactId>
                 <version>${cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>3.1</version>
             </dependency>
 
             <!-- TEST dependency -->

@@ -13,15 +13,15 @@
 							wicket:message="aria-label:personsok.apnetekst, title:personsok.apnetekst, data-apne:personsok.apnetekst, data-lukke:personsok.lukketekst">
 						A
 					</button>
-                <button class="nullstill-button" wicket:message="aria-label:hentperson.nullstillbruker, title:hentperson.nullstillbruker" wicket:id="nullstill"></button>
-
-            </section>
-             <wicket:container wicket:id="personsokPanel"/>
-            <wicket:container wicket:id="personKjerneinfoPanel"/>
-            <!--<wicket:container wicket:id="examplecomponent" />-->
-            <section class="lameller" wicket:id="lameller"></section>
-        </div>
-        <wicket:container wicket:id="sideBar"/>
-    </body>
-</wicket:extend>
+					<button class="nullstill-button" wicket:message="aria-label:hentperson.nullstillbruker, title:hentperson.nullstillbruker" wicket:id="nullstill">[]</button>
+				</section>
+				<wicket:container wicket:id="personsokPanel"/>
+				<wicket:container wicket:id="personKjerneinfoPanel"/>
+				<!--<wicket:container wicket:id="examplecomponent" />-->
+				<section class="lameller" wicket:id="lameller">[]</section>
+			</div>
+			<wicket:container wicket:id="sideBar"/>
+            <wicket:container wicket:id="timeoutBoks"/>
+		</body>
+	</wicket:extend>
 </html>

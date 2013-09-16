@@ -142,6 +142,8 @@ function movePersonsok() {
 	var navbar = $('.navbar');
 	var logo = $('.modia-logo');
 	var nullstill = $('INPUT[name=nullstillSok]');
+    var error = $('.feedbackPanelERROR');
+    error.remove();
 
 	if (navbar[0].style.marginTop == '1%') {
 		toggleAvansertSok();
@@ -207,6 +209,27 @@ function gjennomfoerAvansertSok() {
 	if (personsokElement.is(":visible")) {
 		$('#utvidetPersonsokForm:visible').submit();
 	}
+}
+
+function setSessionTimeoutBox() {
+    var timeoutValue = 1000 * 60 * 55;
+    var timeout = setTimeout(function () {
+        createTimeoutBox();
+    }, timeoutValue);
+
+    Wicket.Event.subscribe('/ajax/call/after', function () {
+        clearTimeout(timeout);
+        timeout = setTimeout(function () {
+            createTimeoutBox();
+        }, timeoutValue);
+    });
+}
+
+function createTimeoutBox() {
+    if (!$('.wicket-mask-dark')[0]) {
+        $('body').append($('<div/>').addClass('wicket-mask-dark'));
+    }
+    $('.informasjonsboks.timeout').show();
 }
 
 function createTabHandler(application) {
