@@ -19,6 +19,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
+import java.io.Serializable;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -32,13 +33,16 @@ public class HentOppgavePanel extends Panel {
     OppgavebehandlingPortType service;
 
     private final WebMarkupContainer temaboks;
-    private final Model<String> tema = new Model<>();
+    private final Model<String> tema;
     private Model<Boolean> visTema = new Model<>(false);
 
     ModigModalWindow modalWindow = new ModigModalWindow("tomForOppgaverMelding");
 
     public HentOppgavePanel(String id) {
         super(id);
+        Serializable temaAttr = getSession().getAttribute("valgtTema");
+        String temaStr = temaAttr != null ? temaAttr.toString() : null;
+        tema = new Model<>(temaStr);
         setDefaultModel(tema);
         setOutputMarkupId(true);
 
@@ -117,6 +121,8 @@ public class HentOppgavePanel extends Panel {
             modalWindow.show(target);
             return;
         }
+
+        getSession().setAttribute("valgtTema", tema);
 
         PageParameters pageParameters = new PageParameters();
         pageParameters.add("fnr", oppgaveResultat.getFodselsnummer());
