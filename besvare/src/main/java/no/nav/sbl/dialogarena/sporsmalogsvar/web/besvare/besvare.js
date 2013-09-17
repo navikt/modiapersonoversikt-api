@@ -11,7 +11,7 @@ $(document).ready(function() {
         else if (e.shiftKey && e.keyCode == 13) {
             $('.send-svar-knapp').click();
         }
-        // Unfocus tekstfeltet: esc (keyCode 27)
+        // Blur tekstfeltet: esc (keyCode 27)
         else if (e.keyCode == 27) {
             $('#tekstfelt').blur();
         }
@@ -35,13 +35,13 @@ $(document).ready(function() {
         $dialogInnhold.off('click');
 
         $dialogInnhold.on('click', function() {
-            var $tekstFelt = $(this).find('p');
+            var $tekstfelt = $(this).find('p');
             var animasjonsHastighet = 100;
 
-            if ($tekstFelt.height() == minHoyde) {
-                $tekstFelt.animate({height: $tekstFelt.data('height')}, animasjonsHastighet);
+            if ($tekstfelt.height() == minHoyde) {
+                $tekstfelt.animate({height: $tekstfelt.data('height')}, animasjonsHastighet);
             } else {
-                $tekstFelt.animate({height: minHoyde}, animasjonsHastighet);
+                $tekstfelt.animate({height: minHoyde}, animasjonsHastighet);
             }
             $(this).find('.utvide-tekst-pil').toggleClass('rotert');
         });
@@ -51,15 +51,17 @@ $(document).ready(function() {
         var $tekstfelt = $('#tekstfelt');
         var $sendSvarKnapp = $('.send-svar-knapp');
 
-        var orginalHoyde = $tekstfelt.height();
-        var utvidetHoyde = $tekstfelt.height() * 8;
+        var orginalHoyde = $tekstfelt.innerHeight();
         var padding = $tekstfelt.innerHeight() - $tekstfelt.height();
+        var utvidetHoyde = ($tekstfelt.height() * 8) + padding;
+
+        var animasjonsHastighet = 100;
 
         // I tilfelle AJAX events fra andre deler av Modia
         $tekstfelt.off('input focusin focusout');
 
         $tekstfelt.on('input', function() {
-            if (this.scrollHeight - padding > utvidetHoyde) {
+            if (this.scrollHeight > utvidetHoyde) {
                 this.style.height = 'auto';
                 $(this).height(this.scrollHeight);
 
@@ -71,14 +73,14 @@ $(document).ready(function() {
 
         $tekstfelt.on('focusin', function () {
             if ($(this).height() < utvidetHoyde) {
-                $(this).height(utvidetHoyde);
+                $(this).animate({height: utvidetHoyde}, animasjonsHastighet);
             }
             $sendSvarKnapp.show();
         });
 
         $tekstfelt.on('focusout', function() {
             if (this.value.length == 0) {
-                $(this).height(orginalHoyde);
+                $(this).animate({height: orginalHoyde}, animasjonsHastighet);
                 $sendSvarKnapp.hide();
             }
         });
