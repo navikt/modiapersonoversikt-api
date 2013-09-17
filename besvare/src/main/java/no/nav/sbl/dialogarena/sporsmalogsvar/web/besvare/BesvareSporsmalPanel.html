@@ -12,13 +12,13 @@
             <h3 wicket:id="tema"/>
         </section>
         <form wicket:id="svar" class="svar-seksjon">
-            <h2>Svar bruker</h2>
+            <h2 class="robust">Svar bruker</h2>
             <span wicket:id="feedback"></span>
             <textarea id="tekstfelt" wicket:id="svar.fritekst" rows="1"/>
-            <input type="submit" class="send-svar-knapp" wicket:id="send" value="Send"/>
+            <input type="submit" class="send-svar-knapp knapp-hoved-stor" wicket:id="send" value="Send"/>
         </form>
         <section wicket:id="sporsmal" class="sporsmal-seksjon">
-            <h2>Fra bruker</h2>
+            <h2 class="robust">Fra bruker</h2>
             <aside wicket:id="sporsmal.sendtDatoAsString"/>
             <p wicket:id="sporsmal.fritekst"/>
         </section>
@@ -26,7 +26,7 @@
             <article wicket:id="tidligereDialog">
                 <header wicket:id="sendtDato"/>
                 <div class="dialog-innhold">
-                    <h2 wicket:id="overskrift"/>
+                    <h2 wicket:id="overskrift" class="robust"/>
                     <div class="utvide-tekst-pil"></div>
                     <hr/>
                     <p wicket:id="fritekst"/>
