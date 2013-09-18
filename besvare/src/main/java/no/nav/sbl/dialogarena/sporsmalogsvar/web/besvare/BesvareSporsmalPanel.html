@@ -12,9 +12,11 @@
             <div class="form-top">
                 <h3 wicket:id="tema"/>
                 <div class="innsynsvelger">
-                    <div style="width: 1em; height: 1em; background-color: dodgerblue"></div>
-                    <div>
-                        <input type="checkbox" wicket:id="svar.sensitiv" id="besvarepanel-sensitiv"/><label for="besvarepanel-sensitiv">Sensitivt</label>
+                    <div class="innsynsvelger-knapp" style="width: 1em; height: 1em; float:right; margin-right: 1em; background-color: dodgerblue"></div>
+                    <div class="innsynsvelger-liste">
+                        <label class="innsynsvelger-lukk">&#x2715</label>
+                        <input type="checkbox" wicket:id="svar.sensitiv" id="besvarepanel-sensitiv"/>
+                        <label for="besvarepanel-sensitiv">Sensitivt</label>
                     </div>
                 </div>
             </div>

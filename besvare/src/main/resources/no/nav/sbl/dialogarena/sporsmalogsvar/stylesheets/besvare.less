@@ -12,10 +12,8 @@
   margin: 0;
   border-left: 1px solid @modiabakgrunn;
   .svar-seksjon {
-    margin-bottom: 2em;
     .form-top {
       height: 2em;
-      margin-bottom: 2em;
       border-bottom: 1px solid @rammeborder;
       padding: 0.5em @sidepadding;
       h3 {
@@ -27,10 +25,51 @@
       }
       .innsynsvelger {
         float: right;
+        cursor: pointer;
+        position: relative;
+        .innsynsvelger-liste {
+          display: none;
+          position: absolute;
+          top: 0;
+          right: 0;
+          clear: both;
+          list-style: none;
+          margin: 2em 0 0 0;
+          padding: 1.5em 1.5em 1em 1.5em;
+          background-color: @modiabakgrunn;
+          .innsynsvelger-lukk {
+            position: absolute;
+            top: 2px;
+            right: 5px;
+            color: @dodgerblue;
+          }
+          label {
+            text-transform: none;
+            color: white;
+            font-weight: 600;
+            opacity: 0.95;
+            margin: 0;
+          }
+          input:checked + label {
+            opacity: 1;
+          }
+          &:after {
+            position: absolute;
+            bottom: 100%;
+            left: 75%;
+            content: " ";
+            height: 0;
+            width: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 8px solid @modiabakgrunn;
+          }
+        }
       }
     }
     .form-body {
       padding: 0 @sidepadding;
+      margin: 2em 0;
       h2 {
         margin: 0;
       }

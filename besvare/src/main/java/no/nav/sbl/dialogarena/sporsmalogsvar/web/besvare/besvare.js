@@ -17,6 +17,23 @@ $(document).ready(function() {
         }
     });
 
+    function attachToggleInnsynsvelgerListener() {
+        var $innsynsvelgerKnapp = $('.innsynsvelger-knapp');
+        var $innsynsvelgerLukkKnapp = $('.innsynsvelger-lukk');
+
+        // I tilfelle AJAX events fra andre deler av Modia
+        $innsynsvelgerKnapp.off('click');
+        $innsynsvelgerLukkKnapp.off('click');
+
+        $innsynsvelgerKnapp.on('click', function() {
+            $(this).siblings('.innsynsvelger-liste').toggle(100);
+        });
+
+        $innsynsvelgerLukkKnapp.on('click', function() {
+            $(this).parent().toggle(100);
+        });
+    }
+
     function attachToggleHoydeListener() {
         var $dialogInnholdTekst = $('.tidligere-dialog .dialog-innhold p');
         var minHoyde = parseInt($dialogInnholdTekst.css('line-height')) * 2;
@@ -90,10 +107,12 @@ $(document).ready(function() {
         $(document).on('ajaxComplete', function() {
             attachSvarFormListener();
             attachToggleHoydeListener();
+            attachToggleInnsynsvelgerListener();
         });
     }
 
     attachAjaxCompleteListener();
     attachSvarFormListener();
     attachToggleHoydeListener();
+    attachToggleInnsynsvelgerListener();
 });
