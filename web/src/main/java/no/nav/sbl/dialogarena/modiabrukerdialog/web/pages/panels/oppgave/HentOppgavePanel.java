@@ -25,7 +25,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class HentOppgavePanel extends Panel {
 
@@ -33,7 +32,7 @@ public class HentOppgavePanel extends Panel {
     OppgavebehandlingPortType service;
 
     private final WebMarkupContainer temaboks;
-    private final Model<String> tema;
+    private final Model<Tema> tema;
     private Model<Boolean> visTema = new Model<>(false);
 
     ModigModalWindow modalWindow = new ModigModalWindow("tomForOppgaverMelding");
@@ -41,17 +40,12 @@ public class HentOppgavePanel extends Panel {
     public HentOppgavePanel(String id) {
         super(id);
         Serializable temaAttr = getSession().getAttribute("valgtTema");
-        String temaStr = temaAttr != null ? temaAttr.toString() : null;
-        tema = new Model<>(temaStr);
-        setDefaultModel(tema);
+        Tema temaet = temaAttr != null ? Tema.valueOf(temaAttr.toString()) : null;
+        this.tema = new Model<>(temaet);
+        setDefaultModel(this.tema);
         setOutputMarkupId(true);
 
-        Temaliste temaliste = new Temaliste(
-            "tema", asList(
-                "Dagpenger",
-                "Sykepenger",
-                "Langtekst"
-            ));
+        Temaliste temaliste = new Temaliste("tema", asList(Tema.values()));
 
         temaboks = new WebMarkupContainer("temaboks");
         temaboks.setOutputMarkupPlaceholderTag(true);
@@ -62,8 +56,8 @@ public class HentOppgavePanel extends Panel {
         add(new AjaxLink("plukk-oppgave") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                if (isNotBlank(tema.getObject())) {
-                    valgteTema(tema.getObject(), target);
+                if (HentOppgavePanel.this.tema.getObject() != null) {
+                    valgteTema(HentOppgavePanel.this.tema.getObject(), target);
                 } else {
                     visTema.setObject(!visTema.getObject());
                     target.add(temaboks);
@@ -79,7 +73,7 @@ public class HentOppgavePanel extends Panel {
         });
     }
 
-    private IModel<Boolean> erValgteTema(final String t) {
+    private IModel<Boolean> erValgteTema(final Tema t) {
         return new AbstractReadOnlyModel <Boolean>() {
             @Override
             public Boolean getObject() {
@@ -88,18 +82,18 @@ public class HentOppgavePanel extends Panel {
         };
     }
 
-    class Temaliste extends PropertyListView<String> {
+    class Temaliste extends PropertyListView<Tema> {
 
-        public Temaliste(String id, List<? extends String> list) {
+        public Temaliste(String id, List<Tema> list) {
             super(id, list);
             setOutputMarkupId(true);
         }
 
         @Override
-        protected void populateItem(final ListItem<String> item) {
+        protected void populateItem(final ListItem<Tema> item) {
             item.add(
                 new Label("temanavn",
-                    new StringResourceModel(item.getModelObject(), this, null)));
+                    new StringResourceModel(item.getModelObject().navn(), this, null)));
             item.add(hasCssClassIf("valgt", erValgteTema(item.getModelObject())));
             item.add(new AjaxEventBehavior("click") {
                 @Override
@@ -113,8 +107,8 @@ public class HentOppgavePanel extends Panel {
         }
     }
 
-    public void valgteTema(String tema, AjaxRequestTarget target) {
-        WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema);
+    public void valgteTema(Tema tema, AjaxRequestTarget target) {
+        WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema.navn());
         if (oppgaveResultat == null) {
             modalWindow.setContent(
                 new TomtForOppgaverPanel(modalWindow.getContentId(), modalWindow));
