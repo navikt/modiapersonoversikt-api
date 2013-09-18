@@ -11,42 +11,50 @@
   color: black;
   margin: 0;
   border-left: 1px solid @modiabakgrunn;
-  .tema-seksjon {
-    border-bottom: 1px solid @rammeborder;
-    padding: 0.5em @sidepadding;
-    h3 {
-      font-size: 1em;
-      color: @dodgerblue;
-      font-weight: bold;
-      margin: 0;
-    }
-  }
   .svar-seksjon {
-    padding: 0 @sidepadding;
-    margin: 2em 0;
-    h2 {
-      margin: 0;
+    margin-bottom: 2em;
+    .form-top {
+      height: 2em;
+      margin-bottom: 2em;
+      border-bottom: 1px solid @rammeborder;
+      padding: 0.5em @sidepadding;
+      h3 {
+        float: left;
+        font-size: 1em;
+        color: @dodgerblue;
+        font-weight: bold;
+        margin: 0;
+      }
+      .innsynsvelger {
+        float: right;
+      }
     }
-    textarea {
-      width: 100%;
-      resize: none;
-      overflow: hidden;
-      margin-top: 1em;
-    }
-    input[type="submit"] {
-      background-color: @dodgerblue;
-      display: none;
-      color: white;
-      border: 1px solid (@dodgerblue * 0.8);
-      font-size: 1.2em;
-      font-weight: bold;
-      text-transform: uppercase;
-      padding: 0.75em 2em;
-      margin-top: 1em;
-      &:hover {
-        text-decoration: none;
-        background: (@dodgerblue * 1.1);
+    .form-body {
+      padding: 0 @sidepadding;
+      h2 {
+        margin: 0;
+      }
+      textarea {
+        width: 100%;
+        resize: none;
+        overflow: hidden;
+        margin-top: 1em;
+      }
+      input[type="submit"] {
+        background-color: @dodgerblue;
+        display: none;
         color: white;
+        border: 1px solid (@dodgerblue * 0.8);
+        font-size: 1.2em;
+        font-weight: bold;
+        text-transform: uppercase;
+        padding: 0.75em 2em;
+        margin-top: 1em;
+        &:hover {
+          text-decoration: none;
+          background: (@dodgerblue * 1.1);
+          color: white;
+        }
       }
     }
   }

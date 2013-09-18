@@ -14,6 +14,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -53,7 +54,6 @@ public class BesvareSporsmalPanel extends Panel {
         tidligereDialog = new TidligereDialog("tidligereDialog");
         sporsmalDetaljer = new SporsmalDetaljer("sporsmal");
         add(
-                new Label("tema"),
                 new SvarForm("svar"),
                 sporsmalDetaljer,
                 tidligereDialog);
@@ -77,6 +77,8 @@ public class BesvareSporsmalPanel extends Panel {
             fritekst.setRequired(true);
             fritekst.add(StringValidator.maximumLength(FRITEKST_MAKS_LENGDE));
             add(
+                    new Label("tema"),
+                    new CheckBox("svar.sensitiv"),
                     new FeedbackPanel("feedback"),
                     fritekst,
                     new AjaxSubmitLink("send") {

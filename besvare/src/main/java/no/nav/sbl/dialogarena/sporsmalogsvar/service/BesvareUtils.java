@@ -18,7 +18,7 @@ public class BesvareUtils {
     public static final Transformer<Svar, WSSvar> TIL_WSSVAR = new Transformer<Svar, WSSvar>() {
         @Override
         public WSSvar transform(Svar svar) {
-            return new WSSvar().withBehandlingsId(svar.getBehandlingId()).withTema(svar.tema).withFritekst(svar.fritekst).withSensitiv(svar.sensitive);
+            return new WSSvar().withBehandlingsId(svar.getBehandlingId()).withTema(svar.tema).withFritekst(svar.fritekst).withSensitiv(svar.sensitiv);
         }
     };
 
@@ -64,7 +64,7 @@ public class BesvareUtils {
             Svar svar = new Svar(wsSvar.getBehandlingsId());
             svar.tema = wsSvar.getTema();
             svar.fritekst = wsSvar.getFritekst();
-            svar.sensitive = wsSvar.isSensitiv();
+            svar.sensitiv = wsSvar.isSensitiv();
             return svar;
         }
     };

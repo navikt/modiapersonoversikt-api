@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Svar implements Serializable {
     private String behandlingId;
     public String tema, fritekst;
-    public Boolean sensitive;
+    public Boolean sensitiv;
 
     public Svar(String behandlingId) {
         this.behandlingId = behandlingId;
