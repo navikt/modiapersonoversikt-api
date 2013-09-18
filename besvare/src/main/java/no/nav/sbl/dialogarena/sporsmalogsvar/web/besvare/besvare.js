@@ -111,8 +111,8 @@ $(document).ready(function() {
         });
     }
 
-    attachAjaxCompleteListener();
     attachSvarFormListener();
     attachToggleHoydeListener();
     attachToggleInnsynsvelgerListener();
+    attachAjaxCompleteListener();
 });
