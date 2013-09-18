@@ -1,7 +1,7 @@
 jQuery(document).ready(function ($) {
 	'use strict';
 
-	Modig.shortcutListener.on({ alt: true, shift: false, key: 'V' }, toggleKjerneinfo);
+	Modig.shortcutListener.on({ alt: true, keyCode: 112 }, toggleKjerneinfo);   // F1
 
 	createTabHandler("modiabrukerdialog");
 
@@ -25,7 +25,11 @@ jQuery(document).ready(function ($) {
 
 	$('#toggle-personsok').on('click', checkIfToggleAvansertSok);
 	Modig.shortcutListener.on({key: 'A'}, checkIfToggleAvansertSok);
-	Modig.shortcutListener.on({alt: true, keyCode: 113}, checkIfToggleAvansertSok);
+
+	Modig.shortcutListener.on({alt: true, keyCode: 114}, focusSearchField); // F3
+	Modig.shortcutListener.on({alt: true, keyCode: 116}, closeResetPerson); // F5
+	Modig.shortcutListener.on({alt: true, keyCode: 117}, focusLamellHead);  // F6
+	Modig.shortcutListener.on({alt: true, keyCode: 118}, closeLamellHead);  // F7
 
 	$('body').on('click', '.lamell .lamellhode > a', function () {
 		if ($('.main > .personsok').is(':visible')) {
@@ -70,6 +74,22 @@ jQuery(document).ready(function ($) {
 
     detectWidthChange();
 });
+
+function focusSearchField() {
+	$('#foedselsnummerInput').focus()
+}
+
+function focusLamellHead() {
+	$(document.activeElement).parents('.lamell').find('.lamellhode a').focus();
+}
+
+function closeLamellHead() {
+	$(document.activeElement).parents('.lamell').find('button.close').click();
+}
+
+function closeResetPerson() {
+	$('.nullstill-button').click();
+}
 
 function detectWidthChange() {
     var win = $(window);
