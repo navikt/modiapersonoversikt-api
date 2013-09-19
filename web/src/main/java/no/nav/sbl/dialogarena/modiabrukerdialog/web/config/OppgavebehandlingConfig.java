@@ -19,6 +19,8 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.apache.cxf.ws.security.SecurityConstants;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -30,6 +32,8 @@ import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 
 @Configuration
 public class OppgavebehandlingConfig {
+
+    private static final Logger LOG = LoggerFactory.getLogger(OppgavebehandlingConfig.class);
 
     @Profile({"default", "oppgavebehandlingDefault"})
     @Configuration
@@ -100,7 +104,7 @@ public class OppgavebehandlingConfig {
 
                 @Override
                 public void leggTilbakeOppgave(String oppgaveId, String aarsak) {
-
+                    LOG.debug("Legge tilbake oppgave med id " + oppgaveId + " fordi " + aarsak);
                 }
 
             };
