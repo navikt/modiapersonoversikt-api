@@ -15,7 +15,7 @@
     .form-top {
       height: 2em;
       border-bottom: 1px solid @rammeborder;
-      padding: 0.5em @sidepadding;
+      padding: 0.5em 0.5em 0.5em @sidepadding;
       h3 {
         float: left;
         font-size: 1em;
@@ -27,11 +27,21 @@
         float: right;
         cursor: pointer;
         position: relative;
+        width: 25%;
+        .innsynsvelger-knapp {
+          height: 1em;
+          width: 1em;
+          border-radius: 1em;
+          float:right;
+          background-color: @modiabakgrunn;
+          margin-right: 1.5em;
+        }
         .innsynsvelger-liste {
           display: none;
           position: absolute;
           top: 0;
           right: 0;
+          width: 100%;
           clear: both;
           list-style: none;
           margin: 2em 0 0 0;
@@ -40,7 +50,8 @@
           .innsynsvelger-lukk {
             position: absolute;
             top: 2px;
-            right: 5px;
+            right: 10px;
+            width: 1em;
             color: @dodgerblue;
           }
           label {
@@ -56,7 +67,7 @@
           &:after {
             position: absolute;
             bottom: 100%;
-            left: 75%;
+            right: 1.5em;
             content: " ";
             height: 0;
             width: 0;

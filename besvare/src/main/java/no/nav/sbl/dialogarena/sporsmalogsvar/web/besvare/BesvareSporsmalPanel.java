@@ -1,8 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare;
 
-import java.util.ArrayList;
-import java.util.List;
-import javax.inject.Inject;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareSporsmalDetaljer;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelse;
@@ -26,6 +23,10 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.joda.time.DateTime;
+
+import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelsestype.SPORSMAL;
