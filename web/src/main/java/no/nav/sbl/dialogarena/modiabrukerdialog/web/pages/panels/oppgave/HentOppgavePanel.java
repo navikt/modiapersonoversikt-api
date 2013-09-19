@@ -93,7 +93,7 @@ public class HentOppgavePanel extends Panel {
         protected void populateItem(final ListItem<Tema> item) {
             item.add(
                 new Label("temanavn",
-                    new StringResourceModel(item.getModelObject().navn(), this, null)));
+                    new StringResourceModel(item.getModelObject().toString(), this, null)));
             item.add(hasCssClassIf("valgt", erValgteTema(item.getModelObject())));
             item.add(new AjaxEventBehavior("click") {
                 @Override
@@ -108,7 +108,7 @@ public class HentOppgavePanel extends Panel {
     }
 
     public void valgteTema(Tema tema, AjaxRequestTarget target) {
-        WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema.navn());
+        WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema.toString());
         if (oppgaveResultat == null) {
             modalWindow.setContent(
                 new TomtForOppgaverPanel(modalWindow.getContentId(), modalWindow));
