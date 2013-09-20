@@ -29,6 +29,7 @@ import javax.inject.Inject;
 
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static org.mockito.Mockito.times;
 
 @ActiveProfiles("test")
 @ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
@@ -64,7 +65,26 @@ public class InternTest extends TestSecurityBaseClass {
         Whitebox.setInternalState(intern, "lamellHandler", lamellHandler);
         AjaxRequestTarget target = new AjaxRequestHandler(intern);
         intern.refreshKjerneinfo(target,"");
-        Mockito.verify(modal).show(target);
+        Mockito.verify(modal, times(1)).show(target);
+        Mockito.verify(modal, times(0)).redirect();
+
+    }
+
+    @Test
+    public void shouldNotShowDialogWhenRefreshingKjerneinfoIfThereAreNoChanges() {
+        Parameters param = new Parameters();
+        param.pageParameters.set("fnr", "12037649749");
+        FluentWicketTester<? extends WebApplication> wicketTester = fluentWicketTester.goTo(Intern.class, param);
+        Intern intern = findInternPageInstance(wicketTester);
+        ModiaModalWindow modal = Mockito.mock(ModiaModalWindow.class);
+        LamellHandler lamellHandler = Mockito.mock(LamellHandler.class);
+        Mockito.when(lamellHandler.hasUnsavedChanges()).thenReturn(false);
+        Whitebox.setInternalState(intern, "modalWindow", modal);
+        Whitebox.setInternalState(intern, "lamellHandler", lamellHandler);
+        AjaxRequestTarget target = new AjaxRequestHandler(intern);
+        intern.refreshKjerneinfo(target,"");
+        Mockito.verify(modal, times(0)).show(target);
+        Mockito.verify(modal, times(1)).redirect();
     }
 
     private Intern findInternPageInstance(FluentWicketTester<? extends WebApplication> wicketTester) {
