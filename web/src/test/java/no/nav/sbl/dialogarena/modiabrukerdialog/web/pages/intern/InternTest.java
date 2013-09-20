@@ -11,7 +11,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
@@ -32,7 +31,6 @@ public class InternTest extends TestSecurityBaseClass {
     private FluentWicketTester<?> fluentWicketTester;
 
     @Test
-    @Ignore
     public void shouldLoadPage(){
         Parameters param = new Parameters();
         param.pageParameters.set("fnr", "12037649749");
