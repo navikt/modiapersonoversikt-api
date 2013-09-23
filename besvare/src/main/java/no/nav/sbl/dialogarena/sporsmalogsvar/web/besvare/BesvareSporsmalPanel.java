@@ -77,10 +77,13 @@ public class BesvareSporsmalPanel extends Panel {
             final TextArea<String> fritekst = new TextArea<>("svar.fritekst");
             fritekst.setRequired(true);
             fritekst.add(StringValidator.maximumLength(FRITEKST_MAKS_LENGDE));
+
+            final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+            feedbackPanel.setOutputMarkupId(true);
             add(
                     new Label("tema"),
                     new CheckBox("svar.sensitiv"),
-                    new FeedbackPanel("feedback"),
+                    feedbackPanel,
                     fritekst,
                     new AjaxSubmitLink("send") {
 
@@ -104,7 +107,7 @@ public class BesvareSporsmalPanel extends Panel {
 
                         @Override
                         protected void onError(AjaxRequestTarget target, Form<?> form) {
-                            target.add(BesvareSporsmalPanel.this);
+                            target.add(feedbackPanel);
                         }
                     }
             );

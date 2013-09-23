@@ -74,9 +74,6 @@ $(document).ready(function() {
 
         var animasjonsHastighet = 100;
 
-        // I tilfelle AJAX events fra andre deler av Modia
-        $tekstfelt.off('input focusin focusout');
-
         $tekstfelt.on('input', function() {
             if (this.scrollHeight > utvidetHoyde) {
                 this.style.height = 'auto';
@@ -105,7 +102,6 @@ $(document).ready(function() {
 
     function attachAjaxCompleteListener() {
         $(document).on('ajaxComplete', function() {
-            attachSvarFormListener();
             attachToggleHoydeListener();
             attachToggleInnsynsvelgerListener();
         });
