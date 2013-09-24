@@ -3,8 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 import no.nav.modig.security.loginmodule.DummyRole;
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
 import org.eclipse.jetty.jaas.JAASLoginService;
-import org.eclipse.jetty.util.resource.ResourceCollection;
-import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.io.File;
 import java.lang.reflect.Field;
@@ -35,10 +33,6 @@ public class StartJetty {
                 .buildJetty();
 	    Field contextField = jetty.getClass().getDeclaredField("context");
 	    contextField.setAccessible(true);
-	    WebAppContext context = (WebAppContext) contextField.get(jetty);
-	    String[] resources = {"web/src/main/webapp", "../zmodig/modig-frontend/modig-frontend-ressurser/src/main/resources/META-INF/resources"};
-	    ResourceCollection resourceCollection = new ResourceCollection(resources);
-	    context.setBaseResource(resourceCollection);
         jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
     }
 
