@@ -21,10 +21,4 @@ public class ApplicationContext {
     public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
     }
-
-    @Bean
-    public LamellHandler lamellHandler(){
-        return new LamellHandler();
-    }
-
 }
