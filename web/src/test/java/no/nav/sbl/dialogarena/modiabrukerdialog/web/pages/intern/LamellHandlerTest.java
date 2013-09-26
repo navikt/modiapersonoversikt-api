@@ -92,6 +92,11 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
     }
 
     @Test
+    public void hasUnchangedChangesReturnFalseWhenNoChanges() {
+        assertThat(lamellHandler.hasUnsavedChanges(), equalTo(false));
+    }
+
+    @Test
     public void handleWidgetItemEventshouldGotoKontrakterLamellWhenKontrakterEventHappens() {
         TokenLamellPanel panel = createPanel();
         lamellHandler.handleWidgetItemEvent(LAMELL_KONTRAKTER);

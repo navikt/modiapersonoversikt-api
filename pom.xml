@@ -24,10 +24,10 @@
         <spring.version>3.2.3.RELEASE</spring.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
-        <modig.wicket.version>1.0.25</modig.wicket.version>
+        <modig.wicket.version>1.0.26</modig.wicket.version>
         <modig.fitnesse.version>1.0.1</modig.fitnesse.version>
         <modig.lang.version>1.1.0</modig.lang.version>
-        <modig.frontend.wicket.version>1.0.29</modig.frontend.wicket.version>
+        <modig.frontend.wicket.version>1.0.33</modig.frontend.wicket.version>
         <modig.security.version>1.0.11</modig.security.version>
 		<modig.log.version>1.1.2</modig.log.version>
         <modig-testcertificates-version>1.0.0</modig-testcertificates-version>
@@ -48,8 +48,8 @@
         <webbit.version>0.4.14</webbit.version>
         <cxf.version>2.7.6</cxf.version>
         <!-- Modia-komponenter-->
-        <personsok.version>0.0.91</personsok.version>
-		<kjerneinfo.versjon>1.0.31</kjerneinfo.versjon>
+        <personsok.version>0.0.94</personsok.version>
+        <kjerneinfo.versjon>1.0.36</kjerneinfo.versjon>
         <sporsmalogsvar.version>1.3</sporsmalogsvar.version>
     </properties>
 
