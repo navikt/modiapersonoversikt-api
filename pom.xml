@@ -9,6 +9,7 @@
     <modules>
         <module>besvare</module>
         <module>innboks</module>
+        <module>widget</module>
     </modules>
     <name>sporsmal-og-svar</name>
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål Og Svar - innside og utside.</description>
