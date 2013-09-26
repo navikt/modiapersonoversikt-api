@@ -55,12 +55,13 @@ jQuery(document).ready(function ($) {
 		css: 'margin-bottom: 20px;'
 	});
 
-    if ($('#submitFodselsnummer').length > 0) {
+	var submitFodselsnummer = $('#submitFodselsnummer');
+    if (submitFodselsnummer.length > 0) {
         var scaling = 0.8;
-        var height = $('#submitFodselsnummer').innerHeight();
+        var height = submitFodselsnummer.innerHeight();
         var posDiff = (height*(1-scaling)/2);
-        var top = $('#submitFodselsnummer').position().top + posDiff + "px";
-        var left = $('#submitFodselsnummer').position().left + posDiff + "px";
+        var top = submitFodselsnummer.position().top + posDiff + "px";
+        var left = submitFodselsnummer.position().left + posDiff + "px";
         height = height*scaling;
 
         Modig.ajaxLoader.register({
