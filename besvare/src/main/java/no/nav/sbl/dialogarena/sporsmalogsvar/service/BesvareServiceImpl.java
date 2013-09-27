@@ -7,6 +7,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHe
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import java.util.Arrays;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -41,7 +42,7 @@ public class BesvareServiceImpl implements BesvareService {
         besvareSporsmalDetaljer.svar = TIL_SVAR.transform(wsSporsmalOgSvar.getSvar());
         besvareSporsmalDetaljer.sporsmal = TIL_SPORSMAL.transform(wsSporsmalOgSvar.getSporsmal());
 
-        List<WSHenvendelse> wsHenvendelser = on(henvendelsePortType.hentHenvendelseListe(fnr)).collect(NYESTE_FORST);
+        List<WSHenvendelse> wsHenvendelser = on(henvendelsePortType.hentHenvendelseListe(fnr, Arrays.asList("SPORSMAL", "SVAR"))).collect(NYESTE_FORST);
 
         besvareSporsmalDetaljer.tidligereDialog = on(wsHenvendelser)
                 .filter(where(TRAAD_ID, equalTo(wsSporsmalOgSvar.getSporsmal().getTraad())))

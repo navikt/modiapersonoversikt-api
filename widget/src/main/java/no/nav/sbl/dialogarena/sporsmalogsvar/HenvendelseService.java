@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +9,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortT
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import org.apache.commons.collections15.Transformer;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
@@ -17,7 +19,7 @@ public class HenvendelseService {
     private List<WSHenvendelse> alleHenvendelser;
 
     public HenvendelseService(HenvendelsePortType service, String fnr) {
-        alleHenvendelser = on(service.hentHenvendelseListe(fnr)).collect(NYESTE_OVERST);
+        alleHenvendelser = on(service.hentHenvendelseListe(fnr, asList("SPORSMAL", "SVAR"))).collect(NYESTE_OVERST);
     }
 
     public List<WSHenvendelse> alleHenvendelser() {

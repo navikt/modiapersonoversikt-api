@@ -26,6 +26,8 @@
         <modig.scm.plugin.version>1.1.10</modig.scm.plugin.version>
         <modig.frontend.version>1.0.18</modig.frontend.version>
         <modig-security.version>1.0.9</modig-security.version>
+        <modig-content.version>1.2.1</modig-content.version>
+        <henvendelse-felles-tjenestespesifikasjon.version>0.0.12</henvendelse-felles-tjenestespesifikasjon.version>
         <sonar.skippedModules />
     </properties>
 
@@ -81,7 +83,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
-                <version>0.0.11</version>
+                <version>${henvendelse-felles-tjenestespesifikasjon.version}</version>
             </dependency>
 
             <dependency>
@@ -134,10 +136,9 @@
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
-                <artifactId>modig-security-core</artifactId>
-                <version>${modig-security.version}</version>
-                <scope>test</scope>
-            </dependency>
+            <artifactId>modig-security-core</artifactId>
+            <version>${modig-security.version}</version>
+        </dependency>
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
@@ -176,7 +177,7 @@
 	        <dependency>
 	            <groupId>no.nav.modig</groupId>
 	            <artifactId>modig-content</artifactId>
-	            <version>1.2.1</version>
+	            <version>${modig-content.version}</version>
 	            <exclusions>
 	                <exclusion>
 	                    <groupId>commons-logging</groupId>

@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import javax.jws.WebParam;
+
 import static java.util.Arrays.asList;
 
 @Configuration
@@ -50,10 +52,9 @@ public class HenvendelseTestConfig {
                 }
 
                 @Override
-                public List<WSHenvendelse> hentHenvendelseListe(String fnr) {
+                public List<WSHenvendelse> hentHenvendelseListe(String fnr, List<String> strings) {
                     LOG.info("Henter alle henvendelser for bruker med fødselsnummer " + fnr);
-                    return henvendelser;
-                }
+                    return henvendelser;                }
 
                 WSHenvendelse createWSHenvendelse(String type, DateTime opprettet) {
                     WSHenvendelse wsHenvendelse =
