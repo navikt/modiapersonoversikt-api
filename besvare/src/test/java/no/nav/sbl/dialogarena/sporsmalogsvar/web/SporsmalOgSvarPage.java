@@ -7,7 +7,7 @@ public class SporsmalOgSvarPage extends WebPage {
 
     public SporsmalOgSvarPage() {
         super();
-        add(new BesvareSporsmalPanel("besvar", "1", "28088834986"));
+        add(new BesvareSporsmalPanel("besvar", "1", "10108000398"));
     }
 
 }
