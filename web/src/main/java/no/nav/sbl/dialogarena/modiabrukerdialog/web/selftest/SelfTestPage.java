@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest;
 
+import no.nav.brukerprofil.ping.BrukerprofilPing;
 import no.nav.kjerneinfo.kontrakter.ping.KontrakterPing;
 import no.nav.kjerneinfo.ping.KjerneinfoPing;
 import no.nav.modig.core.exception.SystemException;
@@ -29,6 +30,9 @@ public class SelfTestPage extends SelfTestBase {
     @Inject
     private KjerneinfoPing kjerneinfoPing;
 
+	@Inject
+    private BrukerprofilPing brukerprofilPing;
+
     @Inject
     private KontrakterPing kontrakterPing;
 
@@ -42,6 +46,7 @@ public class SelfTestPage extends SelfTestBase {
     @Override
     protected void addToStatusList(List<AvhengighetStatus> statusList) {
         statusList.addAll(getPingableComponentStatus(kjerneinfoPing));
+        statusList.addAll(getPingableComponentStatus(brukerprofilPing));
         statusList.addAll(getPingableComponentStatus(kontrakterPing));
         statusList.addAll(getPingableComponentStatus(sykmeldingsperioderPing));
         statusList.addAll(getPingableComponentStatus(personsokPing));
