@@ -1,87 +1,96 @@
-@sortbakgrunn : #333;
-@graabakgrunn : #f1f1f1;
+@modiasvart: #333;
+@graabakgrunn: #f1f1f1;
 @rammeborder: #ddd;
-@skilleborder: #bbb;
-@dodgerblue: #1e90ff;
+@dodgerblue: #0067c5;
 @maxwidth: 1080px;
+@meldingslistemargin: 30px;
 
 body {
   font-family: Modus, Arial, sans-serif;
 }
 
-#innboks-top {
-  overflow: hidden;
-  border-bottom: solid 1px @rammeborder;
+.innboks-overskrift {
   background-color: white;
-  padding: 0.5em 0;
-  .innboks-nav {
-    border-left: @rammeborder;
-    max-width: @maxwidth;
-    margin: 0 auto;
-    .tilbake-til-innboks-link {
-      float: left;
-      display: none;
-    }
-    .skriv-ny-link {
-      float: right;
-    }
-  }
-}
-
-#innboks-container {
-  overflow: hidden;
-  height: 700px;
-  max-width: @maxwidth;
-  margin: 0 auto;
-  border-left: solid 1px @rammeborder;
-}
-
-.footer {
-  height: 142px;
+  margin: 0;
+  padding: 0.5em 0 0.5em @meldingslistemargin;
+  border-bottom: 1px solid @rammeborder;
 }
 
 .meldingsliste {
-  width: 35%;
+  width: 40%;
   height: 100%;
   float: left;
   overflow: auto;
   background-color: white;
   margin: 0;
-  border-right: 1px solid @skilleborder;
   border-left: 1px solid @rammeborder;
   border-bottom: 1px solid @rammeborder;
   .melding {
-    padding: 1em;
-    padding-left: 2em;
+    padding: 1em @meldingslistemargin 1em @meldingslistemargin;
+    padding-left: @meldingslistemargin;
     position: relative;
     border-bottom: solid 1px @rammeborder;
-    height: 100px;
-    .tema {
-      font-weight: 600;
-    }
-    h2 {
-      text-transform: uppercase;
-      font-weight: normal;
-      margin: 0;
-      margin-bottom: 0.2em;
-      font-size: 1em;
-    }
-    h1 {
-      max-width: 700px;
-      font-weight: bold;
-      margin: 0;
-      font-size: 1.2em;
-      text-overflow: ellipsis;
-      -o-text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-      text-align: left;
-    }
-    .opprettet {
-      position: absolute;
-      top: 1em;
-      right: 1.5em;
-      text-transform: uppercase;
+    min-height: 100px;
+    header {
+      .antall-henvendelser {
+        float: right;
+        color: white;
+        background-color: @modiasvart;
+        width: 25px;
+        height: 15px;
+        border-top-left-radius: 13px 8px;
+        border-top-right-radius: 13px 8px;
+        border-bottom-left-radius: 13px 8px;
+        border-bottom-right-radius: 13px 8px;
+        text-align: center;
+        vertical-align: middle;
+      }
+      .indikator {
+        margin-bottom: 1em;
+        .indikator-dot {
+          display: inline-block;
+          vertical-align: middle;
+          height: 1em;
+          width: 1em;
+          border-radius: 2em;
+          -moz-border-radius: 2em;
+          -webkit-border-radius: 2em;
+          &:not(.lest) {
+            background-color: @dodgerblue;
+          }
+          &.lest {
+            background-color: transparent;
+            border: 1px solid @dodgerblue;
+          }
+          &.ikke-besvart {
+            background-color: #ffb748;
+            border: 0;
+          }
+        }
+        .indikator-tekst {
+          vertical-align: middle;
+        }
+      }
+      .opprettet {
+        text-transform: uppercase;
+        font-size: 1em;
+        font-weight: normal;
+        margin: 0;
+      }
+      h1 {
+        max-width: 700px;
+        font-weight: bold;
+        margin: 0;
+        font-size: 1.2em;
+        text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        text-align: left;
+      }
+      .tema {
+        font-weight: 600;
+      }
     }
     p {
       max-width : 500px;
@@ -91,24 +100,10 @@ body {
       white-space: nowrap;
     }
     &.valgt {
-      background-color: @sortbakgrunn;
-    }
-    &.valgt * {
-      color: white;
+      background-color: @graabakgrunn;
     }
     &:not(.valgt) {
       cursor: pointer;
-    }
-    &:not(.lest) {
-      .ulest-indikator {
-        position: absolute;
-        top: 1.7em;
-        left: 0.5em;
-        background-color: #0067c5;
-        height: 1em;
-        width: 1em;
-        border-radius: 2em;
-      }
     }
   }
 }
@@ -117,10 +112,10 @@ body {
   height: 100%;
   overflow: auto;
   margin: 0;
-  background-color: @graabakgrunn;
+  background-color: white;
   border-right: 1px solid @rammeborder;
+  border-left: 1px solid @rammeborder;
   border-bottom: 1px solid @rammeborder;
-  border-left: 1px solid @skilleborder;
   padding-bottom: 3em;
   line-height: 1.5em;
   .tema-header {
@@ -128,31 +123,7 @@ body {
     font-weight: 600;
     padding: 0.5em 2.5em 0.5em 2.5em;
   }
-  section.nyeste-henvendelse {
-    padding: 1em 2.5em 1em 2.5em;
-    h1 {
-      font-size: 1.5em;
-      text-align: left;
-      font-weight: 600;
-      margin: 0 0 1em 0;
-    }
-    h2 {
-      font-size: 1.1em;
-      text-transform: uppercase;
-    }
-    article {
-      text-align: justify;
-    }
-    .opprettet {
-      float: right;
-      text-transform: uppercase;
-      .lest-dato {
-        font-size: 0.8em;
-        text-align: right;
-      }
-    }
-  }
-  section.tidligere-henvendelse {
+  section.tidligere-henvendelse, section.nyeste-henvendelse {
     padding: 2.5em;
     padding-bottom: 0;
     header {
@@ -165,7 +136,6 @@ body {
       background: white;
       padding: 1.5em;
       border: 1px solid @rammeborder;
-      cursor: pointer;
       background-color: white;
       // CSS magi for å tegne pil
       &:before, &:after {
@@ -192,6 +162,7 @@ body {
       h2 {
         text-align: center;
         font-weight: 600;
+        margin: 0;
       }
       hr {
         border-style: none;
@@ -200,65 +171,38 @@ body {
         overflow: hidden;
         padding: 0 2em;
       }
-      .utvide-tekst-pil {
-        position: absolute;
-        height: 0;
-        width: 0;
-        top: 2em;
-        right: 2em;
-        border-left: 8px solid transparent;
-        border-right: 8px solid transparent;
-        border-top: 8px solid @dodgerblue;
-        &.rotert {
-          -webkit-transform: rotate(-180deg);
-          -moz-transform: rotate(-180deg);
-          -ms-transform: rotate(-180deg);
-          -o-transform: rotate(-180deg);
-          transform: rotate(-180deg);
+    }
+    &:last-child {
+      article {
+        &:after {
+          border: none;
+        }
+        &:before {
+          border: none;
         }
       }
     }
   }
-}
-
-#eksterne-lenker {
-  text-align: center;
-  padding: 1em;
-  a {
-    margin: 1em;
-  }
-}
-
-@media screen and (max-width: 768px) {
-
-  #innboks-top .innboks-nav {
-    margin: 0 1em;
-    max-width: 100%;
-    .tilbake-til-innboks-link {
-      display: block;
-      &.skjult {
-        display: none;
+  section.tidligere-henvendelse {
+    article {
+      cursor: pointer;
+    }
+    .utvide-tekst-pil {
+      position: absolute;
+      height: 0;
+      width: 0;
+      top: 2em;
+      right: 2em;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 8px solid @dodgerblue;
+      &.rotert {
+        -webkit-transform: rotate(-180deg);
+        -moz-transform: rotate(-180deg);
+        -ms-transform: rotate(-180deg);
+        -o-transform: rotate(-180deg);
+        transform: rotate(-180deg);
       }
     }
-  }
-
-  #innboks-container {
-    max-width: 100%;
-    margin: 0;
-    border: 0;
-  }
-
-  .meldingsliste {
-    width: 100%;
-    margin: 0;
-    border: 0;
-    &.skjult {
-      display: none;
-    }
-  }
-
-  .meldingsdetaljer {
-    margin: 0;
-    border: 0;
   }
 }

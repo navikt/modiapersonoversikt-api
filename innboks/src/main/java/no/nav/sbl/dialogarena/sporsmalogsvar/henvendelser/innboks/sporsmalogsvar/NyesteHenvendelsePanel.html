@@ -6,13 +6,11 @@
 <wicket:panel>
     <section class="nyeste-henvendelse">
         <header>
-            <div class="opprettet">
-                <aside wicket:id="nyesteHenvendelse.opprettetDato"></aside>
-                <aside wicket:id="nyesteHenvendelse.lestDato" class="lest-dato"></aside>
-            </div>
-            <h1 wicket:id="nyesteHenvendelse.henvendelse.overskrift"></h1>
+            <span wicket:id="nyesteHenvendelse.opprettetDato"></span>
         </header>
         <article>
+            <h2 wicket:id="nyesteHenvendelse.henvendelse.overskrift"></h2>
+            <hr class="robust-strek" />
             <p wicket:id="nyesteHenvendelse.henvendelse.fritekst"></p>
         </article>
     </section>

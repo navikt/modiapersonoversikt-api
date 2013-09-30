@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.Locale;
 
+import static no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.consumer.Henvendelsetype.SPORSMAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.consumer.Henvendelsetype.SVAR;
 
 
@@ -57,6 +58,15 @@ public class HenvendelseVM implements Serializable {
             @Override
             public Boolean getObject() {
                 return henvendelse.erLest();
+            }
+        };
+    }
+
+    public IModel<Boolean> erIkkeBesvart() {
+        return new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return henvendelse.erLest() && avType(SPORSMAL).getObject();
             }
         };
     }

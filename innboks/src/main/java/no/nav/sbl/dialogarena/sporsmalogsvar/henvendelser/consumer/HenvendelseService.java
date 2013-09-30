@@ -19,7 +19,6 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 public interface HenvendelseService {
 
     List<Henvendelse> hentAlleHenvendelser(String aktorId);
-    void merkHenvendelseSomLest(String behandlingsId);
 
     class Default implements HenvendelseService {
 
@@ -60,12 +59,6 @@ public interface HenvendelseService {
             };
             return on(henvendelseWS.hentHenvendelseListe(aktorId, Arrays.asList("SPORSMAL", "SVAR"))).map(somHenvendelse).collect();
         }
-
-        @Override
-        public void merkHenvendelseSomLest(String behandlingsId) {
-            henvendelseWS.merkMeldingSomLest(behandlingsId);
-        }
-
     }
 
     class Mock implements HenvendelseService {
@@ -129,6 +122,8 @@ public interface HenvendelseService {
                     " sequitur mutationem consuetudium lectorum. Mirum est notare quam littera gothica, quam nunc putamus parum claram, anteposuerit litterarum formas";
             svar2.tema = spsm2.tema;
             svar2.overskrift = (Henvendelsetype.SPORSMAL.equals(svar2.type) ? "Bruker:" : "NAV:");
+            svar2.markerSomLest();
+            svar2.lestDato = svar2.opprettet.minusHours(6);
             henvendelser.put(svar2.id, svar2);
 
             Henvendelse spsm3 = new Henvendelse("" + random.nextInt(), Henvendelsetype.SPORSMAL, "" + random.nextInt());
@@ -174,14 +169,6 @@ public interface HenvendelseService {
         public List<Henvendelse> hentAlleHenvendelser(String aktorId) {
             return new ArrayList<>(henvendelser.values());
         }
-
-        @Override
-        public void merkHenvendelseSomLest(String behandlingsId) {
-            Henvendelse henvendelse = henvendelser.get(behandlingsId);
-            henvendelse.markerSomLest();
-            henvendelser.put(henvendelse.id, henvendelse);
-        }
-
     }
 
 }

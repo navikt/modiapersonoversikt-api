@@ -57,6 +57,10 @@ public class InnboksVM implements Serializable {
         return emptyList();
     }
 
+    public int getTraadLengde(String id) {
+        return on(henvendelser).filter(where(TRAAD_ID, equalTo(id))).collect().size();
+    }
+
     public List<HenvendelseVM> getTidligereHenvendelser() {
         List<HenvendelseVM> traad = getTraad();
         return traad.isEmpty() ? traad : traad.subList(1, traad.size());

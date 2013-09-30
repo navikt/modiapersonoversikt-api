@@ -5,7 +5,6 @@ import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.consumer.HenvendelseService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
@@ -23,7 +22,6 @@ public class Innboks extends Lerret {
     HenvendelseService service;
 
     private InnboksModell innboksModell;
-    AjaxLink<Void> tilInnboksLink;
 
     @Override
     public void renderHead(IHeaderResponse response) {
@@ -36,7 +34,7 @@ public class Innboks extends Lerret {
         setDefaultModel(innboksModell);
         setOutputMarkupId(true);
 
-        final AlleHenvendelserPanel alleMeldinger = new AlleHenvendelserPanel("henvendelser", innboksModell, service);
+        final AlleHenvendelserPanel alleMeldinger = new AlleHenvendelserPanel("henvendelser", innboksModell);
         alleMeldinger.add(hasCssClassIf("skjult", innboksModell.alleHenvendelserSkalSkjulesHvisLitenSkjerm));
         DetaljvisningPanel detaljvisning = new DetaljvisningPanel("detaljpanel", innboksModell);
 
