@@ -1,0 +1,12 @@
+*.iml
+.idea/*
+*/target
+*.log
+
+#fitnesse
+web/FitNesseRoot/FitNesse/
+web/FitNesseRoot/files/
+web/FitNesseRoot/properties
+web/FitNesseRoot/updateDoNotCopyOverList
+web/FitNesseRoot/updateList
+web/FitNesseRoot/ErrorLogs
