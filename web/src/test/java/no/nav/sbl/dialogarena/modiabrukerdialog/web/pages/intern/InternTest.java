@@ -4,13 +4,13 @@ import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.test.FluentWicketTester;
-import no.nav.modig.wicket.test.internal.Parameters;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
+import no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare.BesvareSporsmalPanel;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -26,14 +26,15 @@ import javax.inject.Inject;
 import static no.nav.modig.common.MDCOperations.MDC_CALL_ID;
 import static no.nav.modig.common.MDCOperations.generateCallId;
 import static no.nav.modig.common.MDCOperations.putToMDC;
+import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
 
 @ActiveProfiles({"test"})
 @ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
@@ -60,16 +61,14 @@ public class InternTest extends TestSecurityBaseClass {
     }
 
     @Test
-    public void shouldShowDialogWhenRefreshingKjerneinfoIfThereAreChanges() {
-        Parameters param = new Parameters();
-        param.pageParameters.set("fnr", "12037649749");
-        wicket.goTo(Intern.class, param);
+    public void vedUlagredeEndringerOgRefreshSkalViseModaldialog() {
+        wicket.goTo(Intern.class, with().param("fnr", "12037649749"));
         Intern intern = (Intern) wicket.tester.getLastRenderedPage();
         ModiaModalWindow modal = mock(ModiaModalWindow.class);
         LamellHandler lamellHandler = mock(LamellHandler.class);
+        on(intern).setFieldValue("modalWindow", modal);
+        on(intern).setFieldValue("lamellHandler", lamellHandler);
         when(lamellHandler.hasUnsavedChanges()).thenReturn(true);
-        setInternalState(intern, "modalWindow", modal);
-        setInternalState(intern, "lamellHandler", lamellHandler);
         AjaxRequestTarget target = new AjaxRequestHandler(intern);
         intern.refreshKjerneinfo(target, "");
         verify(modal, times(1)).show(target);
@@ -78,20 +77,24 @@ public class InternTest extends TestSecurityBaseClass {
     }
 
     @Test
-    public void shouldNotShowDialogWhenRefreshingKjerneinfoIfThereAreNoChanges() {
-        Parameters param = new Parameters();
-        param.pageParameters.set("fnr", "12037649749");
-        wicket.goTo(Intern.class, param);
+    public void vedIngenUlagredeEndringerOgRefreshSkalIkkeViseModaldialog() {
+        wicket.goTo(Intern.class, with().param("fnr", "12037649749"));
         Intern intern = (Intern) wicket.tester.getLastRenderedPage();
         ModiaModalWindow modal = mock(ModiaModalWindow.class);
         LamellHandler lamellHandler = mock(LamellHandler.class);
+        on(intern).setFieldValue("modalWindow", modal);
+        on(intern).setFieldValue("lamellHandler", lamellHandler);
         when(lamellHandler.hasUnsavedChanges()).thenReturn(false);
-        setInternalState(intern, "modalWindow", modal);
-        setInternalState(intern, "lamellHandler", lamellHandler);
         AjaxRequestTarget target = new AjaxRequestHandler(intern);
         intern.refreshKjerneinfo(target, "");
         verify(modal, times(0)).show(target);
         verify(modal, times(1)).redirect();
+    }
+
+    @Test
+    public void besvareSporsmalPanelErSynligNaarOppgaveIdGisIUrl() {
+        wicket.goTo(Intern.class, with().param("fnr", "12037649749").param("oppgaveId", "123"))
+            .should().containComponent(ofType(BesvareSporsmalPanel.class).and(thatIsVisible()));
     }
 
 
