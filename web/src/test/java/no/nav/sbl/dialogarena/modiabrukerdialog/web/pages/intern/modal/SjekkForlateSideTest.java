@@ -4,6 +4,7 @@ import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer.AnswerType;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,8 +20,8 @@ import static no.nav.modig.common.MDCOperations.generateCallId;
 import static no.nav.modig.common.MDCOperations.putToMDC;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @ActiveProfiles({"test"})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -53,7 +54,8 @@ public class SjekkForlateSideTest extends TestSecurityBaseClass {
         fluentWicketTester.goToPageWith(sjekkForlateSide)
                 .click().link(withId("closeCancel"));
 
-        assertThat(answer.getAnswerType(), is(SjekkForlateSideAnswer.AnswerType.CANCEL));
+        assertTrue(answer.is(AnswerType.CANCEL));
+        assertFalse(answer.is(AnswerType.DISCARD));
     }
 
     @Test
@@ -64,6 +66,7 @@ public class SjekkForlateSideTest extends TestSecurityBaseClass {
         fluentWicketTester.goToPageWith(sjekkForlateSide)
                 .click().link(withId("closeDiscard"));
 
-        assertThat(answer.getAnswerType(), is(SjekkForlateSideAnswer.AnswerType.DISCARD));
+        assertTrue(answer.is(AnswerType.DISCARD));
+        assertFalse(answer.is(AnswerType.CANCEL));
     }
 }
