@@ -7,51 +7,57 @@
       margin-top: 40px;
     }
   }
+}
 
-  .oppgaveplukker {
+.oppgaveplukker {
+  position: relative;
+  float: left;
+
+  .knapp-liten {
+    background: @grayLight;
+    border: none;
+    margin-top: 40px;
+  }
+
+  .plukk-valg {
+    background: @grayLight url(../svg/radio_ikon.svg) no-repeat center;
+    background-size: 50%;
+    height: 32px;
+    width: 32px;
+    padding: 6px 10px 7px;
     position: relative;
-    float: left;
-
-    .plukk-valg {
-      background: @grayLight url(../svg/radio_ikon.svg) no-repeat center;
-      background-size: 50%;
-      height: 32px;
-      width: 32px;
-      padding: 6px 10px 7px;
-      position: relative;
-      &:after {
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        border: solid transparent;
-        content: " ";
-        height: 0;
-        width: 0;
-        border-top-color: @grayLight;
-        border-width: 0.5em;
-        margin-left: -0.5em;
-      }
-    }
-
-    .temaboks {
-      background: #333;
-      border: solid 1px black;
-      color: white;
+    &:after {
       position: absolute;
-      left:-120px; right:0; top: 82px;
-      z-index: 1000;
-      padding: 10px;
-      ul {
-        list-style: none;
-        margin: 0 0 0 10px;
-        padding: 0;
-        li {
-          padding: 3px 0 8px 28px;
-          cursor: pointer;
-          background: url(../svg/radio_svart.svg) no-repeat;
-          &.valgt {
-            background: url(../svg/radio_svart_valgt.svg) no-repeat;
-          }
+      top: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      border-top-color: @grayLight;
+      border-width: 0.5em;
+      margin-left: -0.5em;
+    }
+  }
+
+  .temaboks {
+    background: #333;
+    border: solid 1px black;
+    color: white;
+    position: absolute;
+    left:-120px; right:0; top: 82px;
+    z-index: 1000;
+    padding: 10px;
+    ul {
+      list-style: none;
+      margin: 0 0 0 10px;
+      padding: 0;
+      li {
+        padding: 3px 0 8px 28px;
+        cursor: pointer;
+        background: url(../svg/radio_svart.svg) no-repeat;
+        &.valgt {
+          background: url(../svg/radio_svart_valgt.svg) no-repeat;
         }
       }
     }
