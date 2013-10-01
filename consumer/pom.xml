@@ -3,13 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
      <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
-        <artifactId>sokander-modia</artifactId>
+        <artifactId>soknader-modia</artifactId>
         <version>2.0.0-SNAPSHOT</version>
     </parent>
     <artifactId>soknader-consumer</artifactId>
     <name>Soknader-Modia :: Consumer</name>
 
-   
     <dependencies>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -21,7 +20,6 @@
             <artifactId>modig-core</artifactId>
         </dependency>
 
-        <!-- Logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>

@@ -22,7 +22,6 @@
             <artifactId>modig-wicket</artifactId>
         </dependency>
 
-        <!-- Logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-core</artifactId>
@@ -38,7 +37,6 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
 
-        <!-- Wicket -->
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-ioc</artifactId>
