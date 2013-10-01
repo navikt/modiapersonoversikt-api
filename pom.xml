@@ -65,6 +65,12 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>soknader-panel</artifactId>
+                <version>${soknader.widget.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>soknader-consumer</artifactId>
                 <version>${soknader.widget.version}</version>
             </dependency>
