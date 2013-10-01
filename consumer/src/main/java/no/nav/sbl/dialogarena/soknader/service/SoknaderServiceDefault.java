@@ -7,9 +7,9 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
-public class SoknaderWidgetServiceDefault implements SoknaderWidgetService {
+public class SoknaderServiceDefault implements SoknaderService {
 
-    private final Logger logger = LoggerFactory.getLogger(SoknaderWidgetServiceDefault.class);
+    private final Logger logger = LoggerFactory.getLogger(SoknaderServiceDefault.class);
 
     @Override
     public List<InfoPanelVM> getWidgetContent(String fnr) {
