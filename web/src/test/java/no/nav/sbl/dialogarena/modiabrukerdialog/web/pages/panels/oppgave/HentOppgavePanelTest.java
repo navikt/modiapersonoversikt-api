@@ -27,7 +27,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertNotNull;
+import static org.hamcrest.Matchers.notNullValue;
 
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -35,35 +35,35 @@ import static org.junit.Assert.assertNotNull;
 public class HentOppgavePanelTest extends TestSecurityBaseClass {
 
     @Inject
-    private FluentWicketTester<?> fluentWicketTester;
+    private FluentWicketTester<?> wicket;
 
     @Before
     public void hentOppgave() {
-        fluentWicketTester.goTo(Intern.class).click().link(withId("plukk-oppgave"));
+        wicket.goTo(Intern.class).click().link(withId("plukk-oppgave"));
     }
 
     @Test
     public void skalViseTemavelgerNaarDuPlukkerOppgave() {
-        fluentWicketTester.should().containComponent(both(ofType(HentOppgavePanel.class)).and(thatIsVisible()));
+        wicket.should().containComponent(both(ofType(HentOppgavePanel.class)).and(thatIsVisible()));
     }
 
     @Test
     public void besvarePanelSkalHaVerdierNaarManHarValgtTema() {
-        fluentWicketTester.tester.executeAjaxEvent(fluentWicketTester.get().components(ofType(ListItem.class).and(containedInComponent(ofType(HentOppgavePanel.class)))).get(0), "click");
+        wicket.tester.executeAjaxEvent(wicket.get().components(ofType(ListItem.class).and(containedInComponent(ofType(HentOppgavePanel.class)))).get(0), "click");
 
-        PageParameters pageParameters = fluentWicketTester.tester.getLastRenderedPage().getPageParameters();
+        PageParameters pageParameters = wicket.tester.getLastRenderedPage().getPageParameters();
         assertThat(pageParameters.get("fnr").toString(), equalTo(OppgavebehandlingConfig.Test.FODESELSNR));
 
-        Sporsmal sporsmal = (Sporsmal) fluentWicketTester.get()
+        Sporsmal sporsmal = (Sporsmal) wicket.get()
                 .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("sporsmal")))
                 .getDefaultModelObject();
-        assertNotNull(sporsmal.getFritekst());
-        assertNotNull(sporsmal.getSendtDato());
+        assertThat(sporsmal.getFritekst(), notNullValue());
+        assertThat(sporsmal.getSendtDato(), notNullValue());
 
-        Svar svar = (Svar) fluentWicketTester.get()
+        Svar svar = (Svar) wicket.get()
                 .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("svar"))).getDefaultModelObject();
 
-        assertNotNull(svar.getBehandlingId());
+        assertThat(svar.getBehandlingId(), notNullValue());
     }
 
 }
