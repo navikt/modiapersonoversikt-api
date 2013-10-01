@@ -98,6 +98,15 @@
             <artifactId>sporsmal-og-svar-besvare</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>soknader-widget</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>soknader-consumer</artifactId>
+        </dependency>
 
         <!-- End modia komponenter -->
 
