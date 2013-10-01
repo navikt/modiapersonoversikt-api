@@ -16,6 +16,7 @@
             , brukerhenvendelserDefaultWithoutCNCheck
             , henvendelseinnsynTest
             , oppgavebehandlingDefault
+            , soknaderTest
         </param-value>
     </context-param>
 
