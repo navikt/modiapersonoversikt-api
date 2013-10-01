@@ -4,8 +4,6 @@ import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.consumer.HenvendelseService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
@@ -17,16 +15,13 @@ public class Innboks extends Lerret {
     public static final String VALGT_HENVENDELSE = "hendelser.valgt_henvendelse";
     public static final String OPPDATER_HENVENDELSER = "hendelser.oppdater_henvendelser";
 
+    public static final JavaScriptResourceReference JS_REFERENCE = new JavaScriptResourceReference(Innboks.class, "innboks.js");
+
     @Inject
     HenvendelseService service;
 
     private InnboksModell innboksModell;
     private String fnr;
-
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(Innboks.class, "innboks.js")));
-    }
 
     public Innboks(String id, String fnr) {
         super(id);

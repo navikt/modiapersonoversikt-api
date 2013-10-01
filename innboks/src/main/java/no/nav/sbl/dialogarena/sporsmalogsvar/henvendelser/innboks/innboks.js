@@ -3,7 +3,7 @@ $(document).ready(function() {
     var distanseFraToppen = 0;
 
     var attachHenvendelseListener = function() {
-        $('.melding').on('click', function() {
+        $(document).on('click', '.melding', function() {
             distanseFraToppen = $('#meldinger').scrollTop();
             attachAjaxCompleteListener();
         });

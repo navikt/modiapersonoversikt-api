@@ -23,14 +23,14 @@
       }
     }
     .status-container {
-      padding: 20px 10px;
+      padding: 10px;
       overflow: hidden;
       text-align: center;
       .status {
         height: 1em;
         width: 1em;
         border-radius: 50%;
-        margin: 0 auto;
+        margin: 1em auto;
         &.ikke-besvart {
           background-color: #eebe00;
         }
@@ -45,8 +45,17 @@
           background-color: #ec288d;
         }
       }
-      footer {
-        font-size: 0.9em;
+      div label {
+        width: 100%;
+        font-size: 0.8em;
+        text-transform:  none;
+        margin: 0;
+        color: black;
+        line-height: 1em;
+        &.lest-dato {
+          font-size: 0.7em;
+          font-weight: 600;
+        }
       }
     }
   }

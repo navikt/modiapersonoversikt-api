@@ -111,7 +111,7 @@ public class MeldingVM implements FeedItemVM, Serializable {
 
     @Override
     public String getType() {
-        return "Melding";
+        return "meldinger";
     }
 
     @Override

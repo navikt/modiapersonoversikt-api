@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.inject.Inject;
 
 @Configuration
-public class MeldingsinnboksContext {
+public class MeldingerInnboksConfig {
 
         @Inject
         HenvendelsePortType henvendelseWS;

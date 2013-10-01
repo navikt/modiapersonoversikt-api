@@ -8,14 +8,6 @@
 body {
   font-family: Modus, Arial, sans-serif;
 }
-
-.innboks-overskrift {
-  background-color: white;
-  margin: 0;
-  padding: 0.5em 0 0.5em @meldingslistemargin;
-  border-bottom: 1px solid @rammeborder;
-}
-
 .meldingsliste {
   width: 40%;
   height: 100%;
@@ -23,6 +15,7 @@ body {
   overflow: auto;
   background-color: white;
   margin: 0;
+  border-top: 1px solid @rammeborder;
   border-left: 1px solid @rammeborder;
   border-bottom: 1px solid @rammeborder;
   .melding {
@@ -113,9 +106,7 @@ body {
   overflow: auto;
   margin: 0;
   background-color: white;
-  border-right: 1px solid @rammeborder;
-  border-left: 1px solid @rammeborder;
-  border-bottom: 1px solid @rammeborder;
+  border: 1px solid @rammeborder;
   padding-bottom: 3em;
   line-height: 1.5em;
   .tema-header {
