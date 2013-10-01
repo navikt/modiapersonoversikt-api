@@ -72,6 +72,13 @@
             <artifactId>wicket-spring</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>soknader-widget</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <resources>
