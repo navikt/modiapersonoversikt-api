@@ -3,7 +3,7 @@ $(document).ready(function() {
     var distanseFraToppen = 0;
 
     var attachHenvendelseListener = function() {
-        $(document).on('click', '.melding', function() {
+        $('.melding').on('click', function() {
             distanseFraToppen = $('#meldinger').scrollTop();
             attachAjaxCompleteListener();
         });
@@ -16,21 +16,20 @@ $(document).ready(function() {
         });
     };
 
-    var attachTilInnboksListener = function() {
-        $('.tilbake-til-innboks-link').on('click', function() {
-            attachAjaxCompleteListener();
-        });
-    };
-
     var attachToggleHoydeListener = function() {
         var $tidligereHenvendelseTekst = $('.tidligere-henvendelse p');
         var minHoyde = parseInt($tidligereHenvendelseTekst.css('line-height')) * 2;
 
         $tidligereHenvendelseTekst.each(function() {
-            $(this).data('height', $(this).height());
+            if (!$(this).data('height') && $(this).height() >= minHoyde) {
+                $(this).data('height', $(this).height());
+            }
         });
 
         $tidligereHenvendelseTekst.height(minHoyde);
+
+        // I tilfelle AJAX events fra andre deler av Modia
+        $('.tidligere-henvendelse article').off('click');
 
         $('.tidligere-henvendelse article').on('click', function() {
             var $tekstFelt = $(this).find('p');
@@ -47,17 +46,9 @@ $(document).ready(function() {
 
     var attachListeners = function() {
         attachHenvendelseListener();
-        attachTilInnboksListener();
         attachToggleHoydeListener();
-    };
-
-    var adjustInnboksHeight = function() {
-        var bodyHeight = $('body').outerHeight();
-        var restHeight = $('.footer').outerHeight() + $('.innstillinger-innlogget').outerHeight() +
-            $('.rad-logo').outerHeight() + $('#innboks-top').outerHeight();
-        $('#innboks-container').height(bodyHeight - restHeight);
+        attachAjaxCompleteListener();
     };
 
     attachListeners();
-    adjustInnboksHeight();
 });
