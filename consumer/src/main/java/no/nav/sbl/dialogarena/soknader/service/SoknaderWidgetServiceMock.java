@@ -5,7 +5,7 @@ import no.nav.modig.modia.widget.panels.InfoPanelVM;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SoknaderWidgetMockService implements SoknaderWidgetService {
+public class SoknaderWidgetServiceMock implements SoknaderWidgetService {
 
 
     public static final String SOKNAD = "SOKNAD";
