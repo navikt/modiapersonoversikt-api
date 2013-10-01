@@ -12,8 +12,6 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class SoknaderConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SoknaderConfig.class);
-
     @Profile({"default", "soknaderDefault"})
     @Configuration
     public static class Default {
