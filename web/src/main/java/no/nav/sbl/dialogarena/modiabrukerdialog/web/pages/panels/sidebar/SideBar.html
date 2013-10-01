@@ -1,9 +1,11 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <aside class="sidebar">
-        <wicket:container wicket:id="hent-oppgave"/>
-        <wicket:container wicket:id="oppgavevalg"/>
-        <div wicket:id="besvarePanel" style="margin: 0;"/>
+        <section class="navbar menu-intern active">
+            <wicket:container wicket:id="hent-oppgave"/>
+            <wicket:container wicket:id="oppgavevalg"/>
+        </section>
+        <div wicket:id="besvarePanel" style="margin: 0; margin-top: 40px;"/>
         <div wicket:id="visittkortPanel" ></div>
     </aside>
 </wicket:panel>
