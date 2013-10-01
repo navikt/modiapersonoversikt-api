@@ -64,6 +64,12 @@
             </dependency>
 
             <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>soknader-consumer</artifactId>
+                <version>${soknader.widget.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-wicket</artifactId>
                 <version>${modig.wicket.version}</version>
