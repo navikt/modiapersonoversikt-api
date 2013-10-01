@@ -70,18 +70,6 @@
 
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-core</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket</artifactId>
         </dependency>
 

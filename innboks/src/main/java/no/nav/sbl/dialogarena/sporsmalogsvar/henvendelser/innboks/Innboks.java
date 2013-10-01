@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks;
 
-import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.consumer.HenvendelseService;
@@ -22,15 +21,17 @@ public class Innboks extends Lerret {
     HenvendelseService service;
 
     private InnboksModell innboksModell;
+    private String fnr;
 
     @Override
     public void renderHead(IHeaderResponse response) {
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(Innboks.class, "innboks.js")));
     }
 
-    public Innboks(String id) {
+    public Innboks(String id, String fnr) {
         super(id);
-        innboksModell = new InnboksModell(new InnboksVM(service.hentAlleHenvendelser(SubjectHandler.getSubjectHandler().getUid())));
+        this.fnr = fnr;
+        this.innboksModell = new InnboksModell(new InnboksVM(service.hentAlleHenvendelser(fnr)));
         setDefaultModel(innboksModell);
         setOutputMarkupId(true);
 
@@ -43,7 +44,7 @@ public class Innboks extends Lerret {
 
     @RunOnEvents(OPPDATER_HENVENDELSER)
     public void meldingerOppdatert(AjaxRequestTarget target) {
-        this.innboksModell.getObject().oppdaterHenvendelserFra(service.hentAlleHenvendelser(SubjectHandler.getSubjectHandler().getUid()));
+        this.innboksModell.getObject().oppdaterHenvendelserFra(service.hentAlleHenvendelser(fnr));
         target.add(this);
     }
 }
