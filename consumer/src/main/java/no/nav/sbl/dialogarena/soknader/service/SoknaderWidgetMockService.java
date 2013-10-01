@@ -17,6 +17,7 @@ public class SoknaderWidgetMockService implements SoknaderWidgetService {
         soknader.add(soknad1());
         soknader.add(soknad2());
         soknader.add(soknad3());
+        soknader.add(soknad4());
         return soknader;
     }
 
@@ -32,6 +33,11 @@ public class SoknaderWidgetMockService implements SoknaderWidgetService {
 
     private InfoPanelVM soknad3() {
         InfoPanelVM infoPanelVM = new InfoPanelVM("soknad3", SOKNAD, "05.09.2013", "Sykepenger", metaData3(), InfoPanelVM.Status.ERROR);
+        return infoPanelVM;
+    }
+
+    private InfoPanelVM soknad4() {
+        InfoPanelVM infoPanelVM = new InfoPanelVM("alleSokander", SOKNAD, "Alle", "Alle søknader", metaData4(), InfoPanelVM.Status.OK);
         return infoPanelVM;
     }
 
@@ -53,6 +59,12 @@ public class SoknaderWidgetMockService implements SoknaderWidgetService {
         metadata.add("10.09.2013");
         metadata.add("Behandlingstid : 10 dager");
         metadata.add("Manglende dokumentasjon");
+        return metadata;
+    }
+
+    private List<String> metaData4() {
+        List<String> metadata = new ArrayList<>();
+        metadata.add("Alle søknader");
         return metadata;
     }
 }

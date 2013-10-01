@@ -7,8 +7,6 @@ import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.spring.injection.annot.SpringBean;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -19,8 +17,6 @@ public class SoknaderWidget extends InfoFeedWidget {
     }
 
     private static final class WidgetModel extends LoadableDetachableModel<List<InfoPanelVM>> {
-
-        private Logger LOG = LoggerFactory.getLogger(WidgetModel.class);
 
         IModel<String> fnrModel;
         @SpringBean
