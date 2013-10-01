@@ -5,7 +5,7 @@ import org.apache.wicket.markup.html.basic.Label;
 
 public class SoknaderPanel extends Lerret {
 
-    public SoknaderPanel(String id, String fnr){
+    public SoknaderPanel(String id){
         super(id);
         add(new Label("heading","Søknader"));
 
