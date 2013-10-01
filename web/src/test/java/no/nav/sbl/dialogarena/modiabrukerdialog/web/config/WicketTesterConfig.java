@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
+import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketApplication;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ public class WicketTesterConfig {
         System.setProperty("tjenestebuss.url", "http://changeme");
         System.setProperty("ctjenestebuss.username", "me");
         System.setProperty("ctjenestebuss.password", "secret");
+        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }
 
     @Inject
