@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
+import java.util.Comparator;
 import java.util.List;
 import javax.inject.Inject;
 import no.nav.modig.modia.widget.FeedWidget;
@@ -19,7 +20,7 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
     public MeldingerWidget(String id, String initial, String fnr) {
         super(id, initial);
         HenvendelseService service = new HenvendelseService(henvendelsePortType, fnr);
-        List<MeldingVM> meldinger = on(service.alleTraader()).map(TIL_MELDINGVM).collect();
+        List<MeldingVM> meldinger = on(service.alleTraader()).map(TIL_MELDINGVM).collect(NYESTE_OVERST);
         setDefaultModel(new CompoundPropertyModel<>(meldinger));
     }
 
@@ -27,6 +28,13 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
     public MeldingWidgetPanel newFeedPanel(String id, IModel<MeldingVM> model) {
         return new MeldingWidgetPanel(id, model);
     }
+
+    private static final Comparator<MeldingVM> NYESTE_OVERST = new Comparator<MeldingVM>() {
+        @Override
+        public int compare(MeldingVM o1, MeldingVM o2) {
+            return o2.getOpprettetDato().compareTo(o1.getOpprettetDato());
+        }
+    };
 
     private static final Transformer<List<WSHenvendelse>, MeldingVM> TIL_MELDINGVM = new Transformer<List<WSHenvendelse>, MeldingVM>() {
         @Override

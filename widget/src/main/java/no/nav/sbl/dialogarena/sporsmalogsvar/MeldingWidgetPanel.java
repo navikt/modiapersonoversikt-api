@@ -26,7 +26,7 @@ public class MeldingWidgetPanel extends GenericPanel<MeldingVM> {
                 lestDato,
                 new Label("statusTekst"));
         add(
-                new Label("opprettetDato"),
+                new Label("opprettetDatoAsString"),
                 new Label("avsender"),
                 new Label("tema", new StringResourceModel("${tema}", getModel())),
                 statusContainer);

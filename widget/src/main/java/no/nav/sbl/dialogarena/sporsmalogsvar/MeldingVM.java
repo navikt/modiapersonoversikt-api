@@ -76,8 +76,12 @@ public class MeldingVM implements FeedItemVM, Serializable {
         };
     }
 
-    public String getOpprettetDato() {
+    public String getOpprettetDatoAsString() {
         return DateTimeFormat.forPattern("dd.MM.yyyy 'kl' HH.mm").print(opprettetDato);
+    }
+
+    public DateTime getOpprettetDato() {
+        return opprettetDato;
     }
 
     public void setOpprettetDato(DateTime opprettetDato) {
