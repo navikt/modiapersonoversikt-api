@@ -1,13 +1,15 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
-import java.util.ArrayList;
 import java.util.List;
 import javax.inject.Inject;
 import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
+import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+
+import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class MeldingerWidget extends FeedWidget<MeldingVM> {
 
@@ -16,16 +18,8 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
 
     public MeldingerWidget(String id, String initial, String fnr) {
         super(id, initial);
-        List<MeldingVM> meldinger = new ArrayList<>();
-        for (List<WSHenvendelse> traad : new HenvendelseService(henvendelsePortType, fnr).alleTraader()) {
-            WSHenvendelse nyesteMelding = traad.get(0);
-            MeldingVM melding = new MeldingVM(nyesteMelding.getBehandlingsId());
-            melding.setDato(nyesteMelding.getOpprettetDato());
-            melding.setAvsender((traad.size() == 1 ? "Melding" : "Svar") + " fra " +
-                    ("SPORSMAL".equals(nyesteMelding.getHenvendelseType()) ? "Navn Navnesen" : "NAV"));
-            melding.setTema(nyesteMelding.getTema());
-            meldinger.add(melding);
-        }
+        HenvendelseService service = new HenvendelseService(henvendelsePortType, fnr);
+        List<MeldingVM> meldinger = on(service.alleTraader()).map(TIL_MELDINGVM).collect();
         setDefaultModel(new CompoundPropertyModel<>(meldinger));
     }
 
@@ -33,5 +27,12 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
     public MeldingWidgetPanel newFeedPanel(String id, IModel<MeldingVM> model) {
         return new MeldingWidgetPanel(id, model);
     }
+
+    private static final Transformer<List<WSHenvendelse>, MeldingVM> TIL_MELDINGVM = new Transformer<List<WSHenvendelse>, MeldingVM>() {
+        @Override
+        public MeldingVM transform(List<WSHenvendelse> traad) {
+            return new MeldingVM(traad);
+        }
+    };
 
 }

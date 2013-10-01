@@ -1,7 +1,16 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-    <p wicket:id="dato"/>
-    <p wicket:id="avsender"/>
-    <p wicket:id="tema"/>
+    <div class="melding-metadata">
+        <label wicket:id="opprettetDato"/>
+        <h4 wicket:id="avsender"/>
+        <footer wicket:id="tema"/>
+    </div>
+    <div wicket:id="status-container" class="status-container">
+        <div wicket:id="status" class="status"/>
+        <div>
+            <label wicket:id="lestDato"/>
+            <footer wicket:id="statusTekst"/>
+        </div>
+    </div>
 </wicket:panel>
 </html>
