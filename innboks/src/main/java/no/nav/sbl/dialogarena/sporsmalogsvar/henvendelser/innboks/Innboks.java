@@ -1,13 +1,15 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks;
 
+import javax.inject.Inject;
+import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.consumer.HenvendelseService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
-import javax.inject.Inject;
-
+import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 
 public class Innboks extends Lerret {
@@ -41,5 +43,11 @@ public class Innboks extends Lerret {
     public void meldingerOppdatert(AjaxRequestTarget target) {
         this.innboksModell.getObject().oppdaterHenvendelserFra(service.hentAlleHenvendelser(fnr));
         target.add(this);
+    }
+
+    @RunOnEvents(FEED_ITEM_CLICKED)
+    public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
+       innboksModell.getObject().setValgtHenvendelse(feedItemPayload.getItemId());
+       target.add(this);
     }
 }

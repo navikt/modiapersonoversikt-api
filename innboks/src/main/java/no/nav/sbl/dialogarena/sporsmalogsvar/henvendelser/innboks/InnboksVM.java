@@ -13,6 +13,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.HenvendelseVM.ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.HenvendelseVM.NYESTE_OVERST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.HenvendelseVM.TIL_HENVENDELSE_VM;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.HenvendelseVM.TRAAD_ID;
@@ -77,6 +78,10 @@ public class InnboksVM implements Serializable {
 
     public Optional<HenvendelseVM> getValgtHenvendelse() {
         return valgtHenvendelse;
+    }
+
+    public void setValgtHenvendelse(String id) {
+        valgtHenvendelse = on(henvendelser).filter(where(ID, equalTo(id))).head();
     }
 
     public void setValgtHenvendelse(HenvendelseVM valgtHenvendelse) {

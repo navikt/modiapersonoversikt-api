@@ -85,6 +85,13 @@ public class HenvendelseVM implements Serializable {
         }
     };
 
+    public static final Transformer<HenvendelseVM, String> ID = new Transformer<HenvendelseVM, String>() {
+        @Override
+        public String transform(HenvendelseVM henvendelseVM) {
+            return henvendelseVM.henvendelse.id;
+        }
+    };
+
     public static final Comparator<HenvendelseVM> NYESTE_OVERST = new Comparator<HenvendelseVM>() {
         public int compare(HenvendelseVM m1, HenvendelseVM m2) {
             return m2.henvendelse.opprettet.compareTo(m1.henvendelse.opprettet);
