@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles;
 
-import no.nav.sbl.dialogarena.soknader.service.SoknaderWidgetMockService;
+import no.nav.sbl.dialogarena.soknader.service.SoknaderWidgetServiceMock;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderWidgetService;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderWidgetServiceDefault;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +27,7 @@ public class SoknaderConfig {
 
         @Bean
         public SoknaderWidgetService soknaderWidgetService() {
-            return new SoknaderWidgetMockService();
+            return new SoknaderWidgetServiceMock();
         }
     }
 }
