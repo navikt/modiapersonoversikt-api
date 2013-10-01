@@ -11,7 +11,6 @@ import static java.util.Collections.emptyList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.HenvendelseVM.ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.HenvendelseVM.NYESTE_OVERST;
@@ -22,10 +21,11 @@ public class InnboksVM implements Serializable {
 
     private List<HenvendelseVM> henvendelser;
 
-    private Optional<HenvendelseVM> valgtHenvendelse = none();
+    private Optional<HenvendelseVM> valgtHenvendelse;
 
     public InnboksVM(List<Henvendelse> nyeHenvendelser) {
         oppdaterHenvendelserFra(nyeHenvendelser);
+        valgtHenvendelse = optional(henvendelser.isEmpty() ? null : henvendelser.get(0));
     }
 
     public List<HenvendelseVM> getHenvendelser() {
