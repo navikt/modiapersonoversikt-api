@@ -10,7 +10,7 @@ import no.nav.modig.modia.lamell.LerretFactory;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.GenericLerret;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.Oversikt;
-import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.BrukerhenvendelserPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.Innboks;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
 import org.apache.wicket.event.IEvent;
@@ -33,7 +33,7 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_SYKEPENGER = "sykepenger";
     public static final String LAMELL_OVERSIKT = "oversikt";
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
-    public static final String LAMELL_BRUKERHENVENDELSER = "brukerhenvendelser";
+    public static final String LAMELL_MELDINGER = "meldinger";
     public static final String PANEL = "panel";
 
 
@@ -105,7 +105,7 @@ public class LamellHandler implements Serializable {
                 createOversiktLamell(),
                 createKontrakterLamell(),
                 createBrukerprofilLamell(),
-                createBrukerhenvendelserLamell()
+                createMeldingerLamell()
         );
     }
 
@@ -136,11 +136,11 @@ public class LamellHandler implements Serializable {
         });
     }
 
-    private LamellFactory createBrukerhenvendelserLamell() {
-        return newLamellFactory(LAMELL_BRUKERHENVENDELSER, "H", new LerretFactory() {
+    private LamellFactory createMeldingerLamell() {
+        return newLamellFactory(LAMELL_MELDINGER, "M", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new BrukerhenvendelserPanel(id, fnrFromRequest, null)); //TODO: Missing MeldingService
+                return addLerretToListAndReturn(new Innboks(id, fnrFromRequest));
             }
         });
     }

@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.SoknaderConfig;
+import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.config.MeldingerInnboksConfig;
 import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -16,7 +17,8 @@ import org.springframework.context.annotation.Import;
         no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.HenvendelseinnsynConfig.class,
         no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig.class,
         OppgavebehandlingConfig.class,
-        SoknaderConfig.class
+        SoknaderConfig.class,
+        MeldingerInnboksConfig.class
 })
 public class ComponentsContext {
 

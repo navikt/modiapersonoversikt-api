@@ -22,6 +22,7 @@ import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
+import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.Innboks;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
@@ -79,16 +80,18 @@ public class WicketApplication extends WebApplication {
                 .addConditionalJavascript(Intern.RESPOND_JS)
 		        .addLess(
                         BasePage.INTERN_LESS,
-                        BasePage.BESVARESPORSALPANEL)
+                        BasePage.BESVARESPORSALPANEL,
+                        BasePage.MELDINGERWIDGET,
+                        BasePage.MELDINGERLAMELL)
                 .addCss(
-		                BasePage.PERSONSOKRESULT,
-		                BasePage.PERSONSOKSEARCH,
-		                BasePage.PERSONKJERNEINFO
+                        BasePage.PERSONSOKRESULT,
+                        BasePage.PERSONSOKSEARCH,
+                        BasePage.PERSONKJERNEINFO
                 )
                 .addScripts(SPIResources.getScripts())
 		        .addScripts(
-		                BasePage.JS_RESOURCE,
-		                ShortcutListenerResourceReference.get(), //TODO: Flytt til MODIA modul ?
+                        BasePage.JS_RESOURCE,
+                        ShortcutListenerResourceReference.get(), //TODO: Flytt til MODIA modul ?
                         KeyNavigationResourceReference.get(),    //TODO: Flytt til MODIA modul ?
                         Widget.JS_RESOURCE,
                         LamellPanel.JS_RESOURCE,
@@ -99,8 +102,9 @@ public class WicketApplication extends WebApplication {
                         EkspanderingsListe.JS_RESOURCE,          //TODO: Flytt til MODIA modul ?
                         Liste.JS_RESOURCE,                       //TODO: Flytt til MODIA modul ?
                         DatePicker.JQUERY_PLACEHOLDER,
-                        ModalErrorPanel.JS_RESOURCE
-	            )
+                        ModalErrorPanel.JS_RESOURCE,
+                        Innboks.JS_REFERENCE
+                )
 		        .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
 
