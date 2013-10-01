@@ -9,11 +9,11 @@ import java.util.List;
 
 public class SoknaderWidgetServiceDefault implements SoknaderWidgetService {
 
-    private final Logger LOG = LoggerFactory.getLogger(SoknaderWidgetServiceDefault.class);
+    private final Logger logger = LoggerFactory.getLogger(SoknaderWidgetServiceDefault.class);
 
     @Override
     public List<InfoPanelVM> getWidgetContent(String fnr) {
-        LOG.error("Soknaderintegrasjon ikke implementert");
+        logger.error("Soknaderintegrasjon ikke implementert");
         throw new ApplicationException("Soknaderintegrasjon ikke implementert");
     }
 }
