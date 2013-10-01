@@ -13,9 +13,12 @@ public class SideBar extends Panel {
         super(id);
         OppgavevalgPanel oppgavevalg = new OppgavevalgPanel("oppgavevalg", oppgaveIdFromRequest);
         oppgavevalg.setVisible(oppgaveIdFromRequest.isSome());
+
         VisittkortPanel visittkortPanel = new VisittkortPanel("visittkortPanel", fnr);
+
         BesvareSporsmalPanel besvarePanel = new BesvareSporsmalPanel("besvarePanel", oppgaveIdFromRequest.getOrElse(null), fnr);
         besvarePanel.setVisible(oppgaveIdFromRequest.isSome());
+
         add(visittkortPanel, besvarePanel, new HentOppgavePanel("hent-oppgave"), oppgavevalg);
     }
 

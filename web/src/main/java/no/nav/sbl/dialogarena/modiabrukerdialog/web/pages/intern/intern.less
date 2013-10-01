@@ -1,25 +1,21 @@
-.sidebar {
-  .knapper {
-    height: 101px;
-    .knapp-liten {
-      background: @grayLight;
-      border: none;
-      margin-top: 40px;
-    }
-  }
+//.sidebar {
+//  .knapper {
+//    height: 101px;
+//    .knapp-liten {
+//      background: @grayLight;
+//      border: none;
+//      margin-top: 40px;
+//    }
+//  }
+//}
+
+.knapp-liten-flat {
+  background: @grayLight;
+  border: none;
 }
 
-.oppgaveplukker {
-  position: relative;
-  float: left;
-
-  .knapp-liten {
-    background: @grayLight;
-    border: none;
-    margin-top: 40px;
-  }
-
-  .plukk-valg {
+.hent-oppgave {
+  .velg-tema {
     background: @grayLight url(../svg/radio_ikon.svg) no-repeat center;
     background-size: 50%;
     height: 32px;
@@ -40,7 +36,7 @@
     }
   }
 
-  .temaboks {
+  .temavelger {
     background: #333;
     border: solid 1px black;
     color: white;
@@ -62,146 +58,146 @@
       }
     }
   }
+}
 
-  .oppgavevelger  {
+.oppgavevalg  {
+  position: relative;
+  float: left;
+  margin-left: 1em;
+  .knapp-liten {
     position: relative;
-    float: left;
-    margin-left: 1em;
-    .knapp-liten {
-      position: relative;
-      &:after {
-        position: absolute;
-        top: 100%;
-        left: 50%;
-        border: solid transparent;
-        content: " ";
-        height: 0;
-        width: 0;
-        border-top-color: @grayLight;
-        border-width: 0.5em;
-        margin-left: -0.5em;
-      }
+    &:after {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      border-top-color: @grayLight;
+      border-width: 0.5em;
+      margin-left: -0.5em;
     }
+  }
 
-    .oppgavevalg-liste {
-      position: absolute;
-      top: 82px;
-      padding: 1em;
-      background-color: #333;
-      border: 1px solid #000;
-      width: 132px;
-      text-align: center;
-      a {
-        color: #ffffff;
-        font-family:  Modens, Arial, Helvetica, sans-serif;
-        &:hover {
-          text-decoration: none;
-          color: #0ca9e1;
-        }
+  .oppgavevalg-liste {
+    position: absolute;
+    top: 82px;
+    padding: 1em;
+    background-color: #333;
+    border: 1px solid #000;
+    width: 132px;
+    text-align: center;
+    a {
+      color: #ffffff;
+      font-family:  Modens, Arial, Helvetica, sans-serif;
+      &:hover {
+        text-decoration: none;
+        color: #0ca9e1;
       }
     }
-    .legg-tilbake-boks {
-      position: absolute;
-      top: 82px;
-      right: 0;
-      width: 350px;
-      z-index: 1;
-      .legg-tilbake-form {
-        position: relative;
-        padding: 1em;
-        background-color: #ffffff;
+  }
+  .legg-tilbake-boks {
+    position: absolute;
+    top: 82px;
+    right: 0;
+    width: 350px;
+    z-index: 1;
+    .legg-tilbake-form {
+      position: relative;
+      padding: 1em;
+      background-color: #ffffff;
+      border: 1px solid #cccccc;
+      .lukk {
+        position: absolute;
+        top: 0.5em;
+        right: 0.5em;
+        color: black;
         border: 1px solid #cccccc;
-        .lukk {
-          position: absolute;
-          top: 0.5em;
-          right: 0.5em;
-          color: black;
-          border: 1px solid #cccccc;
-          padding: 0.1em;
-          cursor: pointer;
-          font-weight: bold;
-          &:hover {
-            border-color: #0ca9e1;
-            background-color: #0ca9e1;
-            color: white;
-          }
+        padding: 0.1em;
+        cursor: pointer;
+        font-weight: bold;
+        &:hover {
+          border-color: #0ca9e1;
+          background-color: #0ca9e1;
+          color: white;
         }
-        h3 {
-          font-size: 0.95em;
-          font-weight: bold;
-          text-align: center;
-        }
-        hr {
-          background-color: #000;
-          width: 2em;
-        }
-        input[type="radio"] + label {
-          color: #000;
-          text-transform: none;
-        }
-        .feedbackPanel {
-          background-color: white;
-          color: red;
-          font-size: 1em;
-        }
-        textarea {
-          resize: none;
-          width: 80%;
-          display: block;
-          margin: 0 auto;
-        }
-        .knapp-hoved-liten {
-          display: block;
-          margin: 2em auto;
-        }
+      }
+      h3 {
+        font-size: 0.95em;
+        font-weight: bold;
+        text-align: center;
+      }
+      hr {
+        background-color: #000;
+        width: 2em;
+      }
+      input[type="radio"] + label {
+        color: #000;
+        text-transform: none;
+      }
+      .feedbackPanel {
+        background-color: white;
+        color: red;
+        font-size: 1em;
+      }
+      textarea {
+        resize: none;
+        width: 80%;
+        display: block;
+        margin: 0 auto;
+      }
+      .knapp-hoved-liten {
+        display: block;
+        margin: 2em auto;
       }
     }
   }
 }
 
 .informasjonsboks {
-	text-align: center;
-	padding: 30px 30px 40px;
-	background: @grayDark;
-	max-width: 100%;
-	width: 500px;
-	z-index: 1050;
-	position: absolute;
-	top: 250px;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
-	box-shadow: 0 0 15rem @grayLight;
+  text-align: center;
+  padding: 30px 30px 40px;
+  background: @grayDark;
+  max-width: 100%;
+  width: 500px;
+  z-index: 1050;
+  position: absolute;
+  top: 250px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  box-shadow: 0 0 15rem @grayLight;
 
-	h1, p {
-		color: @white;
-	}
+  h1, p {
+    color: @white;
+  }
 
-	p {
-		margin-bottom: 30px;
-	}
+  p {
+    margin-bottom: 30px;
+  }
 
-	.knapp-info {
-		color: @white;
-		background: @grayDark;
-		border: 1px solid #675c53;
+  .knapp-info {
+    color: @white;
+    background: @grayDark;
+    border: 1px solid #675c53;
 
-		&:hover, &:focus {
-			background: @blue;
-			color: @black;
-		}
-	}
+    &:hover, &:focus {
+      background: @blue;
+      color: @black;
+    }
+  }
 
-	[class*="knapp"]:first-of-type + a {
-		margin-left: 10px;
-	}
+  [class*="knapp"]:first-of-type + a {
+    margin-left: 10px;
+  }
 }
 
 .wicket-mask-dark {
-	position: fixed;
-	z-index: 1040;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
+  position: fixed;
+  z-index: 1040;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
