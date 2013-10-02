@@ -10,6 +10,7 @@
         <module>besvare</module>
         <module>innboks</module>
         <module>widget</module>
+        <module>common</module>
     </modules>
     <name>sporsmal-og-svar</name>
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål Og Svar - innside og utside.</description>
@@ -27,6 +28,7 @@
         <modig.frontend.version>1.0.18</modig.frontend.version>
         <modig-security.version>1.0.9</modig-security.version>
         <modig-content.version>1.2.1</modig-content.version>
+        <modig-core.version>1.0.0</modig-core.version>
         <henvendelse-felles-tjenestespesifikasjon.version>0.0.12</henvendelse-felles-tjenestespesifikasjon.version>
         <sonar.skippedModules />
     </properties>
@@ -158,8 +160,14 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-core-test</artifactId>
-                <version>1.0.0</version>
+                <version>${modig-core.version}</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-core</artifactId>
+                <version>${modig-core.version}</version>
             </dependency>
 
             <dependency>

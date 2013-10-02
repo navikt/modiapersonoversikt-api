@@ -9,22 +9,24 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.Status.LEST_AV_BRUKER;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.melding.Status.LEST_AV_BRUKER;
 
 public class MeldingWidgetPanel extends GenericPanel<MeldingVM> {
 
     public MeldingWidgetPanel(String id, IModel<MeldingVM> meldingVM) {
         super(id, new CompoundPropertyModel<>(meldingVM));
         setOutputMarkupId(true);
+
         WebMarkupContainer statusContainer = new WebMarkupContainer("status-container");
-        WebMarkupContainer status = new WebMarkupContainer("status");
+        WebMarkupContainer status = new WebMarkupContainer("statusIndikator");
         status.add(new AttributeModifier("class", meldingVM.getObject().getStatusKlasse()));
         Label lestDato = new Label("lestDato");
         lestDato.add(visibleIf(meldingVM.getObject().harStatus(LEST_AV_BRUKER)));
         statusContainer.add(
                 status,
                 lestDato,
-                new Label("statusTekst"));
+                new Label("status",  new StringResourceModel("${status}", getModel())));
+
         add(
                 new Label("opprettetDatoAsString"),
                 new Label("avsender"),

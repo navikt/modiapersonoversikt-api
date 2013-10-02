@@ -1,18 +1,20 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
-import java.io.Serializable;
-import java.util.List;
 import no.nav.modig.modia.model.FeedItemVM;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
+import no.nav.sbl.dialogarena.sporsmalogsvar.melding.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.melding.Status;
+import no.nav.sbl.dialogarena.sporsmalogsvar.records.Record;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.Status.IKKE_BESVART;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.Status.IKKE_BESVART_INNEN_FRIST;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.Status.IKKE_LEST_AV_BRUKER;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.Status.LEST_AV_BRUKER;
+import java.io.Serializable;
+import java.util.List;
+
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingUtils.NYESTE_FORST;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.melding.Meldingstype.INNGAENDE;
 
 public class MeldingVM implements FeedItemVM, Serializable {
 
@@ -21,50 +23,20 @@ public class MeldingVM implements FeedItemVM, Serializable {
     private DateTime opprettetDato, lestDato;
     private Status status;
 
-    public MeldingVM(List<WSHenvendelse> traad) {
-        WSHenvendelse nyesteHenvendelse = traad.get(0);
-        id = nyesteHenvendelse.getBehandlingsId();
+    public MeldingVM(List<Record<Melding>> traad) {
+        Record<Melding> nyesteMelding = on(traad).collect(NYESTE_FORST).get(0);
+        id = nyesteMelding.get(Melding.id);
         avsender = (traad.size() == 1 ? "Melding" : "Svar") + " fra " +
-                ("SPORSMAL".equals(nyesteHenvendelse.getHenvendelseType()) ? "Navn Navnesen" : "NAV");
-        tema = nyesteHenvendelse.getTema();
-        opprettetDato = nyesteHenvendelse.getOpprettetDato();
-        lestDato = nyesteHenvendelse.getLestDato();
-        switch (nyesteHenvendelse.getHenvendelseType()) {
-            case "SPORSMAL":
-                if (DateTime.now().isAfter(nyesteHenvendelse.getOpprettetDato().plusHours(48))) {
-                    status = IKKE_BESVART_INNEN_FRIST;
-                } else {
-                    status = IKKE_BESVART;
-                }
-                break;
-            case "SVAR":
-                if (lestDato != null) {
-                    status = LEST_AV_BRUKER;
-                } else {
-                    status = IKKE_LEST_AV_BRUKER;
-                }
-                break;
-            default:
-                throw new RuntimeException("Kjenner ikke til henvendelsetype " + nyesteHenvendelse.getHenvendelseType());
-        }
+                (nyesteMelding.get(Melding.type) == INNGAENDE ? "Navn Navnesen" : "NAV");
+        tema = nyesteMelding.get(Melding.tema);
+        opprettetDato = nyesteMelding.get(Melding.opprettetDato);
+        lestDato = nyesteMelding.get(Melding.lestDato);
+        status = nyesteMelding.get(Melding.status);
     }
 
 
     public String getLestDato() {
         return lestDato == null ? null : DateTimeFormat.forPattern("dd.MM.yyyy").print(lestDato);
-    }
-
-    public String getStatusTekst() {
-        return status.toString();
-    }
-
-    public IModel<String> getStatusKlasse() {
-        return new AbstractReadOnlyModel<String>() {
-            @Override
-            public String getObject() {
-                return "status " + status.toString().toLowerCase().replace(" ", "-");
-            }
-        };
     }
 
     public IModel<Boolean> harStatus(final Status status) {
@@ -74,6 +46,10 @@ public class MeldingVM implements FeedItemVM, Serializable {
                 return MeldingVM.this.status == status;
             }
         };
+    }
+
+    public String getStatusKlasse() {
+        return "status " + status.toString().toLowerCase().replace("_", "-");
     }
 
     public String getOpprettetDatoAsString() {
