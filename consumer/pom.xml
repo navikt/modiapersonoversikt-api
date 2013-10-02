@@ -11,6 +11,12 @@
 
    
     <dependencies>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sakogbehandling-jaxws</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket</artifactId>
