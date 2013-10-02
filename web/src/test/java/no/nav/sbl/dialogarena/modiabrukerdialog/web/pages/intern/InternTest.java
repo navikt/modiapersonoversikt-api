@@ -29,6 +29,7 @@ import static no.nav.modig.common.MDCOperations.putToMDC;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Mockito.mock;
@@ -93,7 +94,11 @@ public class InternTest extends TestSecurityBaseClass {
 
     @Test
     public void besvareSporsmalPanelErSynligNaarOppgaveIdGisIUrl() {
-        wicket.goTo(Intern.class, with().param("fnr", "12037649749").param("oppgaveId", "123"))
+        wicket
+            .goTo(Intern.class, with().param("fnr", "12037649749"))
+            .should().containComponent(ofType(BesvareSporsmalPanel.class).and(thatIsInvisible()))
+
+            .goTo(Intern.class, with().param("fnr", "12037649749").param("oppgaveId", "123"))
             .should().containComponent(ofType(BesvareSporsmalPanel.class).and(thatIsVisible()));
     }
 
