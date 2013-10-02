@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.melding;
 
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.sbl.dialogarena.common.integrasjonsutils.JSON;
 import no.nav.sbl.dialogarena.sporsmalogsvar.records.Record;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import org.apache.commons.collections15.Transformer;
@@ -29,7 +30,7 @@ public class MeldingUtils {
                     .with(Melding.traadId, wsHenvendelse.getTraad())
                     .with(Melding.avsenderId, wsHenvendelse.getAktor())
                     .with(Melding.tema, wsHenvendelse.getTema())
-                    .with(Melding.fritekst, wsHenvendelse.getBehandlingsresultat())
+                    .with(Melding.fritekst, JSON.unmarshal(wsHenvendelse.getBehandlingsresultat()).get("fritekst").toString())
                     .with(Melding.opprettetDato, wsHenvendelse.getOpprettetDato())
                     .with(Melding.lestDato, wsHenvendelse.getLestDato())
                     .with(Melding.status, STATUS.transform(wsHenvendelse))
@@ -41,6 +42,13 @@ public class MeldingUtils {
         @Override
         public int compare(Record<Melding> o1, Record<Melding> o2) {
             return o2.get(Melding.opprettetDato).compareTo(o1.get(Melding.opprettetDato));
+        }
+    };
+
+    public static final Comparator<Record<Melding>> ELDSTE_FORST = new Comparator<Record<Melding>>() {
+        @Override
+        public int compare(Record<Melding> o1, Record<Melding> o2) {
+            return o1.get(Melding.opprettetDato).compareTo(o2.get(Melding.opprettetDato));
         }
     };
 

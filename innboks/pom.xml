@@ -12,6 +12,13 @@
 
 
     <dependencies>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sporsmal-og-svar-common</artifactId>
+            <version>${parent.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
@@ -146,6 +153,11 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-integrasjonsutils</artifactId>
         </dependency>
 
     </dependencies>

@@ -4,15 +4,14 @@
 <head></head>
 <body>
 <wicket:panel>
-    <section wicket:id="tidligereHenvendelser" class="tidligere-henvendelse">
+    <section class="nyeste-henvendelse">
         <header>
-            <span wicket:id="opprettetDato"></span>
+            <span wicket:id="nyesteMelding.opprettetDato"></span>
         </header>
         <article>
-            <h2 wicket:id="henvendelse.overskrift"></h2>
-            <div class="utvide-tekst-pil"></div>
+            <h2 wicket:id="nyesteMelding.avsender"></h2>
             <hr class="robust-strek" />
-            <p wicket:id="henvendelse.fritekst"></p>
+            <p wicket:id="nyesteMelding.fritekst"></p>
         </article>
     </section>
 </wicket:panel>

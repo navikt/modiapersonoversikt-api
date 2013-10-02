@@ -48,16 +48,18 @@ body {
           border-radius: 2em;
           -moz-border-radius: 2em;
           -webkit-border-radius: 2em;
-          &:not(.lest) {
-            background-color: @dodgerblue;
-          }
-          &.lest {
-            background-color: transparent;
-            border: 1px solid @dodgerblue;
-          }
           &.ikke-besvart {
-            background-color: #ffb748;
-            border: 0;
+            background-color: #eebe00;
+          }
+          &.ikke-besvart-innen-frist {
+            background-color: #ec288d;
+          }
+          &.ikke-lest-av-bruker{
+            background-color: #0ca9e1;
+          }
+          &.lest-av-bruker {
+            background-color: transparent;
+            border: 1px solid #0ca9e1;
           }
         }
         .indikator-tekst {
