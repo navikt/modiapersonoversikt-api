@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.soknader.service;
 
-import no.nav.modig.modia.widget.panels.InfoPanelVM;
+import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,5 +9,5 @@ public interface SoknaderService extends Serializable {
 
     String SOKNAD = "soknader";
 
-    List<InfoPanelVM> getWidgetContent(String fnr);
+    List<Soknad> getSoknader(String fnr);
 }

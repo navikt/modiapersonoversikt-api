@@ -91,6 +91,7 @@ public class Soknad implements Serializable {
         @Override
         public Soknad transform(Behandlingskjede behandlingskjede) {
             Soknad soknad = new Soknad();
+            //TODO: Gjør oppslag for å finne tema!
             soknad.tittel = behandlingskjede.getBehandlingskjedetype().getKodeverksRef();
             soknad.normertBehandlingsTid = getNormertTidString(behandlingskjede);
             soknad.mottattDato = dateTimeTransformer().transform(behandlingskjede.getStart());
