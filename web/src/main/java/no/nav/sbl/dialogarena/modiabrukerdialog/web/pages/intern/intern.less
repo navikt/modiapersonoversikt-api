@@ -1,19 +1,16 @@
-//.sidebar {
-//  .knapper {
-//    height: 101px;
-//    .knapp-liten {
-//      background: @grayLight;
-//      border: none;
-//      margin-top: 40px;
-//    }
-//  }
-//}
-
 .sidebar {
   .hent-oppgave, .oppgavevalg {
     margin-top: 30px;
     float: left;
   }
+  .fyll-ut {
+    margin-left: 0;
+    margin-right: 0;
+  }
+}
+
+.sidebar-header {
+  height: 101px;
 }
 
 #hent-oppgave-forside {
@@ -27,6 +24,9 @@
 }
 
 .hent-oppgave {
+  position: relative;
+  display: inline;
+
   .velg-tema {
     background: @grayLight url(../svg/radio_ikon.svg) no-repeat center;
     background-size: 50%;
@@ -53,7 +53,8 @@
     border: solid 1px black;
     color: white;
     position: absolute;
-    left:-120px; right:0; top: 82px;
+    left:-120px; right:0; top: 47px;
+    text-align: left;
     z-index: 1000;
     padding: 10px;
     ul {
