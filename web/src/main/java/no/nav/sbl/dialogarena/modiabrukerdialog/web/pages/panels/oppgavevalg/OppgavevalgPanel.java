@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgavevalg;
 
+import no.nav.modig.lang.option.Optional;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -7,7 +8,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 public class OppgavevalgPanel extends Panel {
 
-    public OppgavevalgPanel(String id, final String oppgaveId) {
+    public OppgavevalgPanel(String id, final Optional<String> oppgaveId) {
         super(id);
         final LeggTilbakeForm leggTilbakeForm = new LeggTilbakeForm("legg-tilbake-form", oppgaveId);
         leggTilbakeForm.setVisible(false);
@@ -20,8 +21,6 @@ public class OppgavevalgPanel extends Panel {
                 valg.setVisible(false);
                 leggTilbakeForm.setVisible(true);
                 target.add(valg, leggTilbakeForm);
-
-
             }
         });
 
