@@ -7,7 +7,7 @@ import org.apache.wicket.model.Model;
 public class SoknaderTestPage extends WebPage {
 
     public SoknaderTestPage() {
-        add( new SoknaderWidget("soknadWidget", "S", new Model<>("")));
+        add(new SoknaderWidget("soknadWidget", "S", new Model<>("")));
     }
 
 }
