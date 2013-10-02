@@ -108,11 +108,6 @@
             <artifactId>soknader-consumer</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>soknader-panel</artifactId>
-        </dependency>
-
         <!-- End modia komponenter -->
 
         <!-- Modig avhengigheter -->
