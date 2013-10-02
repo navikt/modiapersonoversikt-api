@@ -27,6 +27,7 @@
         <modig.frontend.version>1.0.18</modig.frontend.version>
         <slf4j.version>1.7.5</slf4j.version>
         <sakogbehandling.jaxws.version>1.0.1</sakogbehandling.jaxws.version>
+        <mockito.core.version>1.9.5</mockito.core.version>
 
     </properties>
 
@@ -39,6 +40,7 @@
                 <artifactId>sakogbehandling-jaxws</artifactId>
                 <version>${sakogbehandling.jaxws.version}</version>
             </dependency>
+
             <!-- Modig dep -->
 
             <dependency>
@@ -184,6 +186,18 @@
                 <artifactId>javax.inject</artifactId>
                 <version>1</version>
                 <scope>provided</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.core.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.objenesis</groupId>
+                        <artifactId>objenesis</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
         </dependencies>

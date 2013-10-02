@@ -20,7 +20,7 @@ import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UNDER_B
 
 public class Soknad implements Serializable {
 
-    public static final int AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED = 21;
+    public static final int AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED = 28;
 
     public enum SoknadStatus {UKJENT, MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG, GAMMEL_FERDIG}
 
