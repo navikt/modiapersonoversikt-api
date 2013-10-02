@@ -19,6 +19,7 @@ import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.BesvareSporsmalPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
@@ -35,6 +36,7 @@ import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+
 import java.util.Locale;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
@@ -126,7 +128,7 @@ public class WicketApplication extends WebApplication {
                 .configure(this);
 
         mountPage("/person/${fnr}", Intern.class);
-        mountPage("/person/${fnr}/besvaresporsmal/${oppgaveId}", Intern.class);
+        mountPage("/person/${fnr}/besvaresporsmal/${oppgaveId}", BesvareSporsmalPage.class);
         mountPage("internal/selftest", SelfTestPage.class);
 
         setSpringComponentInjector();

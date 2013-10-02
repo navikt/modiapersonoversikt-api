@@ -50,7 +50,7 @@
         <!-- Modia-komponenter-->
         <personsok.version>0.0.94</personsok.version>
         <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
-        <sporsmalogsvar.version>1.3</sporsmalogsvar.version>
+        <sporsmalogsvar.version>1.4-SNAPSHOT</sporsmalogsvar.version>
         <soknader.widget.version>2.0.0-SNAPSHOT</soknader.widget.version>
     </properties>
 
@@ -218,7 +218,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
-                <version>0.0.11</version>
+                <version>0.0.12</version>
             </dependency>
 
             <dependency>

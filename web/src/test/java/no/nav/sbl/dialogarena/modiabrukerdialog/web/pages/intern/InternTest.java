@@ -8,6 +8,7 @@ import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.BesvareSporsmalPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare.BesvareSporsmalPanel;
@@ -29,7 +30,6 @@ import static no.nav.modig.common.MDCOperations.putToMDC;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Mockito.mock;
@@ -48,6 +48,7 @@ public class InternTest extends TestSecurityBaseClass {
     @Before
     public void setupMDC() {
         putToMDC(MDC_CALL_ID, generateCallId());
+        wicket.configuration.setPageAssertAfterGoTo(false);
     }
 
     @Test
@@ -95,10 +96,8 @@ public class InternTest extends TestSecurityBaseClass {
     @Test
     public void besvareSporsmalPanelErSynligNaarOppgaveIdGisIUrl() {
         wicket
-            .goTo(Intern.class, with().param("fnr", "12037649749"))
-            .should().containComponent(ofType(BesvareSporsmalPanel.class).and(thatIsInvisible()))
-
-            .goTo(Intern.class, with().param("fnr", "12037649749").param("oppgaveId", "123"))
+            .goTo(BesvareSporsmalPage.class, with().param("fnr", "12037649749").param("oppgaveId", "123"))
+            .should().beOn(Intern.class)
             .should().containComponent(ofType(BesvareSporsmalPanel.class).and(thatIsVisible()));
     }
 

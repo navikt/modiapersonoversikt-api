@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar;
 
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave.HentOppgavePanel;
@@ -21,18 +20,26 @@ public class SideBar extends Panel {
 
     public SideBar(String id, String fnr) {
         super(id);
-        oppgavevalg = new OppgavevalgPanel("oppgavevalg", Optional.<String>none());
+        oppgavevalg = new OppgavevalgPanel("oppgavevalg");
         VisittkortPanel visittkortPanel = new VisittkortPanel("visittkortPanel", fnr);
-        besvaresporsmalPanel = new BesvareSporsmalPanel("besvarePanel", null, fnr);
-        add(visittkortPanel, besvaresporsmalPanel, new HentOppgavePanel("hent-oppgave"), oppgavevalg);
+        besvaresporsmalPanel = new BesvareSporsmalPanel("besvarePanel", fnr);
         initVisibility();
+        add(
+                visittkortPanel,
+                besvaresporsmalPanel,
+                new HentOppgavePanel("hent-oppgave"),
+                oppgavevalg);
     }
 
     @RunOnEvents(Modus.BESVARE)
     public void besvarmodus(AjaxRequestTarget target, String oppgaveId) {
         LOG.info("Modus: {}. Oppgave: {}", Modus.BESVARE, oppgaveId);
+        besvaresporsmalPanel.besvar(oppgaveId);
         besvaresporsmalPanel.setVisibilityAllowed(true);
         oppgavevalg.setVisibilityAllowed(true);
+        if (target != null) {
+            target.add(besvaresporsmalPanel, oppgavevalg);
+        }
     }
 
     public void initVisibility() {

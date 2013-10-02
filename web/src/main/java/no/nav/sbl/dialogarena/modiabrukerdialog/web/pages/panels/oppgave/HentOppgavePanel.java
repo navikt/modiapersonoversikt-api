@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave;
 
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.BesvareSporsmalPage;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.informasjon.WSPlukkOppgaveResultat;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -19,6 +19,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class HentOppgavePanel extends Panel {
         temavelger.add(visibleIf(visTema));
         add(temavelger, modalWindow);
 
-        add(new AjaxLink("plukk-oppgave") {
+        add(new AjaxLink<Void>("plukk-oppgave") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 if (HentOppgavePanel.this.tema.getObject() != null) {
@@ -64,7 +65,7 @@ public class HentOppgavePanel extends Panel {
                 }
             }
         });
-        add(new AjaxLink("velg-tema") {
+        add(new AjaxLink<Void>("velg-tema") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 visTema.setObject(!visTema.getObject());
@@ -107,8 +108,8 @@ public class HentOppgavePanel extends Panel {
         }
     }
 
-    public void valgteTema(Tema tema, AjaxRequestTarget target) {
-        WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema.toString());
+    private void valgteTema(Tema tema, AjaxRequestTarget target) {
+        final WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema.toString());
         if (oppgaveResultat == null) {
             modalWindow.setContent(
                 new TomtForOppgaverPanel(modalWindow.getContentId(), modalWindow));
@@ -118,9 +119,6 @@ public class HentOppgavePanel extends Panel {
 
         getSession().setAttribute("valgtTema", tema);
 
-        PageParameters pageParameters = new PageParameters();
-        pageParameters.add("fnr", oppgaveResultat.getFodselsnummer());
-        pageParameters.add("oppgaveId", oppgaveResultat.getOppgaveId());
-        setResponsePage(Intern.class, pageParameters);
+        setResponsePage(BesvareSporsmalPage.class, new PageParameters().add("fnr", oppgaveResultat.getFodselsnummer()).add("oppgaveId", oppgaveResultat.getOppgaveId()));
     }
 }

@@ -2,10 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
@@ -24,6 +20,11 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
@@ -112,7 +113,7 @@ public class HenvendelseinnsynConfig {
                 }
 
                 @Override
-                public List<WSHenvendelse> hentHenvendelseListe(String fnr) {
+                public List<WSHenvendelse> hentHenvendelseListe(String fnr, List<String> henvendelseType) {
                     LOG.info("Henter alle henvendelser for bruker med fødselsnummer " + fnr);
                     return henvendelser;
                 }
