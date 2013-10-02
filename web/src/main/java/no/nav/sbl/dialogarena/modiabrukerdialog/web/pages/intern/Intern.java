@@ -5,6 +5,7 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
@@ -63,7 +64,7 @@ public class Intern extends BasePage {
         this.modalWindow = createModalWindow("modal");
         lamellHandler = new LamellHandler();
         instantiateComponents(pageParameters.get("fnr").toString(null),
-                pageParameters.get("oppgaveId").toString(null));
+                Optional.<String>optional(pageParameters.get("oppgaveId").toString(null)));
     }
 
     @Override
@@ -121,7 +122,7 @@ public class Intern extends BasePage {
 		send(getPage(), Broadcast.BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
 	}
 
-	private void instantiateComponents(String fnrFromRequest, String oppgaveIdFromRequest) {
+	private void instantiateComponents(String fnrFromRequest, Optional<String> oppgaveIdFromRequest) {
         add(
                 new Button("toggle-sok"),
                 new HentPersonPanel("searchPanel"),

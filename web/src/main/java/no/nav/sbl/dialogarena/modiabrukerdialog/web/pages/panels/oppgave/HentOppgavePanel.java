@@ -31,7 +31,7 @@ public class HentOppgavePanel extends Panel {
     @Inject
     OppgavebehandlingPortType service;
 
-    private final WebMarkupContainer temaboks;
+    private final WebMarkupContainer temavelger;
     private final Model<Tema> tema;
     private Model<Boolean> visTema = new Model<>(false);
 
@@ -47,11 +47,11 @@ public class HentOppgavePanel extends Panel {
 
         Temaliste temaliste = new Temaliste("tema", asList(Tema.values()));
 
-        temaboks = new WebMarkupContainer("temaboks");
-        temaboks.setOutputMarkupPlaceholderTag(true);
-        temaboks.add(temaliste);
-        temaboks.add(visibleIf(visTema));
-        add(temaboks, modalWindow);
+        temavelger = new WebMarkupContainer("temavelger");
+        temavelger.setOutputMarkupPlaceholderTag(true);
+        temavelger.add(temaliste);
+        temavelger.add(visibleIf(visTema));
+        add(temavelger, modalWindow);
 
         add(new AjaxLink("plukk-oppgave") {
             @Override
@@ -60,15 +60,15 @@ public class HentOppgavePanel extends Panel {
                     valgteTema(HentOppgavePanel.this.tema.getObject(), target);
                 } else {
                     visTema.setObject(!visTema.getObject());
-                    target.add(temaboks);
+                    target.add(temavelger);
                 }
             }
         });
-        add(new AjaxLink("plukk-valg") {
+        add(new AjaxLink("velg-tema") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 visTema.setObject(!visTema.getObject());
-                target.add(temaboks);
+                target.add(temavelger);
             }
         });
     }
@@ -101,7 +101,7 @@ public class HentOppgavePanel extends Panel {
                     visTema.setObject(false);
                     tema.setObject(item.getModelObject());
                     HentOppgavePanel.this.valgteTema(item.getModelObject(), target);
-                    target.add(temaboks);
+                    target.add(temavelger);
                 }
             });
         }
