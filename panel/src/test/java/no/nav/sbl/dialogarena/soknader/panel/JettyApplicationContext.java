@@ -19,6 +19,7 @@ public class JettyApplicationContext {
         return new PropertySourcesPlaceholderConfigurer();
     }
 
+    //Denne ligger her da den egentlig er definert i Modiabrukerdialog
     @Bean
     public SoknaderService soknaderService(){
         return new SoknaderServiceMock();

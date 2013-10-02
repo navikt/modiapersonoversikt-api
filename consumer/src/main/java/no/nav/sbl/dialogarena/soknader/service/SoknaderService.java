@@ -6,5 +6,8 @@ import java.io.Serializable;
 import java.util.List;
 
 public interface SoknaderService extends Serializable {
+
+    String SOKNAD = "soknader";
+
     List<InfoPanelVM> getWidgetContent(String fnr);
 }

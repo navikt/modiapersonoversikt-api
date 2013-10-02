@@ -8,8 +8,6 @@ import java.util.List;
 public class SoknaderServiceMock implements SoknaderService {
 
 
-    public static final String SOKNAD = "soknader";
-
     @Override
     public List<InfoPanelVM> getWidgetContent(String fnr) {
         List<InfoPanelVM> soknader = new ArrayList<>();
