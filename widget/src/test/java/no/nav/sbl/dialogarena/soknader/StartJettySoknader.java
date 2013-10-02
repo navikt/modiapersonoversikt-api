@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.soknader.panel;
+package no.nav.sbl.dialogarena.soknader;
 
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
 

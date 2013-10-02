@@ -17,7 +17,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>no.nav.sbl.dialogarena.soknader.panel.JettyApplicationContext</param-value>
+        <param-value>no.nav.sbl.dialogarena.soknader.JettyApplicationContext</param-value>
     </context-param>
 
     <filter>

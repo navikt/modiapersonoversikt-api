@@ -19,6 +19,7 @@ public class SoknaderWidget extends InfoFeedWidget {
     private static final class WidgetModel extends LoadableDetachableModel<List<InfoPanelVM>> {
 
         IModel<String> fnrModel;
+
         @SpringBean
         private SoknaderService soknaderService;
 

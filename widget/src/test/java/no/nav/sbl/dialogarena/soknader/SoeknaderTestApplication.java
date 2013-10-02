@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.soknader.panel;
+package no.nav.sbl.dialogarena.soknader;
 
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.FrontendModules;
