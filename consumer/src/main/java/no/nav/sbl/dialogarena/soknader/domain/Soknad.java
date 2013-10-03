@@ -18,7 +18,7 @@ import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.NYLIG_F
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UKJENT;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UNDER_BEHANDLING;
 
-public final class Soknad implements Serializable {
+public class Soknad implements Serializable {
 
     public static final int AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED = 28;
 
