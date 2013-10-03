@@ -18,8 +18,9 @@ import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.NYLIG_F
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UKJENT;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UNDER_BEHANDLING;
 
+//Checkstyle : OFF
 public class Soknad implements Serializable {
-
+//Checkstyle : ON
     public static final int AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED = 28;
 
     public enum SoknadStatus {UKJENT, MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG, GAMMEL_FERDIG}
