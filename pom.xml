@@ -10,7 +10,7 @@
 
     <name>Soknader-Modia</name>
     <artifactId>soknader-modia</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -388,7 +388,7 @@
     <scm>
         <developerConnection>scm:git:ssh://git@a34apvl029.devillo.no:7999/dial/modia-soknadsoversikt.git</developerConnection>
         <url>http://a34apvl029.devillo.no:7990/scm/dial/modia-soknadsoversikt.git</url>
-        <tag>2.0.0-soknader-modia</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <reporting>
