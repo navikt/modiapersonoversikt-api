@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks;
 
+import no.nav.modig.lang.collections.TransformerUtils;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.records.Record;
@@ -14,11 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.MeldingVM.NYESTE_OVERST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingUtils.NYESTE_FORST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingUtils.TIL_MELDING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.utils.WSHenvendelseUtils.skillUtTraader;
@@ -36,16 +37,12 @@ public class InnboksVM implements Serializable {
         valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
     }
 
-    public void oppdaterMeldinger(List<WSHenvendelse> henvendelser) {
+    public final void oppdaterMeldinger(List<WSHenvendelse> henvendelser) {
         Map<String, List<WSHenvendelse>> wsHenvendelseTraader = skillUtTraader(henvendelser);
         for (Map.Entry<String, List<WSHenvendelse>> wsHenvendelseTraad : wsHenvendelseTraader.entrySet()) {
             traader.put(wsHenvendelseTraad.getKey(), TIL_MELDINGVM_TRAAD.transform(wsHenvendelseTraad.getValue()));
         }
-
-        for (List<MeldingVM> traad : traader.values()) {
-            nyesteMeldingerITraad.add(traad.get(0));
-        }
-        sort(nyesteMeldingerITraad, MeldingVM.NYESTE_OVERST);
+        nyesteMeldingerITraad = on(traader.values()).map(TransformerUtils.<MeldingVM>elementAt(0)).collect(NYESTE_OVERST);
     }
 
     public List<MeldingVM> getNyesteMeldingerITraad() {

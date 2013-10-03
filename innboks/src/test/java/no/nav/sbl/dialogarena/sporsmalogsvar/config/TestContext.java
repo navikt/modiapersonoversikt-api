@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.sbl.dialogarena.common.integrasjonsutils.JSON;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
@@ -63,7 +61,6 @@ public class TestContext {
                 WSHenvendelse wsHenvendelse =
                         new WSHenvendelse().withBehandlingsId("" + random.nextInt()).withHenvendelseType(type)
                                 .withOpprettetDato(opprettet).withTraad(traad).withTema(tema).withLestDato(lestdato);
-                ObjectMapper mapper = new ObjectMapper();
 
                 Map<String, String> fritekstMapping = new HashMap<>();
                 fritekstMapping.put("fritekst", "Lorem ipsum dolor sit amet, " +
