@@ -35,12 +35,9 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     public static final String LAMELL_MELDINGER = "meldinger";
     public static final String PANEL = "panel";
-
-
     private TokenLamellPanel lamellPanel;
-    private List<Lerret> lerretList = new  ArrayList<>();
+    private List<Lerret> lerretList = new ArrayList<>();
     private String fnrFromRequest;
-
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         final String type = feedItemPayload.getType().toLowerCase();
@@ -98,7 +95,7 @@ public class LamellHandler implements Serializable {
 
     private boolean canHaveMoreThanOneFactory(String type) {
         return SYKEPENGER.equalsIgnoreCase(type) || FORELDREPENGER.equalsIgnoreCase(type);
-        }
+    }
 
     private List<LamellFactory> createStaticLamellFactories() {
         return asList(

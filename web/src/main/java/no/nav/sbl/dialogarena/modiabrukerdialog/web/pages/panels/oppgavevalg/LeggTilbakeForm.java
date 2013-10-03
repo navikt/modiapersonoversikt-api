@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgavevalg;
 
 import javax.inject.Inject;
+
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -19,7 +21,7 @@ public class LeggTilbakeForm extends Form<AarsakVM> {
     @Inject
     OppgavebehandlingPortType service;
 
-    public LeggTilbakeForm(String id, final String oppgaveId) {
+    public LeggTilbakeForm(String id, final Optional<String> oppgaveId) {
         super(id);
         final LeggTilbakeModell model = new LeggTilbakeModell(new AarsakVM(INHABIL));
         setDefaultModel(model);
@@ -43,7 +45,7 @@ public class LeggTilbakeForm extends Form<AarsakVM> {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 String aarsak = model.getAarsakForTilbakeleggelse();
                 if (aarsak != null) {
-                    service.leggTilbakeOppgave(oppgaveId, aarsak);
+                    service.leggTilbakeOppgave(oppgaveId.get(), aarsak);
                     setResponsePage(HentPersonPage.class);
                 } else {
                     info("Du må angi hvorfor du legger tilbake oppgaven");

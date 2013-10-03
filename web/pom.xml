@@ -100,6 +100,11 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sporsmal-og-svar-widget</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>soknader-widget</artifactId>
         </dependency>
 
@@ -110,7 +115,7 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar-widget</artifactId>
+            <artifactId>sakogbehandling-jaxws</artifactId>
         </dependency>
 
         <!-- End modia komponenter -->
