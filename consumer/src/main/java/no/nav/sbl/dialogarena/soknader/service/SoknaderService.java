@@ -10,4 +10,5 @@ public interface SoknaderService extends Serializable {
     String SOKNAD = "soknader";
 
     List<InfoPanelVM> getWidgetContent(String fnr);
+    List<Soknad> getSoknadListe(String fnr);
 }

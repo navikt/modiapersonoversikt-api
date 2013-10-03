@@ -14,8 +14,49 @@ public class SoknaderServiceMock implements SoknaderService {
 
         soknader.add(soknad1());
         soknader.add(soknad2());
+        soknader.add(soknad2());
+        soknader.add(soknad2());
+        soknader.add(soknad2());
+        soknader.add(soknad2());
+        soknader.add(soknad2());
+        soknader.add(soknad2());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
+        soknader.add(soknad3());
         soknader.add(soknad3());
         soknader.add(soknad4());
+        return soknader;
+    }
+
+    @Override
+    public List<Soknad> getSoknadListe(String fnr) {
+        List<Soknad> soknader  = new ArrayList<>();
+         soknader.add(new Soknad("Uføre","10.10.2013"));
+         soknader.add(new Soknad("Sykepenger","1.9.2013"));
+         soknader.add(new Soknad("Sykepenger2","1.9.2013"));
+         soknader.add(new Soknad("Sykepenger3","1.9.2013"));
+         soknader.add(new Soknad("Sykepenger4","1.9.2013"));
+         soknader.add(new Soknad("Sykepenger5","1.9.2013"));
+         soknader.add(new Soknad("Sykepenger6","1.9.2013"));
+         soknader.add(new Soknad("Sykepenger7","1.9.2013"));
+         soknader.add(new Soknad("Sykepenger8","1.9.2013"));
+         soknader.add(new Soknad("Sykepenger9","1.9.2013"));
         return soknader;
     }
 

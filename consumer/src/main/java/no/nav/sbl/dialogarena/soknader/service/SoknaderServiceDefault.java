@@ -16,4 +16,9 @@ public class SoknaderServiceDefault implements SoknaderService {
         logger.error("Soknaderintegrasjon ikke implementert");
         throw new ApplicationException("Soknaderintegrasjon ikke implementert");
     }
+
+    @Override
+    public List<Soknad> getSoknadListe(String fnr) {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
 }
