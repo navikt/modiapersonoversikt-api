@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles;
 
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
-import no.nav.sbl.dialogarena.soknader.service.SoknaderServiceImpl;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingHentBehandlingBehandlingIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
@@ -26,7 +25,7 @@ public class SoknaderConfig {
 
         @Bean
         public SoknaderService soknaderWidgetService() {
-            return new SoknaderServiceImpl();
+            return new SoknaderService();
         }
 
         @Bean
@@ -62,7 +61,7 @@ public class SoknaderConfig {
 
         @Bean
         public SoknaderService soknaderWidgetService() {
-            return new SoknaderServiceImpl();
+            return new SoknaderService();
         }
 
         @Bean
