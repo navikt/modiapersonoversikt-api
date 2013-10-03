@@ -3,6 +3,17 @@ package no.nav.sbl.dialogarena.soknader;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.FrontendModules;
 import no.nav.modig.frontend.MetaTag;
+import no.nav.modig.modia.lamell.LamellPanel;
+import no.nav.modig.modia.lamell.ModalErrorPanel;
+import no.nav.modig.modia.liste.EkspanderingsListe;
+import no.nav.modig.modia.liste.Liste;
+import no.nav.modig.modia.navigation.KeyNavigationResourceReference;
+import no.nav.modig.modia.shortcuts.ShortcutListenerResourceReference;
+import no.nav.modig.modia.token.JqueryTokenValueChangeBehavior;
+import no.nav.modig.modia.widget.Widget;
+import no.nav.modig.wicket.component.datepicker.DatePicker;
+import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
+import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -37,6 +48,20 @@ public class SoeknaderTestApplication extends WebApplication {
                                 .attribute("content", "IE=edge,chrome=1")
                                 .done())
                 .withResourcePacking(this.usesDeploymentConfig())
-                .configure(this);
+                .addScripts(
+//                        BasePage.JS_RESOURCE,
+//                        ShortcutListenerResourceReference.get(), //TODO: Flytt til MODIA modul ?
+//                        KeyNavigationResourceReference.get(),    //TODO: Flytt til MODIA modul ?
+//                        Widget.JS_RESOURCE,
+//                        LamellPanel.JS_RESOURCE,
+//                        DatePicker.DATEPICKER_JS,
+//                        DateRangePicker.JS_REFERENCE,
+//                        JqueryTokenValueChangeBehavior.JS_REFERENCE,
+//                        ModigModalWindow.JS,
+                        EkspanderingsListe.JS_RESOURCE          //TODO: Flytt til MODIA modul ?
+//                        Liste.JS_RESOURCE,                       //TODO: Flytt til MODIA modul ?
+//                        DatePicker.JQUERY_PLACEHOLDER,
+//                        ModalErrorPanel.JS_RESOURCE
+                ).configure(this);
     }
 }
