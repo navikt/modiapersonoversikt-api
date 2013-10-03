@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.soknader.panel.context;
+package no.nav.sbl.dialogarena.soknader.context;
 
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderServiceImpl;

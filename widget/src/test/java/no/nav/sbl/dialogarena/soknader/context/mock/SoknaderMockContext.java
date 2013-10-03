@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.soknader.panel.context.mock;
+package no.nav.sbl.dialogarena.soknader.context.mock;
 
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
