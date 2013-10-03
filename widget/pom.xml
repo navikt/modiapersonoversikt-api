@@ -16,6 +16,16 @@
             <artifactId>modig-wicket</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
         <!-- Logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -72,6 +82,7 @@
                             <usedDependencies>
                                 <usedDependency>ch.qos.logback:logback-core</usedDependency>
                                 <usedDependency>ch.qos.logback:logback-classic</usedDependency>
+                                <usedDependency>no.nav.sbl.dialogarena:soknader-consumer</usedDependency>
                             </usedDependencies>
                         </configuration>
                     </execution>

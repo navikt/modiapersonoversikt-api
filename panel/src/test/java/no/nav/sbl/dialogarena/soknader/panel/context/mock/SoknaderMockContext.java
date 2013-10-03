@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.soknader.panel;
+package no.nav.sbl.dialogarena.soknader.panel.context.mock;
 
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.soknader.util.SoknadMockBuilder;
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import java.util.List;
 
@@ -22,19 +21,8 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Configuration
-public class JettyApplicationContext {
+public class SoknaderMockContext {
 
-    @Bean
-    public SoeknaderTestApplication application() {
-        return new SoeknaderTestApplication();
-    }
-
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
-
-    //Denne ligger her da den egentlig er definert i Modiabrukerdialog
     @Bean
     public SoknaderService soknaderService(){
         SoknaderService service = mock(SoknaderService.class);
@@ -44,7 +32,8 @@ public class JettyApplicationContext {
     }
 
     private List<Soknad> soknaderDataSetMocked() {
-        return asList(createMottattSoknad(),
+        return asList(
+                createMottattSoknad(),
                 createUnderBehandlingSoknad(),
                 createNyligFerdigSoknad(),
                 createGammelFerdigSoknad());
@@ -59,7 +48,6 @@ public class JettyApplicationContext {
                 .withSoknadStatus(GAMMEL_FERDIG)
                 .withNormertBehandlingsTid("14 dager")
                 .build();
-
     }
 
     private Soknad createNyligFerdigSoknad() {
@@ -71,7 +59,6 @@ public class JettyApplicationContext {
                 .withSoknadStatus(NYLIG_FERDIG)
                 .withNormertBehandlingsTid("10 dager")
                 .build();
-
     }
 
     private Soknad createUnderBehandlingSoknad() {
@@ -82,7 +69,6 @@ public class JettyApplicationContext {
                 .withNormertBehandlingsTid("200 dager")
                 .withSoknadStatus(UNDER_BEHANDLING)
                 .build();
-
     }
 
     private Soknad createMottattSoknad() {

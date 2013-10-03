@@ -6,6 +6,15 @@
 
     <display-name>Soeknader</display-name>
 
+    <session-config>
+        <session-timeout>60</session-timeout>
+        <cookie-config>
+            <name>SOKNADER_JSESSIONID</name>
+            <http-only>true</http-only>
+        </cookie-config>
+        <tracking-mode>COOKIE</tracking-mode>
+    </session-config>
+
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
@@ -17,7 +26,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>no.nav.sbl.dialogarena.soknader.panel.JettyApplicationContext</param-value>
+        <param-value>no.nav.sbl.dialogarena.soknader.panel.context.JettyApplicationContext</param-value>
     </context-param>
 
     <filter>

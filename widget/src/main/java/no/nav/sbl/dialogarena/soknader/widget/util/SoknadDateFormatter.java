@@ -16,14 +16,4 @@ public class SoknadDateFormatter {
                 .withLocale(new Locale("no"))
                 .print(dateTime);
     }
-
-    public static String printLongDate(DateTime dateTime) {
-        if(dateTime == null) {
-            return "";
-        }
-        return DateTimeFormat
-                .forPattern("d. MMMM YYYY")
-                .withLocale(new Locale("no"))
-                .print(dateTime);
-    }
 }
