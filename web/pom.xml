@@ -110,7 +110,7 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>soknader-panel</artifactId>
+            <artifactId>sakogbehandling-jaxws</artifactId>
         </dependency>
 
         <!-- End modia komponenter -->

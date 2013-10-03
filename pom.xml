@@ -43,6 +43,7 @@
         <jetty-util.version>6.1.26</jetty-util.version>
         <javax.annotation.version>1.1.0.v201108011116</javax.annotation.version>
         <servlet.api.version>2.5</servlet.api.version>
+        <sakogbehandling.jaxws.version>1.0.1</sakogbehandling.jaxws.version>
         <fitnesse.version>20111026</fitnesse.version>
         <fitlibrary.version>2.0</fitlibrary.version>
         <webbit.version>0.4.14</webbit.version>
@@ -60,12 +61,6 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>soknader-widget</artifactId>
-                <version>${soknader.widget.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>soknader-panel</artifactId>
                 <version>${soknader.widget.version}</version>
             </dependency>
 
@@ -136,7 +131,13 @@
                 <version>${modig.lang.version}</version>
             </dependency>
 
-			<dependency>
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>sakogbehandling-jaxws</artifactId>
+                <version>${sakogbehandling.jaxws.version}</version>
+            </dependency>
+
+            <dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>3.1.0</version>

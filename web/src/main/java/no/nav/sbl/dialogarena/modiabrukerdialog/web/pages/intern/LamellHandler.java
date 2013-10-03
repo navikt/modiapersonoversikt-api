@@ -10,7 +10,6 @@ import no.nav.modig.modia.lamell.LerretFactory;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.GenericLerret;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.Oversikt;
-import no.nav.sbl.dialogarena.soknader.panel.SoknaderPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.Innboks;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
@@ -35,7 +34,6 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_OVERSIKT = "oversikt";
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     public static final String LAMELL_BRUKERHENVENDELSER = "brukerhenvendelser";
-    public static final String LAMELL_SOKNADER = "soknader";
     public static final String PANEL = "panel";
     private TokenLamellPanel lamellPanel;
     private List<Lerret> lerretList = new ArrayList<>();
@@ -104,8 +102,7 @@ public class LamellHandler implements Serializable {
                 createOversiktLamell(),
                 createKontrakterLamell(),
                 createBrukerprofilLamell(),
-                createBrukerhenvendelserLamell(),
-                createSoknaderLamell()
+                createBrukerhenvendelserLamell()
         );
     }
 
@@ -145,14 +142,6 @@ public class LamellHandler implements Serializable {
         });
     }
 
-    private LamellFactory createSoknaderLamell() {
-        return newLamellFactory(LAMELL_SOKNADER, "S", new LerretFactory() {
-            @Override
-            public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new SoknaderPanel(id));
-            }
-        });
-    }
 
     private Lerret addLerretToListAndReturn(Lerret lerret) {
         lerretList.add(lerret);
