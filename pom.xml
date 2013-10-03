@@ -52,7 +52,7 @@
         <personsok.version>0.0.94</personsok.version>
         <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
         <sporsmalogsvar.version>1.3</sporsmalogsvar.version>
-        <soknader.widget.version>2.0.0-SNAPSHOT</soknader.widget.version>
+        <soknader.widget.version>2.0.0</soknader.widget.version>
     </properties>
 
     <dependencyManagement>
@@ -60,7 +60,7 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>soknader-widget</artifactId>
+                <artifactId>soknader-liste</artifactId>
                 <version>${soknader.widget.version}</version>
             </dependency>
 
