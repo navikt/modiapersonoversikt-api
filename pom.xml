@@ -386,8 +386,8 @@
         </plugins>
     </build>
     <scm>
-        <developerConnection>scm:git:ssh://git@a34apvl029.devillo.no:7999/dial/soknadsoversikt.git</developerConnection>
-        <url>http://a34apvl029.devillo.no:7990/scm/dial/soknadsoversikt.git</url>
+        <developerConnection>scm:git:ssh://git@a34apvl029.devillo.no:7999/dial/modia-soknadsoversikt.git</developerConnection>
+        <url>http://a34apvl029.devillo.no:7990/scm/dial/modia-soknadsoversikt.git</url>
         <tag>HEAD</tag>
     </scm>
 
