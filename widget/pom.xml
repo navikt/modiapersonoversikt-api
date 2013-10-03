@@ -12,13 +12,14 @@
     <dependencies>
 
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-wicket</artifactId>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>soknader-consumer</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-wicket</artifactId>
         </dependency>
 
         <dependency>
@@ -30,10 +31,20 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-frontend-wicket</artifactId>
         </dependency>
-
+        
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+        </dependency>
+        
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sakogbehandling-jaxws</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
         </dependency>
 
         <!-- Logback -->
