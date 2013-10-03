@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.melding.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.melding.Status;
 import no.nav.sbl.dialogarena.sporsmalogsvar.records.Record;
+import org.apache.wicket.Session;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.joda.time.DateTime;
@@ -12,7 +13,6 @@ import org.joda.time.format.DateTimeFormat;
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.melding.MeldingUtils.ELDSTE_FORST;
@@ -31,7 +31,7 @@ public class MeldingVM implements Serializable {
 
     public MeldingVM(List<Record<Melding>> tilhorendeTraad, String id) {
         Record<Melding> melding = on(tilhorendeTraad).filter(Melding.id.is(id)).head().get();
-        id = melding.get(Melding.id);
+        this.id = melding.get(Melding.id);
         traadId = melding.get(Melding.traadId);
         tema = melding.get(Melding.tema);
         type = melding.get(Melding.type);
@@ -58,13 +58,13 @@ public class MeldingVM implements Serializable {
     }
 
     public String getLestDato() {
-        return type == INNGAENDE ? formatertDato(lestDato, "'Lest:' dd.MM.yyyy 'kl' HH:mm") : null;
+        return formatertDato(lestDato, "dd.MM.yyyy 'kl' HH:mm");
     }
 
     public String formatertDato(final DateTime dato, final String format) {
         return dato == null ? null :
                 DateTimeFormat.forPattern(format)
-                        .withLocale(new Locale("nb"))
+                        .withLocale(Session.get().getLocale())
                         .print(dato);
     }
 

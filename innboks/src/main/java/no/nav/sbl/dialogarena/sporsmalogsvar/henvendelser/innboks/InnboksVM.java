@@ -38,8 +38,8 @@ public class InnboksVM implements Serializable {
 
     public void oppdaterMeldinger(List<WSHenvendelse> henvendelser) {
         Map<String, List<WSHenvendelse>> wsHenvendelseTraader = skillUtTraader(henvendelser);
-        for (String traadId : wsHenvendelseTraader.entrySet()) {
-            traader.put(traadId, TIL_MELDINGVM_TRAAD.transform(wsHenvendelseTraader.get(traadId)));
+        for (Map.Entry<String, List<WSHenvendelse>> wsHenvendelseTraad : wsHenvendelseTraader.entrySet()) {
+            traader.put(wsHenvendelseTraad.getKey(), TIL_MELDINGVM_TRAAD.transform(wsHenvendelseTraad.getValue()));
         }
 
         for (List<MeldingVM> traad : traader.values()) {

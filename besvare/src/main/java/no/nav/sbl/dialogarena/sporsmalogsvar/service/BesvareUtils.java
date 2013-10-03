@@ -5,12 +5,12 @@ import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import org.apache.commons.collections15.Transformer;
+import org.apache.wicket.Session;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.Locale;
 import java.util.Map;
 
 public class BesvareUtils {
@@ -77,6 +77,6 @@ public class BesvareUtils {
     };
 
     public static String formatertDato(DateTime dato) {
-        return DateTimeFormat.forPattern("EEEEE dd.MM.yyyy 'kl' HH:mm").withLocale(new Locale("nb")).print(dato);
+        return DateTimeFormat.forPattern("EEEEE dd.MM.yyyy 'kl' HH:mm").withLocale(Session.get().getLocale()).print(dato);
     }
 }

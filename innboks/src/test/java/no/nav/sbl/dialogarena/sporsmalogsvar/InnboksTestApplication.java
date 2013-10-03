@@ -6,13 +6,17 @@ import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.Innboks;
 import org.apache.wicket.Page;
+import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.request.Request;
+import org.apache.wicket.request.Response;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.context.ApplicationContext;
 
 import javax.inject.Inject;
+import java.util.Locale;
 
 public class InnboksTestApplication extends WebApplication {
 
@@ -44,4 +48,12 @@ public class InnboksTestApplication extends WebApplication {
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
     }
+
+    @Override
+    public Session newSession(Request request, Response response) {
+        Session session = super.newSession(request, response);
+        session.setLocale(new Locale("nb", "no"));
+        return session;
+    }
+
 }
