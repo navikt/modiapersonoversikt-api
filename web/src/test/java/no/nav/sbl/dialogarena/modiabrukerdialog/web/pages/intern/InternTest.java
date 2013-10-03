@@ -8,7 +8,6 @@ import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.BesvareSporsmalPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare.BesvareSporsmalPanel;
@@ -96,8 +95,7 @@ public class InternTest extends TestSecurityBaseClass {
     @Test
     public void besvareSporsmalPanelErSynligNaarOppgaveIdGisIUrl() {
         wicket
-            .goTo(BesvareSporsmalPage.class, with().param("fnr", "12037649749").param("oppgaveId", "123"))
-            .should().beOn(Intern.class)
+            .goTo(InternBesvaremodus.class, with().param("fnr", "12037649749").param("oppgaveId", "123"))
             .should().containComponent(ofType(BesvareSporsmalPanel.class).and(thatIsVisible()));
     }
 

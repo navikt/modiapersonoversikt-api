@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave;
 
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.BesvareSporsmalPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.InternBesvaremodus;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.informasjon.WSPlukkOppgaveResultat;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -119,6 +119,6 @@ public class HentOppgavePanel extends Panel {
 
         getSession().setAttribute("valgtTema", tema);
 
-        setResponsePage(BesvareSporsmalPage.class, new PageParameters().add("fnr", oppgaveResultat.getFodselsnummer()).add("oppgaveId", oppgaveResultat.getOppgaveId()));
+        setResponsePage(InternBesvaremodus.class, new PageParameters().add("fnr", oppgaveResultat.getFodselsnummer()).add("oppgaveId", oppgaveResultat.getOppgaveId()));
     }
 }
