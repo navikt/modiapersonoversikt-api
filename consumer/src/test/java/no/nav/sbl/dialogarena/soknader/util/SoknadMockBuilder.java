@@ -56,14 +56,14 @@ public class SoknadMockBuilder {
     }
 
     private Soknad createDefaultSoknad() {
-        Soknad soknad = mock(Soknad.class, withSettings().serializable());
-        when(soknad.getTittel()).thenReturn("title-MOCK");
-        when(soknad.getSoknadStatus()).thenReturn(SoknadStatus.UKJENT);
-        when(soknad.getNormertBehandlingsTid()).thenReturn("10 dager-MOCK");
-        when(soknad.getUnderBehandlingDato()).thenReturn(null);
-        when(soknad.getFerdigDato()).thenReturn(null);
-        when(soknad.getMottattDato()).thenReturn(DateTime.now());
-        when(soknad.getBehandlingskjedeId()).thenReturn("behandlingsKjedeId-MOCK");
-        return soknad;
+        Soknad mockSoknad = mock(Soknad.class, withSettings().serializable());
+        when(mockSoknad.getTittel()).thenReturn("title-MOCK");
+        when(mockSoknad.getSoknadStatus()).thenReturn(SoknadStatus.UKJENT);
+        when(mockSoknad.getNormertBehandlingsTid()).thenReturn("10 dager-MOCK");
+        when(mockSoknad.getUnderBehandlingDato()).thenReturn(null);
+        when(mockSoknad.getFerdigDato()).thenReturn(null);
+        when(mockSoknad.getMottattDato()).thenReturn(DateTime.now());
+        when(mockSoknad.getBehandlingskjedeId()).thenReturn("behandlingsKjedeId-MOCK");
+        return mockSoknad;
     }
 }

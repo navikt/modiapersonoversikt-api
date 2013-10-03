@@ -18,7 +18,7 @@ import static no.nav.sbl.dialogarena.soknader.widget.util.SoknadDateFormatter.pr
 
 public class SoknaderWidget extends InfoFeedWidget {
 
-    private static String SOKNAD = "soknader";
+    private static final String SOKNAD = "soknader";
 
     public SoknaderWidget(String id, String initial, final IModel<String> model) {
         super(id, initial, new WidgetModel(model));
@@ -27,7 +27,6 @@ public class SoknaderWidget extends InfoFeedWidget {
     private static final class WidgetModel extends LoadableDetachableModel<List<InfoPanelVM>> {
 
         IModel<String> fnrModel;
-
         @SpringBean
         @Named("soknaderService")
         private SoknaderService soknaderService;
@@ -49,7 +48,7 @@ public class SoknaderWidget extends InfoFeedWidget {
         private List<InfoPanelVM> convertSoknadToInfoPanel(List<Soknad> soknadList) {
             List<InfoPanelVM> infoPanelList = new ArrayList<>();
             int panelId = 0;
-            for(Soknad soknad : soknadList) {
+            for (Soknad soknad : soknadList) {
                 infoPanelList.add(populateInfoPanel("soknad" + panelId++, soknad));
             }
             return infoPanelList;

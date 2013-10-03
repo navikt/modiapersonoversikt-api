@@ -6,8 +6,6 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -17,8 +15,6 @@ import static no.nav.sbl.dialogarena.soknader.domain.Soknad.transformToSoeknad;
 
 public class SoknaderServiceImpl implements SoknaderService {
 
-    private final Logger logger = LoggerFactory.getLogger(SoknaderServiceImpl.class);
-
     @Inject
     private SakOgBehandlingPortType sakOgBehandlingPortType;
 
@@ -26,8 +22,8 @@ public class SoknaderServiceImpl implements SoknaderService {
     public List<Soknad> getSoknader(String fnr) {
         List<Soknad> soknadList = new ArrayList<>();
         FinnSakOgBehandlingskjedeListeResponse response = sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(createRequest(fnr));
-        for(Sak sak : response.getSak()) {
-              soknadList.addAll(convertSakToSoknader(sak));
+        for (Sak sak : response.getSak()) {
+            soknadList.addAll(convertSakToSoknader(sak));
         }
         return soknadList;
     }
@@ -38,12 +34,12 @@ public class SoknaderServiceImpl implements SoknaderService {
 
     private List<Soknad> convertSakToSoknader(Sak sak) {
         String temaKodeRef = sak.getTema().getKodeRef();
-        String temaKodeverkRef = sak.getTema().getKodeverksRef();
+        //        String temaKodeverkRef = sak.getTema().getKodeverksRef();
 
         //TODO: Gjøre oppslag mot kodeverk, og finne sakstemaet her før implementasjon mot sak og behandling
         String tittel = temaKodeRef;
         List<Soknad> soknadList = new ArrayList<>();
-        for(Behandlingskjede behandlingskjede :sak.getBehandlingskjede()) {
+        for (Behandlingskjede behandlingskjede : sak.getBehandlingskjede()) {
             soknadList.add(transformToSoeknad(behandlingskjede, tittel));
         }
         return soknadList;
