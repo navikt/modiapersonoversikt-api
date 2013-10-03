@@ -21,13 +21,12 @@ public class SideBar extends Panel {
     public SideBar(String id, String fnr) {
         super(id);
         oppgavevalg = new OppgavevalgPanel("oppgavevalg");
-        VisittkortPanel visittkortPanel = new VisittkortPanel("visittkortPanel", fnr);
         besvaresporsmalPanel = new BesvareSporsmalPanel("besvarePanel", fnr);
         initVisibility();
         add(
-                visittkortPanel,
-                besvaresporsmalPanel,
                 new HentOppgavePanel("hent-oppgave"),
+                new VisittkortPanel("visittkortPanel", fnr),
+                besvaresporsmalPanel,
                 oppgavevalg);
     }
 
