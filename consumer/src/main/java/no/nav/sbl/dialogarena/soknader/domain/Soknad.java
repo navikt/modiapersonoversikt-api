@@ -29,7 +29,6 @@ public class Soknad implements Serializable {
     private String normertBehandlingsTid;
     private String tittel;
     private SoknadStatus soknadStatus;
-    private String behandlingskjedeId;
 
     private Soknad() { }
 
