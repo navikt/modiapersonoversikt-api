@@ -22,7 +22,6 @@
             <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-test</artifactId>
@@ -140,13 +139,13 @@
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
-            <version>2.2.2</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
-            <version>2.2.2</version>
+            <scope>compile</scope>
         </dependency>
 
     </dependencies>

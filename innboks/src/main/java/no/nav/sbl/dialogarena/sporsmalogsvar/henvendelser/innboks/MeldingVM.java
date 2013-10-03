@@ -36,7 +36,7 @@ public class MeldingVM implements Serializable {
         tema = melding.get(Melding.tema);
         type = melding.get(Melding.type);
         avsender = (melding.equals(on(tilhorendeTraad).collect(ELDSTE_FORST).get(0)) ? "Melding" : "Svar") + " fra " +
-                (type == INNGAENDE ? "Navn Navnesen" : "NAV");
+                (type == INNGAENDE ? "Bruker" : "NAV");
         fritekst = melding.get(Melding.fritekst);
         opprettetDato = melding.get(Melding.opprettetDato);
         lestDato = melding.get(Melding.lestDato);

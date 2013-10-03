@@ -25,7 +25,7 @@ public class MeldingWidgetPanel extends GenericPanel<MeldingVM> {
         statusContainer.add(
                 status,
                 lestDato,
-                new Label("status",  new StringResourceModel("${status}", getModel())));
+                new Label("status",  new StringResourceModel("widget.${status}", getModel())));
 
         add(
                 new Label("opprettetDatoAsString"),

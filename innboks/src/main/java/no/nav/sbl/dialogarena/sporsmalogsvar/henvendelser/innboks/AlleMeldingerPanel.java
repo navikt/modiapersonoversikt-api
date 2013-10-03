@@ -10,7 +10,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
@@ -28,8 +27,7 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(new Label("antallMeldingerITraad"));
 
                 item.add(new WebMarkupContainer("indikator-dot").add(new AttributeModifier("class", item.getModelObject().getStatusKlasse())));
-                item.add(new Label("indikator-tekst",
-                        new StringResourceModel("${status}", item.getModel(), new PropertyModel<>(item.getModel(), "lestDato"))));
+                item.add(new Label("indikator-tekst", new StringResourceModel("lamell.${status}", item.getModel())));
 
                 item.add(new Label("opprettetDato"));
                 item.add(new Label("avsender"));
