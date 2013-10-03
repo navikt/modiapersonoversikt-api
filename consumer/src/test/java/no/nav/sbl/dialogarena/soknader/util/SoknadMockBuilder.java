@@ -41,11 +41,6 @@ public class SoknadMockBuilder {
         return this;
     }
 
-    public SoknadMockBuilder withBehandlingskjedeId(String behandlingskjedeId) {
-        when(soknad.getBehandlingskjedeId()).thenReturn(behandlingskjedeId);
-        return this;
-    }
-
     public SoknadMockBuilder withMottattDato(DateTime mottattDato) {
         when(soknad.getMottattDato()).thenReturn(mottattDato);
         return this;
@@ -63,7 +58,6 @@ public class SoknadMockBuilder {
         when(mockSoknad.getUnderBehandlingDato()).thenReturn(null);
         when(mockSoknad.getFerdigDato()).thenReturn(null);
         when(mockSoknad.getMottattDato()).thenReturn(DateTime.now());
-        when(mockSoknad.getBehandlingskjedeId()).thenReturn("behandlingsKjedeId-MOCK");
         return mockSoknad;
     }
 }

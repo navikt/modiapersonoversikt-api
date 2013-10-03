@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.modia.widget.panels.InfoPanelVM.Status.ERROR;
+import static no.nav.modig.modia.widget.panels.InfoPanelVM.Status.OK;
 import static no.nav.sbl.dialogarena.soknader.widget.util.SoknadDateFormatter.printShortDate;
 
 public class SoknaderWidget extends InfoFeedWidget {
@@ -62,13 +64,13 @@ public class SoknaderWidget extends InfoFeedWidget {
             switch (soknad.getSoknadStatus()) {
                 case MOTTATT:
                 case UNDER_BEHANDLING:
-                    return InfoPanelVM.Status.OK;
+                    return OK;
                 case NYLIG_FERDIG:
                 case GAMMEL_FERDIG:
                     return null;
                 case UKJENT:
                 default:
-                    return InfoPanelVM.Status.ERROR;
+                    return ERROR;
             }
         }
 

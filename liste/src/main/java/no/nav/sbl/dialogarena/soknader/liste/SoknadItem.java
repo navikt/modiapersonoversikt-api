@@ -6,6 +6,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
 public class SoknadItem extends Panel {
+
     public SoknadItem(String id, IModel<Soknad> model) {
         super(id, model);
         Soknad soknad = model.getObject();
@@ -13,4 +14,5 @@ public class SoknadItem extends Panel {
                 new Label("date", soknad.getFerdigDato())
         );
     }
+
 }

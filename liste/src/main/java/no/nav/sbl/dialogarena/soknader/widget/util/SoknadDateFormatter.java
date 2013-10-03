@@ -8,7 +8,7 @@ import java.util.Locale;
 public class SoknadDateFormatter {
 
     public static String printShortDate(DateTime dateTime) {
-        if(dateTime == null) {
+        if (dateTime == null) {
             return "";
         }
         return DateTimeFormat

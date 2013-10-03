@@ -6,9 +6,7 @@ import org.joda.time.DateTime;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
 import static java.util.Calendar.DAY_OF_YEAR;
 import static java.util.Calendar.getInstance;
@@ -41,26 +39,6 @@ public class Soknad implements Serializable {
         return soknad;
     }
 
-    public static final Transformer<Soknad, SoknadStatus> SOEKNADSTATUS_TRANSFORMER = new Transformer<Soknad, SoknadStatus>() {
-
-        @Override
-        public SoknadStatus transform(Soknad soeknad) {
-            return soeknad.getSoknadStatus();
-        }
-    };
-
-    public static final Transformer<List<Behandlingskjede>, List<Soknad>> SOEKNAD_LIST_TRANSFORMER = new Transformer<List<Behandlingskjede>, List<Soknad>>() {
-
-        @Override
-        public List<Soknad> transform(List<Behandlingskjede> behandlingskjedeList) {
-            List<Soknad> soeknadList = new ArrayList<>();
-            for (Behandlingskjede behandlingskjede : behandlingskjedeList) {
-                soeknadList.add(soeknadTransformer.transform(behandlingskjede));
-            }
-            return soeknadList;
-        }
-    };
-
     public String getTittel() {
         return tittel;
     }
@@ -79,10 +57,6 @@ public class Soknad implements Serializable {
 
     public DateTime getFerdigDato() {
         return ferdigDato;
-    }
-
-    public String getBehandlingskjedeId() {
-        return behandlingskjedeId;
     }
 
     public DateTime getMottattDato() {
@@ -156,4 +130,5 @@ public class Soknad implements Serializable {
         timeFromSoeknad.add(DAY_OF_YEAR, AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED);
         return timeFromSoeknad.after(getInstance());
     }
+
 }
