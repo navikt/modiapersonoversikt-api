@@ -7,7 +7,7 @@ public class Soknad {
     private String heading;
     private String date;
 
-    public Soknad(String heading, String date ){
+    public Soknad(String heading, String date){
         this.heading = heading;
         this.date = date;
     }
