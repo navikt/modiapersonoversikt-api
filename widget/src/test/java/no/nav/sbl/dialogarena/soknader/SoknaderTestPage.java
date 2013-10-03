@@ -14,7 +14,7 @@ public class SoknaderTestPage extends WebPage {
 
 
     public SoknaderTestPage() {
-        add(new SoknadListe("soknadListe", new ListModel<>(soknaderService.getSoknadListe(""))));
+        add(new SoknadListe("soknadListe", new ListModel<>(soknaderService.getSoknader(""))));
     }
 
 }
