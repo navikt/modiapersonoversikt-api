@@ -7,7 +7,5 @@ import java.util.List;
 
 public interface SoknaderService extends Serializable {
 
-    String SOKNAD = "soknader";
-
     List<Soknad> getSoknader(String fnr);
 }

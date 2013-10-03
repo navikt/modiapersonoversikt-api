@@ -34,8 +34,10 @@ public class Soknad implements Serializable {
 
     private Soknad() { }
 
-    public static Soknad transformToSoeknad(Behandlingskjede behandlingskjede) {
-        return soeknadTransformer.transform(behandlingskjede);
+    public static Soknad transformToSoeknad(Behandlingskjede behandlingskjede, String tittel) {
+        Soknad soknad = soeknadTransformer.transform(behandlingskjede);
+        soknad.tittel = tittel;
+        return soknad;
     }
 
     public static final Transformer<Soknad, SoknadStatus> SOEKNADSTATUS_TRANSFORMER = new Transformer<Soknad, SoknadStatus>() {
@@ -91,8 +93,6 @@ public class Soknad implements Serializable {
         @Override
         public Soknad transform(Behandlingskjede behandlingskjede) {
             Soknad soknad = new Soknad();
-            //TODO: Gjør oppslag for å finne tema!
-            soknad.tittel = behandlingskjede.getBehandlingskjedetype().getKodeverksRef();
             soknad.normertBehandlingsTid = getNormertTidString(behandlingskjede);
             soknad.mottattDato = dateTimeTransformer().transform(behandlingskjede.getStart());
             soknad.underBehandlingDato = optional(behandlingskjede.getStartNAVtid()).map(dateTimeTransformer()).getOrElse(null);
