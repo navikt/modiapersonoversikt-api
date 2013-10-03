@@ -33,16 +33,24 @@ public class HentOppgavePanel extends Panel {
     OppgavebehandlingPortType service;
 
     private final WebMarkupContainer temavelger;
-    private final Model<Tema> tema;
+//    private final Model<Tema> tema;
+    private final IModel<Tema> tema = new AbstractReadOnlyModel<Tema>() {
+        @Override
+        public Tema getObject() {
+            Serializable temaAttr = getSession().getAttribute("valgtTema");
+            return temaAttr != null ? Tema.valueOf(temaAttr.toString()) : null;
+        }
+    };
+
     private Model<Boolean> visTema = new Model<>(false);
 
     ModigModalWindow modalWindow = new ModigModalWindow("tomForOppgaverMelding");
 
     public HentOppgavePanel(String id) {
         super(id);
-        Serializable temaAttr = getSession().getAttribute("valgtTema");
-        Tema temaet = temaAttr != null ? Tema.valueOf(temaAttr.toString()) : null;
-        this.tema = new Model<>(temaet);
+//        Serializable temaAttr = getSession().getAttribute("valgtTema");
+//        Tema temaet = temaAttr != null ? Tema.valueOf(temaAttr.toString()) : null;
+//        this.tema = new Model<>(temaet);
         setDefaultModel(this.tema);
         setOutputMarkupId(true);
 
@@ -60,7 +68,7 @@ public class HentOppgavePanel extends Panel {
                 if (HentOppgavePanel.this.tema.getObject() != null) {
                     valgteTema(HentOppgavePanel.this.tema.getObject(), target);
                 } else {
-                    visTema.setObject(!visTema.getObject());
+                    visTema.setObject(true);
                     target.add(temavelger);
                 }
             }
@@ -100,7 +108,6 @@ public class HentOppgavePanel extends Panel {
                 @Override
                 protected void onEvent(AjaxRequestTarget target) {
                     visTema.setObject(false);
-                    tema.setObject(item.getModelObject());
                     HentOppgavePanel.this.valgteTema(item.getModelObject(), target);
                     target.add(temavelger);
                 }

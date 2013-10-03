@@ -18,13 +18,16 @@ public class SideBar extends Panel {
     private final BesvareSporsmalPanel besvaresporsmalPanel;
     private final OppgavevalgPanel oppgavevalg;
 
+    private final HentOppgavePanel hentOppgavePanel;
+
     public SideBar(String id, String fnr) {
         super(id);
         oppgavevalg = new OppgavevalgPanel("oppgavevalg");
         besvaresporsmalPanel = new BesvareSporsmalPanel("besvarePanel", fnr);
+        hentOppgavePanel = new HentOppgavePanel("hent-oppgave");
         initVisibility();
         add(
-                new HentOppgavePanel("hent-oppgave"),
+                hentOppgavePanel,
                 new VisittkortPanel("visittkortPanel", fnr),
                 besvaresporsmalPanel,
                 oppgavevalg);
@@ -36,6 +39,7 @@ public class SideBar extends Panel {
         besvaresporsmalPanel.besvar(oppgaveId);
         besvaresporsmalPanel.setVisibilityAllowed(true);
         oppgavevalg.setVisibilityAllowed(true);
+        hentOppgavePanel.setVisibilityAllowed(false);
         if (target != null) {
             target.add(besvaresporsmalPanel, oppgavevalg);
         }
@@ -44,6 +48,7 @@ public class SideBar extends Panel {
     public void initVisibility() {
         besvaresporsmalPanel.setVisibilityAllowed(false);
         oppgavevalg.setVisibilityAllowed(false);
+        hentOppgavePanel.setVisibilityAllowed(true);
     }
 
 }

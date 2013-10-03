@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.containedInComponent;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -35,21 +36,23 @@ public class HentOppgavePanelTest extends TestSecurityBaseClass {
     private FluentWicketTester<?> wicket;
 
     @Before
-    public void hentOppgave() {
-        wicket.goTo(Intern.class).click().link(withId("plukk-oppgave"));
+    public void cleanSession() {
+        wicket.tester.getSession().replaceSession();
     }
+
 
     @Test
     public void skalViseTemavelgerNaarDuPlukkerOppgave() {
-        wicket.should().containComponent(both(ofType(HentOppgavePanel.class)).and(thatIsVisible()));
+        wicket.goTo(Intern.class)
+            .should().containComponent(ofType(HentOppgavePanel.Temaliste.class).and(thatIsInvisible()))
+            .click().link(withId("plukk-oppgave"))
+            .should().containComponent(ofType(HentOppgavePanel.Temaliste.class).and(thatIsVisible()));
     }
 
     @Test
     public void besvarePanelSkalHaVerdierNaarManHarValgtTema() {
+        wicket.goTo(Intern.class).click().link(withId("plukk-oppgave"));
         wicket.tester.executeAjaxEvent(wicket.get().components(ofType(ListItem.class).and(containedInComponent(ofType(HentOppgavePanel.class)))).get(0), "click");
-
-//        PageParameters pageParameters = wicket.tester.getLastRenderedPage().getPageParameters();
-//        assertThat(pageParameters.get("fnr").toString(), equalTo(OppgavebehandlingConfig.Test.FODESELSNR));
 
         Sporsmal sporsmal = (Sporsmal) wicket.get()
                 .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("sporsmal")))
