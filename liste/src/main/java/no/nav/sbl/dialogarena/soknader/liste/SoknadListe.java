@@ -9,13 +9,14 @@ import java.util.List;
 
 public class SoknadListe extends Liste<Soknad> {
 
-    public SoknadListe(String id, final IModel<List<Soknad>> model){
-        super(id,model);
+    public SoknadListe(String id, final IModel<List<Soknad>> model) {
+        super(id, model);
     }
 
     @Override
-    public WebMarkupContainer newListItem(String id, IModel<Soknad> model){
+    public WebMarkupContainer newListItem(String id, IModel<Soknad> model) {
         return new SoknadItem(id, model);
     }
+
 
 }
