@@ -55,7 +55,7 @@ public class SoknaderServiceMock implements SoknaderService {
          soknader.add(new Soknad("Sykepenger5","1.9.2013"));
          soknader.add(new Soknad("Sykepenger6","1.9.2013"));
          soknader.add(new Soknad("Sykepenger7","1.9.2013"));
-         soknader.add(new Soknad("Sykepenger8","1.9.2013"));
+         soknader.add(new Soknad("Sykepenger8 Sykepenger8 Sykepenger8 Sykepenger8 Sykepenger8","1.9.2013"));
          soknader.add(new Soknad("Sykepenger9","1.9.2013"));
         return soknader;
     }
