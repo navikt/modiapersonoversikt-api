@@ -71,7 +71,6 @@ public class Soknad implements Serializable {
             soknad.mottattDato = dateTimeTransformer().transform(behandlingskjede.getStart());
             soknad.underBehandlingDato = optional(behandlingskjede.getStartNAVtid()).map(dateTimeTransformer()).getOrElse(null);
             soknad.ferdigDato = evaluateFerdigDato(behandlingskjede);
-            soknad.behandlingskjedeId = behandlingskjede.getBehandlingskjedeId();
             evaluateAndSetStatus(soknad);
             return soknad;
         }
