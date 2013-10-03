@@ -15,7 +15,7 @@
 
     <modules>
         <module>consumer</module>
-        <module>widget</module>
+        <module>liste</module>
     </modules>
 
 
