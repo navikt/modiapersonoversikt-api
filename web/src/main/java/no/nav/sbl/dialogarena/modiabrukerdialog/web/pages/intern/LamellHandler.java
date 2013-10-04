@@ -10,7 +10,7 @@ import no.nav.modig.modia.lamell.LerretFactory;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.GenericLerret;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.Oversikt;
-import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.Innboks;
+import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
 import org.apache.wicket.event.IEvent;
