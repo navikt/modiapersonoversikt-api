@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.soknader.service;
 
+import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingskjedetyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingstid;
@@ -19,6 +20,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigInteger;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
@@ -39,7 +41,9 @@ public class SoknaderServiceTest {
     @Test
     public void testGetSoknader() throws Exception {
         when(sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenReturn(createResponse());
-        assertThat(soknaderService.getSoknader("fnr").size(), is(equalTo(1)));
+        List<Soknad> soknader = soknaderService.getSoknader("fnr");
+        assertThat(soknader.size(), is(equalTo(1)));
+        assertThat(soknader.get(0).getTittel(), is(equalTo("tittel")));
     }
 
     private FinnSakOgBehandlingskjedeListeResponse createResponse() throws Exception{
