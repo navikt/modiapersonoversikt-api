@@ -15,7 +15,7 @@
             , behandleBrukerprofilDefault
             , brukerhenvendelserTest
             , henvendelseinnsynTest
-            , oppgavebehandlingTest
+            , oppgavebehandlingDefault
             , soknaderTest
         </param-value>
     </context-param>
