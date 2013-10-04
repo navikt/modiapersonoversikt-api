@@ -308,6 +308,13 @@
             </dependency>
 
 
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-wicket-test</artifactId>
+                <version>1.0.0</version>
+                <scope>test</scope>
+            </dependency>
+
         </dependencies>
 
     </dependencyManagement>
