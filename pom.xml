@@ -410,8 +410,8 @@
     </build>
 
     <scm>
-        <developerConnection>scm:svn:https://versjonskontroll.adeo.no/svn/nav-sbl/dialogarena/sporsmal-og-svar/trunk</developerConnection>
-        <url>https://versjonskontroll.adeo.no/wsvn/nav-sbl/dialogarena/sporsmal-og-svar/trunk</url>
+        <developerConnection>scm:git:ssh://git@stash.devillo.no:7999/dial/sporsmalogsvar.git</developerConnection>
+        <url>http://stash.devillo.no/projects/DIAL/repos/sporsmalogsvar/</url>
     </scm>
 
     <reporting>
