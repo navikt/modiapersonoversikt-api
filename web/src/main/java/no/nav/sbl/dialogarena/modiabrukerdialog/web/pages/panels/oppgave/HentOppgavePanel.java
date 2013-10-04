@@ -19,7 +19,6 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -48,6 +47,7 @@ public class HentOppgavePanel extends Panel {
 
     public HentOppgavePanel(String id) {
         super(id);
+        setOutputMarkupPlaceholderTag(true);
 //        Serializable temaAttr = getSession().getAttribute("valgtTema");
 //        Tema temaet = temaAttr != null ? Tema.valueOf(temaAttr.toString()) : null;
 //        this.tema = new Model<>(temaet);
