@@ -19,6 +19,4 @@ public class SoknadListe extends Liste<Soknad> {
     public WebMarkupContainer newListItem(String id, IModel<Soknad> model) {
         return new SoknadItem(id, model);
     }
-
-
 }

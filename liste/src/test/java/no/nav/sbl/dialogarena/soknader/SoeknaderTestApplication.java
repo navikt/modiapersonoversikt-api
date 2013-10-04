@@ -40,21 +40,8 @@ public class SoeknaderTestApplication extends WebApplication {
                                 .attribute("content", "IE=edge,chrome=1")
                                 .done())
                 .withResourcePacking(this.usesDeploymentConfig())
-                .addScripts(
-                        //                        BasePage.JS_RESOURCE,
-                        //                        ShortcutListenerResourceReference.get(), //TODO: Flytt til MODIA modul ?
-                        //                        KeyNavigationResourceReference.get(),    //TODO: Flytt til MODIA modul ?
-                        //                        Widget.JS_RESOURCE,
-                        //                        LamellPanel.JS_RESOURCE,
-                        //                        DatePicker.DATEPICKER_JS,
-                        //                        DateRangePicker.JS_REFERENCE,
-                        //                        JqueryTokenValueChangeBehavior.JS_REFERENCE,
-                        //                        ModigModalWindow.JS,
-                        EkspanderingsListe.JS_RESOURCE          //TODO: Flytt til MODIA modul ?
-                        //                        Liste.JS_RESOURCE,                       //TODO: Flytt til MODIA modul ?
-                        //                        DatePicker.JQUERY_PLACEHOLDER,
-                        //                        ModalErrorPanel.JS_RESOURCE
-                ).addCss(CSS_RESOURCE)
+                .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
+                .addCss(CSS_RESOURCE)
                 .configure(this);
     }
 }
