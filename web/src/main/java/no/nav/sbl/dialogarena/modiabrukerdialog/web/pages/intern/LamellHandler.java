@@ -10,7 +10,7 @@ import no.nav.modig.modia.lamell.LerretFactory;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.GenericLerret;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.Oversikt;
-import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.BrukerhenvendelserPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
 import org.apache.wicket.event.IEvent;
@@ -137,10 +137,11 @@ public class LamellHandler implements Serializable {
         return newLamellFactory(LAMELL_BRUKERHENVENDELSER, "H", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new BrukerhenvendelserPanel(id, fnrFromRequest, null)); //TODO: Missing MeldingService
+                return addLerretToListAndReturn(new Innboks(id, fnrFromRequest));
             }
         });
     }
+
 
     private Lerret addLerretToListAndReturn(Lerret lerret) {
         lerretList.add(lerret);

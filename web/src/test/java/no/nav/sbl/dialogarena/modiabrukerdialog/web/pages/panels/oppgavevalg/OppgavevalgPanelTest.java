@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgavevalg;
 
-import javax.inject.Inject;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
@@ -14,6 +13,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.inject.Inject;
 
 import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.containedInComponent;
@@ -30,7 +31,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class OppgavevalgPanelTest extends TestSecurityBaseClass {
 
     @Inject
-    private FluentWicketTester<?> fluentWicketTester;
+    private FluentWicketTester<?> wicket;
 
     private static final String OPPGAVEVALG = "oppgavevalg-link";
     private static final String LEGG_TILBAKE = "legg-tilbake-link";
@@ -40,14 +41,14 @@ public class OppgavevalgPanelTest extends TestSecurityBaseClass {
 
     @Test
     public void skalIkkeHaOppgavevalgNaarManIkkeHarPlukketOppgave() {
-        Component oppgavevalg = fluentWicketTester.goTo(Intern.class).get().component(ofType(OppgavevalgPanel.class));
+        Component oppgavevalg = wicket.goTo(Intern.class).get().component(ofType(OppgavevalgPanel.class));
         assertThat(oppgavevalg, thatIsInvisible());
     }
 
     @Test
     public void skalHaOppgavevalgNaarManHarPlukketOppgave() {
         plukkOppgave();
-        assertThat(fluentWicketTester.get().component(ofType(OppgavevalgPanel.class)), thatIsVisible());
+        assertThat(wicket.get().component(ofType(OppgavevalgPanel.class)), thatIsVisible());
     }
 
     @Test
@@ -71,7 +72,7 @@ public class OppgavevalgPanelTest extends TestSecurityBaseClass {
         plukkOppgave();
         trykkPaa(OPPGAVEVALG);
         trykkPaa(LEGG_TILBAKE);
-        assertThat(fluentWicketTester.get().component(ofType(LeggTilbakeForm.class)), thatIsVisible());
+        assertThat(wicket.get().component(ofType(LeggTilbakeForm.class)), thatIsVisible());
     }
 
     @Test
@@ -80,7 +81,7 @@ public class OppgavevalgPanelTest extends TestSecurityBaseClass {
         trykkPaa(OPPGAVEVALG);
         trykkPaa(LEGG_TILBAKE);
         trykkPaa(LUKK);
-        assertThat(fluentWicketTester.get().component(ofType(LeggTilbakeForm.class)), thatIsInvisible());
+        assertThat(wicket.get().component(ofType(LeggTilbakeForm.class)), thatIsInvisible());
     }
 
     @Test
@@ -88,27 +89,27 @@ public class OppgavevalgPanelTest extends TestSecurityBaseClass {
         plukkOppgave();
         trykkPaa(OPPGAVEVALG);
         trykkPaa(LEGG_TILBAKE);
-        assertThat(((AarsakVM) fluentWicketTester.get().component(ofType(LeggTilbakeForm.class)).getDefaultModelObject()).getValg().getTekst(),
+        assertThat(((AarsakVM) wicket.get().component(ofType(LeggTilbakeForm.class)).getDefaultModelObject()).getValg().getTekst(),
                 equalTo("Jeg er inhabil"));
     }
 
     private void plukkOppgave() {
-        fluentWicketTester.goTo(Intern.class).click().link(withId("plukk-oppgave"));
+        wicket.goTo(Intern.class).click().link(withId("plukk-oppgave"));
         if (!harValgtTema) {
-            fluentWicketTester.tester.executeAjaxEvent(fluentWicketTester.get()
+            wicket.tester.executeAjaxEvent(wicket.get()
                     .components(ofType(ListItem.class).and(containedInComponent(ofType(HentOppgavePanel.class)))).get(0), "click");
             harValgtTema = true;
         }
     }
 
     private void trykkPaa(String id) {
-        fluentWicketTester.tester.executeAjaxEvent(fluentWicketTester.get()
+        wicket.tester.executeAjaxEvent(wicket.get()
                 .component(both(containedInComponent(ofType(OppgavevalgPanel.class)))
                         .and(withId(id))), "click");
     }
 
     private Component oppgavevalgCompenentWithId(String id) {
-        return fluentWicketTester.get().component(both(containedInComponent(ofType(OppgavevalgPanel.class))).and(withId(id)));
+        return wicket.get().component(both(containedInComponent(ofType(OppgavevalgPanel.class))).and(withId(id)));
     }
 
 }

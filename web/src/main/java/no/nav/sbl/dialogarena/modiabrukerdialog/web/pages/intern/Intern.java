@@ -5,7 +5,6 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
@@ -19,6 +18,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForl
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.timeout.TimeoutBoks;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
+import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -63,8 +63,7 @@ public class Intern extends BasePage {
         this.answer = new SjekkForlateSideAnswer();
         this.modalWindow = createModalWindow("modal");
         lamellHandler = new LamellHandler();
-        instantiateComponents(pageParameters.get("fnr").toString(null),
-                Optional.<String>optional(pageParameters.get("oppgaveId").toString(null)));
+        instantiateComponents(pageParameters.get("fnr").toString(null));
     }
 
     @Override
@@ -76,7 +75,7 @@ public class Intern extends BasePage {
     public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
         PageParameters pageParameters = new PageParameters();
         pageParameters.set("fnr", query);
-        handleNewFnrFoundEvent(target, pageParameters, Intern.class);
+        handleRedirect(target, pageParameters, Intern.class);
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
@@ -84,7 +83,7 @@ public class Intern extends BasePage {
         PageParameters pageParameters = new PageParameters();
         pageParameters.set("fnr", query);
         getSession().setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, true);
-        handleNewFnrFoundEvent(target, pageParameters, Intern.class);
+        handleRedirect(target, pageParameters, Intern.class);
     }
 
     @RunOnEvents(GOTO_HENT_PERSONPAGE)
@@ -122,37 +121,31 @@ public class Intern extends BasePage {
 		send(getPage(), Broadcast.BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
 	}
 
-	private void instantiateComponents(String fnrFromRequest, Optional<String> oppgaveIdFromRequest) {
+	private void instantiateComponents(String fnrFromRequest) {
         add(
                 new Button("toggle-sok"),
                 new HentPersonPanel("searchPanel"),
                 new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 lamellHandler.createLamellPanel("lameller", fnrFromRequest),
-                new SideBar("sideBar", fnrFromRequest, oppgaveIdFromRequest).setVisible(true),
+                new SideBar("sideBar", fnrFromRequest).setVisible(true),
                 new TimeoutBoks("timeoutBoks", fnrFromRequest),
-                createNullstillLink(modalWindow),
+                createNullstillLink(),
                 modalWindow
         );
     }
 
-    private AjaxLink<Boolean> createNullstillLink(final ModiaModalWindow modalWindow) {
-        return new AjaxLink<Boolean>("nullstill") {
+    private AjaxLink<?> createNullstillLink() {
+        return new AjaxLink<Void>("nullstill") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                modalWindow.setRedirectClass(HentPersonPage.class);
-                modalWindow.setPageParameters(new PageParameters());
-                if (lamellHandler.hasUnsavedChanges()) {
-                    modalWindow.show(target);
-                } else {
-                    modalWindow.redirect();
-                }
+                handleRedirect(target, new PageParameters(), HentPersonPage.class);
             }
         };
     }
 
     private ModiaModalWindow createModalWindow(String id) {
-        final ModiaModalWindow modiaModalWindow = new ModiaModalWindow(id);
+        ModiaModalWindow modiaModalWindow = new ModiaModalWindow(id);
         modiaModalWindow.setInitialHeight(280);
         modiaModalWindow.setInitialWidth(600);
         modiaModalWindow.setContent(new SjekkForlateSide(modiaModalWindow.getContentId(), modiaModalWindow, this.answer));
@@ -161,8 +154,8 @@ public class Intern extends BasePage {
         return modiaModalWindow;
     }
 
-    private void handleNewFnrFoundEvent(AjaxRequestTarget target, PageParameters pageParameters, Class clazz) {
-        modalWindow.setRedirectClass(clazz);
+    private void handleRedirect(AjaxRequestTarget target, PageParameters pageParameters, Class<? extends Page> redirectTo) {
+        modalWindow.setRedirectClass(redirectTo);
         modalWindow.setPageParameters(pageParameters);
         if (lamellHandler.hasUnsavedChanges()) {
             modalWindow.show(target);
@@ -175,7 +168,7 @@ public class Intern extends BasePage {
         return new ModigModalWindow.WindowClosedCallback() {
             @Override
             public void onClose(AjaxRequestTarget ajaxRequestTarget) {
-                if (answer.getAnswerType() == DISCARD) {
+                if (answer.is(DISCARD)) {
                     modalWindow.redirect();
                 }
                 ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());

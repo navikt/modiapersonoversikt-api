@@ -8,8 +8,8 @@ public class SjekkForlateSideAnswer implements Serializable {
 
     private AnswerType answerType;
 
-    public AnswerType getAnswerType() {
-        return answerType;
+    public boolean is(AnswerType type) {
+        return answerType == type;
     }
 
     public void setAnswerType(AnswerType answerType) {

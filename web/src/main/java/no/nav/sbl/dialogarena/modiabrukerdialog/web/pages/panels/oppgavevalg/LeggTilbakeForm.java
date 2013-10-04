@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgavevalg;
 
-import javax.inject.Inject;
-
-import no.nav.modig.lang.option.Optional;
+import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -13,6 +12,9 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.CompoundPropertyModel;
+
+import javax.inject.Inject;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgavevalg.Aarsak.INHABIL;
 
@@ -21,17 +23,18 @@ public class LeggTilbakeForm extends Form<AarsakVM> {
     @Inject
     OppgavebehandlingPortType service;
 
-    public LeggTilbakeForm(String id, final Optional<String> oppgaveId) {
+    private String oppgaveId;
+
+    public LeggTilbakeForm(String id) {
         super(id);
-        final LeggTilbakeModell model = new LeggTilbakeModell(new AarsakVM(INHABIL));
-        setDefaultModel(model);
+        setModel(new CompoundPropertyModel<>(new AarsakVM(INHABIL)));
         setOutputMarkupId(true);
         final FeedbackPanel feedback = new FeedbackPanel("feedback");
         feedback.setOutputMarkupId(true);
         AjaxLink<Void> lukk = new AjaxLink<Void>("lukk") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                LeggTilbakeForm.this.setVisible(false);
+                LeggTilbakeForm.this.setVisibilityAllowed(false);
                 target.add(LeggTilbakeForm.this);
             }
         };
@@ -43,9 +46,9 @@ public class LeggTilbakeForm extends Form<AarsakVM> {
         AjaxSubmitLink leggTilbake = new AjaxSubmitLink("submit") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                String aarsak = model.getAarsakForTilbakeleggelse();
+                String aarsak = getModelObject().getAarsakForTilbakeleggelse();
                 if (aarsak != null) {
-                    service.leggTilbakeOppgave(oppgaveId.get(), aarsak);
+                    service.leggTilbakeOppgave(oppgaveId, aarsak);
                     setResponsePage(HentPersonPage.class);
                 } else {
                     info("Du må angi hvorfor du legger tilbake oppgaven");
@@ -55,4 +58,10 @@ public class LeggTilbakeForm extends Form<AarsakVM> {
         };
         add(feedback, valg, lukk, annenAarsakTekst, leggTilbake);
     }
+
+    @RunOnEvents(Modus.BESVARE)
+    public void setOppgaveId(AjaxRequestTarget target, String oppgaveId) {
+        this.oppgaveId = oppgaveId;
+    }
+
 }

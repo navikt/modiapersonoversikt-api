@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave;
 
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.InternBesvaremodus;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.informasjon.WSPlukkOppgaveResultat;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -19,6 +19,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import javax.inject.Inject;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -32,16 +33,24 @@ public class HentOppgavePanel extends Panel {
     OppgavebehandlingPortType service;
 
     private final WebMarkupContainer temavelger;
-    private final Model<Tema> tema;
+//    private final Model<Tema> tema;
+    private final IModel<Tema> tema = new AbstractReadOnlyModel<Tema>() {
+        @Override
+        public Tema getObject() {
+            Serializable temaAttr = getSession().getAttribute("valgtTema");
+            return temaAttr != null ? Tema.valueOf(temaAttr.toString()) : null;
+        }
+    };
+
     private Model<Boolean> visTema = new Model<>(false);
 
     ModigModalWindow modalWindow = new ModigModalWindow("tomForOppgaverMelding");
 
     public HentOppgavePanel(String id) {
         super(id);
-        Serializable temaAttr = getSession().getAttribute("valgtTema");
-        Tema temaet = temaAttr != null ? Tema.valueOf(temaAttr.toString()) : null;
-        this.tema = new Model<>(temaet);
+//        Serializable temaAttr = getSession().getAttribute("valgtTema");
+//        Tema temaet = temaAttr != null ? Tema.valueOf(temaAttr.toString()) : null;
+//        this.tema = new Model<>(temaet);
         setDefaultModel(this.tema);
         setOutputMarkupId(true);
 
@@ -53,18 +62,18 @@ public class HentOppgavePanel extends Panel {
         temavelger.add(visibleIf(visTema));
         add(temavelger, modalWindow);
 
-        add(new AjaxLink("plukk-oppgave") {
+        add(new AjaxLink<Void>("plukk-oppgave") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 if (HentOppgavePanel.this.tema.getObject() != null) {
                     valgteTema(HentOppgavePanel.this.tema.getObject(), target);
                 } else {
-                    visTema.setObject(!visTema.getObject());
+                    visTema.setObject(true);
                     target.add(temavelger);
                 }
             }
         });
-        add(new AjaxLink("velg-tema") {
+        add(new AjaxLink<Void>("velg-tema") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 visTema.setObject(!visTema.getObject());
@@ -99,7 +108,6 @@ public class HentOppgavePanel extends Panel {
                 @Override
                 protected void onEvent(AjaxRequestTarget target) {
                     visTema.setObject(false);
-                    tema.setObject(item.getModelObject());
                     HentOppgavePanel.this.valgteTema(item.getModelObject(), target);
                     target.add(temavelger);
                 }
@@ -107,8 +115,8 @@ public class HentOppgavePanel extends Panel {
         }
     }
 
-    public void valgteTema(Tema tema, AjaxRequestTarget target) {
-        WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema.toString());
+    private void valgteTema(Tema tema, AjaxRequestTarget target) {
+        final WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema.toString());
         if (oppgaveResultat == null) {
             modalWindow.setContent(
                 new TomtForOppgaverPanel(modalWindow.getContentId(), modalWindow));
@@ -118,9 +126,6 @@ public class HentOppgavePanel extends Panel {
 
         getSession().setAttribute("valgtTema", tema);
 
-        PageParameters pageParameters = new PageParameters();
-        pageParameters.add("fnr", oppgaveResultat.getFodselsnummer());
-        pageParameters.add("oppgaveId", oppgaveResultat.getOppgaveId());
-        setResponsePage(Intern.class, pageParameters);
+        setResponsePage(InternBesvaremodus.class, new PageParameters().add("fnr", oppgaveResultat.getFodselsnummer()).add("oppgaveId", oppgaveResultat.getOppgaveId()));
     }
 }

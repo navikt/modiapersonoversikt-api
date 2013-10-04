@@ -24,6 +24,7 @@ import org.springframework.context.annotation.Profile;
 import javax.jws.WebParam;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
+
 import java.math.BigInteger;
 
 @Configuration
@@ -43,11 +44,7 @@ public class SoknaderConfig {
             return new SakOgBehandlingPortType() {
                 @Override
                 public FinnSakOgBehandlingskjedeListeResponse finnSakOgBehandlingskjedeListe(@WebParam(name = "request", targetNamespace = "") FinnSakOgBehandlingskjedeListeRequest finnSakOgBehandlingskjedeListeRequest) {
-
-                    FinnSakOgBehandlingskjedeListeResponse response = new FinnSakOgBehandlingskjedeListeResponse();
-
-
-                    return response;
+                    return new FinnSakOgBehandlingskjedeListeResponse();
                 }
 
                 @Override
@@ -99,7 +96,7 @@ public class SoknaderConfig {
                         sak.withBehandlingskjede(behandlingskjede);
                         response.withSak(sak);
                     } catch (DatatypeConfigurationException e) {
-                        logger.debug(e.getMessage(), e);
+                        throw new RuntimeException(e.getMessage(), e);
                     }
 
                     return response;

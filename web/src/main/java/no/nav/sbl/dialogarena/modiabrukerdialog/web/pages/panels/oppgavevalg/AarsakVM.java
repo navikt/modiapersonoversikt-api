@@ -46,4 +46,11 @@ public class AarsakVM implements Serializable {
         this.tekst = tekst;
     }
 
+    public String getAarsakForTilbakeleggelse() {
+        if (valg == ANNEN) {
+            return getAnnenAarsakTekst();
+        }
+        return valg.toString();
+    }
+
 }

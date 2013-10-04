@@ -21,6 +21,7 @@ import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.InternBesvaremodus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
@@ -35,6 +36,7 @@ import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+
 import java.util.Locale;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
@@ -126,7 +128,7 @@ public class WicketApplication extends WebApplication {
                 .configure(this);
 
         mountPage("/person/${fnr}", Intern.class);
-        mountPage("/person/${fnr}/besvaresporsmal/${oppgaveId}", Intern.class);
+        mountPage("/person/${fnr}/besvaresporsmal/${oppgaveId}", InternBesvaremodus.class);
         mountPage("internal/selftest", SelfTestPage.class);
 
         setSpringComponentInjector();
