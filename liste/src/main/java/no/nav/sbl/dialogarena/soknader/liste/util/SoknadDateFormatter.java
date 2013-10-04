@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.soknader.widget.util;
+package no.nav.sbl.dialogarena.soknader.liste.util;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
