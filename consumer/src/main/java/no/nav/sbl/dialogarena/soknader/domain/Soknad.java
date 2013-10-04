@@ -16,21 +16,17 @@ import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.MOTTATT
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.NYLIG_FERDIG;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UNDER_BEHANDLING;
 
-//CHECKSTYLE:OFF
 public class Soknad implements Serializable {
-//CHECKSTYLE:ON
     public static final int AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED = 28;
 
     public enum SoknadStatus {MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG, GAMMEL_FERDIG}
 
     private DateTime innsendtDato;
+    private String tittel;
+    private SoknadStatus soknadStatus;
     private DateTime underBehandlingStartDato;
     private DateTime ferdigDato;
     private String normertBehandlingsTid;
-    private String tittel;
-    private SoknadStatus soknadStatus;
-
-    private Soknad() { }
 
     public static Soknad transformToSoeknad(Behandlingskjede behandlingskjede) {
         return soeknadTransformer.transform(behandlingskjede);
