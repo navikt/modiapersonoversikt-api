@@ -91,7 +91,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-integrasjonsutils</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>0.0.2</version>
             </dependency>
 
             <dependency>
