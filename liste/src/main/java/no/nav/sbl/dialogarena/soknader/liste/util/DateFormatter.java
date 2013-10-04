@@ -5,7 +5,7 @@ import org.joda.time.format.DateTimeFormat;
 
 import java.util.Locale;
 
-public class SoknadDateFormatter {
+public class DateFormatter {
 
     public static String printShortDate(DateTime dateTime) {
         if (dateTime == null) {

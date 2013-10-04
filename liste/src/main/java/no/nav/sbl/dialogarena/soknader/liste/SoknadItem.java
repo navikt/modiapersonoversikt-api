@@ -9,7 +9,7 @@ import org.apache.wicket.model.Model;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.sbl.dialogarena.soknader.liste.util.SoknadDateFormatter.printShortDate;
+import static no.nav.sbl.dialogarena.soknader.liste.util.DateFormatter.printShortDate;
 
 public class SoknadItem extends Panel {
 
@@ -19,15 +19,13 @@ public class SoknadItem extends Panel {
         String innsendtDato = printShortDate(soknad.getInnsendtDato());
         String behandlingStart = printShortDate(soknad.getInnsendtDato());
         String ferdigdato = printShortDate(soknad.getFerdigDato());
-        add(new Label("heading", soknad.getTittel()),
+        add(
+                new Label("heading", soknad.getTittel()),
                 new Label("innsendtDato", "Innsendt " + innsendtDato).add(visibleIf(not(isEmptyString(Model.of(innsendtDato))))),
                 new Label("behandlingStart", "Under behandling siden  " + behandlingStart).add(visibleIf(not(isEmptyString(Model.of(behandlingStart))))),
                 new Label("behandlingsTid", "Normert behandlingstid " + soknad.getNormertBehandlingsTid()).add(visibleIf(not(isEmptyString(Model.of(soknad.getNormertBehandlingsTid()))))),
                 new Label("ferdigBehandlet", "Ferdig behandlet " + ferdigdato).add(visibleIf(not(isEmptyString(Model.of(ferdigdato)))))
-
         );
-
-
     }
 
 }
