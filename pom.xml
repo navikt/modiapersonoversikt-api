@@ -741,10 +741,9 @@
         </plugins>
     </build>
     <scm>
-        <developerConnection>
-            scm:svn:https://versjonskontroll.adeo.no/svn/nav-sbl/dialogarena/modiabrukerdialog/branches/leveranse1
-        </developerConnection>
-        <url>https://versjonskontroll.adeo.no/wsvn/nav-sbl/dialogarena/modiabrukerdialog/branches/leveranse1</url>
+        <developerConnection>scm:git:ssh://git@stash.devillo.no:7999/dial/modiabrukerdialog.git</developerConnection>
+        <url>http://stash.devillo.no:7990/scm/dial/modiabrukerdialog.git</url>
+        <tag>HEAD</tag>
     </scm>
 
     <profiles>
