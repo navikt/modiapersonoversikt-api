@@ -32,7 +32,7 @@ public class SoknadMockBuilder {
     }
 
     public SoknadMockBuilder withUnderBehandlingDato(DateTime underBehandlingDato) {
-        when(soknad.getUnderBehandlingDato()).thenReturn(underBehandlingDato);
+        when(soknad.getUnderBehandlingStartDato()).thenReturn(underBehandlingDato);
         return this;
     }
 
@@ -42,7 +42,7 @@ public class SoknadMockBuilder {
     }
 
     public SoknadMockBuilder withMottattDato(DateTime mottattDato) {
-        when(soknad.getMottattDato()).thenReturn(mottattDato);
+        when(soknad.getInnsendtDato()).thenReturn(mottattDato);
         return this;
     }
 
@@ -53,11 +53,11 @@ public class SoknadMockBuilder {
     private Soknad createDefaultSoknad() {
         Soknad mockSoknad = mock(Soknad.class, withSettings().serializable());
         when(mockSoknad.getTittel()).thenReturn("title-MOCK");
-        when(mockSoknad.getSoknadStatus()).thenReturn(SoknadStatus.UKJENT);
+        when(mockSoknad.getSoknadStatus()).thenReturn(SoknadStatus.MOTTATT);
         when(mockSoknad.getNormertBehandlingsTid()).thenReturn("10 dager-MOCK");
-        when(mockSoknad.getUnderBehandlingDato()).thenReturn(null);
+        when(mockSoknad.getUnderBehandlingStartDato()).thenReturn(null);
         when(mockSoknad.getFerdigDato()).thenReturn(null);
-        when(mockSoknad.getMottattDato()).thenReturn(DateTime.now());
+        when(mockSoknad.getInnsendtDato()).thenReturn(DateTime.now());
         return mockSoknad;
     }
 }

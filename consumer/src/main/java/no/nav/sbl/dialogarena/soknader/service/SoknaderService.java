@@ -32,14 +32,9 @@ public class SoknaderService {
     }
 
     private List<Soknad> convertSakToSoknader(Sak sak) {
-        String temaKodeRef = sak.getTema().getKodeRef();
-        //        String temaKodeverkRef = sak.getTema().getKodeverksRef();
-
-        //TODO: Gjøre oppslag mot kodeverk, og finne sakstemaet her før implementasjon mot sak og behandling
-        String tittel = temaKodeRef;
         List<Soknad> soknadList = new ArrayList<>();
         for (Behandlingskjede behandlingskjede : sak.getBehandlingskjede()) {
-            soknadList.add(transformToSoeknad(behandlingskjede, tittel));
+            soknadList.add(transformToSoeknad(behandlingskjede));
         }
         return soknadList;
     }

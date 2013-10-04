@@ -12,8 +12,8 @@ import static java.util.Calendar.DAY_OF_YEAR;
 import static java.util.Calendar.getInstance;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.GAMMEL_FERDIG;
+import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.MOTTATT;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.NYLIG_FERDIG;
-import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UKJENT;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UNDER_BEHANDLING;
 
 //CHECKSTYLE:OFF
@@ -21,10 +21,10 @@ public class Soknad implements Serializable {
 //CHECKSTYLE:ON
     public static final int AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED = 28;
 
-    public enum SoknadStatus {UKJENT, MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG, GAMMEL_FERDIG}
+    public enum SoknadStatus {MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG, GAMMEL_FERDIG}
 
-    private DateTime mottattDato;
-    private DateTime underBehandlingDato;
+    private DateTime innsendtDato;
+    private DateTime underBehandlingStartDato;
     private DateTime ferdigDato;
     private String normertBehandlingsTid;
     private String tittel;
@@ -32,10 +32,8 @@ public class Soknad implements Serializable {
 
     private Soknad() { }
 
-    public static Soknad transformToSoeknad(Behandlingskjede behandlingskjede, String tittel) {
-        Soknad soknad = soeknadTransformer.transform(behandlingskjede);
-        soknad.tittel = tittel;
-        return soknad;
+    public static Soknad transformToSoeknad(Behandlingskjede behandlingskjede) {
+        return soeknadTransformer.transform(behandlingskjede);
     }
 
     public String getTittel() {
@@ -50,16 +48,16 @@ public class Soknad implements Serializable {
         return normertBehandlingsTid;
     }
 
-    public DateTime getUnderBehandlingDato() {
-        return underBehandlingDato;
+    public DateTime getUnderBehandlingStartDato() {
+        return underBehandlingStartDato;
     }
 
     public DateTime getFerdigDato() {
         return ferdigDato;
     }
 
-    public DateTime getMottattDato() {
-        return mottattDato;
+    public DateTime getInnsendtDato() {
+        return innsendtDato;
     }
 
     private static Transformer<Behandlingskjede, Soknad> soeknadTransformer = new Transformer<Behandlingskjede, Soknad>() {
@@ -67,10 +65,11 @@ public class Soknad implements Serializable {
         @Override
         public Soknad transform(Behandlingskjede behandlingskjede) {
             Soknad soknad = new Soknad();
-            soknad.normertBehandlingsTid = getNormertTidString(behandlingskjede);
-            soknad.mottattDato = dateTimeTransformer().transform(behandlingskjede.getStart());
-            soknad.underBehandlingDato = optional(behandlingskjede.getStartNAVtid()).map(dateTimeTransformer()).getOrElse(null);
+            soknad.innsendtDato = dateTimeTransformer().transform(behandlingskjede.getStart());
+            soknad.tittel =  behandlingskjede.getBehandlingskjedetype().getKodeverksRef();
+            soknad.underBehandlingStartDato = optional(behandlingskjede.getStartNAVtid()).map(dateTimeTransformer()).getOrElse(null);
             soknad.ferdigDato = evaluateFerdigDato(behandlingskjede);
+            soknad.normertBehandlingsTid = getNormertTidString(behandlingskjede);
             evaluateAndSetStatus(soknad);
             return soknad;
         }
@@ -83,7 +82,7 @@ public class Soknad implements Serializable {
         } else if (soeknadHasUnderBehandlingDato(soknad)) {
             soknad.soknadStatus = UNDER_BEHANDLING;
         } else {
-            soknad.soknadStatus = UKJENT;
+            soknad.soknadStatus = MOTTATT;
         }
     }
 
@@ -100,7 +99,7 @@ public class Soknad implements Serializable {
     }
 
     private static boolean soeknadHasUnderBehandlingDato(Soknad soknad) {
-        return soknad.getUnderBehandlingDato() != null;
+        return soknad.getUnderBehandlingStartDato() != null;
     }
 
     private static DateTime evaluateFerdigDato(Behandlingskjede behandlingskjede) {

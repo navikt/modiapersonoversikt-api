@@ -57,7 +57,7 @@ public class SoknaderWidget extends InfoFeedWidget {
         }
 
         private InfoPanelVM populateInfoPanel(String panelId, Soknad soknad) {
-            return new InfoPanelVM(panelId, SOKNAD, printShortDate(soknad.getMottattDato()), soknad.getTittel(), populateMetaData(soknad), setInfoPanelStatus(soknad));
+            return new InfoPanelVM(panelId, SOKNAD, printShortDate(soknad.getInnsendtDato()), soknad.getTittel(), populateMetaData(soknad), setInfoPanelStatus(soknad));
         }
 
         private InfoPanelVM.Status setInfoPanelStatus(Soknad soknad) {
@@ -68,7 +68,6 @@ public class SoknaderWidget extends InfoFeedWidget {
                 case NYLIG_FERDIG:
                 case GAMMEL_FERDIG:
                     return null;
-                case UKJENT:
                 default:
                     return ERROR;
             }
@@ -81,13 +80,12 @@ public class SoknaderWidget extends InfoFeedWidget {
                             "Normal saksbehandlingstid er " + soknad.getNormertBehandlingsTid());
                 case UNDER_BEHANDLING:
                     return asList(
-                            "Under behandling siden " + printShortDate(soknad.getUnderBehandlingDato()),
+                            "Under behandling siden " + printShortDate(soknad.getUnderBehandlingStartDato()),
                             "Normal saksbehandlingstid er " + soknad.getNormertBehandlingsTid());
                 case NYLIG_FERDIG:
                 case GAMMEL_FERDIG:
                     return asList(
                             "Ferdig behandlet " + printShortDate(soknad.getFerdigDato()));
-                case UKJENT:
                 default:
                     return new ArrayList<>();
             }
