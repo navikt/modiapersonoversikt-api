@@ -21,7 +21,7 @@ public class Soknad implements Serializable {
 
     public enum SoknadStatus {MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG, GAMMEL_FERDIG}
 
-    public static Transformer<Soknad, SoknadStatus> SOKNAD_STATUS_TRANSFORMER = new Transformer<Soknad, SoknadStatus>() {
+    public static final Transformer<Soknad, SoknadStatus> SOKNAD_STATUS_TRANSFORMER = new Transformer<Soknad, SoknadStatus>() {
         @Override
         public SoknadStatus transform(Soknad soknad) {
             return soknad.getSoknadStatus();
