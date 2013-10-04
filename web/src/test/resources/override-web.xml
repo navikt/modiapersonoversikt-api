@@ -13,9 +13,9 @@
             , personsokDefault
             , brukerprofilDefault
             , behandleBrukerprofilDefault
-            , brukerhenvendelserDefaultWithoutCNCheck
+            , brukerhenvendelserTest
             , henvendelseinnsynTest
-            , oppgavebehandlingDefault
+            , oppgavebehandlingTest
             , soknaderTest
         </param-value>
     </context-param>
