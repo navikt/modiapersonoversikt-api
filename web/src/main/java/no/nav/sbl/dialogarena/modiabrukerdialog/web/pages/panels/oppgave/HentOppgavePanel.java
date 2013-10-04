@@ -48,6 +48,7 @@ public class HentOppgavePanel extends Panel {
 
     public HentOppgavePanel(String id) {
         super(id);
+        setOutputMarkupPlaceholderTag(true);
 //        Serializable temaAttr = getSession().getAttribute("valgtTema");
 //        Tema temaet = temaAttr != null ? Tema.valueOf(temaAttr.toString()) : null;
 //        this.tema = new Model<>(temaet);
