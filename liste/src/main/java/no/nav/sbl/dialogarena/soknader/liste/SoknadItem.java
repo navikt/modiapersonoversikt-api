@@ -24,7 +24,8 @@ public class SoknadItem extends Panel {
                 new Label("innsendtDato", "Innsendt " + innsendtDato).add(visibleIf(not(isEmptyString(Model.of(innsendtDato))))),
                 new Label("behandlingStart", "Under behandling siden  " + behandlingStart).add(visibleIf(not(isEmptyString(Model.of(behandlingStart))))),
                 new Label("behandlingsTid", "Normert behandlingstid " + soknad.getNormertBehandlingsTid()).add(visibleIf(not(isEmptyString(Model.of(soknad.getNormertBehandlingsTid()))))),
-                new Label("ferdigBehandlet", "Ferdig behandlet " + ferdigdato).add(visibleIf(not(isEmptyString(Model.of(ferdigdato)))))
+                new Label("ferdigBehandlet", "Ferdig behandlet " + ferdigdato).add(visibleIf(not(isEmptyString(Model.of(ferdigdato))))),
+                new Label("status", soknad.getSoknadStatus())
         );
     }
 

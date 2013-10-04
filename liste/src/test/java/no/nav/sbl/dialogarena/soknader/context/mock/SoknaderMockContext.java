@@ -34,11 +34,11 @@ public class SoknaderMockContext {
     private List<Soknad> soknaderDataSetMocked() {
         return asList(
                 createMottattSoknad(),
+                createMottattSoknadUtenBehandlingsTid(),
+                createMottattSoknadUtenInnsendtDato(),
                 createUnderBehandlingSoknad(),
                 createNyligFerdigSoknad(),
-                createGammelFerdigSoknad(),
-                createMottattSoknadUtenBehandlingsTid(),
-                createMottattSoknadUtenInnsendtDato()
+                createGammelFerdigSoknad()
         );
     }
 

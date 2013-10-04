@@ -12,6 +12,8 @@ import org.springframework.context.ApplicationContext;
 
 import javax.inject.Inject;
 
+import static no.nav.sbl.dialogarena.soknader.liste.SoknadListe.CSS_RESOURCE;
+
 public class SoeknaderTestApplication extends WebApplication {
 
     @Inject
@@ -52,6 +54,7 @@ public class SoeknaderTestApplication extends WebApplication {
                         //                        Liste.JS_RESOURCE,                       //TODO: Flytt til MODIA modul ?
                         //                        DatePicker.JQUERY_PLACEHOLDER,
                         //                        ModalErrorPanel.JS_RESOURCE
-                ).configure(this);
+                ).addCss(CSS_RESOURCE)
+                .configure(this);
     }
 }
