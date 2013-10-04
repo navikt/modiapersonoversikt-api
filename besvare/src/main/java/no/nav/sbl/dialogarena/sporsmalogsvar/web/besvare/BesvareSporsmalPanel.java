@@ -25,21 +25,20 @@ import org.apache.wicket.validation.validator.StringValidator;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelsestype.SPORSMAL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelsestype.SVAR;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
 
 public class BesvareSporsmalPanel extends Panel {
 
     @Inject
     private BesvareService service;
 
-    private TidligereDialog tidligereDialog;
     private SporsmalDetaljer sporsmalDetaljer;
+    private TidligereDialog tidligereDialog;
 
     private String oppgaveId;
 
@@ -47,16 +46,16 @@ public class BesvareSporsmalPanel extends Panel {
         super(id);
         setOutputMarkupId(true);
 
-        LoadableDetachableModel<BesvareSporsmalDetaljer> ldm = new LoadableDetachableModel<BesvareSporsmalDetaljer>() {
+        LoadableDetachableModel<BesvareSporsmalDetaljer> besvareSporsmalDetaljer = new LoadableDetachableModel<BesvareSporsmalDetaljer>() {
             @Override
             protected BesvareSporsmalDetaljer load() {
                 return service.hentDetaljer(fnr, oppgaveId);
             }
         };
-        setDefaultModel(new CompoundPropertyModel<>(ldm));
+        setDefaultModel(new CompoundPropertyModel<Object>(besvareSporsmalDetaljer));
 
-        tidligereDialog = new TidligereDialog("tidligereDialog");
         sporsmalDetaljer = new SporsmalDetaljer("sporsmal");
+        tidligereDialog = new TidligereDialog("tidligereDialog");
         add(
                 new SvarForm("svar"),
                 sporsmalDetaljer,
@@ -83,6 +82,7 @@ public class BesvareSporsmalPanel extends Panel {
 
             final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
             feedbackPanel.setOutputMarkupId(true);
+
             add(
                     new Label("tema"),
                     new CheckBox("svar.sensitiv"),
@@ -96,9 +96,9 @@ public class BesvareSporsmalPanel extends Panel {
                             service.besvareSporsmal(svar);
 
                             Sporsmal sporsmal = (Sporsmal) sporsmalDetaljer.getDefaultModelObject();
-                            tidligereDialog.prependHenvendelse(new Henvendelse(SPORSMAL, sporsmal.getSendtDato(), sporsmal.getFritekst()));
+                            tidligereDialog.prependHenvendelse(new Henvendelse(INNGAENDE, sporsmal.getSendtDato(), sporsmal.getFritekst()));
 
-                            Henvendelse svarkvittering = new Henvendelse(SVAR, DateTime.now(), svar.fritekst);
+                            Henvendelse svarkvittering = new Henvendelse(UTGAENDE, DateTime.now(), svar.fritekst);
                             svarkvittering.tidligereHenvendelse.setObject(false);
                             tidligereDialog.prependHenvendelse(svarkvittering);
 

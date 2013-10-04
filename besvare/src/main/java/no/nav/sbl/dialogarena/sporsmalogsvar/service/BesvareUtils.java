@@ -13,6 +13,9 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.Map;
 
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
+
 public class BesvareUtils {
 
     public static final Transformer<Svar, WSSvar> TIL_WSSVAR = new Transformer<Svar, WSSvar>() {
@@ -54,7 +57,8 @@ public class BesvareUtils {
                 throw new RuntimeException("Kunne ikke lese ut behandlingsresultat", e);
             }
             String fritekst = behandlingsresultat.get("fritekst");
-            return new Henvendelse(Henvendelsestype.valueOf(wsHenvendelse.getHenvendelseType()), wsHenvendelse.getOpprettetDato(), fritekst);
+            return new Henvendelse(wsHenvendelse.getHenvendelseType().equals("SPORSMAL") ? INNGAENDE : UTGAENDE,
+                    wsHenvendelse.getOpprettetDato(), fritekst);
         }
     };
 
