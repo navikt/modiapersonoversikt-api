@@ -21,6 +21,13 @@ public class Soknad implements Serializable {
 
     public enum SoknadStatus {MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG, GAMMEL_FERDIG}
 
+    public static Transformer<Soknad, SoknadStatus> SOKNAD_STATUS_TRANSFORMER = new Transformer<Soknad, SoknadStatus>() {
+        @Override
+        public SoknadStatus transform(Soknad soknad) {
+            return soknad.getSoknadStatus();
+        }
+    };
+
     private DateTime innsendtDato;
     private String tittel;
     private SoknadStatus soknadStatus;
@@ -130,5 +137,4 @@ public class Soknad implements Serializable {
         timeFromSoeknad.add(DAY_OF_YEAR, AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED);
         return timeFromSoeknad.after(getInstance());
     }
-
 }

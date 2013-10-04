@@ -65,7 +65,7 @@ public class SoknaderServiceTest {
     }
 
     private XMLGregorianCalendar createXmlGregorianCalander() throws Exception {
-        return DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().toGregorianCalendar());
+        return DatatypeFactory.newInstance().newXMLGregorianCalendar(DateTime.now().toGregorianCalendar());
     }
 
     private Behandlingstid createNormertBehandlingstid() {

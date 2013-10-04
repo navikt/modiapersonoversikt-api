@@ -13,6 +13,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.sort;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.equalAnyOf;
+import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SOKNAD_STATUS_TRANSFORMER;
+import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.MOTTATT;
+import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.NYLIG_FERDIG;
+import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UNDER_BEHANDLING;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.transformToSoeknad;
 
 public class SoknaderService {
@@ -27,7 +34,11 @@ public class SoknaderService {
             soknadList.addAll(convertSakToSoknader(sak));
         }
         sort(soknadList, new SoknadComparator());
-        return soknadList;
+        return removeGamleFerdigeFromCollection(soknadList);
+    }
+
+    private List<Soknad> removeGamleFerdigeFromCollection(List<Soknad> soknadList) {
+        return on(soknadList).filter(where(SOKNAD_STATUS_TRANSFORMER, equalAnyOf(MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG))).collect();
     }
 
     private FinnSakOgBehandlingskjedeListeRequest createRequest(String aktoerId) {
