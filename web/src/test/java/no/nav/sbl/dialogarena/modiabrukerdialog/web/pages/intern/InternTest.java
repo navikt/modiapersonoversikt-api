@@ -8,7 +8,7 @@ import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare.BesvareSporsmalPanel;
 import org.apache.wicket.ajax.AjaxRequestHandler;
@@ -65,15 +65,15 @@ public class InternTest extends TestSecurityBaseClass {
     public void vedUlagredeEndringerOgRefreshSkalViseModaldialog() {
         wicket.goTo(Intern.class, with().param("fnr", "12037649749"));
         Intern intern = (Intern) wicket.tester.getLastRenderedPage();
-        ModiaModalWindow modal = mock(ModiaModalWindow.class);
+        RedirectModalWindow redirectPopup = mock(RedirectModalWindow.class);
         LamellHandler lamellHandler = mock(LamellHandler.class);
-        on(intern).setFieldValue("modalWindow", modal);
+        on(intern).setFieldValue("redirectPopup", redirectPopup);
         on(intern).setFieldValue("lamellHandler", lamellHandler);
         when(lamellHandler.hasUnsavedChanges()).thenReturn(true);
         AjaxRequestTarget target = new AjaxRequestHandler(intern);
         intern.refreshKjerneinfo(target, "");
-        verify(modal, times(1)).show(target);
-        verify(modal, times(0)).redirect();
+        verify(redirectPopup, times(1)).show(target);
+        verify(redirectPopup, times(0)).redirect();
 
     }
 
@@ -81,15 +81,15 @@ public class InternTest extends TestSecurityBaseClass {
     public void vedIngenUlagredeEndringerOgRefreshSkalIkkeViseModaldialog() {
         wicket.goTo(Intern.class, with().param("fnr", "12037649749"));
         Intern intern = (Intern) wicket.tester.getLastRenderedPage();
-        ModiaModalWindow modal = mock(ModiaModalWindow.class);
+        RedirectModalWindow redirectPopup = mock(RedirectModalWindow.class);
         LamellHandler lamellHandler = mock(LamellHandler.class);
-        on(intern).setFieldValue("modalWindow", modal);
+        on(intern).setFieldValue("redirectPopup", redirectPopup);
         on(intern).setFieldValue("lamellHandler", lamellHandler);
         when(lamellHandler.hasUnsavedChanges()).thenReturn(false);
         AjaxRequestTarget target = new AjaxRequestHandler(intern);
         intern.refreshKjerneinfo(target, "");
-        verify(modal, times(0)).show(target);
-        verify(modal, times(1)).redirect();
+        verify(redirectPopup, times(0)).show(target);
+        verify(redirectPopup, times(1)).redirect();
     }
 
     @Test

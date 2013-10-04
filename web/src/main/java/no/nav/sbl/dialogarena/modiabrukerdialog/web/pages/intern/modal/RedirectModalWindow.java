@@ -7,24 +7,22 @@ import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 
-public class ModiaModalWindow extends ModigModalWindow {
+public class RedirectModalWindow extends ModigModalWindow {
 
-    private Class<? extends Page> clazz = HentPersonPage.class;
-    private PageParameters pageParameters = new PageParameters();
+    private Class<? extends Page> targetPage = HentPersonPage.class;
+    private PageParameters params = new PageParameters();
 
-    public ModiaModalWindow(String id) {
+    public RedirectModalWindow(String id) {
         super(id);
     }
 
-    public void setRedirectClass(Class<? extends Page> clazz) {
-        this.clazz = clazz;
+    public void setTarget(Class<? extends Page> targetPage, PageParameters params) {
+        this.targetPage = targetPage;
+        this.params = params;
     }
 
-    public void setPageParameters(PageParameters pageParameters) {
-        this.pageParameters = pageParameters;
-    }
     public void redirect() {
-        throw new RestartResponseException(clazz, pageParameters);
+        throw new RestartResponseException(targetPage, params);
     }
 
     public static String getJavascriptSaveButtonFocus() {

@@ -13,6 +13,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.Over
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
+import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
@@ -22,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
@@ -35,12 +37,13 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     public static final String LAMELL_BRUKERHENVENDELSER = "brukerhenvendelser";
     public static final String PANEL = "panel";
+
+    private final List<Lerret> lerretList = new ArrayList<>();
     private TokenLamellPanel lamellPanel;
-    private List<Lerret> lerretList = new ArrayList<>();
     private String fnrFromRequest;
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
-        final String type = feedItemPayload.getType().toLowerCase();
+        String type = feedItemPayload.getType().toLowerCase();
         String lamellId = feedItemPayload.getType().toLowerCase();
         if (canHaveMoreThanOneFactory(type)) {
             lamellId = createFactoryIfMissing(lamellPanel, type, feedItemPayload.getItemId());
@@ -63,7 +66,7 @@ public class LamellHandler implements Serializable {
 
     public TokenLamellPanel createLamellPanel(String id, String fnrFromRequest) {
         this.fnrFromRequest = fnrFromRequest;
-        lamellPanel = new TokenLamellPanel(id, createStaticLamellFactories());
+        this.lamellPanel = new TokenLamellPanel(id, createStaticLamellFactories());
         return lamellPanel;
     }
 
@@ -78,9 +81,9 @@ public class LamellHandler implements Serializable {
     private LamellFactory createFactory(String type, String itemId) {
         final Panel panel;
         if (SYKEPENGER.equalsIgnoreCase(type)) {
-            panel = new SykmeldingsperiodePanel(PANEL, new Model<>(fnrFromRequest), new Model<>(itemId));
+            panel = new SykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (FORELDREPENGER.equalsIgnoreCase(type)) {
-            panel = new ForeldrepengerPanel(PANEL, new Model<>(fnrFromRequest), new Model<>(itemId));
+            panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else {
             throw new ApplicationException("Ukjent type panel: " + type);
         }
@@ -110,7 +113,7 @@ public class LamellHandler implements Serializable {
         return newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new BrukerprofilPanel(id, new Model<>(fnrFromRequest)));
+                return addLerretToListAndReturn(new BrukerprofilPanel(id, Model.of(fnrFromRequest)));
             }
         });
     }
@@ -119,7 +122,7 @@ public class LamellHandler implements Serializable {
         return newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new GenericLerret(id, new KontrakterPanel(PANEL, new Model<>(fnrFromRequest))));
+                return addLerretToListAndReturn(new GenericLerret(id, new KontrakterPanel(PANEL, Model.of(fnrFromRequest))));
             }
         });
     }
@@ -142,18 +145,19 @@ public class LamellHandler implements Serializable {
         });
     }
 
-
     private Lerret addLerretToListAndReturn(Lerret lerret) {
         lerretList.add(lerret);
         return lerret;
     }
 
     public boolean hasUnsavedChanges() {
-        for (Lerret lerret : lerretList) {
-            if (lerret.isModified()) {
-                return true;
-            }
-        }
-        return false;
+        return on(lerretList).exists(MODIFIED_LERRET);
     }
+
+    private static final Predicate<Lerret> MODIFIED_LERRET = new Predicate<Lerret>() {
+        @Override
+        public boolean evaluate(Lerret lerret) {
+            return lerret.isModified();
+        }
+    };
 }

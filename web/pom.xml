@@ -89,6 +89,11 @@
         </dependency>
 
         <dependency>
+            <groupId>net.sourceforge.collections</groupId>
+            <artifactId>collections-generic</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sporsmal-og-svar-innboks</artifactId>
         </dependency>

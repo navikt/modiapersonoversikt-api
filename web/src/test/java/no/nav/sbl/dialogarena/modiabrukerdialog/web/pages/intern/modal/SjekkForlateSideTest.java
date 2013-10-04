@@ -39,7 +39,7 @@ public class SjekkForlateSideTest extends TestSecurityBaseClass {
     @Test
     public void skalOppretteSjekkForlateSide() {
         SjekkForlateSideAnswer answer = new SjekkForlateSideAnswer();
-        SjekkForlateSide sjekkForlateSide = new SjekkForlateSide("id", new ModiaModalWindow("modigModalWindow"), answer);
+        SjekkForlateSide sjekkForlateSide = new SjekkForlateSide("id", new RedirectModalWindow("modigModalWindow"), answer);
 
         fluentWicketTester.goToPageWith(sjekkForlateSide)
                 .should().containComponent(withId("closeDiscard").and(ofType(AjaxLink.class)))
@@ -49,7 +49,7 @@ public class SjekkForlateSideTest extends TestSecurityBaseClass {
     @Test
     public void skalReturnereCancelAswer() {
         SjekkForlateSideAnswer answer = new SjekkForlateSideAnswer();
-        SjekkForlateSide sjekkForlateSide = new SjekkForlateSide("id", new ModiaModalWindow("modigModalWindow"), answer);
+        SjekkForlateSide sjekkForlateSide = new SjekkForlateSide("id", new RedirectModalWindow("modigModalWindow"), answer);
 
         fluentWicketTester.goToPageWith(sjekkForlateSide)
                 .click().link(withId("closeCancel"));
@@ -61,7 +61,7 @@ public class SjekkForlateSideTest extends TestSecurityBaseClass {
     @Test
     public void skalReturnereDiscardAswer() {
         SjekkForlateSideAnswer answer = new SjekkForlateSideAnswer();
-        SjekkForlateSide sjekkForlateSide = new SjekkForlateSide("id", new ModiaModalWindow("modigModalWindow"), answer);
+        SjekkForlateSide sjekkForlateSide = new SjekkForlateSide("id", new RedirectModalWindow("modigModalWindow"), answer);
 
         fluentWicketTester.goToPageWith(sjekkForlateSide)
                 .click().link(withId("closeDiscard"));

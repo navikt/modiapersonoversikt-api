@@ -13,7 +13,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.timeout.TimeoutBoks;
@@ -27,9 +27,7 @@ import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.apache.wicket.request.resource.ResourceReference;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
@@ -40,7 +38,7 @@ import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
 import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
 import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.ModiaModalWindow.getJavascriptSaveButtonFocus;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 
 
@@ -49,48 +47,34 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.Sj
  */
 public class Intern extends BasePage {
 
-    private static final ResourceReference MEDIA_QUERIES = new PackageResourceReference(Intern.class, "respond.min.js");
-    public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(MEDIA_QUERIES, "lt IE 9");
-    public static final JavaScriptResourceReference JS_SNURR = new JavaScriptResourceReference(Intern.class, "snurr.js");
+    public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(Intern.class, "respond.min.js"), "lt IE 9");
+	public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(Intern.class, "intern_ie.css"), "screen", "lt IE 10");
 
-	public static final ConditionalCssResource INTERN_IE
-			= new ConditionalCssResource(new CssResourceReference(Intern.class, "intern_ie.css"), "screen", "lt IE 10");
-    private final SjekkForlateSideAnswer answer;
-    private final ModiaModalWindow modalWindow;
-	private LamellHandler lamellHandler;
+	private final SjekkForlateSideAnswer answer;
+    private final RedirectModalWindow redirectPopup;
+	private final LamellHandler lamellHandler;
 
     public Intern(PageParameters pageParameters) {
-        this.answer = new SjekkForlateSideAnswer();
-        this.modalWindow = createModalWindow("modal");
+        answer = new SjekkForlateSideAnswer();
+        redirectPopup = createModalWindow("modal");
         lamellHandler = new LamellHandler();
         instantiateComponents(pageParameters.get("fnr").toString(null));
     }
 
-    @Override
-    public boolean isVersioned() {
-        return false;
-    }
-
     @RunOnEvents(FODSELSNUMMER_FUNNET)
-    public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
-        PageParameters pageParameters = new PageParameters();
-        pageParameters.set("fnr", query);
-        handleRedirect(target, pageParameters, Intern.class);
+    public void refreshKjerneinfo(AjaxRequestTarget target, String fnr) {
+        handleRedirect(target, new PageParameters().set("fnr", fnr), Intern.class);
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
-    public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String query) {
-        PageParameters pageParameters = new PageParameters();
-        pageParameters.set("fnr", query);
+    public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String fnr) {
         getSession().setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, true);
-        handleRedirect(target, pageParameters, Intern.class);
+        refreshKjerneinfo(target, fnr);
     }
 
     @RunOnEvents(GOTO_HENT_PERSONPAGE)
     public void gotoHentPersonPage(AjaxRequestTarget target, String query) {
-        PageParameters pageParameters = new PageParameters();
-        pageParameters.set("error", query);
-        throw new RestartResponseException(HentPersonPage.class, pageParameters);
+        throw new RestartResponseException(HentPersonPage.class, new PageParameters().set("error", query));
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
@@ -130,22 +114,24 @@ public class Intern extends BasePage {
                 lamellHandler.createLamellPanel("lameller", fnrFromRequest),
                 new SideBar("sideBar", fnrFromRequest).setVisible(true),
                 new TimeoutBoks("timeoutBoks", fnrFromRequest),
-                createNullstillLink(),
-                modalWindow
+                new NullstillLink("nullstill"),
+                redirectPopup
         );
     }
 
-    private AjaxLink<?> createNullstillLink() {
-        return new AjaxLink<Void>("nullstill") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                handleRedirect(target, new PageParameters(), HentPersonPage.class);
-            }
-        };
+    private class NullstillLink extends AjaxLink<Void> {
+        public NullstillLink(String id) {
+            super(id);
+        }
+
+        @Override
+        public void onClick(AjaxRequestTarget target) {
+            handleRedirect(target, new PageParameters(), HentPersonPage.class);
+        }
     }
 
-    private ModiaModalWindow createModalWindow(String id) {
-        ModiaModalWindow modiaModalWindow = new ModiaModalWindow(id);
+    private RedirectModalWindow createModalWindow(String id) {
+        RedirectModalWindow modiaModalWindow = new RedirectModalWindow(id);
         modiaModalWindow.setInitialHeight(280);
         modiaModalWindow.setInitialWidth(600);
         modiaModalWindow.setContent(new SjekkForlateSide(modiaModalWindow.getContentId(), modiaModalWindow, this.answer));
@@ -155,16 +141,15 @@ public class Intern extends BasePage {
     }
 
     private void handleRedirect(AjaxRequestTarget target, PageParameters pageParameters, Class<? extends Page> redirectTo) {
-        modalWindow.setRedirectClass(redirectTo);
-        modalWindow.setPageParameters(pageParameters);
+        redirectPopup.setTarget(redirectTo, pageParameters);
         if (lamellHandler.hasUnsavedChanges()) {
-            modalWindow.show(target);
+            redirectPopup.show(target);
         } else {
-            modalWindow.redirect();
+            redirectPopup.redirect();
         }
     }
 
-    private ModigModalWindow.WindowClosedCallback createWindowClosedCallback(final ModiaModalWindow modalWindow) {
+    private ModigModalWindow.WindowClosedCallback createWindowClosedCallback(final RedirectModalWindow modalWindow) {
         return new ModigModalWindow.WindowClosedCallback() {
             @Override
             public void onClose(AjaxRequestTarget ajaxRequestTarget) {
@@ -184,6 +169,11 @@ public class Intern extends BasePage {
                 return true;
             }
         };
+    }
+
+    @Override
+    public boolean isVersioned() {
+        return false;
     }
 
 }
