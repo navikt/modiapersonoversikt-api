@@ -15,8 +15,6 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingRes
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerResponse;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -69,8 +67,6 @@ public class SoknaderConfig {
     @Profile({"test", "soknaderTest"})
     @Configuration
     public static class Test {
-
-        private Logger logger = LoggerFactory.getLogger(SoknaderConfig.Test.class);
 
         @Bean
         public SoknaderService soknaderWidgetService() {

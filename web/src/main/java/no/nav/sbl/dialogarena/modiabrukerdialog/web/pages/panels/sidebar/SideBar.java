@@ -45,7 +45,7 @@ public class SideBar extends Panel {
         }
     }
 
-    public void initVisibility() {
+    public final void initVisibility() {
         besvaresporsmalPanel.setVisibilityAllowed(false);
         oppgavevalg.setVisibilityAllowed(false);
         hentOppgavePanel.setVisibilityAllowed(true);
