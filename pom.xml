@@ -15,7 +15,7 @@
     <name>sporsmal-og-svar</name>
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål Og Svar - innside og utside.</description>
     <artifactId>sporsmal-og-svar</artifactId>
-    <version>1.4-SNAPSHOT</version>
+    <version>1.4</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -412,7 +412,8 @@
     <scm>
         <developerConnection>scm:git:ssh://git@stash.devillo.no:7999/dial/sporsmalogsvar.git</developerConnection>
         <url>http://stash.devillo.no/projects/DIAL/repos/sporsmalogsvar/</url>
-    </scm>
+      <tag>sporsmal-og-svar-1.4</tag>
+  </scm>
 
     <reporting>
         <plugins>
