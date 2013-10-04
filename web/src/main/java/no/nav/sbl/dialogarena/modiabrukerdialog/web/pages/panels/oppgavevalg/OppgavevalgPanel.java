@@ -7,7 +7,11 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.verktoy.Synlighet.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.verktoy.Synlighet.flippSynlighet;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.verktoy.Synlighet.skjul;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.verktoy.Synlighet.skjulMenTaMedIMarkupLikevel;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.verktoy.Synlighet.taMedIMarkupSelvOmUsynlig;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.verktoy.Synlighet.vis;
 
 public class OppgavevalgPanel extends Panel {
 
