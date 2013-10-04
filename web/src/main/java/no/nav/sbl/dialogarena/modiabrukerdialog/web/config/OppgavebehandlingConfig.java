@@ -86,7 +86,7 @@ public class OppgavebehandlingConfig {
     @Configuration
     public static class Test {
 
-        public static final String FODESELSNR = "12345678901";
+        public static final String FODESELSNR = "10108000398";
         public static final String OPPGAVEID = "1";
 
         @Bean
