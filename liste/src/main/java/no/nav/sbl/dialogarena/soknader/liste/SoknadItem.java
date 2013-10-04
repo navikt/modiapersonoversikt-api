@@ -9,7 +9,7 @@ import org.apache.wicket.model.Model;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.sbl.dialogarena.soknader.widget.util.SoknadDateFormatter.printShortDate;
+import static no.nav.sbl.dialogarena.soknader.liste.util.SoknadDateFormatter.printShortDate;
 
 public class SoknadItem extends Panel {
 
