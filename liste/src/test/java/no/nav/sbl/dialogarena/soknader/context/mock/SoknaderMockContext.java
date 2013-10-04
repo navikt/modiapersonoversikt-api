@@ -101,4 +101,5 @@ public class SoknaderMockContext {
                 .withFerdigDato(now().minusDays(AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED - 1))
                 .build();
     }
+
 }

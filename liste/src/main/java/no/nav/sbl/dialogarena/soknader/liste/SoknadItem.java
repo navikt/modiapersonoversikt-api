@@ -31,6 +31,3 @@ public class SoknadItem extends Panel {
     }
 
 }
-
-
-//visibleIf(not(isEmptyString(new PropertyModel<String>(getModel(), "metaheading"))))),
