@@ -45,7 +45,15 @@ public class SideBar extends Panel {
         }
     }
 
-    public final void initVisibility() {
+    @RunOnEvents(Modus.KVITTERING)
+    public void kvitteringsmodus(AjaxRequestTarget target) {
+        hentOppgavePanel.setVisibilityAllowed(true);
+        if (target != null) {
+            target.add(hentOppgavePanel);
+        }
+    }
+
+    public void initVisibility() {
         besvaresporsmalPanel.setVisibilityAllowed(false);
         oppgavevalg.setVisibilityAllowed(false);
         hentOppgavePanel.setVisibilityAllowed(true);

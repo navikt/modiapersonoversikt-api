@@ -35,7 +35,7 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_SYKEPENGER = "sykepenger";
     public static final String LAMELL_OVERSIKT = "oversikt";
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
-    public static final String LAMELL_BRUKERHENVENDELSER = "brukerhenvendelser";
+    public static final String LAMELL_MELDINGER = "meldinger";
     public static final String PANEL = "panel";
 
     private final List<Lerret> lerretList = new ArrayList<>();
@@ -105,7 +105,7 @@ public class LamellHandler implements Serializable {
                 createOversiktLamell(),
                 createKontrakterLamell(),
                 createBrukerprofilLamell(),
-                createBrukerhenvendelserLamell()
+                createMeldingerLamell()
         );
     }
 
@@ -136,8 +136,8 @@ public class LamellHandler implements Serializable {
         });
     }
 
-    private LamellFactory createBrukerhenvendelserLamell() {
-        return newLamellFactory(LAMELL_BRUKERHENVENDELSER, "H", new LerretFactory() {
+    private LamellFactory createMeldingerLamell() {
+        return newLamellFactory(LAMELL_MELDINGER, "M", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
                 return addLerretToListAndReturn(new Innboks(id, fnrFromRequest));

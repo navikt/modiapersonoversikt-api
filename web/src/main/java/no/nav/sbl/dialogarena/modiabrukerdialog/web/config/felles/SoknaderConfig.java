@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles;
 
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingHentBehandlingBehandlingIkkeFunnet;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingstid;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Temaer;
@@ -22,7 +20,6 @@ import org.springframework.context.annotation.Profile;
 import javax.jws.WebParam;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
-
 import java.math.BigInteger;
 
 @Configuration
@@ -46,18 +43,17 @@ public class SoknaderConfig {
                 }
 
                 @Override
-                public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest hentBehandlingskjedensBehandlingerRequest) throws HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
+                public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest hentBehandlingskjedensBehandlingerRequest) {
                     return new HentBehandlingskjedensBehandlingerResponse();
                 }
 
                 @Override
-                public HentBehandlingResponse hentBehandling(@WebParam(name = "request", targetNamespace = "") HentBehandlingRequest hentBehandlingRequest) throws HentBehandlingHentBehandlingBehandlingIkkeFunnet {
+                public HentBehandlingResponse hentBehandling(@WebParam(name = "request", targetNamespace = "") HentBehandlingRequest hentBehandlingRequest) {
                     return new HentBehandlingResponse();
                 }
 
                 @Override
                 public void ping() {
-                    //To change body of implemented methods use File | Settings | File Templates.
                 }
             };
         }
@@ -99,18 +95,17 @@ public class SoknaderConfig {
                 }
 
                 @Override
-                public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest hentBehandlingskjedensBehandlingerRequest) throws HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
+                public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest hentBehandlingskjedensBehandlingerRequest) {
                     return new HentBehandlingskjedensBehandlingerResponse();
                 }
 
                 @Override
-                public HentBehandlingResponse hentBehandling(@WebParam(name = "request", targetNamespace = "") HentBehandlingRequest hentBehandlingRequest) throws HentBehandlingHentBehandlingBehandlingIkkeFunnet {
+                public HentBehandlingResponse hentBehandling(@WebParam(name = "request", targetNamespace = "") HentBehandlingRequest hentBehandlingRequest) {
                     return new HentBehandlingResponse();
                 }
 
                 @Override
                 public void ping() {
-                    //To change body of implemented methods use File | Settings | File Templates.
                 }
             };
         }

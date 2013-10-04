@@ -6,6 +6,7 @@ import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave.Tema;
 import no.nav.sbl.dialogarena.sporsmalogsvar.mock.BesvareHenvendelsePortTypeMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
@@ -91,16 +92,18 @@ public class HenvendelseinnsynConfig {
 
         @Bean
         public HenvendelsePortType henvendelsePortType() {
+            final Integer traadId = Integer.valueOf(BesvareHenvendelsePortTypeMock.TRAAD);
             return new HenvendelsePortType() {
 
                 private static final String SPORSMAL = "SPORSMAL";
                 private static final String SVAR = "SVAR";
                 List<WSHenvendelse> henvendelser = asList(
-                        createWSHenvendelse(SPORSMAL, DateTime.now().minusWeeks(2)),
-                        createWSHenvendelse(SVAR, DateTime.now().minusWeeks(1)),
-                        createWSHenvendelse(SPORSMAL, DateTime.now().minusDays(5)),
-                        createWSHenvendelse(SVAR, DateTime.now().minusDays(4)),
-                        createWSHenvendelse(SPORSMAL, DateTime.now().minusDays(2)));
+                        createWSHenvendelse(SPORSMAL, "" + traadId, Tema.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT, DateTime.now().minusWeeks(2)),
+                        createWSHenvendelse(SPORSMAL, "" + (traadId + 1), Tema.INTERNASJONALT, DateTime.now().minusWeeks(1)),
+                        createWSHenvendelse(SVAR, "" + (traadId + 1), Tema.INTERNASJONALT, DateTime.now().minusDays(5), DateTime.now().minusDays(4)),
+                        createWSHenvendelse(SPORSMAL, "" + (traadId + 2), Tema.HJELPEMIDLER, DateTime.now().minusDays(3)),
+                        createWSHenvendelse(SVAR, "" + (traadId + 2), Tema.HJELPEMIDLER, DateTime.now().minusHours(5), null),
+                        createWSHenvendelse(SPORSMAL, "" + (traadId + 3), Tema.HJELPEMIDLER, DateTime.now().minusHours(10)));
 
                 @Override
                 public void merkMeldingSomLest(String id) {
@@ -118,11 +121,16 @@ public class HenvendelseinnsynConfig {
                     return henvendelser;
                 }
 
-                WSHenvendelse createWSHenvendelse(String type, DateTime opprettet) {
+
+                WSHenvendelse createWSHenvendelse(String type, String traad, Tema tema, DateTime opprettet) {
+                    return createWSHenvendelse(type, traad, tema, opprettet, opprettet);
+                }
+
+                WSHenvendelse createWSHenvendelse(String type, String traad, Tema tema, DateTime opprettet, DateTime lestdato) {
                     Random random = new Random();
                     WSHenvendelse wsHenvendelse =
                             new WSHenvendelse().withBehandlingsId("" + random.nextInt()).withHenvendelseType(type)
-                                    .withOpprettetDato(opprettet).withTraad(BesvareHenvendelsePortTypeMock.TRAAD);
+                                    .withOpprettetDato(opprettet).withTraad(traad).withTema(tema.toString()).withLestDato(lestdato);
                     ObjectMapper mapper = new ObjectMapper();
                     try {
                         Map<String, String> fritekstMapping = new HashMap<>();

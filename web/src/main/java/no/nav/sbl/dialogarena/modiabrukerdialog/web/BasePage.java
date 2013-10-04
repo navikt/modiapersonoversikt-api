@@ -4,7 +4,9 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.personsok.result.PersonsokResultPanel;
 import no.nav.personsok.search.PersonsokSearchPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
+import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare.BesvareSporsmalPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
@@ -20,6 +22,8 @@ public class BasePage extends WebPage {
 	public static final CssResourceReference PERSONSOKSEARCH = new CssResourceReference(PersonsokSearchPanel.class, "PersonsokSearchPanel.css");
 	public static final CssResourceReference PERSONKJERNEINFO = new CssResourceReference(PersonKjerneinfoPanel.class, "PersonKjerneinfoPanel.css");
     public static final PackageResourceReference BESVARESPORSALPANEL = new PackageResourceReference(BesvareSporsmalPanel.class, "../../stylesheets/besvare.less");
+    public static final PackageResourceReference MELDINGERWIDGET = new PackageResourceReference(MeldingerWidget.class, "meldingerwidget.less");
+    public static final PackageResourceReference MELDINGERLAMELL = new PackageResourceReference(Innboks.class, "innboks.less");
 
     private final WebMarkupContainer body;
 

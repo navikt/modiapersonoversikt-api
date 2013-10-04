@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Import;
         no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.HenvendelseinnsynConfig.class,
         no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig.class,
         OppgavebehandlingConfig.class,
-        SoknaderConfig.class
+        SoknaderConfig.class,
 })
 public class ComponentsContext {
 
