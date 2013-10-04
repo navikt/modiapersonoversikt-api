@@ -25,6 +25,7 @@ import org.apache.wicket.validation.validator.StringValidator;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,7 +41,9 @@ public class BesvareSporsmalPanel extends Panel {
     private TidligereDialog tidligereDialog;
     private SporsmalDetaljer sporsmalDetaljer;
 
-    public BesvareSporsmalPanel(String id, final String oppgaveId, final String fnr) {
+    private String oppgaveId;
+
+    public BesvareSporsmalPanel(String id, final String fnr) {
         super(id);
         setOutputMarkupId(true);
 
@@ -139,5 +142,9 @@ public class BesvareSporsmalPanel extends Panel {
             henvendelser.add(0, henvendelse);
             setModelObject(henvendelser);
         }
+    }
+
+    public void besvar(String oppgaveId) {
+        this.oppgaveId = oppgaveId;
     }
 }
