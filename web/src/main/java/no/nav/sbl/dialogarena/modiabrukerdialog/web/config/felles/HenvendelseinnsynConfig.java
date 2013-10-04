@@ -116,7 +116,7 @@ public class HenvendelseinnsynConfig {
                 }
 
                 @Override
-                public List<WSHenvendelse> hentHenvendelseListe(String fnr, List<String> filter) {
+                public List<WSHenvendelse> hentHenvendelseListe(String fnr, List<String> henvendelseType) {
                     LOG.info("Henter alle henvendelser for bruker med fødselsnummer " + fnr);
                     return henvendelser;
                 }

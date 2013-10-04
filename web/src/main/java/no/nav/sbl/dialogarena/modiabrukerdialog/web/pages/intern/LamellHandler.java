@@ -142,6 +142,7 @@ public class LamellHandler implements Serializable {
         });
     }
 
+
     private Lerret addLerretToListAndReturn(Lerret lerret) {
         lerretList.add(lerret);
         return lerret;

@@ -51,8 +51,8 @@
         <!-- Modia-komponenter-->
         <personsok.version>0.0.94</personsok.version>
         <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
-        <sporsmalogsvar.version>1.4-SNAPSHOT</sporsmalogsvar.version>
-        <soknader.widget.version>2.0.0</soknader.widget.version>
+        <sporsmalogsvar.version>1.4</sporsmalogsvar.version>
+        <soknader.liste.version>2.0.1</soknader.liste.version>
     </properties>
 
     <dependencyManagement>
@@ -61,13 +61,13 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>soknader-liste</artifactId>
-                <version>${soknader.widget.version}</version>
+                <version>${soknader.liste.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>soknader-consumer</artifactId>
-                <version>${soknader.widget.version}</version>
+                <version>${soknader.liste.version}</version>
             </dependency>
 
             <dependency>
@@ -267,6 +267,12 @@
                 <groupId>no.nav</groupId>
                 <artifactId>personsok-consumer</artifactId>
                 <version>${personsok.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -297,6 +303,10 @@
 					<exclusion>
                         <groupId>org.springframework</groupId>
                         <artifactId>spring-web</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -362,6 +372,10 @@
                         <groupId>commons-logging</groupId>
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
@@ -382,6 +396,10 @@
                         <groupId>no.nav</groupId>
                         <artifactId>personsok-consumer</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
 
@@ -401,6 +419,10 @@
                     <exclusion>
                         <groupId>no.nav</groupId>
                         <artifactId>personsok-consumer</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
@@ -427,6 +449,12 @@
                 <groupId>no.nav</groupId>
                 <artifactId>brukerprofil-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -709,6 +737,12 @@
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-security-ws</artifactId>
                 <version>${modig.security.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
