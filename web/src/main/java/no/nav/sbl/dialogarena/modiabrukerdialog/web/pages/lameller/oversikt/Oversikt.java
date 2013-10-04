@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.widget.LenkeWidget;
 import no.nav.sbl.dialogarena.soknader.widget.SoknaderWidget;
-import no.nav.sbl.dialogarena.sporsmalogsvar.MeldingerWidget;
+import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;

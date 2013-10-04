@@ -22,7 +22,7 @@ import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
-import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.Innboks;
+import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;

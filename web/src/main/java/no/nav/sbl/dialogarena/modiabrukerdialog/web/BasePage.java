@@ -4,9 +4,9 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.personsok.result.PersonsokResultPanel;
 import no.nav.personsok.search.PersonsokSearchPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
-import no.nav.sbl.dialogarena.sporsmalogsvar.MeldingerWidget;
-import no.nav.sbl.dialogarena.sporsmalogsvar.henvendelser.innboks.Innboks;
+import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare.BesvareSporsmalPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import org.apache.wicket.markup.html.TransparentWebMarkupContainer;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.WebPage;
