@@ -15,6 +15,8 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingRes
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerResponse;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -68,6 +70,8 @@ public class SoknaderConfig {
     @Configuration
     public static class Test {
 
+        private Logger logger = LoggerFactory.getLogger(SoknaderConfig.Test.class);
+
         @Bean
         public SoknaderService soknaderWidgetService() {
             return new SoknaderService();
@@ -84,15 +88,15 @@ public class SoknaderConfig {
                     try {
                         sak.setOpprettet(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().toGregorianCalendar()));
                         sak.setLukket(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().toGregorianCalendar()));
-                    sak.setSaksId("id1");
-                    Behandlingskjede behandlingskjede = new Behandlingskjede();
-                    behandlingskjede.withBehandlingskjedeId("behndling1");
-                    behandlingskjede.withNormertBehandlingstid(new Behandlingstid().withTid(BigInteger.valueOf(10)));
-                    behandlingskjede.withStart(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().toGregorianCalendar()));
-                    sak.withBehandlingskjede(behandlingskjede);
-                    response.withSak(sak);
+                        sak.setSaksId("id1");
+                        Behandlingskjede behandlingskjede = new Behandlingskjede();
+                        behandlingskjede.withBehandlingskjedeId("behndling1");
+                        behandlingskjede.withNormertBehandlingstid(new Behandlingstid().withTid(BigInteger.valueOf(10)));
+                        behandlingskjede.withStart(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().toGregorianCalendar()));
+                        sak.withBehandlingskjede(behandlingskjede);
+                        response.withSak(sak);
                     } catch (DatatypeConfigurationException e) {
-                        e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                        throw new RuntimeException(e.getMessage(), e);
                     }
 
                     return response;

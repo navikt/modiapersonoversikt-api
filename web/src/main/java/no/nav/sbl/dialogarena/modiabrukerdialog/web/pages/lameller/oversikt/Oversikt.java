@@ -22,7 +22,7 @@ public class Oversikt extends Lerret {
         add(
                 new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
                 new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
-                new SoknadListe("soknader",  new ListModel<>(soknaderService.getSoknader("")))
+                new SoknadListe("soknader", new ListModel<>(soknaderService.getSoknader("")))
         );
     }
 
