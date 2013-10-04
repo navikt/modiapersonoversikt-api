@@ -36,7 +36,10 @@ public class SoknaderMockContext {
                 createMottattSoknad(),
                 createUnderBehandlingSoknad(),
                 createNyligFerdigSoknad(),
-                createGammelFerdigSoknad());
+                createGammelFerdigSoknad(),
+                createMottattSoknadUtenBehandlingsTid(),
+                createMottattSoknadUtenInnsendtDato()
+        );
     }
 
     private Soknad createGammelFerdigSoknad() {
@@ -77,6 +80,25 @@ public class SoknaderMockContext {
                 .withTittel("Dagpenger")
                 .withNormertBehandlingsTid("10 dager")
                 .withSoknadStatus(MOTTATT)
+                .build();
+    }
+
+    private Soknad createMottattSoknadUtenBehandlingsTid() {
+        return new SoknadMockBuilder()
+                .withMottattDato(now())
+                .withTittel("Dagpenger uten behandlingstid")
+                .withSoknadStatus(MOTTATT)
+                .withNormertBehandlingsTid("")
+                .build();
+    }
+
+    private Soknad createMottattSoknadUtenInnsendtDato() {
+        return new SoknadMockBuilder()
+                .withMottattDato(null)
+                .withTittel("Dagpenger uten innsendt dato")
+                .withSoknadStatus(MOTTATT)
+                .withNormertBehandlingsTid("")
+                .withFerdigDato(now().minusDays(AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED - 1))
                 .build();
     }
 

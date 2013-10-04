@@ -120,7 +120,13 @@ public class Soknad implements Serializable {
     }
 
     private static String getNormertTidString(Behandlingskjede behandlingskjede) {
-        return behandlingskjede.getNormertBehandlingstid().getTid() + " " + behandlingskjede.getNormertBehandlingstid().getType().getValue();
+        if(behandlingskjede != null){
+            if(behandlingskjede.getNormertBehandlingstid() != null){
+                if(behandlingskjede.getNormertBehandlingstid().getTid() != null && behandlingskjede.getNormertBehandlingstid().getType() != null)
+                return behandlingskjede.getNormertBehandlingstid().getTid() + " " + behandlingskjede.getNormertBehandlingstid().getType().getValue();
+            }
+        }
+        return "";
     }
 
     private static boolean isNyligFerdig(Soknad soeknad) {
