@@ -410,8 +410,8 @@
     </build>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@stash.devillo.no:7999/dial/sporsmalogsvar.git</developerConnection>
-        <url>http://stash.devillo.no/projects/DIAL/repos/sporsmalogsvar/</url>
+        <developerConnection>scm:git:ssh://git@a34apvl029.devillo.no:7999/dial/sporsmalogsvar.git</developerConnection>
+        <url>http://a34apvl029.devillo.no/projects/DIAL/repos/sporsmalogsvar/</url>
     </scm>
 
     <reporting>
