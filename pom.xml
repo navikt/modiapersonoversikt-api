@@ -240,6 +240,12 @@
                 <version>2.2.2</version>
             </dependency>
 
+            <dependency>
+                <groupId>xml-apis</groupId>
+                <artifactId>xml-apis</artifactId>
+                <version>1.4.01</version>
+            </dependency>
+
             <!-- MODIA-komponenter -->
             <dependency>
                 <groupId>no.nav</groupId>
