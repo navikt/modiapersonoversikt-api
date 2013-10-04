@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.soknader.service;
 
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingskjedetyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingstid;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Temaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
@@ -18,7 +19,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-
 import java.math.BigInteger;
 import java.util.List;
 
@@ -73,6 +73,7 @@ public class SoknaderServiceTest {
         behandlingskjede.withBehandlingskjedeId("behandling1");
         behandlingskjede.withNormertBehandlingstid(new Behandlingstid().withTid(BigInteger.valueOf(10)));
         behandlingskjede.withStart(createXmlGregorianCalander());
+        behandlingskjede.withBehandlingskjedetype(new Behandlingskjedetyper().withKodeRef("tittel"));
         return behandlingskjede;
     }
 }

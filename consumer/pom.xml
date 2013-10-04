@@ -74,7 +74,13 @@
             <artifactId>hamcrest-core</artifactId>
         </dependency>
 
-</dependencies>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+        </dependency>
+
+
+    </dependencies>
     <build>
         <plugins>
             <plugin>
