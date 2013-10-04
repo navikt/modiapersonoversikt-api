@@ -49,13 +49,13 @@ public class SoknadBuilder {
     }
 
     private Soknad createDefaultSoknad() {
-        Soknad soknad = new Soknad();
-        setInternalState(soknad, "innsendtDato", DateTime.now());
-        setInternalState(soknad, "tittel", "tittel-mock");
-        setInternalState(soknad, "soknadStatus", SoknadStatus.MOTTATT);
-        setInternalState(soknad, "underBehandlingStartDato", null);
-        setInternalState(soknad, "ferdigDato", null);
-        setInternalState(soknad, "normertBehandlingsTid", "10 dager-mock");
-        return soknad;
+        Soknad defaultSoknad = new Soknad();
+        setInternalState(defaultSoknad, "innsendtDato", DateTime.now());
+        setInternalState(defaultSoknad, "tittel", "tittel-mock");
+        setInternalState(defaultSoknad, "soknadStatus", SoknadStatus.MOTTATT);
+        setInternalState(defaultSoknad, "underBehandlingStartDato", null);
+        setInternalState(defaultSoknad, "ferdigDato", null);
+        setInternalState(defaultSoknad, "normertBehandlingsTid", "10 dager-mock");
+        return defaultSoknad;
     }
 }
