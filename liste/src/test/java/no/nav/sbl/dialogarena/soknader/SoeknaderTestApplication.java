@@ -24,9 +24,13 @@ public class SoeknaderTestApplication extends WebApplication {
         return SoknaderTestPage.class;
     }
 
+    protected void setupSpringInjector() {
+        getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
+    }
+
     @Override
     protected void init() {
-        getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
+        setupSpringInjector();
         getMarkupSettings().setStripWicketTags(true);
 
         new ApplicationSettingsConfig().configure(this);

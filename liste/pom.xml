@@ -119,6 +119,12 @@
             <artifactId>hamcrest-library</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-wicket-test</artifactId>
+        </dependency>
+
+
 
     </dependencies>
     <build>
