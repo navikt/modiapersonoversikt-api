@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.soknader.context.mock;
 
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
-import no.nav.sbl.dialogarena.soknader.util.SoknadMockBuilder;
+import no.nav.sbl.dialogarena.soknader.util.SoknadBuilder;
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,10 +43,10 @@ public class SoknaderMockContext {
     }
 
     private Soknad createGammelFerdigSoknad() {
-        return new SoknadMockBuilder()
+        return new SoknadBuilder()
                 .withTittel("Dagpenger")
-                .withMottattDato(new DateTime(2013, 1, 1, 11, 11))
-                .withUnderBehandlingDato(new DateTime(2013, 2, 2, 11, 12))
+                .withInnsendtDato(new DateTime(2013, 1, 1, 11, 11))
+                .underBehandlingStartDato(new DateTime(2013, 2, 2, 11, 12))
                 .withFerdigDato(now().minusDays(AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED + 1))
                 .withSoknadStatus(GAMMEL_FERDIG)
                 .withNormertBehandlingsTid("14 dager")
@@ -54,10 +54,10 @@ public class SoknaderMockContext {
     }
 
     private Soknad createNyligFerdigSoknad() {
-        return new SoknadMockBuilder()
+        return new SoknadBuilder()
                 .withTittel("Sykepenger")
-                .withMottattDato(new DateTime(2013, 8, 19, 11, 11))
-                .withUnderBehandlingDato(new DateTime(2013, 9, 10, 11, 12))
+                .withInnsendtDato(new DateTime(2013, 8, 19, 11, 11))
+                .underBehandlingStartDato(new DateTime(2013, 9, 10, 11, 12))
                 .withFerdigDato(now().minusDays(AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED - 1))
                 .withSoknadStatus(NYLIG_FERDIG)
                 .withNormertBehandlingsTid("10 dager")
@@ -65,9 +65,9 @@ public class SoknaderMockContext {
     }
 
     private Soknad createUnderBehandlingSoknad() {
-        return new SoknadMockBuilder()
-                .withMottattDato(now().minusDays(5))
-                .withUnderBehandlingDato(now().minusDays(2))
+        return new SoknadBuilder()
+                .withInnsendtDato(now().minusDays(5))
+                .underBehandlingStartDato(now().minusDays(2))
                 .withTittel("Uføre")
                 .withNormertBehandlingsTid("200 dager")
                 .withSoknadStatus(UNDER_BEHANDLING)
@@ -75,8 +75,8 @@ public class SoknaderMockContext {
     }
 
     private Soknad createMottattSoknad() {
-        return new SoknadMockBuilder()
-                .withMottattDato(now())
+        return new SoknadBuilder()
+                .withInnsendtDato(now())
                 .withTittel("Dagpenger")
                 .withNormertBehandlingsTid("10 dager")
                 .withSoknadStatus(MOTTATT)
@@ -84,8 +84,8 @@ public class SoknaderMockContext {
     }
 
     private Soknad createMottattSoknadUtenBehandlingsTid() {
-        return new SoknadMockBuilder()
-                .withMottattDato(now())
+        return new SoknadBuilder()
+                .withInnsendtDato(now())
                 .withTittel("Dagpenger uten behandlingstid")
                 .withSoknadStatus(MOTTATT)
                 .withNormertBehandlingsTid("")
@@ -93,8 +93,8 @@ public class SoknaderMockContext {
     }
 
     private Soknad createMottattSoknadUtenInnsendtDato() {
-        return new SoknadMockBuilder()
-                .withMottattDato(null)
+        return new SoknadBuilder()
+                .withInnsendtDato(null)
                 .withTittel("Dagpenger uten innsendt dato")
                 .withSoknadStatus(MOTTATT)
                 .withNormertBehandlingsTid("")

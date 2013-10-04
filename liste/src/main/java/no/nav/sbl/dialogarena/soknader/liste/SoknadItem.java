@@ -16,8 +16,8 @@ public class SoknadItem extends Panel {
     public SoknadItem(String id, IModel<Soknad> model) {
         super(id, model);
         Soknad soknad = model.getObject();
-        String innsendtDato = printShortDate(soknad.getMottattDato());
-        String behandlingStart = printShortDate(soknad.getMottattDato());
+        String innsendtDato = printShortDate(soknad.getInnsendtDato());
+        String behandlingStart = printShortDate(soknad.getInnsendtDato());
         String ferdigdato = printShortDate(soknad.getFerdigDato());
         add(new Label("heading", soknad.getTittel()),
                 new Label("innsendtDato", "Innsendt " + innsendtDato).add(visibleIf(not(isEmptyString(Model.of(innsendtDato))))),
