@@ -13,6 +13,10 @@ public class SoknadDateFormatterTest {
     public void testPrintShortDate() throws Exception {
         DateTime dt = new DateTime(1980,1,2,12,0);
         assertThat(SoknadDateFormatter.printShortDate(dt), is(equalTo("02.01.1980" )));
+    }
 
+    @Test
+    public void testPrintShortDateWithNull() throws Exception {
+        assertThat(SoknadDateFormatter.printShortDate(null), is(equalTo("" )));
     }
 }
