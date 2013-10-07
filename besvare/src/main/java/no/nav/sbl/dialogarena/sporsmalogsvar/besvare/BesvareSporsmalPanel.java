@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare;
+package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareService;
