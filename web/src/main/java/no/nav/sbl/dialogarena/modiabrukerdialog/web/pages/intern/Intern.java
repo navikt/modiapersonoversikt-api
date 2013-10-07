@@ -12,6 +12,7 @@ import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSide;
@@ -53,12 +54,38 @@ public class Intern extends BasePage {
 	private final SjekkForlateSideAnswer answer;
     private final RedirectModalWindow redirectPopup;
 	private final LamellHandler lamellHandler;
+    private final HentPersonPanel hentPersonPanel;
+    private final Button searchToggleButton;
+    private final NullstillLink nullstillLink;
 
     public Intern(PageParameters pageParameters) {
+        String fnr = pageParameters.get("fnr").toString(null);
         answer = new SjekkForlateSideAnswer();
         redirectPopup = createModalWindow("modal");
         lamellHandler = new LamellHandler();
-        instantiateComponents(pageParameters.get("fnr").toString(null));
+        hentPersonPanel = new HentPersonPanel("searchPanel");
+        searchToggleButton = new Button("toggle-sok");
+        nullstillLink = new NullstillLink("nullstill");
+        add(
+            hentPersonPanel,
+            searchToggleButton,
+            nullstillLink,
+            new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
+            new PersonsokPanel("personsokPanel").setVisible(true),
+            lamellHandler.createLamellPanel("lameller", fnr),
+            new SideBar("sideBar", fnr).setVisible(true),
+            new TimeoutBoks("timeoutBoks", fnr),
+            redirectPopup);
+    }
+
+    @RunOnEvents(Modus.BESVARE)
+    public void skjulSokOgNullstillknapp(AjaxRequestTarget target) {
+        hentPersonPanel.setVisibilityAllowed(false);
+        searchToggleButton.setVisibilityAllowed(false);
+        nullstillLink.setVisibilityAllowed(false);
+        if (target != null) {
+            target.add(hentPersonPanel, searchToggleButton, nullstillLink);
+        }
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET)
@@ -104,20 +131,6 @@ public class Intern extends BasePage {
 	public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
 		send(getPage(), Broadcast.BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
 	}
-
-	private void instantiateComponents(String fnrFromRequest) {
-        add(
-                new Button("toggle-sok"),
-                new HentPersonPanel("searchPanel"),
-                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnrFromRequest).setVisible(true),
-                new PersonsokPanel("personsokPanel").setVisible(true),
-                lamellHandler.createLamellPanel("lameller", fnrFromRequest),
-                new SideBar("sideBar", fnrFromRequest).setVisible(true),
-                new TimeoutBoks("timeoutBoks", fnrFromRequest),
-                new NullstillLink("nullstill"),
-                redirectPopup
-        );
-    }
 
     private class NullstillLink extends AjaxLink<Void> {
         public NullstillLink(String id) {
