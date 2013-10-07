@@ -6,10 +6,7 @@ import org.joda.time.DateTime;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.Serializable;
-import java.util.Calendar;
 
-import static java.util.Calendar.DAY_OF_YEAR;
-import static java.util.Calendar.getInstance;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.GAMMEL_FERDIG;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.MOTTATT;
