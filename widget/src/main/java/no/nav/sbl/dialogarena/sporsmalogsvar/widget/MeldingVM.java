@@ -36,7 +36,7 @@ public class MeldingVM implements FeedItemVM, Serializable {
 
 
     public String getLestDato() {
-        return lestDato == null ? null : DateTimeFormat.forPattern("dd.MM.yyyy").print(lestDato);
+        return lestDato == null ? null : DateTimeFormat.forPattern("dd.MM.yy").print(lestDato);
     }
 
     public IModel<Boolean> harStatus(final Status status) {
