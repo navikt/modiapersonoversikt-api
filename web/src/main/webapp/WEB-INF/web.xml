@@ -37,6 +37,7 @@
             , brukerhenvendelserDefault
             , oppgavebehandlingDefault
             , henvendelseinnsynDefault
+            , soknaderTest
         </param-value>
     </context-param>
 
