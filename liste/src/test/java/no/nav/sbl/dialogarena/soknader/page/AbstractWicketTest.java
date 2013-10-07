@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.soknader.page;
 
 import no.nav.modig.wicket.test.FluentWicketTester;
-import no.nav.sbl.dialogarena.soknader.SoeknaderTestApplication;
+import no.nav.sbl.dialogarena.soknader.SoknaderTestApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.apache.wicket.spring.test.ApplicationContextMock;
 import org.junit.Before;
@@ -10,12 +10,12 @@ import org.mockito.Mockito;
 public abstract class AbstractWicketTest {
 
     protected ApplicationContextMock applicationContext;
-    protected FluentWicketTester<SoeknaderTestApplication> wicketTester;
+    protected FluentWicketTester<SoknaderTestApplication> wicketTester;
 
     @Before
     public void before() {
         applicationContext = new ApplicationContextMock();
-        SoeknaderTestApplication wicketApplication = new SoeknaderTestApplication() {
+        SoknaderTestApplication wicketApplication = new SoknaderTestApplication() {
             @Override
             protected void setupSpringInjector() {
                 getComponentInstantiationListeners().add(new SpringComponentInjector(this, applicationContext));
