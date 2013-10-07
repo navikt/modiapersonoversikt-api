@@ -11,4 +11,5 @@ public class SoknaderContext {
     public SoknaderService soknaderService() {
         return new SoknaderService();
     }
+
 }

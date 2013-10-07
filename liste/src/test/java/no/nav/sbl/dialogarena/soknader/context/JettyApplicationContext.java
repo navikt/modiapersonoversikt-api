@@ -28,4 +28,5 @@ public class JettyApplicationContext {
     public SakOgBehandlingPortType sakOgBehandlingPortType() {
         return mock(SakOgBehandlingPortType.class);
     }
+
 }

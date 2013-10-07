@@ -9,6 +9,7 @@ import org.apache.wicket.request.resource.CssResourceReference;
 import java.util.List;
 
 public class SoknadListe extends Liste<Soknad> {
+
     public static final CssResourceReference CSS_RESOURCE = new CssResourceReference(SoknadListe.class, "soknadliste.css");
 
     public SoknadListe(String id, final IModel<List<Soknad>> model) {
@@ -19,4 +20,5 @@ public class SoknadListe extends Liste<Soknad> {
     public WebMarkupContainer newListItem(String id, IModel<Soknad> model) {
         return new SoknadItem(id, model);
     }
+
 }

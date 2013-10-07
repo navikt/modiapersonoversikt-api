@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.soknader.liste;
 
+import org.apache.wicket.behavior.Behavior;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -21,11 +22,16 @@ public class SoknadItem extends Panel {
         String ferdigdato = printShortDate(soknad.getFerdigDato());
         add(
                 new Label("heading", soknad.getTittel()),
-                new Label("innsendtDato", "Innsendt " + innsendtDato).add(visibleIf(not(isEmptyString(of(innsendtDato))))),
-                new Label("behandlingStart", "Under behandling siden  " + behandlingStart).add(visibleIf(not(isEmptyString(of(behandlingStart))))),
-                new Label("behandlingsTid", "Normert behandlingstid " + soknad.getNormertBehandlingsTid()).add(visibleIf(not(isEmptyString(of(soknad.getNormertBehandlingsTid()))))),
-                new Label("ferdigBehandlet", "Ferdig behandlet " + ferdigdato).add(visibleIf(not(isEmptyString(of(ferdigdato))))),
+                new Label("innsendtDato", "Innsendt " + innsendtDato).add(visibleIfStringIsNotEmpty(innsendtDato)),
+                new Label("behandlingStart", "Under behandling siden  " + behandlingStart).add(visibleIfStringIsNotEmpty(behandlingStart)),
+                new Label("behandlingsTid", "Normert behandlingstid " + soknad.getNormertBehandlingsTid()).add(visibleIfStringIsNotEmpty(soknad.getNormertBehandlingsTid())),
+                new Label("ferdigBehandlet", "Ferdig behandlet " + ferdigdato).add(visibleIfStringIsNotEmpty(ferdigdato)),
                 new Label("status", soknad.getSoknadStatus())
         );
     }
+
+    private Behavior visibleIfStringIsNotEmpty(String innsendtDato) {
+        return visibleIf(not(isEmptyString(of(innsendtDato))));
+    }
+
 }

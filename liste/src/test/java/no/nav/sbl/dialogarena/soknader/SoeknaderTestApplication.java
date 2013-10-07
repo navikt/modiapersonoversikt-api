@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.soknader;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.FrontendModules;
 import no.nav.modig.frontend.MetaTag;
-import no.nav.modig.modia.liste.EkspanderingsListe;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -12,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 
 import javax.inject.Inject;
 
+import static no.nav.modig.modia.liste.EkspanderingsListe.JS_RESOURCE;
 import static no.nav.sbl.dialogarena.soknader.liste.SoknadListe.CSS_RESOURCE;
 
 public class SoeknaderTestApplication extends WebApplication {
@@ -44,7 +44,7 @@ public class SoeknaderTestApplication extends WebApplication {
                                 .attribute("content", "IE=edge,chrome=1")
                                 .done())
                 .withResourcePacking(this.usesDeploymentConfig())
-                .addScripts(EkspanderingsListe.JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
+                .addScripts(JS_RESOURCE)          //TODO: Flytt til MODIA modul ?
                 .addCss(CSS_RESOURCE)
                 .configure(this);
     }

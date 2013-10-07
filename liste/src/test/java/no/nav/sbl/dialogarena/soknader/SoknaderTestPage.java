@@ -12,7 +12,6 @@ public class SoknaderTestPage extends WebPage {
     @Inject
     private SoknaderService soknaderService;
 
-
     public SoknaderTestPage() {
         add(new SoknadListe("soknadListe", new ListModel<>(soknaderService.getSoknader(""))));
         add(new SoknadListe("soknadListe2", new ListModel<>(soknaderService.getSoknader(""))));
