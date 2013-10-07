@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class SoknaderTestPageTest extends AbstractWicketTest {
+
     @Override
     protected void setup() {
         SoknaderMockContext ctx = new SoknaderMockContext();
@@ -40,9 +41,7 @@ public class SoknaderTestPageTest extends AbstractWicketTest {
     @Test
     public void firstSoknadShouldContainCorrectData(){
         Component listItem = getFirstListItemFromFirstListe();
-        assertThat(getTextFromListItem("innsendtDato", listItem), is(equalTo("Innsendt 04.10.2013")));
         assertThat(getTextFromListItem("heading", listItem), is(equalTo("Dagpenger")));
-        assertThat(getTextFromListItem("behandlingStart", listItem), is(equalTo("Under behandling siden  04.10.2013")));
         assertThat(getTextFromListItem("behandlingsTid", listItem), is(equalTo("Normert behandlingstid 10 dager")));
         assertThat(getTextFromListItem("status", listItem), is(equalTo("MOTTATT")));
     }
@@ -57,6 +56,5 @@ public class SoknaderTestPageTest extends AbstractWicketTest {
     private String getTextFromListItem(String id, Component listItem){
         return wicketTester.get().components(withId(id).and(containedInComponent(equalTo(listItem)))).get(0).getDefaultModelObjectAsString();
     }
-
 
 }
