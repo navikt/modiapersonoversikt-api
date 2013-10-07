@@ -7,7 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Sporsmal;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Svar;
-import no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare.BesvareSporsmalPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.BesvareSporsmalPanel;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.junit.Before;
 import org.junit.Test;
