@@ -2,13 +2,6 @@ $(document).ready(function() {
 
     var distanseFraToppen = 0;
 
-    var attachMeldingListener = function() {
-        $('.melding').on('click', function() {
-            distanseFraToppen = $('#meldinger').scrollTop();
-            attachAjaxCompleteListener();
-        });
-    };
-
     var attachAjaxCompleteListener = function() {
         $(document).one('ajaxComplete', function() {
             $('#meldinger').scrollTop(distanseFraToppen);
@@ -45,7 +38,6 @@ $(document).ready(function() {
     };
 
     var attachListeners = function() {
-        attachMeldingListener();
         attachToggleHoydeListener();
         attachAjaxCompleteListener();
     };
