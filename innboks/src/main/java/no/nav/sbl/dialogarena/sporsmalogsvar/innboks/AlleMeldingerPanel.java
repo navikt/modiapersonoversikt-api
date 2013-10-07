@@ -16,6 +16,8 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 
 public class AlleMeldingerPanel extends Panel {
 
+    ListItem<MeldingVM> current;
+
     public AlleMeldingerPanel(String id, final IModel<InnboksVM> modell) {
         super(id);
         setOutputMarkupId(true);
@@ -36,15 +38,17 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(new Label("fritekst"));
 
                 item.add(hasCssClassIf("valgt", modell.getObject().erValgtMelding(item.getModelObject())));
+                if (modell.getObject().erValgtMelding(item.getModelObject()).getObject()) {
+                    current = item;
+                }
                 item.add(hasCssClassIf("lest", item.getModelObject().erLest()));
                 item.add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
-                        // Merk meldingen som valgt
                         modell.getObject().setValgtMelding(item.getModelObject());
                         send(getPage(), Broadcast.DEPTH, Innboks.VALGT_MELDING);
-                        // Oppdater visningen
-                        target.add(AlleMeldingerPanel.this);
+                        target.add(item, current);
+                        current = item;
                     }
                 });
             }
