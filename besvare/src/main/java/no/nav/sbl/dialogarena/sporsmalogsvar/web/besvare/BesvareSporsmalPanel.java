@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.web.besvare;
 
+import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareSporsmalDetaljer;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelse;
@@ -7,6 +8,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.service.Sporsmal;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Svar;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -71,6 +73,7 @@ public class BesvareSporsmalPanel extends Panel {
     private final class SvarForm extends Form<Svar> {
 
         private static final int FRITEKST_MAKS_LENGDE = 5000;
+        static final String KVITTERING = "modia.global.modus.kvittering";
 
         public SvarForm(String id) {
             super(id);
@@ -104,6 +107,8 @@ public class BesvareSporsmalPanel extends Panel {
 
                             sporsmalDetaljer.setVisible(false);
                             SvarForm.this.setVisible(false);
+
+                            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(KVITTERING));
 
                             target.add(BesvareSporsmalPanel.this);
                         }
