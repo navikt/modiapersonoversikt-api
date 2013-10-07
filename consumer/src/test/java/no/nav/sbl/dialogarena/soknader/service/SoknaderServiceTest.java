@@ -10,24 +10,23 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
-import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-import java.math.BigInteger;
 import java.util.List;
 
+import static java.math.BigInteger.TEN;
+import static javax.xml.datatype.DatatypeFactory.newInstance;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
-
 
 @RunWith(MockitoJUnitRunner.class)
 public class SoknaderServiceTest {
@@ -69,10 +68,10 @@ public class SoknaderServiceTest {
     }
 
     private XMLGregorianCalendar createXmlGregorianCalander() throws Exception {
-        return DatatypeFactory.newInstance().newXMLGregorianCalendar(DateTime.now().toGregorianCalendar());
+        return newInstance().newXMLGregorianCalendar(now().toGregorianCalendar());
     }
 
     private Behandlingstid createNormertBehandlingstid() {
-        return new Behandlingstid().withTid(BigInteger.TEN).withType(new Behandlingstidtyper().withKodeRef("dager"));
+        return new Behandlingstid().withTid(TEN).withType(new Behandlingstidtyper().withKodeRef("dager"));
     }
 }

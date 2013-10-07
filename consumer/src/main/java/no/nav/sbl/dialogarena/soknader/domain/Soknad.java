@@ -17,6 +17,7 @@ import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.NYLIG_F
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UNDER_BEHANDLING;
 
 public class Soknad implements Serializable {
+
     public static final int AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED = 28;
 
     public enum SoknadStatus {MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG, GAMMEL_FERDIG}
@@ -35,7 +36,7 @@ public class Soknad implements Serializable {
     private DateTime ferdigDato;
     private String normertBehandlingsTid;
 
-    public static Soknad transformToSoeknad(Behandlingskjede behandlingskjede) {
+    public static Soknad transformToSoknad(Behandlingskjede behandlingskjede) {
         return soeknadTransformer.transform(behandlingskjede);
     }
 

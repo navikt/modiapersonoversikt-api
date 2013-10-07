@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import org.joda.time.DateTime;
 
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus;
+import static org.joda.time.DateTime.now;
 import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
 
 public class SoknadBuilder {
@@ -50,7 +51,7 @@ public class SoknadBuilder {
 
     private Soknad createDefaultSoknad() {
         Soknad defaultSoknad = new Soknad();
-        setInternalState(defaultSoknad, "innsendtDato", DateTime.now());
+        setInternalState(defaultSoknad, "innsendtDato", now());
         setInternalState(defaultSoknad, "tittel", "tittel-mock");
         setInternalState(defaultSoknad, "soknadStatus", SoknadStatus.MOTTATT);
         setInternalState(defaultSoknad, "underBehandlingStartDato", null);
