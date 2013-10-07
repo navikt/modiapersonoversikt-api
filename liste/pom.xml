@@ -64,12 +64,6 @@
             <artifactId>wicket-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>soknader-consumer</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- Test dependencies -->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
