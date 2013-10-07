@@ -3,9 +3,7 @@ package no.nav.sbl.dialogarena.soknader.domain;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingskjedetyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingstid;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingstidtyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Temaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
@@ -15,7 +13,6 @@ import java.math.BigInteger;
 import static javax.xml.datatype.DatatypeFactory.newInstance;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
-import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 
 public class SoknadTest {
@@ -35,8 +32,6 @@ public class SoknadTest {
         assertThat(soknad.getNormertBehandlingsTid(), is(equalTo("10 dager")));
         assertThat(soknad.getFerdigDato(), is(equalTo(new DateTime(2013, 10, 5, 12, 0))));
     }
-
-
 
     @Test
     public void ferdigDatoIsTakenFromNAVSluttTid() throws Exception {
