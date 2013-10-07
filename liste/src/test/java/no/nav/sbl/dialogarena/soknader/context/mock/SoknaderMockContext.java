@@ -76,7 +76,7 @@ public class SoknaderMockContext {
 
     private Soknad createMottattSoknad() {
         return new SoknadBuilder()
-                .withInnsendtDato(now())
+                .withInnsendtDato(new DateTime(2013,10,1,12,0))
                 .withTittel("Dagpenger")
                 .withNormertBehandlingsTid("10 dager")
                 .withSoknadStatus(MOTTATT)
