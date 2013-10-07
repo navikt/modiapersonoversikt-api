@@ -69,6 +69,19 @@ public class SoknadTest {
         assertThat(soknad.getSoknadStatus(), is(equalTo(Soknad.SoknadStatus.NYLIG_FERDIG)));
     }
 
+
+    @Test
+    public void statusIsGammelWhenFerdigDatoIsSetAndMoreThan28DaysSinceDone() throws Exception {
+        Behandlingskjede behandlingskjede = new Behandlingskjede();
+        behandlingskjede.withBehandlingskjedeId("behandling1")
+                .withNormertBehandlingstid(createNormertBehandlingstid(10))
+                .withStart(createXmlGregorianCalander(new DateTime(2013, 8, 1, 12, 0)))
+                .withBehandlingskjedetype(new Behandlingskjedetyper().withKodeRef("tittel"))
+                .withSlutt(createXmlGregorianCalander(new DateTime(2013, 8, 2, 12, 0)));
+        Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
+        assertThat(soknad.getSoknadStatus(), is(equalTo(Soknad.SoknadStatus.GAMMEL_FERDIG)));
+    }
+
     @Test
     public void statusIsSetToUnderBehanldingWhenUnderBehanldingDatoIsSet() throws Exception {
         Behandlingskjede behandlingskjede = new Behandlingskjede();
