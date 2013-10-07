@@ -15,6 +15,7 @@ import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.GAMMEL_
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.MOTTATT;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.NYLIG_FERDIG;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UNDER_BEHANDLING;
+import static org.joda.time.DateTime.now;
 
 public class Soknad implements Serializable {
 
@@ -133,9 +134,9 @@ public class Soknad implements Serializable {
         return "";
     }
 
-    private static boolean isNyligFerdig(Soknad soeknad) {
-        Calendar timeFromSoeknad = soeknad.getFerdigDato().toGregorianCalendar();
-        timeFromSoeknad.add(DAY_OF_YEAR, AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED);
-        return timeFromSoeknad.after(getInstance());
+    private static boolean isNyligFerdig(Soknad soknad) {
+        DateTime ferdigDato = soknad.getFerdigDato();
+        DateTime expiredDate = ferdigDato.plusDays(AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED);
+        return now().isBefore(expiredDate);
     }
 }
