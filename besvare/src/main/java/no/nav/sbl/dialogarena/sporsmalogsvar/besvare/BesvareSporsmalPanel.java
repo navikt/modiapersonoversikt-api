@@ -95,7 +95,7 @@ public class BesvareSporsmalPanel extends Panel {
                             service.besvareSporsmal(svar);
 
                             Sporsmal sporsmal = sporsmalDetaljer.getSporsmal();
-                            tidligereDialog.prependHenvendelse(new Henvendelse(INNGAENDE, sporsmal.getSendtDato(), sporsmal.getFritekst()));
+                            tidligereDialog.prependHenvendelse(new Henvendelse(INNGAENDE, sporsmal.sendtDato, sporsmal.fritekst));
 
                             Henvendelse svarkvittering = new Henvendelse(UTGAENDE, DateTime.now(), svar.fritekst);
                             svarkvittering.tidligereHenvendelse.setObject(false);

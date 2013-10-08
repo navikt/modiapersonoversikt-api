@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.service;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.Datoformat;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.joda.time.DateTime;
@@ -7,14 +8,13 @@ import org.joda.time.DateTime;
 import java.io.Serializable;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.formatertDato;
 
 public class Henvendelse implements Serializable {
     private String overskrift, sendtDato, fritekst;
 
     public Henvendelse(Meldingstype type, DateTime sendtDato, String fritekst) {
         this.overskrift = "Fra " + (type == INNGAENDE ? "Bruker" : "NAV");
-        this.sendtDato = formatertDato(sendtDato);
+        this.sendtDato = Datoformat.lang(sendtDato);
         this.fritekst = fritekst;
     }
 

@@ -3,15 +3,16 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.service;
 import java.io.Serializable;
 
 public class Svar implements Serializable {
-    private String behandlingId;
-    public String tema, fritekst;
-    public Boolean sensitiv;
 
-    public Svar(String behandlingId) {
+    public final String behandlingId, tema, fritekst;
+
+    public final boolean sensitiv;
+
+    public Svar(String behandlingId, String tema, String fritekst, Boolean sensitiv) {
         this.behandlingId = behandlingId;
+        this.tema = tema;
+        this.fritekst = fritekst;
+        this.sensitiv = sensitiv != null? sensitiv : false;
     }
 
-    public String getBehandlingId() {
-        return behandlingId;
-    }
 }

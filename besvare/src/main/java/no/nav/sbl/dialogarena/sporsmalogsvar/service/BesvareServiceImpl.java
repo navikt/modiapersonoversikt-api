@@ -7,9 +7,10 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHe
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Arrays;
+
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
@@ -30,19 +31,21 @@ public class BesvareServiceImpl implements BesvareService {
     @Inject
     HenvendelsePortType henvendelsePortType;
 
+    @Override
     public void besvareSporsmal(Svar svar) {
         besvareHenvendelsePortType.besvarSporsmal(TIL_WSSVAR.transform(svar));
     }
 
+    @Override
     public BesvareSporsmalDetaljer hentDetaljer(String fnr, String oppgaveId) {
         WSSporsmalOgSvar wsSporsmalOgSvar = besvareHenvendelsePortType.hentSporsmalOgSvar(oppgaveId);
+        List<WSHenvendelse> wsHenvendelser = on(henvendelsePortType.hentHenvendelseListe(fnr, asList("SPORSMAL", "SVAR"))).collect(NYESTE_FORST);
 
         BesvareSporsmalDetaljer besvareSporsmalDetaljer = new BesvareSporsmalDetaljer();
         besvareSporsmalDetaljer.tema = wsSporsmalOgSvar.getSporsmal().getTema();
         besvareSporsmalDetaljer.svar = TIL_SVAR.transform(wsSporsmalOgSvar.getSvar());
         besvareSporsmalDetaljer.sporsmal = TIL_SPORSMAL.transform(wsSporsmalOgSvar.getSporsmal());
 
-        List<WSHenvendelse> wsHenvendelser = on(henvendelsePortType.hentHenvendelseListe(fnr, Arrays.asList("SPORSMAL", "SVAR"))).collect(NYESTE_FORST);
 
         besvareSporsmalDetaljer.tidligereDialog = on(wsHenvendelser)
                 .filter(where(TRAAD_ID, equalTo(wsSporsmalOgSvar.getSporsmal().getTraad())))
