@@ -25,7 +25,7 @@
         <slf4j.version>1.7.5</slf4j.version>
         <logback.version>1.0.13</logback.version>
         <modig.scm.plugin.version>1.1.10</modig.scm.plugin.version>
-        <modig.frontend.version>1.0.18</modig.frontend.version>
+        <modig.frontend.version>1.1.0</modig.frontend.version>
         <modig-security.version>1.0.9</modig-security.version>
         <modig-content.version>1.2.1</modig-content.version>
         <modig-core.version>1.0.0</modig-core.version>

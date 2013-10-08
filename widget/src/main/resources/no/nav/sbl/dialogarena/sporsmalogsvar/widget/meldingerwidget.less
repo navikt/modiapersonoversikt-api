@@ -1,8 +1,23 @@
 @meldingHoyde: 85px;
 @hoydePadding: 10px;
+@borderColor: #d1d1d1;
 
 .widget-navigasjon.widget-meldinger {
-  & > UL > LI > A {
+  & > ul > li {
+    &:hover {
+      a .melding-metadata {
+        border-right-color: #999;
+      }
+    }
+  }
+  & > ul > li > a {
+    &:focus {
+      background-color: #dadada !important;
+      color: black !important;
+      .melding-metadata {
+        border-right-color: #999;
+      }
+    }
     padding: 0;
     .melding-metadata {
       height: @meldingHoyde;
@@ -62,7 +77,7 @@
         width: 100%;
         left: 0;
         label {
-          padding: 0 @hoydePadding;
+          padding: 0 15px;
           width: 100%;
           font-family: arial, sans-serif;
           font-size: 0.85rem;
