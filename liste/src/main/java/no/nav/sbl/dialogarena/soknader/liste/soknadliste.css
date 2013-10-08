@@ -1,4 +1,61 @@
-.soknadstatus {
-    float:right;
-    clear: both;
+.liste {
+    /*background-color: #f1f1f1;*/
+
 }
+
+.soknadlistitem .soknadstatus {
+    float: right;
+    display: inline-block;
+    /*clear: both;*/
+    /*position: absolute;*/
+}
+
+.soknadlistitem .soknadData {
+    border-right: 1px solid rgb(209,209,209) ;
+    display: inline-block;
+    float: left;
+    width: 80%;
+}
+
+.soknadlistitem {
+    /*display: block;*/
+    margin: 0;
+    position: relative;
+    background-color: #f1f1f1;
+    /*border-top: 1px solid #fff;*/
+    /*border-bottom: 1px solid #d1d1d1;*/
+}
+
+
+.soknadlistitem .soknadData .tidsrom{
+    /*display: block;*/
+    color: black;
+}
+
+.soknadlistitem .soknadData .heading{
+    font-size: 1.14em;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+    margin-top: 0px;
+}
+
+.soknadlistitem .metaData {
+    margin: 1rem 37px 0 0;
+    overflow: auto;
+}
+
+.soknadlistitem .metaData li {
+    float: left;
+    display: inline;
+    padding: 0 8px 0 0;
+    margin-right: 8px;
+    border-right: 1px solid;
+}
+
+.soknadlistitem .metaData li:last-of-type {
+    margin-right: 0;
+    padding-right: 0;
+    border-right: none;
+
+}
+
