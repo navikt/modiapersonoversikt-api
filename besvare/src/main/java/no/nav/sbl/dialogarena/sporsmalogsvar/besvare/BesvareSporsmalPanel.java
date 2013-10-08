@@ -27,9 +27,8 @@ import org.apache.wicket.validation.validator.StringValidator;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
@@ -47,14 +46,12 @@ public class BesvareSporsmalPanel extends Panel {
     public BesvareSporsmalPanel(String id, final String fnr) {
         super(id);
         setOutputMarkupId(true);
-
-        LoadableDetachableModel<BesvareSporsmalDetaljer> besvareSporsmalDetaljer = new LoadableDetachableModel<BesvareSporsmalDetaljer>() {
+        setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<BesvareSporsmalDetaljer>() {
             @Override
             protected BesvareSporsmalDetaljer load() {
                 return service.hentDetaljer(fnr, oppgaveId);
             }
-        };
-        setDefaultModel(new CompoundPropertyModel<Object>(besvareSporsmalDetaljer));
+        }));
 
         sporsmalDetaljer = new SporsmalDetaljer("sporsmal");
         tidligereDialog = new TidligereDialog("tidligereDialog");
@@ -66,7 +63,6 @@ public class BesvareSporsmalPanel extends Panel {
 
     @Override
     public void renderHead(IHeaderResponse response) {
-        super.renderHead(response);
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(BesvareSporsmalPanel.class, "besvare.js")));
     }
 
@@ -98,15 +94,15 @@ public class BesvareSporsmalPanel extends Panel {
                             Svar svar = getModelObject();
                             service.besvareSporsmal(svar);
 
-                            Sporsmal sporsmal = (Sporsmal) sporsmalDetaljer.getDefaultModelObject();
+                            Sporsmal sporsmal = sporsmalDetaljer.getSporsmal();
                             tidligereDialog.prependHenvendelse(new Henvendelse(INNGAENDE, sporsmal.getSendtDato(), sporsmal.getFritekst()));
 
                             Henvendelse svarkvittering = new Henvendelse(UTGAENDE, DateTime.now(), svar.fritekst);
                             svarkvittering.tidligereHenvendelse.setObject(false);
                             tidligereDialog.prependHenvendelse(svarkvittering);
 
-                            sporsmalDetaljer.setVisible(false);
-                            SvarForm.this.setVisible(false);
+                            sporsmalDetaljer.setVisibilityAllowed(false);
+                            SvarForm.this.setVisibilityAllowed(false);
 
                             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(KVITTERING));
 
@@ -128,6 +124,10 @@ public class BesvareSporsmalPanel extends Panel {
             super(id);
             add(new Label("sporsmal.sendtDatoAsString"), new Label("sporsmal.fritekst"));
         }
+
+        public Sporsmal getSporsmal() {
+            return (Sporsmal) getDefaultModelObject();
+        }
     }
 
     private static class TidligereDialog extends PropertyListView<Henvendelse> {
@@ -143,9 +143,7 @@ public class BesvareSporsmalPanel extends Panel {
         }
 
         public void prependHenvendelse(Henvendelse henvendelse) {
-            List<Henvendelse> henvendelser = new ArrayList<>(getModelObject());
-            henvendelser.add(0, henvendelse);
-            setModelObject(henvendelser);
+            setModelObject(on(getModelObject()).prepend(henvendelse).collect());
         }
     }
 
