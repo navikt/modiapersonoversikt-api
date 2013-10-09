@@ -3,6 +3,13 @@
 
 }
 
+
+.soknads-liste  UL  LI {
+    padding: 0px 30px;
+}
+
+
+
 .soknadlistitem .soknadstatus {
     float: right;
     display: inline-block;
@@ -10,18 +17,46 @@
     /*position: absolute;*/
 }
 
+.soknadlistitem .soknadstatus .status{
+    height: 1em;
+    width: 1em;
+    border-radius: 50%;
+    margin: 1em auto;
+}
+
+.soknadlistitem .soknadstatus .mottat{
+    background-color: rgb(12, 169, 225);;
+}
+
+.soknadlistitem .soknadstatus .under-behandling{
+    background-color: rgb(238, 190, 0);;
+}
+
+.soknadlistitem .soknadstatus .nylig-ferdig{
+    background-color: transparent;
+    border: 1px solid rgb(12, 169, 225);
+}
+
+.soknadlistitem .soknadstatus .gammel-ferdig{
+    background-color: rgb(236, 40, 141);
+}
+
+
 .soknadlistitem .soknadData {
     border-right: 1px solid rgb(209,209,209) ;
     display: inline-block;
     float: left;
     width: 80%;
+    padding-top:10px;
+    padding-bottom: 10px;
+
 }
 
 .soknadlistitem {
     /*display: block;*/
     margin: 0;
     position: relative;
-    background-color: #f1f1f1;
+    /*background-color: #f1f1f1;*/
     /*border-top: 1px solid #fff;*/
     /*border-bottom: 1px solid #d1d1d1;*/
 }
@@ -39,12 +74,12 @@
     margin-top: 0px;
 }
 
-.soknadlistitem .metaData {
+.soknadlistitem .soknadData .metaData {
     margin: 1rem 37px 0 0;
     overflow: auto;
 }
 
-.soknadlistitem .metaData li {
+.soknadlistitem .soknadData .metaData li {
     float: left;
     display: inline;
     padding: 0 8px 0 0;
@@ -52,7 +87,7 @@
     border-right: 1px solid;
 }
 
-.soknadlistitem .metaData li:last-of-type {
+.soknadlistitem .soknadData .metaData li:last-of-type {
     margin-right: 0;
     padding-right: 0;
     border-right: none;
