@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.joda.time.DateTime;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
@@ -21,16 +22,13 @@ public class SoknadItem extends Panel {
         super(id, model);
         Soknad soknad = model.getObject();
         String innsendtDato = printShortDate(soknad.getInnsendtDato());
-        String behandlingStart = printShortDate(soknad.getInnsendtDato());
-        String ferdigdato = printShortDate(soknad.getFerdigDato());
         add(
                 new Label("heading", soknad.getTittel()),
                 new Label("innsendtDato", "Innsendt " + innsendtDato).add(visibleIfStringIsNotEmpty(innsendtDato)),
-                new Label("behandlingStart", "Under behandling siden  " + behandlingStart).add(visibleIfStringIsNotEmpty(behandlingStart)),
                 new Label("behandlingsTid", "Normert behandlingstid " + soknad.getNormertBehandlingsTid()).add(visibleIfStringIsNotEmpty(soknad.getNormertBehandlingsTid())),
-                new Label("ferdigBehandlet", "Ferdig behandlet " + ferdigdato).add(visibleIfStringIsNotEmpty(ferdigdato)),
                 createStatusLabel(soknad),
-                createStatusIcon(soknad)
+                createStatusIcon(soknad),
+                createStatusDate(soknad)
         );
     }
 
@@ -71,6 +69,25 @@ public class SoknadItem extends Panel {
             icon.add(new AttributeAppender("class",new Model<>("under-behandling"), " "));
         }
         return icon;
+    }
+
+    private Component createStatusDate(Soknad soknad){
+
+        DateTime date = null;
+        if(soknad.getSoknadStatus().equals(Soknad.SoknadStatus.GAMMEL_FERDIG)){
+            date = soknad.getFerdigDato();
+        }
+        if(soknad.getSoknadStatus().equals(Soknad.SoknadStatus.MOTTATT)){
+            date = null;
+        }
+        if(soknad.getSoknadStatus().equals(Soknad.SoknadStatus.NYLIG_FERDIG)){
+            date = soknad.getFerdigDato();
+        }
+        if(soknad.getSoknadStatus().equals(Soknad.SoknadStatus.UNDER_BEHANDLING)){
+            date = soknad.getUnderBehandlingStartDato();
+        }
+        Label dateLabel = new Label("status-date", date != null ? printShortDate(date) : "");
+        return dateLabel;
     }
 
 }

@@ -2,10 +2,19 @@
     padding: 0 0 0 30px;
 }
 
+.soknadlistitem{
+    height: 100%;
+    display: block;
+}
+
 .soknadlistitem .soknadstatus {
     float: right;
-    display: inline-block;
+    display: block;
     width: 20%;
+    text-align: center;
+    height: auto;
+    vertical-align: middle;
+    padding-top: 10px;
 }
 
 .soknadlistitem .soknadstatus .status-icon {
@@ -13,23 +22,28 @@
     width: 1em;
     border-radius: 50%;
     margin: 1em auto;
-    /*display: block;*/
 }
 
 .soknadlistitem .soknadstatus .status-text {
-    /*margin: auto;*/
     text-align: center;
     font-size: 0.8em;
     color:black;
+    /*line-height: 1em;*/
+}
 
+.soknadlistitem .soknadstatus .status-date {
+    text-align: center;
+    font-size: 0.7em;
+    font-weight: 600;
+    line-height: 1em;
 }
 
 .soknadlistitem .soknadstatus .status-icon.mottat {
-    background-color: rgb(12, 169, 225);;
+    background-color: rgb(238, 190, 0);
 }
 
 .soknadlistitem .soknadstatus .status-icon.under-behandling {
-    background-color: rgb(238, 190, 0);;
+    background-color: rgb(238, 190, 0);
 }
 
 .soknadlistitem .soknadstatus .status-icon.nylig-ferdig {
