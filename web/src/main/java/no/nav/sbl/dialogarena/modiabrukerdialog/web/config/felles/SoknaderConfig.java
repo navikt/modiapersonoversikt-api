@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles;
 
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingskjedetyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingstid;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Temaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
@@ -85,6 +86,7 @@ public class SoknaderConfig {
                         behandlingskjede.withBehandlingskjedeId("behndling1");
                         behandlingskjede.withNormertBehandlingstid(new Behandlingstid().withTid(BigInteger.valueOf(10)));
                         behandlingskjede.withStart(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().toGregorianCalendar()));
+                        behandlingskjede.withBehandlingskjedetype(new Behandlingskjedetyper().withKodeRef("Dagpenger2"));
                         sak.withBehandlingskjede(behandlingskjede);
                         response.withSak(sak);
                     } catch (DatatypeConfigurationException e) {
