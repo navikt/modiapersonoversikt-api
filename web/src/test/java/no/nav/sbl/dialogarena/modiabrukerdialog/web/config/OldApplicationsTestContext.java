@@ -19,8 +19,5 @@ import org.springframework.context.annotation.Import;
 })
 public class OldApplicationsTestContext {
 
-    static {
-        System.setProperty("spring.profiles.active", "test");
-    }
 
 }

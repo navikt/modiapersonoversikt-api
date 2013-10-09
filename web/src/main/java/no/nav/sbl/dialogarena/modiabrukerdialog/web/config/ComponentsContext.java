@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(value = {
+        DefaultProfileContext.class,
         OldApplicationsContext.class,
         HenvendelseinnsynConfig.Default.class,
         OppgavebehandlingConfig.Default.class,

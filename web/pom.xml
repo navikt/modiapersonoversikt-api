@@ -517,7 +517,6 @@
                                 <usedDependency>org.springframework:spring-web</usedDependency>
                                 <usedDependency>no.nav.modig:modig-security-core</usedDependency>
                                 <usedDependency>no.nav.modig:modig-security-loginmodule</usedDependency>
-                                <usedDependency>no.nav:kjerneinfo-consumer</usedDependency>
                                 <usedDependency>no.nav:personsok-consumer</usedDependency>
                             </usedDependencies>
                         </configuration>
