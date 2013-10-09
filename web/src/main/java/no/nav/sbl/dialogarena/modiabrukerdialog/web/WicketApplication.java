@@ -23,6 +23,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.InternBesvaremodus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
+import no.nav.sbl.dialogarena.soknader.liste.SoknadListe;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
@@ -88,7 +89,8 @@ public class WicketApplication extends WebApplication {
                 .addCss(
                         BasePage.PERSONSOKRESULT,
                         BasePage.PERSONSOKSEARCH,
-                        BasePage.PERSONKJERNEINFO
+                        BasePage.PERSONKJERNEINFO,
+                        SoknadListe.CSS_RESOURCE
                 )
                 .addScripts(SPIResources.getScripts())
 		        .addScripts(
