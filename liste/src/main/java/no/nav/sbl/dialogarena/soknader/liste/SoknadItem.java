@@ -43,7 +43,7 @@ public class SoknadItem extends Panel {
             return new Label("status", "Gammel");
         }
         if(soknad.getSoknadStatus().equals(Soknad.SoknadStatus.MOTTATT)){
-            return new Label("status", "Mottat");
+            return new Label("status", "Mottatt");
         }
         if(soknad.getSoknadStatus().equals(Soknad.SoknadStatus.NYLIG_FERDIG)){
             return new Label("status", "Nylig ferdig");

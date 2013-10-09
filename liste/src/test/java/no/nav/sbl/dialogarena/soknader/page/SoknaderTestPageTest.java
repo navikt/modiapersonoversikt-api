@@ -47,7 +47,7 @@ public class SoknaderTestPageTest extends AbstractWicketTest {
         assertThat(getTextFromListItem("heading", listItem), is(equalTo("Dagpenger")));
         assertThat(getTextFromListItem("behandlingStart", listItem), is(equalTo("Under behandling siden  01.10.2013")));
         assertThat(getTextFromListItem("behandlingsTid", listItem), is(equalTo("Normert behandlingstid 10 dager")));
-        assertThat(getTextFromListItem("status", listItem), is(equalTo("MOTTATT")));
+        assertThat(getTextFromListItem("status", listItem), is(equalTo("Mottatt")));
         wicketTester.should().containComponent(both(withId("ferdigBehandlet").and(thatIsInvisible())));
     }
 
