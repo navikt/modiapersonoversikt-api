@@ -57,13 +57,13 @@ public class HentOppgavePanelTest extends TestSecurityBaseClass {
         Sporsmal sporsmal = (Sporsmal) wicket.get()
                 .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("sporsmal")))
                 .getDefaultModelObject();
-        assertThat(sporsmal.getFritekst(), notNullValue());
-        assertThat(sporsmal.getSendtDato(), notNullValue());
+        assertThat(sporsmal.fritekst, notNullValue());
+        assertThat(sporsmal.sendtDato, notNullValue());
 
         Svar svar = (Svar) wicket.get()
                 .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("svar"))).getDefaultModelObject();
 
-        assertThat(svar.getBehandlingId(), notNullValue());
+        assertThat(svar.behandlingId, notNullValue());
     }
 
 }
