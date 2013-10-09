@@ -5,8 +5,10 @@ import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.modig.wicket.test.internal.Parameters;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationTestContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.CacheConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -17,7 +19,9 @@ import javax.inject.Inject;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 
-@ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
+@Ignore
+
+@ContextConfiguration(classes = {ApplicationTestContext.class, CacheConfig.class, WicketTesterConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class HentPersonPageTest extends TestSecurityBaseClass {
 

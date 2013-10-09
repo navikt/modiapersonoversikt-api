@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +36,6 @@ public class HenvendelseinnsynConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(HenvendelseinnsynConfig.class);
 
-    @Profile({"default", "henvendelseinnsynDefault"})
     @Configuration
     public static class Default {
 
@@ -86,7 +84,6 @@ public class HenvendelseinnsynConfig {
         }
     }
 
-    @Profile({"test", "henvendelseinnsynTest"})
     @Configuration
     public static class Test {
 

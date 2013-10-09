@@ -39,7 +39,7 @@ public class StartJetty {
         jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
     }
 
-    private static JAASLoginService createLoginService() {
+    public static JAASLoginService createLoginService() {
         JAASLoginService jaasLoginService = new JAASLoginService("Simple Login Realm");
         jaasLoginService.setLoginModuleName("simplelogin");
         jaasLoginService.setRoleClassNames(new String[]{DummyRole.class.getName()});

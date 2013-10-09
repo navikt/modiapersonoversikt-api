@@ -6,7 +6,8 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationTestContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.CacheConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl;
 import org.apache.wicket.event.IEvent;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.reflection.Whitebox.getInternalState;
 import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
 
-@ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
+@ContextConfiguration(classes = {ApplicationTestContext.class, CacheConfig.class, WicketTesterConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class LamellHandlerTest extends TestSecurityBaseClass {
 

@@ -3,7 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.modig.wicket.test.internal.Parameters;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationTestContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.CacheConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import org.junit.Before;
@@ -24,7 +25,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
+@ContextConfiguration(classes = {ApplicationTestContext.class, CacheConfig.class, WicketTesterConfig.class})
 public class SideBarTest extends TestSecurityBaseClass {
 
     @Inject
