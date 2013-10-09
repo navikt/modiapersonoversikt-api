@@ -8,9 +8,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationTestContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.CacheConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -19,8 +19,7 @@ import javax.inject.Inject;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 
-@Ignore
-
+@ActiveProfiles("test")
 @ContextConfiguration(classes = {ApplicationTestContext.class, CacheConfig.class, WicketTesterConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class HentPersonPageTest extends TestSecurityBaseClass {

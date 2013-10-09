@@ -4,8 +4,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import static java.lang.System.setProperty;
-
 /**
  * @see OldApplicationsContext
  */
@@ -22,7 +20,7 @@ import static java.lang.System.setProperty;
 public class OldApplicationsTestContext {
 
     static {
-        setProperty("spring.profiles.active", "test");
+        System.setProperty("spring.profiles.active", "test");
     }
 
 }
