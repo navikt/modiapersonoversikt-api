@@ -4,7 +4,7 @@ import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.modig.wicket.test.internal.Parameters;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.HentPersonPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
