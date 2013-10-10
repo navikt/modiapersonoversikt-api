@@ -18,9 +18,6 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTER
 
 public class Innboks extends Lerret {
 
-    public static final String VALGT_MELDING = "hendelser.valgt_melding";
-    public static final String OPPDATER_MELDING = "hendelser.oppdatert_meldinger";
-
     public static final JavaScriptResourceReference JS_REFERENCE = new JavaScriptResourceReference(Innboks.class, "innboks.js");
     private static final String SPORSMAL = "SPORSMAL";
     private static final String SVAR = "SVAR";
@@ -33,6 +30,8 @@ public class Innboks extends Lerret {
 
     public Innboks(String id, String fnr) {
         super(id);
+        setOutputMarkupId(true);
+
         this.fnr = fnr;
         modell = new CompoundPropertyModel<>(new InnboksVM(service.hentHenvendelseListe(fnr, asList(SPORSMAL, SVAR))));
         setDefaultModel(modell);
@@ -41,7 +40,7 @@ public class Innboks extends Lerret {
         add(new AlleMeldingerPanel("meldinger", modell), new TraaddetaljerPanel("detaljpanel", modell));
     }
 
-    @RunOnEvents({OPPDATER_MELDING, KVITTERING})
+    @RunOnEvents(KVITTERING)
     public void meldingerOppdatert(AjaxRequestTarget target) {
         modell.getObject().oppdaterMeldinger(service.hentHenvendelseListe(fnr, asList(SPORSMAL, SVAR)));
         target.add(this);
