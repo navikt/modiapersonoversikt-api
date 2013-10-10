@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.joda.time.DateTime;
@@ -83,7 +84,7 @@ public class BesvareSporsmalPanel extends Panel {
             feedbackPanel.setOutputMarkupId(true);
 
             add(
-                    new Label("tema"),
+                    new Label("tema", new StringResourceModel("${tema}", BesvareSporsmalPanel.this.getDefaultModel())),
                     new CheckBox("svar.sensitiv"),
                     feedbackPanel,
                     fritekst,
