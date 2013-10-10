@@ -443,7 +443,6 @@
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>sykmeldingsperioder-consumer</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>

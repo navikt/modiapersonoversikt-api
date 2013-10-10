@@ -391,7 +391,6 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>sykmeldingsperioder-consumer</artifactId>
-                <scope>test</scope>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
                     <exclusion>
