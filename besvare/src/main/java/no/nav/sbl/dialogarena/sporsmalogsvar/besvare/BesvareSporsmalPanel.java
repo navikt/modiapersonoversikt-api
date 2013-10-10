@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareSporsmalDetaljer;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelse;
@@ -108,7 +107,7 @@ public class BesvareSporsmalPanel extends Panel {
                             sporsmalDetaljer.setVisibilityAllowed(false);
                             SvarForm.this.setVisibilityAllowed(false);
 
-                            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(KVITTERING));
+                            send(getPage(), Broadcast.DEPTH, KVITTERING);
 
                             target.add(BesvareSporsmalPanel.this);
                         }
