@@ -30,6 +30,7 @@ import javax.inject.Inject;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
 
@@ -69,7 +70,6 @@ public class BesvareSporsmalPanel extends Panel {
     private final class SvarForm extends Form<Svar> {
 
         private static final int FRITEKST_MAKS_LENGDE = 5000;
-        static final String KVITTERING = "modia.global.modus.kvittering";
 
         public SvarForm(String id) {
             super(id);

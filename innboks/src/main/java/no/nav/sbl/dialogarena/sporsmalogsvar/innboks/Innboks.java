@@ -14,6 +14,7 @@ import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;
 
 public class Innboks extends Lerret {
 
@@ -40,7 +41,7 @@ public class Innboks extends Lerret {
         add(new AlleMeldingerPanel("meldinger", modell), new TraaddetaljerPanel("detaljpanel", modell));
     }
 
-    @RunOnEvents(OPPDATER_MELDING)
+    @RunOnEvents({OPPDATER_MELDING, KVITTERING})
     public void meldingerOppdatert(AjaxRequestTarget target) {
         modell.getObject().oppdaterMeldinger(service.hentHenvendelseListe(fnr, asList(SPORSMAL, SVAR)));
         target.add(this);
