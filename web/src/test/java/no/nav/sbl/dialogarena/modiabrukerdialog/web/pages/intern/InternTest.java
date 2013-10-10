@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.personsok.PersonsokPanel;
@@ -25,10 +24,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
-import static java.lang.System.setProperty;
-import static no.nav.modig.common.MDCOperations.MDC_CALL_ID;
-import static no.nav.modig.common.MDCOperations.generateCallId;
-import static no.nav.modig.common.MDCOperations.putToMDC;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
@@ -49,8 +44,6 @@ public class InternTest extends TestSecurityBaseClass {
 
     @Before
     public void setupMDC() {
-        setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
-        putToMDC(MDC_CALL_ID, generateCallId());
         wicket.configuration.setPageAssertAfterGoTo(false);
     }
 

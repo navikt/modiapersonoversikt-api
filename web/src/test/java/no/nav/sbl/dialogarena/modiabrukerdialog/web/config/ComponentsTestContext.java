@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Import;
 
 @Configuration
 @Import(value = {
-        TestProfileContext.class,
         OldApplicationsTestContext.class,
         HenvendelseinnsynConfig.Test.class,
         OppgavebehandlingConfig.Test.class,
