@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareSporsmalDetaljer;
@@ -22,6 +23,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.validation.validator.StringValidator;
 import org.joda.time.DateTime;
@@ -49,7 +51,8 @@ public class BesvareSporsmalPanel extends Panel {
         setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<BesvareSporsmalDetaljer>() {
             @Override
             protected BesvareSporsmalDetaljer load() {
-                return service.hentDetaljer(fnr, oppgaveId);
+                Optional<BesvareSporsmalDetaljer> detaljer = service.hentDetaljer(fnr, oppgaveId);
+                return detaljer.getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId));
             }
         }));
 

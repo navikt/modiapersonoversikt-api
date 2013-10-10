@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.service;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
@@ -15,6 +16,8 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.modig.lang.option.Optional.none;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.BEHANDLINGS_ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.NYESTE_FORST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.TIL_HENVENDELSE;
@@ -37,8 +40,11 @@ public class BesvareServiceImpl implements BesvareService {
     }
 
     @Override
-    public BesvareSporsmalDetaljer hentDetaljer(String fnr, String oppgaveId) {
+    public Optional<BesvareSporsmalDetaljer> hentDetaljer(String fnr, String oppgaveId) {
         WSSporsmalOgSvar wsSporsmalOgSvar = besvareHenvendelsePortType.hentSporsmalOgSvar(oppgaveId);
+        if (wsSporsmalOgSvar == null) {
+            return none();
+        }
         List<WSHenvendelse> wsHenvendelser = on(henvendelsePortType.hentHenvendelseListe(fnr, asList("SPORSMAL", "SVAR"))).collect(NYESTE_FORST);
 
         BesvareSporsmalDetaljer besvareSporsmalDetaljer = new BesvareSporsmalDetaljer();
@@ -52,7 +58,7 @@ public class BesvareServiceImpl implements BesvareService {
                 .filter(where(BEHANDLINGS_ID, not(equalTo(wsSporsmalOgSvar.getSporsmal().getBehandlingsId()))))
                 .map(TIL_HENVENDELSE).collect();
 
-        return besvareSporsmalDetaljer;
+        return optional(besvareSporsmalDetaljer);
 
     }
 
