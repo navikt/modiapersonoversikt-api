@@ -4,17 +4,13 @@ import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 import javax.inject.Inject;
 
 @Configuration
+@Import(WicketApplicationTestContext.class)
 public class WicketTesterConfig {
-
-    static {
-        System.setProperty("tjenestebuss.url", "http://changeme");
-        System.setProperty("ctjenestebuss.username", "me");
-        System.setProperty("ctjenestebuss.password", "secret");
-    }
 
     @Inject
     private WicketApplication application;

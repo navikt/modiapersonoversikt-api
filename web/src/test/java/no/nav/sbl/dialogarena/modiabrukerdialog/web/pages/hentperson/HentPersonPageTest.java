@@ -4,7 +4,7 @@ import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.modig.wicket.test.internal.Parameters;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.MockTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 
-@ContextConfiguration(classes = {MockTest.class, WicketTesterConfig.class})
+@ContextConfiguration(classes = {HentPersonPanelMockContext.class, WicketTesterConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class HentPersonPageTest {
 
