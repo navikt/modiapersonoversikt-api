@@ -390,6 +390,31 @@
 
             <dependency>
                 <groupId>no.nav</groupId>
+                <artifactId>sykmeldingsperioder-consumer</artifactId>
+                <scope>test</scope>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>no.nav</groupId>
+                        <artifactId>personsok-consumer</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
                 <artifactId>brukerprofil-panel</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>

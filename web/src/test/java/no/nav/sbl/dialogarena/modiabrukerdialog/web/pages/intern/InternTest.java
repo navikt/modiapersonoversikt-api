@@ -71,7 +71,6 @@ public class InternTest extends TestSecurityBaseClass {
         intern.refreshKjerneinfo(target, "");
         verify(redirectPopup, times(1)).show(target);
         verify(redirectPopup, times(0)).redirect();
-
     }
 
     @Test

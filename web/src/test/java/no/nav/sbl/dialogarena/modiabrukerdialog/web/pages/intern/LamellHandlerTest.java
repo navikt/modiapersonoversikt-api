@@ -4,21 +4,17 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationTestContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.CacheConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ForeldrepengerPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykmeldingsperiodePanelMockContext;
 import org.apache.wicket.event.IEvent;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static no.nav.modig.common.MDCOperations.MDC_CALL_ID;
-import static no.nav.modig.common.MDCOperations.generateCallId;
-import static no.nav.modig.common.MDCOperations.putToMDC;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.LamellHandler.LAMELL_FORELDREPENGER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.LamellHandler.LAMELL_KONTRAKTER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.LamellHandler.LAMELL_SYKEPENGER;
@@ -32,10 +28,13 @@ import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.reflection.Whitebox.getInternalState;
 import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
 
-@ActiveProfiles("test")
-@ContextConfiguration(classes = {ApplicationTestContext.class, CacheConfig.class, WicketTesterConfig.class})
+@ContextConfiguration(classes = {
+        KjerneinfoPepMockContext.class,
+        WicketTesterConfig.class,
+        SykmeldingsperiodePanelMockContext.class,
+        ForeldrepengerPanelMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class LamellHandlerTest extends TestSecurityBaseClass {
+public class LamellHandlerTest {
 
     private LamellHandler lamellHandler;
 
@@ -43,7 +42,6 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
     public void setup() {
         lamellHandler = new LamellHandler();
         lamellHandler.createLamellPanel("lameller", "22222222222");
-        putToMDC(MDC_CALL_ID, generateCallId());
     }
 
     @Test(expected = ApplicationException.class)
