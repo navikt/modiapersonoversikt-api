@@ -19,11 +19,13 @@ import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.LocaleFromWicketSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.InternBesvaremodus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
+import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
@@ -136,6 +138,8 @@ public class WicketApplication extends WebApplication {
         mountPage("internal/selftest", SelfTestPage.class);
 
         setSpringComponentInjector();
+
+        Datoformat.brukLocaleFra(LocaleFromWicketSession.INSTANCE);
     }
 
     @Override
