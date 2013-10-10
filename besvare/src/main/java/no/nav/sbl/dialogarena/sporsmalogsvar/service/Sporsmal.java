@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.service;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.Datoformat;
+import no.nav.sbl.dialogarena.time.Datoformat;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;

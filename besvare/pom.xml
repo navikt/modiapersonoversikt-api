@@ -35,6 +35,11 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-time</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-jetty</artifactId>
         </dependency>
 
@@ -156,18 +161,6 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <scope>compile</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>

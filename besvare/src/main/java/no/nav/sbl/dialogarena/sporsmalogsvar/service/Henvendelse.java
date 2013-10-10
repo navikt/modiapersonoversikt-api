@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.service;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.Datoformat;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
+import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.joda.time.DateTime;
 
