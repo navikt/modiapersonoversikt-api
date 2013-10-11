@@ -32,7 +32,7 @@
         <!-- Modia-komponenter-->
         <personsok.version>0.0.94</personsok.version>
         <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
-        <sporsmalogsvar.version>1.5.4</sporsmalogsvar.version>
+        <sporsmalogsvar.version>1.6</sporsmalogsvar.version>
         <soknader.liste.version>2.0.1</soknader.liste.version>
     </properties>
 
