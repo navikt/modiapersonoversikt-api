@@ -87,7 +87,9 @@ public class SoknadItem extends Panel {
         if (soknad.getSoknadStatus().equals(Soknad.SoknadStatus.UNDER_BEHANDLING)) {
             date = soknad.getUnderBehandlingStartDato();
         }
-        Label dateLabel = new Label("status-date", date != null ? printShortDate(date) : "");
+
+        String statusDato = Optional.optional(date).map(Datoformat.KORT).getOrElse("");
+        Label dateLabel = new Label("status-date",statusDato);
         return dateLabel;
     }
 
