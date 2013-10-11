@@ -6,6 +6,7 @@ import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.modia.liste.Liste;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.sbl.dialogarena.soknader.liste.SoknadListe;
+import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -31,6 +32,8 @@ public class SoknaderTestApplication extends WebApplication {
     protected void init() {
         setupSpringInjector();
         getMarkupSettings().setStripWicketTags(true);
+
+        Datoformat.brukLocaleFra(LocaleFromWicketSession.INSTANCE);
 
         new ApplicationSettingsConfig().configure(this);
         new FrontendConfigurator()

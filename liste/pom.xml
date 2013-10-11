@@ -42,6 +42,12 @@
             <artifactId>sakogbehandling-jaxws</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-time</artifactId>
+        </dependency>
+
+
         <!-- Logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>

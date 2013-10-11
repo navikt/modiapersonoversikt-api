@@ -1,7 +1,8 @@
 package no.nav.sbl.dialogarena.soknader.liste;
 
-import org.apache.wicket.behavior.Behavior;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
+import no.nav.sbl.dialogarena.time.Datoformat;
+import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
@@ -9,7 +10,6 @@ import org.apache.wicket.model.IModel;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.sbl.dialogarena.soknader.liste.util.DateFormatter.printShortDate;
 import static org.apache.wicket.model.Model.of;
 
 public class SoknadItem extends Panel {
@@ -17,9 +17,9 @@ public class SoknadItem extends Panel {
     public SoknadItem(String id, IModel<Soknad> model) {
         super(id, model);
         Soknad soknad = model.getObject();
-        String innsendtDato = printShortDate(soknad.getInnsendtDato());
-        String behandlingStart = printShortDate(soknad.getInnsendtDato());
-        String ferdigdato = printShortDate(soknad.getFerdigDato());
+        String innsendtDato = soknad.getInnsendtDato() != null ? Datoformat.kort(soknad.getInnsendtDato()) : "";
+        String behandlingStart = soknad.getInnsendtDato() != null ? Datoformat.kort(soknad.getInnsendtDato()) : "";
+        String ferdigdato = soknad.getFerdigDato() != null ? Datoformat.kort(soknad.getFerdigDato()) : "";
         add(
                 new Label("heading", soknad.getTittel()),
                 new Label("innsendtDato", "Innsendt " + innsendtDato).add(visibleIfStringIsNotEmpty(innsendtDato)),
