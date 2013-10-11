@@ -43,20 +43,20 @@
 }
 
 .soknadlistitem .soknadstatus .status-icon.under-behandling {
-    background-color: rgb(238, 190, 0);
+    background-color: #EEBE00;
 }
 
 .soknadlistitem .soknadstatus .status-icon.gammel-ferdig {
     background-color: transparent;
-    border: 1px solid rgb(12, 169, 225);
+    border: 1px solid #0CA9E1;
 }
 
 .soknadlistitem .soknadstatus .status-icon.nylig-ferdig {
-    background-color: rgb(12, 169, 225);
+    background-color: #0CA9E1;
 }
 
 .soknadlistitem .soknadData {
-    border-right: 1px solid rgb(209, 209, 209);
+    border-right: 1px solid #D1D1D1;
     display: inline-block;
     float: left;
     width: 80%;
