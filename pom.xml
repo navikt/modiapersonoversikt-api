@@ -89,7 +89,6 @@
                 <version>2.1</version>
             </dependency>
 
-
             <!-- Logback -->
             <dependency>
                 <groupId>ch.qos.logback</groupId>
