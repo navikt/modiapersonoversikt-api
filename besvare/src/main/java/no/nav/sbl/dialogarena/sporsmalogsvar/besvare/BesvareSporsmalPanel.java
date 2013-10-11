@@ -6,6 +6,8 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareSporsmalDetaljer;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelse;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Sporsmal;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Svar;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
@@ -40,7 +42,11 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.
 public class BesvareSporsmalPanel extends Panel {
 
     @Inject
-    private BesvareService service;
+    private HenvendelsePortType henvendelsePortType;
+    @Inject
+    private BesvareHenvendelsePortType besvareHenvendelsePortType;
+
+    private BesvareService service = new BesvareService(besvareHenvendelsePortType, henvendelsePortType);
 
     private SporsmalDetaljer sporsmalDetaljer;
     private TidligereDialog tidligereDialog;

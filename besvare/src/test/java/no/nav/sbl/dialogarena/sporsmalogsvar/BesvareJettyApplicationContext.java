@@ -1,13 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareHenvendelseConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.HenvendelseTestConfig;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.TjenesterMock;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
-@Import({BesvareHenvendelseConfig.class, HenvendelseTestConfig.class, BesvareServiceConfig.class})
+@Import(TjenesterMock.class)
 public class BesvareJettyApplicationContext {
 
     @Bean
