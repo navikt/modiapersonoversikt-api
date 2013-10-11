@@ -35,7 +35,7 @@ $(document).ready(function() {
     }
 
     function attachToggleHoydeListener() {
-        var $dialogInnholdTekst = $('.tidligere-dialog .dialog-innhold p');
+        var $dialogInnholdTekst = $('.tidligere-dialog .dialog-innhold .fritekst');
         var minHoyde = parseInt($dialogInnholdTekst.css('line-height')) * 2;
 
         $dialogInnholdTekst.each(function() {
@@ -52,7 +52,7 @@ $(document).ready(function() {
         $dialogInnhold.off('click');
 
         $dialogInnhold.on('click', function() {
-            var $tekstfelt = $(this).find('p');
+            var $tekstfelt = $(this).find('.fritekst');
             var animasjonsHastighet = 100;
 
             if ($tekstfelt.height() == minHoyde) {

@@ -114,6 +114,7 @@
     padding: 0 @sidepadding;
     border-bottom: 1px solid @rammeborder;
     padding-bottom: 2em;
+    line-height: 1.5em;
     h2 {
       margin: 0;
       float: left;
@@ -124,16 +125,16 @@
       float: right;
     }
     p {
-      text-align: justify;
       line-height: 1.5em;
-      padding-top: 1.5em;
-      margin-bottom: 0;
+      margin-top: 0;
+      margin-bottom: 1em;
       clear: both;
     }
   }
   .tidligere-dialog-seksjon {
     text-align: center;
     padding: 2em @sidepadding;
+    line-height: 1.5em;
     header {
       text-transform: uppercase;
       font-size: 0.8em;
@@ -150,18 +151,17 @@
           margin: 0;
         }
         hr {
-          width: 3em;
-          border: 0;
-          height: 1px;
-          background: black;
-          margin-top: 1em;
-          margin-bottom: 1em;
+          border-style: none;
         }
-        p {
-          text-align: justify;
-          line-height: 1.5em;
+        .fritekst {
+          text-align: left;
           overflow: hidden;
           margin-bottom: 0;
+          p {
+            line-height: 1.5em;
+            margin-bottom: 1em;
+            margin-top: 0;
+          }
         }
         // CSS magi for å tegne pil
         &:before, &:after {

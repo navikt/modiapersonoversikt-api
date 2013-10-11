@@ -10,7 +10,7 @@ $(document).ready(function() {
     };
 
     var attachToggleHoydeListener = function() {
-        var $tidligereMeldingTekst = $('.tidligere-melding p');
+        var $tidligereMeldingTekst = $('.tidligere-melding .fritekst');
         var minHoyde = parseInt($tidligereMeldingTekst.css('line-height')) * 2;
 
         $tidligereMeldingTekst.each(function() {
@@ -25,7 +25,7 @@ $(document).ready(function() {
         $('.tidligere-melding article').off('click');
 
         $('.tidligere-melding article').on('click', function() {
-            var $tekstFelt = $(this).find('p');
+            var $tekstFelt = $(this).find('.fritekst');
             var animasjonsHastighet = 100;
 
             if($tekstFelt.height() == minHoyde) {

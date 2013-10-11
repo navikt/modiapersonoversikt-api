@@ -13,6 +13,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
@@ -125,7 +126,7 @@ public class BesvareSporsmalPanel extends Panel {
 
         public SporsmalDetaljer(String id) {
             super(id);
-            add(new Label("sporsmal.sendtDatoAsString"), new Label("sporsmal.fritekst"));
+            add(new Label("sporsmal.sendtDatoAsString"), new MultiLineLabel("sporsmal.fritekst"));
         }
 
         public Sporsmal getSporsmal() {
@@ -141,7 +142,7 @@ public class BesvareSporsmalPanel extends Panel {
 
         @Override
         protected void populateItem(ListItem<Henvendelse> item) {
-            item.add(new Label("sendtDato"), new Label("overskrift"), new Label("fritekst"));
+            item.add(new Label("sendtDato"), new Label("overskrift"), new MultiLineLabel("fritekst"));
             item.add(hasCssClassIf("tidligere-dialog", item.getModelObject().tidligereHenvendelse));
         }
 

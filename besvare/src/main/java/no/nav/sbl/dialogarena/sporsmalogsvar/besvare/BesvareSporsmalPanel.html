@@ -30,7 +30,7 @@
         <section wicket:id="sporsmal" class="sporsmal-seksjon">
             <h2 class="robust">Fra bruker</h2>
             <aside wicket:id="sporsmal.sendtDatoAsString"/>
-            <p wicket:id="sporsmal.fritekst"/>
+            <wicket:container wicket:id="sporsmal.fritekst" />
         </section>
         <section class="tidligere-dialog-seksjon">
             <article wicket:id="tidligereDialog">
@@ -38,8 +38,10 @@
                 <div class="dialog-innhold">
                     <h2 wicket:id="overskrift" class="robust"/>
                     <div class="utvide-tekst-pil"></div>
-                    <hr/>
-                    <p wicket:id="fritekst"/>
+                    <hr class="robust-strek" />
+                    <section class="fritekst">
+                        <wicket:container wicket:id="fritekst" />
+                    </section>
                 </div>
             </article>
         </section>
