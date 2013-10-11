@@ -26,7 +26,7 @@ public class MeldingVM implements FeedItemVM, Serializable {
     public MeldingVM(Iterable<Record<Melding>> traad) {
         List<Record<Melding>> sortertTraad = on(traad).collect(NYESTE_FORST);
         Record<Melding> nyesteMelding = sortertTraad.get(0);
-        id = nyesteMelding.get(Melding.id);
+        id = nyesteMelding.get(Melding.traadId);
         avsender = (sortertTraad.size() == 1 ? "Melding" : "Svar") + " fra " +
                 (nyesteMelding.get(Melding.type) == INNGAENDE ? "Bruker" : "NAV");
         tema = nyesteMelding.get(Melding.tema);

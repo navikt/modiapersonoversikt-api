@@ -95,7 +95,7 @@ public class InnboksVM implements Serializable {
     private static final Transformer<MeldingVM, String> ID = new Transformer<MeldingVM, String>() {
         @Override
         public String transform(MeldingVM meldingVM) {
-            return meldingVM.getId();
+            return meldingVM.getTraadId();
         }
     };
 

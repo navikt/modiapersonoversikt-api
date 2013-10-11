@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareSporsmalDetaljer;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelse;
@@ -23,6 +22,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.validation.validator.StringValidator;
@@ -86,7 +86,7 @@ public class BesvareSporsmalPanel extends Panel {
             feedbackPanel.setOutputMarkupId(true);
 
             add(
-                    new Label("tema"),
+                    new Label("tema", new StringResourceModel("${tema}", BesvareSporsmalPanel.this.getDefaultModel())),
                     new CheckBox("svar.sensitiv"),
                     feedbackPanel,
                     fritekst,
@@ -107,7 +107,7 @@ public class BesvareSporsmalPanel extends Panel {
                             sporsmalDetaljer.setVisibilityAllowed(false);
                             SvarForm.this.setVisibilityAllowed(false);
 
-                            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(KVITTERING));
+                            send(getPage(), Broadcast.DEPTH, KVITTERING);
 
                             target.add(BesvareSporsmalPanel.this);
                         }

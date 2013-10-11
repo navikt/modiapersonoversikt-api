@@ -8,7 +8,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHe
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
 import java.util.List;
 
 import static java.util.Arrays.asList;
