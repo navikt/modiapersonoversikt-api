@@ -14,7 +14,7 @@
             , brukerprofilDefault
             , behandleBrukerprofilDefault
             , brukerhenvendelserDefaultWithoutCNCheck
-            , henvendelseinnsynTest
+            , henvendelseinnsynDefault
             , oppgavebehandlingDefault
             , soknaderTest
         </param-value>
