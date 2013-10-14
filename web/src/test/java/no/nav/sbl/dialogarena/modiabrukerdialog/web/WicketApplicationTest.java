@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
+import org.apache.wicket.Session;
 import org.apache.wicket.mock.MockWebRequest;
 import org.apache.wicket.mock.MockWebResponse;
 import org.apache.wicket.request.Url;
@@ -7,7 +8,6 @@ import org.junit.Test;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
-
 
 public class WicketApplicationTest {
     
@@ -20,9 +20,11 @@ public class WicketApplicationTest {
     
     @Test
     public void newSessionShouldHaveNbLocale() throws Exception {
-        MockWebRequest request = new MockWebRequest(new Url());
-        MockWebResponse resonse  = new MockWebResponse();
-
-        assertThat("nb", equalTo(application.newSession(request, resonse).getLocale().getLanguage()));
+        assertThat("nb", equalTo(createSession().getLocale().getLanguage()));
     }
+
+    private Session createSession() {
+        return application.newSession(new MockWebRequest(new Url()), new MockWebResponse());
+    }
+
 }
