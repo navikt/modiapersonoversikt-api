@@ -14,6 +14,10 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>sporsmalogsvar/common</module>
+        <module>sporsmalogsvar/besvare</module>
+        <module>sporsmalogsvar/innboks</module>
+        <module>sporsmalogsvar/widget</module>
         <module>config</module>
         <module>web</module>
         <module>jee</module>
@@ -23,7 +27,7 @@
         <wicket.version>6.11.0</wicket.version>
         <spring.version>3.2.4.RELEASE</spring.version>
         <modig.frontend.version>1.1.1-SNAPSHOT</modig.frontend.version>
-        <modig.security.version>1.0.11</modig.security.version>
+        <modig.security.version>1.0.19</modig.security.version>
 		<modig.log.version>1.1.2</modig.log.version>
         <slf4j.version>1.7.5</slf4j.version>
         <jetty.version>9.0.5.v20130815</jetty.version>
@@ -32,7 +36,6 @@
         <!-- Modia-komponenter-->
         <personsok.version>0.0.94</personsok.version>
         <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
-        <sporsmalogsvar.version>1.7</sporsmalogsvar.version>
         <soknader.liste.version>2.0.2-SNAPSHOT</soknader.liste.version>
     </properties>
 
@@ -163,6 +166,12 @@
                 <artifactId>common-time</artifactId>
                 <version>2.1</version>
             </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>common-integrasjonsutils</artifactId>
+                <version>0.0.2</version>
+			</dependency>
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -352,19 +361,19 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sporsmal-og-svar-besvare</artifactId>
-                <version>${sporsmalogsvar.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
 	        <dependency>
 	            <groupId>no.nav.sbl.dialogarena</groupId>
 	            <artifactId>sporsmal-og-svar-innboks</artifactId>
-	            <version>${sporsmalogsvar.version}</version>
+	            <version>${project.version}</version>
 	        </dependency>
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sporsmal-og-svar-widget</artifactId>
-                <version>${sporsmalogsvar.version}</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -512,12 +521,14 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-core</artifactId>
                 <version>1.0.13</version>
+                <scope>runtime</scope>
             </dependency>
 
             <dependency>
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>1.0.13</version>
+                <scope>runtime</scope>
             </dependency>
 
             <dependency>

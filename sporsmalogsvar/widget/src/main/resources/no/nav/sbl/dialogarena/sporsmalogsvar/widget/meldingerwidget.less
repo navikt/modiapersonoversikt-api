@@ -1,0 +1,95 @@
+@meldingHoyde: 85px;
+@hoydePadding: 10px;
+@borderColor: #d1d1d1;
+
+.widget-navigasjon.widget-meldinger {
+  & > ul > li {
+    &:hover {
+      a .melding-metadata {
+        border-right-color: #999;
+      }
+    }
+  }
+  & > ul > li > a {
+    &:focus {
+      background-color: #dadada !important;
+      color: black !important;
+      .melding-metadata {
+        border-right-color: #999;
+      }
+    }
+    padding: 0;
+    .melding-metadata {
+      height: @meldingHoyde;
+      padding: @hoydePadding 30px;
+      float: left;
+      overflow: hidden;
+      width: 85%;
+      border-right: 1px solid #d1d1d1;
+      label {
+        font-family: arial, sans-serif;
+        margin: 0;
+        color: black;
+        font-size:  0.85rem;
+      }
+      h4 {
+        font-family: 'Modus', arial, sans-serif;
+        margin-top: 0;
+        margin-bottom: 0.5em;
+        font-size: 1.2rem;
+      }
+      footer {
+        font-family: arial, sans-serif;
+        margin: 0;
+        font-size: 0.85rem;
+      }
+    }
+    .status-container {
+      position: relative;
+      height: @meldingHoyde;
+      padding: @hoydePadding;
+      overflow: hidden;
+      text-align: center;
+      .status {
+        position: relative;
+        top: 0;
+        height: 1em;
+        width: 1em;
+        border-radius: 50%;
+        margin: 0 auto;
+        &.ikke-besvart {
+          background-color: #eebe00;
+        }
+        &.ikke-lest-av-bruker {
+          background-color: #0ca9e1;
+        }
+        &.lest-av-bruker {
+          background-color: transparent;
+          border: 1px solid #0ca9e1;
+        }
+        &.ikke-besvart-innen-frist {
+          background-color: #ec288d;
+        }
+      }
+      div {
+        position: absolute;
+        bottom: @hoydePadding;
+        width: 100%;
+        left: 0;
+        label {
+          padding: 0 15px;
+          width: 100%;
+          font-family: arial, sans-serif;
+          font-size: 0.85rem;
+          text-transform:  none;
+          margin: 0;
+          color: black;
+          line-height: 1em;
+          &.lest-dato {
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
+}
