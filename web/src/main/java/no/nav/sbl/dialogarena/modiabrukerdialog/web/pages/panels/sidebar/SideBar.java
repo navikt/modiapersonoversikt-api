@@ -36,6 +36,7 @@ public class SideBar extends Panel {
     @RunOnEvents(Modus.BESVARE)
     public void besvarmodus(AjaxRequestTarget target, String oppgaveId) {
         LOG.info("Modus: {}. Oppgave: {}", Modus.BESVARE, oppgaveId);
+
         besvaresporsmalPanel.besvar(oppgaveId);
         besvaresporsmalPanel.setVisibilityAllowed(true);
         oppgavevalg.setVisibilityAllowed(true);

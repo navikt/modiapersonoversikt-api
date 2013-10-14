@@ -5,7 +5,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>dialogarena</artifactId>
-        <version>2.1</version>
+        <version>3-SNAPSHOT</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -32,8 +32,8 @@
         <!-- Modia-komponenter-->
         <personsok.version>0.0.94</personsok.version>
         <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
-        <sporsmalogsvar.version>1.5.2</sporsmalogsvar.version>
-        <soknader.liste.version>2.0.2-SNAPSHOT</soknader.liste.version>
+        <sporsmalogsvar.version>1.7</sporsmalogsvar.version>
+        <soknader.liste.version>2.0.1</soknader.liste.version>
     </properties>
 
     <dependencyManagement>
@@ -158,6 +158,17 @@
                 <scope>test</scope>
             </dependency>
 
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>common-time</artifactId>
+                <version>2.1</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
+                <version>0.0.12</version>
+            </dependency>
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -230,16 +241,6 @@
                 <groupId>no.nav</groupId>
                 <artifactId>personsok-panel</artifactId>
                 <version>${personsok.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>
@@ -278,18 +279,6 @@
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                    </exclusion>
-					<exclusion>
-                        <groupId>org.springframework</groupId>
-                        <artifactId>spring-web</artifactId>
-                    </exclusion>
-                    <exclusion>
                         <groupId>xml-apis</groupId>
                         <artifactId>xml-apis</artifactId>
                     </exclusion>
@@ -300,40 +289,12 @@
                 <groupId>no.nav</groupId>
                 <artifactId>kjerneinfo-hentperson</artifactId>
                 <version>${kjerneinfo.versjon}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>no.nav</groupId>
-                        <artifactId>personsok-consumer</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>kjerneinfo-panel</artifactId>
                 <version>${kjerneinfo.versjon}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>no.nav</groupId>
-                        <artifactId>personsok-consumer</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>
@@ -341,18 +302,6 @@
                 <artifactId>kjerneinfo-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>no.nav</groupId>
-                        <artifactId>personsok-consumer</artifactId>
-                    </exclusion>
                     <exclusion>
                         <groupId>commons-logging</groupId>
                         <artifactId>commons-logging</artifactId>
@@ -370,17 +319,17 @@
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
                     <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-core</artifactId>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
                     </exclusion>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>no.nav</groupId>
-                        <artifactId>personsok-consumer</artifactId>
-                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>sykmeldingsperioder-consumer</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
                     <exclusion>
                         <groupId>xml-apis</groupId>
                         <artifactId>xml-apis</artifactId>
@@ -393,18 +342,6 @@
                 <artifactId>brukerprofil-panel</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>no.nav</groupId>
-                        <artifactId>personsok-consumer</artifactId>
-                    </exclusion>
                     <exclusion>
                         <groupId>xml-apis</groupId>
                         <artifactId>xml-apis</artifactId>
@@ -446,20 +383,6 @@
                 <groupId>no.nav</groupId>
                 <artifactId>behandlebrukerprofil-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-core</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>no.nav</groupId>
-                        <artifactId>personsok-consumer</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
 
             <dependency>
@@ -552,6 +475,12 @@
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-core</artifactId>
                 <version>${spring.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -711,6 +640,10 @@
                 <version>${modig.security.version}</version>
                 <exclusions>
                     <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
                         <groupId>xml-apis</groupId>
                         <artifactId>xml-apis</artifactId>
                     </exclusion>
@@ -718,9 +651,9 @@
             </dependency>
 
             <dependency>
-              <groupId>no.nav.modig</groupId>
-              <artifactId>modig-security-core</artifactId>
-              <version>${modig.security.version}</version>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-security-core</artifactId>
+                <version>${modig.security.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
             </dependency>
@@ -733,7 +666,7 @@
                 <plugin>
                     <groupId>no.nav.maven.plugins</groupId>
                     <artifactId>modig-scm-plugin</artifactId>
-                    <version>1.1.9</version>
+                    <version>1.1.11</version>
                 </plugin>
                 <plugin>
                     <groupId>no.nav.maven.plugins</groupId>
@@ -787,21 +720,6 @@
                         <goals>
                             <goal>report</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>analyze</id>
-                        <goals>
-                            <goal>analyze-only</goal>
-                        </goals>
-                        <configuration>
-                            <failOnWarning>true</failOnWarning>
-                            <ignoreNonCompile>true</ignoreNonCompile>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

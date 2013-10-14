@@ -17,7 +17,6 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskj
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import javax.jws.WebParam;
 import javax.xml.datatype.DatatypeConfigurationException;
@@ -27,7 +26,6 @@ import java.math.BigInteger;
 @Configuration
 public class SoknaderConfig {
 
-    @Profile({"default", "soknaderDefault"})
     @Configuration
     public static class Default {
 
@@ -62,7 +60,6 @@ public class SoknaderConfig {
 
     }
 
-    @Profile({"test", "soknaderTest"})
     @Configuration
     public static class Test {
 

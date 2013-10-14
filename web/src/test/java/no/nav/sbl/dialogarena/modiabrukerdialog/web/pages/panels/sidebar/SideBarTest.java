@@ -2,14 +2,19 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar;
 
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.modig.wicket.test.internal.Parameters;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.HenvendelseinnsynConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.SoknaderConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.BesvareHenvendelseMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -22,10 +27,19 @@ import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 
-@ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
-public class SideBarTest extends TestSecurityBaseClass {
+@ContextConfiguration(classes = {
+        HentPersonPanelMockContext.class,
+        KjerneinfoPepMockContext.class,
+        WicketTesterConfig.class,
+        HenvendelseinnsynConfig.Test.class,
+        SykepengerWidgetMockContext.class,
+        SoknaderConfig.Test.class,
+        OppgavebehandlingConfig.Test.class,
+        BesvareServiceConfig.Default.class,
+        BesvareHenvendelseMockContext.class
+})
+public class SideBarTest {
 
     @Inject
     private FluentWicketTester<?> fluentWicketTester;

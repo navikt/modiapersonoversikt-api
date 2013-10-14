@@ -1,14 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
 
-import no.nav.modig.common.MDCOperations;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
-import no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ForeldrepengerPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykmeldingsperiodePanelMockContext;
 import org.apache.wicket.event.IEvent;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,10 +15,10 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import static no.nav.modig.common.MDCOperations.generateCallId;
-import static no.nav.modig.common.MDCOperations.putToMDC;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.LamellHandler.LAMELL_FORELDREPENGER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.LamellHandler.LAMELL_KONTRAKTER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.LamellHandler.LAMELL_SYKEPENGER;
+import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.Assert.assertThat;
@@ -29,9 +28,13 @@ import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.reflection.Whitebox.getInternalState;
 import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
 
-@ContextConfiguration(classes = {ApplicationContext.class, WicketTesterConfig.class})
+@ContextConfiguration(classes = {
+        KjerneinfoPepMockContext.class,
+        WicketTesterConfig.class,
+        SykmeldingsperiodePanelMockContext.class,
+        ForeldrepengerPanelMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class LamellHandlerTest extends TestSecurityBaseClass {
+public class LamellHandlerTest {
 
     private LamellHandler lamellHandler;
 
@@ -39,7 +42,6 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
     public void setup() {
         lamellHandler = new LamellHandler();
         lamellHandler.createLamellPanel("lameller", "22222222222");
-        putToMDC(MDCOperations.MDC_CALL_ID, generateCallId());
     }
 
     @Test(expected = ApplicationException.class)
@@ -49,8 +51,8 @@ public class LamellHandlerTest extends TestSecurityBaseClass {
 
     @Test
     public void handleFeedItemEventsShouldGotoForeldrePengerLamellWhenForeeldrePengerEventHappens() {
-        lamellHandler.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", SykepengerWidgetServiceImpl.FORELDREPENGER));
-        assertThat(getSelectedLamell(), equalTo(LamellHandler.LAMELL_FORELDREPENGER + "itemId"));
+        lamellHandler.handleFeedItemEvent(createEvent(), new FeedItemPayload("widgetid", "itemId", FORELDREPENGER));
+        assertThat(getSelectedLamell(), equalTo(LAMELL_FORELDREPENGER + "itemId"));
     }
 
     @Test

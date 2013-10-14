@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 
 import java.util.HashMap;
 import java.util.List;
@@ -36,7 +35,6 @@ public class OppgavebehandlingConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(OppgavebehandlingConfig.class);
 
-    @Profile({"default", "oppgavebehandlingDefault"})
     @Configuration
     public static class Default {
 
@@ -83,7 +81,6 @@ public class OppgavebehandlingConfig {
         }
     }
 
-    @Profile({"test", "oppgavebehandlingTest"})
     @Configuration
     public static class Test {
 

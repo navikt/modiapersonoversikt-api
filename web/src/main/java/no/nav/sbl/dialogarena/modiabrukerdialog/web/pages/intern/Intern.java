@@ -67,9 +67,9 @@ public class Intern extends BasePage {
         searchToggleButton = new Button("toggle-sok");
         nullstillLink = new NullstillLink("nullstill");
         add(
-            hentPersonPanel,
-            searchToggleButton,
-            nullstillLink,
+            hentPersonPanel.setOutputMarkupPlaceholderTag(true),
+            searchToggleButton.setOutputMarkupPlaceholderTag(true),
+            nullstillLink.setOutputMarkupPlaceholderTag(true),
             new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
             new PersonsokPanel("personsokPanel").setVisible(true),
             lamellHandler.createLamellPanel("lameller", fnr),
@@ -83,6 +83,16 @@ public class Intern extends BasePage {
         hentPersonPanel.setVisibilityAllowed(false);
         searchToggleButton.setVisibilityAllowed(false);
         nullstillLink.setVisibilityAllowed(false);
+        if (target != null) {
+            target.add(hentPersonPanel, searchToggleButton, nullstillLink);
+        }
+    }
+
+    @RunOnEvents(Modus.KVITTERING)
+    public void visSokOgNullstillknapp(AjaxRequestTarget target){
+        hentPersonPanel.setVisibilityAllowed(true);
+        searchToggleButton.setVisibilityAllowed(true);
+        nullstillLink.setVisibilityAllowed(true);
         if (target != null) {
             target.add(hentPersonPanel, searchToggleButton, nullstillLink);
         }
