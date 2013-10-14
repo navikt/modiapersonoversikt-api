@@ -85,12 +85,12 @@ public class WicketApplication extends WebApplication {
                         BasePage.INTERN_LESS,
                         BasePage.BESVARESPORSALPANEL,
                         BasePage.MELDINGERWIDGET,
-                        BasePage.MELDINGERLAMELL)
+                        BasePage.MELDINGERLAMELL,
+                        SoknadListe.SOKNADSLISTE_LESS)
                 .addCss(
                         BasePage.PERSONSOKRESULT,
                         BasePage.PERSONSOKSEARCH,
-                        BasePage.PERSONKJERNEINFO,
-                        SoknadListe.CSS_RESOURCE
+                        BasePage.PERSONKJERNEINFO
                 )
                 .addScripts(SPIResources.getScripts())
 		        .addScripts(
