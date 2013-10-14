@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
-        <artifactId>sporsmal-og-svar</artifactId>
-        <version>1.8-SNAPSHOT</version>
+        <artifactId>modiabrukerdialog</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>sporsmal-og-svar-common</artifactId>

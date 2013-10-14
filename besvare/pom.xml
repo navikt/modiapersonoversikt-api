@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
-        <artifactId>sporsmal-og-svar</artifactId>
-        <version>1.8-SNAPSHOT</version>
+        <artifactId>modiabrukerdialog</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>sporsmal-og-svar-besvare</artifactId>
@@ -22,7 +22,6 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
@@ -100,10 +99,6 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-web</artifactId>
         </dependency>
 
         <dependency>

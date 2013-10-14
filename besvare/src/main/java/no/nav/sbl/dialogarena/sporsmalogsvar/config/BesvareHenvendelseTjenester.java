@@ -1,8 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.inject.Inject;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
@@ -16,6 +13,11 @@ import org.apache.cxf.ws.security.SecurityConstants;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import javax.inject.Inject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class BesvareHenvendelseTjenester {
@@ -61,7 +63,7 @@ public class BesvareHenvendelseTjenester {
         JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
         Map<String, Object> properties = new HashMap<>();
         properties.put("schema-validation-enabled", true);
-        properties.put(SecurityConstants.MUSTUNDERSTAND, false);
+        properties.put(SecurityConstants.MUST_UNDERSTAND, false);
         factoryBean.setProperties(properties);
         factoryBean.getFeatures().addAll(jaxwsFeatures.jaxwsFeatures());
         factoryBean.getOutInterceptors().add(samlOutInterceptor);
