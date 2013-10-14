@@ -14,10 +14,10 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>common</module>
-        <module>besvare</module>
-        <module>innboks</module>
-        <module>widget</module>
+        <module>sporsmalogsvar/common</module>
+        <module>sporsmalogsvar/besvare</module>
+        <module>sporsmalogsvar/innboks</module>
+        <module>sporsmalogsvar/widget</module>
         <module>config</module>
         <module>web</module>
         <module>jee</module>

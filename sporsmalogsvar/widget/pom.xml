@@ -5,13 +5,20 @@
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>modiabrukerdialog</artifactId>
         <version>2.0.0-SNAPSHOT</version>
+		<relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>sporsmal-og-svar-common</artifactId>
+    <artifactId>sporsmal-og-svar-widget</artifactId>
     <name>${project.artifactId}</name>
 
-
     <dependencies>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sporsmal-og-svar-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
@@ -19,18 +26,7 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-integrasjonsutils</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>jcl-over-slf4j</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-core</artifactId>
+            <artifactId>common-time</artifactId>
         </dependency>
 
         <dependency>
@@ -39,8 +35,13 @@
         </dependency>
 
         <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-wicket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
         </dependency>
 
         <dependency>
@@ -48,7 +49,18 @@
             <artifactId>collections-generic</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
     </dependencies>
+
 
     <build>
         <resources>
