@@ -1,12 +1,17 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgavevalg;
 
 import no.nav.modig.wicket.test.FluentWicketTester;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationTestContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.CacheConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.HenvendelseinnsynConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.SoknaderConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.BesvareHenvendelseMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave.HentOppgavePanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig;
 import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.junit.Test;
@@ -28,8 +33,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 @ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ApplicationTestContext.class, CacheConfig.class, WicketTesterConfig.class})
-public class OppgavevalgPanelTest extends TestSecurityBaseClass {
+@ContextConfiguration(classes = {
+        HentPersonPanelMockContext.class,
+        KjerneinfoPepMockContext.class,
+        WicketTesterConfig.class,
+        HenvendelseinnsynConfig.Test.class,
+        SykepengerWidgetMockContext.class,
+        SoknaderConfig.Test.class,
+        OppgavebehandlingConfig.Test.class,
+        BesvareServiceConfig.Default.class,
+        BesvareHenvendelseMockContext.class
+})
+public class OppgavevalgPanelTest {
 
     @Inject
     private FluentWicketTester<?> wicket;
