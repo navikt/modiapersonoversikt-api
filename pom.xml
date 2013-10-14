@@ -24,7 +24,7 @@
         <modig.wicket.version>1.0.28</modig.wicket.version>
         <modig.core.version>1.0.1</modig.core.version>
         <wicket.version>6.10.0</wicket.version>
-        <modig.frontend.version>1.0.18</modig.frontend.version>
+        <modig.frontend.version>1.1.1-SNAPSHOT</modig.frontend.version>
         <slf4j.version>1.7.5</slf4j.version>
         <sakogbehandling.jaxws.version>1.0.1</sakogbehandling.jaxws.version>
         <mockito.core.version>1.9.5</mockito.core.version>

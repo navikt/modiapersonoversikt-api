@@ -34,10 +34,10 @@ public class SoknaderTestPageTest extends AbstractWicketTest {
     }
 
     @Test
-    public void shouldContainSixSoknader() {
+    public void shouldContainFiveSoknader() {
         Component liste = wicketTester.goTo(SoknaderTestPage.class).get().component(withId("soknadListe"));
         List<Component> listitems = wicketTester.get().components(withId("content").and(containedInComponent(equalTo(liste))));
-        assertThat(listitems.size(), is(equalTo(6)));
+        assertThat(listitems.size(), is(equalTo(5)));
     }
 
     @Test
@@ -45,10 +45,9 @@ public class SoknaderTestPageTest extends AbstractWicketTest {
         Component listItem = getFirstListItemFromFirstListe();
         assertThat(getTextFromListItem("innsendtDato", listItem), is(equalTo("Innsendt 01.10.2013")));
         assertThat(getTextFromListItem("heading", listItem), is(equalTo("Dagpenger")));
-        assertThat(getTextFromListItem("behandlingStart", listItem), is(equalTo("Under behandling siden  01.10.2013")));
         assertThat(getTextFromListItem("behandlingsTid", listItem), is(equalTo("Normert behandlingstid 10 dager")));
-        assertThat(getTextFromListItem("status", listItem), is(equalTo("MOTTATT")));
-        wicketTester.should().containComponent(both(withId("ferdigBehandlet").and(thatIsInvisible())));
+        assertThat(getTextFromListItem("status", listItem), is(equalTo("Mottatt")));
+        assertThat(getTextFromListItem("status-date", listItem), is(equalTo("")));
     }
 
     private Component getFirstListItemFromFirstListe() {

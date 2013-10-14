@@ -1,0 +1,79 @@
+.soknads-liste.liste  UL  LI {
+    padding-top: 0;
+    padding-right: 0;
+    padding-left: 30px;
+    padding-bottom: 0;
+}
+
+.soknadlistitem {
+    height: 100%;
+    display: block;
+
+    .soknadstatus {
+        float: right;
+        display: block;
+        width: 20%;
+        text-align: center;
+        height: auto;
+        vertical-align: middle;
+        padding-top: 10px;
+        .status-text {
+            text-align: center;
+            font-size: 0.8em;
+            color: black;
+            padding-top: 3px;
+        }
+        .status-icon {
+            height: 1em;
+            width: 1em;
+            border-radius: 50%;
+            margin: 1em auto;
+            &.mottat {
+                background-color: #d8d8d8;
+            }
+            &.under-behandling {
+                background-color: #EEBE00;
+            }
+            &.gammel-ferdig {
+                background-color: transparent;
+                border: 1px solid #0CA9E1;
+            }
+            &.nylig-ferdig {
+                background-color: #0CA9E1;
+            }
+        }
+        .status-date {
+            text-align: center;
+            font-size: 0.7em;
+            font-weight: 600;
+            line-height: 1em;
+        }
+    }
+
+    .soknadData {
+        border-right: 1px solid #D1D1D1;
+        display: inline-block;
+        float: left;
+        width: 80%;
+        padding-top: 10px;
+        padding-bottom: 20px;
+        .tidsrom {
+            color: black;
+        }
+        .heading {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+            margin-top: 0;
+        }
+        .metaData {
+            margin-right: 37px;
+            overflow: auto;
+            float: left;
+            display: inline;
+            padding: 0;
+            margin-right: 0;
+            border-right: none;
+        }
+    }
+}

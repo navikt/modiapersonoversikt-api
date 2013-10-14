@@ -35,7 +35,7 @@ public class SoknaderMockContext {
         return asList(
                 createMottattSoknad(),
                 createMottattSoknadUtenBehandlingsTid(),
-                createMottattSoknadUtenInnsendtDato(),
+//                createMottattSoknadUtenInnsendtDato(),
                 createUnderBehandlingSoknad(),
                 createNyligFerdigSoknad(),
                 createGammelFerdigSoknad()
