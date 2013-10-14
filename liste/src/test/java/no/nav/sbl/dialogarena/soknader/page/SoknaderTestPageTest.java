@@ -7,9 +7,7 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.containedInComponent;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
