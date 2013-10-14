@@ -47,7 +47,7 @@ public class SoknaderTestApplication extends WebApplication {
                                 .done())
                 .withResourcePacking(this.usesDeploymentConfig())
                 .addScripts(Liste.JS_RESOURCE)
-                .addCss(SoknadListe.CSS_RESOURCE)
+                .addLess(SoknadListe.SOKNADSLISTE_LESS)
                 .configure(this);
     }
 }
