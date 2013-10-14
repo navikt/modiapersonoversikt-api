@@ -164,6 +164,11 @@
                 <version>2.1</version>
             </dependency>
 
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
+                <version>0.0.12</version>
+            </dependency>
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>

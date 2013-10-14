@@ -1,19 +1,23 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave;
 
 import no.nav.modig.wicket.test.FluentWicketTester;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationTestContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.CacheConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.HenvendelseinnsynConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.SoknaderConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.BesvareHenvendelseMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.BesvareSporsmalPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Sporsmal;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Svar;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -28,10 +32,19 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 
-@ActiveProfiles("test")
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ApplicationTestContext.class, CacheConfig.class, WicketTesterConfig.class})
-public class HentOppgavePanelTest extends TestSecurityBaseClass {
+@ContextConfiguration(classes = {
+        HentPersonPanelMockContext.class,
+        KjerneinfoPepMockContext.class,
+        WicketTesterConfig.class,
+        HenvendelseinnsynConfig.Test.class,
+        SykepengerWidgetMockContext.class,
+        SoknaderConfig.Test.class,
+        OppgavebehandlingConfig.Test.class,
+        BesvareServiceConfig.Default.class,
+        BesvareHenvendelseMockContext.class
+})
+public class HentOppgavePanelTest {
 
     @Inject
     private FluentWicketTester<?> wicket;
