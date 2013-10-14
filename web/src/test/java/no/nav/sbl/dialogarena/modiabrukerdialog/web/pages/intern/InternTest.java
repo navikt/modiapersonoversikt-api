@@ -5,13 +5,18 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationTestContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.CacheConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.HenvendelseinnsynConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.SoknaderConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.BesvareHenvendelseMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.BesvareSporsmalPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -35,9 +40,19 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ActiveProfiles("test")
-@ContextConfiguration(classes = {ApplicationTestContext.class, CacheConfig.class, WicketTesterConfig.class})
+@ContextConfiguration(classes = {
+        HentPersonPanelMockContext.class,
+        KjerneinfoPepMockContext.class,
+        WicketTesterConfig.class,
+        HenvendelseinnsynConfig.Test.class,
+        SykepengerWidgetMockContext.class,
+        SoknaderConfig.Test.class,
+        OppgavebehandlingConfig.Test.class,
+        BesvareServiceConfig.Default.class,
+        BesvareHenvendelseMockContext.class
+})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class InternTest extends TestSecurityBaseClass {
+public class InternTest {
 
     @Inject
     private FluentWicketTester<?> wicket;

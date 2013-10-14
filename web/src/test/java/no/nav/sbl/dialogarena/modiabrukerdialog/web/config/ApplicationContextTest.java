@@ -1,11 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.TestSecurityBaseClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
+import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 
 @ActiveProfiles({
         "kjerneinfoDefault",
@@ -21,7 +24,13 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = ApplicationContext.class)
-public class ApplicationContextTest extends TestSecurityBaseClass {
+public class ApplicationContextTest {
+
+    @BeforeClass
+    public static void setupStatic() {
+        setFrom("environment-local.properties");
+        setupKeyAndTrustStore();
+    }
 
     @Test
     public void shouldSetupAppContext() { }
