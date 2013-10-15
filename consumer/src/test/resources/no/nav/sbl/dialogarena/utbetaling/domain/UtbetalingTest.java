@@ -25,4 +25,11 @@ public class UtbetalingTest {
         assertThat(utbetaling.getEndDate() , is(nullValue()));
     }
 
+    @Test
+    public void extractDatoFromNullPeriodeString(){
+        Utbetaling utbetaling = new UtbetalingBuilder().setPeriode(null).createUtbetaling();
+        assertThat(utbetaling.getStartDate() , is(nullValue()));
+        assertThat(utbetaling.getEndDate() , is(nullValue()));
+    }
+
 }
