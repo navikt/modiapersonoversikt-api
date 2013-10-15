@@ -34,8 +34,18 @@ public class Utbetaling {
     private void extractPeriodDates(String periode) {
         // ÅÅÅÅ.MM.DD-ÅÅÅÅ.MM.DD
         String[] datoer = periode.split("-");
-        startDate = DateTime.parse(datoer[0], DateTimeFormat.forPattern("YYYY.MM.dd"));
-        endDate = DateTime.parse(datoer[1], DateTimeFormat.forPattern("YYYY.MM.dd"));
+        if (datoer.length >= 1)
+            try {
+                startDate = DateTime.parse(datoer[0], DateTimeFormat.forPattern("YYYY.MM.dd"));
+            } catch (IllegalArgumentException e) {
+                startDate = null;
+            }
+        if (datoer.length >= 2)
+            try {
+                endDate = DateTime.parse(datoer[1], DateTimeFormat.forPattern("YYYY.MM.dd"));
+            } catch (IllegalArgumentException e) {
+                endDate = null;
+            }
     }
 
     public String getValuta() {
