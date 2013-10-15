@@ -8,8 +8,6 @@ import java.util.List;
 public class UtbetalingBuilder {
     private List<Bilag> bilag = new ArrayList<>();
     private String beskrivelse = "Dagpenger";
-    private DateTime startDate = DateTime.now().minusDays(5);
-    private DateTime endDate = DateTime.now().minusDays(2);
     private String periode = "2013.10.07-2013.11.07";
     private String statuskode = "10";
     private DateTime utbetalingsDato = DateTime.now().minus(1);
@@ -24,16 +22,6 @@ public class UtbetalingBuilder {
 
     public UtbetalingBuilder setBeskrivelse(String beskrivelse) {
         this.beskrivelse = beskrivelse;
-        return this;
-    }
-
-    public UtbetalingBuilder setStartDate(DateTime startDate) {
-        this.startDate = startDate;
-        return this;
-    }
-
-    public UtbetalingBuilder setEndDate(DateTime endDate) {
-        this.endDate = endDate;
         return this;
     }
 
