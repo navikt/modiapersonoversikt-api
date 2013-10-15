@@ -374,24 +374,6 @@
             </dependency>
 
             <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-besvare</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-	        <dependency>
-	            <groupId>no.nav.sbl.dialogarena</groupId>
-	            <artifactId>sporsmal-og-svar-innboks</artifactId>
-	            <version>${project.version}</version>
-	        </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-widget</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>brukerprofil-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
