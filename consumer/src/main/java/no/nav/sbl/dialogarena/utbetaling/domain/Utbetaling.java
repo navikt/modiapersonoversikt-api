@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import java.util.List;
 
@@ -17,17 +18,24 @@ public class Utbetaling {
     private double nettoBelop;
     private String valuta;
 
-    public Utbetaling(List<Bilag> bilag, String beskrivelse, DateTime startDate, DateTime endDate, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta) {
+    public Utbetaling(List<Bilag> bilag, String beskrivelse, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta) {
         this.bilag = bilag;
         this.beskrivelse = beskrivelse;
-        this.startDate = startDate;
-        this.endDate = endDate;
         this.periode = periode;
         this.statuskode = statuskode;
         this.utbetalingsDato = utbetalingsDato;
         this.bruttoBelop = bruttoBelop;
         this.nettoBelop = nettoBelop;
         this.valuta = valuta;
+        extractPeriodDates(periode);
+
+    }
+
+    private void extractPeriodDates(String periode) {
+        // ÅÅÅÅ.MM.DD-ÅÅÅÅ.MM.DD
+        String[] datoer = periode.split("-");
+        startDate = DateTime.parse(datoer[0], DateTimeFormat.forPattern("YYYY.MM.dd"));
+        endDate = DateTime.parse(datoer[1], DateTimeFormat.forPattern("YYYY.MM.dd"));
     }
 
     public String getValuta() {

@@ -70,6 +70,6 @@ public class UtbetalingBuilder {
 
 
     public Utbetaling createUtbetaling() {
-        return new Utbetaling(bilag, beskrivelse, startDate, endDate, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta);
+        return new Utbetaling(bilag, beskrivelse, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta);
     }
 }

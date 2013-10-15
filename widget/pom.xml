@@ -39,12 +39,6 @@
             <artifactId>joda-time</artifactId>
         </dependency>
 
-        <!-- Spring -->
-        <!--<dependency>-->
-            <!--<groupId>org.springframework</groupId>-->
-            <!--<artifactId>spring-context</artifactId>-->
-        <!--</dependency>-->
-
         <!-- Logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
@@ -54,6 +48,13 @@
         <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <scope>runtime</scope>
+            <version>1.7.5</version>
         </dependency>
 
 
