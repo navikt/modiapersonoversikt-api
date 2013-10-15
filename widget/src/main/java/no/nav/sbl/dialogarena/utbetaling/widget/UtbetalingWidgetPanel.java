@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
+import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -12,14 +14,18 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
         setOutputMarkupId(true);
         WebMarkupContainer statusContainer = new WebMarkupContainer("status-container");
         UtbetalingVM utbetalingVM = model.getObject();
-        Label utbetalingsDato = new Label("utbetalingsDato", utbetalingVM.getUtbetalingsDato());
-        Label beskrivelse = new Label("beskrivelse", utbetalingVM.getBeskrivelse());
-        Label periode = new Label("periode", utbetalingVM.getPeriode());
-        Label belop = new Label("belop", utbetalingVM.getBelop());
-        Label status = new Label("status", utbetalingVM.getStatus());
-        statusContainer.add(status);
+        String utbetalingsDato = Optional.optional(utbetalingVM.getUtbetalingsDato()).map(Datoformat.KORT).getOrElse("Ingen utbetalingsdato");
+        String startDato =Optional.optional(utbetalingVM.getStartDato()).map(Datoformat.KORT).getOrElse("Ingen startdato");
+        String sluttDato =Optional.optional(utbetalingVM.getSluttDato()).map(Datoformat.KORT).getOrElse("Ingen sluttdato");
 
-        add(statusContainer, utbetalingsDato, belop, beskrivelse, periode);
+        String periode = startDato + "-" + sluttDato;
+
+        statusContainer.add(new Label("status", utbetalingVM.getStatus()));
+        add(statusContainer,
+                new Label("utbetalingsDato",utbetalingsDato),
+                new Label("belop", utbetalingVM.getBelop()),
+                new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
+                new Label("periode", periode));
 
     }
 }

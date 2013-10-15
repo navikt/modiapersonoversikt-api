@@ -7,7 +7,7 @@ public class UtbetalingTestPage extends WebPage {
 
 
     public UtbetalingTestPage() {
-        add(new UtbetalingWidget("utbetalingWidget", "initial", "12345612345"));
+        add(new UtbetalingWidget("utbetalingWidget", "U", "12345612345"));
     }
 
 }
