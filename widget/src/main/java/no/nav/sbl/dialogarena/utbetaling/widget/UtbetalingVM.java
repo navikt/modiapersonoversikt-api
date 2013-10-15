@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 
-public class UtbetalingVM implements FeedItemVM, Serializable {
+public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<UtbetalingVM> {
 
     private Utbetaling utbetaling;
 
@@ -50,5 +50,10 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
     @Override
     public String getId() {
         return "1";  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public int compareTo(UtbetalingVM o) {
+        return o.getUtbetalingsDato().compareTo(getUtbetalingsDato());
     }
 }

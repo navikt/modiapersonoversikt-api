@@ -8,6 +8,7 @@ import org.apache.wicket.model.IModel;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
@@ -27,6 +28,8 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
         for (Utbetaling utbetaling : utbetalinger) {
             utbetalingVMs.add(new UtbetalingVM(utbetaling));
         }
+        Collections.sort(utbetalingVMs);
+
         return utbetalingVMs;
     }
 
