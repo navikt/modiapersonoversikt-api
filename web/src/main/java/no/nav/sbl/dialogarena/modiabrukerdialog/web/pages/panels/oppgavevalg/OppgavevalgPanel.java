@@ -15,31 +15,33 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.verktoy.Synlighet.vis
 
 public class OppgavevalgPanel extends Panel {
 
-    private final AjaxLink<Void> leggTilbakeLenke;
-    private final WebMarkupContainer valgliste;
+    private AjaxLink<Void> leggTilbakeLenke;
+    private WebMarkupContainer valgliste;
 
     public OppgavevalgPanel(String id) {
         super(id);
-
         final LeggTilbakeForm leggTilbakeSkjema = new LeggTilbakeForm("legg-tilbake-form");
+        instantiateLeggTilbakeLenke(leggTilbakeSkjema);
+        instantiateValgliste(leggTilbakeSkjema);
+        add(
+                valgliste,
+                leggTilbakeSkjema,
+                createOppgavevalgLenke(leggTilbakeSkjema)
+        );
+    }
 
-        valgliste = new WebMarkupContainer("oppgavevalg-liste");
-
-        leggTilbakeLenke = new AjaxLink<Void>("legg-tilbake-link") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                skjul(valgliste);
-                vis(leggTilbakeSkjema);
-                target.add(valgliste, leggTilbakeSkjema);
-            }
-        };
+    private void instantiateLeggTilbakeLenke(LeggTilbakeForm leggTilbakeSkjema) {
+        leggTilbakeLenke = createLeggTilbakeLink(leggTilbakeSkjema);
         taMedIMarkupSelvOmUsynlig(leggTilbakeLenke);
+    }
 
+    private void instantiateValgliste(LeggTilbakeForm leggTilbakeSkjema) {
+        valgliste = (WebMarkupContainer) new WebMarkupContainer("oppgavevalg-liste").add(leggTilbakeLenke);
         skjulMenTaMedIMarkupLikevel(leggTilbakeSkjema, valgliste);
+    }
 
-        valgliste.add(leggTilbakeLenke);
-
-        AjaxLink<Void> oppgavevalglenke = new AjaxLink<Void>("oppgavevalg-link") {
+    private AjaxLink<Void> createOppgavevalgLenke(final LeggTilbakeForm leggTilbakeSkjema) {
+        return new AjaxLink<Void>("oppgavevalg-link") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 flippSynlighet(valgliste);
@@ -47,8 +49,17 @@ public class OppgavevalgPanel extends Panel {
                 target.add(valgliste, leggTilbakeSkjema);
             }
         };
+    }
 
-        add(valgliste, leggTilbakeSkjema, oppgavevalglenke);
+    private AjaxLink<Void> createLeggTilbakeLink(final LeggTilbakeForm leggTilbakeSkjema) {
+        return new AjaxLink<Void>("legg-tilbake-link") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                skjul(valgliste);
+                vis(leggTilbakeSkjema);
+                target.add(valgliste, leggTilbakeSkjema);
+            }
+        };
     }
 
     @RunOnEvents(Modus.KVITTERING)

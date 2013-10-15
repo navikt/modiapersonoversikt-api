@@ -75,7 +75,7 @@ public class LamellHandlerTest {
     }
 
     @Test
-    public void handleFeedItemEventsShouldGotoDiffenrentLammelWhenDifferentItemIsClicked() {
+    public void handleFeedItemEventsShouldGotoDifferentLammelWhenDifferentItemIsClicked() {
         IEvent<String> event = createEvent();
         FeedItemPayload payload = new FeedItemPayload("widgetid", "itemId", SYKEPENGER);
         lamellHandler.handleFeedItemEvent(event, payload);

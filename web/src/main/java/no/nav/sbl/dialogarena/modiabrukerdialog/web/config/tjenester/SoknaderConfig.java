@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester;
 
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;

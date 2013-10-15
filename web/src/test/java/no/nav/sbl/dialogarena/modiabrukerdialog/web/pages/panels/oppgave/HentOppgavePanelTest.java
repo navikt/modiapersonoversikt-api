@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.HenvendelseinnsynConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.felles.SoknaderConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseinnsynConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.BesvareHenvendelseMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
@@ -69,16 +69,23 @@ public class HentOppgavePanelTest {
         wicket.goTo(Intern.class).click().link(withId("plukk-oppgave"));
         wicket.tester.executeAjaxEvent(wicket.get().components(ofType(ListItem.class).and(containedInComponent(ofType(HentOppgavePanel.class)))).get(0), "click");
 
-        Sporsmal sporsmal = (Sporsmal) wicket.get()
-                .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("sporsmal")))
-                .getDefaultModelObject();
+        Sporsmal sporsmal = getSporsmal();
         assertThat(sporsmal.fritekst, notNullValue());
         assertThat(sporsmal.sendtDato, notNullValue());
 
-        Svar svar = (Svar) wicket.get()
-                .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("svar"))).getDefaultModelObject();
-
+        Svar svar = getSvar();
         assertThat(svar.behandlingId, notNullValue());
+    }
+
+    private Svar getSvar() {
+        return (Svar) wicket.get()
+                .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("svar"))).getDefaultModelObject();
+    }
+
+    private Sporsmal getSporsmal() {
+        return (Sporsmal) wicket.get()
+                .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("sporsmal")))
+                .getDefaultModelObject();
     }
 
 }

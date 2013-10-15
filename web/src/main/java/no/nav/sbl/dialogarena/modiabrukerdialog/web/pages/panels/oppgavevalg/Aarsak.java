@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgavevalg;
 
 public enum Aarsak {
+
     INHABIL("Jeg er inhabil"),
     ANNEN("Annen årsak");
 

@@ -11,23 +11,22 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave.HentOppgavePanel;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 
+import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGANG;
+import static org.apache.wicket.event.Broadcast.BREADTH;
+import static org.apache.wicket.event.Broadcast.DEPTH;
+import static org.apache.wicket.markup.head.OnLoadHeaderItem.forScript;
+
 public class HentPersonPage extends BasePage {
 
-
     public HentPersonPage(PageParameters pageParameters) {
-
         HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel");
-        StringValue errorText = pageParameters.get("error");
-        if (!errorText.isEmpty()) {
-            hentPersonPanel.setErrorText(errorText.toString());
-        }
+        setupErrorText(pageParameters, hentPersonPanel);
         add(
                 new ContextImage("modia-logo", "img/modiaLogo.svg"),
                 hentPersonPanel,
@@ -37,9 +36,16 @@ public class HentPersonPage extends BasePage {
 
     }
 
+    private void setupErrorText(PageParameters pageParameters, HentPersonPanel hentPersonPanel) {
+        StringValue errorText = pageParameters.get("error");
+        if (!errorText.isEmpty()) {
+            hentPersonPanel.setErrorText(errorText.toString());
+        }
+    }
+
     @Override
     public void renderHead(IHeaderResponse response) {
-        response.render(OnLoadHeaderItem.forScript("jQuery('#foedselsnummerInput').focus()"));
+        response.render(forScript("jQuery('#foedselsnummerInput').focus()"));
     }
 
     public boolean isVersioned() {
@@ -59,12 +65,12 @@ public class HentPersonPage extends BasePage {
 
     @RunOnEvents(InternalEvents.PERSONSOK_FNR_CLICKED)
     public void personsokresultatClicked(AjaxRequestTarget target, String query) {
-        send(getPage(), Broadcast.DEPTH, new NamedEventPayload(InternalEvents.FNR_CHANGED, query));
+        send(getPage(), DEPTH, new NamedEventPayload(FNR_CHANGED, query));
     }
 
     @RunOnEvents(InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG)
     public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
-        send(getPage(), Broadcast.BREADTH, new NamedEventPayload(InternalEvents.FODSELSNUMMER_IKKE_TILGANG, query));
+        send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
     }
 
 }
