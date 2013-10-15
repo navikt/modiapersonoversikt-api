@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
 
@@ -13,8 +14,8 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
         this.utbetaling = utbetaling;
     }
 
-    public String getUtbetalingsDato() {
-        return utbetaling.getUtbetalingsDato().toString();
+    public DateTime getUtbetalingsDato() {
+        return utbetaling.getUtbetalingsDato();
     }
 
     public String getBeskrivelse() {
@@ -31,6 +32,14 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
 
     public String getStatus() {
         return utbetaling.getStatuskode();
+    }
+
+    public DateTime getStartDato(){
+        return utbetaling.getStartDate();
+    }
+
+    public DateTime getSluttDato(){
+        return utbetaling.getEndDate();
     }
 
     @Override

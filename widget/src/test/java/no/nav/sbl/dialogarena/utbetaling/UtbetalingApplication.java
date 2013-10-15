@@ -4,6 +4,7 @@ import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.FrontendModules;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
+import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -30,7 +31,7 @@ public class UtbetalingApplication extends WebApplication {
         setupSpringInjector();
         getMarkupSettings().setStripWicketTags(true);
 
-        //        Datoformat.brukLocaleFra(LocaleFromWicketSession.INSTANCE);
+        Datoformat.brukLocaleFra(LocaleFromWicketSession.INSTANCE);
 
         new ApplicationSettingsConfig().configure(this);
         new FrontendConfigurator()
