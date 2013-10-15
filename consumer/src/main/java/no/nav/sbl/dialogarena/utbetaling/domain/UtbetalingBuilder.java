@@ -67,6 +67,8 @@ public class UtbetalingBuilder {
         return this;
     }
 
+
+
     public Utbetaling createUtbetaling() {
         return new Utbetaling(bilag, beskrivelse, startDate, endDate, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta);
     }
