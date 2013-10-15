@@ -29,15 +29,15 @@
             <artifactId>modig-frontend-wicket</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-frontend-ressurser</artifactId>
-        </dependency>
-
         <!--<dependency>-->
-            <!--<groupId>joda-time</groupId>-->
-            <!--<artifactId>joda-time</artifactId>-->
+            <!--<groupId>no.nav.modig</groupId>-->
+            <!--<artifactId>modig-frontend-ressurser</artifactId>-->
         <!--</dependency>-->
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
 
         <!-- Spring -->
         <!--<dependency>-->
@@ -128,5 +128,24 @@
                 </excludes>
             </testResource>
         </testResources>
+        <plugins>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>analyze</id>
+                        <goals>
+                            <goal>analyze-only</goal>
+                        </goals>
+                        <configuration>
+                            <usedDependencies>
+                                <usedDependency>ch.qos.logback:logback-core</usedDependency>
+                                <usedDependency>ch.qos.logback:logback-classic</usedDependency>
+                            </usedDependencies>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>
