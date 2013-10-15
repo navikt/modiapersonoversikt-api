@@ -145,11 +145,6 @@
 
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-log-common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket-test</artifactId>
         </dependency>
 

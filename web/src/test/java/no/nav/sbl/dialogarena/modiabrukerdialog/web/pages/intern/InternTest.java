@@ -110,5 +110,4 @@ public class InternTest {
             .should().containComponent(ofType(BesvareSporsmalPanel.class).and(thatIsVisible()));
     }
 
-
 }

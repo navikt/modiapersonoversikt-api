@@ -69,16 +69,23 @@ public class HentOppgavePanelTest {
         wicket.goTo(Intern.class).click().link(withId("plukk-oppgave"));
         wicket.tester.executeAjaxEvent(wicket.get().components(ofType(ListItem.class).and(containedInComponent(ofType(HentOppgavePanel.class)))).get(0), "click");
 
-        Sporsmal sporsmal = (Sporsmal) wicket.get()
-                .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("sporsmal")))
-                .getDefaultModelObject();
+        Sporsmal sporsmal = getSporsmal();
         assertThat(sporsmal.fritekst, notNullValue());
         assertThat(sporsmal.sendtDato, notNullValue());
 
-        Svar svar = (Svar) wicket.get()
-                .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("svar"))).getDefaultModelObject();
-
+        Svar svar = getSvar();
         assertThat(svar.behandlingId, notNullValue());
+    }
+
+    private Svar getSvar() {
+        return (Svar) wicket.get()
+                .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("svar"))).getDefaultModelObject();
+    }
+
+    private Sporsmal getSporsmal() {
+        return (Sporsmal) wicket.get()
+                .component(both(containedInComponent(ofType(BesvareSporsmalPanel.class))).and(withId("sporsmal")))
+                .getDefaultModelObject();
     }
 
 }

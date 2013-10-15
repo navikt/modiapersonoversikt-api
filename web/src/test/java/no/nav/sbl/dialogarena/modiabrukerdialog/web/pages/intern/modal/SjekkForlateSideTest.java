@@ -27,16 +27,17 @@ public class SjekkForlateSideTest {
     private FluentWicketTester<?> fluentWicketTester;
 
     private SjekkForlateSideAnswer answer;
+    private SjekkForlateSide sjekkForlateSide;
 
     @Before
     public void setup() {
         answer = new SjekkForlateSideAnswer();
+        sjekkForlateSide = new SjekkForlateSide("id", new RedirectModalWindow("modigModalWindow"), answer);
+
     }
 
     @Test
     public void skalOppretteSjekkForlateSide() {
-        SjekkForlateSide sjekkForlateSide = new SjekkForlateSide("id", new RedirectModalWindow("modigModalWindow"), answer);
-
         fluentWicketTester.goToPageWith(sjekkForlateSide)
                 .should().containComponent(withId("closeDiscard").and(ofType(AjaxLink.class)))
                 .should().containComponent(withId("closeCancel").and(ofType(AjaxLink.class)));
@@ -44,19 +45,14 @@ public class SjekkForlateSideTest {
 
     @Test
     public void skalReturnereCancelAswer() {
-        SjekkForlateSide sjekkForlateSide = new SjekkForlateSide("id", new RedirectModalWindow("modigModalWindow"), answer);
-
         fluentWicketTester.goToPageWith(sjekkForlateSide)
                 .click().link(withId("closeCancel"));
-
         assertTrue(answer.is(CANCEL));
         assertFalse(answer.is(DISCARD));
     }
 
     @Test
     public void skalReturnereDiscardAswer() {
-        SjekkForlateSide sjekkForlateSide = new SjekkForlateSide("id", new RedirectModalWindow("modigModalWindow"), answer);
-
         fluentWicketTester.goToPageWith(sjekkForlateSide)
                 .click().link(withId("closeDiscard"));
 
