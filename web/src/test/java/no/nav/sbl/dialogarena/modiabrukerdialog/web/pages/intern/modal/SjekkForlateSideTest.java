@@ -35,7 +35,6 @@ public class SjekkForlateSideTest {
     public void setup() {
         answer = new SjekkForlateSideAnswer();
         sjekkForlateSide = new SjekkForlateSide("id", new RedirectModalWindow("modigModalWindow"), answer);
-
     }
 
     @Test
