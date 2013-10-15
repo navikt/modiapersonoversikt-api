@@ -19,7 +19,7 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
     public UtbetalingWidget(String id, String initial, String fnr) {
         super(id, initial);
         List<Utbetaling> utbetalinger = utbetalingService.hentUtbetalinger(fnr);
-        setDefaultModel(new CompoundPropertyModel<Object>(transformUtbetalingToVM(utbetalinger) ));
+        setDefaultModel(new CompoundPropertyModel<Object>(transformUtbetalingToVM(utbetalinger)));
     }
 
     private List<UtbetalingVM> transformUtbetalingToVM(List<Utbetaling> utbetalinger) {
@@ -27,7 +27,7 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
         for (Utbetaling utbetaling : utbetalinger) {
             utbetalingVMs.add(new UtbetalingVM(utbetaling));
         }
-        return  utbetalingVMs;
+        return utbetalingVMs;
     }
 
     @Override
