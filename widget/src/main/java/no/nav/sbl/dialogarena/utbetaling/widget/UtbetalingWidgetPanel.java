@@ -26,6 +26,5 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
                 new Label("belop", utbetalingVM.getBelop()),
                 new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
                 new Label("periode", periode));
-
     }
 }
