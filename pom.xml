@@ -14,10 +14,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>sporsmalogsvar/common</module>
-        <module>sporsmalogsvar/besvare</module>
-        <module>sporsmalogsvar/innboks</module>
-        <module>sporsmalogsvar/widget</module>
         <module>config</module>
         <module>web</module>
         <module>jee</module>
@@ -37,6 +33,7 @@
         <personsok.version>0.0.94</personsok.version>
         <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
         <soknader.liste.version>2.0.1</soknader.liste.version>
+        <sporsmalogsvar.version>1.7</sporsmalogsvar.version>
     </properties>
 
     <dependencyManagement>
@@ -52,6 +49,24 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>soknader-consumer</artifactId>
                 <version>${soknader.liste.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>sporsmal-og-svar-besvare</artifactId>
+                <version>${sporsmalogsvar.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>sporsmal-og-svar-innboks</artifactId>
+                <version>${sporsmalogsvar.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>sporsmal-og-svar-widget</artifactId>
+                <version>${sporsmalogsvar.version}</version>
             </dependency>
 
             <dependency>
