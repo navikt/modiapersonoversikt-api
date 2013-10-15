@@ -10,12 +10,18 @@ public class TomtForOppgaverPanel extends Panel {
 
     public TomtForOppgaverPanel(String id, final ModigModalWindow modalWindow) {
         super(id);
-        add(new Label("tekst", "Dere har jobbet på så bra at det ikke finnes noen fler oppgaver igjen på dette tema! Vennligst velg et annet tema!"));
-        add(new AjaxLink<Void>("lukk") {
+        add(
+                new Label("tekst", "Dere har jobbet på så bra at det ikke finnes noen fler oppgaver igjen på dette tema! Vennligst velg et annet tema!"),
+                createLukkLink(modalWindow)
+        );
+    }
+
+    private AjaxLink<Void> createLukkLink(final ModigModalWindow modalWindow) {
+        return new AjaxLink<Void>("lukk") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 modalWindow.close(target);
             }
-        });
+        };
     }
 }

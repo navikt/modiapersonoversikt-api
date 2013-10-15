@@ -31,8 +31,9 @@ public class HentOppgavePanel extends Panel {
     @Inject
     OppgavebehandlingPortType service;
 
-    private final WebMarkupContainer temavelger;
-//    private final Model<Tema> tema;
+    private WebMarkupContainer temavelger;
+    private Model<Boolean> visTema = new Model<>(false);
+    ModigModalWindow modalWindow = new ModigModalWindow("tomForOppgaverMelding");
     private final IModel<Tema> tema = new AbstractReadOnlyModel<Tema>() {
         @Override
         public Tema getObject() {
@@ -41,28 +42,36 @@ public class HentOppgavePanel extends Panel {
         }
     };
 
-    private Model<Boolean> visTema = new Model<>(false);
-
-    ModigModalWindow modalWindow = new ModigModalWindow("tomForOppgaverMelding");
-
     public HentOppgavePanel(String id) {
         super(id);
+        setupAttributesAndComponents();
+        add(
+                temavelger,
+                modalWindow,
+                createPlukkOppgaveLink(),
+                createVelgTemaLink()
+        );
+    }
+
+    private void setupAttributesAndComponents() {
         setOutputMarkupPlaceholderTag(true);
-//        Serializable temaAttr = getSession().getAttribute("valgtTema");
-//        Tema temaet = temaAttr != null ? Tema.valueOf(temaAttr.toString()) : null;
-//        this.tema = new Model<>(temaet);
         setDefaultModel(this.tema);
         setOutputMarkupId(true);
+        setupTemavelger(new Temaliste("tema", asList(Tema.values())));
+    }
 
-        Temaliste temaliste = new Temaliste("tema", asList(Tema.values()));
+    private AjaxLink<Void> createVelgTemaLink() {
+        return new AjaxLink<Void>("velg-tema") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                visTema.setObject(!visTema.getObject());
+                target.add(temavelger);
+            }
+        };
+    }
 
-        temavelger = new WebMarkupContainer("temavelger");
-        temavelger.setOutputMarkupPlaceholderTag(true);
-        temavelger.add(temaliste);
-        temavelger.add(visibleIf(visTema));
-        add(temavelger, modalWindow);
-
-        add(new AjaxLink<Void>("plukk-oppgave") {
+    private AjaxLink<Void> createPlukkOppgaveLink() {
+        return new AjaxLink<Void>("plukk-oppgave") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 if (HentOppgavePanel.this.tema.getObject() != null) {
@@ -72,14 +81,14 @@ public class HentOppgavePanel extends Panel {
                     target.add(temavelger);
                 }
             }
-        });
-        add(new AjaxLink<Void>("velg-tema") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                visTema.setObject(!visTema.getObject());
-                target.add(temavelger);
-            }
-        });
+        };
+    }
+
+    private void setupTemavelger(Temaliste temaliste) {
+        temavelger = new WebMarkupContainer("temavelger");
+        temavelger.setOutputMarkupPlaceholderTag(true);
+        temavelger.add(temaliste);
+        temavelger.add(visibleIf(visTema));
     }
 
     private IModel<Boolean> erValgteTema(final Tema t) {
@@ -101,31 +110,34 @@ public class HentOppgavePanel extends Panel {
         @Override
         protected void populateItem(final ListItem<Tema> item) {
             item.add(
-                new Label("temanavn",
-                    new StringResourceModel(item.getModelObject().toString(), this, null)));
-            item.add(hasCssClassIf("valgt", erValgteTema(item.getModelObject())));
-            item.add(new AjaxEventBehavior("click") {
+                new Label("temanavn", new StringResourceModel(item.getModelObject().toString(), this, null)));
+            item.add(
+                hasCssClassIf("valgt", erValgteTema(item.getModelObject())),
+                createClickBehavior(item)
+            );
+        }
+
+        private AjaxEventBehavior createClickBehavior(final ListItem<Tema> item) {
+            return new AjaxEventBehavior("click") {
                 @Override
                 protected void onEvent(AjaxRequestTarget target) {
                     visTema.setObject(false);
                     HentOppgavePanel.this.valgteTema(item.getModelObject(), target);
                     target.add(temavelger);
                 }
-            });
+            };
         }
     }
 
     private void valgteTema(Tema tema, AjaxRequestTarget target) {
         final WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema.toString());
         if (oppgaveResultat == null) {
-            modalWindow.setContent(
-                new TomtForOppgaverPanel(modalWindow.getContentId(), modalWindow));
+            modalWindow.setContent(new TomtForOppgaverPanel(modalWindow.getContentId(), modalWindow));
             modalWindow.show(target);
             return;
         }
-
         getSession().setAttribute("valgtTema", tema);
-
         setResponsePage(InternBesvaremodus.class, new PageParameters().add("fnr", oppgaveResultat.getFodselsnummer()).add("oppgaveId", oppgaveResultat.getOppgaveId()));
     }
+
 }

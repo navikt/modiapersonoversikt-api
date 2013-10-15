@@ -17,7 +17,6 @@ public class SideBar extends Panel {
 
     private final BesvareSporsmalPanel besvaresporsmalPanel;
     private final OppgavevalgPanel oppgavevalg;
-
     private final HentOppgavePanel hentOppgavePanel;
 
     public SideBar(String id, String fnr) {
@@ -30,7 +29,8 @@ public class SideBar extends Panel {
                 hentOppgavePanel,
                 new VisittkortPanel("visittkortPanel", fnr),
                 besvaresporsmalPanel,
-                oppgavevalg);
+                oppgavevalg
+        );
     }
 
     @RunOnEvents(Modus.BESVARE)

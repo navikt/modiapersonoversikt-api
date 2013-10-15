@@ -5,7 +5,6 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
-import no.nav.modig.modia.constants.ModiaConstants;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.events.NamedEventPayload;
@@ -30,6 +29,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
+import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
@@ -51,31 +51,35 @@ public class Intern extends BasePage {
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(Intern.class, "respond.min.js"), "lt IE 9");
 	public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(Intern.class, "intern_ie.css"), "screen", "lt IE 10");
 
-	private final SjekkForlateSideAnswer answer;
-    private final RedirectModalWindow redirectPopup;
-	private final LamellHandler lamellHandler;
-    private final HentPersonPanel hentPersonPanel;
-    private final Button searchToggleButton;
-    private final NullstillLink nullstillLink;
+	private SjekkForlateSideAnswer answer;
+    private RedirectModalWindow redirectPopup;
+	private LamellHandler lamellHandler;
+    private HentPersonPanel hentPersonPanel;
+    private Button searchToggleButton;
+    private NullstillLink nullstillLink;
 
     public Intern(PageParameters pageParameters) {
         String fnr = pageParameters.get("fnr").toString(null);
-        answer = new SjekkForlateSideAnswer();
-        redirectPopup = createModalWindow("modal");
-        lamellHandler = new LamellHandler();
-        hentPersonPanel = new HentPersonPanel("searchPanel");
-        searchToggleButton = new Button("toggle-sok");
-        nullstillLink = new NullstillLink("nullstill");
+        instantiateComponents();
         add(
-            hentPersonPanel.setOutputMarkupPlaceholderTag(true),
-            searchToggleButton.setOutputMarkupPlaceholderTag(true),
-            nullstillLink.setOutputMarkupPlaceholderTag(true),
+            hentPersonPanel,
+            searchToggleButton,
+            nullstillLink,
             new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
             new PersonsokPanel("personsokPanel").setVisible(true),
             lamellHandler.createLamellPanel("lameller", fnr),
             new SideBar("sideBar", fnr).setVisible(true),
             new TimeoutBoks("timeoutBoks", fnr),
             redirectPopup);
+    }
+
+    private void instantiateComponents() {
+        answer = new SjekkForlateSideAnswer();
+        redirectPopup = createModalWindow("modal");
+        lamellHandler = new LamellHandler();
+        hentPersonPanel = (HentPersonPanel) new HentPersonPanel("searchPanel").setOutputMarkupPlaceholderTag(true);
+        searchToggleButton = (Button) new Button("toggle-sok").setOutputMarkupPlaceholderTag(true);
+        nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
     }
 
     @RunOnEvents(Modus.BESVARE)
@@ -105,7 +109,7 @@ public class Intern extends BasePage {
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
     public void refreshKjerneinfoMedBegrunnelse(AjaxRequestTarget target, String fnr) {
-        getSession().setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, true);
+        getSession().setAttribute(HENT_PERSON_BEGRUNNET, true);
         refreshKjerneinfo(target, fnr);
     }
 

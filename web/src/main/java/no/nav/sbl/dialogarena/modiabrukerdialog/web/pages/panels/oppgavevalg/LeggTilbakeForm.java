@@ -29,21 +29,18 @@ public class LeggTilbakeForm extends Form<AarsakVM> {
         super(id);
         setModel(new CompoundPropertyModel<>(new AarsakVM(INHABIL)));
         setOutputMarkupId(true);
-        final FeedbackPanel feedback = new FeedbackPanel("feedback");
-        feedback.setOutputMarkupId(true);
-        AjaxLink<Void> lukk = new AjaxLink<Void>("lukk") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                LeggTilbakeForm.this.setVisibilityAllowed(false);
-                target.add(LeggTilbakeForm.this);
-            }
-        };
-        final RadioGroup<Aarsak> valg = new RadioGroup<>("valg");
-        valg.add(new Radio<Aarsak>("inhabil"));
-        valg.add(new Radio<Aarsak>("annen"));
+        final FeedbackPanel feedback = (FeedbackPanel) new FeedbackPanel("feedback").setOutputMarkupId(true);
+        add(
+                feedback,
+                createAarsakValg(),
+                createLukkLink(),
+                new TextArea<String>("annenAarsakTekst"),
+                createSubmitLink(feedback)
+        );
+    }
 
-        TextArea<String> annenAarsakTekst = new TextArea<>("annenAarsakTekst");
-        AjaxSubmitLink leggTilbake = new AjaxSubmitLink("submit") {
+    private AjaxSubmitLink createSubmitLink(final FeedbackPanel feedback) {
+        return new AjaxSubmitLink("submit") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 String aarsak = getModelObject().getAarsakForTilbakeleggelse();
@@ -56,7 +53,23 @@ public class LeggTilbakeForm extends Form<AarsakVM> {
                 }
             }
         };
-        add(feedback, valg, lukk, annenAarsakTekst, leggTilbake);
+    }
+
+    private RadioGroup<Aarsak> createAarsakValg() {
+        RadioGroup<Aarsak> valg = new RadioGroup<>("valg");
+        valg.add(new Radio<Aarsak>("inhabil"));
+        valg.add(new Radio<Aarsak>("annen"));
+        return valg;
+    }
+
+    private AjaxLink<Void> createLukkLink() {
+        return new AjaxLink<Void>("lukk") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                LeggTilbakeForm.this.setVisibilityAllowed(false);
+                target.add(LeggTilbakeForm.this);
+            }
+        };
     }
 
     @RunOnEvents(Modus.BESVARE)

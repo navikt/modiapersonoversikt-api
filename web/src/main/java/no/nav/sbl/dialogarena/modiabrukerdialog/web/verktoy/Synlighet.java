@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.verktoy;
 import org.apache.wicket.Component;
 
 public final class Synlighet {
+
     public static Component[] skjulMenTaMedIMarkupLikevel(Component... components) {
         for (Component c : components) {
             skjulMenTaMedIMarkupLikevel(c);
@@ -35,4 +36,5 @@ public final class Synlighet {
         component.setVisibilityAllowed(true);
         return component;
     }
+
 }
