@@ -35,7 +35,6 @@ public class SoknaderMockContext {
         return asList(
                 createMottattSoknad(),
                 createMottattSoknadUtenBehandlingsTid(),
-//                createMottattSoknadUtenInnsendtDato(),
                 createUnderBehandlingSoknad(),
                 createNyligFerdigSoknad(),
                 createGammelFerdigSoknad()
@@ -92,13 +91,4 @@ public class SoknaderMockContext {
                 .build();
     }
 
-    private Soknad createMottattSoknadUtenInnsendtDato() {
-        return new SoknadBuilder()
-                .withInnsendtDato(null)
-                .withTittel("Dagpenger uten innsendt dato")
-                .withSoknadStatus(MOTTATT)
-                .withNormertBehandlingsTid("")
-                .withFerdigDato(now().minusDays(AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED - 1))
-                .build();
-    }
 }
