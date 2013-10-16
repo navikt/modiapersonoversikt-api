@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -15,7 +16,9 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.Sj
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
+@DirtiesContext(classMode = AFTER_CLASS)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {KjerneinfoPepMockContext.class, WicketTesterConfig.class})
 public class SjekkForlateSideTest extends WicketPageTest {
