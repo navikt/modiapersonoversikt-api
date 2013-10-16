@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.service.Svar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Traad;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
@@ -45,7 +46,7 @@ public class BesvareSporsmalPanel extends Panel {
 
     private BesvareService service = new BesvareService(besvareHenvendelsePortType, henvendelsePortType);
 
-    private SporsmalDetaljer sporsmalDetaljer;
+    private MarkupContainer sisteMelding;
     private TidligereDialog tidligereDialog;
 
     private String oppgaveId;
@@ -61,11 +62,13 @@ public class BesvareSporsmalPanel extends Panel {
             }
         }));
 
-        sporsmalDetaljer = new SporsmalDetaljer("sporsmal");
+        sisteMelding = new WebMarkupContainer("siste-melding")
+            .add(new Label("sporsmal.overskrift"), new Label("sporsmal.sendtDato"), new MultiLineLabel("sporsmal.fritekst"));
+
         tidligereDialog = new TidligereDialog("tidligereDialog");
         add(
                 new SvarForm("svar"),
-                sporsmalDetaljer,
+                sisteMelding,
                 tidligereDialog);
     }
 
@@ -111,7 +114,7 @@ public class BesvareSporsmalPanel extends Panel {
                             svarkvittering.tidligereHenvendelse.setObject(false);
                             tidligereDialog.prependHenvendelse(svarkvittering);
 
-                            sporsmalDetaljer.setVisibilityAllowed(false);
+                            sisteMelding.setVisibilityAllowed(false);
                             SvarForm.this.setVisibilityAllowed(false);
 
                             send(getPage(), Broadcast.DEPTH, KVITTERING);
@@ -125,13 +128,6 @@ public class BesvareSporsmalPanel extends Panel {
                         }
                     }
             );
-        }
-    }
-
-    private static class SporsmalDetaljer extends WebMarkupContainer {
-        public SporsmalDetaljer(String id) {
-            super(id);
-            add(new Label("sporsmal.sendtDato"), new MultiLineLabel("sporsmal.fritekst"));
         }
     }
 
