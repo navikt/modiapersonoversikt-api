@@ -27,12 +27,15 @@ public class SoknaderService {
     private SakOgBehandlingPortType sakOgBehandlingPortType;
 
     public List<Soknad> getSoknader(String fnr) {
-        throw new ApplicationException("Feil ved kontakt med server");
-//        List<Soknad> soknadList = new ArrayList<>();
-//        for (Sak sak : sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(createRequest(fnr)).getSak()) {
-//            soknadList.addAll(extractSoknaderFromSak(sak));
-//        }
-//        return on(soknadList).filter(where(SOKNAD_STATUS_TRANSFORMER, equalAnyOf(MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG))).collect(new SoknadComparator());
+        List<Soknad> soknadList = new ArrayList<>();
+        try {
+            for (Sak sak : sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(createRequest(fnr)).getSak()) {
+                soknadList.addAll(extractSoknaderFromSak(sak));
+            }
+        } catch (Exception e) {
+            throw new ApplicationException("Feil ved henting av søknader", e);
+        }
+        return on(soknadList).filter(where(SOKNAD_STATUS_TRANSFORMER, equalAnyOf(MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG))).collect(new SoknadComparator());
     }
 
     private FinnSakOgBehandlingskjedeListeRequest createRequest(String aktoerId) {
