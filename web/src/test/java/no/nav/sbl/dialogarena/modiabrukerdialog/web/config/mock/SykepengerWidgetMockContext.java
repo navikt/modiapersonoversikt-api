@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
-import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
-import no.nav.sykmeldingsperioder.consumer.sykepenger.SykepengerServiceBi;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,14 +14,14 @@ public class SykepengerWidgetMockContext {
         return mock(SykepengerWidgetService.class);
     }
 
-    @Bean
-    public ForeldrepengerServiceBi foreldrepengerServiceBi() {
-        return mock(ForeldrepengerServiceBi.class);
-    }
-
-    @Bean
-    public SykepengerServiceBi sykepengerServiceBi() {
-        return mock(SykepengerServiceBi.class);
-    }
+//    @Bean
+//    public ForeldrepengerServiceBi foreldrepengerServiceBi() {
+//        return mock(ForeldrepengerServiceBi.class);
+//    }
+//
+//    @Bean
+//    public SykepengerServiceBi sykepengerServiceBi() {
+//        return mock(SykepengerServiceBi.class);
+//    }
 
 }
