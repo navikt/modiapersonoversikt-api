@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import(value = {
         OldApplicationsContext.class,
-        HenvendelseTjenesteConfig.Default.class,
+        HenvendelseTjenesteConfig.Test.class,
         BesvareHenvendelseTjenesteConfig.Default.class,
         OppgavebehandlingConfig.Default.class,
         SoknaderConfig.Default.class,
