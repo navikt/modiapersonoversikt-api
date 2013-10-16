@@ -12,13 +12,26 @@ public class SoknadListe extends Liste<Soknad> {
 
     public static final PackageResourceReference SOKNADSLISTE_LESS = new PackageResourceReference(SoknadListe.class, "soknadliste.less");
 
-    public SoknadListe(String id, final IModel<List<Soknad>> model) {
+    private boolean serviceCallFailed;
+
+    public SoknadListe(String id, final IModel<List<Soknad>> model, boolean serviceCallFailed) {
         super(id, model);
+        this.serviceCallFailed = serviceCallFailed;
+        if(serviceCallFailed){
+            model.getObject().clear();
+            model.getObject().add(new Soknad()); //Setter inn en tom søknad slik at newListItem blir kalt
+        }
+
     }
+
 
     @Override
     public WebMarkupContainer newListItem(String id, IModel<Soknad> model) {
-        return new SoknadItem(id, model);
+        if(serviceCallFailed){
+            return new SoknadListeError(id);
+        }else{
+            return new SoknadItem(id, model);
+        }
     }
 
 }
