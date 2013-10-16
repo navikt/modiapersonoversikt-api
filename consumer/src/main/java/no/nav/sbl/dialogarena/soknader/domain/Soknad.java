@@ -62,7 +62,7 @@ public class Soknad implements Serializable {
         return innsendtDato;
     }
 
-    public final static Transformer<Behandlingskjede, Soknad> BEHANDLINGSKJEDE_TO_SOKNAD_TRANSFORMER = new Transformer<Behandlingskjede, Soknad>() {
+    public static final Transformer<Behandlingskjede, Soknad> BEHANDLINGSKJEDE_TO_SOKNAD_TRANSFORMER = new Transformer<Behandlingskjede, Soknad>() {
 
         @Override
         public Soknad transform(Behandlingskjede behandlingskjede) {
