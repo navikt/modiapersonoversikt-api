@@ -5,6 +5,7 @@ import no.nav.modig.frontend.FrontendModules;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.sbl.dialogarena.time.Datoformat;
+import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLamell;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -44,6 +45,7 @@ public class UtbetalingApplication extends WebApplication {
                                 .attribute("content", "IE=edge,chrome=1")
                                 .done())
                 .withResourcePacking(this.usesDeploymentConfig())
+                .addLess(UtbetalingLamell.UTBETALING_LAMELL_LESS)
                 .configure(this);
     }
 
