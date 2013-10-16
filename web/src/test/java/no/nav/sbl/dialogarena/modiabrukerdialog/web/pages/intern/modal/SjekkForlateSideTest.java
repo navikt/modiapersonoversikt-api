@@ -27,7 +27,6 @@ public class SjekkForlateSideTest extends WicketPageTest {
     protected void additionalSetup() {
         answer = new SjekkForlateSideAnswer();
         sjekkForlateSide = new SjekkForlateSide("id", new RedirectModalWindow("modigModalWindow"), answer);
-
     }
 
     @Test
@@ -49,7 +48,6 @@ public class SjekkForlateSideTest extends WicketPageTest {
     public void skalReturnereDiscardAswer() {
         wicket.goToPageWith(sjekkForlateSide)
                 .click().link(withId("closeDiscard"));
-
         assertTrue(answer.is(DISCARD));
         assertFalse(answer.is(CANCEL));
     }
