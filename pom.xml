@@ -22,7 +22,7 @@
     <properties>
         <wicket.version>6.11.0</wicket.version>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <modig.frontend.version>1.1.0</modig.frontend.version>
+        <modig.frontend.version>1.1.1</modig.frontend.version>
         <modig.security.version>1.0.19</modig.security.version>
 		<modig.log.version>1.1.2</modig.log.version>
         <slf4j.version>1.7.5</slf4j.version>
@@ -32,7 +32,7 @@
         <!-- Modia-komponenter-->
         <personsok.version>0.0.94</personsok.version>
         <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
-        <soknader.liste.version>2.0.1</soknader.liste.version>
+        <soknader.liste.version>2.0.2</soknader.liste.version>
         <sporsmalogsvar.version>1.8</sporsmalogsvar.version>
     </properties>
 
