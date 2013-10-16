@@ -25,29 +25,13 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-frontend-wicket</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-time</artifactId>
         </dependency>
 
-
-        <!--<dependency>-->
-            <!--<groupId>no.nav.modig</groupId>-->
-            <!--<artifactId>modig-frontend-ressurser</artifactId>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sourceforge.collections</groupId>
-            <artifactId>collections-generic</artifactId>
         </dependency>
 
         <dependency>
@@ -79,10 +63,6 @@
             <artifactId>wicket-core</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.apache.wicket</groupId>
-            <artifactId>wicket-spring</artifactId>
-        </dependency>
 
 
         <dependency>
@@ -107,10 +87,6 @@
             <artifactId>spring-web</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-        </dependency>
 
 
 

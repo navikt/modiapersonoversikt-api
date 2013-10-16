@@ -40,26 +40,11 @@
             <artifactId>common-time</artifactId>
         </dependency>
 
-
-        <!--<dependency>-->
-            <!--<groupId>no.nav.modig</groupId>-->
-            <!--<artifactId>modig-frontend-ressurser</artifactId>-->
-        <!--</dependency>-->
-
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>net.sourceforge.collections</groupId>
             <artifactId>collections-generic</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-lang</artifactId>
-        </dependency>
 
         <!-- Logback -->
         <dependency>
