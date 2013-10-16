@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar;
 
-import javax.inject.Inject;
-import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
@@ -10,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidget
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseinnsynConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,14 +31,11 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
         OppgavebehandlingConfig.Test.class,
         BesvareHenvendelseTjenesteConfig.Test.class
 })
-public class SideBarTest {
-
-    @Inject
-    private FluentWicketTester<?> fluentWicketTester;
+public class SideBarTest extends WicketPageTest {
 
     @Test
     public void skalOppretteSidebarUtenOppgaveId() {
-        fluentWicketTester.goTo(Intern.class, with().param("fnr", "03054549872"))
+        wicket.goTo(Intern.class, with().param("fnr", "03054549872"))
                 .should().containComponent(both(ofType(SideBar.class)).and(thatIsVisible()));
     }
 

@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgavevalg;
 
-import javax.inject.Inject;
-import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
@@ -10,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidget
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseinnsynConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave.HentOppgavePanel;
 import org.apache.wicket.Component;
@@ -39,16 +38,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
         OppgavebehandlingConfig.Test.class,
         BesvareHenvendelseTjenesteConfig.Test.class
 })
-public class OppgavevalgPanelTest {
-
-    @Inject
-    private FluentWicketTester<?> wicket;
+public class OppgavevalgPanelTest extends WicketPageTest {
 
     private static final String OPPGAVEVALG = "oppgavevalg-link";
     private static final String LEGG_TILBAKE = "legg-tilbake-link";
     private static final String LUKK = "lukk";
 
-    private static boolean harValgtTema = false;
+    private boolean harValgtTema = false;
 
     @Test
     public void skalIkkeHaOppgavevalgNaarManIkkeHarPlukketOppgave() {
