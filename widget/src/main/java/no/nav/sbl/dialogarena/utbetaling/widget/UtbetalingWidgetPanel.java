@@ -18,7 +18,7 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
         String startDato =Optional.optional(utbetalingVM.getStartDato()).map(Datoformat.KORT).getOrElse("Ingen startdato");
         String sluttDato =Optional.optional(utbetalingVM.getSluttDato()).map(Datoformat.KORT).getOrElse("Ingen sluttdato");
 
-        String periode = startDato + "-" + sluttDato;
+        String periode = startDato + " - " + sluttDato;
 
         statusContainer.add(new Label("status", utbetalingVM.getStatus()));
         add(statusContainer,

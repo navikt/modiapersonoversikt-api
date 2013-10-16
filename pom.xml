@@ -24,6 +24,7 @@
     <modules>
         <module>consumer</module>
         <module>widget</module>
+        <module>lamell</module>
     </modules>
 
     <dependencyManagement>
