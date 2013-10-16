@@ -5,7 +5,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>dialogarena</artifactId>
-        <version>3-SNAPSHOT</version>
+        <version>3</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -371,24 +371,6 @@
                         <artifactId>xml-apis</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-besvare</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-	        <dependency>
-	            <groupId>no.nav.sbl.dialogarena</groupId>
-	            <artifactId>sporsmal-og-svar-innboks</artifactId>
-	            <version>${project.version}</version>
-	        </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-widget</artifactId>
-                <version>${project.version}</version>
             </dependency>
 
             <dependency>
