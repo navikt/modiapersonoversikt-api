@@ -14,14 +14,4 @@ public class SykepengerWidgetMockContext {
         return mock(SykepengerWidgetService.class);
     }
 
-//    @Bean
-//    public ForeldrepengerServiceBi foreldrepengerServiceBi() {
-//        return mock(ForeldrepengerServiceBi.class);
-//    }
-//
-//    @Bean
-//    public SykepengerServiceBi sykepengerServiceBi() {
-//        return mock(SykepengerServiceBi.class);
-//    }
-
 }
