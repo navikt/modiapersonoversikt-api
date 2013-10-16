@@ -34,9 +34,9 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
-@DirtiesContext(classMode = AFTER_CLASS)
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = {
         HentPersonPanelMockContext.class,
         WicketTesterConfig.class,
