@@ -20,8 +20,9 @@ public class SoknadListe extends Liste<Soknad> {
         super(id, model);
         this.serviceCallFailed = serviceCallFailed;
         if(serviceCallFailed){
+            //Setter inn en tom søknad slik at newListItem blir kalt en gang
             model.getObject().clear();
-            model.getObject().add(new Soknad()); //Setter inn en tom søknad slik at newListItem blir kalt
+            model.getObject().add(new Soknad());
         }
 
     }
