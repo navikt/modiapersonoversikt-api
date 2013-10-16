@@ -13,11 +13,11 @@
 
     <dependencies>
 
-        <!--<dependency>-->
-            <!--<groupId>${project.groupId}</groupId>-->
-            <!--<artifactId>utbetalinger-consumer</artifactId>-->
-            <!--<version>${project.version}</version>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>utbetalinger-consumer</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -85,10 +85,10 @@
         <!--</dependency>-->
 
 
-        <!--<dependency>-->
-            <!--<groupId>javax.inject</groupId>-->
-            <!--<artifactId>javax.inject</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+        </dependency>
 
           <!--TEST  -->
 
