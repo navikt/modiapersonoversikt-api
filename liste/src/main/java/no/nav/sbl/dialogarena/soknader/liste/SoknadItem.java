@@ -9,6 +9,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.joda.time.DateTime;
 
 import static no.nav.modig.lang.option.Optional.optional;
@@ -45,20 +46,20 @@ public class SoknadItem extends Panel {
         Label icon = new Label("status-icon", "");
         DateTime date = null;
 
+        if (soknad.getSoknadStatus() != null) {
+            statusLabel.setDefaultModel(new StringResourceModel("soknad.status." + soknad.getSoknadStatus().name().toLowerCase(), new Model()));
+        }
+
         if (soknadStatusIs(GAMMEL_FERDIG)) {
-            statusLabel.setDefaultModel(new Model<>("Gammel"));
             icon.add(new AttributeAppender("class", new Model<>("gammel-ferdig"), " "));
             date = soknad.getFerdigDato();
         } else if (soknadStatusIs(MOTTATT)) {
-            statusLabel.setDefaultModel(new Model<>("Mottatt"));
             icon.add(new AttributeAppender("class", new Model<>("mottat"), " "));
             //date will still be null
         } else if (soknadStatusIs(NYLIG_FERDIG)) {
-            statusLabel.setDefaultModel(new Model<>("Nylig ferdig"));
             icon.add(new AttributeAppender("class", new Model<>("nylig-ferdig"), " "));
             date = soknad.getFerdigDato();
         } else if (soknadStatusIs(UNDER_BEHANDLING)) {
-            statusLabel.setDefaultModel(new Model<>("Under behandling"));
             icon.add(new AttributeAppender("class", new Model<>("under-behandling"), " "));
             date = soknad.getUnderBehandlingStartDato();
         }
