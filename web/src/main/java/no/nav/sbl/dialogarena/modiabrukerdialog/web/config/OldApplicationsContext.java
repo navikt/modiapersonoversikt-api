@@ -14,8 +14,6 @@ import org.springframework.context.annotation.Import;
         no.nav.kjerneinfo.config.spring.KjerneinfoPanelConfig.class,
         no.nav.kjerneinfo.kontrakter.config.KontrakterPanelConfig.class,
         no.nav.brukerprofil.config.BrukerprofilPanelConfig.class,
-        no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareHenvendelseConfig.class,
-        no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig.class
 })
 public class OldApplicationsContext {
 

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
+import javax.inject.Inject;
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
@@ -7,16 +8,15 @@ import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseinnsynConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.BesvareHenvendelseMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseinnsynConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.BesvareSporsmalPanel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -26,8 +26,6 @@ import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import javax.inject.Inject;
 
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
@@ -48,8 +46,7 @@ import static org.mockito.Mockito.when;
         SykepengerWidgetMockContext.class,
         SoknaderConfig.Test.class,
         OppgavebehandlingConfig.Test.class,
-        BesvareServiceConfig.Default.class,
-        BesvareHenvendelseMockContext.class
+        BesvareHenvendelseTjenesteConfig.Test.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InternTest {

@@ -33,7 +33,7 @@
         <personsok.version>0.0.94</personsok.version>
         <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
         <soknader.liste.version>2.0.1</soknader.liste.version>
-        <sporsmalogsvar.version>1.7</sporsmalogsvar.version>
+        <sporsmalogsvar.version>1.8</sporsmalogsvar.version>
     </properties>
 
     <dependencyManagement>

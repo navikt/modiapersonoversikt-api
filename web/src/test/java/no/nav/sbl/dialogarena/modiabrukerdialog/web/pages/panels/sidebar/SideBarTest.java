@@ -1,22 +1,20 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar;
 
+import javax.inject.Inject;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseinnsynConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.BesvareHenvendelseMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseinnsynConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.BesvareServiceConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import javax.inject.Inject;
 
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
@@ -32,8 +30,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
         SykepengerWidgetMockContext.class,
         SoknaderConfig.Test.class,
         OppgavebehandlingConfig.Test.class,
-        BesvareServiceConfig.Default.class,
-        BesvareHenvendelseMockContext.class
+        BesvareHenvendelseTjenesteConfig.Test.class
 })
 public class SideBarTest {
 

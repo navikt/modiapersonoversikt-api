@@ -7,7 +7,6 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave.Tema;
-import no.nav.sbl.dialogarena.sporsmalogsvar.mock.BesvareHenvendelsePortTypeMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import org.apache.cxf.feature.LoggingFeature;
@@ -89,7 +88,7 @@ public class HenvendelseinnsynConfig {
 
         @Bean
         public HenvendelsePortType henvendelsePortType() {
-            final Integer traadId = Integer.valueOf(BesvareHenvendelsePortTypeMock.TRAAD);
+            final Integer traadId = BesvareHenvendelseTjenesteConfig.Test.TRAAD_ID;
             return new HenvendelsePortType() {
 
                 private static final String SPORSMAL = "SPORSMAL";
