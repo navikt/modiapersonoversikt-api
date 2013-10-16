@@ -35,7 +35,7 @@ public class Soknad implements Serializable {
     private String normertBehandlingsTid;
 
     public static Soknad transformToSoknad(Behandlingskjede behandlingskjede) {
-        return soeknadTransformer.transform(behandlingskjede);
+        return BEHANDLINGSKJEDE_TO_SOKNAD_TRANSFORMER.transform(behandlingskjede);
     }
 
     public String getTittel() {
@@ -62,7 +62,7 @@ public class Soknad implements Serializable {
         return innsendtDato;
     }
 
-    private static Transformer<Behandlingskjede, Soknad> soeknadTransformer = new Transformer<Behandlingskjede, Soknad>() {
+    public final static Transformer<Behandlingskjede, Soknad> BEHANDLINGSKJEDE_TO_SOKNAD_TRANSFORMER = new Transformer<Behandlingskjede, Soknad>() {
 
         @Override
         public Soknad transform(Behandlingskjede behandlingskjede) {
