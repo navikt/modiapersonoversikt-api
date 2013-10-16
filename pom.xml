@@ -30,7 +30,7 @@
         <cxf.version>2.7.6</cxf.version>
         <sakogbehandling.jaxws.version>1.0.1</sakogbehandling.jaxws.version>
         <!-- Modia-komponenter-->
-        <personsok.version>0.0.94</personsok.version>
+        <personsok.version>0.0.95</personsok.version>
         <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
         <soknader.liste.version>2.0.2</soknader.liste.version>
         <sporsmalogsvar.version>1.8</sporsmalogsvar.version>
