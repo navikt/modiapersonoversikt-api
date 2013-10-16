@@ -1,11 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareSporsmalDetaljer;
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelse;
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.Sporsmal;
+import no.nav.sbl.dialogarena.sporsmalogsvar.service.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Svar;
+import no.nav.sbl.dialogarena.sporsmalogsvar.service.Traad;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -36,7 +34,6 @@ import javax.inject.Inject;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
 
 public class BesvareSporsmalPanel extends Panel {
@@ -56,11 +53,11 @@ public class BesvareSporsmalPanel extends Panel {
     public BesvareSporsmalPanel(String id, final String fnr) {
         super(id);
         setOutputMarkupId(true);
-        setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<BesvareSporsmalDetaljer>() {
+        setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<Traad>() {
             @Override
-            protected BesvareSporsmalDetaljer load() {
-                Optional<BesvareSporsmalDetaljer> detaljer = service.hentDetaljer(fnr, oppgaveId);
-                return detaljer.getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId));
+            protected Traad load() {
+                return service.hentDetaljer(fnr, oppgaveId)
+                        .getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId));
             }
         }));
 
@@ -70,6 +67,10 @@ public class BesvareSporsmalPanel extends Panel {
                 new SvarForm("svar"),
                 sporsmalDetaljer,
                 tidligereDialog);
+    }
+
+    private Melding getSporsmal() {
+        return ((Traad) getDefaultModelObject()).sporsmal;
     }
 
     @Override
@@ -85,7 +86,7 @@ public class BesvareSporsmalPanel extends Panel {
             super(id);
             setOutputMarkupId(true);
 
-            final TextArea<String> fritekst = new TextArea<>("svar.fritekst");
+            TextArea<String> fritekst = new TextArea<>("svar.fritekst");
             fritekst.setRequired(true);
             fritekst.add(StringValidator.maximumLength(FRITEKST_MAKS_LENGDE));
 
@@ -104,10 +105,9 @@ public class BesvareSporsmalPanel extends Panel {
                             Svar svar = getModelObject();
                             service.besvareSporsmal(svar);
 
-                            Sporsmal sporsmal = sporsmalDetaljer.getSporsmal();
-                            tidligereDialog.prependHenvendelse(new Henvendelse(INNGAENDE, sporsmal.sendtDato, sporsmal.fritekst));
+                            tidligereDialog.prependHenvendelse(getSporsmal());
 
-                            Henvendelse svarkvittering = new Henvendelse(UTGAENDE, DateTime.now(), svar.fritekst);
+                            Melding svarkvittering = new Melding(UTGAENDE, DateTime.now(), svar.fritekst);
                             svarkvittering.tidligereHenvendelse.setObject(false);
                             tidligereDialog.prependHenvendelse(svarkvittering);
 
@@ -129,30 +129,28 @@ public class BesvareSporsmalPanel extends Panel {
     }
 
     private static class SporsmalDetaljer extends WebMarkupContainer {
-
         public SporsmalDetaljer(String id) {
             super(id);
-            add(new Label("sporsmal.sendtDatoAsString"), new MultiLineLabel("sporsmal.fritekst"));
-        }
-
-        public Sporsmal getSporsmal() {
-            return (Sporsmal) getDefaultModelObject();
+            add(new Label("sporsmal.sendtDato"), new MultiLineLabel("sporsmal.fritekst"));
         }
     }
 
-    private static class TidligereDialog extends PropertyListView<Henvendelse> {
+    private static class TidligereDialog extends PropertyListView<Melding> {
 
         public TidligereDialog(String id) {
             super(id);
         }
 
         @Override
-        protected void populateItem(ListItem<Henvendelse> item) {
-            item.add(new Label("sendtDato"), new Label("overskrift"), new MultiLineLabel("fritekst"));
+        protected void populateItem(ListItem<Melding> item) {
+            item.add(
+                    new Label("sendtDato"),
+                    new Label("overskrift"),
+                    new MultiLineLabel("fritekst"));
             item.add(hasCssClassIf("tidligere-dialog", item.getModelObject().tidligereHenvendelse));
         }
 
-        public void prependHenvendelse(Henvendelse henvendelse) {
+        public void prependHenvendelse(Melding henvendelse) {
             setModelObject(on(getModelObject()).prepend(henvendelse).collect());
         }
     }

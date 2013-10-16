@@ -37,14 +37,14 @@ public class BesvareService implements Serializable {
         besvareHenvendelsePortType.besvarSporsmal(TIL_WSSVAR.transform(svar));
     }
 
-    public Optional<BesvareSporsmalDetaljer> hentDetaljer(String fnr, String oppgaveId) {
+    public Optional<Traad> hentDetaljer(String fnr, String oppgaveId) {
         WSSporsmalOgSvar wsSporsmalOgSvar = besvareHenvendelsePortType.hentSporsmalOgSvar(oppgaveId);
         if (wsSporsmalOgSvar == null) {
             return none();
         }
         List<WSHenvendelse> wsHenvendelser = on(henvendelsePortType.hentHenvendelseListe(fnr, asList("SPORSMAL", "SVAR"))).collect(NYESTE_FORST);
 
-        BesvareSporsmalDetaljer besvareSporsmalDetaljer = new BesvareSporsmalDetaljer();
+        Traad besvareSporsmalDetaljer = new Traad();
         besvareSporsmalDetaljer.tema = wsSporsmalOgSvar.getSporsmal().getTema();
         besvareSporsmalDetaljer.svar = TIL_SVAR.transform(wsSporsmalOgSvar.getSvar());
         besvareSporsmalDetaljer.sporsmal = TIL_SPORSMAL.transform(wsSporsmalOgSvar.getSporsmal());

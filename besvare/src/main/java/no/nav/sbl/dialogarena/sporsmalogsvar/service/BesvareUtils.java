@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
@@ -44,10 +45,10 @@ public class BesvareUtils {
         }
     };
 
-    public static final Transformer<WSHenvendelse, Henvendelse> TIL_HENVENDELSE = new Transformer<WSHenvendelse, Henvendelse>() {
+    public static final Transformer<WSHenvendelse, Melding> TIL_HENVENDELSE = new Transformer<WSHenvendelse, Melding>() {
         final ObjectMapper mapper = new ObjectMapper();
         @Override
-        public Henvendelse transform(WSHenvendelse wsHenvendelse) {
+        public Melding transform(WSHenvendelse wsHenvendelse) {
             Map<String, String> behandlingsresultat;
             try {
                 behandlingsresultat = mapper.readValue(wsHenvendelse.getBehandlingsresultat(), new TypeReference<Map<String, String>>() { });
@@ -55,7 +56,7 @@ public class BesvareUtils {
                 throw new RuntimeException("Kunne ikke lese ut behandlingsresultat", e);
             }
             String fritekst = behandlingsresultat.get("fritekst");
-            return new Henvendelse("SPORSMAL".equals(wsHenvendelse.getHenvendelseType()) ? INNGAENDE : UTGAENDE, wsHenvendelse.getOpprettetDato(), fritekst);
+            return new Melding("SPORSMAL".equals(wsHenvendelse.getHenvendelseType()) ? INNGAENDE : UTGAENDE, wsHenvendelse.getOpprettetDato(), fritekst);
         }
     };
 
@@ -66,10 +67,10 @@ public class BesvareUtils {
         }
     };
 
-    public static final Transformer<WSSporsmal, Sporsmal> TIL_SPORSMAL = new Transformer<WSSporsmal, Sporsmal>() {
+    public static final Transformer<WSSporsmal, Melding> TIL_SPORSMAL = new Transformer<WSSporsmal, Melding>() {
         @Override
-        public Sporsmal transform(WSSporsmal wsSporsmal) {
-            return new Sporsmal(wsSporsmal.getFritekst(), wsSporsmal.getOpprettet());
+        public Melding transform(WSSporsmal wsSporsmal) {
+            return new Melding(Meldingstype.INNGAENDE, wsSporsmal.getOpprettet(), wsSporsmal.getFritekst());
         }
     };
 

@@ -4,7 +4,9 @@ import java.io.Serializable;
 
 public class Svar implements Serializable {
 
-    public final String behandlingId, tema, fritekst;
+    public final String behandlingId,
+                        tema,
+                        fritekst;
 
     public final boolean sensitiv;
 
