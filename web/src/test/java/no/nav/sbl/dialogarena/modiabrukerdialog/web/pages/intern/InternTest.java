@@ -10,7 +10,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseinnsynConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseTjenesteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 @ContextConfiguration(classes = {
         HentPersonPanelMockContext.class,
         WicketTesterConfig.class,
-        HenvendelseinnsynConfig.Test.class,
+        HenvendelseTjenesteConfig.Test.class,
         SykepengerWidgetMockContext.class,
         SoknaderConfig.Test.class,
         OppgavebehandlingConfig.Test.class,

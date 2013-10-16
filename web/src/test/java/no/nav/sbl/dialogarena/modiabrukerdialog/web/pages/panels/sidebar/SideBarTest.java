@@ -6,7 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelM
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseinnsynConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseTjenesteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
@@ -25,7 +25,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
         HentPersonPanelMockContext.class,
         KjerneinfoPepMockContext.class,
         WicketTesterConfig.class,
-        HenvendelseinnsynConfig.Test.class,
+        HenvendelseTjenesteConfig.Test.class,
         SykepengerWidgetMockContext.class,
         SoknaderConfig.Test.class,
         OppgavebehandlingConfig.Test.class,
