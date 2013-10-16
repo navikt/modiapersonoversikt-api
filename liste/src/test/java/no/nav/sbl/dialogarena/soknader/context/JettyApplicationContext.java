@@ -11,7 +11,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import static org.mockito.Mockito.mock;
 
 @Configuration
-@Import({SoknaderMockContext.class})
+@Import({SoknaderContext.class})
 public class JettyApplicationContext {
 
     @Bean

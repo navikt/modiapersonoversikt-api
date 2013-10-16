@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.soknader.service;
 
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.sbl.dialogarena.soknader.domain.SoknadComparator;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
@@ -26,11 +27,12 @@ public class SoknaderService {
     private SakOgBehandlingPortType sakOgBehandlingPortType;
 
     public List<Soknad> getSoknader(String fnr) {
-        List<Soknad> soknadList = new ArrayList<>();
-        for (Sak sak : sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(createRequest(fnr)).getSak()) {
-            soknadList.addAll(extractSoknaderFromSak(sak));
-        }
-        return on(soknadList).filter(where(SOKNAD_STATUS_TRANSFORMER, equalAnyOf(MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG))).collect(new SoknadComparator());
+        throw new ApplicationException("Feil ved kontakt med server");
+//        List<Soknad> soknadList = new ArrayList<>();
+//        for (Sak sak : sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(createRequest(fnr)).getSak()) {
+//            soknadList.addAll(extractSoknaderFromSak(sak));
+//        }
+//        return on(soknadList).filter(where(SOKNAD_STATUS_TRANSFORMER, equalAnyOf(MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG))).collect(new SoknadComparator());
     }
 
     private FinnSakOgBehandlingskjedeListeRequest createRequest(String aktoerId) {
