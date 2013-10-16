@@ -8,8 +8,9 @@ public class UtbetalingTestPage extends WebPage {
 
 
     public UtbetalingTestPage() {
-        add(new UtbetalingWidget("utbetalingWidget", "U", "12345612345"));
-        add(new UtbetalingLamell("utbetaling"));
+        String fnr = "12345612345";
+        add(new UtbetalingWidget("utbetalingWidget", "U", fnr));
+        add(new UtbetalingLamell("utbetaling", fnr));
     }
 
 }
