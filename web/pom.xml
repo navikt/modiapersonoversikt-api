@@ -26,6 +26,12 @@
         </dependency>
 
         <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>utbetalinger-lamell</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-wicket</artifactId>
         </dependency>
