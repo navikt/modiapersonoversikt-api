@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConf
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.BesvareHenvendelseMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseinnsynConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
@@ -22,7 +21,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -38,10 +36,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@DirtiesContext
 @ContextConfiguration(classes = {
         HentPersonPanelMockContext.class,
-        KjerneinfoPepMockContext.class,
         WicketTesterConfig.class,
         HenvendelseinnsynConfig.Test.class,
         SykepengerWidgetMockContext.class,
