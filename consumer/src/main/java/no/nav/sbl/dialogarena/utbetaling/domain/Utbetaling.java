@@ -17,8 +17,9 @@ public class Utbetaling {
     private double bruttoBelop;
     private double nettoBelop;
     private String valuta;
+    private String kontoNr;
 
-    public Utbetaling(List<Bilag> bilag, String beskrivelse, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta) {
+    public Utbetaling(List<Bilag> bilag, String beskrivelse, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr) {
         this.bilag = bilag;
         this.beskrivelse = beskrivelse;
         this.periode = periode;
@@ -27,8 +28,13 @@ public class Utbetaling {
         this.bruttoBelop = bruttoBelop;
         this.nettoBelop = nettoBelop;
         this.valuta = valuta;
+        this.kontoNr = kontoNr;
         extractPeriodDates(periode);
 
+    }
+
+    public String getKontoNr() {
+        return kontoNr;
     }
 
     private void extractPeriodDates(String periode) {
@@ -49,7 +55,7 @@ public class Utbetaling {
                     endDate = null;
                 }
             }
-        }else{
+        } else {
             startDate = null;
             endDate = null;
         }

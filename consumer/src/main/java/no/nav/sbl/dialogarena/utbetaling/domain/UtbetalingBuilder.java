@@ -14,9 +14,15 @@ public class UtbetalingBuilder {
     private double bruttoBelop = 6000.0;
     private double nettoBelop = 4800.0;
     private String valuta = "kr";
+    private String kontoNr = "1234 25 25814";
 
     public UtbetalingBuilder setBilag(List<Bilag> bilag) {
         this.bilag = bilag;
+        return this;
+    }
+
+    public UtbetalingBuilder setKontoNr(String kontoNr) {
+        this.kontoNr = kontoNr;
         return this;
     }
 
@@ -58,6 +64,6 @@ public class UtbetalingBuilder {
 
 
     public Utbetaling createUtbetaling() {
-        return new Utbetaling(bilag, beskrivelse, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta);
+        return new Utbetaling(bilag, beskrivelse, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr);
     }
 }
