@@ -1,9 +1,11 @@
 package no.nav.sbl.dialogarena.soknader.liste;
 
 import no.nav.modig.modia.liste.Liste;
+import no.nav.modig.modia.widget.panels.FeedItemErrorMessagePanel;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 import java.util.List;
@@ -28,7 +30,7 @@ public class SoknadListe extends Liste<Soknad> {
     @Override
     public WebMarkupContainer newListItem(String id, IModel<Soknad> model) {
         if(serviceCallFailed){
-            return new SoknadListeError(id);
+            return new FeedItemErrorMessagePanel(id, Model.of("Feil ved uthenting av søknader"));
         }else{
             return new SoknadItem(id, model);
         }
