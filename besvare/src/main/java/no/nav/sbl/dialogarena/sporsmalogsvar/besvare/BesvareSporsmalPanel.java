@@ -57,7 +57,7 @@ public class BesvareSporsmalPanel extends Panel {
         setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<Traad>() {
             @Override
             protected Traad load() {
-                return service.hentDetaljer(fnr, oppgaveId)
+                return service.hentTraad(fnr, oppgaveId)
                         .getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId));
             }
         }));

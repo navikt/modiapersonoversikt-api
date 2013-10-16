@@ -12,10 +12,13 @@ import java.io.IOException;
 import java.util.Comparator;
 import java.util.Map;
 
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
 
 public class BesvareUtils {
+
+    private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public static final Transformer<Svar, WSSvar> TIL_WSSVAR = new Transformer<Svar, WSSvar>() {
         @Override
@@ -46,19 +49,28 @@ public class BesvareUtils {
     };
 
     public static final Transformer<WSHenvendelse, Melding> TIL_HENVENDELSE = new Transformer<WSHenvendelse, Melding>() {
-        final ObjectMapper mapper = new ObjectMapper();
         @Override
         public Melding transform(WSHenvendelse wsHenvendelse) {
-            Map<String, String> behandlingsresultat;
-            try {
-                behandlingsresultat = mapper.readValue(wsHenvendelse.getBehandlingsresultat(), new TypeReference<Map<String, String>>() { });
-            } catch (IOException e) {
-                throw new RuntimeException("Kunne ikke lese ut behandlingsresultat", e);
-            }
-            String fritekst = behandlingsresultat.get("fritekst");
+            String fritekst = optional(wsHenvendelse.getBehandlingsresultat()).map(getFromBehandlingsresultat("fritekst")).getOrElse(null);
             return new Melding("SPORSMAL".equals(wsHenvendelse.getHenvendelseType()) ? INNGAENDE : UTGAENDE, wsHenvendelse.getOpprettetDato(), fritekst);
         }
     };
+
+    public static Transformer<String, String> getFromBehandlingsresultat(final String mapKey) {
+        return new Transformer<String, String>() {
+            @Override
+            public String transform(String unparsedBehandlingsresultat) {
+                Map<String, String> behandlingsresultat;
+                try {
+                    behandlingsresultat = MAPPER.readValue(unparsedBehandlingsresultat, new TypeReference<Map<String, String>>() { });
+                } catch (IOException e) {
+                    throw new RuntimeException("Kunne ikke lese ut behandlingsresultat", e);
+                }
+                return behandlingsresultat.get(mapKey);
+            }
+        };
+    }
+
 
     public static final Transformer<WSSvar, Svar> TIL_SVAR = new Transformer<WSSvar, Svar>() {
         @Override
