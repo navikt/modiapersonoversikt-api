@@ -1,15 +1,17 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import com.sun.deploy.util.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 public class Utbetaling {
 
-    private List<Bilag> bilag;
+    private List<Bilag> bilag = new ArrayList<>();
     private String beskrivelse;
     private DateTime startDate;
     private DateTime endDate;
@@ -39,40 +41,6 @@ public class Utbetaling {
         return kontoNr;
     }
 
-    public Set<String> getBeskrivelser() {
-        Set<String> beskrivelser = new TreeSet<>();
-        for (Bilag detalj : bilag) {
-            beskrivelser.addAll(detalj.getBeskrivelser());
-        }
-        return beskrivelser;
-    }
-
-    private void extractPeriodDates(String periode) {
-        // ÅÅÅÅ.MM.DD-ÅÅÅÅ.MM.DD
-        if (periode != null) {
-            String[] datoer = periode.split("-");
-            if (datoer.length >= 1) {
-                try {
-                    startDate = DateTime.parse(datoer[0], DateTimeFormat.forPattern("YYYY.MM.dd"));
-                } catch (IllegalArgumentException e) {
-                    startDate = null;
-                }
-            }
-            if (datoer.length >= 2) {
-                try {
-                    endDate = DateTime.parse(datoer[1], DateTimeFormat.forPattern("YYYY.MM.dd"));
-                } catch (IllegalArgumentException e) {
-                    endDate = null;
-                }
-            }
-        } else {
-            startDate = null;
-            endDate = null;
-        }
-
-
-    }
-
     public String getValuta() {
         return valuta;
     }
@@ -82,7 +50,7 @@ public class Utbetaling {
     }
 
     public String getBeskrivelse() {
-        return beskrivelse;
+        return StringUtils.join(getBeskrivelser(), ", ");
     }
 
     public DateTime getStartDate() {
@@ -113,5 +81,35 @@ public class Utbetaling {
         return nettoBelop;
     }
 
+    protected Set<String> getBeskrivelser() {
+        Set<String> beskrivelser = new TreeSet<>();
+        for (Bilag detalj : bilag) {
+            beskrivelser.addAll(detalj.getBeskrivelser());
+        }
+        return beskrivelser;
+    }
 
+    private void extractPeriodDates(String periode) {
+        // ÅÅÅÅ.MM.DD-ÅÅÅÅ.MM.DD
+        if (periode != null) {
+            String[] datoer = periode.split("-");
+            if (datoer.length >= 1) {
+                try {
+                    startDate = DateTime.parse(datoer[0], DateTimeFormat.forPattern("YYYY.MM.dd"));
+                } catch (IllegalArgumentException e) {
+                    startDate = null;
+                }
+            }
+            if (datoer.length >= 2) {
+                try {
+                    endDate = DateTime.parse(datoer[1], DateTimeFormat.forPattern("YYYY.MM.dd"));
+                } catch (IllegalArgumentException e) {
+                    endDate = null;
+                }
+            }
+        } else {
+            startDate = null;
+            endDate = null;
+        }
+    }
 }

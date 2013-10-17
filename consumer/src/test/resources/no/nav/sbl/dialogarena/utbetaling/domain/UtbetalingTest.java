@@ -25,8 +25,47 @@ public class UtbetalingTest {
 
         System.out.println("beskrivelser. = " + beskrivelser);
         assertThat(beskrivelser.size(), is(3));
+        assertThat(beskrivelser.contains("Dagpenger"), is(equalTo(true)));
+        assertThat(beskrivelser.contains("Sykepenger"), is(equalTo(true)));
+        assertThat(beskrivelser.contains("Skatt"), is(equalTo(true)));
+        assertThat(utbetaling.getBeskrivelse(),is("Dagpenger, Skatt, Sykepenger"));
     }
 
+    @Test
+    public void extractUtbetalingsBeskrivelseFraDetalj_FlereBilagMedForskjelligeDetaljer() throws Exception {
+        PosteringsDetalj dagpenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("Dagpenger").createPosteringsDetalj();
+        PosteringsDetalj sykepenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("Sykepenger").createPosteringsDetalj();
+        PosteringsDetalj skatt = new PosteringsDetaljBuilder().setHovedBeskrivelse("Skatt").createPosteringsDetalj();
+        Bilag bilag = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(dagpenger, skatt)).createBilag();
+        Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(sykepenger, skatt)).createBilag();
+        Utbetaling utbetaling = new UtbetalingBuilder().setBilag(Arrays.asList(bilag, bilag2)).createUtbetaling();
+
+        TreeSet<String> beskrivelser = (TreeSet<String>) utbetaling.getBeskrivelser();
+
+        System.out.println("beskrivelser. = " + beskrivelser);
+        assertThat(beskrivelser.size(), is(3));
+        assertThat(beskrivelser.contains("Dagpenger"), is(equalTo(true)));
+        assertThat(beskrivelser.contains("Sykepenger"), is(equalTo(true)));
+        assertThat(beskrivelser.contains("Skatt"), is(equalTo(true)));
+        assertThat(utbetaling.getBeskrivelse(),is("Dagpenger, Skatt, Sykepenger"));
+    }
+
+    @Test
+    public void extractUtbetalingsBeskrivelseFraDetalj_FlereBilagMedTommeBeskrivelserDetaljer_TomBeskrivelse() throws Exception {
+        PosteringsDetalj dagpenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("").createPosteringsDetalj();
+        PosteringsDetalj sykepenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("").createPosteringsDetalj();
+        PosteringsDetalj skatt = new PosteringsDetaljBuilder().setHovedBeskrivelse("").createPosteringsDetalj();
+        Bilag bilag = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(dagpenger, skatt)).createBilag();
+        Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(sykepenger, skatt)).createBilag();
+        Utbetaling utbetaling = new UtbetalingBuilder().setBilag(Arrays.asList(bilag, bilag2)).createUtbetaling();
+
+        TreeSet<String> beskrivelser = (TreeSet<String>) utbetaling.getBeskrivelser();
+
+        System.out.println("beskrivelser. = " + beskrivelser);
+        assertThat(beskrivelser.size(), is(1));
+        assertThat(beskrivelser.contains(""), is(equalTo(true)));
+        assertThat(utbetaling.getBeskrivelse(),is(""));
+    }
 
     @Test
     public void extractDatoFromPeriodeString(){
