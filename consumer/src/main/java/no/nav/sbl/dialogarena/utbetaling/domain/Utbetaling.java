@@ -23,6 +23,7 @@ public class Utbetaling {
     private String valuta;
     private String kontoNr;
 
+    // CHECKSTYLE:OFF
     public Utbetaling(List<Bilag> bilag, String beskrivelse, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr) {
         this.bilag = bilag;
         this.beskrivelse = beskrivelse;
@@ -36,6 +37,7 @@ public class Utbetaling {
 
         extractPeriodDates(periode);
     }
+    // CHECKSTYLE:ON
 
     public String getKontoNr() {
         return kontoNr;

@@ -15,15 +15,15 @@ public class UtbetalingPanel extends Panel {
     public UtbetalingPanel(String id, Utbetaling utbetaling) {
         super(id);
         String utbetalingsDato = Optional.optional(utbetaling.getUtbetalingsDato()).map(Datoformat.KORT).getOrElse("Ingen utbetalingsdato");
-        String startDato =Optional.optional(utbetaling.getStartDate()).map(Datoformat.KORT).getOrElse("");
-        String sluttDato =Optional.optional(utbetaling.getEndDate()).map(Datoformat.KORT).getOrElse("");
+        String startDato = Optional.optional(utbetaling.getStartDate()).map(Datoformat.KORT).getOrElse("");
+        String sluttDato = Optional.optional(utbetaling.getEndDate()).map(Datoformat.KORT).getOrElse("");
 
         final String periode = startDato + " - " + sluttDato;
 
 
         NumberFormat currencyInstance = NumberFormat.getNumberInstance(Locale.forLanguageTag("nb-no"));
         currencyInstance.setMinimumFractionDigits(2);
-        String nettoBelop = currencyInstance.format( utbetaling.getNettoBelop()) + " " + utbetaling.getValuta();
+        String nettoBelop = currencyInstance.format(utbetaling.getNettoBelop()) + " " + utbetaling.getValuta();
 
         final Label hidden = new Label("hidden", "SKJULT");
         hidden.setVisible(false);
