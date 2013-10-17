@@ -8,11 +8,9 @@
         </encoder>
     </appender>
 
-    <logger name="org.apache.cxf.services" level="DEBUG" />
-    <logger name="org.apache.cxf" level="INFO" additivity="false" />
-    <logger name="no.nav.modig" level="ERROR" additivity="false" />
-    <logger name="org.apache.wicket" level="WARN" additivity="false" />
-    <logger name="org.springframework" level="WARN" additivity="false" />
+    <logger name="no.nav.modig" level="ERROR" />
+    <logger name="org.apache.wicket" level="WARN" />
+    <logger name="org.springframework" level="WARN" />
 
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
