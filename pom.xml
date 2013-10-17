@@ -710,7 +710,7 @@
                         <phase>package</phase>
                         <goals>
                             <!--<goal>failon-unwanted-dependencies</goal>-->
-                            <goal>report-unapproved-dependencies</goal>
+                            <!--<goal>report-unapproved-dependencies</goal>-->
                         </goals>
                     </execution>
                 </executions>
