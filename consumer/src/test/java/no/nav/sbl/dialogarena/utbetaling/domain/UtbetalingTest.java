@@ -24,7 +24,6 @@ public class UtbetalingTest {
 
         TreeSet<String> beskrivelser = (TreeSet<String>) utbetaling.getBeskrivelser();
 
-        System.out.println("beskrivelser. = " + beskrivelser);
         assertThat(beskrivelser.size(), is(3));
         assertThat(beskrivelser.contains("Dagpenger"), is(equalTo(true)));
         assertThat(beskrivelser.contains("Sykepenger"), is(equalTo(true)));
@@ -43,7 +42,6 @@ public class UtbetalingTest {
 
         TreeSet<String> beskrivelser = (TreeSet<String>) utbetaling.getBeskrivelser();
 
-        System.out.println("beskrivelser. = " + beskrivelser);
         assertThat(beskrivelser.size(), is(3));
         assertThat(beskrivelser.contains("Dagpenger"), is(equalTo(true)));
         assertThat(beskrivelser.contains("Sykepenger"), is(equalTo(true)));
@@ -62,7 +60,6 @@ public class UtbetalingTest {
 
         TreeSet<String> beskrivelser = (TreeSet<String>) utbetaling.getBeskrivelser();
 
-        System.out.println("beskrivelser. = " + beskrivelser);
         assertThat(beskrivelser.size(), is(1));
         assertThat(beskrivelser.contains(""), is(equalTo(true)));
         assertThat(utbetaling.getBeskrivelse(),is(""));
