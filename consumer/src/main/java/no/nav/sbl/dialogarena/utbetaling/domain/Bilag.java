@@ -32,6 +32,7 @@ public class Bilag {
         return beskrivelser;
     }
 
+    // CHECKSTYLE:OFF
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,4 +61,5 @@ public class Bilag {
                 ", posteringsDetaljer=" + posteringsDetaljer +
                 '}';
     }
+    // CHECKSTYLE:ON
 }
