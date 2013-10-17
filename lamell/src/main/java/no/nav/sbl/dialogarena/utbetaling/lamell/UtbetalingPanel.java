@@ -24,6 +24,7 @@ public class UtbetalingPanel extends Panel {
         NumberFormat currencyInstance = NumberFormat.getNumberInstance(Locale.forLanguageTag("nb-no"));
         currencyInstance.setMinimumFractionDigits(2);
         String nettoBelop = currencyInstance.format( utbetaling.getNettoBelop()) + " " + utbetaling.getValuta();
+
         final Label hidden = new Label("hidden", "SKJULT");
         hidden.setVisible(false);
         hidden.setOutputMarkupId(true);
@@ -40,10 +41,7 @@ public class UtbetalingPanel extends Panel {
         add(new AjaxLink<Void>("expandbutton") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                System.out.println("Link klikket");
-                System.out.println("target = " + target);
                 hidden.setVisible(!hidden.isVisible());
-//                hidden.setOutputMarkupId(true);
                 target.add(hidden);
             }
         });

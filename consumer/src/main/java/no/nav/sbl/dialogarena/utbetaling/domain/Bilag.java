@@ -12,4 +12,6 @@ public class Bilag {
     private List<PosteringsDetalj> posteringsDetaljer;
 
 
+
+
 }
