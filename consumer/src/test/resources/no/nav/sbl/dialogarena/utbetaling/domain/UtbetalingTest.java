@@ -3,12 +3,30 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
+import java.util.Arrays;
+import java.util.TreeSet;
+
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
 public class UtbetalingTest {
+
+    @Test
+    public void extractUtbetalingsBeskrivelseFraDetalj() throws Exception {
+        PosteringsDetalj dagpenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("Dagpenger").createPosteringsDetalj();
+        PosteringsDetalj sykepenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("Sykepenger").createPosteringsDetalj();
+        PosteringsDetalj skatt = new PosteringsDetaljBuilder().setHovedBeskrivelse("Skatt").createPosteringsDetalj();
+        Bilag bilag = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(dagpenger, sykepenger, skatt)).createBilag();
+        Utbetaling utbetaling = new UtbetalingBuilder().setBilag(Arrays.asList(bilag)).createUtbetaling();
+
+        TreeSet<String> beskrivelser = (TreeSet<String>) utbetaling.getBeskrivelser();
+
+        System.out.println("beskrivelser. = " + beskrivelser);
+        assertThat(beskrivelser.size(), is(3));
+    }
+
 
     @Test
     public void extractDatoFromPeriodeString(){

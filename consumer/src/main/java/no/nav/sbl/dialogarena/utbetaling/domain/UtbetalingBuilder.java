@@ -16,6 +16,16 @@ public class UtbetalingBuilder {
     private String valuta = "kr";
     private String kontoNr = "1234 25 25814";
 
+    public UtbetalingBuilder() {
+        Bilag bilag1 = new BilagBuilder().createBilag();
+        Bilag bilag2 = new BilagBuilder().createBilag();
+        Bilag bilag3 = new BilagBuilder().createBilag();
+
+        bilag.add(bilag1);
+        bilag.add(bilag2);
+        bilag.add(bilag3);
+    }
+
     public UtbetalingBuilder setBilag(List<Bilag> bilag) {
         this.bilag = bilag;
         return this;

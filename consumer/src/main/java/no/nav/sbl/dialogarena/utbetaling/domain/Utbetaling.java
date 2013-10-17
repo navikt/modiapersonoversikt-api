@@ -4,6 +4,8 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 public class Utbetaling {
 
@@ -35,6 +37,15 @@ public class Utbetaling {
 
     public String getKontoNr() {
         return kontoNr;
+    }
+
+    public Set<String> getBeskrivelser() {
+        Set<String> beskrivelser = new TreeSet<String>();
+        for (Bilag detalj : bilag) {
+            Set<String> beskrivelser1 = detalj.getBeskrivelser();
+            beskrivelser.addAll(beskrivelser1);
+        }
+        return beskrivelser;
     }
 
     private void extractPeriodDates(String periode) {

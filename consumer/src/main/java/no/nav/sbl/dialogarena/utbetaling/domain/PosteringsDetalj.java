@@ -16,4 +16,6 @@ public class PosteringsDetalj {
     public String getUnderdBeskrivelse() {
         return underdBeskrivelse;
     }
+
+
 }
