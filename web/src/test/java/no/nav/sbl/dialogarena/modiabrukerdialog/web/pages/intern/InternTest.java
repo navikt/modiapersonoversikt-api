@@ -18,7 +18,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.BesvareSporsmalPanel;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.AbstractLink;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
