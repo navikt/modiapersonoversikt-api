@@ -50,10 +50,10 @@
             <!--<artifactId>collections-generic</artifactId>-->
         <!--</dependency>-->
 
-        <!--<dependency>-->
-            <!--<groupId>no.nav.modig</groupId>-->
-            <!--<artifactId>modig-lang</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-lang</artifactId>
+        </dependency>
 
         <!--&lt;!&ndash; Logback &ndash;&gt;-->
         <!--<dependency>-->
@@ -74,10 +74,10 @@
         <!--</dependency>-->
 
 
-        <!--<dependency>-->
-            <!--<groupId>org.apache.wicket</groupId>-->
-            <!--<artifactId>wicket-core</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>org.apache.wicket</groupId>
+            <artifactId>wicket-core</artifactId>
+        </dependency>
 
         <!--<dependency>-->
             <!--<groupId>org.apache.wicket</groupId>-->

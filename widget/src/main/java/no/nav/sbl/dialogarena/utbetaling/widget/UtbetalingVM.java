@@ -34,11 +34,11 @@ public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<Utbeta
         return utbetaling.getStatuskode();
     }
 
-    public DateTime getStartDato(){
+    public DateTime getStartDato() {
         return utbetaling.getStartDate();
     }
 
-    public DateTime getSluttDato(){
+    public DateTime getSluttDato() {
         return utbetaling.getEndDate();
     }
 
@@ -55,5 +55,13 @@ public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<Utbeta
     @Override
     public int compareTo(UtbetalingVM o) {
         return o.getUtbetalingsDato().compareTo(getUtbetalingsDato());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof UtbetalingVM)
+            return ((UtbetalingVM) o).getUtbetalingsDato().equals(getUtbetalingsDato());
+        else
+            throw new IllegalArgumentException();
     }
 }
