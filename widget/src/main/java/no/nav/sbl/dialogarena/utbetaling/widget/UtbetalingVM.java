@@ -59,9 +59,18 @@ public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<Utbeta
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof UtbetalingVM)
-            return ((UtbetalingVM) o).getUtbetalingsDato().equals(getUtbetalingsDato());
-        else
-            throw new IllegalArgumentException();
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UtbetalingVM that = (UtbetalingVM) o;
+
+        if (!utbetaling.equals(that.utbetaling)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return utbetaling.hashCode();
     }
 }

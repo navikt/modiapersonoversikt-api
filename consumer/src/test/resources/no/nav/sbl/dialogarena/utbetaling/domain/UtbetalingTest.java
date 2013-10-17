@@ -8,6 +8,7 @@ import java.util.TreeSet;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsEqual.equalTo;
+import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
@@ -65,6 +66,35 @@ public class UtbetalingTest {
         assertThat(beskrivelser.size(), is(1));
         assertThat(beskrivelser.contains(""), is(equalTo(true)));
         assertThat(utbetaling.getBeskrivelse(),is(""));
+    }
+
+    @Test
+    public void equals_ForskjelligeBilag_ForskjelligeUtbetalinger() throws Exception {
+        PosteringsDetalj dagpenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("Dagpenger").createPosteringsDetalj();
+        PosteringsDetalj sykepenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("Sykepenger").createPosteringsDetalj();
+        PosteringsDetalj skatt = new PosteringsDetaljBuilder().setHovedBeskrivelse("Skatt").createPosteringsDetalj();
+        Bilag bilag = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(dagpenger, skatt)).createBilag();
+        DateTime now = DateTime.now();
+
+        Utbetaling utbetaling = new UtbetalingBuilder().setUtbetalingsDato(now).setBilag(Arrays.asList(bilag)).createUtbetaling();
+
+        Bilag bilag4 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(sykepenger, skatt)).createBilag();
+        Utbetaling utbetaling1 = new UtbetalingBuilder().setUtbetalingsDato(now).setBilag(Arrays.asList(bilag4)).createUtbetaling();
+
+        assertThat(utbetaling, is(not(equalTo(utbetaling1))));
+    }
+
+    @Test
+    public void equals_LikeBilag_LikeUtbetalinger() throws Exception {
+        PosteringsDetalj skatt = new PosteringsDetaljBuilder().setHovedBeskrivelse("Skatt").createPosteringsDetalj();
+        Bilag bilag = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(skatt)).createBilag();
+        DateTime now = DateTime.now();
+        Utbetaling utbetaling = new UtbetalingBuilder().setUtbetalingsDato(now).setBilag(Arrays.asList(bilag)).createUtbetaling();
+
+        Bilag bilag4 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(skatt)).createBilag();
+        Utbetaling utbetaling1 = new UtbetalingBuilder().setUtbetalingsDato(now).setBilag(Arrays.asList(bilag4)).createUtbetaling();
+
+        assertThat(utbetaling, is(equalTo(utbetaling1)));
     }
 
     @Test
