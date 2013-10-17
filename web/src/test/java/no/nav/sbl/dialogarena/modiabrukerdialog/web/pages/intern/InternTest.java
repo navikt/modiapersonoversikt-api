@@ -20,9 +20,14 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.inject.Inject;
 
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
@@ -46,6 +51,16 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InternTest extends WicketPageTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(InternTest.class);
+
+    @Inject
+    private ApplicationContext applicationContext;
+
+    @Override
+    protected void additionalSetup() {
+        logger.info("<============= ACTIVE PROFILES :: " + applicationContext.getEnvironment().getActiveProfiles().length + " ==============>");
+    }
 
     @Test
     public void shouldLoadPage() {
