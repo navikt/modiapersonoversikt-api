@@ -74,7 +74,6 @@ public class InternTest extends WicketPageTest {
         verify(redirectPopup, times(0)).redirect();
     }
 
-    @Ignore
     @Test
     public void vedIngenUlagredeEndringerOgRefreshSkalIkkeViseModaldialog() {
         wicket.goTo(Intern.class, with().param("fnr", "12037649749"));
