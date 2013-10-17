@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import com.sun.deploy.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
