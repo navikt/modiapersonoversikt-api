@@ -11,6 +11,7 @@ import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.GenericLerret;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.Oversikt;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
+import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLamell;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
 import org.apache.commons.collections15.Predicate;
@@ -31,6 +32,7 @@ import static org.apache.wicket.model.Model.of;
 public class LamellHandler implements Serializable {
 
     public static final String LAMELL_KONTRAKTER = "kontrakter";
+    public static final String LAMELL_UTBETALINGER = "utbetalinger";
     public static final String LAMELL_FORELDREPENGER = "foreldrepenger";
     public static final String LAMELL_SYKEPENGER = "sykepenger";
     public static final String LAMELL_OVERSIKT = "oversikt";
@@ -59,7 +61,9 @@ public class LamellHandler implements Serializable {
     public void handleWidgetItemEvent(String linkId) {
         if (LAMELL_KONTRAKTER.equalsIgnoreCase(linkId)) {
             lamellPanel.goToLamell(LAMELL_KONTRAKTER);
-        } else {
+        } else if( LAMELL_UTBETALINGER.equalsIgnoreCase(linkId)){
+            lamellPanel.goToLamell(LAMELL_UTBETALINGER);
+        }else  {
             throw new ApplicationException("Widgetlenke med ukjent id <" + linkId + "> klikket');");
         }
     }
@@ -105,7 +109,8 @@ public class LamellHandler implements Serializable {
                 createOversiktLamell(),
                 createKontrakterLamell(),
                 createBrukerprofilLamell(),
-                createMeldingerLamell()
+                createMeldingerLamell(),
+                createUtbetalingLamell()
         );
     }
 
@@ -135,6 +140,16 @@ public class LamellHandler implements Serializable {
             }
         });
     }
+
+    private LamellFactory createUtbetalingLamell() {
+        return newLamellFactory(LAMELL_UTBETALINGER, "U", false, new LerretFactory() {
+            @Override
+            public Lerret createLerret(String id) {
+                return addLerretToListAndReturn(new UtbetalingLamell(id, fnrFromRequest));
+            }
+        });
+    }
+
 
     private LamellFactory createMeldingerLamell() {
         return newLamellFactory(LAMELL_MELDINGER, "M", new LerretFactory() {

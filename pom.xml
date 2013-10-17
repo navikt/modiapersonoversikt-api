@@ -34,6 +34,7 @@
         <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
         <soknader.liste.version>2.0.2</soknader.liste.version>
         <sporsmalogsvar.version>1.8</sporsmalogsvar.version>
+        <utbetaling.version>2.0.0-SNAPSHOT</utbetaling.version>
     </properties>
 
     <dependencyManagement>
@@ -67,6 +68,12 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sporsmal-og-svar-widget</artifactId>
                 <version>${sporsmalogsvar.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>utbetalinger-lamell</artifactId>
+                <version>${utbetaling.version}</version>
             </dependency>
 
             <dependency>

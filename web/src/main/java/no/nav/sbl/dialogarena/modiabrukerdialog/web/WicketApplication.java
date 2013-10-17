@@ -26,6 +26,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.InternBesvaremo
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.sbl.dialogarena.time.Datoformat;
+import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLamell;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
@@ -39,7 +40,6 @@ import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
-
 import java.util.Locale;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
@@ -86,7 +86,8 @@ public class WicketApplication extends WebApplication {
                         BasePage.INTERN_LESS,
                         BasePage.BESVARESPORSALPANEL,
                         BasePage.MELDINGERWIDGET,
-                        BasePage.MELDINGERLAMELL)
+                        BasePage.MELDINGERLAMELL,
+                        UtbetalingLamell.UTBETALING_LAMELL_LESS)
                 .addCss(
                         BasePage.PERSONSOKRESULT,
                         BasePage.PERSONSOKSEARCH,
