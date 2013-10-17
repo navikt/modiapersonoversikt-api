@@ -28,14 +28,11 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.validation.validator.StringValidator;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
 
 public class BesvareSporsmalPanel extends Panel {
 
@@ -47,7 +44,7 @@ public class BesvareSporsmalPanel extends Panel {
     private BesvareService service = new BesvareService(besvareHenvendelsePortType, henvendelsePortType);
 
     private MarkupContainer sisteMelding;
-    private TidligereDialog tidligereDialog;
+    private Dialog dialog;
 
     private String oppgaveId;
 
@@ -55,26 +52,30 @@ public class BesvareSporsmalPanel extends Panel {
         super(id);
         setOutputMarkupId(true);
         setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<Traad>() {
+            Traad traad = new Traad();
             @Override
             protected Traad load() {
-                return service.hentTraad(fnr, oppgaveId)
-                        .getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId));
+                traad = service.hentTraad(fnr, oppgaveId)
+                        .getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId))
+                        .merge(traad);
+                return traad;
             }
         }));
 
         sisteMelding = new WebMarkupContainer("siste-melding")
-            .add(new Label("sporsmal.overskrift"), new Label("sporsmal.sendtDato"), new MultiLineLabel("sporsmal.fritekst"));
+            .add(new Label("sisteMelding.overskrift"), new Label("sisteMelding.sendtDato"), new MultiLineLabel("sisteMelding.fritekst"));
 
-        tidligereDialog = new TidligereDialog("tidligereDialog");
+        dialog = new Dialog("tidligereDialog");
         add(
                 new SvarForm("svar"),
                 sisteMelding,
-                tidligereDialog);
+                dialog);
     }
 
-    private Melding getSporsmal() {
-        return ((Traad) getDefaultModelObject()).sporsmal;
+    private Traad getTraad() {
+        return (Traad) getDefaultModelObject();
     }
+
 
     @Override
     public void renderHead(IHeaderResponse response) {
@@ -105,17 +106,10 @@ public class BesvareSporsmalPanel extends Panel {
 
                         @Override
                         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                            Svar svar = getModelObject();
-                            service.besvareSporsmal(svar);
-
-                            tidligereDialog.prependHenvendelse(getSporsmal());
-
-                            Melding svarkvittering = new Melding(UTGAENDE, DateTime.now(), svar.fritekst);
-                            svarkvittering.tidligereHenvendelse.setObject(false);
-                            tidligereDialog.prependHenvendelse(svarkvittering);
-
-                            sisteMelding.setVisibilityAllowed(false);
+                            service.besvareSporsmal(getTraad());
                             SvarForm.this.setVisibilityAllowed(false);
+                            dialog.setList(getTraad().getDialog());
+                            sisteMelding.setVisibilityAllowed(false);
 
                             send(getPage(), Broadcast.DEPTH, KVITTERING);
 
@@ -131,10 +125,11 @@ public class BesvareSporsmalPanel extends Panel {
         }
     }
 
-    private static class TidligereDialog extends PropertyListView<Melding> {
+    private static class Dialog extends PropertyListView<Melding> {
 
-        public TidligereDialog(String id) {
+        public Dialog(String id) {
             super(id);
+            setReuseItems(true);
         }
 
         @Override
@@ -146,9 +141,6 @@ public class BesvareSporsmalPanel extends Panel {
             item.add(hasCssClassIf("tidligere-dialog", item.getModelObject().tidligereHenvendelse));
         }
 
-        public void prependHenvendelse(Melding henvendelse) {
-            setModelObject(on(getModelObject()).prepend(henvendelse).collect());
-        }
     }
 
     public void besvar(String oppgaveId) {

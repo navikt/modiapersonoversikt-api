@@ -3,13 +3,13 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.collections.IterUtils.by;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.getFromBehandlingsresultat;
@@ -101,7 +102,7 @@ public class TjenesterMock {
 
             @Override
             public WSSporsmalOgSvar hentSporsmalOgSvar(String oppgaveId) {
-                WSHenvendelse nyesteHenvendelse = HENVENDELSER.collect(BesvareUtils.NYESTE_FORST).get(0);
+                WSHenvendelse nyesteHenvendelse = HENVENDELSER.collect(by(OPPRETTET_DATO).descending()).get(0);
                 WSSporsmal sporsmal = new WSSporsmal()
                         .withFritekst(optional(nyesteHenvendelse.getBehandlingsresultat()).map(getFromBehandlingsresultat("fritekst")).getOrElse(null))
                         .withOpprettet(nyesteHenvendelse.getOpprettetDato())
@@ -114,6 +115,13 @@ public class TjenesterMock {
         };
         return new BesvareHenvendelseStub();
     }
+
+    private static final Transformer<WSHenvendelse, DateTime> OPPRETTET_DATO = new Transformer<WSHenvendelse, DateTime>() {
+        @Override
+        public DateTime transform(WSHenvendelse wshenvendelse) {
+            return wshenvendelse.getOpprettetDato();
+        }
+    };
 
 
     abstract static class ItPings {
