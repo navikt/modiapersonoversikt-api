@@ -57,14 +57,15 @@ public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<Utbeta
         return o.getUtbetalingsDato().compareTo(getUtbetalingsDato());
     }
 
+    // CHECKSTYLE:OFF
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) { return true; }
+        if (o == null || getClass() != o.getClass()) { return false; }
 
         UtbetalingVM that = (UtbetalingVM) o;
 
-        if (!utbetaling.equals(that.utbetaling)) return false;
+        if (!utbetaling.equals(that.utbetaling)) { return false; }
 
         return true;
     }
@@ -73,4 +74,5 @@ public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<Utbeta
     public int hashCode() {
         return utbetaling.hashCode();
     }
+    // CHECKSTYLE:ON
 }
