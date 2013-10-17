@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -17,6 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
+@Ignore
 @DirtiesContext(classMode = AFTER_CLASS)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {KjerneinfoPepMockContext.class})
