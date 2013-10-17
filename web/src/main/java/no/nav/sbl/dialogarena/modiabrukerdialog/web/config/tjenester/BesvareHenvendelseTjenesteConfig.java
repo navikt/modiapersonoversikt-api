@@ -58,7 +58,7 @@ public class BesvareHenvendelseTjenesteConfig {
 
         private BesvareHenvendelsePortType lagBesvareHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {
             JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
-            factoryBean.setWsdlURL("classpath:BesvareHenvendelse.wsdl");
+            factoryBean.setWsdlURL("classpath:v1/BesvareHenvendelse.wsdl");
             factoryBean.getFeatures().add(new LoggingFeature());
             factoryBean.getFeatures().add(new WSAddressingFeature());
             factoryBean.getOutInterceptors().add(interceptor);
