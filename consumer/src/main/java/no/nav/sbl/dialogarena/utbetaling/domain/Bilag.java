@@ -25,10 +25,9 @@ public class Bilag {
 
 
     public Set<String> getBeskrivelser() {
-        Set<String> beskrivelser = new TreeSet<String>();
+        Set<String> beskrivelser = new TreeSet<>();
         for (PosteringsDetalj detalj : posteringsDetaljer) {
-            String beskrivelse = detalj.getHovedBeskrivelse();
-            beskrivelser.add(beskrivelse);
+            beskrivelser.add(detalj.getHovedBeskrivelse());
         }
         return beskrivelser;
     }

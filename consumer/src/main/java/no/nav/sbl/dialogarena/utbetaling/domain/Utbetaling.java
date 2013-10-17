@@ -31,8 +31,8 @@ public class Utbetaling {
         this.nettoBelop = nettoBelop;
         this.valuta = valuta;
         this.kontoNr = kontoNr;
-        extractPeriodDates(periode);
 
+        extractPeriodDates(periode);
     }
 
     public String getKontoNr() {
@@ -40,10 +40,9 @@ public class Utbetaling {
     }
 
     public Set<String> getBeskrivelser() {
-        Set<String> beskrivelser = new TreeSet<String>();
+        Set<String> beskrivelser = new TreeSet<>();
         for (Bilag detalj : bilag) {
-            Set<String> beskrivelser1 = detalj.getBeskrivelser();
-            beskrivelser.addAll(beskrivelser1);
+            beskrivelser.addAll(detalj.getBeskrivelser());
         }
         return beskrivelser;
     }
