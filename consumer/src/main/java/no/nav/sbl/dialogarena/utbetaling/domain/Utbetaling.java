@@ -112,4 +112,58 @@ public class Utbetaling {
             endDate = null;
         }
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Utbetaling that = (Utbetaling) o;
+
+        if (Double.compare(that.bruttoBelop, bruttoBelop) != 0) return false;
+        if (Double.compare(that.nettoBelop, nettoBelop) != 0) return false;
+        if (beskrivelse != null ? !beskrivelse.equals(that.beskrivelse) : that.beskrivelse != null) return false;
+        if (bilag != null ? !bilag.equals(that.bilag) : that.bilag != null) return false;
+        if (endDate != null ? !endDate.equals(that.endDate) : that.endDate != null) return false;
+        if (kontoNr != null ? !kontoNr.equals(that.kontoNr) : that.kontoNr != null) return false;
+        if (periode != null ? !periode.equals(that.periode) : that.periode != null) return false;
+        if (startDate != null ? !startDate.equals(that.startDate) : that.startDate != null) return false;
+        if (statuskode != null ? !statuskode.equals(that.statuskode) : that.statuskode != null) return false;
+        if (utbetalingsDato != null ? !utbetalingsDato.equals(that.utbetalingsDato) : that.utbetalingsDato != null)
+            return false;
+        if (valuta != null ? !valuta.equals(that.valuta) : that.valuta != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result;
+        long temp;
+        result = bilag != null ? bilag.hashCode() : 0;
+        result = 31 * result + (beskrivelse != null ? beskrivelse.hashCode() : 0);
+        result = 31 * result + (startDate != null ? startDate.hashCode() : 0);
+        result = 31 * result + (endDate != null ? endDate.hashCode() : 0);
+        result = 31 * result + (periode != null ? periode.hashCode() : 0);
+        result = 31 * result + (statuskode != null ? statuskode.hashCode() : 0);
+        result = 31 * result + (utbetalingsDato != null ? utbetalingsDato.hashCode() : 0);
+        temp = bruttoBelop != +0.0d ? Double.doubleToLongBits(bruttoBelop) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        temp = nettoBelop != +0.0d ? Double.doubleToLongBits(nettoBelop) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (valuta != null ? valuta.hashCode() : 0);
+        result = 31 * result + (kontoNr != null ? kontoNr.hashCode() : 0);
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Utbetaling{" +
+                "beskrivelse='" + beskrivelse + '\'' +
+                ", periode='" + periode + '\'' +
+                ", statuskode='" + statuskode + '\'' +
+                ", bilag=" + bilag +
+                ", nettoBelop=" + nettoBelop +
+                '}';
+    }
 }
