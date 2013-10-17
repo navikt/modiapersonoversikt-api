@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
@@ -22,7 +21,6 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
         HentPersonPanelMockContext.class,
-        WicketTesterConfig.class,
         HenvendelseTjenesteConfig.Test.class,
         SykepengerWidgetMockContext.class,
         SoknaderConfig.Test.class,
