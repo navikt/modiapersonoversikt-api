@@ -17,6 +17,7 @@ public class PosteringsDetalj {
         return underdBeskrivelse;
     }
 
+    // CHECKSTYLE:OFF
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -46,4 +47,5 @@ public class PosteringsDetalj {
                 ", underdBeskrivelse='" + underdBeskrivelse + '\'' +
                 '}';
     }
+    // CHECKSTYLE:ON
 }

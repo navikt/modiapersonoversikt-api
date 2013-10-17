@@ -113,6 +113,7 @@ public class Utbetaling {
         }
     }
 
+    // CHECKSTYLE:OFF
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -166,4 +167,5 @@ public class Utbetaling {
                 ", nettoBelop=" + nettoBelop +
                 '}';
     }
+    // CHECKSTYLE:ON
 }
