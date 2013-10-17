@@ -31,14 +31,13 @@ public class BesvareService implements Serializable {
 
     public void besvareSporsmal(Traad traad) {
         traad.ferdigSvar();
-        besvareHenvendelsePortType.besvarSporsmal(tilWsSvar(traad.tema, traad.sensitiv).transform(traad.getSisteMelding()));
+        besvareHenvendelsePortType.besvarSporsmal(tilWsSvar(traad.getTema(), traad.erSensitiv()).transform(traad.getSisteMelding()));
     }
 
     public Optional<Traad> hentTraad(String fnr, String oppgaveId) {
         Traad traad = null;
         for (WSSporsmalOgSvar sporsmalOgSvar : optional(besvareHenvendelsePortType.hentSporsmalOgSvar(oppgaveId))) {
-            traad = new Traad();
-            traad.tema = sporsmalOgSvar.getSporsmal().getTema();
+            traad = new Traad(sporsmalOgSvar.getSporsmal().getTema());
 
             traad.leggTil(on(henvendelsePortType.hentHenvendelseListe(fnr, SPORSMAL_OG_SVAR))
                     .filter(where(TRAAD_ID, equalTo(sporsmalOgSvar.getSporsmal().getTraad()))).map(TIL_MELDING));

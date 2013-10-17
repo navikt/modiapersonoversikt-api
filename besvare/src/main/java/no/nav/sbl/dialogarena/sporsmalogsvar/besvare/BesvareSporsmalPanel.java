@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.Svar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Traad;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
@@ -52,13 +51,10 @@ public class BesvareSporsmalPanel extends Panel {
         super(id);
         setOutputMarkupId(true);
         setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<Traad>() {
-            Traad traad = new Traad();
             @Override
             protected Traad load() {
-                traad = service.hentTraad(fnr, oppgaveId)
-                        .getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId))
-                        .merge(traad);
-                return traad;
+                return service.hentTraad(fnr, oppgaveId)
+                        .getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId));
             }
         }));
 
@@ -82,7 +78,7 @@ public class BesvareSporsmalPanel extends Panel {
         response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(BesvareSporsmalPanel.class, "besvare.js")));
     }
 
-    private final class SvarForm extends Form<Svar> {
+    private final class SvarForm extends Form<Traad.Svar> {
 
         private static final int FRITEKST_MAKS_LENGDE = 5000;
 
