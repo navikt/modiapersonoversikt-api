@@ -31,7 +31,7 @@
         <sakogbehandling.jaxws.version>1.0.1</sakogbehandling.jaxws.version>
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
-        <kjerneinfo.versjon>1.0.41</kjerneinfo.versjon>
+        <kjerneinfo.versjon>2.0.1-SPRINGFIX</kjerneinfo.versjon>
         <soknader.liste.version>2.0.2</soknader.liste.version>
         <sporsmalogsvar.version>1.8</sporsmalogsvar.version>
     </properties>
@@ -306,6 +306,42 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>kontrakter-panel</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>behandlebrukerprofil-consumer</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>kontrakter-consumer</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>brukerprofil-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
                     <exclusion>

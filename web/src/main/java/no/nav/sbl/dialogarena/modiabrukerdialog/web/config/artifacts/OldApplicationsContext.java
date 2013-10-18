@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.artifacts;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.artifacts.kjerneinfo.KjerneinfoContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.artifacts.personsok.PersonsokContext;

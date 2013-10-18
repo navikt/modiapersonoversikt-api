@@ -65,6 +65,21 @@
 
         <dependency>
             <groupId>no.nav</groupId>
+            <artifactId>behandlebrukerprofil-consumer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kontrakter-consumer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-consumer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-panel</artifactId>
         </dependency>
 

@@ -1,11 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.artifacts.OldApplicationsContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseTjenesteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SakOgBehandlingTjenesteConfig;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+
+import static org.slf4j.bridge.SLF4JBridgeHandler.install;
+import static org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger;
 
 @Configuration
 @Import(value = {
@@ -19,7 +22,7 @@ public class ComponentsContext {
 
     static {
         // Sikkerhetsrammeverkene logger til java.util.logging
-        SLF4JBridgeHandler.removeHandlersForRootLogger();
-        SLF4JBridgeHandler.install();
+        removeHandlersForRootLogger();
+        install();
     }
 }

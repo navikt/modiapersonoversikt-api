@@ -3,21 +3,18 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
 
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
     <context-param>
-        <description>Brukes for å velge kontekst</description>
-        <param-name>spring.profiles.active</param-name>
-        <param-value>
-            kjerneinfoDefault
-            , sykemeldingsperioderDefault
-            , kontrakterDefault
-            , personsokDefault
-            , brukerprofilDefault
-            , behandleBrukerprofilDefault
-            , brukerhenvendelserDefaultWithoutCNCheck
-            , henvendelseinnsynDefault
-            , oppgavebehandlingDefault
-            , soknaderTest
-        </param-value>
+        <param-name>contextClass</param-name>
+        <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext</param-value>
     </context-param>
 
     <context-param>
