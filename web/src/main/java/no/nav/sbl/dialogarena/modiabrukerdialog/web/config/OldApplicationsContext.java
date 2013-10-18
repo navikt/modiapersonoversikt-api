@@ -1,18 +1,18 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.artifacts.kjerneinfo.KjerneinfoContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.artifacts.personsok.PersonsokContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
- * Gamle applikasjoner definerer egne kontekstklasser. MODIA importerer disse heller enn å lage sine egne
+ * Gamle applikasjoner definerer egne kontekstklasser som baserer seg på artefakter, ikke tjenester.
+ * Disse importeres samlet, her.
  */
 @Configuration
 @Import(value = {
         PersonsokContext.class,
-        no.nav.sykmeldingsperioder.config.SykmeldingsperioderPanelConfig.class,
-        no.nav.kjerneinfo.config.spring.KjerneinfoPanelConfig.class,
-        no.nav.kjerneinfo.kontrakter.config.KontrakterPanelConfig.class,
-        no.nav.brukerprofil.config.BrukerprofilPanelConfig.class,
+        KjerneinfoContext.class
 })
 public class OldApplicationsContext {
 
