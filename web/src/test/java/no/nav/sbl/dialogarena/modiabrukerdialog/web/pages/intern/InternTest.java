@@ -5,7 +5,7 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.LamellHandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.OppgavebehandlingTjenesteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
@@ -41,7 +41,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         HenvendelseTjenesteConfig.Test.class,
         SykepengerWidgetMockContext.class,
         SakOgBehandlingTjenesteConfig.Test.class,
-        OppgavebehandlingConfig.Test.class,
+        OppgavebehandlingTjenesteConfig.Test.class,
         BesvareHenvendelseTjenesteConfig.Test.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)

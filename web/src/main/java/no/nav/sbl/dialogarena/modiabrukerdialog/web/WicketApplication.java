@@ -19,7 +19,7 @@ import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.LocaleFromWicketSession;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.LocaleFromWicketSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.InternBesvaremodus;

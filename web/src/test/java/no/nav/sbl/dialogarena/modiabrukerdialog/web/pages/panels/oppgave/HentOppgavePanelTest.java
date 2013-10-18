@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.OppgavebehandlingTjenesteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
@@ -35,7 +35,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         HenvendelseTjenesteConfig.Test.class,
         SykepengerWidgetMockContext.class,
         SakOgBehandlingTjenesteConfig.Test.class,
-        OppgavebehandlingConfig.Test.class,
+        OppgavebehandlingTjenesteConfig.Test.class,
         BesvareHenvendelseTjenesteConfig.Test.class
 })
 public class HentOppgavePanelTest extends WicketPageTest {

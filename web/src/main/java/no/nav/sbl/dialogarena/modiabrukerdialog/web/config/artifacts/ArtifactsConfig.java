@@ -14,6 +14,6 @@ import org.springframework.context.annotation.Import;
         PersonsokContext.class,
         KjerneinfoContext.class
 })
-public class OldApplicationsContext {
+public class ArtifactsConfig {
 
 }
