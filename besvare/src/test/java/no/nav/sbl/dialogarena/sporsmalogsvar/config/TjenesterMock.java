@@ -112,7 +112,7 @@ public class TjenesterMock {
                 WSSvar svar = new WSSvar().withBehandlingsId(randomNumeric(5));
                 return new WSSporsmalOgSvar().withSporsmal(sporsmal).withSvar(svar);
             }
-        };
+        }
         return new BesvareHenvendelseStub();
     }
 
