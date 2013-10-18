@@ -68,7 +68,7 @@ public class SoknadTest {
     }
 
     @Test
-    public void statusIsSetWhenFerdigDatoIsSet() throws Exception {
+    public void status_WhenFerdigDatoIsSet_StatusIsNyligFerdig() throws Exception {
         startDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED + 10);
         sluttDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED - 1);
         behandlingskjede.withStart(createXmlGregorianCalander(startDate))
@@ -79,7 +79,7 @@ public class SoknadTest {
 
 
     @Test
-    public void statusIsGammelWhenFerdigDatoIsSetAndMoreThan28DaysSinceDone() throws Exception {
+    public void status_WhenFerdigDatoIsSetAndMoreThan28DaysSinceDone_StatusIsGammelFerdig() throws Exception {
         startDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED + 20);
         sluttDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED + 1);
         behandlingskjede.withStart(createXmlGregorianCalander(startDate))
@@ -89,7 +89,7 @@ public class SoknadTest {
     }
 
     @Test
-    public void statusIsSetToUnderBehandlingWhenUnderBehandlingDatoIsSet() throws Exception {
+    public void status_WhenUnderBehandlingDatoIsSet_StatusIsUnderBehandling() throws Exception {
         startDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED - 20);
         DateTime startNavDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED - 1);
         behandlingskjede.withNormertBehandlingstid(createNormertBehandlingstid(10))
@@ -100,7 +100,7 @@ public class SoknadTest {
     }
 
     @Test
-    public void statusIsSetToMottatWhenUnderBehandlingDatoIsNotSetAndFerdigDatoIsNotSet() throws Exception {
+    public void status_WhenOnlyStartIsSet_UseDefault_StatusIsMottatt() throws Exception {
         startDate = now().minusDays(10);
         behandlingskjede.withStart(createXmlGregorianCalander(startDate));
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);

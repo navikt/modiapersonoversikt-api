@@ -72,28 +72,29 @@ public class Soknad implements Serializable {
             soknad.underBehandlingStartDato = optional(behandlingskjede.getStartNAVtid()).map(dateTimeTransformer()).getOrElse(null);
             soknad.ferdigDato = evaluateFerdigDato(behandlingskjede);
             soknad.normertBehandlingsTid = getNormertTidString(behandlingskjede);
-            evaluateAndSetStatus(soknad);
+            soknad.soknadStatus = evaluateStatus(soknad);
             return soknad;
         }
 
     };
 
-    private static void evaluateAndSetStatus(Soknad soknad) {
+    private static SoknadStatus evaluateStatus(Soknad soknad) {
+        SoknadStatus status = MOTTATT;
         if (soeknadHasFerdigDato(soknad)) {
-            evaluateAndSetFerdigTypeStatus(soknad);
-        } else if (soeknadHasUnderBehandlingDato(soknad)) {
-            soknad.soknadStatus = UNDER_BEHANDLING;
-        } else {
-            soknad.soknadStatus = MOTTATT;
+            return getFerdigSoknadStatus(soknad);
         }
+        if (soeknadHasUnderBehandlingDato(soknad)) {
+            status = UNDER_BEHANDLING;
+        }
+        return status;
     }
 
-    private static void evaluateAndSetFerdigTypeStatus(Soknad soknad) {
+    private static SoknadStatus getFerdigSoknadStatus(Soknad soknad) {
+        SoknadStatus status = GAMMEL_FERDIG;
         if (isNyligFerdig(soknad)) {
-            soknad.soknadStatus = NYLIG_FERDIG;
-        } else {
-            soknad.soknadStatus = GAMMEL_FERDIG;
+            status = NYLIG_FERDIG;
         }
+        return status;
     }
 
     private static boolean soeknadHasFerdigDato(Soknad soknad) {
