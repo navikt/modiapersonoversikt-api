@@ -32,7 +32,7 @@
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.1-SPRINGFIX</kjerneinfo.versjon>
-        <soknader.liste.version>2.0.2</soknader.liste.version>
+        <soknader.liste.version>2.0.3-SNAPSHOT</soknader.liste.version>
         <sporsmalogsvar.version>1.8</sporsmalogsvar.version>
     </properties>
 
@@ -241,6 +241,12 @@
                 <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
                 <version>0.0.12</version>
             </dependency>
+
+            <!--<dependency>-->
+                <!--<groupId>no.nav.tjenester.fim</groupId>-->
+                <!--<artifactId>nav-fim-sakOgBehandling-v1-tjenestespesifikasjon</artifactId>-->
+                <!--<version>1.0.0-alpha004</version>-->
+            <!--</dependency>-->
 
             <dependency>
                 <groupId>joda-time</groupId>

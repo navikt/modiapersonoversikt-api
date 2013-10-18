@@ -20,12 +20,11 @@ public class Oversikt extends Lerret {
 
     public Oversikt(String id, String fnr) {
         super(id);
-        add(
-                new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
-                new MeldingerWidget("meldinger", "M", fnr),
-                new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
-                new SoknadListe("soknader", new ListModel<>(soknaderService.getSoknader("")))
-        );
+        add(new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))));
+        add(new MeldingerWidget("meldinger", "M", fnr));
+        add(new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)));
+        add(new SoknadListe("soknader", new ListModel<>(soknaderService.getSoknader("")), false));
+
     }
 
 }
