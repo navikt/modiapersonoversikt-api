@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.soknader.domain;
 import java.util.Comparator;
 
 /**
- * Sorterer søknader basert på omvendt kronologisk dato
+ * Sorterer søknader basert på omvendt kronologisk dato slik at nyeste kommer først
  */
 public class SoknadComparator implements Comparator<Soknad> {
 

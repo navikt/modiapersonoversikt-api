@@ -12,6 +12,10 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigInteger;
 
 import static javax.xml.datatype.DatatypeFactory.newInstance;
+import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.GAMMEL_FERDIG;
+import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.MOTTATT;
+import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.NYLIG_FERDIG;
+import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UNDER_BEHANDLING;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -70,7 +74,7 @@ public class SoknadTest {
         behandlingskjede.withStart(createXmlGregorianCalander(startDate))
                 .withSlutt(createXmlGregorianCalander(sluttDate));
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
-        assertThat(soknad.getSoknadStatus(), is(equalTo(Soknad.SoknadStatus.NYLIG_FERDIG)));
+        assertThat(soknad.getSoknadStatus(), is(equalTo(NYLIG_FERDIG)));
     }
 
 
@@ -81,26 +85,26 @@ public class SoknadTest {
         behandlingskjede.withStart(createXmlGregorianCalander(startDate))
                 .withSlutt(createXmlGregorianCalander(sluttDate));
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
-        assertThat(soknad.getSoknadStatus(), is(equalTo(Soknad.SoknadStatus.GAMMEL_FERDIG)));
+        assertThat(soknad.getSoknadStatus(), is(equalTo(GAMMEL_FERDIG)));
     }
 
     @Test
-    public void statusIsSetToUnderBehanldingWhenUnderBehanldingDatoIsSet() throws Exception {
+    public void statusIsSetToUnderBehandlingWhenUnderBehandlingDatoIsSet() throws Exception {
         startDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED - 20);
         DateTime startNavDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED - 1);
         behandlingskjede.withNormertBehandlingstid(createNormertBehandlingstid(10))
                 .withStart(createXmlGregorianCalander(startDate))
                 .withStartNAVtid(createXmlGregorianCalander(startNavDate));
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
-        assertThat(soknad.getSoknadStatus(), is(equalTo(Soknad.SoknadStatus.UNDER_BEHANDLING)));
+        assertThat(soknad.getSoknadStatus(), is(equalTo(UNDER_BEHANDLING)));
     }
 
     @Test
-    public void statusIsSetToMottatWhenUnderBehanldingDatoIsNotSetAndFerdigDatoIsNotSet() throws Exception {
+    public void statusIsSetToMottatWhenUnderBehandlingDatoIsNotSetAndFerdigDatoIsNotSet() throws Exception {
         startDate = now().minusDays(10);
         behandlingskjede.withStart(createXmlGregorianCalander(startDate));
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
-        assertThat(soknad.getSoknadStatus(), is(equalTo(Soknad.SoknadStatus.MOTTATT)));
+        assertThat(soknad.getSoknadStatus(), is(equalTo(MOTTATT)));
     }
 
     private XMLGregorianCalendar createXmlGregorianCalander(DateTime date) throws Exception {

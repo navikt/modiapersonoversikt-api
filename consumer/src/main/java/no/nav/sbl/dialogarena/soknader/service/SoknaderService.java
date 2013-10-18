@@ -12,13 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.equalAnyOf;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.BEHANDLINGSKJEDE_TO_SOKNAD_TRANSFORMER;
-import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SOKNAD_STATUS_TRANSFORMER;
-import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.MOTTATT;
-import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.NYLIG_FERDIG;
-import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UNDER_BEHANDLING;
 
 public class SoknaderService {
 
@@ -34,7 +28,7 @@ public class SoknaderService {
         } catch (Exception e) {
             throw new ApplicationException("Feil ved henting av søknader", e);
         }
-        return on(soknadList).filter(where(SOKNAD_STATUS_TRANSFORMER, equalAnyOf(MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG))).collect(new SoknadComparator());
+        return on(soknadList).collect(new SoknadComparator());
     }
 
     private FinnSakOgBehandlingskjedeListeRequest createRequest(String aktoerId) {

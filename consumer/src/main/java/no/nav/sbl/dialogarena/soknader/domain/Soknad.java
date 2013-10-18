@@ -68,7 +68,7 @@ public class Soknad implements Serializable {
         public Soknad transform(Behandlingskjede behandlingskjede) {
             Soknad soknad = new Soknad();
             soknad.innsendtDato = dateTimeTransformer().transform(behandlingskjede.getStart());
-            soknad.tittel =  behandlingskjede.getBehandlingskjedetype().getKodeRef();
+            soknad.tittel = behandlingskjede.getBehandlingskjedetype().getKodeRef();
             soknad.underBehandlingStartDato = optional(behandlingskjede.getStartNAVtid()).map(dateTimeTransformer()).getOrElse(null);
             soknad.ferdigDato = evaluateFerdigDato(behandlingskjede);
             soknad.normertBehandlingsTid = getNormertTidString(behandlingskjede);
@@ -121,14 +121,17 @@ public class Soknad implements Serializable {
     }
 
     private static String getNormertTidString(Behandlingskjede behandlingskjede) {
-        if(behandlingskjede != null){
-            if(behandlingskjede.getNormertBehandlingstid() != null){
-                if(behandlingskjede.getNormertBehandlingstid().getTid() != null && behandlingskjede.getNormertBehandlingstid().getType() != null){
-                    return behandlingskjede.getNormertBehandlingstid().getTid() + " " + behandlingskjede.getNormertBehandlingstid().getType().getValue();
-                }
-            }
+        if (behandlingsTidInfoExists(behandlingskjede)) {
+            return behandlingskjede.getNormertBehandlingstid().getTid() + " " + behandlingskjede.getNormertBehandlingstid().getType().getValue();
         }
         return "";
+    }
+
+    private static boolean behandlingsTidInfoExists(Behandlingskjede behandlingskjede) {
+        return behandlingskjede != null &&
+                behandlingskjede.getNormertBehandlingstid() != null &&
+                behandlingskjede.getNormertBehandlingstid().getTid() != null &&
+                behandlingskjede.getNormertBehandlingstid().getType() != null;
     }
 
     private static boolean isNyligFerdig(Soknad soknad) {
