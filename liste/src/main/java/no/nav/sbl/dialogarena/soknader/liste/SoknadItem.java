@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.soknader.liste;
 
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
-import no.nav.sbl.dialogarena.time.Datoformat;
-import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
 import org.apache.wicket.markup.html.basic.Label;
@@ -16,12 +15,7 @@ import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SOKNAD_STATUS_TRANSFORMER;
-import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus;
-import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.GAMMEL_FERDIG;
-import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.MOTTATT;
-import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.NYLIG_FERDIG;
-import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.UNDER_BEHANDLING;
+import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static org.apache.wicket.model.Model.of;
 
 public class SoknadItem extends Panel {
@@ -31,7 +25,7 @@ public class SoknadItem extends Panel {
     public SoknadItem(String id, IModel<Soknad> model) {
         super(id, model);
         soknad = model.getObject();
-        String innsendtDato = optional(soknad.getInnsendtDato()).map(Datoformat.KORT).getOrElse("");
+        String innsendtDato = optional(soknad.getInnsendtDato()).map(KORT).get();
         add(
                 new Label("heading", soknad.getTittel()),
                 new Label("innsendtDato", "Innsendt " + innsendtDato).add(visibleIfStringIsNotEmpty(innsendtDato)),
@@ -41,42 +35,54 @@ public class SoknadItem extends Panel {
 
     }
 
-    private Component addLabelsBasedOnStatus() {
-        Label statusLabel = new Label("status", "Ukjent status");
+    private void addLabelsBasedOnStatus() {
         Label icon = new Label("status-icon", "");
-        DateTime date = null;
+        DateTime date = evaluateAttributes(icon);
 
-        if (soknad.getSoknadStatus() != null) {
-            statusLabel.setDefaultModel(new StringResourceModel("soknad.status." + soknad.getSoknadStatus().name().toLowerCase(), new Model()));
-        }
-
-        if (soknadStatusIs(GAMMEL_FERDIG)) {
-            icon.add(new AttributeAppender("class", new Model<>("gammel-ferdig"), " "));
-            date = soknad.getFerdigDato();
-        } else if (soknadStatusIs(MOTTATT)) {
-            icon.add(new AttributeAppender("class", new Model<>("mottat"), " "));
-            //date will still be null
-        } else if (soknadStatusIs(NYLIG_FERDIG)) {
-            icon.add(new AttributeAppender("class", new Model<>("nylig-ferdig"), " "));
-            date = soknad.getFerdigDato();
-        } else if (soknadStatusIs(UNDER_BEHANDLING)) {
-            icon.add(new AttributeAppender("class", new Model<>("under-behandling"), " "));
-            date = soknad.getUnderBehandlingStartDato();
-        }
-        return add(
-                statusLabel,
+        add(
+                new Label("status", new StringResourceModel("soknad.status." + soknad.getSoknadStatus().name().toLowerCase(), new Model())),
                 icon,
-                new Label("status-date", optional(date).map(Datoformat.KORT).getOrElse(""))
+                new Label("status-date", optional(date).map(KORT).get())
         );
+    }
+
+    private DateTime evaluateAttributes(Label icon) {
+        switch (soknad.getSoknadStatus()) {
+            case GAMMEL_FERDIG:
+                return setGammelFerdigAttributes(icon);
+            case MOTTATT:
+                return setMottattAttributes(icon);
+            case UNDER_BEHANDLING:
+                return setUnderBehandlingAttributes(icon);
+            case NYLIG_FERDIG:
+                return setNyligFerdigAttributes(icon);
+            default:
+                throw new ApplicationException("soknadsstatus cannot be unknown");
+        }
+    }
+
+    private DateTime setNyligFerdigAttributes(Label icon) {
+        icon.add(new AttributeAppender("class", new Model<>("nylig-ferdig"), " "));
+        return soknad.getFerdigDato();
+    }
+
+    private DateTime setUnderBehandlingAttributes(Label icon) {
+        icon.add(new AttributeAppender("class", new Model<>("under-behandling"), " "));
+        return soknad.getUnderBehandlingStartDato();
+    }
+
+    private DateTime setMottattAttributes(Label icon) {
+        icon.add(new AttributeAppender("class", new Model<>("mottat"), " "));
+        return soknad.getInnsendtDato();
+    }
+
+    private DateTime setGammelFerdigAttributes(Label icon) {
+        icon.add(new AttributeAppender("class", new Model<>("gammel-ferdig"), " "));
+        return soknad.getFerdigDato();
     }
 
     private Behavior visibleIfStringIsNotEmpty(String innsendtDato) {
         return visibleIf(not(isEmptyString(of(innsendtDato))));
     }
-
-    private boolean soknadStatusIs(SoknadStatus status) {
-        return status.equals(optional(soknad).map(SOKNAD_STATUS_TRANSFORMER).getOrElse(null));
-    }
-
 
 }

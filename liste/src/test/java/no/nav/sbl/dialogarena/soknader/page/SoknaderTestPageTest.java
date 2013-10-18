@@ -45,7 +45,7 @@ public class SoknaderTestPageTest extends AbstractWicketTest {
         assertThat(getTextFromListItem("heading", listItem), is(equalTo("Dagpenger")));
         assertThat(getTextFromListItem("behandlingsTid", listItem), is(equalTo("Normert behandlingstid 10 dager")));
         assertThat(getTextFromListItem("status", listItem), is(equalTo("Mottatt")));
-        assertThat(getTextFromListItem("status-date", listItem), is(equalTo("")));
+        assertThat(getTextFromListItem("status-date", listItem), is(equalTo("01.10.2013")));
     }
 
     private Component getFirstListItemFromFirstListe() {
