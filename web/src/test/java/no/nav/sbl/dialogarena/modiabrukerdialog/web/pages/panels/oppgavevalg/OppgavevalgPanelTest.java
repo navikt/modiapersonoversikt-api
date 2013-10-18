@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelM
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseTjenesteConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SakOgBehandlingTjenesteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave.HentOppgavePanel;
@@ -33,7 +33,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         HentPersonPanelMockContext.class,
         HenvendelseTjenesteConfig.Test.class,
         SykepengerWidgetMockContext.class,
-        SoknaderConfig.Test.class,
+        SakOgBehandlingTjenesteConfig.Test.class,
         OppgavebehandlingConfig.Test.class,
         BesvareHenvendelseTjenesteConfig.Test.class
 })

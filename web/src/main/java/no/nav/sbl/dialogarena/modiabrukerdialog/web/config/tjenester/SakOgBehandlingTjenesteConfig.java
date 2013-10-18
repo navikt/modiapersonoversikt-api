@@ -23,7 +23,7 @@ import javax.xml.datatype.DatatypeFactory;
 import java.math.BigInteger;
 
 @Configuration
-public class SoknaderConfig {
+public class SakOgBehandlingTjenesteConfig {
 
     @Configuration
     public static class Default {

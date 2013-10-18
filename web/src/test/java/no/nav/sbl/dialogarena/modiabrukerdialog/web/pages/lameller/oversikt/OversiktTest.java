@@ -4,7 +4,7 @@ import no.nav.modig.modia.widget.LenkeWidget;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseTjenesteConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SakOgBehandlingTjenesteConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
         HenvendelseTjenesteConfig.Test.class,
         KjerneinfoPepMockContext.class,
         SykepengerWidgetMockContext.class,
-        SoknaderConfig.Test.class
+        SakOgBehandlingTjenesteConfig.Test.class
 })
 public class OversiktTest extends WicketPageTest {
 
