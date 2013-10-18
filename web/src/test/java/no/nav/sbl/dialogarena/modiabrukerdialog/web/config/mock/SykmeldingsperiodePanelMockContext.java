@@ -12,7 +12,7 @@ public class SykmeldingsperiodePanelMockContext {
 
     @Bean
     public SykmeldingsperiodeLoader sykmeldingsperiodeLoader() {
-        return mock(SykmeldingsperiodeLoader.class);
+        return new SykmeldingsperiodeLoader();
     }
 
     @Bean

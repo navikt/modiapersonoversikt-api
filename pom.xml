@@ -30,8 +30,8 @@
         <cxf.version>2.7.6</cxf.version>
         <sakogbehandling.jaxws.version>1.0.1</sakogbehandling.jaxws.version>
         <!-- Modia-komponenter-->
-        <personsok.version>0.0.94</personsok.version>
-        <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
+        <personsok.version>2.0.0-SPRINGFIX</personsok.version>
+        <kjerneinfo.versjon>1.0.41</kjerneinfo.versjon>
         <soknader.liste.version>2.0.2</soknader.liste.version>
         <sporsmalogsvar.version>1.8</sporsmalogsvar.version>
         <utbetaling.version>2.0.0-SNAPSHOT</utbetaling.version>
@@ -276,8 +276,14 @@
 
             <dependency>
                 <groupId>no.nav</groupId>
-                <artifactId>personsok-webcommon</artifactId>
+                <artifactId>personsok-pdp</artifactId>
                 <version>${personsok.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -711,7 +717,7 @@
                         <phase>package</phase>
                         <goals>
                             <!--<goal>failon-unwanted-dependencies</goal>-->
-                            <goal>report-unapproved-dependencies</goal>
+                            <!--<goal>report-unapproved-dependencies</goal>-->
                         </goals>
                     </execution>
                 </executions>

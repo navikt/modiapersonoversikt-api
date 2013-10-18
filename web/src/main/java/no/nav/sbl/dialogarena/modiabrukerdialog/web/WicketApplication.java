@@ -24,6 +24,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.InternBesvaremodus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
+import no.nav.sbl.dialogarena.soknader.liste.SoknadListe;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLamell;
@@ -86,6 +87,8 @@ public class WicketApplication extends WebApplication {
                         BasePage.INTERN_LESS,
                         BasePage.BESVARESPORSALPANEL,
                         BasePage.MELDINGERWIDGET,
+                        BasePage.MELDINGERLAMELL,
+                        SoknadListe.SOKNADSLISTE_LESS,
                         BasePage.MELDINGERLAMELL,
                         UtbetalingLamell.UTBETALING_LAMELL_LESS)
                 .addCss(
