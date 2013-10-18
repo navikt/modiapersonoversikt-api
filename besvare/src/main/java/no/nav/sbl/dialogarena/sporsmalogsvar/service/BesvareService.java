@@ -21,25 +21,25 @@ public class BesvareService implements Serializable {
 
     private static final List<String> SPORSMAL_OG_SVAR = asList("SPORSMAL", "SVAR");
 
-    private final BesvareHenvendelsePortType besvareHenvendelsePortType;
-    private final HenvendelsePortType henvendelsePortType;
+    private final BesvareHenvendelsePortType mottaksbehandling;
+    private final HenvendelsePortType henvendelsesbehandling;
 
-    public BesvareService(BesvareHenvendelsePortType besvareHenvendelsePortType, HenvendelsePortType henvendelsePortType) {
-        this.besvareHenvendelsePortType = besvareHenvendelsePortType;
-        this.henvendelsePortType = henvendelsePortType;
+    public BesvareService(BesvareHenvendelsePortType mottaksbehandling, HenvendelsePortType henvendelsesbehandling) {
+        this.mottaksbehandling = mottaksbehandling;
+        this.henvendelsesbehandling = henvendelsesbehandling;
     }
 
     public void besvareSporsmal(Traad traad) {
         traad.ferdigSvar();
-        besvareHenvendelsePortType.besvarSporsmal(tilWsSvar(traad.getTema(), traad.erSensitiv()).transform(traad.getSisteMelding()));
+        mottaksbehandling.besvarSporsmal(tilWsSvar(traad.getTema(), traad.erSensitiv()).transform(traad.getSisteMelding()));
     }
 
     public Optional<Traad> hentTraad(String fnr, String oppgaveId) {
         Traad traad = null;
-        for (WSSporsmalOgSvar sporsmalOgSvar : optional(besvareHenvendelsePortType.hentSporsmalOgSvar(oppgaveId))) {
+        for (WSSporsmalOgSvar sporsmalOgSvar : optional(mottaksbehandling.hentSporsmalOgSvar(oppgaveId))) {
             traad = new Traad(sporsmalOgSvar.getSporsmal().getTema());
 
-            traad.leggTil(on(henvendelsePortType.hentHenvendelseListe(fnr, SPORSMAL_OG_SVAR))
+            traad.leggTil(on(henvendelsesbehandling.hentHenvendelseListe(fnr, SPORSMAL_OG_SVAR))
                     .filter(where(TRAAD_ID, equalTo(sporsmalOgSvar.getSporsmal().getTraad()))).map(TIL_MELDING));
         }
         return optional(traad);
