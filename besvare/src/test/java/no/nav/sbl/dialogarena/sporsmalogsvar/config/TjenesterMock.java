@@ -32,8 +32,8 @@ import static org.joda.time.DateTime.now;
 @Configuration
 public class TjenesterMock {
 
+    public static final String TRAAD = "1";
     private static final Logger LOG = LoggerFactory.getLogger(TjenesterMock.class);
-    private static final String TRAAD = "1";
     private static final String SPORSMAL = "SPORSMAL";
     private static final String SVAR = "SVAR";
     private static final String LANG_TEKST = "Lorem ipsum dolor sit amet, " +
@@ -49,7 +49,7 @@ public class TjenesterMock {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    private static final PreparedIterable<WSHenvendelse> HENVENDELSER = on(asList(
+    public static final PreparedIterable<WSHenvendelse> HENVENDELSER = on(asList(
             createWSHenvendelse(SPORSMAL, "Jeg lurer på noe!", now().minusWeeks(2)),
             createWSHenvendelse(SVAR, "Hva da?", now().minusWeeks(1)),
             createWSHenvendelse(SPORSMAL, "Jo nå skal du høre: " + LANG_TEKST, now().minusDays(5)),
