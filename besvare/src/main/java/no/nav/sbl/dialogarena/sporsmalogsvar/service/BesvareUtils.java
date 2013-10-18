@@ -18,23 +18,32 @@ public class BesvareUtils {
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
     public static final Transformer<Melding, WSSvar> tilWsSvar(final String tema, final boolean sensitiv) { return new Transformer<Melding, WSSvar>() {
-        @Override
-        public WSSvar transform(Melding svar) {
+        @Override public WSSvar transform(Melding svar) {
             return new WSSvar().withBehandlingsId(svar.behandlingId).withTema(tema).withFritekst(svar.fritekst).withSensitiv(sensitiv);
         }
     }; }
 
     public static final Transformer<WSHenvendelse, String> TRAAD_ID = new Transformer<WSHenvendelse, String>() {
-        @Override
-        public String transform(WSHenvendelse wsHenvendelse) {
+        @Override public String transform(WSHenvendelse wsHenvendelse) {
             return wsHenvendelse.getTraad();
+        }
+    };
+
+    public static final Transformer<WSHenvendelse, String> BEHANDLINGSID = new Transformer<WSHenvendelse, String>() {
+        @Override public String transform(WSHenvendelse wsHenvendelse) {
+            return wsHenvendelse.getBehandlingsId();
+        }
+    };
+
+    public static final Transformer<WSHenvendelse, Boolean> SENSITIV = new Transformer<WSHenvendelse, Boolean>() {
+        @Override public Boolean transform(WSHenvendelse wsHenvendelse) {
+            return wsHenvendelse.isSensitiv();
         }
     };
 
 
     public static final Transformer<WSHenvendelse, Melding> TIL_MELDING = new Transformer<WSHenvendelse, Melding>() {
-        @Override
-        public Melding transform(WSHenvendelse wsHenvendelse) {
+        @Override public Melding transform(WSHenvendelse wsHenvendelse) {
             String fritekst = optional(wsHenvendelse.getBehandlingsresultat()).map(getFromBehandlingsresultat("fritekst")).getOrElse(null);
             return new Melding(wsHenvendelse.getBehandlingsId(), "SPORSMAL".equals(wsHenvendelse.getHenvendelseType()) ? INNGAENDE : UTGAENDE, wsHenvendelse.getOpprettetDato(), fritekst);
         }
@@ -42,8 +51,7 @@ public class BesvareUtils {
 
     public static Transformer<String, String> getFromBehandlingsresultat(final String mapKey) {
         return new Transformer<String, String>() {
-            @Override
-            public String transform(String unparsedBehandlingsresultat) {
+            @Override public String transform(String unparsedBehandlingsresultat) {
                 Map<String, String> behandlingsresultat;
                 try {
                     behandlingsresultat = MAPPER.readValue(unparsedBehandlingsresultat, new TypeReference<Map<String, String>>() { });

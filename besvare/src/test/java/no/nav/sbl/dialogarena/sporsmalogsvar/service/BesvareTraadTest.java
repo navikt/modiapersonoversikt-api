@@ -30,19 +30,20 @@ public class BesvareTraadTest {
 
     @Test
     public void leggerInnSvarIEnTraad() {
-        Traad traad = new Traad("OST");
+        Traad traad = new Traad("OST", "svar-42");
         traad.getSvar().fritekst = "Denne osten stinker";
         traad.getSvar().sensitiv = true;
         traad.getSvar().tema = "FRANSK OST";
 
 
-        ArgumentCaptor<WSSvar> argument = ArgumentCaptor.forClass(WSSvar.class);
+        ArgumentCaptor<WSSvar> wsSvar = ArgumentCaptor.forClass(WSSvar.class);
         service.besvareSporsmal(traad);
-        verify(besvareHenvendelsePortType).besvarSporsmal(argument.capture());
+        verify(besvareHenvendelsePortType).besvarSporsmal(wsSvar.capture());
 
-        assertThat(argument.getValue().getFritekst(), is("Denne osten stinker"));
-        assertThat(argument.getValue().getTema(), is("FRANSK OST"));
-        assertTrue(argument.getValue().isSensitiv());
+        assertThat(wsSvar.getValue().getBehandlingsId(), is("svar-42"));
+        assertThat(wsSvar.getValue().getFritekst(), is("Denne osten stinker"));
+        assertThat(wsSvar.getValue().getTema(), is("FRANSK OST"));
+        assertTrue(wsSvar.getValue().isSensitiv());
 
 
     }

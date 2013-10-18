@@ -44,6 +44,12 @@ public class Melding implements Serializable {
         }
     };
 
+    public static final Transformer<Melding, String> BEHANDLING_ID = new Transformer<Melding, String>() {
+        @Override public String transform(Melding melding) {
+            return melding.behandlingId;
+        }
+    };
+
     @Override
     public final boolean equals(Object obj) {
         if (obj instanceof Melding) {

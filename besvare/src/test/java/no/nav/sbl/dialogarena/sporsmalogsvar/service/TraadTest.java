@@ -11,6 +11,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.
 import static no.nav.sbl.dialogarena.sporsmalogsvar.service.Melding.FRITEKST;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -20,7 +21,7 @@ public class TraadTest {
 
     @Test
     public void leggTilSetterInnAlleMeldingerSortertPaaTidspunktNyesteForst() {
-        Traad traad = new Traad("SYKEPENGER");
+        Traad traad = new Traad("SYKEPENGER", null);
         traad.leggTil(new Melding("1", INNGAENDE, idag0945.minusDays(1), "Hei!"));
         traad.leggTil(new Melding("1", INNGAENDE, idag0945, "Halla!"));
 
@@ -29,7 +30,7 @@ public class TraadTest {
 
     @Test
     public void leggTilSetterKunInnMeldingerSomIkkeErITraadFraFoer() {
-        Traad traad = new Traad("SYKEPENGER");
+        Traad traad = new Traad("SYKEPENGER", null);
         traad.leggTil(new Melding("1", INNGAENDE, idag0945.minusDays(1), "Hei!"));
         traad.leggTil(new Melding("1", UTGAENDE, idag0945, "Halla!"));
         traad.leggTil(asList(
@@ -41,8 +42,9 @@ public class TraadTest {
 
     @Test
     public void ferdigSvarBlirLagtInnIDialogenOgTraadstatuserOppdateres() {
-        Traad traad = new Traad("SYKEPENGER");
+        Traad traad = new Traad("SYKEPENGER", "svar-42");
         traad.leggTil(new Melding("1", INNGAENDE, idag0945.minusDays(1), "Hei!"));
+        assertFalse(traad.erSensitiv());
 
         Svar svar = traad.getSvar();
         svar.fritekst = "Halla!";
@@ -54,6 +56,7 @@ public class TraadTest {
         assertThat(traad.getTema(), is("ANNET_TEMA"));
         assertTrue(traad.erSensitiv());
         assertThat(traad.getSisteMelding().fritekst, is("Halla!"));
+        assertThat(traad.getSisteMelding().behandlingId, is("svar-42"));
 
 
     }

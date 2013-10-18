@@ -26,9 +26,10 @@ public class Traad implements Serializable {
     private List<Melding> dialog = emptyList();
 
 
-    public Traad(String tema) {
+    public Traad(String tema, String svarBehandlingId) {
         this.tema = tema;
         this.svar = new Svar();
+        this.svar.behandlingId = svarBehandlingId;
         this.svar.tema = tema;
     }
 
@@ -64,7 +65,11 @@ public class Traad implements Serializable {
 
     public void leggTil(Iterable<Melding> meldinger) {
         Iterable<Melding> nyeMeldinger = on(meldinger).filter(not(containedIn(dialog)));
-        this.dialog = on(dialog).append(nyeMeldinger).collect(by(Melding.SENDT_DATO).descending());
+        dialog = on(dialog).append(nyeMeldinger).collect(by(Melding.SENDT_DATO).descending());
+    }
+
+    public void setSensitiv(boolean sensitiv) {
+        this.sensitiv = sensitiv;
     }
 
 

@@ -54,7 +54,7 @@ public class TjenesterMock {
             createWSHenvendelse(SVAR, "Hva da?", now().minusWeeks(1)),
             createWSHenvendelse(SPORSMAL, "Jo nå skal du høre: " + LANG_TEKST, now().minusDays(5)),
             createWSHenvendelse(SVAR, "Ja det var ikke småtterier!", now().minusDays(4)),
-            createWSHenvendelse(SPORSMAL, "Nei det kan du si. Joda, så neida så... men ikke nok med det, " + LANG_TEKST, now().minusDays(2))));
+            createWSHenvendelse(SPORSMAL, "Nei det kan du si. Dette er litt sensitivt, men, joda, så neida så, og ikke nok med det, " + LANG_TEKST, now().minusDays(2)).withSensitiv(true)));
 
 
     private static WSHenvendelse createWSHenvendelse(String type, String fritekst, DateTime opprettet) {
@@ -97,7 +97,7 @@ public class TjenesterMock {
         class BesvareHenvendelseStub extends ItPings implements BesvareHenvendelsePortType {
             @Override
             public void besvarSporsmal(WSSvar wsSvar) {
-                LOG.info("BesvareHenvendelsePortType besvarer spørsmål {} (\"{}\")", wsSvar.getBehandlingsId(), abbreviate(wsSvar.getFritekst(), 30));
+                LOG.info("BesvareHenvendelsePortType besvarer spørsmål (svar behandlingId {} \"{}\")", wsSvar.getBehandlingsId(), abbreviate(wsSvar.getFritekst(), 30));
             }
 
             @Override
@@ -109,8 +109,7 @@ public class TjenesterMock {
                         .withBehandlingsId(nyesteHenvendelse.getBehandlingsId())
                         .withTema("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT")
                         .withTraad(TRAAD);
-                WSSvar svar = new WSSvar().withBehandlingsId(randomNumeric(5));
-                return new WSSporsmalOgSvar().withSporsmal(sporsmal).withSvar(svar);
+                return new WSSporsmalOgSvar().withSporsmal(sporsmal).withSvar(new WSSvar().withBehandlingsId(randomNumeric(5)));
             }
         }
         return new BesvareHenvendelseStub();
