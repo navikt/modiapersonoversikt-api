@@ -35,7 +35,12 @@
 
         <dependency>
             <groupId>no.nav</groupId>
-            <artifactId>personsok-webcommon</artifactId>
+            <artifactId>personsok-pdp</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>personsok-consumer</artifactId>
         </dependency>
 
         <dependency>
@@ -141,11 +146,6 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-core-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-log-common</artifactId>
         </dependency>
 
         <dependency>

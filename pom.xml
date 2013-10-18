@@ -5,7 +5,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>dialogarena</artifactId>
-        <version>3-SNAPSHOT</version>
+        <version>3</version>
     </parent>
 
     <name>Dialogarena - modiabrukerdialog</name>
@@ -14,10 +14,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>sporsmalogsvar/common</module>
-        <module>sporsmalogsvar/besvare</module>
-        <module>sporsmalogsvar/innboks</module>
-        <module>sporsmalogsvar/widget</module>
         <module>config</module>
         <module>web</module>
         <module>jee</module>
@@ -26,7 +22,7 @@
     <properties>
         <wicket.version>6.11.0</wicket.version>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <modig.frontend.version>1.1.1-SNAPSHOT</modig.frontend.version>
+        <modig.frontend.version>1.1.1</modig.frontend.version>
         <modig.security.version>1.0.19</modig.security.version>
 		<modig.log.version>1.1.2</modig.log.version>
         <slf4j.version>1.7.5</slf4j.version>
@@ -34,9 +30,10 @@
         <cxf.version>2.7.6</cxf.version>
         <sakogbehandling.jaxws.version>1.0.1</sakogbehandling.jaxws.version>
         <!-- Modia-komponenter-->
-        <personsok.version>0.0.94</personsok.version>
+        <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>1.0.39</kjerneinfo.versjon>
-        <soknader.liste.version>2.0.2-SNAPSHOT</soknader.liste.version>
+        <soknader.liste.version>2.0.2</soknader.liste.version>
+        <sporsmalogsvar.version>1.8</sporsmalogsvar.version>
     </properties>
 
     <dependencyManagement>
@@ -52,6 +49,24 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>soknader-consumer</artifactId>
                 <version>${soknader.liste.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>sporsmal-og-svar-besvare</artifactId>
+                <version>${sporsmalogsvar.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>sporsmal-og-svar-innboks</artifactId>
+                <version>${sporsmalogsvar.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>sporsmal-og-svar-widget</artifactId>
+                <version>${sporsmalogsvar.version}</version>
             </dependency>
 
             <dependency>
@@ -254,8 +269,14 @@
 
             <dependency>
                 <groupId>no.nav</groupId>
-                <artifactId>personsok-webcommon</artifactId>
+                <artifactId>personsok-pdp</artifactId>
                 <version>${personsok.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -356,24 +377,6 @@
                         <artifactId>xml-apis</artifactId>
                     </exclusion>
                 </exclusions>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-besvare</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-	        <dependency>
-	            <groupId>no.nav.sbl.dialogarena</groupId>
-	            <artifactId>sporsmal-og-svar-innboks</artifactId>
-	            <version>${project.version}</version>
-	        </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-widget</artifactId>
-                <version>${project.version}</version>
             </dependency>
 
             <dependency>
@@ -706,8 +709,8 @@
                         <id>Check illegal or unwanted dependencies</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>failon-unwanted-dependencies</goal>
-                            <goal>report-unapproved-dependencies</goal>
+                            <!--<goal>failon-unwanted-dependencies</goal>-->
+                            <!--<goal>report-unapproved-dependencies</goal>-->
                         </goals>
                     </execution>
                 </executions>

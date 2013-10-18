@@ -13,10 +13,10 @@ public class TimeoutBoks extends Panel {
 
     public TimeoutBoks(String id, String fnr) {
         super(id);
-        PageParameters pageParameters = new PageParameters();
-        pageParameters.set("fnr", fnr);
-        add(new BookmarkablePageLink<Intern>("fortsettlink", Intern.class, pageParameters));
-        add(new BookmarkablePageLink<HentPersonPage>("forsidelink", HentPersonPage.class));
+        add(
+                new BookmarkablePageLink<Intern>("fortsettlink", Intern.class, new PageParameters().set("fnr", fnr)),
+                new BookmarkablePageLink<HentPersonPage>("forsidelink", HentPersonPage.class)
+        );
         add(new TimeoutBehaviour());
     }
 
