@@ -41,6 +41,10 @@ public class Traad implements Serializable {
         return unmodifiableList(dialog);
     }
 
+    public int getAntallMeldinger() {
+        return dialog.size();
+    }
+
     public Melding getSisteMelding() {
         return on(dialog).head().orNull();
     }

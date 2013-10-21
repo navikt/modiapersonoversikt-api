@@ -21,7 +21,9 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
@@ -47,6 +49,20 @@ public class BesvareSporsmalPanel extends Panel {
 
     private String oppgaveId;
 
+    private final IModel<Traad> traad = new AbstractReadOnlyModel<Traad>() {
+        @Override
+        public Traad getObject() {
+            return (Traad) getDefaultModelObject();
+        }
+    };
+
+    private final IModel<Melding> siste = new AbstractReadOnlyModel<Melding>() {
+        @Override
+        public Melding getObject() {
+            return traad.getObject().getSisteMelding();
+        }
+    };
+
     public BesvareSporsmalPanel(String id, final String fnr) {
         super(id);
         setOutputMarkupId(true);
@@ -58,8 +74,11 @@ public class BesvareSporsmalPanel extends Panel {
             }
         }));
 
-        sisteMelding = new WebMarkupContainer("siste-melding")
-            .add(new Label("sisteMelding.overskrift"), new Label("sisteMelding.sendtDato"), new MultiLineLabel("sisteMelding.fritekst"));
+
+        sisteMelding = new WebMarkupContainer("siste-melding").add(
+                new Label("overskrift", new MeldingOverskrift(siste, traad)),
+                new Label("sisteMelding.sendtDato"),
+                new MultiLineLabel("sisteMelding.fritekst"));
 
         dialog = new Dialog("tidligereDialog");
         add(
@@ -68,8 +87,9 @@ public class BesvareSporsmalPanel extends Panel {
                 dialog);
     }
 
+
     private Traad getTraad() {
-        return (Traad) getDefaultModelObject();
+        return traad.getObject();
     }
 
 
@@ -119,9 +139,11 @@ public class BesvareSporsmalPanel extends Panel {
                     }
             );
         }
+
     }
 
-    private static class Dialog extends PropertyListView<Melding> {
+
+    private class Dialog extends PropertyListView<Melding> {
 
         public Dialog(String id) {
             super(id);
@@ -132,12 +154,13 @@ public class BesvareSporsmalPanel extends Panel {
         protected void populateItem(ListItem<Melding> item) {
             item.add(
                     new Label("sendtDato"),
-                    new Label("overskrift"),
+                    new Label("overskrift", new MeldingOverskrift(item.getModel(), traad)),
                     new MultiLineLabel("fritekst"));
             item.add(hasCssClassIf("tidligere-dialog", item.getModelObject().tidligereHenvendelse));
         }
 
     }
+
 
     public void besvar(String oppgaveId) {
         this.oppgaveId = oppgaveId;

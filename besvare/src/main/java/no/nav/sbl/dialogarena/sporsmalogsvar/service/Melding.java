@@ -17,13 +17,15 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.
  */
 public class Melding implements Serializable {
 
-    public final String overskrift, fritekst;
-    public final String behandlingId;
+    public final String behandlingId,
+                        avsender,
+                        fritekst;
+
     public final DateTime sendtDato;
 
     public Melding(String behandlingId, Meldingstype type, DateTime sendtDato, String fritekst) {
         this.behandlingId = behandlingId;
-        this.overskrift = type == INNGAENDE ? "Melding fra bruker" : "Svar fra NAV";
+        this.avsender = type == INNGAENDE ? "bruker" : "NAV";
         this.sendtDato = sendtDato;
         this.fritekst = fritekst;
     }
@@ -54,7 +56,8 @@ public class Melding implements Serializable {
     public final boolean equals(Object obj) {
         if (obj instanceof Melding) {
             Melding other = (Melding) obj;
-            return Objects.equals(this.overskrift, other.overskrift)
+            return Objects.equals(this.avsender, other.avsender)
+                && Objects.equals(this.behandlingId, other.behandlingId)
                 && Objects.equals(this.fritekst, other.fritekst)
                 && Objects.equals(this.sendtDato, other.sendtDato);
         }
@@ -63,7 +66,7 @@ public class Melding implements Serializable {
 
     @Override
     public final int hashCode() {
-        return hash(overskrift, fritekst, sendtDato);
+        return hash(avsender, behandlingId, fritekst, sendtDato);
     }
 
     public CompoundPropertyModel<Boolean> tidligereHenvendelse = new CompoundPropertyModel<>(true);
