@@ -5,7 +5,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingskjedetyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingstid;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingstidtyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Temaer;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Sakstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
@@ -33,7 +33,6 @@ public class SoknaderServiceTest {
 
     @Mock
     private SakOgBehandlingPortType sakOgBehandlingPortType;
-
     @InjectMocks
     private SoknaderService soknaderService = new SoknaderService();
 
@@ -42,18 +41,18 @@ public class SoknaderServiceTest {
         when(sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenReturn(createResponse());
         List<Soknad> soknader = soknaderService.getSoknader("fnr");
         assertThat(soknader.size(), is(equalTo(1)));
-        assertThat(soknader.get(0).getTittel(), is(equalTo("tittel")));
+        assertThat(soknader.get(0).getTittelKodeverk(), is(equalTo("tittel")));
     }
 
-    private FinnSakOgBehandlingskjedeListeResponse createResponse() throws Exception{
+    private FinnSakOgBehandlingskjedeListeResponse createResponse() throws Exception {
         return new FinnSakOgBehandlingskjedeListeResponse()
                 .withSak(createSak());
     }
 
-    private Sak createSak()throws Exception {
+    private Sak createSak() throws Exception {
         return new Sak()
                 .withSaksId("id1")
-                .withTema(new Temaer().withKodeRef("Dagpenger"))
+                .withSakstema(new Sakstemaer().withValue("Dagpenger"))
                 .withOpprettet(createXmlGregorianCalander())
                 .withLukket(createXmlGregorianCalander())
                 .withBehandlingskjede(createBehandlingKjede());
@@ -64,7 +63,7 @@ public class SoknaderServiceTest {
                 .withBehandlingskjedeId("behandling1")
                 .withNormertBehandlingstid(createNormertBehandlingstid())
                 .withStart(createXmlGregorianCalander())
-                .withBehandlingskjedetype(new Behandlingskjedetyper().withKodeRef("tittel"));
+                .withBehandlingskjedetype(new Behandlingskjedetyper().withKodeverksRef("tittel"));
     }
 
     private XMLGregorianCalendar createXmlGregorianCalander() throws Exception {
@@ -72,6 +71,6 @@ public class SoknaderServiceTest {
     }
 
     private Behandlingstid createNormertBehandlingstid() {
-        return new Behandlingstid().withTid(TEN).withType(new Behandlingstidtyper().withKodeRef("dager"));
+        return new Behandlingstid().withTid(TEN).withType(new Behandlingstidtyper().withKodeverksRef("dager"));
     }
 }

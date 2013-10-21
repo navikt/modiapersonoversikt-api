@@ -19,10 +19,10 @@ public class SoknaderService {
     @Inject
     private SakOgBehandlingPortType sakOgBehandlingPortType;
 
-    public List<Soknad> getSoknader(String fnr) {
+    public List<Soknad> getSoknader(String aktorId) {
         List<Soknad> soknadList = new ArrayList<>();
         try {
-            for (Sak sak : sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(createRequest(fnr)).getSak()) {
+            for (Sak sak : sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(createRequest(aktorId)).getSak()) {
                 soknadList.addAll(extractSoknaderFromSak(sak));
             }
         } catch (Exception e) {

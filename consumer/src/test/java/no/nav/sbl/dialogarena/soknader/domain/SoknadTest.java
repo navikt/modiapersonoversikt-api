@@ -32,7 +32,7 @@ public class SoknadTest {
         behandlingskjede = new Behandlingskjede()
                 .withBehandlingskjedeId("behandling1")
                 .withNormertBehandlingstid(createNormertBehandlingstid(10))
-                .withBehandlingskjedetype(new Behandlingskjedetyper().withKodeRef("tittel"));
+                .withBehandlingskjedetype(new Behandlingskjedetyper().withKodeverksRef("tittel"));
         startDate = now().minusDays(10);
         sluttDate = now().minusDays(4);
     }
@@ -44,7 +44,7 @@ public class SoknadTest {
                 .withSluttNAVtid(createXmlGregorianCalander(sluttNavDate))
                 .withSlutt(createXmlGregorianCalander(sluttDate));
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
-        assertThat(soknad.getTittel(), is(equalTo("tittel")));
+        assertThat(soknad.getTittelKodeverk(), is(equalTo("tittel")));
         assertThat(soknad.getInnsendtDato(), is(equalTo(startDate)));
         assertThat(soknad.getNormertBehandlingsTid(), is(equalTo("10 dager")));
         assertThat(soknad.getFerdigDato(), is(equalTo(sluttNavDate)));
@@ -76,7 +76,6 @@ public class SoknadTest {
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
         assertThat(soknad.getSoknadStatus(), is(equalTo(NYLIG_FERDIG)));
     }
-
 
     @Test
     public void status_WhenFerdigDatoIsSetAndMoreThan28DaysSinceDone_StatusIsGammelFerdig() throws Exception {

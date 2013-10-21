@@ -17,7 +17,7 @@ public class SoknadBuilder {
     }
 
     public SoknadBuilder withTittel(String tittel) {
-        setInternalState(soknad, "tittel", tittel);
+        setInternalState(soknad, "tittelKodeverk", tittel);
         return this;
     }
 
@@ -53,7 +53,7 @@ public class SoknadBuilder {
     private Soknad createDefaultSoknad() {
         Soknad defaultSoknad = new Soknad();
         setInternalState(defaultSoknad, "innsendtDato", now());
-        setInternalState(defaultSoknad, "tittel", "tittel-mock");
+        setInternalState(defaultSoknad, "tittelKodeverk", "tittel-mock");
         setInternalState(defaultSoknad, "soknadStatus", MOTTATT);
         setInternalState(defaultSoknad, "underBehandlingStartDato", null);
         setInternalState(defaultSoknad, "ferdigDato", null);

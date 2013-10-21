@@ -27,7 +27,7 @@ public class SoknadItem extends Panel {
         soknad = model.getObject();
         String innsendtDato = optional(soknad.getInnsendtDato()).map(KORT).get();
         add(
-                new Label("heading", soknad.getTittel()),
+                new Label("heading", soknad.getTittelKodeverk()),
                 new Label("innsendtDato", "Innsendt " + innsendtDato).add(visibleIfStringIsNotEmpty(innsendtDato)),
                 new Label("behandlingsTid", "Normert behandlingstid " + soknad.getNormertBehandlingsTid()).add(visibleIfStringIsNotEmpty(soknad.getNormertBehandlingsTid()))
         );
