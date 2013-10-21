@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints;
 
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
@@ -30,7 +30,7 @@ import java.math.BigInteger;
 import java.net.URL;
 
 @Configuration
-public class SakOgBehandlingTjenesteConfig {
+public class SakOgBehandlingEndpointConfig {
 
     @Configuration
     public static class Default {
