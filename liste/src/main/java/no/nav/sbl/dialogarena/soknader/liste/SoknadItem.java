@@ -50,12 +50,12 @@ public class SoknadItem extends Panel {
         switch (soknad.getSoknadStatus()) {
             case GAMMEL_FERDIG:
                 return setGammelFerdigAttributes(icon);
-            case MOTTATT:
-                return setMottattAttributes(icon);
-            case UNDER_BEHANDLING:
-                return setUnderBehandlingAttributes(icon);
             case NYLIG_FERDIG:
                 return setNyligFerdigAttributes(icon);
+            case UNDER_BEHANDLING:
+                return setUnderBehandlingAttributes(icon);
+            case MOTTATT:
+                return setMottattAttributes(icon);
             default:
                 throw new ApplicationException("soknadsstatus cannot be unknown");
         }
@@ -72,7 +72,7 @@ public class SoknadItem extends Panel {
     }
 
     private DateTime setMottattAttributes(Label icon) {
-        icon.add(new AttributeAppender("class", new Model<>("mottat"), " "));
+        icon.add(new AttributeAppender("class", new Model<>("mottatt"), " "));
         return soknad.getInnsendtDato();
     }
 
