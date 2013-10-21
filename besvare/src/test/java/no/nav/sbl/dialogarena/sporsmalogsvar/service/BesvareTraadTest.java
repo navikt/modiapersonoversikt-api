@@ -32,7 +32,7 @@ public class BesvareTraadTest {
     public void leggerInnSvarIEnTraad() {
         Traad traad = new Traad("OST", "svar-42");
         traad.getSvar().fritekst = "Denne osten stinker";
-        traad.getSvar().sensitiv = true;
+        traad.erSensitiv = true;
         traad.getSvar().tema = "FRANSK OST";
 
 

@@ -95,7 +95,7 @@ public class BesvareSporsmalPanel extends Panel {
 
             add(
                     new Label("tema", new StringResourceModel("${tema}", BesvareSporsmalPanel.this.getDefaultModel())),
-                    new CheckBox("svar.sensitiv"),
+                    new CheckBox("erSensitiv"),
                     feedbackPanel,
                     fritekst,
                     new AjaxSubmitLink("send") {

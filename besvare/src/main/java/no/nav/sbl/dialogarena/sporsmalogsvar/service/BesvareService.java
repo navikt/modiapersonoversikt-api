@@ -35,7 +35,7 @@ public class BesvareService implements Serializable {
 
     public void besvareSporsmal(Traad traad) {
         traad.ferdigSvar();
-        mottaksbehandling.besvarSporsmal(tilWsSvar(traad.getTema(), traad.erSensitiv()).transform(traad.getSisteMelding()));
+        mottaksbehandling.besvarSporsmal(tilWsSvar(traad.getTema(), traad.erSensitiv).transform(traad.getSisteMelding()));
     }
 
     public Optional<Traad> hentTraad(String fnr, String oppgaveId) {
@@ -48,7 +48,7 @@ public class BesvareService implements Serializable {
             traad.leggTil(henvendelser.map(TIL_MELDING));
 
             for (String sisteBehandlingId : optional(traad.getSisteMelding()).map(Melding.BEHANDLING_ID)) {
-                traad.setSensitiv(henvendelser.filter(where(BEHANDLINGSID, equalTo(sisteBehandlingId))).head().map(SENSITIV).getOrElse(false));
+                traad.erSensitiv = henvendelser.filter(where(BEHANDLINGSID, equalTo(sisteBehandlingId))).head().map(SENSITIV).getOrElse(false);
             }
         }
         return optional(traad);

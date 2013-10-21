@@ -44,17 +44,17 @@ public class TraadTest {
     public void ferdigSvarBlirLagtInnIDialogenOgTraadstatuserOppdateres() {
         Traad traad = new Traad("SYKEPENGER", "svar-42");
         traad.leggTil(new Melding("1", INNGAENDE, idag0945.minusDays(1), "Hei!"));
-        assertFalse(traad.erSensitiv());
+        assertFalse(traad.erSensitiv);
+        traad.erSensitiv = true;
 
         Svar svar = traad.getSvar();
         svar.fritekst = "Halla!";
         svar.tema = "ANNET_TEMA";
-        svar.sensitiv = true;
 
         traad.ferdigSvar();
 
         assertThat(traad.getTema(), is("ANNET_TEMA"));
-        assertTrue(traad.erSensitiv());
+        assertTrue(traad.erSensitiv);
         assertThat(traad.getSisteMelding().fritekst, is("Halla!"));
         assertThat(traad.getSisteMelding().behandlingId, is("svar-42"));
 

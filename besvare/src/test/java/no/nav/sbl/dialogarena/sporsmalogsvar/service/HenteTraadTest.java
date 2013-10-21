@@ -67,7 +67,7 @@ public class HenteTraadTest {
         when(henvendelsePortType.hentHenvendelseListe(anyString(), anyListOf(String.class))).thenReturn(henvendelser);
         Traad traad = service.hentTraad("12345612345", "1").get();
 
-        assertTrue(traad.erSensitiv());
+        assertTrue(traad.erSensitiv);
         assertThat(traad.getDialog(), hasSize(henvendelser.size()));
         assertThat(traad.getTidligereDialog(), hasSize(henvendelser.size() - 1));
         assertThat(traad.getSisteMelding().fritekst, startsWith("Nei det kan du si."));

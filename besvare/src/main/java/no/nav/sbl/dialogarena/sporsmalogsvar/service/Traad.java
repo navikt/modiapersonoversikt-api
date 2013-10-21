@@ -20,8 +20,8 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.
  */
 public class Traad implements Serializable {
 
+    public boolean erSensitiv;
     private String tema;
-    private boolean sensitiv;
     private Svar svar = new Svar();
     private List<Melding> dialog = emptyList();
 
@@ -31,10 +31,6 @@ public class Traad implements Serializable {
         this.svar = new Svar();
         this.svar.behandlingId = svarBehandlingId;
         this.svar.tema = tema;
-    }
-
-    public boolean erSensitiv() {
-        return sensitiv;
     }
 
     public String getTema() {
@@ -68,10 +64,6 @@ public class Traad implements Serializable {
         dialog = on(dialog).append(nyeMeldinger).collect(by(Melding.SENDT_DATO).descending());
     }
 
-    public void setSensitiv(boolean sensitiv) {
-        this.sensitiv = sensitiv;
-    }
-
 
 
 
@@ -82,14 +74,12 @@ public class Traad implements Serializable {
      * immutable {@link Melding}-objekt for inkludering i dialogen i tråden.
      */
     public static class Svar implements Serializable {
-        public boolean sensitiv;
         public String behandlingId,
                       tema,
                       fritekst;
     }
 
     public void ferdigSvar() {
-        sensitiv = svar.sensitiv;
         tema = svar.tema;
         Melding nyMelding = new Melding(svar.behandlingId, UTGAENDE, DateTime.now(), svar.fritekst);
         nyMelding.tidligereHenvendelse.setObject(false);
