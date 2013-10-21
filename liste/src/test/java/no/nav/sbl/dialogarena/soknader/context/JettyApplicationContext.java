@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.soknader.context;
 
 import no.nav.sbl.dialogarena.soknader.SoknaderTestApplication;
+import no.nav.sbl.dialogarena.soknader.context.mock.SoknaderMockContext;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,7 +11,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import static org.mockito.Mockito.mock;
 
 @Configuration
-@Import({SoknaderContext.class})
+@Import({SoknaderMockContext.class})
 public class JettyApplicationContext {
 
     @Bean
