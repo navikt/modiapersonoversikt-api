@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints;
 
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
@@ -23,7 +23,7 @@ import javax.xml.datatype.DatatypeFactory;
 import java.math.BigInteger;
 
 @Configuration
-public class SakOgBehandlingTjenesteConfig {
+public class SakOgBehandlingEndpointConfig {
 
     @Configuration
     public static class Default {
