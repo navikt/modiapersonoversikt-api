@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.mottaksbehandling.Mottaksbehandling;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareSporsmalDetaljer;
 import no.nav.sbl.dialogarena.sporsmalogsvar.service.Henvendelse;
@@ -43,18 +44,17 @@ public class BesvareSporsmalPanel extends Panel {
 
     @Inject
     private HenvendelsePortType henvendelsePortType;
-    @Inject
-    private BesvareHenvendelsePortType besvareHenvendelsePortType;
 
-    private BesvareService service = new BesvareService(besvareHenvendelsePortType, henvendelsePortType);
+    private BesvareService service;
 
     private SporsmalDetaljer sporsmalDetaljer;
     private TidligereDialog tidligereDialog;
 
     private String oppgaveId;
 
-    public BesvareSporsmalPanel(String id, final String fnr) {
+    public BesvareSporsmalPanel(String id, final String fnr, final Mottaksbehandling mottaksbehandling) {
         super(id);
+        this.service = new BesvareService(mottaksbehandling, henvendelsePortType);
         setOutputMarkupId(true);
         setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<BesvareSporsmalDetaljer>() {
             @Override

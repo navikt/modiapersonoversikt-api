@@ -3,6 +3,10 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.service;
 import java.io.Serializable;
 import java.util.List;
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.mottaksbehandling.ISvar;
+import no.nav.sbl.dialogarena.mottaksbehandling.Mottaksbehandling;
+import no.nav.sbl.dialogarena.mottaksbehandling.lagring.SporsmalOgSvar;
+import no.nav.sbl.dialogarena.mottaksbehandling.verktoy.records.Record;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
@@ -24,35 +28,44 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.TIL_WSS
 import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.TRAAD_ID;
 
 public class BesvareService implements Serializable {
-
-    BesvareHenvendelsePortType besvareHenvendelsePortType;
     HenvendelsePortType henvendelsePortType;
 
-    public BesvareService(BesvareHenvendelsePortType besvareHenvendelsePortType, HenvendelsePortType henvendelsePortType) {
-        this.besvareHenvendelsePortType = besvareHenvendelsePortType;
+    private final Mottaksbehandling mottaksbehandling;
+
+    public BesvareService(final Mottaksbehandling mottaksbehandling, HenvendelsePortType henvendelsePortType) {
         this.henvendelsePortType = henvendelsePortType;
+        this.mottaksbehandling = mottaksbehandling;
     }
 
     public void besvareSporsmal(Svar svar) {
-        besvareHenvendelsePortType.besvarSporsmal(TIL_WSSVAR.transform(svar));
+        Record<ISvar> svaret = new Record<ISvar>()
+                .with(ISvar.behandlingsId, svar.behandlingId)
+                .with(ISvar.fritekst, svar.fritekst)
+                .with(ISvar.sensitiv, svar.sensitiv)
+                .with(ISvar.tema, svar.tema);
+        mottaksbehandling.besvarSporsmal(svaret);
     }
 
     public Optional<BesvareSporsmalDetaljer> hentDetaljer(String fnr, String oppgaveId) {
-        WSSporsmalOgSvar wsSporsmalOgSvar = besvareHenvendelsePortType.hentSporsmalOgSvar(oppgaveId);
-        if (wsSporsmalOgSvar == null) {
+        Record<SporsmalOgSvar> sporsmalOgSvar = mottaksbehandling.hentSporsmalOgSvar(oppgaveId);
+        if (sporsmalOgSvar == null) {
             return none();
         }
         List<WSHenvendelse> wsHenvendelser = on(henvendelsePortType.hentHenvendelseListe(fnr, asList("SPORSMAL", "SVAR"))).collect(NYESTE_FORST);
 
         BesvareSporsmalDetaljer besvareSporsmalDetaljer = new BesvareSporsmalDetaljer();
-        besvareSporsmalDetaljer.tema = wsSporsmalOgSvar.getSporsmal().getTema();
-        besvareSporsmalDetaljer.svar = TIL_SVAR.transform(wsSporsmalOgSvar.getSvar());
-        besvareSporsmalDetaljer.sporsmal = TIL_SPORSMAL.transform(wsSporsmalOgSvar.getSporsmal());
+        besvareSporsmalDetaljer.tema = sporsmalOgSvar.get(SporsmalOgSvar.tema).toString();
+
+        Svar svar = new Svar(sporsmalOgSvar.get(SporsmalOgSvar.behandlingsid), sporsmalOgSvar.get(SporsmalOgSvar.tema).toString(), sporsmalOgSvar.get(SporsmalOgSvar.svar), sporsmalOgSvar.get(SporsmalOgSvar.sensitiv));
+        besvareSporsmalDetaljer.svar = svar;
+
+        Sporsmal sporsmal = new Sporsmal(sporsmalOgSvar.get(SporsmalOgSvar.sporsmal), sporsmalOgSvar.get(SporsmalOgSvar.opprettet));
+        besvareSporsmalDetaljer.sporsmal = sporsmal;
 
 
         besvareSporsmalDetaljer.tidligereDialog = on(wsHenvendelser)
-                .filter(where(TRAAD_ID, equalTo(wsSporsmalOgSvar.getSporsmal().getTraad())))
-                .filter(where(BEHANDLINGS_ID, not(equalTo(wsSporsmalOgSvar.getSporsmal().getBehandlingsId()))))
+                .filter(where(TRAAD_ID, equalTo(sporsmalOgSvar.get(SporsmalOgSvar.traad))))
+                .filter(where(BEHANDLINGS_ID, not(equalTo(sporsmalOgSvar.get(SporsmalOgSvar.sporsmaletsBehandlingsId)))))
                 .map(TIL_HENVENDELSE).collect();
 
         return optional(besvareSporsmalDetaljer);
