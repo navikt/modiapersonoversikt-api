@@ -199,6 +199,7 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-jetty</artifactId>
                 <version>1.0.20</version>
+                <scope>test</scope>
             </dependency>
 
             <dependency>
