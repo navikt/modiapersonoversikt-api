@@ -19,7 +19,7 @@ public class Melding implements Serializable {
 
     public final String overskrift, fritekst;
     public final String behandlingId;
-    private final DateTime sendtDato;
+    public final DateTime sendtDato;
 
     public Melding(String behandlingId, Meldingstype type, DateTime sendtDato, String fritekst) {
         this.behandlingId = behandlingId;
