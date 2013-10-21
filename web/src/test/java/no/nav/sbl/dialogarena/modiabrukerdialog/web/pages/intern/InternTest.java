@@ -5,12 +5,12 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.LamellHandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.OppgavebehandlingTjenesteConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.OppgavebehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseTjenesteConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SakOgBehandlingTjenesteConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.BesvareHenvendelseEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.HenvendelseEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
@@ -38,11 +38,11 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = {
         HentPersonPanelMockContext.class,
-        HenvendelseTjenesteConfig.Test.class,
+        HenvendelseEndpointConfig.Test.class,
         SykepengerWidgetMockContext.class,
-        SakOgBehandlingTjenesteConfig.Test.class,
-        OppgavebehandlingTjenesteConfig.Test.class,
-        BesvareHenvendelseTjenesteConfig.Test.class
+        SakOgBehandlingEndpointConfig.Test.class,
+        OppgavebehandlingEndpointConfig.Test.class,
+        BesvareHenvendelseEndpointConfig.Test.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InternTest extends WicketPageTest {

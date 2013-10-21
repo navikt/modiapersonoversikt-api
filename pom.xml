@@ -17,6 +17,7 @@
         <module>config</module>
         <module>web</module>
         <module>jee</module>
+        <module>mock</module>
     </modules>
 
     <properties>

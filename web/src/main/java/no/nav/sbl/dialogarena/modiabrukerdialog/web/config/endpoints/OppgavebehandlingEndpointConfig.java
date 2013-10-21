@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints;
 
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
@@ -31,9 +31,9 @@ import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 
 @Configuration
-public class OppgavebehandlingTjenesteConfig {
+public class OppgavebehandlingEndpointConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OppgavebehandlingTjenesteConfig.class);
+    private static final Logger LOG = LoggerFactory.getLogger(OppgavebehandlingEndpointConfig.class);
 
     @Configuration
     public static class Default {
