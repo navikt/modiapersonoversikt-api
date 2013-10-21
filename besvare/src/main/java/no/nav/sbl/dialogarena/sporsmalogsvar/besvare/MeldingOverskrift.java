@@ -10,11 +10,11 @@ import org.apache.wicket.model.IModel;
  */
 public class MeldingOverskrift extends AbstractReadOnlyModel<String> {
     private IModel<Melding> melding;
-    private IModel<Traad> traad;
+    private IModel<Traad> traadmodell;
 
     public MeldingOverskrift(IModel<Melding> melding, IModel<Traad> traad) {
         this.melding = melding;
-        this.traad = traad;
+        this.traadmodell = traad;
     }
 
     @Override
@@ -23,7 +23,7 @@ public class MeldingOverskrift extends AbstractReadOnlyModel<String> {
     }
 
     private boolean forsteMeldingIDialog() {
-        Traad traad = this.traad.getObject();
+        Traad traad = this.traadmodell.getObject();
         return traad.getDialog().indexOf(melding.getObject()) == traad.getAntallMeldinger() - 1;
     }
 }
