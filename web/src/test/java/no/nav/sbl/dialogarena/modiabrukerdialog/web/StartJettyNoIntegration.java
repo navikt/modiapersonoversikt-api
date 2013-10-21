@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.mock;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
 
