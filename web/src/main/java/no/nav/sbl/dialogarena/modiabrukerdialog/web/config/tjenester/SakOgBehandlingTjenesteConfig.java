@@ -29,8 +29,6 @@ import javax.xml.datatype.DatatypeFactory;
 import java.math.BigInteger;
 import java.net.URL;
 
-import static org.apache.cxf.frontend.ClientProxy.getClient;
-
 @Configuration
 public class SakOgBehandlingTjenesteConfig {
 
@@ -98,7 +96,7 @@ public class SakOgBehandlingTjenesteConfig {
                         behandlingskjede.withBehandlingskjedeId("behandling1");
                         behandlingskjede.withNormertBehandlingstid(new Behandlingstid().withTid(BigInteger.valueOf(10)).withType(new Behandlingstidtyper().withValue("dager")));
                         behandlingskjede.withStart(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().toGregorianCalendar()));
-                        behandlingskjede.withBehandlingskjedetype(new Behandlingskjedetyper().withKodeRef("Dagpenger"));
+                        behandlingskjede.withBehandlingskjedetype(new Behandlingskjedetyper().withKodeverksRef("Dagpenger"));
                         behandlingskjede.withSluttNAVtid(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().toGregorianCalendar()));
                         return behandlingskjede;
                     } catch (DatatypeConfigurationException e) {
@@ -112,7 +110,7 @@ public class SakOgBehandlingTjenesteConfig {
                         behandlingskjede.withBehandlingskjedeId("behandling1");
                         behandlingskjede.withNormertBehandlingstid(new Behandlingstid().withTid(BigInteger.valueOf(10)).withType(new Behandlingstidtyper().withValue("dager")));
                         behandlingskjede.withStart(DatatypeFactory.newInstance().newXMLGregorianCalendar(new DateTime().toGregorianCalendar()));
-                        behandlingskjede.withBehandlingskjedetype(new Behandlingskjedetyper().withKodeRef("Uføre"));
+                        behandlingskjede.withBehandlingskjedetype(new Behandlingskjedetyper().withKodeverksRef("Uføre"));
                         return behandlingskjede;
                     } catch (DatatypeConfigurationException e) {
                         throw new RuntimeException(e.getMessage(), e);
