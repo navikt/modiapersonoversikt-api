@@ -24,8 +24,8 @@ import java.util.Set;
 
 public class TjenesteSikkerhet {
 
-    public static final String  standardBrukernavn  = "Z900002",
-                                standardPassord     = "***REMOVED***";
+    public static final String STANDARD_BRUKERNAVN = "Z900002",
+                                STANDARD_PASSORD = "***REMOVED***";
 
     public static void leggPaaAutentisering(JaxWsProxyFactoryBean jaxwsClient, final String brukernavn, final String passord) {
         jaxwsClient.getHandlers().add(new StelvioHeaderHandler());

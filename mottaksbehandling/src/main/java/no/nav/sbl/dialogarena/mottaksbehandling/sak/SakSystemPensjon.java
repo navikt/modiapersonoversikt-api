@@ -22,10 +22,10 @@ public class SakSystemPensjon implements Pingable {
 
     public List<Record<ISak>> saksliste(String fnr) {
         WSFinnSakListeResponse response = tjeneste.finnSakListe(new WSFinnSakListeRequest().withFnr(fnr));
-        return on(response.getSakListe()).map(tilSak).collect();
+        return on(response.getSakListe()).map(TIL_SAK).collect();
     }
 
-    private static final Transformer<WSSak, Record<ISak>> tilSak = new Transformer<WSSak, Record<ISak>>() {
+    private static final Transformer<WSSak, Record<ISak>> TIL_SAK = new Transformer<WSSak, Record<ISak>>() {
         @Override
         public Record<ISak> transform(WSSak wsSak) {
             return new Record<ISak>()

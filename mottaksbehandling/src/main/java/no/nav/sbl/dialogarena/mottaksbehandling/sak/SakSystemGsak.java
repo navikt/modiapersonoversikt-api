@@ -26,10 +26,10 @@ public class SakSystemGsak implements Pingable {
         WSFinnGenerellSakListeResponse hentetSaksliste = sak.finnGenerellSakListe(hentSakslisteForesporsel);
         List<WSGenerellSak> saksliste = hentetSaksliste.getSakListe();
 
-        return on(saksliste).map(tilSak).collect();
+        return on(saksliste).map(TIL_SAK).collect();
     }
 
-    private static final Transformer<WSGenerellSak, Record<ISak>> tilSak = new Transformer<WSGenerellSak, Record<ISak>>() {
+    private static final Transformer<WSGenerellSak, Record<ISak>> TIL_SAK = new Transformer<WSGenerellSak, Record<ISak>>() {
         @Override
         public Record<ISak> transform(WSGenerellSak wsSak) {
             return new Record<ISak>()

@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
 
 import no.nav.sbl.dialogarena.mottaksbehandling.ISvar;
 import no.nav.sbl.dialogarena.mottaksbehandling.Mottaksbehandling;
-import no.nav.sbl.dialogarena.mottaksbehandling.lagring.HenvendelseRepoStub;
 import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Tema;
 import no.nav.sbl.dialogarena.mottaksbehandling.verktoy.records.Record;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
