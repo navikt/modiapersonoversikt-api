@@ -21,6 +21,27 @@
 
         <dependency>
             <groupId>no.nav</groupId>
+            <artifactId>sykmeldingsperioder-panel</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sakogbehandling-jaxws</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>soknader-consumer</artifactId>
+            <type>test-jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>soknader-consumer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
             <artifactId>brukerprofil-consumer</artifactId>
         </dependency>
 

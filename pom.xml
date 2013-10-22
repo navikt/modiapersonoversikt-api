@@ -54,6 +54,13 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>soknader-consumer</artifactId>
+                <version>${soknader.liste.version}</version>
+                <type>test-jar</type>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sporsmal-og-svar-besvare</artifactId>
                 <version>${sporsmalogsvar.version}</version>
             </dependency>

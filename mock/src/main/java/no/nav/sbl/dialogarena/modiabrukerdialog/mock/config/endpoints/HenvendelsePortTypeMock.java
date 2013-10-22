@@ -17,7 +17,7 @@ import java.util.Random;
 import static java.util.Arrays.asList;
 
 @Configuration
-public class HenvendelsePortTypeContext {
+public class HenvendelsePortTypeMock {
 
     @Bean
     public HenvendelsePortType henvendelsePortType() {

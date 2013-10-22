@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgavevalg;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.BesvareHenvendelseEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.OppgavebehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.SakOgBehandlingEndpointConfig;
@@ -31,7 +31,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
         HentPersonPanelMockContext.class,
-        HenvendelsePortTypeContext.class,
+        HenvendelsePortTypeMock.class,
         SykepengerWidgetMockContext.class,
         SakOgBehandlingEndpointConfig.Test.class,
         OppgavebehandlingEndpointConfig.Test.class,

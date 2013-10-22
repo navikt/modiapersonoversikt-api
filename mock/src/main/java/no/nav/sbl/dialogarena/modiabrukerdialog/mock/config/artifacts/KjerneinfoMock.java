@@ -12,6 +12,7 @@ import no.nav.kjerneinfo.domain.person.Adresse;
 import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.Personnavn;
+import no.nav.sykmeldingsperioder.widget.SykepengerWidgetService;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 import org.springframework.context.annotation.Bean;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @Configuration
-public class Kjerneinfo {
+public class KjerneinfoMock {
 
     public static final String FODSELSNUMMER = "23067911223";
 
@@ -61,6 +62,11 @@ public class Kjerneinfo {
 
         when(mock.hentKontaktinformasjonOgPreferanser(any(BrukerprofilRequest.class))).thenReturn(value);
         return mock;
+    }
+
+    @Bean
+    public SykepengerWidgetService sykepengerWidgetService() {
+        return mock(SykepengerWidgetService.class);
     }
 
 }

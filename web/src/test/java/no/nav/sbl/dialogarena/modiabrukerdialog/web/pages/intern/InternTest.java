@@ -4,7 +4,7 @@ import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.LamellHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.BesvareHenvendelseEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.OppgavebehandlingEndpointConfig;
@@ -38,7 +38,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = {
         HentPersonPanelMockContext.class,
-        HenvendelsePortTypeContext.class,
+        HenvendelsePortTypeMock.class,
         SykepengerWidgetMockContext.class,
         SakOgBehandlingEndpointConfig.Test.class,
         OppgavebehandlingEndpointConfig.Test.class,
