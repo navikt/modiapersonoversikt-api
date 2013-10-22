@@ -2,18 +2,10 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
 
 import no.nav.sbl.dialogarena.mottaksbehandling.ISvar;
 import no.nav.sbl.dialogarena.mottaksbehandling.Mottaksbehandling;
-import no.nav.sbl.dialogarena.mottaksbehandling.context.MottaksbehandlingKontekst;
-import no.nav.sbl.dialogarena.mottaksbehandling.ko.HendelseKo;
-import no.nav.sbl.dialogarena.mottaksbehandling.ko.HendelseKoStub;
 import no.nav.sbl.dialogarena.mottaksbehandling.lagring.HenvendelseRepoStub;
-import no.nav.sbl.dialogarena.mottaksbehandling.lagring.SporsmalOgSvar;
-import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Oppgavesystem;
-import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.OppgavesystemStub;
 import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Tema;
 import no.nav.sbl.dialogarena.mottaksbehandling.verktoy.records.Record;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
-import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,8 +25,6 @@ public class BesvareTraadTest {
     private Mottaksbehandling mottaksbehandling;
 
     private Traader service;
-
-    private HenvendelseRepoStub repo = new HenvendelseRepoStub();
 
     @Before
     public void wireUpService() {

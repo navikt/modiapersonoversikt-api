@@ -27,20 +27,20 @@ public class Henvendelser {
                 .filter(where(BEHANDLINGS_ID, not(equalTo(etterBehandlingsId)))).collect();
     }
 
-    private static Comparator<WSHenvendelse> NYESTE_FORST = new Comparator<WSHenvendelse>() {
+    private static final Comparator<WSHenvendelse> NYESTE_FORST = new Comparator<WSHenvendelse>() {
         @Override
         public int compare(WSHenvendelse o1, WSHenvendelse o2) {
             return o2.getOpprettetDato().compareTo(o1.getOpprettetDato());
         }
     };
 
-    private static Transformer<WSHenvendelse, String> TRAAD_ID = new Transformer<WSHenvendelse, String>() {
+    private static final Transformer<WSHenvendelse, String> TRAAD_ID = new Transformer<WSHenvendelse, String>() {
         @Override
         public String transform(WSHenvendelse wsHenvendelse) {
             return wsHenvendelse.getTraad();
         }
     };
-    private static Transformer<WSHenvendelse, String> BEHANDLINGS_ID = new Transformer<WSHenvendelse, String>() {
+    private static final Transformer<WSHenvendelse, String> BEHANDLINGS_ID = new Transformer<WSHenvendelse, String>() {
         @Override
         public String transform(WSHenvendelse wsHenvendelse) {
             return wsHenvendelse.getBehandlingsId();
