@@ -21,7 +21,6 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
         super(id, initial);
         List<Utbetaling> utbetalinger = utbetalingService.hentUtbetalinger(fnr);
         setDefaultModel(new CompoundPropertyModel<Object>(transformUtbetalingToVM(utbetalinger)));
-
     }
 
     private List<UtbetalingVM> transformUtbetalingToVM(List<Utbetaling> utbetalinger) {
@@ -30,7 +29,10 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
             utbetalingVMs.add(new UtbetalingVM(utbetaling));
         }
         Collections.sort(utbetalingVMs);
-        return utbetalingVMs.subList(0,6);
+
+        ArrayList<UtbetalingVM> list = new ArrayList<>();
+        list.addAll(utbetalingVMs.subList(0, 6));
+        return list;
     }
 
     @Override
