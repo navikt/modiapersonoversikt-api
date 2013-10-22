@@ -11,4 +11,5 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({SoknaderConfig.class})
 public class ServicesConfig {
+
 }

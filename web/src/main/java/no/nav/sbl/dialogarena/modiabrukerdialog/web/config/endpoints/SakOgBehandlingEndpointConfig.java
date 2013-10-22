@@ -31,7 +31,6 @@ public class SakOgBehandlingEndpointConfig {
         return sakOgBehandlingPortType;
     }
 
-
     private SakOgBehandlingPortType createSakOgBehandlingPortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setWsdlLocation("sakOgBehandling/no/nav/tjeneste/virksomhet/sakOgBehandling/v1/SakOgBehandling.wsdl");
@@ -42,4 +41,5 @@ public class SakOgBehandlingEndpointConfig {
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
         return proxyFactoryBean.create(SakOgBehandlingPortType.class);
     }
+
 }

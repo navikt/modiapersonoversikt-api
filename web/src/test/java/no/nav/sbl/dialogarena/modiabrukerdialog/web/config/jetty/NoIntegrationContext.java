@@ -11,8 +11,7 @@ import static org.mockito.Mockito.mock;
 
 @Configuration
 @Import({
-        MockContext.class,
-
+        MockContext.class
 })
 public class NoIntegrationContext {
 

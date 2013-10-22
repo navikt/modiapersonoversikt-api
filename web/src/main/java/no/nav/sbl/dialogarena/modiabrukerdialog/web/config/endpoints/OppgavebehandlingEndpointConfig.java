@@ -10,7 +10,6 @@ import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.feature.Feature;
 import org.apache.cxf.feature.LoggingFeature;
-import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
@@ -23,9 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
+import static org.apache.cxf.frontend.ClientProxy.getClient;
 
 @Configuration
 public class OppgavebehandlingEndpointConfig {
@@ -50,7 +51,7 @@ public class OppgavebehandlingEndpointConfig {
         factoryBean.setWsdlURL("classpath:Oppgavebehandling.wsdl");
         OppgavebehandlingPortType oppgavebehandlingPortType = factoryBean.create(OppgavebehandlingPortType.class);
 
-        Client client = ClientProxy.getClient(oppgavebehandlingPortType);
+        Client client = getClient(oppgavebehandlingPortType);
         HTTPConduit conduit = (HTTPConduit) client.getConduit();
         TLSClientParameters params = new TLSClientParameters();
         params.setDisableCNCheck(true);
@@ -82,13 +83,13 @@ public class OppgavebehandlingEndpointConfig {
 
         @Override
         public List<PingResult> ping() {
-            long start = System.currentTimeMillis();
+            long start = currentTimeMillis();
             try {
                 boolean ping = oppgavebehandlingPortType.ping();
-                long timeElapsed = System.currentTimeMillis() - start;
+                long timeElapsed = currentTimeMillis() - start;
                 return asList(new PingResult("Oppgavebehandling_v1", ping ? SERVICE_OK : SERVICE_FAIL, timeElapsed));
             } catch (Exception e) {
-                long timeElapsed = System.currentTimeMillis() - start;
+                long timeElapsed = currentTimeMillis() - start;
                 return asList(new PingResult("Oppgavebehandling_v1", SERVICE_FAIL, timeElapsed));
             }
         }
