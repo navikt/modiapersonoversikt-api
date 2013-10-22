@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Traader;
-
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import org.apache.wicket.MarkupContainer;
@@ -41,7 +40,7 @@ public class TraadPanel extends Panel {
     @Inject
     private BesvareHenvendelsePortType besvareHenvendelsePortType;
 
-    private Traader service = new Traader(besvareHenvendelsePortType, henvendelsePortType);
+    private Traader traader = new Traader(besvareHenvendelsePortType, henvendelsePortType);
 
     private MarkupContainer sisteMelding;
     private Dialog dialog;
@@ -68,7 +67,7 @@ public class TraadPanel extends Panel {
         setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<Traad>() {
             @Override
             protected Traad load() {
-                return service.hentTraad(fnr, oppgaveId)
+                return traader.hentTraad(fnr, oppgaveId)
                         .getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId));
             }
         }));
@@ -121,7 +120,7 @@ public class TraadPanel extends Panel {
 
                         @Override
                         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                            service.besvareSporsmal(getTraad());
+                            traader.besvareSporsmal(getTraad());
                             SvarForm.this.setVisibilityAllowed(false);
                             dialog.setList(getTraad().getDialog());
                             sisteMelding.setVisibilityAllowed(false);
@@ -150,12 +149,12 @@ public class TraadPanel extends Panel {
         }
 
         @Override
-        protected void populateItem(ListItem<Melding> item) {
-            item.add(
+        protected void populateItem(ListItem<Melding> meldingItem) {
+            meldingItem.add(
                     new Label("sendtDato"),
-                    new Label("overskrift", new MeldingOverskrift(item.getModel(), traad)),
+                    new Label("overskrift", new MeldingOverskrift(meldingItem.getModel(), traad)),
                     new MultiLineLabel("fritekst"));
-            item.add(hasCssClassIf("tidligere-dialog", item.getModelObject().tidligereHenvendelse));
+            meldingItem.add(hasCssClassIf("tidligere-dialog", meldingItem.getModelObject().tidligereHenvendelse));
         }
 
     }

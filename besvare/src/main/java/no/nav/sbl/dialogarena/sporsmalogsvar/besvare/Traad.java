@@ -68,7 +68,14 @@ public class Traad implements Serializable {
         dialog = on(dialog).append(nyeMeldinger).collect(by(Melding.SENDT_DATO).descending());
     }
 
-
+    @Override
+    public String toString() {
+        boolean tomDialog = dialog.isEmpty();
+        return (tomDialog ? "tom " : "") +
+               (erSensitiv ? "sensitiv tråd" : "tråd") +
+               " ang. " + tema +
+               (tomDialog ? "" : ". " + dialog);
+    }
 
 
 

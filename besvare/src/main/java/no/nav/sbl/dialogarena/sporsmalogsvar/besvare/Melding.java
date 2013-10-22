@@ -7,10 +7,12 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 import static java.util.Objects.hash;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
+import static org.apache.commons.lang3.StringUtils.abbreviate;
 
 /**
  * En ferdigskrevet melding.
@@ -28,6 +30,12 @@ public class Melding implements Serializable {
         this.avsender = type == INNGAENDE ? "bruker" : "NAV";
         this.sendtDato = sendtDato;
         this.fritekst = fritekst;
+    }
+
+    public boolean innleder(Traad traad) {
+        List<Melding> dialog = traad.getDialog();
+        int dialogPos = dialog.indexOf(this);
+        return dialogPos != -1 && dialogPos == dialog.size() - 1;
     }
 
     public String getSendtDato() {
@@ -67,6 +75,11 @@ public class Melding implements Serializable {
     @Override
     public final int hashCode() {
         return hash(avsender, behandlingId, fritekst, sendtDato);
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Melding (%s) fra %s: '%s'", behandlingId, avsender, abbreviate(fritekst, 30));
     }
 
     public CompoundPropertyModel<Boolean> tidligereHenvendelse = new CompoundPropertyModel<>(true);

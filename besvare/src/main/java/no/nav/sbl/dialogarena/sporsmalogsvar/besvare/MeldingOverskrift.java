@@ -4,24 +4,20 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
 /**
- * Resolve overskrift for meldingsvisning i en tråd.
+ * Resolver overskrift for meldingsvisning i en tråd.
  */
 public class MeldingOverskrift extends AbstractReadOnlyModel<String> {
     private IModel<Melding> melding;
-    private IModel<Traad> traadmodell;
+    private IModel<Traad> traad;
 
     public MeldingOverskrift(IModel<Melding> melding, IModel<Traad> traad) {
         this.melding = melding;
-        this.traadmodell = traad;
+        this.traad = traad;
     }
 
     @Override
     public String getObject() {
-        return (forsteMeldingIDialog() ? "Melding fra " : "Svar fra ") + melding.getObject().avsender;
+        return (melding.getObject().innleder(traad.getObject()) ? "Melding fra " : "Svar fra ") + melding.getObject().avsender;
     }
 
-    private boolean forsteMeldingIDialog() {
-        Traad traad = this.traadmodell.getObject();
-        return traad.getDialog().indexOf(melding.getObject()) == traad.getAntallMeldinger() - 1;
-    }
 }
