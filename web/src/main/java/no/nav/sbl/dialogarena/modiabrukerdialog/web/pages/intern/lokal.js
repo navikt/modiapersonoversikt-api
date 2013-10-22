@@ -28,8 +28,8 @@ jQuery(document).ready(function ($) {
 
 	Modig.shortcutListener.on({alt: true, keyCode: 114}, focusSearchField); // F3
 	Modig.shortcutListener.on({alt: true, keyCode: 116}, closeResetPerson); // F5
-	Modig.shortcutListener.on({alt: true, keyCode: 117}, focusLamellHead);  // F6
-	Modig.shortcutListener.on({alt: true, keyCode: 118}, closeLamellHead);  // F7
+	Modig.shortcutListener.on({alt: true, shift: true, ctrl: true, keyCode: 117}, focusLamellHead);  // F6
+	Modig.shortcutListener.on({alt: true, shift: true, ctrl: true, keyCode: 118}, closeLamellHead);  // F7
 
 	$('body').on('click', '.lamell .lamellhode > a', function () {
 		if ($('.main > .personsok').is(':visible')) {
