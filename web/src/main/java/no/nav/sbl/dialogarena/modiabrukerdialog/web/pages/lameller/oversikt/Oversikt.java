@@ -7,12 +7,12 @@ import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.sbl.dialogarena.soknader.liste.SoknadListe;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
+import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
 import javax.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +39,7 @@ public class Oversikt extends Lerret {
         add(new MeldingerWidget("meldinger", "M", fnr));
         add(new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)));
         add(new SoknadListe("soknader", new ListModel<>(soknader), soknaderServiceCallFailed));
+        add(new UtbetalingWidget("utbetalinger", "U", fnr));
 
     }
 

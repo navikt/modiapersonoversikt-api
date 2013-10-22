@@ -160,6 +160,11 @@
             <artifactId>utbetalinger-lamell</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>utbetalinger-widget</artifactId>
+        </dependency>
+
         <!-- End modia komponenter -->
 
         <!-- Modig avhengigheter -->

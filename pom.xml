@@ -78,6 +78,12 @@
             </dependency>
 
             <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>utbetalinger-widget</artifactId>
+                <version>${utbetaling.version}</version>
+            </dependency>
+
+            <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-wicket</artifactId>
                 <version>1.0.28</version>
