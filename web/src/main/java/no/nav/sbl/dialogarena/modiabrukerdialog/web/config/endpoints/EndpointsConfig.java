@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({
         BesvareHenvendelseEndpointConfig.Default.class,
-        HenvendelseEndpointConfig.Test.class,
+        HenvendelseEndpointConfig.Default.class,
         OppgavebehandlingEndpointConfig.Default.class,
         SakOgBehandlingEndpointConfig.Default.class
 })
