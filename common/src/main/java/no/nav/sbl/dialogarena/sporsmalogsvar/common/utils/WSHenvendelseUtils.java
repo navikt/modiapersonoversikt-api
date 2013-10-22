@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import org.apache.commons.collections15.Transformer;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -28,12 +27,6 @@ public class WSHenvendelseUtils {
         return traaderMap;
     }
 
-    public static final Comparator<WSHenvendelse> NYESTE_OVERST = new Comparator<WSHenvendelse>() {
-        @Override
-        public int compare(WSHenvendelse o1, WSHenvendelse o2) {
-            return o2.getOpprettetDato().compareTo(o1.getOpprettetDato());
-        }
-    };
 
     public static final Transformer<WSHenvendelse, String> TRAAD_ID = new Transformer<WSHenvendelse, String>() {
         @Override
