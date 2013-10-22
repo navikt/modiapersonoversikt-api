@@ -41,10 +41,10 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sakogbehandling-jaxws</artifactId>
+            <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
         </dependency>
 
         <dependency>

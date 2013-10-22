@@ -2,12 +2,12 @@ package no.nav.sbl.dialogarena.soknader.service;
 
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingskjedetyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingstid;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingstidtyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Sakstemaer;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstid;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstidtyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSSakstemaer;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import org.junit.Test;
@@ -16,11 +16,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.List;
 
 import static java.math.BigInteger.TEN;
-import static javax.xml.datatype.DatatypeFactory.newInstance;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;
@@ -49,28 +47,24 @@ public class SoknaderServiceTest {
                 .withSak(createSak());
     }
 
-    private Sak createSak() throws Exception {
-        return new Sak()
+    private WSSak createSak() throws Exception {
+        return new WSSak()
                 .withSaksId("id1")
-                .withSakstema(new Sakstemaer().withValue("Dagpenger"))
-                .withOpprettet(createXmlGregorianCalander())
-                .withLukket(createXmlGregorianCalander())
+                .withSakstema(new WSSakstemaer().withValue("Dagpenger"))
+                .withOpprettet(now())
+                .withLukket(now())
                 .withBehandlingskjede(createBehandlingKjede());
     }
 
-    private Behandlingskjede createBehandlingKjede() throws Exception {
-        return new Behandlingskjede()
+    private WSBehandlingskjede createBehandlingKjede() throws Exception {
+        return new WSBehandlingskjede()
                 .withBehandlingskjedeId("behandling1")
                 .withNormertBehandlingstid(createNormertBehandlingstid())
-                .withStart(createXmlGregorianCalander())
-                .withBehandlingskjedetype(new Behandlingskjedetyper().withKodeverksRef("tittel"));
+                .withStart(now())
+                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withKodeverksRef("tittel"));
     }
 
-    private XMLGregorianCalendar createXmlGregorianCalander() throws Exception {
-        return newInstance().newXMLGregorianCalendar(now().toGregorianCalendar());
-    }
-
-    private Behandlingstid createNormertBehandlingstid() {
-        return new Behandlingstid().withTid(TEN).withType(new Behandlingstidtyper().withKodeverksRef("dager"));
+    private WSBehandlingstid createNormertBehandlingstid() {
+        return new WSBehandlingstid().withTid(TEN).withType(new WSBehandlingstidtyper().withKodeverksRef("dager"));
     }
 }

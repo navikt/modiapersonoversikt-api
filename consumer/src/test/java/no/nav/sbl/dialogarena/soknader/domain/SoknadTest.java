@@ -1,17 +1,15 @@
 package no.nav.sbl.dialogarena.soknader.domain;
 
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingskjedetyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingstid;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.Behandlingstidtyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstid;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstidtyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.math.BigInteger;
 
-import static javax.xml.datatype.DatatypeFactory.newInstance;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.GAMMEL_FERDIG;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.MOTTATT;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.NYLIG_FERDIG;
@@ -23,16 +21,16 @@ import static org.junit.Assert.assertThat;
 
 public class SoknadTest {
 
-    private Behandlingskjede behandlingskjede;
+    private WSBehandlingskjede behandlingskjede;
     private DateTime startDate;
     private DateTime sluttDate;
 
     @Before
     public void setUp() {
-        behandlingskjede = new Behandlingskjede()
+        behandlingskjede = new WSBehandlingskjede()
                 .withBehandlingskjedeId("behandling1")
                 .withNormertBehandlingstid(createNormertBehandlingstid(10))
-                .withBehandlingskjedetype(new Behandlingskjedetyper().withKodeverksRef("tittel"));
+                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withKodeverksRef("tittel"));
         startDate = now().minusDays(10);
         sluttDate = now().minusDays(4);
     }
@@ -40,9 +38,9 @@ public class SoknadTest {
     @Test
     public void testThatTransformWorks() throws Exception {
         DateTime sluttNavDate = now().minusDays(5);
-        behandlingskjede.withStart(createXmlGregorianCalander(startDate))
-                .withSluttNAVtid(createXmlGregorianCalander(sluttNavDate))
-                .withSlutt(createXmlGregorianCalander(sluttDate));
+        behandlingskjede.withStart(startDate)
+                .withSluttNAVtid(sluttNavDate)
+                .withSlutt(sluttDate);
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
         assertThat(soknad.getTittelKodeverk(), is(equalTo("tittel")));
         assertThat(soknad.getInnsendtDato(), is(equalTo(startDate)));
@@ -53,16 +51,16 @@ public class SoknadTest {
     @Test
     public void ferdigDatoIsTakenFromNAVSluttTid() throws Exception {
         DateTime sluttNavDate = now().minusDays(5);
-        behandlingskjede.withStart(createXmlGregorianCalander(startDate))
-                .withSluttNAVtid(createXmlGregorianCalander(sluttNavDate));
+        behandlingskjede.withStart(startDate)
+                .withSluttNAVtid(sluttNavDate);
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
         assertThat(soknad.getFerdigDato(), is(equalTo(sluttNavDate)));
     }
 
     @Test
     public void ferdigDatoIsTakenFromSluttTidIfNoNAVSluttTid() throws Exception {
-        behandlingskjede.withStart(createXmlGregorianCalander(startDate))
-                .withSlutt(createXmlGregorianCalander(sluttDate));
+        behandlingskjede.withStart(startDate)
+                .withSlutt(sluttDate);
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
         assertThat(soknad.getFerdigDato(), is(equalTo(sluttDate)));
     }
@@ -71,8 +69,8 @@ public class SoknadTest {
     public void status_WhenFerdigDatoIsSet_StatusIsNyligFerdig() throws Exception {
         startDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED + 10);
         sluttDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED - 1);
-        behandlingskjede.withStart(createXmlGregorianCalander(startDate))
-                .withSlutt(createXmlGregorianCalander(sluttDate));
+        behandlingskjede.withStart(startDate)
+                .withSlutt(sluttDate);
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
         assertThat(soknad.getSoknadStatus(), is(equalTo(NYLIG_FERDIG)));
     }
@@ -81,8 +79,8 @@ public class SoknadTest {
     public void status_WhenFerdigDatoIsSetAndMoreThan28DaysSinceDone_StatusIsGammelFerdig() throws Exception {
         startDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED + 20);
         sluttDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED + 1);
-        behandlingskjede.withStart(createXmlGregorianCalander(startDate))
-                .withSlutt(createXmlGregorianCalander(sluttDate));
+        behandlingskjede.withStart(startDate)
+                .withSlutt(sluttDate);
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
         assertThat(soknad.getSoknadStatus(), is(equalTo(GAMMEL_FERDIG)));
     }
@@ -92,8 +90,8 @@ public class SoknadTest {
         startDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED - 20);
         DateTime startNavDate = now().minusDays(Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED - 1);
         behandlingskjede.withNormertBehandlingstid(createNormertBehandlingstid(10))
-                .withStart(createXmlGregorianCalander(startDate))
-                .withStartNAVtid(createXmlGregorianCalander(startNavDate));
+                .withStart(startDate)
+                .withStartNAVtid(startNavDate);
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
         assertThat(soknad.getSoknadStatus(), is(equalTo(UNDER_BEHANDLING)));
     }
@@ -101,19 +99,15 @@ public class SoknadTest {
     @Test
     public void status_WhenOnlyStartIsSet_UseDefault_StatusIsMottatt() throws Exception {
         startDate = now().minusDays(10);
-        behandlingskjede.withStart(createXmlGregorianCalander(startDate));
+        behandlingskjede.withStart(startDate);
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
         assertThat(soknad.getSoknadStatus(), is(equalTo(MOTTATT)));
     }
 
-    private XMLGregorianCalendar createXmlGregorianCalander(DateTime date) throws Exception {
-        return newInstance().newXMLGregorianCalendar(date.toGregorianCalendar());
-    }
-
-    private Behandlingstid createNormertBehandlingstid(int days) {
-        Behandlingstidtyper behandlingstidtyper = new Behandlingstidtyper();
+    private WSBehandlingstid createNormertBehandlingstid(int days) {
+        WSBehandlingstidtyper behandlingstidtyper = new WSBehandlingstidtyper();
         behandlingstidtyper.setValue("dager");
-        return new Behandlingstid().withTid(BigInteger.valueOf(days)).withType(behandlingstidtyper);
+        return new WSBehandlingstid().withTid(BigInteger.valueOf(days)).withType(behandlingstidtyper);
     }
 
 }

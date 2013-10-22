@@ -4,7 +4,7 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.sbl.dialogarena.soknader.domain.SoknadComparator;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Sak;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 
 import javax.inject.Inject;
@@ -22,7 +22,7 @@ public class SoknaderService {
     public List<Soknad> getSoknader(String aktorId) {
         List<Soknad> soknadList = new ArrayList<>();
         try {
-            for (Sak sak : sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(createRequest(aktorId)).getSak()) {
+            for (WSSak sak : sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(createRequest(aktorId)).getSak()) {
                 soknadList.addAll(extractSoknaderFromSak(sak));
             }
         } catch (Exception e) {
@@ -35,7 +35,7 @@ public class SoknaderService {
         return new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktoerId);
     }
 
-    private List<Soknad> extractSoknaderFromSak(Sak sak) {
+    private List<Soknad> extractSoknaderFromSak(WSSak sak) {
         return on(sak.getBehandlingskjede()).map(BEHANDLINGSKJEDE_TO_SOKNAD_TRANSFORMER).collect();
 
     }

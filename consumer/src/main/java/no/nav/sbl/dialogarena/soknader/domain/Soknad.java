@@ -1,10 +1,9 @@
 package no.nav.sbl.dialogarena.soknader.domain;
 
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.Behandlingskjede;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.Serializable;
 
 import static no.nav.modig.lang.option.Optional.optional;
@@ -20,13 +19,6 @@ public class Soknad implements Serializable {
 
     public enum SoknadStatus {MOTTATT, UNDER_BEHANDLING, NYLIG_FERDIG, GAMMEL_FERDIG}
 
-    public static final Transformer<Soknad, SoknadStatus> SOKNAD_STATUS_TRANSFORMER = new Transformer<Soknad, SoknadStatus>() {
-        @Override
-        public SoknadStatus transform(Soknad soknad) {
-            return soknad.getSoknadStatus();
-        }
-    };
-
     private DateTime innsendtDato;
     private String tittelKodeverk;
     private SoknadStatus soknadStatus;
@@ -34,7 +26,7 @@ public class Soknad implements Serializable {
     private DateTime ferdigDato;
     private String normertBehandlingsTid;
 
-    public static Soknad transformToSoknad(Behandlingskjede behandlingskjede) {
+    public static Soknad transformToSoknad(WSBehandlingskjede behandlingskjede) {
         return BEHANDLINGSKJEDE_TO_SOKNAD_TRANSFORMER.transform(behandlingskjede);
     }
 
@@ -62,20 +54,18 @@ public class Soknad implements Serializable {
         return innsendtDato;
     }
 
-    public static final Transformer<Behandlingskjede, Soknad> BEHANDLINGSKJEDE_TO_SOKNAD_TRANSFORMER = new Transformer<Behandlingskjede, Soknad>() {
-
+    public static final Transformer<WSBehandlingskjede, Soknad> BEHANDLINGSKJEDE_TO_SOKNAD_TRANSFORMER = new Transformer<WSBehandlingskjede, Soknad>() {
         @Override
-        public Soknad transform(Behandlingskjede behandlingskjede) {
+        public Soknad transform(WSBehandlingskjede behandlingskjede) {
             Soknad soknad = new Soknad();
-            soknad.innsendtDato = dateTimeTransformer().transform(behandlingskjede.getStart());
+            soknad.innsendtDato = behandlingskjede.getStart();
             soknad.tittelKodeverk = behandlingskjede.getBehandlingskjedetype().getKodeverksRef();
-            soknad.underBehandlingStartDato = optional(behandlingskjede.getStartNAVtid()).map(dateTimeTransformer()).getOrElse(null);
+            soknad.underBehandlingStartDato = optional(behandlingskjede.getStartNAVtid()).getOrElse(null);
             soknad.ferdigDato = evaluateFerdigDato(behandlingskjede);
             soknad.normertBehandlingsTid = getNormertTidString(behandlingskjede);
             soknad.soknadStatus = evaluateStatus(soknad);
             return soknad;
         }
-
     };
 
     private static SoknadStatus evaluateStatus(Soknad soknad) {
@@ -105,30 +95,20 @@ public class Soknad implements Serializable {
         return soknad.getUnderBehandlingStartDato() != null;
     }
 
-    private static DateTime evaluateFerdigDato(Behandlingskjede behandlingskjede) {
+    private static DateTime evaluateFerdigDato(WSBehandlingskjede behandlingskjede) {
         return optional(behandlingskjede.getSluttNAVtid())
-                .map(dateTimeTransformer()).getOrElse(
-                        optional(behandlingskjede.getSlutt())
-                                .map(dateTimeTransformer()).getOrElse(null));
+                   .getOrElse(optional(behandlingskjede.getSlutt())
+                   .getOrElse(null));
     }
 
-    private static Transformer<XMLGregorianCalendar, DateTime> dateTimeTransformer() {
-        return new Transformer<XMLGregorianCalendar, DateTime>() {
-            @Override
-            public DateTime transform(XMLGregorianCalendar xmlGregorianCalendar) {
-                return new DateTime(xmlGregorianCalendar.toGregorianCalendar().getTime());
-            }
-        };
-    }
-
-    private static String getNormertTidString(Behandlingskjede behandlingskjede) {
+    private static String getNormertTidString(WSBehandlingskjede behandlingskjede) {
         if (behandlingsTidInfoExists(behandlingskjede)) {
             return behandlingskjede.getNormertBehandlingstid().getTid() + " " + behandlingskjede.getNormertBehandlingstid().getType().getValue();
         }
         return "";
     }
 
-    private static boolean behandlingsTidInfoExists(Behandlingskjede behandlingskjede) {
+    private static boolean behandlingsTidInfoExists(WSBehandlingskjede behandlingskjede) {
         return behandlingskjede != null &&
                 behandlingskjede.getNormertBehandlingstid() != null &&
                 behandlingskjede.getNormertBehandlingstid().getTid() != null &&

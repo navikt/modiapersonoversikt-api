@@ -27,6 +27,7 @@
         <modig.frontend.version>1.1.1</modig.frontend.version>
         <slf4j.version>1.7.5</slf4j.version>
         <sakogbehandling.jaxws.version>1.0.2</sakogbehandling.jaxws.version>
+        <sakogbehandling.tjenestespesifikasjon.version>1.0.8</sakogbehandling.tjenestespesifikasjon.version>
         <mockito.core.version>1.9.5</mockito.core.version>
         <cxf.version>2.7.6</cxf.version>
         <modig-security.version>1.0.16</modig-security.version>
@@ -37,11 +38,10 @@
 
     <dependencyManagement>
         <dependencies>
-
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sakogbehandling-jaxws</artifactId>
-                <version>${sakogbehandling.jaxws.version}</version>
+                <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
+                <version>${sakogbehandling.tjenestespesifikasjon.version}</version>
             </dependency>
 
             <dependency>
