@@ -1,10 +1,8 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
+package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.config.TjenesterMock;
-
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Traader;
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Traad;
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.config.TjenesterMock;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;

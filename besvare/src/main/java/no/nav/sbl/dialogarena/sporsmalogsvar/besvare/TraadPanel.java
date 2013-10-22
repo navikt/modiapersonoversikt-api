@@ -1,5 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
+
+import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Traader;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;

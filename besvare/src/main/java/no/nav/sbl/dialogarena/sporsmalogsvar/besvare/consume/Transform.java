@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;

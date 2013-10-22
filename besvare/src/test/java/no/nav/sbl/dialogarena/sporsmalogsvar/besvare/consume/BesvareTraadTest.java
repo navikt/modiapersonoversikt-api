@@ -1,8 +1,6 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
+package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Traader;
-
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Traad;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
 import org.junit.Before;
@@ -11,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
+
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;

@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Traad;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.modig.lang.option.Optional;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
@@ -18,7 +18,6 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.SE
 import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.TIL_MELDING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.TRAAD_ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.tilWsSvar;
-
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;

@@ -1,5 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
+
+import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
 import org.apache.wicket.model.Model;
 import org.hamcrest.Description;

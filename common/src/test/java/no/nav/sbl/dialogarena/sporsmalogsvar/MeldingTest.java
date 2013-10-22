@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
+package no.nav.sbl.dialogarena.sporsmalogsvar;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.hamcrest.Description;
