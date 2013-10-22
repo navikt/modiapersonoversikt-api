@@ -6,7 +6,6 @@ import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
-import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.informasjon.WSPlukkOppgaveResultat;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.feature.Feature;
@@ -78,34 +77,6 @@ public class OppgavebehandlingEndpointConfig {
             features.add(new WSAddressingFeature());
             factoryBean.getOutInterceptors().add(samlOutInterceptor);
             return factoryBean;
-        }
-    }
-
-    @Configuration
-    public static class Test {
-
-        public static final String FODESELSNR = "10108000398";
-        public static final String OPPGAVEID = "1";
-
-        @Bean
-        public OppgavebehandlingPortType oppgavebehandlingPortType() {
-            return new OppgavebehandlingPortType() {
-                @Override
-                public boolean ping() {
-                    return true;
-                }
-
-                @Override
-                public WSPlukkOppgaveResultat plukkOppgave(String tema) {
-                    return new WSPlukkOppgaveResultat().withFodselsnummer(FODESELSNR).withOppgaveId(OPPGAVEID);
-                }
-
-                @Override
-                public void leggTilbakeOppgave(String oppgaveId, String aarsak) {
-                    LOG.debug("Legge tilbake oppgave med id " + oppgaveId + " fordi " + aarsak);
-                }
-
-            };
         }
     }
 

@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BesvareHenvendelsePortTypeMock.TRAAD_ID;
 import static org.joda.time.DateTime.now;
 
 @Configuration
@@ -22,7 +23,7 @@ public class HenvendelsePortTypeMock {
 
     @Bean
     public HenvendelsePortType henvendelsePortType() {
-        final Integer traadId = 1;
+        final Integer traadId = TRAAD_ID;
         return new HenvendelsePortType() {
 
             private static final String SPORSMAL = "SPORSMAL";

@@ -4,10 +4,10 @@ import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.personsok.PersonsokPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BesvareHenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OppgavebehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.LamellHandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.BesvareHenvendelseEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.OppgavebehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
@@ -41,8 +41,8 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         HenvendelsePortTypeMock.class,
         SykepengerWidgetMockContext.class,
         SakOgBehandlingEndpointConfig.Test.class,
-        OppgavebehandlingEndpointConfig.Test.class,
-        BesvareHenvendelseEndpointConfig.Test.class
+        OppgavebehandlingPortTypeMock.class,
+        BesvareHenvendelsePortTypeMock.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InternTest extends WicketPageTest {

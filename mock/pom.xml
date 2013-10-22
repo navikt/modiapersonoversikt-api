@@ -100,6 +100,16 @@
             <artifactId>kjerneinfo-common</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>oppgavebehandling-tjenestespesifikasjon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
+        </dependency>
+
     </dependencies>
 
 </project>

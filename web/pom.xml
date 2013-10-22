@@ -415,12 +415,6 @@
             <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>no.nav.tjenester.fim</groupId>-->
-            <!--<artifactId>nav-fim-sakOgBehandling-v1-tjenestespesifikasjon</artifactId>-->
-        <!--</dependency>-->
-
-
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
