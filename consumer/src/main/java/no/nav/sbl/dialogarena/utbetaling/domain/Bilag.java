@@ -1,10 +1,11 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Bilag {
+public class Bilag  implements Serializable {
 
     private String melding;
     private List<PosteringsDetalj> posteringsDetaljer;

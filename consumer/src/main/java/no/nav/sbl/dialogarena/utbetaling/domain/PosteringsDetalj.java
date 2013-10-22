@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-public class PosteringsDetalj {
+import java.io.Serializable;
+
+public class PosteringsDetalj  implements Serializable {
     private String hovedBeskrivelse;
     private String underdBeskrivelse;
 

@@ -4,12 +4,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Utbetaling {
+public class Utbetaling implements Serializable {
 
     private List<Bilag> bilag = new ArrayList<>();
     private String beskrivelse;
