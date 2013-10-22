@@ -18,6 +18,7 @@ import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPrefer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.MockContext.FODSELSNUMMER;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -25,48 +26,58 @@ import static org.mockito.Mockito.when;
 @Configuration
 public class KjerneinfoMock {
 
-    public static final String FODSELSNUMMER = "23067911223";
-
     @Bean
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
-        PersonKjerneinfoServiceBi mock = mock(PersonKjerneinfoServiceBi.class);
-        HentKjerneinformasjonResponse value = new HentKjerneinformasjonResponse();
+        PersonKjerneinfoServiceBi serviceMock = mock(PersonKjerneinfoServiceBi.class);
+        HentKjerneinformasjonResponse mockReturnValue = createPersonResponse();
 
-        value.setPerson(
-                new Person.With()
-                        .fodselsnummer(FODSELSNUMMER)
-                        .personfakta(new Personfakta.With()
-                                .sivilstand(new Kodeverdi.With()
-                                        .value("SINGEL")
-                                        .done())
-                                .navn(new Personnavn.With()
-                                        .fornavn("Testern")
-                                        .etternavn("Testesen")
-                                        .done())
-                                .adresse(new Adresse.With()
-                                        .gatenavn("Testgata")
-                                        .postnummer("1337")
-                                        .poststed("Test").done())
-                                .done())
-                        .done());
-        when(mock.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(value);
-        return mock;
+        when(serviceMock.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(mockReturnValue);
+        return serviceMock;
     }
 
     @Bean
     public BrukerprofilServiceBi brukerprofilServiceBi() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
-        BrukerprofilServiceBi mock = mock(BrukerprofilServiceBi.class);
-        BrukerprofilResponse value = new BrukerprofilResponse();
+        BrukerprofilServiceBi serviceMock = mock(BrukerprofilServiceBi.class);
+        BrukerprofilResponse mockReturnValue = createBrukerprofilResponse();
 
-        value.setBruker(new Bruker());
-
-        when(mock.hentKontaktinformasjonOgPreferanser(any(BrukerprofilRequest.class))).thenReturn(value);
-        return mock;
+        when(serviceMock.hentKontaktinformasjonOgPreferanser(any(BrukerprofilRequest.class))).thenReturn(mockReturnValue);
+        return serviceMock;
     }
 
     @Bean
     public SykepengerWidgetService sykepengerWidgetService() {
         return mock(SykepengerWidgetService.class);
+    }
+
+    private BrukerprofilResponse createBrukerprofilResponse() {
+        BrukerprofilResponse mockReturnValue = new BrukerprofilResponse();
+        mockReturnValue.setBruker(new Bruker());
+        return mockReturnValue;
+    }
+
+    private HentKjerneinformasjonResponse createPersonResponse() {
+        HentKjerneinformasjonResponse mockReturnValue = new HentKjerneinformasjonResponse();
+        mockReturnValue.setPerson(createPerson());
+        return mockReturnValue;
+    }
+
+    private Person createPerson() {
+        return new Person.With()
+                .fodselsnummer(FODSELSNUMMER)
+                .personfakta(new Personfakta.With()
+                        .sivilstand(new Kodeverdi.With()
+                                .value("SINGEL")
+                                .done())
+                        .navn(new Personnavn.With()
+                                .fornavn("Testern")
+                                .etternavn("Testesen")
+                                .done())
+                        .adresse(new Adresse.With()
+                                .gatenavn("Testgata")
+                                .postnummer("1337")
+                                .poststed("Test").done())
+                        .done())
+                .done();
     }
 
 }

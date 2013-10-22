@@ -16,4 +16,6 @@ import org.springframework.context.annotation.Import;
 })
 public class MockContext {
 
+    public static final String FODSELSNUMMER = "23067911223";
+
 }

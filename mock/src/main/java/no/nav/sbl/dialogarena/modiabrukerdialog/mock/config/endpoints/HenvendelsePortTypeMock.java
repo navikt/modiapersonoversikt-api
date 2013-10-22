@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Random;
 
 import static java.util.Arrays.asList;
+import static org.joda.time.DateTime.now;
 
 @Configuration
 public class HenvendelsePortTypeMock {
@@ -27,12 +28,12 @@ public class HenvendelsePortTypeMock {
             private static final String SPORSMAL = "SPORSMAL";
             private static final String SVAR = "SVAR";
             List<WSHenvendelse> henvendelser = asList(
-                    createWSHenvendelse(SPORSMAL, "" + traadId, "ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", DateTime.now().minusWeeks(2)),
-                    createWSHenvendelse(SPORSMAL, "" + (traadId + 1), "INTERNASJONALT", DateTime.now().minusWeeks(1)),
-                    createWSHenvendelse(SVAR, "" + (traadId + 1), "INTERNASJONALT", DateTime.now().minusDays(5), DateTime.now().minusDays(4)),
-                    createWSHenvendelse(SPORSMAL, "" + (traadId + 2), "HJELPEMIDLER", DateTime.now().minusDays(3)),
-                    createWSHenvendelse(SVAR, "" + (traadId + 2), "HJELPEMIDLER", DateTime.now().minusHours(5), null),
-                    createWSHenvendelse(SPORSMAL, "" + (traadId + 3), "HJELPEMIDLER", DateTime.now().minusHours(10)));
+                    createWSHenvendelse(SPORSMAL, "" + traadId, "ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", now().minusWeeks(2)),
+                    createWSHenvendelse(SPORSMAL, "" + (traadId + 1), "INTERNASJONALT", now().minusWeeks(1)),
+                    createWSHenvendelse(SVAR, "" + (traadId + 1), "INTERNASJONALT", now().minusDays(5), now().minusDays(4)),
+                    createWSHenvendelse(SPORSMAL, "" + (traadId + 2), "HJELPEMIDLER", now().minusDays(3)),
+                    createWSHenvendelse(SVAR, "" + (traadId + 2), "HJELPEMIDLER", now().minusHours(5), null),
+                    createWSHenvendelse(SPORSMAL, "" + (traadId + 3), "HJELPEMIDLER", now().minusHours(10)));
 
             WSHenvendelse createWSHenvendelse(String type, String traad, String tema, DateTime opprettet) {
                 return createWSHenvendelse(type, traad, tema, opprettet, opprettet);
@@ -40,9 +41,13 @@ public class HenvendelsePortTypeMock {
 
             WSHenvendelse createWSHenvendelse(String type, String traad, String tema, DateTime opprettet, DateTime lestdato) {
                 Random random = new Random();
-                WSHenvendelse wsHenvendelse =
-                        new WSHenvendelse().withBehandlingsId("" + random.nextInt()).withHenvendelseType(type)
-                                .withOpprettetDato(opprettet).withTraad(traad).withTema(tema.toString()).withLestDato(lestdato);
+                WSHenvendelse wsHenvendelse = new WSHenvendelse()
+                        .withBehandlingsId("" + random.nextInt())
+                        .withHenvendelseType(type)
+                        .withOpprettetDato(opprettet)
+                        .withTraad(traad)
+                        .withTema(tema)
+                        .withLestDato(lestdato);
                 ObjectMapper mapper = new ObjectMapper();
                 try {
                     Map<String, String> fritekstMapping = new HashMap<>();
