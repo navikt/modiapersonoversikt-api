@@ -17,7 +17,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>no.nav.sbl.dialogarena.sporsmalogsvar.BesvareJettyApplicationContext</param-value>
+        <param-value>no.nav.sbl.dialogarena.sporsmalogsvar.besvare.config.BesvareJettyApplicationContext</param-value>
     </context-param>
 
     <context-param>

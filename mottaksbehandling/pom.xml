@@ -5,7 +5,7 @@
     <parent>
         <artifactId>sporsmal-og-svar</artifactId>
         <groupId>no.nav.sbl.dialogarena</groupId>
-        <version>1.9-SNAPSHOT</version>
+        <version>1.10-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -107,7 +107,6 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>
-            <version>1.1.0</version>
         </dependency>
 
         <dependency>

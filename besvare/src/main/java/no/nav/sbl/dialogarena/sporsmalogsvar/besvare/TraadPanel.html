@@ -15,7 +15,7 @@
                     <div class="innsynsvelger-knapp"></div>
                     <div class="innsynsvelger-liste">
                         <label class="innsynsvelger-lukk">&#x2715</label>
-                        <input type="checkbox" wicket:id="svar.sensitiv" id="besvarepanel-sensitiv"/>
+                        <input type="checkbox" wicket:id="erSensitiv" id="besvarepanel-sensitiv"/>
                         <label for="besvarepanel-sensitiv">Sensitivt</label>
                     </div>
                 </div>
@@ -27,10 +27,10 @@
                 <input type="submit" class="send-svar-knapp knapp-hoved-stor" wicket:id="send" value="Send"/>
             </div>
         </form>
-        <section wicket:id="sporsmal" class="sporsmal-seksjon">
-            <h2 class="robust">Fra bruker</h2>
-            <aside wicket:id="sporsmal.sendtDatoAsString"/>
-            <wicket:container wicket:id="sporsmal.fritekst" />
+        <section wicket:id="siste-melding" class="sporsmal-seksjon">
+            <h2 wicket:id="overskrift" class="robust">[[Melding fra bruker]]</h2>
+            <aside wicket:id="sisteMelding.sendtDato">[[1. oktober 2013]]</aside>
+            <wicket:container wicket:id="sisteMelding.fritekst" >[[Dette lurer jeg på.]]</wicket:container>
         </section>
         <section class="tidligere-dialog-seksjon">
             <article wicket:id="tidligereDialog">
