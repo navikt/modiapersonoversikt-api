@@ -94,9 +94,9 @@ public class Traad implements Serializable {
     public void ferdigSvar() {
         tema = svar.tema;
         Melding nyMelding = new Melding(svar.behandlingId, UTGAENDE, DateTime.now(), svar.fritekst);
-        nyMelding.tidligereHenvendelse.setObject(false);
         leggTil(nyMelding);
         svar = new Svar();
+        svar.tema = tema;
     }
 
 
