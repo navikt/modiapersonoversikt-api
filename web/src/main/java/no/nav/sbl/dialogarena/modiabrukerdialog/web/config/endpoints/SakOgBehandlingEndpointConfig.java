@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints;
 
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
+import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
@@ -41,14 +42,12 @@ public class SakOgBehandlingEndpointConfig {
         @Bean
         public SakOgBehandlingPortType sakOgBehandlingPortType() {
             SakOgBehandlingPortType sakOgBehandlingPortType = createSakOgBehandlingPortType(new UserSAMLOutInterceptor());
-//            STSConfigurationUtility.configureStsForExternalSSO(getClient(sakOgBehandlingPortType));
             return sakOgBehandlingPortType;
         }
 
         @Bean
         public SakOgBehandlingPortType selfTestSakOgBehandlingPortType() {
-            SakOgBehandlingPortType sakOgBehandlingPortType = createSakOgBehandlingPortType(new UserSAMLOutInterceptor());
-//            STSConfigurationUtility.configureStsForSystemUser(getClient(sakOgBehandlingPortType));
+            SakOgBehandlingPortType sakOgBehandlingPortType = createSakOgBehandlingPortType(new SystemSAMLOutInterceptor());
             return sakOgBehandlingPortType;
         }
 
@@ -61,7 +60,6 @@ public class SakOgBehandlingEndpointConfig {
             proxyFactoryBean.getOutInterceptors().add(interceptor);
             proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
             proxyFactoryBean.getFeatures().add(new LoggingFeature());
-//            proxyFactoryBean.getFeatures().add(new TimeoutFeature());
             return proxyFactoryBean.create(SakOgBehandlingPortType.class);
         }
 
