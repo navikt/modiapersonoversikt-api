@@ -1,32 +1,34 @@
 package no.nav.sbl.dialogarena.mottaksbehandling;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.mottaksbehandling.context.AppContext;
+import no.nav.sbl.dialogarena.mottaksbehandling.context.MottaksbehandlingKontekst;
 import no.nav.sbl.dialogarena.mottaksbehandling.lagring.SporsmalOgSvar;
 import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Oppgave;
 import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Tema;
 import no.nav.sbl.dialogarena.mottaksbehandling.sak.ISak;
 import no.nav.sbl.dialogarena.mottaksbehandling.verktoy.records.Record;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+import static no.nav.modig.lang.option.Optional.none;
+
 public class Mottaksbehandling {
     private static final Logger log = LoggerFactory.getLogger(Mottaksbehandling.class);
-    public final AppContext context;
+    public final MottaksbehandlingKontekst context;
 
     public void besvarSporsmal(Record<ISvar> svar) {
         BesvarSporsmal.besvar(context, svar);
     }
 
-    public Record<SporsmalOgSvar> hentSporsmalOgSvar(String oppgaveId) {
+    public Optional<Record<SporsmalOgSvar>> hentSporsmalOgSvar(String oppgaveId) {
         Optional<Record<SporsmalOgSvar>> resultObject = context.repo.hentMedOppgaveId(oppgaveId);
         if (!resultObject.isSome()) {
             log.error("Oppgave fra GSAK med oppgaveId " + oppgaveId + " finnes ikke i Mottaksbehandling. Databasene kan være i usync.");
-            return null;
         }
-        return resultObject.get();
+        return resultObject;
     }
 
     public List<Record<ISak>> hentSaker(String brukerId) {
@@ -35,13 +37,14 @@ public class Mottaksbehandling {
         return saksliste;
     }
 
-    public Record<Oppgave> plukkOppgave(String tema) {
+    public Optional<Record<Oppgave>> plukkOppgave(String tema) {
         Optional<Record<Oppgave>> plukket = context.oppgavesystem.plukkOppgave(Tema.valueOf(tema));
-        for (Record<Oppgave> oppgave : plukket) {
-            String oppgid = oppgave.get(Oppgave.id);
-            Optional<Record<SporsmalOgSvar>> optionalHenvendelse = context.repo.hentMedOppgaveId(oppgid);
-            if (optionalHenvendelse.isSome()) {
-                return oppgave;
+
+        if (plukket.isSome()) {
+            String oppgid = plukket.get().get(Oppgave.id);
+            Optional<Record<SporsmalOgSvar>> henvendelse = context.repo.hentMedOppgaveId(oppgid);
+            if (henvendelse.isSome()) {
+                return plukket;
             } else {
                 log.warn("Oppgave fra GSAK med oppgaveId " + oppgid + " finnes ikke i Mottaksbehandling.\n" +
                         "Databasene kan være i usync. Vi ferdigstiller oppgaven og plukker en ny.");
@@ -49,14 +52,18 @@ public class Mottaksbehandling {
                 plukkOppgave(tema);
             }
         }
-        return null;
+        return none();
+    }
+
+    public List<WSHenvendelse> tidligereDialog(String fnr, String traadId, String etterBehandlingsId) {
+        return context.henvendelser.tidligereDialog(fnr, traadId, etterBehandlingsId);
     }
 
     public void leggTilbakeOppgave(String oppgaveId, String begrunnelse) {
         context.oppgavesystem.fristill(oppgaveId, begrunnelse);
     }
 
-    public Mottaksbehandling(AppContext context) {
+    public Mottaksbehandling(MottaksbehandlingKontekst context) {
         this.context = context;
     }
 }

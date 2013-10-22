@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.mottaksbehandling.context;
 
+import no.nav.sbl.dialogarena.mottaksbehandling.henvendelse.Henvendelser;
 import no.nav.sbl.dialogarena.mottaksbehandling.ko.HendelseKo;
 import no.nav.sbl.dialogarena.mottaksbehandling.lagring.HenvendelseRepo;
 import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Oppgavesystem;
@@ -11,7 +12,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-public class AppContext {
+public class MottaksbehandlingKontekst {
 
     public static final String SERVLETCONTEXT_KEY = "no.nav.sbl.dialogarena.no.nav.sbl.dialogarena.mottaksbehandling.AppContext";
 
@@ -20,13 +21,15 @@ public class AppContext {
     public final HenvendelseRepo repo;
     public final SakSystemGsak saksystem;
     public final SakSystemPensjon pensjonSaksystem;
+    public final Henvendelser henvendelser;
 
-    public AppContext(HendelseKo hendelseKo, Oppgavesystem oppgavesystem, HenvendelseRepo repo, SakSystemGsak saksystem, SakSystemPensjon pensjonSaksystem) {
+    public MottaksbehandlingKontekst(HendelseKo hendelseKo, Oppgavesystem oppgavesystem, HenvendelseRepo repo, SakSystemGsak saksystem, SakSystemPensjon pensjonSaksystem, Henvendelser henvendelser) {
         this.hendelseKo = hendelseKo;
         this.oppgavesystem = oppgavesystem;
         this.repo = repo;
         this.saksystem = saksystem;
         this.pensjonSaksystem = pensjonSaksystem;
+        this.henvendelser = henvendelser;
     }
    
     public List<? extends Pingable> getPingables() {

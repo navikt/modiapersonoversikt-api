@@ -23,26 +23,11 @@ public class BesvareUtils {
         }
     };
 
-    public static final Comparator<WSHenvendelse> NYESTE_FORST = new Comparator<WSHenvendelse>() {
-        @Override
-        public int compare(WSHenvendelse o1, WSHenvendelse o2) {
-            return o2.getOpprettetDato().compareTo(o1.getOpprettetDato());
-        }
-    };
 
-    public static final Transformer<WSHenvendelse, String> TRAAD_ID = new Transformer<WSHenvendelse, String>() {
-        @Override
-        public String transform(WSHenvendelse wsHenvendelse) {
-            return wsHenvendelse.getTraad();
-        }
-    };
 
-    public static final Transformer<WSHenvendelse, String> BEHANDLINGS_ID = new Transformer<WSHenvendelse, String>() {
-        @Override
-        public String transform(WSHenvendelse wsHenvendelse) {
-            return wsHenvendelse.getBehandlingsId();
-        }
-    };
+    
+
+
 
     public static final Transformer<WSHenvendelse, Henvendelse> TIL_HENVENDELSE = new Transformer<WSHenvendelse, Henvendelse>() {
         final ObjectMapper mapper = new ObjectMapper();

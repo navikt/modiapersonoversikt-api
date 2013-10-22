@@ -41,10 +41,6 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
 
 public class BesvareSporsmalPanel extends Panel {
-
-    @Inject
-    private HenvendelsePortType henvendelsePortType;
-
     private BesvareService service;
 
     private SporsmalDetaljer sporsmalDetaljer;
@@ -54,7 +50,7 @@ public class BesvareSporsmalPanel extends Panel {
 
     public BesvareSporsmalPanel(String id, final String fnr, final Mottaksbehandling mottaksbehandling) {
         super(id);
-        this.service = new BesvareService(mottaksbehandling, henvendelsePortType);
+        this.service = new BesvareService(mottaksbehandling);
         setOutputMarkupId(true);
         setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<BesvareSporsmalDetaljer>() {
             @Override

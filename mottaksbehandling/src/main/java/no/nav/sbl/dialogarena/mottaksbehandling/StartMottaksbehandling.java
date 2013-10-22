@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.mottaksbehandling;
 import no.nav.melding.virksomhet.hendelse.behandling.kommando.v1.StartBehandling;
 import no.nav.melding.virksomhet.henvendelsebehandling.behandlingsresultat.v1.XMLHenvendelse;
 import no.nav.sbl.dialogarena.common.integrasjonsutils.JSON;
-import no.nav.sbl.dialogarena.mottaksbehandling.context.AppContext;
+import no.nav.sbl.dialogarena.mottaksbehandling.context.MottaksbehandlingKontekst;
 import no.nav.sbl.dialogarena.mottaksbehandling.lagring.SporsmalOgSvar;
 import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Tema;
 import no.nav.sbl.dialogarena.mottaksbehandling.verktoy.records.Record;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 public class StartMottaksbehandling {
 	
-    public static Record<SporsmalOgSvar> start(AppContext context, StartBehandling sb) {
+    public static Record<SporsmalOgSvar> start(MottaksbehandlingKontekst context, StartBehandling sb) {
         
     	XMLHenvendelse xml = (XMLHenvendelse) sb.getBehandlingsinformasjon();
     	Map<String, Object> behandlingsresultat = JSON.unmarshal(xml.getBehandlingsresultat());
