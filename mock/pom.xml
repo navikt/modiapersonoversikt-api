@@ -15,8 +15,58 @@
     <dependencies>
 
         <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-consumer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-consumer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-domain</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-domain</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-common</artifactId>
         </dependency>
 
     </dependencies>

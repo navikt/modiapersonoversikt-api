@@ -336,6 +336,12 @@
 
             <dependency>
                 <groupId>no.nav</groupId>
+                <artifactId>kjerneinfo-common</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
                 <artifactId>kjerneinfo-panel</artifactId>
                 <version>${kjerneinfo.versjon}</version>
             </dependency>
@@ -343,6 +349,22 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>kjerneinfo-consumer</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>kjerneinfo-domain</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
                     <exclusion>
@@ -383,6 +405,18 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>brukerprofil-panel</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>brukerprofil-domain</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
                     <exclusion>
@@ -637,7 +671,6 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>1.9.5</version>
-                <scope>test</scope>
             </dependency>
 
             <dependency>

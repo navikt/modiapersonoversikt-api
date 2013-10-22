@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 
 import no.nav.modig.modia.widget.LenkeWidget;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.HenvendelseEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
-        HenvendelseEndpointConfig.Test.class,
+        HenvendelsePortTypeContext.class,
         KjerneinfoPepMockContext.class,
         SykepengerWidgetMockContext.class,
         SakOgBehandlingEndpointConfig.Test.class
