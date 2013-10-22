@@ -17,7 +17,6 @@ public class JettyNoIntegration implements JettyRunner {
 
     @Override
     public void run() {
-        System.out.println("Run JettyNoIntegration");
         setup();
         jetty.start();
     }

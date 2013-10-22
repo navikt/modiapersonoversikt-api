@@ -21,7 +21,6 @@ public class JettyNormal implements JettyRunner {
 
     @Override
     public void run() {
-        System.out.println("Run JettyNormal");
         setup();
         jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
     }
