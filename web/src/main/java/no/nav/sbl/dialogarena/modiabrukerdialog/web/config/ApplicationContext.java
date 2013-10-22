@@ -10,7 +10,8 @@ import org.springframework.core.PriorityOrdered;
 @Configuration
 @Import({
         ComponentsContext.class,
-        CacheConfig.class})
+        CacheConfig.class
+})
 public class ApplicationContext implements PriorityOrdered {
 
     @Bean

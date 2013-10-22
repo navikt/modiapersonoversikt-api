@@ -38,6 +38,8 @@
 
         <!-- Slutt kjerneinfo -->
         <!-- App-->
+        <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling"/>
+
         <applicationCertificate alias="srvModiabrukerdialog" />
     </resources>
 </application>

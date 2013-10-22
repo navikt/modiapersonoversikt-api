@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgavevalg;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.OppgavebehandlingConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.OppgavebehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseTjenesteConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.BesvareHenvendelseEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.HenvendelseEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave.HentOppgavePanel;
@@ -31,11 +31,11 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
         HentPersonPanelMockContext.class,
-        HenvendelseTjenesteConfig.Test.class,
+        HenvendelseEndpointConfig.Test.class,
         SykepengerWidgetMockContext.class,
-        SoknaderConfig.Test.class,
-        OppgavebehandlingConfig.Test.class,
-        BesvareHenvendelseTjenesteConfig.Test.class
+        SakOgBehandlingEndpointConfig.Test.class,
+        OppgavebehandlingEndpointConfig.Test.class,
+        BesvareHenvendelseEndpointConfig.Test.class
 })
 public class OppgavevalgPanelTest extends WicketPageTest {
 

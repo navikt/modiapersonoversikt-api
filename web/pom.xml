@@ -27,6 +27,13 @@
             <type>test-jar</type>
         </dependency>
 
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>modiabrukerdialog-mock</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- Modia-komponenter -->
          <dependency>
              <groupId>no.nav</groupId>
@@ -61,6 +68,21 @@
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-hentperson</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>behandlebrukerprofil-consumer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kontrakter-consumer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-consumer</artifactId>
         </dependency>
 
         <dependency>
@@ -312,11 +334,6 @@
             <artifactId>spring-beans</artifactId>
         </dependency>
 
-<!--         <dependency> -->
-<!--             <groupId>org.springframework</groupId> -->
-<!--             <artifactId>spring-web</artifactId> -->
-<!--         </dependency> -->
-
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-tx</artifactId>
@@ -402,6 +419,12 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
         </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>no.nav.tjenester.fim</groupId>-->
+            <!--<artifactId>nav-fim-sakOgBehandling-v1-tjenestespesifikasjon</artifactId>-->
+        <!--</dependency>-->
+
 
         <dependency>
             <groupId>joda-time</groupId>

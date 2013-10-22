@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -26,10 +26,10 @@ import java.util.Random;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.Utils.konfigurerMedHttps;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.Utils.konfigurerMedHttps;
 
 @Configuration
-public class HenvendelseTjenesteConfig {
+public class HenvendelseEndpointConfig {
 
     @Configuration
     public static class Default {
@@ -80,7 +80,7 @@ public class HenvendelseTjenesteConfig {
 
         @Bean
         public HenvendelsePortType henvendelsePortType() {
-            final Integer traadId = BesvareHenvendelseTjenesteConfig.Test.TRAAD_ID;
+            final Integer traadId = BesvareHenvendelseEndpointConfig.Test.TRAAD_ID;
             return new HenvendelsePortType() {
 
                 private static final String SPORSMAL = "SPORSMAL";

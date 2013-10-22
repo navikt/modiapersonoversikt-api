@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.artifacts.personsok;
 
 import no.nav.personsok.config.spring.SecurityPolicyConfig;
 import no.nav.personsok.consumer.config.ConsumerConfig;

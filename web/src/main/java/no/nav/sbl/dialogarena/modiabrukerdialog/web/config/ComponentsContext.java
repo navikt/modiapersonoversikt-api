@@ -1,27 +1,25 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.BesvareHenvendelseTjenesteConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.HenvendelseTjenesteConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.tjenester.SoknaderConfig;
-import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
-import org.slf4j.bridge.SLF4JBridgeHandler;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.artifacts.ArtifactsConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.EndpointsConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.services.ServicesConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import static org.slf4j.bridge.SLF4JBridgeHandler.install;
+import static org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger;
+
 @Configuration
 @Import(value = {
-        OldApplicationsContext.class,
-        HenvendelseTjenesteConfig.Test.class,
-        BesvareHenvendelseTjenesteConfig.Default.class,
-        OppgavebehandlingConfig.Default.class,
-        SoknaderConfig.Default.class,
-        UtbetalingConfig.class
+        ArtifactsConfig.class,
+        EndpointsConfig.class,
+        ServicesConfig.class
 })
 public class ComponentsContext {
 
     static {
         // Sikkerhetsrammeverkene logger til java.util.logging
-        SLF4JBridgeHandler.removeHandlersForRootLogger();
-        SLF4JBridgeHandler.install();
+        removeHandlersForRootLogger();
+        install();
     }
 }

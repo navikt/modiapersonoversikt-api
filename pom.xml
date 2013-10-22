@@ -17,6 +17,7 @@
         <module>config</module>
         <module>web</module>
         <module>jee</module>
+        <module>mock</module>
     </modules>
 
     <properties>
@@ -28,12 +29,12 @@
         <slf4j.version>1.7.5</slf4j.version>
         <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
-        <sakogbehandling.jaxws.version>1.0.1</sakogbehandling.jaxws.version>
+        <sakogbehandling.jaxws.version>1.0.2</sakogbehandling.jaxws.version>
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
-        <kjerneinfo.versjon>1.0.41</kjerneinfo.versjon>
-        <soknader.liste.version>2.0.2</soknader.liste.version>
-        <sporsmalogsvar.version>1.8</sporsmalogsvar.version>
+        <kjerneinfo.versjon>2.0.1-SPRINGFIX</kjerneinfo.versjon>
+        <soknader.liste.version>2.0.3</soknader.liste.version>
+        <sporsmalogsvar.version>1.9</sporsmalogsvar.version>
         <utbetaling.version>2.0.0-SNAPSHOT</utbetaling.version>
     </properties>
 
@@ -140,7 +141,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-lang</artifactId>
-                <version>1.1.0</version>
+                <version>1.2.0</version>
             </dependency>
 
             <dependency>
@@ -249,6 +250,12 @@
                 <version>0.0.12</version>
             </dependency>
 
+            <!--<dependency>-->
+                <!--<groupId>no.nav.tjenester.fim</groupId>-->
+                <!--<artifactId>nav-fim-sakOgBehandling-v1-tjenestespesifikasjon</artifactId>-->
+                <!--<version>1.0.0-alpha004</version>-->
+            <!--</dependency>-->
+
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
@@ -313,6 +320,18 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>kontrakter-panel</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>kontrakter-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
                     <exclusion>
@@ -402,6 +421,12 @@
                 <groupId>no.nav</groupId>
                 <artifactId>behandlebrukerprofil-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
