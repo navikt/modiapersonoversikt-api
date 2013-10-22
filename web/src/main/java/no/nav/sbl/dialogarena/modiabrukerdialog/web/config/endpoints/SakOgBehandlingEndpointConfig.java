@@ -36,7 +36,7 @@ public class SakOgBehandlingEndpointConfig {
     @Configuration
     public static class Default {
 
-        @Value("${sakogbehandling.ws.url}")
+        @Value("${sakogbehandling.url}")
         private URL sakogbehandlingEndpoint;
 
         @Bean
