@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<wicket:panel>
+    <div class="journalfor">
+        <a wicket:id="start-journalforing" class="start-journalforing">Journalfør</a>
+        <form wicket:id="journalfor-form">
+            <article wicket:id="sak-radio-group">
+                <section wicket:id="saker-per-tema">
+                    <h3 wicket:id="tema"></h3>
+                    <ul>
+                        <li wicket:id="sak">
+                            <input wicket:id="radio" type="radio"/>
+                            <label wicket:id="sak-container">
+                                <p wicket:id="opprettet-dato"></p>
+                                <p wicket:id="fagsystem"></p>
+                            </label>
+                        </li>
+                    </ul>
+                </section>
+            </article>
+            <article wicket:id="sensitiv-radio-group">
+                <input wicket:id="ikke-sensitivt" type="radio" id="ikke-sensitivt"/><label for="ikke-sensitivt">Ikke sensitivt</label>
+                <input wicket:id="sensitivt" type="radio" id="sensitivt"/><label for="sensitivt">Sensitivt</label>
+            </article>
+            <input wicket:id="journalfor-submit" value="Journalfør" type="submit"/>
+        </form>
+    </div>
+</wicket:panel>
+
+</html>

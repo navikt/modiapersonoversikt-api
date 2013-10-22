@@ -2,7 +2,6 @@ $(document).ready(function() {
 
     // Shortcuts
     $(document).on('keydown', function (e) {
-        console.log(e.keyCode);
         // Fokuser tekstfeltet: alt + F1 (keyCode 112)
         if (e.altKey && e.keyCode == 112) {
             $('#tekstfelt').focus();
