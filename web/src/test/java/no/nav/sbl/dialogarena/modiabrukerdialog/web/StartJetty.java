@@ -1,24 +1,21 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
-import no.nav.modig.security.loginmodule.DummyRole;
-import no.nav.sbl.dialogarena.common.jetty.Jetty;
-import org.eclipse.jetty.jaas.JAASLoginService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.jettyrunner.JettyNoIntegration;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.jettyrunner.JettyNormal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.jettyrunner.JettyRunner;
 
-import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
 
-import static no.nav.modig.core.test.FilesAndDirs.TEST_RESOURCES;
-import static no.nav.modig.core.test.FilesAndDirs.WEBAPP_SOURCE;
-import static no.nav.modig.lang.collections.FactoryUtils.gotKeypress;
-import static no.nav.modig.lang.collections.RunnableUtils.first;
-import static no.nav.modig.lang.collections.RunnableUtils.waitFor;
-import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
-import static no.nav.sbl.dialogarena.common.jetty.Jetty.usingWar;
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 
 
 /**
- * Starter MODIA Brukerdialog lokalt p? Jetty.
+ * Starter MODIA Brukerdialog lokalt på Jetty.
+ *
+ * Bruk start.properties for å styre hvilken JettyRunner som starter.
+ * Sett start.jetty.withintegration=no hvis du ønsker JettyNoIntegration, ellers
+ * starter JettyNormal.
  *
  * - logg p? med bruker/passord: Z000001/Gosys017,
  * - s?k etter fornavn: 'aaa'
@@ -27,23 +24,20 @@ import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 public class StartJetty {
 
     public static void main(String[] args) throws IOException, NoSuchFieldException, IllegalAccessException {
-        setFrom("jetty-environment.properties");
-        setFrom("environment-local.properties");
-        setupKeyAndTrustStore();
-
-        Jetty jetty = usingWar(WEBAPP_SOURCE)
-                .at("modiabrukerdialog")
-                .port(8083)
-                .overrideWebXml(new File(TEST_RESOURCES, "override-web.xml"))
-                .withLoginService(createLoginService())
-                .buildJetty();
-        jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
+        JettyRunner jetty = getJetty();
+        jetty.setup().run();
     }
 
-    public static JAASLoginService createLoginService() {
-        JAASLoginService jaasLoginService = new JAASLoginService("Simple Login Realm");
-        jaasLoginService.setLoginModuleName("simplelogin");
-        jaasLoginService.setRoleClassNames(new String[]{DummyRole.class.getName()});
-        return jaasLoginService;
+    private static JettyRunner getJetty() {
+        setFrom("start.properties");
+
+        Properties properties = System.getProperties();
+        String start = properties.getProperty("start.jetty.withintegration");
+
+        if (start.compareToIgnoreCase("no") == 0) {
+            return new JettyNoIntegration();
+        }
+        return new JettyNormal();
     }
+
 }
