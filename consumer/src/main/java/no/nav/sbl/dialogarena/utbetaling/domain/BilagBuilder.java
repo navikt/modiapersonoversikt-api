@@ -6,7 +6,7 @@ import java.util.List;
 public class BilagBuilder {
 
     private String melding = "Bilagsmelding ... Skatt 14%";
-    private List<PosteringsDetalj> posteringsDetaljer = new ArrayList<PosteringsDetalj>() { };
+    private List<PosteringsDetalj> posteringsDetaljer = new ArrayList<>();
 
     public BilagBuilder() {
         PosteringsDetalj posteringsDetalj = new PosteringsDetaljBuilder().createPosteringsDetalj();
