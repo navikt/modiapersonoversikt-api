@@ -78,6 +78,18 @@
             </dependency>
 
             <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>kodeverk-consumer</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-wicket</artifactId>
                 <version>1.0.28</version>
@@ -249,12 +261,6 @@
                 <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
                 <version>0.0.12</version>
             </dependency>
-
-            <!--<dependency>-->
-                <!--<groupId>no.nav.tjenester.fim</groupId>-->
-                <!--<artifactId>nav-fim-sakOgBehandling-v1-tjenestespesifikasjon</artifactId>-->
-                <!--<version>1.0.0-alpha004</version>-->
-            <!--</dependency>-->
 
             <dependency>
                 <groupId>joda-time</groupId>

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts;
 
+import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi;
 import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilRequest;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilResponse;
@@ -12,6 +13,7 @@ import no.nav.kjerneinfo.domain.person.Adresse;
 import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.Personnavn;
+import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetService;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
@@ -45,8 +47,18 @@ public class KjerneinfoMock {
     }
 
     @Bean
+    public BehandleBrukerprofilServiceBi behandleBrukerprofilServiceBi() {
+        return mock(BehandleBrukerprofilServiceBi.class);
+    }
+
+    @Bean
     public SykepengerWidgetService sykepengerWidgetService() {
         return mock(SykepengerWidgetService.class);
+    }
+
+    @Bean
+    public KodeverkmanagerBi kodeverkmanagerBi() {
+        return mock(KodeverkmanagerBi.class);
     }
 
     private BrukerprofilResponse createBrukerprofilResponse() {

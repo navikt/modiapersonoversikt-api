@@ -25,6 +25,11 @@
         </dependency>
 
         <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kodeverk-consumer</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sakogbehandling-jaxws</artifactId>
         </dependency>
@@ -43,6 +48,11 @@
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>brukerprofil-consumer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>behandlebrukerprofil-consumer</artifactId>
         </dependency>
 
         <dependency>
