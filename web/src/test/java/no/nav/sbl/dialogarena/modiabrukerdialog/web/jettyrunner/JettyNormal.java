@@ -20,7 +20,13 @@ public class JettyNormal implements JettyRunner {
     private Jetty jetty;
 
     @Override
-    public JettyRunner setup() {
+    public void run() {
+        System.out.println("Run JettyNormal");
+        setup();
+        jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
+    }
+
+    private JettyRunner setup() {
         setFrom("jetty-environment.properties");
         setFrom("environment-local.properties");
         setupKeyAndTrustStore();
@@ -33,12 +39,6 @@ public class JettyNormal implements JettyRunner {
                 .buildJetty();
 
         return this;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Run JettyNormal");
-        jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
     }
 
 }

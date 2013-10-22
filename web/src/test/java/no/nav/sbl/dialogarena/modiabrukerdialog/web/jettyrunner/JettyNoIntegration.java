@@ -16,7 +16,13 @@ public class JettyNoIntegration implements JettyRunner {
     private Jetty jetty;
 
     @Override
-    public JettyRunner setup() {
+    public void run() {
+        System.out.println("Run JettyNoIntegration");
+        setup();
+        jetty.start();
+    }
+
+    private JettyRunner setup() {
         setFrom("jetty-mock-environment.properties");
         setupKeyAndTrustStore();
 
@@ -28,11 +34,5 @@ public class JettyNoIntegration implements JettyRunner {
                 .buildJetty();
 
         return this;
-    }
-
-    @Override
-    public void run() {
-        System.out.println("Run JettyNoIntegration");
-        jetty.start();
     }
 }

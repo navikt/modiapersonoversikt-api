@@ -25,7 +25,7 @@ public class StartJetty {
 
     public static void main(String[] args) throws IOException, NoSuchFieldException, IllegalAccessException {
         JettyRunner jetty = getJetty();
-        jetty.setup().run();
+        jetty.run();
     }
 
     private static JettyRunner getJetty() {
