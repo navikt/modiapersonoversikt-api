@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.Traad;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 

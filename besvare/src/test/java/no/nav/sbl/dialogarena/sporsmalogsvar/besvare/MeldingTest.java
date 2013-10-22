@@ -1,9 +1,10 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.service;
+package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
+
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Melding;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 import org.joda.time.DateTime;
 import org.junit.Test;
-
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
 import static org.hamcrest.Matchers.equalTo;

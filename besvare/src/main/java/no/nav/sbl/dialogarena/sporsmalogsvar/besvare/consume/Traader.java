@@ -1,4 +1,7 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.service;
+package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
+
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Traad;
 
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.modig.lang.option.Optional;
@@ -10,25 +13,26 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHe
 import java.io.Serializable;
 import java.util.List;
 
+import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.BEHANDLINGSID;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.SENSITIV;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.TIL_MELDING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.TRAAD_ID;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.tilWsSvar;
+
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.BEHANDLINGSID;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.SENSITIV;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.TIL_MELDING;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.TRAAD_ID;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.tilWsSvar;
 
-public class BesvareService implements Serializable {
+public class Traader implements Serializable {
 
     private static final List<String> SPORSMAL_OG_SVAR = asList("SPORSMAL", "SVAR");
 
     private final BesvareHenvendelsePortType mottaksbehandling;
     private final HenvendelsePortType henvendelsesbehandling;
 
-    public BesvareService(BesvareHenvendelsePortType mottaksbehandling, HenvendelsePortType henvendelsesbehandling) {
+    public Traader(BesvareHenvendelsePortType mottaksbehandling, HenvendelsePortType henvendelsesbehandling) {
         this.mottaksbehandling = mottaksbehandling;
         this.henvendelsesbehandling = henvendelsesbehandling;
     }

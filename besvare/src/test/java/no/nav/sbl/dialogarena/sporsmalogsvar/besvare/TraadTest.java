@@ -1,14 +1,17 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.service;
+package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.Traad.Svar;
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Traad;
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Traad.Svar;
+
+import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Melding.FRITEKST;
+
 import org.joda.time.DateTime;
 import org.junit.Test;
-
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.service.Melding.FRITEKST;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;

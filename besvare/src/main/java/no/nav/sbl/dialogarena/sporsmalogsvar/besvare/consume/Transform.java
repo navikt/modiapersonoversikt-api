@@ -1,4 +1,6 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.service;
+package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
+
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Melding;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +15,7 @@ import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
 
-public class BesvareUtils {
+public class Transform {
 
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
@@ -44,7 +46,7 @@ public class BesvareUtils {
 
     public static final Transformer<WSHenvendelse, Melding> TIL_MELDING = new Transformer<WSHenvendelse, Melding>() {
         @Override public Melding transform(WSHenvendelse wsHenvendelse) {
-            String fritekst = optional(wsHenvendelse.getBehandlingsresultat()).map(getFromBehandlingsresultat("fritekst")).getOrElse(null);
+            String fritekst = optional(wsHenvendelse.getBehandlingsresultat()).map(getFromBehandlingsresultat("fritekst")).orNull();
             return new Melding(wsHenvendelse.getBehandlingsId(), "SPORSMAL".equals(wsHenvendelse.getHenvendelseType()) ? INNGAENDE : UTGAENDE, wsHenvendelse.getOpprettetDato(), fritekst);
         }
     };

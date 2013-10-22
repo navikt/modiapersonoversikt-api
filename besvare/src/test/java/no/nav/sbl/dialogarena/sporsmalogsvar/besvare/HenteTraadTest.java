@@ -1,7 +1,10 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.service;
+package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.config.TjenesterMock;
+
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Traader;
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Traad;
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.TjenesterMock;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
@@ -34,11 +37,11 @@ public class HenteTraadTest {
     @Mock
     private HenvendelsePortType henvendelsePortType;
 
-    private BesvareService service;
+    private Traader service;
 
     @Before
     public void wireUpService() {
-        service = new BesvareService(besvareHenvendelsePortType, henvendelsePortType);
+        service = new Traader(besvareHenvendelsePortType, henvendelsePortType);
     }
 
     @Test

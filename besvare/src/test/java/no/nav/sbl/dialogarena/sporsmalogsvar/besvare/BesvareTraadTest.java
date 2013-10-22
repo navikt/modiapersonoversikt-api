@@ -1,5 +1,8 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.service;
+package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Traader;
+
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.Traad;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
 import org.junit.Before;
@@ -8,7 +11,6 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -20,11 +22,11 @@ public class BesvareTraadTest {
     @Mock
     private BesvareHenvendelsePortType besvareHenvendelsePortType;
 
-    private BesvareService service;
+    private Traader service;
 
     @Before
     public void wireUpService() {
-        service = new BesvareService(besvareHenvendelsePortType, null);
+        service = new Traader(besvareHenvendelsePortType, null);
     }
 
 

@@ -1,12 +1,11 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar;
+package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.web;
 
 import no.nav.modig.core.context.SubjectHandlerUtils;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.FrontendModules;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.BesvareSporsmalPanel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.web.SporsmalOgSvarPage;
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.TraadPanel;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -54,7 +53,7 @@ public class BesvareSporsmalApplication extends WebApplication {
                                 .attribute("http-equiv", "X-UA-Compatible")
                                 .attribute("content", "IE=edge,chrome=1")
                                 .done())
-                .addLess(new PackageResourceReference(BesvareSporsmalPanel.class, "besvare.less"))
+                .addLess(new PackageResourceReference(TraadPanel.class, "besvare.less"))
                 .addCss(new CssResourceReference(BesvareSporsmalApplication.class, "white-background.css"))
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);

@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.Traad;
 import org.apache.wicket.model.Model;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
@@ -10,7 +8,6 @@ import org.hamcrest.TypeSafeMatcher;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.startsWith;

@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.config;
+package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,11 +20,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.getFromBehandlingsresultat;
+
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.by;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.service.BesvareUtils.getFromBehandlingsresultat;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.apache.commons.lang3.StringUtils.abbreviate;
 import static org.joda.time.DateTime.now;

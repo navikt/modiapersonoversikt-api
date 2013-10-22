@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.service;
+package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
 import org.joda.time.DateTime;
 
