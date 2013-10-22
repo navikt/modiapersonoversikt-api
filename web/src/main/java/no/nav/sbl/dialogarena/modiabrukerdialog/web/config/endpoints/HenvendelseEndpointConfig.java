@@ -23,47 +23,43 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.Util
 @Configuration
 public class HenvendelseEndpointConfig {
 
-    @Configuration
-    public static class Default {
+    @Value("${henvendelseendpoint.url}")
+    protected String henvendelseEndpoint;
 
-        @Value("${henvendelseendpoint.url}")
-        protected String henvendelseEndpoint;
+    @Bean
+    public HenvendelsePortType henvendelsePortType() {
+        return lagHenvendelsePortType(new UserSAMLOutInterceptor());
+    }
 
-        @Bean
-        public HenvendelsePortType henvendelsePortType() {
-            return lagHenvendelsePortType(new UserSAMLOutInterceptor());
-        }
-
-        @Bean
-        public Pingable henvendelsePing() {
-            return new Pingable() {
-                @Override
-                public List<PingResult> ping() {
-                    HenvendelsePortType henvendelsePortType = lagHenvendelsePortType(new SystemSAMLOutInterceptor());
-                    long start = System.currentTimeMillis();
-                    boolean success;
-                    try {
-                        success = henvendelsePortType.ping();
-                    } catch (Exception e) {
-                        success = false;
-                    }
-                    return asList(new PingResult("HenvendelseInnsyn_v1", success ? SERVICE_OK : SERVICE_FAIL, System.currentTimeMillis() - start));
+    @Bean
+    public Pingable henvendelsePing() {
+        return new Pingable() {
+            @Override
+            public List<PingResult> ping() {
+                HenvendelsePortType henvendelsePortType = lagHenvendelsePortType(new SystemSAMLOutInterceptor());
+                long start = System.currentTimeMillis();
+                boolean success;
+                try {
+                    success = henvendelsePortType.ping();
+                } catch (Exception e) {
+                    success = false;
                 }
-            };
-        }
+                return asList(new PingResult("HenvendelseInnsyn_v1", success ? SERVICE_OK : SERVICE_FAIL, System.currentTimeMillis() - start));
+            }
+        };
+    }
 
-        private HenvendelsePortType lagHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {
-            JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
-            factoryBean.setWsdlURL("classpath:Henvendelse.wsdl");
-            factoryBean.getFeatures().add(new LoggingFeature());
-            factoryBean.getFeatures().add(new WSAddressingFeature());
-            factoryBean.getOutInterceptors().add(interceptor);
-            factoryBean.setServiceClass(HenvendelsePortType.class);
-            factoryBean.setAddress(henvendelseEndpoint);
-            HenvendelsePortType henvendelsePortType = factoryBean.create(HenvendelsePortType.class);
-            konfigurerMedHttps(henvendelsePortType);
+    private HenvendelsePortType lagHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {
+        JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
+        factoryBean.setWsdlURL("classpath:Henvendelse.wsdl");
+        factoryBean.getFeatures().add(new LoggingFeature());
+        factoryBean.getFeatures().add(new WSAddressingFeature());
+        factoryBean.getOutInterceptors().add(interceptor);
+        factoryBean.setServiceClass(HenvendelsePortType.class);
+        factoryBean.setAddress(henvendelseEndpoint);
+        HenvendelsePortType henvendelsePortType = factoryBean.create(HenvendelsePortType.class);
+        konfigurerMedHttps(henvendelsePortType);
 
-            return henvendelsePortType;
-        }
+        return henvendelsePortType;
     }
 }

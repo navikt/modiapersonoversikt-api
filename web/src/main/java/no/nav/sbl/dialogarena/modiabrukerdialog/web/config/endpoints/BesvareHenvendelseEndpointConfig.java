@@ -23,47 +23,44 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.Util
 @Configuration
 public class BesvareHenvendelseEndpointConfig {
 
-    @Configuration
-    public static class Default {
-        @Value("${besvarehenvendelseendpoint.url}")
-        protected String besvareHenvendelseEndpoint;
+    @Value("${besvarehenvendelseendpoint.url}")
+    protected String besvareHenvendelseEndpoint;
 
-        @Bean
-        public BesvareHenvendelsePortType besvareHenvendelsePortType() {
-            return lagBesvareHenvendelsePortType(new UserSAMLOutInterceptor());
-        }
+    @Bean
+    public BesvareHenvendelsePortType besvareHenvendelsePortType() {
+        return lagBesvareHenvendelsePortType(new UserSAMLOutInterceptor());
+    }
 
-        @Bean
-        public Pingable besvareHenvendelsePing() {
-            return new Pingable() {
-                @Override
-                public List<PingResult> ping() {
-                    BesvareHenvendelsePortType besvareHenvendelsePortType = lagBesvareHenvendelsePortType(new SystemSAMLOutInterceptor());
-                    long start = System.currentTimeMillis();
-                    boolean success;
-                    try {
-                        success = besvareHenvendelsePortType.ping();
-                    } catch (Exception e) {
-                        success = false;
-                    }
-                    return asList(new PingResult("BesvareHenvendelse_v1", success ? SERVICE_OK : SERVICE_FAIL, System.currentTimeMillis() - start));
+    @Bean
+    public Pingable besvareHenvendelsePing() {
+        return new Pingable() {
+            @Override
+            public List<PingResult> ping() {
+                BesvareHenvendelsePortType besvareHenvendelsePortType = lagBesvareHenvendelsePortType(new SystemSAMLOutInterceptor());
+                long start = System.currentTimeMillis();
+                boolean success;
+                try {
+                    success = besvareHenvendelsePortType.ping();
+                } catch (Exception e) {
+                    success = false;
                 }
-            };
-        }
+                return asList(new PingResult("BesvareHenvendelse_v1", success ? SERVICE_OK : SERVICE_FAIL, System.currentTimeMillis() - start));
+            }
+        };
+    }
 
-        private BesvareHenvendelsePortType lagBesvareHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {
-            JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
-            factoryBean.setWsdlURL("classpath:v1/BesvareHenvendelse.wsdl");
-            factoryBean.getFeatures().add(new LoggingFeature());
-            factoryBean.getFeatures().add(new WSAddressingFeature());
-            factoryBean.getOutInterceptors().add(interceptor);
-            factoryBean.setServiceClass(BesvareHenvendelsePortType.class);
-            factoryBean.setAddress(besvareHenvendelseEndpoint);
-            BesvareHenvendelsePortType besvareHenvendelsePortType = factoryBean.create(BesvareHenvendelsePortType.class);
-            konfigurerMedHttps(besvareHenvendelsePortType);
+    private BesvareHenvendelsePortType lagBesvareHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {
+        JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
+        factoryBean.setWsdlURL("classpath:v1/BesvareHenvendelse.wsdl");
+        factoryBean.getFeatures().add(new LoggingFeature());
+        factoryBean.getFeatures().add(new WSAddressingFeature());
+        factoryBean.getOutInterceptors().add(interceptor);
+        factoryBean.setServiceClass(BesvareHenvendelsePortType.class);
+        factoryBean.setAddress(besvareHenvendelseEndpoint);
+        BesvareHenvendelsePortType besvareHenvendelsePortType = factoryBean.create(BesvareHenvendelsePortType.class);
+        konfigurerMedHttps(besvareHenvendelsePortType);
 
-            return besvareHenvendelsePortType;
-        }
+        return besvareHenvendelsePortType;
     }
 
 }

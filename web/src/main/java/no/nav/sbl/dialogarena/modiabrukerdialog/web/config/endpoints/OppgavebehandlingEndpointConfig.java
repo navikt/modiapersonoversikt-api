@@ -15,8 +15,6 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.apache.cxf.ws.security.SecurityConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,52 +30,46 @@ import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 @Configuration
 public class OppgavebehandlingEndpointConfig {
 
-    private static final Logger LOG = LoggerFactory.getLogger(OppgavebehandlingEndpointConfig.class);
+    @Value("${oppgavebehandlingendpoint.url}")
+    protected String oppgavebehandlingEndpoint;
 
-    @Configuration
-    public static class Default {
+    @Bean
+    public OppgavebehandlingPortType oppgavebehandlingPortType() {
+        return opprettOppgavebehandlingPortType(new UserSAMLOutInterceptor());
+    }
 
-        @Value("${oppgavebehandlingendpoint.url}")
-        protected String oppgavebehandlingEndpoint;
+    @Bean
+    public Pingable oppgavebehandlingPing() {
+        return new OppgavebehandlingPing(opprettOppgavebehandlingPortType(new SystemSAMLOutInterceptor()));
+    }
 
-        @Bean
-        public OppgavebehandlingPortType oppgavebehandlingPortType() {
-            return opprettOppgavebehandlingPortType(new UserSAMLOutInterceptor());
-        }
+    private OppgavebehandlingPortType opprettOppgavebehandlingPortType(AbstractSAMLOutInterceptor samlOutInterceptor) {
+        JaxWsProxyFactoryBean factoryBean = commonJaxWsConfig(samlOutInterceptor);
+        factoryBean.setServiceClass(OppgavebehandlingPortType.class);
+        factoryBean.setAddress(oppgavebehandlingEndpoint);
+        factoryBean.setWsdlURL("classpath:Oppgavebehandling.wsdl");
+        OppgavebehandlingPortType oppgavebehandlingPortType = factoryBean.create(OppgavebehandlingPortType.class);
 
-        @Bean
-        public Pingable oppgavebehandlingPing() {
-            return new OppgavebehandlingPing(opprettOppgavebehandlingPortType(new SystemSAMLOutInterceptor()));
-        }
+        Client client = ClientProxy.getClient(oppgavebehandlingPortType);
+        HTTPConduit conduit = (HTTPConduit) client.getConduit();
+        TLSClientParameters params = new TLSClientParameters();
+        params.setDisableCNCheck(true);
+        conduit.setTlsClientParameters(params);
 
-        private OppgavebehandlingPortType opprettOppgavebehandlingPortType(AbstractSAMLOutInterceptor samlOutInterceptor) {
-            JaxWsProxyFactoryBean factoryBean = commonJaxWsConfig(samlOutInterceptor);
-            factoryBean.setServiceClass(OppgavebehandlingPortType.class);
-            factoryBean.setAddress(oppgavebehandlingEndpoint);
-            factoryBean.setWsdlURL("classpath:Oppgavebehandling.wsdl");
-            OppgavebehandlingPortType oppgavebehandlingPortType = factoryBean.create(OppgavebehandlingPortType.class);
+        return oppgavebehandlingPortType;
+    }
 
-            Client client = ClientProxy.getClient(oppgavebehandlingPortType);
-            HTTPConduit conduit = (HTTPConduit) client.getConduit();
-            TLSClientParameters params = new TLSClientParameters();
-            params.setDisableCNCheck(true);
-            conduit.setTlsClientParameters(params);
-
-            return oppgavebehandlingPortType;
-        }
-
-        private JaxWsProxyFactoryBean commonJaxWsConfig(AbstractSAMLOutInterceptor samlOutInterceptor) {
-            JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
-            Map<String, Object> properties = new HashMap<>();
-            properties.put("schema-validation-enabled", true);
-            properties.put(SecurityConstants.MUST_UNDERSTAND, false);
-            factoryBean.setProperties(properties);
-            List<Feature> features = factoryBean.getFeatures();
-            features.add(new LoggingFeature());
-            features.add(new WSAddressingFeature());
-            factoryBean.getOutInterceptors().add(samlOutInterceptor);
-            return factoryBean;
-        }
+    private JaxWsProxyFactoryBean commonJaxWsConfig(AbstractSAMLOutInterceptor samlOutInterceptor) {
+        JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
+        Map<String, Object> properties = new HashMap<>();
+        properties.put("schema-validation-enabled", true);
+        properties.put(SecurityConstants.MUST_UNDERSTAND, false);
+        factoryBean.setProperties(properties);
+        List<Feature> features = factoryBean.getFeatures();
+        features.add(new LoggingFeature());
+        features.add(new WSAddressingFeature());
+        factoryBean.getOutInterceptors().add(samlOutInterceptor);
+        return factoryBean;
     }
 
     private static class OppgavebehandlingPing implements Pingable {
