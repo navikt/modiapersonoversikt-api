@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.jettyrunner;
 
 import no.nav.sbl.dialogarena.common.jetty.Jetty;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.jettyrunner.util.LoginService;
 
 import java.io.File;
 
@@ -12,8 +11,8 @@ import static no.nav.modig.lang.collections.RunnableUtils.first;
 import static no.nav.modig.lang.collections.RunnableUtils.waitFor;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
 import static no.nav.sbl.dialogarena.common.jetty.Jetty.usingWar;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.jettyrunner.util.LoginService.createLoginService;
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
-
 
 public class JettyNormal implements JettyRunner {
 
@@ -25,7 +24,7 @@ public class JettyNormal implements JettyRunner {
         jetty.startAnd(first(waitFor(gotKeypress())).then(jetty.stop));
     }
 
-    private JettyRunner setup() {
+    private void setup() {
         setFrom("jetty-environment.properties");
         setFrom("environment-local.properties");
         setupKeyAndTrustStore();
@@ -34,10 +33,8 @@ public class JettyNormal implements JettyRunner {
                 .at("modiabrukerdialog")
                 .port(8083)
                 .overrideWebXml(new File(TEST_RESOURCES, "override-web.xml"))
-                .withLoginService(LoginService.createLoginService())
+                .withLoginService(createLoginService())
                 .buildJetty();
-
-        return this;
     }
 
 }
