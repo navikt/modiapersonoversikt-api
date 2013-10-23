@@ -19,6 +19,7 @@
         <wicket.version>6.10.0</wicket.version>
         <modig.frontend.version>1.1.1</modig.frontend.version>
 
+        <utbetaling.tjenestespesifikasjon.version>1.0.0-SNAPSHOT</utbetaling.tjenestespesifikasjon.version>
     </properties>
 
     <modules>
@@ -101,6 +102,12 @@
                         <artifactId>commons-logging</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
+                <version>${utbetaling.tjenestespesifikasjon.version}</version>
             </dependency>
 
             <dependency>
