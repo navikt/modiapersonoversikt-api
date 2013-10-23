@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.mottaksbehandling;
 import no.nav.melding.virksomhet.hendelse.behandling.kommando.v1.StartBehandling;
 import no.nav.melding.virksomhet.henvendelsebehandling.behandlingsresultat.v1.XMLHenvendelse;
 import no.nav.sbl.dialogarena.common.integrasjonsutils.JSON;
-import no.nav.sbl.dialogarena.mottaksbehandling.MottaksbehandlingKontekst;
 import no.nav.sbl.dialogarena.mottaksbehandling.lagring.SporsmalOgSvar;
 import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Tema;
 import no.nav.sbl.dialogarena.mottaksbehandling.verktoy.records.Record;

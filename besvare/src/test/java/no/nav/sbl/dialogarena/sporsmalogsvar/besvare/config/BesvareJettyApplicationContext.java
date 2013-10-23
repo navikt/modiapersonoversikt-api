@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.config;
 
-import no.nav.sbl.dialogarena.mottaksbehandling.MottaksbehandlingKontekst;
 import no.nav.sbl.dialogarena.mottaksbehandling.Mottaksbehandling;
+import no.nav.sbl.dialogarena.mottaksbehandling.MottaksbehandlingKontekst;
 import no.nav.sbl.dialogarena.mottaksbehandling.henvendelse.Henvendelser;
 import no.nav.sbl.dialogarena.mottaksbehandling.ko.HendelseKoStub;
 import no.nav.sbl.dialogarena.mottaksbehandling.lagring.HenvendelseRepo;

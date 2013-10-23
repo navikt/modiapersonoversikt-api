@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.mottaksbehandling.ko;
 
 import no.nav.melding.virksomhet.hendelse.behandling.kommando.v1.StartBehandling;
 import no.nav.melding.virksomhet.hendelse.v1.Hendelse;
-import no.nav.sbl.dialogarena.mottaksbehandling.StartMottaksbehandling;
 import no.nav.sbl.dialogarena.mottaksbehandling.MottaksbehandlingKontekst;
+import no.nav.sbl.dialogarena.mottaksbehandling.StartMottaksbehandling;
 import no.nav.sbl.dialogarena.mottaksbehandling.lagring.SporsmalOgSvar;
 import no.nav.sbl.dialogarena.mottaksbehandling.verktoy.records.Record;
 import org.slf4j.Logger;

@@ -1,9 +1,6 @@
 package no.nav.sbl.dialogarena.mottaksbehandling;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.mottaksbehandling.BesvarSporsmal;
-import no.nav.sbl.dialogarena.mottaksbehandling.ISvar;
-import no.nav.sbl.dialogarena.mottaksbehandling.MottaksbehandlingKontekst;
 import no.nav.sbl.dialogarena.mottaksbehandling.lagring.SporsmalOgSvar;
 import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Oppgave;
 import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Tema;
@@ -26,7 +23,7 @@ public interface Mottaksbehandling {
     List<WSHenvendelse> tidligereDialog(String fnr, String traadId, String etterBehandlingsId);
     void leggTilbakeOppgave(String oppgaveId, String begrunnelse);
 
-    public static class Default implements Mottaksbehandling {
+    static class Default implements Mottaksbehandling {
         private static final Logger log = LoggerFactory.getLogger(Default.class);
         private MottaksbehandlingKontekst context;
 
