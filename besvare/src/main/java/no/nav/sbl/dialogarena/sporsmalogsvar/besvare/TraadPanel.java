@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Traader;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel.JournalforPanel;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import org.apache.wicket.MarkupContainer;
@@ -83,6 +84,7 @@ public class TraadPanel extends Panel {
 
         dialog = new Dialog("tidligereDialog");
         add(
+                new JournalforPanel("journalfor-panel", traad.getObject()),
                 new SvarForm("svar"),
                 sisteMelding,
                 dialog);

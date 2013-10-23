@@ -4,26 +4,27 @@
 <wicket:panel>
     <div class="journalfor">
         <a wicket:id="start-journalforing" class="start-journalforing">Journalfør</a>
-        <form wicket:id="journalfor-form">
-            <article wicket:id="sak-radio-group">
-                <section wicket:id="saker-per-tema">
-                    <h3 wicket:id="tema"></h3>
-                    <ul>
-                        <li wicket:id="sak">
+        <form wicket:id="journalfor-form" class="">
+            <h3><wicket:message key="journalforpanel.heading"/></h3>
+            <article wicket:id="valgtSak">
+                <section wicket:id="temakoder">
+                    <h4 wicket:id="tema"></h4>
+                        <article wicket:id="sak">
                             <input wicket:id="radio" type="radio"/>
                             <label wicket:id="sak-container">
-                                <p wicket:id="opprettet-dato"></p>
+                                <p wicket:id="opprettetDato"></p>
                                 <p wicket:id="fagsystem"></p>
                             </label>
-                        </li>
-                    </ul>
+                        </article>
                 </section>
             </article>
-            <article wicket:id="sensitiv-radio-group">
+            <article wicket:id="sensitiv">
                 <input wicket:id="ikke-sensitivt" type="radio" id="ikke-sensitivt"/><label for="ikke-sensitivt">Ikke sensitivt</label>
                 <input wicket:id="sensitivt" type="radio" id="sensitivt"/><label for="sensitivt">Sensitivt</label>
             </article>
-            <input wicket:id="journalfor-submit" value="Journalfør" type="submit"/>
+            <div wicket:id="feedback"/>
+            <a wicket:id="journalfor-submit" class="knapp-hoved-liten">Journalfør</a>
+            <a wicket:id="avbryt">Avbryt</a>
         </form>
     </div>
 </wicket:panel>
