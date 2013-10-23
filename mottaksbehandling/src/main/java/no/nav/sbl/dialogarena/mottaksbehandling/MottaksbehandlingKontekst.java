@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.mottaksbehandling.context;
+package no.nav.sbl.dialogarena.mottaksbehandling;
 
 import no.nav.sbl.dialogarena.mottaksbehandling.henvendelse.Henvendelser;
 import no.nav.sbl.dialogarena.mottaksbehandling.ko.HendelseKo;

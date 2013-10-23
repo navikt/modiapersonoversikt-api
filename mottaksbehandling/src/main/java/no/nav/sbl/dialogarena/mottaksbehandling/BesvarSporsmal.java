@@ -6,7 +6,7 @@ import no.nav.melding.virksomhet.hendelse.v1.ApplikasjonIDer;
 import no.nav.melding.virksomhet.hendelse.v1.Kodeverdi;
 import no.nav.melding.virksomhet.henvendelsebehandling.behandlingsresultat.v1.XMLHenvendelse;
 import no.nav.sbl.dialogarena.common.integrasjonsutils.JSON;
-import no.nav.sbl.dialogarena.mottaksbehandling.context.MottaksbehandlingKontekst;
+import no.nav.sbl.dialogarena.mottaksbehandling.MottaksbehandlingKontekst;
 import no.nav.sbl.dialogarena.mottaksbehandling.ko.HendelseKo;
 import no.nav.sbl.dialogarena.mottaksbehandling.lagring.SporsmalOgSvar;
 import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Oppgavesystem;

@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Tema;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -51,14 +52,12 @@ public class Traad implements Serializable {
     }
 
     public List<Melding> getTidligereDialog() {
-        return on(dialog).tail().collect();
+        return dialog.size() == 1 ? Collections.<Melding>emptyList() : on(dialog).tail().collect();
     }
 
     public Svar getSvar() {
         return svar;
     }
-
-
 
     public void leggTil(Melding melding) {
         leggTil(optional(melding));

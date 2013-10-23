@@ -67,7 +67,6 @@ public class TraadPanel extends Panel {
             }
         }));
 
-
         sisteMelding = new WebMarkupContainer("siste-melding").add(
                 new Label("overskrift", new MeldingOverskrift(siste, traad)),
                 new Label("sisteMelding.sendtDato"),
@@ -135,7 +134,6 @@ public class TraadPanel extends Panel {
 
     }
 
-
     private class Dialog extends PropertyListView<Melding> {
 
         public Dialog(String id) {
@@ -152,7 +150,6 @@ public class TraadPanel extends Panel {
         }
 
     }
-
 
     public void besvar(String oppgaveId) {
         this.oppgaveId = oppgaveId;

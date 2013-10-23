@@ -1,9 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import org.apache.commons.collections15.Transformer;

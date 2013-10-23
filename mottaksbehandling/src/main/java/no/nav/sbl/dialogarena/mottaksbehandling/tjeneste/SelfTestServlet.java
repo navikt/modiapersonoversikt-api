@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.mottaksbehandling.tjeneste;
 
 import no.nav.sbl.dialogarena.common.web.selftest.SelfTestBaseServlet;
-import no.nav.sbl.dialogarena.mottaksbehandling.context.MottaksbehandlingKontekst;
+import no.nav.sbl.dialogarena.mottaksbehandling.MottaksbehandlingKontekst;
 import no.nav.sbl.dialogarena.types.Pingable;
 
 import java.util.Collection;
