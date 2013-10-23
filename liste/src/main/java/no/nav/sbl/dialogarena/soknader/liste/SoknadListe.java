@@ -8,7 +8,6 @@ import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
@@ -43,7 +42,7 @@ public class SoknadListe extends Liste<Soknad> {
             soknader.clear();
             soknader.add(new Soknad());
         }
-        setDefaultModel(Model.ofList(soknader));
+        model.setObject(soknader);
     }
 
     @Override
