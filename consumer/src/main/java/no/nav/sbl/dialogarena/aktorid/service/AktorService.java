@@ -1,10 +1,11 @@
 package no.nav.sbl.dialogarena.aktorid.service;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class AktorService {
 
-    private HashMap<String, String> aktorIdMap = new HashMap<>();
+    private Map<String, String> aktorIdMap = new HashMap<>();
 
     public AktorService() {
         aktorIdMap.put("01010091736", "69078469165827");
