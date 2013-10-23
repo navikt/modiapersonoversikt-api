@@ -20,7 +20,7 @@ import static org.apache.wicket.model.Model.of;
 public class SoknadListe extends Liste<Soknad> {
 
     public static final PackageResourceReference SOKNADSLISTE_LESS = new PackageResourceReference(SoknadListe.class, "soknadliste.less");
-    private static final IModel<List<Soknad>> model = new ListModel<>(new ArrayList<Soknad>());
+    private static final IModel<List<Soknad>> MODEL = new ListModel<>(new ArrayList<Soknad>());
     private boolean serviceCallFailed;
     @Inject
     private SoknaderService soknaderService;
@@ -28,7 +28,7 @@ public class SoknadListe extends Liste<Soknad> {
     private AktorService aktorService;
 
     public SoknadListe(String id, String fnr) {
-        super(id, model);
+        super(id, MODEL);
 
         String aktorId = aktorService.getAktorId(fnr);
         List<Soknad> soknader = new ArrayList<>();
@@ -42,7 +42,7 @@ public class SoknadListe extends Liste<Soknad> {
             soknader.clear();
             soknader.add(new Soknad());
         }
-        model.setObject(soknader);
+        MODEL.setObject(soknader);
     }
 
     @Override
