@@ -34,10 +34,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTER
 
 public class TraadPanel extends Panel {
 
-    private HenvendelsePortType henvendelsePortType;
-    private Mottaksbehandling mottaksbehandling;
-
-    private Traader traader = new Traader(mottaksbehandling, henvendelsePortType);
+    private Traader traader;
 
     private MarkupContainer sisteMelding;
     private Dialog dialog;
@@ -60,8 +57,7 @@ public class TraadPanel extends Panel {
 
     public TraadPanel(String id, final String fnr, final Mottaksbehandling mottaksbehandling, final HenvendelsePortType henvendelsePortType) {
         super(id);
-        this.mottaksbehandling = mottaksbehandling;
-        this.henvendelsePortType = henvendelsePortType;
+        this.traader = new Traader(mottaksbehandling, henvendelsePortType);
         setOutputMarkupId(true);
         setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<Traad>() {
             @Override

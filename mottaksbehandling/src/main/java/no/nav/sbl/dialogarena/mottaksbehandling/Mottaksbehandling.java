@@ -11,11 +11,12 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHe
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.Serializable;
 import java.util.List;
 
 import static no.nav.modig.lang.option.Optional.none;
 
-public class Mottaksbehandling {
+public class Mottaksbehandling implements Serializable {
     private static final Logger log = LoggerFactory.getLogger(Mottaksbehandling.class);
     public final MottaksbehandlingKontekst context;
 
