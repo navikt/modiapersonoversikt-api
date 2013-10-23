@@ -19,6 +19,7 @@ public class SoknaderTestPageTest extends AbstractWicketTest {
     protected void setup() {
         SoknaderMockContext ctx = new SoknaderMockContext();
         applicationContext.putBean("soknaderService", ctx.soknaderService());
+        applicationContext.putBean("aktorService", ctx.aktorService());
     }
 
     @Test
