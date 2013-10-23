@@ -6,17 +6,22 @@ import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetaljBuilder;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
+import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.joda.time.DateTime;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class UtbetalingService {
 
-    public List<Utbetaling> hentUtbetalinger(String fnr){
-        List<Utbetaling> utbetalinger = new ArrayList<>();
+    @Inject
+    UtbetalingPortType utbetalingPortType;
 
+    public List<Utbetaling> hentUtbetalinger(String fnr) {
+
+        List<Utbetaling> utbetalinger = new ArrayList<>();
 
 
         utbetalinger.add(createUtbetaling1());
@@ -29,7 +34,7 @@ public class UtbetalingService {
         return utbetalinger;
     }
 
-    private Utbetaling createUtbetaling1(){
+    private Utbetaling createUtbetaling1() {
         PosteringsDetalj detalj1 = new PosteringsDetaljBuilder().setHovedBeskrivelse("Alderspensjon").createPosteringsDetalj();
         PosteringsDetalj detalj2 = new PosteringsDetaljBuilder().setHovedBeskrivelse("Skatt").createPosteringsDetalj();
 
@@ -37,36 +42,36 @@ public class UtbetalingService {
         Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(detalj2)).setMelding("bilag2").createBilag();
 
         Utbetaling utbetaling = new UtbetalingBuilder()
-                                    .setPeriode("2010.01.23-2011.01.24")
-                                    .setNettoBelop(1000.0)
-                                    .setStatuskode("12")
-                                    .setBeskrivelse("Uføre")
-                                    .setUtbetalingsDato(new DateTime().now().minusDays(4))
-                                    .setBilag(Arrays.asList(bilag1,bilag2)).createUtbetaling();
+                .setPeriode("2010.01.23-2011.01.24")
+                .setNettoBelop(1000.0)
+                .setStatuskode("12")
+                .setBeskrivelse("Uføre")
+                .setUtbetalingsDato(new DateTime().now().minusDays(4))
+                .setBilag(Arrays.asList(bilag1, bilag2)).createUtbetaling();
 
         return utbetaling;
     }
 
-    private Utbetaling createUtbetaling2(){
+    private Utbetaling createUtbetaling2() {
         PosteringsDetalj detalj1 = new PosteringsDetaljBuilder().setHovedBeskrivelse("Uføre").createPosteringsDetalj();
         PosteringsDetalj detalj2 = new PosteringsDetaljBuilder().setHovedBeskrivelse("Foreldrepenger").createPosteringsDetalj();
         PosteringsDetalj detalj3 = new PosteringsDetaljBuilder().setHovedBeskrivelse("Skatt").createPosteringsDetalj();
 
         Bilag bilag1 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(detalj1)).setMelding("bilag1").createBilag();
-        Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(detalj2,detalj3)).setMelding("bilag2").createBilag();
+        Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(detalj2, detalj3)).setMelding("bilag2").createBilag();
 
 
         Utbetaling utbetaling = new UtbetalingBuilder()
-                                    .setPeriode("2010.02.23-2011.02.24")
-                                    .setNettoBelop(2000.0)
-                                    .setStatuskode("12")
-                                    .setBeskrivelse("Trygd")
-                                    .setUtbetalingsDato(new DateTime().now().minusDays(7))
-                                    .setBilag(Arrays.asList(bilag1,bilag2)).createUtbetaling();
+                .setPeriode("2010.02.23-2011.02.24")
+                .setNettoBelop(2000.0)
+                .setStatuskode("12")
+                .setBeskrivelse("Trygd")
+                .setUtbetalingsDato(new DateTime().now().minusDays(7))
+                .setBilag(Arrays.asList(bilag1, bilag2)).createUtbetaling();
         return utbetaling;
     }
 
-    private Utbetaling createUtbetaling3(){
+    private Utbetaling createUtbetaling3() {
         PosteringsDetalj detalj1 = new PosteringsDetaljBuilder().setHovedBeskrivelse("Barnepenger").createPosteringsDetalj();
         PosteringsDetalj detalj2 = new PosteringsDetaljBuilder().setHovedBeskrivelse("Skatt").createPosteringsDetalj();
 
@@ -74,16 +79,16 @@ public class UtbetalingService {
         Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(detalj2)).setMelding("bilag2").createBilag();
 
         Utbetaling utbetaling = new UtbetalingBuilder()
-                                    .setPeriode("2010.03.23-2011.03.24")
-                                    .setNettoBelop(3000.10)
-                                    .setStatuskode("12")
-                                    .setBeskrivelse("Barnepenger")
-                                    .setUtbetalingsDato(new DateTime().now().minusDays(10))
-                                    .setBilag(Arrays.asList(bilag1,bilag2)).createUtbetaling();
+                .setPeriode("2010.03.23-2011.03.24")
+                .setNettoBelop(3000.10)
+                .setStatuskode("12")
+                .setBeskrivelse("Barnepenger")
+                .setUtbetalingsDato(new DateTime().now().minusDays(10))
+                .setBilag(Arrays.asList(bilag1, bilag2)).createUtbetaling();
         return utbetaling;
     }
 
-    private Utbetaling createUtbetaling4(){
+    private Utbetaling createUtbetaling4() {
         PosteringsDetalj detalj1 = new PosteringsDetaljBuilder().setHovedBeskrivelse("Trygd").createPosteringsDetalj();
 
         Bilag bilag1 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(detalj1)).setMelding("bilag1").createBilag();
@@ -98,7 +103,7 @@ public class UtbetalingService {
         return utbetaling;
     }
 
-    private Utbetaling createUtbetaling5(){
+    private Utbetaling createUtbetaling5() {
         PosteringsDetalj detalj1 = new PosteringsDetaljBuilder().setHovedBeskrivelse("APGrunnbeløp").createPosteringsDetalj();
         PosteringsDetalj detalj2 = new PosteringsDetaljBuilder().setHovedBeskrivelse("Skatt").createPosteringsDetalj();
 
@@ -112,11 +117,11 @@ public class UtbetalingService {
                 .setStatuskode("12")
                 .setBeskrivelse("APGrunnbeløp")
                 .setUtbetalingsDato(new DateTime().now().minusDays(84))
-                .setBilag(Arrays.asList(bilag1,bilag2)).createUtbetaling();
+                .setBilag(Arrays.asList(bilag1, bilag2)).createUtbetaling();
         return utbetaling;
     }
 
-    private Utbetaling createUtbetaling6(){
+    private Utbetaling createUtbetaling6() {
         PosteringsDetalj detalj1 = new PosteringsDetaljBuilder().setHovedBeskrivelse("Pensjon").createPosteringsDetalj();
         PosteringsDetalj detalj2 = new PosteringsDetaljBuilder().setHovedBeskrivelse("Skatt").createPosteringsDetalj();
 
@@ -130,11 +135,11 @@ public class UtbetalingService {
                 .setStatuskode("12")
                 .setBeskrivelse("Pensjon")
                 .setUtbetalingsDato(new DateTime().now().minusDays(200))
-                .setBilag(Arrays.asList(bilag1,bilag2)).createUtbetaling();
+                .setBilag(Arrays.asList(bilag1, bilag2)).createUtbetaling();
         return utbetaling;
     }
 
-     private Utbetaling createUtbetaling7(){
+    private Utbetaling createUtbetaling7() {
         Utbetaling utbetaling = new UtbetalingBuilder()
                 .setUtbetalingsDato(new DateTime().now().minusDays(300))
                 .createUtbetaling();
