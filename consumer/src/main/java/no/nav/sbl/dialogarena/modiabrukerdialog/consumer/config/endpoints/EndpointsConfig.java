@@ -12,7 +12,8 @@ import org.springframework.context.annotation.Import;
         BesvareHenvendelseEndpointConfig.class,
         HenvendelseEndpointConfig.class,
         OppgavebehandlingEndpointConfig.class,
-        SakOgBehandlingEndpointConfig.class
+        SakOgBehandlingEndpointConfig.class,
+        UtbetalingEndpointConfig.class
 })
 public class EndpointsConfig {
 }
