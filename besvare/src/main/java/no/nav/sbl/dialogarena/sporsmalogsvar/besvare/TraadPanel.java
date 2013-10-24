@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
-import no.nav.sbl.dialogarena.mottaksbehandling.Mottaksbehandling;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Traader;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -30,11 +30,18 @@ import org.apache.wicket.request.http.flow.AbortWithHttpErrorCodeException;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.validation.validator.StringValidator;
 
+import javax.inject.Inject;
+
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;
 
 public class TraadPanel extends Panel {
 
-    private Traader traader;
+    @Inject
+    private HenvendelsePortType henvendelsePortType;
+    @Inject
+    private BesvareHenvendelsePortType besvareHenvendelsePortType;
+
+    private Traader traader = new Traader(besvareHenvendelsePortType, henvendelsePortType);
 
     private MarkupContainer sisteMelding;
     private Dialog dialog;
@@ -55,9 +62,8 @@ public class TraadPanel extends Panel {
         }
     };
 
-    public TraadPanel(String id, final String fnr, final Mottaksbehandling mottaksbehandling, final HenvendelsePortType henvendelsePortType) {
+    public TraadPanel(String id, final String fnr) {
         super(id);
-        this.traader = new Traader(mottaksbehandling, henvendelsePortType);
         setOutputMarkupId(true);
         setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<Traad>() {
             @Override
@@ -66,6 +72,7 @@ public class TraadPanel extends Panel {
                         .getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId));
             }
         }));
+
 
         sisteMelding = new WebMarkupContainer("siste-melding").add(
                 new Label("overskrift", new MeldingOverskrift(siste, traad)),
@@ -134,6 +141,7 @@ public class TraadPanel extends Panel {
 
     }
 
+
     private class Dialog extends PropertyListView<Melding> {
 
         public Dialog(String id) {
@@ -150,6 +158,7 @@ public class TraadPanel extends Panel {
         }
 
     }
+
 
     public void besvar(String oppgaveId) {
         this.oppgaveId = oppgaveId;

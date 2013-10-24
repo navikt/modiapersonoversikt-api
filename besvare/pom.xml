@@ -20,12 +20,6 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar-mottaksbehandling</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
         </dependency>
 
@@ -178,18 +172,6 @@
             <groupId>nl.jqno.equalsverifier</groupId>
             <artifactId>equalsverifier</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>dial-nav-tjeneste-sak</artifactId>
-            <version>1-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>dial-nav-tjeneste-pensjonSak</artifactId>
-            <version>1-SNAPSHOT</version>
         </dependency>
 
     </dependencies>

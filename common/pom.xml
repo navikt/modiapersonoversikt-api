@@ -12,13 +12,6 @@
 
 
     <dependencies>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar-mottaksbehandling</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>

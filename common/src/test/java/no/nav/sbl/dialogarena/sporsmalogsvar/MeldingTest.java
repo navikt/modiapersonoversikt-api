@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Tema;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
@@ -38,13 +37,13 @@ public class MeldingTest {
 
     @Test
     public void tomTraadHarAldriEnInnledendeMelding() {
-        Traad traad = new Traad(Tema.HJELPEMIDLER, "100");
+        Traad traad = new Traad("OST", "100");
         assertThat(asList(melding1, melding2, melding3), everyItem(not(innleder(traad))));
     }
 
     @Test
     public void avgjoreOmMeldingErForsteIEnTraad() {
-        Traad traad = new Traad(Tema.HJELPEMIDLER, "100");
+        Traad traad = new Traad("OST", "100");
         traad.leggTil(asList(melding3, melding1, melding2));
 
         assertThat(melding1, innleder(traad));

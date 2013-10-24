@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
-import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Tema;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad.Svar;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -22,7 +21,7 @@ public class TraadTest {
 
     @Test
     public void leggTilSetterInnAlleMeldingerSortertPaaTidspunktNyesteForst() {
-        Traad traad = new Traad(Tema.HJELPEMIDLER, null);
+        Traad traad = new Traad("SYKEPENGER", null);
         traad.leggTil(new Melding("1", INNGAENDE, idag0945.minusDays(1), "Hei!"));
         traad.leggTil(new Melding("1", INNGAENDE, idag0945, "Halla!"));
 
@@ -31,7 +30,7 @@ public class TraadTest {
 
     @Test
     public void leggTilSetterKunInnMeldingerSomIkkeErITraadFraFoer() {
-        Traad traad = new Traad(Tema.HJELPEMIDLER, null);
+        Traad traad = new Traad("SYKEPENGER", null);
         traad.leggTil(new Melding("1", INNGAENDE, idag0945.minusDays(1), "Hei!"));
         traad.leggTil(new Melding("1", UTGAENDE, idag0945, "Halla!"));
         traad.leggTil(asList(
@@ -43,18 +42,18 @@ public class TraadTest {
 
     @Test
     public void ferdigSvarBlirLagtInnIDialogenOgTraadstatuserOppdateres() {
-        Traad traad = new Traad(Tema.HJELPEMIDLER, "svar-42");
+        Traad traad = new Traad("SYKEPENGER", "svar-42");
         traad.leggTil(new Melding("1", INNGAENDE, idag0945.minusDays(1), "Hei!"));
         assertFalse(traad.erSensitiv);
         traad.erSensitiv = true;
 
         Svar svar = traad.getSvar();
         svar.fritekst = "Halla!";
-        svar.tema = Tema.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT;
+        svar.tema = "ANNET_TEMA";
 
         traad.ferdigSvar();
 
-        assertThat(traad.getTema(), is(Tema.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT));
+        assertThat(traad.getTema(), is("ANNET_TEMA"));
         assertTrue(traad.erSensitiv);
         assertThat(traad.getSisteMelding().fritekst, is("Halla!"));
         assertThat(traad.getSisteMelding().behandlingId, is("svar-42"));

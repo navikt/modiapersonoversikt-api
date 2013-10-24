@@ -1,10 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar;
 
-import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Tema;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -23,19 +21,19 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.
 public class Traad implements Serializable {
 
     public boolean erSensitiv;
-    private Tema tema;
+    private String tema;
     private Svar svar = new Svar();
     private List<Melding> dialog = emptyList();
 
 
-    public Traad(Tema tema, String svarBehandlingId) {
+    public Traad(String tema, String svarBehandlingId) {
         this.tema = tema;
         this.svar = new Svar();
         this.svar.behandlingId = svarBehandlingId;
         this.svar.tema = tema;
     }
 
-    public Tema getTema() {
+    public String getTema() {
         return tema;
     }
 
@@ -52,12 +50,14 @@ public class Traad implements Serializable {
     }
 
     public List<Melding> getTidligereDialog() {
-        return dialog.size() == 1 ? Collections.<Melding>emptyList() : on(dialog).tail().collect();
+        return on(dialog).tail().collect();
     }
 
     public Svar getSvar() {
         return svar;
     }
+
+
 
     public void leggTil(Melding melding) {
         leggTil(optional(melding));
@@ -81,13 +81,13 @@ public class Traad implements Serializable {
 
     /**
      * Mutable dataobjekt som brukes ved innlegging av svar fra saksbehandler.
-     * Når svaret er ferdig kan {@link #ferdigSvar()} kalles for å få et
+     * Når svaret er ferdig kan {@link #getFerdigSvar()} kalles for å få et
      * immutable {@link Melding}-objekt for inkludering i dialogen i tråden.
      */
     public static class Svar implements Serializable {
         public String behandlingId,
+                      tema,
                       fritekst;
-        public Tema tema;
     }
 
     public void ferdigSvar() {

@@ -1,10 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
 
-import no.nav.sbl.dialogarena.mottaksbehandling.ISvar;
-import no.nav.sbl.dialogarena.mottaksbehandling.Mottaksbehandling;
-import no.nav.sbl.dialogarena.mottaksbehandling.oppgave.Tema;
-import no.nav.sbl.dialogarena.mottaksbehandling.verktoy.records.Record;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,31 +19,32 @@ import static org.mockito.Mockito.verify;
 public class BesvareTraadTest {
 
     @Mock
-    private Mottaksbehandling mottaksbehandling;
+    private BesvareHenvendelsePortType besvareHenvendelsePortType;
 
     private Traader service;
 
     @Before
     public void wireUpService() {
-        service = new Traader(mottaksbehandling, null);
+        service = new Traader(besvareHenvendelsePortType, null);
     }
+
 
     @Test
     public void leggerInnSvarIEnTraad() {
-        Traad traad = new Traad(Tema.HJELPEMIDLER, "svar-42");
+        Traad traad = new Traad("OST", "svar-42");
         traad.getSvar().fritekst = "Denne osten stinker";
         traad.erSensitiv = true;
-        traad.getSvar().tema = Tema.FAMILIE_OG_BARN;
+        traad.getSvar().tema = "FRANSK OST";
 
 
-        ArgumentCaptor<Record<ISvar>> svar = (ArgumentCaptor<Record<ISvar>>) ArgumentCaptor.forClass(new Record<ISvar>().getClass());
+        ArgumentCaptor<WSSvar> wsSvar = ArgumentCaptor.forClass(WSSvar.class);
         service.besvareSporsmal(traad);
-        verify(mottaksbehandling).besvarSporsmal(svar.capture());
+        verify(besvareHenvendelsePortType).besvarSporsmal(wsSvar.capture());
 
-        assertThat(svar.getValue().get(ISvar.behandlingsId), is("svar-42"));
-        assertThat(svar.getValue().get(ISvar.fritekst), is("Denne osten stinker"));
-        assertThat(svar.getValue().get(ISvar.tema), is(Tema.FAMILIE_OG_BARN));
-        assertTrue(svar.getValue().get(ISvar.sensitiv));
+        assertThat(wsSvar.getValue().getBehandlingsId(), is("svar-42"));
+        assertThat(wsSvar.getValue().getFritekst(), is("Denne osten stinker"));
+        assertThat(wsSvar.getValue().getTema(), is("FRANSK OST"));
+        assertTrue(wsSvar.getValue().isSensitiv());
 
 
     }
