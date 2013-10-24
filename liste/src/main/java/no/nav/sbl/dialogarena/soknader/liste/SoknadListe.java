@@ -30,9 +30,9 @@ public class SoknadListe extends Liste<Soknad> {
     public SoknadListe(String id, String fnr) {
         super(id, MODEL);
 
-        String aktorId = aktorService.getAktorId(fnr);
         List<Soknad> soknader = new ArrayList<>();
         try {
+            String aktorId = aktorService.getAktorId(fnr);
             soknader = soknaderService.getSoknader(aktorId);
         } catch (ApplicationException ex) {
             serviceCallFailed = true;
