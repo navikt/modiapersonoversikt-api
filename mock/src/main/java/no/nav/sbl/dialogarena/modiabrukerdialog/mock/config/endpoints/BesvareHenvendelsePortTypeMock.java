@@ -4,10 +4,13 @@ import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerRequest;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerResponse;
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.jws.WebParam;
 import java.util.Random;
 
 @Configuration
@@ -44,6 +47,11 @@ public class BesvareHenvendelsePortTypeMock {
                                         " doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis in iis qui facit " +
                                         "eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus"))
                         .withSvar(new WSSvar().withBehandlingsId("" + random.nextInt()));
+            }
+
+            @Override
+            public HentSakerResponse hentSaker(HentSakerRequest parameters) {
+                return new HentSakerResponse();
             }
         };
     }
