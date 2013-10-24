@@ -18,17 +18,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.jws.WebParam;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.getFromBehandlingsresultat;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.by;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.getFromBehandlingsresultat;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.apache.commons.lang3.StringUtils.abbreviate;
 import static org.joda.time.DateTime.now;
