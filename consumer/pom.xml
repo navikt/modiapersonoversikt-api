@@ -102,7 +102,7 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sakogbehandling-jaxws</artifactId>
+            <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
         </dependency>
 
         <dependency>
