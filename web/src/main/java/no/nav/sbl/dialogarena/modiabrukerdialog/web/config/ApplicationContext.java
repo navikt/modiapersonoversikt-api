@@ -1,33 +1,30 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.ConsumerContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketApplication;
-import org.springframework.context.annotation.Bean;
+import org.springframework.beans.BeansException;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
-import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.core.PriorityOrdered;
+import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 @Configuration
 @Import({
-        ConsumerContext.class,
-        CacheConfig.class
+        ContextBeans.class,
+        MockContextBeans.class
 })
-public class ApplicationContext implements PriorityOrdered {
+public class ApplicationContext extends AnnotationConfigWebApplicationContext implements PriorityOrdered {
 
-    @Bean
-    public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
-        return new PropertySourcesPlaceholderConfigurer();
-    }
+    @Override
+    public void refresh() throws BeansException, IllegalStateException {
+        System.out.println("Refresh");
 
-    @Bean
-    public WicketApplication modiaApplication() {
-        return new WicketApplication();
+        System.out.println("Setter profile til default");
+        getEnvironment().setActiveProfiles("default");
+
+        super.refresh();
     }
 
     @Override
     public int getOrder() {
         return 0;
     }
-
 }
