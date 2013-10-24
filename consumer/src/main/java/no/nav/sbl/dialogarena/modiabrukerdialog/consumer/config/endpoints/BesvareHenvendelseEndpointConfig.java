@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
@@ -18,7 +18,7 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.Utils.konfigurerMedHttps;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.Utils.konfigurerMedHttps;
 
 @Configuration
 public class BesvareHenvendelseEndpointConfig {

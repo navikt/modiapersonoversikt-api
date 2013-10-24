@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.services;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
 import no.nav.sbl.dialogarena.soknader.liste.config.SoknaderConfig;
 import org.springframework.context.annotation.Configuration;

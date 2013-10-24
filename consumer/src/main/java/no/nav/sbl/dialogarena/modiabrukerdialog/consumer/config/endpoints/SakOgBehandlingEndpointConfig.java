@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;

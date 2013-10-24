@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.ConsumerContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -9,7 +10,7 @@ import org.springframework.core.PriorityOrdered;
 
 @Configuration
 @Import({
-        ComponentsContext.class,
+        ConsumerContext.class,
         CacheConfig.class
 })
 public class ApplicationContext implements PriorityOrdered {

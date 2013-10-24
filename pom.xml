@@ -18,6 +18,7 @@
         <module>web</module>
         <module>jee</module>
         <module>mock</module>
+        <module>consumer</module>
     </modules>
 
     <properties>
@@ -39,6 +40,12 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>modiabrukerdialog-consumer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>

@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;

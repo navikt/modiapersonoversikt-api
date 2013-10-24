@@ -1,7 +1,7 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.artifacts;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.artifacts.kjerneinfo.KjerneinfoContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.artifacts.personsok.PersonsokContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.KjerneinfoContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.personsok.PersonsokContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 

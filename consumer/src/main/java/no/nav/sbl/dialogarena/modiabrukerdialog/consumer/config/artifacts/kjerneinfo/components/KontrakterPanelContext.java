@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.artifacts.kjerneinfo.components;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components;
 
 import no.nav.kontrakter.consumer.config.ConsumerConfig;
 import org.springframework.context.annotation.Configuration;
