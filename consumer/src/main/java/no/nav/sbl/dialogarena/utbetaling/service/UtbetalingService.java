@@ -6,10 +6,10 @@ import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetaljBuilder;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
-import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.joda.time.DateTime;
 
-import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -17,8 +17,8 @@ import static org.joda.time.DateTime.now;
 
 public class UtbetalingService {
 
-    @Inject
-    UtbetalingPortType utbetalingPortType;
+    //    @Inject
+    //    UtbetalingPortType utbetalingPortType;
 
     public List<Utbetaling> hentUtbetalinger(String fnr) {
         return (asList(
