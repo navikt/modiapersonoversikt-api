@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.services;
 
+import no.nav.sbl.dialogarena.aktorid.service.AktorService;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.sbl.dialogarena.soknader.util.SoknadBuilder;
@@ -29,6 +30,11 @@ public class SoknaderServiceMock {
         List<Soknad> soknadList = soknaderDataSetMocked();
         when(service.getSoknader(anyString())).thenReturn(soknadList);
         return service;
+    }
+
+    @Bean
+    public AktorService aktorService(){
+        return new AktorService();
     }
 
     private List<Soknad> soknaderDataSetMocked() {
