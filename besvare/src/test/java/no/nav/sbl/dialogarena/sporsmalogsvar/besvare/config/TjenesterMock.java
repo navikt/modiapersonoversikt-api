@@ -7,6 +7,8 @@ import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerRequest;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import org.apache.commons.collections15.Transformer;
@@ -16,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.jws.WebParam;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -111,6 +114,11 @@ public class TjenesterMock {
                         .withTema("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT")
                         .withTraad(TRAAD);
                 return new WSSporsmalOgSvar().withSporsmal(sporsmal).withSvar(new WSSvar().withBehandlingsId(randomNumeric(5)));
+            }
+
+            @Override
+            public HentSakerResponse hentSaker(HentSakerRequest parameters) {
+                return new HentSakerResponse();
             }
         }
         return new BesvareHenvendelseStub();
