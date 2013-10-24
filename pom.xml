@@ -18,6 +18,7 @@
         <module>web</module>
         <module>jee</module>
         <module>mock</module>
+        <module>consumer</module>
     </modules>
 
     <properties>
@@ -29,17 +30,24 @@
         <slf4j.version>1.7.5</slf4j.version>
         <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
-        <sakogbehandling.jaxws.version>1.0.2</sakogbehandling.jaxws.version>
+        <sakogbehandling.tjeneste.version>1.0.8</sakogbehandling.tjeneste.version>
+        <utbetaling.tjenestespesifikasjon.version>1.0.0-SNAPSHOT</utbetaling.tjenestespesifikasjon.version>
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.1-SPRINGFIX</kjerneinfo.versjon>
-        <soknader.liste.version>2.0.3</soknader.liste.version>
+        <soknader.liste.version>2.0.4</soknader.liste.version>
         <sporsmalogsvar.version>1.9</sporsmalogsvar.version>
         <utbetaling.version>2.0.0-SNAPSHOT</utbetaling.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>modiabrukerdialog-consumer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -51,6 +59,13 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>soknader-consumer</artifactId>
                 <version>${soknader.liste.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>soknader-consumer</artifactId>
+                <version>${soknader.liste.version}</version>
+                <type>test-jar</type>
             </dependency>
 
             <dependency>
@@ -81,6 +96,26 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>utbetalinger-widget</artifactId>
                 <version>${utbetaling.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>utbetalinger-consumer</artifactId>
+                <version>${utbetaling.version}</version>
+            </dependency>
+
+
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>kodeverk-consumer</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>
@@ -158,8 +193,14 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sakogbehandling-jaxws</artifactId>
-                <version>${sakogbehandling.jaxws.version}</version>
+                <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
+                <version>${sakogbehandling.tjeneste.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
+                <version>${utbetaling.tjenestespesifikasjon.version}</version>
             </dependency>
 
             <dependency>
@@ -256,12 +297,6 @@
                 <version>0.0.12</version>
             </dependency>
 
-            <!--<dependency>-->
-                <!--<groupId>no.nav.tjenester.fim</groupId>-->
-                <!--<artifactId>nav-fim-sakOgBehandling-v1-tjenestespesifikasjon</artifactId>-->
-                <!--<version>1.0.0-alpha004</version>-->
-            <!--</dependency>-->
-
             <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
@@ -355,6 +390,12 @@
 
             <dependency>
                 <groupId>no.nav</groupId>
+                <artifactId>kjerneinfo-common</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
                 <artifactId>kjerneinfo-panel</artifactId>
                 <version>${kjerneinfo.versjon}</version>
             </dependency>
@@ -362,6 +403,22 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>kjerneinfo-consumer</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>kjerneinfo-domain</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
                     <exclusion>
@@ -402,6 +459,18 @@
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>brukerprofil-panel</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
+                <artifactId>brukerprofil-domain</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>
                     <exclusion>
@@ -656,7 +725,6 @@
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
                 <version>1.9.5</version>
-                <scope>test</scope>
             </dependency>
 
             <dependency>

@@ -4,17 +4,19 @@ import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.personsok.PersonsokPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BesvareHenvendelsePortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OppgavebehandlingPortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.services.SoknaderServiceMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.LamellHandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.OppgavebehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.BesvareHenvendelseEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.HenvendelseEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.endpoints.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.BesvareSporsmalPanel;
+import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -38,11 +40,13 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = {
         HentPersonPanelMockContext.class,
-        HenvendelseEndpointConfig.Test.class,
+        HenvendelsePortTypeMock.class,
         SykepengerWidgetMockContext.class,
-        SakOgBehandlingEndpointConfig.Test.class,
-        OppgavebehandlingEndpointConfig.Test.class,
-        BesvareHenvendelseEndpointConfig.Test.class
+        SakOgBehandlingPortTypeMock.class,
+        OppgavebehandlingPortTypeMock.class,
+        BesvareHenvendelsePortTypeMock.class,
+        SoknaderServiceMock.class,
+        UtbetalingConfig.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InternTest extends WicketPageTest {

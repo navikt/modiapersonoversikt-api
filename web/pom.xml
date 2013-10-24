@@ -20,6 +20,11 @@
     <dependencies>
 
         <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modiabrukerdialog-consumer</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>modiabrukerdialog-config</artifactId>
             <version>${project.version}</version>
@@ -42,16 +47,6 @@
 
         <dependency>
             <groupId>no.nav</groupId>
-            <artifactId>personsok-pdp</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>personsok-consumer</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav</groupId>
             <artifactId>personsok-search</artifactId>
         </dependency>
 
@@ -68,21 +63,6 @@
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-hentperson</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>behandlebrukerprofil-consumer</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>kontrakter-consumer</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>brukerprofil-consumer</artifactId>
         </dependency>
 
         <dependency>
@@ -132,11 +112,6 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sporsmal-og-svar-widget</artifactId>
         </dependency>
 
@@ -145,15 +120,10 @@
             <artifactId>soknader-liste</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>soknader-consumer</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sakogbehandling-jaxws</artifactId>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>no.nav.sbl.dialogarena</groupId>-->
+            <!--<artifactId>soknader-consumer</artifactId>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -165,6 +135,17 @@
             <artifactId>utbetalinger-widget</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>utbetalinger-consumer</artifactId>
+        </dependency>
+
+
+        <!--<dependency>-->
+            <!--<groupId>no.nav.sbl.dialogarena</groupId>-->
+            <!--<artifactId>utbetaling-tjenestespesifikasjon</artifactId>-->
+        <!--</dependency>-->
+        
         <!-- End modia komponenter -->
 
         <!-- Modig avhengigheter -->
@@ -211,11 +192,6 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-security-ws</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
@@ -236,6 +212,12 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-security-loginmodule</artifactId>
             <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -383,67 +365,14 @@
 
         <dependency>
             <groupId>org.slf4j</groupId>
-            <artifactId>jul-to-slf4j</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <scope>runtime</scope>
         </dependency>
         <!-- End logging -->
 
-        <!-- CXF -->
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-simple</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-frontend-jaxws</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-rt-transports-http</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.cxf</groupId>
-            <artifactId>cxf-api</artifactId>
-        </dependency>
-        <!-- End CXF -->
-
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>oppgavebehandling-tjenestespesifikasjon</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
-        </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>no.nav.tjenester.fim</groupId>-->
-            <!--<artifactId>nav-fim-sakOgBehandling-v1-tjenestespesifikasjon</artifactId>-->
-        <!--</dependency>-->
-
-
-        <dependency>
-            <groupId>joda-time</groupId>
-            <artifactId>joda-time</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
         </dependency>
 
         <dependency>
