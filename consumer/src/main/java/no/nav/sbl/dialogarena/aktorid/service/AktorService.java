@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.aktorid.service;
 import java.util.HashMap;
 import java.util.Map;
 
+import static no.nav.modig.lang.option.Optional.optional;
+
 public class AktorService {
 
     private Map<String, String> aktorIdMap = new HashMap<>();
@@ -17,11 +19,7 @@ public class AktorService {
     }
 
     public String getAktorId(String fnr) {
-        if (aktorIdMap.containsKey(fnr)) {
-            return aktorIdMap.get(fnr);
-        } else {
-            return "";
-        }
+        return optional(aktorIdMap.get(fnr)).getOrElse("");
     }
 
 }
