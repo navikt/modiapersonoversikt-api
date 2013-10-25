@@ -10,6 +10,7 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeForMangeFore
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkkeFunnet;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeUgyldigDato;
 import no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling;
+import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
@@ -17,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.jws.WebParam;
 import java.net.URL;
 
 @Configuration
@@ -38,20 +38,14 @@ public class UtbetalingEndpointConfig {
         proxyFactoryBean.getOutInterceptors().add(interceptor);
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
-        return new UtbetalingPortType(proxyFactoryBean.create(Utbetaling.class));
+        final Utbetaling utbetalingTjeneste = proxyFactoryBean.create(Utbetaling.class);
+        return new UtbetalingPortType() {
+            @Override
+            public WSHentUtbetalingListeResponse hentUtbetalingListe(WSHentUtbetalingListeRequest request) throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
+                return utbetalingTjeneste.hentUtbetalingListe(request);
+            }
+        };
 
-    }
-
-    private class UtbetalingPortType {
-        private Utbetaling utbetalingTjeneste;
-
-        public UtbetalingPortType(Utbetaling utbetalingTjeneste) {
-            this.utbetalingTjeneste = utbetalingTjeneste;
-        }
-
-        public WSHentUtbetalingListeResponse hentUtbetalingListe(@WebParam(name = "request", targetNamespace = "") WSHentUtbetalingListeRequest request) throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
-            return utbetalingTjeneste.hentUtbetalingListe(request);
-        }
     }
 
 
