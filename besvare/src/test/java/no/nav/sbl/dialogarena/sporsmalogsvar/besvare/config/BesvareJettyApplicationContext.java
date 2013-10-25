@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.config;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.web.BesvareSporsmalApplication;
-
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;

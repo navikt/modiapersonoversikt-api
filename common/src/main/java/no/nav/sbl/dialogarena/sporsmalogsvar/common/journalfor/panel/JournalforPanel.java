@@ -2,8 +2,10 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.JournalforModell;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalforing;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Sak;
 import no.nav.sbl.dialogarena.time.Datoformat;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -21,15 +23,23 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.inject.Inject;
 
 public class JournalforPanel extends Panel {
 
     public static final PackageResourceReference LESS_REFERENCE = new PackageResourceReference(JournalforPanel.class, "journalfor.less");
+    private static final Logger log = LoggerFactory.getLogger(JournalforPanel.class);
 
-    public JournalforPanel(String id, Traad traad) {
+    @Inject
+    BesvareHenvendelsePortType besvareHenvendelsePortType;
+
+    public JournalforPanel(String id, Traad traad, String fnr) {
         super(id);
 
-        final JournalforForm journalforForm = new JournalforForm("journalfor-form", traad);
+        final JournalforForm journalforForm = new JournalforForm("journalfor-form", traad, fnr, besvareHenvendelsePortType);
         journalforForm.setVisibilityAllowed(false);
         journalforForm.setOutputMarkupPlaceholderTag(true);
 
@@ -43,13 +53,14 @@ public class JournalforPanel extends Panel {
         add(startJournalforing, journalforForm);
     }
 
-    private static class JournalforForm extends Form<Sak> {
+    private static class JournalforForm extends Form<Journalforing> {
 
-        public JournalforForm(String id, final Traad traad) {
+        private final JournalforModell modell;
+
+        public JournalforForm(String id, final Traad traad, String fnr, BesvareHenvendelsePortType besvareHenvendelsePortType) {
             super(id);
-
-            final JournalforModell modell = new JournalforModell(traad);
-            setDefaultModel(new CompoundPropertyModel<Object>(modell));
+            modell = new JournalforModell(traad, fnr, besvareHenvendelsePortType);
+            setModel(new CompoundPropertyModel<>(modell));
 
             final RadioGroup<Sak> sakRadioGroup = new RadioGroup<>("valgtSak");
             sakRadioGroup.setRequired(true);
@@ -66,8 +77,8 @@ public class JournalforPanel extends Panel {
                             WebMarkupContainer sakContainer = new WebMarkupContainer("sak-container");
                             sakContainer.add(new AttributeModifier("for", radio.getMarkupId()));
                             Sak sak = item.getModelObject();
-                            sakContainer.add(new Label("opprettetDato", Datoformat.kort(sak.getOpprettetDato())));
-                            sakContainer.add(new Label("fagsystem", sak.getFagsystem()));
+                            sakContainer.add(new Label("opprettetDato", Datoformat.kort(sak.opprettetDato)));
+                            sakContainer.add(new Label("fagsystem", sak.fagsystem));
                             item.add(sakContainer);
                         }
                     });
@@ -84,7 +95,8 @@ public class JournalforPanel extends Panel {
             AjaxSubmitLink journalfor = new AjaxSubmitLink("journalfor-submit") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    // TODO: Sende tråden over til arkivering tilknyttet saken som er valgt
+                     //JournalforPanel.this.besvareHenvendelsePortType modell.getObject().getValgtSak()
+                    log.info("Trodde jeg journalførte gitt");
                 }
 
                 @Override

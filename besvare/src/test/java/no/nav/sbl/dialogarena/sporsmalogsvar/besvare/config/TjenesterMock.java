@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSak;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,7 +118,7 @@ public class TjenesterMock {
 
             @Override
             public HentSakerResponse hentSaker(HentSakerRequest parameters) {
-                return new HentSakerResponse();
+                return new HentSakerResponse().withSaker(Arrays.asList(new WSSak().withGenerell(true).withOpprettetDato(DateTime.now()).withSakId("123").withStatus("Foobar")));
             }
         }
         return new BesvareHenvendelseStub();

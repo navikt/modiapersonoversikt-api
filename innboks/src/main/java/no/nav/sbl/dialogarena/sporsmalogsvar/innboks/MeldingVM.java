@@ -15,8 +15,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.ELDSTE_FORST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.ELDSTE_FORST;
 
 
 public class MeldingVM implements Serializable {

@@ -82,7 +82,7 @@ public class TraadPanel extends Panel {
 
         dialog = new Dialog("tidligereDialog");
         add(
-                new JournalforPanel("journalfor-panel", traad.getObject()),
+                new JournalforPanel("journalfor-panel", traad.getObject(), fnr),
                 new SvarForm("svar"),
                 sisteMelding,
                 dialog);
