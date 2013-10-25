@@ -19,13 +19,11 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.utils.Util
 
 public class Journalforing implements Serializable {
 
-    private final Traad traad;
     private Map<String, List<Sak>> sakerPerTema;
     private Optional<Sak> valgtSak;
     private Boolean sensitiv;
 
     public Journalforing(Traad traad, Iterable<Sak> saker) {
-        this.traad = traad;
         sakerPerTema = new HashMap<>();
         for (String temakode : on(saker).map(ARKIVTEMA).collectIn(new HashSet<String>())) {
             sakerPerTema.put(temakode, on(saker).filter(where(ARKIVTEMA, equalTo(temakode))).collect(SORTER_NYESTE_OVERST));
