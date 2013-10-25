@@ -15,7 +15,6 @@ public class Bilag  implements Serializable {
         this.posteringsDetaljer = posteringsDetaljer;
     }
 
-
     public String getMelding() {
         return melding;
     }
@@ -23,7 +22,6 @@ public class Bilag  implements Serializable {
     public List<PosteringsDetalj> getPosteringsDetaljer() {
         return posteringsDetaljer;
     }
-
 
     public Set<String> getBeskrivelser() {
         Set<String> beskrivelser = new TreeSet<>();

@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
 public class PosteringsDetaljBuilder {
+
     private String hovedBeskrivelse = "Alderspensjon";
     private String underdBeskrivelse = "hovedutbetaling";
 
