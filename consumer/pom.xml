@@ -22,10 +22,16 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>no.nav.sbl.dialogarena</groupId>-->
-            <!--<artifactId>utbetaling-tjenestespesifikasjon</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
+        </dependency>
+
+
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-core</artifactId>
+        </dependency>
 
         <!-- Spring -->
         <dependency>
@@ -43,10 +49,10 @@
             <artifactId>hamcrest-core</artifactId>
         </dependency>
 
-        <!--<dependency>-->
-            <!--<groupId>javax.inject</groupId>-->
-            <!--<artifactId>javax.inject</artifactId>-->
-        <!--</dependency>-->
+        <dependency>
+            <groupId>javax.inject</groupId>
+            <artifactId>javax.inject</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

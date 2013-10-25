@@ -1,6 +1,11 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -15,6 +20,15 @@ public class Bilag  implements Serializable {
         this.posteringsDetaljer = posteringsDetaljer;
     }
 
+    public Bilag(WSBilag wsBilag) {
+        melding = StringUtils.join(wsBilag.getMeldingListe(),", ");
+        posteringsDetaljer = new ArrayList<>();
+        for (WSPosteringsdetaljer wsPosteringsdetaljer : wsBilag.getPosteringsdetaljerListe()) {
+            posteringsDetaljer.add(new PosteringsDetalj(wsPosteringsdetaljer));
+        }
+    }
+
+
     public String getMelding() {
         return melding;
     }
@@ -22,6 +36,15 @@ public class Bilag  implements Serializable {
     public List<PosteringsDetalj> getPosteringsDetaljer() {
         return posteringsDetaljer;
     }
+
+    public Set<? extends String> getKontoNrFromDetaljer() {
+        Set<String> kontoNr = new TreeSet<>();
+        for(PosteringsDetalj detalj : posteringsDetaljer){
+            kontoNr.add(detalj.getKontoNr());
+        }
+        return kontoNr;
+    }
+
 
     public Set<String> getBeskrivelser() {
         Set<String> beskrivelser = new TreeSet<>();
@@ -60,5 +83,7 @@ public class Bilag  implements Serializable {
                 ", posteringsDetaljer=" + posteringsDetaljer +
                 '}';
     }
+
+
     // CHECKSTYLE:ON
 }
