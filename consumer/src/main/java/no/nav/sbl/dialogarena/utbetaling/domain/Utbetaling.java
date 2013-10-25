@@ -1,5 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -41,6 +44,22 @@ public class Utbetaling implements Serializable {
         extractPeriodDates(periode);
     }
     // CHECKSTYLE:ON
+
+
+    public Utbetaling(WSUtbetaling wsUtbetaling) {
+        for(WSBilag wsBilag : wsUtbetaling.getBilagListe()){
+            bilag.add(new Bilag(wsBilag));
+        }
+        this.statuskode = wsUtbetaling.getStatusKode();
+        this.utbetalingsDato = new DateTime (wsUtbetaling.getUtbetalingDato());
+        this.bruttoBelop = wsUtbetaling.getBruttobelop();
+        this.nettoBelop = wsUtbetaling.getNettobelop();
+        this.valuta = wsUtbetaling.getValuta();
+        this.kontoNr = StringUtils.join(getKontoNrFromBilag(), ", ");
+        this.startDate = new DateTime(wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato());
+        this.endDate = new DateTime(wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato());
+
+    }
 
     public String getKontoNr() {
         return kontoNr;
@@ -92,6 +111,14 @@ public class Utbetaling implements Serializable {
             beskrivelser.addAll(detalj.getBeskrivelser());
         }
         return beskrivelser;
+    }
+
+    private Set<String> getKontoNrFromBilag(){
+        Set<String> kontoNr = new TreeSet<>();
+        for(Bilag detalj : bilag){
+            kontoNr.addAll(detalj.getKontoNrFromDetaljer());
+        }
+        return kontoNr;
     }
 
     private void extractPeriodDates(String periode) {

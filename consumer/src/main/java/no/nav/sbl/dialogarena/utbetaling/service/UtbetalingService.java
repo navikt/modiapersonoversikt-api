@@ -1,13 +1,27 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
 import no.nav.sbl.dialogarena.utbetaling.domain.BilagBuilder;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetaljBuilder;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
+import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeResponse;
+import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSPeriode;
+import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeBaksystemIkkeTilgjengelig;
+import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeForMangeForekomster;
+import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkkeFunnet;
+import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeUgyldigDato;
+import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.joda.time.DateTime;
 
+import javax.inject.Inject;
+import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.datatype.DatatypeFactory;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -17,19 +31,46 @@ import static org.joda.time.DateTime.now;
 
 public class UtbetalingService {
 
-    //    @Inject
-    //    UtbetalingPortType utbetalingPortType;
+    @Inject
+    UtbetalingPortType utbetalingPortType;
 
     public List<Utbetaling> hentUtbetalinger(String fnr) {
-        return (asList(
-                createUtbetaling1(),
-                createUtbetaling2(),
-                createUtbetaling3(),
-                createUtbetaling4(),
-                createUtbetaling5(),
-                createUtbetaling6(),
-                createUtbetaling7()
-        ));
+
+        WSHentUtbetalingListeResponse response;
+        try {
+            response = utbetalingPortType.hentUtbetalingListe(createRequest(fnr));
+        } catch (HentUtbetalingListeMottakerIkkeFunnet hentUtbetalingListeMottakerIkkeFunnet) {
+            throw new ApplicationException("Utbetalingservice : Mottaker ikke funnet", hentUtbetalingListeMottakerIkkeFunnet);
+        } catch (HentUtbetalingListeForMangeForekomster hentUtbetalingListeForMangeForekomster) {
+            throw new ApplicationException("Utbetalingservice : For mange forekomster", hentUtbetalingListeForMangeForekomster);
+        } catch (HentUtbetalingListeBaksystemIkkeTilgjengelig hentUtbetalingListeBaksystemIkkeTilgjengelig) {
+            throw new ApplicationException("Utbetalingservice : Baksystem ikke tilgjengelig", hentUtbetalingListeBaksystemIkkeTilgjengelig);
+        } catch (HentUtbetalingListeUgyldigDato hentUtbetalingListeUgyldigDato) {
+            throw new ApplicationException("Utbetalingservice : Ugyldig dato", hentUtbetalingListeUgyldigDato);
+        }
+        List<WSUtbetaling> utbetalingListe = response.getUtbetalingListe();
+
+        List<Utbetaling> utbetalinger = new ArrayList<>();
+
+        for (WSUtbetaling wsUtbetaling : utbetalingListe){
+            utbetalinger.add(new Utbetaling(wsUtbetaling));
+        }
+        return utbetalinger;
+    }
+
+    private WSHentUtbetalingListeRequest createRequest(String fnr) {
+        WSHentUtbetalingListeRequest request = new WSHentUtbetalingListeRequest();
+        request.withMottaker(fnr);
+        XMLGregorianCalendar fomDate;
+        XMLGregorianCalendar tomDate;
+        try {
+            fomDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(DateTime.now().minusMonths(3).toGregorianCalendar().toString());
+            tomDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(DateTime.now().toGregorianCalendar().toString());
+        } catch (DatatypeConfigurationException e) {
+            throw new ApplicationException("Feil ved parsing av dato",e);
+        }
+        request.withPeriode(new WSPeriode().withFom(fomDate).withTom(tomDate));
+        return request;
     }
 
     private Utbetaling createUtbetaling1() {
