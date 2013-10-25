@@ -7,6 +7,8 @@ import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerRequest;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import org.apache.commons.collections15.Transformer;
@@ -20,12 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.getFromBehandlingsresultat;
-
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.by;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.getFromBehandlingsresultat;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.apache.commons.lang3.StringUtils.abbreviate;
 import static org.joda.time.DateTime.now;
@@ -111,6 +112,11 @@ public class TjenesterMock {
                         .withTema("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT")
                         .withTraad(TRAAD);
                 return new WSSporsmalOgSvar().withSporsmal(sporsmal).withSvar(new WSSvar().withBehandlingsId(randomNumeric(5)));
+            }
+
+            @Override
+            public HentSakerResponse hentSaker(HentSakerRequest parameters) {
+                return new HentSakerResponse();
             }
         }
         return new BesvareHenvendelseStub();

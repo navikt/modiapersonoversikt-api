@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
-
 import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Traader;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel.JournalforPanel;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
@@ -34,7 +33,6 @@ import org.apache.wicket.validation.validator.StringValidator;
 
 import javax.inject.Inject;
 
-import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;
 
 public class TraadPanel extends Panel {
@@ -159,7 +157,6 @@ public class TraadPanel extends Panel {
                     new Label("sendtDato"),
                     new Label("overskrift", new MeldingOverskrift(meldingItem.getModel(), traad)),
                     new MultiLineLabel("fritekst"));
-            meldingItem.add(hasCssClassIf("tidligere-dialog", meldingItem.getModelObject().tidligereHenvendelse));
         }
 
     }

@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.commons.collections15.Transformer;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -81,13 +80,5 @@ public class Melding implements Serializable {
     public String toString() {
         return String.format("Melding (%s) fra %s: '%s'", behandlingId, avsender, abbreviate(fritekst, 30));
     }
-
-
-    /**
-     * @deprecated Eneste Wicket-relatert som er igjen i domenemodell, og bør fjernes.
-     *             Er dette noe som meldingen/tråden kan resolve selv?
-     */
-    @Deprecated
-    public CompoundPropertyModel<Boolean> tidligereHenvendelse = new CompoundPropertyModel<>(true);
 
 }
