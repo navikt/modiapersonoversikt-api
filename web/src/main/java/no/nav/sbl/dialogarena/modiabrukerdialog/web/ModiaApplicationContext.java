@@ -7,24 +7,37 @@ import org.springframework.web.context.support.AnnotationConfigWebApplicationCon
 
 
 
-public class ApplicationContext  extends AnnotationConfigWebApplicationContext {
+public class ModiaApplicationContext extends AnnotationConfigWebApplicationContext {
 
 
-    String MOCK_ME = "yes";
+    private static boolean mockMe = false;
 
-    public ApplicationContext() {
+    public ModiaApplicationContext() {
         System.out.println("Start appcontext");
     }
 
     @Override
     public void refresh() throws BeansException, IllegalStateException {
 
-        if ("yes".equalsIgnoreCase(MOCK_ME)) {
+        if (mockMe) {
             register(MockContextBeans.class);
         } else {
             register(ContextBeans.class);
         }
+        super.refresh();
 
-        super.refresh();    //To change body of overridden methods use File | Settings | File Templates.
+        String[] beanDefinitionNames = getBeanDefinitionNames();
+        int i = 0;
+        for (String beanDefinitionName : beanDefinitionNames) {
+            System.out.println(i+ ": beanDefinitionName = " + beanDefinitionName);
+            i++;
+        }
+
     }
+
+    public void doRefresh(boolean mockAlt) {
+        this.mockMe = mockAlt;
+        refresh();
+    }
+
 }

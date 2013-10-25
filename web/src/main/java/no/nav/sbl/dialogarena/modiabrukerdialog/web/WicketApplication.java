@@ -138,7 +138,7 @@ public class WicketApplication extends WebApplication {
 
         mountPage("/person/${fnr}", Intern.class);
         mountPage("/person/${fnr}/besvaresporsmal/${oppgaveId}", InternBesvaremodus.class);
-        mountPage("internal/mocksetup", MockSetupPage.class);
+        mountPage("/mocksetup", MockSetupPage.class);
         mountPage("internal/selftest", SelfTestPage.class);
 
         setSpringComponentInjector();
