@@ -2,18 +2,21 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ContextBeans;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.MockContextBeans;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 
 
 public class ModiaApplicationContext extends AnnotationConfigWebApplicationContext {
+    private static final Logger LOG = LoggerFactory.getLogger(ModiaApplicationContext.class);
 
-
-    private static boolean mockMe = false;
+    private boolean mockMe;
 
     public ModiaApplicationContext() {
-        System.out.println("Start appcontext");
+        LOG.debug("Start appcontext");
+        mockMe = false;
     }
 
     @Override
@@ -29,10 +32,9 @@ public class ModiaApplicationContext extends AnnotationConfigWebApplicationConte
         String[] beanDefinitionNames = getBeanDefinitionNames();
         int i = 0;
         for (String beanDefinitionName : beanDefinitionNames) {
-            System.out.println(i+ ": beanDefinitionName = " + beanDefinitionName);
+            LOG.debug(i+ ": beanDefinitionName = " + beanDefinitionName);
             i++;
         }
-
     }
 
     public void doRefresh(boolean mockAlt) {
