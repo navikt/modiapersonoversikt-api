@@ -36,7 +36,7 @@ public class MockSetupPage extends BasePage {
                 context.doRefresh(mockAlt);
 
                 PageParameters parameters = new PageParameters();
-                if(!mockAlt) {
+                if(mockAlt) {
                     parameters.add("fnr", "23067911223");
                 }
                 getRequestCycle().setResponsePage(Intern.class, parameters);
