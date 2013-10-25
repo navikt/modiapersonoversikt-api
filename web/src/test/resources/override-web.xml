@@ -7,14 +7,18 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
-    <!--<context-param>-->
-        <!--<param-name>contextClass</param-name>-->
-        <!--<param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>-->
-    <!--</context-param>-->
+    <context-param>
+        <param-name>contextClass</param-name>
+        <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.ApplicationContext</param-value>
+    </context-param>
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContext</param-value>
+        <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContextConfig</param-value>
+    </context-param>
+    <context-param>
+        <param-name>spring.profiles.active</param-name>
+        <param-value>default</param-value>
     </context-param>
 
     <context-param>
