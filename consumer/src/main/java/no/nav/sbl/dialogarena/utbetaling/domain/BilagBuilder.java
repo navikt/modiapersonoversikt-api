@@ -3,19 +3,19 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 public class BilagBuilder {
 
     private String melding = "Bilagsmelding ... Skatt 14%";
     private List<PosteringsDetalj> posteringsDetaljer = new ArrayList<>();
 
     public BilagBuilder() {
-        PosteringsDetalj posteringsDetalj = new PosteringsDetaljBuilder().createPosteringsDetalj();
-        PosteringsDetalj posteringsDetalj1 = new PosteringsDetaljBuilder().createPosteringsDetalj();
-        PosteringsDetalj posteringsDetalj2 = new PosteringsDetaljBuilder().createPosteringsDetalj();
-
-        posteringsDetaljer.add(posteringsDetalj);
-        posteringsDetaljer.add(posteringsDetalj1);
-        posteringsDetaljer.add(posteringsDetalj2);
+        posteringsDetaljer.addAll(asList(
+                new PosteringsDetaljBuilder().createPosteringsDetalj(),
+                new PosteringsDetaljBuilder().createPosteringsDetalj(),
+                new PosteringsDetaljBuilder().createPosteringsDetalj()
+        ));
     }
 
     public BilagBuilder setMelding(String melding) {
@@ -31,4 +31,5 @@ public class BilagBuilder {
     public Bilag createBilag() {
         return new Bilag(melding, posteringsDetaljer);
     }
+
 }

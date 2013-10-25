@@ -5,7 +5,10 @@ import org.joda.time.DateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 public class UtbetalingBuilder {
+
     private List<Bilag> bilag = new ArrayList<>();
     private String beskrivelse = "Dagpenger";
     private String periode = "2013.10.07-2013.11.07";
@@ -17,13 +20,12 @@ public class UtbetalingBuilder {
     private String kontoNr = "1234 25 25814";
 
     public UtbetalingBuilder() {
-        Bilag bilag1 = new BilagBuilder().createBilag();
-        Bilag bilag2 = new BilagBuilder().createBilag();
-        Bilag bilag3 = new BilagBuilder().createBilag();
 
-        bilag.add(bilag1);
-        bilag.add(bilag2);
-        bilag.add(bilag3);
+        bilag.addAll(asList(
+                new BilagBuilder().createBilag(),
+                new BilagBuilder().createBilag(),
+                new BilagBuilder().createBilag()
+        ));
     }
 
     public UtbetalingBuilder setBilag(List<Bilag> bilag) {
@@ -71,9 +73,8 @@ public class UtbetalingBuilder {
         return this;
     }
 
-
-
     public Utbetaling createUtbetaling() {
         return new Utbetaling(bilag, beskrivelse, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr);
     }
+
 }

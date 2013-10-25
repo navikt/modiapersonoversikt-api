@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 import java.io.Serializable;
 
 public class PosteringsDetalj  implements Serializable {
+
     private String hovedBeskrivelse;
     private String underdBeskrivelse;
 

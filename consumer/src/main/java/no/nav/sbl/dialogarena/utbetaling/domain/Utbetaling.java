@@ -1,14 +1,16 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import static org.apache.commons.lang3.StringUtils.join;
+import static org.joda.time.DateTime.parse;
+import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class Utbetaling implements Serializable {
 
@@ -53,7 +55,7 @@ public class Utbetaling implements Serializable {
     }
 
     public String getBeskrivelse() {
-        return StringUtils.join(getBeskrivelser(), ", ");
+        return join(getBeskrivelser(), ", ");
     }
 
     public DateTime getStartDate() {
@@ -98,14 +100,14 @@ public class Utbetaling implements Serializable {
             String[] datoer = periode.split("-");
             if (datoer.length >= 1) {
                 try {
-                    startDate = DateTime.parse(datoer[0], DateTimeFormat.forPattern("YYYY.MM.dd"));
+                    startDate = parse(datoer[0], forPattern("YYYY.MM.dd"));
                 } catch (IllegalArgumentException e) {
                     startDate = null;
                 }
             }
             if (datoer.length >= 2) {
                 try {
-                    endDate = DateTime.parse(datoer[1], DateTimeFormat.forPattern("YYYY.MM.dd"));
+                    endDate = parse(datoer[1], forPattern("YYYY.MM.dd"));
                 } catch (IllegalArgumentException e) {
                     endDate = null;
                 }
