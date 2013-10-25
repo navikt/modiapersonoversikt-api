@@ -59,7 +59,7 @@ public class Soknad implements Serializable {
         public Soknad transform(WSBehandlingskjede behandlingskjede) {
             Soknad soknad = new Soknad();
             soknad.innsendtDato = behandlingskjede.getStart();
-            soknad.tittelKodeverk = behandlingskjede.getBehandlingskjedetype().getKodeverksRef();
+            soknad.tittelKodeverk = behandlingskjede.getBehandlingskjedetype().getValue();
             soknad.underBehandlingStartDato = optional(behandlingskjede.getStartNAVtid()).getOrElse(null);
             soknad.ferdigDato = evaluateFerdigDato(behandlingskjede);
             soknad.normertBehandlingsTid = getNormertTidString(behandlingskjede);
