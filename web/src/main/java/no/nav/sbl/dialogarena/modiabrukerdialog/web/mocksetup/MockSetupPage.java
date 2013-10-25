@@ -11,11 +11,14 @@ import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MockSetupPage extends BasePage {
+    private static final Logger LOG = LoggerFactory.getLogger(MockSetupPage.class);
 
     private String selected = "";
 
@@ -32,7 +35,7 @@ public class MockSetupPage extends BasePage {
             protected void onSubmit() {
                 ModiaApplicationContext context = (ModiaApplicationContext) WicketApplication.get().getApplicationContext();
                 boolean mockAlt = mockStr.equals(selected);
-                System.out.println("mockAlt = " + mockAlt);
+                LOG.debug("mockAlt = " + mockAlt);
                 context.doRefresh(mockAlt);
 
                 PageParameters parameters = new PageParameters();

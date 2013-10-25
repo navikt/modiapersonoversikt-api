@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.ConsumerContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketApplication;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -13,6 +15,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
         CacheConfig.class
 })
 public class ContextBeans {
+    private static final Logger LOG = LoggerFactory.getLogger(ContextBeans.class);
 
     @Bean
     public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
@@ -21,7 +24,7 @@ public class ContextBeans {
 
     @Bean
     public WicketApplication modiaApplication() {
-        System.out.println("ContextBeans modiaapp");
+        LOG.debug("ContextBeans modiaapp");
         return new WicketApplication();
     }
 

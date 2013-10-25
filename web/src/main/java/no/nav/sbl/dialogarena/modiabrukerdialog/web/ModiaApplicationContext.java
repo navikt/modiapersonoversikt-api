@@ -20,7 +20,7 @@ public class ModiaApplicationContext extends AnnotationConfigWebApplicationConte
     }
 
     @Override
-    public void refresh() throws BeansException, IllegalStateException {
+    public void refresh() {
 
         if (mockMe) {
             register(MockContextBeans.class);
