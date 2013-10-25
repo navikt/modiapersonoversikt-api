@@ -10,7 +10,6 @@ import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.jws.WebParam;
 import java.util.Random;
 
 @Configuration
