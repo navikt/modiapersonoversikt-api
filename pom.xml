@@ -116,6 +116,12 @@
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
+                <artifactId>modig-lang</artifactId>
+                <version>1.2.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.modig</groupId>
                 <artifactId>modig-security-authorization</artifactId>
                 <version>${modig.security.version}</version>
             </dependency>
