@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ContextBeans;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.MockContextBeans;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 
@@ -32,7 +31,7 @@ public class ModiaApplicationContext extends AnnotationConfigWebApplicationConte
         String[] beanDefinitionNames = getBeanDefinitionNames();
         int i = 0;
         for (String beanDefinitionName : beanDefinitionNames) {
-            LOG.debug(i+ ": beanDefinitionName = " + beanDefinitionName);
+            LOG.debug(i + ": beanDefinitionName = " + beanDefinitionName);
             i++;
         }
     }
