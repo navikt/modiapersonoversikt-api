@@ -119,11 +119,6 @@
             <artifactId>soknader-liste</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>soknader-consumer</artifactId>
-        </dependency>
-
         <!-- End modia komponenter -->
 
         <!-- Modig avhengigheter -->

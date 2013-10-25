@@ -16,6 +16,7 @@ import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -50,21 +51,26 @@ public class SakOgBehandlingEndpointConfig {
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
         final SakOgBehandlingPortType sakOgBehandlingPortType = proxyFactoryBean.create(SakOgBehandlingPortType.class);
         return new SakOgBehandlingPortType() {
+
+            @Cacheable("endpointCache")
             @Override
             public FinnSakOgBehandlingskjedeListeResponse finnSakOgBehandlingskjedeListe(@WebParam(name = "request", targetNamespace = "") FinnSakOgBehandlingskjedeListeRequest finnSakOgBehandlingskjedeListeRequest) {
                 return sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(finnSakOgBehandlingskjedeListeRequest);
             }
 
+            @Cacheable("endpointCache")
             @Override
             public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest hentBehandlingskjedensBehandlingerRequest) throws HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
                 return sakOgBehandlingPortType.hentBehandlingskjedensBehandlinger(hentBehandlingskjedensBehandlingerRequest);
             }
 
+            @Cacheable("endpointCache")
             @Override
             public HentBehandlingResponse hentBehandling(@WebParam(name = "request", targetNamespace = "") HentBehandlingRequest hentBehandlingRequest) throws HentBehandlingHentBehandlingBehandlingIkkeFunnet {
                 return sakOgBehandlingPortType.hentBehandling(hentBehandlingRequest);
             }
 
+            @Cacheable("endpointCache")
             @Override
             public void ping() {
                 sakOgBehandlingPortType.ping();

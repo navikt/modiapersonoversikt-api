@@ -30,11 +30,11 @@
         <slf4j.version>1.7.5</slf4j.version>
         <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
-        <sakogbehandling.jaxws.version>1.0.2</sakogbehandling.jaxws.version>
+        <sakogbehandling.tjeneste.version>1.0.8</sakogbehandling.tjeneste.version>
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.1-SPRINGFIX</kjerneinfo.versjon>
-        <soknader.liste.version>2.0.3</soknader.liste.version>
+        <soknader.liste.version>2.0.5</soknader.liste.version>
         <sporsmalogsvar.version>1.9</sporsmalogsvar.version>
     </properties>
 
@@ -116,6 +116,12 @@
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
+                <artifactId>modig-lang</artifactId>
+                <version>1.2.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.modig</groupId>
                 <artifactId>modig-security-authorization</artifactId>
                 <version>${modig.security.version}</version>
             </dependency>
@@ -171,8 +177,8 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sakogbehandling-jaxws</artifactId>
-                <version>${sakogbehandling.jaxws.version}</version>
+                <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
+                <version>${sakogbehandling.tjeneste.version}</version>
             </dependency>
 
             <dependency>
@@ -218,7 +224,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
-                <version>0.0.12</version>
+                <version>0.0.14</version>
             </dependency>
 
             <dependency>
