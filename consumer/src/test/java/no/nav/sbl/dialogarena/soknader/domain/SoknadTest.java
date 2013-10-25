@@ -30,7 +30,7 @@ public class SoknadTest {
         behandlingskjede = new WSBehandlingskjede()
                 .withBehandlingskjedeId("behandling1")
                 .withNormertBehandlingstid(createNormertBehandlingstid(10))
-                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withKodeverksRef("tittel"));
+                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue("tittel"));
         startDate = now().minusDays(10);
         sluttDate = now().minusDays(4);
     }

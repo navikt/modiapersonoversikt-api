@@ -61,7 +61,7 @@ public class SoknaderServiceTest {
                 .withBehandlingskjedeId("behandling1")
                 .withNormertBehandlingstid(createNormertBehandlingstid())
                 .withStart(now())
-                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withKodeverksRef("tittel"));
+                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue("tittel"));
     }
 
     private WSBehandlingstid createNormertBehandlingstid() {
