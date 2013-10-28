@@ -2,29 +2,39 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-    <div class="journalfor">
+    <div wicket:id="journalfor" class="journalfor">
         <a wicket:id="start-journalforing" class="start-journalforing">Journalfør</a>
-        <form wicket:id="journalfor-form" class="">
+        <form wicket:id="journalfor-form" class="journalfor-form">
             <h3><wicket:message key="journalforpanel.heading"/></h3>
+            <hr class="robust-strek" />
             <article wicket:id="valgtSak">
                 <section wicket:id="temakoder">
                     <h4 wicket:id="tema"></h4>
-                        <article wicket:id="sak">
+                    <article wicket:id="sak">
+                        <div class="sakvalg">
                             <input wicket:id="radio" type="radio"/>
-                            <label wicket:id="sak-container">
-                                <p wicket:id="opprettetDato"></p>
-                                <p wicket:id="fagsystem"></p>
-                            </label>
-                        </article>
+                            <label wicket:id="opprettetDato" />
+                            <br />
+                            <label wicket:id="fagsystem" />
+                        </div>
+                    </article>
                 </section>
             </article>
-            <article wicket:id="sensitiv">
-                <input wicket:id="ikke-sensitivt" type="radio" id="ikke-sensitivt"/><label for="ikke-sensitivt">Ikke sensitivt</label>
-                <input wicket:id="sensitivt" type="radio" id="sensitivt"/><label for="sensitivt">Sensitivt</label>
+            <hr class="skillestrek"/>
+            <article wicket:id="sensitiv" class="sensitiv">
+                <div>
+                    <input wicket:id="ikke-sensitivt" type="radio" id="ikke-sensitivt"/>
+                    <label for="ikke-sensitivt">Ikke sensitivt</label>
+                </div>
+                <div>
+                    <input wicket:id="sensitivt" type="radio" id="sensitivt"/>
+                    <label for="sensitivt">Sensitivt</label>
+                </div>
             </article>
+            <hr class="skillestrek"/>
             <div wicket:id="feedback"/>
-            <a wicket:id="journalfor-submit" class="knapp-hoved-liten">Journalfør</a>
-            <a wicket:id="avbryt">Avbryt</a>
+            <div class="fortsett"><a wicket:id="journalfor-submit" class="knapp-hoved-stor">Journalfør</a></div>
+            <div class="avbryt"><a wicket:id="avbryt">Avbryt</a></div>
         </form>
     </div>
 </wicket:panel>
