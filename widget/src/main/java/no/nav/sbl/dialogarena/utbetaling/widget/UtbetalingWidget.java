@@ -31,7 +31,7 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
         Collections.sort(utbetalingVMs);
 
         ArrayList<UtbetalingVM> list = new ArrayList<>();
-        list.addAll(utbetalingVMs.subList(0, 6));
+        list.addAll(utbetalingVMs.subList(0, utbetalingVMs.size()>6 ? 6 : utbetalingVMs.size()));
         return list;
     }
 
