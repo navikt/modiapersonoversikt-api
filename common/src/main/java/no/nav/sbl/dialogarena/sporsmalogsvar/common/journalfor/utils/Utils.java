@@ -1,9 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.utils;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Sak;
-import org.apache.commons.collections15.Transformer;
-
 import java.util.Comparator;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Sak;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding;
+import org.apache.commons.collections15.Transformer;
 
 public class Utils {
 
@@ -11,6 +12,17 @@ public class Utils {
         @Override
         public String transform(Sak sak) {
             return sak.temakode;
+        }
+    };
+
+    public static final Transformer<Melding, WSMelding> TIL_WSMELDING = new Transformer<Melding, WSMelding>() {
+        @Override
+        public WSMelding transform(Melding melding) {
+            return new WSMelding()
+                    .withBehandlingsId(melding.behandlingId)
+                    .withMeldingstype(melding.avsender)
+                    .withOpprettetDato(melding.sendtDato)
+                    .withFritekst(melding.fritekst);
         }
     };
 

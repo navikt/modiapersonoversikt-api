@@ -2,8 +2,13 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.config;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSak;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
@@ -18,11 +23,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.by;
@@ -99,6 +99,11 @@ public class TjenesterMock {
     @Bean
     public BesvareHenvendelsePortType besvareHenvendelsePortType() {
         class BesvareHenvendelseStub extends ItPings implements BesvareHenvendelsePortType {
+
+            @Override
+            public void journalforMeldinger(List<WSMelding> meldinger) {
+            }
+
             @Override
             public void besvarSporsmal(WSSvar wsSvar) {
                 LOG.info("BesvareHenvendelsePortType besvarer spørsmål (svar behandlingId {} \"{}\")", wsSvar.getBehandlingsId(), abbreviate(wsSvar.getFritekst(), 30));
