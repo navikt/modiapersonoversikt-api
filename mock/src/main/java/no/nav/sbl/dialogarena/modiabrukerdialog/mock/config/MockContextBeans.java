@@ -23,4 +23,9 @@ public class MockContextBeans {
     public EnforcementPoint kjerneinfoPep() {
         return mock(EnforcementPoint.class);
     }
+
+    @Bean(name = "pep")
+    public EnforcementPoint pep() {
+        return mock(EnforcementPoint.class);
+    }
 }
