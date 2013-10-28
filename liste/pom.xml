@@ -66,12 +66,8 @@
         <!-- Logback -->
         <dependency>
             <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <!-- Wicket -->
@@ -179,12 +175,6 @@
                         <goals>
                             <goal>analyze-only</goal>
                         </goals>
-                        <configuration>
-                            <usedDependencies>
-                                <usedDependency>ch.qos.logback:logback-core</usedDependency>
-                                <usedDependency>ch.qos.logback:logback-classic</usedDependency>
-                            </usedDependencies>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

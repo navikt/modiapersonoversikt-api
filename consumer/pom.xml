@@ -37,22 +37,6 @@
             <artifactId>joda-time</artifactId>
         </dependency>
 
-        <!-- Logback -->
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>ch.qos.logback</groupId>
-            <artifactId>logback-classic</artifactId>
-        </dependency>
-
-        <!--<dependency>-->
-            <!--<groupId>org.slf4j</groupId>-->
-            <!--<artifactId>slf4j-api</artifactId>-->
-        <!--</dependency>-->
-
         <dependency>
             <groupId>net.sourceforge.collections</groupId>
             <artifactId>collections-generic</artifactId>
@@ -96,12 +80,6 @@
                         <goals>
                             <goal>analyze-only</goal>
                         </goals>
-                        <configuration>
-                            <usedDependencies>
-                                <usedDependency>ch.qos.logback:logback-core</usedDependency>
-                                <usedDependency>ch.qos.logback:logback-classic</usedDependency>
-                            </usedDependencies>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

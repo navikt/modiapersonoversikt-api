@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.soknader.context.mock;
 
 import no.nav.sbl.dialogarena.aktorid.service.AktorService;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
+import no.nav.sbl.dialogarena.soknader.domain.SoknadComparator;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.sbl.dialogarena.soknader.util.SoknadBuilder;
 import org.joda.time.DateTime;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.sort;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.GAMMEL_FERDIG;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.SoknadStatus.MOTTATT;
@@ -28,6 +30,7 @@ public class SoknaderMockContext {
     public SoknaderService soknaderService(){
         SoknaderService service = mock(SoknaderService.class);
         List<Soknad> soknadList = soknaderDataSetMocked();
+        sort(soknadList, new SoknadComparator());
         when(service.hentSoknader(anyString())).thenReturn(soknadList);
         return service;
     }
