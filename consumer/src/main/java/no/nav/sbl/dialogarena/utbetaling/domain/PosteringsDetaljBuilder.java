@@ -19,4 +19,5 @@ public class PosteringsDetaljBuilder {
     public PosteringsDetalj createPosteringsDetalj() {
         return new PosteringsDetalj(hovedBeskrivelse, underBeskrivelse, kontoNr);
     }
+
 }

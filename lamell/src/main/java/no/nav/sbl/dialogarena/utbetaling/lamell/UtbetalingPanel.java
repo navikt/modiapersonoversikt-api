@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
-import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -9,42 +7,59 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 
 import java.text.NumberFormat;
-import java.util.Locale;
+
+import static java.text.NumberFormat.getNumberInstance;
+import static java.util.Locale.forLanguageTag;
+import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 
 public class UtbetalingPanel extends Panel {
+
     public UtbetalingPanel(String id, Utbetaling utbetaling) {
         super(id);
-        String utbetalingsDato = Optional.optional(utbetaling.getUtbetalingsDato()).map(Datoformat.KORT).getOrElse("Ingen utbetalingsdato");
-        String startDato = Optional.optional(utbetaling.getStartDate()).map(Datoformat.KORT).getOrElse("");
-        String sluttDato = Optional.optional(utbetaling.getEndDate()).map(Datoformat.KORT).getOrElse("");
+        final Label hidden = createHiddenLabel();
 
-        final String periode = startDato + " - " + sluttDato;
+        add(
+                hidden,
+                new Label("beskrivelse", utbetaling.getBeskrivelse()),
+                createUtbetalingDatoLabel(utbetaling),
+                createBelopLabel(utbetaling),
+                createPeriodeLabel(utbetaling),
+                new Label("status", utbetaling.getStatuskode()),
+                new Label("kontonr", utbetaling.getKontoNr()),
+                createExpandButton(hidden)
+        );
+    }
 
+    private Label createUtbetalingDatoLabel(Utbetaling utbetaling) {
+        return new Label("utbetalingdato", optional(utbetaling.getUtbetalingsDato()).map(KORT).getOrElse("Ingen utbetalingsdato"));
+    }
 
-        NumberFormat currencyInstance = NumberFormat.getNumberInstance(Locale.forLanguageTag("nb-no"));
-        currencyInstance.setMinimumFractionDigits(2);
-        String nettoBelop = currencyInstance.format(utbetaling.getNettoBelop()) + " " + utbetaling.getValuta();
+    private Label createHiddenLabel() {
+        return (Label) new Label("hidden", "SKJULT")
+                .setVisible(false)
+                .setOutputMarkupId(true)
+                .setOutputMarkupPlaceholderTag(true);
+    }
 
-        final Label hidden = new Label("hidden", "SKJULT");
-        hidden.setVisible(false);
-        hidden.setOutputMarkupId(true);
-        hidden.setOutputMarkupPlaceholderTag(true);
-
-
-        add(new Label("beskrivelse", utbetaling.getBeskrivelse()));
-        add(hidden);
-        add(new Label("utbetalingdato", utbetalingsDato));
-        add(new Label("belop", nettoBelop));
-        add(new Label("periode", periode));
-        add(new Label("status", utbetaling.getStatuskode()));
-        add(new Label("kontonr", utbetaling.getKontoNr()));
-        add(new AjaxLink<Void>("expandbutton") {
+    private AjaxLink<Void> createExpandButton(final Label hidden) {
+        return new AjaxLink<Void>("expandbutton") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 hidden.setVisible(!hidden.isVisible());
                 target.add(hidden);
             }
-        });
-
+        };
     }
+
+    private Label createPeriodeLabel(Utbetaling utbetaling) {
+        return new Label("periode", optional(utbetaling.getStartDate()).map(KORT).getOrElse("") + " - " + optional(utbetaling.getEndDate()).map(KORT).getOrElse(""));
+    }
+
+    private Label createBelopLabel(Utbetaling utbetaling) {
+        NumberFormat currencyInstance = getNumberInstance(forLanguageTag("nb-no"));
+        currencyInstance.setMinimumFractionDigits(2);
+        return new Label("belop", currencyInstance.format(utbetaling.getNettoBelop()) + " " + utbetaling.getValuta());
+    }
+
 }
