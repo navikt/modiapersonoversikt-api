@@ -19,6 +19,7 @@ import static org.mockito.Mockito.mock;
 public class MockContextBeans {
 
     private static final Logger LOG = LoggerFactory.getLogger(MockContextBeans.class);
+
     @Bean
     public WicketApplication modiaApplication() {
         LOG.debug("MockContextBeans modiaapp");
