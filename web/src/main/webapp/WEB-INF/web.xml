@@ -13,7 +13,7 @@
     </listener>
     <context-param>
         <param-name>contextClass</param-name>
-        <param-value>org.springframework.web.context.support.AnnotationConfigWebApplicationContext</param-value>
+        <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.ModiaApplicationContext</param-value>
     </context-param>
     <context-param>
         <param-name>contextConfigLocation</param-name>
