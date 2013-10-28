@@ -29,6 +29,7 @@ import no.nav.sbl.dialogarena.soknader.liste.SoknadListe;
 import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLamell;
+import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
@@ -91,7 +92,8 @@ public class WicketApplication extends WebApplication {
                         BasePage.MELDINGERLAMELL,
                         SoknadListe.SOKNADSLISTE_LESS,
                         BasePage.MELDINGERLAMELL,
-                        UtbetalingLamell.UTBETALING_LAMELL_LESS)
+                        UtbetalingLamell.UTBETALING_LAMELL_LESS,
+                        UtbetalingWidget.UTBETALING_WIDGET_LESS)
                 .addCss(
                         BasePage.PERSONSOKRESULT,
                         BasePage.PERSONSOKSEARCH,
