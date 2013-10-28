@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -13,6 +14,8 @@ import java.util.List;
 import static java.util.Collections.sort;
 
 public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
+
+    public static final PackageResourceReference UTBETALING_WIDGET_LESS = new PackageResourceReference(UtbetalingWidget.class, "utbetaling.less");
 
     @Inject
     private UtbetalingService utbetalingService;
@@ -29,9 +32,15 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
         }
         sort(utbetalingVMs);
 
-        ArrayList<UtbetalingVM> list = new ArrayList<>();
-        list.addAll(utbetalingVMs.subList(0, utbetalingVMs.size() > 6 ? 6 : utbetalingVMs.size()));
-        return list;
+
+        if (utbetalingVMs.size() > 6) {
+            ArrayList<UtbetalingVM> list = new ArrayList<>();
+            list.addAll(utbetalingVMs.subList(0, 6));
+            return list;
+        } else {
+            return utbetalingVMs;
+        }
+
     }
 
     @Override
