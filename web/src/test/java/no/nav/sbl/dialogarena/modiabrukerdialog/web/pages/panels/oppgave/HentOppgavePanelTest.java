@@ -9,9 +9,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelM
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.BesvareSporsmalPanel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.Traad;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.TraadPanel;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +50,7 @@ public class HentOppgavePanelTest extends WicketPageTest {
     }
 
     @Test
-    public void besvarePanelSkalHaVerdierNaarManHarValgtTema() {
+    public void traadPanelSkalHaVerdierNaarManHarValgtTema() {
         wicket.goTo(Intern.class).click().link(withId("plukk-oppgave"));
         wicket.tester.executeAjaxEvent(wicket.get().components(ofType(ListItem.class).and(containedInComponent(ofType(HentOppgavePanel.class)))).get(0), "click");
 
@@ -64,7 +64,7 @@ public class HentOppgavePanelTest extends WicketPageTest {
 
 
     private Traad getTraad() {
-        return (Traad) wicket.get().component(ofType(BesvareSporsmalPanel.class)).getDefaultModelObject();
+        return (Traad) wicket.get().component(ofType(TraadPanel.class)).getDefaultModelObject();
     }
 
 }

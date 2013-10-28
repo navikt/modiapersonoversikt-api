@@ -15,7 +15,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidget
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.BesvareSporsmalPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.TraadPanel;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -91,10 +91,10 @@ public class InternTest extends WicketPageTest {
     }
 
     @Test
-    public void besvareSporsmalPanelErSynligNaarOppgaveIdGisIUrl() {
+    public void traadPanelErSynligNaarOppgaveIdGisIUrl() {
         wicket
             .goTo(InternBesvaremodus.class, with().param("fnr", "12037649749").param("oppgaveId", "123"))
-            .should().containComponent(ofType(BesvareSporsmalPanel.class).and(thatIsVisible()));
+            .should().containComponent(ofType(TraadPanel.class).and(thatIsVisible()));
     }
 
 }

@@ -86,7 +86,7 @@ public class WicketApplication extends WebApplication {
                 .addConditionalJavascript(Intern.RESPOND_JS)
 		        .addLess(
                         BasePage.INTERN_LESS,
-                        BasePage.BESVARESPORSALPANEL,
+                        BasePage.TRAADPANEL,
                         BasePage.MELDINGERWIDGET,
                         BasePage.MELDINGERLAMELL,
                         SoknadListe.SOKNADSLISTE_LESS)
