@@ -89,7 +89,6 @@ public class UtbetalingService {
         Bilag bilag1 = new BilagBuilder().setPosteringsDetaljer(asList(detalj1)).setMelding("bilag1").createBilag();
         Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(asList(detalj2, detalj3)).setMelding("bilag2").createBilag();
 
-
         Utbetaling utbetaling = new UtbetalingBuilder()
                 .setPeriode("2010.02.23-2011.02.24")
                 .setNettoBelop(2000.0)
@@ -139,7 +138,6 @@ public class UtbetalingService {
         Bilag bilag1 = new BilagBuilder().setPosteringsDetaljer(asList(detalj1)).setMelding("bilag1").createBilag();
         Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(asList(detalj2)).setMelding("bilag2").createBilag();
 
-
         Utbetaling utbetaling = new UtbetalingBuilder()
                 .setPeriode("2010.05.23-2011.05.24")
                 .setNettoBelop(5100.50)
@@ -156,7 +154,6 @@ public class UtbetalingService {
 
         Bilag bilag1 = new BilagBuilder().setPosteringsDetaljer(asList(detalj1)).setMelding("bilag1").createBilag();
         Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(asList(detalj2)).setMelding("bilag2").createBilag();
-
 
         Utbetaling utbetaling = new UtbetalingBuilder()
                 .setPeriode("2010.06.23-2011.06.24")

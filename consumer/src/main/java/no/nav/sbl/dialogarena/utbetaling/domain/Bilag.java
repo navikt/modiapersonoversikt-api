@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-public class Bilag  implements Serializable {
+public class Bilag implements Serializable {
 
     private String melding;
     private List<PosteringsDetalj> posteringsDetaljer;
@@ -28,7 +28,6 @@ public class Bilag  implements Serializable {
         }
     }
 
-
     public String getMelding() {
         return melding;
     }
@@ -44,7 +43,6 @@ public class Bilag  implements Serializable {
         }
         return kontoNr;
     }
-
 
     public Set<String> getBeskrivelser() {
         Set<String> beskrivelser = new TreeSet<>();
@@ -83,7 +81,5 @@ public class Bilag  implements Serializable {
                 ", posteringsDetaljer=" + posteringsDetaljer +
                 '}';
     }
-
-
     // CHECKSTYLE:ON
 }

@@ -58,7 +58,6 @@ public class Utbetaling implements Serializable {
         this.kontoNr = StringUtils.join(getKontoNrFromBilag(), ", ");
         this.startDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato();
         this.endDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato();
-
     }
 
     public String getKontoNr() {

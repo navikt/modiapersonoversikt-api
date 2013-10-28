@@ -34,7 +34,6 @@ public class PosteringsDetalj implements Serializable {
         return kontoNr;
     }
 
-
     // CHECKSTYLE:OFF
     @Override
     public boolean equals(Object o) {
@@ -67,8 +66,5 @@ public class PosteringsDetalj implements Serializable {
                 ", underBeskrivelse='" + underBeskrivelse + '\'' +
                 '}';
     }
-
-
-
     // CHECKSTYLE:ON
 }

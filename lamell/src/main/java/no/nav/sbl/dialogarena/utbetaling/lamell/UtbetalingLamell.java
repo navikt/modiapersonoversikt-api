@@ -5,11 +5,11 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
-import java.util.List;
+
+import static org.apache.wicket.model.Model.ofList;
 
 public class UtbetalingLamell extends Lerret {
 
@@ -18,13 +18,9 @@ public class UtbetalingLamell extends Lerret {
     @Inject
     private UtbetalingService utbetalingService;
 
-
     public UtbetalingLamell(String id, String fnr) {
         super(id);
-        List<Utbetaling> utbetalinger = utbetalingService.hentUtbetalinger(fnr);
-
-
-        ListView<Utbetaling> utbetalingListView = new ListView<Utbetaling>("utbetalinger", Model.ofList(utbetalinger)) {
+        ListView<Utbetaling> utbetalingListView = new ListView<Utbetaling>("utbetalinger", ofList(utbetalingService.hentUtbetalinger(fnr))) {
             @Override
             protected void populateItem(ListItem<Utbetaling> item) {
                 item.add(new UtbetalingPanel("utbetaling", item.getModelObject()));
