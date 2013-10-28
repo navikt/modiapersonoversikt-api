@@ -4,13 +4,13 @@ import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.MockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketApplication;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 import static org.mockito.Mockito.mock;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Configuration
 @Import({
@@ -18,7 +18,7 @@ import static org.mockito.Mockito.mock;
 })
 public class MockContextBeans {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MockContextBeans.class);
+    private static final Logger LOG = getLogger(MockContextBeans.class);
 
     @Bean
     public WicketApplication modiaApplication() {
