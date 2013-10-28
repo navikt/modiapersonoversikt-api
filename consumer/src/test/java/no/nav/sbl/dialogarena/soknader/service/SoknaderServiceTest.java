@@ -35,9 +35,9 @@ public class SoknaderServiceTest {
     private SoknaderService soknaderService = new SoknaderService();
 
     @Test
-    public void testGetSoknader() throws Exception {
+    public void testHentSoknader() throws Exception {
         when(sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenReturn(createResponse());
-        List<Soknad> soknader = soknaderService.getSoknader("fnr");
+        List<Soknad> soknader = soknaderService.hentSoknader("fnr");
         assertThat(soknader.size(), is(equalTo(1)));
         assertThat(soknader.get(0).getTittelKodeverk(), is(equalTo("tittel")));
     }

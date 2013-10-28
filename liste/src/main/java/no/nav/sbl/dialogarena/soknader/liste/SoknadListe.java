@@ -33,7 +33,7 @@ public class SoknadListe extends Liste<Soknad> {
         List<Soknad> soknader = new ArrayList<>();
         try {
             String aktorId = aktorService.getAktorId(fnr);
-            soknader = soknaderService.getSoknader(aktorId);
+            soknader = soknaderService.hentSoknader(aktorId);
         } catch (ApplicationException ex) {
             serviceCallFailed = true;
         }

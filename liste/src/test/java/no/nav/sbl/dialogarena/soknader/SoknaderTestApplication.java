@@ -37,7 +37,7 @@ public class SoknaderTestApplication extends WebApplication {
 
         brukLocaleFra(INSTANCE);
 
-        new ApplicationSettingsConfig().configure(this);
+        new ApplicationSettingsConfig().withUtf8Properties(true).configure(this);
         new FrontendConfigurator()
                 .withModules(FrontendModules.MODIA)
                 .addMetas(

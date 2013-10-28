@@ -18,8 +18,9 @@ public class SoknaderService {
 
     @Inject
     private SakOgBehandlingPortType sakOgBehandlingPortType;
+    private SoknadComparator soknadComparator = new SoknadComparator();
 
-    public List<Soknad> getSoknader(String aktorId) {
+    public List<Soknad> hentSoknader(String aktorId) {
         List<Soknad> soknadList = new ArrayList<>();
         try {
             for (WSSak sak : sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(createRequest(aktorId)).getSak()) {
@@ -28,7 +29,7 @@ public class SoknaderService {
         } catch (Exception e) {
             throw new ApplicationException("Feil ved henting av søknader", e);
         }
-        return on(soknadList).collect(new SoknadComparator());
+        return on(soknadList).collect(soknadComparator);
     }
 
     private FinnSakOgBehandlingskjedeListeRequest createRequest(String aktoerId) {

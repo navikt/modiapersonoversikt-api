@@ -28,7 +28,7 @@ public class SoknaderMockContext {
     public SoknaderService soknaderService(){
         SoknaderService service = mock(SoknaderService.class);
         List<Soknad> soknadList = soknaderDataSetMocked();
-        when(service.getSoknader(anyString())).thenReturn(soknadList);
+        when(service.hentSoknader(anyString())).thenReturn(soknadList);
         return service;
     }
 
