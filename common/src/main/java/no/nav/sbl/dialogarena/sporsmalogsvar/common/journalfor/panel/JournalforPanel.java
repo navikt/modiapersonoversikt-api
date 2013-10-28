@@ -1,11 +1,16 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel;
 
+import no.nav.modig.lang.collections.IterUtils;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.JournalforModell;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalforing;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Sak;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSBruker;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding;
+import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -24,10 +29,14 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.Arrays;
+
+import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class JournalforPanel extends Panel {
 
@@ -58,7 +67,7 @@ public class JournalforPanel extends Panel {
 
         private final JournalforModell modell;
 
-        public JournalforForm(String id, final IModel<Traad> traad, String fnr, BesvareHenvendelsePortType besvareHenvendelsePortType) {
+        public JournalforForm(String id, final IModel<Traad> traad, String fnr, final BesvareHenvendelsePortType besvareHenvendelsePortType) {
             super(id);
             modell = new JournalforModell(traad, fnr, besvareHenvendelsePortType);
             setModel(new CompoundPropertyModel<>(modell));
@@ -96,8 +105,8 @@ public class JournalforPanel extends Panel {
             AjaxSubmitLink journalfor = new AjaxSubmitLink("journalfor-submit") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                     //JournalforPanel.this.besvareHenvendelsePortType modell.getObject().getValgtSak()
-                    log.info("Trodde jeg journalførte gitt");
+                    besvareHenvendelsePortType.journalforMeldinger(on(traad.getObject().getDialog()).map(tilWsMelding(modell.getObject().getValgtSak().saksId)).collect());
+                    log.info("Bestilte journalføring hos mottaksbehandling. SaksID = " + modell.getObject().getValgtSak().saksId);
                 }
 
                 @Override
@@ -116,6 +125,22 @@ public class JournalforPanel extends Panel {
             };
 
             add(sakRadioGroup, sensitivRadioGroup, feedback, journalfor, avbryt);
+        }
+
+        private static Transformer<Melding, WSMelding> tilWsMelding(final String sakId) {
+            return new Transformer<Melding, WSMelding>() {
+                @Override
+                public WSMelding transform(Melding melding) {
+                    return new WSMelding()
+                            .withAktor(new WSBruker().withFodselsnummer(melding.avsender))
+                            .withBehandlingsId(melding.behandlingId)
+                            .withFritekst(melding.fritekst)
+                            .withMeldingstype("Fubar")
+                            .withSaksId(sakId)
+                            .withOpprettetDato(DateTime.parse(melding.getSendtDato()))
+                            .withTemastruktur("Tema C");
+                }
+            };
         }
 
     }

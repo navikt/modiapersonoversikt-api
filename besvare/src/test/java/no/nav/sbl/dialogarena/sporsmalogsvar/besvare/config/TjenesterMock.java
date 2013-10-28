@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSak;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
@@ -19,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.jws.WebParam;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -99,6 +101,10 @@ public class TjenesterMock {
     @Bean
     public BesvareHenvendelsePortType besvareHenvendelsePortType() {
         class BesvareHenvendelseStub extends ItPings implements BesvareHenvendelsePortType {
+            @Override
+            public void journalforMeldinger(@WebParam(name = "meldinger", targetNamespace = "") List<WSMelding> wsMeldings) {
+            }
+
             @Override
             public void besvarSporsmal(WSSvar wsSvar) {
                 LOG.info("BesvareHenvendelsePortType besvarer spørsmål (svar behandlingId {} \"{}\")", wsSvar.getBehandlingsId(), abbreviate(wsSvar.getFritekst(), 30));
