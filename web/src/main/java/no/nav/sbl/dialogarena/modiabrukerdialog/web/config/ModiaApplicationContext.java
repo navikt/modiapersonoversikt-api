@@ -1,7 +1,6 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ContextBeans;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.MockContextBeans;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.MockContextBeans;
 import org.slf4j.Logger;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
@@ -20,10 +19,11 @@ public class ModiaApplicationContext extends AnnotationConfigWebApplicationConte
 
     @Override
     public void refresh() {
+        register(WicketApplicationBeans.class);
         if (mockMe) {
             register(MockContextBeans.class);
         } else {
-            register(ContextBeans.class);
+            register(ApplicationContextBeans.class);
         }
         super.refresh();
 
