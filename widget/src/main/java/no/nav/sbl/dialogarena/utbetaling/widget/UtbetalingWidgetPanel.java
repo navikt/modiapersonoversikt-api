@@ -4,6 +4,8 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
@@ -14,12 +16,13 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
         super(id, model);
         setOutputMarkupId(true);
 
+        UtbetalingVM utbetalingVM = model.getObject();
         add(
-                createStatusContainer(model.getObject()),
-                createUtbetalingsDatoLabel(model.getObject()),
-                new Label("belop", model.getObject().getBelop()),
-                new Label("beskrivelse", model.getObject().getBeskrivelse()),
-                createPeriodeLabel(model.getObject())
+                createStatusContainer(utbetalingVM),
+                createUtbetalingsDatoLabel(utbetalingVM),
+                new Label("belop", utbetalingVM.getBelop()),
+                new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
+                createPeriodeLabel(utbetalingVM)
         );
     }
 
@@ -30,15 +33,18 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
     }
 
     private String getSluttDato(UtbetalingVM utbetalingVM) {
-        return optional(utbetalingVM.getSluttDato()).map(KORT).getOrElse("Ingen sluttdato");
+        StringResourceModel stringResourceModel = new StringResourceModel("sluttdato.mangler", new Model());
+        return optional(utbetalingVM.getSluttDato()).map(KORT).getOrElse(stringResourceModel.getString());
     }
 
     private String getStartDato(UtbetalingVM utbetalingVM) {
-        return optional(utbetalingVM.getStartDato()).map(KORT).getOrElse("Ingen startdato");
+        StringResourceModel stringResourceModel = new StringResourceModel("startdato.mangler", new Model());
+        return optional(utbetalingVM.getStartDato()).map(KORT).getOrElse(stringResourceModel.getString());
     }
 
     private Label createUtbetalingsDatoLabel(UtbetalingVM utbetalingVM) {
-        return new Label("utbetalingsDato", optional(utbetalingVM.getUtbetalingsDato()).map(KORT).getOrElse("Ingen utbetalingsdato"));
+        StringResourceModel stringResourceModel = new StringResourceModel("utbetalingdato.mangler", new Model());
+        return new Label("utbetalingsDato", optional(utbetalingVM.getUtbetalingsDato()).map(KORT).getOrElse(stringResourceModel.getString()));
     }
 
     private WebMarkupContainer createStatusContainer(UtbetalingVM utbetalingVM) {
