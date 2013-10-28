@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Traader;
@@ -33,6 +34,8 @@ import org.apache.wicket.validation.validator.StringValidator;
 
 import javax.inject.Inject;
 
+import static no.nav.modig.lang.option.Optional.none;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;
 
 public class TraadPanel extends Panel {
@@ -47,7 +50,9 @@ public class TraadPanel extends Panel {
     private MarkupContainer sisteMelding;
     private Dialog dialog;
 
-    private String oppgaveId;
+    private Optional<String> oppgaveId = none();
+
+    private final String fnr;
 
     private final IModel<Traad> traad = new AbstractReadOnlyModel<Traad>() {
         @Override
@@ -65,15 +70,8 @@ public class TraadPanel extends Panel {
 
     public TraadPanel(String id, final String fnr) {
         super(id);
+        this.fnr = fnr;
         setOutputMarkupId(true);
-        setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<Traad>() {
-            @Override
-            protected Traad load() {
-                return traader.hentTraad(fnr, oppgaveId)
-                        .getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId));
-            }
-        }));
-
 
         sisteMelding = new WebMarkupContainer("siste-melding").add(
                 new Label("overskrift", new MeldingOverskrift(siste, traad)),
@@ -82,7 +80,7 @@ public class TraadPanel extends Panel {
 
         dialog = new Dialog("tidligereDialog");
         add(
-                new JournalforPanel("journalfor-panel", traad.getObject(), fnr),
+                new JournalforPanel("journalfor-panel", traad, fnr),
                 new SvarForm("svar"),
                 sisteMelding,
                 dialog);
@@ -115,7 +113,7 @@ public class TraadPanel extends Panel {
             feedbackPanel.setOutputMarkupId(true);
 
             add(
-                    new Label("tema", new StringResourceModel("${tema}", TraadPanel.this.getDefaultModel())),
+                    new Label("tema", new StringResourceModel("${tema}", traad)),
                     new CheckBox("erSensitiv"),
                     feedbackPanel,
                     fritekst,
@@ -162,7 +160,17 @@ public class TraadPanel extends Panel {
     }
 
 
-    public void besvar(String oppgaveId) {
-        this.oppgaveId = oppgaveId;
+    public void besvar(String oppgaven) {
+        this.oppgaveId = optional(oppgaven);
+        setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<Traad>() {
+            @Override
+            protected Traad load() {
+                if (oppgaveId.isSome()) {
+                    return traader.hentTraad(fnr, oppgaveId.get())
+                            .getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId));
+                }
+                return null;
+            }
+        }));
     }
 }
