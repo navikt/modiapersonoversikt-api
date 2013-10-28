@@ -4,7 +4,7 @@
     <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
         <artifactId>sporsmal-og-svar</artifactId>
-        <version>1.10-SNAPSHOT</version>
+        <version>1.11-SNAPSHOT</version>
     </parent>
 
     <artifactId>sporsmal-og-svar-common</artifactId>
@@ -106,11 +106,6 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
         </dependency>
 
     </dependencies>

@@ -1,11 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.JournalforModell;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalforing;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Sak;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -24,17 +26,17 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.utils.Utils.TIL_WSMELDING;
 
 public class JournalforPanel extends Panel {
 
     public static final PackageResourceReference LESS_REFERENCE = new PackageResourceReference(JournalforPanel.class, "journalfor.less");
-    private static final Logger log = LoggerFactory.getLogger(JournalforPanel.class);
 
     private final IModel<Boolean> aabnet = new Model<>(false);
     private final WebMarkupContainer journalforContainer = new WebMarkupContainer("journalfor");
@@ -42,7 +44,7 @@ public class JournalforPanel extends Panel {
     @Inject
     BesvareHenvendelsePortType besvareHenvendelsePortType;
 
-    public JournalforPanel(String id, Traad traad, String fnr) {
+    public JournalforPanel(String id, IModel<Traad> traad, String fnr) {
         super(id);
 
         final JournalforForm journalforForm = new JournalforForm("journalfor-form", traad, fnr, besvareHenvendelsePortType);
@@ -69,7 +71,7 @@ public class JournalforPanel extends Panel {
 
         private final JournalforModell modell;
 
-        public JournalforForm(String id, final Traad traad, String fnr, BesvareHenvendelsePortType besvareHenvendelsePortType) {
+        public JournalforForm(String id, final IModel<Traad> traad, String fnr, final BesvareHenvendelsePortType besvareHenvendelsePortType) {
             super(id);
 
             modell = new JournalforModell(traad, fnr, besvareHenvendelsePortType);
@@ -86,14 +88,13 @@ public class JournalforPanel extends Panel {
                         @Override
                         protected void populateItem(ListItem<Sak> item) {
                             Radio<Sak> radio = new Radio<>("radio", item.getModel());
-                            item.add(radio);
                             Sak sak = item.getModelObject();
                             AttributeModifier radioReference = new AttributeModifier("for", radio.getMarkupId());
                             Label opprettetDato = new Label("opprettetDato", Datoformat.kort(sak.opprettetDato));
                             opprettetDato.add(radioReference);
                             Label fagsystem = new Label("fagsystem", sak.fagsystem);
                             fagsystem.add(radioReference);
-                            item.add(opprettetDato, fagsystem);
+                            item.add(radio, opprettetDato, fagsystem);
                         }
                     });
                 }
@@ -109,8 +110,14 @@ public class JournalforPanel extends Panel {
             AjaxSubmitLink journalfor = new AjaxSubmitLink("journalfor-submit") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    //JournalforPanel.this.besvareHenvendelsePortType modell.getObject().getValgtSak()
-                    log.info("Trodde jeg journalførte gitt");
+                    Sak valgtSak = getModelObject().getValgtSak();
+                    List<WSMelding> wsMeldinger = new ArrayList<>();
+                    for (Melding melding : traad.getObject().getDialog()) {
+                        WSMelding wsMelding = TIL_WSMELDING.transform(melding);
+                        wsMelding.setSaksId(valgtSak.saksId);
+                        wsMeldinger.add(wsMelding);
+                    }
+                    besvareHenvendelsePortType.journalforMeldinger(wsMeldinger);
                 }
 
                 @Override
