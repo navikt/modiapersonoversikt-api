@@ -1,11 +1,16 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.inject.Inject;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.JournalforModell;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalforing;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Sak;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -24,15 +29,12 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.inject.Inject;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.utils.Utils.TIL_WSMELDING;
 
 public class JournalforPanel extends Panel {
 
     public static final PackageResourceReference LESS_REFERENCE = new PackageResourceReference(JournalforPanel.class, "journalfor.less");
-    private static final Logger log = LoggerFactory.getLogger(JournalforPanel.class);
 
     @Inject
     BesvareHenvendelsePortType besvareHenvendelsePortType;
@@ -58,7 +60,7 @@ public class JournalforPanel extends Panel {
 
         private final JournalforModell modell;
 
-        public JournalforForm(String id, final IModel<Traad> traad, String fnr, BesvareHenvendelsePortType besvareHenvendelsePortType) {
+        public JournalforForm(String id, final IModel<Traad> traad, String fnr, final BesvareHenvendelsePortType besvareHenvendelsePortType) {
             super(id);
             modell = new JournalforModell(traad, fnr, besvareHenvendelsePortType);
             setModel(new CompoundPropertyModel<>(modell));
@@ -98,7 +100,7 @@ public class JournalforPanel extends Panel {
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     Sak valgtSak = getModelObject().getValgtSak();
                     List<WSMelding> wsMeldinger = new ArrayList<>();
-                    for (Melding melding : traad.getDialog()) {
+                    for (Melding melding : traad.getObject().getDialog()) {
                         WSMelding wsMelding = TIL_WSMELDING.transform(melding);
                         wsMelding.setSaksId(valgtSak.saksId);
                         wsMeldinger.add(wsMelding);
