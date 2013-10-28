@@ -42,13 +42,17 @@ public class MockSetupPage extends BasePage {
                 ModiaApplicationContext context = (ModiaApplicationContext) WicketApplication.get().getApplicationContext();
                 boolean mockAlt = mockString.equals(selected);
                 LOG.debug("mockAlt = " + mockAlt);
-                context.doRefresh(mockAlt);
+                if(context != null) {
+                    context.doRefresh(mockAlt);
 
-                PageParameters parameters = new PageParameters();
-                if (mockAlt) {
-                    parameters.add("fnr", "23067911223");
+                    PageParameters parameters = new PageParameters();
+                    if (mockAlt) {
+                        parameters.add("fnr", "23067911223");
+                    }
+                    getRequestCycle().setResponsePage(Intern.class, parameters);
+                } else {
+                    error("Context kunne ikke castes til ModiaApplicationContext");
                 }
-                getRequestCycle().setResponsePage(Intern.class, parameters);
             }
         };
         return (Form<Void>) form.add(new RadioChoice<>("velgMock", new PropertyModel<String>(this, "selected"), alternativer));

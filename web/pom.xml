@@ -393,19 +393,13 @@
 
         <dependency>
             <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
+            <artifactId>hamcrest-all</artifactId>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>sykmeldingsperioder-consumer</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-library</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
