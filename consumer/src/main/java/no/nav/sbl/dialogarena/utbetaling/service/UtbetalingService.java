@@ -19,9 +19,6 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,24 +49,19 @@ public class UtbetalingService {
 
         List<Utbetaling> utbetalinger = new ArrayList<>();
 
-        for (WSUtbetaling wsUtbetaling : utbetalingListe){
-            utbetalinger.add(new Utbetaling(wsUtbetaling));
+        if (utbetalingListe.size() > 0) {
+            for (WSUtbetaling wsUtbetaling : utbetalingListe) {
+                utbetalinger.add(new Utbetaling(wsUtbetaling));
+            }
         }
+
         return utbetalinger;
     }
 
     private WSHentUtbetalingListeRequest createRequest(String fnr) {
         WSHentUtbetalingListeRequest request = new WSHentUtbetalingListeRequest();
         request.withMottaker(fnr);
-        XMLGregorianCalendar fomDate;
-        XMLGregorianCalendar tomDate;
-        try {
-            fomDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(DateTime.now().minusMonths(3).toGregorianCalendar().toString());
-            tomDate = DatatypeFactory.newInstance().newXMLGregorianCalendar(DateTime.now().toGregorianCalendar().toString());
-        } catch (DatatypeConfigurationException e) {
-            throw new ApplicationException("Feil ved parsing av dato",e);
-        }
-        request.withPeriode(new WSPeriode().withFom(fomDate).withTom(tomDate));
+        request.withPeriode(new WSPeriode().withFom(DateTime.now().minusMonths(3)).withTom(DateTime.now()));
         return request;
     }
 
