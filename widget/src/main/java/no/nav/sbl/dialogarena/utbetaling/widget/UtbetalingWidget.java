@@ -8,19 +8,18 @@ import org.apache.wicket.model.IModel;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import static java.util.Collections.sort;
 
 public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
 
     @Inject
     private UtbetalingService utbetalingService;
 
-
     public UtbetalingWidget(String id, String initial, String fnr) {
         super(id, initial);
-        List<Utbetaling> utbetalinger = utbetalingService.hentUtbetalinger(fnr);
-        setDefaultModel(new CompoundPropertyModel<Object>(transformUtbetalingToVM(utbetalinger)));
+        setDefaultModel(new CompoundPropertyModel<Object>(transformUtbetalingToVM(utbetalingService.hentUtbetalinger(fnr))));
     }
 
     private List<UtbetalingVM> transformUtbetalingToVM(List<Utbetaling> utbetalinger) {
@@ -28,10 +27,10 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
         for (Utbetaling utbetaling : utbetalinger) {
             utbetalingVMs.add(new UtbetalingVM(utbetaling));
         }
-        Collections.sort(utbetalingVMs);
+        sort(utbetalingVMs);
 
         ArrayList<UtbetalingVM> list = new ArrayList<>();
-        list.addAll(utbetalingVMs.subList(0, utbetalingVMs.size()>6 ? 6 : utbetalingVMs.size()));
+        list.addAll(utbetalingVMs.subList(0, utbetalingVMs.size() > 6 ? 6 : utbetalingVMs.size()));
         return list;
     }
 
@@ -39,4 +38,5 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
     public UtbetalingWidgetPanel newFeedPanel(String id, IModel<UtbetalingVM> model) {
         return new UtbetalingWidgetPanel(id, model);
     }
+
 }
