@@ -35,7 +35,7 @@
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.1-SPRINGFIX</kjerneinfo.versjon>
-        <soknader.liste.version>2.0.4</soknader.liste.version>
+        <soknader.liste.version>2.0.5</soknader.liste.version>
         <sporsmalogsvar.version>1.9</sporsmalogsvar.version>
         <utbetaling.version>2.0.0-SNAPSHOT</utbetaling.version>
     </properties>
@@ -134,6 +134,12 @@
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-security-wicket</artifactId>
                 <version>${modig.security.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-lang</artifactId>
+                <version>1.2.0</version>
             </dependency>
 
             <dependency>
