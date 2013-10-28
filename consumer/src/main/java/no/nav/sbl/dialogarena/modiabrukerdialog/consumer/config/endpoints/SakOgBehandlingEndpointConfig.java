@@ -31,14 +31,12 @@ public class SakOgBehandlingEndpointConfig {
 
     @Bean
     public SakOgBehandlingPortType sakOgBehandlingPortType() {
-        SakOgBehandlingPortType sakOgBehandlingPortType = createSakOgBehandlingPortType(new UserSAMLOutInterceptor());
-        return sakOgBehandlingPortType;
+        return createSakOgBehandlingPortType(new UserSAMLOutInterceptor());
     }
 
     @Bean
     public SakOgBehandlingPortType selfTestSakOgBehandlingPortType() {
-        SakOgBehandlingPortType sakOgBehandlingPortType = createSakOgBehandlingPortType(new SystemSAMLOutInterceptor());
-        return sakOgBehandlingPortType;
+        return createSakOgBehandlingPortType(new SystemSAMLOutInterceptor());
     }
 
     private SakOgBehandlingPortType createSakOgBehandlingPortType(AbstractSAMLOutInterceptor interceptor) {
