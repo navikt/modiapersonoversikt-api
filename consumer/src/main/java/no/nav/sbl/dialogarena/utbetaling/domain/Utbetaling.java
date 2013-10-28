@@ -113,11 +113,11 @@ public class Utbetaling implements Serializable {
     }
 
     private Set<String> getKontoNrFromBilag(){
-        Set<String> kontoNr = new TreeSet<>();
+        Set<String> kontoNrSet = new TreeSet<>();
         for(Bilag detalj : bilag){
-            kontoNr.addAll(detalj.getKontoNrFromDetaljer());
+            kontoNrSet.addAll(detalj.getKontoNrFromDetaljer());
         }
-        return kontoNr;
+        return kontoNrSet;
     }
 
     private void extractPeriodDates(String periode) {
