@@ -51,13 +51,13 @@ public class Utbetaling implements Serializable {
             bilag.add(new Bilag(wsBilag));
         }
         this.statuskode = wsUtbetaling.getStatusKode();
-        this.utbetalingsDato = new DateTime (wsUtbetaling.getUtbetalingDato());
+        this.utbetalingsDato = wsUtbetaling.getUtbetalingDato();
         this.bruttoBelop = wsUtbetaling.getBruttobelop();
         this.nettoBelop = wsUtbetaling.getNettobelop();
         this.valuta = wsUtbetaling.getValuta();
         this.kontoNr = StringUtils.join(getKontoNrFromBilag(), ", ");
-        this.startDate = new DateTime(wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato());
-        this.endDate = new DateTime(wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato());
+        this.startDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato();
+        this.endDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato();
 
     }
 
