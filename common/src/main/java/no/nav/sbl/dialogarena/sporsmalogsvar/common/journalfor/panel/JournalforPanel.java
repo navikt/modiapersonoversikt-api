@@ -20,6 +20,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -36,7 +37,7 @@ public class JournalforPanel extends Panel {
     @Inject
     BesvareHenvendelsePortType besvareHenvendelsePortType;
 
-    public JournalforPanel(String id, Traad traad, String fnr) {
+    public JournalforPanel(String id, IModel<Traad> traad, String fnr) {
         super(id);
 
         final JournalforForm journalforForm = new JournalforForm("journalfor-form", traad, fnr, besvareHenvendelsePortType);
@@ -57,7 +58,7 @@ public class JournalforPanel extends Panel {
 
         private final JournalforModell modell;
 
-        public JournalforForm(String id, final Traad traad, String fnr, BesvareHenvendelsePortType besvareHenvendelsePortType) {
+        public JournalforForm(String id, final IModel<Traad> traad, String fnr, BesvareHenvendelsePortType besvareHenvendelsePortType) {
             super(id);
             modell = new JournalforModell(traad, fnr, besvareHenvendelsePortType);
             setModel(new CompoundPropertyModel<>(modell));
