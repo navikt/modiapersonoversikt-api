@@ -32,7 +32,7 @@ public class UtbetalingEndpointConfig {
 
     private UtbetalingPortType createUtbetalingPortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setWsdlLocation("utbetaling/no/nav/virksomhet/tjenester/utbetaling/Utbetaling.wsdl");
+        proxyFactoryBean.setWsdlLocation("utbetaling/no/nav/virksomhet/tjenester/utbetaling/utbetaling.wsdl");
         proxyFactoryBean.setAddress(utbetalingEndpoint.toString());
         proxyFactoryBean.setServiceClass(Utbetaling.class);
         proxyFactoryBean.getOutInterceptors().add(interceptor);

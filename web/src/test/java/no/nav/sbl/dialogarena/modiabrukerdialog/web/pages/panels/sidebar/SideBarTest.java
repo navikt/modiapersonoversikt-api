@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BesvareHen
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OppgavebehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.services.SoknaderServiceMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
@@ -36,7 +37,8 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         OppgavebehandlingPortTypeMock.class,
         BesvareHenvendelsePortTypeMock.class,
         SoknaderServiceMock.class,
-        UtbetalingConfig.class
+        UtbetalingConfig.class,
+        UtbetalingPortTypeMock.class
 })
 public class SideBarTest extends WicketPageTest {
 

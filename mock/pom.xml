@@ -36,6 +36,11 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>soknader-consumer</artifactId>
             <type>test-jar</type>
         </dependency>
