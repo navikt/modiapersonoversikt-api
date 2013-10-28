@@ -116,6 +116,11 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sporsmal-og-svar-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>soknader-liste</artifactId>
         </dependency>
 
