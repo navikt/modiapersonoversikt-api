@@ -20,7 +20,6 @@ import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -49,7 +48,7 @@ public class UtbetalingService {
 
         List<Utbetaling> utbetalinger = new ArrayList<>();
 
-        if (utbetalingListe.size() > 0) {
+        if (!utbetalingListe.isEmpty()) {
             for (WSUtbetaling wsUtbetaling : utbetalingListe) {
                 utbetalinger.add(new Utbetaling(wsUtbetaling));
             }
