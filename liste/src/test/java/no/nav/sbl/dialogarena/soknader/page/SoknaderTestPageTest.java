@@ -40,8 +40,8 @@ public class SoknaderTestPageTest extends AbstractWicketTest {
     }
 
     @Test
-    public void firstSoknadShouldContainCorrectData() {
-        Component listItem = getFirstListItemFromFirstListe();
+    public void thirdSoknadShouldContainCorrectData() {
+        Component listItem = getThirdListItemFromFirstListe();
         assertThat(getTextFromListItem("innsendtDato", listItem), is(equalTo("Innsendt 01.10.2013")));
         assertThat(getTextFromListItem("heading", listItem), is(equalTo("Dagpenger")));
         assertThat(getTextFromListItem("behandlingsTid", listItem), is(equalTo("Normert behandlingstid 10 dager")));
@@ -49,10 +49,10 @@ public class SoknaderTestPageTest extends AbstractWicketTest {
         assertThat(getTextFromListItem("status-date", listItem), is(equalTo("01.10.2013")));
     }
 
-    private Component getFirstListItemFromFirstListe() {
+    private Component getThirdListItemFromFirstListe() {
         Component liste = wicketTester.goTo(SoknaderTestPage.class).get().component(withId("soknadListe"));
         List<Component> listitems = wicketTester.get().components(withId("content").and(containedInComponent(equalTo(liste))));
-        return listitems.get(0);
+        return listitems.get(2);
     }
 
     private String getTextFromListItem(String id, Component listItem) {
