@@ -41,7 +41,7 @@ public class MockSetupPage extends BasePage {
             protected void onSubmit() {
                 ModiaApplicationContext context = (ModiaApplicationContext) WicketApplication.get().getApplicationContext();
                 boolean mockAlt = mockString.equals(selected);
-                LOG.debug("mockAlt = " + mockAlt);
+                LOG.info("<=================== mockAlt = " + mockAlt + "===================>");
                 if(context != null) {
                     context.doRefresh(mockAlt);
 
