@@ -12,6 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
+import static no.nav.modig.lang.collections.PredicateUtils.not;
+import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.sbl.dialogarena.soknader.domain.Soknad.BEHANDLINGSKJEDE_TO_SOKNAD_TRANSFORMER;
 
 public class SoknaderService {
@@ -29,7 +32,9 @@ public class SoknaderService {
         } catch (Exception e) {
             throw new ApplicationException("Feil ved henting av søknader", e);
         }
-        return on(soknadList).collect(soknadComparator);
+        return on(soknadList)
+                .filter(where(Soknad.SOKNAD_SOKNAD_STATUS_TRANSFORMER,not(equalTo(Soknad.SoknadStatus.GAMMEL_FERDIG))))
+                .collect(soknadComparator);
     }
 
     private FinnSakOgBehandlingskjedeListeRequest createRequest(String aktoerId) {

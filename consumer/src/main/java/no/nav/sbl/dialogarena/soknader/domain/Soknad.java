@@ -120,4 +120,13 @@ public class Soknad implements Serializable {
         DateTime expiredDate = ferdigDato.plusDays(AMOUNT_OF_DAYS_BEFORE_SOEKNAD_IS_OUTDATED);
         return now().isBefore(expiredDate);
     }
+
+
+    public static final Transformer<Soknad, SoknadStatus> SOKNAD_SOKNAD_STATUS_TRANSFORMER = new Transformer<Soknad, SoknadStatus>() {
+        @Override
+        public SoknadStatus transform(Soknad soknad) {
+            return soknad.getSoknadStatus();
+        }
+    };
 }
+

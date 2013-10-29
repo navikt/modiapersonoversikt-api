@@ -42,9 +42,40 @@ public class SoknaderServiceTest {
         assertThat(soknader.get(0).getTittelKodeverk(), is(equalTo("tittel")));
     }
 
+    @Test
+    public void soknaderEldreEnn28DagerSkalIkkeVises() throws Exception {
+        when(sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenReturn(createResponse2());
+        List<Soknad> soknader = soknaderService.getSoknader("fnr");
+        assertThat(soknader.size(), is(equalTo(1)));
+        assertThat(soknader.get(0).getTittelKodeverk(), is(equalTo("tittel")));
+    }
+
+    private FinnSakOgBehandlingskjedeListeResponse createResponse2() throws Exception {
+        return new FinnSakOgBehandlingskjedeListeResponse()
+                .withSak(createSak(),createOldSak());
+    }
+
     private FinnSakOgBehandlingskjedeListeResponse createResponse() throws Exception {
         return new FinnSakOgBehandlingskjedeListeResponse()
                 .withSak(createSak());
+    }
+
+    private WSSak createOldSak() throws Exception {
+        return new WSSak()
+                .withSaksId("id1")
+                .withSakstema(new WSSakstemaer().withValue("Dagpenger"))
+                .withOpprettet(now().minusDays(40))
+                .withLukket(now().minusDays(30))
+                .withBehandlingskjede(createOldBehandlingKjede());
+    }
+
+    private WSBehandlingskjede createOldBehandlingKjede() {
+        return new WSBehandlingskjede()
+                .withBehandlingskjedeId("behandling1")
+                .withNormertBehandlingstid(createNormertBehandlingstid())
+                .withStart(now().minusDays(35))
+                .withSluttNAVtid(now().minusDays(30))
+                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue("gammelTittel"));
     }
 
     private WSSak createSak() throws Exception {
