@@ -31,13 +31,13 @@
         <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
         <sakogbehandling.tjeneste.version>1.0.8</sakogbehandling.tjeneste.version>
-        <utbetaling.tjenestespesifikasjon.version>1.0.0-SNAPSHOT</utbetaling.tjenestespesifikasjon.version>
+        <utbetaling.tjenestespesifikasjon.version>1.0.0</utbetaling.tjenestespesifikasjon.version>
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.1-SPRINGFIX</kjerneinfo.versjon>
         <soknader.liste.version>2.0.6</soknader.liste.version>
         <sporsmalogsvar.version>1.10</sporsmalogsvar.version>
-        <utbetaling.version>2.0.0-SNAPSHOT</utbetaling.version>
+        <utbetaling.version>2.0.0</utbetaling.version>
     </properties>
 
     <dependencyManagement>
