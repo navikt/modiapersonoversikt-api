@@ -24,6 +24,8 @@ import static org.joda.time.DateTime.now;
 @Configuration
 public class UtbetalingPortTypeMock {
 
+    public static final String KONTO_NR = "12345678900";
+
     @Bean
     public UtbetalingPortType utbetalingPortType() {
         return new UtbetalingPortType() {
@@ -36,129 +38,80 @@ public class UtbetalingPortTypeMock {
                 utbetalinger.add(createUtbetaling4());
                 utbetalinger.add(createUtbetaling5());
                 utbetalinger.add(createUtbetaling6());
-
-
                 return new WSHentUtbetalingListeResponse().withUtbetalingListe(utbetalinger);
             }
 
             private WSUtbetaling createUtbetaling1() {
-                WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Alderspensjon", "12345678900");
-                WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Skatt", "12345678900");
-                WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
-                WSBilag bilag2 = createBilag("bilag2", posteringsdetalj2);
-
+                WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Alderspensjon", KONTO_NR));
+                WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Skatt", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(1000.0)
-                        .withBruttobelop(1000.0)
-                        .withStatusKode("12")
-                        .withStatusBeskrivelse("Uføre")
-                        .withUtbetalingDato(now().minusDays(4))
-                        .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 1, 23, 0, 0), new DateTime(2011, 1, 24, 0, 0)));
-                utbetaling.withBilagListe(bilag1,bilag2);
+                utbetaling.withNettobelop(1000.0).withBruttobelop(1000.0).withStatusKode("12").withStatusBeskrivelse("Uføre")
+                        .withUtbetalingDato(now().minusDays(4)).withUtbetalingsPeriode(createPeriode(new DateTime(2010, 1, 23, 0, 0), new DateTime(2011, 1, 24, 0, 0)));
+                utbetaling.withBilagListe(bilag1, bilag2);
                 return utbetaling;
             }
 
             private WSUtbetaling createUtbetaling2() {
-                WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Uføre", "12345678900");
-                WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Foreldrepenger", "12345678900");
-                WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", "12345678900");
-                WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
-                WSBilag bilag2 = createBilag("bilag2", posteringsdetalj2, posteringsdetalj3);
-
+                WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Uføre", KONTO_NR));
+                WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Foreldrepenger", KONTO_NR), createPosteringsDetalj("Skatt", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(2000.0)
-                        .withBruttobelop(2000.0)
-                        .withStatusKode("12")
-                        .withStatusBeskrivelse("Trygd")
-                        .withUtbetalingDato(now().minusDays(7))
-                        .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 2, 23, 0, 0), new DateTime(2011, 2, 24, 0, 0)));
-                utbetaling.withBilagListe(bilag1,bilag2);
+                utbetaling.withNettobelop(2000.0).withBruttobelop(2000.0).withStatusKode("12").withStatusBeskrivelse("Trygd")
+                        .withUtbetalingDato(now().minusDays(7)).withUtbetalingsPeriode(createPeriode(new DateTime(2010, 2, 23, 0, 0), new DateTime(2011, 2, 24, 0, 0)));
+                utbetaling.withBilagListe(bilag1, bilag2);
                 return utbetaling;
             }
 
             private WSUtbetaling createUtbetaling3() {
-                WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Barnepenger", "12345678900");
-                WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", "12345678900");
-                WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
-                WSBilag bilag2 = createBilag("bilag2",  posteringsdetalj3);
-
+                WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Barnepenger", KONTO_NR));
+                WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Skatt", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(3000.0)
-                        .withBruttobelop(3000.0)
-                        .withStatusKode("12")
-                        .withStatusBeskrivelse("Barnepenger")
-                        .withUtbetalingDato(now().minusDays(10))
-                        .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 3, 23, 0, 0), new DateTime(2011, 3, 24, 0, 0)));
-                utbetaling.withBilagListe(bilag1,bilag2);
+                utbetaling.withNettobelop(3000.0).withBruttobelop(3000.0).withStatusKode("12").withStatusBeskrivelse("Barnepenger")
+                        .withUtbetalingDato(now().minusDays(10)).withUtbetalingsPeriode(createPeriode(new DateTime(2010, 3, 23, 0, 0), new DateTime(2011, 3, 24, 0, 0)));
+                utbetaling.withBilagListe(bilag1, bilag2);
                 return utbetaling;
             }
 
             private WSUtbetaling createUtbetaling4() {
-                WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Trygd", "12345678900");
-                WSBilag bilag2 = createBilag("bilag2",  posteringsdetalj1);
-
+                WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Trygd", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(4000.00)
-                        .withBruttobelop(4000.0)
-                        .withStatusKode("12")
-                        .withStatusBeskrivelse("Trygd")
-                        .withUtbetalingDato(now().minusDays(40))
-                        .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 4, 23, 0, 0), new DateTime(2011, 4, 24, 0, 0)));
+                utbetaling.withNettobelop(4000.00).withBruttobelop(4000.0).withStatusKode("12").withStatusBeskrivelse("Trygd")
+                        .withUtbetalingDato(now().minusDays(40)).withUtbetalingsPeriode(createPeriode(new DateTime(2010, 4, 23, 0, 0), new DateTime(2011, 4, 24, 0, 0)));
                 utbetaling.withBilagListe(bilag2);
                 return utbetaling;
             }
 
 
-
             private WSUtbetaling createUtbetaling5() {
-                WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("APGrunnbeløp", "12345678900");
-                WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", "12345678900");
-                WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
-                WSBilag bilag2 = createBilag("bilag2",  posteringsdetalj3);
-
+                WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("APGrunnbeløp", KONTO_NR));
+                WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Skatt", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(5100.50)
-                        .withBruttobelop(5100.50)
-                        .withStatusKode("12")
-                        .withStatusBeskrivelse("APGrunnbeløp")
-                        .withUtbetalingDato(now().minusDays(84))
-                        .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 5, 23, 0, 0), new DateTime(2011, 5, 24, 0, 0)));
-                utbetaling.withBilagListe(bilag1,bilag2);
+                utbetaling.withNettobelop(5100.50).withBruttobelop(5100.50).withStatusKode("12").withStatusBeskrivelse("APGrunnbeløp")
+                        .withUtbetalingDato(now().minusDays(84)).withUtbetalingsPeriode(createPeriode(new DateTime(2010, 5, 23, 0, 0), new DateTime(2011, 5, 24, 0, 0)));
+                utbetaling.withBilagListe(bilag1, bilag2);
                 return utbetaling;
             }
 
             private WSUtbetaling createUtbetaling6() {
-                WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Pensjon", "12345678900");
-                WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", "12345678900");
-                WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
-                WSBilag bilag2 = createBilag("bilag2",  posteringsdetalj3);
-
+                WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Pensjon", KONTO_NR));
+                WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Skatt", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(6000.00)
-                        .withBruttobelop(6000.0)
-                        .withStatusKode("12")
-                        .withStatusBeskrivelse("Pensjon")
-                        .withUtbetalingDato(now().minusDays(200))
-                        .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
-                utbetaling.withBilagListe(bilag1,bilag2);
+                utbetaling.withNettobelop(6000.00).withBruttobelop(6000.0).withStatusKode("12").withStatusBeskrivelse("Pensjon")
+                        .withUtbetalingDato(now().minusDays(200)).withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
+                utbetaling.withBilagListe(bilag1, bilag2);
                 return utbetaling;
             }
-
 
             private WSPeriode createPeriode(DateTime fomDate, DateTime tomDate) {
                 return new WSPeriode().withPeriodeFomDato(fomDate).withPeriodeTomDato(tomDate);
             }
 
-            private WSPosteringsdetaljer createPosteringsDetalj(String hovedBeskrivelse, String kontoNr){
+            private WSPosteringsdetaljer createPosteringsDetalj(String hovedBeskrivelse, String kontoNr) {
                 return new WSPosteringsdetaljer().withKontoBeskrHoved(hovedBeskrivelse).withKontonr(kontoNr);
             }
 
-            private WSBilag createBilag(String melding, WSPosteringsdetaljer... posteringsdetaljer ){
+            private WSBilag createBilag(String melding, WSPosteringsdetaljer... posteringsdetaljer) {
                 return new WSBilag().withMeldingListe(new WSMelding().withMeldingtekst(melding)).withPosteringsdetaljerListe(posteringsdetaljer);
             }
-
-
-
         };
     }
 

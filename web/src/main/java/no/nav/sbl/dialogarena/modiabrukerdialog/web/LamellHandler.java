@@ -61,7 +61,7 @@ public class LamellHandler implements Serializable {
     public void handleWidgetItemEvent(String linkId) {
         if (LAMELL_KONTRAKTER.equalsIgnoreCase(linkId)) {
             lamellPanel.goToLamell(LAMELL_KONTRAKTER);
-        } else if( LAMELL_UTBETALINGER.equalsIgnoreCase(linkId)){
+        } else if(LAMELL_UTBETALINGER.equalsIgnoreCase(linkId)){
             lamellPanel.goToLamell(LAMELL_UTBETALINGER);
         }else  {
             throw new ApplicationException("Widgetlenke med ukjent id <" + linkId + "> klikket');");
