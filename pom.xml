@@ -19,7 +19,7 @@
         <wicket.version>6.10.0</wicket.version>
         <modig.frontend.version>1.1.1</modig.frontend.version>
 
-        <utbetaling.tjenestespesifikasjon.version>1.0.0-SNAPSHOT</utbetaling.tjenestespesifikasjon.version>
+        <utbetaling.tjenestespesifikasjon.version>1.0.0</utbetaling.tjenestespesifikasjon.version>
     </properties>
 
     <modules>
@@ -257,5 +257,10 @@
         </plugins>
     </build>
 
+    <scm>
+        <developerConnection>scm:git:ssh://git@a34apvl029.devillo.no:7999/dial/modia-utbetalinger.git</developerConnection>
+        <url>http://stash.devillo.no/scm/dial/modia-utbetalinger.git</url>
+        <tag>HEAD</tag>
+    </scm>
 
 </project>
