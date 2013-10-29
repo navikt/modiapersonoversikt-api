@@ -20,7 +20,6 @@ public class UtbetalingBuilder {
     private String kontoNr = "1234 25 25814";
 
     public UtbetalingBuilder() {
-
         bilag.addAll(asList(
                 new BilagBuilder().createBilag(),
                 new BilagBuilder().createBilag(),

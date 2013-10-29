@@ -15,8 +15,8 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
     public UtbetalingWidgetPanel(String id, IModel<UtbetalingVM> model) {
         super(id, model);
         setOutputMarkupId(true);
-
         UtbetalingVM utbetalingVM = model.getObject();
+
         add(
                 createStatusContainer(utbetalingVM),
                 createUtbetalingsDatoLabel(utbetalingVM),
