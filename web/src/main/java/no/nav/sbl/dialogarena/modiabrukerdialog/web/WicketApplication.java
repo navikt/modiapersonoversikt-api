@@ -87,6 +87,7 @@ public class WicketApplication extends WebApplication {
 		        .addLess(
                         BasePage.INTERN_LESS,
                         BasePage.TRAADPANEL,
+                        BasePage.JOURNALFORPANEL,
                         BasePage.MELDINGERWIDGET,
                         BasePage.MELDINGERLAMELL,
                         SoknadListe.SOKNADSLISTE_LESS)
