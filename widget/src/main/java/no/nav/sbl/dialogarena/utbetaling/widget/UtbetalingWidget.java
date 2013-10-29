@@ -38,8 +38,8 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
         }
     }
 
-    private ArrayList<UtbetalingVM> transformToVMs(List<Utbetaling> utbetalinger) {
-        ArrayList<UtbetalingVM> utbetalingVMs = new ArrayList<>();
+    private List<UtbetalingVM> transformToVMs(List<Utbetaling> utbetalinger) {
+        List<UtbetalingVM> utbetalingVMs = new ArrayList<>();
         for (Utbetaling utbetaling : utbetalinger) {
             utbetalingVMs.add(new UtbetalingVM(utbetaling));
         }
