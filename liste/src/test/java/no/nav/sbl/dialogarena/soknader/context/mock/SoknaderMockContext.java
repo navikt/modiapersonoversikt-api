@@ -37,7 +37,10 @@ public class SoknaderMockContext {
 
     @Bean
     public AktorService aktorService(){
-        return new AktorService();
+        AktorService service = mock(AktorService.class);
+        String aktorIdMocked = "29078469165474";
+        when(service.getAktorId(anyString())).thenReturn(aktorIdMocked);
+        return service;
     }
 
     private List<Soknad> soknaderDataSetMocked() {

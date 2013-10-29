@@ -1,25 +1,26 @@
 package no.nav.sbl.dialogarena.aktorid.service;
 
-import java.util.HashMap;
-import java.util.Map;
+import no.nav.modig.core.exception.SystemException;
+import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
+import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
 
-import static no.nav.modig.lang.option.Optional.optional;
+import javax.inject.Inject;
 
 public class AktorService {
 
-    private Map<String, String> aktorIdMap = new HashMap<>();
+    @Inject
+    private AktoerPortType ws;
 
-    public AktorService() {
-        aktorIdMap.put("01010091736", "69078469165827");
-        aktorIdMap.put("06047848871", "29078469165474");
-        aktorIdMap.put("23054549733", "79078469165571");
-        aktorIdMap.put("15066849497", "19078469165809");
-        aktorIdMap.put("06025800174", "69078469165205");
-        aktorIdMap.put("01010090195", "Ukjent");
-    }
+    public AktorService() {}
 
-    public String getAktorId(String fnr) {
-        return optional(aktorIdMap.get(fnr)).getOrElse("");
+    public String getAktorId(String fodselsnummer) {
+        try {
+            HentAktoerIdForIdentRequest request = new HentAktoerIdForIdentRequest();
+            request.setIdent(fodselsnummer);
+            return ws.hentAktoerIdForIdent(request).getAktoerId();
+        } catch (Exception e) {
+            throw new SystemException("Feil ved henting av aktorId for fnr: " + fodselsnummer, e);
+        }
     }
 
 }
