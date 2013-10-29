@@ -29,7 +29,7 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
     }
 
     private List<UtbetalingVM> transformUtbetalingToVM(List<Utbetaling> utbetalinger) {
-        ArrayList<UtbetalingVM> utbetalingVMs = transformToVMs(utbetalinger);
+        List<UtbetalingVM> utbetalingVMs = transformToVMs(utbetalinger);
         if (utbetalingVMs.size() > MAX_NUMBER_OF_UTBETALINGER) {
             //subList returnerer en ikke-serialiserbar liste, må derfor gjøre en workaround her
             return asList(utbetalingVMs.subList(0, MAX_NUMBER_OF_UTBETALINGER).toArray(new UtbetalingVM[]{}));
