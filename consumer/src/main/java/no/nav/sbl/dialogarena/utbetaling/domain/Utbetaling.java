@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -11,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static java.lang.Double.compare;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.joda.time.DateTime.parse;
 import static org.joda.time.format.DateTimeFormat.forPattern;
@@ -45,9 +45,8 @@ public class Utbetaling implements Serializable {
     }
     // CHECKSTYLE:ON
 
-
     public Utbetaling(WSUtbetaling wsUtbetaling) {
-        for(WSBilag wsBilag : wsUtbetaling.getBilagListe()){
+        for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
             bilag.add(new Bilag(wsBilag));
         }
         this.statuskode = wsUtbetaling.getStatusKode();
@@ -55,7 +54,7 @@ public class Utbetaling implements Serializable {
         this.bruttoBelop = wsUtbetaling.getBruttobelop();
         this.nettoBelop = wsUtbetaling.getNettobelop();
         this.valuta = wsUtbetaling.getValuta();
-        this.kontoNr = StringUtils.join(getKontoNrFromBilag(), ", ");
+        this.kontoNr = join(getKontoNrFromBilag(), ", ");
         this.startDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato();
         this.endDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato();
     }
@@ -152,8 +151,8 @@ public class Utbetaling implements Serializable {
 
         Utbetaling that = (Utbetaling) o;
 
-        if (Double.compare(that.bruttoBelop, bruttoBelop) != 0) return false;
-        if (Double.compare(that.nettoBelop, nettoBelop) != 0) return false;
+        if (compare(that.bruttoBelop, bruttoBelop) != 0) return false;
+        if (compare(that.nettoBelop, nettoBelop) != 0) return false;
         if (beskrivelse != null ? !beskrivelse.equals(that.beskrivelse) : that.beskrivelse != null) return false;
         if (bilag != null ? !bilag.equals(that.bilag) : that.bilag != null) return false;
         if (endDate != null ? !endDate.equals(that.endDate) : that.endDate != null) return false;

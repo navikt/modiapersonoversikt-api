@@ -31,10 +31,21 @@ public class UtbetalingService {
     UtbetalingPortType utbetalingPortType;
 
     public List<Utbetaling> hentUtbetalinger(String fnr) {
+        List<WSUtbetaling> wsUtbetalinger = getResponse(fnr).getUtbetalingListe();
+        List<Utbetaling> utbetalinger = new ArrayList<>();
 
-        WSHentUtbetalingListeResponse response;
+        if (!wsUtbetalinger.isEmpty()) {
+            for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
+                utbetalinger.add(new Utbetaling(wsUtbetaling));
+            }
+        }
+
+        return utbetalinger;
+    }
+
+    private WSHentUtbetalingListeResponse getResponse(String fnr) {
         try {
-            response = utbetalingPortType.hentUtbetalingListe(createRequest(fnr));
+            return utbetalingPortType.hentUtbetalingListe(createRequest(fnr));
         } catch (HentUtbetalingListeMottakerIkkeFunnet hentUtbetalingListeMottakerIkkeFunnet) {
             throw new ApplicationException("Utbetalingservice : Mottaker ikke funnet", hentUtbetalingListeMottakerIkkeFunnet);
         } catch (HentUtbetalingListeForMangeForekomster hentUtbetalingListeForMangeForekomster) {
@@ -44,17 +55,6 @@ public class UtbetalingService {
         } catch (HentUtbetalingListeUgyldigDato hentUtbetalingListeUgyldigDato) {
             throw new ApplicationException("Utbetalingservice : Ugyldig dato", hentUtbetalingListeUgyldigDato);
         }
-        List<WSUtbetaling> utbetalingListe = response.getUtbetalingListe();
-
-        List<Utbetaling> utbetalinger = new ArrayList<>();
-
-        if (!utbetalingListe.isEmpty()) {
-            for (WSUtbetaling wsUtbetaling : utbetalingListe) {
-                utbetalinger.add(new Utbetaling(wsUtbetaling));
-            }
-        }
-
-        return utbetalinger;
     }
 
     private WSHentUtbetalingListeRequest createRequest(String fnr) {
