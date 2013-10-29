@@ -86,7 +86,7 @@ public class UtbetalingPortTypeMock {
                 WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Skatt", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
                 utbetaling.withNettobelop(5100.50).withBruttobelop(5100.50).withStatusKode("12").withStatusBeskrivelse("APGrunnbeløp")
-                        .withUtbetalingDato(now().minusDays(84)).withUtbetalingsPeriode(createPeriode( now().minusDays(114), now().minusDays(85)));
+                        .withUtbetalingDato(now().minusDays(84)).withUtbetalingsPeriode(createPeriode(now().minusDays(114), now().minusDays(85)));
                 utbetaling.withBilagListe(bilag1, bilag2);
                 return utbetaling;
             }
