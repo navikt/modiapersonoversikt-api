@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
+import no.nav.modig.modia.ping.PingResult;
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
@@ -17,6 +19,12 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.jws.WebParam;
 import java.net.URL;
+import java.util.List;
+
+import static java.lang.System.currentTimeMillis;
+import static java.util.Arrays.asList;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 
 @Configuration
 public class AktorEndpointConfig {
@@ -26,15 +34,29 @@ public class AktorEndpointConfig {
 
     @Bean
     public AktoerPortType aktorPortType() {
-        return createSakOgBehandlingPortType(new UserSAMLOutInterceptor());
+        return createAktorIdPortType(new UserSAMLOutInterceptor());
     }
 
     @Bean
-    public AktoerPortType selfTestAktorPortType() {
-        return createSakOgBehandlingPortType(new SystemSAMLOutInterceptor());
+    public Pingable aktorIdPing() {
+        final AktoerPortType aktorIdPortType = createAktorIdPortType(new SystemSAMLOutInterceptor());
+        return new Pingable() {
+            @Override
+            public List<PingResult> ping() {
+                PingResult.ServiceResult result;
+                long start = currentTimeMillis();
+                try {
+                    aktorIdPortType.ping();
+                    result = SERVICE_OK;
+                } catch (Exception e) {
+                    result = SERVICE_FAIL;
+                }
+                return asList(new PingResult("Aktoer_v1", result, currentTimeMillis() - start));
+            }
+        };
     }
 
-    private AktoerPortType createSakOgBehandlingPortType(AbstractSAMLOutInterceptor interceptor) {
+    private AktoerPortType createAktorIdPortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setWsdlLocation("wsdl/no/nav/tjeneste/virksomhet/aktoer/v1/Aktoer.wsdl");
         proxyFactoryBean.setAddress(aktorEndpoint.toString());
