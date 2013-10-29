@@ -16,8 +16,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidget
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.BesvareSporsmalPanel;
-import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.TraadPanel;
 import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import org.apache.wicket.ajax.AjaxRequestHandler;
@@ -58,12 +56,12 @@ public class InternTest extends WicketPageTest {
     @Test
     public void shouldLoadPage() {
         wicket.goTo(Intern.class, with().param("fnr", "12037649749"))
-            .should().containComponent(withId("searchPanel").and(ofType(HentPersonPanel.class)))
-            .should().containComponent(withId("personKjerneinfoPanel").and(ofType(PersonKjerneinfoPanel.class)))
-            .should().containComponent(withId("personsokPanel").and(ofType(PersonsokPanel.class)))
-            .should().containComponent(withId("lameller").and(ofType(TokenLamellPanel.class)))
-            .should().containComponent(withId("sideBar").and(ofType(SideBar.class)))
-            .should().containComponent(withId("nullstill").and(ofType(AbstractLink.class)));
+                .should().containComponent(withId("searchPanel").and(ofType(HentPersonPanel.class)))
+                .should().containComponent(withId("personKjerneinfoPanel").and(ofType(PersonKjerneinfoPanel.class)))
+                .should().containComponent(withId("personsokPanel").and(ofType(PersonsokPanel.class)))
+                .should().containComponent(withId("lameller").and(ofType(TokenLamellPanel.class)))
+                .should().containComponent(withId("sideBar").and(ofType(SideBar.class)))
+                .should().containComponent(withId("nullstill").and(ofType(AbstractLink.class)));
     }
 
     @Test
@@ -99,8 +97,8 @@ public class InternTest extends WicketPageTest {
     @Test
     public void traadPanelErSynligNaarOppgaveIdGisIUrl() {
         wicket
-            .goTo(InternBesvaremodus.class, with().param("fnr", "12037649749").param("oppgaveId", "123"))
-            .should().containComponent(ofType(TraadPanel.class).and(thatIsVisible()));
+                .goTo(InternBesvaremodus.class, with().param("fnr", "12037649749").param("oppgaveId", "123"))
+                .should().containComponent(ofType(TraadPanel.class).and(thatIsVisible()));
     }
 
 }

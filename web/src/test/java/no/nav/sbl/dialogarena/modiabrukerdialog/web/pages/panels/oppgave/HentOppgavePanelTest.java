@@ -10,13 +10,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelM
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.BesvareSporsmalPanel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.service.Traad;
-import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.TraadPanel;
+import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,9 +48,9 @@ public class HentOppgavePanelTest extends WicketPageTest {
     @Test
     public void skalViseTemavelgerNaarDuPlukkerOppgave() {
         wicket.goTo(Intern.class)
-            .should().containComponent(ofType(HentOppgavePanel.Temaliste.class).and(thatIsInvisible()))
-            .click().link(withId("plukk-oppgave"))
-            .should().containComponent(ofType(HentOppgavePanel.Temaliste.class).and(thatIsVisible()));
+                .should().containComponent(ofType(HentOppgavePanel.Temaliste.class).and(thatIsInvisible()))
+                .click().link(withId("plukk-oppgave"))
+                .should().containComponent(ofType(HentOppgavePanel.Temaliste.class).and(thatIsVisible()));
     }
 
     @Test
@@ -68,7 +65,6 @@ public class HentOppgavePanelTest extends WicketPageTest {
 
         assertThat(getTraad().getSvar().behandlingId, notNullValue());
     }
-
 
     private Traad getTraad() {
         return (Traad) wicket.get().component(ofType(TraadPanel.class)).getDefaultModelObject();
