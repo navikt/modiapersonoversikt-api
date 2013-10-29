@@ -45,7 +45,7 @@ public class SoknaderServiceTest {
     @Test
     public void soknaderEldreEnn28DagerSkalIkkeVises() throws Exception {
         when(sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenReturn(createResponse2());
-        List<Soknad> soknader = soknaderService.getSoknader("fnr");
+        List<Soknad> soknader = soknaderService.hentSoknader("fnr");
         assertThat(soknader.size(), is(equalTo(1)));
         assertThat(soknader.get(0).getTittelKodeverk(), is(equalTo("tittel")));
     }
