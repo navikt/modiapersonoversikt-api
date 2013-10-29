@@ -102,16 +102,16 @@ public class WicketApplication extends WebApplication {
                 .addScripts(SPIResources.getScripts())
 		        .addScripts(
                         BasePage.JS_RESOURCE,
-                        ShortcutListenerResourceReference.get(), //TODO: Flytt til MODIA modul ?
-                        KeyNavigationResourceReference.get(),    //TODO: Flytt til MODIA modul ?
+                        ShortcutListenerResourceReference.get(),
+                        KeyNavigationResourceReference.get(),
                         Widget.JS_RESOURCE,
                         LamellPanel.JS_RESOURCE,
                         DatePicker.DATEPICKER_JS,
                         DateRangePicker.JS_REFERENCE,
                         JqueryTokenValueChangeBehavior.JS_REFERENCE,
                         ModigModalWindow.JS,
-                        EkspanderingsListe.JS_RESOURCE,          //TODO: Flytt til MODIA modul ?
-                        Liste.JS_RESOURCE,                       //TODO: Flytt til MODIA modul ?
+                        EkspanderingsListe.JS_RESOURCE,
+                        Liste.JS_RESOURCE,
                         DatePicker.JQUERY_PLACEHOLDER,
                         ModalErrorPanel.JS_RESOURCE,
                         Innboks.JS_REFERENCE
