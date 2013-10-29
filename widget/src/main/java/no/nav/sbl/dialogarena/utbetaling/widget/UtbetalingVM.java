@@ -5,6 +5,11 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Currency;
+import java.util.Locale;
 
 public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<UtbetalingVM> {
 
@@ -27,7 +32,12 @@ public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<Utbeta
     }
 
     public String getBelop() {
-        return Double.toString(utbetaling.getNettoBelop());
+        return formaterBelop(utbetaling.getNettoBelop());
+    }
+
+    public String getValuta() {
+        String valuta = utbetaling.getValuta();
+        return (valuta != null && !valuta.isEmpty() ? valuta : "kr");
     }
 
     public String getStatus() {
@@ -74,5 +84,13 @@ public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<Utbeta
     public int hashCode() {
         return utbetaling.hashCode();
     }
+
     // CHECKSTYLE:ON
+
+    private String formaterBelop(double nettoBelop) {
+        NumberFormat nf =  NumberFormat.getNumberInstance(Locale.forLanguageTag("nb"));
+        nf.setGroupingUsed(true);
+        nf.setMinimumFractionDigits(2);
+        return nf.format(nettoBelop);
+    }
 }
