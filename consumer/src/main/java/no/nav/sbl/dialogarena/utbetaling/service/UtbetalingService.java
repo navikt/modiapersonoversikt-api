@@ -26,7 +26,7 @@ public class UtbetalingService {
         return transformUtbetalinger(getWSUtbetalinger(fnr));
     }
 
-    private List<Utbetaling> transformUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
+    protected List<Utbetaling> transformUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
         List<Utbetaling> utbetalinger = new ArrayList<>();
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
             utbetalinger.add(new Utbetaling(wsUtbetaling));
