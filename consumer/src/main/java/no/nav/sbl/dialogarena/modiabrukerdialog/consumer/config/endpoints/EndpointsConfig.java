@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import({
+        AktorEndpointConfig.class,
         BesvareHenvendelseEndpointConfig.class,
         HenvendelseEndpointConfig.class,
         OppgavebehandlingEndpointConfig.class,
