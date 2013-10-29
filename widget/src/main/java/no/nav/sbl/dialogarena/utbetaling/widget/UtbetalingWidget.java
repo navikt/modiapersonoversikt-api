@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 
 public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
+
+    public static final PackageResourceReference UTBETALING_WIDGET_LESS = new PackageResourceReference(UtbetalingWidget.class, "utbetaling.less");
 
     private static final int MAX_NUMBER_OF_UTBETALINGER = 6;
 
