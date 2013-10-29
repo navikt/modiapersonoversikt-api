@@ -7,7 +7,6 @@ import org.junit.Test;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
@@ -44,7 +43,7 @@ public class UtbetalingVMTest {
         UtbetalingVM vm = new UtbetalingVM(utbetaling);
 
         String belop1 = vm.getBelop();
-        System.out.println("belop = " + belop1);
+//        System.out.println("belop = " + belop1);
 
         String[] splittPaaKomma = belop1.split(",");
         assertThat(splittPaaKomma.length, is(equalTo(2)));
