@@ -36,12 +36,19 @@
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.1-SPRINGFIX</kjerneinfo.versjon>
         <soknader.liste.version>2.0.6</soknader.liste.version>
-        <sporsmalogsvar.version>1.10</sporsmalogsvar.version>
+        <sporsmalogsvar.version>1.11</sporsmalogsvar.version>
         <utbetaling.version>2.0.0</utbetaling.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>no.nav.tjenester.fim</groupId>
+                <artifactId>nav-fim-aktoer-v1-tjenestespesifikasjon</artifactId>
+                <classifier>jaxws</classifier>
+                <version>1.0.0</version>
+            </dependency>
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>

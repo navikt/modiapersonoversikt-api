@@ -39,6 +39,7 @@
         <!-- Slutt kjerneinfo -->
         <!-- App-->
         <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling"/>
+        <webservice alias="Aktoer_v1" mapToProperty="aktor"/>
 
         <applicationCertificate alias="srvModiabrukerdialog" />
     </resources>

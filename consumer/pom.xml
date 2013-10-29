@@ -16,6 +16,12 @@
     <dependencies>
 
         <dependency>
+            <groupId>no.nav.tjenester.fim</groupId>
+            <artifactId>nav-fim-aktoer-v1-tjenestespesifikasjon</artifactId>
+            <classifier>jaxws</classifier>
+        </dependency>
+
+        <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-security-ws</artifactId>
         </dependency>
