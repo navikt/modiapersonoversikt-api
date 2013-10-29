@@ -14,16 +14,13 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.net.URL;
-
 @Configuration
 public class UtbetalingEndpointConfig {
-    @Value("${utbetaling.url}")
-    private URL utbetalingEndpoint;
+
+    private String utbetalingEndpoint = "https://modapp-t11.adeo.no/utbetaling";
 
     @Bean
     public UtbetalingPortType utbetalingPortType() {
@@ -33,7 +30,7 @@ public class UtbetalingEndpointConfig {
     private UtbetalingPortType createUtbetalingPortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setWsdlLocation("utbetaling/no/nav/virksomhet/tjenester/utbetaling/utbetaling.wsdl");
-        proxyFactoryBean.setAddress(utbetalingEndpoint.toString());
+        proxyFactoryBean.setAddress(utbetalingEndpoint);
         proxyFactoryBean.setServiceClass(Utbetaling.class);
         proxyFactoryBean.getOutInterceptors().add(interceptor);
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
