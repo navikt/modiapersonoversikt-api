@@ -13,11 +13,11 @@
     </listener>
     <context-param>
         <param-name>contextClass</param-name>
-        <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.ModiaApplicationContext</param-value>
+        <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext</param-value>
     </context-param>
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ApplicationContextConfig</param-value>
+        <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketApplicationBeans</param-value>
     </context-param>
 	<context-param>
 		<param-name>configuration</param-name>

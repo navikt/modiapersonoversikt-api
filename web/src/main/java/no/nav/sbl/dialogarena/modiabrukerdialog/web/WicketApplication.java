@@ -87,7 +87,7 @@ public class WicketApplication extends WebApplication {
                 .addConditionalJavascript(Intern.RESPOND_JS)
 		        .addLess(
                         BasePage.INTERN_LESS,
-                        BasePage.BESVARESPORSALPANEL,
+                        BasePage.TRAADPANEL,
                         BasePage.MELDINGERWIDGET,
                         BasePage.MELDINGERLAMELL,
                         SoknadListe.SOKNADSLISTE_LESS,
@@ -131,7 +131,7 @@ public class WicketApplication extends WebApplication {
 		compoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(kjerneinfoPep));
 		getSecuritySettings().setAuthorizationStrategy(compoundAuthorizationStrategy);
 
-        new ApplicationSettingsConfig().configure(this);
+        new ApplicationSettingsConfig().withUtf8Properties(true).configure(this);
 
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
 

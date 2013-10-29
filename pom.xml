@@ -35,8 +35,8 @@
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.1-SPRINGFIX</kjerneinfo.versjon>
-        <soknader.liste.version>2.0.5</soknader.liste.version>
-        <sporsmalogsvar.version>1.9</sporsmalogsvar.version>
+        <soknader.liste.version>2.0.6</soknader.liste.version>
+        <sporsmalogsvar.version>1.10</sporsmalogsvar.version>
         <utbetaling.version>2.0.0-SNAPSHOT</utbetaling.version>
     </properties>
 
@@ -105,6 +105,12 @@
             </dependency>
 
 
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>sporsmal-og-svar-common</artifactId>
+                <version>${sporsmalogsvar.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>no.nav</groupId>
@@ -183,12 +189,6 @@
                 <artifactId>modig-log-filter</artifactId>
                 <version>${modig.log.version}</version>
                 <scope>runtime</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.modig</groupId>
-                <artifactId>modig-lang</artifactId>
-                <version>1.2.0</version>
             </dependency>
 
             <dependency>
@@ -692,6 +692,18 @@
                 <version>${spring.version}</version>
             </dependency>
 
+
+            <!--HAMCREST-->
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-core</artifactId>
+                <version>1.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hamcrest</groupId>
+                <artifactId>hamcrest-all</artifactId>
+                <version>1.3</version>
+            </dependency>
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest-library</artifactId>
@@ -699,12 +711,6 @@
                 <scope>test</scope>
             </dependency>
 
-            <dependency>
-                <groupId>org.hamcrest</groupId>
-                <artifactId>hamcrest-core</artifactId>
-                <version>1.3</version>
-                <scope>test</scope>
-            </dependency>
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
@@ -725,6 +731,12 @@
                 <artifactId>junit</artifactId>
                 <version>4.11</version>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>1.9.5</version>
             </dependency>
 
             <dependency>

@@ -5,7 +5,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave.HentOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgavevalg.OppgavevalgPanel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.BesvareSporsmalPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.TraadPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.slf4j.Logger;
@@ -15,20 +15,20 @@ public class SideBar extends Panel {
 
     private static final Logger LOG = LoggerFactory.getLogger(SideBar.class);
 
-    private final BesvareSporsmalPanel besvaresporsmalPanel;
+    private final TraadPanel traadPanel;
     private final OppgavevalgPanel oppgavevalg;
     private final HentOppgavePanel hentOppgavePanel;
 
     public SideBar(String id, String fnr) {
         super(id);
         oppgavevalg = new OppgavevalgPanel("oppgavevalg");
-        besvaresporsmalPanel = new BesvareSporsmalPanel("besvarePanel", fnr);
+        traadPanel = new TraadPanel("besvarePanel", fnr);
         hentOppgavePanel = new HentOppgavePanel("hent-oppgave");
         initVisibility();
         add(
                 hentOppgavePanel,
                 new VisittkortPanel("visittkortPanel", fnr),
-                besvaresporsmalPanel,
+                traadPanel,
                 oppgavevalg
         );
     }
@@ -37,12 +37,12 @@ public class SideBar extends Panel {
     public void besvarmodus(AjaxRequestTarget target, String oppgaveId) {
         LOG.info("Modus: {}. Oppgave: {}", Modus.BESVARE, oppgaveId);
 
-        besvaresporsmalPanel.besvar(oppgaveId);
-        besvaresporsmalPanel.setVisibilityAllowed(true);
+        traadPanel.besvar(oppgaveId);
+        traadPanel.setVisibilityAllowed(true);
         oppgavevalg.setVisibilityAllowed(true);
         hentOppgavePanel.setVisibilityAllowed(false);
         if (target != null) {
-            target.add(besvaresporsmalPanel, oppgavevalg);
+            target.add(traadPanel, oppgavevalg);
         }
     }
 
@@ -55,7 +55,7 @@ public class SideBar extends Panel {
     }
 
     public final void initVisibility() {
-        besvaresporsmalPanel.setVisibilityAllowed(false);
+        traadPanel.setVisibilityAllowed(false);
         oppgavevalg.setVisibilityAllowed(false);
         hentOppgavePanel.setVisibilityAllowed(true);
     }
