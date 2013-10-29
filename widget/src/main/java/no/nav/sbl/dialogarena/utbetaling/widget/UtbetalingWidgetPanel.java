@@ -21,6 +21,7 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
                 createStatusContainer(utbetalingVM),
                 createUtbetalingsDatoLabel(utbetalingVM),
                 new Label("belop", utbetalingVM.getBelop()),
+                new Label("valuta", utbetalingVM.getValuta()),
                 new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
                 createPeriodeLabel(utbetalingVM)
         );
@@ -48,7 +49,7 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
     }
 
     private WebMarkupContainer createStatusContainer(UtbetalingVM utbetalingVM) {
-        return (WebMarkupContainer) new WebMarkupContainer("status-container").add(new Label("status", utbetalingVM.getStatus()));
+        return (WebMarkupContainer) new WebMarkupContainer("status-container");
     }
 
 }
