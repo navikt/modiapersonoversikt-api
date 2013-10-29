@@ -20,13 +20,16 @@ public class UtbetalingLamell extends Lerret {
 
     public UtbetalingLamell(String id, String fnr) {
         super(id);
-        ListView<Utbetaling> utbetalingListView = new ListView<Utbetaling>("utbetalinger", ofList(utbetalingService.hentUtbetalinger(fnr))) {
+        add(createUtbetalingListView(fnr));
+
+    }
+
+    private ListView<Utbetaling> createUtbetalingListView(final String fnr) {
+        return new ListView<Utbetaling>("utbetalinger", ofList(utbetalingService.hentUtbetalinger(fnr))) {
             @Override
             protected void populateItem(ListItem<Utbetaling> item) {
                 item.add(new UtbetalingPanel("utbetaling", item.getModelObject()));
             }
         };
-        add(utbetalingListView);
-
     }
 }
