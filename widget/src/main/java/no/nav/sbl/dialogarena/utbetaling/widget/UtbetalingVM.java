@@ -5,10 +5,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
-import java.util.Currency;
 import java.util.Locale;
 
 public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<UtbetalingVM> {
@@ -70,12 +67,18 @@ public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<Utbeta
     // CHECKSTYLE:OFF
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         UtbetalingVM that = (UtbetalingVM) o;
 
-        if (!utbetaling.equals(that.utbetaling)) { return false; }
+        if (!utbetaling.equals(that.utbetaling)) {
+            return false;
+        }
 
         return true;
     }
@@ -88,7 +91,7 @@ public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<Utbeta
     // CHECKSTYLE:ON
 
     private String formaterBelop(double nettoBelop) {
-        NumberFormat nf =  NumberFormat.getNumberInstance(Locale.forLanguageTag("nb"));
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.forLanguageTag("nb"));
         nf.setGroupingUsed(true);
         nf.setMinimumFractionDigits(2);
         return nf.format(nettoBelop);
