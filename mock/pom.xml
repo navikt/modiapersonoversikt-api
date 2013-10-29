@@ -66,11 +66,6 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-lang</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-domain</artifactId>
         </dependency>
@@ -122,25 +117,5 @@
 
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>analyze</id>
-                        <goals>
-                            <goal>analyze-only</goal>
-                        </goals>
-                        <configuration>
-                            <usedDependencies>
-                                <usedDependency>no.nav.modig:modig-lang</usedDependency>
-                            </usedDependencies>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
