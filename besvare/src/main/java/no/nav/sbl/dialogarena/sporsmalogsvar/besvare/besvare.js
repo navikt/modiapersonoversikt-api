@@ -34,7 +34,7 @@ $(document).ready(function() {
     }
 
     function attachToggleHoydeListener() {
-        var $dialogInnholdTekst = $('.tidligere-dialog .dialog-innhold .fritekst');
+        var $dialogInnholdTekst = $('.dialog-innhold .fritekst');
         var minHoyde = parseInt($dialogInnholdTekst.css('line-height')) * 2;
 
         $dialogInnholdTekst.each(function() {
@@ -45,7 +45,7 @@ $(document).ready(function() {
 
         $dialogInnholdTekst.height(minHoyde);
 
-        var $dialogInnhold = $('.tidligere-dialog .dialog-innhold');
+        var $dialogInnhold = $('.dialog-innhold');
 
         // I tilfelle AJAX events fra andre deler av Modia
         $dialogInnhold.off('click');
