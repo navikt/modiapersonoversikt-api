@@ -87,7 +87,7 @@ public class WicketApplication extends WebApplication {
                 .addConditionalJavascript(Intern.RESPOND_JS)
 		        .addLess(
                         BasePage.INTERN_LESS,
-                        BasePage.BESVARESPORSALPANEL,
+                        BasePage.TRAADPANEL,
                         BasePage.MELDINGERWIDGET,
                         BasePage.MELDINGERLAMELL,
                         SoknadListe.SOKNADSLISTE_LESS,
@@ -102,16 +102,16 @@ public class WicketApplication extends WebApplication {
                 .addScripts(SPIResources.getScripts())
 		        .addScripts(
                         BasePage.JS_RESOURCE,
-                        ShortcutListenerResourceReference.get(), //TODO: Flytt til MODIA modul ?
-                        KeyNavigationResourceReference.get(),    //TODO: Flytt til MODIA modul ?
+                        ShortcutListenerResourceReference.get(),
+                        KeyNavigationResourceReference.get(),
                         Widget.JS_RESOURCE,
                         LamellPanel.JS_RESOURCE,
                         DatePicker.DATEPICKER_JS,
                         DateRangePicker.JS_REFERENCE,
                         JqueryTokenValueChangeBehavior.JS_REFERENCE,
                         ModigModalWindow.JS,
-                        EkspanderingsListe.JS_RESOURCE,          //TODO: Flytt til MODIA modul ?
-                        Liste.JS_RESOURCE,                       //TODO: Flytt til MODIA modul ?
+                        EkspanderingsListe.JS_RESOURCE,
+                        Liste.JS_RESOURCE,
                         DatePicker.JQUERY_PLACEHOLDER,
                         ModalErrorPanel.JS_RESOURCE,
                         Innboks.JS_REFERENCE
@@ -131,7 +131,7 @@ public class WicketApplication extends WebApplication {
 		compoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(kjerneinfoPep));
 		getSecuritySettings().setAuthorizationStrategy(compoundAuthorizationStrategy);
 
-        new ApplicationSettingsConfig().configure(this);
+        new ApplicationSettingsConfig().withUtf8Properties(true).configure(this);
 
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
 

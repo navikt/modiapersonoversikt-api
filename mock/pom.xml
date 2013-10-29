@@ -72,7 +72,7 @@
 
         <dependency>
             <groupId>no.nav.modig</groupId>
-            <artifactId>modig-lang</artifactId>
+            <artifactId>modig-security-authorization</artifactId>
         </dependency>
 
         <dependency>
@@ -87,7 +87,7 @@
 
         <dependency>
             <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
+            <artifactId>mockito-all</artifactId>
         </dependency>
 
         <dependency>
@@ -127,25 +127,5 @@
 
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>analyze</id>
-                        <goals>
-                            <goal>analyze-only</goal>
-                        </goals>
-                        <configuration>
-                            <usedDependencies>
-                                <usedDependency>no.nav.modig:modig-lang</usedDependency>
-                            </usedDependencies>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>

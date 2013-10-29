@@ -1,15 +1,14 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ContextBeans;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.MockContextBeans;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.MockContextBeans;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
-
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class ModiaApplicationContext extends AnnotationConfigWebApplicationContext {
-    private static final Logger LOG = LoggerFactory.getLogger(ModiaApplicationContext.class);
+
+    private static final Logger LOG = getLogger(ModiaApplicationContext.class);
 
     private boolean mockMe;
 
@@ -20,11 +19,11 @@ public class ModiaApplicationContext extends AnnotationConfigWebApplicationConte
 
     @Override
     public void refresh() {
-
+        register(WicketApplicationBeans.class);
         if (mockMe) {
             register(MockContextBeans.class);
         } else {
-            register(ContextBeans.class);
+            register(ApplicationContextBeans.class);
         }
         super.refresh();
 
