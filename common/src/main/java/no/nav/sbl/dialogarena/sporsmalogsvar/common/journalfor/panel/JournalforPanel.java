@@ -12,7 +12,6 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
@@ -38,9 +37,9 @@ public class JournalforPanel extends Panel {
 
     public static final PackageResourceReference LESS_REFERENCE = new PackageResourceReference(JournalforPanel.class, "journalfor.less");
 
-    private final IModel<Boolean> aabnet;
-    private final WebMarkupContainer journalforContainer;
-    private final JournalforForm journalforForm;
+    private IModel<Boolean> aabnet;
+    private AjaxLink<Void> journaforingExpander;
+    private JournalforForm journalforForm;
 
     @Inject
     BesvareHenvendelsePortType besvareHenvendelsePortType;
@@ -49,30 +48,28 @@ public class JournalforPanel extends Panel {
         super(id);
 
         aabnet = new Model<>(false);
-        journalforContainer = new WebMarkupContainer("journalfor");
 
-        journalforForm = new JournalforForm("journalfor-form", traad, fnr, besvareHenvendelsePortType);
-        journalforForm.setVisibilityAllowed(false);
-        journalforForm.setOutputMarkupPlaceholderTag(true);
-
-        AjaxLink<Void> journaforingExpander = new AjaxLink<Void>("start-journalforing") {
+        journaforingExpander = new AjaxLink<Void>("start-journalforing") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                toggleSynlighet();
-                target.add(journalforContainer);
+                toggleSynlighet(target);
             }
         };
         journaforingExpander.add(hasCssClassIf("valgt", aabnet));
         journaforingExpander.setOutputMarkupId(true);
 
-        journalforContainer.setOutputMarkupId(true);
-        journalforContainer.add(journaforingExpander, journalforForm);
-        add(journalforContainer);
+        journalforForm = new JournalforForm("journalfor-form", traad, fnr, besvareHenvendelsePortType);
+        journalforForm.setVisibilityAllowed(false);
+        journalforForm.setOutputMarkupPlaceholderTag(true);
+
+
+        add(journaforingExpander, journalforForm);
     }
 
-    private void toggleSynlighet() {
+    private void toggleSynlighet(AjaxRequestTarget target) {
         aabnet.setObject(!aabnet.getObject());
         journalforForm.setVisibilityAllowed(aabnet.getObject());
+        target.add(journaforingExpander, journalforForm);
     }
 
     private class JournalforForm extends Form<Journalforing> {
@@ -100,13 +97,14 @@ public class JournalforPanel extends Panel {
                             AttributeModifier radioReference = new AttributeModifier("for", radio.getMarkupId());
                             Label opprettetDato = new Label("opprettetDato", Datoformat.kort(sak.opprettetDato));
                             opprettetDato.add(radioReference);
-                            Label fagsystem = new Label("fagsystem", sak.fagsystem);
-                            fagsystem.add(radioReference);
-                            item.add(radio, opprettetDato, fagsystem);
+                            Label sakstype = new Label("sakstype", sak.sakstype);
+                            sakstype.add(radioReference);
+                            item.add(radio, opprettetDato, sakstype);
                         }
                     });
                 }
             });
+
             final RadioGroup<Boolean> sensitivRadioGroup = new RadioGroup<>("sensitiv");
             sensitivRadioGroup.setRequired(true);
             sensitivRadioGroup.add(new Radio<>("ikke-sensitivt", Model.of(false)));
@@ -126,8 +124,7 @@ public class JournalforPanel extends Panel {
                         wsMeldinger.add(wsMelding);
                     }
                     besvareHenvendelsePortType.journalforMeldinger(wsMeldinger);
-                    toggleSynlighet();
-                    target.add(journalforContainer);
+                    toggleSynlighet(target);
                 }
 
                 @Override
@@ -140,14 +137,11 @@ public class JournalforPanel extends Panel {
                 @Override
                 public void onClick(AjaxRequestTarget target) {
                     modell.nullstill();
-                    toggleSynlighet();
-                    target.add(journalforContainer);
+                    toggleSynlighet(target);
                 }
             };
 
             add(sakRadioGroup, sensitivRadioGroup, feedback, journalfor, avbryt);
         }
-
     }
-
 }
