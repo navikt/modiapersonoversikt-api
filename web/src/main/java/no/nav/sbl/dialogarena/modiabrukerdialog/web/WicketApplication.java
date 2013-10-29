@@ -127,7 +127,7 @@ public class WicketApplication extends WebApplication {
 		compoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(kjerneinfoPep));
 		getSecuritySettings().setAuthorizationStrategy(compoundAuthorizationStrategy);
 
-        new ApplicationSettingsConfig().configure(this);
+        new ApplicationSettingsConfig().withUtf8Properties(true).configure(this);
 
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
 
