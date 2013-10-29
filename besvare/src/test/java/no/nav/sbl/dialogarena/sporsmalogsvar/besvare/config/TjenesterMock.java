@@ -123,7 +123,10 @@ public class TjenesterMock {
 
             @Override
             public HentSakerResponse hentSaker(HentSakerRequest parameters) {
-                return new HentSakerResponse().withSaker(Arrays.asList(new WSSak().withGenerell(true).withOpprettetDato(DateTime.now()).withSakId("123").withStatus("Foobar")));
+                return new HentSakerResponse().withSaker(Arrays.asList(
+                        new WSSak().withGenerell(true).withOpprettetDato(DateTime.now()).withSakId("123").withStatus("Foobar"),
+                        new WSSak().withGenerell(false).withOpprettetDato(DateTime.now().minusDays(1)).withSakId("12").withStatus("Something"),
+                        new WSSak().withGenerell(true).withOpprettetDato(DateTime.now().minusDays(3)).withSakId("1234").withStatus("Ingen Status")));
             }
         }
         return new BesvareHenvendelseStub();

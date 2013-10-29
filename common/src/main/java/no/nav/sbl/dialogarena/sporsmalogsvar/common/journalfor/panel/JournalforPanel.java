@@ -38,8 +38,9 @@ public class JournalforPanel extends Panel {
 
     public static final PackageResourceReference LESS_REFERENCE = new PackageResourceReference(JournalforPanel.class, "journalfor.less");
 
-    private final IModel<Boolean> aabnet = new Model<>(false);
-    private final WebMarkupContainer journalforContainer = new WebMarkupContainer("journalfor");
+    private final IModel<Boolean> aabnet;
+    private final WebMarkupContainer journalforContainer;
+    private final JournalforForm journalforForm;
 
     @Inject
     BesvareHenvendelsePortType besvareHenvendelsePortType;
@@ -47,15 +48,17 @@ public class JournalforPanel extends Panel {
     public JournalforPanel(String id, IModel<Traad> traad, String fnr) {
         super(id);
 
-        final JournalforForm journalforForm = new JournalforForm("journalfor-form", traad, fnr, besvareHenvendelsePortType);
+        aabnet = new Model<>(false);
+        journalforContainer = new WebMarkupContainer("journalfor");
+
+        journalforForm = new JournalforForm("journalfor-form", traad, fnr, besvareHenvendelsePortType);
         journalforForm.setVisibilityAllowed(false);
         journalforForm.setOutputMarkupPlaceholderTag(true);
 
         AjaxLink<Void> journaforingExpander = new AjaxLink<Void>("start-journalforing") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                aabnet.setObject(!aabnet.getObject());
-                journalforForm.setVisibilityAllowed(aabnet.getObject());
+                toggleSynlighet();
                 target.add(journalforContainer);
             }
         };
@@ -65,6 +68,11 @@ public class JournalforPanel extends Panel {
         journalforContainer.setOutputMarkupId(true);
         journalforContainer.add(journaforingExpander, journalforForm);
         add(journalforContainer);
+    }
+
+    private void toggleSynlighet() {
+        aabnet.setObject(!aabnet.getObject());
+        journalforForm.setVisibilityAllowed(aabnet.getObject());
     }
 
     private class JournalforForm extends Form<Journalforing> {
@@ -118,6 +126,8 @@ public class JournalforPanel extends Panel {
                         wsMeldinger.add(wsMelding);
                     }
                     besvareHenvendelsePortType.journalforMeldinger(wsMeldinger);
+                    toggleSynlighet();
+                    target.add(journalforContainer);
                 }
 
                 @Override
@@ -130,8 +140,7 @@ public class JournalforPanel extends Panel {
                 @Override
                 public void onClick(AjaxRequestTarget target) {
                     modell.nullstill();
-                    JournalforForm.this.setVisibilityAllowed(false);
-                    aabnet.setObject(!aabnet.getObject());
+                    toggleSynlighet();
                     target.add(journalforContainer);
                 }
             };
