@@ -21,6 +21,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import javax.xml.soap.SOAPException;
 import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
@@ -67,6 +68,12 @@ public class UtbetalingServiceTest {
     @Test(expected = ApplicationException.class)
     public void testExceptions_HentUtbetalingListeUgyldigDato() throws Exception {
         when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeUgyldigDato());
+        service.getWSUtbetalinger(fnr);
+    }
+
+    @Test(expected = ApplicationException.class)
+    public void testExceptions_UkjentFeil() throws Exception {
+        when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new RuntimeException());
         service.getWSUtbetalinger(fnr);
     }
 
