@@ -16,7 +16,7 @@ public class OppgavePanel extends Panel {
     private final OppgavevalgPanel oppgavevalg;
     private final HentOppgavePanel hentOppgavePanel;
 
-    public OppgavePanel(String id, String fnr) {
+    public OppgavePanel(String id) {
         super(id);
         oppgavevalg = new OppgavevalgPanel("oppgavevalg");
         hentOppgavePanel = new HentOppgavePanel("hent-oppgave");

@@ -74,7 +74,7 @@ public class Intern extends BasePage {
 		    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
             new TimeoutBoks("timeoutBoks", fnr),
             redirectPopup,
-		    new OppgavePanel("oppgavePanel", fnr).setVisible(true),
+		    new OppgavePanel("oppgavePanel").setVisible(true),
 		    new BesvarePanel("besvarePanel", fnr)
         );
     }
