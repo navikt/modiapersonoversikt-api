@@ -15,9 +15,9 @@ import static org.joda.time.DateTime.now;
 
 public class WSUtbetalingTestData {
 
-    private String kontoNr = "***REMOVED***";
+    private static String kontoNr = "***REMOVED***";
 
-    public List<WSUtbetaling> getWsUtbetalinger() {
+    public static List<WSUtbetaling> getWsUtbetalinger() {
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
         utbetalinger.add(createUtbetaling1());
         utbetalinger.add(createUtbetaling2());
@@ -28,7 +28,7 @@ public class WSUtbetalingTestData {
         return utbetalinger;
     }
 
-    public WSUtbetaling createUtbetaling1() {
+    public static WSUtbetaling createUtbetaling1() {
         WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Alderspensjon",kontoNr);
         WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Skatt", kontoNr);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
@@ -45,7 +45,7 @@ public class WSUtbetalingTestData {
         return utbetaling;
     }
 
-    public WSUtbetaling createUtbetaling2() {
+    public static WSUtbetaling createUtbetaling2() {
         WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Uføre", kontoNr);
         WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Foreldrepenger", kontoNr);
         WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", kontoNr);
@@ -63,7 +63,7 @@ public class WSUtbetalingTestData {
         return utbetaling;
     }
 
-    public WSUtbetaling createUtbetaling3() {
+    public static WSUtbetaling createUtbetaling3() {
         WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Barnepenger", kontoNr);
         WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", kontoNr);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
@@ -80,7 +80,7 @@ public class WSUtbetalingTestData {
         return utbetaling;
     }
 
-    public WSUtbetaling createUtbetaling4() {
+    public static WSUtbetaling createUtbetaling4() {
         //String kontoNr = kontoNr;
         WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Trygd", kontoNr);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj1);
@@ -96,7 +96,7 @@ public class WSUtbetalingTestData {
         return utbetaling;
     }
 
-    public WSUtbetaling createUtbetaling5() {
+    public static WSUtbetaling createUtbetaling5() {
         WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("APGrunnbeløp", kontoNr);
         WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", kontoNr);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
@@ -113,7 +113,7 @@ public class WSUtbetalingTestData {
         return utbetaling;
     }
 
-    public WSUtbetaling createUtbetaling6() {
+    public static WSUtbetaling createUtbetaling6() {
         WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Pensjon", kontoNr);
         WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", kontoNr);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
@@ -130,15 +130,15 @@ public class WSUtbetalingTestData {
         return utbetaling;
     }
 
-    public WSPeriode createPeriode(DateTime fomDate, DateTime tomDate) {
+    public static WSPeriode createPeriode(DateTime fomDate, DateTime tomDate) {
         return new WSPeriode().withPeriodeFomDato(fomDate).withPeriodeTomDato(tomDate);
     }
 
-    public WSPosteringsdetaljer createPosteringsDetalj(String hovedBeskrivelse, String kontoNr) {
+    public static WSPosteringsdetaljer createPosteringsDetalj(String hovedBeskrivelse, String kontoNr) {
         return new WSPosteringsdetaljer().withKontoBeskrHoved(hovedBeskrivelse).withKontonr(kontoNr);
     }
 
-    public WSBilag createBilag(String melding, WSPosteringsdetaljer... posteringsdetaljer) {
+    public static WSBilag createBilag(String melding, WSPosteringsdetaljer... posteringsdetaljer) {
         return new WSBilag().withMeldingListe(new WSMelding().withMeldingtekst(melding)).withPosteringsdetaljerListe(posteringsdetaljer);
     }
 
