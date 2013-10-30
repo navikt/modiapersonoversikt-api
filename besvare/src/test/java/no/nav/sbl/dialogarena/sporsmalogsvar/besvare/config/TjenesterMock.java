@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.jws.WebParam;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -101,9 +100,11 @@ public class TjenesterMock {
     @Bean
     public BesvareHenvendelsePortType besvareHenvendelsePortType() {
         class BesvareHenvendelseStub extends ItPings implements BesvareHenvendelsePortType {
+
             @Override
-            public void journalforMeldinger(@WebParam(name = "meldinger", targetNamespace = "") List<WSMelding> wsMeldings) {
+            public void journalforMeldinger(List<WSMelding> meldinger) {
             }
+
 
             @Override
             public void besvarSporsmal(WSSvar wsSvar) {
@@ -124,7 +125,10 @@ public class TjenesterMock {
 
             @Override
             public HentSakerResponse hentSaker(HentSakerRequest parameters) {
-                return new HentSakerResponse().withSaker(Arrays.asList(new WSSak().withGenerell(true).withOpprettetDato(DateTime.now()).withSakId("123").withStatus("Foobar")));
+                return new HentSakerResponse().withSaker(Arrays.asList(
+                        new WSSak().withGenerell(true).withOpprettetDato(DateTime.now()).withSakId("123").withStatus("Foobar"),
+                        new WSSak().withGenerell(false).withOpprettetDato(DateTime.now().minusDays(1)).withSakId("12").withStatus("Something"),
+                        new WSSak().withGenerell(true).withOpprettetDato(DateTime.now().minusDays(3)).withSakId("1234").withStatus("Ingen Status")));
             }
         }
         return new BesvareHenvendelseStub();

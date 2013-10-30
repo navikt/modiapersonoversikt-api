@@ -1,9 +1,100 @@
+@morkeBlaa: #0067c5;
+@graaSkrift: #b7b1a9;
+
 .journalfor {
+  .start-journalforing {
+    display: inline-block;
+    font-family: Modus, Helvetica, Arial, sans-serif;
+    color: black;
+    padding: 0.5rem 2rem;
+    margin: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-align: center;
+    text-transform: uppercase;
+    position: relative;
+    background-color: @graaSkrift;
+    &:after {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      border-top-color: @graaSkrift;
+      border-width: 0.5rem;
+      margin-left: -0.5rem;
+    }
+    &.valgt, &:hover {
+      text-decoration: none;
+      background-color: @morkeBlaa;
+      color: white;
+      &:after {
+        border-top-color: @morkeBlaa;
+      }
+    }
+  }
   .journalfor-form {
     background-color: #333333;
-    padding: 1em;
+    padding: 2em;
     h3, h4 {
-      color: #b7b1a9;
+      color: @graaSkrift;
+    }
+    h3 {
+      text-align: center;
+      margin: 0;
+    }
+    h4 {
+      margin-bottom: 0;
+    }
+    .sakvalg {
+      label {
+        font-family: Modus, Helvetica, Arial, sans-serif;
+        text-transform: uppercase;
+        font-size: 0.9rem !important;
+        padding: 0 0 0 2.5rem;
+        font-weight: 600;
+        &:last-child {
+          display: block;
+          color: white;
+          margin-top: -0.75rem;
+          font-size: 1rem !important;
+          font-weight: bold;
+          padding-left: 2.5rem;
+          text-transform: none;
+        }
+      }
+    }
+    input + label {
+      text-transform: none;
+      padding-left: 2.5rem;
+    }
+    .robust-strek {
+      border-style: none;
+    }
+    .skillestrek {
+      margin: 1rem auto;
+      width: 100%;
+      height: 1px;
+      border-style: none;
+      background-color: #675c53;
+    }
+    .fortsett {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .avbryt {
+      margin-top: 1em;
+      text-align: center;
+      a {
+        color: #0ca9e1;
+        text-decoration: none;
+        font-size: 1.25em;
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
 }

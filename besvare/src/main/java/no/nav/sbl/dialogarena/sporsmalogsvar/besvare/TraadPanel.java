@@ -52,8 +52,6 @@ public class TraadPanel extends Panel {
 
     private Optional<String> oppgaveId = none();
 
-    private final String fnr;
-
     private final IModel<Traad> traad = new AbstractReadOnlyModel<Traad>() {
         @Override
         public Traad getObject() {
@@ -70,8 +68,18 @@ public class TraadPanel extends Panel {
 
     public TraadPanel(String id, final String fnr) {
         super(id);
-        this.fnr = fnr;
         setOutputMarkupId(true);
+
+        setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<Traad>() {
+            @Override
+            protected Traad load() {
+                for (String oppgaven : oppgaveId) {
+                    return traader.hentTraad(fnr, oppgaven)
+                            .getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId));
+                }
+                return null;
+            }
+        }));
 
         sisteMelding = new WebMarkupContainer("siste-melding").add(
                 new Label("overskrift", new MeldingOverskrift(siste, traad)),
@@ -159,18 +167,7 @@ public class TraadPanel extends Panel {
 
     }
 
-
     public void besvar(String oppgaven) {
         this.oppgaveId = optional(oppgaven);
-        setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<Traad>() {
-            @Override
-            protected Traad load() {
-                if (oppgaveId.isSome()) {
-                    return traader.hentTraad(fnr, oppgaveId.get())
-                            .getOrThrow(new AbortWithHttpErrorCodeException(404, "Fant ikke henvendelse for oppgaveid = " + oppgaveId));
-                }
-                return null;
-            }
-        }));
     }
 }

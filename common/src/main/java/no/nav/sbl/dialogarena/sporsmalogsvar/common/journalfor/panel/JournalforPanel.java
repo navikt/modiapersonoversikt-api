@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel;
 
-import no.nav.modig.lang.collections.IterUtils;
+
 import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.JournalforModell;
@@ -8,9 +8,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalfor
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Sak;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSBruker;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding;
-import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -29,19 +27,21 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.List;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.utils.Utils.TIL_WSMELDING;
 
 public class JournalforPanel extends Panel {
 
     public static final PackageResourceReference LESS_REFERENCE = new PackageResourceReference(JournalforPanel.class, "journalfor.less");
-    private static final Logger log = LoggerFactory.getLogger(JournalforPanel.class);
+
+    private final IModel<Boolean> aabnet;
+    private final WebMarkupContainer journalforContainer;
+    private final JournalforForm journalforForm;
 
     @Inject
     BesvareHenvendelsePortType besvareHenvendelsePortType;
@@ -49,26 +49,40 @@ public class JournalforPanel extends Panel {
     public JournalforPanel(String id, IModel<Traad> traad, String fnr) {
         super(id);
 
-        final JournalforForm journalforForm = new JournalforForm("journalfor-form", traad, fnr, besvareHenvendelsePortType);
+        aabnet = new Model<>(false);
+        journalforContainer = new WebMarkupContainer("journalfor");
+
+        journalforForm = new JournalforForm("journalfor-form", traad, fnr, besvareHenvendelsePortType);
         journalforForm.setVisibilityAllowed(false);
         journalforForm.setOutputMarkupPlaceholderTag(true);
 
-        AjaxLink<Void> startJournalforing = new AjaxLink<Void>("start-journalforing") {
+        AjaxLink<Void> journaforingExpander = new AjaxLink<Void>("start-journalforing") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                journalforForm.setVisibilityAllowed(true);
-                target.add(journalforForm);
+                toggleSynlighet();
+                target.add(journalforContainer);
             }
         };
-        add(startJournalforing, journalforForm);
+        journaforingExpander.add(hasCssClassIf("valgt", aabnet));
+        journaforingExpander.setOutputMarkupId(true);
+
+        journalforContainer.setOutputMarkupId(true);
+        journalforContainer.add(journaforingExpander, journalforForm);
+        add(journalforContainer);
     }
 
-    private static class JournalforForm extends Form<Journalforing> {
+    private void toggleSynlighet() {
+        aabnet.setObject(!aabnet.getObject());
+        journalforForm.setVisibilityAllowed(aabnet.getObject());
+    }
+
+    private class JournalforForm extends Form<Journalforing> {
 
         private final JournalforModell modell;
 
         public JournalforForm(String id, final IModel<Traad> traad, String fnr, final BesvareHenvendelsePortType besvareHenvendelsePortType) {
             super(id);
+
             modell = new JournalforModell(traad, fnr, besvareHenvendelsePortType);
             setModel(new CompoundPropertyModel<>(modell));
 
@@ -83,13 +97,13 @@ public class JournalforPanel extends Panel {
                         @Override
                         protected void populateItem(ListItem<Sak> item) {
                             Radio<Sak> radio = new Radio<>("radio", item.getModel());
-                            item.add(radio);
-                            WebMarkupContainer sakContainer = new WebMarkupContainer("sak-container");
-                            sakContainer.add(new AttributeModifier("for", radio.getMarkupId()));
                             Sak sak = item.getModelObject();
-                            sakContainer.add(new Label("opprettetDato", Datoformat.kort(sak.opprettetDato)));
-                            sakContainer.add(new Label("fagsystem", sak.fagsystem));
-                            item.add(sakContainer);
+                            AttributeModifier radioReference = new AttributeModifier("for", radio.getMarkupId());
+                            Label opprettetDato = new Label("opprettetDato", Datoformat.kort(sak.opprettetDato));
+                            opprettetDato.add(radioReference);
+                            Label fagsystem = new Label("fagsystem", sak.fagsystem);
+                            fagsystem.add(radioReference);
+                            item.add(radio, opprettetDato, fagsystem);
                         }
                     });
                 }
@@ -105,8 +119,16 @@ public class JournalforPanel extends Panel {
             AjaxSubmitLink journalfor = new AjaxSubmitLink("journalfor-submit") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    besvareHenvendelsePortType.journalforMeldinger(on(traad.getObject().getDialog()).map(tilWsMelding(modell.getObject().getValgtSak().saksId)).collect());
-                    log.info("Bestilte journalføring hos mottaksbehandling. SaksID = " + modell.getObject().getValgtSak().saksId);
+                    Sak valgtSak = getModelObject().getValgtSak();
+                    List<WSMelding> wsMeldinger = new ArrayList<>();
+                    for (Melding melding : traad.getObject().getDialog()) {
+                        WSMelding wsMelding = TIL_WSMELDING.transform(melding);
+                        wsMelding.setSaksId(valgtSak.saksId);
+                        wsMeldinger.add(wsMelding);
+                    }
+                    besvareHenvendelsePortType.journalforMeldinger(wsMeldinger);
+                    toggleSynlighet();
+                    target.add(journalforContainer);
                 }
 
                 @Override
@@ -119,29 +141,29 @@ public class JournalforPanel extends Panel {
                 @Override
                 public void onClick(AjaxRequestTarget target) {
                     modell.nullstill();
-                    JournalforForm.this.setVisibilityAllowed(false);
-                    target.add(JournalforForm.this);
+                    toggleSynlighet();
+                    target.add(journalforContainer);
                 }
             };
 
             add(sakRadioGroup, sensitivRadioGroup, feedback, journalfor, avbryt);
         }
 
-        private static Transformer<Melding, WSMelding> tilWsMelding(final String sakId) {
-            return new Transformer<Melding, WSMelding>() {
-                @Override
-                public WSMelding transform(Melding melding) {
-                    return new WSMelding()
-                            .withAktor(new WSBruker().withFodselsnummer(melding.avsender))
-                            .withBehandlingsId(melding.behandlingId)
-                            .withFritekst(melding.fritekst)
-                            .withMeldingstype("Fubar")
-                            .withSaksId(sakId)
-                            .withOpprettetDato(DateTime.parse(melding.getSendtDato()))
-                            .withTemastruktur("Tema C");
-                }
-            };
-        }
+//        private static Transformer<Melding, WSMelding> tilWsMelding(final String sakId) {
+//            return new Transformer<Melding, WSMelding>() {
+//                @Override
+//                public WSMelding transform(Melding melding) {
+//                    return new WSMelding()
+//                            .withAktor(new WSBruker().withFodselsnummer(melding.avsender))
+//                            .withBehandlingsId(melding.behandlingId)
+//                            .withFritekst(melding.fritekst)
+//                            .withMeldingstype("Fubar")
+//                            .withSaksId(sakId)
+//                            .withOpprettetDato(DateTime.parse(melding.getSendtDato()))
+//                            .withTemastruktur("Tema C");
+//                }
+//            };
+//        }
 
     }
 
