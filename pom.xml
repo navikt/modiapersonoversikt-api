@@ -36,7 +36,7 @@
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.2-SPRINGFIX</kjerneinfo.versjon>
         <soknader.liste.version>2.0.8</soknader.liste.version>
-        <sporsmalogsvar.version>1.13</sporsmalogsvar.version>
+        <sporsmalogsvar.version>1.14</sporsmalogsvar.version>
         <utbetaling.version>2.0.0</utbetaling.version>
     </properties>
 
@@ -247,7 +247,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-time</artifactId>
-                <version>2.1</version>
+                <version>2.2</version>
             </dependency>
 
             <dependency>
