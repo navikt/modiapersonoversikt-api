@@ -2,7 +2,7 @@
 @rammeborder: #ccc;
 @modiabakgrunn: #333;
 @sidepadding: 2em;
-@dodgerblue: #1E90FF;
+@morkeBlaa: #0067c5;
 
 .besvare-panel {
   background-color: @bakgrunnsfarge;
@@ -15,12 +15,12 @@
     .form-top {
       height: 2em;
       border-bottom: 1px solid @rammeborder;
-      padding: 0.5em 0.5em 0.5em @sidepadding;
+      padding: 0.5em 0;
       h3 {
         text-transform: none;
         float: left;
         font-size: 1em;
-        color: @dodgerblue;
+        color: @morkeBlaa;
         font-weight: bold;
         margin: 0;
       }
@@ -28,7 +28,7 @@
         float: right;
         cursor: pointer;
         position: relative;
-        width: 25%;
+        width: 30%;
         .innsynsvelger-knapp {
           height: 1em;
           width: 1em;
@@ -53,7 +53,7 @@
             top: 2px;
             right: 10px;
             width: 1em;
-            color: @dodgerblue;
+            color: #0ca9e1;
           }
           label {
             text-transform: none;
@@ -80,7 +80,7 @@
       }
     }
     .form-body {
-      padding: 0 @sidepadding;
+      padding: 0;
       margin: 2em 0;
       h2 {
         margin: 0;
@@ -92,10 +92,10 @@
         margin-top: 1em;
       }
       input[type="submit"] {
-        background-color: @dodgerblue;
+        background-color: @morkeBlaa;
         display: none;
         color: white;
-        border: 1px solid (@dodgerblue * 0.8);
+        border: 1px solid (@morkeBlaa * 0.8);
         font-size: 1.2em;
         font-weight: bold;
         text-transform: uppercase;
@@ -103,7 +103,7 @@
         margin-top: 1em;
         &:hover {
           text-decoration: none;
-          background: (@dodgerblue * 1.1);
+          background: (@morkeBlaa * 1.1);
           color: white;
         }
       }
@@ -111,9 +111,9 @@
   }
   .sporsmal-seksjon {
     position: relative;
-    padding: 0 @sidepadding;
-    border-bottom: 1px solid @rammeborder;
+    padding: 0;
     padding-bottom: 2em;
+    border-bottom: 1px solid @rammeborder;
     line-height: 1.5em;
     h2 {
       margin: 0;
@@ -133,7 +133,7 @@
   }
   .tidligere-dialog-seksjon {
     text-align: center;
-    padding: 2em @sidepadding;
+    padding: 2em;
     line-height: 1.5em;
     header {
       text-transform: uppercase;
@@ -193,7 +193,7 @@
           right: 2em;
           border-left: 8px solid transparent;
           border-right: 8px solid transparent;
-          border-top: 8px solid @dodgerblue;
+          border-top: 8px solid @morkeBlaa;
           &.rotert {
             -webkit-transform: rotate(-180deg);
             -moz-transform: rotate(-180deg);

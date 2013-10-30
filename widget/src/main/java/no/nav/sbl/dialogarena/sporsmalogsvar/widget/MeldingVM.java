@@ -37,7 +37,7 @@ public class MeldingVM implements FeedItemVM, Serializable {
 
 
     public String getLestDato() {
-        return Datoformat.kort(lestDato);
+        return Datoformat.ultrakort(lestDato);
     }
 
     public IModel<Boolean> harStatus(final Status status) {

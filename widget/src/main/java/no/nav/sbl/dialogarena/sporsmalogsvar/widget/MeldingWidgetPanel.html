@@ -1,15 +1,15 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div class="melding-metadata">
-        <label wicket:id="opprettetDatoAsString"/>
+        <p wicket:id="opprettetDatoAsString" class="opprettet-dato"/>
         <h4 wicket:id="avsender"/>
-        <footer wicket:id="tema"/>
+        <p wicket:id="tema" class="tema"/>
     </div>
     <div wicket:id="status-container" class="status-container">
         <div wicket:id="statusIndikator" class="status"/>
         <div>
-            <label wicket:id="lestDato" class="lest-dato"/>
-            <label wicket:id="status"/>
+            <p wicket:id="lestDato" class="lest-dato"/>
+            <p wicket:id="status"/>
         </div>
     </div>
 </wicket:panel>
