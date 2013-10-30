@@ -3,8 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
-import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.integrasjon.features.TimeoutFeature;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
@@ -37,19 +35,52 @@ public class AktorEndpointConfig {
 
     @Bean
     public AktoerPortType aktorPortType() {
-        return createAktorIdPortType(new UserSAMLOutInterceptor());
+//        return createAktorIdPortType(new UserSAMLOutInterceptor());
+        return new AktoerPortType() {
+
+            @Override
+            public HentAktoerIdForIdentResponse hentAktoerIdForIdent(@WebParam(name = "request", targetNamespace = "") HentAktoerIdForIdentRequest hentAktoerIdForIdentRequest) throws HentAktoerIdForIdentPersonIkkeFunnet {
+                HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
+                hentAktoerIdForIdentResponse.setAktoerId("aktor-" + hentAktoerIdForIdentRequest.getIdent());
+                return hentAktoerIdForIdentResponse;
+            }
+
+            @Override
+            public void ping() {
+            }
+        };
     }
+
+//    @Bean
+//    public Pingable aktorIdPing() {
+//        final AktoerPortType aktorIdPortType = createAktorIdPortType(new SystemSAMLOutInterceptor());
+//        return new Pingable() {
+//            @Override
+//            public List<PingResult> ping() {
+//                PingResult.ServiceResult result;
+//                long start = currentTimeMillis();
+//                try {
+//                    aktorIdPortType.ping();
+//                    result = SERVICE_OK;
+//                } catch (Exception e) {
+//                    result = SERVICE_FAIL;
+//                }
+//                return asList(new PingResult("Aktoer_v1", result, currentTimeMillis() - start));
+//            }
+//        };
+//    }
 
     @Bean
     public Pingable aktorIdPing() {
-        final AktoerPortType aktorIdPortType = createAktorIdPortType(new SystemSAMLOutInterceptor());
+
+//        final AktoerPortType aktorIdPortType = createAktorIdPortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 PingResult.ServiceResult result;
                 long start = currentTimeMillis();
                 try {
-                    aktorIdPortType.ping();
+//                    aktorIdPortType.ping();
                     result = SERVICE_OK;
                 } catch (Exception e) {
                     result = SERVICE_FAIL;

@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
@@ -10,6 +11,8 @@ import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.jws.WebParam;
+import java.util.List;
 import java.util.Random;
 
 @Configuration
@@ -23,6 +26,10 @@ public class BesvareHenvendelsePortTypeMock {
             @Override
             public boolean ping() {
                 return true;
+            }
+
+            @Override
+            public void journalforMeldinger(@WebParam(name = "meldinger", targetNamespace = "") List<WSMelding> meldinger) {
             }
 
             @Override

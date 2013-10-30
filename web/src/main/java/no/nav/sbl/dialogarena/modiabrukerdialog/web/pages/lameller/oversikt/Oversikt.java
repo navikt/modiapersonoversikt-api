@@ -9,7 +9,6 @@ import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
-
 import static java.util.Arrays.asList;
 
 public class Oversikt extends Lerret {
