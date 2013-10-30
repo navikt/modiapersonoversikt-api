@@ -16,4 +16,7 @@ import org.springframework.context.annotation.Import;
         SakOgBehandlingEndpointConfig.class
 })
 public class EndpointsConfig {
+
+    public static final int MODIA_RECEIVE_TIMEOUT = 4000;
+    public static final int MODIA_CONNECTION_TIMEOUT = 4000;
 }
