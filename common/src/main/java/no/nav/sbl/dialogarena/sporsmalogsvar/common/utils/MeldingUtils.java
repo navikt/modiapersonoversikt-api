@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.common.integrasjonsutils.JSON;
+import no.nav.sbl.dialogarena.common.integrasjon.utils.JSON;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status;
