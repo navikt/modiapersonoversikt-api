@@ -67,13 +67,12 @@ public class AktorEndpointConfig {
         final AktoerPortType aktoerPortType = proxyFactoryBean.create(AktoerPortType.class);
         return new AktoerPortType() {
 
-            @Cacheable("endpointCache")
             @Override
+            @Cacheable("aktoridCache")
             public HentAktoerIdForIdentResponse hentAktoerIdForIdent(@WebParam(name = "request", targetNamespace = "") HentAktoerIdForIdentRequest hentAktoerIdForIdentRequest) throws HentAktoerIdForIdentPersonIkkeFunnet {
                 return aktoerPortType.hentAktoerIdForIdent(hentAktoerIdForIdentRequest);
             }
 
-            @Cacheable("endpointCache")
             @Override
             public void ping() {
                 aktoerPortType.ping();
