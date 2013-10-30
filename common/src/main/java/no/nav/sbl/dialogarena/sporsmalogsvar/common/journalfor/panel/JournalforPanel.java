@@ -134,7 +134,6 @@ public class JournalforPanel extends Panel {
             AjaxLink<Void> avbryt = new AjaxLink<Void>("avbryt") {
                 @Override
                 public void onClick(AjaxRequestTarget target) {
-//                    modell.setObject(new Journalforing(traad.getObject(), Collections.<Sak>emptyList()));
                     toggleSynlighet(target);
                 }
             };
