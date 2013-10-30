@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
+import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
@@ -18,7 +19,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectM
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.timeout.TimeoutBoks;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.BesvarePanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.OppgavePanel;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -66,12 +68,15 @@ public class Intern extends BasePage {
             hentPersonPanel,
             searchToggleButton,
             nullstillLink,
-            new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
             new PersonsokPanel("personsokPanel").setVisible(true),
             lamellHandler.createLamellPanel("lameller", fnr),
-            new SideBar("sideBar", fnr).setVisible(true),
+		    new VisittkortPanel("visittkort", fnr).setVisible(true),
+		    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
             new TimeoutBoks("timeoutBoks", fnr),
-            redirectPopup);
+            redirectPopup,
+		    new OppgavePanel("oppgavePanel", fnr).setVisible(true),
+		    new BesvarePanel("besvarePanel", fnr)
+        );
     }
 
     private void instantiateComponents() {

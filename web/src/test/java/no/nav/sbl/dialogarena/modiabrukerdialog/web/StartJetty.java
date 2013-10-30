@@ -34,6 +34,8 @@ public class StartJetty {
     }
 
     private static JettyRunner getJetty() {
+
+	    System.setProperty("wicket.configuration", "development");
         setFrom("start.properties");
 
         String start = getProperties().getProperty("start.jetty.withintegration");

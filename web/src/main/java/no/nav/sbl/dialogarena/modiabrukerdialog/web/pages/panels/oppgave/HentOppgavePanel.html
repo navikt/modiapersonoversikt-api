@@ -1,24 +1,18 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
-<head>
-
-</head>
-<body>
-
-<wicket:panel>
-    <div wicket:id="tomForOppgaverMelding"></div>
-    <div class="hent-oppgave">
-        <a wicket:id="plukk-oppgave" class="knapp-liten-flat">Hent oppgave</a>
-        <a wicket:id="velg-tema" class="knapp-liten-flat velg-tema"></a>
-        <div wicket:id="temavelger" class="temavelger">
-            <ul>
-                <li wicket:id="tema">
-                    <span wicket:id="temanavn"></span>
-                </li>
-            </ul>
-        </div>
-    </div>
-</wicket:panel>
-</body>
+	<wicket:panel>
+		<div wicket:id="tomForOppgaverMelding"></div>
+		<div class="hent-oppgave">
+			<div class="pull-right">
+				<a wicket:id="plukk-oppgave" class="oppgave-knapp">Hent oppgave</a>
+				<a wicket:id="velg-tema" class="oppgave-knapp velg-tema pil"></a>
+			</div>
+			<div wicket:id="temavelger" class="temavelger">
+				<ul>
+					<li wicket:id="tema">
+						<span wicket:id="temanavn"></span>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</wicket:panel>
 </html>

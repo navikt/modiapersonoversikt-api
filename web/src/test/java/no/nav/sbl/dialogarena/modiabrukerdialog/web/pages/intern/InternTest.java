@@ -16,7 +16,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelM
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.sidebar.SideBar;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.TraadPanel;
 import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
@@ -64,7 +63,6 @@ public class InternTest extends WicketPageTest {
                 .should().containComponent(withId("personKjerneinfoPanel").and(ofType(PersonKjerneinfoPanel.class)))
                 .should().containComponent(withId("personsokPanel").and(ofType(PersonsokPanel.class)))
                 .should().containComponent(withId("lameller").and(ofType(TokenLamellPanel.class)))
-                .should().containComponent(withId("sideBar").and(ofType(SideBar.class)))
                 .should().containComponent(withId("nullstill").and(ofType(AbstractLink.class)));
     }
 

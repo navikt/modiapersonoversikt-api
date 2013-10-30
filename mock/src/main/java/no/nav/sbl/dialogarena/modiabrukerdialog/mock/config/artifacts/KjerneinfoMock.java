@@ -13,12 +13,16 @@ import no.nav.kjerneinfo.domain.person.Adresse;
 import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.Personnavn;
+import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon;
+import no.nav.kjerneinfo.domain.person.fakta.Familierelasjonstype;
 import no.nav.kodeverk.consumer.fim.kodeverk.KodeverkmanagerBi;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetService;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Arrays;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.MockContext.FODSELSNUMMER;
 import static org.mockito.Matchers.any;
@@ -74,22 +78,45 @@ public class KjerneinfoMock {
     }
 
     private Person createPerson() {
-        return new Person.With()
-                .fodselsnummer(FODSELSNUMMER)
-                .personfakta(new Personfakta.With()
-                        .sivilstand(new Kodeverdi.With()
-                                .value("SINGEL")
-                                .done())
-                        .navn(new Personnavn.With()
-                                .fornavn("Testern")
-                                .etternavn("Testesen")
-                                .done())
-                        .adresse(new Adresse.With()
-                                .gatenavn("Testgata")
-                                .postnummer("1337")
-                                .poststed("Test").done())
-                        .done())
-                .done();
+	    Person barn = new Person.With()
+			    .fodselsnummer("01019912345")
+			    .personfakta(new Personfakta.With()
+					    .sivilstand(new Kodeverdi.With()
+							    .value("SINGEL")
+							    .done())
+					    .navn(new Personnavn.With()
+							    .fornavn("Barn")
+							    .etternavn("Testesen")
+							    .done())
+					    .adresse(new Adresse.With()
+							    .gatenavn("Testgata")
+							    .postnummer("1337")
+							    .poststed("Test").done())
+					    .done())
+			    .done();
+
+	    Familierelasjon familierelasjon = new Familierelasjon();
+	    	    familierelasjon.setHarSammeBosted(true);
+	    	    familierelasjon.setTilRolle(Familierelasjonstype.BARN.toString().toUpperCase());
+	    	    familierelasjon.setTilPerson(barn);
+
+	    return new Person.With()
+	    			    .fodselsnummer(FODSELSNUMMER)
+	    			    .personfakta(new Personfakta.With()
+						        .sivilstand(new Kodeverdi.With()
+								        .value("SINGEL")
+								        .done())
+						        .navn(new Personnavn.With()
+								        .fornavn("Test")
+								        .etternavn("Testesen")
+								        .done())
+						        .adresse(new Adresse.With()
+								        .gatenavn("Testgata")
+								        .postnummer("1337")
+								        .poststed("Test").done())
+						        .familierelasjoner(Arrays.asList(familierelasjon))
+						        .done())
+	    			    .done();
     }
 
 }

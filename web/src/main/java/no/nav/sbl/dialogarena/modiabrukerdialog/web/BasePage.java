@@ -21,6 +21,7 @@ public class BasePage extends WebPage {
 	public static final CssResourceReference INTERN_LESS = new CssResourceReference(Intern.class, "intern.less");
 	public static final CssResourceReference PERSONSOKRESULT = new CssResourceReference(PersonsokResultPanel.class, "PersonsokResultPanel.css");
 	public static final CssResourceReference PERSONSOKSEARCH = new CssResourceReference(PersonsokSearchPanel.class, "PersonsokSearchPanel.css");
+    public static final PackageResourceReference BESVARE_LESS = new PackageResourceReference(Intern.class, "besvare.less");
 	public static final CssResourceReference PERSONKJERNEINFO = new CssResourceReference(PersonKjerneinfoPanel.class, "PersonKjerneinfoPanel.css");
     public static final PackageResourceReference TRAADPANEL = new PackageResourceReference(TraadPanel.class, "besvare.less");
     public static final PackageResourceReference JOURNALFORPANEL = new PackageResourceReference(JournalforPanel.class, "journalfor.less");
