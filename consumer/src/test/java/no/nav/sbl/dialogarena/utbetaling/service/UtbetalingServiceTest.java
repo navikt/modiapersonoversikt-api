@@ -78,7 +78,7 @@ public class UtbetalingServiceTest {
         DateTime utbDato = now().minusDays(4);
         String alderspensjon = "Alderspensjon";
         String skatt = "Skatt";
-
+        String kontoNr = "***REMOVED***";
         String meldingsTekst = "bilag1";
         WSMelding melding = new WSMelding().withMeldingtekst(meldingsTekst);
 
@@ -92,11 +92,18 @@ public class UtbetalingServiceTest {
         assertThat(u.getBruttoBelop(), is(1000.0));
         assertThat(u.getBeskrivelse(), is(alderspensjon + ", " + skatt));
         assertThat(u.getStatuskode(), is("12"));
+        assertThat(u.getKontoNr(), is(kontoNr));
         assertThat(u.getBilag().size(), is(2));
-        String meldingtekst = melding.getMeldingtekst();
-        String melding1 = u.getBilag().get(0).getMelding();
-        assertThat(melding1, is(equalTo(meldingtekst)));
+        assertThat(u.getBilag().get(0).getMelding(), is(equalTo(melding.getMeldingtekst())));
+        assertThat(u.getBilag().get(0).getPosteringsDetaljer().size(), is(1));
         assertThat(u.getBilag().get(0).getPosteringsDetaljer().get(0).getHovedBeskrivelse(), is(alderspensjon));
         assertThat(u.getBilag().get(0).getPosteringsDetaljer().get(0).getKontoNr(), is(fnr));
+        assertThat(u.getBilag().get(0).getPosteringsDetaljer().get(0).getHovedBeskrivelse(), is(alderspensjon));
+        assertThat(u.getBilag().get(0).getPosteringsDetaljer().get(0).getKontoNr(), is(kontoNr));
+        assertThat(u.getBilag().get(1).getPosteringsDetaljer().size(), is(1));
+        assertThat(u.getBilag().get(1).getPosteringsDetaljer().get(0).getKontoNr(), is(kontoNr));
+        assertThat(u.getBilag().get(1).getPosteringsDetaljer().get(0).getHovedBeskrivelse(), is(skatt));
+        assertThat(u.getBilag().get(1).getPosteringsDetaljer().get(0).getHovedBeskrivelse(), is(skatt));
+
     }
 }
