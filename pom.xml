@@ -30,7 +30,7 @@
         <modig-content.version>1.2.1</modig-content.version>
         <modig-core.version>1.0.0</modig-core.version>
         <henvendelse-felles-tjenestespesifikasjon.version>0.0.12</henvendelse-felles-tjenestespesifikasjon.version>
-        <besvare-henvendelse-tjenestespesifikasjon.version>0.2-SNAPSHOT</besvare-henvendelse-tjenestespesifikasjon.version>
+        <besvare-henvendelse-tjenestespesifikasjon.version>0.2</besvare-henvendelse-tjenestespesifikasjon.version>
         <sonar.skippedModules />
     </properties>
 
