@@ -15,7 +15,7 @@
     <name>Dialogarena - Spørsmal og svar</name>
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål og svar - innside og utside.</description>
     <artifactId>sporsmal-og-svar</artifactId>
-    <version>1.11-SNAPSHOT</version>
+    <version>1.13-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -30,6 +30,7 @@
         <modig-content.version>1.2.1</modig-content.version>
         <modig-core.version>1.0.0</modig-core.version>
         <henvendelse-felles-tjenestespesifikasjon.version>0.0.12</henvendelse-felles-tjenestespesifikasjon.version>
+        <besvare-henvendelse-tjenestespesifikasjon.version>0.2-SNAPSHOT</besvare-henvendelse-tjenestespesifikasjon.version>
         <sonar.skippedModules />
     </properties>
 
@@ -79,7 +80,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
-                <version>0.0.17-SNAPSHOT</version>
+                <version>${besvare-henvendelse-tjenestespesifikasjon.version}</version>
             </dependency>
 
             <dependency>
@@ -91,7 +92,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-integrasjonsutils</artifactId>
-                <version>0.0.2</version>
+                <version>0.0.7</version>
             </dependency>
 
             <dependency>

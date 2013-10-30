@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.innboks.config;
 
-import no.nav.sbl.dialogarena.common.integrasjonsutils.JSON;
+import no.nav.sbl.dialogarena.common.integrasjon.utils.JSON;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
 import org.joda.time.DateTime;
