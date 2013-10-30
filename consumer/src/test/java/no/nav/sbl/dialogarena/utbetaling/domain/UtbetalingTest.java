@@ -1,5 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
@@ -114,6 +117,46 @@ public class UtbetalingTest {
         Utbetaling utbetaling = new UtbetalingBuilder().setPeriode(null).createUtbetaling();
         assertThat(utbetaling.getStartDate() , is(nullValue()));
         assertThat(utbetaling.getEndDate() , is(nullValue()));
+    }
+
+    @Test
+    public void skalTransformereUtbetaling() throws Exception {
+        WSUtbetaling wsUtbetaling = new WSUtbetalingTestData().createUtbetaling1();
+        String alderspensjon = "Alderspensjon";
+        String skatt = "Skatt";
+        String kontoNr = "***REMOVED***";
+
+        Utbetaling u = new Utbetaling(wsUtbetaling);
+
+        assertThat(u.getUtbetalingsDato(), is(wsUtbetaling.getUtbetalingDato()));
+        assertThat(u.getStartDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato()));
+        assertThat(u.getEndDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato()));
+        assertThat(u.getNettoBelop(), is(wsUtbetaling.getNettobelop()));
+        assertThat(u.getBruttoBelop(), is(wsUtbetaling.getBruttobelop()));
+        assertThat(u.getBeskrivelse(), is(alderspensjon + ", " + skatt));
+        assertThat(u.getStatuskode(), is(wsUtbetaling.getStatusKode()));
+        assertThat(u.getKontoNr(), is(kontoNr));
+
+        assertThat(u.getBilag().size(), is(wsUtbetaling.getBilagListe().size()));
+
+        Bilag bilag1 = u.getBilag().get(0);
+        WSBilag wsBilag1 = wsUtbetaling.getBilagListe().get(0);
+        assertThat(bilag1.getPosteringsDetaljer().size(), is(wsBilag1.getPosteringsdetaljerListe().size()));
+        assertThat(bilag1.getMelding(), is(equalTo(wsBilag1.getMeldingListe().get(0).getMeldingtekst())));
+
+        PosteringsDetalj posteringsDetalj = bilag1.getPosteringsDetaljer().get(0);
+        WSPosteringsdetaljer wsPosteringsdetalj = wsBilag1.getPosteringsdetaljerListe().get(0);
+        assertThat(posteringsDetalj.getHovedBeskrivelse(), is(wsPosteringsdetalj.getKontoBeskrHoved()));
+        assertThat(posteringsDetalj.getKontoNr(), is(wsPosteringsdetalj.getKontonr()));
+
+        Bilag bilag2 = u.getBilag().get(1);
+        WSBilag wsBilag2 = wsUtbetaling.getBilagListe().get(1);
+        assertThat(bilag2.getPosteringsDetaljer().size(), is(wsBilag2.getPosteringsdetaljerListe().size()));
+
+        posteringsDetalj = bilag2.getPosteringsDetaljer().get(0);
+        wsPosteringsdetalj = wsBilag2.getPosteringsdetaljerListe().get(0);
+        assertThat(posteringsDetalj.getKontoNr(), is(wsPosteringsdetalj.getKontonr()));
+        assertThat(posteringsDetalj.getHovedBeskrivelse(), is(wsPosteringsdetalj.getKontoBeskrHoved()));
     }
 
 }
