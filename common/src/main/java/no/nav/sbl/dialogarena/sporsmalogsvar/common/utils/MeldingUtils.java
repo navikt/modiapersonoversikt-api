@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.common.integrasjon.utils.JSON;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status;
@@ -33,7 +32,7 @@ public class MeldingUtils {
                     .with(Melding.traadId, wsHenvendelse.getTraad())
                     .with(Melding.avsenderId, wsHenvendelse.getAktor())
                     .with(Melding.tema, wsHenvendelse.getTema())
-                    .with(Melding.fritekst, JSON.unmarshal(wsHenvendelse.getBehandlingsresultat()).get("fritekst").toString())
+                    .with(Melding.fritekst, wsHenvendelse.getBehandlingsresultat())
                     .with(Melding.opprettetDato, wsHenvendelse.getOpprettetDato())
                     .with(Melding.lestDato, wsHenvendelse.getLestDato())
                     .with(Melding.status, STATUS.transform(wsHenvendelse))

@@ -37,7 +37,11 @@ public class JournalforService implements Serializable {
     private static final Transformer<WSSak, Sak> TIL_SAK = new Transformer<WSSak, Sak>() {
         @Override
         public Sak transform(WSSak wsSak) {
-            return new Sak(wsSak.getSakId(), wsSak.isGenerell() ? "Generell" : "Ikke generell", wsSak.getTemakode(), wsSak.getOpprettetDato());
+            return new Sak(
+                    wsSak.getSakId(),
+                    wsSak.isGenerell() ? "Generell" : "Ikke generell",
+                    wsSak.isGenerell() ? "Gsak" : "Pesys",
+                    wsSak.getTemakode(), wsSak.getOpprettetDato(), wsSak.getStatuskode());
         }
     };
 

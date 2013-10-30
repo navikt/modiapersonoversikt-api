@@ -10,12 +10,16 @@ public class Sak implements Serializable {
     public final String sakstype;
     public final String temakode;
     public final DateTime opprettetDato;
+    public final String statuskode;
+    public final String fagsystem;
 
-    public Sak(String saksId, String sakstype, String temakode, DateTime opprettetDato) {
+    public Sak(String saksId, String sakstype, String fagsystem, String temakode, DateTime opprettetDato, String statuskode) {
         this.saksId = saksId;
+        this.fagsystem = fagsystem;
         this.sakstype = sakstype;
         this.temakode = temakode;
         this.opprettetDato = opprettetDato;
+        this.statuskode = statuskode;
     }
 
     public static final Transformer<Sak, DateTime> OPPRETTET_DATO = new Transformer<Sak, DateTime>() {

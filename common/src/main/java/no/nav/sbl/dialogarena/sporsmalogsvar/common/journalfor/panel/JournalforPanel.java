@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel;
 
+
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.JournalforService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalforing;
@@ -18,6 +19,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
@@ -28,6 +30,8 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import javax.inject.Inject;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class JournalforPanel extends Panel {
 
@@ -75,6 +79,11 @@ public class JournalforPanel extends Panel {
     private class JournalforForm extends Form<Journalforing> {
 
         private final IModel<Journalforing> modell;
+        private final IModel<Boolean> harSaker = new AbstractReadOnlyModel<Boolean>() {
+            public Boolean getObject() {
+                return modell.getObject().harSaker();
+            };
+        };
 
         public JournalforForm(String id, final IModel<Traad> traad, final String fnr) {
             super(id);
@@ -89,6 +98,7 @@ public class JournalforPanel extends Panel {
 
             final RadioGroup<Sak> sakRadioGroup = new RadioGroup<>("valgtSak");
             sakRadioGroup.setRequired(true);
+            sakRadioGroup.add(visibleIf(harSaker));
             sakRadioGroup.add(new ListView<String>("temakoder") {
                 @Override
                 protected void populateItem(ListItem<String> item) {
@@ -104,11 +114,17 @@ public class JournalforPanel extends Panel {
                             opprettetDato.add(radioReference);
                             Label sakstype = new Label("sakstype", sak.sakstype);
                             sakstype.add(radioReference);
-                            item.add(radio, opprettetDato, sakstype);
+                            Label statuskode = new Label("statuskode", sak.statuskode);
+                            item.add(radio, opprettetDato, sakstype, statuskode);
+
                         }
                     });
                 }
             });
+
+            Label ingenSaker = new Label("ingen-saker",
+                    new StringResourceModel("journalforpanel.ingen-saker", JournalforPanel.this, null));
+            ingenSaker.add(visibleIf(not(harSaker)));
 
             final RadioGroup<Boolean> sensitivRadioGroup = new RadioGroup<>("sensitiv");
             sensitivRadioGroup.setRequired(true);
@@ -138,7 +154,7 @@ public class JournalforPanel extends Panel {
                 }
             };
 
-            add(sakRadioGroup, sensitivRadioGroup, feedback, journalfor, avbryt);
+            add(sakRadioGroup, ingenSaker, sensitivRadioGroup, feedback, journalfor, avbryt);
         }
     }
 }

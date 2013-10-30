@@ -31,6 +31,10 @@ public class Journalforing implements Serializable {
         return new ArrayList<>(sakerPerTema.keySet());
     }
 
+    public boolean harSaker() {
+        return !sakerPerTema.isEmpty();
+    }
+
     public List<Sak> getSaker(String temakode) {
         return sakerPerTema.get(temakode);
     }
