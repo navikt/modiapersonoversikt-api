@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class UtbetalingVMTest {
@@ -43,7 +43,6 @@ public class UtbetalingVMTest {
         UtbetalingVM vm = new UtbetalingVM(utbetaling);
 
         String belop1 = vm.getBelop();
-//        System.out.println("belop = " + belop1);
 
         String[] splittPaaKomma = belop1.split(",");
         assertThat(splittPaaKomma.length, is(equalTo(2)));
