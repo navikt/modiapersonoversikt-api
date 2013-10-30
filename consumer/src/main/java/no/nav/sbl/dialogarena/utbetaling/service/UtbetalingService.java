@@ -34,7 +34,7 @@ public class UtbetalingService {
         return utbetalinger;
     }
 
-    private List<WSUtbetaling> getWSUtbetalinger(String fnr) {
+    protected List<WSUtbetaling> getWSUtbetalinger(String fnr) {
         try {
             return utbetalingPortType.hentUtbetalingListe(createRequest(fnr)).getUtbetalingListe();
         } catch (HentUtbetalingListeMottakerIkkeFunnet hentUtbetalingListeMottakerIkkeFunnet) {
@@ -48,7 +48,7 @@ public class UtbetalingService {
         }
     }
 
-    private WSHentUtbetalingListeRequest createRequest(String fnr) {
+    protected WSHentUtbetalingListeRequest createRequest(String fnr) {
         return new WSHentUtbetalingListeRequest()
                 .withMottaker(fnr)
                 .withPeriode(new WSPeriode().withFom(now().minusMonths(3)).withTom(now()));

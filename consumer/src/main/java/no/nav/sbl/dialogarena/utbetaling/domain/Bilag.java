@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
 import org.apache.commons.lang3.StringUtils;
 
@@ -21,7 +22,7 @@ public class Bilag implements Serializable {
     }
 
     public Bilag(WSBilag wsBilag) {
-        melding = StringUtils.join(wsBilag.getMeldingListe(),", ");
+        transformMelding(wsBilag);
         posteringsDetaljer = new ArrayList<>();
         for (WSPosteringsdetaljer wsPosteringsdetaljer : wsBilag.getPosteringsdetaljerListe()) {
             posteringsDetaljer.add(new PosteringsDetalj(wsPosteringsdetaljer));
@@ -38,7 +39,7 @@ public class Bilag implements Serializable {
 
     public Set<? extends String> getKontoNrFromDetaljer() {
         Set<String> kontoNr = new TreeSet<>();
-        for(PosteringsDetalj detalj : posteringsDetaljer){
+        for (PosteringsDetalj detalj : posteringsDetaljer) {
             kontoNr.add(detalj.getKontoNr());
         }
         return kontoNr;
@@ -81,5 +82,16 @@ public class Bilag implements Serializable {
                 ", posteringsDetaljer=" + posteringsDetaljer +
                 '}';
     }
+
     // CHECKSTYLE:ON
+
+    private void transformMelding(WSBilag wsBilag) {
+        List<WSMelding> meldingListe = wsBilag.getMeldingListe();
+        List<String> strings = new ArrayList<>();
+        for (WSMelding wsMelding : meldingListe) {
+            strings.add(wsMelding.getMeldingtekst());
+        }
+
+        melding = StringUtils.join(strings, ", ");
+    }
 }
