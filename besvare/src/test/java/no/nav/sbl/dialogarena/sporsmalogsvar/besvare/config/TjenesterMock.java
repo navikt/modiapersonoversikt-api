@@ -90,6 +90,7 @@ public class TjenesterMock {
 
             @Override
             public void journalforMeldinger(List<WSMelding> meldinger) {
+                LOG.info("Journalfører {} meldinger", meldinger.size());
             }
 
 
