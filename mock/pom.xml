@@ -40,6 +40,13 @@
         </dependency>
 
         <dependency>
+            <groupId>no.nav.tjenester.fim</groupId>
+            <artifactId>nav-fim-aktoer-v1-tjenestespesifikasjon</artifactId>
+            <classifier>jaxws</classifier>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>soknader-liste</artifactId>
         </dependency>
