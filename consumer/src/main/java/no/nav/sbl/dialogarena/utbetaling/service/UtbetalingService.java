@@ -26,7 +26,7 @@ public class UtbetalingService {
         return transformUtbetalinger(getWSUtbetalinger(fnr));
     }
 
-    protected List<Utbetaling> transformUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
+    private List<Utbetaling> transformUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
         List<Utbetaling> utbetalinger = new ArrayList<>();
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
             utbetalinger.add(new Utbetaling(wsUtbetaling));
@@ -34,7 +34,7 @@ public class UtbetalingService {
         return utbetalinger;
     }
 
-    protected List<WSUtbetaling> getWSUtbetalinger(String fnr) {
+    private List<WSUtbetaling> getWSUtbetalinger(String fnr) {
         try {
             return utbetalingPortType.hentUtbetalingListe(createRequest(fnr)).getUtbetalingListe();
         } catch (HentUtbetalingListeMottakerIkkeFunnet hentUtbetalingListeMottakerIkkeFunnet) {
@@ -50,7 +50,7 @@ public class UtbetalingService {
         }
     }
 
-    protected WSHentUtbetalingListeRequest createRequest(String fnr) {
+    private WSHentUtbetalingListeRequest createRequest(String fnr) {
         return new WSHentUtbetalingListeRequest()
                 .withMottaker(fnr)
                 .withPeriode(new WSPeriode().withFom(now().minusMonths(3)).withTom(now()));
