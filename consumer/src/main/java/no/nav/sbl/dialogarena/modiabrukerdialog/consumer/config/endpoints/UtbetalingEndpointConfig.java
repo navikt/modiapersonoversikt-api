@@ -14,9 +14,13 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Fake endpoint, tjeneste eksisterer ikke pt
+ */
 @Configuration
 public class UtbetalingEndpointConfig {
 
@@ -37,6 +41,8 @@ public class UtbetalingEndpointConfig {
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
         final Utbetaling utbetalingTjeneste = proxyFactoryBean.create(Utbetaling.class);
         return new UtbetalingPortType() {
+
+            @Cacheable("endpointCache")
             @Override
             public WSHentUtbetalingListeResponse hentUtbetalingListe(WSHentUtbetalingListeRequest request) throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
                 return utbetalingTjeneste.hentUtbetalingListe(request);

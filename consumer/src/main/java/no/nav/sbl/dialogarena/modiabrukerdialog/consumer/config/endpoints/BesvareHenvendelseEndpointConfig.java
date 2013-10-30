@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
@@ -37,14 +38,14 @@ public class BesvareHenvendelseEndpointConfig {
             @Override
             public List<PingResult> ping() {
                 BesvareHenvendelsePortType besvareHenvendelsePortType = lagBesvareHenvendelsePortType(new SystemSAMLOutInterceptor());
-                long start = System.currentTimeMillis();
+                long start = currentTimeMillis();
                 boolean success;
                 try {
                     success = besvareHenvendelsePortType.ping();
                 } catch (Exception e) {
                     success = false;
                 }
-                return asList(new PingResult("BesvareHenvendelse_v1", success ? SERVICE_OK : SERVICE_FAIL, System.currentTimeMillis() - start));
+                return asList(new PingResult("BesvareHenvendelse_v1", success ? SERVICE_OK : SERVICE_FAIL, currentTimeMillis() - start));
             }
         };
     }
