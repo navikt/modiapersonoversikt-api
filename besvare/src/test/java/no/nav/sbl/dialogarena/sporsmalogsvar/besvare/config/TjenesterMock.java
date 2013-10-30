@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.config;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding;
@@ -21,15 +19,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.by;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.getFromBehandlingsresultat;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.apache.commons.lang3.StringUtils.abbreviate;
 import static org.joda.time.DateTime.now;
@@ -52,8 +46,6 @@ public class TjenesterMock {
             " litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes" +
             " in futurum.";
 
-    private static final ObjectMapper MAPPER = new ObjectMapper();
-
     public static final PreparedIterable<WSHenvendelse> HENVENDELSER = on(asList(
             createWSHenvendelse(SPORSMAL, "Jeg lurer på noe!", now().minusWeeks(2)),
             createWSHenvendelse(SVAR, "Hva da?", now().minusWeeks(1)),
@@ -68,13 +60,8 @@ public class TjenesterMock {
             .withHenvendelseType(type)
             .withOpprettetDato(opprettet)
             .withTraad(TRAAD);
-        try {
-            Map<String, String> fritekstMapping = new HashMap<>();
-            fritekstMapping.put("fritekst", fritekst);
-            wsHenvendelse.setBehandlingsresultat(MAPPER.writeValueAsString(fritekstMapping));
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException("Kunne ikke bygge JSON", e);
-        }
+
+        wsHenvendelse.setBehandlingsresultat(fritekst);
         return wsHenvendelse;
     }
 
@@ -115,7 +102,7 @@ public class TjenesterMock {
             public WSSporsmalOgSvar hentSporsmalOgSvar(String oppgaveId) {
                 WSHenvendelse nyesteHenvendelse = HENVENDELSER.collect(by(OPPRETTET_DATO).descending()).get(0);
                 WSSporsmal sporsmal = new WSSporsmal()
-                        .withFritekst(optional(nyesteHenvendelse.getBehandlingsresultat()).map(getFromBehandlingsresultat("fritekst")).getOrElse(null))
+                        .withFritekst(nyesteHenvendelse.getBehandlingsresultat())
                         .withOpprettet(nyesteHenvendelse.getOpprettetDato())
                         .withBehandlingsId(nyesteHenvendelse.getBehandlingsId())
                         .withTema("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT")
@@ -126,9 +113,9 @@ public class TjenesterMock {
             @Override
             public HentSakerResponse hentSaker(HentSakerRequest parameters) {
                 return new HentSakerResponse().withSaker(Arrays.asList(
-                        new WSSak().withGenerell(true).withOpprettetDato(DateTime.now()).withSakId("123").withStatus("Foobar"),
-                        new WSSak().withGenerell(false).withOpprettetDato(DateTime.now().minusDays(1)).withSakId("12").withStatus("Something"),
-                        new WSSak().withGenerell(true).withOpprettetDato(DateTime.now().minusDays(3)).withSakId("1234").withStatus("Ingen Status")));
+                        new WSSak().withGenerell(true).withOpprettetDato(DateTime.now()).withSakId("123").withStatuskode("Foobar"),
+                        new WSSak().withGenerell(false).withOpprettetDato(DateTime.now().minusDays(1)).withSakId("12").withStatuskode("Something"),
+                        new WSSak().withGenerell(true).withOpprettetDato(DateTime.now().minusDays(3)).withSakId("1234").withStatuskode("Ingen Status")));
             }
         }
         return new BesvareHenvendelseStub();

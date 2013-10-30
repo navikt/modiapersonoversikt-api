@@ -19,11 +19,6 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-integrasjonsutils</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-time</artifactId>
         </dependency>
 

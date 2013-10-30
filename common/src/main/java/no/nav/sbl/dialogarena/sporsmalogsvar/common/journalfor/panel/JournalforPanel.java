@@ -103,7 +103,8 @@ public class JournalforPanel extends Panel {
                             opprettetDato.add(radioReference);
                             Label fagsystem = new Label("fagsystem", sak.fagsystem);
                             fagsystem.add(radioReference);
-                            item.add(radio, opprettetDato, fagsystem);
+                            Label statuskode = new Label("statuskode", sak.statuskode);
+                            item.add(radio, opprettetDato, fagsystem, statuskode);
                         }
                     });
                 }

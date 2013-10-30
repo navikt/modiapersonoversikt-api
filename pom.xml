@@ -79,7 +79,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
-                <version>0.0.15-SNAPSHOT</version>
+                <version>0.0.17-SNAPSHOT</version>
             </dependency>
 
             <dependency>

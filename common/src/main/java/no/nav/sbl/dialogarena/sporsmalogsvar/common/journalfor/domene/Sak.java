@@ -10,12 +10,14 @@ public class Sak implements Serializable {
     public final String fagsystem;
     public final String temakode;
     public final DateTime opprettetDato;
+    public final String statuskode;
 
-    public Sak(String saksId, String sakstype, String fagsystem, String temakode, DateTime opprettetDato) {
+    public Sak(String saksId, String sakstype, String fagsystem, String temakode, DateTime opprettetDato, String statuskode) {
         this.saksId = saksId;
         this.sakstype = sakstype;
         this.fagsystem = fagsystem;
         this.temakode = temakode;
         this.opprettetDato = opprettetDato;
+        this.statuskode = statuskode;
     }
 }
