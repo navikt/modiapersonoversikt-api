@@ -32,6 +32,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.utils.Utils.TIL_WSMELDING;
 
 public class JournalforPanel extends Panel {
@@ -85,6 +87,7 @@ public class JournalforPanel extends Panel {
 
             final RadioGroup<Sak> sakRadioGroup = new RadioGroup<>("valgtSak");
             sakRadioGroup.setRequired(true);
+            sakRadioGroup.add(visibleIf(modell.harSaker()));
             sakRadioGroup.add(new ListView<String>("temakoder") {
                 @Override
                 protected void populateItem(ListItem<String> item) {
@@ -98,16 +101,19 @@ public class JournalforPanel extends Panel {
                             AttributeModifier radioReference = new AttributeModifier("for", radio.getMarkupId());
                             Label opprettetDato = new Label("opprettetDato", Datoformat.kort(sak.opprettetDato));
                             opprettetDato.add(radioReference);
-                            Label fagsystem = new Label("fagsystem", sak.fagsystem);
-                            fagsystem.add(radioReference);
-                            Label statuskode = new Label("statuskode", sak.statuskode);
                             Label sakstype = new Label("sakstype", sak.sakstype);
-                            item.add(radio, opprettetDato, fagsystem, statuskode, sakstype);
+                            sakstype.add(radioReference);
+                            Label statuskode = new Label("statuskode", sak.statuskode);
+                            item.add(radio, opprettetDato, sakstype, statuskode);
 
                         }
                     });
                 }
             });
+
+            Label ingenSaker = new Label("ingen-saker",
+                    new StringResourceModel("journalforpanel.ingen-saker", JournalforPanel.this, null));
+            ingenSaker.add(visibleIf(not(modell.harSaker())));
 
             final RadioGroup<Boolean> sensitivRadioGroup = new RadioGroup<>("sensitiv");
             sensitivRadioGroup.setRequired(true);
@@ -145,7 +151,7 @@ public class JournalforPanel extends Panel {
                 }
             };
 
-            add(sakRadioGroup, sensitivRadioGroup, feedback, journalfor, avbryt);
+            add(sakRadioGroup, ingenSaker, sensitivRadioGroup, feedback, journalfor, avbryt);
         }
     }
 }

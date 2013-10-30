@@ -6,6 +6,7 @@ import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSak;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerRequest;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerResponse;
 import org.apache.commons.collections15.Transformer;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.LoadableDetachableModel;
 
@@ -40,6 +41,15 @@ public class JournalforModell extends LoadableDetachableModel<Journalforing> {
 
     public void nullstill() {
         setObject(new Journalforing(traad.getObject(), Collections.<Sak>emptyList()));
+    }
+
+    public IModel<Boolean> harSaker() {
+        return new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return JournalforModell.this.getObject().harSaker();
+            }
+        };
     }
 
 }

@@ -36,6 +36,10 @@ public class Journalforing implements Serializable {
         return on(sakerPerTema.keySet()).collect(String.CASE_INSENSITIVE_ORDER);
     }
 
+    public boolean harSaker() {
+        return !sakerPerTema.isEmpty();
+    }
+
     public List<Sak> getSaker(String temakode) {
         return sakerPerTema.get(temakode);
     }
