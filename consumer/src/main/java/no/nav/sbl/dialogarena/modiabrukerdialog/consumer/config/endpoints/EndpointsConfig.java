@@ -17,4 +17,7 @@ import org.springframework.context.annotation.Import;
         UtbetalingEndpointConfig.class
 })
 public class EndpointsConfig {
+
+    public static final int MODIA_RECEIVE_TIMEOUT = 4000;
+    public static final int MODIA_CONNECTION_TIMEOUT = 4000;
 }

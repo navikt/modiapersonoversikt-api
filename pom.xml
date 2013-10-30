@@ -36,7 +36,7 @@
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.1-SPRINGFIX</kjerneinfo.versjon>
         <soknader.liste.version>2.0.6</soknader.liste.version>
-        <sporsmalogsvar.version>1.11</sporsmalogsvar.version>
+        <sporsmalogsvar.version>1.12</sporsmalogsvar.version>
         <utbetaling.version>2.0.0</utbetaling.version>
     </properties>
 
@@ -253,7 +253,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-integrasjonsutils</artifactId>
-                <version>0.0.2</version>
+                <version>0.0.7</version>
 			</dependency>
 
             <dependency>

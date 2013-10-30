@@ -5,13 +5,11 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
+import no.nav.sbl.dialogarena.common.integrasjon.features.TimeoutFeature;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
-import org.apache.cxf.configuration.jsse.TLSClientParameters;
-import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.feature.Feature;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.apache.cxf.ws.security.SecurityConstants;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +24,9 @@ import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static org.apache.cxf.frontend.ClientProxy.getClient;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.EndpointsConfig.MODIA_CONNECTION_TIMEOUT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.EndpointsConfig.MODIA_RECEIVE_TIMEOUT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.Utils.konfigurerMedHttps;
 
 @Configuration
 public class OppgavebehandlingEndpointConfig {
@@ -50,12 +50,7 @@ public class OppgavebehandlingEndpointConfig {
         factoryBean.setAddress(oppgavebehandlingEndpoint);
         factoryBean.setWsdlURL("classpath:Oppgavebehandling.wsdl");
         OppgavebehandlingPortType oppgavebehandlingPortType = factoryBean.create(OppgavebehandlingPortType.class);
-
-        Client client = getClient(oppgavebehandlingPortType);
-        HTTPConduit conduit = (HTTPConduit) client.getConduit();
-        TLSClientParameters params = new TLSClientParameters();
-        params.setDisableCNCheck(true);
-        conduit.setTlsClientParameters(params);
+        konfigurerMedHttps(oppgavebehandlingPortType);
 
         return oppgavebehandlingPortType;
     }
@@ -69,6 +64,7 @@ public class OppgavebehandlingEndpointConfig {
         List<Feature> features = factoryBean.getFeatures();
         features.add(new LoggingFeature());
         features.add(new WSAddressingFeature());
+        features.add(new TimeoutFeature().withConnectionTimeout(MODIA_CONNECTION_TIMEOUT).withReceiveTimeout(MODIA_RECEIVE_TIMEOUT));
         factoryBean.getOutInterceptors().add(samlOutInterceptor);
         return factoryBean;
     }
