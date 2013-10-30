@@ -21,7 +21,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import javax.xml.soap.SOAPException;
 import java.util.Arrays;
 
 import static org.hamcrest.core.Is.is;
@@ -34,13 +33,12 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class UtbetalingServiceTest {
 
+    String fnr = "***REMOVED***";
+    WSUtbetalingTestData data = new WSUtbetalingTestData();
     @InjectMocks
     private UtbetalingService service = new UtbetalingService();
     @Mock
     private UtbetalingPortType utbetalingPortType;
-
-    String fnr = "***REMOVED***";
-    WSUtbetalingTestData data = new WSUtbetalingTestData();
 
     @Before
     public void setUp() throws Exception {
