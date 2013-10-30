@@ -45,6 +45,8 @@ public class UtbetalingService {
             throw new ApplicationException("Utbetalingservice : Baksystem ikke tilgjengelig", hentUtbetalingListeBaksystemIkkeTilgjengelig);
         } catch (HentUtbetalingListeUgyldigDato hentUtbetalingListeUgyldigDato) {
             throw new ApplicationException("Utbetalingservice : Ugyldig dato", hentUtbetalingListeUgyldigDato);
+        } catch (Exception e) {
+            throw new ApplicationException("Utbetalingservice : Ukjent feil oppsto", e);
         }
     }
 
