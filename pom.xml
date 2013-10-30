@@ -24,7 +24,7 @@
     <properties>
         <wicket.version>6.11.0</wicket.version>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <modig.frontend.version>1.1.1</modig.frontend.version>
+        <modig.frontend.version>1.1.2</modig.frontend.version>
         <modig.security.version>1.0.19</modig.security.version>
 		<modig.log.version>1.1.2</modig.log.version>
         <slf4j.version>1.7.5</slf4j.version>
@@ -34,7 +34,7 @@
         <utbetaling.tjenestespesifikasjon.version>1.0.0</utbetaling.tjenestespesifikasjon.version>
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
-        <kjerneinfo.versjon>2.0.2-SPRINGFIX-SNAPSHOT</kjerneinfo.versjon>
+        <kjerneinfo.versjon>2.0.2-SPRINGFIX</kjerneinfo.versjon>
         <soknader.liste.version>2.0.8</soknader.liste.version>
         <sporsmalogsvar.version>1.13</sporsmalogsvar.version>
         <utbetaling.version>2.0.0</utbetaling.version>
