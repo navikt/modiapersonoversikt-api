@@ -31,7 +31,7 @@ public enum Arkivtema {
     VEN("Ventelønn"),
     YRK("Yrkesskade / Menerstatning");
 
-    private String navn;
+    public final String navn;
 
     Arkivtema(String navn) {
         this.navn = navn;

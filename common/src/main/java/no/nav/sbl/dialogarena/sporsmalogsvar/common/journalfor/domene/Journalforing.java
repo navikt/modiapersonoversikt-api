@@ -1,58 +1,45 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
+import static no.nav.modig.lang.collections.IterUtils.by;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.utils.Utils.ARKIVTEMA;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.utils.Utils.SORTER_NYESTE_OVERST;
 
 public class Journalforing implements Serializable {
 
-    private Map<String, List<Sak>> sakerPerTema;
-    private Optional<Sak> valgtSak;
-    private Boolean sensitiv;
+    public Sak valgtSak;
+    private final SortedMap<String, List<Sak>> sakerPerTema;
+    public final Traad traad;
 
     public Journalforing(Traad traad, Iterable<Sak> saker) {
-        sakerPerTema = new HashMap<>();
-        for (String temakode : on(saker).map(ARKIVTEMA).collectIn(new HashSet<String>())) {
-            sakerPerTema.put(temakode, on(saker).filter(where(ARKIVTEMA, equalTo(temakode))).collect(SORTER_NYESTE_OVERST));
+        this.traad = traad;
+        sakerPerTema = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        for (String temakode : on(saker).map(Sak.TEMAKODE)) {
+            sakerPerTema.put(temakode, on(saker).filter(where(Sak.TEMAKODE, equalTo(temakode))).collect(by(Sak.OPPRETTET_DATO).descending()));
         }
-        valgtSak = none();
-        sensitiv = traad.erSensitiv;
     }
 
     public List<String> getTemakoder() {
-        return on(sakerPerTema.keySet()).collect(String.CASE_INSENSITIVE_ORDER);
+        return new ArrayList<>(sakerPerTema.keySet());
     }
 
     public List<Sak> getSaker(String temakode) {
         return sakerPerTema.get(temakode);
     }
 
-    public Sak getValgtSak() {
-        return valgtSak.getOrElse(null);
+    public boolean isSensitiv() {
+        return traad.erSensitiv;
     }
 
-    public void setValgtSak(Sak sak) {
-        valgtSak = optional(sak);
-    }
-
-    public Boolean isSensitiv() {
-        return sensitiv;
-    }
-
-    public void setSensitiv(Boolean sensitiv) {
-        this.sensitiv = sensitiv;
+    public void setSensitiv(boolean sensitiv) {
+        traad.erSensitiv = sensitiv;
     }
 }

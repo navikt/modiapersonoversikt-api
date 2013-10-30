@@ -1,13 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.JournalforModell;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.JournalforService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalforing;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Sak;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -22,16 +20,14 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.utils.Utils.TIL_WSMELDING;
 
 public class JournalforPanel extends Panel {
 
@@ -42,11 +38,13 @@ public class JournalforPanel extends Panel {
     private JournalforForm journalforForm;
 
     @Inject
-    BesvareHenvendelsePortType besvareHenvendelsePortType;
+    private BesvareHenvendelsePortType besvareHenvendelsePortType;
+
+    private final JournalforService journalforService;
 
     public JournalforPanel(String id, IModel<Traad> traad, String fnr) {
         super(id);
-
+        journalforService = new JournalforService(besvareHenvendelsePortType);
         aabnet = new Model<>(false);
 
         journaforingExpander = new AjaxLink<Void>("start-journalforing") {
@@ -58,13 +56,14 @@ public class JournalforPanel extends Panel {
         journaforingExpander.add(hasCssClassIf("valgt", aabnet));
         journaforingExpander.setOutputMarkupId(true);
 
-        journalforForm = new JournalforForm("journalfor-form", traad, fnr, besvareHenvendelsePortType);
+        journalforForm = new JournalforForm("journalfor-form", traad, fnr);
         journalforForm.setVisibilityAllowed(false);
         journalforForm.setOutputMarkupPlaceholderTag(true);
 
 
         add(journaforingExpander, journalforForm);
     }
+
 
     private void toggleSynlighet(AjaxRequestTarget target) {
         aabnet.setObject(!aabnet.getObject());
@@ -74,12 +73,17 @@ public class JournalforPanel extends Panel {
 
     private class JournalforForm extends Form<Journalforing> {
 
-        private final JournalforModell modell;
+        private final IModel<Journalforing> modell;
 
-        public JournalforForm(String id, final IModel<Traad> traad, String fnr, final BesvareHenvendelsePortType besvareHenvendelsePortType) {
+        public JournalforForm(String id, final IModel<Traad> traad, final String fnr) {
             super(id);
 
-            modell = new JournalforModell(traad, fnr, besvareHenvendelsePortType);
+            modell = new LoadableDetachableModel<Journalforing>() {
+                @Override
+                protected Journalforing load() {
+                    return journalforService.opprettJournalforing(fnr, traad.getObject());
+                }
+            };
             setModel(new CompoundPropertyModel<>(modell));
 
             final RadioGroup<Sak> sakRadioGroup = new RadioGroup<>("valgtSak");
@@ -116,14 +120,7 @@ public class JournalforPanel extends Panel {
             AjaxSubmitLink journalfor = new AjaxSubmitLink("journalfor-submit") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    Sak valgtSak = getModelObject().getValgtSak();
-                    List<WSMelding> wsMeldinger = new ArrayList<>();
-                    for (Melding melding : traad.getObject().getDialog()) {
-                        WSMelding wsMelding = TIL_WSMELDING.transform(melding);
-                        wsMelding.setSaksId(valgtSak.saksId);
-                        wsMeldinger.add(wsMelding);
-                    }
-                    besvareHenvendelsePortType.journalforMeldinger(wsMeldinger);
+                    journalforService.journalfor(getModelObject());
                     toggleSynlighet(target);
                 }
 
@@ -136,7 +133,7 @@ public class JournalforPanel extends Panel {
             AjaxLink<Void> avbryt = new AjaxLink<Void>("avbryt") {
                 @Override
                 public void onClick(AjaxRequestTarget target) {
-                    modell.nullstill();
+//                    modell.setObject(new Journalforing(traad.getObject(), Collections.<Sak>emptyList()));
                     toggleSynlighet(target);
                 }
             };

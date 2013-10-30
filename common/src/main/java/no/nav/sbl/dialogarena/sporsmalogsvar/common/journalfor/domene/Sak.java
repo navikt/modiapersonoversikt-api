@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene;
 
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -16,4 +17,18 @@ public class Sak implements Serializable {
         this.temakode = temakode;
         this.opprettetDato = opprettetDato;
     }
+
+    public static final Transformer<Sak, DateTime> OPPRETTET_DATO = new Transformer<Sak, DateTime>() {
+        @Override
+        public DateTime transform(Sak sak) {
+            return sak.opprettetDato;
+        }
+    };
+
+    public static final Transformer<Sak, String> TEMAKODE = new Transformer<Sak, String>() {
+        @Override
+        public String transform(Sak sak) {
+            return sak.temakode;
+        }
+    };
 }
