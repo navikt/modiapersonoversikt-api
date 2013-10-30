@@ -39,7 +39,7 @@ public class WSUtbetalingTestData {
                 .withStatusBeskrivelse("Uføre")
                 .withUtbetalingDato(now().minusDays(4))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 1, 23, 0, 0), new DateTime(2011, 1, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag1,bilag2);
+        utbetaling.withBilagListe(bilag1, bilag2);
         return utbetaling;
     }
 
@@ -57,7 +57,7 @@ public class WSUtbetalingTestData {
                 .withStatusBeskrivelse("Trygd")
                 .withUtbetalingDato(now().minusDays(7))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 2, 23, 0, 0), new DateTime(2011, 2, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag1,bilag2);
+        utbetaling.withBilagListe(bilag1, bilag2);
         return utbetaling;
     }
 
@@ -65,7 +65,7 @@ public class WSUtbetalingTestData {
         WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Barnepenger", "12345678900");
         WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", "12345678900");
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
-        WSBilag bilag2 = createBilag("bilag2",  posteringsdetalj3);
+        WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(3000.0)
@@ -74,13 +74,13 @@ public class WSUtbetalingTestData {
                 .withStatusBeskrivelse("Barnepenger")
                 .withUtbetalingDato(now().minusDays(10))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 3, 23, 0, 0), new DateTime(2011, 3, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag1,bilag2);
+        utbetaling.withBilagListe(bilag1, bilag2);
         return utbetaling;
     }
 
     public WSUtbetaling createUtbetaling4() {
         WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Trygd", "12345678900");
-        WSBilag bilag2 = createBilag("bilag2",  posteringsdetalj1);
+        WSBilag bilag2 = createBilag("bilag2", posteringsdetalj1);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(4000.00)
@@ -93,13 +93,11 @@ public class WSUtbetalingTestData {
         return utbetaling;
     }
 
-
-
     public WSUtbetaling createUtbetaling5() {
         WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("APGrunnbeløp", "12345678900");
         WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", "12345678900");
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
-        WSBilag bilag2 = createBilag("bilag2",  posteringsdetalj3);
+        WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(5100.50)
@@ -108,7 +106,7 @@ public class WSUtbetalingTestData {
                 .withStatusBeskrivelse("APGrunnbeløp")
                 .withUtbetalingDato(now().minusDays(84))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 5, 23, 0, 0), new DateTime(2011, 5, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag1,bilag2);
+        utbetaling.withBilagListe(bilag1, bilag2);
         return utbetaling;
     }
 
@@ -116,7 +114,7 @@ public class WSUtbetalingTestData {
         WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Pensjon", "12345678900");
         WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", "12345678900");
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
-        WSBilag bilag2 = createBilag("bilag2",  posteringsdetalj3);
+        WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(6000.00)
@@ -125,20 +123,19 @@ public class WSUtbetalingTestData {
                 .withStatusBeskrivelse("Pensjon")
                 .withUtbetalingDato(now().minusDays(200))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
-        utbetaling.withBilagListe(bilag1,bilag2);
+        utbetaling.withBilagListe(bilag1, bilag2);
         return utbetaling;
     }
-
 
     public WSPeriode createPeriode(DateTime fomDate, DateTime tomDate) {
         return new WSPeriode().withPeriodeFomDato(fomDate).withPeriodeTomDato(tomDate);
     }
 
-    public WSPosteringsdetaljer createPosteringsDetalj(String hovedBeskrivelse, String kontoNr){
+    public WSPosteringsdetaljer createPosteringsDetalj(String hovedBeskrivelse, String kontoNr) {
         return new WSPosteringsdetaljer().withKontoBeskrHoved(hovedBeskrivelse).withKontonr(kontoNr);
     }
 
-    public WSBilag createBilag(String melding, WSPosteringsdetaljer... posteringsdetaljer ){
+    public WSBilag createBilag(String melding, WSPosteringsdetaljer... posteringsdetaljer) {
         return new WSBilag().withMeldingListe(new WSMelding().withMeldingtekst(melding)).withPosteringsdetaljerListe(posteringsdetaljer);
     }
 
