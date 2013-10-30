@@ -26,15 +26,15 @@ public class AktorEndpointConfig {
 
     @Bean
     public AktoerPortType aktorPortType() {
-        return createSakOgBehandlingPortType(new UserSAMLOutInterceptor());
+        return createAktorPortType(new UserSAMLOutInterceptor());
     }
 
     @Bean
     public AktoerPortType selfTestAktorPortType() {
-        return createSakOgBehandlingPortType(new SystemSAMLOutInterceptor());
+        return createAktorPortType(new SystemSAMLOutInterceptor());
     }
 
-    private AktoerPortType createSakOgBehandlingPortType(AbstractSAMLOutInterceptor interceptor) {
+    private AktoerPortType createAktorPortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setWsdlLocation("wsdl/no/nav/tjeneste/virksomhet/aktoer/v1/Aktoer.wsdl");
         proxyFactoryBean.setAddress(aktorEndpoint.toString());
