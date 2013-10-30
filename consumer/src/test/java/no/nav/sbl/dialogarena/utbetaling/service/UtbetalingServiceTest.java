@@ -32,7 +32,10 @@ public class UtbetalingServiceTest {
         DateTime fraDateTime = new DateTime(2010, 1, 23, 0, 0);
         DateTime tilDateTime = new DateTime(2011, 1, 24, 0, 0);
         DateTime utbDato = now().minusDays(4);
-        String meldingsTekst = "bilag1";
+        String alderspensjon = "Alderspensjon";
+        String skatt = "Skatt";
+        String fnr = "***REMOVED***";
+        //String meldingsTekst = "bilag1";
         //WSMelding melding = new WSMelding().withMeldingtekst(meldingsTekst);
 
         Utbetaling u = service.transformUtbetalinger(Arrays.asList(wsUtbetaling)).get(0);
@@ -43,11 +46,11 @@ public class UtbetalingServiceTest {
         assertThat(u.getEndDate(), is(tilDateTime));
         assertThat(u.getNettoBelop(), is(1000.0));
         assertThat(u.getBruttoBelop(), is(1000.0));
-        assertThat(u.getBeskrivelse(), is("Alderspensjon, Skatt"));
+        assertThat(u.getBeskrivelse(), is(alderspensjon + ", " + skatt));
         assertThat(u.getStatuskode(), is("12"));
         assertThat(u.getBilag().size(), is(2));
         //assertThat(u.getBilag().get(0).getMelding(), is(equalTo(melding.getMeldingtekst())));
-        assertThat(u.getBilag().get(0).getPosteringsDetaljer().get(0).getHovedBeskrivelse(), is("Alderspensjon"));
-        assertThat(u.getBilag().get(0).getPosteringsDetaljer().get(0).getKontoNr(), is("***REMOVED***"));
+        assertThat(u.getBilag().get(0).getPosteringsDetaljer().get(0).getHovedBeskrivelse(), is(alderspensjon));
+        assertThat(u.getBilag().get(0).getPosteringsDetaljer().get(0).getKontoNr(), is(fnr));
     }
 }
