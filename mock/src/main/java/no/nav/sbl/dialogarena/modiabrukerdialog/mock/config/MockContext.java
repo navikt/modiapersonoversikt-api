@@ -6,7 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Henvendels
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OppgavebehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.services.SoknaderServiceMock;
+import no.nav.sbl.dialogarena.soknader.liste.config.SoknaderConfig;
 import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Import;
 @Import({
         KjerneinfoMock.class,
         HenvendelsePortTypeMock.class,
-        SoknaderServiceMock.class,
+        SoknaderConfig.class,
         SakOgBehandlingPortTypeMock.class,
         OppgavebehandlingPortTypeMock.class,
         BesvareHenvendelsePortTypeMock.class,
