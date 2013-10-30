@@ -5,6 +5,7 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.aktorid.service.AktorService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BesvareHenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OppgavebehandlingPortTypeMock;
@@ -47,6 +48,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         SakOgBehandlingPortTypeMock.class,
         OppgavebehandlingPortTypeMock.class,
         BesvareHenvendelsePortTypeMock.class,
+        AktorPortTypeMock.class,
         SoknaderService.class,
         AktorService.class,
         UtbetalingConfig.class,

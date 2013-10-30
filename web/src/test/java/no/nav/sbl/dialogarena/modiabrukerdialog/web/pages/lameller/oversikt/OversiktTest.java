@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 
 import no.nav.modig.modia.widget.LenkeWidget;
 import no.nav.sbl.dialogarena.aktorid.service.AktorService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
@@ -25,6 +26,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
         KjerneinfoPepMockContext.class,
         SykepengerWidgetMockContext.class,
         SakOgBehandlingPortTypeMock.class,
+        AktorPortTypeMock.class,
         SoknaderService.class,
         AktorService.class,
         UtbetalingConfig.class,
