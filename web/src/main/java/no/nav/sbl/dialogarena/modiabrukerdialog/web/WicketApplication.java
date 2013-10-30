@@ -43,6 +43,7 @@ import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
+
 import java.util.Locale;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
@@ -87,6 +88,7 @@ public class WicketApplication extends WebApplication {
                 .addConditionalJavascript(Intern.RESPOND_JS)
 		        .addLess(
                         BasePage.INTERN_LESS,
+                        BasePage.BESVARE_LESS,
                         BasePage.TRAADPANEL,
                         BasePage.JOURNALFORPANEL,
                         BasePage.MELDINGERWIDGET,

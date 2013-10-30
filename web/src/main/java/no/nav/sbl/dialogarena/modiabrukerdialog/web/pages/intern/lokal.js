@@ -1,11 +1,7 @@
 jQuery(document).ready(function ($) {
 	'use strict';
 
-	Modig.shortcutListener.on({ alt: true, keyCode: 112 }, toggleKjerneinfo);   // F1
-
 	createTabHandler("modiabrukerdialog");
-
-	$('#toggle-kjerneinfo, .kjerneinfo .lukk').on('click', toggleKjerneinfo);
 
 	$('.brukerprofillink').on('click', closeSidebar);
 
@@ -18,10 +14,14 @@ jQuery(document).ready(function ($) {
         }
 	});
 
-
+	// Lagt til midlertidig for å skjule overskrift ved kun en lamell
 	$('.sidebar > *').on('click', function (e) {
 		e.stopPropagation();
 	});
+
+	if ($('.main-content .lamell').length === 1) {
+		$('.main-content .lamell').first().find('.lamellhode').hide();
+	}
 
 	$('#toggle-personsok').on('click', checkIfToggleAvansertSok);
 	Modig.shortcutListener.on({key: 'A'}, checkIfToggleAvansertSok);
@@ -137,27 +137,6 @@ function isSidebarPositionAbsolute() {
     return $('aside.sidebar').css('position') == 'absolute';
 }
 
-function toggleKjerneinfo() {
-	var kjerneInfoElement = $('.main > .kjerneinfo');
-    var toggleElement = $('#toggle-kjerneinfo');
-    var visittkort = $('aside.sidebar > .visittkort');
-
-	if (kjerneInfoElement.is(':visible')) {
-		kjerneInfoElement.hide();
-		toggleElement.attr('title', (toggleElement.attr('data-show-text')));
-		visittkort.removeClass('active');
-	} else {
-		kjerneInfoElement.show();
-		toggleElement.attr('title', (toggleElement.attr('data-hide-text')));
-		visittkort.addClass('active');
-        closeSidebar();
-
-		if ($('#personsokPanel').is(':visible')) {
-			toggleAvansertSok();
-		}
-	}
-}
-
 function movePersonsok() {
 	var navbar = $('.navbar');
 	var logo = $('.modia-logo');
@@ -216,10 +195,6 @@ function toggleAvansertSok() {
 
 		if (fornavnInput.length != 0) {
 			fornavnInput.focus();
-		}
-
-		if ($('.main > .kjerneinfo').is(':visible')) {
-			toggleKjerneinfo();
 		}
 	}
 }

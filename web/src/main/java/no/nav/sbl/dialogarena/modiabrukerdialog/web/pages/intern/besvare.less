@@ -1,0 +1,223 @@
+@bakgrunnsfarge: #f1f1f1;
+@rammeborder: #ccc;
+@modiabakgrunn: #333;
+@sidepadding: 2em;
+@dodgerblue: #1E90FF;
+
+.besvare-panel {
+	position: absolute;
+	top: 140px;
+	right: 0;
+	bottom: 0;
+	background-color: @bakgrunnsfarge;
+	width: 470px;
+	border-left: 1px solid #ddd;
+	.svar-seksjon {
+		.form-top {
+			height: 2em;
+			border-bottom: 1px solid @rammeborder;
+			padding: 0.5em 0.5em 0.5em @sidepadding;
+			h3 {
+				text-transform: none;
+				float: left;
+				font-size: 1em;
+				color: @dodgerblue;
+				font-weight: bold;
+				margin: 0;
+			}
+			.innsynsvelger {
+				float: right;
+				cursor: pointer;
+				position: relative;
+				width: 25%;
+				.innsynsvelger-knapp {
+					height: 1em;
+					width: 1em;
+					border-radius: 1em;
+					float: right;
+					background-color: @modiabakgrunn;
+					margin-right: 1.5em;
+				}
+				.innsynsvelger-liste {
+					display: none;
+					position: absolute;
+					top: 0;
+					right: 0;
+					width: 100%;
+					clear: both;
+					list-style: none;
+					margin: 2em 0 0 0;
+					padding: 1.5em 1.5em 1em 1.5em;
+					background-color: @modiabakgrunn;
+					.innsynsvelger-lukk {
+						position: absolute;
+						top: 2px;
+						right: 10px;
+						width: 1em;
+						color: @dodgerblue;
+					}
+					label {
+						text-transform: none;
+						color: white;
+						font-weight: 600;
+						opacity: 0.95;
+						margin: 0;
+					}
+					input:checked + label {
+						opacity: 1;
+					}
+					&:after {
+						position: absolute;
+						bottom: 100%;
+						right: 1.5em;
+						content: " ";
+						height: 0;
+						width: 0;
+						border-left: 8px solid transparent;
+						border-right: 8px solid transparent;
+						border-bottom: 8px solid @modiabakgrunn;
+					}
+				}
+			}
+		}
+		.form-body {
+			padding: 0 @sidepadding;
+			margin: 2em 0;
+			h2 {
+				margin: 0;
+			}
+			textarea {
+				width: 100%;
+				resize: none;
+				overflow: hidden;
+				margin-top: 1em;
+			}
+			input[type="submit"] {
+				background-color: @dodgerblue;
+				display: none;
+				color: white;
+				border: 1px solid (@dodgerblue * 0.8);
+				font-size: 1.2em;
+				font-weight: bold;
+				text-transform: uppercase;
+				padding: 0.75em 2em;
+				margin-top: 1em;
+				&:hover {
+					text-decoration: none;
+					background: (@dodgerblue * 1.1);
+					color: white;
+				}
+			}
+		}
+	}
+	.sporsmal-seksjon {
+		position: relative;
+		padding: 0 @sidepadding;
+		border-bottom: 1px solid @rammeborder;
+		padding-bottom: 2em;
+		line-height: 1.5em;
+		h2 {
+			margin: 0;
+			float: left;
+		}
+		aside {
+			text-transform: uppercase;
+			font-size: 0.8em;
+			float: right;
+		}
+		p {
+			line-height: 1.5em;
+			margin-top: 0;
+			margin-bottom: 1em;
+			clear: both;
+		}
+	}
+	.tidligere-dialog-seksjon {
+		text-align: center;
+		padding: 2em @sidepadding;
+		line-height: 1.5em;
+		header {
+			text-transform: uppercase;
+			font-size: 0.8em;
+			margin-bottom: 1em;
+		}
+		article {
+			margin-bottom: 3em;
+			.dialog-innhold {
+				background-color: white;
+				border: 1px solid @rammeborder;
+				padding: @sidepadding;
+				position: relative;
+				h2 {
+					margin: 0;
+				}
+				hr {
+					border-style: none;
+				}
+				.fritekst {
+					text-align: left;
+					overflow: hidden;
+					margin-bottom: 0;
+					p {
+						line-height: 1.5em;
+						margin-bottom: 1em;
+						margin-top: 0;
+					}
+				}
+				// CSS magi for å tegne pil
+				&:before, &:after {
+					position: absolute;
+					top: 100%;
+					border: solid transparent;
+					content: " ";
+					height: 0;
+					width: 0;
+				}
+				&:after {
+					border-top-color: white;
+					border-width: 20px;
+					left: 50%;
+					margin-left: -20px;
+				}
+				&:before {
+					border-top-color: @rammeborder;
+					border-width: 21px;
+					left: 50%;
+					margin-left: -21px;
+				}
+				// Ferdig med CSS magi
+			}
+			&.tidligere-dialog {
+				.dialog-innhold {
+					.utvide-tekst-pil {
+						position: absolute;
+						height: 0;
+						width: 0;
+						top: 2em;
+						right: 2em;
+						border-left: 8px solid transparent;
+						border-right: 8px solid transparent;
+						border-top: 8px solid @dodgerblue;
+						&.rotert {
+							-webkit-transform: rotate(-180deg);
+							-moz-transform: rotate(-180deg);
+							-ms-transform: rotate(-180deg);
+							-o-transform: rotate(-180deg);
+							transform: rotate(-180deg);
+						}
+					}
+				}
+			}
+			&:last-child {
+				.dialog-innhold {
+					&:after {
+						border: none;
+					}
+					&:before {
+						border: none;
+					}
+				}
+			}
+		}
+	}
+}

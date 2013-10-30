@@ -25,7 +25,7 @@ public class JettyNoIntegration implements JettyRunner {
         return usingWar(WEBAPP_SOURCE)
                 .at("modiabrukerdialog")
                 .withLoginService(createLoginService())
-                .port(8083)
+                .port(8080)
                 .overrideWebXml(new File(TEST_RESOURCES, "mock-web.xml"))
                 .buildJetty();
     }
