@@ -33,14 +33,15 @@ public class JournalforPanel extends Panel {
 
     public static final PackageResourceReference LESS_REFERENCE = new PackageResourceReference(JournalforPanel.class, "journalfor.less");
 
-    private IModel<Boolean> aabnet;
-    private AjaxLink<Void> journaforingExpander;
-    private JournalforForm journalforForm;
+    private final IModel<Boolean> aabnet;
+    private final AjaxLink<Void> journaforingExpander;
+    private final JournalforForm journalforForm;
+
+    private final JournalforService journalforService;
 
     @Inject
     private BesvareHenvendelsePortType besvareHenvendelsePortType;
 
-    private final JournalforService journalforService;
 
     public JournalforPanel(String id, IModel<Traad> traad, String fnr) {
         super(id);
