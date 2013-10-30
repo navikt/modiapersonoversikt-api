@@ -55,6 +55,7 @@ public class MockSetupPage extends BasePage {
                 }
             }
         };
-        return (Form<Void>) form.add(new RadioChoice<>("velgMock", new PropertyModel<String>(this, "selected"), alternativer));
+        form.add(new RadioChoice<>("velgMock", new PropertyModel<String>(this, "selected"), alternativer));
+        return form;
     }
 }
