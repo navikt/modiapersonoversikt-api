@@ -15,6 +15,8 @@ import static org.joda.time.DateTime.now;
 
 public class WSUtbetalingTestData {
 
+    private String kontoNr = "12345678900";
+
     public List<WSUtbetaling> getWsUtbetalinger() {
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
         utbetalinger.add(createUtbetaling1());
@@ -27,8 +29,8 @@ public class WSUtbetalingTestData {
     }
 
     public WSUtbetaling createUtbetaling1() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Alderspensjon", "12345678900");
-        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Skatt", "12345678900");
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Alderspensjon",kontoNr);
+        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Skatt", kontoNr);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj2);
 
@@ -44,9 +46,9 @@ public class WSUtbetalingTestData {
     }
 
     public WSUtbetaling createUtbetaling2() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Uføre", "12345678900");
-        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Foreldrepenger", "12345678900");
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", "12345678900");
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Uføre", kontoNr);
+        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Foreldrepenger", kontoNr);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", kontoNr);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj2, posteringsdetalj3);
 
@@ -62,8 +64,8 @@ public class WSUtbetalingTestData {
     }
 
     public WSUtbetaling createUtbetaling3() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Barnepenger", "12345678900");
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", "12345678900");
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Barnepenger", kontoNr);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", kontoNr);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
 
@@ -79,7 +81,8 @@ public class WSUtbetalingTestData {
     }
 
     public WSUtbetaling createUtbetaling4() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Trygd", "12345678900");
+        //String kontoNr = kontoNr;
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Trygd", kontoNr);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj1);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
@@ -94,8 +97,8 @@ public class WSUtbetalingTestData {
     }
 
     public WSUtbetaling createUtbetaling5() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("APGrunnbeløp", "12345678900");
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", "12345678900");
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("APGrunnbeløp", kontoNr);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", kontoNr);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
 
@@ -111,8 +114,8 @@ public class WSUtbetalingTestData {
     }
 
     public WSUtbetaling createUtbetaling6() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Pensjon", "12345678900");
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", "12345678900");
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Pensjon", kontoNr);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", kontoNr);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
 
