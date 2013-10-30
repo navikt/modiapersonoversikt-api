@@ -45,7 +45,7 @@ public class SakOgBehandlingPortTypeMock {
                         createNyligFerdigSoknad(),
                         createGammelFerdigSoknad()
                 ));
-
+                //                throw new ApplicationException("Feil i sakogBehandling");
                 return new FinnSakOgBehandlingskjedeListeResponse().withSak(asList(new WSSak().withBehandlingskjede(behandlingskjeder)));
             }
 
