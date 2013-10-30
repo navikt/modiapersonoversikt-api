@@ -6,16 +6,17 @@ import no.nav.modig.modia.widget.panels.FeedItemErrorMessagePanel;
 import no.nav.sbl.dialogarena.aktorid.service.AktorService;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
-
-import static org.apache.wicket.model.Model.of;
 
 public class SoknadListe extends Liste<Soknad> {
 
@@ -37,7 +38,11 @@ public class SoknadListe extends Liste<Soknad> {
         } catch (ApplicationException ex) {
             serviceCallFailed = true;
         }
-        if (serviceCallFailed) {
+        if (!serviceCallFailed) {
+            //legger til soknads-liste css-klasse slik at custom css blir brukt.
+            //hvis kall til tjeneste feiler ønsker vi ikke å bruke custom-css fordi vi da skal vise en standard feil
+            this.add(new AttributeAppender("class", new Model<>("soknads-liste"), " "));
+        } else {
             //Setter inn en tom søknad slik at newListItem blir kalt en gang
             soknader.clear();
             soknader.add(new Soknad());
@@ -48,7 +53,7 @@ public class SoknadListe extends Liste<Soknad> {
     @Override
     public WebMarkupContainer newListItem(String id, IModel<Soknad> model) {
         if (serviceCallFailed) {
-            return new FeedItemErrorMessagePanel(id, of("Feil ved uthenting av søknader"));
+            return new FeedItemErrorMessagePanel(id, new StringResourceModel("sakogbehandling.feil", new Model()));
         } else {
             return new SoknadItem(id, model);
         }
