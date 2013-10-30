@@ -2,21 +2,22 @@
 <wicket:panel>
     <div class="utbetaling-metadata">
         <label>
-            <span><wicket:message key="utbetaling.label.dato"/></span>
-            <span wicket:id="utbetalingsDato" />
+            <wicket:message key="utbetaling.label.dato"/>
+            <wicket:container wicket:id="utbetalingsDato"/>
         </label>
-        <h4 wicket:id="beskrivelse"/>
+        <h2 wicket:id="beskrivelse">[]</h2>
 
         <footer>
-            <span class="float_left label"><wicket:message key="utbetaling.label.periode"/></span>
+            <span class="label">
+                <wicket:message key="utbetaling.label.periode"/>
+                <wicket:container wicket:id="periode"/>
+            </span>
 
-            <div wicket:id="periode" class="float_left"/>
-            <div class="float_right">
-                <span wicket:id="belop"/>
-                <span wicket:id="valuta"/>
-            </div>
+            <span class="float_right">
+                <wicket:container wicket:id="belop"/>
+                <wicket:container wicket:id="valuta"/>
+            </span>
         </footer>
-        <div wicket:id="status-container" class="status-container"/>
     </div>
 </wicket:panel>
 </html>

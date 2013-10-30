@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.IModel;
@@ -18,7 +17,6 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
         UtbetalingVM utbetalingVM = model.getObject();
 
         add(
-                createStatusContainer(),
                 createUtbetalingsDatoLabel(utbetalingVM),
                 new Label("belop", utbetalingVM.getBelop()),
                 new Label("valuta", utbetalingVM.getValuta()),
@@ -46,10 +44,6 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
     private Label createUtbetalingsDatoLabel(UtbetalingVM utbetalingVM) {
         StringResourceModel stringResourceModel = new StringResourceModel("utbetalingdato.mangler", this, new Model());
         return new Label("utbetalingsDato", optional(utbetalingVM.getUtbetalingsDato()).map(KORT).getOrElse(stringResourceModel.getString()));
-    }
-
-    private WebMarkupContainer createStatusContainer() {
-        return new WebMarkupContainer("status-container");
     }
 
 }
