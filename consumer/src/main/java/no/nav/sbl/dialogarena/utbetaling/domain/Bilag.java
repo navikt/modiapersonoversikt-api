@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.modig.lang.collections.PredicateUtils;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
