@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.KjerneinfoMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfoTEST.KjerneinfoMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BesvareHenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseMeldingerPortTypeMock;

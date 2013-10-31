@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo;
+package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfoTEST;
 
 import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilRequest;

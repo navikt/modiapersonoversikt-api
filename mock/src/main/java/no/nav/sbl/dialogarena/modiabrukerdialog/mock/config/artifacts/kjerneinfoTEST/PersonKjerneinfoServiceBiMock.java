@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo;
+package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfoTEST;
 
 import no.nav.kjerneinfo.common.domain.Kodeverdi;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
