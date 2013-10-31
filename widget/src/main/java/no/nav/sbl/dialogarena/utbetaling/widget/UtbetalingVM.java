@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<UtbetalingVM> {
+public class UtbetalingVM implements FeedItemVM, Serializable {
 
     public static final Transformer<Utbetaling, UtbetalingVM> UTBETALING_UTBETALINGVM_TRANSFORMER = new Transformer<Utbetaling, UtbetalingVM>() {
         @Override
@@ -65,11 +65,6 @@ public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<Utbeta
     @Override
     public String getId() {
         return "1";  //To change body of implemented methods use File | Settings | File Templates.
-    }
-
-    @Override
-    public int compareTo(UtbetalingVM o) {
-        return o.getUtbetalingsDato().compareTo(getUtbetalingsDato());
     }
 
     // CHECKSTYLE:OFF
