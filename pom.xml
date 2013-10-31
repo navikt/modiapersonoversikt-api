@@ -37,7 +37,7 @@
         <kjerneinfo.versjon>2.0.2-SPRINGFIX</kjerneinfo.versjon>
         <soknader.liste.version>2.0.8</soknader.liste.version>
         <sporsmalogsvar.version>1.14</sporsmalogsvar.version>
-        <utbetaling.version>2.0.0</utbetaling.version>
+        <utbetaling.version>2.0.2</utbetaling.version>
     </properties>
 
     <dependencyManagement>
