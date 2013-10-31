@@ -18,7 +18,9 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.jws.WebParam;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
@@ -38,11 +40,28 @@ public class AktorEndpointConfig {
 //        return createAktorIdPortType(new UserSAMLOutInterceptor());
         return new AktoerPortType() {
 
+            private Map<String, String> aktorIdMap = new HashMap<>();
+
+            {
+                aktorIdMap.put("01010091736", "69078469165827");
+                aktorIdMap.put("06047848871", "29078469165474");
+                aktorIdMap.put("23054549733", "79078469165571");
+                aktorIdMap.put("15066849497", "19078469165809");
+                aktorIdMap.put("06025800174", "69078469165205");
+                aktorIdMap.put("01010090195", "Ukjent");
+            }
+
             @Override
-            public HentAktoerIdForIdentResponse hentAktoerIdForIdent(@WebParam(name = "request", targetNamespace = "") HentAktoerIdForIdentRequest hentAktoerIdForIdentRequest) throws HentAktoerIdForIdentPersonIkkeFunnet {
-                HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
-                hentAktoerIdForIdentResponse.setAktoerId("29078469165474");
-                return hentAktoerIdForIdentResponse;
+            public HentAktoerIdForIdentResponse hentAktoerIdForIdent(HentAktoerIdForIdentRequest hentAktoerIdForIdentRequest) throws HentAktoerIdForIdentPersonIkkeFunnet {
+                HentAktoerIdForIdentResponse response = new HentAktoerIdForIdentResponse();
+                if(aktorIdMap.containsKey(hentAktoerIdForIdentRequest.getIdent())){
+                    response.setAktoerId(aktorIdMap.get(hentAktoerIdForIdentRequest.getIdent()));
+                }else{
+                    //default
+                    response.setAktoerId("29078469165474");
+                }
+                return response;
+
             }
 
             @Override
