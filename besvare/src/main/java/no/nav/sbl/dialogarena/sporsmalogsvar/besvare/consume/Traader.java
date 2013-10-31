@@ -1,18 +1,16 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
 
+import java.io.Serializable;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.HenvendelseMeldingerPortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.meldinger.HentMeldingListe;
 
-import java.io.Serializable;
-import java.util.List;
-
-import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
@@ -25,14 +23,12 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Transform.ti
 
 public class Traader implements Serializable {
 
-    private static final List<String> SPORSMAL_OG_SVAR = asList("SPORSMAL", "SVAR");
-
     private final BesvareHenvendelsePortType mottaksbehandling;
-    private final HenvendelsePortType henvendelsesbehandling;
+    private final HenvendelseMeldingerPortType henvendelseMeldingerPortType;
 
-    public Traader(BesvareHenvendelsePortType mottaksbehandling, HenvendelsePortType henvendelsesbehandling) {
+    public Traader(BesvareHenvendelsePortType mottaksbehandling, HenvendelseMeldingerPortType henvendelseMeldingerPortType) {
         this.mottaksbehandling = mottaksbehandling;
-        this.henvendelsesbehandling = henvendelsesbehandling;
+        this.henvendelseMeldingerPortType = henvendelseMeldingerPortType;
     }
 
     public void besvareSporsmal(Traad traad) {
@@ -45,12 +41,12 @@ public class Traader implements Serializable {
         for (WSSporsmalOgSvar sporsmalOgSvar : optional(mottaksbehandling.hentSporsmalOgSvar(oppgaveId))) {
             traad = new Traad(sporsmalOgSvar.getSporsmal().getTema(), sporsmalOgSvar.getSvar().getBehandlingsId());
 
-            PreparedIterable<WSHenvendelse> henvendelser = on(henvendelsesbehandling.hentHenvendelseListe(fnr, SPORSMAL_OG_SVAR))
+            PreparedIterable<WSMelding> meldinger = on(henvendelseMeldingerPortType.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding())
                     .filter(where(TRAAD_ID, equalTo(sporsmalOgSvar.getSporsmal().getTraad())));
-            traad.leggTil(henvendelser.map(TIL_MELDING));
+            traad.leggTil(meldinger.map(TIL_MELDING));
 
             for (String sisteBehandlingId : optional(traad.getSisteMelding()).map(Melding.BEHANDLING_ID)) {
-                traad.erSensitiv = henvendelser.filter(where(BEHANDLINGSID, equalTo(sisteBehandlingId))).head().map(SENSITIV).getOrElse(false);
+                traad.erSensitiv = meldinger.filter(where(BEHANDLINGSID, equalTo(sisteBehandlingId))).head().map(SENSITIV).getOrElse(false);
             }
         }
         return optional(traad);
