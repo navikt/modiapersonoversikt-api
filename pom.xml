@@ -10,7 +10,7 @@
 
     <name>Dialogarena - modiabrukerdialog</name>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>1.0.52.2-HL4-SNAPSHOT</version>
+    <version>1.0.52.2-HL4</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -743,7 +743,7 @@
     <scm>
         <developerConnection>scm:git:ssh://git@stash.devillo.no:7999/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/scm/dial/modiabrukerdialog.git</url>
-        <tag>1.0.52.2-HL4-SNAPSHOT-modiabrukerdialog</tag>
+        <tag>1.0.52.2-HL4-modiabrukerdialog</tag>
     </scm>
 
     <profiles>
