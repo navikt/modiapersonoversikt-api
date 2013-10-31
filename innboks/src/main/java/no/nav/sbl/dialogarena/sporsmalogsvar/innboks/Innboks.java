@@ -23,7 +23,7 @@ public class Innboks extends Lerret {
     HenvendelseMeldingerPortType service;
 
 
-    private CompoundPropertyModel<InnboksVM> innboks;
+    private CompoundPropertyModel<InnboksVM> innboksVM;
     private String fnr;
 
     public Innboks(String id, String fnr) {
@@ -31,22 +31,22 @@ public class Innboks extends Lerret {
         setOutputMarkupId(true);
 
         this.fnr = fnr;
-        innboks = new CompoundPropertyModel<>(new InnboksVM(service.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding()));
-        setDefaultModel(innboks);
+        innboksVM = new CompoundPropertyModel<>(new InnboksVM(service.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding()));
+        setDefaultModel(innboksVM);
         setOutputMarkupId(true);
 
-        add(new AlleMeldingerPanel("meldinger", innboks), new TraaddetaljerPanel("detaljpanel", fnr, innboks));
+        add(new AlleMeldingerPanel("meldinger", innboksVM), new TraaddetaljerPanel("detaljpanel", fnr, innboksVM));
     }
 
     @RunOnEvents(KVITTERING)
     public void meldingerOppdatert(AjaxRequestTarget target) {
-        innboks.getObject().oppdaterMeldinger(service.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding());
+        innboksVM.getObject().oppdaterMeldinger(service.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding());
         target.add(this);
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
-        innboks.getObject().setValgtMelding(feedItemPayload.getItemId());
+        innboksVM.getObject().setValgtMelding(feedItemPayload.getItemId());
         target.add(this);
     }
 }
