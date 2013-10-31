@@ -35,7 +35,7 @@
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.2-SPRINGFIX</kjerneinfo.versjon>
-        <soknader.liste.version>2.0.8</soknader.liste.version>
+        <soknader.liste.version>2.0.9</soknader.liste.version>
         <sporsmalogsvar.version>1.14</sporsmalogsvar.version>
         <utbetaling.version>2.0.2</utbetaling.version>
     </properties>
@@ -316,17 +316,6 @@
                 <version>2.2</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>2.2.2</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>2.2.2</version>
-            </dependency>
 
             <!-- MODIA-komponenter -->
             <dependency>
