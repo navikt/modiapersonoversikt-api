@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel;
 
 
+import javax.inject.Inject;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.JournalforService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalforing;
@@ -26,8 +27,6 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
-
-import javax.inject.Inject;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -86,7 +85,7 @@ public class JournalforPanel extends Panel {
             @Override
             public Boolean getObject() {
                 return modell.getObject().harSaker();
-            };
+            }
         };
 
         public JournalforForm(String id, final IModel<Traad> traad, final String fnr) {
@@ -141,8 +140,13 @@ public class JournalforPanel extends Panel {
             AjaxSubmitLink journalfor = new AjaxSubmitLink("journalfor-submit") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                    journalforService.journalfor(getModelObject());
-                    toggleSynlighet(target);
+                    if (!getModelObject().harSaker()) {
+                        error("Brukeren har ingen saker. Det kan derfor ikke journalføres på sak.");
+                        target.add(feedback);
+                    } else {
+                        journalforService.journalfor(getModelObject());
+                        toggleSynlighet(target);
+                    }
                 }
 
                 @Override
