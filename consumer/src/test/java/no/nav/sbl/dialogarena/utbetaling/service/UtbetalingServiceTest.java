@@ -67,7 +67,6 @@ public class UtbetalingServiceTest {
     public void skalTransformereUtbetaling() throws Exception {
         WSUtbetaling wsUtbetaling = data.createUtbetaling1();
         String alderspensjon = "Alderspensjon";
-        String skatt = "Skatt";
 
         when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenReturn(new WSHentUtbetalingListeResponse().withUtbetalingListe(wsUtbetaling));
         Utbetaling u = service.hentUtbetalinger(fnr).get(0);
@@ -77,6 +76,6 @@ public class UtbetalingServiceTest {
         assertThat(u.getEndDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato()));
         assertThat(u.getNettoBelop(), is(wsUtbetaling.getNettobelop()));
         assertThat(u.getBruttoBelop(), is(wsUtbetaling.getBruttobelop()));
-        assertThat(u.getBeskrivelse(), is(alderspensjon + ", " + skatt));
+        assertThat(u.getBeskrivelse(), is(alderspensjon));
     }
 }
