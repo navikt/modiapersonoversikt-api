@@ -11,8 +11,7 @@ public interface Melding {
     Key<String>         id              = key("id"),
                         traadId         = key("traadId"),
                         tema            = key("tema"),
-                        fritekst        = key("fritekst"),
-                        avsenderId      = key("avsenderId");
+                        fritekst        = key("fritekst");
     Key<DateTime>       opprettetDato   = key("opprettetDato"),
                         lestDato        = key("lestDato");
     Key<Status>         status          = key("status");

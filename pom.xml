@@ -29,7 +29,7 @@
         <modig-security.version>1.0.9</modig-security.version>
         <modig-content.version>1.2.1</modig-content.version>
         <modig-core.version>1.0.0</modig-core.version>
-        <henvendelse-felles-tjenestespesifikasjon.version>0.0.12</henvendelse-felles-tjenestespesifikasjon.version>
+        <henvendelse-meldinger-tjenestespesifikasjon.version>0.0.7</henvendelse-meldinger-tjenestespesifikasjon.version>
         <besvare-henvendelse-tjenestespesifikasjon.version>0.2</besvare-henvendelse-tjenestespesifikasjon.version>
         <sonar.skippedModules />
     </properties>
@@ -85,14 +85,8 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
-                <version>${henvendelse-felles-tjenestespesifikasjon.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>common-integrasjonsutils</artifactId>
-                <version>0.0.7</version>
+                <artifactId>henvendelse-meldinger-tjenestespesifikasjon</artifactId>
+                <version>${henvendelse-meldinger-tjenestespesifikasjon.version}</version>
             </dependency>
 
             <dependency>

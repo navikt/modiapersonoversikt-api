@@ -5,7 +5,7 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.records.Record;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -22,7 +22,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.NYESTE_FORST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.WSHenvendelseUtils.skillUtTraader;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.WSMeldingUtils.skillUtTraader;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.innboks.MeldingVM.NYESTE_OVERST;
 
 public class InnboksVM implements Serializable {
@@ -33,15 +33,15 @@ public class InnboksVM implements Serializable {
 
     private Optional<MeldingVM> valgtMelding;
 
-    public InnboksVM(List<WSHenvendelse> henvendelser) {
-        oppdaterMeldinger(henvendelser);
+    public InnboksVM(List<WSMelding> meldinger) {
+        oppdaterMeldinger(meldinger);
         valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
     }
 
-    public final void oppdaterMeldinger(List<WSHenvendelse> henvendelser) {
-        Map<String, List<WSHenvendelse>> wsHenvendelseTraader = skillUtTraader(henvendelser);
-        for (Map.Entry<String, List<WSHenvendelse>> wsHenvendelseTraad : wsHenvendelseTraader.entrySet()) {
-            traader.put(wsHenvendelseTraad.getKey(), TIL_MELDINGVM_TRAAD.transform(wsHenvendelseTraad.getValue()));
+    public final void oppdaterMeldinger(List<WSMelding> meldinger) {
+        Map<String, List<WSMelding>> wsMeldingTraader = skillUtTraader(meldinger);
+        for (Map.Entry<String, List<WSMelding>> wsMeldingTraad : wsMeldingTraader.entrySet()) {
+            traader.put(wsMeldingTraad.getKey(), TIL_MELDINGVM_TRAAD.transform(wsMeldingTraad.getValue()));
         }
         nyesteMeldingerITraad = on(traader.values()).map(TransformerUtils.<MeldingVM>elementAt(0)).collect(NYESTE_OVERST);
     }
@@ -114,10 +114,10 @@ public class InnboksVM implements Serializable {
         }
     };
 
-    private static final Transformer<List<WSHenvendelse>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = new Transformer<List<WSHenvendelse>, List<MeldingVM>>() {
+    private static final Transformer<List<WSMelding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = new Transformer<List<WSMelding>, List<MeldingVM>>() {
         @Override
-        public List<MeldingVM> transform(List<WSHenvendelse> wsHenvendelser) {
-            List<Record<Melding>> meldingerITraad = on(wsHenvendelser).map(TIL_MELDING).collect(NYESTE_FORST);
+        public List<MeldingVM> transform(List<WSMelding> wsMeldinger) {
+            List<Record<Melding>> meldingerITraad = on(wsMeldinger).map(TIL_MELDING).collect(NYESTE_FORST);
             List<MeldingVM> meldingVMTraad = new ArrayList<>();
             for (Record<Melding> melding : meldingerITraad) {
                 meldingVMTraad.add(new MeldingVM(meldingerITraad, melding.get(Melding.id)));

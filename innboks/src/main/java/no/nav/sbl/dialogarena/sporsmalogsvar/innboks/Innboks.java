@@ -3,7 +3,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.innboks;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.HenvendelseMeldingerPortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.meldinger.HentMeldingListe;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -11,18 +12,16 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
 
-import static java.util.Arrays.asList;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;
 
 public class Innboks extends Lerret {
 
     public static final JavaScriptResourceReference JS_REFERENCE = new JavaScriptResourceReference(Innboks.class, "innboks.js");
-    private static final String SPORSMAL = "SPORSMAL";
-    private static final String SVAR = "SVAR";
 
     @Inject
-    HenvendelsePortType henvendelsesbehandling;
+    HenvendelseMeldingerPortType service;
+
 
     private CompoundPropertyModel<InnboksVM> innboks;
     private String fnr;
@@ -32,7 +31,7 @@ public class Innboks extends Lerret {
         setOutputMarkupId(true);
 
         this.fnr = fnr;
-        innboks = new CompoundPropertyModel<>(new InnboksVM(henvendelsesbehandling.hentHenvendelseListe(fnr, asList(SPORSMAL, SVAR))));
+        innboks = new CompoundPropertyModel<>(new InnboksVM(service.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding()));
         setDefaultModel(innboks);
         setOutputMarkupId(true);
 
@@ -41,7 +40,7 @@ public class Innboks extends Lerret {
 
     @RunOnEvents(KVITTERING)
     public void meldingerOppdatert(AjaxRequestTarget target) {
-        innboks.getObject().oppdaterMeldinger(henvendelsesbehandling.hentHenvendelseListe(fnr, asList(SPORSMAL, SVAR)));
+        innboks.getObject().oppdaterMeldinger(service.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding());
         target.add(this);
     }
 
