@@ -27,11 +27,10 @@ public class UtbetalingTest {
 
         TreeSet<String> beskrivelser = (TreeSet<String>) utbetaling.getBeskrivelser();
 
-        assertThat(beskrivelser.size(), is(3));
+        assertThat(beskrivelser.size(), is(2));
         assertThat(beskrivelser.contains("Dagpenger"), is(equalTo(true)));
         assertThat(beskrivelser.contains("Sykepenger"), is(equalTo(true)));
-        assertThat(beskrivelser.contains("Skatt"), is(equalTo(true)));
-        assertThat(utbetaling.getBeskrivelse(),is("Dagpenger, Skatt, Sykepenger"));
+        assertThat(utbetaling.getBeskrivelse(),is("Dagpenger, Sykepenger"));
     }
 
     @Test
@@ -45,11 +44,10 @@ public class UtbetalingTest {
 
         TreeSet<String> beskrivelser = (TreeSet<String>) utbetaling.getBeskrivelser();
 
-        assertThat(beskrivelser.size(), is(3));
+        assertThat(beskrivelser.size(), is(2));
         assertThat(beskrivelser.contains("Dagpenger"), is(equalTo(true)));
         assertThat(beskrivelser.contains("Sykepenger"), is(equalTo(true)));
-        assertThat(beskrivelser.contains("Skatt"), is(equalTo(true)));
-        assertThat(utbetaling.getBeskrivelse(),is("Dagpenger, Skatt, Sykepenger"));
+        assertThat(utbetaling.getBeskrivelse(),is("Dagpenger, Sykepenger"));
     }
 
     @Test
@@ -133,7 +131,7 @@ public class UtbetalingTest {
         assertThat(u.getEndDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato()));
         assertThat(u.getNettoBelop(), is(wsUtbetaling.getNettobelop()));
         assertThat(u.getBruttoBelop(), is(wsUtbetaling.getBruttobelop()));
-        assertThat(u.getBeskrivelse(), is(alderspensjon + ", " + skatt));
+        assertThat(u.getBeskrivelse(), is(alderspensjon));
         assertThat(u.getStatuskode(), is(wsUtbetaling.getStatusKode()));
         assertThat(u.getKontoNr(), is(kontoNr));
 

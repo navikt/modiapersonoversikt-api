@@ -13,6 +13,7 @@ import java.util.TreeSet;
 
 public class Bilag implements Serializable {
 
+    public static final String SKATT = "skatt";
     private String melding;
     private List<PosteringsDetalj> posteringsDetaljer;
 
@@ -48,7 +49,11 @@ public class Bilag implements Serializable {
     public Set<String> getBeskrivelser() {
         Set<String> beskrivelser = new TreeSet<>();
         for (PosteringsDetalj detalj : posteringsDetaljer) {
+            if(detalj.getHovedBeskrivelse().equalsIgnoreCase(SKATT)){ //legger ikke til "skatt" i beskrivelse
+                continue;
+            }
             beskrivelser.add(detalj.getHovedBeskrivelse());
+
         }
         return beskrivelser;
     }
