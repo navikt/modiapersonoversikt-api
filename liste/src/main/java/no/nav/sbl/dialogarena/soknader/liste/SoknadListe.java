@@ -39,10 +39,13 @@ public class SoknadListe extends Liste<Soknad> {
         } catch (ApplicationException ex) {
             serviceCallOk = false;
         }
-        if (serviceCallOk) {
+        if (serviceCallOk ) {
             //legger til soknads-liste css-klasse slik at custom css blir brukt.
             //hvis kall til tjeneste feiler ønsker vi ikke å bruke custom-css fordi vi da skal vise en standard feil
-            this.add(new AttributeAppender("class", new Model<>("soknads-liste"), " "));
+            //Hvis det ikke er noen søknader, ikke legg til custom-css
+            if(!soknader.isEmpty()){
+                this.add(new AttributeAppender("class", new Model<>("soknads-liste"), " "));
+            }
         } else {
             //Setter inn en tom søknad slik at newListItem blir kalt en gang
             soknader.clear();
