@@ -1,16 +1,20 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.config;
 
+import java.util.Arrays;
+import java.util.List;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSak;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerRequest;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerResponse;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.HenvendelseMeldingerPortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.meldinger.HentMeldingListe;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.meldinger.HentMeldingListeResponse;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
@@ -18,12 +22,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Arrays;
-import java.util.List;
-
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.by;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype.INNGAENDE;
+import static no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype.UTGAENDE;
 import static org.apache.commons.lang3.RandomStringUtils.randomNumeric;
 import static org.apache.commons.lang3.StringUtils.abbreviate;
 import static org.joda.time.DateTime.now;
@@ -33,8 +36,6 @@ public class TjenesterMock {
 
     public static final String TRAAD = "1";
     private static final Logger LOG = LoggerFactory.getLogger(TjenesterMock.class);
-    private static final String SPORSMAL = "SPORSMAL";
-    private static final String SVAR = "SVAR";
     private static final String LANG_TEKST = "Lorem ipsum dolor sit amet, " +
             "consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad " +
             "minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure " +
@@ -46,41 +47,43 @@ public class TjenesterMock {
             " litterarum formas humanitatis per seacula quarta decima et quinta decima. Eodem modo typi, qui nunc nobis videntur parum clari, fiant sollemnes" +
             " in futurum.";
 
-    public static final PreparedIterable<WSHenvendelse> HENVENDELSER = on(asList(
-            createWSHenvendelse(SPORSMAL, "Jeg lurer på noe!", now().minusWeeks(2)),
-            createWSHenvendelse(SVAR, "Hva da?", now().minusWeeks(1)),
-            createWSHenvendelse(SPORSMAL, "Jo nå skal du høre: " + LANG_TEKST, now().minusDays(5)),
-            createWSHenvendelse(SVAR, "Ja det var ikke småtterier!", now().minusDays(4)),
-            createWSHenvendelse(SPORSMAL, "Nei det kan du si. Dette er litt sensitivt, men, joda, så neida så, og ikke nok med det, " + LANG_TEKST, now().minusDays(2)).withSensitiv(true)));
+    public static final PreparedIterable<WSMelding> MELDINGER = on(asList(
+            createWSMelding(INNGAENDE, "Jeg lurer på noe!", now().minusWeeks(2)),
+            createWSMelding(UTGAENDE, "Hva da?", now().minusWeeks(1)),
+            createWSMelding(INNGAENDE, "Jo nå skal du høre: " + LANG_TEKST, now().minusDays(5)),
+            createWSMelding(UTGAENDE, "Ja det var ikke småtterier!", now().minusDays(4)),
+            createWSMelding(INNGAENDE, "Nei det kan du si. Dette er litt sensitivt, men, joda, så neida så, og ikke nok med det, " + LANG_TEKST, now().minusDays(2)).withSensitiv(true)));
 
 
-    private static WSHenvendelse createWSHenvendelse(String type, String fritekst, DateTime opprettet) {
-        WSHenvendelse wsHenvendelse = new WSHenvendelse()
-            .withBehandlingsId(randomNumeric(5))
-            .withHenvendelseType(type)
-            .withOpprettetDato(opprettet)
-            .withTraad(TRAAD);
-
-        wsHenvendelse.setBehandlingsresultat(fritekst);
-        return wsHenvendelse;
+    private static WSMelding createWSMelding(WSMeldingstype type, String fritekst, DateTime opprettet) {
+        return new WSMelding()
+                .withBehandlingsId(randomNumeric(5))
+                .withMeldingsType(type)
+                .withOpprettetDato(opprettet)
+                .withTraad(TRAAD)
+                .withTekst(fritekst);
     }
 
 
     @Bean
-    public HenvendelsePortType henvendelsePortType() {
-        class HenvendelseStub extends ItPings implements HenvendelsePortType {
+    public HenvendelseMeldingerPortType henvendelseMeldingerPortType() {
+        return new HenvendelseMeldingerPortType() {
             @Override
-            public void merkMeldingSomLest(String id) {
-                LOG.info("HenvendelsePortType: Henvendelse med id {} er lest.", id);
+            public HentMeldingListeResponse hentMeldingListe(HentMeldingListe hentMeldingListeRequest) {
+                LOG.info("Henter alle henvendelser for bruker med fødselsnummer " + hentMeldingListeRequest.getFodselsnummer());
+                return new HentMeldingListeResponse().withMelding(MELDINGER.collect());
             }
 
             @Override
-            public List<WSHenvendelse> hentHenvendelseListe(String fnr, List<String> strings) {
-                LOG.info("Henter alle henvendelser for bruker med fødselsnummer " + fnr);
-                return HENVENDELSER.collect();
+            public void merkMeldingSomLest(String behandlingsId) {
+                LOG.info("HenvendelseMeldingerPortType: Melding med id {} er lest.", behandlingsId);
             }
-        }
-        return new HenvendelseStub();
+
+            @Override
+            public void ping() {
+            }
+        };
+
     }
 
 
@@ -89,7 +92,7 @@ public class TjenesterMock {
         class BesvareHenvendelseStub extends ItPings implements BesvareHenvendelsePortType {
 
             @Override
-            public void journalforMeldinger(List<WSMelding> meldinger) {
+            public void journalforMeldinger(List<no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding> meldinger) {
                 LOG.info("Journalfører {} meldinger", meldinger.size());
             }
 
@@ -101,11 +104,11 @@ public class TjenesterMock {
 
             @Override
             public WSSporsmalOgSvar hentSporsmalOgSvar(String oppgaveId) {
-                WSHenvendelse nyesteHenvendelse = HENVENDELSER.collect(by(OPPRETTET_DATO).descending()).get(0);
+                WSMelding nyesteMelding = MELDINGER.collect(by(OPPRETTET_DATO).descending()).get(0);
                 WSSporsmal sporsmal = new WSSporsmal()
-                        .withFritekst(nyesteHenvendelse.getBehandlingsresultat())
-                        .withOpprettet(nyesteHenvendelse.getOpprettetDato())
-                        .withBehandlingsId(nyesteHenvendelse.getBehandlingsId())
+                        .withFritekst(nyesteMelding.getTekst())
+                        .withOpprettet(nyesteMelding.getOpprettetDato())
+                        .withBehandlingsId(nyesteMelding.getBehandlingsId())
                         .withTema("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT")
                         .withTraad(TRAAD);
                 return new WSSporsmalOgSvar().withSporsmal(sporsmal).withSvar(new WSSvar().withBehandlingsId(randomNumeric(5)));
@@ -123,10 +126,10 @@ public class TjenesterMock {
         return new BesvareHenvendelseStub();
     }
 
-    private static final Transformer<WSHenvendelse, DateTime> OPPRETTET_DATO = new Transformer<WSHenvendelse, DateTime>() {
+    private static final Transformer<WSMelding, DateTime> OPPRETTET_DATO = new Transformer<WSMelding, DateTime>() {
         @Override
-        public DateTime transform(WSHenvendelse wshenvendelse) {
-            return wshenvendelse.getOpprettetDato();
+        public DateTime transform(WSMelding wsMelding) {
+            return wsMelding.getOpprettetDato();
         }
     };
 

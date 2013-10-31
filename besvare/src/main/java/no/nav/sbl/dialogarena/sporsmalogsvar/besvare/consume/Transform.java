@@ -1,12 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
 import org.apache.commons.collections15.Transformer;
-
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
 
 public class Transform {
 
@@ -16,29 +14,29 @@ public class Transform {
         }
     }; }
 
-    public static final Transformer<WSHenvendelse, String> TRAAD_ID = new Transformer<WSHenvendelse, String>() {
-        @Override public String transform(WSHenvendelse wsHenvendelse) {
-            return wsHenvendelse.getTraad();
+    public static final Transformer<WSMelding, String> TRAAD_ID = new Transformer<WSMelding, String>() {
+        @Override public String transform(WSMelding wsMelding) {
+            return wsMelding.getTraad();
         }
     };
 
-    public static final Transformer<WSHenvendelse, String> BEHANDLINGSID = new Transformer<WSHenvendelse, String>() {
-        @Override public String transform(WSHenvendelse wsHenvendelse) {
-            return wsHenvendelse.getBehandlingsId();
+    public static final Transformer<WSMelding, String> BEHANDLINGSID = new Transformer<WSMelding, String>() {
+        @Override public String transform(WSMelding wsMelding) {
+            return wsMelding.getBehandlingsId();
         }
     };
 
-    public static final Transformer<WSHenvendelse, Boolean> SENSITIV = new Transformer<WSHenvendelse, Boolean>() {
-        @Override public Boolean transform(WSHenvendelse wsHenvendelse) {
-            return wsHenvendelse.isSensitiv();
+    public static final Transformer<WSMelding, Boolean> SENSITIV = new Transformer<WSMelding, Boolean>() {
+        @Override public Boolean transform(WSMelding wsMelding) {
+            return wsMelding.isSensitiv();
         }
     };
 
 
-    public static final Transformer<WSHenvendelse, Melding> TIL_MELDING = new Transformer<WSHenvendelse, Melding>() {
-        @Override public Melding transform(WSHenvendelse wsHenvendelse) {
-            String fritekst = wsHenvendelse.getBehandlingsresultat();
-            return new Melding(wsHenvendelse.getBehandlingsId(), "SPORSMAL".equals(wsHenvendelse.getHenvendelseType()) ? INNGAENDE : UTGAENDE, wsHenvendelse.getOpprettetDato(), fritekst);
+    public static final Transformer<WSMelding, Melding> TIL_MELDING = new Transformer<WSMelding, Melding>() {
+        @Override public Melding transform(WSMelding wsMelding) {
+            String fritekst = wsMelding.getTekst();
+            return new Melding(wsMelding.getBehandlingsId(), Meldingstype.valueOf(wsMelding.getMeldingsType().toString()), wsMelding.getOpprettetDato(), fritekst);
         }
     };
 }

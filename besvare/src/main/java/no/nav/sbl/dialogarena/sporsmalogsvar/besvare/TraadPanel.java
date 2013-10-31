@@ -6,7 +6,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Traader;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel.JournalforPanel;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.HenvendelseMeldingerPortType;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -41,11 +41,11 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTER
 public class TraadPanel extends Panel {
 
     @Inject
-    private HenvendelsePortType henvendelsePortType;
+    private HenvendelseMeldingerPortType henvendelseMeldingerPortType;
     @Inject
     private BesvareHenvendelsePortType besvareHenvendelsePortType;
 
-    private Traader traader = new Traader(besvareHenvendelsePortType, henvendelsePortType);
+    private Traader traader = new Traader(besvareHenvendelsePortType, henvendelseMeldingerPortType);
 
     private MarkupContainer sisteMelding;
     private Dialog dialog;
