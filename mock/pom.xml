@@ -30,6 +30,11 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
         </dependency>
 

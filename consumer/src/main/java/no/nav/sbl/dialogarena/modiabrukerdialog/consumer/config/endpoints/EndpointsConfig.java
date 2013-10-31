@@ -14,7 +14,8 @@ import org.springframework.context.annotation.Import;
         HenvendelseMeldingerEndpointConfig.class,
         OppgavebehandlingEndpointConfig.class,
         SakOgBehandlingEndpointConfig.class,
-        UtbetalingEndpointConfig.class
+        UtbetalingEndpointConfig.class,
+        KodeverkV2EndpointConfig.class
 })
 public class EndpointsConfig {
 

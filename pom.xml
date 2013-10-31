@@ -35,7 +35,7 @@
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.2-SPRINGFIX</kjerneinfo.versjon>
-        <soknader.liste.version>2.0.9</soknader.liste.version>
+        <soknader.liste.version>2.0.10</soknader.liste.version>
         <sporsmalogsvar.version>1.16-SNAPSHOT</sporsmalogsvar.version>
         <utbetaling.version>2.0.3</utbetaling.version>
     </properties>
@@ -48,6 +48,12 @@
                 <artifactId>nav-fim-aktoer-v1-tjenestespesifikasjon</artifactId>
                 <classifier>jaxws</classifier>
                 <version>1.0.0</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
+                <version>2.0.0</version>
             </dependency>
 
             <dependency>
@@ -242,6 +248,12 @@
                 <version>${modig.security.version}</version>
                 <type>test-jar</type>
                 <scope>test</scope>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>common-kodeverk</artifactId>
+                <version>1.0.0</version>
             </dependency>
 
             <dependency>
