@@ -49,6 +49,7 @@ public class JournalforPanel extends Panel {
 
     public JournalforPanel(String id, IModel<Traad> traad, String fnr) {
         super(id);
+        setOutputMarkupPlaceholderTag(true);
         journalforService = new JournalforService(besvareHenvendelsePortType);
         aabnet = new Model<>(false);
 
@@ -70,6 +71,8 @@ public class JournalforPanel extends Panel {
     }
 
 
+
+
     private void toggleSynlighet(AjaxRequestTarget target) {
         aabnet.setObject(!aabnet.getObject());
         journalforForm.setVisibilityAllowed(aabnet.getObject());
@@ -80,6 +83,7 @@ public class JournalforPanel extends Panel {
 
         private final IModel<Journalforing> modell;
         private final IModel<Boolean> harSaker = new AbstractReadOnlyModel<Boolean>() {
+            @Override
             public Boolean getObject() {
                 return modell.getObject().harSaker();
             };

@@ -1,9 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume.Traader;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel.JournalforPanel;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.HenvendelseMeldingerPortType;
@@ -47,7 +49,8 @@ public class TraadPanel extends Panel {
 
     private Traader traader = new Traader(besvareHenvendelsePortType, henvendelseMeldingerPortType);
 
-    private MarkupContainer sisteMelding;
+    private final MarkupContainer sisteMelding;
+    private final JournalforPanel journalforing;
     private Dialog dialog;
 
     private Optional<String> oppgaveId = none();
@@ -87,13 +90,20 @@ public class TraadPanel extends Panel {
                 new MultiLineLabel("sisteMelding.fritekst"));
 
         dialog = new Dialog("tidligereDialog");
+        journalforing = new JournalforPanel("journalfor-panel", traad, fnr);
+        journalforing.setVisibilityAllowed(false);
         add(
-                new JournalforPanel("journalfor-panel", traad, fnr),
+                journalforing,
                 new SvarForm("svar"),
                 sisteMelding,
                 dialog);
     }
 
+    @RunOnEvents(Events.KVITTERING)
+    public void aktiverPanel(AjaxRequestTarget target) {
+        journalforing.setVisibilityAllowed(true);
+        target.add(this);
+    }
 
     private Traad getTraad() {
         return traad.getObject();
