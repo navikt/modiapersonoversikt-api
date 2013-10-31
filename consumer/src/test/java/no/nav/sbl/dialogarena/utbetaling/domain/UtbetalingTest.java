@@ -121,7 +121,6 @@ public class UtbetalingTest {
     public void skalTransformereUtbetaling() throws Exception {
         WSUtbetaling wsUtbetaling = new WSUtbetalingTestData().createUtbetaling1();
         String alderspensjon = "Alderspensjon";
-        String skatt = "Skatt";
         String kontoNr = "***REMOVED***";
 
         Utbetaling u = new Utbetaling(wsUtbetaling);
