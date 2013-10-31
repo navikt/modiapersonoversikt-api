@@ -21,7 +21,7 @@ public class KodeverkV2PortTypeMock {
             }
 
             @Override
-            public XMLFinnKodeverkListeResponse finnKodeverkListe( XMLFinnKodeverkListeRequest request) {
+            public XMLFinnKodeverkListeResponse finnKodeverkListe(XMLFinnKodeverkListeRequest request) {
                 return new XMLFinnKodeverkListeResponse();
             }
 
