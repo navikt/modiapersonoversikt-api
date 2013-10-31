@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel;
 
 
-import javax.inject.Inject;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.JournalforService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalforing;
@@ -12,6 +11,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
@@ -19,7 +19,7 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
@@ -28,15 +28,31 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
+import javax.inject.Inject;
+
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 
-public class JournalforPanel extends Panel {
+public class JournalforPanel extends GenericPanel<Traad> {
 
     public static final PackageResourceReference LESS_REFERENCE = new PackageResourceReference(JournalforPanel.class, "journalfor.less");
 
-    private final IModel<Boolean> aabnet;
+
+    private final IModel<Boolean> erJournalfort = new AbstractReadOnlyModel<Boolean>() {
+        @Override
+        public Boolean getObject() {
+            return getModelObject().erJournalfort();
+        }
+    };
+
+    private final IModel<Boolean> synligJournalforForm = new AbstractReadOnlyModel<Boolean>() {
+        @Override
+        public Boolean getObject() {
+            return journalforForm.isVisibleInHierarchy();
+        }
+    };
+
     private final AjaxLink<Void> journaforingExpander;
     private final JournalforForm journalforForm;
 
@@ -48,9 +64,9 @@ public class JournalforPanel extends Panel {
 
     public JournalforPanel(String id, IModel<Traad> traad, String fnr) {
         super(id);
+        setModel(new CompoundPropertyModel<>(traad));
         setOutputMarkupPlaceholderTag(true);
         journalforService = new JournalforService(besvareHenvendelsePortType);
-        aabnet = new Model<>(false);
 
         journaforingExpander = new AjaxLink<Void>("start-journalforing") {
             @Override
@@ -58,48 +74,57 @@ public class JournalforPanel extends Panel {
                 toggleSynlighet(target);
             }
         };
-        journaforingExpander.add(hasCssClassIf("valgt", aabnet));
-        journaforingExpander.setOutputMarkupId(true);
 
         journalforForm = new JournalforForm("journalfor-form", traad, fnr);
         journalforForm.setVisibilityAllowed(false);
         journalforForm.setOutputMarkupPlaceholderTag(true);
 
+        journaforingExpander.add(
+                hasCssClassIf("valgt", synligJournalforForm),
+                visibleIf(not(erJournalfort)));
+        journaforingExpander.setOutputMarkupId(true);
 
-        add(journaforingExpander, journalforForm);
+
+        WebMarkupContainer journalfortKvittering = new WebMarkupContainer("kvittering");
+        journalfortKvittering.add(visibleIf(erJournalfort));
+        journalfortKvittering.add(new Label("journalforingkvittering.dato"));
+        journalfortKvittering.add(new Label("journalforingkvittering.saksId"));
+        journalfortKvittering.add(new Label("journalforingkvittering.tema"));
+
+
+        add(journaforingExpander, journalforForm, journalfortKvittering);
     }
 
 
 
 
     private void toggleSynlighet(AjaxRequestTarget target) {
-        aabnet.setObject(!aabnet.getObject());
-        journalforForm.setVisibilityAllowed(aabnet.getObject());
+        journalforForm.setVisibilityAllowed(!journalforForm.isVisibleInHierarchy());
         target.add(journaforingExpander, journalforForm);
     }
 
     private class JournalforForm extends Form<Journalforing> {
 
-        private final IModel<Journalforing> modell;
-        private final IModel<Boolean> harSaker = new AbstractReadOnlyModel<Boolean>() {
+        final IModel<Boolean> harSaker = new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return modell.getObject().harSaker();
+                return getModelObject().harSaker();
             }
         };
+
+        private final RadioGroup<Sak> sakRadioGroup;
 
         public JournalforForm(String id, final IModel<Traad> traad, final String fnr) {
             super(id);
 
-            modell = new LoadableDetachableModel<Journalforing>() {
+            setModel(new CompoundPropertyModel<>(new LoadableDetachableModel<Journalforing>() {
                 @Override
                 protected Journalforing load() {
                     return journalforService.opprettJournalforing(fnr, traad.getObject());
                 }
-            };
-            setModel(new CompoundPropertyModel<>(modell));
+            }));
 
-            final RadioGroup<Sak> sakRadioGroup = new RadioGroup<>("valgtSak");
+            sakRadioGroup = new RadioGroup<>("valgtSak");
             sakRadioGroup.setRequired(true);
             sakRadioGroup.add(visibleIf(harSaker));
             sakRadioGroup.add(new ListView<String>("temakoder") {
@@ -107,7 +132,7 @@ public class JournalforPanel extends Panel {
                 protected void populateItem(ListItem<String> item) {
                     String temakode = item.getModelObject();
                     item.add(new Label("tema", new StringResourceModel(temakode, null)));
-                    item.add(new ListView<Sak>("sak", modell.getObject().getSaker(temakode)) {
+                    item.add(new ListView<Sak>("sak", JournalforForm.this.getModelObject().getSaker(temakode)) {
                         @Override
                         protected void populateItem(ListItem<Sak> item) {
                             Radio<Sak> radio = new Radio<>("radio", item.getModel());
@@ -145,7 +170,8 @@ public class JournalforPanel extends Panel {
                         target.add(feedback);
                     } else {
                         journalforService.journalfor(getModelObject());
-                        toggleSynlighet(target);
+                        journalforForm.setVisibilityAllowed(false);
+                        target.add(JournalforPanel.this);
                     }
                 }
 
