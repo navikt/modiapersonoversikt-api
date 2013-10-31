@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.KjerneinfoMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BesvareHenvendelsePortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseMeldingerPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OppgavebehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({
         KjerneinfoMock.class,
-        HenvendelsePortTypeMock.class,
+        HenvendelseMeldingerPortTypeMock.class,
         SoknaderConfig.class,
         SakOgBehandlingPortTypeMock.class,
         OppgavebehandlingPortTypeMock.class,

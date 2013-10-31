@@ -36,8 +36,8 @@
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.2-SPRINGFIX</kjerneinfo.versjon>
         <soknader.liste.version>2.0.9</soknader.liste.version>
-        <sporsmalogsvar.version>1.14</sporsmalogsvar.version>
-        <utbetaling.version>2.0.2</utbetaling.version>
+        <sporsmalogsvar.version>1.15-SNAPSHOT</sporsmalogsvar.version>
+        <utbetaling.version>2.0.3</utbetaling.version>
     </properties>
 
     <dependencyManagement>
@@ -306,8 +306,8 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>henvendelse-felles-tjenestespesifikasjon</artifactId>
-                <version>0.0.12</version>
+                <artifactId>henvendelse-meldinger-tjenestespesifikasjon</artifactId>
+                <version>0.0.7</version>
             </dependency>
 
             <dependency>
