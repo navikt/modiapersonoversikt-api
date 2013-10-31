@@ -22,7 +22,7 @@ public class SoknadListe extends Liste<Soknad> {
 
     public static final PackageResourceReference SOKNADSLISTE_LESS = new PackageResourceReference(SoknadListe.class, "soknadliste.less");
     private static final IModel<List<Soknad>> MODEL = new ListModel<>(new ArrayList<Soknad>());
-    private boolean serviceCallFailed;
+    private boolean serviceCallOk;
     @Inject
     private SoknaderService soknaderService;
     @Inject
@@ -31,14 +31,15 @@ public class SoknadListe extends Liste<Soknad> {
     public SoknadListe(String id, String fnr) {
         super(id, MODEL);
 
+        serviceCallOk = true;
         List<Soknad> soknader = new ArrayList<>();
         try {
             String aktorId = aktorService.getAktorId(fnr);
             soknader = soknaderService.hentSoknader(aktorId);
         } catch (ApplicationException ex) {
-            serviceCallFailed = true;
+            serviceCallOk = false;
         }
-        if (!serviceCallFailed) {
+        if (serviceCallOk) {
             //legger til soknads-liste css-klasse slik at custom css blir brukt.
             //hvis kall til tjeneste feiler ønsker vi ikke å bruke custom-css fordi vi da skal vise en standard feil
             this.add(new AttributeAppender("class", new Model<>("soknads-liste"), " "));
@@ -52,10 +53,10 @@ public class SoknadListe extends Liste<Soknad> {
 
     @Override
     public WebMarkupContainer newListItem(String id, IModel<Soknad> model) {
-        if (serviceCallFailed) {
-            return new FeedItemErrorMessagePanel(id, new StringResourceModel("sakogbehandling.feil", new Model()));
-        } else {
+        if (serviceCallOk) {
             return new SoknadItem(id, model);
+        } else {
+            return new FeedItemErrorMessagePanel(id, new StringResourceModel("sakogbehandling.feil", new Model()));
         }
     }
 
