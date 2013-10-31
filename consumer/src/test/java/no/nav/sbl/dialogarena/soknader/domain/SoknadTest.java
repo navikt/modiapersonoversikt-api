@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.soknader.domain;
 
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstid;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstidtyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
@@ -30,7 +31,8 @@ public class SoknadTest {
         behandlingskjede = new WSBehandlingskjede()
                 .withBehandlingskjedeId("behandling1")
                 .withNormertBehandlingstid(createNormertBehandlingstid(10))
-                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue("tittel"));
+                .withBehandlingskjedetype(new WSBehandlingskjedetyper())
+                .withBehandlingstema(new WSBehandlingstemaer().withValue("a0001"));
         startDate = now().minusDays(10);
         sluttDate = now().minusDays(4);
     }
@@ -42,7 +44,7 @@ public class SoknadTest {
                 .withSluttNAVtid(sluttNavDate)
                 .withSlutt(sluttDate);
         Soknad soknad = Soknad.transformToSoknad(behandlingskjede);
-        assertThat(soknad.getTittelKodeverk(), is(equalTo("tittel")));
+        assertThat(soknad.getTittelKodeverk(), is(equalTo("a0001")));
         assertThat(soknad.getInnsendtDato(), is(equalTo(startDate)));
         assertThat(soknad.getNormertBehandlingsTid(), is(equalTo("10 dager")));
         assertThat(soknad.getFerdigDato(), is(equalTo(sluttNavDate)));

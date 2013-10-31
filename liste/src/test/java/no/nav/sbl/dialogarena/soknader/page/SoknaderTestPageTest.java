@@ -20,6 +20,7 @@ public class SoknaderTestPageTest extends AbstractWicketTest {
         SoknaderMockContext ctx = new SoknaderMockContext();
         applicationContext.putBean("soknaderService", ctx.soknaderService());
         applicationContext.putBean("aktorService", ctx.aktorService());
+        applicationContext.putBean("kodeverkClient", ctx.kodeverkClient());
     }
 
     @Test

@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.soknader.service;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstid;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstidtyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSSakstemaer;
@@ -39,7 +40,7 @@ public class SoknaderServiceTest {
         when(sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenReturn(createResponse());
         List<Soknad> soknader = soknaderService.hentSoknader("fnr");
         assertThat(soknader.size(), is(equalTo(1)));
-        assertThat(soknader.get(0).getTittelKodeverk(), is(equalTo("tittel")));
+        assertThat(soknader.get(0).getTittelKodeverk(), is(equalTo("a0001")));
     }
 
     @Test
@@ -47,7 +48,7 @@ public class SoknaderServiceTest {
         when(sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenReturn(createResponse2());
         List<Soknad> soknader = soknaderService.hentSoknader("fnr");
         assertThat(soknader.size(), is(equalTo(1)));
-        assertThat(soknader.get(0).getTittelKodeverk(), is(equalTo("tittel")));
+        assertThat(soknader.get(0).getTittelKodeverk(), is(equalTo("a0001")));
     }
 
     private FinnSakOgBehandlingskjedeListeResponse createResponse2() throws Exception {
@@ -75,6 +76,7 @@ public class SoknaderServiceTest {
                 .withNormertBehandlingstid(createNormertBehandlingstid())
                 .withStart(now().minusDays(35))
                 .withSluttNAVtid(now().minusDays(30))
+                .withBehandlingstema(new WSBehandlingstemaer().withValue("a0002"))
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue("gammelTittel"));
     }
 
@@ -92,6 +94,7 @@ public class SoknaderServiceTest {
                 .withBehandlingskjedeId("behandling1")
                 .withNormertBehandlingstid(createNormertBehandlingstid())
                 .withStart(now())
+                .withBehandlingstema(new WSBehandlingstemaer().withValue("a0001"))
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue("tittel"));
     }
 

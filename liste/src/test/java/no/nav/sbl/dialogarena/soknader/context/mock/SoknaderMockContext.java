@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.soknader.context.mock;
 
 import no.nav.sbl.dialogarena.aktorid.service.AktorService;
+import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.sbl.dialogarena.soknader.domain.SoknadComparator;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
@@ -41,6 +42,13 @@ public class SoknaderMockContext {
         String aktorIdMocked = "29078469165474";
         when(service.getAktorId(anyString())).thenReturn(aktorIdMocked);
         return service;
+    }
+
+    @Bean
+    public KodeverkClient kodeverkClient() {
+        KodeverkClient kodeverkClient = mock(KodeverkClient.class);
+        when(kodeverkClient.hentFoersteTermnavnForKode(anyString(), anyString())).thenReturn("Dagpenger");
+        return kodeverkClient;
     }
 
     private List<Soknad> soknaderDataSetMocked() {

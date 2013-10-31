@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.soknader.liste;
 
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.behavior.Behavior;
@@ -11,6 +12,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.joda.time.DateTime;
 
+import javax.inject.Inject;
+
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
@@ -20,6 +23,9 @@ import static org.apache.wicket.model.Model.of;
 
 public class SoknadItem extends Panel {
 
+    @Inject
+    private KodeverkClient kodeverkClient;
+
     private Soknad soknad;
 
     public SoknadItem(String id, IModel<Soknad> model) {
@@ -27,7 +33,7 @@ public class SoknadItem extends Panel {
         soknad = model.getObject();
         String innsendtDato = optional(soknad.getInnsendtDato()).map(KORT).get();
         add(
-                new Label("heading", soknad.getTittelKodeverk()),
+                new Label("heading", getTittelKodeverk()),
                 new Label("innsendtDato", "Innsendt " + innsendtDato).add(visibleIfStringIsNotEmpty(innsendtDato)),
                 new Label("behandlingsTid", "Normert behandlingstid " + soknad.getNormertBehandlingsTid()).add(visibleIfStringIsNotEmpty(soknad.getNormertBehandlingsTid()))
         );
@@ -83,6 +89,10 @@ public class SoknadItem extends Panel {
 
     private Behavior visibleIfStringIsNotEmpty(String innsendtDato) {
         return visibleIf(not(isEmptyString(of(innsendtDato))));
+    }
+
+    private String getTittelKodeverk() {
+        return kodeverkClient.hentFoersteTermnavnForKode(soknad.getTittelKodeverk(), "Tema");
     }
 
 }
