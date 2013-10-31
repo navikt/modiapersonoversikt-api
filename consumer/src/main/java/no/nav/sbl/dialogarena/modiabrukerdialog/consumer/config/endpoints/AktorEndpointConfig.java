@@ -41,7 +41,7 @@ public class AktorEndpointConfig {
             @Override
             public HentAktoerIdForIdentResponse hentAktoerIdForIdent(@WebParam(name = "request", targetNamespace = "") HentAktoerIdForIdentRequest hentAktoerIdForIdentRequest) throws HentAktoerIdForIdentPersonIkkeFunnet {
                 HentAktoerIdForIdentResponse hentAktoerIdForIdentResponse = new HentAktoerIdForIdentResponse();
-                hentAktoerIdForIdentResponse.setAktoerId("aktor-" + hentAktoerIdForIdentRequest.getIdent());
+                hentAktoerIdForIdentResponse.setAktoerId("29078469165474");
                 return hentAktoerIdForIdentResponse;
             }
 
