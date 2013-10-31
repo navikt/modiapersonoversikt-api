@@ -52,7 +52,7 @@ public class UtbetalingPortTypeMock {
             }
 
             private WSUtbetaling createUtbetaling2() {
-                WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Uføre", KONTO_NR));
+                WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Uføre", KONTO_NR),createPosteringsDetalj("En lang beskrivelse", KONTO_NR),createPosteringsDetalj("En enda lengre beskrivelse", KONTO_NR));
                 WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Foreldrepenger", KONTO_NR), createPosteringsDetalj("Skatt", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
                 utbetaling.withNettobelop(2000.0).withBruttobelop(2000.0).withStatusKode("12").withStatusBeskrivelse("Trygd")
