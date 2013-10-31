@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import no.nav.modig.lang.collections.PredicateUtils;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
@@ -10,6 +11,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.equalToIgnoreCase;
+import static no.nav.modig.lang.collections.PredicateUtils.not;
+import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.POSTERINGS_DETALJ_KONTONR_TRANSFORMER;
 
 public class Bilag implements Serializable {
 
@@ -23,7 +31,7 @@ public class Bilag implements Serializable {
     }
 
     public Bilag(WSBilag wsBilag) {
-        transformMelding(wsBilag);
+        melding = transformMelding(wsBilag);
         posteringsDetaljer = new ArrayList<>();
         for (WSPosteringsdetaljer wsPosteringsdetaljer : wsBilag.getPosteringsdetaljerListe()) {
             posteringsDetaljer.add(new PosteringsDetalj(wsPosteringsdetaljer));
@@ -39,24 +47,15 @@ public class Bilag implements Serializable {
     }
 
     public Set<? extends String> getKontoNrFromDetaljer() {
-        Set<String> kontoNr = new TreeSet<>();
-        for (PosteringsDetalj detalj : posteringsDetaljer) {
-            kontoNr.add(detalj.getKontoNr());
-        }
-        return kontoNr;
+        return on(posteringsDetaljer).map(POSTERINGS_DETALJ_KONTONR_TRANSFORMER).collectIn(new TreeSet<String>());
     }
 
-    public Set<String> getBeskrivelser() {
-        Set<String> beskrivelser = new TreeSet<>();
-        for (PosteringsDetalj detalj : posteringsDetaljer) {
-            if(detalj.getHovedBeskrivelse().equalsIgnoreCase(SKATT)){ //legger ikke til "skatt" i beskrivelse
-                continue;
-            }
-            beskrivelser.add(detalj.getHovedBeskrivelse());
-
-        }
-        return beskrivelser;
+    public Set<String> getBeskrivelserFromDetaljer() {
+        return on(posteringsDetaljer)
+                .filter(where(POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER, not(equalToIgnoreCase(SKATT))))
+                .map(POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER).collectIn(new TreeSet<String>());
     }
+
 
     // CHECKSTYLE:OFF
     @Override
@@ -90,13 +89,13 @@ public class Bilag implements Serializable {
 
     // CHECKSTYLE:ON
 
-    private void transformMelding(WSBilag wsBilag) {
+    private String transformMelding(WSBilag wsBilag) {
         List<WSMelding> meldingListe = wsBilag.getMeldingListe();
         List<String> strings = new ArrayList<>();
         for (WSMelding wsMelding : meldingListe) {
             strings.add(wsMelding.getMeldingtekst());
         }
 
-        melding = StringUtils.join(strings, ", ");
+       return StringUtils.join(strings, ", ");
     }
 }

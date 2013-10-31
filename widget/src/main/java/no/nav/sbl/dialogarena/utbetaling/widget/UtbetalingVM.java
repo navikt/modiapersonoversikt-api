@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -9,6 +10,13 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 public class UtbetalingVM implements FeedItemVM, Serializable, Comparable<UtbetalingVM> {
+
+    public static final Transformer<Utbetaling, UtbetalingVM> UTBETALING_UTBETALINGVM_TRANSFORMER = new Transformer<Utbetaling, UtbetalingVM>() {
+        @Override
+        public UtbetalingVM transform(Utbetaling utbetaling) {
+            return new UtbetalingVM(utbetaling);
+        }
+    };
 
     private Utbetaling utbetaling;
 

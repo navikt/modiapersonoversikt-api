@@ -106,7 +106,7 @@ public class Utbetaling implements Serializable {
     protected Set<String> getBeskrivelser() {
         Set<String> beskrivelser = new TreeSet<>();
         for (Bilag detalj : bilag) {
-            beskrivelser.addAll(detalj.getBeskrivelser());
+            beskrivelser.addAll(detalj.getBeskrivelserFromDetaljer());
         }
         return beskrivelser;
     }
