@@ -13,7 +13,6 @@
     <name>${project.artifactId}</name>
 
     <dependencies>
-
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-consumer</artifactId>
@@ -68,6 +67,11 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-security-authorization</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-wicket</artifactId>
         </dependency>
 
         <dependency>
