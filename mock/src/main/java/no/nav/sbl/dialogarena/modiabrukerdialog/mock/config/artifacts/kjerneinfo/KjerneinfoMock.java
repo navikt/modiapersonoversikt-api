@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.test;
+package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo;
 
 import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi;
 import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
@@ -10,8 +10,8 @@ import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPrefer
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.test.BehandleBrukerprofilServiceBiMock.getBehandleBrukerprofilServiceBiMock;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.test.BrukerprofilServiceBiMock.getBrukerprofilServiceBiMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.BehandleBrukerprofilServiceBiMock.getBehandleBrukerprofilServiceBiMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.BrukerprofilServiceBiMock.getBrukerprofilServiceBiMock;
 
 @Configuration
 public class KjerneinfoMock {
