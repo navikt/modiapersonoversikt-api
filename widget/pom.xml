@@ -68,6 +68,11 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>net.sourceforge.collections</groupId>
+            <artifactId>collections-generic</artifactId>
+        </dependency>
+
     <dependency>
         <groupId>javax.inject</groupId>
         <artifactId>javax.inject</artifactId>

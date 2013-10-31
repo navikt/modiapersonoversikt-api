@@ -8,11 +8,11 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingVM.UTBETALING_UTBETALINGVM_TRANSFORMER;
 
 public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
 
@@ -30,19 +30,11 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
 
     private List<UtbetalingVM> transformUtbetalingToVM(List<Utbetaling> utbetalinger) {
         List<UtbetalingVM> utbetalingVMs = transformToVMs(utbetalinger);
-        if (utbetalingVMs.size() > MAX_NUMBER_OF_UTBETALINGER) {
-            //subList returnerer en ikke-serialiserbar liste, må derfor gjøre en workaround her
-            return asList(utbetalingVMs.subList(0, MAX_NUMBER_OF_UTBETALINGER).toArray(new UtbetalingVM[]{}));
-        } else {
-            return utbetalingVMs;
-        }
+        return on(utbetalingVMs).take(MAX_NUMBER_OF_UTBETALINGER).collect();
     }
 
     private List<UtbetalingVM> transformToVMs(List<Utbetaling> utbetalinger) {
-        List<UtbetalingVM> utbetalingVMs = new ArrayList<>();
-        for (Utbetaling utbetaling : utbetalinger) {
-            utbetalingVMs.add(new UtbetalingVM(utbetaling));
-        }
+        List<UtbetalingVM> utbetalingVMs = on(utbetalinger).map(UTBETALING_UTBETALINGVM_TRANSFORMER).collect();
         sort(utbetalingVMs);
         return utbetalingVMs;
     }
