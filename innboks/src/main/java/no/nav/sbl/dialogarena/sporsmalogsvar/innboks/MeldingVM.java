@@ -24,7 +24,7 @@ public class MeldingVM implements Serializable {
     private String id, traadId, tema, avsender, fritekst;
 
     private Meldingstype type;
-    private DateTime opprettetDato, lestDato;
+    public final DateTime opprettetDato, lestDato;
     private boolean lest;
     private int antallMeldingerITraad;
     private Status status;

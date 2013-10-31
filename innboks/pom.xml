@@ -25,6 +25,11 @@
         </dependency>
 
         <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>
         </dependency>
@@ -32,6 +37,16 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-frontend-wicket</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <dependency>
@@ -87,7 +102,6 @@
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.2</version>
         </dependency>
 
         <dependency>
@@ -118,7 +132,6 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>1.9.5</version>
             <scope>test</scope>
         </dependency>
 
@@ -126,23 +139,6 @@
             <groupId>javax.servlet</groupId>
             <artifactId>javax.servlet-api</artifactId>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-integrasjonsutils</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-core</artifactId>
-            <scope>runtime</scope>
         </dependency>
 
     </dependencies>

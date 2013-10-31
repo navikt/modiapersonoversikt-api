@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.innboks;
 
 import no.nav.modig.lang.collections.TransformerUtils;
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.records.Record;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.informasjon.WSHenvendelse;
@@ -51,6 +52,20 @@ public class InnboksVM implements Serializable {
 
     public List<MeldingVM> getValgtTraad() {
         return valgtMelding.isSome() ? traader.get(valgtMelding.get().getTraadId()) : new ArrayList<MeldingVM>();
+    }
+
+    /**
+     * @deprecated hack for å få opp journalføringknapp i innbokslamell for demo. Innboks må skrives om til å bruke
+     *             {@link Traad}-domeneobjekt.
+     */
+    @Deprecated
+    public Traad getValgtTraadForJournalforing() {
+        Traad traad = new Traad(getValgtTraadTema(), null);
+        for (MeldingVM meldingVm : getValgtTraad()) {
+            no.nav.sbl.dialogarena.sporsmalogsvar.Melding melding = new no.nav.sbl.dialogarena.sporsmalogsvar.Melding(null, meldingVm.getType(), meldingVm.opprettetDato, meldingVm.getFritekst());
+            traad.leggTil(melding);
+        }
+        return traad;
     }
 
     public String getValgtTraadTema() {

@@ -7,7 +7,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsefelles.v1.HenvendelsePortT
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
@@ -23,9 +22,9 @@ public class Innboks extends Lerret {
     private static final String SVAR = "SVAR";
 
     @Inject
-    HenvendelsePortType service;
+    HenvendelsePortType henvendelsesbehandling;
 
-    private IModel<InnboksVM> modell;
+    private CompoundPropertyModel<InnboksVM> innboks;
     private String fnr;
 
     public Innboks(String id, String fnr) {
@@ -33,22 +32,22 @@ public class Innboks extends Lerret {
         setOutputMarkupId(true);
 
         this.fnr = fnr;
-        modell = new CompoundPropertyModel<>(new InnboksVM(service.hentHenvendelseListe(fnr, asList(SPORSMAL, SVAR))));
-        setDefaultModel(modell);
+        innboks = new CompoundPropertyModel<>(new InnboksVM(henvendelsesbehandling.hentHenvendelseListe(fnr, asList(SPORSMAL, SVAR))));
+        setDefaultModel(innboks);
         setOutputMarkupId(true);
 
-        add(new AlleMeldingerPanel("meldinger", modell), new TraaddetaljerPanel("detaljpanel", modell));
+        add(new AlleMeldingerPanel("meldinger", innboks), new TraaddetaljerPanel("detaljpanel", fnr, innboks));
     }
 
     @RunOnEvents(KVITTERING)
     public void meldingerOppdatert(AjaxRequestTarget target) {
-        modell.getObject().oppdaterMeldinger(service.hentHenvendelseListe(fnr, asList(SPORSMAL, SVAR)));
+        innboks.getObject().oppdaterMeldinger(henvendelsesbehandling.hentHenvendelseListe(fnr, asList(SPORSMAL, SVAR)));
         target.add(this);
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
-        modell.getObject().setValgtMelding(feedItemPayload.getItemId());
+        innboks.getObject().setValgtMelding(feedItemPayload.getItemId());
         target.add(this);
     }
 }
