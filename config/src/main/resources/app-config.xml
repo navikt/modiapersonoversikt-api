@@ -32,7 +32,7 @@
         <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>   <!-- mangler i T8 ?-->
         <webservice alias="virksomhet:foreldrepenger_v1" mapToProperty="foreldrepengerendpoint"/>
         <webservice alias="virksomhet:sykepenger_v1" mapToProperty="sykepengerendpoint"/>
-        <webservice alias="domene.Brukerdialog:HenvendelseService_v1" mapToProperty="henvendelseendpoint"/>
+        <webservice alias="domene.Brukerdialog:HenvendelseMeldingerService_v1" mapToProperty="henvendelse.meldinger.endpoint"/>
         <webservice alias="domene.Brukerdialog:BesvareHenvendelseService_v1" mapToProperty="besvarehenvendelseendpoint"/>
         <webservice alias="domene.Brukerdialog:OppgavebehandlingService_v1" mapToProperty="oppgavebehandlingendpoint"/>
 

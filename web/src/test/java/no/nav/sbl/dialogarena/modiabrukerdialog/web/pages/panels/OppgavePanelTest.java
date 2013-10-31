@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels;
 import no.nav.sbl.dialogarena.aktorid.service.AktorService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BesvareHenvendelsePortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseMeldingerPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OppgavebehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
@@ -33,7 +33,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
         HentPersonPanelMockContext.class,
-        HenvendelsePortTypeMock.class,
+        HenvendelseMeldingerPortTypeMock.class,
         SykepengerWidgetMockContext.class,
         SakOgBehandlingPortTypeMock.class,
         OppgavebehandlingPortTypeMock.class,
