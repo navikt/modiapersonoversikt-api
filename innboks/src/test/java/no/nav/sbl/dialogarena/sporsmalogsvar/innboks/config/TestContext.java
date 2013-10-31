@@ -1,26 +1,74 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.innboks.config;
 
-import java.util.List;
-import java.util.Random;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSak;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmalOgSvar;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerRequest;
+import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.HenvendelseMeldingerPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.meldinger.HentMeldingListe;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.meldinger.HentMeldingListeResponse;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
 import static java.util.Arrays.asList;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype.INNGAENDE;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype.UTGAENDE;
+import static org.apache.commons.lang3.StringUtils.abbreviate;
 
 
 public class TestContext {
 
+    private static final Logger LOG = LoggerFactory.getLogger(TestContext.class);
+
     @Bean
     public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
         return new PropertySourcesPlaceholderConfigurer();
+    }
+
+    @Bean
+    public BesvareHenvendelsePortType besvareHenvendelsePortType() {
+        return new BesvareHenvendelsePortType() {
+
+            @Override
+            public boolean ping() {
+                return true;
+            }
+
+            @Override
+            public void journalforMeldinger(List<no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding> meldinger) {
+                LOG.info("Journalfører {} meldinger", meldinger.size());
+            }
+
+            @Override
+            public WSSporsmalOgSvar hentSporsmalOgSvar(String oppgaveId) {
+                return new WSSporsmalOgSvar();
+            }
+
+            @Override
+            public HentSakerResponse hentSaker(HentSakerRequest parameters) {
+                return new HentSakerResponse().withSaker(Arrays.asList(
+                        new WSSak().withGenerell(true).withOpprettetDato(DateTime.now()).withSakId("123").withStatuskode("Foobar").withTemakode("UFO"),
+                        new WSSak().withGenerell(false).withOpprettetDato(DateTime.now().minusDays(1)).withSakId("12").withStatuskode("Something").withTemakode("BIL"),
+                        new WSSak().withGenerell(true).withOpprettetDato(DateTime.now().minusDays(3)).withSakId("13").withStatuskode("Ingen Status").withTemakode("BIL"),
+                        new WSSak().withGenerell(false).withOpprettetDato(DateTime.now().minusDays(3)).withSakId("1234").withStatuskode("Ingen Status").withTemakode("BAR")));
+            }
+
+            @Override
+            public void besvarSporsmal(WSSvar svar) {
+                LOG.info("BesvareHenvendelsePortType besvarer spørsmål (svar behandlingId {} \"{}\")", svar.getBehandlingsId(), abbreviate(svar.getFritekst(), 30));
+            }
+        };
     }
 
     @Bean
@@ -64,6 +112,7 @@ public class TestContext {
 
             WSMelding createWSMelding(WSMeldingstype type, String traad, String tema, DateTime opprettet, DateTime lestdato) {
                 Random random = new Random();
+
                 return new WSMelding()
                         .withBehandlingsId("" + random.nextInt())
                         .withMeldingsType(type)
