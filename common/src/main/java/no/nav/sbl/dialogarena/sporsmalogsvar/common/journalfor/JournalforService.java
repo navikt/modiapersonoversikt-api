@@ -30,7 +30,7 @@ public class JournalforService implements Serializable {
 
     public void journalfor(Journalforing journalforing) {
         besvareHenvendelse.journalforMeldinger(
-                on(journalforing.traad.getDialog()).map(tilWsMelding(journalforing.valgtSak.saksId)).collect());
+                on(journalforing.traad.getDialog()).map(tilWsMelding(journalforing.valgtSak.saksId, journalforing.valgtSak.temakode)).collect());
     }
 
 
@@ -45,7 +45,7 @@ public class JournalforService implements Serializable {
         }
     };
 
-    public static Transformer<Melding, WSMelding> tilWsMelding(final String saksId) {
+    public static Transformer<Melding, WSMelding> tilWsMelding(final String saksId, final String temakode) {
         return new Transformer<Melding, WSMelding>() {
             @Override
             public WSMelding transform(Melding melding) {
@@ -54,6 +54,7 @@ public class JournalforService implements Serializable {
                         .withBehandlingsId(melding.behandlingId)
                         .withMeldingstype(melding.avsender)
                         .withOpprettetDato(melding.sendtDato)
+                        .withArkivtema(temakode)
                         .withFritekst(melding.fritekst);
             }
         };
