@@ -35,7 +35,7 @@ public class UtbetalingApplication extends WebApplication {
 
         Datoformat.brukLocaleFra(LocaleFromWicketSession.INSTANCE);
 
-        new ApplicationSettingsConfig().configure(this);
+        new ApplicationSettingsConfig().withUtf8Properties(true).configure(this);
         new FrontendConfigurator()
                 .withModules(FrontendModules.MODIA)
                 .addMetas(
