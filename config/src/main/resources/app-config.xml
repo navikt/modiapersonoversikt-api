@@ -26,6 +26,7 @@
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
         <webservice alias="virksomhet:Person_v1" mapToProperty="kjerneinfoendpoint"/>
         <webservice alias="virksomhet:Kodeverk_v1" mapToProperty="kodeverkendpoint"/>
+        <webservice alias="virksomhet:Kodeverk_v2" mapToProperty="kodeverkendpoint.v2"/>
         <webservice alias="virksomhet:Brukerprofil_v1" mapToProperty="brukerprofilendpoint"/>
         <webservice alias="virksomhet:BehandleBrukerprofil_v1" mapToProperty="behandlebrukerprofilendpoint"/>
         <webservice alias="virksomhet:Ytelseskontrakt_v1" mapToProperty="ytelseskontraktendpoint"/>     <!-- mangler i T8 ?-->
