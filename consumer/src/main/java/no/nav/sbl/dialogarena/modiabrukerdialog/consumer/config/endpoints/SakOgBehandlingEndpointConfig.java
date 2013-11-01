@@ -11,8 +11,6 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingReq
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingResponse;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerResponse;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
@@ -21,26 +19,24 @@ import org.springframework.context.annotation.Configuration;
 import javax.jws.WebParam;
 import java.net.URL;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.ConfigUtil.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.ConfigUtil.isInMockMode;
 
 @Configuration
 public class SakOgBehandlingEndpointConfig {
-    private static final Logger LOG = LoggerFactory.getLogger(SakOgBehandlingEndpointConfig.class);
 
     @Value("${sakogbehandling.url}")
     private URL sakogbehandlingEndpoint;
-
     private boolean useMock;
     private SakOgBehandlingPortTypeImpl portType = new SakOgBehandlingPortTypeImpl();
     private SakOgBehandlingPortTypeMock portTypeMock = new SakOgBehandlingPortTypeMock();
 
     public SakOgBehandlingEndpointConfig() {
-        useMock = setUseMock("start.sakogbehandling.withintegration", LOG);
+        useMock = isInMockMode("start.sakogbehandling.withintegration");
     }
 
     @Bean
     public SakOgBehandlingPortType sakOgBehandlingPortType() {
-        if(useMock) {
+        if (useMock) {
             return portTypeMock.sakOgBehandlingPortType();
         }
         SakOgBehandlingPortType sakOgBehandlingPortType = portType.sakOgBehandlingPortType(sakogbehandlingEndpoint);
@@ -49,13 +45,12 @@ public class SakOgBehandlingEndpointConfig {
 
     @Bean
     public SakOgBehandlingPortType selfTestSakOgBehandlingPortType() {
-        if(useMock) {
+        if (useMock) {
             return portTypeMock.sakOgBehandlingPortType();
         }
         SakOgBehandlingPortType sakOgBehandlingPortType = portType.selfTestSakOgBehandlingPortType(sakogbehandlingEndpoint);
         return createSakOgBehandlingPortType(sakOgBehandlingPortType);
     }
-
 
     private SakOgBehandlingPortType createSakOgBehandlingPortType(final SakOgBehandlingPortType sakOgBehandlingPortType) {
         return new SakOgBehandlingPortType() {
@@ -85,7 +80,6 @@ public class SakOgBehandlingEndpointConfig {
             }
         };
     }
-
 
 
 }

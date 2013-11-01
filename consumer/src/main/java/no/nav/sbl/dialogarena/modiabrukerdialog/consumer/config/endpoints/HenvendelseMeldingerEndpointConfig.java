@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.ConfigUtil.setUseMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.ConfigUtil.isInMockMode;
 
 @Configuration
 public class HenvendelseMeldingerEndpointConfig {
@@ -23,7 +23,7 @@ public class HenvendelseMeldingerEndpointConfig {
     private HenvendelseMeldingerPortTypeMock portTypeMock = new HenvendelseMeldingerPortTypeMock();
 
     public HenvendelseMeldingerEndpointConfig() {
-        useMock = setUseMock("start.henvendelsemeldinger.withintegration", LOG);
+        useMock = isInMockMode("start.henvendelsemeldinger.withintegration");
     }
 
     @Bean

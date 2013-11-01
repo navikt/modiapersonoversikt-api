@@ -2,15 +2,17 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
 
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static java.lang.System.getProperties;
 
 public class ConfigUtil {
+    private static final Logger LOG = LoggerFactory.getLogger(ConfigUtil.class);
 
-    public static boolean setUseMock(String key, Logger LOG) {
+    public static boolean isInMockMode(String key) {
         String start = getProperties().getProperty(key);
         boolean useMock = false;
-        if(start != null) {
+        if (start != null) {
             useMock = start.equalsIgnoreCase("no");
         } else {
             LOG.info("Kunne ikke lese start.properties");

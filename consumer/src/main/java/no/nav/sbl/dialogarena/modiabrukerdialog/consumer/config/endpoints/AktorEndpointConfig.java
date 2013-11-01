@@ -13,20 +13,19 @@ import org.springframework.context.annotation.Configuration;
 
 import java.net.URL;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.ConfigUtil.setUseMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.ConfigUtil.isInMockMode;
 
 @Configuration
 public class AktorEndpointConfig {
     private static final Logger LOG = LoggerFactory.getLogger(AktorEndpointConfig.class);
     @Value("${aktor.url}")
     private URL aktorEndpoint;
-
     private boolean useMock;
     private AktorPortTypeImpl portType = new AktorPortTypeImpl(aktorEndpoint);
     private AktorPortTypeMock portTypeMock = new AktorPortTypeMock();
 
     public AktorEndpointConfig() {
-        useMock = setUseMock("start.aktor.withintegration", LOG);
+        useMock = isInMockMode("start.aktor.withintegration");
     }
 
     @Bean
