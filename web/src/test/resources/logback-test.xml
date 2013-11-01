@@ -8,7 +8,7 @@
         </encoder>
     </appender>
 
-    <logger name="no.nav.modig" level="ERROR" />
+    <logger name="no.nav.modig" level="WARN" />
     <logger name="org.apache.wicket" level="WARN" />
     <logger name="org.springframework" level="WARN" />
 
