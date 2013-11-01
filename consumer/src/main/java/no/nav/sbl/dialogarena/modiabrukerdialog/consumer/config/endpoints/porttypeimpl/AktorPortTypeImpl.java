@@ -28,6 +28,10 @@ public class AktorPortTypeImpl {
 
     private URL aktorEndpoint;
 
+    public AktorPortTypeImpl(URL aktorEndpoint) {
+        this.aktorEndpoint = aktorEndpoint;
+    }
+
     public AktoerPortType aktorPortType() {
 //        return createAktorIdPortType(new UserSAMLOutInterceptor());
         return new AktoerPortType() {

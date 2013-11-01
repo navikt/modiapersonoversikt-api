@@ -20,8 +20,9 @@ public class AktorEndpointConfig {
     private static final Logger LOG = LoggerFactory.getLogger(AktorEndpointConfig.class);
     @Value("${aktor.url}")
     private URL aktorEndpoint;
+
     private boolean useMock;
-    private AktorPortTypeImpl portType = new AktorPortTypeImpl();
+    private AktorPortTypeImpl portType = new AktorPortTypeImpl(aktorEndpoint);
     private AktorPortTypeMock portTypeMock = new AktorPortTypeMock();
 
     public AktorEndpointConfig() {
