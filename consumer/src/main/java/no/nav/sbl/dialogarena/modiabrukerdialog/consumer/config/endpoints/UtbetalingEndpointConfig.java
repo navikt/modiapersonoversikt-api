@@ -5,36 +5,26 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.portty
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.MockPingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.ConfigUtil.setUseMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.InstanceSwitcher.createSwitcher;
 
 @Configuration
 public class UtbetalingEndpointConfig {
-    private static final Logger LOG = LoggerFactory.getLogger(UtbetalingEndpointConfig.class);
-    private final UtbetalingPortTypeImpl portType;
-    private final UtbetalingPortTypeMock portTypeMock;
-    private boolean useMock;
+    private  UtbetalingPortType portType = new UtbetalingPortTypeImpl().utbetalingPortType();
+    private  UtbetalingPortType portTypeMock = new UtbetalingPortTypeMock().utbetalingPortType();
+    private  String key = "start.utbetaling.withintegration";
 
-    public UtbetalingEndpointConfig() {
-        useMock = setUseMock("start.utbetaling.withintegration", LOG);
-        portType = new UtbetalingPortTypeImpl();
-        portTypeMock = new UtbetalingPortTypeMock();
-    }
 
     @Bean
     public UtbetalingPortType utbetalingPortType() {
-        if (useMock) {
-            return portTypeMock.utbetalingPortType();
-        }
-        return portType.utbetalingPortType();
+        return createSwitcher(portType, portTypeMock, key, UtbetalingPortType.class);
     }
 
     @Bean
     public Pingable utbetalingPing() {
         return new MockPingable("UtbetalingEndpoint");
     }
+
 }

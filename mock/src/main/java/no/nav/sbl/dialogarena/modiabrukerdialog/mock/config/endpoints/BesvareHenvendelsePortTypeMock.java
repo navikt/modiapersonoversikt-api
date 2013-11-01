@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSporsmal;
@@ -60,6 +61,10 @@ public class BesvareHenvendelsePortTypeMock {
                 return new HentSakerResponse();
             }
         };
+    }
+
+    public Pingable besvareHenvendelsePing(){
+        return new MockPingable("BesvareHenvendelsePortType");
     }
 
 }
