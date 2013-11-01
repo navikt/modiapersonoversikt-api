@@ -4,9 +4,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Proxy;
-
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 

@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

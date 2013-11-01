@@ -8,7 +8,7 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
 
 @Configuration
 public class UtbetalingEndpointConfig {
