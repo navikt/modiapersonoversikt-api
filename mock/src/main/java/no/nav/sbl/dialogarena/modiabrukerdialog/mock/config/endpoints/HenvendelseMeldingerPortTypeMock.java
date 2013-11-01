@@ -8,6 +8,7 @@ import static no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.inform
 import java.util.List;
 import java.util.Random;
 
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.HenvendelseMeldingerPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype;
@@ -75,4 +76,7 @@ public class HenvendelseMeldingerPortTypeMock {
         };
     }
 
+    public Pingable henvendelsePing() {
+        return new MockPingable("HenvendelseMeldingerPortType");
+    }
 }
