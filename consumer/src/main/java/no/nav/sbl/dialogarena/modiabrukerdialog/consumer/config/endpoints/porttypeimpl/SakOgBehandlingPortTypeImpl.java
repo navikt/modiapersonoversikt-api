@@ -16,6 +16,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 
 public class SakOgBehandlingPortTypeImpl {
 
+
+
     public SakOgBehandlingPortType sakOgBehandlingPortType(URL sakogbehandlingEndpoint) {
         return createSakOgBehandlingPortType(new UserSAMLOutInterceptor(), sakogbehandlingEndpoint);
     }
@@ -25,6 +27,7 @@ public class SakOgBehandlingPortTypeImpl {
     }
 
     private SakOgBehandlingPortType createSakOgBehandlingPortType(AbstractSAMLOutInterceptor interceptor, URL sakogbehandlingEndpoint) {
+        if(sakogbehandlingEndpoint == null) { throw new IllegalStateException("sakogbehandlingEndpoint er null"); }
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setWsdlLocation("sakOgBehandling/no/nav/tjeneste/virksomhet/sakOgBehandling/v1/SakOgBehandling.wsdl");
         proxyFactoryBean.setAddress(sakogbehandlingEndpoint.toString());
