@@ -4,11 +4,10 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.records.Record;
-import org.apache.wicket.Session;
+import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -54,18 +53,11 @@ public class MeldingVM implements Serializable {
     }
 
     public String getOpprettetDato() {
-        return formatertDato(opprettetDato, "EEEEE dd.MM.yyyy 'kl' HH:mm");
+        return Datoformat.langMedTid(opprettetDato);
     }
 
     public String getLestDato() {
-        return formatertDato(lestDato, "dd.MM.yyyy 'kl' HH:mm");
-    }
-
-    public String formatertDato(final DateTime dato, final String format) {
-        return dato == null ? null :
-                DateTimeFormat.forPattern(format)
-                        .withLocale(Session.get().getLocale())
-                        .print(dato);
+        return Datoformat.kortMedTid(lestDato);
     }
 
     public String getTraadId() {

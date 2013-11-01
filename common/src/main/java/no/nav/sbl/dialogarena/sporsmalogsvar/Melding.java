@@ -38,7 +38,7 @@ public class Melding implements Serializable {
     }
 
     public String getSendtDato() {
-        return Datoformat.lang(sendtDato);
+        return Datoformat.langMedTid(sendtDato);
     }
 
     public static final Transformer<Melding, DateTime> SENDT_DATO = new Transformer<Melding, DateTime>() {
