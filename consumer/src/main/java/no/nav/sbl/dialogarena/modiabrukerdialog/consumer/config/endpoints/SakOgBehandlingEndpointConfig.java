@@ -19,7 +19,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.jws.WebParam;
 import java.net.URL;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.ConfigUtil.isInMockMode;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.ConfigUtil.isInMockMode;
 
 @Configuration
 public class SakOgBehandlingEndpointConfig {
