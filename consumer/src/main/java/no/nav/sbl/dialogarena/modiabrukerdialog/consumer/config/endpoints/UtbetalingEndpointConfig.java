@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
 import no.nav.modig.modia.ping.Pingable;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.porttypeimpl.UtbetalingPortTypeImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.MockPingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
