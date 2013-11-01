@@ -11,6 +11,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
@@ -22,6 +24,8 @@ import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static org.apache.wicket.model.Model.of;
 
 public class SoknadItem extends Panel {
+
+    private static final Logger logger = LoggerFactory.getLogger(SoknadItem.class);
 
     @Inject
     private KodeverkClient kodeverkClient;
@@ -92,7 +96,12 @@ public class SoknadItem extends Panel {
     }
 
     private String getTittelKodeverk() {
-        return kodeverkClient.hentFoersteTermnavnForKode(soknad.getTittelKodeverk(), "Tema");
+        try {
+            return kodeverkClient.hentFoersteTermnavnForKode(soknad.getTittelKodeverk(), "Tema");
+        } catch (Exception e) {
+            logger.warn("Fant ikke kodeverkid '{}'. Bruker generisk tittel.", soknad.getTittelKodeverk());
+            return getString("soknad.tittel.tema.ikke.funnet");
+        }
     }
 
 }
