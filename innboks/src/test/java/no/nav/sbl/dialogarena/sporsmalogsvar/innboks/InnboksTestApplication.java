@@ -4,6 +4,7 @@ import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.FrontendModules;
 import no.nav.modig.frontend.MetaTag;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel.JournalforPanel;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
@@ -45,7 +46,7 @@ public class InnboksTestApplication extends WebApplication {
                                 .attribute("content", "IE=edge,chrome=1")
                                 .done())
                 .addScripts(new JavaScriptResourceReference(Innboks.class, "innboks.js"))
-                .addLess(new PackageResourceReference(Innboks.class, "innboks.less"))
+                .addLess(new PackageResourceReference(Innboks.class, "innboks.less"), JournalforPanel.LESS_REFERENCE)
                 .addCss(new CssResourceReference(InnboksTestApplication.class, "white-background.css"))
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);

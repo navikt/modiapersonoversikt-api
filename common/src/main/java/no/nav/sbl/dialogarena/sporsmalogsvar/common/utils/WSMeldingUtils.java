@@ -35,4 +35,10 @@ public class WSMeldingUtils {
         }
     };
 
+    public static final Transformer<WSMelding, String> BEHANDLINGSID = new Transformer<WSMelding, String>() {
+        @Override
+        public String transform(WSMelding wsMelding) {
+            return wsMelding.getBehandlingsId();
+        }
+    };
 }

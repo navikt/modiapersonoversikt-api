@@ -1,5 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.innboks;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import no.nav.modig.lang.collections.TransformerUtils;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
@@ -9,12 +14,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.W
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
@@ -27,6 +26,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.innboks.MeldingVM.NYESTE_OVE
 
 public class InnboksVM implements Serializable {
 
+    private Traad traad;
     private Map<String, List<MeldingVM>> traader = new HashMap<>();
 
     private List<MeldingVM> nyesteMeldingerITraad = new ArrayList<>();
@@ -35,7 +35,7 @@ public class InnboksVM implements Serializable {
 
     public InnboksVM(List<WSMelding> meldinger) {
         oppdaterMeldinger(meldinger);
-        valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
+        setValgtMelding(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
     }
 
     public final void oppdaterMeldinger(List<WSMelding> meldinger) {
@@ -60,11 +60,6 @@ public class InnboksVM implements Serializable {
      */
     @Deprecated
     public Traad getValgtTraadForJournalforing() {
-        Traad traad = new Traad(getValgtTraadTema(), null);
-        for (MeldingVM meldingVm : getValgtTraad()) {
-            no.nav.sbl.dialogarena.sporsmalogsvar.Melding melding = new no.nav.sbl.dialogarena.sporsmalogsvar.Melding(null, meldingVm.getType(), meldingVm.opprettetDato, meldingVm.getFritekst());
-            traad.leggTil(melding);
-        }
         return traad;
     }
 
@@ -91,11 +86,18 @@ public class InnboksVM implements Serializable {
     }
 
     public void setValgtMelding(String id) {
-        valgtMelding = on(nyesteMeldingerITraad).filter(where(ID, equalTo(id))).head();
+        setValgtMelding(on(nyesteMeldingerITraad).filter(where(ID, equalTo(id))).head().get());
     }
 
-    public void setValgtMelding(MeldingVM melding) {
-        valgtMelding = optional(melding);
+    public void setValgtMelding(MeldingVM meldingVM) {
+        valgtMelding = optional(meldingVM);
+        traad = new Traad(getValgtTraadTema(), null);
+        for (MeldingVM meldingVm : getValgtTraad()) {
+            no.nav.sbl.dialogarena.sporsmalogsvar.Melding melding = new no.nav.sbl.dialogarena.sporsmalogsvar.Melding(meldingVm.getId(), meldingVm.getType(), meldingVm.opprettetDato, meldingVm.getFritekst());
+            traad.leggTil(melding);
+            traad.setJournalforingkvittering(Optional.optional(meldingVm.getJournalfortDato() == null ? null :
+                    new Traad.Journalforingkvittering(meldingVm.getJournalfortDato(), meldingVm.getJournalfortSakdId(), meldingVm.getJournalfortTema())));
+        }
     }
 
     public final IModel<Boolean> erValgtMelding(final MeldingVM meldingVM) {

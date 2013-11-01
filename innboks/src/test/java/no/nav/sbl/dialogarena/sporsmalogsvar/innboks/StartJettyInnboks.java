@@ -11,7 +11,7 @@ public final class StartJettyInnboks {
 
     public static void main(String ... args) {
         SystemProperties.setFrom("jetty-innside.properties");
-        Jetty.usingWar(new File(TEST_RESOURCES, "webapp")).at("innboks").port(8383)
+        Jetty.usingWar(new File(TEST_RESOURCES, "webapp")).at("innboks").port(8384)
                 .buildJetty().start();
     }
 }

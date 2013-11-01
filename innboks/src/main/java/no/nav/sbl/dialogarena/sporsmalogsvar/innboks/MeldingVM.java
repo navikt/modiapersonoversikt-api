@@ -21,10 +21,16 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.EL
 
 public class MeldingVM implements Serializable {
 
-    private String id, traadId, tema, avsender, fritekst;
+    private String id;
+    private String traadId;
+    private String tema;
+    private String avsender;
+    private String fritekst;
 
+    private String journalfortTema;
+    private String journalfortSakdId;
     private Meldingstype type;
-    public final DateTime opprettetDato, lestDato;
+    public final DateTime opprettetDato, lestDato, journalfortDato;
     private boolean lest;
     private int antallMeldingerITraad;
     private Status status;
@@ -43,6 +49,9 @@ public class MeldingVM implements Serializable {
         lest = lestDato != null;
         antallMeldingerITraad = tilhorendeTraad.size();
         status = melding.get(Melding.status);
+        journalfortDato = melding.get(Melding.journalfortDato);
+        journalfortSakdId = melding.get(Melding.journalfortSaksid);
+        journalfortTema = melding.get(Melding.journalfortTema);
     }
 
     public String getId() {
@@ -86,6 +95,26 @@ public class MeldingVM implements Serializable {
 
     public Meldingstype getType() {
         return type;
+    }
+
+    public String getJournalfortTema() {
+        return journalfortTema;
+    }
+
+    public void setJournalfortTema(String journalfortTema) {
+        this.journalfortTema = journalfortTema;
+    }
+
+    public String getJournalfortSakdId() {
+        return journalfortSakdId;
+    }
+
+    public void setJournalfortSakdId(String journalfortSakdId) {
+        this.journalfortSakdId = journalfortSakdId;
+    }
+
+    public DateTime getJournalfortDato() {
+        return journalfortDato;
     }
 
     public IModel<Boolean> erLest() {

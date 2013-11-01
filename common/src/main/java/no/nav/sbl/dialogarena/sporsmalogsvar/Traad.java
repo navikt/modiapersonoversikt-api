@@ -22,7 +22,7 @@ import static no.nav.sbl.dialogarena.time.Datoformat.kort;
  */
 public class Traad implements Serializable {
 
-    public static class Journalforingkvittering {
+    public static class Journalforingkvittering implements Serializable {
         public final String dato;
         public final String saksId;
         public final String tema;
@@ -35,12 +35,12 @@ public class Traad implements Serializable {
     }
 
     public boolean erSensitiv;
+
     private String tema;
+
     private Svar svar = new Svar();
     private List<Melding> dialog = emptyList();
     private Journalforingkvittering journalforingkvittering;
-
-
     public Traad(String tema, String svarBehandlingId) {
         this.tema = tema;
         this.svar = new Svar();
@@ -48,8 +48,13 @@ public class Traad implements Serializable {
         this.svar.tema = tema;
     }
 
+
     public String getTema() {
         return tema;
+    }
+
+    public void setTema(String tema) {
+        this.tema = tema;
     }
 
     public List<Melding> getDialog() {

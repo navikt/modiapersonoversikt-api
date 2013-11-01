@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel;
 
 
+import javax.inject.Inject;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.JournalforService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalforing;
@@ -27,8 +28,6 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
-
-import javax.inject.Inject;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -89,7 +88,7 @@ public class JournalforPanel extends GenericPanel<Traad> {
         journalfortKvittering.add(visibleIf(erJournalfort));
         journalfortKvittering.add(new Label("journalforingkvittering.dato"));
         journalfortKvittering.add(new Label("journalforingkvittering.saksId"));
-        journalfortKvittering.add(new Label("journalforingkvittering.tema"));
+        journalfortKvittering.add(new Label("journalforingkvittering.tema", new StringResourceModel("${journalforingkvittering.tema}", getModel())));
 
 
         add(journaforingExpander, journalforForm, journalfortKvittering);
