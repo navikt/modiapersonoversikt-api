@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.config;
 
-import java.util.Arrays;
-import java.util.List;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSak;
@@ -15,12 +13,16 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.W
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.meldinger.HentMeldingListe;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.meldinger.HentMeldingListeResponse;
+import org.apache.commons.collections15.Closure;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.by;
@@ -92,8 +94,20 @@ public class TjenesterMock {
         class BesvareHenvendelseStub extends ItPings implements BesvareHenvendelsePortType {
 
             @Override
-            public void journalforMeldinger(List<no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding> meldinger) {
+            public void journalforMeldinger(final List<no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSMelding> meldinger) {
                 LOG.info("Journalfører {} meldinger", meldinger.size());
+                if (!meldinger.isEmpty()) {
+
+                    MELDINGER.forEach(new Closure<WSMelding>() {
+                        @Override
+                        public void execute(WSMelding melding) {
+                            melding.setJournalfortDato(DateTime.now());
+                            melding.setJournalfortTema(meldinger.get(0).getArkivtema());
+                            melding.setJournalfortSaksId(meldinger.get(0).getSaksId());
+                        }
+                    });
+
+                }
             }
 
 

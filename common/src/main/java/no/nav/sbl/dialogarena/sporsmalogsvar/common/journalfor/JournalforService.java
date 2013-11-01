@@ -10,10 +10,12 @@ import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSak;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerRequest;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerResponse;
 import org.apache.commons.collections15.Transformer;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.option.Optional.optional;
 
 public class JournalforService implements Serializable {
 
@@ -31,6 +33,7 @@ public class JournalforService implements Serializable {
     public void journalfor(Journalforing journalforing) {
         besvareHenvendelse.journalforMeldinger(
                 on(journalforing.traad.getDialog()).map(tilWsMelding(journalforing.valgtSak.saksId, journalforing.valgtSak.temakode)).collect());
+        journalforing.traad.setJournalforingkvittering(optional(new Traad.Journalforingkvittering(DateTime.now(), journalforing.valgtSak.saksId, journalforing.valgtSak.temakode)));
     }
 
 

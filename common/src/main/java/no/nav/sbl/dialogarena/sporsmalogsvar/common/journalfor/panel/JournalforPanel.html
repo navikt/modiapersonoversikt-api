@@ -3,6 +3,11 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div class="journalfor">
+        <div wicket:id="kvittering" class="kvittering">
+            <p wicket:id="journalforingkvittering.tema">[tema]</p>
+            <p>Journalført <span wicket:id="journalforingkvittering.dato">[dato]</span></p>
+            <p wicket:id="journalforingkvittering.saksId">[saks-id]</p>
+        </div>
         <a wicket:id="start-journalforing" class="start-journalforing">Journalfør</a>
         <form wicket:id="journalfor-form" class="journalfor-form">
             <h3><wicket:message key="journalforpanel.heading"/></h3>

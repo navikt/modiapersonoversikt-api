@@ -31,7 +31,10 @@ public class MeldingUtils {
                     .with(Melding.opprettetDato, wsMelding.getOpprettetDato())
                     .with(Melding.lestDato, wsMelding.getLestDato())
                     .with(Melding.status, STATUS.transform(wsMelding))
-                    .with(Melding.type, MELDINGSTYPE.transform(wsMelding));
+                    .with(Melding.type, MELDINGSTYPE.transform(wsMelding))
+                    .with(Melding.journalfortDato, wsMelding.getJournalfortDato())
+                    .with(Melding.journalfortSaksid, wsMelding.getJournalfortSaksId())
+                    .with(Melding.journalfortTema, wsMelding.getJournalfortTema());
         }
     };
 

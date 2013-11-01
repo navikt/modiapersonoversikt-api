@@ -1,12 +1,25 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.besvare.consume;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
+import no.nav.sbl.dialogarena.sporsmalogsvar.Traad.Journalforingkvittering;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.informasjon.WSSvar;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
 import org.apache.commons.collections15.Transformer;
 
 public class Transform {
+
+    public static final Transformer<WSMelding, Traad.Journalforingkvittering> JOURNALFORING = new Transformer<WSMelding, Traad.Journalforingkvittering>() {
+        @Override
+        public Journalforingkvittering transform(WSMelding melding) {
+            if (melding.getJournalfortDato() != null) {
+                return new Journalforingkvittering(melding.getJournalfortDato(), melding.getJournalfortSaksId(), melding.getJournalfortTema());
+            }
+            return null;
+        }
+    };
+
 
     public static final Transformer<Melding, WSSvar> tilWsSvar(final String tema, final boolean sensitiv) { return new Transformer<Melding, WSSvar>() {
         @Override public WSSvar transform(Melding svar) {

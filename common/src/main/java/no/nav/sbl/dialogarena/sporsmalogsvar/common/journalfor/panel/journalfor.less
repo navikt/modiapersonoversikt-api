@@ -7,6 +7,33 @@
   .knapp-hoved-stor {
     color: #ffffff;
   }
+  .kvittering {
+    background-color: #333333;
+    color: @graaSkrift;
+    text-transform: uppercase;
+    position: relative;
+    height: 25px;
+    p {
+      &:nth-child(1) {
+        position: absolute;
+        left: 10px;
+        top: -10px;
+      }
+      &:nth-child(2) {
+        position: absolute;
+        margin: auto;
+        top: 3px;
+        bottom: 0;
+        right: 0;
+        left: 0;
+      }
+      &:nth-child(3) {
+        position: absolute;
+        right: 10px;
+        top: -10px;
+      }
+    }
+  }
   .start-journalforing {
     display: inline-block;
     font-family: Modus, Helvetica, Arial, sans-serif;
