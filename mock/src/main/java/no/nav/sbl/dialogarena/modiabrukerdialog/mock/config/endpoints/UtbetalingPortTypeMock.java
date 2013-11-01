@@ -34,9 +34,9 @@ public class UtbetalingPortTypeMock {
                 List<WSUtbetaling> utbetalinger = new ArrayList<>();
                 utbetalinger.add(createFerietilleggDagpenger());
                 utbetalinger.add(createDagpenger());
+                utbetalinger.add(createDagpenger1());
                 utbetalinger.add(createYrkesskade());
                 utbetalinger.add(createAlderspensjon());
-                utbetalinger.add(createUtbetalingMedLangBeskrivelse());
                 return new WSHentUtbetalingListeResponse().withUtbetalingListe(utbetalinger);
             }
 
@@ -67,6 +67,16 @@ public class UtbetalingPortTypeMock {
                 WSUtbetaling utbetaling = new WSUtbetaling();
                 utbetaling.withNettobelop(2718.0).withBruttobelop(3040.0).withStatusKode("12").withStatusBeskrivelse("")
                         .withUtbetalingDato(now().minusDays(25)).withUtbetalingsPeriode(createPeriode(now().minusDays(39), now().minusDays(25)));
+                utbetaling.withBilagListe(bilag1, bilag2);
+                return utbetaling;
+            }
+
+            private WSUtbetaling createDagpenger1() {
+                WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Dagpenger", KONTO_NR));
+                WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Skatt", KONTO_NR));
+                WSUtbetaling utbetaling = new WSUtbetaling();
+                utbetaling.withNettobelop(2718.0).withBruttobelop(3040.0).withStatusKode("12").withStatusBeskrivelse("")
+                        .withUtbetalingDato(now().minusDays(50)).withUtbetalingsPeriode(createPeriode(now().minusDays(39), now().minusDays(25)));
                 utbetaling.withBilagListe(bilag1, bilag2);
                 return utbetaling;
             }
