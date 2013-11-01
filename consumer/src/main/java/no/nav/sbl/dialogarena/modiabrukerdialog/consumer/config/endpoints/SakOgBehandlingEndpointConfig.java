@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.jws.WebParam;
 import java.net.URL;
 
-import static java.lang.System.getProperties;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.ConfigUtil.*;
 
 @Configuration
 public class SakOgBehandlingEndpointConfig {
@@ -35,7 +35,7 @@ public class SakOgBehandlingEndpointConfig {
     private SakOgBehandlingPortTypeMock portTypeMock = new SakOgBehandlingPortTypeMock();
 
     public SakOgBehandlingEndpointConfig() {
-        setUseMock();
+        useMock = setUseMock("start.sakogbehandling.withintegration", LOG);
     }
 
     @Bean
@@ -86,14 +86,6 @@ public class SakOgBehandlingEndpointConfig {
         };
     }
 
-    private void setUseMock() {
-        String start = getProperties().getProperty("start.sakogbehandling.withintegration");
-        if(start != null) {
-            useMock = start.equalsIgnoreCase("no");
-        } else {
-            LOG.info("Kunne ikke lese start.properties");
-            useMock = false;
-        }
-    }
+
 
 }
