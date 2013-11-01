@@ -143,6 +143,7 @@ public class TestContext {
         return createWSMelding(type, traad, tema, opprettet, lestdato, null, null, null);
     }
 
+    // CHECKSTYLE:OFF
     private static WSMelding createWSMelding(WSMeldingstype type, String traad, String tema, DateTime opprettet, DateTime lestdato,
                                              DateTime journalfortDato, String journalfortTema, String journalfortSaksid) {
         Random random = new Random();

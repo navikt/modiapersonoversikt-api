@@ -35,7 +35,14 @@ public class InnboksVM implements Serializable {
 
     public InnboksVM(List<WSMelding> meldinger) {
         oppdaterMeldinger(meldinger);
-        setValgtMelding(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
+        valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
+        traad = new Traad(getValgtTraadTema(), null);
+        for (MeldingVM meldingVm : getValgtTraad()) {
+            no.nav.sbl.dialogarena.sporsmalogsvar.Melding melding = new no.nav.sbl.dialogarena.sporsmalogsvar.Melding(meldingVm.getId(), meldingVm.getType(), meldingVm.opprettetDato, meldingVm.getFritekst());
+            traad.leggTil(melding);
+            traad.setJournalforingkvittering(Optional.optional(meldingVm.getJournalfortDato() == null ? null :
+                    new Traad.Journalforingkvittering(meldingVm.getJournalfortDato(), meldingVm.getJournalfortSakdId(), meldingVm.getJournalfortTema())));
+        }
     }
 
     public final void oppdaterMeldinger(List<WSMelding> meldinger) {
@@ -72,13 +79,13 @@ public class InnboksVM implements Serializable {
     }
 
     public List<MeldingVM> getTidligereMeldinger() {
-        List<MeldingVM> traad = getValgtTraad();
-        return traad.isEmpty() ? new ArrayList<MeldingVM>() : traad.subList(1, traad.size());
+        List<MeldingVM> valgtTraad = getValgtTraad();
+        return valgtTraad.isEmpty() ? new ArrayList<MeldingVM>() : valgtTraad.subList(1, valgtTraad.size());
     }
 
     public MeldingVM getNyesteMelding() {
-        List<MeldingVM> traad = getValgtTraad();
-        return traad.isEmpty() ? null : traad.get(0);
+        List<MeldingVM> valgtTraad = getValgtTraad();
+        return valgtTraad.isEmpty() ? null : valgtTraad.get(0);
     }
 
     public Optional<MeldingVM> getValgtMelding() {
