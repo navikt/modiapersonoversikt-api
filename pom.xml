@@ -15,7 +15,7 @@
     <name>Dialogarena - Spørsmal og svar</name>
     <description>Prosjekt med felleskomponenter for løsningsområdet Spørsmål og svar - innside og utside.</description>
     <artifactId>sporsmal-og-svar</artifactId>
-    <version>1.16-SNAPSHOT</version>
+    <version>1.16</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -453,7 +453,7 @@
     <scm>
         <developerConnection>scm:git:ssh://git@a34apvl029.devillo.no:7999/dial/sporsmalogsvar.git</developerConnection>
         <url>http://a34apvl029.devillo.no/projects/DIAL/repos/sporsmalogsvar/</url>
-        <tag>HEAD</tag>
+        <tag>sporsmal-og-svar-1.16</tag>
     </scm>
 
     <reporting>
