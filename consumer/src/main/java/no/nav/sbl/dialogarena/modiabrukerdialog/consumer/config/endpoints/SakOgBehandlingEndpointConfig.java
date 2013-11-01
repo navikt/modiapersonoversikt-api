@@ -20,63 +20,68 @@ import javax.jws.WebParam;
 import java.net.URL;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.ConfigUtil.isInMockMode;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
 
 @Configuration
 public class SakOgBehandlingEndpointConfig {
 
     @Value("${sakogbehandling.url}")
     private URL sakogbehandlingEndpoint;
-    private boolean useMock;
-    private SakOgBehandlingPortTypeImpl portType = new SakOgBehandlingPortTypeImpl();
-    private SakOgBehandlingPortTypeMock portTypeMock = new SakOgBehandlingPortTypeMock();
 
-    public SakOgBehandlingEndpointConfig() {
-        useMock = isInMockMode("start.sakogbehandling.withintegration");
-    }
+    private SakOgBehandlingPortType portType = new SakOgBehandlingPortTypeImpl().sakOgBehandlingPortType(sakogbehandlingEndpoint);
+    private SakOgBehandlingPortType portTypeMock = new SakOgBehandlingPortTypeMock().sakOgBehandlingPortType();
+    String key = "start.sakogbehandling.withintegration";
 
     @Bean
     public SakOgBehandlingPortType sakOgBehandlingPortType() {
-        if (useMock) {
-            return portTypeMock.sakOgBehandlingPortType();
-        }
-        SakOgBehandlingPortType sakOgBehandlingPortType = portType.sakOgBehandlingPortType(sakogbehandlingEndpoint);
-        return createSakOgBehandlingPortType(sakOgBehandlingPortType);
+        SakOgBehandlingPortType behandlingPortType = createSwitcher(portType, portTypeMock, key, SakOgBehandlingPortType.class);
+        return createSakOgBehandlingPortType(behandlingPortType, portTypeMock);
     }
 
     @Bean
     public SakOgBehandlingPortType selfTestSakOgBehandlingPortType() {
-        if (useMock) {
-            return portTypeMock.sakOgBehandlingPortType();
-        }
-        SakOgBehandlingPortType sakOgBehandlingPortType = portType.selfTestSakOgBehandlingPortType(sakogbehandlingEndpoint);
-        return createSakOgBehandlingPortType(sakOgBehandlingPortType);
+        SakOgBehandlingPortType behandlingPortType = createSwitcher(portType, portTypeMock, key, SakOgBehandlingPortType.class);
+        return createSakOgBehandlingPortType(behandlingPortType, portTypeMock);
     }
 
-    private SakOgBehandlingPortType createSakOgBehandlingPortType(final SakOgBehandlingPortType sakOgBehandlingPortType) {
+    private SakOgBehandlingPortType createSakOgBehandlingPortType(final SakOgBehandlingPortType portType, final SakOgBehandlingPortType portTypeMock) {
         return new SakOgBehandlingPortType() {
 
             @Cacheable("endpointCache")
             @Override
             public FinnSakOgBehandlingskjedeListeResponse finnSakOgBehandlingskjedeListe(@WebParam(name = "request", targetNamespace = "") FinnSakOgBehandlingskjedeListeRequest finnSakOgBehandlingskjedeListeRequest) {
-                return sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(finnSakOgBehandlingskjedeListeRequest);
+                if (isInMockMode(key)) {
+                    return portTypeMock.finnSakOgBehandlingskjedeListe(finnSakOgBehandlingskjedeListeRequest);
+                }
+                return portType.finnSakOgBehandlingskjedeListe(finnSakOgBehandlingskjedeListeRequest);
             }
 
             @Cacheable("endpointCache")
             @Override
             public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest hentBehandlingskjedensBehandlingerRequest) throws HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
-                return sakOgBehandlingPortType.hentBehandlingskjedensBehandlinger(hentBehandlingskjedensBehandlingerRequest);
+                if (isInMockMode(key)) {
+                    return portTypeMock.hentBehandlingskjedensBehandlinger(hentBehandlingskjedensBehandlingerRequest);
+                }
+                return portType.hentBehandlingskjedensBehandlinger(hentBehandlingskjedensBehandlingerRequest);
             }
 
             @Cacheable("endpointCache")
             @Override
             public HentBehandlingResponse hentBehandling(@WebParam(name = "request", targetNamespace = "") HentBehandlingRequest hentBehandlingRequest) throws HentBehandlingHentBehandlingBehandlingIkkeFunnet {
-                return sakOgBehandlingPortType.hentBehandling(hentBehandlingRequest);
+                if (isInMockMode(key)) {
+                    return portTypeMock.hentBehandling(hentBehandlingRequest);
+                }
+                return portType.hentBehandling(hentBehandlingRequest);
             }
 
             @Cacheable("endpointCache")
             @Override
             public void ping() {
-                sakOgBehandlingPortType.ping();
+                if (isInMockMode(key)) {
+                    portTypeMock.ping();
+                    return;
+                }
+                portType.ping();
             }
         };
     }
