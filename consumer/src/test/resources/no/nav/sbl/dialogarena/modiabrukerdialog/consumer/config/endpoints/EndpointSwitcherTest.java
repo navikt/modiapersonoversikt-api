@@ -1,13 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
-import org.hamcrest.Matchers;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.lang.reflect.Proxy;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.InstanceSwitcher.createSwitcher;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -33,17 +32,12 @@ public class EndpointSwitcherTest {
             }
         };
 
-        EndpointSwitcher switcher = new EndpointSwitcher(foo, bar, "useBar");
-        value = getValue(switcher);
+        value = createSwitcher(foo, bar, "useBar", Value.class);
     }
 
     @After
     public void tearDown() throws Exception {
-        System.setProperty("useBar", "");
-    }
-
-    private Value getValue(EndpointSwitcher switcher) {
-        return (Value) Proxy.newProxyInstance(getClass().getClassLoader(), new Class[]{Value.class}, switcher);
+        System.getProperties().remove("useBar");
     }
 
     @Test
@@ -53,7 +47,7 @@ public class EndpointSwitcherTest {
 
     @Test
     public void useFirstObjectIfPropertyKeyIsSpecified() throws Exception {
-        System.setProperty("useBar", "no");
+        System.setProperty("useBar", "yes");
         assertThat(value.gimme(), is("bar"));
     }
 }
