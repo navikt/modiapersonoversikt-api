@@ -12,13 +12,16 @@ import org.springframework.context.annotation.Configuration;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.BehandleBrukerprofilServiceBiMock.getBehandleBrukerprofilServiceBiMock;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.BrukerprofilServiceBiMock.getBrukerprofilServiceBiMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.KodeverkmanagerBiMock.getKodeverkmanagerBiMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.PersonKjerneinfoServiceBiMock.getPersonKjerneinfoServiceBiMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getSykepengerWidgetServiceMock;
 
 @Configuration
 public class KjerneinfoMock {
 
     @Bean
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
-        return PersonKjerneinfoServiceBiMock.getPersonKjerneinfoServiceBiMock();
+        return getPersonKjerneinfoServiceBiMock();
     }
 
     @Bean
@@ -33,12 +36,12 @@ public class KjerneinfoMock {
 
     @Bean
     public SykepengerWidgetService sykepengerWidgetService() {
-        return SykepengerWidgetServiceMock.getSykepengerWidgetServiceMock();
+        return getSykepengerWidgetServiceMock();
     }
 
     @Bean
     public KodeverkmanagerBi kodeverkmanagerBi() {
-        return KodeverkmanagerBiMock.getKodeverkmanagerBiMock();
+        return getKodeverkmanagerBiMock();
     }
 
 }
