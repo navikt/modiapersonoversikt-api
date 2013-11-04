@@ -12,7 +12,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -36,9 +35,8 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 public class OversiktTest extends WicketPageTest {
 
     @Test
-    @Ignore
     public void skalOppretteOversikt() {
-        wicket.goToPageWith(new Oversikt("id", "fnr"))
+        wicket.goToPageWith(new Oversikt("oversiktId", "fnr"))
                 .should().containComponent(withId("lenker").and(ofType(LenkeWidget.class)))
                 .should().containComponent(withId("sykepenger").and(ofType(SykepengerWidget.class)));
     }
