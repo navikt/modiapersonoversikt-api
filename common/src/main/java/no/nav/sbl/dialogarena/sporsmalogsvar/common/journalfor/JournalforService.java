@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor;
 
+import java.io.Serializable;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalforing;
@@ -11,8 +12,6 @@ import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerRequest
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerResponse;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
-
-import java.io.Serializable;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
@@ -32,7 +31,7 @@ public class JournalforService implements Serializable {
 
     public void journalfor(Journalforing journalforing) {
         besvareHenvendelse.journalforMeldinger(
-                on(journalforing.traad.getDialog()).map(tilWsMelding(journalforing.valgtSak.saksId, journalforing.valgtSak.temakode)).collect());
+                on(journalforing.traad.getDialog()).map(tilWsMelding(journalforing.valgtSak.saksId, journalforing.valgtSak.temakode, journalforing.isSensitiv())).collect());
         journalforing.traad.setJournalforingkvittering(optional(new Traad.Journalforingkvittering(DateTime.now(), journalforing.valgtSak.saksId, journalforing.valgtSak.temakode)));
     }
 
@@ -48,7 +47,7 @@ public class JournalforService implements Serializable {
         }
     };
 
-    public static Transformer<Melding, WSMelding> tilWsMelding(final String saksId, final String temakode) {
+    public static Transformer<Melding, WSMelding> tilWsMelding(final String saksId, final String temakode, final boolean sensitiv) {
         return new Transformer<Melding, WSMelding>() {
             @Override
             public WSMelding transform(Melding melding) {
@@ -58,7 +57,8 @@ public class JournalforService implements Serializable {
                         .withMeldingstype(melding.avsender)
                         .withOpprettetDato(melding.sendtDato)
                         .withArkivtema(temakode)
-                        .withFritekst(melding.fritekst);
+                        .withFritekst(melding.fritekst)
+                        .withSensitiv(sensitiv);
             }
         };
     }
