@@ -13,11 +13,17 @@ import static org.mockito.Mockito.when;
 
 public class BrukerprofilServiceBiMock {
 
-    public static BrukerprofilServiceBi getBrukerprofilServiceBiMock() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
+    public static BrukerprofilServiceBi getBrukerprofilServiceBiMock() {
         BrukerprofilServiceBi serviceMock = mock(BrukerprofilServiceBi.class);
         BrukerprofilResponse mockReturnValue = createBrukerprofilResponse();
 
-        when(serviceMock.hentKontaktinformasjonOgPreferanser(any(BrukerprofilRequest.class))).thenReturn(mockReturnValue);
+        try {
+            when(serviceMock.hentKontaktinformasjonOgPreferanser(any(BrukerprofilRequest.class))).thenReturn(mockReturnValue);
+        } catch (HentKontaktinformasjonOgPreferanserPersonIkkeFunnet hentKontaktinformasjonOgPreferanserPersonIkkeFunnet) {
+            throw new RuntimeException(hentKontaktinformasjonOgPreferanserPersonIkkeFunnet);
+        } catch (HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning hentKontaktinformasjonOgPreferanserSikkerhetsbegrensning) {
+            throw new RuntimeException(hentKontaktinformasjonOgPreferanserSikkerhetsbegrensning);
+        }
         return serviceMock;
     }
 
