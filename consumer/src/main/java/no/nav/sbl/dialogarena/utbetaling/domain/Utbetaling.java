@@ -17,6 +17,7 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class Utbetaling implements Serializable {
 
+    private final String utbetalingId;
     private List<Bilag> bilag = new ArrayList<>();
     private String beskrivelse;
     private DateTime startDate;
@@ -30,7 +31,7 @@ public class Utbetaling implements Serializable {
     private String kontoNr;
 
     // CHECKSTYLE:OFF
-    public Utbetaling(List<Bilag> bilag, String beskrivelse, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr) {
+    public Utbetaling(List<Bilag> bilag, String beskrivelse, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId) {
         this.bilag = bilag;
         this.beskrivelse = beskrivelse;
         this.periode = periode;
@@ -40,6 +41,7 @@ public class Utbetaling implements Serializable {
         this.nettoBelop = nettoBelop;
         this.valuta = valuta;
         this.kontoNr = kontoNr;
+        this.utbetalingId = utbetalingId;
 
         extractPeriodDates(periode);
     }
@@ -57,6 +59,7 @@ public class Utbetaling implements Serializable {
         this.kontoNr = join(getKontoNrFromBilag(), ", ");
         this.startDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato();
         this.endDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato();
+        this.utbetalingId = wsUtbetaling.getUtbetalingId();
     }
 
     public String getKontoNr() {
@@ -117,6 +120,10 @@ public class Utbetaling implements Serializable {
             kontoNrSet.addAll(detalj.getKontoNrFromDetaljer());
         }
         return kontoNrSet;
+    }
+
+    public String getUtbetalingId() {
+        return utbetalingId;
     }
 
     private void extractPeriodDates(String periode) {
@@ -197,5 +204,6 @@ public class Utbetaling implements Serializable {
                 ", nettoBelop=" + nettoBelop +
                 '}';
     }
+
     // CHECKSTYLE:ON
 }
