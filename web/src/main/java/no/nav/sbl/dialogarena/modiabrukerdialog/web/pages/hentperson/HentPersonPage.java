@@ -33,7 +33,6 @@ public class HentPersonPage extends BasePage {
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new HentOppgavePanel("hent-oppgave")
         );
-
     }
 
     private void setupErrorText(PageParameters pageParameters, HentPersonPanel hentPersonPanel) {

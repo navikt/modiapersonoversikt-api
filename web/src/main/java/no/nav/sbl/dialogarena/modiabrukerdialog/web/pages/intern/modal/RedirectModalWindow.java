@@ -6,7 +6,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 
-
 public class RedirectModalWindow extends ModigModalWindow {
 
     private Class<? extends Page> targetPage = HentPersonPage.class;
