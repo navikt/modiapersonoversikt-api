@@ -7,12 +7,14 @@
 				<a wicket:id="velg-tema" class="oppgave-knapp velg-tema pil"></a>
 			</div>
 			<div wicket:id="temavelger" class="temavelger">
-				<ul>
+				<ul class="temaliste">
 					<li wicket:id="tema">
 						<span wicket:id="temanavn"></span>
 					</li>
 				</ul>
-			</div>
+                <wicket:container wicket:id="temavelger-feedback" />
+                <input type="button" wicket:id="hent-oppgave-knapp" class="knapp-hoved-liten" value="Hent" />
+            </div>
 		</div>
 	</wicket:panel>
 </html>

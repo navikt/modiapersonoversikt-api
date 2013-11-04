@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -75,7 +76,7 @@ public class HentOppgavePanel extends Panel {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 if (HentOppgavePanel.this.tema.getObject() != null) {
-                    valgteTema(HentOppgavePanel.this.tema.getObject(), target);
+                    hentOppgaveMedTema(HentOppgavePanel.this.tema, target);
                 } else {
                     visTema.setObject(true);
                     target.add(temavelger);
@@ -89,6 +90,31 @@ public class HentOppgavePanel extends Panel {
         temavelger.setOutputMarkupPlaceholderTag(true);
         temavelger.add(temaliste);
         temavelger.add(visibleIf(visTema));
+        temavelger.add(new FeedbackPanel("temavelger-feedback"));
+        temavelger.add(new AjaxLink<Void>("hent-oppgave-knapp") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                if (HentOppgavePanel.this.tema.getObject() != null) {
+                    target.add(temavelger);
+                    visTema.setObject(false);
+                    hentOppgaveMedTema(HentOppgavePanel.this.tema, target);
+                } else {
+                    error(new StringResourceModel("oppgaveplukker.ikke-valgt-tema", HentOppgavePanel.this, null).getString());
+                    target.add(temavelger);
+                }
+
+            }
+        });
+    }
+
+    private void hentOppgaveMedTema(IModel<Tema> tema, AjaxRequestTarget target) {
+        final WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema.toString());
+        if (oppgaveResultat == null) {
+            modalWindow.setContent(new TomtForOppgaverPanel(modalWindow.getContentId(), modalWindow));
+            modalWindow.show(target);
+            return;
+        }
+        setResponsePage(InternBesvaremodus.class, new PageParameters().add("fnr", oppgaveResultat.getFodselsnummer()).add("oppgaveId", oppgaveResultat.getOppgaveId()));
     }
 
     private IModel<Boolean> erValgteTema(final Tema t) {
@@ -110,10 +136,10 @@ public class HentOppgavePanel extends Panel {
         @Override
         protected void populateItem(final ListItem<Tema> item) {
             item.add(
-                new Label("temanavn", new StringResourceModel(item.getModelObject().toString(), this, null)));
+                    new Label("temanavn", new StringResourceModel(item.getModelObject().toString(), this, null)));
             item.add(
-                hasCssClassIf("valgt", erValgteTema(item.getModelObject())),
-                createClickBehavior(item)
+                    hasCssClassIf("valgt", erValgteTema(item.getModelObject())),
+                    createClickBehavior(item)
             );
         }
 
@@ -121,23 +147,10 @@ public class HentOppgavePanel extends Panel {
             return new AjaxEventBehavior("click") {
                 @Override
                 protected void onEvent(AjaxRequestTarget target) {
-                    visTema.setObject(false);
-                    HentOppgavePanel.this.valgteTema(item.getModelObject(), target);
+                    getSession().setAttribute("valgtTema", item.getModelObject());
                     target.add(temavelger);
                 }
             };
         }
     }
-
-    private void valgteTema(Tema tema, AjaxRequestTarget target) {
-        final WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema.toString());
-        if (oppgaveResultat == null) {
-            modalWindow.setContent(new TomtForOppgaverPanel(modalWindow.getContentId(), modalWindow));
-            modalWindow.show(target);
-            return;
-        }
-        getSession().setAttribute("valgtTema", tema);
-        setResponsePage(InternBesvaremodus.class, new PageParameters().add("fnr", oppgaveResultat.getFodselsnummer()).add("oppgaveId", oppgaveResultat.getOppgaveId()));
-    }
-
 }
