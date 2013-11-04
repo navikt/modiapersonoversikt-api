@@ -58,7 +58,7 @@ public class InnboksVM implements Serializable {
         return nyesteMeldingerITraad;
     }
 
-    public List<MeldingVM> getValgtTraad() {
+    public final List<MeldingVM> getValgtTraad() {
         return valgtMelding.isSome() ? traader.get(valgtMelding.get().getTraadId()) : new ArrayList<MeldingVM>();
     }
 
@@ -71,7 +71,7 @@ public class InnboksVM implements Serializable {
         return traad;
     }
 
-    public String getValgtTraadTema() {
+    public final String getValgtTraadTema() {
         return valgtMelding.isSome() ? valgtMelding.get().getTema() : null;
     }
 
