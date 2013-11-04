@@ -4,8 +4,6 @@ import no.nav.brukerprofil.config.spring.brukerprofil.BrukerprofilConsumerConfig
 import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.mockableimpl.BrukerprofilConsumerConfigImpl;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.BrukerprofilPortType;
-import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -26,20 +24,9 @@ public class BrukerprofilConsumerConfigResolver {
     private BrukerprofilPortType selfTestBrukerprofilPortType;
 
     private BrukerprofilServiceBi defaultBi = new BrukerprofilConsumerConfigImpl(brukerprofilPortType, selfTestBrukerprofilPortType).brukerprofilServiceBi();
-    private BrukerprofilServiceBi alternateBi;
+    private BrukerprofilServiceBi alternateBi = getBrukerprofilServiceBiMock();;
     private String key = "start.kjerneinfo.withintegration";
 
-    public BrukerprofilConsumerConfigResolver() {
-         BrukerprofilServiceBi defaultBi = new BrukerprofilConsumerConfigImpl(brukerprofilPortType, selfTestBrukerprofilPortType).brukerprofilServiceBi();
-        try {
-            BrukerprofilServiceBi alternateBi = getBrukerprofilServiceBiMock();
-        } catch (HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning hentKontaktinformasjonOgPreferanserSikkerhetsbegrensning) {
-            hentKontaktinformasjonOgPreferanserSikkerhetsbegrensning.printStackTrace();
-        } catch (HentKontaktinformasjonOgPreferanserPersonIkkeFunnet hentKontaktinformasjonOgPreferanserPersonIkkeFunnet) {
-            hentKontaktinformasjonOgPreferanserPersonIkkeFunnet.printStackTrace();
-        }
-
-    }
 
     @Bean
     public BrukerprofilServiceBi brukerprofilServiceBi() {
