@@ -45,7 +45,7 @@ public class UtbetalingPortTypeMock {
                                                        createPosteringsDetalj("Dagpenger", KONTO_NR),
                                                        createPosteringsDetalj("Skatt", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(1622.84).withBruttobelop(2153.84).withStatusKode("12").withStatusBeskrivelse("")
+                utbetaling.withNettobelop(1622.84).withBruttobelop(2153.84).withStatusKode("12").withStatusBeskrivelse("").withUtbetalingId("1")
                         .withUtbetalingDato(now().minusDays(4)).withUtbetalingsPeriode(createPeriode(now().minusDays(34), now().minusDays(4)));
                 utbetaling.withBilagListe(bilag1);
                 return utbetaling;
@@ -55,7 +55,7 @@ public class UtbetalingPortTypeMock {
                 WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Uføre", KONTO_NR),createPosteringsDetalj("En lang beskrivelse", KONTO_NR),createPosteringsDetalj("En enda lengre beskrivelse", KONTO_NR));
                 WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Foreldrepenger", KONTO_NR), createPosteringsDetalj("Skatt", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(2000.0).withBruttobelop(2000.0).withStatusKode("12").withStatusBeskrivelse("Trygd")
+                utbetaling.withNettobelop(2000.0).withBruttobelop(2000.0).withStatusKode("12").withStatusBeskrivelse("Trygd").withUtbetalingId("2")
                         .withUtbetalingDato(now().minusDays(150)).withUtbetalingsPeriode(createPeriode(now().minusDays(180), now().minusDays(150)));
                 utbetaling.withBilagListe(bilag1, bilag2);
                 return utbetaling;
@@ -65,7 +65,7 @@ public class UtbetalingPortTypeMock {
                 WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Dagpenger", KONTO_NR));
                 WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Skatt", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(2718.0).withBruttobelop(3040.0).withStatusKode("12").withStatusBeskrivelse("")
+                utbetaling.withNettobelop(2718.0).withBruttobelop(3040.0).withStatusKode("12").withStatusBeskrivelse("").withUtbetalingId("3")
                         .withUtbetalingDato(now().minusDays(25)).withUtbetalingsPeriode(createPeriode(now().minusDays(39), now().minusDays(25)));
                 utbetaling.withBilagListe(bilag1, bilag2);
                 return utbetaling;
@@ -75,7 +75,7 @@ public class UtbetalingPortTypeMock {
                 WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Dagpenger", KONTO_NR));
                 WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Skatt", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(2718.0).withBruttobelop(3040.0).withStatusKode("12").withStatusBeskrivelse("")
+                utbetaling.withNettobelop(2718.0).withBruttobelop(3040.0).withStatusKode("12").withStatusBeskrivelse("").withUtbetalingId("4")
                         .withUtbetalingDato(now().minusDays(50)).withUtbetalingsPeriode(createPeriode(now().minusDays(39), now().minusDays(25)));
                 utbetaling.withBilagListe(bilag1, bilag2);
                 return utbetaling;
@@ -84,7 +84,7 @@ public class UtbetalingPortTypeMock {
             private WSUtbetaling createYrkesskade() {
                 WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Ytkesskade", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(2258.0).withBruttobelop(2258.0).withStatusKode("12").withStatusBeskrivelse("")
+                utbetaling.withNettobelop(2258.0).withBruttobelop(2258.0).withStatusKode("12").withStatusBeskrivelse("").withUtbetalingId("5")
                         .withUtbetalingDato(now().minusDays(40)).withUtbetalingsPeriode(createPeriode(now().minusDays(70), now().minusDays(40)));
                 utbetaling.withBilagListe(bilag2);
                 return utbetaling;
@@ -96,7 +96,7 @@ public class UtbetalingPortTypeMock {
                 WSBilag bilag2 = createBilag("bilag1", createPosteringsDetalj("Alderpensjon", KONTO_NR));
                 WSBilag bilag3 = createBilag("bilag2", createPosteringsDetalj("Skatt", KONTO_NR));
                 WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(19029.0).withBruttobelop(16365.0).withStatusKode("12").withStatusBeskrivelse("")
+                utbetaling.withNettobelop(19029.0).withBruttobelop(16365.0).withStatusKode("12").withStatusBeskrivelse("").withUtbetalingId("6")
                         .withUtbetalingDato(now().minusDays(20)).withUtbetalingsPeriode(createPeriode(now().minusDays(50), now().minusDays(20)));
                 utbetaling.withBilagListe(bilag1, bilag2, bilag3);
                 return utbetaling;
