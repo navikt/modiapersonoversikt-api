@@ -67,11 +67,5 @@ public class UtbetalingVMTest {
         assertThat(utbetaling.getStartDate(), is(equalTo(utbetalingVM.getStartDato())));
         assertThat(utbetaling.getEndDate(), is(equalTo(utbetalingVM.getSluttDato())));
         assertThat(utbetaling.getUtbetalingId(), is(equalTo(utbetalingVM.getUtbetalingId())));
-
-
-
-
-
-
     }
 }
