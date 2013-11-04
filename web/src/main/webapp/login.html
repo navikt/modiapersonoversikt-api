@@ -42,6 +42,7 @@
 		}
 
 	</style>
+
 	<body>
 		<form name="login" action="j_security_check" method="post">
 			<div id="container">
@@ -61,11 +62,14 @@
 							<td><input type="password" name="j_password"/></td>
 						</tr>
 						<tr>
-							<td class="centered" colspan="100%"><input type="submit" value="Logg inn"/></td>
+							<td class="centered" colspan="100%"><input id="mainbutton" type="submit" value="Logg inn"/></td>
 						</tr>
 					</tbody>
 				</table>
 			</div>
 		</form>
 	</body>
+    <script>
+        document.getElementById("mainbutton").focus();
+    </script>
 </html>
