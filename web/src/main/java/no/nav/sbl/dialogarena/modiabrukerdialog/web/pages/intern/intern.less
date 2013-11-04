@@ -1,309 +1,315 @@
 ///// OVERSTYRING AV MODIG-FRONTENDs MODIA STYLING /////
 
 body {
-	position: relative;
+  position: relative;
 }
 
 .lameller .lamell {
-	width: 1010px;
+  width: 1010px;
 }
 
 .besvare-panel {
-	padding: 20px;
-	.referatPlaceholder {
-		text-align: center;
-		margin-top: 150px;
-	}
+  position: absolute;
+  top: 140px;
+  right: 0;
+  bottom: 0;
+  background-color: @bakgrunnsfarge;
+  width: 470px;
+  border-left: 1px solid #ddd;
+  .referatPlaceholder {
+    text-align: center;
+    margin-top: 150px;
+  }
 }
 
 .sidebar {
-	.visittkort {
-		.left {
-			.year {
-				font-size: 2.5rem;
-			}
-		}
-	}
-	.kjerneinfo {
-		height: 67%;
-		.barn {
-			margin-top: 2rem;
-			.barnAlder {
-				float: left;
-				text-align: center;
-				margin-right: 15px;
-				SPAN {
-					display: block;
-					font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-					&.alderEnhet {
-						font-size: 0.7rem;
-						text-transform: uppercase;
-						letter-spacing: 1px;
-					}
-					&.alder {
-						font-size: 2.5rem;
-						font-weight: 600;
-					}
-				}
-			}
-			UL {
-				float: left;
-				list-style: none;
-				padding: 0;
-				margin: 0;
-				font-weight: bold;
-				LI:last-child {
-					font-weight: normal;
-					font-size: 0.7rem;
-				}
-			}
-			&.boy {
-				.barnAlder {
-					color: #0ca9e1;
-				}
-			}
-			&.girl {
-				.barnAlder {
-					color: #df4b78;
-				}
-			}
-		}
-	}
+  .visittkort {
+    .left {
+      .year {
+        font-size: 2.5rem;
+      }
+    }
+  }
+  .kjerneinfo {
+    height: 67%;
+    .barn {
+      margin-top: 2rem;
+      .barnAlder {
+        float: left;
+        text-align: center;
+        margin-right: 15px;
+        SPAN {
+          display: block;
+          font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+          &.alderEnhet {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+          }
+          &.alder {
+            font-size: 2.5rem;
+            font-weight: 600;
+          }
+        }
+      }
+      UL {
+        float: left;
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        font-weight: bold;
+        LI:last-child {
+          font-weight: normal;
+          font-size: 0.7rem;
+        }
+      }
+      &.boy {
+        .barnAlder {
+          color: #0ca9e1;
+        }
+      }
+      &.girl {
+        .barnAlder {
+          color: #df4b78;
+        }
+      }
+    }
+  }
 }
 
 .hentperson.main .hent-oppgave {
-    display: block;
-    margin-left: -8rem;
+  display: block;
+  margin-left: -8rem;
 }
 
 .hent-oppgave {
-    width: auto !important;
+  width: auto !important;
 }
 
 
 .oppgave-panel {
-    width: 33rem;
+  width: 33rem;
 }
 
 ////////////////////////////////////////////////////////////////
 
 #hent-oppgave-forside {
-	text-align: center;
-	margin-top: 30px;
+  text-align: center;
+  margin-top: 30px;
 }
 
 .hent-oppgave {
-	position: relative;
-	width: 34rem;
-	.pull-right {
-		.oppgave-knapp {
-			float: left;
-		}
-	}
-	.oppgave-knapp {
-		font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-		font-weight: 600;
-		font-size: 1.2rem;
-		text-transform: uppercase;
-		padding: 1.6rem 2.5rem;
-		color: @textColor;
-		background-color: @grayLight;
-		background-image: none;
-		height: 60px;
-		position: relative;
-		display: block;
-		float: right;
-		&:hover {
-			text-decoration: none;
-		}
-		&.velg-tema {
-			background-image: url(../img/radio_ikon.svg);
-			background-repeat: no-repeat;
-			background-position: center;
-			background-size: 35%;
-			width: 60px;
-			margin: 0 2rem 0 0.2rem;
-		}
-		&.pil {
-			&:after {
-				position: absolute;
-				top: 100%;
-				left: 50%;
-				border: solid transparent;
-				content: " ";
-				height: 0;
-				width: 0;
-				border-top-color: @grayLight;
-				border-width: 0.8em;
-				margin-left: -0.8em;
-			}
-		}
-	}
+  position: relative;
+  width: 34rem;
+  .pull-right {
+    .oppgave-knapp {
+      float: left;
+    }
+  }
+  .oppgave-knapp {
+    font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 600;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    padding: 1.6rem 2.5rem;
+    color: @textColor;
+    background-color: @grayLight;
+    background-image: none;
+    height: 60px;
+    position: relative;
+    display: block;
+    float: right;
+    &:hover {
+      text-decoration: none;
+    }
+    &.velg-tema {
+      background-image: url(../img/radio_ikon.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 35%;
+      width: 60px;
+      margin: 0 2rem 0 0.2rem;
+    }
+    &.pil {
+      &:after {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+        border-top-color: @grayLight;
+        border-width: 0.8em;
+        margin-left: -0.8em;
+      }
+    }
+  }
 
-	.temavelger {
-		background: #333;
-		border: solid 1px black;
-		color: white;
-		position: absolute;
-		right: 0;
-		top: 80px;
-		text-align: left;
-		z-index: 1000;
-		padding: 20px 25px 15px 10px;
-		ul {
-			list-style: none;
-			margin: 0 0 0 10px;
-			padding: 0;
-			li {
-				padding: 3px 0 8px 28px;
-				cursor: pointer;
-				background: url(../svg/radio_svart.svg) no-repeat;
-				&.valgt {
-					background: url(../svg/radio_svart_valgt.svg) no-repeat;
-				}
-			}
-		}
-	}
+  .temavelger {
+    background: #333;
+    border: solid 1px black;
+    color: white;
+    position: absolute;
+    right: 0;
+    top: 80px;
+    text-align: left;
+    z-index: 1000;
+    padding: 20px 25px 15px 10px;
+    ul {
+      list-style: none;
+      margin: 0 0 0 10px;
+      padding: 0;
+      li {
+        padding: 3px 0 8px 28px;
+        cursor: pointer;
+        background: url(../svg/radio_svart.svg) no-repeat;
+        &.valgt {
+          background: url(../svg/radio_svart_valgt.svg) no-repeat;
+        }
+      }
+    }
+  }
 }
 
 .oppgavevalg {
-	position: relative;
-	float: left;
-	.knapp-liten {
-		position: relative;
-		&:after {
-			position: absolute;
-			top: 100%;
-			left: 50%;
-			border: solid transparent;
-			content: " ";
-			height: 0;
-			width: 0;
-			border-top-color: @grayLight;
-			border-width: 0.5em;
-			margin-left: -0.5em;
-		}
-	}
+  position: relative;
+  float: left;
+  .knapp-liten {
+    position: relative;
+    &:after {
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      border: solid transparent;
+      content: " ";
+      height: 0;
+      width: 0;
+      border-top-color: @grayLight;
+      border-width: 0.5em;
+      margin-left: -0.5em;
+    }
+  }
 
-	.oppgavevalg-liste {
-		position: absolute;
-		top: 80px;
-		right: 30px;
-		padding: 1em;
-		background-color: #b7b1a9;
-		width: 132px;
-		text-align: center;
-		z-index: 1001;
-		a {
-			color: #3e3832;
-			font-family: Modens, Arial, Helvetica, sans-serif;
-			&:hover {
-				text-decoration: none;
-				color: #000;
-			}
-		}
-	}
-	.legg-tilbake-boks {
-		position: absolute;
-		top: 82px;
-		right: 0;
-		width: 350px;
-		z-index: 1;
-		.legg-tilbake-form {
-			position: relative;
-			padding: 1em;
-			background-color: #ffffff;
-			border: 1px solid #cccccc;
-			.lukk {
-				position: absolute;
-				top: 0.5em;
-				right: 0.5em;
-				color: black;
-				border: 1px solid #cccccc;
-				padding: 0.1em;
-				cursor: pointer;
-				font-weight: bold;
-				&:hover {
-					border-color: #0ca9e1;
-					background-color: #0ca9e1;
-					color: white;
-				}
-			}
-			h3 {
-				font-size: 0.95em;
-				font-weight: bold;
-				text-align: center;
-			}
-			hr {
-				background-color: #000;
-				width: 2em;
-			}
-			input[type="radio"] + label {
-				color: #000;
-				text-transform: none;
-			}
-			.feedbackPanel {
-				background-color: white;
-				color: red;
-				font-size: 1em;
-			}
-			textarea {
-				resize: none;
-				width: 80%;
-				display: block;
-				margin: 0 auto;
-			}
-			.knapp-hoved-liten {
-				display: block;
-				margin: 2em auto;
-			}
-		}
-	}
+  .oppgavevalg-liste {
+    position: absolute;
+    top: 80px;
+    right: 30px;
+    padding: 1em;
+    background-color: #b7b1a9;
+    width: 132px;
+    text-align: center;
+    z-index: 1001;
+    a {
+      color: #3e3832;
+      font-family: Modens, Arial, Helvetica, sans-serif;
+      &:hover {
+        text-decoration: none;
+        color: #000;
+      }
+    }
+  }
+  .legg-tilbake-boks {
+    position: absolute;
+    top: 82px;
+    right: 0;
+    width: 350px;
+    z-index: 1;
+    .legg-tilbake-form {
+      position: relative;
+      padding: 1em;
+      background-color: #ffffff;
+      border: 1px solid #cccccc;
+      .lukk {
+        position: absolute;
+        top: 0.5em;
+        right: 0.5em;
+        color: black;
+        border: 1px solid #cccccc;
+        padding: 0.1em;
+        cursor: pointer;
+        font-weight: bold;
+        &:hover {
+          border-color: #0ca9e1;
+          background-color: #0ca9e1;
+          color: white;
+        }
+      }
+      h3 {
+        font-size: 0.95em;
+        font-weight: bold;
+        text-align: center;
+      }
+      hr {
+        background-color: #000;
+        width: 2em;
+      }
+      input[type="radio"] + label {
+        color: #000;
+        text-transform: none;
+      }
+      .feedbackPanel {
+        background-color: white;
+        color: red;
+        font-size: 1em;
+      }
+      textarea {
+        resize: none;
+        width: 80%;
+        display: block;
+        margin: 0 auto;
+      }
+      .knapp-hoved-liten {
+        display: block;
+        margin: 2em auto;
+      }
+    }
+  }
 }
 
 .informasjonsboks {
-	text-align: center;
-	padding: 30px 30px 40px;
-	background: @grayDark;
-	max-width: 100%;
-	width: 500px;
-	z-index: 1050;
-	position: absolute;
-	top: 250px;
-	left: 0;
-	right: 0;
-	margin: 0 auto;
-	box-shadow: 0 0 15rem @grayLight;
+  text-align: center;
+  padding: 30px 30px 40px;
+  background: @grayDark;
+  max-width: 100%;
+  width: 500px;
+  z-index: 1050;
+  position: absolute;
+  top: 250px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  box-shadow: 0 0 15rem @grayLight;
 
-	h1, p {
-		color: @white;
-	}
+  h1, p {
+    color: @white;
+  }
 
-	p {
-		margin-bottom: 30px;
-	}
+  p {
+    margin-bottom: 30px;
+  }
 
-	.knapp-info {
-		color: @white;
-		background: @grayDark;
-		border: 1px solid #675c53;
+  .knapp-info {
+    color: @white;
+    background: @grayDark;
+    border: 1px solid #675c53;
 
-		&:hover, &:focus {
-			background: @blue;
-			color: @black;
-		}
-	}
+    &:hover, &:focus {
+      background: @blue;
+      color: @black;
+    }
+  }
 
-	[class*="knapp"]:first-of-type + a {
-		margin-left: 10px;
-	}
+  [class*="knapp"]:first-of-type + a {
+    margin-left: 10px;
+  }
 }
 
 .wicket-mask-dark {
-	position: fixed;
-	z-index: 1040;
-	top: 0;
-	left: 0;
-	height: 100%;
-	width: 100%;
+  position: fixed;
+  z-index: 1040;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
