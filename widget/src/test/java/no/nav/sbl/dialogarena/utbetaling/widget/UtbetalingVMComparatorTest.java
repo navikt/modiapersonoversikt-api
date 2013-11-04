@@ -48,6 +48,6 @@ public class UtbetalingVMComparatorTest {
     }
 
     private UtbetalingVM lagUtbetalingVM(DateTime utbetalingsDato) {
-        return new UtbetalingVM(new Utbetaling(null, null, null, null, utbetalingsDato, 0, 0, "NOK", "123","1"));
+        return new UtbetalingVM(new Utbetaling(null,  null, null, utbetalingsDato, 0, 0, "NOK", "123","1"));
     }
 }

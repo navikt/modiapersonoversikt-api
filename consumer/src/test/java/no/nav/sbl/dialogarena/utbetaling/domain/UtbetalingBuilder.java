@@ -10,7 +10,6 @@ import static java.util.Arrays.asList;
 public class UtbetalingBuilder {
 
     private List<Bilag> bilag = new ArrayList<>();
-    private String beskrivelse = "Dagpenger";
     private String periode = "2013.10.07-2013.11.07";
     private String statuskode = "10";
     private DateTime utbetalingsDato = DateTime.now().minus(1);
@@ -35,11 +34,6 @@ public class UtbetalingBuilder {
 
     public UtbetalingBuilder setKontoNr(String kontoNr) {
         this.kontoNr = kontoNr;
-        return this;
-    }
-
-    public UtbetalingBuilder setBeskrivelse(String beskrivelse) {
-        this.beskrivelse = beskrivelse;
         return this;
     }
 
@@ -79,7 +73,7 @@ public class UtbetalingBuilder {
     }
 
     public Utbetaling createUtbetaling() {
-        return new Utbetaling(bilag, beskrivelse, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr, utbetalingId);
+        return new Utbetaling(bilag, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr, utbetalingId);
     }
 
 }
