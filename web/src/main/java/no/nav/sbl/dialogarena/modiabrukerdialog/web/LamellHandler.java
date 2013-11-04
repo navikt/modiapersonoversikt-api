@@ -32,7 +32,7 @@ import static org.apache.wicket.model.Model.of;
 public class LamellHandler implements Serializable {
 
     public static final String LAMELL_KONTRAKTER = "kontrakter";
-    public static final String LAMELL_UTBETALINGER = "utbetalinger";
+    public static final String LAMELL_UTBETALINGER = "utbetaling";
     public static final String LAMELL_FORELDREPENGER = "foreldrepenger";
     public static final String LAMELL_SYKEPENGER = "sykepenger";
     public static final String LAMELL_OVERSIKT = "oversikt";
@@ -142,7 +142,7 @@ public class LamellHandler implements Serializable {
     }
 
     private LamellFactory createUtbetalingLamell() {
-        return newLamellFactory(LAMELL_UTBETALINGER, "U", false, new LerretFactory() {
+        return newLamellFactory(LAMELL_UTBETALINGER, "U", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
                 return addLerretToListAndReturn(new UtbetalingLamell(id, fnrFromRequest));
