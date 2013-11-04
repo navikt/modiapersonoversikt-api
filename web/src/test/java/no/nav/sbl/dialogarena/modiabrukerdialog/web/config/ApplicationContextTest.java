@@ -18,6 +18,7 @@ public class ApplicationContextTest {
 
     @BeforeClass
     public static void setupStatic() {
+        setFrom("start.properties");
         setFrom("environment-local.properties");
         setupKeyAndTrustStore();
     }
