@@ -13,9 +13,9 @@ import org.springframework.context.annotation.Configuration;
 import javax.inject.Inject;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getForeldrepengerLoaderMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getForeldrepengerServiceBiMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getSykepengerServiceBiMock;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getSykepengerWidgetServiceMock;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getSykmeldingsperioderPingMock;
 
 @Configuration
 public class SykmeldingsperioderPanelConfigResolver {
@@ -24,20 +24,29 @@ public class SykmeldingsperioderPanelConfigResolver {
     SykepengerServiceBi sykepengerServiceBi;
     @Inject
     ForeldrepengerServiceBi foreldrepengerServiceBi;
+    private ForeldrepengerServiceBi foreldrepengerServiceBiMock;
+    private SykepengerServiceBi sykepengerServiceBiMock;
 
-    private SykepengerWidgetService defaultWidgetService = new SykmeldingsperioderPanelConfigImpl(sykepengerServiceBi, foreldrepengerServiceBi).sykepengerWidgetService();
+    private SykmeldingsperioderPanelConfigImpl sykmeldingsperioderImpl = new SykmeldingsperioderPanelConfigImpl();
+
+    private SykepengerWidgetService defaultWidgetService = sykmeldingsperioderImpl.sykepengerWidgetService();
     private SykepengerWidgetService mockWidgetService = getSykepengerWidgetServiceMock();
-    private SykmeldingsperiodeLoader periodeLoader = new SykmeldingsperioderPanelConfigImpl(sykepengerServiceBi, foreldrepengerServiceBi).sykmeldingsperiodeLoader();
-    private SykmeldingsperiodeLoader periodeLoaderMock = new SykmeldingsperioderPanelConfigImpl(sykepengerServiceBi, foreldrepengerServiceBi).sykmeldingsperiodeLoader();
-    private ForeldrepengerLoader foreldrepengerLoader = new SykmeldingsperioderPanelConfigImpl(sykepengerServiceBi, foreldrepengerServiceBi).foreldrepengerLoader();
-    private ForeldrepengerLoader foreldrepengerLoaderMock = getForeldrepengerLoaderMock();
-    private SykmeldingsperioderPing ping = new SykmeldingsperioderPanelConfigImpl(sykepengerServiceBi, foreldrepengerServiceBi).sykmeldingsperioderPing();
-    private SykmeldingsperioderPing pingMock = getSykmeldingsperioderPingMock();
+    private SykmeldingsperiodeLoader periodeLoader = sykmeldingsperioderImpl.sykmeldingsperiodeLoader();
+    private ForeldrepengerLoader foreldrepengerLoader = sykmeldingsperioderImpl.foreldrepengerLoader();
+    private SykmeldingsperioderPing ping;
     private String key = "start.kjerneinfo.withintegration";
+
+    public SykmeldingsperioderPanelConfigResolver() {
+
+        foreldrepengerServiceBiMock = getForeldrepengerServiceBiMock();
+        sykepengerServiceBiMock = getSykepengerServiceBiMock();
+
+        ping = sykmeldingsperioderImpl.sykmeldingsperioderPing(foreldrepengerServiceBi(), sykepengerServiceBi());
+    }
 
     @Bean
     SykmeldingsperioderPing sykmeldingsperioderPing() {
-        return createSwitcher(ping, pingMock, key, SykmeldingsperioderPing.class);
+        return ping;
     }
 
     @Bean
@@ -47,12 +56,23 @@ public class SykmeldingsperioderPanelConfigResolver {
 
     @Bean
     public SykmeldingsperiodeLoader sykmeldingsperiodeLoader() {
-        return createSwitcher(periodeLoader, periodeLoaderMock, key, SykmeldingsperiodeLoader.class);
+        periodeLoader.setSykepengerService(sykepengerServiceBi());
+        return periodeLoader;
     }
 
     @Bean
     public ForeldrepengerLoader foreldrepengerLoader() {
-        return createSwitcher(foreldrepengerLoader, foreldrepengerLoaderMock, key, ForeldrepengerLoader.class);
+        foreldrepengerLoader.setForeldrepengerService(foreldrepengerServiceBi());
+        return foreldrepengerLoader;
     }
+
+    private ForeldrepengerServiceBi foreldrepengerServiceBi() {
+        return createSwitcher(foreldrepengerServiceBi, foreldrepengerServiceBiMock, key, ForeldrepengerServiceBi.class);
+    }
+
+    private SykepengerServiceBi sykepengerServiceBi() {
+        return createSwitcher(sykepengerServiceBi, sykepengerServiceBiMock, key, SykepengerServiceBi.class);
+    }
+
 
 }

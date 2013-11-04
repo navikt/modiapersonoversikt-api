@@ -10,15 +10,7 @@ import no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl;
 
 public class SykmeldingsperioderPanelConfigImpl {
 
-    SykepengerServiceBi sykepengerServiceBi;
-    ForeldrepengerServiceBi foreldrepengerServiceBi;
-
-    public SykmeldingsperioderPanelConfigImpl(SykepengerServiceBi sykepengerServiceBi, ForeldrepengerServiceBi foreldrepengerServiceBi) {
-        this.sykepengerServiceBi = sykepengerServiceBi;
-        this.foreldrepengerServiceBi = foreldrepengerServiceBi;
-    }
-
-    public SykmeldingsperioderPing sykmeldingsperioderPing() {
+    public SykmeldingsperioderPing sykmeldingsperioderPing(ForeldrepengerServiceBi foreldrepengerServiceBi, SykepengerServiceBi sykepengerServiceBi) {
         return new SykmeldingsperioderPing(foreldrepengerServiceBi, sykepengerServiceBi);
     }
 
