@@ -10,34 +10,26 @@ import org.springframework.context.annotation.Configuration;
 
 import java.net.URL;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.ConfigUtil.isInMockMode;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
 
 @Configuration
 public class KodeverkV2EndpointConfig {
 
+    private final String key = "start.kodeverk.withmock";
     @Value("${kodeverkendpoint.v2.url}")
     private URL kodeverkEndpoint;
-    private boolean useMock;
-    private KodeverkV2EndpointConfigImpl portType = new KodeverkV2EndpointConfigImpl(kodeverkEndpoint);
-    private KodeverkV2PortTypeMock portTypeMock = new KodeverkV2PortTypeMock();
-
-    public KodeverkV2EndpointConfig() {
-        useMock = isInMockMode("start.kodeverk.withmock");
-    }
+    private KodeverkPortType portType = new KodeverkV2EndpointConfigImpl(kodeverkEndpoint).kodeverkPortType();
+    private KodeverkPortType portTypeMock = new KodeverkV2PortTypeMock().kodeverkPortType();
+    private KodeverkClient kodeverkKlient = new KodeverkV2EndpointConfigImpl(kodeverkEndpoint).kodeverkClient();
+    private KodeverkClient kodeverkKlientMock = new KodeverkV2PortTypeMock().kodeverkClient();
 
     @Bean(name = "kodeverkPortTypeV2")
     public KodeverkPortType kodeverkPortType() {
-        if (useMock) {
-            return portTypeMock.kodeverkPortType();
-        }
-        return portType.kodeverkPortType();
+        return createSwitcher(portType, portTypeMock, key, KodeverkPortType.class);
     }
 
     @Bean
     public KodeverkClient kodeverkClient() {
-        if (useMock) {
-            return portTypeMock.kodeverkClient();
-        }
-        return portType.kodeverkClient();
+        return createSwitcher(kodeverkKlient, kodeverkKlientMock, key, KodeverkClient.class);
     }
 }
