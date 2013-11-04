@@ -18,7 +18,6 @@ public class Utbetaling implements Serializable {
 
     private final String utbetalingId;
     private List<Bilag> bilag = new ArrayList<>();
-    private String beskrivelse;
     private DateTime startDate;
     private DateTime endDate;
     private String periode;
@@ -30,9 +29,8 @@ public class Utbetaling implements Serializable {
     private String kontoNr;
 
     // CHECKSTYLE:OFF
-    public Utbetaling(List<Bilag> bilag, String beskrivelse, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId) {
+    public Utbetaling(List<Bilag> bilag, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId) {
         this.bilag = bilag;
-        this.beskrivelse = beskrivelse;
         this.periode = periode;
         this.statuskode = statuskode;
         this.utbetalingsDato = utbetalingsDato;
