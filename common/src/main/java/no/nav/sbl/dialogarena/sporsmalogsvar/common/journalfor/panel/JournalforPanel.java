@@ -163,7 +163,7 @@ public class JournalforPanel extends GenericPanel<Traad> {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                     if (!getModelObject().harSaker()) {
-                        error("Brukeren har ingen saker. Det kan derfor ikke journalføres på sak.");
+                        error(new StringResourceModel("journalforpanel.ingen-saker.submit", JournalforPanel.this, null).getString());
                         target.add(feedback);
                     } else {
                         journalforService.journalfor(getModelObject());
