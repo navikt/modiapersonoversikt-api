@@ -15,7 +15,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 @Configuration
 public class AktorEndpointConfig {
 
-    String key = "start.aktor.withintegration";
+    String key = "start.aktor.withmock";
     @Value("${aktor.url}")
     private URL aktorEndpoint;
     private AktoerPortType portType = new AktorPortTypeImpl(aktorEndpoint).aktorPortType();

@@ -22,7 +22,7 @@ public class KodeverkV2EndpointConfig {
     private KodeverkV2PortTypeMock portTypeMock = new KodeverkV2PortTypeMock();
 
     public KodeverkV2EndpointConfig() {
-        useMock = isInMockMode("start.kodeverk.withintegration");
+        useMock = isInMockMode("start.kodeverk.withmock");
     }
 
     @Bean(name = "kodeverkPortTypeV2")

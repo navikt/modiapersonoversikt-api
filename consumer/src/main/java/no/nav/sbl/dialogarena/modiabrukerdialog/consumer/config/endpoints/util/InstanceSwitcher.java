@@ -20,9 +20,9 @@ public class InstanceSwitcher implements InvocationHandler {
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        String useDefault = getProperty(key, "yes");
+        String useDefault = getProperty(key, "no");
         method.setAccessible(true);
-        if (useDefault.equalsIgnoreCase("no")) {
+        if (useDefault.equalsIgnoreCase("yes")) {
             return method.invoke(alternative, args);
         }
         return method.invoke(defaultInstance, args);

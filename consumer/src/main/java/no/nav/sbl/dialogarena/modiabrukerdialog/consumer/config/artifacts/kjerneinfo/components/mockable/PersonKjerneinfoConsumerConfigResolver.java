@@ -1,12 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable;
 
-import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.kjerneinfo.consumer.config.KjerneinfoSecurityPolicyConfig;
 import no.nav.kjerneinfo.consumer.fim.mapping.KjerneinfoMapper;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.config.PersonKjerneinfoConsumerConfig;
-import no.nav.kjerneinfo.consumer.fim.person.mock.PersonKjerneinfoServiceMock;
-import no.nav.kjerneinfo.consumer.fim.person.support.DefaultPersonKjerneinfoService;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.mockableimpl.PersonKjerneinfoConsumerConfigImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.PersonKjerneinfoServiceBiMock;
@@ -45,7 +42,7 @@ public class PersonKjerneinfoConsumerConfigResolver {
 
     private PersonKjerneinfoServiceBi defaultBi = new PersonKjerneinfoConsumerConfigImpl(personPortType, selfTestPersonPortType, kjerneinfoMapperBean, kjerneinfoPep).personKjerneinfoServiceBi();
     private PersonKjerneinfoServiceBi mockBi =  PersonKjerneinfoServiceBiMock.getPersonKjerneinfoServiceBiMock();
-    private String key = "start.kjerneinfo.withintegration";
+    private String key = "start.kjerneinfo.withmock";
 
     @Bean
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {

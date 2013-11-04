@@ -34,7 +34,7 @@ public class SykmeldingsperioderPanelConfigResolver {
     private SykmeldingsperiodeLoader periodeLoader = sykmeldingsperioderImpl.sykmeldingsperiodeLoader();
     private ForeldrepengerLoader foreldrepengerLoader = sykmeldingsperioderImpl.foreldrepengerLoader();
     private SykmeldingsperioderPing ping;
-    private String key = "start.kjerneinfo.withintegration";
+    private String key = "start.kjerneinfo.withmock";
 
     public SykmeldingsperioderPanelConfigResolver() {
 

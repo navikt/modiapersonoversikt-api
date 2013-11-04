@@ -32,7 +32,7 @@ public class SakOgBehandlingEndpointConfig {
     private SakOgBehandlingPortType portType;
     private SakOgBehandlingPortType portTypeSelftTest;
     private SakOgBehandlingPortType portTypeMock = new SakOgBehandlingPortTypeMock().sakOgBehandlingPortType();
-    String key = "start.sakogbehandling.withintegration";
+    String key = "start.sakogbehandling.withmock";
 
     @Bean
     public SakOgBehandlingPortType sakOgBehandlingPortType() {

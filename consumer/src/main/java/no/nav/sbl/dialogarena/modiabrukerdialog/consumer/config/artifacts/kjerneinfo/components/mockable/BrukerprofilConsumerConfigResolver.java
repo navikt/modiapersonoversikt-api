@@ -25,7 +25,7 @@ public class BrukerprofilConsumerConfigResolver {
 
     private BrukerprofilServiceBi defaultBi = new BrukerprofilConsumerConfigImpl(brukerprofilPortType, selfTestBrukerprofilPortType).brukerprofilServiceBi();
     private BrukerprofilServiceBi alternateBi = getBrukerprofilServiceBiMock();;
-    private String key = "start.kjerneinfo.withintegration";
+    private String key = "start.kjerneinfo.withmock";
 
 
     @Bean

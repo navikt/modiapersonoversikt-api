@@ -29,7 +29,7 @@ public class BehandleBrukerprofilConsumerConfigResolver {
 
     @Bean
     public BehandleBrukerprofilServiceBi behandleBrukerprofilServiceBi() {
-        String key = "start.kjerneinfo.withintegration";
+        String key = "start.kjerneinfo.withmock";
         return createSwitcher(defaultBi, alternateBi, key, BehandleBrukerprofilServiceBi.class);
     }
 

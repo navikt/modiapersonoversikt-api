@@ -19,7 +19,7 @@ public class OppgavebehandlingEndpointConfig {
     private OppgavebehandlingPortType portTypeMock = new OppgavebehandlingPortTypeMock().oppgavebehandlingPortType();
     private Pingable pingable = new OppgavebehandlingPortTypeImpl(oppgavebehandlingEndpoint).oppgavebehandlingPing();
     private Pingable pingableMock = new OppgavebehandlingPortTypeMock().oppgavebehandlingPing();
-    private String key = "start.oppgavebehandling.withintegration";
+    private String key = "start.oppgavebehandling.withmock";
 
     @Bean
     public OppgavebehandlingPortType oppgavebehandlingPortType() {

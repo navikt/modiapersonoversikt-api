@@ -19,7 +19,7 @@ public class HenvendelseMeldingerEndpointConfig {
     private HenvendelseMeldingerPortType portTypeMock = new HenvendelseMeldingerPortTypeMock().henvendelseMeldingerPortType();
     private Pingable pingable = new HenvendelseMeldingerPortTypeImpl(henvendelseEndpoint).henvendelsePing();
     private Pingable pingableMock = new HenvendelseMeldingerPortTypeMock().henvendelsePing();
-    private String key = "start.henvendelsemeldinger.withintegration";
+    private String key = "start.henvendelsemeldinger.withmock";
 
     @Bean
     public HenvendelseMeldingerPortType henvendelsePortType() {

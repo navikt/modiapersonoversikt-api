@@ -23,7 +23,7 @@ public class PersonKjerneinfoMapperConfigResolver {
     private KodeverkmanagerBi kodeverkmanagerBeanMock = getKodeverkmanagerBiMock();
     private KjerneinfoMapper mapper = new PersonKjerneinfoMapperConfigImpl(kodeverkmanagerBean).kjerneinfoMapperBean();
     private KjerneinfoMapper mapperMock = new PersonKjerneinfoMapperConfigImpl(kodeverkmanagerBeanMock).kjerneinfoMapperBean();
-    private String key = "start.kjerneinfo.withintegration";
+    private String key = "start.kjerneinfo.withmock";
 
     @Bean
     public KjerneinfoMapper kjerneinfoMapperBean() {

@@ -38,7 +38,7 @@ public class StartJetty {
 	    System.setProperty("wicket.configuration", "development");
         setFrom("start.properties");
 
-        String start = getProperties().getProperty("start.jetty.withintegration");
+        String start = getProperties().getProperty("start.jetty.withsomeintegration");
 
         if (start.compareToIgnoreCase("no") == 0) {
             return new JettyNoIntegration();

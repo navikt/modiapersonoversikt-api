@@ -14,7 +14,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 public class UtbetalingEndpointConfig {
     private  UtbetalingPortType portType = new UtbetalingPortTypeImpl().utbetalingPortType();
     private  UtbetalingPortType portTypeMock = new UtbetalingPortTypeMock().utbetalingPortType();
-    private  String key = "start.utbetaling.withintegration";
+    private  String key = "start.utbetaling.withmock";
 
 
     @Bean
