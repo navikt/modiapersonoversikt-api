@@ -48,38 +48,4 @@ public class PosteringsDetalj implements Serializable {
     public String getKontoNr() {
         return kontoNr;
     }
-
-    // CHECKSTYLE:OFF
-    @Override
-    public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
-
-        PosteringsDetalj that = (PosteringsDetalj) o;
-
-        if (hovedBeskrivelse != null ? !hovedBeskrivelse.equals(that.hovedBeskrivelse) : that.hovedBeskrivelse != null)
-            return false;
-        if (underBeskrivelse != null ? !underBeskrivelse.equals(that.underBeskrivelse) : that.underBeskrivelse != null)
-            return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = hovedBeskrivelse != null ? hovedBeskrivelse.hashCode() : 0;
-        result = 31 * result + (underBeskrivelse != null ? underBeskrivelse.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "PosteringsDetalj{" +
-                "hovedBeskrivelse='" + hovedBeskrivelse + '\'' +
-                ", underBeskrivelse='" + underBeskrivelse + '\'' +
-                '}';
-    }
-    // CHECKSTYLE:ON
 }

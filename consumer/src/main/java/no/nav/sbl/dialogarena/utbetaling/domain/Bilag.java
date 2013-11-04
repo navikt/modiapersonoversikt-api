@@ -55,39 +55,6 @@ public class Bilag implements Serializable {
                 .map(POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER).collectIn(new TreeSet<String>());
     }
 
-
-    // CHECKSTYLE:OFF
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Bilag bilag = (Bilag) o;
-
-        if (melding != null ? !melding.equals(bilag.melding) : bilag.melding != null) return false;
-        if (posteringsDetaljer != null ? !posteringsDetaljer.equals(bilag.posteringsDetaljer) : bilag.posteringsDetaljer != null)
-            return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = melding != null ? melding.hashCode() : 0;
-        result = 31 * result + (posteringsDetaljer != null ? posteringsDetaljer.hashCode() : 0);
-        return result;
-    }
-
-    @Override
-    public String toString() {
-        return "Bilag{" +
-                "melding='" + melding + '\'' +
-                ", posteringsDetaljer=" + posteringsDetaljer +
-                '}';
-    }
-
-    // CHECKSTYLE:ON
-
     private String transformMelding(WSBilag wsBilag) {
         List<WSMelding> meldingListe = wsBilag.getMeldingListe();
         List<String> strings = new ArrayList<>();
