@@ -71,32 +71,6 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
         return getUtbetalingId();
     }
 
-    // CHECKSTYLE:OFF
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-
-        UtbetalingVM that = (UtbetalingVM) o;
-
-        if (!utbetaling.equals(that.utbetaling)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return utbetaling.hashCode();
-    }
-
-    // CHECKSTYLE:ON
-
     private String formaterBelop(double nettoBelop) {
         NumberFormat nf = NumberFormat.getNumberInstance(Locale.forLanguageTag("nb"));
         nf.setGroupingUsed(true);
