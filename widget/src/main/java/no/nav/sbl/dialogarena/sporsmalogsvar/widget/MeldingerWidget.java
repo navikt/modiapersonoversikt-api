@@ -1,8 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
-import java.util.Comparator;
-import java.util.List;
-import javax.inject.Inject;
 import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.HenvendelseMeldingerPortType;
@@ -12,6 +9,10 @@ import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+
+import javax.inject.Inject;
+import java.util.Comparator;
+import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;

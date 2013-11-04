@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
-import java.util.Comparator;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
@@ -10,6 +9,8 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.W
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
+
+import java.util.Comparator;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status.IKKE_BESVART;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status.IKKE_BESVART_INNEN_FRIST;

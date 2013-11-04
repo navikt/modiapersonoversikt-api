@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor;
 
-import java.io.Serializable;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalforing;
@@ -12,6 +11,8 @@ import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerRequest
 import no.nav.tjeneste.domene.brukerdialog.besvare.v1.meldinger.HentSakerResponse;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
+
+import java.io.Serializable;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;

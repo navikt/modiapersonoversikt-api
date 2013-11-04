@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.panel;
 
 
-import javax.inject.Inject;
 import no.nav.sbl.dialogarena.sporsmalogsvar.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.JournalforService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.journalfor.domene.Journalforing;
@@ -28,6 +27,8 @@ import org.apache.wicket.model.LoadableDetachableModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
+
+import javax.inject.Inject;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -59,7 +60,6 @@ public class JournalforPanel extends GenericPanel<Traad> {
 
     @Inject
     private BesvareHenvendelsePortType besvareHenvendelsePortType;
-
 
     public JournalforPanel(String id, IModel<Traad> traad, String fnr) {
         super(id);
@@ -93,9 +93,6 @@ public class JournalforPanel extends GenericPanel<Traad> {
 
         add(journaforingExpander, journalforForm, journalfortKvittering);
     }
-
-
-
 
     private void toggleSynlighet(AjaxRequestTarget target) {
         journalforForm.setVisibilityAllowed(!journalforForm.isVisibleInHierarchy());
@@ -142,7 +139,8 @@ public class JournalforPanel extends GenericPanel<Traad> {
                             Label sakstype = new Label("sakstype", sak.sakstype);
                             sakstype.add(radioReference);
                             Label statuskode = new Label("statuskode", sak.statuskode);
-                            item.add(radio, opprettetDato, sakstype, statuskode);
+                            Label sakid = new Label("sakid", sak.saksId);
+                            item.add(radio, opprettetDato, sakstype, statuskode, sakid);
 
                         }
                     });
