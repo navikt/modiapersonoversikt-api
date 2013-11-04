@@ -10,6 +10,7 @@ import static org.junit.Assert.assertThat;
 
 public class EndpointSwitcherTest {
 
+    public static final String USE_FOO = "useBar";
     private Value value;
 
     interface Value {
@@ -30,12 +31,12 @@ public class EndpointSwitcherTest {
             }
         };
 
-        value = createSwitcher(foo, bar, "useBar", Value.class);
+        value = createSwitcher(foo, bar, USE_FOO, Value.class);
     }
 
     @After
     public void tearDown() throws Exception {
-        System.getProperties().remove("useBar");
+        System.getProperties().remove(USE_FOO);
     }
 
     @Test
@@ -45,7 +46,7 @@ public class EndpointSwitcherTest {
 
     @Test
     public void useFirstObjectIfPropertyKeyIsSpecified() throws Exception {
-        System.setProperty("useBar", "yes");
+        System.setProperty(USE_FOO, "no");
         assertThat(value.gimme(), is("bar"));
     }
 }

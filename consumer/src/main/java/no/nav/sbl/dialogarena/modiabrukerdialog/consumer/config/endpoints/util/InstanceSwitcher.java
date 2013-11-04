@@ -9,7 +9,7 @@ public class InstanceSwitcher implements InvocationHandler {
     private final Object alternative;
     private final String key;
 
-    protected <T> InstanceSwitcher(T defaultInstance, T alternative, String key) {
+    public <T> InstanceSwitcher(T defaultInstance, T alternative, String key) {
         this.defaultInstance = defaultInstance;
         this.alternative = alternative;
         this.key = key;
@@ -19,6 +19,7 @@ public class InstanceSwitcher implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         String useDefault = System.getProperty(key, "yes");
 
+        method.setAccessible(true);
         if (useDefault.equalsIgnoreCase("no")) {
             return method.invoke(alternative, args);
         }
