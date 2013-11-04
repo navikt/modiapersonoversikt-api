@@ -18,6 +18,7 @@ public class UtbetalingBuilder {
     private double nettoBelop = 4800.0;
     private String valuta = "kr";
     private String kontoNr = "1234 25 25814";
+    private String utbetalingId = "1";
 
     public UtbetalingBuilder() {
         bilag.addAll(asList(
@@ -72,8 +73,13 @@ public class UtbetalingBuilder {
         return this;
     }
 
+    public UtbetalingBuilder setUtbetalingId(String value) {
+        this.utbetalingId = value;
+        return this;
+    }
+
     public Utbetaling createUtbetaling() {
-        return new Utbetaling(bilag, beskrivelse, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr);
+        return new Utbetaling(bilag, beskrivelse, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr, utbetalingId);
     }
 
 }

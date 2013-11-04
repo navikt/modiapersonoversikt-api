@@ -57,6 +57,10 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
         return utbetaling.getEndDate();
     }
 
+    public String getUtbetalingId(){
+        return utbetaling.getUtbetalingId();
+    }
+
     @Override
     public String getType() {
         return "utbetaling";
@@ -64,7 +68,7 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
 
     @Override
     public String getId() {
-        return "1";  //To change body of implemented methods use File | Settings | File Templates.
+        return getUtbetalingId();
     }
 
     // CHECKSTYLE:OFF
