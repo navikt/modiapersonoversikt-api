@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
@@ -10,18 +11,16 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
-import org.slf4j.Logger;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class MockSetupPage extends BasePage {
 
-    private static final Logger LOG = getLogger(MockSetupPage.class);
-    private String selected = "";
     private ListView<MockSetupModel> listView;
 
     public MockSetupPage() {
@@ -39,13 +38,13 @@ public class MockSetupPage extends BasePage {
 
             @Override
             protected void onSubmit() {
-                List<MockSetupModel> modelObject = listView.getModelObject();
-                System.out.println("modelObject = " + modelObject);
-                info(modelObject.get(0).getServiceName() + " = " + modelObject.get(0).getUseMock());
-
-//                PageParameters parameters = new PageParameters();
-//                parameters.add("fnr", "23067911223");
-//                getRequestCycle().setResponsePage(Intern.class, parameters);
+                List<MockSetupModel> models = listView.getModelObject();
+                for (MockSetupModel model : models) {
+                    setProperty(model.getKey(), model.getMockProperty());
+                }
+                PageParameters parameters = new PageParameters();
+                parameters.add("fnr", "23067911223");
+                getRequestCycle().setResponsePage(Intern.class, parameters);
             }
         };
         listView = leggTilRadioknapper(alternativer);
@@ -73,14 +72,14 @@ public class MockSetupPage extends BasePage {
     private List<MockSetupModel> lagModeller() {
         ArrayList<MockSetupModel> models = new ArrayList<>();
 
-        String defaultValue = "Nei";
-        models.add(new MockSetupModel("1", "Sak og behandling", defaultValue));
-        models.add(new MockSetupModel("2", "AktørID", defaultValue));
-        models.add(new MockSetupModel("3", "Utbetaling", defaultValue));
-        models.add(new MockSetupModel("4", "Kodeverk", defaultValue));
-        models.add(new MockSetupModel("5", "Henvendelse", defaultValue));
-        models.add(new MockSetupModel("6", "Besvare henvendelse", defaultValue));
-        models.add(new MockSetupModel("6", "Oppgavebehandling", defaultValue));
+        models.add(new MockSetupModel("8", "Kjerneinfo", "start.kjerneinfo.withmock"));
+        models.add(new MockSetupModel("1", "Sak og behandling", "start.sakogbehandling.withmock"));
+        models.add(new MockSetupModel("2", "AktørID", "start.aktor.withmock"));
+        models.add(new MockSetupModel("3", "Utbetaling", "start.utbetaling.withmock"));
+        models.add(new MockSetupModel("4", "Kodeverk", "start.kodeverk.withmock"));
+        models.add(new MockSetupModel("5", "Henvendelse", "start.henvendelsemeldinger.withmock"));
+        models.add(new MockSetupModel("6", "Besvare henvendelse", "start.besvarehenvendelse.withmock"));
+        models.add(new MockSetupModel("7", "Oppgavebehandling", "start.oppgavebehandling.withmock"));
         return models;
     }
 }
