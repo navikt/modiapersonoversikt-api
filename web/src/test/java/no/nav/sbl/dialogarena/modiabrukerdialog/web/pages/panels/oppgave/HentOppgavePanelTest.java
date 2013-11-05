@@ -61,6 +61,7 @@ public class HentOppgavePanelTest extends WicketPageTest {
     public void traadPanelSkalHaVerdierNaarManHarValgtTema() {
         wicket.goTo(Intern.class).click().link(withId("plukk-oppgave"));
         wicket.tester.executeAjaxEvent(wicket.get().components(ofType(ListItem.class).and(containedInComponent(ofType(HentOppgavePanel.class)))).get(0), "click");
+        wicket.tester.executeAjaxEvent(wicket.get().component(withId("hent-oppgave-knapp")), "click");
 
         Melding sporsmal = getTraad().getSisteMelding();
 

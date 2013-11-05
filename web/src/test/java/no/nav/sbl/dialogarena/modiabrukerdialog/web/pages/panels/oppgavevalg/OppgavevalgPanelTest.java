@@ -111,6 +111,7 @@ public class OppgavevalgPanelTest extends WicketPageTest {
         wicket.goTo(Intern.class).click().link(withId("plukk-oppgave"));
         wicket.tester.executeAjaxEvent(wicket.get()
             .components(ofType(ListItem.class).and(containedInComponent(ofType(HentOppgavePanel.class)))).get(0), "click");
+        wicket.tester.executeAjaxEvent(wicket.get().component(withId("hent-oppgave-knapp")), "click");
     }
 
     private void trykkPaa(String id) {

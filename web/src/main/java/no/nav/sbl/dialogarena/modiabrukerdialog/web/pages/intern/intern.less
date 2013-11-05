@@ -88,14 +88,20 @@ body {
 
 
 .oppgave-panel {
-  width: 33rem;
+  width: 30rem;
 }
 
 ////////////////////////////////////////////////////////////////
 
 #hent-oppgave-forside {
   text-align: center;
+  margin-right: 65px;
   margin-top: 30px;
+  position: relative;
+  .temavelger {
+    position: absolute;
+    left: 105px;
+  }
 }
 
 .hent-oppgave {
@@ -151,20 +157,22 @@ body {
     border: solid 1px black;
     color: white;
     position: absolute;
-    right: 0;
+    width: 375px;
+    left: 0;
     top: 80px;
     text-align: left;
     z-index: 1000;
-    padding: 20px 25px 15px 10px;
-    ul {
+    padding: 20px;
+    .temaliste {
       list-style: none;
-      margin: 0 0 0 10px;
+      margin: 0;
       padding: 0;
       li {
         padding: 3px 0 8px 28px;
         cursor: pointer;
         background: url(../svg/radio_svart.svg) no-repeat;
         &.valgt {
+          font-weight: bold;
           background: url(../svg/radio_svart_valgt.svg) no-repeat;
         }
       }
