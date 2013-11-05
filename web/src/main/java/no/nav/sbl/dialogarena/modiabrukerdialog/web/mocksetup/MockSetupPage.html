@@ -32,6 +32,11 @@
             position: relative;
         }
 
+        form input[type="submit"] {
+            margin-top: 20px;
+        }
+
+
 
     </style>
 </wicket:head>
@@ -55,7 +60,12 @@
                     </li>
                 </ul>
             </div>
-
+            <hr>
+            <div>
+                Bruk testperson:
+                <input type="checkbox" wicket:id="brukTestPerson"/>
+            </div>
+            <hr>
             <div>
                 <input type="submit" value="Velg..."/>
             </div>

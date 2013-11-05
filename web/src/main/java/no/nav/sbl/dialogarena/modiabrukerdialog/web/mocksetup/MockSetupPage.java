@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
@@ -11,6 +12,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,8 +23,10 @@ import static java.lang.System.setProperty;
 public class MockSetupPage extends BasePage {
 
     private ListView<MockSetupModel> listView;
+    private Boolean brukTestPerson = false;
 
     public MockSetupPage() {
+
         add(
                 new ContextImage("modia-logo", "img/modiaLogo.svg"),
                 new FeedbackPanel("feedback"),
@@ -43,15 +47,28 @@ public class MockSetupPage extends BasePage {
                 }
                 info(infostr);
 
+                redirect();
+            }
+
+            private void redirect() {
+                if (brukTestPerson) {
+                    PageParameters parameters = new PageParameters();
+                    parameters.add("fnr", "23067911223");
+                    getRequestCycle().setResponsePage(Intern.class, parameters);
+                    return;
+                }
                 getRequestCycle().setResponsePage(HentPersonPage.class);
             }
         };
-        listView = leggTilCheckBoxer();
+        listView = leggTilMockCheckBoxer();
+        CheckBox testPersonCheckbox = new CheckBox("brukTestPerson", new PropertyModel<Boolean>(this, "brukTestPerson"));
+
         form.add(listView);
+        form.add(testPersonCheckbox);
         return form;
     }
 
-    private ListView<MockSetupModel> leggTilCheckBoxer() {
+    private ListView<MockSetupModel> leggTilMockCheckBoxer() {
         List<MockSetupModel> models = lagModeller();
 
         return new ListView<MockSetupModel>("radioliste", models) {
