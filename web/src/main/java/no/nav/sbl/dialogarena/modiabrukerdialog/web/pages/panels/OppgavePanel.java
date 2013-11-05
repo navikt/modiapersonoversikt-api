@@ -31,15 +31,16 @@ public class OppgavePanel extends Panel {
         oppgavevalg.setVisibilityAllowed(true);
         hentOppgavePanel.setVisibilityAllowed(false);
         if (target != null) {
-            target.add(oppgavevalg);
+            target.add(oppgavevalg, hentOppgavePanel);
         }
     }
 
     @RunOnEvents(Modus.KVITTERING)
     public void kvitteringsmodus(AjaxRequestTarget target) {
         hentOppgavePanel.setVisibilityAllowed(true);
+        oppgavevalg.setVisibilityAllowed(false);
         if (target != null) {
-            target.add(hentOppgavePanel);
+            target.add(hentOppgavePanel, oppgavevalg);
         }
     }
 

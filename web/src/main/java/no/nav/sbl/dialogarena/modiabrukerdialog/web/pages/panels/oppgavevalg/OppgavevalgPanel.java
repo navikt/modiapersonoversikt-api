@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgavevalg;
 
-import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.Modus;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -20,6 +18,7 @@ public class OppgavevalgPanel extends Panel {
 
     public OppgavevalgPanel(String id) {
         super(id);
+        setOutputMarkupId(true);
         final LeggTilbakeForm leggTilbakeSkjema = new LeggTilbakeForm("legg-tilbake-form");
         instantiateLeggTilbakeLenke(leggTilbakeSkjema);
         instantiateValgliste(leggTilbakeSkjema);
@@ -60,13 +59,5 @@ public class OppgavevalgPanel extends Panel {
                 target.add(valgliste, leggTilbakeSkjema);
             }
         };
-    }
-
-    @RunOnEvents(Modus.KVITTERING)
-    private void kvitteringsmodus(AjaxRequestTarget target) {
-        skjul(leggTilbakeLenke);
-        if (target != null) {
-            target.add(valgliste);
-        }
     }
 }
