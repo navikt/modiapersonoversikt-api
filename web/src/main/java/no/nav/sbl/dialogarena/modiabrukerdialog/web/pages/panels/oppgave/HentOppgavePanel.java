@@ -76,7 +76,7 @@ public class HentOppgavePanel extends Panel {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 if (HentOppgavePanel.this.tema.getObject() != null) {
-                    hentOppgaveMedTema(HentOppgavePanel.this.tema, target);
+                    hentOppgaveMedTema(HentOppgavePanel.this.tema.getObject(), target);
                 } else {
                     visTema.setObject(true);
                     target.add(temavelger);
@@ -97,7 +97,7 @@ public class HentOppgavePanel extends Panel {
                 if (HentOppgavePanel.this.tema.getObject() != null) {
                     target.add(temavelger);
                     visTema.setObject(false);
-                    hentOppgaveMedTema(HentOppgavePanel.this.tema, target);
+                    hentOppgaveMedTema(HentOppgavePanel.this.tema.getObject(), target);
                 } else {
                     error(new StringResourceModel("oppgaveplukker.ikke-valgt-tema", HentOppgavePanel.this, null).getString());
                     target.add(temavelger);
@@ -107,7 +107,7 @@ public class HentOppgavePanel extends Panel {
         });
     }
 
-    private void hentOppgaveMedTema(IModel<Tema> tema, AjaxRequestTarget target) {
+    private void hentOppgaveMedTema(Tema tema, AjaxRequestTarget target) {
         final WSPlukkOppgaveResultat oppgaveResultat = service.plukkOppgave(tema.toString());
         if (oppgaveResultat == null) {
             modalWindow.setContent(new TomtForOppgaverPanel(modalWindow.getContentId(), modalWindow));

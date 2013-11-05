@@ -28,24 +28,19 @@ public class SakOgBehandlingEndpointConfig {
     @Value("${sakogbehandling.url}")
     private URL sakogbehandlingEndpoint;
 
-
-    private SakOgBehandlingPortType portType;
-    private SakOgBehandlingPortType portTypeSelftTest;
     private SakOgBehandlingPortType portTypeMock = new SakOgBehandlingPortTypeMock().sakOgBehandlingPortType();
     String key = "start.sakogbehandling.withmock";
 
     @Bean
     public SakOgBehandlingPortType sakOgBehandlingPortType() {
-        portType = new SakOgBehandlingPortTypeImpl().sakOgBehandlingPortType(sakogbehandlingEndpoint);
-        SakOgBehandlingPortType switcher = createSwitcher(portType, portTypeMock, key, SakOgBehandlingPortType.class);
-        return createSakOgBehandlingPortType(switcher, portTypeMock);
+        SakOgBehandlingPortType portType = new SakOgBehandlingPortTypeImpl().sakOgBehandlingPortType(sakogbehandlingEndpoint);
+        return createSakOgBehandlingPortType(createSwitcher(portType, portTypeMock, key, SakOgBehandlingPortType.class), portTypeMock);
     }
 
     @Bean
     public SakOgBehandlingPortType selfTestSakOgBehandlingPortType() {
-        portTypeSelftTest = new SakOgBehandlingPortTypeImpl().selfTestSakOgBehandlingPortType(sakogbehandlingEndpoint);
-        SakOgBehandlingPortType switcher = createSwitcher(portTypeSelftTest, portTypeMock, key, SakOgBehandlingPortType.class);
-        return createSakOgBehandlingPortType(switcher, portTypeMock);
+        SakOgBehandlingPortType portTypeSelftTest = new SakOgBehandlingPortTypeImpl().selfTestSakOgBehandlingPortType(sakogbehandlingEndpoint);
+        return createSakOgBehandlingPortType(createSwitcher(portTypeSelftTest, portTypeMock, key, SakOgBehandlingPortType.class), portTypeMock);
     }
 
     private SakOgBehandlingPortType createSakOgBehandlingPortType(final SakOgBehandlingPortType portType, final SakOgBehandlingPortType portTypeMock) {

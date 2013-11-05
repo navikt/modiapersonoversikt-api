@@ -1,12 +1,15 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util;
 
+import no.nav.modig.core.exception.ApplicationException;
+
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import static java.lang.System.getProperty;
 import static java.lang.reflect.Proxy.newProxyInstance;
 
-public class InstanceSwitcher implements InvocationHandler {
+public final class InstanceSwitcher implements InvocationHandler {
 
     private final Object defaultInstance;
     private final Object alternative;
@@ -19,13 +22,16 @@ public class InstanceSwitcher implements InvocationHandler {
     }
 
     @Override
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        String useDefault = getProperty(key, "no");
+    public Object invoke(Object proxy, Method method, Object[] args) {
         method.setAccessible(true);
-        if (useDefault.equalsIgnoreCase("yes")) {
-            return method.invoke(alternative, args);
+        try {
+            if (getProperty(key, "no").equalsIgnoreCase("yes")) {
+                return method.invoke(alternative, args);
+            }
+            return method.invoke(defaultInstance, args);
+        } catch (IllegalAccessException | InvocationTargetException exception) {
+            throw new ApplicationException("Problemer med invokering av metode", exception);
         }
-        return method.invoke(defaultInstance, args);
     }
 
     public static  <T> T createSwitcher(T defaultInstance, T alternative, String key, Class<T> type) {
