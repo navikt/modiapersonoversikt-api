@@ -18,19 +18,23 @@ public class KodeverkV2EndpointConfig {
     @Value("${kodeverkendpoint.v2.url}")
     private URL kodeverkEndpoint;
 
-    private KodeverkPortType portType = new KodeverkV2EndpointConfigImpl(kodeverkEndpoint).kodeverkPortType();
-    private KodeverkPortType portTypeMock = new KodeverkV2PortTypeMock().kodeverkPortType();
-    private KodeverkClient kodeverkKlient = new KodeverkV2EndpointConfigImpl(kodeverkEndpoint).kodeverkClient();
-    private KodeverkClient kodeverkKlientMock = new KodeverkV2PortTypeMock().kodeverkClient();
+    private KodeverkPortType portType;
+    private KodeverkPortType portTypeMock;
+    private KodeverkClient kodeverkKlient;
+    private KodeverkClient kodeverkKlientMock;
     private final String key = "start.kodeverk.withmock";
 
     @Bean(name = "kodeverkPortTypeV2")
     public KodeverkPortType kodeverkPortType() {
+        portType = new KodeverkV2EndpointConfigImpl(kodeverkEndpoint).kodeverkPortType();
+        portTypeMock = new KodeverkV2PortTypeMock().kodeverkPortType();
         return createSwitcher(portType, portTypeMock, key, KodeverkPortType.class);
     }
 
     @Bean
     public KodeverkClient kodeverkClient() {
+        kodeverkKlient = new KodeverkV2EndpointConfigImpl(kodeverkEndpoint).kodeverkClient();
+        kodeverkKlientMock = new KodeverkV2PortTypeMock().kodeverkClient();
         return createSwitcher(kodeverkKlient, kodeverkKlientMock, key, KodeverkClient.class);
     }
 }
