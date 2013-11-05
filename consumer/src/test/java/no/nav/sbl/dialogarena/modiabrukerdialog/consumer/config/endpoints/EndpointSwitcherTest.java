@@ -40,13 +40,19 @@ public class EndpointSwitcherTest {
     }
 
     @Test
-    public void useFirstObjectIfPrpertyKeyNotSpecified() throws Exception {
+    public void useFirstObjectIfPropertyKeyNotSpecified() throws Exception {
         assertThat(value.gimme(), is("foo"));
     }
 
     @Test
-    public void useFirstObjectIfPropertyKeyIsSpecified() throws Exception {
+    public void useFirstObjectIfPropertyKeyIsSpecifiedAndNo() throws Exception {
         System.setProperty(USE_FOO, "no");
+        assertThat(value.gimme(), is("foo"));
+    }
+
+    @Test
+    public void useSecondObjectIfPropertyKeyIsSpecifiedAndYes() throws Exception {
+        System.setProperty(USE_FOO, "yes");
         assertThat(value.gimme(), is("bar"));
     }
 }
