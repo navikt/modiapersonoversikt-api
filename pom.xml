@@ -24,7 +24,7 @@
     <properties>
         <wicket.version>6.11.0</wicket.version>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <modig.frontend.version>1.1.4-SNAPSHOT</modig.frontend.version>
+        <modig.frontend.version>1.1.4</modig.frontend.version>
         <modig.security.version>1.0.19</modig.security.version>
 		<modig.log.version>1.1.2</modig.log.version>
         <slf4j.version>1.7.5</slf4j.version>
