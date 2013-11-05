@@ -15,19 +15,24 @@ public class OppgavebehandlingEndpointConfig {
 
     @Value("${oppgavebehandlingendpoint.url}")
     protected String oppgavebehandlingEndpoint;
-    private OppgavebehandlingPortType portType = new OppgavebehandlingPortTypeImpl(oppgavebehandlingEndpoint).oppgavebehandlingPortType();
-    private OppgavebehandlingPortType portTypeMock = new OppgavebehandlingPortTypeMock().oppgavebehandlingPortType();
-    private Pingable pingable = new OppgavebehandlingPortTypeImpl(oppgavebehandlingEndpoint).oppgavebehandlingPing();
-    private Pingable pingableMock = new OppgavebehandlingPortTypeMock().oppgavebehandlingPing();
+
+    private OppgavebehandlingPortType portType;
+    private OppgavebehandlingPortType portTypeMock;
+    private Pingable pingable;
+    private Pingable pingableMock;
     private String key = "start.oppgavebehandling.withmock";
 
     @Bean
     public OppgavebehandlingPortType oppgavebehandlingPortType() {
+        portType = new OppgavebehandlingPortTypeImpl(oppgavebehandlingEndpoint).oppgavebehandlingPortType();
+        portTypeMock = new OppgavebehandlingPortTypeMock().oppgavebehandlingPortType();
         return createSwitcher(portType, portTypeMock, key, OppgavebehandlingPortType.class);
     }
 
     @Bean
     public Pingable oppgavebehandlingPing() {
+        pingable = new OppgavebehandlingPortTypeImpl(oppgavebehandlingEndpoint).oppgavebehandlingPing();
+        pingableMock = new OppgavebehandlingPortTypeMock().oppgavebehandlingPing();
         return createSwitcher(pingable, pingableMock, key, Pingable.class);
     }
 }
