@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
+import no.nav.modig.modia.ping.Pingable;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -93,6 +94,10 @@ public class BesvareHenvendelsePortTypeMock {
                         new WSSak().withGenerell(false).withOpprettetDato(DateTime.now().minusDays(3)).withSakId("1234").withStatuskode("Ingen Status").withTemakode("BAR")));
             }
         };
+    }
+
+    public Pingable besvareHenvendelsePing(){
+        return new MockPingable("BesvareHenvendelsePortType");
     }
 
 }

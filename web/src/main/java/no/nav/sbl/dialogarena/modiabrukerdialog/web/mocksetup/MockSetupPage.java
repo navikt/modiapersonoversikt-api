@@ -2,8 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketApplication;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioChoice;
@@ -39,20 +37,10 @@ public class MockSetupPage extends BasePage {
 
             @Override
             protected void onSubmit() {
-                ModiaApplicationContext context = (ModiaApplicationContext) WicketApplication.get().getApplicationContext();
-                boolean mockAlt = mockString.equals(selected);
-                LOG.info("<=================== mockAlt = " + mockAlt + "===================>");
-                if(context != null) {
-                    context.doRefresh(mockAlt);
-
-                    PageParameters parameters = new PageParameters();
-                    if (mockAlt) {
-                        parameters.add("fnr", "23067911223");
-                    }
-                    getRequestCycle().setResponsePage(Intern.class, parameters);
-                } else {
-                    error("Context kunne ikke castes til ModiaApplicationContext");
-                }
+                //TODO fiks utvelgelse med radiobuttons, sett properties i stedet
+                PageParameters parameters = new PageParameters();
+                parameters.add("fnr", "23067911223");
+                getRequestCycle().setResponsePage(Intern.class, parameters);
             }
         };
         form.add(new RadioChoice<>("velgMock", new PropertyModel<String>(this, "selected"), alternativer));

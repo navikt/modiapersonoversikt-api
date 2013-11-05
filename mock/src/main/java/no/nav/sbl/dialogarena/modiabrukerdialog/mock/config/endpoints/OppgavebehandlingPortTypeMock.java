@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
 import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.informasjon.WSPlukkOppgaveResultat;
 import org.springframework.context.annotation.Bean;
@@ -32,4 +33,7 @@ public class OppgavebehandlingPortTypeMock {
         };
     }
 
+    public Pingable oppgavebehandlingPing() {
+        return new MockPingable("OppgavebehandlingPortType");
+    }
 }

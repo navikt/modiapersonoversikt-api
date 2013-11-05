@@ -1,9 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
-import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
-import no.nav.modig.security.ws.UserSAMLOutInterceptor;
-import no.nav.sbl.dialogarena.common.integrasjon.features.TimeoutFeature;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.porttypeimpl.SakOgBehandlingPortTypeImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingHentBehandlingBehandlingIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
@@ -13,9 +11,6 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingReq
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingResponse;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerResponse;
-import org.apache.cxf.feature.LoggingFeature;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +19,8 @@ import org.springframework.context.annotation.Configuration;
 import javax.jws.WebParam;
 import java.net.URL;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.EndpointsConfig.MODIA_CONNECTION_TIMEOUT;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.EndpointsConfig.MODIA_RECEIVE_TIMEOUT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.ConfigUtil.isInMockMode;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
 
 @Configuration
 public class SakOgBehandlingEndpointConfig {
@@ -33,52 +28,67 @@ public class SakOgBehandlingEndpointConfig {
     @Value("${sakogbehandling.url}")
     private URL sakogbehandlingEndpoint;
 
+
+    private SakOgBehandlingPortType portType;
+    private SakOgBehandlingPortType portTypeSelftTest;
+    private SakOgBehandlingPortType portTypeMock = new SakOgBehandlingPortTypeMock().sakOgBehandlingPortType();
+    String key = "start.sakogbehandling.withmock";
+
     @Bean
     public SakOgBehandlingPortType sakOgBehandlingPortType() {
-        return createSakOgBehandlingPortType(new UserSAMLOutInterceptor());
+        portType = new SakOgBehandlingPortTypeImpl().sakOgBehandlingPortType(sakogbehandlingEndpoint);
+        SakOgBehandlingPortType switcher = createSwitcher(portType, portTypeMock, key, SakOgBehandlingPortType.class);
+        return createSakOgBehandlingPortType(switcher, portTypeMock);
     }
 
     @Bean
     public SakOgBehandlingPortType selfTestSakOgBehandlingPortType() {
-        return createSakOgBehandlingPortType(new SystemSAMLOutInterceptor());
+        portTypeSelftTest = new SakOgBehandlingPortTypeImpl().selfTestSakOgBehandlingPortType(sakogbehandlingEndpoint);
+        SakOgBehandlingPortType switcher = createSwitcher(portTypeSelftTest, portTypeMock, key, SakOgBehandlingPortType.class);
+        return createSakOgBehandlingPortType(switcher, portTypeMock);
     }
 
-    private SakOgBehandlingPortType createSakOgBehandlingPortType(AbstractSAMLOutInterceptor interceptor) {
-        JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setWsdlLocation("sakOgBehandling/no/nav/tjeneste/virksomhet/sakOgBehandling/v1/SakOgBehandling.wsdl");
-        proxyFactoryBean.setAddress(sakogbehandlingEndpoint.toString());
-        proxyFactoryBean.setServiceClass(SakOgBehandlingPortType.class);
-        proxyFactoryBean.getOutInterceptors().add(interceptor);
-        proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
-        proxyFactoryBean.getFeatures().add(new LoggingFeature());
-        proxyFactoryBean.getFeatures().add(new TimeoutFeature().withConnectionTimeout(MODIA_CONNECTION_TIMEOUT).withReceiveTimeout(MODIA_RECEIVE_TIMEOUT));
-        final SakOgBehandlingPortType sakOgBehandlingPortType = proxyFactoryBean.create(SakOgBehandlingPortType.class);
+    private SakOgBehandlingPortType createSakOgBehandlingPortType(final SakOgBehandlingPortType portType, final SakOgBehandlingPortType portTypeMock) {
         return new SakOgBehandlingPortType() {
 
             @Cacheable("endpointCache")
             @Override
             public FinnSakOgBehandlingskjedeListeResponse finnSakOgBehandlingskjedeListe(@WebParam(name = "request", targetNamespace = "") FinnSakOgBehandlingskjedeListeRequest finnSakOgBehandlingskjedeListeRequest) {
-                return sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(finnSakOgBehandlingskjedeListeRequest);
+                if (isInMockMode(key)) {
+                    return portTypeMock.finnSakOgBehandlingskjedeListe(finnSakOgBehandlingskjedeListeRequest);
+                }
+                return portType.finnSakOgBehandlingskjedeListe(finnSakOgBehandlingskjedeListeRequest);
             }
 
             @Cacheable("endpointCache")
             @Override
             public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest hentBehandlingskjedensBehandlingerRequest) throws HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
-                return sakOgBehandlingPortType.hentBehandlingskjedensBehandlinger(hentBehandlingskjedensBehandlingerRequest);
+                if (isInMockMode(key)) {
+                    return portTypeMock.hentBehandlingskjedensBehandlinger(hentBehandlingskjedensBehandlingerRequest);
+                }
+                return portType.hentBehandlingskjedensBehandlinger(hentBehandlingskjedensBehandlingerRequest);
             }
 
             @Cacheable("endpointCache")
             @Override
             public HentBehandlingResponse hentBehandling(@WebParam(name = "request", targetNamespace = "") HentBehandlingRequest hentBehandlingRequest) throws HentBehandlingHentBehandlingBehandlingIkkeFunnet {
-                return sakOgBehandlingPortType.hentBehandling(hentBehandlingRequest);
+                if (isInMockMode(key)) {
+                    return portTypeMock.hentBehandling(hentBehandlingRequest);
+                }
+                return portType.hentBehandling(hentBehandlingRequest);
             }
 
             @Cacheable("endpointCache")
             @Override
             public void ping() {
-                sakOgBehandlingPortType.ping();
+                if (isInMockMode(key)) {
+                    portTypeMock.ping();
+                    return;
+                }
+                portType.ping();
             }
         };
     }
+
 
 }

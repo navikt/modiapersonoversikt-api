@@ -35,6 +35,7 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>modiabrukerdialog-mock</artifactId>
             <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <!-- Modia-komponenter -->
@@ -143,12 +144,6 @@
             <artifactId>utbetalinger-consumer</artifactId>
         </dependency>
 
-
-        <!--<dependency>-->
-            <!--<groupId>no.nav.sbl.dialogarena</groupId>-->
-            <!--<artifactId>utbetaling-tjenestespesifikasjon</artifactId>-->
-        <!--</dependency>-->
-        
         <!-- End modia komponenter -->
 
         <!-- Modig avhengigheter -->
