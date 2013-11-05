@@ -16,14 +16,14 @@ public class BesvareHenvendelseEndpointConfig {
     @Value("${besvarehenvendelseendpoint.url}")
     protected String besvareHenvendelseEndpoint;
 
-    private static final String key = "start.besvarehenvendelse.withmock";
+    private static final String KEY = "start.besvarehenvendelse.withmock";
 
     @Bean
     public BesvareHenvendelsePortType besvareHenvendelsePortType() {
         BesvareHenvendelsePortType portType = new BesvareHenvendelsePortTypeImpl(besvareHenvendelseEndpoint).besvareHenvendelsePortType();
         BesvareHenvendelsePortType portTypeMock = new BesvareHenvendelsePortTypeMock().besvareHenvendelsePortType();
 
-        return createSwitcher(portType, portTypeMock, key, BesvareHenvendelsePortType.class);
+        return createSwitcher(portType, portTypeMock, KEY, BesvareHenvendelsePortType.class);
     }
 
     @Bean
@@ -31,6 +31,6 @@ public class BesvareHenvendelseEndpointConfig {
         Pingable pingable = new BesvareHenvendelsePortTypeImpl(besvareHenvendelseEndpoint).besvareHenvendelsePing();
         Pingable pingableMock = new BesvareHenvendelsePortTypeMock().besvareHenvendelsePing();
 
-        return createSwitcher(pingable, pingableMock, key, Pingable.class);
+        return createSwitcher(pingable, pingableMock, KEY, Pingable.class);
     }
 }
