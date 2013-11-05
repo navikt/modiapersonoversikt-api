@@ -25,6 +25,11 @@
 
         <dependency>
             <groupId>no.nav</groupId>
+            <artifactId>sykmeldingsperioder-consumer</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
             <artifactId>kodeverk-consumer</artifactId>
         </dependency>
         <dependency>
