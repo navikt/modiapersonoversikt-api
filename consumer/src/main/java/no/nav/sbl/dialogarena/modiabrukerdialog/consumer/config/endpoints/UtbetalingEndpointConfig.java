@@ -19,7 +19,8 @@ public class UtbetalingEndpointConfig {
 
     @Bean
     public UtbetalingPortType utbetalingPortType() {
-        return createSwitcher(portType, portTypeMock, key, UtbetalingPortType.class);
+       // return createSwitcher(portType, portTypeMock, key, UtbetalingPortType.class);
+       return portTypeMock;
     }
 
     @Bean
