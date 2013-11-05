@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
@@ -11,7 +11,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,9 +42,8 @@ public class MockSetupPage extends BasePage {
                     infostr += model.getServiceName() + ": " + getProperty(model.getKey()) + ", ";
                 }
                 info(infostr);
-                PageParameters parameters = new PageParameters();
-                parameters.add("fnr", "23067911223");
-                getRequestCycle().setResponsePage(Intern.class, parameters);
+
+                getRequestCycle().setResponsePage(HentPersonPage.class);
             }
         };
         listView = leggTilCheckBoxer();
