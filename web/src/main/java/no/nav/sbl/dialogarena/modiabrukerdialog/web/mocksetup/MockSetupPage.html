@@ -2,6 +2,40 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:head>
     <title>Modia Mock Setup</title>
+
+    <style>
+        .mockform {
+            padding: 10px;
+            background-color: #cccccc;
+
+        }
+
+        .float_left {
+            float: left;
+        }
+
+        .float_right {
+            float: right;
+        }
+
+        .float_right {
+            float: right;
+        }
+
+        ul {
+            list-style: none none;
+        }
+
+        .checkbox {
+            width: 100px;
+        }
+
+        div {
+            background-color: #cccccc;
+        }
+
+
+    </style>
 </wicket:head>
 <wicket:extend>
     <body class="main hentperson">
@@ -9,12 +43,26 @@
     <section class="navbar menu-intern active">
         <img class="modia-logo" wicket:id="modia-logo"/>
 
-        <form wicket:id="velgMockForm">
-            Velg:
-            <div wicket:id="velgMock"></div>
+            <form wicket:id="velgMockForm" class="mockform">
+                <div>
+                    Vil du bruke mocktjeneste for:
+                </div>
+                <div>
+                    <ul>
+                        <li wicket:id="radioliste">
+                            <div class="float_left">
+                                <span wicket:id="radiolabel"/>
+                        <span wicket:id="radiovalg">[]
+                        </span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
 
-            <input type="submit" value="Velg..." />
-        </form>
+                <div>
+                    <input type="submit" value="Velg..."/>
+                </div>
+            </form>
 
     </section>
     </body>
