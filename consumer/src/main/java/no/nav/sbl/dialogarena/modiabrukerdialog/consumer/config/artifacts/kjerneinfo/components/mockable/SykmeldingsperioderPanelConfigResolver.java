@@ -37,10 +37,8 @@ public class SykmeldingsperioderPanelConfigResolver {
     private String key = "start.kjerneinfo.withmock";
 
     public SykmeldingsperioderPanelConfigResolver() {
-
         foreldrepengerServiceBiMock = getForeldrepengerServiceBiMock();
         sykepengerServiceBiMock = getSykepengerServiceBiMock();
-
         ping = sykmeldingsperioderImpl.sykmeldingsperioderPing(foreldrepengerServiceBi(), sykepengerServiceBi());
     }
 
@@ -73,6 +71,5 @@ public class SykmeldingsperioderPanelConfigResolver {
     private SykepengerServiceBi sykepengerServiceBi() {
         return createSwitcher(sykepengerServiceBi, sykepengerServiceBiMock, key, SykepengerServiceBi.class);
     }
-
 
 }
