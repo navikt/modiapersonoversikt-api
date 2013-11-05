@@ -22,7 +22,7 @@ public class KodeverkV2EndpointConfig {
     private KodeverkPortType portTypeMock = new KodeverkV2PortTypeMock().kodeverkPortType();
     private KodeverkClient kodeverkKlient = new KodeverkV2EndpointConfigImpl(kodeverkEndpoint).kodeverkClient();
     private KodeverkClient kodeverkKlientMock = new KodeverkV2PortTypeMock().kodeverkClient();
-    private final String key = "start.kodeverk.withmock";
+    private static final String key = "start.kodeverk.withmock";
 
     @Bean(name = "kodeverkPortTypeV2")
     public KodeverkPortType kodeverkPortType() {

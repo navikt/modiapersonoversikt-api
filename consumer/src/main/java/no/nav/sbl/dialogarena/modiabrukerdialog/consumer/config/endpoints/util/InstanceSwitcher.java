@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 import static java.lang.System.getProperty;
 import static java.lang.reflect.Proxy.newProxyInstance;
 
-public class InstanceSwitcher implements InvocationHandler {
+public final class InstanceSwitcher implements InvocationHandler {
 
     private final Object defaultInstance;
     private final Object alternative;
