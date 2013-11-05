@@ -16,19 +16,25 @@ public class BesvareHenvendelseEndpointConfig {
     @Value("${besvarehenvendelseendpoint.url}")
     protected String besvareHenvendelseEndpoint;
 
-    private BesvareHenvendelsePortType portType = new BesvareHenvendelsePortTypeImpl(besvareHenvendelseEndpoint).besvareHenvendelsePortType();
-    private BesvareHenvendelsePortType portTypeMock = new BesvareHenvendelsePortTypeMock().besvareHenvendelsePortType();
-    private Pingable pingable = new BesvareHenvendelsePortTypeImpl(besvareHenvendelseEndpoint).besvareHenvendelsePing();
-    private Pingable pingableMock = new BesvareHenvendelsePortTypeMock().besvareHenvendelsePing();
-    private String key = "start.";
+    private BesvareHenvendelsePortType portType;
+    private BesvareHenvendelsePortType portTypeMock;
+    private Pingable pingable;
+    private Pingable pingableMock;
+    private String key = "start.besvarehenvendelse.withmock";
 
     @Bean
     public BesvareHenvendelsePortType besvareHenvendelsePortType() {
+        portType = new BesvareHenvendelsePortTypeImpl(besvareHenvendelseEndpoint).besvareHenvendelsePortType();
+        portTypeMock = new BesvareHenvendelsePortTypeMock().besvareHenvendelsePortType();
+
         return createSwitcher(portType, portTypeMock, key, BesvareHenvendelsePortType.class);
     }
 
     @Bean
     public Pingable besvareHenvendelsePing() {
+        pingable = new BesvareHenvendelsePortTypeImpl(besvareHenvendelseEndpoint).besvareHenvendelsePing();
+        pingableMock = new BesvareHenvendelsePortTypeMock().besvareHenvendelsePing();
+
         return createSwitcher(pingable, pingableMock, key, Pingable.class);
     }
 }
