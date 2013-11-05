@@ -40,12 +40,12 @@ public class MockSetupPage extends BasePage {
             @Override
             protected void onSubmit() {
                 List<MockSetupModel> models = listView.getModelObject();
-                String infostr = "";
+                StringBuilder strBuilder = new StringBuilder();
                 for (MockSetupModel model : models) {
                     setProperty(model.getKey(), model.getMockProperty());
-                    infostr += model.getServiceName() + ": " + getProperty(model.getKey()) + ", ";
+                    strBuilder.append(model.getServiceName()).append(": ").append(getProperty(model.getKey())).append(", ");
                 }
-                info(infostr);
+                info(strBuilder.toString());
 
                 redirect();
             }
