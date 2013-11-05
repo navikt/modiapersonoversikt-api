@@ -11,7 +11,9 @@ import static java.lang.System.setProperty;
 /**
  * Starter MODIA Brukerdialog lokalt på Jetty.
  *
- * Sett start.properties for å styre integrasjon. Per default kjører alt mot reelle baksystemer
+ * NB!
+ * Sett start.properties for å styre integrasjon. Per default kjører alt mot reelle baksystemer, ergo kan
+ * man kommentere ut en tjeneste for å sette den til å gå mot reelt baksystem
  */
 public class StartJetty {
 
