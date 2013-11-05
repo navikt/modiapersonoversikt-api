@@ -1,72 +1,34 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
-import static java.lang.System.currentTimeMillis;
-import static java.util.Arrays.asList;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
-import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.EndpointsConfig.MODIA_CONNECTION_TIMEOUT;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.EndpointsConfig.MODIA_RECEIVE_TIMEOUT;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.Utils.konfigurerMedHttps;
-
-import java.util.List;
-
-import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
-import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
-import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
-import no.nav.modig.security.ws.UserSAMLOutInterceptor;
-import no.nav.sbl.dialogarena.common.integrasjon.features.TimeoutFeature;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.porttypeimpl.HenvendelseMeldingerPortTypeImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseMeldingerPortTypeMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.HenvendelseMeldingerPortType;
-
-import org.apache.cxf.feature.LoggingFeature;
-import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
+
 @Configuration
 public class HenvendelseMeldingerEndpointConfig {
-
     @Value("${henvendelse.meldinger.endpoint.url}")
     protected String henvendelseEndpoint;
 
+    private HenvendelseMeldingerPortType portType = new HenvendelseMeldingerPortTypeImpl(henvendelseEndpoint).henvendelsePortType();
+    private HenvendelseMeldingerPortType portTypeMock = new HenvendelseMeldingerPortTypeMock().henvendelseMeldingerPortType();
+    private Pingable pingable = new HenvendelseMeldingerPortTypeImpl(henvendelseEndpoint).henvendelsePing();
+    private Pingable pingableMock = new HenvendelseMeldingerPortTypeMock().henvendelsePing();
+    private String key = "start.henvendelsemeldinger.withmock";
+
     @Bean
     public HenvendelseMeldingerPortType henvendelsePortType() {
-        return lagHenvendelsePortType(new UserSAMLOutInterceptor());
+        return createSwitcher(portType, portTypeMock, key, HenvendelseMeldingerPortType.class);
     }
 
     @Bean
     public Pingable henvendelsePing() {
-        return new Pingable() {
-            @Override
-            public List<PingResult> ping() {
-            	HenvendelseMeldingerPortType henvendelsePortType = lagHenvendelsePortType(new SystemSAMLOutInterceptor());
-                long start = currentTimeMillis();
-                boolean success;
-                try {
-                	henvendelsePortType.ping();
-                    success = true;
-                } catch (Exception e) {
-                    success = false;
-                }
-                return asList(new PingResult("HenvendelseMeldinger_v1", success ? SERVICE_OK : SERVICE_FAIL, currentTimeMillis() - start));
-            }
-        };
+        return createSwitcher(pingable, pingableMock, key, Pingable.class);
     }
 
-    private HenvendelseMeldingerPortType lagHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {
-        JaxWsProxyFactoryBean factoryBean = new JaxWsProxyFactoryBean();
-        factoryBean.setWsdlURL("classpath:no/nav/tjeneste/domene/brukerdialog/henvendelsemeldinger/v1/Meldinger.wsdl");
-        factoryBean.getFeatures().add(new LoggingFeature());
-        factoryBean.getFeatures().add(new WSAddressingFeature());
-        factoryBean.getFeatures().add(new TimeoutFeature().withConnectionTimeout(MODIA_CONNECTION_TIMEOUT).withReceiveTimeout(MODIA_RECEIVE_TIMEOUT));
-        factoryBean.getOutInterceptors().add(interceptor);
-        factoryBean.setServiceClass(HenvendelseMeldingerPortType.class);
-        factoryBean.setAddress(henvendelseEndpoint);
-        HenvendelseMeldingerPortType henvendelsePortType = factoryBean.create(HenvendelseMeldingerPortType.class);
-        konfigurerMedHttps(henvendelsePortType);
-
-        return henvendelsePortType;
-    }
 }

@@ -44,6 +44,11 @@
 
         <dependency>
             <groupId>no.nav.modig</groupId>
+            <artifactId>modig-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>
         </dependency>
 
@@ -195,6 +200,19 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-integrasjonsutils</artifactId>
+        </dependency>
+
+        <!--TEST-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest-library</artifactId>
+            <scope>test</scope>
         </dependency>
 
     </dependencies>

@@ -13,12 +13,13 @@ import no.nav.kjerneinfo.domain.person.fakta.Familierelasjonstype;
 
 import java.util.Arrays;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.MockContext.FODSELSNUMMER;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 public class PersonKjerneinfoServiceBiMock {
+
+    public static final String FODSELSNUMMER = "23067911223";
 
     public static PersonKjerneinfoServiceBi getPersonKjerneinfoServiceBiMock() {
         PersonKjerneinfoServiceBi serviceMock = mock(PersonKjerneinfoServiceBi.class);

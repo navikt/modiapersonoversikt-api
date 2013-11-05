@@ -9,5 +9,4 @@ public class BehandleBrukerprofilServiceBiMock {
     public static BehandleBrukerprofilServiceBi getBehandleBrukerprofilServiceBiMock() {
         return mock(BehandleBrukerprofilServiceBi.class);
     }
-
 }

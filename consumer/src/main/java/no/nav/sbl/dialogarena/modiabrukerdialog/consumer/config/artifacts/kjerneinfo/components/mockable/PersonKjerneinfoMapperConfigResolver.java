@@ -8,6 +8,9 @@ import org.springframework.context.annotation.Import;
 
 import javax.inject.Inject;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.KodeverkmanagerBiMock.getKodeverkmanagerBiMock;
+
 @Configuration
 @Import({
         no.nav.kodeverk.consumer.config.ConsumerConfig.class
@@ -16,10 +19,16 @@ public class PersonKjerneinfoMapperConfigResolver {
 
     @Inject
     private KodeverkmanagerBi kodeverkmanagerBean;
+    private KodeverkmanagerBi kodeverkmanagerBeanMock = getKodeverkmanagerBiMock();
+    private String key = "start.kjerneinfo.withmock";
 
     @Bean
     public KjerneinfoMapper kjerneinfoMapperBean() {
-        return new KjerneinfoMapper(kodeverkmanagerBean);
+        return new KjerneinfoMapper(kodeverksManagerBean());
+    }
+
+    private KodeverkmanagerBi kodeverksManagerBean() {
+        return createSwitcher(kodeverkmanagerBean, kodeverkmanagerBeanMock, key, KodeverkmanagerBi.class);
     }
 
 }
