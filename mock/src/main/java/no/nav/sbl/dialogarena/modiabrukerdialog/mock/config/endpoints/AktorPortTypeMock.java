@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
@@ -48,4 +49,7 @@ public class AktorPortTypeMock {
         };
     }
 
+    public Pingable aktorIdPing() {
+        return new MockPingable("AktorPortTypeMock");
+    }
 }
