@@ -4,8 +4,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.RadioChoice;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -16,8 +16,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
-import static java.util.Arrays.asList;
 
 public class MockSetupPage extends BasePage {
 
@@ -32,41 +32,41 @@ public class MockSetupPage extends BasePage {
     }
 
     private Form<Void> createVelgMockForm() {
-        final List<String> alternativer = asList("Ja", "Nei");
-
         Form<Void> form = new Form<Void>("velgMockForm") {
 
             @Override
             protected void onSubmit() {
                 List<MockSetupModel> models = listView.getModelObject();
+                String infostr = "";
                 for (MockSetupModel model : models) {
                     setProperty(model.getKey(), model.getMockProperty());
+                    infostr += model.getServiceName() + ": " + getProperty(model.getKey()) + ", ";
                 }
+                info(infostr);
                 PageParameters parameters = new PageParameters();
                 parameters.add("fnr", "23067911223");
                 getRequestCycle().setResponsePage(Intern.class, parameters);
             }
         };
-        listView = leggTilRadioknapper(alternativer);
+        listView = leggTilCheckBoxer();
         form.add(listView);
         return form;
     }
 
-    private ListView<MockSetupModel> leggTilRadioknapper(final List<String> alternativer) {
+    private ListView<MockSetupModel> leggTilCheckBoxer() {
         List<MockSetupModel> models = lagModeller();
 
-        ListView<MockSetupModel> listView = new ListView("radioliste", models) {
+        return new ListView<MockSetupModel>("radioliste", models) {
             @Override
             protected void populateItem(ListItem item) {
                 MockSetupModel model = (MockSetupModel) item.getModelObject();
                 Label label = new Label("radiolabel", model.getServiceName());
-                RadioChoice<String> radioChoice = new RadioChoice<>("radiovalg", new PropertyModel<String>(model, "useMock"), alternativer);
+                CheckBox mockvalg = new CheckBox("mockvalg", new PropertyModel<Boolean>(model, "useMock"));
+
                 item.add(label);
-                item.add(radioChoice);
+                item.add(mockvalg);
             }
         };
-
-        return listView;
     }
 
     private List<MockSetupModel> lagModeller() {

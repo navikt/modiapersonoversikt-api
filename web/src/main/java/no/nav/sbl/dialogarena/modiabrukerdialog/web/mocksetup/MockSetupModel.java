@@ -7,13 +7,24 @@ public class MockSetupModel implements Serializable {
 
     private String modelId;
     private String serviceName;
-    private String useMock;
     private String key;
+    private Boolean useMock;
 
     public MockSetupModel(String modelId, String serviceName, String key) {
         this.modelId = modelId;
         this.serviceName = serviceName;
         this.key = key;
+    }
+
+    public Boolean getUseMock() {
+        if (useMock == null) {
+            useMock = "yes".equalsIgnoreCase(System.getProperty(key, "no")) ? true : false;
+        }
+        return useMock;
+    }
+
+    public void setUseMock(Boolean useMock) {
+        this.useMock = useMock;
     }
 
     public String getKey() {
@@ -28,18 +39,7 @@ public class MockSetupModel implements Serializable {
         return serviceName;
     }
 
-    public String getUseMock() {
-        if (useMock == null) {
-            useMock = "yes".equalsIgnoreCase(System.getProperty(key)) ? "Ja" : "Nei";
-        }
-        return useMock;
-    }
-
-    public void setUseMock(String useMock) {
-        this.useMock = useMock;
-    }
-
     public String getMockProperty() {
-        return (useMock != null && useMock.equalsIgnoreCase("Ja")) ? "yes" : "no";
+        return useMock ? "yes" : "no";
     }
 }
