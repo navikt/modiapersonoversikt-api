@@ -35,7 +35,6 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>modiabrukerdialog-mock</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
         </dependency>
 
         <!-- Modia-komponenter -->
