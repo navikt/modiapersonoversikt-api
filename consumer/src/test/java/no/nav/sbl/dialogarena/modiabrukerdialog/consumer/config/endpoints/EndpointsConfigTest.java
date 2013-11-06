@@ -47,7 +47,7 @@ public class EndpointsConfigTest {
     @BeforeClass
     public static void setupStatic() {
         setFrom("environment-local.properties");
-        setFrom("start.properties");
+        setFrom("start_test.properties");
         setupKeyAndTrustStore();
         System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }
