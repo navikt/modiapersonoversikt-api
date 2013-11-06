@@ -27,7 +27,6 @@ public class SykmeldingsperioderPanelConfigResolver {
 
     private ForeldrepengerServiceBi foreldrepengerServiceBiMock;
     private SykepengerServiceBi sykepengerServiceBiMock;
-    private SykmeldingsperioderPing ping;
     private static final String KEY = "start.kjerneinfo.withmock";
 
     public SykmeldingsperioderPanelConfigResolver() {
