@@ -19,9 +19,10 @@ public class AktorEndpointConfig {
 
     @Bean
     public AktoerPortType aktorPortType() {
-        AktoerPortType portType = new AktorPortTypeImpl(aktorEndpoint).aktorPortType();
+//        AktoerPortType portType = new AktorPortTypeImpl(aktorEndpoint).aktorPortType();
         AktoerPortType portTypeMock = new AktorPortTypeMock().aktorPortType();
-        return createSwitcher(portType, portTypeMock, key, AktoerPortType.class);
+        return portTypeMock;
+//        return createSwitcher(portType, portTypeMock, key, AktoerPortType.class);
     }
 
     @Bean
