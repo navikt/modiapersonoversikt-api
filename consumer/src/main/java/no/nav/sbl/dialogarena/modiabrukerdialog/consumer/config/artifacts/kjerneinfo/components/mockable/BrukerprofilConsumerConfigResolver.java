@@ -23,14 +23,15 @@ public class BrukerprofilConsumerConfigResolver {
     @Inject
     private BrukerprofilPortType selfTestBrukerprofilPortType;
 
-    private BrukerprofilServiceBi defaultBi = new BrukerprofilConsumerConfigImpl(brukerprofilPortType, selfTestBrukerprofilPortType).brukerprofilServiceBi();
-    private BrukerprofilServiceBi alternateBi = getBrukerprofilServiceBiMock();;
-    private String key = "start.kjerneinfo.withmock";
+
+    private static final String KEY = "start.kjerneinfo.withmock";
 
 
     @Bean
     public BrukerprofilServiceBi brukerprofilServiceBi() {
-        return createSwitcher(defaultBi, alternateBi, key, BrukerprofilServiceBi.class);
+        BrukerprofilServiceBi defaultBi = new BrukerprofilConsumerConfigImpl(brukerprofilPortType, selfTestBrukerprofilPortType).brukerprofilServiceBi();
+        BrukerprofilServiceBi alternateBi = getBrukerprofilServiceBiMock();
+        return createSwitcher(defaultBi, alternateBi, KEY, BrukerprofilServiceBi.class);
     }
 
 }
