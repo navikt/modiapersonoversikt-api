@@ -24,12 +24,13 @@ public class BehandleBrukerprofilConsumerConfigResolver {
     @Inject
     private BehandleBrukerprofilPortType selfTestBehandleBrukerprofilPortType;
 
-    private BehandleBrukerprofilServiceBi defaultBi = new BehandleBrukerProfilPortTypeImpl(behandleBrukerprofilPortType, selfTestBehandleBrukerprofilPortType).behandleBrukerprofilServiceBi();
-    private BehandleBrukerprofilServiceBi alternateBi = getBehandleBrukerprofilServiceBiMock();
 
     @Bean
     public BehandleBrukerprofilServiceBi behandleBrukerprofilServiceBi() {
         String key = "start.kjerneinfo.withmock";
+        BehandleBrukerprofilServiceBi defaultBi = new BehandleBrukerProfilPortTypeImpl(behandleBrukerprofilPortType, selfTestBehandleBrukerprofilPortType).behandleBrukerprofilServiceBi();
+        BehandleBrukerprofilServiceBi alternateBi = getBehandleBrukerprofilServiceBiMock();
+
         return createSwitcher(defaultBi, alternateBi, key, BehandleBrukerprofilServiceBi.class);
     }
 

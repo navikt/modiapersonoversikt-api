@@ -14,18 +14,14 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.BrukerprofilServiceBiMock.getBrukerprofilServiceBiMock;
 
 @Configuration
-@Import({ BrukerprofilConsumerConfig.class })
+@Import({BrukerprofilConsumerConfig.class})
 public class BrukerprofilConsumerConfigResolver {
+    private static final String KEY = "start.kjerneinfo.withmock";
 
     @Inject
     private BrukerprofilPortType brukerprofilPortType;
-
     @Inject
     private BrukerprofilPortType selfTestBrukerprofilPortType;
-
-
-    private static final String KEY = "start.kjerneinfo.withmock";
-
 
     @Bean
     public BrukerprofilServiceBi brukerprofilServiceBi() {

@@ -40,13 +40,14 @@ public class PersonKjerneinfoConsumerConfigResolver {
     @Resource(name = "personKjerneinfoPep")
     private EnforcementPoint kjerneinfoPep;
 
-    private PersonKjerneinfoServiceBi defaultBi = new PersonKjerneinfoConsumerConfigImpl(personPortType, selfTestPersonPortType, kjerneinfoMapperBean, kjerneinfoPep).personKjerneinfoServiceBi();
-    private PersonKjerneinfoServiceBi mockBi =  PersonKjerneinfoServiceBiMock.getPersonKjerneinfoServiceBiMock();
-    private String key = "start.kjerneinfo.withmock";
+
+    private static final String KEY = "start.kjerneinfo.withmock";
 
     @Bean
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
-        return createSwitcher(defaultBi, mockBi, key, PersonKjerneinfoServiceBi.class);
+        PersonKjerneinfoServiceBi defaultBi = new PersonKjerneinfoConsumerConfigImpl(personPortType, selfTestPersonPortType, kjerneinfoMapperBean, kjerneinfoPep).personKjerneinfoServiceBi();
+        PersonKjerneinfoServiceBi mockBi =  PersonKjerneinfoServiceBiMock.getPersonKjerneinfoServiceBiMock();
+        return createSwitcher(defaultBi, mockBi, KEY, PersonKjerneinfoServiceBi.class);
     }
 
 }
