@@ -22,6 +22,7 @@ import javax.inject.Named;
 
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.Assert.assertThat;
@@ -64,6 +65,7 @@ public class EndpointsConfigTest {
     @BeforeClass
     public static void setupStatic() {
         setFrom("environment-local.properties");
+        setFrom("start.properties");
         setupKeyAndTrustStore();
         System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }
@@ -81,11 +83,11 @@ public class EndpointsConfigTest {
 
     @Test
     public void shouldHavePingPortTypes() {
-        assertThat(aktorIdPing, is(notNullValue()));
-        assertThat(besvareHenvendelsePing, is(notNullValue()));
-        assertThat(utbetalingPing, is(notNullValue()));
-        assertThat(henvendelsePing, is(notNullValue()));
-        assertThat(oppgavebehandlingPing, is(notNullValue()));
+        assertThat(aktorIdPing.ping().size(), is(equalTo(1)));
+        assertThat(besvareHenvendelsePing.ping().size(), is(equalTo(1)));
+        assertThat(utbetalingPing.ping().size(), is(equalTo(1)));
+        assertThat(henvendelsePing.ping().size(), is(equalTo(1)));
+        assertThat(oppgavebehandlingPing.ping().size(), is(equalTo(1)));
 
     }
 
