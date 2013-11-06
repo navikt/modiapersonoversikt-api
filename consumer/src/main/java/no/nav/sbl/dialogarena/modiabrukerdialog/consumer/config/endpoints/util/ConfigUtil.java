@@ -22,7 +22,7 @@ public class ConfigUtil {
      *
      */
     public static boolean transformUrlStringToBoolean(String url) {
-        if(url == null) return false;
+        if(url == null) { return false; }
 
         try {
             URL boolURL = new URL(url);

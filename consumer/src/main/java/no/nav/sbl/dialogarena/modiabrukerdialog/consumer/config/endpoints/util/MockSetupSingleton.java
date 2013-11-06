@@ -4,7 +4,7 @@ import static java.lang.System.getProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.ConfigUtil.transformUrlStringToBoolean;
 
 
-public class MockSetupSingleton {
+public final class MockSetupSingleton {
 
     private static MockSetupSingleton instance;
     private Boolean tillatMock;
