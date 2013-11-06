@@ -10,7 +10,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 public class ConfigUtil {
 
     public static boolean isInMockMode(String key) {
-        if(mockSetup().isTillat()) {
+        if (mockSetup().isTillat()) {
             String start = getProperties().getProperty(key);
             return start != null ? start.equalsIgnoreCase("yes") : false;
         }
