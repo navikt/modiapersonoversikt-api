@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+    <property name="MAIN_APPLICATION" value="minehenvendelser" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%date %level [%thread] - [%logger] - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="no.nav.modig" level="WARN" />
+    <logger name="org.apache.wicket" level="WARN" />
+    <logger name="org.springframework" level="WARN" />
+
+    <root level="INFO">
+        <appender-ref ref="CONSOLE"/>
+    </root>
+
+</configuration>
