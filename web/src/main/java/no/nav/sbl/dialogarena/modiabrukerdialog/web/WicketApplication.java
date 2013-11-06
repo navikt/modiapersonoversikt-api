@@ -19,6 +19,7 @@ import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockSetupSingleton;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.LocaleFromWicketSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
@@ -47,6 +48,7 @@ import javax.inject.Inject;
 import java.util.Locale;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockSetupSingleton.mockSetup;
 import static org.apache.wicket.util.time.Duration.ONE_SECOND;
 
 public class WicketApplication extends WebApplication {
@@ -140,14 +142,20 @@ public class WicketApplication extends WebApplication {
                 .withExceptionHandler(true)
                 .configure(this);
 
-        mountPage("/person/${fnr}", Intern.class);
-        mountPage("/person/${fnr}/besvaresporsmal/${oppgaveId}", InternBesvaremodus.class);
-        mountPage("/mocksetup", MockSetupPage.class);
-        mountPage("internal/selftest", SelfTestPage.class);
+        mountPages();
 
         setSpringComponentInjector();
 
         Datoformat.brukLocaleFra(LocaleFromWicketSession.INSTANCE);
+    }
+
+    private void mountPages() {
+        mountPage("/person/${fnr}", Intern.class);
+        mountPage("/person/${fnr}/besvaresporsmal/${oppgaveId}", InternBesvaremodus.class);
+        mountPage("internal/selftest", SelfTestPage.class);
+        if(mockSetup().isTillat()) {
+            mountPage("/mocksetup", MockSetupPage.class);
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import java.lang.reflect.Method;
 
 import static java.lang.System.getProperty;
 import static java.lang.reflect.Proxy.newProxyInstance;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockSetupSingleton.mockSetup;
 
 public final class InstanceSwitcher implements InvocationHandler {
 
@@ -21,6 +22,19 @@ public final class InstanceSwitcher implements InvocationHandler {
         this.key = key;
     }
 
+    public static <T> T createSwitcher(T defaultInstance, T alternative, String key, Class<T> type) {
+
+        if (!mockSetup().isTillat()) {
+            return defaultInstance;
+        }
+
+        return (T) newProxyInstance(
+                InstanceSwitcher.class.getClassLoader(),
+                new Class[]{type},
+                new InstanceSwitcher(defaultInstance, alternative, key)
+        );
+    }
+
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) {
         method.setAccessible(true);
@@ -32,14 +46,6 @@ public final class InstanceSwitcher implements InvocationHandler {
         } catch (IllegalAccessException | InvocationTargetException exception) {
             throw new ApplicationException("Problemer med invokering av metode", exception);
         }
-    }
-
-    public static  <T> T createSwitcher(T defaultInstance, T alternative, String key, Class<T> type) {
-        return (T) newProxyInstance(
-                InstanceSwitcher.class.getClassLoader(),
-                new Class[]{type},
-                new InstanceSwitcher(defaultInstance, alternative, key)
-        );
     }
 
 }

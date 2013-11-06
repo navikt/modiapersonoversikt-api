@@ -24,6 +24,7 @@
         <credential alias="srv_kjerneinfo_tjenestebuss" mapToProperty="ctjenestebuss" />
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
+        <baseUrl alias="TillatMockSetup" mapToProperty="tillatmocksetup"/>
         <webservice alias="virksomhet:Person_v1" mapToProperty="kjerneinfoendpoint"/>
         <webservice alias="virksomhet:Kodeverk_v1" mapToProperty="kodeverkendpoint"/>
         <webservice alias="virksomhet:Kodeverk_v2" mapToProperty="kodeverkendpoint.v2"/>
