@@ -13,14 +13,12 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.LamellHandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.timeout.TimeoutBoks;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.BesvarePanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.OppgavePanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.SideBar;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -73,8 +71,7 @@ public class Intern extends BasePage {
 		    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
             new TimeoutBoks("timeoutBoks", fnr),
             redirectPopup,
-		    new OppgavePanel("oppgavePanel").setVisible(true),
-		    new BesvarePanel("besvarePanel", fnr)
+		    new SideBar("sideBar")
         );
     }
 
@@ -85,26 +82,6 @@ public class Intern extends BasePage {
         hentPersonPanel = (HentPersonPanel) new HentPersonPanel("searchPanel").setOutputMarkupPlaceholderTag(true);
         searchToggleButton = (Button) new Button("toggle-sok").setOutputMarkupPlaceholderTag(true);
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
-    }
-
-    @RunOnEvents(Modus.BESVARE)
-    public void skjulSokOgNullstillknapp(AjaxRequestTarget target) {
-        hentPersonPanel.setVisibilityAllowed(false);
-        searchToggleButton.setVisibilityAllowed(false);
-        nullstillLink.setVisibilityAllowed(false);
-        if (target != null) {
-            target.add(hentPersonPanel, searchToggleButton, nullstillLink);
-        }
-    }
-
-    @RunOnEvents(Modus.KVITTERING)
-    public void visSokOgNullstillknapp(AjaxRequestTarget target){
-        hentPersonPanel.setVisibilityAllowed(true);
-        searchToggleButton.setVisibilityAllowed(true);
-        nullstillLink.setVisibilityAllowed(true);
-        if (target != null) {
-            target.add(hentPersonPanel, searchToggleButton, nullstillLink);
-        }
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET)

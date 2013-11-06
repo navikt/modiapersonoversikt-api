@@ -36,7 +36,6 @@
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.2-SPRINGFIX</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <sporsmalogsvar.version>1.20</sporsmalogsvar.version>
         <utbetaling.version>2.0.3</utbetaling.version>
     </properties>
 
@@ -83,24 +82,6 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-besvare</artifactId>
-                <version>${sporsmalogsvar.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-innboks</artifactId>
-                <version>${sporsmalogsvar.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-widget</artifactId>
-                <version>${sporsmalogsvar.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>utbetalinger-lamell</artifactId>
                 <version>${utbetaling.version}</version>
             </dependency>
@@ -115,14 +96,6 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>utbetalinger-consumer</artifactId>
                 <version>${utbetaling.version}</version>
-            </dependency>
-
-
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-common</artifactId>
-                <version>${sporsmalogsvar.version}</version>
             </dependency>
 
             <dependency>
@@ -270,12 +243,6 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
-                <version>0.2</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-jetty</artifactId>
                 <version>1.0.20</version>
                 <scope>test</scope>
@@ -308,18 +275,6 @@
                 <artifactId>common-test</artifactId>
                 <version>1.2</version>
                 <scope>test</scope>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>oppgavebehandling-tjenestespesifikasjon</artifactId>
-                <version>0.0.5</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>henvendelse-meldinger-tjenestespesifikasjon</artifactId>
-                <version>0.0.7</version>
             </dependency>
 
             <dependency>

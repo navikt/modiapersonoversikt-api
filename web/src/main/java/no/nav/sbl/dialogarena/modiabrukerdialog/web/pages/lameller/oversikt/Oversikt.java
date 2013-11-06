@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.widget.LenkeWidget;
 import no.nav.sbl.dialogarena.soknader.liste.SoknadListe;
-import no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingerWidget;
 import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.apache.wicket.model.Model;
@@ -17,7 +16,6 @@ public class Oversikt extends Lerret {
         super(id);
         add(
                 new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
-                new MeldingerWidget("meldinger", "M", fnr),
                 new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
                 new SoknadListe("soknader", fnr),
                 new UtbetalingWidget("utbetalinger", "U", fnr)

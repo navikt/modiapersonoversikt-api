@@ -8,7 +8,6 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.oppgave.HentOppgavePanel;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -30,8 +29,7 @@ public class HentPersonPage extends BasePage {
         add(
                 new ContextImage("modia-logo", "img/modiaLogo.svg"),
                 hentPersonPanel,
-                new PersonsokPanel("personsokPanel").setVisible(true),
-                new HentOppgavePanel("hent-oppgave")
+                new PersonsokPanel("personsokPanel").setVisible(true)
         );
     }
 

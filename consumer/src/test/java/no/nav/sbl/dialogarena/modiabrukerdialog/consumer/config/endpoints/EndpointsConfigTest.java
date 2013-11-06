@@ -3,9 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.TestBeans;
-import no.nav.tjeneste.domene.brukerdialog.besvare.v1.BesvareHenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.HenvendelseMeldingerPortType;
-import no.nav.tjeneste.domene.brukerdialog.oppgavebehandling.v1.OppgavebehandlingPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
@@ -35,12 +32,6 @@ public class EndpointsConfigTest {
     @Inject
     private AktoerPortType aktoerPortType;
     @Inject
-    private BesvareHenvendelsePortType besvareHenvendelsePortType;
-    @Inject
-    private HenvendelseMeldingerPortType henvendelseMeldingerPortType;
-    @Inject
-    private OppgavebehandlingPortType oppgavebehandlingPortType;
-    @Inject
     private SakOgBehandlingPortType sakOgBehandlingPortType;
     @Inject
     private UtbetalingPortType utbetalingPortType;
@@ -50,17 +41,8 @@ public class EndpointsConfigTest {
     @Named("aktorIdPing")
     private Pingable aktorIdPing;
     @Inject
-    @Named("besvareHenvendelsePing")
-    private Pingable besvareHenvendelsePing;
-    @Inject
     @Named("utbetalingPing")
     private Pingable utbetalingPing;
-    @Inject
-    @Named("henvendelsePing")
-    private Pingable henvendelsePing;
-    @Inject
-    @Named("oppgavebehandlingPing")
-    private Pingable oppgavebehandlingPing;
 
     @BeforeClass
     public static void setupStatic() {
@@ -73,9 +55,6 @@ public class EndpointsConfigTest {
     @Test
     public void shouldHavePortTypes() {
         assertThat(aktoerPortType, is(notNullValue()));
-        assertThat(besvareHenvendelsePortType, is(notNullValue()));
-        assertThat(henvendelseMeldingerPortType, is(notNullValue()));
-        assertThat(oppgavebehandlingPortType, is(notNullValue()));
         assertThat(sakOgBehandlingPortType, is(notNullValue()));
         assertThat(utbetalingPortType, is(notNullValue()));
         assertThat(kodeverkPortType, is(notNullValue()));
@@ -84,11 +63,7 @@ public class EndpointsConfigTest {
     @Test
     public void shouldHavePingPortTypes() {
         assertThat(aktorIdPing.ping().size(), is(equalTo(1)));
-        assertThat(besvareHenvendelsePing.ping().size(), is(equalTo(1)));
         assertThat(utbetalingPing.ping().size(), is(equalTo(1)));
-        assertThat(henvendelsePing.ping().size(), is(equalTo(1)));
-        assertThat(oppgavebehandlingPing.ping().size(), is(equalTo(1)));
-
     }
 
 

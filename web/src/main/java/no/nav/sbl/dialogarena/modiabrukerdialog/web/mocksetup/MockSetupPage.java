@@ -81,10 +81,7 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("2", "AktørID", "start.aktor.withmock"),
                 new MockSetupModel("3", "Utbetaling", "start.utbetaling.withmock"),
                 new MockSetupModel("4", "Kodeverk", "start.kodeverk.withmock"),
-                new MockSetupModel("5", "Henvendelse", "start.henvendelsemeldinger.withmock"),
-                new MockSetupModel("6", "Besvare henvendelse", "start.besvarehenvendelse.withmock"),
-                new MockSetupModel("7", "Oppgavebehandling", "start.oppgavebehandling.withmock"),
-                new MockSetupModel("8", "Kjerneinfo", "start.kjerneinfo.withmock")
+                new MockSetupModel("5", "Kjerneinfo", "start.kjerneinfo.withmock")
         );
     }
 

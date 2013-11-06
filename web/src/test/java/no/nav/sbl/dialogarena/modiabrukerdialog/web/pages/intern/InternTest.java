@@ -6,9 +6,6 @@ import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.aktorid.service.AktorService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BesvareHenvendelsePortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseMeldingerPortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.OppgavebehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.LamellHandler;
@@ -17,7 +14,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidget
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.besvare.TraadPanel;
 import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -31,7 +27,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -42,11 +37,8 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = {
         HentPersonPanelMockContext.class,
-        HenvendelseMeldingerPortTypeMock.class,
         SykepengerWidgetMockContext.class,
         SakOgBehandlingPortTypeMock.class,
-        OppgavebehandlingPortTypeMock.class,
-        BesvareHenvendelsePortTypeMock.class,
         AktorPortTypeMock.class,
         SoknaderService.class,
         AktorService.class,
@@ -95,12 +87,4 @@ public class InternTest extends WicketPageTest {
         verify(redirectPopup, times(0)).show(target);
         verify(redirectPopup, times(1)).redirect();
     }
-
-    @Test
-    public void traadPanelErSynligNaarOppgaveIdGisIUrl() {
-        wicket
-                .goTo(InternBesvaremodus.class, with().param("fnr", "12037649749").param("oppgaveId", "123"))
-                .should().containComponent(ofType(TraadPanel.class).and(thatIsVisible()));
-    }
-
 }
