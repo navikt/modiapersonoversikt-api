@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
 import java.io.Serializable;
 
+import static java.lang.System.getProperty;
+
 public class MockSetupModel implements Serializable {
 
     private String modelId;
@@ -18,7 +20,7 @@ public class MockSetupModel implements Serializable {
 
     public Boolean getUseMock() {
         if (useMock == null) {
-            useMock = "yes".equalsIgnoreCase(System.getProperty(key, "no")) ? true : false;
+            useMock = "yes".equalsIgnoreCase(getProperty(key, "no")) ? true : false;
         }
         return useMock;
     }
@@ -42,4 +44,5 @@ public class MockSetupModel implements Serializable {
     public String getMockProperty() {
         return useMock ? "yes" : "no";
     }
+
 }

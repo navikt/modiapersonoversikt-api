@@ -36,7 +36,7 @@ public class SykmeldingsperioderPanelConfigResolver {
 
     @Bean
     SykmeldingsperioderPing sykmeldingsperioderPing() {
-        return new SykmeldingsperioderPanelConfigImpl().sykmeldingsperioderPing(foreldrepengerServiceBi(), sykepengerServiceBi());
+        return new SykmeldingsperioderPanelConfigImpl().sykmeldingsperioderPing(getForeldrepengerServiceBi(), getSykepengerServiceBi());
     }
 
     @Bean
@@ -49,22 +49,22 @@ public class SykmeldingsperioderPanelConfigResolver {
     @Bean
     public SykmeldingsperiodeLoader sykmeldingsperiodeLoader() {
         SykmeldingsperiodeLoader periodeLoader = new SykmeldingsperioderPanelConfigImpl().sykmeldingsperiodeLoader();
-        periodeLoader.setSykepengerService(sykepengerServiceBi());
+        periodeLoader.setSykepengerService(getSykepengerServiceBi());
         return periodeLoader;
     }
 
     @Bean
     public ForeldrepengerLoader foreldrepengerLoader() {
         ForeldrepengerLoader foreldrepengerLoader = new SykmeldingsperioderPanelConfigImpl().foreldrepengerLoader();
-        foreldrepengerLoader.setForeldrepengerService(foreldrepengerServiceBi());
+        foreldrepengerLoader.setForeldrepengerService(getForeldrepengerServiceBi());
         return foreldrepengerLoader;
     }
 
-    private ForeldrepengerServiceBi foreldrepengerServiceBi() {
+    private ForeldrepengerServiceBi getForeldrepengerServiceBi() {
         return createSwitcher(foreldrepengerServiceBi, foreldrepengerServiceBiMock, KEY, ForeldrepengerServiceBi.class);
     }
 
-    private SykepengerServiceBi sykepengerServiceBi() {
+    private SykepengerServiceBi getSykepengerServiceBi() {
         return createSwitcher(sykepengerServiceBi, sykepengerServiceBiMock, KEY, SykepengerServiceBi.class);
     }
 
