@@ -8,17 +8,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.net.URL;
-
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
 
 @Configuration
 public class AktorEndpointConfig {
 
-    @Value("${aktor.url}")
-    private URL aktorEndpoint;
-
     String key = "start.aktor.withmock";
+    @Value("${aktor.url}")
+    private String aktorEndpoint;
 
     @Bean
     public AktoerPortType aktorPortType() {
