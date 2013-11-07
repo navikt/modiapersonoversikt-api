@@ -12,6 +12,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandli
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerRequest;
 import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +23,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static java.lang.System.setProperty;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockSetupSingleton.mockSetup;
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -49,10 +52,13 @@ public class EndpointsConfigTest {
     @Named("utbetalingPing")
     private Pingable utbetalingPing;
 
+
     @BeforeClass
     public static void setupStatic() {
+        mockSetup().clear();
         setFrom("environment-local.properties");
         setFrom("start_test.properties");
+
         setupKeyAndTrustStore();
         System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }

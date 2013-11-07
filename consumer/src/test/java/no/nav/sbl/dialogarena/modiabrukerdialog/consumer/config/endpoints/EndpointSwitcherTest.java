@@ -4,7 +4,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import static java.lang.System.getProperties;
+import static java.lang.System.setProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockSetupSingleton.mockSetup;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -31,12 +34,14 @@ public class EndpointSwitcherTest {
             }
         };
 
+        mockSetup().clear();
+        setProperty("tillatmocksetup.url", "http://ja.no");
         value = createSwitcher(foo, bar, USE_FOO, Value.class);
     }
 
     @After
     public void tearDown() throws Exception {
-        System.getProperties().remove(USE_FOO);
+        getProperties().remove(USE_FOO);
     }
 
     @Test
@@ -46,13 +51,13 @@ public class EndpointSwitcherTest {
 
     @Test
     public void useFirstObjectIfPropertyKeyIsSpecifiedAndNo() throws Exception {
-        System.setProperty(USE_FOO, "no");
+        setProperty(USE_FOO, "no");
         assertThat(value.gimme(), is("foo"));
     }
 
     @Test
     public void useSecondObjectIfPropertyKeyIsSpecifiedAndYes() throws Exception {
-        System.setProperty(USE_FOO, "yes");
+        setProperty(USE_FOO, "yes");
         assertThat(value.gimme(), is("bar"));
     }
 }
