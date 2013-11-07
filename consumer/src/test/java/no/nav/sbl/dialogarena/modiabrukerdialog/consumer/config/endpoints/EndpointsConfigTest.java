@@ -5,7 +5,12 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.TestBeans;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingHentBehandlingBehandlingIkkeFunnet;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingRequest;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerRequest;
 import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -59,6 +64,31 @@ public class EndpointsConfigTest {
         assertThat(utbetalingPortType, is(notNullValue()));
         assertThat(kodeverkPortType, is(notNullValue()));
     }
+
+    @Test
+    public void sakOgBehandlingPortType_finnSakOgBehandlingskjedeListe(){
+        FinnSakOgBehandlingskjedeListeRequest request = new FinnSakOgBehandlingskjedeListeRequest();
+        request.setAktoerREF("1234");
+        assertThat(sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(request), is(notNullValue()));
+    }
+
+    @Test
+    public void sakOgBehandlingPortType_hentBehandlingskjedensBehandlinger() throws HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
+        HentBehandlingskjedensBehandlingerRequest  request = new HentBehandlingskjedensBehandlingerRequest();
+        request.setBehandlingskjedeREF("");
+        assertThat(sakOgBehandlingPortType.hentBehandlingskjedensBehandlinger(request), is(notNullValue()));
+    }
+    @Test
+    public void hentBehandling() throws HentBehandlingHentBehandlingBehandlingIkkeFunnet {
+        HentBehandlingRequest  request = new HentBehandlingRequest();
+        request.setBehandlingsREF("");
+        assertThat(sakOgBehandlingPortType.hentBehandling(request), is(notNullValue()));
+    }
+    @Test
+    public void sakOgBehandlingPortType_ping(){
+        sakOgBehandlingPortType.ping();
+    }
+
 
     @Test
     public void shouldHavePingPortTypes() {

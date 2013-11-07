@@ -90,17 +90,17 @@ public class SakOgBehandlingPortTypeMock {
 
             @Override
             public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest hentBehandlingskjedensBehandlingerRequest) throws HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
+                return new HentBehandlingskjedensBehandlingerResponse();
             }
 
             @Override
             public HentBehandlingResponse hentBehandling(@WebParam(name = "request", targetNamespace = "") HentBehandlingRequest hentBehandlingRequest) throws HentBehandlingHentBehandlingBehandlingIkkeFunnet {
-                return null;  //To change body of implemented methods use File | Settings | File Templates.
+                return new HentBehandlingResponse();
             }
 
             @Override
             public void ping() {
-                //To change body of implemented methods use File | Settings | File Templates.
+                return;
             }
         };
     }
