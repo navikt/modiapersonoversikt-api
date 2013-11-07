@@ -17,6 +17,13 @@ public class ConfigUtilTest {
     }
 
     @Test
+    public void testTransformUrl_HostInneholderJaIAnnetOrd_GirFalse() throws Exception {
+        String url = "http://jajaja.nav.no";
+        boolean urlOversatt = transformUrlStringToBoolean(url);
+        assertThat(urlOversatt, is(equalTo(false)));
+    }
+
+    @Test
     public void testTransformUrl_MalformedUrl_GirFalse() throws Exception {
         String url = "nei.nav.no";
         boolean urlOversatt = transformUrlStringToBoolean(url);
@@ -24,14 +31,35 @@ public class ConfigUtilTest {
     }
 
     @Test
-    public void testTransformUrl_Null_GirFalse() throws Exception {
+    public void testTransformUrl_KunNei_GirFalse() throws Exception {
+        String url = "nei";
+        boolean urlOversatt = transformUrlStringToBoolean(url);
+        assertThat(urlOversatt, is(equalTo(false)));
+    }
+
+    @Test
+    public void testTransformUrl_UrlErIkkeSatt_GirFalse() throws Exception {
         boolean urlOversatt = transformUrlStringToBoolean(null);
         assertThat(urlOversatt, is(equalTo(false)));
     }
 
     @Test
-    public void testTransformUrl_Ja_GirTrue() throws Exception {
+    public void testTransformUrl_HostBegynnerMedJa_GirTrue() throws Exception {
         String url = "http://ja.nav.no";
+        boolean urlOversatt = transformUrlStringToBoolean(url);
+        assertThat(urlOversatt, is(equalTo(true)));
+    }
+
+    @Test
+    public void testTransformUrl_HostBegynnerMedJaStoreBokstaver_GirTrue() throws Exception {
+        String url = "http://Ja.nav.no";
+        boolean urlOversatt = transformUrlStringToBoolean(url);
+        assertThat(urlOversatt, is(equalTo(true)));
+    }
+
+    @Test
+    public void testTransformUrl_HostInneholderJa_GirTrue() throws Exception {
+        String url = "http://jabbadabba.ja.no";
         boolean urlOversatt = transformUrlStringToBoolean(url);
         assertThat(urlOversatt, is(equalTo(true)));
     }

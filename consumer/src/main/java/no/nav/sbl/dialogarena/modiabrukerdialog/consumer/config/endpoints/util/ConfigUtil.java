@@ -1,8 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util;
 
 
+import com.google.common.collect.Sets;
+
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Set;
 
 import static java.lang.System.getProperties;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockSetupSingleton.mockSetup;
@@ -18,17 +21,18 @@ public class ConfigUtil {
     }
 
     /**
-     *  Gjør om en url-string til boolean. Url som "http://ja.nav.no" gir true, alle andre gir false.
+     *  Gjør om en url-string til boolean.
+     *  Url som inneholder ordet "ja" i hostnavnet gir true, alle andre gir false.
+     *  F.eks  "http://ja.nav.no" gir true.
      *
      */
     public static boolean transformUrlStringToBoolean(String url) {
         if(url == null) { return false; }
 
         try {
-            URL boolURL = new URL(url);
-            String host = boolURL.getHost();
-            String[] boolString = host.split("\\.");
-            return boolString.length > 1 && (boolString[0].equalsIgnoreCase("ja"));
+            Set<String> set = Sets.newHashSet(new URL(url.toLowerCase()).getHost().split("\\."));
+            return set.contains("ja");
+
         } catch (MalformedURLException e) {
             return false;
         }
