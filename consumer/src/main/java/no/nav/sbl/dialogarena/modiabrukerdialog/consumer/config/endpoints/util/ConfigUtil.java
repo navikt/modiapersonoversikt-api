@@ -15,7 +15,7 @@ public class ConfigUtil {
     public static boolean isInMockMode(String key) {
         if (mockSetup().isTillat()) {
             String start = getProperties().getProperty(key);
-            return start != null ? start.equalsIgnoreCase("yes") : false;
+            return start != null && start.equalsIgnoreCase("yes");
         }
         return false;
     }

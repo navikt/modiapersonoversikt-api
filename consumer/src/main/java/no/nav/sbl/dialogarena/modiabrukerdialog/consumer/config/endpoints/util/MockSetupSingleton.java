@@ -24,4 +24,8 @@ public final class MockSetupSingleton {
         }
         return tillatMock;
     }
+
+    public void clear(){
+        tillatMock = null;
+    }
 }
