@@ -56,7 +56,7 @@ public class Utbetaling implements Serializable {
         this.startDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato();
         this.endDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato();
         this.utbetalingId = wsUtbetaling.getUtbetalingId();
-        this.valuta = transformValuta(wsUtbetaling);
+        this.valuta = transformValuta(wsUtbetaling.getValuta());
     }
 
     public String getKontoNr() {
@@ -115,8 +115,7 @@ public class Utbetaling implements Serializable {
         return beskrivelser;
     }
 
-    private String transformValuta(WSUtbetaling wsUtbetaling) {
-        String wsValuta = wsUtbetaling.getValuta();
+    private String transformValuta(String wsValuta) {
         return (wsValuta == null || wsValuta.isEmpty()) ? "kr" : wsValuta;
     }
 
