@@ -52,11 +52,11 @@ public class Utbetaling implements Serializable {
         this.utbetalingsDato = wsUtbetaling.getUtbetalingDato();
         this.bruttoBelop = wsUtbetaling.getBruttobelop();
         this.nettoBelop = wsUtbetaling.getNettobelop();
-        this.valuta = wsUtbetaling.getValuta();
         this.kontoNr = join(getKontoNrFromBilag(), ", ");
         this.startDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato();
         this.endDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato();
         this.utbetalingId = wsUtbetaling.getUtbetalingId();
+        this.valuta = transformValuta(wsUtbetaling);
     }
 
     public String getKontoNr() {
@@ -99,6 +99,10 @@ public class Utbetaling implements Serializable {
         return bruttoBelop;
     }
 
+    public String getUtbetalingId() {
+        return utbetalingId;
+    }
+
     public double getNettoBelop() {
         return nettoBelop;
     }
@@ -111,16 +115,17 @@ public class Utbetaling implements Serializable {
         return beskrivelser;
     }
 
-    private Set<String> getKontoNrFromBilag(){
+    private String transformValuta(WSUtbetaling wsUtbetaling) {
+        String wsValuta = wsUtbetaling.getValuta();
+        return (wsValuta == null || wsValuta.isEmpty()) ? "kr" : wsValuta;
+    }
+
+    private Set<String> getKontoNrFromBilag() {
         Set<String> kontoNrSet = new TreeSet<>();
-        for(Bilag detalj : bilag){
+        for (Bilag detalj : bilag) {
             kontoNrSet.addAll(detalj.getKontoNrFromDetaljer());
         }
         return kontoNrSet;
-    }
-
-    public String getUtbetalingId() {
-        return utbetalingId;
     }
 
     private void extractPeriodDates(String periode) {

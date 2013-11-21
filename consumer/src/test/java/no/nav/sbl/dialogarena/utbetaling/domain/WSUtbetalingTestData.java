@@ -72,6 +72,7 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(3000.0)
                 .withBruttobelop(3000.0)
+                .withValuta("kr")
                 .withStatusKode("12")
                 .withStatusBeskrivelse("Barnepenger")
                 .withUtbetalingDato(now().minusDays(10))
@@ -88,6 +89,7 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(4000.00)
                 .withBruttobelop(4000.0)
+                .withValuta("kr")
                 .withStatusKode("12")
                 .withStatusBeskrivelse("Trygd")
                 .withUtbetalingDato(now().minusDays(40))
