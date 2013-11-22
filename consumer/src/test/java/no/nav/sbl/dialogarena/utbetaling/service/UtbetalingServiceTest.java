@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.domain.WSUtbetalingTestData;
+import no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeResponse;

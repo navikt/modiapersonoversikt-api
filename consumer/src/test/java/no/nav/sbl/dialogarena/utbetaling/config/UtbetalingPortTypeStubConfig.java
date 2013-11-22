@@ -10,7 +10,7 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import static no.nav.sbl.dialogarena.utbetaling.domain.WSUtbetalingTestData.getWsUtbetalinger;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.getWsUtbetalinger;
 
 @Configuration
 public class UtbetalingPortTypeStubConfig {
