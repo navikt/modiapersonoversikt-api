@@ -61,7 +61,7 @@ public class UtbetalingVMTest {
         Utbetaling utbetaling = new UtbetalingBuilder().createUtbetaling();
         UtbetalingVM utbetalingVM = new UtbetalingVM(utbetaling);
         assertThat(utbetaling.getBeskrivelse(), is(equalTo(utbetalingVM.getBeskrivelse())));
-        assertThat(utbetaling.getPeriode(), is(equalTo(utbetalingVM.getPeriode())));
+        assertThat(utbetaling.getPeriode().getPeriode(), is(equalTo(utbetalingVM.getPeriode())));
         assertThat(utbetaling.getValuta(), is(equalTo(utbetalingVM.getValuta())));
         assertThat(utbetaling.getStatuskode(), is(equalTo(utbetalingVM.getStatus())));
         assertThat(utbetaling.getStartDate(), is(equalTo(utbetalingVM.getStartDato())));

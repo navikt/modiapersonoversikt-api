@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottaker;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
@@ -40,7 +40,7 @@ public class UtbetalingVMComparatorTest {
     @Test
     public void shouldHandtereManglendeUtbetalingsdato() {
         UtbetalingVM utbetalingVMUtenUtbetalingsdato1 = lagUtbetalingVM(null);
-        UtbetalingVM utbetalingVMUtenUtbetalingsdato2= lagUtbetalingVM(null);
+        UtbetalingVM utbetalingVMUtenUtbetalingsdato2 = lagUtbetalingVM(null);
 
         List<UtbetalingVM> utbetalinger = asList(utbetalingVMUtenUtbetalingsdato1, utbetalingVMUtenUtbetalingsdato2);
         Collections.sort(utbetalinger, new UtbetalingVMComparator());
@@ -49,6 +49,11 @@ public class UtbetalingVMComparatorTest {
     }
 
     private UtbetalingVM lagUtbetalingVM(DateTime utbetalingsDato) {
-        return new UtbetalingVM(new Utbetaling(null,  null, null, utbetalingsDato, 0, 0, "NOK", "123","1", new Mottaker("7", "kode", "Arbeidsgiver")));
+        return new UtbetalingVM(
+                new UtbetalingBuilder().setValuta("kr").setMottaker(new Mottaker("7", "kode", "Arbeidsgiver"))
+                        .setKontoNr("123").setUtbetalingId("1").setUtbetalingsDato(utbetalingsDato)
+                        .createUtbetaling()
+
+        );
     }
 }

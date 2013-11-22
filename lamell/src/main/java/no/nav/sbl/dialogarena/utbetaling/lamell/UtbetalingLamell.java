@@ -25,10 +25,8 @@ import static org.joda.time.DateTime.now;
 public class UtbetalingLamell extends Lerret {
 
     public static final PackageResourceReference UTBETALING_LAMELL_LESS = new PackageResourceReference(UtbetalingLamell.class, "utbetaling.less");
-
     private static final LocalDate FILTER_STARTDATO = now().minusMonths(3).toLocalDate();
     private static final LocalDate FILTER_SLUTTDATO = now().toLocalDate();
-
     @Inject
     private UtbetalingService utbetalingService;
 

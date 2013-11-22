@@ -10,7 +10,6 @@ import static java.util.Arrays.asList;
 public class UtbetalingBuilder {
 
     private List<Bilag> bilag = new ArrayList<>();
-    private String periode = "2013.10.07-2013.11.07";
     private String statuskode = "10";
     private DateTime utbetalingsDato = DateTime.now().minus(1);
     private double bruttoBelop = 6000.0;
@@ -19,6 +18,7 @@ public class UtbetalingBuilder {
     private String kontoNr = "1234 25 25814";
     private String utbetalingId = "1";
     private Mottaker mottaker = new Mottaker("1", "12", "Arbeidsgiver");
+    private Periode periode = new Periode(new DateTime().minusDays(32), new DateTime().minusDays(2));
 
     public UtbetalingBuilder() {
         bilag.addAll(asList(
@@ -44,6 +44,11 @@ public class UtbetalingBuilder {
     }
 
     public UtbetalingBuilder setPeriode(String periode) {
+        this.periode = new Periode(periode);
+        return this;
+    }
+
+    public UtbetalingBuilder setPeriode(Periode periode) {
         this.periode = periode;
         return this;
     }
@@ -79,7 +84,7 @@ public class UtbetalingBuilder {
     }
 
     public Utbetaling createUtbetaling() {
-        return new Utbetaling(bilag, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr, utbetalingId, mottaker);
+        return new Utbetaling(bilag, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr, utbetalingId, mottaker, periode);
     }
 
 }

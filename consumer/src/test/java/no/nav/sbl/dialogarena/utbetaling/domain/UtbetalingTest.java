@@ -98,14 +98,14 @@ public class UtbetalingTest {
 
     @Test
     public void extractDatoFromNullPeriodeString() {
-        Utbetaling utbetaling = new UtbetalingBuilder().setPeriode(null).createUtbetaling();
+        Utbetaling utbetaling = new UtbetalingBuilder().setPeriode((Periode) null).createUtbetaling();
         assertThat(utbetaling.getStartDate(), is(nullValue()));
         assertThat(utbetaling.getEndDate(), is(nullValue()));
     }
 
     @Test
     public void skalTransformereUtbetaling() throws Exception {
-        WSUtbetaling wsUtbetaling = new WSUtbetalingTestData().createUtbetaling1();
+        WSUtbetaling wsUtbetaling = WSUtbetalingTestData.createUtbetaling1();
         String alderspensjon = "Alderspensjon";
         String kontoNr = "12345678900";
 
