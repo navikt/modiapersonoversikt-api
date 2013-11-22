@@ -155,7 +155,7 @@ public class WSUtbetalingTestData {
         WSMottaker wsMottaker = new WSMottaker();
         wsMottaker.withMottakerId("4")
                 .withMottakertypeKode("brukerkode")
-                .withNavn("Mottaker");
+                .withNavn("Bruker");
         return wsMottaker;
     }
 

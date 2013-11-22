@@ -6,9 +6,9 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.Filter;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterForm;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.LocalDate;
 
@@ -27,18 +27,20 @@ public class UtbetalingLamell extends Lerret {
     @Inject
     private UtbetalingService utbetalingService;
 
-    private Filter filter;
-
     public UtbetalingLamell(String id, String fnr) {
         super(id);
 
         Mottaker mottaker = new Mottaker("test", "test", "test");
 
-        this.filter = new Filter(FILTER_STARTDATO, FILTER_SLUTTDATO, mottaker);
+        Filter filter = new Filter(FILTER_STARTDATO, FILTER_SLUTTDATO, true, true);
         ListView utbetalingListView = createUtbetalingListView(fnr);
 
+        FeedbackPanel feedbackpanel = new FeedbackPanel("feedbackpanel");
+        feedbackpanel.setOutputMarkupId(true);
+        setOutputMarkupId(true);
         add(
-                new FilterForm("filterForm", filter, utbetalingListView),
+                feedbackpanel,
+                new FilterForm("filterForm", filter, utbetalingListView, feedbackpanel),
                 utbetalingListView
         );
     }

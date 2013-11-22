@@ -27,6 +27,7 @@ public class UtbetalingPanel extends Panel {
                 createPeriodeLabel(utbetaling),
                 new Label("status", utbetaling.getStatuskode()),
                 new Label("kontonr", utbetaling.getKontoNr()),
+                new Label("mottaker", utbetaling.getMottaker().getNavn()),
                 createExpandButton(hidden)
         );
     }
