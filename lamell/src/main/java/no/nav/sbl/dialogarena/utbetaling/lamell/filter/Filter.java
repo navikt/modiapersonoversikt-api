@@ -12,22 +12,22 @@ public class Filter implements Serializable {
 
     private IModel<LocalDate> startDato;
     private IModel<LocalDate> sluttDato;
-    private Boolean brukerCheckbox = true;
-    private Boolean arbeidsgiverCheckbox = true;
+    private Boolean visBruker = true;
+    private Boolean visArbeidsgiver = true;
 
     public Filter(LocalDate startDato, LocalDate sluttDato, Boolean brukerCheckbox, Boolean arbeidsgiverCheckbox) {
-        this.brukerCheckbox = brukerCheckbox;
-        this.arbeidsgiverCheckbox = arbeidsgiverCheckbox;
+        this.visBruker = brukerCheckbox;
+        this.visArbeidsgiver = arbeidsgiverCheckbox;
         this.startDato = new Model<>(startDato);
         this.sluttDato = new Model<>(sluttDato);
     }
 
-    public Boolean getBrukerCheckbox() {
-        return brukerCheckbox;
+    public Boolean getVisBruker() {
+        return visBruker;
     }
 
-    public Boolean getArbeidsgiverCheckbox() {
-        return arbeidsgiverCheckbox;
+    public Boolean getVisArbeidsgiver() {
+        return visArbeidsgiver;
     }
 
     public IModel<LocalDate> getStartDato() {
