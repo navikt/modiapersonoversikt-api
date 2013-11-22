@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottaker;
-import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
+import no.nav.sbl.dialogarena.utbetaling.domain.builder.UtbetalingBuilder;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
