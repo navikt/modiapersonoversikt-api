@@ -28,11 +28,11 @@ public class FilterForm extends Form {
         add(createMottakerButton("arbeidsgiverCheckbox", feedbackpanel));
 
         add(createDateRangePicker());
-        add(createAjaxFormSubmitBehaviour(utbetalingListView, feedbackpanel));
+        add(createAjaxFormSubmitBehaviour(utbetalingListView));
     }
 
     private AjaxCheckBox createMottakerButton(final String mottaker, final FeedbackPanel feedbackpanel) {
-        AjaxCheckBox checkBox = new AjaxCheckBox(mottaker, new PropertyModel<Boolean>(filter, mottaker)) {
+        return new AjaxCheckBox(mottaker, new PropertyModel<Boolean>(filter, mottaker)) {
 
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
@@ -42,10 +42,9 @@ public class FilterForm extends Form {
                 LOG.info("Trykket på " + mottaker + " Verdi: " + value);
             }
         };
-        return checkBox;
     }
 
-    private AjaxFormSubmitBehavior createAjaxFormSubmitBehaviour(final ListView listView, final FeedbackPanel feedbackpanel) {
+    private AjaxFormSubmitBehavior createAjaxFormSubmitBehaviour(final ListView listView) {
         return new AjaxFormSubmitBehavior("onsubmit") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
