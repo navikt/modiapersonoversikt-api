@@ -15,15 +15,12 @@ public class MottakerComparator implements Comparator<Mottaker> {
     // CHECKSTYLE:OFF
     public static boolean equals(Mottaker left, Mottaker right) {
         if (left == right) { return true;}
-        if(left == null && right == null) { return true; }
-        if( (left == null && right != null) || (right == null && left != null)) { return false; }
+        if((left == null) || (right == null)) { return false; }
 
         if (left.getMottakerId() != null ? !left.getMottakerId().equals(right.getMottakerId()) : right.getMottakerId() != null) { return false; }
         if (left.getMottakertypeKode() != null ? !left.getMottakertypeKode().equals(right.getMottakertypeKode()) : right.getMottakertypeKode() != null)
         { return false; }
-        if (left.getNavn() != null ? !left.getNavn().equals(right.getNavn()) : right.getNavn() != null) { return false; }
-
-        return true;
+        return !(left.getNavn() != null ? !left.getNavn().equals(right.getNavn()) : right.getNavn() != null);
     }
     // CHECKSTYLE:ON
 }
