@@ -27,9 +27,10 @@ public class Utbetaling implements Serializable {
     private double nettoBelop;
     private String valuta;
     private String kontoNr;
+    private Mottaker mottaker;
 
     // CHECKSTYLE:OFF
-    public Utbetaling(List<Bilag> bilag, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId) {
+    public Utbetaling(List<Bilag> bilag, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker) {
         this.bilag = bilag;
         this.periode = periode;
         this.statuskode = statuskode;
@@ -39,10 +40,10 @@ public class Utbetaling implements Serializable {
         this.valuta = valuta;
         this.kontoNr = kontoNr;
         this.utbetalingId = utbetalingId;
+        this.mottaker = mottaker;
 
         extractPeriodDates(periode);
     }
-    // CHECKSTYLE:ON
 
     public Utbetaling(WSUtbetaling wsUtbetaling) {
         for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
@@ -57,6 +58,13 @@ public class Utbetaling implements Serializable {
         this.endDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato();
         this.utbetalingId = wsUtbetaling.getUtbetalingId();
         this.valuta = transformValuta(wsUtbetaling.getValuta());
+        this.mottaker = new Mottaker(wsUtbetaling.getUtbetalingMottaker());
+    }
+
+    // CHECKSTYLE:ON
+
+    public Mottaker getMottaker() {
+        return mottaker;
     }
 
     public String getKontoNr() {

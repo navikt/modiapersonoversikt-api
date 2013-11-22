@@ -19,4 +19,6 @@ public class UtbetalingVMComparator implements Comparator<UtbetalingVM> {
             return utbetalingVM2.getUtbetalingsDato().compareTo(utbetalingVM1.getUtbetalingsDato());
         }
     }
+
+
 }
