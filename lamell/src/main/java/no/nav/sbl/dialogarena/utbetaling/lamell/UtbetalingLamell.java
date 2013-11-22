@@ -69,8 +69,8 @@ public class UtbetalingLamell extends Lerret {
 
             private boolean filtrerMottaker(ListItem<Utbetaling> item) {
                 String mottakerKode = item.getModelObject().getMottaker().getMottakertypeKode();
-                boolean visArbeidsgiver = filter.getArbeidsgiverCheckbox() && "arbeidsgiver".equalsIgnoreCase(mottakerKode);
-                boolean visBruker = filter.getBrukerCheckbox() && "bruker".equalsIgnoreCase(mottakerKode);
+                boolean visArbeidsgiver = filter.getVisArbeidsgiver() && "arbeidsgiver".equalsIgnoreCase(mottakerKode);
+                boolean visBruker = filter.getVisBruker() && "bruker".equalsIgnoreCase(mottakerKode);
                 return visArbeidsgiver || visBruker;
             }
         };

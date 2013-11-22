@@ -22,8 +22,8 @@ public class FilterForm extends Form<Void> {
     public FilterForm(String id, Filter filter, final FeedbackPanel feedbackpanel) {
         super(id);
 
-        add(createMottakerButton("brukerCheckbox", filter, feedbackpanel));
-        add(createMottakerButton("arbeidsgiverCheckbox", filter, feedbackpanel));
+        add(createMottakerButton("visBruker", filter, feedbackpanel));
+        add(createMottakerButton("visArbeidsgiver", filter, feedbackpanel));
 
         add(createDateRangePicker(filter));
         add(createAjaxFormSubmitBehaviour());
@@ -31,12 +31,11 @@ public class FilterForm extends Form<Void> {
 
     private AjaxCheckBox createMottakerButton(final String mottaker, Filter filter, final FeedbackPanel feedbackpanel) {
         return new AjaxCheckBox(mottaker, new PropertyModel<Boolean>(filter, mottaker)) {
-
             @Override
             protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
                 ajaxRequestTarget.add(feedbackpanel);
-                final Boolean value = (Boolean) getDefaultModelObject();
-                info("Trykket på " + mottaker + ". Verdi: " + value);
+                // final Boolean value = (Boolean) getDefaultModelObject();
+                // TODO Endre css på knappen når den blir trykket på
             }
         };
     }
