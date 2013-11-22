@@ -1,4 +1,9 @@
-package no.nav.sbl.dialogarena.utbetaling.domain;
+package no.nav.sbl.dialogarena.utbetaling.domain.builder;
+
+import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
+import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
+import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
+import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +14,7 @@ public class BilagBuilder {
 
     private String melding = "Bilagsmelding ... Skatt 14%";
     private List<PosteringsDetalj> posteringsDetaljer = new ArrayList<>();
+    private Periode periode = new Periode(new DateTime().minusDays(32), new DateTime().minusDays(2));
 
     public BilagBuilder() {
         posteringsDetaljer.addAll(asList(
@@ -16,6 +22,11 @@ public class BilagBuilder {
                 new PosteringsDetaljBuilder().createPosteringsDetalj(),
                 new PosteringsDetaljBuilder().createPosteringsDetalj()
         ));
+    }
+
+    public BilagBuilder setPeriode(Periode periode) {
+        this.periode = periode;
+        return this;
     }
 
     public BilagBuilder setMelding(String melding) {
@@ -29,7 +40,7 @@ public class BilagBuilder {
     }
 
     public Bilag createBilag() {
-        return new Bilag(melding, posteringsDetaljer);
+        return new Bilag(melding, posteringsDetaljer, periode);
     }
 
 }
