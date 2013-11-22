@@ -39,7 +39,6 @@ public class FilterForm extends Form {
                 ajaxRequestTarget.add(feedbackpanel);
                 final Boolean value = (Boolean) getDefaultModelObject();
                 info("Trykket på " + mottaker + ". Verdi: " + value);
-                LOG.info("Trykket på " + mottaker + " Verdi: " + value);
             }
         };
     }
