@@ -54,12 +54,24 @@ public class UtbetalingLamell extends Lerret {
         return new ListView<Utbetaling>("utbetalinger", ofList(utbetalingService.hentUtbetalinger(fnr))) {
             @Override
             protected void populateItem(ListItem<Utbetaling> item) {
+                item.add(new UtbetalingPanel("utbetaling", item.getModelObject()));
+                item.add(visibleIf(new Model<>(filtrerDatoer(item) && filtrerMottaker(item))));
+            }
+
+            private boolean filtrerDatoer(ListItem<Utbetaling> item) {
                 LocalDate utbetalingsDato = item.getModelObject().getUtbetalingsDato().toLocalDate();
                 LocalDate filterStartDato = filter.getStartDato().getObject();
                 LocalDate filterSluttDato = filter.getSluttDato().getObject();
 
-                item.add(new UtbetalingPanel("utbetaling", item.getModelObject()));
-                item.add(visibleIf(new Model<>(utbetalingsDato.isAfter(filterStartDato) && utbetalingsDato.isBefore(filterSluttDato))));
+                return utbetalingsDato.isAfter(filterStartDato)
+                        && utbetalingsDato.isBefore(filterSluttDato);
+            }
+
+            private boolean filtrerMottaker(ListItem<Utbetaling> item) {
+                String mottakerKode = item.getModelObject().getMottaker().getMottakertypeKode();
+                boolean visArbeidsgiver = filter.getArbeidsgiverCheckbox() && "arbeidsgiver".equalsIgnoreCase(mottakerKode);
+                boolean visBruker = filter.getBrukerCheckbox() && "bruker".equalsIgnoreCase(mottakerKode);
+                return visArbeidsgiver || visBruker;
             }
         };
     }
