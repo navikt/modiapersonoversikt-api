@@ -23,18 +23,25 @@ public class Bilag implements Serializable {
     public static final String SKATT = "skatt";
     private String melding;
     private List<PosteringsDetalj> posteringsDetaljer;
+    private Periode periode;
 
-    public Bilag(String melding, List<PosteringsDetalj> posteringsDetaljer) {
+    public Bilag(String melding, List<PosteringsDetalj> posteringsDetaljer, Periode periode) {
         this.melding = melding;
         this.posteringsDetaljer = posteringsDetaljer;
+        this.periode = periode;
     }
 
     public Bilag(WSBilag wsBilag) {
         melding = transformMelding(wsBilag);
         posteringsDetaljer = new ArrayList<>();
+        periode = new Periode(wsBilag.getBilagPeriode());
         for (WSPosteringsdetaljer wsPosteringsdetaljer : wsBilag.getPosteringsdetaljerListe()) {
             posteringsDetaljer.add(new PosteringsDetalj(wsPosteringsdetaljer));
         }
+    }
+
+    public Periode getPeriode() {
+        return periode;
     }
 
     public String getMelding() {

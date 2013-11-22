@@ -16,13 +16,12 @@ public class Periode implements Serializable {
     public static final String DELIMITER = "-";
     private DateTime startDato;
     private DateTime sluttDato;
-
-    private String periode;
+    private String periodeString;
 
     public Periode(DateTime periodeFomDato, DateTime periodeTomDato) {
         this.startDato = periodeFomDato;
         this.sluttDato = periodeTomDato;
-        this.periode = setPeriode(periodeFomDato, periodeTomDato, DELIMITER);
+        this.periodeString = setPeriode(periodeFomDato, periodeTomDato, DELIMITER);
     }
 
     public Periode(WSPeriode utbetalingsPeriode) {
@@ -38,7 +37,7 @@ public class Periode implements Serializable {
     }
 
     public String getPeriode() {
-        return periode;
+        return periodeString;
     }
 
     public DateTime getSluttDato() {
@@ -51,7 +50,7 @@ public class Periode implements Serializable {
 
     @Override
     public String toString() {
-       return periode;
+       return periodeString;
     }
 
     private String setPeriode(DateTime periodeFomDato, DateTime periodeTomDato, String delimiter) {
