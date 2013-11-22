@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSMottaker;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPeriode;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
@@ -39,6 +40,7 @@ public class WSUtbetalingTestData {
                 .withBruttobelop(1000.0)
                 .withStatusKode("12")
                 .withStatusBeskrivelse("Uføre")
+                .withUtbetalingMottaker(createTrygdetMottaker())
                 .withUtbetalingDato(now().minusDays(4))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 1, 23, 0, 0), new DateTime(2011, 1, 24, 0, 0)));
         utbetaling.withBilagListe(bilag1, bilag2);
@@ -57,6 +59,7 @@ public class WSUtbetalingTestData {
                 .withBruttobelop(2000.0)
                 .withStatusKode("12")
                 .withStatusBeskrivelse("Trygd")
+                .withUtbetalingMottaker(createTrygdetMottaker())
                 .withUtbetalingDato(now().minusDays(7))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 2, 23, 0, 0), new DateTime(2011, 2, 24, 0, 0)));
         utbetaling.withBilagListe(bilag1, bilag2);
@@ -74,6 +77,7 @@ public class WSUtbetalingTestData {
                 .withBruttobelop(3000.0)
                 .withValuta("kr")
                 .withStatusKode("12")
+                .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withStatusBeskrivelse("Barnepenger")
                 .withUtbetalingDato(now().minusDays(10))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 3, 23, 0, 0), new DateTime(2011, 3, 24, 0, 0)));
@@ -91,6 +95,7 @@ public class WSUtbetalingTestData {
                 .withBruttobelop(4000.0)
                 .withValuta("kr")
                 .withStatusKode("12")
+                .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withStatusBeskrivelse("Trygd")
                 .withUtbetalingDato(now().minusDays(40))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 4, 23, 0, 0), new DateTime(2011, 4, 24, 0, 0)));
@@ -109,6 +114,7 @@ public class WSUtbetalingTestData {
                 .withBruttobelop(5100.50)
                 .withStatusKode("12")
                 .withStatusBeskrivelse("APGrunnbeløp")
+                .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withUtbetalingDato(now().minusDays(84))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 5, 23, 0, 0), new DateTime(2011, 5, 24, 0, 0)));
         utbetaling.withBilagListe(bilag1, bilag2);
@@ -126,6 +132,7 @@ public class WSUtbetalingTestData {
                 .withBruttobelop(6000.0)
                 .withStatusKode("12")
                 .withStatusBeskrivelse("Pensjon")
+                .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withUtbetalingDato(now().minusDays(200))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
         utbetaling.withBilagListe(bilag1, bilag2);
@@ -142,6 +149,22 @@ public class WSUtbetalingTestData {
 
     public static WSBilag createBilag(String melding, WSPosteringsdetaljer... posteringsdetaljer) {
         return new WSBilag().withMeldingListe(new WSMelding().withMeldingtekst(melding)).withPosteringsdetaljerListe(posteringsdetaljer);
+    }
+
+    private static WSMottaker createTrygdetMottaker() {
+        WSMottaker wsMottaker = new WSMottaker();
+        wsMottaker.withMottakerId("4")
+                .withMottakertypeKode("brukerkode")
+                .withNavn("Mottaker");
+        return wsMottaker;
+    }
+
+    private static WSMottaker createArbeidsgiverMottaker() {
+        WSMottaker wsMottaker = new WSMottaker();
+        wsMottaker.withMottakerId("5")
+                .withMottakertypeKode("arbeidsgiverkode")
+                .withNavn("Arbeidsgiver");
+        return wsMottaker;
     }
 
 

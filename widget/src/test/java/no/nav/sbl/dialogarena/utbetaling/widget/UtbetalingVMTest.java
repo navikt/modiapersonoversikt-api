@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static no.nav.sbl.dialogarena.utbetaling.widget.MottakerComparator.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -67,5 +68,6 @@ public class UtbetalingVMTest {
         assertThat(utbetaling.getStartDate(), is(equalTo(utbetalingVM.getStartDato())));
         assertThat(utbetaling.getEndDate(), is(equalTo(utbetalingVM.getSluttDato())));
         assertThat(utbetaling.getUtbetalingId(), is(equalTo(utbetalingVM.getUtbetalingId())));
+        assertThat(MottakerComparator.equals(utbetaling.getMottaker(), utbetalingVM.getMottaker()), is(true));
     }
 }

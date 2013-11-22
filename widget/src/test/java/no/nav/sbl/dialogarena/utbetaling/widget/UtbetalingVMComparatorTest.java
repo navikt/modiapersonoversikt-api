@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Mottaker;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -48,6 +49,6 @@ public class UtbetalingVMComparatorTest {
     }
 
     private UtbetalingVM lagUtbetalingVM(DateTime utbetalingsDato) {
-        return new UtbetalingVM(new Utbetaling(null,  null, null, utbetalingsDato, 0, 0, "NOK", "123","1"));
+        return new UtbetalingVM(new Utbetaling(null,  null, null, utbetalingsDato, 0, 0, "NOK", "123","1", new Mottaker("7", "kode", "Arbeidsgiver")));
     }
 }

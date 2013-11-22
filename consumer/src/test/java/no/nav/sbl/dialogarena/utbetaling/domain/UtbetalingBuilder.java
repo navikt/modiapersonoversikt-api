@@ -18,6 +18,7 @@ public class UtbetalingBuilder {
     private String valuta = "kr";
     private String kontoNr = "1234 25 25814";
     private String utbetalingId = "1";
+    private Mottaker mottaker = new Mottaker("1", "12", "Arbeidsgiver");
 
     public UtbetalingBuilder() {
         bilag.addAll(asList(
@@ -25,6 +26,11 @@ public class UtbetalingBuilder {
                 new BilagBuilder().createBilag(),
                 new BilagBuilder().createBilag()
         ));
+    }
+
+    public UtbetalingBuilder setMottaker(Mottaker mottaker) {
+        this.mottaker = mottaker;
+        return this;
     }
 
     public UtbetalingBuilder setBilag(List<Bilag> bilag) {
@@ -73,7 +79,7 @@ public class UtbetalingBuilder {
     }
 
     public Utbetaling createUtbetaling() {
-        return new Utbetaling(bilag, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr, utbetalingId);
+        return new Utbetaling(bilag, periode, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr, utbetalingId, mottaker);
     }
 
 }
