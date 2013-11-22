@@ -6,6 +6,7 @@ import org.apache.commons.collections15.Transformer;
 import java.io.Serializable;
 
 public class PosteringsDetalj implements Serializable {
+
     private String hovedBeskrivelse;
     private String underBeskrivelse;
     private String kontoNr;
@@ -34,7 +35,6 @@ public class PosteringsDetalj implements Serializable {
         this.hovedBeskrivelse = wsPosteringsdetaljer.getKontoBeskrHoved();
         this.underBeskrivelse = wsPosteringsdetaljer.getKontoBeskrUnder();
         this.kontoNr = wsPosteringsdetaljer.getKontonr();
-
     }
 
     public String getHovedBeskrivelse() {
