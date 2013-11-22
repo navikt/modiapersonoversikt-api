@@ -30,7 +30,7 @@ public class UtbetalingLamell extends Lerret {
     public UtbetalingLamell(String id, String fnr) {
         super(id);
 
-        Mottaker mottaker = new Mottaker("test", "test", "test");
+//        Mottaker mottaker = new Mottaker("test", "test", "test");
 
         Filter filter = new Filter(FILTER_STARTDATO, FILTER_SLUTTDATO, true, true);
         ListView utbetalingListView = createUtbetalingListView(fnr);

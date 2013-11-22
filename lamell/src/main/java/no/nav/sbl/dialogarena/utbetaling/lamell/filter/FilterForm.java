@@ -24,14 +24,14 @@ public class FilterForm extends Form {
 
         this.filter = filter;
 
-        add(createMottakerButton("brukerCheckbox", feedbackpanel, "brukerLabel", "Bruker"));
-        add(createMottakerButton("arbeidsgiverCheckbox", feedbackpanel, "arbeidsgiverLabel", "Arbeidsgiver"));
+        add(createMottakerButton("brukerCheckbox", feedbackpanel));
+        add(createMottakerButton("arbeidsgiverCheckbox", feedbackpanel));
 
         add(createDateRangePicker());
         add(createAjaxFormSubmitBehaviour(utbetalingListView, feedbackpanel));
     }
 
-    private AjaxCheckBox createMottakerButton(final String mottaker, final FeedbackPanel feedbackpanel, String labelId, String labelTekst) {
+    private AjaxCheckBox createMottakerButton(final String mottaker, final FeedbackPanel feedbackpanel) {
         AjaxCheckBox checkBox = new AjaxCheckBox(mottaker, new PropertyModel<Boolean>(filter, mottaker)) {
 
             @Override

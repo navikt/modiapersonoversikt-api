@@ -4,14 +4,14 @@
         <div wicket:id="feedbackpanel"/>
         <form wicket:id="filterForm">
             <div>
-                <p>
-                    <label wicket:for="brukerCheckbox">Bruker</label>
+                <div class="knapp knappOn">
+                    <label  wicket:for="brukerCheckbox">Bruker</label>
                     <input type="checkbox" wicket:id="brukerCheckbox" />
-                </p>
-                <p>
-                    <label wicket:for="arbeidsgiverCheckbox">Arbeidsgiver</label>
+                </div>
+                <div >
+                    <label class="knapp knappOn" wicket:for="arbeidsgiverCheckbox">Arbeidsgiver</label>
                     <input type="checkbox" wicket:id="arbeidsgiverCheckbox" />
-                </p>
+                </div>
             </div>
             <div wicket:id="datoFilter"></div>
         </form>
