@@ -5,7 +5,9 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.joda.time.LocalDate;
 
-public class Filter {
+import java.io.Serializable;
+
+public class Filter implements Serializable {
 
     private IModel<LocalDate> startDato;
     private IModel<LocalDate> sluttDato;
