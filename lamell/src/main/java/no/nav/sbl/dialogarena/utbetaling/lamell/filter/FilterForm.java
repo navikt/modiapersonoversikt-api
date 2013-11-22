@@ -10,13 +10,10 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 
 public class FilterForm extends Form {
-    private static final Logger LOG = LoggerFactory.getLogger(FilterForm.class);
     private Filter filter;
 
     public FilterForm(String id, Filter filter, ListView utbetalingListView, final FeedbackPanel feedbackpanel) {
@@ -39,6 +36,9 @@ public class FilterForm extends Form {
                 ajaxRequestTarget.add(feedbackpanel);
                 final Boolean value = (Boolean) getDefaultModelObject();
                 info("Trykket på " + mottaker + ". Verdi: " + value);
+
+                //ajaxRequestTarget.add(utbetalingListView);
+
             }
         };
     }
