@@ -154,7 +154,7 @@ public class WSUtbetalingTestData {
     private static WSMottaker createTrygdetMottaker() {
         WSMottaker wsMottaker = new WSMottaker();
         wsMottaker.withMottakerId("4")
-                .withMottakertypeKode("brukerkode")
+                .withMottakertypeKode("bruker")
                 .withNavn("Bruker");
         return wsMottaker;
     }
@@ -162,7 +162,7 @@ public class WSUtbetalingTestData {
     private static WSMottaker createArbeidsgiverMottaker() {
         WSMottaker wsMottaker = new WSMottaker();
         wsMottaker.withMottakerId("5")
-                .withMottakertypeKode("arbeidsgiverkode")
+                .withMottakertypeKode("arbeidsgiver")
                 .withNavn("Arbeidsgiver");
         return wsMottaker;
     }
