@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 public class Filter implements Serializable {
 
+    public static final String ENDRET = "filter.endret";
+
     private IModel<LocalDate> startDato;
     private IModel<LocalDate> sluttDato;
     private Boolean brukerCheckbox = true;
