@@ -29,6 +29,7 @@ public class Utbetaling implements Serializable {
     private String kontoNr;
     private Mottaker mottaker;
 
+    //CHECKSTYLE:OFF
     public Utbetaling(List<Bilag> bilag, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker) {
         this.bilag = bilag;
         this.periode = periode;
@@ -43,6 +44,7 @@ public class Utbetaling implements Serializable {
 
         extractPeriodDates(periode);
     }
+    //CHECKSTYLE:ON
 
     public Utbetaling(WSUtbetaling wsUtbetaling) {
         for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
