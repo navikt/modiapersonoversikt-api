@@ -11,16 +11,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static org.apache.commons.lang3.StringUtils.join;
-import static org.joda.time.DateTime.parse;
-import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class Utbetaling implements Serializable {
 
     private final String utbetalingId;
     private List<Bilag> bilag = new ArrayList<>();
-    private DateTime startDate;
-    private DateTime endDate;
-    private String periode;
     private String statuskode;
     private DateTime utbetalingsDato;
     private double bruttoBelop;
@@ -28,11 +23,11 @@ public class Utbetaling implements Serializable {
     private String valuta;
     private String kontoNr;
     private Mottaker mottaker;
+    private Periode periode;
 
     //CHECKSTYLE:OFF
-    public Utbetaling(List<Bilag> bilag, String periode, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker) {
+    public Utbetaling(List<Bilag> bilag, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode) {
         this.bilag = bilag;
-        this.periode = periode;
         this.statuskode = statuskode;
         this.utbetalingsDato = utbetalingsDato;
         this.bruttoBelop = bruttoBelop;
@@ -41,8 +36,7 @@ public class Utbetaling implements Serializable {
         this.kontoNr = kontoNr;
         this.utbetalingId = utbetalingId;
         this.mottaker = mottaker;
-
-        extractPeriodDates(periode);
+        this.periode = periode;
     }
     //CHECKSTYLE:ON
 
@@ -55,11 +49,10 @@ public class Utbetaling implements Serializable {
         this.bruttoBelop = wsUtbetaling.getBruttobelop();
         this.nettoBelop = wsUtbetaling.getNettobelop();
         this.kontoNr = join(getKontoNrFromBilag(), ", ");
-        this.startDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato();
-        this.endDate = wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato();
         this.utbetalingId = wsUtbetaling.getUtbetalingId();
         this.valuta = transformValuta(wsUtbetaling.getValuta());
         this.mottaker = new Mottaker(wsUtbetaling.getUtbetalingMottaker());
+        this.periode = new Periode(wsUtbetaling.getUtbetalingsPeriode());
     }
 
     public Mottaker getMottaker() {
@@ -83,14 +76,14 @@ public class Utbetaling implements Serializable {
     }
 
     public DateTime getStartDate() {
-        return startDate;
+        return periode != null ? periode.getStartDato() : null;
     }
 
     public DateTime getEndDate() {
-        return endDate;
+        return periode != null ? periode.getSluttDato() : null;
     }
 
-    public String getPeriode() {
+    public Periode getPeriode() {
         return periode;
     }
 
@@ -132,30 +125,6 @@ public class Utbetaling implements Serializable {
             kontoNrSet.addAll(detalj.getKontoNrFromDetaljer());
         }
         return kontoNrSet;
-    }
-
-    private void extractPeriodDates(String periode) {
-        // ÅÅÅÅ.MM.DD-ÅÅÅÅ.MM.DD
-        if (periode != null) {
-            String[] datoer = periode.split("-");
-            if (datoer.length >= 1) {
-                try {
-                    startDate = parse(datoer[0], forPattern("YYYY.MM.dd"));
-                } catch (IllegalArgumentException e) {
-                    startDate = null;
-                }
-            }
-            if (datoer.length >= 2) {
-                try {
-                    endDate = parse(datoer[1], forPattern("YYYY.MM.dd"));
-                } catch (IllegalArgumentException e) {
-                    endDate = null;
-                }
-            }
-        } else {
-            startDate = null;
-            endDate = null;
-        }
     }
 
 }
