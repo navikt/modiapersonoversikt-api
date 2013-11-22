@@ -18,7 +18,7 @@ public class Mottaker implements Serializable {
     }
 
     public Mottaker(WSMottaker wsMottaker) {
-        if(wsMottaker == null) { return; }
+        if (wsMottaker == null) { return; }
         this.mottakerId = wsMottaker.getMottakerId();
         this.mottakertypeKode = wsMottaker.getMottakertypeKode();
         this.navn = wsMottaker.getNavn();

@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
-import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.not;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.POSTERINGS_DETALJ_KONTONR_TRANSFORMER;
+import static org.apache.commons.lang3.StringUtils.join;
 
 public class Bilag implements Serializable {
 
@@ -62,6 +62,6 @@ public class Bilag implements Serializable {
             strings.add(wsMelding.getMeldingtekst());
         }
 
-       return StringUtils.join(strings, ", ");
+       return join(strings, ", ");
     }
 }
