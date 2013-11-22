@@ -6,29 +6,30 @@ import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
+import org.joda.time.LocalDate;
 
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 
-public class FilterForm extends Form {
-    private Filter filter;
+public class FilterForm extends Form<Void> {
 
-    public FilterForm(String id, Filter filter, ListView utbetalingListView, final FeedbackPanel feedbackpanel) {
+    private static final LocalDate MIN_DATO =  LocalDate.now().minusYears(150);
+    private static final LocalDate MAKS_DATO = LocalDate.now();
+
+    public FilterForm(String id, Filter filter, final FeedbackPanel feedbackpanel) {
         super(id);
 
-        this.filter = filter;
+        add(createMottakerButton("brukerCheckbox", filter, feedbackpanel));
+        add(createMottakerButton("arbeidsgiverCheckbox", filter, feedbackpanel));
 
-        add(createMottakerButton("brukerCheckbox", feedbackpanel));
-        add(createMottakerButton("arbeidsgiverCheckbox", feedbackpanel));
-
-        add(createDateRangePicker());
-        add(createAjaxFormSubmitBehaviour(utbetalingListView));
+        add(createDateRangePicker(filter));
+        add(createAjaxFormSubmitBehaviour());
     }
 
-    private AjaxCheckBox createMottakerButton(final String mottaker, final FeedbackPanel feedbackpanel) {
+    private AjaxCheckBox createMottakerButton(final String mottaker, Filter filter, final FeedbackPanel feedbackpanel) {
         return new AjaxCheckBox(mottaker, new PropertyModel<Boolean>(filter, mottaker)) {
 
             @Override
@@ -36,28 +37,24 @@ public class FilterForm extends Form {
                 ajaxRequestTarget.add(feedbackpanel);
                 final Boolean value = (Boolean) getDefaultModelObject();
                 info("Trykket på " + mottaker + ". Verdi: " + value);
-
-                //ajaxRequestTarget.add(utbetalingListView);
-
             }
         };
     }
 
-    private AjaxFormSubmitBehavior createAjaxFormSubmitBehaviour(final ListView listView) {
-        return new AjaxFormSubmitBehavior("onsubmit") {
+    private DateRangePicker createDateRangePicker(Filter filter) {
+        DatePickerConfigurator datePickerConfigurator = datePickerConfigurator().withMaxDate("0d").build();
+        DateRangeModel dateRangeModel = new DateRangeModel(filter.getStartDato(), filter.getSluttDato());
+
+        return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, MIN_DATO, MAKS_DATO);
+    }
+
+    private AjaxFormSubmitBehavior createAjaxFormSubmitBehaviour() {
+        return new AjaxFormSubmitBehavior("onchange") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                target.add(listView);
+                send(getPage(), Broadcast.DEPTH, Filter.ENDRET);
             }
         };
-    }
-
-    private DateRangePicker createDateRangePicker() {
-        DatePickerConfigurator datePickerConfigurator = datePickerConfigurator()
-                .withMaxDate("0d")
-                .build();
-        return new DateRangePicker("datoFilter",
-                new DateRangeModel(filter.getStartDato(), filter.getSluttDato()), datePickerConfigurator, filter.getStartDato().getObject(), filter.getSluttDato().getObject());
     }
 
 }
