@@ -1,7 +1,18 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div class="utbetalinglamell">
+        <div wicket:id="feedbackpanel"/>
         <form wicket:id="filterForm">
+            <div>
+                <p>
+                    <label wicket:for="brukerCheckbox">Bruker</label>
+                    <input type="checkbox" wicket:id="brukerCheckbox" />
+                </p>
+                <p>
+                    <label wicket:for="arbeidsgiverCheckbox">Arbeidsgiver</label>
+                    <input type="checkbox" wicket:id="arbeidsgiverCheckbox" />
+                </p>
+            </div>
             <div wicket:id="datoFilter"></div>
         </form>
 

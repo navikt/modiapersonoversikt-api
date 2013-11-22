@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Mottaker;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.joda.time.LocalDate;
@@ -11,12 +10,22 @@ public class Filter implements Serializable {
 
     private IModel<LocalDate> startDato;
     private IModel<LocalDate> sluttDato;
-    private IModel<Mottaker> mottaker;
+    private Boolean brukerCheckbox = true;
+    private Boolean arbeidsgiverCheckbox = true;
 
-    public Filter(LocalDate startDato, LocalDate sluttDato, Mottaker mottaker) {
+    public Filter(LocalDate startDato, LocalDate sluttDato, Boolean brukerCheckbox, Boolean arbeidsgiverCheckbox) {
+        this.brukerCheckbox = brukerCheckbox;
+        this.arbeidsgiverCheckbox = arbeidsgiverCheckbox;
         this.startDato = new Model<>(startDato);
         this.sluttDato = new Model<>(sluttDato);
-        this.mottaker = new Model<>(mottaker);
+    }
+
+    public Boolean getBrukerCheckbox() {
+        return brukerCheckbox;
+    }
+
+    public Boolean getArbeidsgiverCheckbox() {
+        return arbeidsgiverCheckbox;
     }
 
     public IModel<LocalDate> getStartDato() {
@@ -27,7 +36,4 @@ public class Filter implements Serializable {
         return sluttDato;
     }
 
-    public IModel<Mottaker> getMottaker() {
-        return mottaker;
-    }
 }
