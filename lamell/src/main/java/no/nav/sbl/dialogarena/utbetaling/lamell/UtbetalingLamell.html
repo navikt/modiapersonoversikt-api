@@ -4,20 +4,22 @@
         <div wicket:id="feedbackpanel"/>
         <form wicket:id="filterForm">
             <div>
-                <div class="knapp knappOn">
-                    <label  wicket:for="brukerCheckbox">Bruker</label>
-                    <input type="checkbox" wicket:id="brukerCheckbox" />
+                <div>
+                    <label class="knapp knappOn" wicket:for="visBruker">Bruker</label>
+                    <input type="checkbox" wicket:id="visBruker" />
                 </div>
                 <div >
-                    <label class="knapp knappOn" wicket:for="arbeidsgiverCheckbox">Arbeidsgiver</label>
-                    <input type="checkbox" wicket:id="arbeidsgiverCheckbox" />
+                    <label class="knapp knappOn" wicket:for="visArbeidsgiver">Arbeidsgiver</label>
+                    <input type="checkbox" wicket:id="visArbeidsgiver" />
                 </div>
             </div>
             <div wicket:id="datoFilter"></div>
         </form>
 
-        <div wicket:id="utbetalinger">
-            <div wicket:id="utbetaling"></div>
+        <div wicket:id="utbetalingerContainer" >
+            <div wicket:id="utbetalinger">
+                <div wicket:id="utbetaling"></div>
+            </div>
         </div>
     </div>
 </wicket:panel>
