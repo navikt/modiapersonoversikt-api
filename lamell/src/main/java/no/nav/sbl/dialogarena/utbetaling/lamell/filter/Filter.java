@@ -9,24 +9,18 @@ import java.io.Serializable;
 
 public class Filter implements Serializable {
 
+    public static final String ENDRET = "filter.endret";
+
     private IModel<LocalDate> startDato;
     private IModel<LocalDate> sluttDato;
-    private Boolean brukerCheckbox = true;
-    private Boolean arbeidsgiverCheckbox = true;
+    private Boolean visBruker = true;
+    private Boolean visArbeidsgiver = true;
 
     public Filter(LocalDate startDato, LocalDate sluttDato, Boolean brukerCheckbox, Boolean arbeidsgiverCheckbox) {
-        this.brukerCheckbox = brukerCheckbox;
-        this.arbeidsgiverCheckbox = arbeidsgiverCheckbox;
+        this.visBruker = brukerCheckbox;
+        this.visArbeidsgiver = arbeidsgiverCheckbox;
         this.startDato = new Model<>(startDato);
         this.sluttDato = new Model<>(sluttDato);
-    }
-
-    public Boolean getBrukerCheckbox() {
-        return brukerCheckbox;
-    }
-
-    public Boolean getArbeidsgiverCheckbox() {
-        return arbeidsgiverCheckbox;
     }
 
     public IModel<LocalDate> getStartDato() {
@@ -34,7 +28,7 @@ public class Filter implements Serializable {
     }
 
     public DateTime getStartDate() {
-        return getStartDato().getObject().toDateTimeAtCurrentTime();
+        return startDato.getObject().toDateTimeAtCurrentTime();
     }
 
     public IModel<LocalDate> getSluttDato() {
@@ -42,7 +36,18 @@ public class Filter implements Serializable {
     }
 
     public DateTime getSluttDate() {
-        return getSluttDato().getObject().toDateTimeAtCurrentTime();
+        return sluttDato.getObject().toDateTimeAtCurrentTime();
+    }
+
+    public boolean filtrerPaaDatoer(LocalDate utbetalingsDato) {
+        return utbetalingsDato.isAfter(this.getStartDato().getObject()) &&
+                utbetalingsDato.isBefore(this.getSluttDato().getObject());
+    }
+
+    public boolean filtrerPaaMottaker(String mottakerkode) {
+        boolean visArbeidsgiver = this.visArbeidsgiver && "arbeidsgiver".equalsIgnoreCase(mottakerkode);
+        boolean visBruker = this.visBruker && "bruker".equalsIgnoreCase(mottakerkode);
+        return visArbeidsgiver || visBruker;
     }
 
 }

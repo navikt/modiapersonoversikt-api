@@ -1,27 +1,61 @@
+.knapp {
+  width: 150px;
+  height: 30px;
+  border-width: 1px;
+  border-style: solid;
+  text-align: center;
+  vertical-align: middle;
+  padding: 20px;
+  margin-bottom: 30px;
+  display: table-cell;
+}
+.knappOn {
+  background-color: #444444;
+  color: white;
+  border-color: #222222;
+}
+.knappOff {
+  background-color: #cccccc;
+  color: black;
+  border-color: #444444;
+}
+
+
+
 .utbetalinglamell {
-    margin: 0px;
-    padding: 0px;
-    .utbetaling-linje {
-        border: 1px solid black;
-        margin-top: 1em;
-        .dato{}
-        .body{
-            .main{
-                display: inline-block;
-                width: 69%;
-                border: 1px solid cyan;
-            }
-            .status{
-                display: inline-block;
-                width: 14%;
-                border: 1px solid red;
-            }
-            .dropdown{
-                display: inline-block;
-                width: 14%;
-                border: 1px solid blue;
-                text-align: center;
-            }
+  margin: 0px;
+  padding: 0px;
+  .utbetaling-linje {
+    border: 1px solid black;
+    margin-top: 1em;
+    .dato{}
+    .body{
+      .main{
+        display: inline-block;
+        width: 69%;
+        border: 1px solid cyan;
+        margin-bottom: 1em;
+      }
+      .status{
+        display: inline-block;
+        width: 14%;
+        border: 1px solid red;
+      }
+      .dropdown{
+        display: inline-block;
+        width: 14%;
+        border: 1px solid blue;
+        text-align: center;
+      }
+      .bilag-liste {
+        .bilag {
+          margin-bottom: 1em;
+          border: 1px solid blue;
+          .posteringsdetalj-liste {
+            border: 1px solid red;
+          }
         }
+      }
     }
+  }
 }

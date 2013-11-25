@@ -1,5 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.builder.BilagBuilder;
+import no.nav.sbl.dialogarena.utbetaling.domain.builder.PosteringsDetaljBuilder;
+import no.nav.sbl.dialogarena.utbetaling.domain.builder.UtbetalingBuilder;
+import no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
@@ -98,14 +102,14 @@ public class UtbetalingTest {
 
     @Test
     public void extractDatoFromNullPeriodeString() {
-        Utbetaling utbetaling = new UtbetalingBuilder().setPeriode(null).createUtbetaling();
+        Utbetaling utbetaling = new UtbetalingBuilder().setPeriode((Periode) null).createUtbetaling();
         assertThat(utbetaling.getStartDate(), is(nullValue()));
         assertThat(utbetaling.getEndDate(), is(nullValue()));
     }
 
     @Test
     public void skalTransformereUtbetaling() throws Exception {
-        WSUtbetaling wsUtbetaling = new WSUtbetalingTestData().createUtbetaling1();
+        WSUtbetaling wsUtbetaling = WSUtbetalingTestData.createUtbetaling1();
         String alderspensjon = "Alderspensjon";
         String kontoNr = "***REMOVED***";
 

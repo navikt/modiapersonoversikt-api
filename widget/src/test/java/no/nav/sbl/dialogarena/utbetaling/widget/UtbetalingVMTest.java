@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
+import no.nav.sbl.dialogarena.utbetaling.domain.builder.UtbetalingBuilder;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.Test;
 
@@ -61,7 +61,7 @@ public class UtbetalingVMTest {
         Utbetaling utbetaling = new UtbetalingBuilder().createUtbetaling();
         UtbetalingVM utbetalingVM = new UtbetalingVM(utbetaling);
         assertThat(utbetaling.getBeskrivelse(), is(equalTo(utbetalingVM.getBeskrivelse())));
-        assertThat(utbetaling.getPeriode(), is(equalTo(utbetalingVM.getPeriode())));
+        assertThat(utbetaling.getPeriode().getPeriode(), is(equalTo(utbetalingVM.getPeriode())));
         assertThat(utbetaling.getValuta(), is(equalTo(utbetalingVM.getValuta())));
         assertThat(utbetaling.getStatuskode(), is(equalTo(utbetalingVM.getStatus())));
         assertThat(utbetaling.getStartDate(), is(equalTo(utbetalingVM.getStartDato())));
