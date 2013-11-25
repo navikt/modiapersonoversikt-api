@@ -1,15 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal;
 
-import no.nav.sbl.dialogarena.aktorid.service.AktorService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
-import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.junit.Test;
@@ -31,10 +28,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @ContextConfiguration(classes = {KjerneinfoPepMockContext.class,
         HentPersonPanelMockContext.class,
         SykepengerWidgetMockContext.class,
-        SakOgBehandlingPortTypeMock.class,
         AktorPortTypeMock.class,
-        SoknaderService.class,
-        AktorService.class,
         UtbetalingConfig.class,
         UtbetalingPortTypeMock.class})
 public class SjekkForlateSideTest extends WicketPageTest {

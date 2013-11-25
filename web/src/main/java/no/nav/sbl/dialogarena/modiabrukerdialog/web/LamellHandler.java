@@ -61,7 +61,7 @@ public class LamellHandler implements Serializable {
             lamellPanel.goToLamell(LAMELL_KONTRAKTER);
         } else if(LAMELL_UTBETALINGER.equalsIgnoreCase(linkId)){
             lamellPanel.goToLamell(LAMELL_UTBETALINGER);
-        }else  {
+        } else {
             throw new ApplicationException("Widgetlenke med ukjent id <" + linkId + "> klikket');");
         }
     }

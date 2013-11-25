@@ -24,7 +24,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
-import no.nav.sbl.dialogarena.soknader.liste.SoknadListe;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLamell;
 import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
@@ -86,7 +85,6 @@ public class WicketApplication extends WebApplication {
                 .addConditionalJavascript(Intern.RESPOND_JS)
 		        .addLess(
                         BasePage.INTERN_LESS,
-                        SoknadListe.SOKNADSLISTE_LESS,
                         UtbetalingLamell.UTBETALING_LAMELL_LESS,
                         UtbetalingWidget.UTBETALING_WIDGET_LESS)
                 .addCss(

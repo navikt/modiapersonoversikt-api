@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.EndpointsConfig;
-import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -30,13 +29,10 @@ public class ServicesConfigTest {
     }
 
     @Inject
-    private SoknaderService soknaderService;
-
-    @Inject UtbetalingService utbetalingService;
+    private UtbetalingService utbetalingService;
 
     @Test
     public void shouldSetupAppContext() {
-        assertThat(soknaderService, is(notNullValue()));
         assertThat(utbetalingService, is(notNullValue()));
     }
 

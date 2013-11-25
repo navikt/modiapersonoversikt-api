@@ -77,11 +77,10 @@ public class MockSetupPage extends BasePage {
 
     private List<MockSetupModel> lagModeller() {
         return asList(
-                new MockSetupModel("1", "Sak og behandling", "start.sakogbehandling.withmock"),
-                new MockSetupModel("2", "AktørID", "start.aktor.withmock"),
-                new MockSetupModel("3", "Utbetaling", "start.utbetaling.withmock"),
-                new MockSetupModel("4", "Kodeverk", "start.kodeverk.withmock"),
-                new MockSetupModel("5", "Kjerneinfo", "start.kjerneinfo.withmock")
+                new MockSetupModel("1", "AktørID", "start.aktor.withmock"),
+                new MockSetupModel("2", "Utbetaling", "start.utbetaling.withmock"),
+                new MockSetupModel("3", "Kodeverk", "start.kodeverk.withmock"),
+                new MockSetupModel("4", "Kjerneinfo", "start.kjerneinfo.withmock")
         );
     }
 

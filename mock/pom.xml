@@ -44,11 +44,6 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
         </dependency>
 

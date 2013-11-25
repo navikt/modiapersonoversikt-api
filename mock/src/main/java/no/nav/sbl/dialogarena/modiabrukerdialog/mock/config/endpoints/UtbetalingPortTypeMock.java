@@ -51,16 +51,6 @@ public class UtbetalingPortTypeMock {
                 return utbetaling;
             }
 
-            private WSUtbetaling createUtbetalingMedLangBeskrivelse() {
-                WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Uføre", KONTO_NR),createPosteringsDetalj("En lang beskrivelse", KONTO_NR),createPosteringsDetalj("En enda lengre beskrivelse", KONTO_NR));
-                WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Foreldrepenger", KONTO_NR), createPosteringsDetalj("Skatt", KONTO_NR));
-                WSUtbetaling utbetaling = new WSUtbetaling();
-                utbetaling.withNettobelop(2000.0).withBruttobelop(2000.0).withStatusKode("12").withStatusBeskrivelse("Trygd")
-                        .withUtbetalingDato(now().minusDays(150)).withUtbetalingsPeriode(createPeriode(now().minusDays(180), now().minusDays(150)));
-                utbetaling.withBilagListe(bilag1, bilag2);
-                return utbetaling;
-            }
-
             private WSUtbetaling createDagpenger() {
                 WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Dagpenger", KONTO_NR));
                 WSBilag bilag2 = createBilag("bilag2", createPosteringsDetalj("Skatt", KONTO_NR));
@@ -89,7 +79,6 @@ public class UtbetalingPortTypeMock {
                 utbetaling.withBilagListe(bilag2);
                 return utbetaling;
             }
-
 
             private WSUtbetaling createAlderspensjon() {
                 WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Alderpensjon", KONTO_NR));

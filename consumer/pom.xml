@@ -63,11 +63,6 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>soknader-liste</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>no.nav</groupId>
             <artifactId>personsok-consumer</artifactId>
         </dependency>
@@ -120,11 +115,6 @@
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>sykmeldingsperioder-consumer</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
         </dependency>
 
         <dependency>
@@ -223,12 +213,6 @@
             <version>${project.version}</version>
             <scope>test</scope>
             <type>test-jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>soknader-consumer</artifactId>
-            <scope>test</scope>
         </dependency>
 
         <dependency>

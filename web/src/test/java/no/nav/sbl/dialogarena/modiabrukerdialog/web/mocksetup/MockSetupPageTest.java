@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
-import no.nav.sbl.dialogarena.aktorid.service.AktorService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
@@ -10,7 +8,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidget
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
-import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,10 +22,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @ContextConfiguration(classes = {KjerneinfoPepMockContext.class,
         HentPersonPanelMockContext.class,
         SykepengerWidgetMockContext.class,
-        SakOgBehandlingPortTypeMock.class,
         AktorPortTypeMock.class,
-        SoknaderService.class,
-        AktorService.class,
         UtbetalingConfig.class,
         UtbetalingPortTypeMock.class})
 @RunWith(SpringJUnit4ClassRunner.class)

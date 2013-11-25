@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
-import no.nav.sbl.dialogarena.soknader.liste.config.SoknaderConfig;
 import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -10,8 +9,7 @@ import org.springframework.context.annotation.Import;
  * til sine komponenter
  */
 @Configuration
-@Import({SoknaderConfig.class,
-        UtbetalingConfig.class})
+@Import({UtbetalingConfig.class})
 public class ServicesConfig {
 
 }

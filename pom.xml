@@ -30,7 +30,6 @@
         <slf4j.version>1.7.5</slf4j.version>
         <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
-        <sakogbehandling.tjeneste.version>1.0.8</sakogbehandling.tjeneste.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.0</utbetaling.tjenestespesifikasjon.version>
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
@@ -181,12 +180,6 @@
                 <groupId>net.sourceforge.collections</groupId>
                 <artifactId>collections-generic</artifactId>
                 <version>4.01</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
-                <version>${sakogbehandling.tjeneste.version}</version>
             </dependency>
 
             <dependency>
