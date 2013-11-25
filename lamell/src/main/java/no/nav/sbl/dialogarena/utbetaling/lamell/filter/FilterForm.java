@@ -15,7 +15,7 @@ import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.Da
 
 public class FilterForm extends Form<Void> {
 
-    private static final int AAR_TILBAKE = 100;
+    private static final int AAR_TILBAKE = 3;
 
     public FilterForm(String id, Filter filter) {
         super(id);

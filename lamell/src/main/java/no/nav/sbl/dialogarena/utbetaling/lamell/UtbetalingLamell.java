@@ -59,9 +59,9 @@ public class UtbetalingLamell extends Lerret {
         return new ListView<Utbetaling>("utbetalinger", ofList(utbetalingService.hentUtbetalinger(fnr, startDato, sluttDato))) {
             @Override
             protected void populateItem(ListItem<Utbetaling> item) {
-                item.add(new UtbetalingPanel("utbetaling", item.getModelObject()));
-
                 Utbetaling utbetaling = item.getModelObject();
+
+                item.add(new UtbetalingPanel("utbetaling", utbetaling));
 
                 item.add(visibleIf(
                         new Model<>(filter.filtrerPaaDatoer(utbetaling.getUtbetalingsDato().toLocalDate()) &&
