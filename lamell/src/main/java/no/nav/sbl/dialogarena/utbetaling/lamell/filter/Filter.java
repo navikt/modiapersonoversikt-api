@@ -22,20 +22,23 @@ public class Filter implements Serializable {
         this.sluttDato = new Model<>(sluttDato);
     }
 
-    public Boolean getVisBruker() {
-        return visBruker;
-    }
-
-    public Boolean getVisArbeidsgiver() {
-        return visArbeidsgiver;
-    }
-
     public IModel<LocalDate> getStartDato() {
         return startDato;
     }
 
     public IModel<LocalDate> getSluttDato() {
         return sluttDato;
+    }
+
+    public boolean filtrerPaaDatoer(LocalDate utbetalingsDato) {
+        return utbetalingsDato.isAfter(this.getStartDato().getObject()) &&
+                utbetalingsDato.isBefore(this.getStartDato().getObject());
+    }
+
+    public boolean filtrerPaaMottaker(String mottakerkode) {
+        boolean visArbeidsgiver = this.visArbeidsgiver && "arbeidsgiver".equalsIgnoreCase(mottakerkode);
+        boolean visBruker = this.visBruker && "bruker".equalsIgnoreCase(mottakerkode);
+        return visArbeidsgiver || visBruker;
     }
 
 }

@@ -32,10 +32,7 @@ public class FilterForm extends Form<Void> {
     private AjaxCheckBox createMottakerButton(final String mottaker, Filter filter, final FeedbackPanel feedbackpanel) {
         return new AjaxCheckBox(mottaker, new PropertyModel<Boolean>(filter, mottaker)) {
             @Override
-            protected void onUpdate(AjaxRequestTarget ajaxRequestTarget) {
-                ajaxRequestTarget.add(feedbackpanel);
-                // final Boolean value = (Boolean) getDefaultModelObject();
-                // TODO Endre css på knappen når den blir trykket på
+            protected void onUpdate(AjaxRequestTarget target) {
             }
         };
     }
