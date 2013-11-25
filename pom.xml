@@ -34,7 +34,6 @@
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.2-SPRINGFIX</kjerneinfo.versjon>
-        <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>2.0.3</utbetaling.version>
     </properties>
 
@@ -58,25 +57,6 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>modiabrukerdialog-consumer</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>soknader-liste</artifactId>
-                <version>${soknader.liste.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>soknader-consumer</artifactId>
-                <version>${soknader.liste.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>soknader-consumer</artifactId>
-                <version>${soknader.liste.version}</version>
-                <type>test-jar</type>
             </dependency>
 
             <dependency>

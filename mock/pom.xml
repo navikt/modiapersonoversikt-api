@@ -54,11 +54,6 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>soknader-liste</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>no.nav</groupId>
             <artifactId>brukerprofil-consumer</artifactId>
         </dependency>
@@ -104,26 +99,5 @@
         </dependency>
 
     </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>analyze</id>
-                        <goals>
-                            <goal>analyze-only</goal>
-                        </goals>
-                        <configuration>
-                            <usedDependencies>
-                                <usedDependency>no.nav.sbl.dialogarena:soknader-liste</usedDependency>
-                            </usedDependencies>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 
 </project>
