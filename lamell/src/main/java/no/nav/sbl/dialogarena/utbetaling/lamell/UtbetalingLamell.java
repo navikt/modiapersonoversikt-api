@@ -34,14 +34,19 @@ public class UtbetalingLamell extends Lerret {
 
     public UtbetalingLamell(String id, String fnr) {
         super(id);
-
-        filter = new Filter(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
-        utbetalingerContainer = (MarkupContainer) new WebMarkupContainer("utbetalingerContainer").add(createUtbetalingListView(fnr)).setOutputMarkupId(true);
         setOutputMarkupId(true);
 
+        filter = new Filter(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
+
+        utbetalingerContainer = new WebMarkupContainer("utbetalingerContainer").add(createUtbetalingListView(fnr));
+        utbetalingerContainer.setOutputMarkupId(true);
+
+        FeedbackPanel feedbackpanel = new FeedbackPanel("feedbackpanel");
+        feedbackpanel.setOutputMarkupId(true);
+
         add(
-                new FeedbackPanel("feedbackpanel").setOutputMarkupId(true),
-                new FilterForm("filterForm", filter, (FeedbackPanel) new FeedbackPanel("feedbackpanel").setOutputMarkupId(true)),
+                feedbackpanel,
+                new FilterForm("filterForm", filter),
                 utbetalingerContainer
         );
     }
