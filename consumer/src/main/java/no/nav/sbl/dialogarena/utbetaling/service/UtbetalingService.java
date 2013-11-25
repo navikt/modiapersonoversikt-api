@@ -9,21 +9,19 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeBaksystemIkk
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeForMangeForekomster;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkkeFunnet;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeUgyldigDato;
-import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.joda.time.DateTime.now;
-
 public class UtbetalingService {
 
     @Inject
-    private UtbetalingPortType utbetalingPortType;
+    private no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling utbetaling;
 
-    public List<Utbetaling> hentUtbetalinger(String fnr) {
-        return transformUtbetalinger(getWSUtbetalinger(fnr));
+    public List<Utbetaling> hentUtbetalinger(String fnr, DateTime startDato, DateTime sluttDato) {
+        return transformUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato));
     }
 
     private List<Utbetaling> transformUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
@@ -34,9 +32,9 @@ public class UtbetalingService {
         return utbetalinger;
     }
 
-    private List<WSUtbetaling> getWSUtbetalinger(String fnr) {
+    private List<WSUtbetaling> getWSUtbetalinger(String fnr, DateTime startDato, DateTime sluttDato) {
         try {
-            return utbetalingPortType.hentUtbetalingListe(createRequest(fnr)).getUtbetalingListe();
+            return utbetaling.hentUtbetalingListe(createRequest(fnr, startDato, sluttDato)).getUtbetalingListe();
         } catch (HentUtbetalingListeMottakerIkkeFunnet hentUtbetalingListeMottakerIkkeFunnet) {
             throw new ApplicationException("Utbetalingservice : Mottaker ikke funnet", hentUtbetalingListeMottakerIkkeFunnet);
         } catch (HentUtbetalingListeForMangeForekomster hentUtbetalingListeForMangeForekomster) {
@@ -50,10 +48,10 @@ public class UtbetalingService {
         }
     }
 
-    private WSHentUtbetalingListeRequest createRequest(String fnr) {
+    private WSHentUtbetalingListeRequest createRequest(String fnr, DateTime startDato, DateTime sluttDato) {
         return new WSHentUtbetalingListeRequest()
                 .withMottaker(fnr)
-                .withPeriode(new WSPeriode().withFom(now().minusMonths(3)).withTom(now()));
+                .withPeriode(new WSPeriode().withFom(startDato).withTom(sluttDato));
     }
 
 }

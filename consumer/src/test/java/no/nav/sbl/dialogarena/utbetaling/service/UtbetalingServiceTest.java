@@ -10,7 +10,7 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeBaksystemIkk
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeForMangeForekomster;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkkeFunnet;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeUgyldigDato;
-import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
+import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -28,39 +28,39 @@ public class UtbetalingServiceTest {
     @InjectMocks
     private UtbetalingService service = new UtbetalingService();
     @Mock
-    private UtbetalingPortType utbetalingPortType;
+    private no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling utbetaling;
 
     String fnr = "***REMOVED***";
     WSUtbetalingTestData data = new WSUtbetalingTestData();
 
     @Test(expected = ApplicationException.class)
     public void testExceptions_hentUtbetalingListeMottakerIkkeFunnet() throws Exception {
-        when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeMottakerIkkeFunnet());
-        service.hentUtbetalinger(fnr);
+        when(utbetaling.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeMottakerIkkeFunnet());
+        service.hentUtbetalinger(fnr, new DateTime(), new DateTime());
     }
 
     @Test(expected = ApplicationException.class)
     public void testExceptions_HentUtbetalingListeForMangeForekomster() throws Exception {
-        when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeForMangeForekomster());
-        service.hentUtbetalinger(fnr);
+        when(utbetaling.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeForMangeForekomster());
+        service.hentUtbetalinger(fnr, new DateTime(), new DateTime());
     }
 
     @Test(expected = ApplicationException.class)
     public void testExceptions_HentUtbetalingListeBaksystemIkkeTilgjengelig() throws Exception {
-        when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeBaksystemIkkeTilgjengelig());
-        service.hentUtbetalinger(fnr);
+        when(utbetaling.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeBaksystemIkkeTilgjengelig());
+        service.hentUtbetalinger(fnr, new DateTime(), new DateTime());
     }
 
     @Test(expected = ApplicationException.class)
     public void testExceptions_HentUtbetalingListeUgyldigDato() throws Exception {
-        when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeUgyldigDato());
-        service.hentUtbetalinger(fnr);
+        when(utbetaling.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeUgyldigDato());
+        service.hentUtbetalinger(fnr, new DateTime(), new DateTime());
     }
 
     @Test(expected = ApplicationException.class)
     public void testExceptions_UkjentFeil() throws Exception {
-        when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new RuntimeException());
-        service.hentUtbetalinger(fnr);
+        when(utbetaling.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new RuntimeException());
+        service.hentUtbetalinger(fnr, new DateTime(), new DateTime());
     }
 
     @Test
@@ -68,8 +68,8 @@ public class UtbetalingServiceTest {
         WSUtbetaling wsUtbetaling = data.createUtbetaling1();
         String alderspensjon = "Alderspensjon";
 
-        when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenReturn(new WSHentUtbetalingListeResponse().withUtbetalingListe(wsUtbetaling));
-        Utbetaling u = service.hentUtbetalinger(fnr).get(0);
+        when(utbetaling.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenReturn(new WSHentUtbetalingListeResponse().withUtbetalingListe(wsUtbetaling));
+        Utbetaling u = service.hentUtbetalinger(fnr, new DateTime(), new DateTime()).get(0);
 
         assertThat(u.getUtbetalingsDato(), is(wsUtbetaling.getUtbetalingDato()));
         assertThat(u.getStartDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato()));

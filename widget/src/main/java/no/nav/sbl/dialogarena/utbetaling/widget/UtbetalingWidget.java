@@ -11,6 +11,8 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_SLUTTDATO;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_STARTDATO;
 import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingVM.UTBETALING_UTBETALINGVM_TRANSFORMER;
 
 public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
@@ -24,7 +26,7 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
 
     public UtbetalingWidget(String id, String initial, String fnr) {
         super(id, initial);
-        setDefaultModel(new CompoundPropertyModel<Object>(transformUtbetalingToVM(utbetalingService.hentUtbetalinger(fnr))));
+        setDefaultModel(new CompoundPropertyModel<Object>(transformUtbetalingToVM(utbetalingService.hentUtbetalinger(fnr, DEFAULT_STARTDATO.toDateTimeAtCurrentTime(), DEFAULT_SLUTTDATO.toDateTimeAtCurrentTime()))));
     }
 
     private List<UtbetalingVM> transformUtbetalingToVM(List<Utbetaling> utbetalinger) {
