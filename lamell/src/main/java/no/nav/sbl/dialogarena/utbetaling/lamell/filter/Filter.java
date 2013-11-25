@@ -11,10 +11,13 @@ public class Filter implements Serializable {
 
     public static final String ENDRET = "filter.endret";
 
+    private static final String MOTTAKERKODE_ARBEIDSGIVER = "arbeidsgiver";
+    private static final String MOTTAKERKODE_BRUKER = "bruker";
+
     private IModel<LocalDate> startDato;
     private IModel<LocalDate> sluttDato;
-    private Boolean visBruker = true;
-    private Boolean visArbeidsgiver = true;
+    private Boolean visBruker;
+    private Boolean visArbeidsgiver;
 
     public Filter(LocalDate startDato, LocalDate sluttDato, Boolean brukerCheckbox, Boolean arbeidsgiverCheckbox) {
         this.visBruker = brukerCheckbox;
@@ -45,8 +48,8 @@ public class Filter implements Serializable {
     }
 
     public boolean filtrerPaaMottaker(String mottakerkode) {
-        boolean visArbeidsgiver = this.visArbeidsgiver && "arbeidsgiver".equalsIgnoreCase(mottakerkode);
-        boolean visBruker = this.visBruker && "bruker".equalsIgnoreCase(mottakerkode);
+        boolean visArbeidsgiver = this.visArbeidsgiver && MOTTAKERKODE_ARBEIDSGIVER.equalsIgnoreCase(mottakerkode);
+        boolean visBruker = this.visBruker && MOTTAKERKODE_BRUKER.equalsIgnoreCase(mottakerkode);
         return visArbeidsgiver || visBruker;
     }
 
