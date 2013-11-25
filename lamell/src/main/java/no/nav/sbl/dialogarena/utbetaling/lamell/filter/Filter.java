@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
@@ -32,8 +33,16 @@ public class Filter implements Serializable {
         return startDato;
     }
 
+    public DateTime getStartDate() {
+        return getStartDato().getObject().toDateTimeAtCurrentTime();
+    }
+
     public IModel<LocalDate> getSluttDato() {
         return sluttDato;
+    }
+
+    public DateTime getSluttDate() {
+        return getSluttDato().getObject().toDateTimeAtCurrentTime();
     }
 
 }
