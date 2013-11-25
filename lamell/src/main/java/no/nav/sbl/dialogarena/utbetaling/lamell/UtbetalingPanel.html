@@ -8,15 +8,25 @@
             <div class="main">
                 <div wicket:id="beskrivelse">[]</div>
                 <div wicket:id="belop">[]</div>
-                <label>Konto: </label><span wicket:id="kontonr">[]</span>
-                <label>Periode: </label><span wicket:id="periode">[]</span>
+                <label><wicket:message key="utbetaling.lamell.konto"/>: </label><span wicket:id="kontonr">[]</span>
+                <label><wicket:message key="utbetaling.lamell.periode"/>: </label><span wicket:id="periode">[]</span>
                 <span wicket:id="mottaker"/>
             </div>
             <div class="status">
                 <div wicket:id="status">[]</div>
             </div>
             <button wicket:id="expandbutton" class="dropdown">V</button>
-            <span wicket:id="hidden" ></span>
+            <div wicket:id="bilag-wrapper">
+                <div wicket:id="bilag-liste" class="bilag-liste">
+                    <div class="bilag">
+                        <p wicket:id="melding">[]</p>
+                        <div wicket:id="posteringsdetalj-liste" class="posteringsdetalj-liste">
+                            <p wicket:id="hovedbeskrivelse">[]</p>
+                            <p><wicket:message key="utbetaling.lamell.konto"/>: <span wicket:id="kontonr">[]</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
