@@ -32,7 +32,7 @@ public class Filter implements Serializable {
 
     public boolean filtrerPaaDatoer(LocalDate utbetalingsDato) {
         return utbetalingsDato.isAfter(this.getStartDato().getObject()) &&
-                utbetalingsDato.isBefore(this.getStartDato().getObject());
+                utbetalingsDato.isBefore(this.getSluttDato().getObject());
     }
 
     public boolean filtrerPaaMottaker(String mottakerkode) {
