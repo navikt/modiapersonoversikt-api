@@ -25,8 +25,10 @@ import static org.joda.time.DateTime.now;
 public class UtbetalingLamell extends Lerret {
 
     public static final PackageResourceReference UTBETALING_LAMELL_LESS = new PackageResourceReference(UtbetalingLamell.class, "utbetaling.less");
+
     private static final LocalDate FILTER_STARTDATO = now().minusMonths(3).toLocalDate();
     private static final LocalDate FILTER_SLUTTDATO = now().toLocalDate();
+
     @Inject
     private UtbetalingService utbetalingService;
 
@@ -42,7 +44,9 @@ public class UtbetalingLamell extends Lerret {
 
         FeedbackPanel feedbackpanel = new FeedbackPanel("feedbackpanel");
         feedbackpanel.setOutputMarkupId(true);
+
         setOutputMarkupId(true);
+
         add(
                 feedbackpanel,
                 new FilterForm("filterForm", filter, feedbackpanel),
@@ -55,23 +59,12 @@ public class UtbetalingLamell extends Lerret {
             @Override
             protected void populateItem(ListItem<Utbetaling> item) {
                 item.add(new UtbetalingPanel("utbetaling", item.getModelObject()));
-                item.add(visibleIf(new Model<>(filtrerDatoer(item) && filtrerMottaker(item))));
-            }
 
-            private boolean filtrerDatoer(ListItem<Utbetaling> item) {
-                LocalDate utbetalingsDato = item.getModelObject().getUtbetalingsDato().toLocalDate();
-                LocalDate filterStartDato = filter.getStartDato().getObject();
-                LocalDate filterSluttDato = filter.getSluttDato().getObject();
+                Utbetaling utbetaling = item.getModelObject();
 
-                return utbetalingsDato.isAfter(filterStartDato)
-                        && utbetalingsDato.isBefore(filterSluttDato);
-            }
-
-            private boolean filtrerMottaker(ListItem<Utbetaling> item) {
-                String mottakerKode = item.getModelObject().getMottaker().getMottakertypeKode();
-                boolean visArbeidsgiver = filter.getVisArbeidsgiver() && "arbeidsgiver".equalsIgnoreCase(mottakerKode);
-                boolean visBruker = filter.getVisBruker() && "bruker".equalsIgnoreCase(mottakerKode);
-                return visArbeidsgiver || visBruker;
+                item.add(visibleIf(
+                        new Model<>(filter.filtrerPaaDatoer(utbetaling.getUtbetalingsDato().toLocalDate()) &&
+                                filter.filtrerPaaMottaker(utbetaling.getMottaker().getMottakertypeKode()))));
             }
         };
     }
