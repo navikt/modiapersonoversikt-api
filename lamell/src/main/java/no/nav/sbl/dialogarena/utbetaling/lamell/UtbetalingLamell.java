@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
@@ -52,7 +53,10 @@ public class UtbetalingLamell extends Lerret {
     }
 
     private ListView<Utbetaling> createUtbetalingListView(final String fnr) {
-        return new ListView<Utbetaling>("utbetalinger", ofList(utbetalingService.hentUtbetalinger(fnr, filter.getStartDate(), filter.getSluttDate()))) {
+        DateTime startDato = filter.getStartDato().getObject().toDateTimeAtStartOfDay();
+        DateTime sluttDato = filter.getSluttDato().getObject().toDateTimeAtStartOfDay();
+
+        return new ListView<Utbetaling>("utbetalinger", ofList(utbetalingService.hentUtbetalinger(fnr, startDato, sluttDato))) {
             @Override
             protected void populateItem(ListItem<Utbetaling> item) {
                 item.add(new UtbetalingPanel("utbetaling", item.getModelObject()));
