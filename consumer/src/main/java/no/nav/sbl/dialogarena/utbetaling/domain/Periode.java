@@ -13,6 +13,7 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 
 
 public class Periode implements Serializable {
+
     public static final String DELIMITER = "-";
     private DateTime startDato;
     private DateTime sluttDato;
@@ -56,9 +57,9 @@ public class Periode implements Serializable {
     private String setPeriode(DateTime periodeFomDato, DateTime periodeTomDato, String delimiter) {
         // ÅÅÅÅ.MM.DD-ÅÅÅÅ.MM.DD
         DateFormat format = new SimpleDateFormat("yyyy.MM.dd");
-        Date date = periodeFomDato.toDate();
-        Date date1 = periodeTomDato.toDate();
-        return format.format(date) + delimiter + format.format(date1);
+        Date fraDato = periodeFomDato.toDate();
+        Date tilDato = periodeTomDato.toDate();
+        return format.format(fraDato) + delimiter + format.format(tilDato);
     }
 
     private void extractPeriodDates(String periode, String delimiter) {
