@@ -5,13 +5,14 @@ import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
-import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.PropertyModel;
 import org.joda.time.LocalDate;
 
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static org.joda.time.LocalDate.now;
 
 public class FilterForm extends Form {
@@ -25,20 +26,27 @@ public class FilterForm extends Form {
 
         this.filter = filter;
 
-        add(createMottakerButton("visBruker"));
-        add(createMottakerButton("visArbeidsgiver"));
+        add(
+                createMottakerButton("visBruker"),
+                createMottakerButton("visArbeidsgiver"),
+                createDateRangePicker()
+        );
 
-        add(createDateRangePicker());
-
-        add(createAjaxFormSubmitBehaviour());
+        add(createDateRangePickerChangeBehaviour());
     }
 
-    private AjaxCheckBox createMottakerButton(final String mottaker) {
-        return new AjaxCheckBox(mottaker, new PropertyModel<Boolean>(filter, mottaker)) {
+    private AjaxLink<Boolean> createMottakerButton(final String mottaker) {
+        AjaxLink<Boolean> mottakerButton = new AjaxLink<Boolean>(mottaker, new PropertyModel<Boolean>(filter, mottaker)) {
             @Override
-            protected void onUpdate(AjaxRequestTarget target) {
+            public void onClick(AjaxRequestTarget target) {
+                setModelObject(!getModelObject());
+                sendFilterEndretEvent();
+                target.add(this);
             }
         };
+        mottakerButton.add(hasCssClassIf("valgt", mottakerButton.getModel()));
+
+        return mottakerButton;
     }
 
     private DateRangePicker createDateRangePicker() {
@@ -56,7 +64,7 @@ public class FilterForm extends Form {
         return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }
 
-    private AjaxFormSubmitBehavior createAjaxFormSubmitBehaviour() {
+    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour() {
         return new AjaxFormSubmitBehavior("onchange") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
