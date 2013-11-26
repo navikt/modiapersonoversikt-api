@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getForeldrepengerServiceBiMock;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getSykepengerServiceBiMock;
@@ -27,7 +28,6 @@ public class SykmeldingsperioderPanelConfigResolver {
 
     private ForeldrepengerServiceBi foreldrepengerServiceBiMock;
     private SykepengerServiceBi sykepengerServiceBiMock;
-    private static final String KEY = "start.kjerneinfo.withmock";
 
     public SykmeldingsperioderPanelConfigResolver() {
         foreldrepengerServiceBiMock = getForeldrepengerServiceBiMock();
@@ -43,7 +43,7 @@ public class SykmeldingsperioderPanelConfigResolver {
     public SykepengerWidgetService sykepengerWidgetService() {
         SykepengerWidgetService defaultWidgetService = new SykmeldingsperioderPanelConfigImpl().sykepengerWidgetService();
         SykepengerWidgetService mockWidgetService = getSykepengerWidgetServiceMock();
-        return createSwitcher(defaultWidgetService, mockWidgetService, KEY, SykepengerWidgetService.class);
+        return createSwitcher(defaultWidgetService, mockWidgetService, KJERNEINFO_KEY, SykepengerWidgetService.class);
     }
 
     @Bean
@@ -61,11 +61,11 @@ public class SykmeldingsperioderPanelConfigResolver {
     }
 
     private ForeldrepengerServiceBi getForeldrepengerServiceBi() {
-        return createSwitcher(foreldrepengerServiceBi, foreldrepengerServiceBiMock, KEY, ForeldrepengerServiceBi.class);
+        return createSwitcher(foreldrepengerServiceBi, foreldrepengerServiceBiMock, KJERNEINFO_KEY, ForeldrepengerServiceBi.class);
     }
 
     private SykepengerServiceBi getSykepengerServiceBi() {
-        return createSwitcher(sykepengerServiceBi, sykepengerServiceBiMock, KEY, SykepengerServiceBi.class);
+        return createSwitcher(sykepengerServiceBi, sykepengerServiceBiMock, KJERNEINFO_KEY, SykepengerServiceBi.class);
     }
 
 }

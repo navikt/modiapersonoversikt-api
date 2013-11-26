@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Import;
 
 import javax.inject.Inject;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.BehandleBrukerprofilServiceBiMock.getBehandleBrukerprofilServiceBiMock;
 
@@ -24,14 +25,12 @@ public class BehandleBrukerprofilConsumerConfigResolver {
     @Inject
     private BehandleBrukerprofilPortType selfTestBehandleBrukerprofilPortType;
 
-
     @Bean
     public BehandleBrukerprofilServiceBi behandleBrukerprofilServiceBi() {
-        String key = "start.kjerneinfo.withmock";
         BehandleBrukerprofilServiceBi defaultBi = new BehandleBrukerProfilPortTypeImpl(behandleBrukerprofilPortType, selfTestBehandleBrukerprofilPortType).behandleBrukerprofilServiceBi();
         BehandleBrukerprofilServiceBi alternateBi = getBehandleBrukerprofilServiceBiMock();
 
-        return createSwitcher(defaultBi, alternateBi, key, BehandleBrukerprofilServiceBi.class);
+        return createSwitcher(defaultBi, alternateBi, KJERNEINFO_KEY, BehandleBrukerprofilServiceBi.class);
     }
 
 }

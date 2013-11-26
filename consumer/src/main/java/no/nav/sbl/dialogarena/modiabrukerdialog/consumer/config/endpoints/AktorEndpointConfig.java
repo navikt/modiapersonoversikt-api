@@ -13,7 +13,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 @Configuration
 public class AktorEndpointConfig {
 
-    String key = "start.aktor.withmock";
+    public static final String AKTOR_KEY = "start.aktor.withmock";
+
     @Value("${aktor.url}")
     private String aktorEndpoint;
 
@@ -22,13 +23,13 @@ public class AktorEndpointConfig {
 //        AktoerPortType portType = new AktorPortTypeImpl(aktorEndpoint).aktorPortType();
         AktoerPortType portTypeMock = new AktorPortTypeMock().aktorPortType();
         return portTypeMock;
-//        return createSwitcher(portType, portTypeMock, key, AktoerPortType.class);
+//        return createSwitcher(portType, portTypeMock, AKTOR_KEY, AktoerPortType.class);
     }
 
     @Bean
     public Pingable aktorIdPing() {
         Pingable pingable = new AktorPortTypeImpl(aktorEndpoint).aktorIdPing();
         Pingable pingableMock = new AktorPortTypeMock().aktorIdPing();
-        return createSwitcher(pingable, pingableMock, key, Pingable.class);
+        return createSwitcher(pingable, pingableMock, AKTOR_KEY, Pingable.class);
     }
 }

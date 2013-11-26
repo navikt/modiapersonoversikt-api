@@ -9,13 +9,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class UtbetalingEndpointConfig {
-   // private static final String key = "start.utbetaling.withmock";
-   // private  UtbetalingPortType portType = new UtbetalingPortTypeImpl().utbetalingPortType();
+
+    public static final String UTBETALING_KEY = "start.utbetaling.withmock";
+    // private  UtbetalingPortType portType = new UtbetalingPortTypeImpl().utbetalingPortType();
     private UtbetalingPortType portTypeMock = new UtbetalingPortTypeMock().utbetalingPortType();
 
     @Bean
     public UtbetalingPortType utbetalingPortType() {
-        // return createSwitcher(portType, portTypeMock, key, UtbetalingPortType.class);
+        // return createSwitcher(portType, portTypeMock, UTBETALING_KEY, UtbetalingPortType.class);
         return portTypeMock;
     }
 

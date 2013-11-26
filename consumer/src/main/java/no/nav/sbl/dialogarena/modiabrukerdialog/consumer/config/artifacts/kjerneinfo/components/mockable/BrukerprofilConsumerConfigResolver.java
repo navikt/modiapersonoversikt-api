@@ -10,13 +10,13 @@ import org.springframework.context.annotation.Import;
 
 import javax.inject.Inject;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.BrukerprofilServiceBiMock.getBrukerprofilServiceBiMock;
 
 @Configuration
 @Import({BrukerprofilConsumerConfig.class})
 public class BrukerprofilConsumerConfigResolver {
-    private static final String KEY = "start.kjerneinfo.withmock";
 
     @Inject
     private BrukerprofilPortType brukerprofilPortType;
@@ -27,7 +27,7 @@ public class BrukerprofilConsumerConfigResolver {
     public BrukerprofilServiceBi brukerprofilServiceBi() {
         BrukerprofilServiceBi defaultBi = new BrukerprofilConsumerConfigImpl(brukerprofilPortType, selfTestBrukerprofilPortType).brukerprofilServiceBi();
         BrukerprofilServiceBi alternateBi = getBrukerprofilServiceBiMock();
-        return createSwitcher(defaultBi, alternateBi, KEY, BrukerprofilServiceBi.class);
+        return createSwitcher(defaultBi, alternateBi, KJERNEINFO_KEY, BrukerprofilServiceBi.class);
     }
 
 }

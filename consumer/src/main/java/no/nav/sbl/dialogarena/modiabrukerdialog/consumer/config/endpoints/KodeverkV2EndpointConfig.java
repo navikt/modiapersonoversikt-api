@@ -15,22 +15,22 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 @Configuration
 public class KodeverkV2EndpointConfig {
 
+    public static final String KODEVERK_KEY = "start.kodeverk.withmock";
+
     @Value("${kodeverkendpoint.v2.url}")
     private URL kodeverkEndpoint;
-
-    private static final String KEY = "start.kodeverk.withmock";
 
     @Bean(name = "kodeverkPortTypeV2")
     public KodeverkPortType kodeverkPortType() {
         KodeverkPortType portType = new KodeverkV2EndpointConfigImpl(kodeverkEndpoint).kodeverkPortType();
         KodeverkPortType portTypeMock = new KodeverkV2PortTypeMock().kodeverkPortType();
-        return createSwitcher(portType, portTypeMock, KEY, KodeverkPortType.class);
+        return createSwitcher(portType, portTypeMock, KODEVERK_KEY, KodeverkPortType.class);
     }
 
     @Bean
     public KodeverkClient kodeverkClient() {
         KodeverkClient kodeverkKlient = new KodeverkV2EndpointConfigImpl(kodeverkEndpoint).kodeverkClient();
         KodeverkClient kodeverkKlientMock = new KodeverkV2PortTypeMock().kodeverkClient();
-        return createSwitcher(kodeverkKlient, kodeverkKlientMock, KEY, KodeverkClient.class);
+        return createSwitcher(kodeverkKlient, kodeverkKlientMock, KODEVERK_KEY, KodeverkClient.class);
     }
 }

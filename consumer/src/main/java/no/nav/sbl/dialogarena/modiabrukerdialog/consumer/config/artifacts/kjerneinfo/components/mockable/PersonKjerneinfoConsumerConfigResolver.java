@@ -16,6 +16,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
 
 @Configuration
@@ -40,14 +41,11 @@ public class PersonKjerneinfoConsumerConfigResolver {
     @Resource(name = "personKjerneinfoPep")
     private EnforcementPoint kjerneinfoPep;
 
-
-    private static final String KEY = "start.kjerneinfo.withmock";
-
     @Bean
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
         PersonKjerneinfoServiceBi defaultBi = new PersonKjerneinfoConsumerConfigImpl(personPortType, selfTestPersonPortType, kjerneinfoMapperBean, kjerneinfoPep).personKjerneinfoServiceBi();
         PersonKjerneinfoServiceBi mockBi =  PersonKjerneinfoServiceBiMock.getPersonKjerneinfoServiceBiMock();
-        return createSwitcher(defaultBi, mockBi, KEY, PersonKjerneinfoServiceBi.class);
+        return createSwitcher(defaultBi, mockBi, KJERNEINFO_KEY, PersonKjerneinfoServiceBi.class);
     }
 
 }
