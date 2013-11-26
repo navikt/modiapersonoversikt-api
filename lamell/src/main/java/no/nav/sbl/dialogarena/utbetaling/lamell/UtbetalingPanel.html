@@ -1,34 +1,31 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div class="utbetaling-linje">
-        <div class="dato">
-            <div wicket:id="utbetalingdato">[]</div>
+        <div class="main">
+            <div class="status" wicket:id="status">[]</div>
+            <div class="dato" wicket:id="utbetalingdato"></div>
+            <div wicket:id="beskrivelse"></div>
+            <div class="kontonummer">
+                <label><wicket:message key="utbetaling.lamell.konto"/>: </label><span wicket:id="kontonr"></span>
+            </div>
+            <div class="periode">
+                <label><wicket:message key="utbetaling.lamell.periode"/>: </label><span wicket:id="periode"></span>
+            </div>
+            <span wicket:id="mottaker"/>
+            <div wicket:id="belop"></div>
         </div>
-        <div class="body">
-            <div class="main">
-                <div wicket:id="beskrivelse">[]</div>
-                <div wicket:id="belop">[]</div>
-                <label><wicket:message key="utbetaling.lamell.konto"/>: </label><span wicket:id="kontonr">[]</span>
-                <label><wicket:message key="utbetaling.lamell.periode"/>: </label><span wicket:id="periode">[]</span>
-                <span wicket:id="mottaker"/>
-            </div>
-            <div class="status">
-                <div wicket:id="status">[]</div>
-            </div>
-            <button wicket:id="expandbutton" class="dropdown">V</button>
-            <div wicket:id="bilag-wrapper">
-                <div wicket:id="bilag-liste" class="bilag-liste">
-                    <div class="bilag">
-                        <p wicket:id="melding">[]</p>
-                        <div wicket:id="posteringsdetalj-liste" class="posteringsdetalj-liste">
-                            <p wicket:id="hovedbeskrivelse">[]</p>
-                            <p><wicket:message key="utbetaling.lamell.konto"/>: <span wicket:id="kontonr">[]</span></p>
-                        </div>
+        <button wicket:id="expandbutton" class="dropdown">V</button>
+        <div wicket:id="bilag-wrapper">
+            <div wicket:id="bilag-liste" class="bilag-liste">
+                <div class="bilag">
+                    <p wicket:id="melding">[]</p>
+                    <div wicket:id="posteringsdetalj-liste" class="posteringsdetalj-liste">
+                        <p wicket:id="hovedbeskrivelse">[]</p>
+                        <p><wicket:message key="utbetaling.lamell.konto"/>: <span wicket:id="kontonr">[]</span></p>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 </wicket:panel>
 </html>

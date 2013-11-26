@@ -42,18 +42,20 @@
 
   .utbetalinger {
     padding: 2rem 0;
-  }
-
-  .utbetaling-linje {
-    border: 1px solid black;
-    margin-top: 1em;
-    .dato{}
-    .body{
+    .utbetaling-linje {
+      border: 1px solid black;
+      margin-top: 1em;
       .main{
         display: inline-block;
         width: 69%;
         border: 1px solid cyan;
         margin-bottom: 1em;
+        .kontonummer .periode {
+          display: inline-block;
+          label span {
+            display: block;
+          }
+        }
       }
       .status{
         display: inline-block;
@@ -77,4 +79,5 @@
       }
     }
   }
+
 }
