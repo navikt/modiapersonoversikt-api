@@ -23,15 +23,12 @@ public class FilterForm extends Form {
 
     public FilterForm(String id, Filter filter) {
         super(id);
-
         this.filter = filter;
-
         add(
                 createMottakerButton("visBruker"),
                 createMottakerButton("visArbeidsgiver"),
                 createDateRangePicker()
         );
-
         add(createDateRangePickerChangeBehaviour());
     }
 
