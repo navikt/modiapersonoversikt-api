@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
@@ -34,25 +35,33 @@ public class UtbetalingLamell extends Lerret {
 
     public UtbetalingLamell(String id, String fnr) {
         super(id);
-
-        filter = new Filter(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
-        utbetalingerContainer = (MarkupContainer) new WebMarkupContainer("utbetalingerContainer").add(createUtbetalingListView(fnr)).setOutputMarkupId(true);
         setOutputMarkupId(true);
 
+        filter = new Filter(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
+
+        utbetalingerContainer = new WebMarkupContainer("utbetalingerContainer").add(createUtbetalingListView(fnr));
+        utbetalingerContainer.setOutputMarkupId(true);
+
+        FeedbackPanel feedbackpanel = new FeedbackPanel("feedbackpanel");
+        feedbackpanel.setOutputMarkupId(true);
+
         add(
-                new FeedbackPanel("feedbackpanel").setOutputMarkupId(true),
-                new FilterForm("filterForm", filter, (FeedbackPanel) new FeedbackPanel("feedbackpanel").setOutputMarkupId(true)),
+                feedbackpanel,
+                new FilterForm("filterForm", filter),
                 utbetalingerContainer
         );
     }
 
     private ListView<Utbetaling> createUtbetalingListView(final String fnr) {
-        return new ListView<Utbetaling>("utbetalinger", ofList(utbetalingService.hentUtbetalinger(fnr, filter.getStartDate(), filter.getSluttDate()))) {
+        DateTime startDato = filter.getStartDato().getObject().toDateTimeAtStartOfDay();
+        DateTime sluttDato = filter.getSluttDato().getObject().toDateTimeAtStartOfDay();
+
+        return new ListView<Utbetaling>("utbetalinger", ofList(utbetalingService.hentUtbetalinger(fnr, startDato, sluttDato))) {
             @Override
             protected void populateItem(ListItem<Utbetaling> item) {
-                item.add(new UtbetalingPanel("utbetaling", item.getModelObject()));
-
                 Utbetaling utbetaling = item.getModelObject();
+
+                item.add(new UtbetalingPanel("utbetaling", utbetaling));
 
                 item.add(visibleIf(
                         new Model<>(filter.filtrerPaaDatoer(utbetaling.getUtbetalingsDato().toLocalDate()) &&

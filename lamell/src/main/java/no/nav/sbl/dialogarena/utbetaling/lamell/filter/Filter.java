@@ -30,16 +30,8 @@ public class Filter implements Serializable {
         return startDato;
     }
 
-    public DateTime getStartDate() {
-        return startDato.getObject().toDateTimeAtCurrentTime();
-    }
-
     public IModel<LocalDate> getSluttDato() {
         return sluttDato;
-    }
-
-    public DateTime getSluttDate() {
-        return sluttDato.getObject().toDateTimeAtCurrentTime();
     }
 
     public boolean filtrerPaaDatoer(LocalDate utbetalingsDato) {
