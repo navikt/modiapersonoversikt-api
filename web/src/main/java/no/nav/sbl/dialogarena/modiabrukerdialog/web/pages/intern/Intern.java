@@ -18,7 +18,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.RedirectM
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.timeout.TimeoutBoks;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.panels.SideBar;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -70,8 +69,7 @@ public class Intern extends BasePage {
 		    new VisittkortPanel("visittkort", fnr).setVisible(true),
 		    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
             new TimeoutBoks("timeoutBoks", fnr),
-            redirectPopup,
-		    new SideBar("sideBar")
+            redirectPopup
         );
     }
 
