@@ -1,25 +1,20 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div class="utbetalinglamell">
-        <div wicket:id="feedbackpanel"/>
-        <form wicket:id="filterForm">
-            <div>
-                <div>
-                    <label class="knapp knappOn" wicket:for="visBruker">Bruker</label>
-                    <input type="checkbox" wicket:id="visBruker" />
-                </div>
-                <div >
-                    <label class="knapp knappOn" wicket:for="visArbeidsgiver">Arbeidsgiver</label>
-                    <input type="checkbox" wicket:id="visArbeidsgiver" />
-                </div>
+        <div wicket:id="feedbackpanel" />
+        <form wicket:id="filterForm" class="filter-form">
+            <div class="utbetaling-til-filter">
+                <label>Utbetaling til</label>
+                <input type="button" wicket:id="visBruker" value="Bruker" class="knapp-utbetaling-til-filter" /><!-- Fjerner whitespace mellom inline-elementer
+                --><input type="button" wicket:id="visArbeidsgiver" value="Arbeidsgiver" class="knapp-utbetaling-til-filter" />
             </div>
-            <div wicket:id="datoFilter"></div>
+            <div wicket:id="datoFilter" class="dato-plukker-filter" />
         </form>
 
-        <div wicket:id="utbetalingerContainer" >
-            <div wicket:id="utbetalinger">
-                <div wicket:id="utbetaling"></div>
-            </div>
+        <div wicket:id="utbetalingerContainer" class="utbetalinger" >
+            <wicket:container wicket:id="utbetalinger">
+                <wicket:container wicket:id="utbetaling" />
+            </wicket:container>
         </div>
     </div>
 </wicket:panel>

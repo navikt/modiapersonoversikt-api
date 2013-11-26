@@ -35,7 +35,6 @@ public class UtbetalingLamell extends Lerret {
 
     public UtbetalingLamell(String id, String fnr) {
         super(id);
-        setOutputMarkupId(true);
 
         filter = new Filter(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
 
