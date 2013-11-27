@@ -13,7 +13,9 @@ public class OppsummeringsKalkulator {
         for (Utbetaling utbetaling : utbetalinger) {
             oppsummering.utbetalt += utbetaling.getNettoBelop();
             oppsummering.brutto += utbetaling.getBruttoBelop();
-            oppsummering.trekk += utbetaling.getBruttoBelop() - utbetaling.getNettoBelop();
+            oppsummering.trekk += utbetaling.getTrekk() == 0.0 ?
+                    utbetaling.getBruttoBelop() - utbetaling.getNettoBelop() :
+                    utbetaling.getTrekk();
         }
         return oppsummering;
     }
