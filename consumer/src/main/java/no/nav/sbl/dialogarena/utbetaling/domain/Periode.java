@@ -19,7 +19,7 @@ public class Periode implements Serializable {
     private DateTime sluttDato;
     private String periodeString;
 
-    public Periode(DateTime periodeFomDato, DateTime periodeTomDato) {
+    Periode(DateTime periodeFomDato, DateTime periodeTomDato) {
         this.startDato = periodeFomDato;
         this.sluttDato = periodeTomDato;
         this.periodeString = setPeriode(periodeFomDato, periodeTomDato, DELIMITER);

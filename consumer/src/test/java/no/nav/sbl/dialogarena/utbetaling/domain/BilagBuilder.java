@@ -1,8 +1,5 @@
-package no.nav.sbl.dialogarena.utbetaling.domain.builder;
+package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
-import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
-import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;

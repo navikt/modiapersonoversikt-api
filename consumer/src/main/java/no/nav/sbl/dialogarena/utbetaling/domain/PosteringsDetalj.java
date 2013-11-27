@@ -25,7 +25,7 @@ public class PosteringsDetalj implements Serializable {
         }
     };
 
-    public PosteringsDetalj(String hovedBeskrivelse, String underBeskrivelse, String kontoNr) {
+    PosteringsDetalj(String hovedBeskrivelse, String underBeskrivelse, String kontoNr) {
         this.hovedBeskrivelse = hovedBeskrivelse;
         this.underBeskrivelse = underBeskrivelse;
         this.kontoNr = kontoNr;

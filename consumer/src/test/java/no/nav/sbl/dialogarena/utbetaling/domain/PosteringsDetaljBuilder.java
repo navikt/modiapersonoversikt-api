@@ -1,6 +1,4 @@
-package no.nav.sbl.dialogarena.utbetaling.domain.builder;
-
-import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
+package no.nav.sbl.dialogarena.utbetaling.domain;
 
 public class PosteringsDetaljBuilder {
 

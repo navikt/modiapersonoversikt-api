@@ -31,7 +31,7 @@ public class Utbetaling implements Serializable {
     private Periode periode;
 
     //CHECKSTYLE:OFF
-    public Utbetaling(String fnr, List<Bilag> bilag, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode) {
+    Utbetaling(String fnr, List<Bilag> bilag, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode) {
         this.fnr = fnr;
         this.bilag = bilag;
         this.statuskode = statuskode;

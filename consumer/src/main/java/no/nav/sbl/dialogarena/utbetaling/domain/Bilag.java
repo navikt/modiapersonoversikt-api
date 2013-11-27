@@ -25,7 +25,7 @@ public class Bilag implements Serializable {
     private List<PosteringsDetalj> posteringsDetaljer;
     private Periode periode;
 
-    public Bilag(String melding, List<PosteringsDetalj> posteringsDetaljer, Periode periode) {
+    Bilag(String melding, List<PosteringsDetalj> posteringsDetaljer, Periode periode) {
         this.melding = melding;
         this.posteringsDetaljer = posteringsDetaljer;
         this.periode = periode;
