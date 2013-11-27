@@ -30,7 +30,7 @@ public class UtbetalingServiceTest {
     @Mock
     private no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling utbetaling;
 
-    String fnr = "12345678900";
+    public static final String fnr = "12345678900";
     WSUtbetalingTestData data = new WSUtbetalingTestData();
 
     @Test(expected = ApplicationException.class)

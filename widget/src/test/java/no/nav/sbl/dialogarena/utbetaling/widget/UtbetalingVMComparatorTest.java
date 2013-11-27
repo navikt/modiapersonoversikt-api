@@ -50,7 +50,7 @@ public class UtbetalingVMComparatorTest {
 
     private UtbetalingVM lagUtbetalingVM(DateTime utbetalingsDato) {
         return new UtbetalingVM(
-                new UtbetalingBuilder().setValuta("kr").setMottaker(new Mottaker("7", "kode", "Arbeidsgiver"))
+                new UtbetalingBuilder().setValuta("kr").setMottaker(new Mottaker(Mottaker.ARBEIDSGIVER, "Arbeidsgiver"))
                         .setKontoNr("123").setUtbetalingId("1").setUtbetalingsDato(utbetalingsDato)
                         .createUtbetaling()
 

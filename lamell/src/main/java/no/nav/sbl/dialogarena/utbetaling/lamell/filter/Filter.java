@@ -6,12 +6,11 @@ import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 
+import static no.nav.sbl.dialogarena.utbetaling.domain.Mottaker.*;
+
 public class Filter implements Serializable {
 
     public static final String ENDRET = "filter.endret";
-
-    private static final String MOTTAKERKODE_ARBEIDSGIVER = "arbeidsgiver";
-    private static final String MOTTAKERKODE_BRUKER = "bruker";
 
     private IModel<LocalDate> startDato;
     private IModel<LocalDate> sluttDato;
@@ -39,8 +38,8 @@ public class Filter implements Serializable {
     }
 
     public boolean filtrerPaaMottaker(String mottakerkode) {
-        boolean arbeidsgiverVises = this.visArbeidsgiver && MOTTAKERKODE_ARBEIDSGIVER.equalsIgnoreCase(mottakerkode);
-        boolean brukerVises = this.visBruker && MOTTAKERKODE_BRUKER.equalsIgnoreCase(mottakerkode);
+        boolean arbeidsgiverVises = this.visArbeidsgiver && ARBEIDSGIVER.equalsIgnoreCase(mottakerkode);
+        boolean brukerVises = this.visBruker && BRUKER.equalsIgnoreCase(mottakerkode);
         return arbeidsgiverVises || brukerVises;
     }
 

@@ -17,8 +17,7 @@ public class MottakerComparator implements Comparator<Mottaker> {
         if (left == right) { return true;}
         if((left == null) || (right == null)) { return false; }
 
-        if (left.getMottakerId() != null ? !left.getMottakerId().equals(right.getMottakerId()) : right.getMottakerId() != null) { return false; }
-        if (left.getMottakertypeKode() != null ? !left.getMottakertypeKode().equals(right.getMottakertypeKode()) : right.getMottakertypeKode() != null)
+        if (left.getMottakertypeType() != null ? !left.getMottakertypeType().equals(right.getMottakertypeType()) : right.getMottakertypeType() != null)
         { return false; }
         return !(left.getNavn() != null ? !left.getNavn().equals(right.getNavn()) : right.getNavn() != null);
     }

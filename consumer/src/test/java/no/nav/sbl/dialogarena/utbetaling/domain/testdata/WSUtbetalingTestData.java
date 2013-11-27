@@ -16,9 +16,12 @@ import static org.joda.time.DateTime.now;
 
 public class WSUtbetalingTestData {
 
-    private static String kontoNr = "12345678900";
+    private static final String KONTO_NR = "12345678900";
+    private static final String NAVN = "Kjell Olsen";
+    private static String fnr;
 
-    public static List<WSUtbetaling> getWsUtbetalinger() {
+    public static List<WSUtbetaling> getWsUtbetalinger(String fNr) {
+        fnr = fNr;
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
         utbetalinger.add(createUtbetaling1());
         utbetalinger.add(createUtbetaling2());
@@ -30,8 +33,8 @@ public class WSUtbetalingTestData {
     }
 
     public static WSUtbetaling createUtbetaling1() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Alderspensjon",kontoNr);
-        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Skatt", kontoNr);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Alderspensjon", KONTO_NR);
+        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Skatt", KONTO_NR);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj2);
 
@@ -48,9 +51,9 @@ public class WSUtbetalingTestData {
     }
 
     public static WSUtbetaling createUtbetaling2() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Uføre", kontoNr);
-        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Foreldrepenger", kontoNr);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", kontoNr);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Uføre", KONTO_NR);
+        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Foreldrepenger", KONTO_NR);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", KONTO_NR);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj2, posteringsdetalj3);
 
@@ -67,8 +70,8 @@ public class WSUtbetalingTestData {
     }
 
     public static WSUtbetaling createUtbetaling3() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Barnepenger", kontoNr);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", kontoNr);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Barnepenger", KONTO_NR);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", KONTO_NR);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
 
@@ -86,8 +89,8 @@ public class WSUtbetalingTestData {
     }
 
     public static WSUtbetaling createUtbetaling4() {
-        //String kontoNr = kontoNr;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Trygd", kontoNr);
+        //String KONTO_NR = KONTO_NR;
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Trygd", KONTO_NR);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj1);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
@@ -104,8 +107,8 @@ public class WSUtbetalingTestData {
     }
 
     public static WSUtbetaling createUtbetaling5() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("APGrunnbeløp", kontoNr);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", kontoNr);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("APGrunnbeløp", KONTO_NR);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", KONTO_NR);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
 
@@ -122,8 +125,8 @@ public class WSUtbetalingTestData {
     }
 
     public static WSUtbetaling createUtbetaling6() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Pensjon", kontoNr);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", kontoNr);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Pensjon", KONTO_NR);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", KONTO_NR);
         WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
 
@@ -153,16 +156,16 @@ public class WSUtbetalingTestData {
 
     private static WSMottaker createTrygdetMottaker() {
         WSMottaker wsMottaker = new WSMottaker();
-        wsMottaker.withMottakerId("4")
-                .withMottakertypeKode("bruker")
-                .withNavn("Bruker");
+        wsMottaker.withMottakerId(fnr)
+                .withMottakertypeKode("")
+                .withNavn(NAVN);
         return wsMottaker;
     }
 
     private static WSMottaker createArbeidsgiverMottaker() {
         WSMottaker wsMottaker = new WSMottaker();
-        wsMottaker.withMottakerId("5")
-                .withMottakertypeKode("arbeidsgiver")
+        wsMottaker.withMottakerId("51321")
+                .withMottakertypeKode("")
                 .withNavn("Arbeidsgiver");
         return wsMottaker;
     }

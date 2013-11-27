@@ -7,28 +7,30 @@ import java.io.Serializable;
 
 public class Mottaker implements Serializable {
 
-    private String mottakerId;
-    private String mottakertypeKode;
+    public final static String BRUKER = "bruker";
+    public final static String ARBEIDSGIVER = "arbeidsgiver";
+    private String mottakertypeType;
     private String navn;
 
-    public Mottaker(String mottakerId, String mottakertypeKode, String navn) {
-        this.mottakerId = mottakerId;
-        this.mottakertypeKode = mottakertypeKode;
+    public Mottaker(String mottakertypeKode, String navn) {
+        this.mottakertypeType = mottakertypeKode;
         this.navn = navn;
     }
 
-    public Mottaker(WSMottaker wsMottaker) {
-        if (wsMottaker == null) { return; }
-        this.mottakerId = wsMottaker.getMottakerId();
-        this.mottakertypeKode = wsMottaker.getMottakertypeKode();
+    public Mottaker(String fnr, WSMottaker wsMottaker) {
+        if (wsMottaker == null) {
+            return;
+        }
         this.navn = wsMottaker.getNavn();
-    }
-    public String getMottakerId() {
-        return mottakerId;
+        this.mottakertypeType = transformTilType(wsMottaker.getMottakerId(), fnr);
     }
 
-    public String getMottakertypeKode() {
-        return mottakertypeKode;
+    private String transformTilType(String mottakerId1, String fnr) {
+        return (fnr == null || fnr.equalsIgnoreCase(mottakerId1)) ? BRUKER : ARBEIDSGIVER;
+    }
+
+    public String getMottakertypeType() {
+        return mottakertypeType;
     }
 
     public String getNavn() {
