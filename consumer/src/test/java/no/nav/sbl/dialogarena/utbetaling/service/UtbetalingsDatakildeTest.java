@@ -4,7 +4,6 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
-import no.nav.sbl.dialogarena.utbetaling.logikk.OppsummeringsKalkulator;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
@@ -35,7 +34,6 @@ public class UtbetalingsDatakildeTest {
         assertThat(utbetalingsResultat.get(1).getBeskrivelse(), is(utbetaling2.getBeskrivelse()));
         assertThat(utbetalingsResultat.get(1).getUtbetalingId(), is(utbetaling2.getUtbetalingId()));
     }
-
 
     @Test
     public void finnUtbetalingerIPeriode_EnUtbetalingInnenfor() throws Exception {
