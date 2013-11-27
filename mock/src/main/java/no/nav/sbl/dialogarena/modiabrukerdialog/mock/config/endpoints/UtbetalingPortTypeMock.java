@@ -90,7 +90,6 @@ public class UtbetalingPortTypeMock {
                 return utbetaling;
             }
 
-
             private WSUtbetaling createAlderspensjon() {
                 WSBilag bilag1 = createBilag("bilag1", createPosteringsDetalj("Alderpensjon", KONTO_NR));
                 WSBilag bilag2 = createBilag("bilag1", createPosteringsDetalj("Alderpensjon", KONTO_NR));

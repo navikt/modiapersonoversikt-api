@@ -10,26 +10,19 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class UtbetalingEndpointConfig {
 
-    private boolean useMock;
-    private final UtbetalingPortTypeImpl portType;
-    private final UtbetalingPortTypeMock portTypeMock;
-
-    public UtbetalingEndpointConfig() {
-        useMock = true;
-        portType = new UtbetalingPortTypeImpl();
-        portTypeMock = new UtbetalingPortTypeMock();
-    }
+    public static final String UTBETALING_KEY = "start.utbetaling.withmock";
+    // private  UtbetalingPortType portType = new UtbetalingPortTypeImpl().utbetalingPortType();
+    private UtbetalingPortType portTypeMock = new UtbetalingPortTypeMock().utbetalingPortType();
 
     @Bean
     public UtbetalingPortType utbetalingPortType() {
-        if(useMock) {
-            return portTypeMock.utbetalingPortType();
-        }
-        return portType.utbetalingPortType();
+        // return createSwitcher(portType, portTypeMock, UTBETALING_KEY, UtbetalingPortType.class);
+        return portTypeMock;
     }
 
     @Bean
     public Pingable utbetalingPing() {
         return new MockPingable("UtbetalingEndpoint");
     }
+
 }

@@ -100,36 +100,6 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar-innboks</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar-besvare</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar-widget</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar-common</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>soknader-liste</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>soknader-consumer</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>utbetalinger-lamell</artifactId>
         </dependency>
 
@@ -143,12 +113,6 @@
             <artifactId>utbetalinger-consumer</artifactId>
         </dependency>
 
-
-        <!--<dependency>-->
-            <!--<groupId>no.nav.sbl.dialogarena</groupId>-->
-            <!--<artifactId>utbetaling-tjenestespesifikasjon</artifactId>-->
-        <!--</dependency>-->
-        
         <!-- End modia komponenter -->
 
         <!-- Modig avhengigheter -->
@@ -379,11 +343,6 @@
         <!-- End logging -->
 
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>oppgavebehandling-tjenestespesifikasjon</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
             <version>3.0-beta-6</version>
@@ -412,10 +371,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
-        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest-library</artifactId>

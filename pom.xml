@@ -24,13 +24,26 @@
     <properties>
         <wicket.version>6.11.0</wicket.version>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <modig.frontend.version>1.1.2</modig.frontend.version>
+        <modig.frontend.version>1.1.5</modig.frontend.version>
         <modig.security.version>1.0.19</modig.security.version>
 		<modig.log.version>1.1.2</modig.log.version>
+        <spring.security.version>3.1.0.RELEASE</spring.security.version>
+        <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
+        <modig.wicket.version>1.0.28</modig.wicket.version>
+        <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
+        <modig.lang.version>1.0.0</modig.lang.version>
+        <modig.frontend.wicket.version>1.0.33</modig.frontend.wicket.version>
+        <modig.core.version>1.0.1</modig.core.version>
+        <modig.security.version>1.0.11</modig.security.version>
+        <modig.log.version>1.1.2</modig.log.version>
+        <modig-testcertificates-version>1.0.0</modig-testcertificates-version>
+        <hamcrest.version>1.3</hamcrest.version>
+        <junit.version>4.11</junit.version>
+        <args4j.version>2.0.23</args4j.version>
+        <mockito.core.version>1.9.5</mockito.core.version>
         <slf4j.version>1.7.5</slf4j.version>
         <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
-        <sakogbehandling.tjeneste.version>1.0.8</sakogbehandling.tjeneste.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.0</utbetaling.tjenestespesifikasjon.version>
         <!-- Modia-komponenter-->
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
@@ -64,43 +77,6 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>soknader-liste</artifactId>
-                <version>${soknader.liste.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>soknader-consumer</artifactId>
-                <version>${soknader.liste.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>soknader-consumer</artifactId>
-                <version>${soknader.liste.version}</version>
-                <type>test-jar</type>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-besvare</artifactId>
-                <version>${sporsmalogsvar.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-innboks</artifactId>
-                <version>${sporsmalogsvar.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-widget</artifactId>
-                <version>${sporsmalogsvar.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>utbetalinger-lamell</artifactId>
                 <version>${utbetaling.version}</version>
             </dependency>
@@ -115,14 +91,6 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>utbetalinger-consumer</artifactId>
                 <version>${utbetaling.version}</version>
-            </dependency>
-
-
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-common</artifactId>
-                <version>${sporsmalogsvar.version}</version>
             </dependency>
 
             <dependency>
@@ -212,12 +180,6 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
-                <version>${sakogbehandling.tjeneste.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
                 <version>${utbetaling.tjenestespesifikasjon.version}</version>
             </dependency>
@@ -270,12 +232,6 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
-                <version>0.2</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-jetty</artifactId>
                 <version>1.0.20</version>
                 <scope>test</scope>
@@ -311,21 +267,15 @@
             </dependency>
 
             <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>oppgavebehandling-tjenestespesifikasjon</artifactId>
-                <version>0.0.5</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>henvendelse-meldinger-tjenestespesifikasjon</artifactId>
-                <version>0.0.7</version>
-            </dependency>
-
-            <dependency>
                 <groupId>joda-time</groupId>
                 <artifactId>joda-time</artifactId>
                 <version>2.2</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava-collections</artifactId>
+                <version>r03</version>
             </dependency>
 
 
@@ -892,7 +842,7 @@
                 </property>
             </activation>
             <properties>
-                <sonar.jacoco.excludes>*SelfTestPage.*:*/example/*</sonar.jacoco.excludes>
+                <sonar.jacoco.excludes>*SelfTestPage.*:*/example/*:no/nav/sbl/dialogarena/modiabrukerdialog/mock/**</sonar.jacoco.excludes>
             </properties>
         </profile>
     </profiles>

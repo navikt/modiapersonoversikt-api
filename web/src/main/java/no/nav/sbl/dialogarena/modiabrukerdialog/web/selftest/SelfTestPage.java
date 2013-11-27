@@ -35,7 +35,7 @@ public class SelfTestPage extends SelfTestBase {
             try {
                 List<PingResult> pingResults = pingable.ping();
                 for (PingResult pingResult : pingResults) {
-                    String status = pingResult.getServiceStatus().equals(SERVICE_OK) ? SelfTestBase.STATUS_OK : SelfTestBase.STATUS_ERROR;
+                    String status = pingResult.getServiceStatus().equals(SERVICE_OK) ? STATUS_OK : STATUS_ERROR;
                     serviceStatuses.add(new AvhengighetStatus(pingResult.getServiceName().toUpperCase() + "_PING", status, pingResult.getElapsedTime()));
                 }
             } catch (Exception e) {

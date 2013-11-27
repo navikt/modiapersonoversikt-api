@@ -24,6 +24,7 @@
         <credential alias="srv_kjerneinfo_tjenestebuss" mapToProperty="ctjenestebuss" />
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
+        <baseUrl alias="TillatMockSetup" mapToProperty="tillatmocksetup"/>
         <webservice alias="virksomhet:Person_v1" mapToProperty="kjerneinfoendpoint"/>
         <webservice alias="virksomhet:Kodeverk_v1" mapToProperty="kodeverkendpoint"/>
         <webservice alias="virksomhet:Kodeverk_v2" mapToProperty="kodeverkendpoint.v2"/>
@@ -33,13 +34,9 @@
         <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>   <!-- mangler i T8 ?-->
         <webservice alias="virksomhet:foreldrepenger_v1" mapToProperty="foreldrepengerendpoint"/>
         <webservice alias="virksomhet:sykepenger_v1" mapToProperty="sykepengerendpoint"/>
-        <webservice alias="domene.Brukerdialog:HenvendelseMeldingerService_v1" mapToProperty="henvendelse.meldinger.endpoint"/>
-        <webservice alias="domene.Brukerdialog:BesvareHenvendelseService_v1" mapToProperty="besvarehenvendelseendpoint"/>
-        <webservice alias="domene.Brukerdialog:OppgavebehandlingService_v1" mapToProperty="oppgavebehandlingendpoint"/>
 
         <!-- Slutt kjerneinfo -->
         <!-- App-->
-        <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling"/>
         <webservice alias="Aktoer_v1" mapToProperty="aktor"/>
 
         <applicationCertificate alias="srvModiabrukerdialog" />

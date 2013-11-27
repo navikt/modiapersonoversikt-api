@@ -2,6 +2,43 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:head>
     <title>Modia Mock Setup</title>
+
+    <style>
+        .mockform {
+            padding: 10px;
+            background-color: #cccccc;
+        }
+
+        .float_left {
+            float: left;
+        }
+
+        ul {
+            list-style: circle outside none;
+        }
+
+        li {
+            display: inline-block;
+        }
+
+        div {
+            background-color: #cccccc;
+        }
+
+         form input[type="checkbox"] {
+            height: 14px;
+            width: 20px;
+            opacity: 1;
+            position: relative;
+        }
+
+        form input[type="submit"] {
+            margin-top: 20px;
+        }
+
+
+
+    </style>
 </wicket:head>
 <wicket:extend>
     <body class="main hentperson">
@@ -9,11 +46,29 @@
     <section class="navbar menu-intern active">
         <img class="modia-logo" wicket:id="modia-logo"/>
 
-        <form wicket:id="velgMockForm">
-            Velg:
-            <div wicket:id="velgMock"></div>
-
-            <input type="submit" value="Velg..." />
+        <form wicket:id="velgMockForm" class="mockform">
+            <div>
+                Følgende tjenester benytter mock:
+            </div>
+            <div>
+                <ul wicket:id="radioliste">
+                    <li >
+                        <div class="float_left">
+                            <input type="checkbox" wicket:id="mockvalg"/>
+                            <span wicket:id="radiolabel"/>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+            <hr>
+            <div>
+                Bruk testperson:
+                <input type="checkbox" wicket:id="brukTestPerson"/>
+            </div>
+            <hr>
+            <div>
+                <input type="submit" value="Fullfør"/>
+            </div>
         </form>
 
     </section>

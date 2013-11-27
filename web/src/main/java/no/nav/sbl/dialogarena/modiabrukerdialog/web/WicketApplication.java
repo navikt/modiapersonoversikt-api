@@ -23,10 +23,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.LocaleFromWicke
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.InternBesvaremodus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
-import no.nav.sbl.dialogarena.soknader.liste.SoknadListe;
-import no.nav.sbl.dialogarena.sporsmalogsvar.innboks.Innboks;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLamell;
 import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
@@ -43,10 +40,10 @@ import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
-
 import java.util.Locale;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockSetupSingleton.mockSetup;
 import static org.apache.wicket.util.time.Duration.ONE_SECOND;
 
 public class WicketApplication extends WebApplication {
@@ -88,11 +85,6 @@ public class WicketApplication extends WebApplication {
                 .addConditionalJavascript(Intern.RESPOND_JS)
 		        .addLess(
                         BasePage.INTERN_LESS,
-                        BasePage.BESVARE_LESS,
-                        BasePage.JOURNALFORPANEL,
-                        BasePage.MELDINGERWIDGET,
-                        BasePage.MELDINGERLAMELL,
-                        SoknadListe.SOKNADSLISTE_LESS,
                         UtbetalingLamell.UTBETALING_LAMELL_LESS,
                         UtbetalingWidget.UTBETALING_WIDGET_LESS)
                 .addCss(
@@ -113,8 +105,7 @@ public class WicketApplication extends WebApplication {
                         EkspanderingsListe.JS_RESOURCE,
                         Liste.JS_RESOURCE,
                         DatePicker.JQUERY_PLACEHOLDER,
-                        ModalErrorPanel.JS_RESOURCE,
-                        Innboks.JS_REFERENCE
+                        ModalErrorPanel.JS_RESOURCE
                 )
 		        .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
@@ -140,14 +131,19 @@ public class WicketApplication extends WebApplication {
                 .withExceptionHandler(true)
                 .configure(this);
 
-        mountPage("/person/${fnr}", Intern.class);
-        mountPage("/person/${fnr}/besvaresporsmal/${oppgaveId}", InternBesvaremodus.class);
-        mountPage("/mocksetup", MockSetupPage.class);
-        mountPage("internal/selftest", SelfTestPage.class);
+        mountPages();
 
         setSpringComponentInjector();
 
         Datoformat.brukLocaleFra(LocaleFromWicketSession.INSTANCE);
+    }
+
+    private void mountPages() {
+        mountPage("/person/${fnr}", Intern.class);
+        mountPage("internal/selftest", SelfTestPage.class);
+        if(mockSetup().isTillat()) {
+            mountPage("/mocksetup", MockSetupPage.class);
+        }
     }
 
     @Override
