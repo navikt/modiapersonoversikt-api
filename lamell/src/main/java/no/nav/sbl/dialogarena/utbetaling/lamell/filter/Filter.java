@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Mottaker;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 
-import static no.nav.sbl.dialogarena.utbetaling.domain.Mottaker.*;
 
 public class Filter implements Serializable {
 
@@ -38,8 +38,8 @@ public class Filter implements Serializable {
     }
 
     public boolean filtrerPaaMottaker(String mottakerkode) {
-        boolean arbeidsgiverVises = this.visArbeidsgiver && ARBEIDSGIVER.equalsIgnoreCase(mottakerkode);
-        boolean brukerVises = this.visBruker && BRUKER.equalsIgnoreCase(mottakerkode);
+        boolean arbeidsgiverVises = this.visArbeidsgiver && Mottaker.ARBEIDSGIVER.equalsIgnoreCase(mottakerkode);
+        boolean brukerVises = this.visBruker && Mottaker.BRUKER.equalsIgnoreCase(mottakerkode);
         return arbeidsgiverVises || brukerVises;
     }
 

@@ -7,8 +7,8 @@ import java.io.Serializable;
 
 public class Mottaker implements Serializable {
 
-    public final static String BRUKER = "bruker";
-    public final static String ARBEIDSGIVER = "arbeidsgiver";
+    public static final String BRUKER = "bruker";
+    public static final String ARBEIDSGIVER = "arbeidsgiver";
     private String mottakertypeType;
     private String navn;
 

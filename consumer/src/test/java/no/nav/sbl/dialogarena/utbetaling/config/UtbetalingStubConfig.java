@@ -16,14 +16,14 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTest
 @Configuration
 public class UtbetalingStubConfig {
 
-    private static final String fnr = "12345612345";
+    private static final String FNR = "12345612345";
 
     @Bean
     public no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling utbetaling() {
         return new no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling() {
             @Override
             public WSHentUtbetalingListeResponse hentUtbetalingListe(@WebParam(name = "request", targetNamespace = "") WSHentUtbetalingListeRequest request) throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
-                return new WSHentUtbetalingListeResponse().withUtbetalingListe(getWsUtbetalinger(fnr));
+                return new WSHentUtbetalingListeResponse().withUtbetalingListe(getWsUtbetalinger(FNR));
             }
 
 
