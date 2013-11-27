@@ -16,8 +16,8 @@ public class OppsummeringsKalkulatorTest {
 
     @Test
     public void testRegnUtOppsummering() throws Exception {
-        Utbetaling utbetaling1 = new UtbetalingBuilder().setNettoBelop(1000.0).setBruttoBelop(1300.0).createUtbetaling();
-        Utbetaling utbetaling2 = new UtbetalingBuilder().setNettoBelop(500.0).setBruttoBelop(900.0).createUtbetaling();
+        Utbetaling utbetaling1 = new UtbetalingBuilder().setTrekk(300.0).setNettoBelop(1000.0).setBruttoBelop(1300.0).createUtbetaling();
+        Utbetaling utbetaling2 = new UtbetalingBuilder().setTrekk(400.0).setNettoBelop(500.0).setBruttoBelop(900.0).createUtbetaling();
 
         List<Utbetaling> utbetalinger = Arrays.asList(utbetaling1, utbetaling2);
         Oppsummering oppsummering = OppsummeringsKalkulator.regnUtOppsummering(utbetalinger);
