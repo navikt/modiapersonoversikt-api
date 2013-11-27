@@ -24,8 +24,7 @@ public class UtbetalingPanel extends Panel {
     public UtbetalingPanel(String id, Utbetaling utbetaling) {
         super(id);
         ListView<Bilag> bilagListView = createBilagListView(utbetaling.getBilag());
-        // En ListView kan ikke addes direkte via Ajax. Den må derfor legges i en wrapper.
-        WebMarkupContainer bilagWrapper = new WebMarkupContainer("bilag-wrapper");
+        WebMarkupContainer bilagWrapper = new WebMarkupContainer("bilagWrapper");
         bilagWrapper.add(bilagListView);
         bilagWrapper.setOutputMarkupPlaceholderTag(true);
         bilagWrapper.setVisibilityAllowed(false);

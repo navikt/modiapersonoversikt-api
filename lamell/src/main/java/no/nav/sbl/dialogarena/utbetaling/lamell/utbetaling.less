@@ -1,6 +1,7 @@
 .utbetalinglamell {
   margin: 0px;
   padding: 0px;
+  width: 900px;
 
   .filter-form {
     border-top: 1px solid #d6cece;
@@ -41,40 +42,44 @@
   }
 
   .utbetalinger {
-    padding: 2rem 0;
     .utbetaling-linje {
-      border: 1px solid black;
-      margin-top: 1em;
+      border-bottom: 1px solid #d6cece;
       .main{
         display: inline-block;
-        width: 69%;
-        border: 1px solid cyan;
         margin-bottom: 1em;
-        .kontonummer .periode {
+        width: 75%;
+        .type {
+          span {
+            float: right;
+          }
+          * {
+            color: black;
+            font-size: 1.5rem;
+          }
+        }
+        .kontonummer, .periode {
           display: inline-block;
-          label span {
+          * {
+            margin: 0;
             display: block;
           }
+        }
+        * {
+          margin-right: 2rem;
         }
       }
       .status{
         display: inline-block;
         width: 14%;
-        border: 1px solid red;
       }
       .dropdown{
+        float: right;
         display: inline-block;
-        width: 14%;
-        border: 1px solid blue;
         text-align: center;
       }
       .bilag-liste {
         .bilag {
           margin-bottom: 1em;
-          border: 1px solid blue;
-          .posteringsdetalj-liste {
-            border: 1px solid red;
-          }
         }
       }
     }
