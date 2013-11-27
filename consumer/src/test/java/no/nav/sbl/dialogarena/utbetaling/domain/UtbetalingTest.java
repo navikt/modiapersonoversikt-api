@@ -1,8 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.builder.BilagBuilder;
-import no.nav.sbl.dialogarena.utbetaling.domain.builder.PosteringsDetaljBuilder;
-import no.nav.sbl.dialogarena.utbetaling.domain.builder.UtbetalingBuilder;
 import no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
