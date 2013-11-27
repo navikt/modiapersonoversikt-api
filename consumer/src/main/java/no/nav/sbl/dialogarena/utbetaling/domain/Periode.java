@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPeriode;
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 import java.io.Serializable;
 import java.text.DateFormat;
@@ -18,11 +19,13 @@ public class Periode implements Serializable {
     private DateTime startDato;
     private DateTime sluttDato;
     private String periodeString;
+    private Interval interval;
 
-    Periode(DateTime periodeFomDato, DateTime periodeTomDato) {
+    public Periode(DateTime periodeFomDato, DateTime periodeTomDato) {
         this.startDato = periodeFomDato;
         this.sluttDato = periodeTomDato;
         this.periodeString = setPeriode(periodeFomDato, periodeTomDato, DELIMITER);
+        this.interval = new Interval(startDato.getMillis(), sluttDato.getMillis());
     }
 
     public Periode(WSPeriode utbetalingsPeriode) {
@@ -31,10 +34,16 @@ public class Periode implements Serializable {
         }
         this.startDato = utbetalingsPeriode.getPeriodeFomDato();
         this.sluttDato = utbetalingsPeriode.getPeriodeTomDato();
+        this.periodeString = setPeriode(startDato, sluttDato, DELIMITER);
+        this.interval = new Interval(startDato.getMillis(), sluttDato.getMillis());
     }
 
     public Periode(String periodeString) {
         extractPeriodDates(periodeString, DELIMITER);
+    }
+
+    public boolean containsDate(DateTime date){
+        return interval.contains(date) || startDato.equals(date) || sluttDato.equals(date);
     }
 
     public String getPeriode() {
