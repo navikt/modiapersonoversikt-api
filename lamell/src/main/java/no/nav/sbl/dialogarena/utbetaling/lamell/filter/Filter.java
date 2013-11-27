@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottaker;
+import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.joda.time.LocalDate;
@@ -43,4 +44,7 @@ public class Filter implements Serializable {
         return arbeidsgiverVises || brukerVises;
     }
 
+    public Periode getPeriode() {
+        return new Periode(startDato.getObject().toDateTimeAtCurrentTime(), sluttDato.getObject().toDateTimeAtCurrentTime());
+    }
 }
