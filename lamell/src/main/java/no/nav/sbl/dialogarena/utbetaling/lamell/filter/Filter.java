@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
-import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
@@ -40,9 +39,9 @@ public class Filter implements Serializable {
     }
 
     public boolean filtrerPaaMottaker(String mottakerkode) {
-        boolean visArbeidsgiver = this.visArbeidsgiver && MOTTAKERKODE_ARBEIDSGIVER.equalsIgnoreCase(mottakerkode);
-        boolean visBruker = this.visBruker && MOTTAKERKODE_BRUKER.equalsIgnoreCase(mottakerkode);
-        return visArbeidsgiver || visBruker;
+        boolean arbeidsgiverVises = this.visArbeidsgiver && MOTTAKERKODE_ARBEIDSGIVER.equalsIgnoreCase(mottakerkode);
+        boolean brukerVises = this.visBruker && MOTTAKERKODE_BRUKER.equalsIgnoreCase(mottakerkode);
+        return arbeidsgiverVises || brukerVises;
     }
 
 }
