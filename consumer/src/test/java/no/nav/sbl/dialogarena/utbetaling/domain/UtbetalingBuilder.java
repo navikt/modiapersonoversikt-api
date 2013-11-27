@@ -14,6 +14,7 @@ public class UtbetalingBuilder {
     private DateTime utbetalingsDato = DateTime.now().minus(1);
     private double bruttoBelop = 6000.0;
     private double nettoBelop = 4800.0;
+    private double trekk = 1200.0;
     private String valuta = "kr";
     private String kontoNr = "1234 25 25814";
     private String utbetalingId = "1";
@@ -74,6 +75,11 @@ public class UtbetalingBuilder {
         return this;
     }
 
+    public UtbetalingBuilder setTrekk(double trekk) {
+        this.trekk = trekk;
+        return this;
+    }
+
     public UtbetalingBuilder setNettoBelop(double nettoBelop) {
         this.nettoBelop = nettoBelop;
         return this;
@@ -90,7 +96,7 @@ public class UtbetalingBuilder {
     }
 
     public Utbetaling createUtbetaling() {
-        return new Utbetaling(fnr, bilag, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr, utbetalingId, mottaker, periode);
+        return new Utbetaling(fnr, bilag, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr, utbetalingId, mottaker, periode, trekk);
     }
 
 }
