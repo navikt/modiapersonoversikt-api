@@ -21,7 +21,8 @@ public class UtbetalingBuilder {
     private String valuta = "kr";
     private String kontoNr = "1234 25 25814";
     private String utbetalingId = "1";
-    private Mottaker mottaker = new Mottaker("1", "12", "Arbeidsgiver");
+    private String fnr = "12345678978";
+    private Mottaker mottaker = new Mottaker(Mottaker.BRUKER, "Per Frode Kjellsen");
     private Periode periode = new Periode(new DateTime().minusDays(32), new DateTime().minusDays(2));
 
     public UtbetalingBuilder() {
@@ -30,6 +31,11 @@ public class UtbetalingBuilder {
                 new BilagBuilder().createBilag(),
                 new BilagBuilder().createBilag()
         ));
+    }
+
+    public UtbetalingBuilder setFnr(String fnr) {
+        this.fnr = fnr;
+        return this;
     }
 
     public UtbetalingBuilder setMottaker(Mottaker mottaker) {
@@ -88,7 +94,7 @@ public class UtbetalingBuilder {
     }
 
     public Utbetaling createUtbetaling() {
-        return new Utbetaling(bilag, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr, utbetalingId, mottaker, periode);
+        return new Utbetaling(fnr, bilag, statuskode, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr, utbetalingId, mottaker, periode);
     }
 
 }

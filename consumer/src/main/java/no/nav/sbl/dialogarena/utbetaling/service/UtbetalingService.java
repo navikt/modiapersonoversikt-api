@@ -21,13 +21,13 @@ public class UtbetalingService {
     private no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling utbetaling;
 
     public List<Utbetaling> hentUtbetalinger(String fnr, DateTime startDato, DateTime sluttDato) {
-        return transformUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato));
+        return transformUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato), fnr);
     }
 
-    private List<Utbetaling> transformUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
+    private List<Utbetaling> transformUtbetalinger(List<WSUtbetaling> wsUtbetalinger, String fnr) {
         List<Utbetaling> utbetalinger = new ArrayList<>();
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
-            utbetalinger.add(new Utbetaling(wsUtbetaling));
+            utbetalinger.add(new Utbetaling(fnr, wsUtbetaling));
         }
         return utbetalinger;
     }

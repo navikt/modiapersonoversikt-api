@@ -64,7 +64,7 @@ public class UtbetalingLamell extends Lerret {
 
                 item.add(visibleIf(
                         new Model<>(filter.filtrerPaaDatoer(utbetaling.getUtbetalingsDato().toLocalDate()) &&
-                                filter.filtrerPaaMottaker(utbetaling.getMottaker().getMottakertypeKode()))));
+                                filter.filtrerPaaMottaker(utbetaling.getMottaker().getMottakertypeType()))));
             }
         };
     }

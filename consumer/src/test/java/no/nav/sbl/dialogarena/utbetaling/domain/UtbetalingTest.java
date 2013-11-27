@@ -112,8 +112,9 @@ public class UtbetalingTest {
         WSUtbetaling wsUtbetaling = WSUtbetalingTestData.createUtbetaling1();
         String alderspensjon = "Alderspensjon";
         String kontoNr = "***REMOVED***";
+        String fnr = "12345678978";
 
-        Utbetaling u = new Utbetaling(wsUtbetaling);
+        Utbetaling u = new Utbetaling(fnr, wsUtbetaling);
 
         assertThat(u.getUtbetalingsDato(), is(wsUtbetaling.getUtbetalingDato()));
         assertThat(u.getStartDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato()));

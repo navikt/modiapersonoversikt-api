@@ -18,8 +18,8 @@ public class Utbetaling implements Serializable {
 
     public static final LocalDate DEFAULT_STARTDATO = now().minusMonths(3).toLocalDate();
     public static final LocalDate DEFAULT_SLUTTDATO = now().toLocalDate();
-
     private final String utbetalingId;
+    private String fnr;
     private List<Bilag> bilag = new ArrayList<>();
     private String statuskode;
     private DateTime utbetalingsDato;
@@ -31,7 +31,8 @@ public class Utbetaling implements Serializable {
     private Periode periode;
 
     //CHECKSTYLE:OFF
-    public Utbetaling(List<Bilag> bilag, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode) {
+    public Utbetaling(String fnr, List<Bilag> bilag, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode) {
+        this.fnr = fnr;
         this.bilag = bilag;
         this.statuskode = statuskode;
         this.utbetalingsDato = utbetalingsDato;
@@ -45,10 +46,11 @@ public class Utbetaling implements Serializable {
     }
     //CHECKSTYLE:ON
 
-    public Utbetaling(WSUtbetaling wsUtbetaling) {
+    public Utbetaling(String fnr, WSUtbetaling wsUtbetaling) {
         for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
             bilag.add(new Bilag(wsBilag));
         }
+        this.fnr = fnr;
         this.statuskode = wsUtbetaling.getStatusKode();
         this.utbetalingsDato = wsUtbetaling.getUtbetalingDato();
         this.bruttoBelop = wsUtbetaling.getBruttobelop();
@@ -56,8 +58,12 @@ public class Utbetaling implements Serializable {
         this.kontoNr = join(getKontoNrFromBilag(), ", ");
         this.utbetalingId = wsUtbetaling.getUtbetalingId();
         this.valuta = transformValuta(wsUtbetaling.getValuta());
-        this.mottaker = new Mottaker(wsUtbetaling.getUtbetalingMottaker());
+        this.mottaker = new Mottaker(fnr, wsUtbetaling.getUtbetalingMottaker());
         this.periode = new Periode(wsUtbetaling.getUtbetalingsPeriode());
+    }
+
+    public String getFnr() {
+        return fnr;
     }
 
     public Mottaker getMottaker() {

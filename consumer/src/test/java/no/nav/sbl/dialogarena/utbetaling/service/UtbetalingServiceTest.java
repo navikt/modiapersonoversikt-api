@@ -30,7 +30,7 @@ public class UtbetalingServiceTest {
     @Mock
     private no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling utbetaling;
 
-    String fnr = "***REMOVED***";
+    public static final String fnr = "***REMOVED***";
     WSUtbetalingTestData data = new WSUtbetalingTestData();
 
     @Test(expected = ApplicationException.class)
