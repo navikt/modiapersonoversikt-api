@@ -25,13 +25,14 @@ public class Utbetaling implements Serializable {
     private DateTime utbetalingsDato;
     private double bruttoBelop;
     private double nettoBelop;
+    private double trekk;
     private String valuta;
     private String kontoNr;
     private Mottaker mottaker;
     private Periode periode;
 
     //CHECKSTYLE:OFF
-    Utbetaling(String fnr, List<Bilag> bilag, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode) {
+    Utbetaling(String fnr, List<Bilag> bilag, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode, Double trekk) {
         this.fnr = fnr;
         this.bilag = bilag;
         this.statuskode = statuskode;
@@ -55,12 +56,14 @@ public class Utbetaling implements Serializable {
         this.utbetalingsDato = wsUtbetaling.getUtbetalingDato();
         this.bruttoBelop = wsUtbetaling.getBruttobelop();
         this.nettoBelop = wsUtbetaling.getNettobelop();
+        this.trekk = wsUtbetaling.getTrekk();
         this.kontoNr = join(getKontoNrFromBilag(), ", ");
         this.utbetalingId = wsUtbetaling.getUtbetalingId();
         this.valuta = transformValuta(wsUtbetaling.getValuta());
         this.mottaker = new Mottaker(fnr, wsUtbetaling.getUtbetalingMottaker());
         this.periode = new Periode(wsUtbetaling.getUtbetalingsPeriode());
     }
+
 
     public String getFnr() {
         return fnr;
@@ -116,6 +119,10 @@ public class Utbetaling implements Serializable {
 
     public double getNettoBelop() {
         return nettoBelop;
+    }
+
+    public double getTrekk() {
+        return trekk;
     }
 
     protected Set<String> getBeskrivelser() {
