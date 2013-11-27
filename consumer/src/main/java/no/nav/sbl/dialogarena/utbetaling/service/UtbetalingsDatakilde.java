@@ -5,7 +5,6 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,11 +12,10 @@ public final class UtbetalingsDatakilde {
 
     private static UtbetalingsDatakilde instance;
 
-    @Inject
-    private UtbetalingService utbetalingService;
     private List<Utbetaling> utbetalinger;
 
-    private UtbetalingsDatakilde() { }
+    private UtbetalingsDatakilde() {
+    }
 
     public static UtbetalingsDatakilde getKilde() {
         if(instance == null) {
@@ -30,8 +28,8 @@ public final class UtbetalingsDatakilde {
         return utbetalinger;
     }
 
-    public void refreshUtbetalinger(String fnr, DateTime startdato, DateTime sluttdato) {
-        utbetalinger = utbetalingService.hentUtbetalinger(fnr, startdato, sluttdato);
+    public void refreshUtbetalinger(String fnr, DateTime startdato, DateTime sluttdato, UtbetalingService service) {
+        utbetalinger = service.hentUtbetalinger(fnr, startdato, sluttdato);
     }
 
     public static List<Utbetaling> finnUtbetalingerIPeriode(List<Utbetaling> utbetalinger, Periode periode) {

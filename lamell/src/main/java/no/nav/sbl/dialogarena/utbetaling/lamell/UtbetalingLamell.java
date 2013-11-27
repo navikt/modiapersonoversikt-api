@@ -21,6 +21,7 @@ import javax.inject.Inject;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_SLUTTDATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_STARTDATO;
+import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsDatakilde.*;
 import static org.apache.wicket.model.Model.ofList;
 
 public class UtbetalingLamell extends Lerret {
@@ -36,6 +37,8 @@ public class UtbetalingLamell extends Lerret {
     public UtbetalingLamell(String id, String fnr) {
         super(id);
 
+        getKilde().refreshUtbetalinger(fnr, DEFAULT_STARTDATO.toDateTimeAtStartOfDay(), DEFAULT_SLUTTDATO.toDateTimeAtStartOfDay(), utbetalingService);
+
         filter = new Filter(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
 
         utbetalingerContainer = new WebMarkupContainer("utbetalingerContainer").add(createUtbetalingListView(fnr));
@@ -45,6 +48,7 @@ public class UtbetalingLamell extends Lerret {
         feedbackpanel.setOutputMarkupId(true);
 
         add(
+                new OppsummeringPanel("oppsummeringPanel", filter.getPeriode()),
                 feedbackpanel,
                 new FilterForm("filterForm", filter),
                 utbetalingerContainer
