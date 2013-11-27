@@ -9,7 +9,7 @@ import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsDatakilde.fin
 import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsDatakilde.getKilde;
 
 
-public class LagOppsummering {
+public class Oppsummerer {
 
     public Oppsummering lagOppsummering(Periode periode) {
         return regnUtOppsummering(finnUtbetalingerIPeriode(getKilde().getUtbetalinger(), periode));
