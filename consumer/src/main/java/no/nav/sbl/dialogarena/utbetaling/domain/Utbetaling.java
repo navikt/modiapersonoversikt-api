@@ -32,7 +32,7 @@ public class Utbetaling implements Serializable {
     private Periode periode;
 
     //CHECKSTYLE:OFF
-    Utbetaling(String fnr, List<Bilag> bilag, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode, Double trekk) {
+    Utbetaling(String fnr, List<Bilag> bilag, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode, double trekk) {
         this.fnr = fnr;
         this.bilag = bilag;
         this.statuskode = statuskode;
@@ -44,6 +44,7 @@ public class Utbetaling implements Serializable {
         this.utbetalingId = utbetalingId;
         this.mottaker = mottaker;
         this.periode = periode;
+        this.trekk = trekk;
     }
     //CHECKSTYLE:ON
 

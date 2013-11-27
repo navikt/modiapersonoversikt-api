@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_SLUTTDATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_STARTDATO;
-import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsDatakilde.*;
+import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsDatakilde.getKilde;
 import static org.apache.wicket.model.Model.ofList;
 
 public class UtbetalingLamell extends Lerret {
