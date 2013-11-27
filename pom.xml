@@ -27,6 +27,20 @@
         <modig.frontend.version>1.1.5</modig.frontend.version>
         <modig.security.version>1.0.19</modig.security.version>
 		<modig.log.version>1.1.2</modig.log.version>
+        <spring.security.version>3.1.0.RELEASE</spring.security.version>
+        <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
+        <modig.wicket.version>1.0.28</modig.wicket.version>
+        <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
+        <modig.lang.version>1.0.0</modig.lang.version>
+        <modig.frontend.wicket.version>1.0.33</modig.frontend.wicket.version>
+        <modig.core.version>1.0.1</modig.core.version>
+        <modig.security.version>1.0.11</modig.security.version>
+        <modig.log.version>1.1.2</modig.log.version>
+        <modig-testcertificates-version>1.0.0</modig-testcertificates-version>
+        <hamcrest.version>1.3</hamcrest.version>
+        <junit.version>4.11</junit.version>
+        <args4j.version>2.0.23</args4j.version>
+        <mockito.core.version>1.9.5</mockito.core.version>
         <slf4j.version>1.7.5</slf4j.version>
         <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
