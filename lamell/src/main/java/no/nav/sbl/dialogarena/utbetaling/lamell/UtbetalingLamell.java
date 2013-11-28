@@ -56,8 +56,8 @@ public class UtbetalingLamell extends Lerret {
     }
 
     private ListView<Utbetaling> createUtbetalingListView(final String fnr) {
-        DateTime startDato = filter.getStartDato().getObject().toDateTimeAtStartOfDay();
-        DateTime sluttDato = filter.getSluttDato().getObject().toDateTimeAtStartOfDay();
+        DateTime startDato = filter.getStartDato().toDateTimeAtStartOfDay();
+        DateTime sluttDato = filter.getSluttDato().toDateTimeAtStartOfDay();
 
         return new ListView<Utbetaling>("utbetalinger", ofList(utbetalingService.hentUtbetalinger(fnr, startDato, sluttDato))) {
             @Override
