@@ -9,6 +9,7 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeBaksystemIkk
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeForMangeForekomster;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkkeFunnet;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeUgyldigDato;
+import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
@@ -18,7 +19,7 @@ import java.util.List;
 public class UtbetalingService {
 
     @Inject
-    private no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling utbetaling;
+    private UtbetalingPortType utbetalingPortType;
 
     public List<Utbetaling> hentUtbetalinger(String fnr, DateTime startDato, DateTime sluttDato) {
         return transformUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato), fnr);
@@ -34,7 +35,7 @@ public class UtbetalingService {
 
     private List<WSUtbetaling> getWSUtbetalinger(String fnr, DateTime startDato, DateTime sluttDato) {
         try {
-            return utbetaling.hentUtbetalingListe(createRequest(fnr, startDato, sluttDato)).getUtbetalingListe();
+            return utbetalingPortType.hentUtbetalingListe(createRequest(fnr, startDato, sluttDato)).getUtbetalingListe();
         } catch (HentUtbetalingListeMottakerIkkeFunnet hentUtbetalingListeMottakerIkkeFunnet) {
             throw new ApplicationException("Utbetalingservice : Mottaker ikke funnet", hentUtbetalingListeMottakerIkkeFunnet);
         } catch (HentUtbetalingListeForMangeForekomster hentUtbetalingListeForMangeForekomster) {
