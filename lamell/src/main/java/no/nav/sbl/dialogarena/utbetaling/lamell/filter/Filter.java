@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Mottaker;
-import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
+import no.nav.sbl.dialogarena.utbetaling.logikk.Filtrerer;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
@@ -13,14 +12,23 @@ public class Filter implements Serializable {
 
     private LocalDate startDato;
     private LocalDate sluttDato;
-    private Boolean visBruker;
-    private Boolean visArbeidsgiver;
 
+    private Boolean visBruker;
+
+    private Boolean visArbeidsgiver;
     public Filter(LocalDate startDato, LocalDate sluttDato, Boolean brukerCheckbox, Boolean arbeidsgiverCheckbox) {
         this.visBruker = brukerCheckbox;
         this.visArbeidsgiver = arbeidsgiverCheckbox;
         this.startDato = startDato;
         this.sluttDato = sluttDato;
+    }
+
+    public Boolean getVisBruker() {
+        return visBruker;
+    }
+
+    public Boolean getVisArbeidsgiver() {
+        return visArbeidsgiver;
     }
 
     public LocalDate getStartDato() {
@@ -32,17 +40,10 @@ public class Filter implements Serializable {
     }
 
     public boolean filtrerPaaDatoer(LocalDate utbetalingsDato) {
-        return utbetalingsDato.isAfter(startDato) &&
-                utbetalingsDato.isBefore(sluttDato);
+        return Filtrerer.filtrerPaaDatoer(utbetalingsDato, startDato, sluttDato);
     }
 
     public boolean filtrerPaaMottaker(String mottakerkode) {
-        boolean arbeidsgiverVises = this.visArbeidsgiver && Mottaker.ARBEIDSGIVER.equalsIgnoreCase(mottakerkode);
-        boolean brukerVises = this.visBruker && Mottaker.BRUKER.equalsIgnoreCase(mottakerkode);
-        return arbeidsgiverVises || brukerVises;
-    }
-
-    public Periode getPeriode() {
-        return new Periode(startDato.toDateTimeAtCurrentTime(), sluttDato.toDateTimeAtCurrentTime());
+        return Filtrerer.filtrerPaaMottaker(mottakerkode, visArbeidsgiver, visBruker);
     }
 }
