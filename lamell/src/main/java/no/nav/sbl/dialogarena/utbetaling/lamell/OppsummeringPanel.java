@@ -30,11 +30,4 @@ public class OppsummeringPanel extends Panel {
         this.oppsummering = oppsummering;
         setDefaultModelObject(oppsummering);
     }
-
-    @Override
-    protected void onModelChanged() {
-        super.onModelChanged();
-        System.out.println("Model changed: oppsummering = " + oppsummering);
-        System.out.println("Model changed: getDefaultModelObject() = " + getDefaultModelObject());
-    }
 }
