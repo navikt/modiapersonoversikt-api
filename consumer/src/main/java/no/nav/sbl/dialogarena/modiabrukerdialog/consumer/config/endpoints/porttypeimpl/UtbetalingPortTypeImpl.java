@@ -8,6 +8,7 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeBaksystemIkk
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeForMangeForekomster;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkkeFunnet;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeUgyldigDato;
+import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
@@ -20,8 +21,8 @@ public class UtbetalingPortTypeImpl {
 
     private String utbetalingEndpoint = "https://modapp-t11.adeo.no/utbetaling";
 
-    public no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling utbetalingPortType() {
-        return new no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling() {
+    public UtbetalingPortType utbetalingPortType() {
+        return new UtbetalingPortType() {
             @Override
             public WSHentUtbetalingListeResponse hentUtbetalingListe(WSHentUtbetalingListeRequest request) {
                 return new WSHentUtbetalingListeResponse();
@@ -31,16 +32,16 @@ public class UtbetalingPortTypeImpl {
     }
 
     @SuppressWarnings("unused")
-    private no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling createUtbetalingPortType(AbstractSAMLOutInterceptor interceptor) {
+    private UtbetalingPortType createUtbetalingPortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setWsdlLocation("utbetaling/no/nav/virksomhet/tjenester/utbetaling/utbetaling.wsdl");
         proxyFactoryBean.setAddress(utbetalingEndpoint);
-        proxyFactoryBean.setServiceClass(no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling.class);
+        proxyFactoryBean.setServiceClass(UtbetalingPortType.class);
         proxyFactoryBean.getOutInterceptors().add(interceptor);
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
-        final no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling utbetalingTjeneste = proxyFactoryBean.create(no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling.class);
-        return new no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling() {
+        final UtbetalingPortType utbetalingTjeneste = proxyFactoryBean.create(UtbetalingPortType.class);
+        return new UtbetalingPortType() {
 
             @Cacheable("endpointCache")
             @Override

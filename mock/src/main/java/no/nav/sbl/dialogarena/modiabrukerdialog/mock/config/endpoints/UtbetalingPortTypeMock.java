@@ -7,6 +7,7 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeBaksystemIkk
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeForMangeForekomster;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkkeFunnet;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeUgyldigDato;
+import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,8 +17,8 @@ import java.util.List;
 public class UtbetalingPortTypeMock {
 
     @Bean
-    public no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling utbetalingPortType() {
-        return new no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling() {
+    public UtbetalingPortType utbetalingPortType() {
+        return new UtbetalingPortType() {
             @Override
             public WSHentUtbetalingListeResponse hentUtbetalingListe(WSHentUtbetalingListeRequest request) throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
                 List<WSUtbetaling> utbetalinger = WSUtbetalingTestData.getWsUtbetalinger(request.getMottaker());

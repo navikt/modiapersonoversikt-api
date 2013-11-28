@@ -5,6 +5,7 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.TestBeans;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
+import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +32,7 @@ public class EndpointsConfigTest {
     @Inject
     private AktoerPortType aktoerPortType;
     @Inject
-    private no.nav.virksomhet.tjenester.utbetaling.v2.Utbetaling utbetalingPortType;
+    private UtbetalingPortType utbetalingPortType;
     @Inject
     private KodeverkPortType kodeverkPortType;
     @Inject
