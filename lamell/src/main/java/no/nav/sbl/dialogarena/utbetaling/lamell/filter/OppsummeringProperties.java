@@ -14,9 +14,9 @@ import java.util.List;
 public class OppsummeringProperties implements Serializable {
 
     private List<Utbetaling> utbetalinger;
+
     private LocalDate sluttDato;
     private LocalDate startDato;
-
     private Periode periode;
     private Oppsummering oppsummering;
 
@@ -25,11 +25,11 @@ public class OppsummeringProperties implements Serializable {
         this.sluttDato = sluttDato;
         this.startDato = startDato;
         periode = createPeriode(startDato, sluttDato);
-        regnUtOppsummering();
+        oppsummering = regnUtOppsummering();
     }
 
-    private void regnUtOppsummering() {
-        oppsummering = OppsummeringsKalkulator.regnUtOppsummering(utbetalinger);
+    private Oppsummering regnUtOppsummering() {
+        return OppsummeringsKalkulator.regnUtOppsummering(utbetalinger);
     }
 
     private Periode createPeriode(LocalDate start, LocalDate slutt) {
@@ -52,8 +52,36 @@ public class OppsummeringProperties implements Serializable {
         return oppsummering.brutto;
     }
 
+    public void setUtbetalt(double utbetalt) {
+        oppsummering.utbetalt = utbetalt;
+    }
+
+    public void setTrekk(double trekk) {
+        oppsummering.trekk = trekk;
+    }
+
+    public void setBrutto(double brutto) {
+        oppsummering.brutto = brutto;
+    }
+
     public List<Utbetaling> getUtbetalinger() {
         return utbetalinger;
+    }
+
+    public void setUtbetalinger(List<Utbetaling> utbetalinger) {
+        this.utbetalinger = utbetalinger;
+    }
+
+    public void setSluttDato(LocalDate sluttDato) {
+        this.sluttDato = sluttDato;
+    }
+
+    public void setStartDato(LocalDate startDato) {
+        this.startDato = startDato;
+    }
+
+    public void setPeriode(Periode periode) {
+        this.periode = periode;
     }
 
 

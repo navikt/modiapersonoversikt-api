@@ -99,9 +99,9 @@ public class UtbetalingLamell extends Lerret {
 
         List<Utbetaling> synligeUtbetalinger = getKilde().getSynligeUtbetalinger(filter.getParams());
         oppsummeringProperties = new OppsummeringProperties(synligeUtbetalinger, filter.getStartDato(), filter.getSluttDato());
-//        oppsummeringPanel.setOppsummering(oppsummeringProperties);
-//
-//        target.add(oppsummeringPanel);
+        oppsummeringPanel.setOppsummering(oppsummeringProperties);
+
+        target.add(oppsummeringPanel);
     }
 
 }
