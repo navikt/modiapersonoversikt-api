@@ -7,12 +7,9 @@ import org.apache.wicket.model.IModel;
 
 public class OppsummeringPanel extends Panel {
 
-    private OppsummeringProperties oppsummering;
 
     public OppsummeringPanel(String id, IModel<OppsummeringProperties> model) {
         super(id, model);
-
-        oppsummering = model.getObject();
 
         add(
                 new Label("utbetaltLabel", "Totalt utbetalt"),
@@ -27,7 +24,6 @@ public class OppsummeringPanel extends Panel {
     }
 
     public void setOppsummering(OppsummeringProperties oppsummering) {
-        this.oppsummering = oppsummering;
         setDefaultModelObject(oppsummering);
     }
 }
