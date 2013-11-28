@@ -1,28 +1,40 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Oppsummering;
-import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
-import no.nav.sbl.dialogarena.utbetaling.logikk.Oppsummerer;
+import no.nav.sbl.dialogarena.utbetaling.lamell.filter.OppsummeringProperties;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 
 public class OppsummeringPanel extends Panel {
 
+    private OppsummeringProperties oppsummering;
 
-    public OppsummeringPanel(String id, Periode periode) {
-        super(id);
+    public OppsummeringPanel(String id, IModel<OppsummeringProperties> model) {
+        super(id, model);
 
-        Oppsummering oppsummering = new Oppsummerer().lagOppsummering(periode);
+        oppsummering = model.getObject();
 
         add(
                 new Label("utbetaltLabel", "Totalt utbetalt"),
                 new Label("trekkLabel", "Totalt trekk"),
                 new Label("bruttoLabel", "Totalt brutto"),
-                new Label("periodeLabel", periode.getPeriode()),
-                new Label("utbetaltSum", oppsummering.utbetalt),
-                new Label("trekkSum", oppsummering.trekk),
-                new Label("bruttoSum", oppsummering.brutto)
+                new Label("periodeLabel", model.getObject().getPeriode()),
+                new Label("antallUtbetalinger", model.getObject().getUtbetalinger().size()),
+                new Label("utbetaltSum", model.getObject().getUtbetalt()),
+                new Label("trekkSum", model.getObject().getTrekk()),
+                new Label("bruttoSum", model.getObject().getBrutto())
         );
     }
 
+    public void setOppsummering(OppsummeringProperties oppsummering) {
+        this.oppsummering = oppsummering;
+        setDefaultModelObject(oppsummering);
+    }
+
+    @Override
+    protected void onModelChanged() {
+        super.onModelChanged();
+        System.out.println("Model changed: oppsummering = " + oppsummering);
+        System.out.println("Model changed: getDefaultModelObject() = " + getDefaultModelObject());
+    }
 }
