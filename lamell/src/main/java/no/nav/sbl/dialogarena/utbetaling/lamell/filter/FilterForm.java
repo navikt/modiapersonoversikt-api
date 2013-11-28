@@ -64,7 +64,7 @@ public class FilterForm extends Form {
     private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour() {
         return new AjaxFormSubmitBehavior("onchange") {
             @Override
-            protected void onEvent(AjaxRequestTarget target) {
+            protected void onSubmit(AjaxRequestTarget target) {
                 sendFilterEndretEvent();
             }
         };
