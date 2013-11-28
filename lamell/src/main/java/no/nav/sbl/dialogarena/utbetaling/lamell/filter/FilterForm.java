@@ -56,7 +56,9 @@ public class FilterForm extends Form {
                 .withYearRange("-" + AAR_TILBAKE + "y:c")
                 .build();
 
-        DateRangeModel dateRangeModel = new DateRangeModel(filter.getStartDato(), filter.getSluttDato());
+        DateRangeModel dateRangeModel = new DateRangeModel(
+                new PropertyModel<LocalDate>(filter, "startDato"),
+                new PropertyModel<LocalDate>(filter, "sluttDato"));
 
         return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }
