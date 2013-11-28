@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.lamell.filter.Filter;
+import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterProperties;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterForm;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.OppsummeringProperties;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
@@ -37,14 +37,14 @@ public class UtbetalingLamell extends Lerret {
     @Inject
     private UtbetalingService utbetalingService;
     private MarkupContainer utbetalingerContainer;
-    private final Filter filter;
+    private final FilterProperties filter;
 
     public UtbetalingLamell(String id, String fnr) {
         super(id);
 
         getKilde().refreshUtbetalinger(fnr, DEFAULT_STARTDATO.toDateTimeAtStartOfDay(), DEFAULT_SLUTTDATO.toDateTimeAtStartOfDay(), utbetalingService);
 
-        filter = new Filter(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
+        filter = new FilterProperties(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
 
         createOppsummering(getKilde().getUtbetalinger());
         ListView<Utbetaling> listView = createUtbetalingListView();
@@ -92,13 +92,13 @@ public class UtbetalingLamell extends Lerret {
         };
     }
 
-    @RunOnEvents(Filter.ENDRET)
+    @RunOnEvents(FilterProperties.ENDRET)
     @SuppressWarnings("unused")
     private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
         target.add(utbetalingerContainer);
 
-//        List<Utbetaling> synligeUtbetalinger = getKilde().getSynligeUtbetalinger(filter.getStartDato(), filter.getSluttDato(), filter.getVisArbeidsgiver(), filter.getVisBruker());
-//        oppsummeringProperties = new OppsummeringProperties(synligeUtbetalinger, filter.getStartDato(), filter.getSluttDato());
+        List<Utbetaling> synligeUtbetalinger = getKilde().getSynligeUtbetalinger(filter.getParams());
+        oppsummeringProperties = new OppsummeringProperties(synligeUtbetalinger, filter.getStartDato(), filter.getSluttDato());
 //        oppsummeringPanel.setOppsummering(oppsummeringProperties);
 //
 //        target.add(oppsummeringPanel);

@@ -19,9 +19,9 @@ public class FilterForm extends Form {
 
     private static final int AAR_TILBAKE = 3;
 
-    private Filter filter;
+    private FilterProperties filter;
 
-    public FilterForm(String id, Filter filter) {
+    public FilterForm(String id, FilterProperties filter) {
         super(id);
         this.filter = filter;
         add(
@@ -73,6 +73,6 @@ public class FilterForm extends Form {
     }
 
     private void sendFilterEndretEvent() {
-        send(getPage(), Broadcast.DEPTH, Filter.ENDRET);
+        send(getPage(), Broadcast.DEPTH, FilterProperties.ENDRET);
     }
 }
