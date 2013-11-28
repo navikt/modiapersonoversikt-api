@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
 
+import no.nav.sbl.dialogarena.utbetaling.domain.FilterParameters;
 import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.logikk.Filtrerer;
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,14 +48,14 @@ public final class UtbetalingsDatakilde {
         return resultat;
     }
 
-    public List<Utbetaling> getSynligeUtbetalinger(LocalDate start, LocalDate slutt, boolean visArbeidsgiver, boolean visBruker) {
-        return getSynligeUtbetalinger(utbetalinger, start, slutt, visArbeidsgiver, visBruker);
+    public List<Utbetaling> getSynligeUtbetalinger(FilterParameters params) {
+        return getSynligeUtbetalinger(utbetalinger, params);
     }
 
-    public static List<Utbetaling> getSynligeUtbetalinger(List<Utbetaling> alleUtbetalinger, LocalDate start, LocalDate slutt, boolean visArbeidsgiver, boolean visBruker) {
+    public static List<Utbetaling> getSynligeUtbetalinger(List<Utbetaling> alleUtbetalinger, FilterParameters params) {
         List<Utbetaling> synligeUtbetalinger = new ArrayList<>();
         for (Utbetaling utbetaling : alleUtbetalinger) {
-            boolean erSynlig = utbetalingErSynlig(utbetaling, start, slutt, visArbeidsgiver, visBruker);
+            boolean erSynlig = utbetalingErSynlig(utbetaling, params);
             if(erSynlig) {
                 synligeUtbetalinger.add(utbetaling);
             }
@@ -63,9 +63,9 @@ public final class UtbetalingsDatakilde {
         return synligeUtbetalinger;
     }
 
-    private static boolean utbetalingErSynlig(Utbetaling utbetaling, LocalDate start, LocalDate slutt, boolean visArbeidsgiver, boolean visBruker) {
-        boolean innenforDatoer = Filtrerer.filtrerPaaDatoer(utbetaling.getUtbetalingsDato().toLocalDate(), start, slutt);
-        boolean brukerSkalVises = Filtrerer.filtrerPaaMottaker(utbetaling.getMottaker().getMottakertypeType(), visArbeidsgiver, visBruker);
+    private static boolean utbetalingErSynlig(Utbetaling utbetaling, FilterParameters params) {
+        boolean innenforDatoer = Filtrerer.filtrerPaaDatoer(utbetaling.getUtbetalingsDato().toLocalDate(), params.startDato, params.sluttDato);
+        boolean brukerSkalVises = Filtrerer.filtrerPaaMottaker(utbetaling.getMottaker().getMottakertypeType(), params.visArbeidsgiver, params.visBruker);
         return innenforDatoer && brukerSkalVises;
     }
 }
