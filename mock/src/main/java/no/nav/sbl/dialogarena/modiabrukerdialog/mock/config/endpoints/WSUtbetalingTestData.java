@@ -39,7 +39,8 @@ public class WSUtbetalingTestData {
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(1000.0)
-                .withBruttobelop(1000.0)
+                .withBruttobelop(1200.0)
+                .withTrekk(200.0)
                 .withStatusKode("12")
                 .withStatusBeskrivelse("Uføre")
                 .withUtbetalingMottaker(createTrygdetMottaker())
@@ -57,8 +58,9 @@ public class WSUtbetalingTestData {
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj2, posteringsdetalj3);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(2000.0)
+        utbetaling.withNettobelop(1700.0)
                 .withBruttobelop(2000.0)
+                .withTrekk(300.0)
                 .withStatusKode("12")
                 .withStatusBeskrivelse("Trygd")
                 .withUtbetalingMottaker(createTrygdetMottaker())
@@ -75,8 +77,9 @@ public class WSUtbetalingTestData {
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(3000.0)
+        utbetaling.withNettobelop(2500.0)
                 .withBruttobelop(3000.0)
+                .withTrekk(500.0)
                 .withValuta("kr")
                 .withStatusKode("12")
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
@@ -93,8 +96,9 @@ public class WSUtbetalingTestData {
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj1);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(4000.00)
+        utbetaling.withNettobelop(3000.00)
                 .withBruttobelop(4000.0)
+                .withTrekk(1000.0)
                 .withValuta("kr")
                 .withStatusKode("12")
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
@@ -112,8 +116,9 @@ public class WSUtbetalingTestData {
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(5100.50)
+        utbetaling.withNettobelop(2500.50)
                 .withBruttobelop(5100.50)
+                .withTrekk(2600.0)
                 .withStatusKode("12")
                 .withStatusBeskrivelse("APGrunnbeløp")
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
@@ -130,8 +135,9 @@ public class WSUtbetalingTestData {
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling.withNettobelop(6000.00)
+        utbetaling.withNettobelop(4000.00)
                 .withBruttobelop(6000.0)
+                .withTrekk(2000.0)
                 .withStatusKode("12")
                 .withStatusBeskrivelse("Pensjon")
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
@@ -168,6 +174,5 @@ public class WSUtbetalingTestData {
                 .withNavn("Arbeidsgiver");
         return wsMottaker;
     }
-
 
 }
