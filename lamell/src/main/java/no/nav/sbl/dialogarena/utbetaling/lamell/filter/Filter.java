@@ -12,23 +12,14 @@ public class Filter implements Serializable {
 
     private LocalDate startDato;
     private LocalDate sluttDato;
-
     private Boolean visBruker;
-
     private Boolean visArbeidsgiver;
+
     public Filter(LocalDate startDato, LocalDate sluttDato, Boolean brukerCheckbox, Boolean arbeidsgiverCheckbox) {
         this.visBruker = brukerCheckbox;
         this.visArbeidsgiver = arbeidsgiverCheckbox;
         this.startDato = startDato;
         this.sluttDato = sluttDato;
-    }
-
-    public Boolean getVisBruker() {
-        return visBruker;
-    }
-
-    public Boolean getVisArbeidsgiver() {
-        return visArbeidsgiver;
     }
 
     public LocalDate getStartDato() {
