@@ -82,7 +82,6 @@ public class UtbetalingLamell extends Lerret {
             @Override
             protected void populateItem(ListItem<Utbetaling> item) {
                 Utbetaling utbetaling = item.getModelObject();
-                System.out.println("item = " + item);
 
                 item.add(new UtbetalingPanel("utbetaling", utbetaling));
                 item.add(visibleIf(
