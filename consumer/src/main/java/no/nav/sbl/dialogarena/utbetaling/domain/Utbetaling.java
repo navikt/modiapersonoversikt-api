@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.joda.time.DateTime;
@@ -124,6 +125,10 @@ public class Utbetaling implements Serializable {
 
     public double getTrekk() {
         return trekk;
+    }
+
+    public String getBelopString() {
+        return ValutaUtil.getBelopString(this.nettoBelop, this.valuta);
     }
 
     protected Set<String> getBeskrivelser() {

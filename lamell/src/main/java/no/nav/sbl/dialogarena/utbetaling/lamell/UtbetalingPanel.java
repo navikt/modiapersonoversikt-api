@@ -83,9 +83,6 @@ public class UtbetalingPanel extends Panel {
     }
 
     private Label createBelopLabel(Utbetaling utbetaling) {
-        NumberFormat currencyInstance = getNumberInstance(forLanguageTag("nb-no"));
-        currencyInstance.setMinimumFractionDigits(2);
-        return new Label("belop", currencyInstance.format(utbetaling.getNettoBelop()) + " " + utbetaling.getValuta());
+        return new Label("belop", utbetaling.getBelopString());
     }
-
 }
