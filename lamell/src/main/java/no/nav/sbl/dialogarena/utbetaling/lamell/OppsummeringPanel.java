@@ -7,7 +7,6 @@ import org.apache.wicket.model.IModel;
 
 public class OppsummeringPanel extends Panel {
 
-
     public OppsummeringPanel(String id, IModel<OppsummeringProperties> model) {
         super(id, model);
 
@@ -15,15 +14,11 @@ public class OppsummeringPanel extends Panel {
                 new Label("utbetaltLabel", "Totalt utbetalt"),
                 new Label("trekkLabel", "Totalt trekk"),
                 new Label("bruttoLabel", "Totalt brutto"),
-                new Label("periodeLabel", model.getObject().getPeriode()),
-                new Label("antallUtbetalinger", model.getObject().getUtbetalinger().size()),
-                new Label("utbetaltSum", model.getObject().getUtbetalt()),
-                new Label("trekkSum", model.getObject().getTrekk()),
-                new Label("bruttoSum", model.getObject().getBrutto())
+                new Label("oppsummertPeriodeLabel"),
+                new Label("antallUtbetalinger"),
+                new Label("oppsummering.utbetalt"),
+                new Label("oppsummering.trekk"),
+                new Label("oppsummering.brutto")
         );
-    }
-
-    public void setOppsummering(OppsummeringProperties oppsummering) {
-        setDefaultModelObject(oppsummering);
     }
 }
