@@ -15,7 +15,6 @@ public class OppsummeringPanel extends Panel {
                 new Label("trekkLabel", "Totalt trekk"),
                 new Label("bruttoLabel", "Totalt brutto"),
                 new Label("oppsummertPeriodeLabel"),
-                new Label("antallUtbetalinger"),
                 new Label("oppsummering.utbetalt"),
                 new Label("oppsummering.trekk"),
                 new Label("oppsummering.brutto")

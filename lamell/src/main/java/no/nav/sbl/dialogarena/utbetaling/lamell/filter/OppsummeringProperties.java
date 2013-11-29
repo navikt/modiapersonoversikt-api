@@ -32,11 +32,6 @@ public class OppsummeringProperties implements Serializable {
         return OppsummeringsKalkulator.regnUtOppsummering(utbetalinger);
     }
 
-    @SuppressWarnings("unused")
-    public int getAntallUtbetalinger() {
-        return utbetalinger.size();
-    }
-
     private Periode createPeriode(LocalDate start, LocalDate slutt) {
         return new Periode(start.toDateTimeAtStartOfDay(), slutt.toDateMidnight().toDateTime());
     }
