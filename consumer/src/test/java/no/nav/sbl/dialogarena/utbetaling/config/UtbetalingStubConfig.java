@@ -20,7 +20,7 @@ public class UtbetalingStubConfig {
     private static final String FNR = "12345612345";
 
     @Bean
-    public UtbetalingPortType utbetaling() {
+    public UtbetalingPortType utbetalingPortType() {
         return new UtbetalingPortType() {
             @Override
             public WSHentUtbetalingListeResponse hentUtbetalingListe(@WebParam(name = "request", targetNamespace = "") WSHentUtbetalingListeRequest request) throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
