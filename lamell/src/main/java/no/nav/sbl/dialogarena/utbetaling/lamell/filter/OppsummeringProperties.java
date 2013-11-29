@@ -17,14 +17,14 @@ public class OppsummeringProperties implements Serializable {
 
     private LocalDate sluttDato;
     private LocalDate startDato;
-    private Periode periode;
+    private Periode oppsummertPeriodeLabel;
     private Oppsummering oppsummering;
 
     public OppsummeringProperties(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
         this.utbetalinger = utbetalinger;
         this.sluttDato = sluttDato;
         this.startDato = startDato;
-        periode = createPeriode(startDato, sluttDato);
+        oppsummertPeriodeLabel = createPeriode(startDato, sluttDato);
         oppsummering = regnUtOppsummering();
     }
 
@@ -32,58 +32,14 @@ public class OppsummeringProperties implements Serializable {
         return OppsummeringsKalkulator.regnUtOppsummering(utbetalinger);
     }
 
+    @SuppressWarnings("unused")
+    public int getAntallUtbetalinger() {
+        return utbetalinger.size();
+    }
+
     private Periode createPeriode(LocalDate start, LocalDate slutt) {
         return new Periode(start.toDateTimeAtStartOfDay(), slutt.toDateMidnight().toDateTime());
     }
-
-    public Periode getPeriode() {
-        return periode;
-    }
-
-    public double getUtbetalt() {
-        return oppsummering.utbetalt;
-    }
-
-    public double getTrekk() {
-        return oppsummering.trekk;
-    }
-
-    public double getBrutto() {
-        return oppsummering.brutto;
-    }
-
-    public void setUtbetalt(double utbetalt) {
-        oppsummering.utbetalt = utbetalt;
-    }
-
-    public void setTrekk(double trekk) {
-        oppsummering.trekk = trekk;
-    }
-
-    public void setBrutto(double brutto) {
-        oppsummering.brutto = brutto;
-    }
-
-    public List<Utbetaling> getUtbetalinger() {
-        return utbetalinger;
-    }
-
-    public void setUtbetalinger(List<Utbetaling> utbetalinger) {
-        this.utbetalinger = utbetalinger;
-    }
-
-    public void setSluttDato(LocalDate sluttDato) {
-        this.sluttDato = sluttDato;
-    }
-
-    public void setStartDato(LocalDate startDato) {
-        this.startDato = startDato;
-    }
-
-    public void setPeriode(Periode periode) {
-        this.periode = periode;
-    }
-
 
     @Override
     public String toString() {
@@ -91,7 +47,7 @@ public class OppsummeringProperties implements Serializable {
                 "utbetalinger.size =" + utbetalinger.size() +
                 ", sluttDato=" + sluttDato +
                 ", startDato=" + startDato +
-                ", periode=" + periode +
+                ", oppsummertPeriodeLabel=" + oppsummertPeriodeLabel +
                 ", oppsummering=" + oppsummering +
                 '}';
     }

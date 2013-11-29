@@ -1,20 +1,24 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div class="utbetalinglamell">
-        <div wicket:id="feedbackpanel" />
+        <div wicket:id="feedbackpanel"/>
         <form wicket:id="filterForm" class="filter-form">
             <div class="utbetaling-til-filter">
                 <label>Utbetaling til</label>
-                <input type="button" wicket:id="visBruker" value="Bruker" class="knapp-utbetaling-til-filter" /><!-- Denne fjerner whitespace mellom elementene
-                --><input type="button" wicket:id="visArbeidsgiver" value="Arbeidsgiver" class="knapp-utbetaling-til-filter" />
+                <input type="button" wicket:id="visBruker" value="Bruker" class="knapp-utbetaling-til-filter"/><!-- Denne fjerner whitespace mellom elementene
+                --><input type="button" wicket:id="visArbeidsgiver" value="Arbeidsgiver"
+                          class="knapp-utbetaling-til-filter"/>
             </div>
-            <div wicket:id="datoFilter" class="dato-plukker-filter" />
+            <div wicket:id="datoFilter" class="dato-plukker-filter"/>
         </form>
 
-        <div wicket:id="utbetalingerContainer" class="utbetalinger" >
-            <wicket:container wicket:id="oppsummeringPanel"  />
+        <div wicket:id="oppsummeringContainer" class="utbetalinger">
+            <wicket:container wicket:id="oppsummeringPanel"/>
+        </div>
+
+        <div wicket:id="utbetalingerContainer" class="utbetalinger">
             <wicket:container wicket:id="utbetalinger">
-                <wicket:container wicket:id="utbetaling" />
+                <wicket:container wicket:id="utbetaling"/>
             </wicket:container>
         </div>
     </div>
