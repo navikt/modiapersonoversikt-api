@@ -9,6 +9,7 @@ import java.io.Serializable;
 
 public class FilterProperties implements Serializable {
     public static final String ENDRET = "filter.endret";
+
     private LocalDate startDato;
     private LocalDate sluttDato;
     private Boolean visBruker;
@@ -30,13 +31,7 @@ public class FilterProperties implements Serializable {
     }
 
     public FilterParameters getParams() {
-        FilterParameters params = new FilterParameters();
-        params.visBruker = visBruker;
-        params.visArbeidsgiver = visArbeidsgiver;
-        params.startDato = startDato;
-        params.sluttDato = sluttDato;
-
-        return params;
+        return new FilterParameters(startDato, sluttDato, visBruker, visArbeidsgiver);
     }
 
     public LocalDate getStartDato() {
