@@ -35,15 +35,4 @@ public class OppsummeringProperties implements Serializable {
     private Periode createPeriode(LocalDate start, LocalDate slutt) {
         return new Periode(start.toDateTimeAtStartOfDay(), slutt.toDateMidnight().toDateTime());
     }
-
-    @Override
-    public String toString() {
-        return "OppsummeringProperties{" +
-                "utbetalinger.size =" + utbetalinger.size() +
-                ", sluttDato=" + sluttDato +
-                ", startDato=" + startDato +
-                ", oppsummertPeriode=" + oppsummertPeriode +
-                ", oppsummering=" + oppsummering +
-                '}';
-    }
 }

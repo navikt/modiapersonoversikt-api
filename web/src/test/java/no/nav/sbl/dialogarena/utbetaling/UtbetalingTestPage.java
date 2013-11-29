@@ -6,7 +6,6 @@ import org.apache.wicket.markup.html.WebPage;
 
 public class UtbetalingTestPage extends WebPage {
 
-
     public UtbetalingTestPage() {
         String fnr = "***REMOVED***";
         add(new UtbetalingWidget("utbetalingWidget", "U", fnr));

@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
-import java.text.NumberFormat;
-import java.util.List;
 import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
@@ -14,8 +12,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import static java.text.NumberFormat.getNumberInstance;
-import static java.util.Locale.forLanguageTag;
+import java.util.List;
+
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 
