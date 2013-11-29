@@ -9,59 +9,43 @@ import java.io.Serializable;
 
 public class FilterProperties implements Serializable {
     public static final String ENDRET = "filter.endret";
+    private LocalDate startDato;
+    private LocalDate sluttDato;
+    private Boolean visBruker;
+    private Boolean visArbeidsgiver;
 
-    private FilterParameters params;
-
-    public FilterProperties(LocalDate startDato, LocalDate sluttDato, Boolean brukerCheckbox, Boolean arbeidsgiverCheckbox) {
-        params = new FilterParameters();
-        params.visBruker = brukerCheckbox;
-        params.visArbeidsgiver = arbeidsgiverCheckbox;
-        params.startDato = startDato;
-        params.sluttDato = sluttDato;
+    public FilterProperties(LocalDate startDato, LocalDate sluttDato, Boolean visBruker, Boolean visArbeidsgiver) {
+        this.startDato = startDato;
+        this.sluttDato = sluttDato;
+        this.visBruker = visBruker;
+        this.visArbeidsgiver = visArbeidsgiver;
     }
 
     public boolean filtrerPaaDatoer(LocalDate utbetalingsDato) {
-        return Filtrerer.filtrerPaaDatoer(utbetalingsDato, params.startDato, params.sluttDato);
+        return Filtrerer.filtrerPaaDatoer(utbetalingsDato, startDato, sluttDato);
     }
 
     public boolean filtrerPaaMottaker(String mottakerkode) {
-        return Filtrerer.filtrerPaaMottaker(mottakerkode, params.visArbeidsgiver, params.visBruker);
-    }
-
-    public void setStartDato(LocalDate startDato) {
-        params.startDato = startDato;
-    }
-
-    public void setSluttDato(LocalDate sluttDato) {
-        params.sluttDato = sluttDato;
-    }
-
-    public void setVisBruker(Boolean visBruker) {
-        params.visBruker = visBruker;
-    }
-
-    public void setVisArbeidsgiver(Boolean visArbeidsgiver) {
-        params.visArbeidsgiver = visArbeidsgiver;
+        return Filtrerer.filtrerPaaMottaker(mottakerkode, visArbeidsgiver, visBruker);
     }
 
     public FilterParameters getParams() {
+        FilterParameters params = new FilterParameters();
+        params.visBruker = visBruker;
+        params.visArbeidsgiver = visArbeidsgiver;
+        params.startDato = startDato;
+        params.sluttDato = sluttDato;
+
         return params;
     }
 
-    public Boolean getVisBruker() {
-        return params.visBruker;
-    }
-
-    public Boolean getVisArbeidsgiver() {
-        return params.visArbeidsgiver;
-    }
-
     public LocalDate getStartDato() {
-        return params.startDato;
+        return startDato;
     }
-
 
     public LocalDate getSluttDato() {
-        return params.sluttDato;
+        return sluttDato;
     }
+
+
 }
