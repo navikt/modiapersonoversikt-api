@@ -1,15 +1,20 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-    <div wicket:id="oppsummertPeriodeLabel"/>
-    <div class="labels">
-        <div wicket:id="utbetaltLabel"/>
-        <div wicket:id="trekkLabel"/>
-        <div wicket:id="bruttoLabel"/>
+    <div class="element">
+        <label wicket:id="oppsummertPeriodeLabel"/>
+        <span wicket:id="oppsummertPeriode"/>
     </div>
-    <div class="summer">
-        <div wicket:id="oppsummering.utbetalt"/>
-        <div wicket:id="oppsummering.trekk"/>
-        <div wicket:id="oppsummering.brutto"/>
+    <div class="element">
+        <label wicket:id="utbetaltLabel"/>
+        <span wicket:id="oppsummering.utbetalt"/>
+    </div>
+    <div class="element">
+        <label wicket:id="trekkLabel"/>
+        <span wicket:id="oppsummering.trekk"/>
+    </div>
+    <div class="element">
+        <label wicket:id="bruttoLabel"/>
+        <span wicket:id="oppsummering.brutto"/>
     </div>
 </wicket:panel>
 </html>

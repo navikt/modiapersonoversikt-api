@@ -17,14 +17,14 @@ public class OppsummeringProperties implements Serializable {
 
     private LocalDate sluttDato;
     private LocalDate startDato;
-    private Periode oppsummertPeriodeLabel;
+    private Periode oppsummertPeriode;
     private Oppsummering oppsummering;
 
     public OppsummeringProperties(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
         this.utbetalinger = utbetalinger;
         this.sluttDato = sluttDato;
         this.startDato = startDato;
-        oppsummertPeriodeLabel = createPeriode(startDato, sluttDato);
+        oppsummertPeriode = createPeriode(startDato, sluttDato);
         oppsummering = regnUtOppsummering();
     }
 
@@ -42,7 +42,7 @@ public class OppsummeringProperties implements Serializable {
                 "utbetalinger.size =" + utbetalinger.size() +
                 ", sluttDato=" + sluttDato +
                 ", startDato=" + startDato +
-                ", oppsummertPeriodeLabel=" + oppsummertPeriodeLabel +
+                ", oppsummertPeriode=" + oppsummertPeriode +
                 ", oppsummering=" + oppsummering +
                 '}';
     }
