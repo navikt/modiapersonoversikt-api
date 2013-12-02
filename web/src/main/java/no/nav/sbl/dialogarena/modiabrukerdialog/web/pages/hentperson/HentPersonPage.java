@@ -7,7 +7,7 @@ import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.Personinfo;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -51,7 +51,7 @@ public class HentPersonPage extends BasePage {
 
     @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET)
     public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
-        throw new RestartResponseException(Intern.class, new PageParameters().set("fnr", query));
+        throw new RestartResponseException(Personinfo.class, new PageParameters().set("fnr", query));
     }
 
     @RunOnEvents(InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)

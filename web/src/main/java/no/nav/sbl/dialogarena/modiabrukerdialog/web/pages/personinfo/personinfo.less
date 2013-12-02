@@ -1,0 +1,83 @@
+///// OVERSTYRING AV MODIG-FRONTENDs MODIA STYLING /////
+
+@grayLight:             #b7b1a9;
+@grayDark:              #3e3832;
+@white:                 #fff;
+@textColor:             @grayDark;
+@blue:                  #0ca9e1;
+@black:                 #000;
+
+body {
+  position: relative;
+}
+
+.lameller .lamell {
+  width: 1010px;
+}
+
+.side-bar {
+  position: absolute;
+  top: 140px;
+  right: 0;
+  bottom: 0;
+  background-color: #f1f1f1;
+  width: 470px;
+  border-left: 1px solid #ddd;
+  .referatPlaceholder {
+    text-align: center;
+    margin-top: 150px;
+  }
+}
+
+////////////////////////////////////////////////////////////////
+
+#foedselsnummerInput {
+  line-height: 2.1rem;
+}
+
+.informasjonsboks {
+  text-align: center;
+  padding: 30px 30px 40px;
+  background: @grayDark;
+  max-width: 100%;
+  width: 500px;
+  z-index: 1050;
+  position: absolute;
+  top: 250px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  box-shadow: 0 0 15rem @grayLight;
+
+  h1, p {
+    color: @white;
+  }
+
+  p {
+    margin-bottom: 30px;
+  }
+
+  .knapp-info {
+    color: @white;
+    background: @grayDark;
+    border: 1px solid #675c53;
+
+    &:hover, &:focus {
+      background: @blue;
+      color: @black;
+    }
+  }
+
+  [class*="knapp"]:first-of-type + a {
+    margin-left: 10px;
+  }
+}
+
+.wicket-mask-dark {
+  position: fixed;
+  z-index: 1040;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+}

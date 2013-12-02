@@ -7,7 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMoc
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.intern.Intern;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.Personinfo;
 import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +40,6 @@ public class MockSetupPageTest extends WicketPageTest {
 
     @Test
     public void shouldGoToInternWhenSubmitMockSetupWithTestPerson() {
-        wicket.goTo(MockSetupPage.class).inForm("velgMockForm").check("brukTestPerson", true).submit().should().beOn(Intern.class);
+        wicket.goTo(MockSetupPage.class).inForm("velgMockForm").check("brukTestPerson", true).submit().should().beOn(Personinfo.class);
     }
 }
