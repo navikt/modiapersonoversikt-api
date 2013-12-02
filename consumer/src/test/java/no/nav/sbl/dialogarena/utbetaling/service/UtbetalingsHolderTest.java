@@ -9,7 +9,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingListeUtils.*;
+import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
