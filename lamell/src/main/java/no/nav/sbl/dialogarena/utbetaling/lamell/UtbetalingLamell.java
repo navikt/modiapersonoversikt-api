@@ -18,11 +18,11 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_SLUTTDATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_STARTDATO;
-import static org.apache.wicket.model.Model.ofList;
 
 public class UtbetalingLamell extends Lerret {
 
@@ -35,7 +35,6 @@ public class UtbetalingLamell extends Lerret {
     private FilterProperties filter;
     private OppsummeringPanel oppsummeringPanel;
     private MarkupContainer utbetalingerContainer;
-    private ListView<Utbetaling> utbetalingListView;
 
     public UtbetalingLamell(String id, String fnr) {
         super(id);
@@ -54,9 +53,11 @@ public class UtbetalingLamell extends Lerret {
         utbetalingsDatakilde = new UtbetalingsHolder(fnr, utbetalingService);
         filter = new FilterProperties(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
         oppsummeringPanel = createOppsummeringPanel(utbetalingsDatakilde.getUtbetalinger());
-        utbetalingListView = createUtbetalingListView();
+
+        ListView<List<Utbetaling>> maanedsPanelet = createMaanedsPanelet();
+
         utbetalingerContainer = (WebMarkupContainer) new WebMarkupContainer("utbetalingerContainer")
-                .add(utbetalingListView)
+                .add(maanedsPanelet)
                 .setOutputMarkupId(true);
     }
 
@@ -69,14 +70,23 @@ public class UtbetalingLamell extends Lerret {
         return new CompoundPropertyModel<>(new OppsummeringProperties(liste, filter.getStartDato(), filter.getSluttDato()));
     }
 
-    private ListView<Utbetaling> createUtbetalingListView() {
-        return new ListView<Utbetaling>("utbetalinger", ofList(utbetalingsDatakilde.getSynligeUtbetalinger(filter.getParams()))) {
+
+    private ListView<List<Utbetaling>> createMaanedsPanelet() {
+        List<List<Utbetaling>> maanedsListe = utbetalingsDatakilde.hentFiltrertUtbetalingerPerMaaned(filter.getParams());
+        System.out.println("maanedsListe.size() = " + maanedsListe.size());
+
+        ListView<List<Utbetaling>> listView = new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
             @Override
-            protected void populateItem(ListItem<Utbetaling> item) {
-                item.add(new UtbetalingPanel("utbetaling", item.getModelObject()));
+            protected void populateItem(ListItem<List<Utbetaling>> item) {
+                CompoundPropertyModel<OppsummeringProperties> model = createOppsummeringPropertiesModel(item.getModelObject());
+                MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", model);
+                item.add(maanedsPanel);
             }
         };
+
+        return listView;
     }
+
 
     @RunOnEvents(FilterProperties.ENDRET)
     @SuppressWarnings("unused")
@@ -86,7 +96,7 @@ public class UtbetalingLamell extends Lerret {
                 synligeUtbetalinger,
                 filter.getStartDato(),
                 filter.getSluttDato()));
-        utbetalingListView.setModelObject(synligeUtbetalinger);
+        //utbetalingListView.setModelObject(synligeUtbetalinger);
 
         target.add(utbetalingerContainer, oppsummeringPanel);
     }
