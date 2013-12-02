@@ -29,6 +29,8 @@ public class WSUtbetalingTestData {
         utbetalinger.add(createUtbetaling4());
         utbetalinger.add(createUtbetaling5());
         utbetalinger.add(createUtbetaling6());
+        utbetalinger.add(createUtbetaling7());
+        utbetalinger.add(createUtbetaling8());
         return utbetalinger;
     }
 
@@ -142,7 +144,43 @@ public class WSUtbetalingTestData {
                 .withStatusKode("12")
                 .withStatusBeskrivelse("Pensjon")
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
-                .withUtbetalingDato(now().minusDays(200))
+                .withUtbetalingDato(now().minusMonths(5))
+                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
+        utbetaling.withBilagListe(bilag1, bilag2);
+        return utbetaling;
+    }
+    public static WSUtbetaling createUtbetaling7() {
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Pensjon", KONTO_NR);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", KONTO_NR);
+        WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
+        WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
+
+        WSUtbetaling utbetaling = new WSUtbetaling();
+        utbetaling.withNettobelop(4000.00)
+                .withBruttobelop(6000.0)
+                .withTrekk(2000.0)
+                .withStatusKode("12")
+                .withStatusBeskrivelse("Pensjon")
+                .withUtbetalingMottaker(createArbeidsgiverMottaker())
+                .withUtbetalingDato(now().minusMonths(5))
+                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
+        utbetaling.withBilagListe(bilag1, bilag2);
+        return utbetaling;
+    }
+    public static WSUtbetaling createUtbetaling8() {
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Pensjon", KONTO_NR);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj("Skatt", KONTO_NR);
+        WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
+        WSBilag bilag2 = createBilag("bilag2", posteringsdetalj3);
+
+        WSUtbetaling utbetaling = new WSUtbetaling();
+        utbetaling.withNettobelop(4000.00)
+                .withBruttobelop(6000.0)
+                .withTrekk(2000.0)
+                .withStatusKode("12")
+                .withStatusBeskrivelse("Pensjon")
+                .withUtbetalingMottaker(createArbeidsgiverMottaker())
+                .withUtbetalingDato(now().minusMonths(5))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
         utbetaling.withBilagListe(bilag1, bilag2);
         return utbetaling;
