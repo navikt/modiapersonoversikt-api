@@ -1,7 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.lamell.filter.OppsummeringProperties;
+import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
+import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -18,8 +19,8 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 
 public class MaanedsPanel extends Panel {
 
-    public MaanedsPanel(String maanedsPanel, List<Utbetaling> utbetalingListe) {
-        super(maanedsPanel);
+    public MaanedsPanel(String id, List<Utbetaling> utbetalingListe) {
+        super(id);
 
         CompoundPropertyModel<OppsummeringProperties> oppsummeringsModel = createOppsummeringPropertiesModel(utbetalingListe);
 

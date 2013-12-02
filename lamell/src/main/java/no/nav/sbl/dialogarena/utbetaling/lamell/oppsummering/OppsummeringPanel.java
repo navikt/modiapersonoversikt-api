@@ -1,6 +1,5 @@
-package no.nav.sbl.dialogarena.utbetaling.lamell;
+package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
-import no.nav.sbl.dialogarena.utbetaling.lamell.filter.OppsummeringProperties;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;

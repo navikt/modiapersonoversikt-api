@@ -21,6 +21,7 @@ public class UtbetalingPanel extends Panel {
 
     public UtbetalingPanel(String id, Utbetaling utbetaling) {
         super(id);
+
         ListView<Bilag> bilagListView = createBilagListView(utbetaling.getBilag());
         WebMarkupContainer bilagWrapper = new WebMarkupContainer("bilagWrapper");
         bilagWrapper.add(bilagListView);
