@@ -6,8 +6,6 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.logikk.Filtrerer;
 import org.joda.time.DateTime;
-import org.joda.time.Interval;
-import org.joda.time.Months;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -58,11 +56,6 @@ public final class UtbetalingsHolder implements Serializable {
 
     public List<Utbetaling> hentUtbetalinger(DateTime startDato, DateTime sluttDato) {
         return hentUtbetalinger(utbetalinger, startDato, sluttDato);
-    }
-
-    public List<Utbetaling> getSynligeUtbetalinger(FilterParametere params, Periode periode) {
-        List<Utbetaling> synligeUtbetalinger = getSynligeUtbetalinger(params);
-        return hentUtbetalinger(synligeUtbetalinger, periode.getStartDato(), periode.getSluttDato());
     }
 
     public List<Utbetaling> getSynligeUtbetalinger(FilterParametere params) {
