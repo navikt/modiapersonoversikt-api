@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPeriode;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -32,6 +33,8 @@ public class Periode implements Serializable {
     public Periode(LocalDate startDato, LocalDate sluttDato) {
        this.startDato = startDato.toDateTimeAtStartOfDay();
        this.sluttDato = sluttDato.toDateMidnight().toDateTime();
+       this.periodeString = setPeriode(this.startDato, this.sluttDato, DELIMITER);
+       this.interval = new Interval(this.startDato.getMillis(), this.sluttDato.getMillis());
     }
 
     public Periode(WSPeriode utbetalingsPeriode) {
@@ -46,6 +49,10 @@ public class Periode implements Serializable {
 
     public Periode(String periodeString) {
         extractPeriodDates(periodeString, DELIMITER);
+    }
+
+    public String getPeriodeString(Transformer<DateTime, String> datoFormat){
+        return datoFormat.transform(startDato) + " " + DELIMITER + " " + datoFormat.transform(sluttDato);
     }
 
     public boolean containsDate(DateTime date){

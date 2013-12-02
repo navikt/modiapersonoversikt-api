@@ -55,12 +55,13 @@ public class UtbetalingLamell extends Lerret {
     }
 
     private OppsummeringPanel createOppsummeringPanel(List<Utbetaling> liste) {
-        return new OppsummeringPanel("totalOppsummeringPanel", createOppsummeringPropertiesModel(liste));
+        return new OppsummeringPanel("totalOppsummeringPanel", createTotalOppsummeringPropertiesModel(liste));
     }
 
-    private CompoundPropertyModel<OppsummeringProperties> createOppsummeringPropertiesModel(List<Utbetaling> liste) {
+    private CompoundPropertyModel<OppsummeringProperties> createTotalOppsummeringPropertiesModel(List<Utbetaling> liste) {
         return new CompoundPropertyModel<>(new OppsummeringProperties(liste, filter.getStartDato(), filter.getSluttDato()));
     }
+
 
     private ListView<List<Utbetaling>> createMaanedsPanelet() {
         List<List<Utbetaling>> maanedsListe = utbetalingsDatakilde.hentFiltrertUtbetalingerPerMaaned(filter.getParams());
@@ -68,8 +69,7 @@ public class UtbetalingLamell extends Lerret {
         maanedsListView = new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
             @Override
             protected void populateItem(ListItem<List<Utbetaling>> item) {
-                CompoundPropertyModel<OppsummeringProperties> model = createOppsummeringPropertiesModel(item.getModelObject());
-                item.add(new MaanedsPanel("maanedsPanel", model));
+                item.add(new MaanedsPanel("maanedsPanel", item.getModelObject()));
             }
         };
         maanedsListView.setOutputMarkupId(true);
