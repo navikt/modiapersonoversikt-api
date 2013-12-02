@@ -9,6 +9,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingListeUtils.*;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -94,7 +95,7 @@ public class UtbetalingsHolderTest {
         Utbetaling utbetaling4 = new UtbetalingBuilder().setUtbetalingsDato(aprilDato).createUtbetaling();
         List<Utbetaling> utbetalinger = asList(utbetaling1, utbetaling2, utbetaling3, utbetaling4);
 
-        List<List<Utbetaling>> lists = utbetalingsHolder.splittUtbetalingerPerMaaned(utbetalinger);
+        List<List<Utbetaling>> lists = splittUtbetalingerPerMaaned(utbetalinger);
 
         assertThat(lists.size(), is(3));
         assertThat(lists.get(0).size(), is(2));
@@ -114,7 +115,7 @@ public class UtbetalingsHolderTest {
         Utbetaling utbetaling4 = new UtbetalingBuilder().setUtbetalingsDato(augustDato).createUtbetaling();
         List<Utbetaling> utbetalinger = asList(utbetaling1, utbetaling2, utbetaling3, utbetaling4);
 
-        List<List<Utbetaling>> lists = utbetalingsHolder.splittUtbetalingerPerMaaned(utbetalinger);
+        List<List<Utbetaling>> lists = splittUtbetalingerPerMaaned(utbetalinger);
 
         assertThat(lists.size(), is(3));
         assertThat(lists.get(0).size(), is(2));
@@ -130,7 +131,7 @@ public class UtbetalingsHolderTest {
         Utbetaling utbetaling2 = new UtbetalingBuilder().setUtbetalingsDato(februarDato).createUtbetaling();
         List<Utbetaling> utbetalinger = asList(utbetaling1, utbetaling2);
 
-        List<List<Utbetaling>> lists = utbetalingsHolder.splittUtbetalingerPerMaaned(utbetalinger);
+        List<List<Utbetaling>> lists = splittUtbetalingerPerMaaned(utbetalinger);
 
         assertThat(lists.size(), is(1));
         assertThat(lists.get(0).size(), is(2));
