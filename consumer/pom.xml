@@ -28,11 +28,6 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-time</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-core</artifactId>
         </dependency>
