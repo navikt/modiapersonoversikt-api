@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
+package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 
 import no.nav.sbl.dialogarena.time.Datoformat;
