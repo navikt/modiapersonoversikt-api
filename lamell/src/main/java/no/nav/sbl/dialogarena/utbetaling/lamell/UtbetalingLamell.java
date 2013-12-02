@@ -18,7 +18,6 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_SLUTTDATO;
@@ -27,14 +26,13 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_STARTD
 public class UtbetalingLamell extends Lerret {
 
     public static final PackageResourceReference UTBETALING_LAMELL_LESS = new PackageResourceReference(UtbetalingLamell.class, "utbetaling.less");
-
     @Inject
     private UtbetalingService utbetalingService;
-
     private UtbetalingsHolder utbetalingsDatakilde;
     private FilterProperties filter;
     private OppsummeringPanel oppsummeringPanel;
     private MarkupContainer utbetalingerContainer;
+    private ListView<List<Utbetaling>> maanedsListView;
 
     public UtbetalingLamell(String id, String fnr) {
         super(id);
@@ -44,49 +42,40 @@ public class UtbetalingLamell extends Lerret {
         add(
                 new FeedbackPanel("feedbackpanel").setOutputMarkupId(true),
                 new FilterForm("filterForm", filter),
-                oppsummeringPanel,
-                utbetalingerContainer
+                oppsummeringPanel.setOutputMarkupId(true),
+                utbetalingerContainer.setOutputMarkupId(true)
         );
     }
 
     private void instansierFelter(String fnr) {
         utbetalingsDatakilde = new UtbetalingsHolder(fnr, utbetalingService);
         filter = new FilterProperties(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
-        oppsummeringPanel = createOppsummeringPanel(utbetalingsDatakilde.getUtbetalinger());
-
-        ListView<List<Utbetaling>> maanedsPanelet = createMaanedsPanelet();
-
-        utbetalingerContainer = (WebMarkupContainer) new WebMarkupContainer("utbetalingerContainer")
-                .add(maanedsPanelet)
-                .setOutputMarkupId(true);
+        oppsummeringPanel = createOppsummeringPanel(utbetalingsDatakilde.getSynligeUtbetalinger(filter.getParams()));
+        utbetalingerContainer = new WebMarkupContainer("utbetalingerContainer").add(createMaanedsPanelet());
     }
 
     private OppsummeringPanel createOppsummeringPanel(List<Utbetaling> liste) {
-        return (OppsummeringPanel) new OppsummeringPanel("oppsummeringPanel", createOppsummeringPropertiesModel(liste))
-                .setOutputMarkupId(true);
+        return new OppsummeringPanel("totalOppsummeringPanel", createOppsummeringPropertiesModel(liste));
     }
 
     private CompoundPropertyModel<OppsummeringProperties> createOppsummeringPropertiesModel(List<Utbetaling> liste) {
         return new CompoundPropertyModel<>(new OppsummeringProperties(liste, filter.getStartDato(), filter.getSluttDato()));
     }
 
-
     private ListView<List<Utbetaling>> createMaanedsPanelet() {
         List<List<Utbetaling>> maanedsListe = utbetalingsDatakilde.hentFiltrertUtbetalingerPerMaaned(filter.getParams());
-        System.out.println("maanedsListe.size() = " + maanedsListe.size());
 
-        ListView<List<Utbetaling>> listView = new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
+        maanedsListView = new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
             @Override
             protected void populateItem(ListItem<List<Utbetaling>> item) {
                 CompoundPropertyModel<OppsummeringProperties> model = createOppsummeringPropertiesModel(item.getModelObject());
-                MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", model);
-                item.add(maanedsPanel);
+                item.add(new MaanedsPanel("maanedsPanel", model));
             }
         };
+        maanedsListView.setOutputMarkupId(true);
 
-        return listView;
+        return maanedsListView;
     }
-
 
     @RunOnEvents(FilterProperties.ENDRET)
     @SuppressWarnings("unused")
@@ -96,7 +85,9 @@ public class UtbetalingLamell extends Lerret {
                 synligeUtbetalinger,
                 filter.getStartDato(),
                 filter.getSluttDato()));
-        //utbetalingListView.setModelObject(synligeUtbetalinger);
+
+        List<List<Utbetaling>> maanedsListe = utbetalingsDatakilde.hentFiltrertUtbetalingerPerMaaned(filter.getParams());
+        maanedsListView.setModelObject(maanedsListe);
 
         target.add(utbetalingerContainer, oppsummeringPanel);
     }

@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.logikk.Filter;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -12,7 +11,9 @@ import java.util.List;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_SLUTTDATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_STARTDATO;
-import static no.nav.sbl.dialogarena.utbetaling.logikk.Filter.*;
+import static no.nav.sbl.dialogarena.utbetaling.logikk.Filter.filtrer;
+import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
+import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
 
 public final class UtbetalingsHolder implements Serializable {
 
@@ -29,11 +30,11 @@ public final class UtbetalingsHolder implements Serializable {
     }
 
     public List<List<Utbetaling>> hentFiltrertUtbetalingerPerMaaned(FilterParametere filterParametre) {
-        return UtbetalingListeUtils.splittUtbetalingerPerMaaned(getSynligeUtbetalinger(filterParametre));
+        return splittUtbetalingerPerMaaned(getSynligeUtbetalinger(filterParametre));
     }
 
     public List<Utbetaling> hentUtbetalinger(DateTime startDato, DateTime sluttDato) {
-        return UtbetalingListeUtils.hentUtbetalinger(utbetalinger, startDato, sluttDato);
+        return hentUtbetalingerFraPeriode(utbetalinger, startDato, sluttDato);
     }
 
     public List<Utbetaling> getSynligeUtbetalinger(FilterParametere params) {
@@ -45,9 +46,4 @@ public final class UtbetalingsHolder implements Serializable {
         }
         return synligeUtbetalinger;
     }
-
-    public List<Utbetaling> getUtbetalinger() {
-        return utbetalinger;
-    }
-
 }
