@@ -81,4 +81,59 @@ public class UtbetalingsHolderTest {
         assertThat(utbetalingsResultat.size(), is(0));
     }
 
+
+    @Test
+    public void lagListeAvUtbetalingsLister_SammenhengendeMaaneder() throws Exception {
+        DateTime februarDato = DateTime.now().withMonthOfYear(1);
+        DateTime marsDato = DateTime.now().withMonthOfYear(2);
+        DateTime aprilDato = DateTime.now().withMonthOfYear(3);
+
+        Utbetaling utbetaling1 = new UtbetalingBuilder().setUtbetalingsDato(februarDato).createUtbetaling();
+        Utbetaling utbetaling2 = new UtbetalingBuilder().setUtbetalingsDato(februarDato).createUtbetaling();
+        Utbetaling utbetaling3 = new UtbetalingBuilder().setUtbetalingsDato(marsDato).createUtbetaling();
+        Utbetaling utbetaling4 = new UtbetalingBuilder().setUtbetalingsDato(aprilDato).createUtbetaling();
+        List<Utbetaling> utbetalinger = asList(utbetaling1, utbetaling2, utbetaling3, utbetaling4);
+
+        List<List<Utbetaling>> lists = utbetalingsHolder.splittUtbetalingerPerMaaned(utbetalinger);
+
+        assertThat(lists.size(), is(3));
+        assertThat(lists.get(0).size(), is(2));
+        assertThat(lists.get(1).size(), is(1));
+        assertThat(lists.get(2).size(), is(1));
+    }
+
+    @Test
+    public void lagListeAvUtbetalingsLister_IkkeSammenhengendeMaaneder() throws Exception {
+        DateTime februarDato = DateTime.now().withMonthOfYear(1);
+        DateTime juniDato = DateTime.now().withMonthOfYear(5);
+        DateTime augustDato = DateTime.now().withMonthOfYear(7);
+
+        Utbetaling utbetaling1 = new UtbetalingBuilder().setUtbetalingsDato(februarDato).createUtbetaling();
+        Utbetaling utbetaling2 = new UtbetalingBuilder().setUtbetalingsDato(februarDato).createUtbetaling();
+        Utbetaling utbetaling3 = new UtbetalingBuilder().setUtbetalingsDato(juniDato).createUtbetaling();
+        Utbetaling utbetaling4 = new UtbetalingBuilder().setUtbetalingsDato(augustDato).createUtbetaling();
+        List<Utbetaling> utbetalinger = asList(utbetaling1, utbetaling2, utbetaling3, utbetaling4);
+
+        List<List<Utbetaling>> lists = utbetalingsHolder.splittUtbetalingerPerMaaned(utbetalinger);
+
+        assertThat(lists.size(), is(3));
+        assertThat(lists.get(0).size(), is(2));
+        assertThat(lists.get(1).size(), is(1));
+        assertThat(lists.get(2).size(), is(1));
+    }
+
+    @Test
+    public void lagListeAvUtbetalingsLister_EnMaaned() throws Exception {
+        DateTime februarDato = DateTime.now().withMonthOfYear(1);
+
+        Utbetaling utbetaling1 = new UtbetalingBuilder().setUtbetalingsDato(februarDato).createUtbetaling();
+        Utbetaling utbetaling2 = new UtbetalingBuilder().setUtbetalingsDato(februarDato).createUtbetaling();
+        List<Utbetaling> utbetalinger = asList(utbetaling1, utbetaling2);
+
+        List<List<Utbetaling>> lists = utbetalingsHolder.splittUtbetalingerPerMaaned(utbetalinger);
+
+        assertThat(lists.size(), is(1));
+        assertThat(lists.get(0).size(), is(2));
+    }
+
 }
