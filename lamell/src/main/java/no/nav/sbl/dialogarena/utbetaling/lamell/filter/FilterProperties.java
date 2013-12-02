@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.FilterParametere;
-import no.nav.sbl.dialogarena.utbetaling.logikk.Filtrerer;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
@@ -20,14 +19,6 @@ public class FilterProperties implements Serializable {
         this.sluttDato = sluttDato;
         this.visBruker = visBruker;
         this.visArbeidsgiver = visArbeidsgiver;
-    }
-
-    public boolean filtrerPaaDatoer(LocalDate utbetalingsDato) {
-        return Filtrerer.filtrerPaaDatoer(utbetalingsDato, startDato, sluttDato);
-    }
-
-    public boolean filtrerPaaMottaker(String mottakerkode) {
-        return Filtrerer.filtrerPaaMottaker(mottakerkode, visArbeidsgiver, visBruker);
     }
 
     public FilterParametere getParams() {
