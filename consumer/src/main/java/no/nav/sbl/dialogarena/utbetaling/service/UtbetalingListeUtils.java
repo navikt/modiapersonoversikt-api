@@ -29,7 +29,7 @@ public class UtbetalingListeUtils {
         return utbetalingerFordeltPerMaaned;
     }
 
-    public static List<Utbetaling> hentUtbetalinger(List<Utbetaling> utbetalinger, DateTime startDato, DateTime sluttDato) {
+    public static List<Utbetaling> hentUtbetalingerFraPeriode(List<Utbetaling> utbetalinger, DateTime startDato, DateTime sluttDato) {
         Periode periode = new Periode(startDato, sluttDato);
         ArrayList<Utbetaling> resultat = new ArrayList<>();
         for (Utbetaling utbetaling : utbetalinger) {
