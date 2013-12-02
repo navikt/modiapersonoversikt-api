@@ -24,38 +24,36 @@ public class Periode implements Serializable {
     private Interval interval;
 
     public Periode(DateTime periodeFomDato, DateTime periodeTomDato) {
-        this.startDato = periodeFomDato;
-        this.sluttDato = periodeTomDato;
-        this.periodeString = setPeriode(periodeFomDato, periodeTomDato, DELIMITER);
-        this.interval = new Interval(startDato.getMillis(), sluttDato.getMillis());
+        init(periodeFomDato, periodeTomDato);
     }
 
     public Periode(LocalDate startDato, LocalDate sluttDato) {
-       this.startDato = startDato.toDateTimeAtStartOfDay();
-       this.sluttDato = sluttDato.toDateMidnight().toDateTime();
-       this.periodeString = setPeriode(this.startDato, this.sluttDato, DELIMITER);
-       this.interval = new Interval(this.startDato.getMillis(), this.sluttDato.getMillis());
+        init(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime());
     }
 
     public Periode(WSPeriode utbetalingsPeriode) {
         if (utbetalingsPeriode == null) {
             return;
         }
-        this.startDato = utbetalingsPeriode.getPeriodeFomDato();
-        this.sluttDato = utbetalingsPeriode.getPeriodeTomDato();
-        this.periodeString = setPeriode(startDato, sluttDato, DELIMITER);
-        this.interval = new Interval(startDato.getMillis(), sluttDato.getMillis());
+        init(utbetalingsPeriode.getPeriodeFomDato(), utbetalingsPeriode.getPeriodeTomDato());
     }
 
     public Periode(String periodeString) {
         extractPeriodDates(periodeString, DELIMITER);
     }
 
-    public String getPeriodeString(Transformer<DateTime, String> datoFormat){
+    private void init(DateTime periodeFomDato, DateTime periodeTomDato) {
+        this.startDato = periodeFomDato;
+        this.sluttDato = periodeTomDato;
+        this.periodeString = setPeriode(periodeFomDato, periodeTomDato, DELIMITER);
+        this.interval = new Interval(startDato.getMillis(), sluttDato.getMillis());
+    }
+
+    public String getPeriodeString(Transformer<DateTime, String> datoFormat) {
         return datoFormat.transform(startDato) + " " + DELIMITER + " " + datoFormat.transform(sluttDato);
     }
 
-    public boolean containsDate(DateTime date){
+    public boolean containsDate(DateTime date) {
         return interval.contains(date) || startDato.equals(date) || sluttDato.equals(date);
     }
 
@@ -73,7 +71,7 @@ public class Periode implements Serializable {
 
     @Override
     public String toString() {
-       return periodeString;
+        return periodeString;
     }
 
     private String setPeriode(DateTime periodeFomDato, DateTime periodeTomDato, String delimiter) {
