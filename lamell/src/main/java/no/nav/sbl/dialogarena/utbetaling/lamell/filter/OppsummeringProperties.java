@@ -18,7 +18,9 @@ public class OppsummeringProperties implements Serializable {
     private LocalDate sluttDato;
     private LocalDate startDato;
     private Periode oppsummertPeriode;
+
     private Oppsummering oppsummering;
+
     public OppsummeringProperties(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
         this.utbetalinger = utbetalinger;
         this.sluttDato = sluttDato;
@@ -37,5 +39,21 @@ public class OppsummeringProperties implements Serializable {
 
     public List<Utbetaling> getUtbetalinger() {
         return utbetalinger;
+    }
+
+    public Oppsummering getOppsummering() {
+        return oppsummering;
+    }
+
+    public LocalDate getSluttDato() {
+        return sluttDato;
+    }
+
+    public LocalDate getStartDato() {
+        return startDato;
+    }
+
+    public Periode getOppsummertPeriode() {
+        return oppsummertPeriode;
     }
 }
