@@ -15,14 +15,11 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import java.util.List;
 
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_SLUTTDATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_STARTDATO;
 import static org.apache.wicket.model.Model.ofList;
@@ -38,6 +35,7 @@ public class UtbetalingLamell extends Lerret {
     private FilterProperties filter;
     private OppsummeringPanel oppsummeringPanel;
     private MarkupContainer utbetalingerContainer;
+    private ListView<Utbetaling> utbetalingListView;
 
     public UtbetalingLamell(String id, String fnr) {
         super(id);
@@ -56,8 +54,9 @@ public class UtbetalingLamell extends Lerret {
         utbetalingsDatakilde = new UtbetalingsHolder(fnr, utbetalingService);
         filter = new FilterProperties(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
         oppsummeringPanel = createOppsummeringPanel(utbetalingsDatakilde.getUtbetalinger());
+        utbetalingListView = createUtbetalingListView();
         utbetalingerContainer = (WebMarkupContainer) new WebMarkupContainer("utbetalingerContainer")
-                .add(createUtbetalingListView())
+                .add(utbetalingListView)
                 .setOutputMarkupId(true);
     }
 
@@ -71,18 +70,10 @@ public class UtbetalingLamell extends Lerret {
     }
 
     private ListView<Utbetaling> createUtbetalingListView() {
-        DateTime startDato = filter.getStartDato().toDateTimeAtStartOfDay();
-        DateTime sluttDato = filter.getSluttDato().toDateTimeAtStartOfDay();
-
-        return new ListView<Utbetaling>("utbetalinger", ofList(utbetalingsDatakilde.hentUtbetalinger(startDato, sluttDato))) {
+        return new ListView<Utbetaling>("utbetalinger", ofList(utbetalingsDatakilde.getSynligeUtbetalinger(filter.getParams()))) {
             @Override
             protected void populateItem(ListItem<Utbetaling> item) {
-                Utbetaling utbetaling = item.getModelObject();
-
-                item.add(new UtbetalingPanel("utbetaling", utbetaling));
-                item.add(visibleIf(
-                        new Model<>(filter.filtrerPaaDatoer(utbetaling.getUtbetalingsDato().toLocalDate()) &&
-                                filter.filtrerPaaMottaker(utbetaling.getMottaker().getMottakertypeType()))));
+                item.add(new UtbetalingPanel("utbetaling", item.getModelObject()));
             }
         };
     }
@@ -90,10 +81,12 @@ public class UtbetalingLamell extends Lerret {
     @RunOnEvents(FilterProperties.ENDRET)
     @SuppressWarnings("unused")
     private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
+        List<Utbetaling> synligeUtbetalinger = utbetalingsDatakilde.getSynligeUtbetalinger(filter.getParams());
         oppsummeringPanel.setDefaultModelObject(new OppsummeringProperties(
-                utbetalingsDatakilde.getSynligeUtbetalinger(filter.getParams()),
+                synligeUtbetalinger,
                 filter.getStartDato(),
                 filter.getSluttDato()));
+        utbetalingListView.setModelObject(synligeUtbetalinger);
 
         target.add(utbetalingerContainer, oppsummeringPanel);
     }
