@@ -39,7 +39,6 @@ public class UtbetalingLamell extends Lerret {
 
     public UtbetalingLamell(String id, String fnr) {
         super(id);
-
         instansierFelter(fnr);
 
         add(
@@ -58,8 +57,7 @@ public class UtbetalingLamell extends Lerret {
     }
 
     private OppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
-        OppsummeringPanel totalOppsummeringPanel = new OppsummeringPanel("totalOppsummeringPanel", createTotalOppsummeringPropertiesModel(liste));
-        return totalOppsummeringPanel;
+        return new OppsummeringPanel("totalOppsummeringPanel", createTotalOppsummeringPropertiesModel(liste));
     }
 
     private CompoundPropertyModel<OppsummeringProperties> createTotalOppsummeringPropertiesModel(List<Utbetaling> liste) {
