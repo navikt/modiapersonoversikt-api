@@ -23,13 +23,4 @@ public class Oppsummering implements Serializable {
     public String getBrutto() {
         return ValutaUtil.getBelopString(this.brutto, this.valuta);
     }
-
-    @Override
-    public String toString() {
-        return "Oppsummering{" +
-                "utbetalt=" + utbetalt +
-                ", trekk=" + trekk +
-                ", brutto=" + brutto +
-                '}';
-    }
 }
