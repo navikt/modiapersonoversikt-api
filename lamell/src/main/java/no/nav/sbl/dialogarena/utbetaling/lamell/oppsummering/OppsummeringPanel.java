@@ -10,10 +10,6 @@ public class OppsummeringPanel extends Panel {
         super(id, model);
 
         add(
-                new Label("oppsummertPeriodeLabel", "Periode"),
-                new Label("utbetaltLabel", "Utbetalt"),
-                new Label("trekkLabel", "Trekk"),
-                new Label("bruttoLabel", "Brutto"),
                 new Label("oppsummertPeriode"),
                 new Label("oppsummering.utbetalt"),
                 new Label("oppsummering.trekk"),
