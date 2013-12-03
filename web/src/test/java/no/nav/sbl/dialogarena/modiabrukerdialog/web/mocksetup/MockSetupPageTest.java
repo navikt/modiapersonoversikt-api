@@ -7,7 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMoc
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.PersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;

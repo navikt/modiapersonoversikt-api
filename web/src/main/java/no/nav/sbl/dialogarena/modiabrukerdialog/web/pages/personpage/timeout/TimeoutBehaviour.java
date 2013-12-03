@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.timeout;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout;
 
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractDefaultAjaxBehavior;

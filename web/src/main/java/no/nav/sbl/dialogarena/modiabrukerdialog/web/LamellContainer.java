@@ -168,7 +168,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     };
 
     private static class LerretHolder {
-        ArrayList<Lerret> lerreter;
+        List<Lerret> lerreter;
 
         LerretHolder() {
             this.lerreter = new ArrayList<>();

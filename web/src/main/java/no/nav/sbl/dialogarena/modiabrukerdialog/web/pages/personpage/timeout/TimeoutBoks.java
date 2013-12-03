@@ -1,7 +1,7 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.timeout;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.PersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;

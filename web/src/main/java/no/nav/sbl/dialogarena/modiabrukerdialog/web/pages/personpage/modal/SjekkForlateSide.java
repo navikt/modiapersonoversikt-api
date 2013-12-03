@@ -1,13 +1,13 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.modal;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal;
 
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.modal.SjekkForlateSideAnswer.AnswerType;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.modal.SjekkForlateSideAnswer.AnswerType.CANCEL;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.CANCEL;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 
 public class SjekkForlateSide extends Panel {
 

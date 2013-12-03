@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.modal;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal;
 
 import java.io.Serializable;
 
