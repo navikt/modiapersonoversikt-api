@@ -17,7 +17,7 @@ public class Filter {
     }
 
     private static boolean filtrerPaaDatoer(LocalDate utbetalingsDato, LocalDate startDato, LocalDate sluttDato) {
-        return utbetalingsDato.isAfter(startDato) && utbetalingsDato.isBefore(sluttDato);
+        return utbetalingsDato.isAfter(startDato.minusDays(1)) && utbetalingsDato.isBefore(sluttDato.plusDays(1));
     }
 
     private static boolean filtrerPaaMottaker(String mottakerkode, boolean visArbeidsgiver, boolean visBruker) {

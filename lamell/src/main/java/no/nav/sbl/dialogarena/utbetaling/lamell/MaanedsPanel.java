@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterProperties;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
@@ -20,10 +21,10 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 
 public class MaanedsPanel extends Panel {
 
-    public MaanedsPanel(String id, List<Utbetaling> utbetalingListe) {
+    public MaanedsPanel(String id, List<Utbetaling> utbetalingListe, FilterProperties filter) {
         super(id);
 
-        CompoundPropertyModel<OppsummeringProperties> oppsummeringsModel = createOppsummeringPropertiesModel(utbetalingListe);
+        CompoundPropertyModel<OppsummeringProperties> oppsummeringsModel = createOppsummeringPropertiesModel(utbetalingListe, filter);
 
         OppsummeringPanel oppsummeringsPanel = new OppsummeringPanel("oppsummeringsPanel", oppsummeringsModel);
         oppsummeringsPanel.add(visibleIf(new Model<>(oppsummeringsModel.getObject().getUtbetalinger().size() > 1)));
@@ -44,12 +45,20 @@ public class MaanedsPanel extends Panel {
         };
     }
 
-    private CompoundPropertyModel<OppsummeringProperties> createOppsummeringPropertiesModel(List<Utbetaling> liste) {
+    private CompoundPropertyModel<OppsummeringProperties> createOppsummeringPropertiesModel(List<Utbetaling> liste, FilterProperties filter) {
         if (liste.isEmpty()) {
             return new CompoundPropertyModel<>(new OppsummeringProperties(new ArrayList<Utbetaling>(), LocalDate.now(), LocalDate.now()));
         }
+
         LocalDate startDato = liste.get(liste.size() - 1).getUtbetalingsDato().dayOfMonth().withMinimumValue().toLocalDate();
         LocalDate sluttDato = liste.get(0).getUtbetalingsDato().dayOfMonth().withMaximumValue().toLocalDate();
+
+        if (filter.getStartDato().isAfter(startDato) && filter.getStartDato().isBefore(sluttDato))
+            startDato = filter.getStartDato();
+
+        if (filter.getSluttDato().isBefore(sluttDato) && filter.getSluttDato().isAfter(startDato))
+            sluttDato = filter.getSluttDato();
+
         return new CompoundPropertyModel<>(new OppsummeringProperties(liste, startDato, sluttDato));
     }
 

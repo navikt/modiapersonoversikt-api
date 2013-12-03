@@ -50,8 +50,8 @@ public class UtbetalingLamell extends Lerret {
     }
 
     private void instansierFelter(String fnr) {
-        utbetalingsHolder = new UtbetalingsHolder(fnr, utbetalingService);
         filter = new FilterProperties(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
+        utbetalingsHolder = new UtbetalingsHolder(fnr, utbetalingService);
         totalOppsummeringPanel = createTotalOppsummeringPanel(utbetalingsHolder.getSynligeUtbetalinger(filter.getParams()));
         utbetalingerContainer = new WebMarkupContainer("utbetalingerContainer").add(createMaanedsPanelet());
     }
@@ -71,7 +71,7 @@ public class UtbetalingLamell extends Lerret {
         maanedsListView = new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
             @Override
             protected void populateItem(ListItem<List<Utbetaling>> item) {
-                item.add(new MaanedsPanel("maanedsPanel", item.getModelObject()));
+                item.add(new MaanedsPanel("maanedsPanel", item.getModelObject(), filter));
             }
         };
         maanedsListView.setOutputMarkupId(true);
