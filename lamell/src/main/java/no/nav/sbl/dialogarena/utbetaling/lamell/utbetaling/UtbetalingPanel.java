@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.utbetaling.lamell;
+package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
@@ -11,42 +11,40 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.CompoundPropertyModel;
 
 import java.util.List;
-
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 
 public class UtbetalingPanel extends Panel {
 
     public UtbetalingPanel(String id, Utbetaling utbetaling) {
-        super(id);
+        super(id, new CompoundPropertyModel<>(utbetaling));
 
-        ListView<Bilag> bilagListView = createBilagListView(utbetaling.getBilag());
-        WebMarkupContainer bilagWrapper = new WebMarkupContainer("bilagWrapper");
-        bilagWrapper.add(bilagListView);
-        bilagWrapper.setOutputMarkupPlaceholderTag(true);
-        bilagWrapper.setVisibilityAllowed(false);
+        WebMarkupContainer bilagWrapper = createBilagWrapper(utbetaling.getBilag());
 
         add(
                 bilagWrapper,
-                new Label("beskrivelse", utbetaling.getBeskrivelse()),
-                createUtbetalingDatoLabel(utbetaling),
-                createBelopLabel(utbetaling),
-                createPeriodeLabel(utbetaling),
-                new Label("status", utbetaling.getStatuskode()),
-                new Label("kontonr", utbetaling.getKontoNr()),
-                new Label("mottaker", utbetaling.getMottaker().getNavn()),
-                createExpandButton(bilagWrapper)
+                createExpandButton(bilagWrapper),
+                new Label("statuskode"),
+                new Label("kortUtbetalingsDato"),
+                new Label("beskrivelse"),
+                new Label("belopMedValuta"),
+                new Label("kontoNr"),
+                new Label("periodeMedKortDato"),
+                new Label("mottaker.navn")
         );
     }
 
-    private Label createUtbetalingDatoLabel(Utbetaling utbetaling) {
-        return new Label("utbetalingdato", optional(utbetaling.getUtbetalingsDato()).map(KORT).getOrElse("Ingen utbetalingsdato"));
+    private WebMarkupContainer createBilagWrapper(List<Bilag> bilagsliste) {
+        WebMarkupContainer bilagWrapper = new WebMarkupContainer("bilagWrapper");
+        bilagWrapper.add(createBilagListView(bilagsliste));
+        bilagWrapper.setOutputMarkupPlaceholderTag(true);
+        bilagWrapper.setVisibilityAllowed(false);
+        return bilagWrapper;
     }
 
-    private ListView<Bilag> createBilagListView(List<Bilag> bilagListe) {
-        return new ListView<Bilag>("bilag-liste", bilagListe) {
+    private ListView<Bilag> createBilagListView(List<Bilag> bilagsliste) {
+        return new ListView<Bilag>("bilag-liste", bilagsliste) {
             @Override
             protected void populateItem(ListItem<Bilag> item) {
                 Bilag bilag = item.getModelObject();
@@ -77,11 +75,4 @@ public class UtbetalingPanel extends Panel {
         };
     }
 
-    private Label createPeriodeLabel(Utbetaling utbetaling) {
-        return new Label("periode", optional(utbetaling.getStartDate()).map(KORT).getOrElse("") + " - " + optional(utbetaling.getEndDate()).map(KORT).getOrElse(""));
-    }
-
-    private Label createBelopLabel(Utbetaling utbetaling) {
-        return new Label("belop", utbetaling.getBelopString());
-    }
 }

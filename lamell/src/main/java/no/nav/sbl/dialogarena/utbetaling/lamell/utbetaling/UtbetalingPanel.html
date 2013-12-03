@@ -1,0 +1,38 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<wicket:panel>
+
+    <div class="utbetaling-linje">
+        <button wicket:id="expandbutton" class="dropdown">V</button>
+        <div class="main">
+            <div class="status" wicket:id="statuskode"></div>
+            <div class="dato" wicket:id="kortUtbetalingsDato"></div>
+            <div class="type">
+                <label wicket:id="beskrivelse"></label><span wicket:id="belopMedValuta"></span>
+            </div>
+            <div class="kontonummer">
+                <label><wicket:message key="utbetaling.lamell.konto"/></label>
+                <span wicket:id="kontoNr"></span>
+            </div>
+            <div class="periode">
+                <label><wicket:message key="utbetaling.lamell.periode"/></label>
+                <span wicket:id="periodeMedKortDato"></span>
+            </div>
+            <div>
+                <span wicket:id="mottaker.navn"/>
+            </div>
+        </div>
+        <div wicket:id="bilagWrapper">
+            <div wicket:id="bilag-liste" class="bilag-liste">
+                <div class="bilag">
+                    <p wicket:id="melding"></p>
+                    <div wicket:id="posteringsdetalj-liste" class="posteringsdetalj-liste">
+                        <p wicket:id="hovedbeskrivelse"></p>
+                        <p><wicket:message key="utbetaling.lamell.konto.bilag"/><span wicket:id="kontonr"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</wicket:panel>
+</html>
