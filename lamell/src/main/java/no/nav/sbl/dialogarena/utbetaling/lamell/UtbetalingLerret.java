@@ -24,9 +24,9 @@ import java.util.List;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_SLUTTDATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_STARTDATO;
 
-public class UtbetalingLamell extends Lerret {
+public class UtbetalingLerret extends Lerret {
 
-    public static final PackageResourceReference UTBETALING_LAMELL_LESS = new PackageResourceReference(UtbetalingLamell.class, "utbetaling.less");
+    public static final PackageResourceReference UTBETALING_LAMELL_LESS = new PackageResourceReference(UtbetalingLerret.class, "utbetaling.less");
 
     @Inject
     private UtbetalingService utbetalingService;
@@ -36,7 +36,7 @@ public class UtbetalingLamell extends Lerret {
     private OppsummeringPanel totalOppsummeringPanel;
     private MarkupContainer utbetalingslisteContainer;
 
-    public UtbetalingLamell(String id, String fnr) {
+    public UtbetalingLerret(String id, String fnr) {
         super(id);
 
         instansierFelter(fnr);
