@@ -10,6 +10,8 @@ public class PosteringsDetalj implements Serializable {
     private String hovedBeskrivelse;
     private String underBeskrivelse;
     private String kontoNr;
+    private Double sats;
+    private Integer antall;
 
     public static final Transformer<PosteringsDetalj, String> POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER = new Transformer<PosteringsDetalj, String>() {
         @Override
@@ -25,16 +27,28 @@ public class PosteringsDetalj implements Serializable {
         }
     };
 
-    PosteringsDetalj(String hovedBeskrivelse, String underBeskrivelse, String kontoNr) {
+    PosteringsDetalj(String hovedBeskrivelse, String underBeskrivelse, String kontoNr, Double sats, Integer antall) {
         this.hovedBeskrivelse = hovedBeskrivelse;
         this.underBeskrivelse = underBeskrivelse;
         this.kontoNr = kontoNr;
+        this.sats = sats;
+        this.antall = antall;
     }
 
     public PosteringsDetalj(WSPosteringsdetaljer wsPosteringsdetaljer) {
         this.hovedBeskrivelse = wsPosteringsdetaljer.getKontoBeskrHoved();
         this.underBeskrivelse = wsPosteringsdetaljer.getKontoBeskrUnder();
         this.kontoNr = wsPosteringsdetaljer.getKontonr();
+        this.sats = wsPosteringsdetaljer.getSats();
+        this.antall = wsPosteringsdetaljer.getAntall();
+    }
+
+    public Double getSats() {
+        return sats;
+    }
+
+    public Integer getAntall() {
+        return antall;
     }
 
     public String getHovedBeskrivelse() {

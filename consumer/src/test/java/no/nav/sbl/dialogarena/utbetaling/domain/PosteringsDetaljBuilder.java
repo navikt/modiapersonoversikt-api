@@ -4,7 +4,24 @@ public class PosteringsDetaljBuilder {
 
     private String hovedBeskrivelse = "Alderspensjon";
     private String underBeskrivelse = "hovedutbetaling";
+    private Double sats = 150.0;
+    private Integer antall = 2;
     private String kontoNr = "12345678900";
+
+    public PosteringsDetaljBuilder setKontoNr(String kontoNr) {
+        this.kontoNr = kontoNr;
+        return this;
+    }
+
+    public PosteringsDetaljBuilder setSats(Double sats) {
+        this.sats = sats;
+        return this;
+    }
+
+    public PosteringsDetaljBuilder setAntall(Integer antall) {
+        this.antall = antall;
+        return this;
+    }
 
     public PosteringsDetaljBuilder setHovedBeskrivelse(String hovedBeskrivelse) {
         this.hovedBeskrivelse = hovedBeskrivelse;
@@ -17,7 +34,7 @@ public class PosteringsDetaljBuilder {
     }
 
     public PosteringsDetalj createPosteringsDetalj() {
-        return new PosteringsDetalj(hovedBeskrivelse, underBeskrivelse, kontoNr);
+        return new PosteringsDetalj(hovedBeskrivelse, underBeskrivelse, kontoNr, sats, antall);
     }
 
 }
