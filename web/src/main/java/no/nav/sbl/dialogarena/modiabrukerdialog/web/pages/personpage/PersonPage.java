@@ -7,13 +7,12 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.events.FeedItemPayload;
-import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.LamellContainer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer;
@@ -22,7 +21,6 @@ import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
@@ -42,6 +40,10 @@ import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
+import static org.apache.wicket.event.Broadcast.BREADTH;
+import static org.apache.wicket.event.Broadcast.DEPTH;
+import static org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow.CloseButtonCallback;
+import static org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow.WindowClosedCallback;
 import static org.slf4j.LoggerFactory.getLogger;
 
 /**
@@ -69,7 +71,7 @@ public class PersonPage extends BasePage {
             searchToggleButton,
             nullstillLink,
             new PersonsokPanel("personsokPanel").setVisible(true),
-                lamellContainer,
+            lamellContainer,
 		    new VisittkortPanel("visittkort", fnr).setVisible(true),
 		    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
             new TimeoutBoks("timeoutBoks", fnr),
@@ -117,18 +119,19 @@ public class PersonPage extends BasePage {
         try {
             lamellContainer.handleWidgetItemEvent(linkId);
         } catch (ApplicationException e) {
+            logger.warn("Burde ikke skje, klarte ikke håndtere widgetLink: " + e.getMessage(), e);
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
     }
 
 	@RunOnEvents(PERSONSOK_FNR_CLICKED)
 	public void personsokresultatClicked(AjaxRequestTarget target, String query) {
-		send(getPage(), Broadcast.DEPTH, new NamedEventPayload(FNR_CHANGED, query));
+		send(getPage(), DEPTH, new NamedEventPayload(FNR_CHANGED, query));
 	}
 
 	@RunOnEvents(HENTPERSON_FODSELSNUMMER_IKKE_TILGANG)
 	public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
-		send(getPage(), Broadcast.BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
+		send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
 	}
 
     private class NullstillLink extends AjaxLink<Void> {
@@ -161,8 +164,8 @@ public class PersonPage extends BasePage {
         }
     }
 
-    private ModigModalWindow.WindowClosedCallback createWindowClosedCallback(final RedirectModalWindow modalWindow) {
-        return new ModigModalWindow.WindowClosedCallback() {
+    private WindowClosedCallback createWindowClosedCallback(final RedirectModalWindow modalWindow) {
+        return new WindowClosedCallback() {
             @Override
             public void onClose(AjaxRequestTarget ajaxRequestTarget) {
                 if (answer.is(DISCARD)) {
@@ -173,8 +176,8 @@ public class PersonPage extends BasePage {
         };
     }
 
-    private ModigModalWindow.CloseButtonCallback createCloseButtonCallback() {
-        return new ModigModalWindow.CloseButtonCallback() {
+    private CloseButtonCallback createCloseButtonCallback() {
+        return new CloseButtonCallback() {
             @Override
             public boolean onCloseButtonClicked(AjaxRequestTarget ajaxRequestTarget) {
                 ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
