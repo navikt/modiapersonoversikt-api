@@ -13,6 +13,8 @@ public class PosteringsDetalj implements Serializable {
     private Double sats;
     private Integer antall;
 
+    private Double belop;
+
     public static final Transformer<PosteringsDetalj, String> POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER = new Transformer<PosteringsDetalj, String>() {
         @Override
         public String transform(PosteringsDetalj posteringsDetalj) {
@@ -26,8 +28,7 @@ public class PosteringsDetalj implements Serializable {
             return posteringsDetalj.getKontoNr();
         }
     };
-
-    PosteringsDetalj(String hovedBeskrivelse, String underBeskrivelse, String kontoNr, Double sats, Integer antall) {
+    PosteringsDetalj(String hovedBeskrivelse, String underBeskrivelse, String kontoNr, Double sats, Integer antall, Double belop) {
         this.hovedBeskrivelse = hovedBeskrivelse;
         this.underBeskrivelse = underBeskrivelse;
         this.kontoNr = kontoNr;
@@ -41,6 +42,11 @@ public class PosteringsDetalj implements Serializable {
         this.kontoNr = wsPosteringsdetaljer.getKontonr();
         this.sats = wsPosteringsdetaljer.getSats();
         this.antall = wsPosteringsdetaljer.getAntall();
+        this.belop = wsPosteringsdetaljer.getBelop();
+    }
+
+    public Double getBelop() {
+        return belop;
     }
 
     public Double getSats() {

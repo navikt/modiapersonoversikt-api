@@ -6,7 +6,9 @@ import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -38,6 +40,14 @@ public class Bilag implements Serializable {
         for (WSPosteringsdetaljer wsPosteringsdetaljer : wsBilag.getPosteringsdetaljerListe()) {
             posteringsDetaljer.add(new PosteringsDetalj(wsPosteringsdetaljer));
         }
+    }
+
+    public Map<String, Double> getBelopPerYtelse(){
+        Map<String, Double> ytelsesBetaling = new HashMap<>();
+        for (PosteringsDetalj detalj : posteringsDetaljer) {
+            ytelsesBetaling.put(detalj.getHovedBeskrivelse(), detalj.getBelop());
+        }
+        return ytelsesBetaling;
     }
 
     public Periode getPeriode() {

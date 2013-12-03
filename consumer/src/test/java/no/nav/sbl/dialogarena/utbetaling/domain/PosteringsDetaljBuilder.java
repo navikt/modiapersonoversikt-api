@@ -7,6 +7,7 @@ public class PosteringsDetaljBuilder {
     private Double sats = 150.0;
     private Integer antall = 2;
     private String kontoNr = "12345678900";
+    private Double belop = 1000.0;
 
     public PosteringsDetaljBuilder setKontoNr(String kontoNr) {
         this.kontoNr = kontoNr;
@@ -34,7 +35,7 @@ public class PosteringsDetaljBuilder {
     }
 
     public PosteringsDetalj createPosteringsDetalj() {
-        return new PosteringsDetalj(hovedBeskrivelse, underBeskrivelse, kontoNr, sats, antall);
+        return new PosteringsDetalj(hovedBeskrivelse, underBeskrivelse, kontoNr, sats, antall, belop);
     }
 
 }

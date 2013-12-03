@@ -6,7 +6,9 @@ import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -44,14 +46,33 @@ public class UtbetalingListeUtils {
     }
 
 
-    public static ArrayList<String> hentYtelserFraUtbetalinger(List<Utbetaling> utbetalinger) {
-        Set<String> ytelser = new TreeSet<>();
+    public static Map<String, Double> hentYtelserOgSummerFraUtbetalinger(List<Utbetaling> utbetalinger) {
+
+        Map<String, Double> ytelser = new HashMap<>();
         for (Utbetaling utbetaling : utbetalinger) {
-            ytelser.addAll(utbetaling.getBeskrivelser());
+            Map<String, Double> belopPerYtelse = utbetaling.getBelopPerYtelse();
+            for (String key : belopPerYtelse.keySet()) {
+                Double belop = belopPerYtelse.get(key) + ytelser.get(key);
+                ytelser.put(key, belop);
+            }
         }
+        return ytelser;
+    }
+
+    public static List<String> hentYtelserFraUtbetalinger(List<Utbetaling> utbetalinger) {
+        Set<String> ytelser = hentYtelser(utbetalinger);
         ArrayList<String> list = new ArrayList<>(ytelser);
         Collections.sort(list);
         return list;
     }
+
+    private static Set<String> hentYtelser(List<Utbetaling> utbetalinger) {
+        Set<String> ytelser = new TreeSet<>();
+        for (Utbetaling utbetaling : utbetalinger) {
+            ytelser.addAll(utbetaling.getBeskrivelser());
+        }
+        return ytelser;
+    }
+
 
 }
