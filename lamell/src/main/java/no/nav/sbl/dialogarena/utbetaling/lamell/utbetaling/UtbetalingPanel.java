@@ -60,7 +60,10 @@ public class UtbetalingPanel extends Panel {
             protected void populateItem(ListItem<PosteringsDetalj> item) {
                 PosteringsDetalj posteringsDetalj = item.getModelObject();
                 item.add(new Label("hovedbeskrivelse", posteringsDetalj.getHovedBeskrivelse()));
+                item.add(new Label("underbeskrivelse", posteringsDetalj.getUnderBeskrivelse()));
                 item.add(new Label("kontonr", posteringsDetalj.getKontoNr()));
+                item.add(new Label("sats", posteringsDetalj.getSats()));
+                item.add(new Label("antall", posteringsDetalj.getAntall()));
             }
         };
     }
