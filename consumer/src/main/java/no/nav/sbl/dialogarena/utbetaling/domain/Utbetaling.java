@@ -142,7 +142,7 @@ public class Utbetaling implements Serializable {
         return ValutaUtil.getBelopString(this.nettoBelop, this.valuta);
     }
 
-    protected Set<String> getBeskrivelser() {
+    public Set<String> getBeskrivelser() {
         Set<String> beskrivelser = new TreeSet<>();
         for (Bilag detalj : bilag) {
             beskrivelser.addAll(detalj.getBeskrivelserFromDetaljer());

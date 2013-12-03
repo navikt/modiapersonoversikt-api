@@ -5,7 +5,10 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 public class UtbetalingListeUtils {
@@ -38,6 +41,17 @@ public class UtbetalingListeUtils {
             }
         }
         return resultat;
+    }
+
+
+    public static ArrayList<String> hentYtelserFraUtbetalinger(List<Utbetaling> utbetalinger) {
+        Set<String> ytelser = new TreeSet<>();
+        for (Utbetaling utbetaling : utbetalinger) {
+            ytelser.addAll(utbetaling.getBeskrivelser());
+        }
+        ArrayList<String> list = new ArrayList<>(ytelser);
+        Collections.sort(list);
+        return list;
     }
 
 }
