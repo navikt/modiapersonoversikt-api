@@ -8,7 +8,9 @@ import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -140,6 +142,22 @@ public class Utbetaling implements Serializable {
 
     public String getBelopMedValuta() {
         return ValutaUtil.getBelopString(this.nettoBelop, this.valuta);
+    }
+
+    public boolean harYtelse(String ytelse){
+        return getBeskrivelser().contains(ytelse);
+    }
+
+    public Map<String, Double> getBelopPerYtelse(){
+        Map<String, Double> oppsummert = new HashMap<>();
+        for (Bilag bilag1 : bilag) {
+            Map<String,Double> belopPerYtelse = bilag1.getBelopPerYtelse();
+            for (String key : belopPerYtelse.keySet()) {
+                Double belop = belopPerYtelse.get(key) + oppsummert.get(key);
+                oppsummert.put(key, belop);
+            }
+        }
+        return oppsummert;
     }
 
     public Set<String> getBeskrivelser() {

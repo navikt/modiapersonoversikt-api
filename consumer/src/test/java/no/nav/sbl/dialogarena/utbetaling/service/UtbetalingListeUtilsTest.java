@@ -8,8 +8,8 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingListeUtils.hentYtelserFraUtbetalinger;
@@ -32,7 +32,7 @@ public class UtbetalingListeUtilsTest {
         Utbetaling utbetaling1 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1)).createUtbetaling();
         Utbetaling utbetaling2 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1, bilag2)).createUtbetaling();
 
-        ArrayList<String> beskrivelser = hentYtelserFraUtbetalinger(asList(utbetaling1, utbetaling2));
+        List<String> beskrivelser = hentYtelserFraUtbetalinger(asList(utbetaling1, utbetaling2));
 
         assertThat(beskrivelser.size(), is(3) );
         assertThat(beskrivelser.contains("Dagpenger"), is(equalTo(true)));
