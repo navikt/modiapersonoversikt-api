@@ -42,6 +42,11 @@ public class LamellHandler implements Serializable {
     private TokenLamellPanel lamellPanel;
     private String fnrFromRequest;
 
+    public TokenLamellPanel createLamellPanel(String id, String fnrFromRequest) {
+        this.fnrFromRequest = fnrFromRequest;
+        return lamellPanel = new TokenLamellPanel(id, createStaticLamellFactories());
+    }
+
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         String type = feedItemPayload.getType().toLowerCase();
         String lamellId = feedItemPayload.getType().toLowerCase();
@@ -59,17 +64,15 @@ public class LamellHandler implements Serializable {
     public void handleWidgetItemEvent(String linkId) {
         if (LAMELL_KONTRAKTER.equalsIgnoreCase(linkId)) {
             lamellPanel.goToLamell(LAMELL_KONTRAKTER);
-        } else if(LAMELL_UTBETALINGER.equalsIgnoreCase(linkId)){
+        } else if (LAMELL_UTBETALINGER.equalsIgnoreCase(linkId)){
             lamellPanel.goToLamell(LAMELL_UTBETALINGER);
-        }else  {
+        } else {
             throw new ApplicationException("Widgetlenke med ukjent id <" + linkId + "> klikket');");
         }
     }
 
-    public TokenLamellPanel createLamellPanel(String id, String fnrFromRequest) {
-        this.fnrFromRequest = fnrFromRequest;
-        this.lamellPanel = new TokenLamellPanel(id, createStaticLamellFactories());
-        return lamellPanel;
+    public boolean hasUnsavedChanges() {
+        return on(lerretList).exists(MODIFIED_LERRET);
     }
 
     private String createFactoryIfMissing(TokenLamellPanel panel, String type, String itemId) {
@@ -150,10 +153,6 @@ public class LamellHandler implements Serializable {
     private Lerret addLerretToListAndReturn(Lerret lerret) {
         lerretList.add(lerret);
         return lerret;
-    }
-
-    public boolean hasUnsavedChanges() {
-        return on(lerretList).exists(MODIFIED_LERRET);
     }
 
     private static final Predicate<Lerret> MODIFIED_LERRET = new Predicate<Lerret>() {
