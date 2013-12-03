@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
+import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;

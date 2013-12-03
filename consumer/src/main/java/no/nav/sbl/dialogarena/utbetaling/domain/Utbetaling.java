@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.joda.time.DateTime.now;
 
@@ -19,6 +21,7 @@ public class Utbetaling implements Serializable {
 
     public static final LocalDate DEFAULT_STARTDATO = now().minusMonths(3).toLocalDate();
     public static final LocalDate DEFAULT_SLUTTDATO = now().toLocalDate();
+
     private final String utbetalingId;
     private String fnr;
     private List<Bilag> bilag = new ArrayList<>();
@@ -127,7 +130,15 @@ public class Utbetaling implements Serializable {
         return trekk;
     }
 
-    public String getBelopString() {
+    public String getKortUtbetalingsDato() {
+        return optional(utbetalingsDato).map(KORT).getOrElse("Ingen utbetalingsdato");
+    }
+
+    public String getPeriodeMedKortDato() {
+        return optional(periode.getStartDato()).map(KORT).getOrElse("") + " - " + optional(periode.getSluttDato()).map(KORT).getOrElse("");
+    }
+
+    public String getBelopMedValuta() {
         return ValutaUtil.getBelopString(this.nettoBelop, this.valuta);
     }
 
