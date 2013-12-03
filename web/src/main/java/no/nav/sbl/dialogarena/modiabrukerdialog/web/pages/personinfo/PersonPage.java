@@ -12,7 +12,7 @@ import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.LamellHandler;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.LamellContainer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.modal.SjekkForlateSide;
@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.slf4j.Logger;
 
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
@@ -41,31 +42,34 @@ import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Denne klassen brukes til å vise informasjon om en bruker. Visningen består av lameller, widgets og paneler.
  */
-public class Personinfo extends BasePage {
+public class PersonPage extends BasePage {
 
-    public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(Personinfo.class, "respond.min.js"), "lt IE 9");
-	public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(Personinfo.class, "personinfo_ie.css"), "screen", "lt IE 10");
+    private Logger logger = getLogger(PersonPage.class);
+
+    public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
+	public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
 
 	private SjekkForlateSideAnswer answer;
     private RedirectModalWindow redirectPopup;
-	private LamellHandler lamellHandler;
+	private LamellContainer lamellContainer;
     private HentPersonPanel hentPersonPanel;
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
 
-    public Personinfo(PageParameters pageParameters) {
+    public PersonPage(PageParameters pageParameters) {
         String fnr = pageParameters.get("fnr").toString(null);
-        instansierFelter();
+        instansierFelter(fnr);
         add(
             hentPersonPanel,
             searchToggleButton,
             nullstillLink,
             new PersonsokPanel("personsokPanel").setVisible(true),
-            lamellHandler.createLamellPanel("lameller", fnr),
+                lamellContainer,
 		    new VisittkortPanel("visittkort", fnr).setVisible(true),
 		    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
             new TimeoutBoks("timeoutBoks", fnr),
@@ -73,10 +77,10 @@ public class Personinfo extends BasePage {
         );
     }
 
-    private void instansierFelter() {
+    private void instansierFelter(String fnr) {
         answer = new SjekkForlateSideAnswer();
         redirectPopup = createModalWindow("modal");
-        lamellHandler = new LamellHandler();
+        lamellContainer = new LamellContainer("lameller", fnr);
         hentPersonPanel = (HentPersonPanel) new HentPersonPanel("searchPanel").setOutputMarkupPlaceholderTag(true);
         searchToggleButton = (Button) new Button("toggle-sok").setOutputMarkupPlaceholderTag(true);
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
@@ -84,7 +88,7 @@ public class Personinfo extends BasePage {
 
     @RunOnEvents(FODSELSNUMMER_FUNNET)
     public void refreshKjerneinfo(AjaxRequestTarget target, String fnr) {
-        handleRedirect(target, new PageParameters().set("fnr", fnr), Personinfo.class);
+        handleRedirect(target, new PageParameters().set("fnr", fnr), PersonPage.class);
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
@@ -101,8 +105,9 @@ public class Personinfo extends BasePage {
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
         try {
-            lamellHandler.handleFeedItemEvent(event, feedItemPayload);
+            lamellContainer.handleFeedItemEvent(event, feedItemPayload);
         } catch (ApplicationException e) {
+            logger.warn("Burde ikke skje, klarte ikke håndtere feeditemevent: " + e.getMessage(), e);
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
     }
@@ -110,7 +115,7 @@ public class Personinfo extends BasePage {
     @RunOnEvents(WIDGET_LINK_CLICKED)
     public void widgetLinkClicked(AjaxRequestTarget target, String linkId) {
         try {
-            lamellHandler.handleWidgetItemEvent(linkId);
+            lamellContainer.handleWidgetItemEvent(linkId);
         } catch (ApplicationException e) {
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
@@ -149,7 +154,7 @@ public class Personinfo extends BasePage {
 
     private void handleRedirect(AjaxRequestTarget target, PageParameters pageParameters, Class<? extends Page> redirectTo) {
         redirectPopup.setTarget(redirectTo, pageParameters);
-        if (lamellHandler.hasUnsavedChanges()) {
+        if (lamellContainer.hasUnsavedChanges()) {
             redirectPopup.show(target);
         } else {
             redirectPopup.redirect();

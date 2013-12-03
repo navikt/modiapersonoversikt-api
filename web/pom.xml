@@ -59,6 +59,11 @@
          </dependency>
 
         <dependency>
+             <groupId>no.nav</groupId>
+             <artifactId>kontrakter-consumer</artifactId>
+         </dependency>
+
+        <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-hentperson</artifactId>
         </dependency>

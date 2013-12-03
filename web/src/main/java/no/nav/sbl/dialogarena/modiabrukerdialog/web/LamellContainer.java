@@ -28,7 +28,10 @@ import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORE
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
 import static org.apache.wicket.model.Model.of;
 
-public class LamellHandler implements Serializable {
+/**
+ * Holder på lameller og tilhørende lerreter
+ */
+public class LamellContainer extends TokenLamellPanel implements Serializable {
 
     public static final String LAMELL_KONTRAKTER = "kontrakter";
     public static final String LAMELL_UTBETALINGER = "utbetaling";
@@ -38,25 +41,26 @@ public class LamellHandler implements Serializable {
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     public static final String PANEL = "panel";
 
+    private static LerretHolder lerretHolder = new LerretHolder();
+
     private final List<Lerret> lerretList = new ArrayList<>();
-    private TokenLamellPanel lamellPanel;
     private String fnrFromRequest;
 
-    public TokenLamellPanel createLamellPanel(String id, String fnrFromRequest) {
+    public LamellContainer(String id, String fnrFromRequest) {
+        super(id, createLamellFactories(fnrFromRequest));
         this.fnrFromRequest = fnrFromRequest;
-        lamellPanel = new TokenLamellPanel(id, createStaticLamellFactories());
-        return lamellPanel;
+        lerretList.addAll(lerretHolder.lerreter);
     }
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         String type = feedItemPayload.getType().toLowerCase();
         String lamellId = feedItemPayload.getType().toLowerCase();
         if (canHaveMoreThanOneFactory(type)) {
-            lamellId = createFactoryIfMissing(lamellPanel, type, feedItemPayload.getItemId());
+            lamellId = createFactoryIfMissing(type, feedItemPayload.getItemId());
         }
-        if (lamellPanel.hasFactory(lamellId)) {
-            lamellPanel.goToLamell(lamellId);
-            lamellPanel.sendToLamell(lamellId, event.getPayload());
+        if (hasFactory(lamellId)) {
+            goToLamell(lamellId);
+            sendToLamell(lamellId, event.getPayload());
         } else {
             throw new ApplicationException("Feedlenke med ukjent type <" + lamellId + "> klikket");
         }
@@ -64,9 +68,9 @@ public class LamellHandler implements Serializable {
 
     public void handleWidgetItemEvent(String linkId) {
         if (LAMELL_KONTRAKTER.equalsIgnoreCase(linkId)) {
-            lamellPanel.goToLamell(LAMELL_KONTRAKTER);
+            goToLamell(LAMELL_KONTRAKTER);
         } else if (LAMELL_UTBETALINGER.equalsIgnoreCase(linkId)){
-            lamellPanel.goToLamell(LAMELL_UTBETALINGER);
+            goToLamell(LAMELL_UTBETALINGER);
         } else {
             throw new ApplicationException("Widgetlenke med ukjent id <" + linkId + "> klikket');");
         }
@@ -76,10 +80,10 @@ public class LamellHandler implements Serializable {
         return on(lerretList).exists(MODIFIED_LERRET);
     }
 
-    private String createFactoryIfMissing(TokenLamellPanel panel, String type, String itemId) {
+    private String createFactoryIfMissing(String type, String itemId) {
         String factoryId = type + itemId;
-        if (!panel.hasFactory(factoryId)) {
-            panel.addNewFactory(createFactory(type, itemId));
+        if (!hasFactory(factoryId)) {
+            addNewFactory(createFactory(type, itemId));
         }
         return factoryId;
     }
@@ -106,16 +110,16 @@ public class LamellHandler implements Serializable {
         return SYKEPENGER.equalsIgnoreCase(type) || FORELDREPENGER.equalsIgnoreCase(type);
     }
 
-    private List<LamellFactory> createStaticLamellFactories() {
+    private static List<LamellFactory> createLamellFactories(final String fnrFromRequest) {
         return asList(
-                createOversiktLamell(),
-                createKontrakterLamell(),
-                createBrukerprofilLamell(),
-                createUtbetalingLamell()
+                createOversiktLamell(fnrFromRequest),
+                createKontrakterLamell(fnrFromRequest),
+                createBrukerprofilLamell(fnrFromRequest),
+                createUtbetalingLamell(fnrFromRequest)
         );
     }
 
-    private LamellFactory createBrukerprofilLamell() {
+    private static LamellFactory createBrukerprofilLamell(final String fnrFromRequest) {
         return newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
@@ -124,7 +128,7 @@ public class LamellHandler implements Serializable {
         });
     }
 
-    private LamellFactory createKontrakterLamell() {
+    private static LamellFactory createKontrakterLamell(final String fnrFromRequest) {
         return newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
@@ -133,7 +137,7 @@ public class LamellHandler implements Serializable {
         });
     }
 
-    private LamellFactory createOversiktLamell() {
+    private static LamellFactory createOversiktLamell(final String fnrFromRequest) {
         return newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
@@ -142,7 +146,7 @@ public class LamellHandler implements Serializable {
         });
     }
 
-    private LamellFactory createUtbetalingLamell() {
+    private static LamellFactory createUtbetalingLamell(final String fnrFromRequest) {
         return newLamellFactory(LAMELL_UTBETALINGER, "U", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
@@ -151,8 +155,8 @@ public class LamellHandler implements Serializable {
         });
     }
 
-    private Lerret addLerretToListAndReturn(Lerret lerret) {
-        lerretList.add(lerret);
+    private static Lerret addLerretToListAndReturn(Lerret lerret) {
+        lerretHolder.lerreter.add(lerret);
         return lerret;
     }
 
@@ -162,5 +166,13 @@ public class LamellHandler implements Serializable {
             return lerret.isModified();
         }
     };
+
+    private static class LerretHolder {
+        ArrayList<Lerret> lerreter;
+
+        LerretHolder() {
+            this.lerreter = new ArrayList<>();
+        }
+    }
 
 }

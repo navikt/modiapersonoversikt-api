@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.Personinfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.PersonPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
@@ -56,7 +56,7 @@ public class MockSetupPage extends BasePage {
 
             private void redirect() {
                 if (brukTestPerson) {
-                    getRequestCycle().setResponsePage(Personinfo.class, new PageParameters().add("fnr", "23067911223"));
+                    getRequestCycle().setResponsePage(PersonPage.class, new PageParameters().add("fnr", "23067911223"));
                     return;
                 }
                 getRequestCycle().setResponsePage(HentPersonPage.class);

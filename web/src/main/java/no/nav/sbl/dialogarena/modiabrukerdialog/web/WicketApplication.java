@@ -22,7 +22,7 @@ import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.LocaleFromWicketSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.Personinfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLamell;
@@ -81,8 +81,8 @@ public class WicketApplication extends WebApplication {
                         MetaTag.CHARSET_UTF8,
                         MetaTag.VIEWPORT_SCALE_1
                 )
-		        .addConditionalCss(Personinfo.INTERN_IE)
-                .addConditionalJavascript(Personinfo.RESPOND_JS)
+		        .addConditionalCss(PersonPage.INTERN_IE)
+                .addConditionalJavascript(PersonPage.RESPOND_JS)
 		        .addLess(
                         BasePage.PERSONINFO_LESS,
                         UtbetalingLamell.UTBETALING_LAMELL_LESS,
@@ -139,7 +139,7 @@ public class WicketApplication extends WebApplication {
     }
 
     private void mountPages() {
-        mountPage("/person/${fnr}", Personinfo.class);
+        mountPage("/person/${fnr}", PersonPage.class);
         mountPage("internal/selftest", SelfTestPage.class);
         if(mockSetup().isTillat()) {
             mountPage("/mocksetup", MockSetupPage.class);

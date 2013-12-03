@@ -6,7 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelM
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.Personinfo;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personinfo.PersonPage;
 import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.junit.Test;
@@ -44,14 +44,14 @@ public class SjekkForlateSideTest extends WicketPageTest {
 
     @Test
     public void skalOppretteSjekkForlateSide() {
-        wicket.goTo(Personinfo.class).goToPageWith(sjekkForlateSide)
+        wicket.goTo(PersonPage.class).goToPageWith(sjekkForlateSide)
                 .should().containComponent(withId("closeDiscard").and(ofType(AjaxLink.class)))
                 .should().containComponent(withId("closeCancel").and(ofType(AjaxLink.class)));
     }
 
     @Test
     public void skalReturnereCancelAswer() {
-        wicket.goTo(Personinfo.class).goToPageWith(sjekkForlateSide)
+        wicket.goTo(PersonPage.class).goToPageWith(sjekkForlateSide)
                 .click().link(withId("closeCancel"));
         assertTrue(answer.is(CANCEL));
         assertFalse(answer.is(DISCARD));
@@ -59,7 +59,7 @@ public class SjekkForlateSideTest extends WicketPageTest {
 
     @Test
     public void skalReturnereDiscardAswer() {
-        wicket.goTo(Personinfo.class)
+        wicket.goTo(PersonPage.class)
                 .goToPageWith(sjekkForlateSide)
                 .click().link(withId("closeDiscard"));
         assertTrue(answer.is(DISCARD));

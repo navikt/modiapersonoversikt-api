@@ -6,7 +6,7 @@ import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.LamellHandler;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.LamellContainer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
@@ -40,11 +40,11 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         UtbetalingPortTypeMock.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)
-public class PersoninfoTest extends WicketPageTest {
+public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void shouldLoadPage() {
-        wicket.goTo(Personinfo.class, with().param("fnr", "12037649749"))
+        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
                 .should().containComponent(withId("searchPanel").and(ofType(HentPersonPanel.class)))
                 .should().containComponent(withId("personKjerneinfoPanel").and(ofType(PersonKjerneinfoPanel.class)))
                 .should().containComponent(withId("personsokPanel").and(ofType(PersonsokPanel.class)))
@@ -54,30 +54,30 @@ public class PersoninfoTest extends WicketPageTest {
 
     @Test
     public void vedUlagredeEndringerOgRefreshSkalViseModaldialog() {
-        wicket.goTo(Personinfo.class, with().param("fnr", "12037649749"));
-        Personinfo personinfo = (Personinfo) wicket.tester.getLastRenderedPage();
+        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"));
+        PersonPage personPage = (PersonPage) wicket.tester.getLastRenderedPage();
         RedirectModalWindow redirectPopup = mock(RedirectModalWindow.class);
-        LamellHandler lamellHandler = mock(LamellHandler.class);
-        on(personinfo).setFieldValue("redirectPopup", redirectPopup);
-        on(personinfo).setFieldValue("lamellHandler", lamellHandler);
-        when(lamellHandler.hasUnsavedChanges()).thenReturn(true);
-        AjaxRequestTarget target = new AjaxRequestHandler(personinfo);
-        personinfo.refreshKjerneinfo(target, "");
+        LamellContainer lamellContainer = mock(LamellContainer.class);
+        on(personPage).setFieldValue("redirectPopup", redirectPopup);
+        on(personPage).setFieldValue("lamellContainer", lamellContainer);
+        when(lamellContainer.hasUnsavedChanges()).thenReturn(true);
+        AjaxRequestTarget target = new AjaxRequestHandler(personPage);
+        personPage.refreshKjerneinfo(target, "");
         verify(redirectPopup, times(1)).show(target);
         verify(redirectPopup, times(0)).redirect();
     }
 
     @Test
     public void vedIngenUlagredeEndringerOgRefreshSkalIkkeViseModaldialog() {
-        wicket.goTo(Personinfo.class, with().param("fnr", "12037649749"));
-        Personinfo personinfo = (Personinfo) wicket.tester.getLastRenderedPage();
+        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"));
+        PersonPage personPage = (PersonPage) wicket.tester.getLastRenderedPage();
         RedirectModalWindow redirectPopup = mock(RedirectModalWindow.class);
-        LamellHandler lamellHandler = mock(LamellHandler.class);
-        on(personinfo).setFieldValue("redirectPopup", redirectPopup);
-        on(personinfo).setFieldValue("lamellHandler", lamellHandler);
-        when(lamellHandler.hasUnsavedChanges()).thenReturn(false);
-        AjaxRequestTarget target = new AjaxRequestHandler(personinfo);
-        personinfo.refreshKjerneinfo(target, "");
+        LamellContainer lamellContainer = mock(LamellContainer.class);
+        on(personPage).setFieldValue("redirectPopup", redirectPopup);
+        on(personPage).setFieldValue("lamellContainer", lamellContainer);
+        when(lamellContainer.hasUnsavedChanges()).thenReturn(false);
+        AjaxRequestTarget target = new AjaxRequestHandler(personPage);
+        personPage.refreshKjerneinfo(target, "");
         verify(redirectPopup, times(0)).show(target);
         verify(redirectPopup, times(1)).redirect();
     }
