@@ -44,7 +44,8 @@ public class LamellHandler implements Serializable {
 
     public TokenLamellPanel createLamellPanel(String id, String fnrFromRequest) {
         this.fnrFromRequest = fnrFromRequest;
-        return lamellPanel = new TokenLamellPanel(id, createStaticLamellFactories());
+        lamellPanel = new TokenLamellPanel(id, createStaticLamellFactories());
+        return lamellPanel;
     }
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
