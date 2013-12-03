@@ -34,18 +34,18 @@ public class UtbetalingLamell extends Lerret {
     private UtbetalingsHolder utbetalingsHolder;
     private FilterProperties filter;
     private OppsummeringPanel totalOppsummeringPanel;
-    private MarkupContainer utbetalingerContainer;
-    private ListView<List<Utbetaling>> maanedsListView;
+    private MarkupContainer utbetalingslisteContainer;
 
     public UtbetalingLamell(String id, String fnr) {
         super(id);
+
         instansierFelter(fnr);
 
         add(
                 new FeedbackPanel("feedbackpanel").setOutputMarkupId(true),
                 new FilterForm("filterForm", filter),
                 totalOppsummeringPanel.setOutputMarkupPlaceholderTag(true),
-                utbetalingerContainer.setOutputMarkupId(true)
+                utbetalingslisteContainer.setOutputMarkupId(true)
         );
     }
 
@@ -53,30 +53,26 @@ public class UtbetalingLamell extends Lerret {
         filter = new FilterProperties(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
         utbetalingsHolder = new UtbetalingsHolder(fnr, utbetalingService);
         totalOppsummeringPanel = createTotalOppsummeringPanel(utbetalingsHolder.getSynligeUtbetalinger(filter.getParams()));
-        utbetalingerContainer = new WebMarkupContainer("utbetalingerContainer").add(createMaanedsPanelet());
+        utbetalingslisteContainer = new WebMarkupContainer("utbetalingslisteContainer").add(createMaanedsPanelListe());
     }
 
     private OppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
-        return new OppsummeringPanel("totalOppsummeringPanel", createTotalOppsummeringPropertiesModel(liste));
+        return new OppsummeringPanel("totalOppsummeringPanel",
+                new CompoundPropertyModel<>(new OppsummeringProperties(liste, filter.getStartDato(), filter.getSluttDato())));
     }
 
-    private CompoundPropertyModel<OppsummeringProperties> createTotalOppsummeringPropertiesModel(List<Utbetaling> liste) {
-        return new CompoundPropertyModel<>(new OppsummeringProperties(liste, filter.getStartDato(), filter.getSluttDato()));
-    }
-
-
-    private ListView<List<Utbetaling>> createMaanedsPanelet() {
+    private ListView<List<Utbetaling>> createMaanedsPanelListe() {
         List<List<Utbetaling>> maanedsListe = utbetalingsHolder.hentFiltrertUtbetalingerPerMaaned(filter.getParams());
 
-        maanedsListView = new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
+        ListView<List<Utbetaling>> utbetalingerPerMaaned = new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
             @Override
             protected void populateItem(ListItem<List<Utbetaling>> item) {
                 item.add(new MaanedsPanel("maanedsPanel", item.getModelObject(), filter));
             }
         };
-        maanedsListView.setOutputMarkupId(true);
+        utbetalingerPerMaaned.setOutputMarkupId(true);
 
-        return maanedsListView;
+        return utbetalingerPerMaaned;
     }
 
     @RunOnEvents(FilterProperties.ENDRET)
@@ -87,11 +83,11 @@ public class UtbetalingLamell extends Lerret {
                 synligeUtbetalinger,
                 filter.getStartDato(),
                 filter.getSluttDato()));
+        totalOppsummeringPanel.setVisibilityAllowed(synligeUtbetalinger.size() > 1);
 
-        List<List<Utbetaling>> maanedsListe = utbetalingsHolder.hentFiltrertUtbetalingerPerMaaned(filter.getParams());
-        maanedsListView.setModelObject(maanedsListe);
+        utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe());
 
-        target.add(utbetalingerContainer, totalOppsummeringPanel);
+        target.add(totalOppsummeringPanel, utbetalingslisteContainer);
     }
 
 }

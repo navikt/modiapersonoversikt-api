@@ -15,7 +15,6 @@ import java.util.List;
 public class OppsummeringProperties implements Serializable {
 
     private List<Utbetaling> utbetalinger;
-
     private LocalDate sluttDato;
     private LocalDate startDato;
     private Periode periode;

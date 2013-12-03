@@ -9,7 +9,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.joda.time.LocalDate;
 
@@ -21,23 +20,21 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 
 public class MaanedsPanel extends Panel {
 
-    public MaanedsPanel(String id, List<Utbetaling> utbetalingListe, FilterProperties filter) {
+    public MaanedsPanel(String id, List<Utbetaling> utbetalingsliste, FilterProperties filter) {
         super(id);
 
-        CompoundPropertyModel<OppsummeringProperties> oppsummeringsModel = createOppsummeringPropertiesModel(utbetalingListe, filter);
-
-        OppsummeringPanel oppsummeringsPanel = new OppsummeringPanel("oppsummeringsPanel", oppsummeringsModel);
-        oppsummeringsPanel.add(visibleIf(new Model<>(oppsummeringsModel.getObject().getUtbetalinger().size() > 1)));
-
-        add(
-                oppsummeringsPanel,
-                createUtbetalingListView(oppsummeringsModel)
-        );
-
+        add(createOppsummeringsPanel(utbetalingsliste, filter), createUtbetalingListView(utbetalingsliste));
     }
 
-    private ListView<Utbetaling> createUtbetalingListView(IModel<OppsummeringProperties> oppsummeringsModel) {
-        return new ListView<Utbetaling>("utbetalinger", oppsummeringsModel.getObject().getUtbetalinger()) {
+    private OppsummeringPanel createOppsummeringsPanel(List<Utbetaling> utbetalingsliste, FilterProperties filter) {
+        CompoundPropertyModel<OppsummeringProperties> oppsummeringsModel = createOppsummeringPropertiesModel(utbetalingsliste, filter);
+        OppsummeringPanel oppsummeringsPanel = new OppsummeringPanel("oppsummeringsPanel", oppsummeringsModel);
+        oppsummeringsPanel.add(visibleIf(new Model<>(oppsummeringsModel.getObject().getUtbetalinger().size() > 1)));
+        return oppsummeringsPanel;
+    }
+
+    private ListView<Utbetaling> createUtbetalingListView(List<Utbetaling> utbetalingsliste) {
+        return new ListView<Utbetaling>("utbetalinger", utbetalingsliste) {
             @Override
             protected void populateItem(ListItem<Utbetaling> item) {
                 item.add(new UtbetalingPanel("utbetaling", item.getModelObject()));
@@ -55,7 +52,6 @@ public class MaanedsPanel extends Panel {
 
         if (filter.getStartDato().isAfter(startDato) && filter.getStartDato().isBefore(sluttDato))
             startDato = filter.getStartDato();
-
         if (filter.getSluttDato().isBefore(sluttDato) && filter.getSluttDato().isAfter(startDato))
             sluttDato = filter.getSluttDato();
 
