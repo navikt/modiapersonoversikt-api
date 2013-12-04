@@ -40,7 +40,7 @@ public class Oppsummering implements Serializable {
         return this.hovedYtelsesBeskrivelser;
     }
 
-    public class HovedBeskrivelse implements Serializable {
+    public static class HovedBeskrivelse implements Serializable {
         private String hovedYtelsesBeskrivelse;
         private List<UnderBeskrivelse> underYtelsesBeskrivelser;
 
@@ -61,7 +61,7 @@ public class Oppsummering implements Serializable {
         }
     }
 
-    public class UnderBeskrivelse implements  Serializable {
+    public static class UnderBeskrivelse implements  Serializable {
         private String underYtelsesBeskrivelse;
         private Double ytelsesBelop;
         private String valuta;
