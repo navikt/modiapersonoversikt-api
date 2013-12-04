@@ -46,13 +46,14 @@ public class UtbetalingListeUtils {
     }
 
 
-    public static Map<String, Double> hentYtelserOgSummerFraUtbetalinger(List<Utbetaling> utbetalinger) {
-
+    public static Map<String, Double> hentYtelserOgSummerBelop(List<Utbetaling> utbetalinger) {
         Map<String, Double> ytelser = new HashMap<>();
+
         for (Utbetaling utbetaling : utbetalinger) {
             Map<String, Double> belopPerYtelse = utbetaling.getBelopPerYtelse();
             for (String key : belopPerYtelse.keySet()) {
-                Double belop = belopPerYtelse.get(key) + ytelser.get(key);
+                Double belop = (belopPerYtelse.get(key) != null ? belopPerYtelse.get(key) : 0.0)  +
+                               (ytelser.get(key) != null ? ytelser.get(key) : 0.0);
                 ytelser.put(key, belop);
             }
         }

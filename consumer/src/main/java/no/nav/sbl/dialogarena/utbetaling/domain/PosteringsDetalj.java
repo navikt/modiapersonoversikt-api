@@ -12,7 +12,6 @@ public class PosteringsDetalj implements Serializable {
     private String kontoNr;
     private Double sats;
     private Integer antall;
-
     private Double belop;
 
     public static final Transformer<PosteringsDetalj, String> POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER = new Transformer<PosteringsDetalj, String>() {
@@ -34,6 +33,7 @@ public class PosteringsDetalj implements Serializable {
         this.kontoNr = kontoNr;
         this.sats = sats;
         this.antall = antall;
+        this.belop = belop;
     }
 
     public PosteringsDetalj(WSPosteringsdetaljer wsPosteringsdetaljer) {
