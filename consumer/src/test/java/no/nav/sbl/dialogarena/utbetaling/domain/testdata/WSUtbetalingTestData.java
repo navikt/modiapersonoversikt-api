@@ -22,7 +22,7 @@ public class WSUtbetalingTestData {
     private static final String MOTTATT_KONTOFORER = "MOTTATT KONTOFØRER";
     private static final String STATUS_KODE = "0018";
     private static final Double BELOP = 1000.0;
-    public static final String GRUNNBELØP = "Grunnbeløp";
+    private static final String GRUNNBELØP = "Grunnbeløp";
     private static String fnr;
 
     public static List<WSUtbetaling> getWsUtbetalinger(String fNr) {
