@@ -23,7 +23,6 @@ import static org.apache.commons.lang3.StringUtils.join;
 public class Bilag implements Serializable {
 
     public static final String SKATT = "skatt";
-    public static final String DELIMITER = "_";
     private String melding;
     private List<PosteringsDetalj> posteringsDetaljer;
     private Periode periode;
@@ -51,14 +50,6 @@ public class Bilag implements Serializable {
         return ytelsesBetaling;
     }
 
-    public Map<String, Double> getBelopPerUnderYtelse() {
-        Map<String, Double> ytelsesBetaling = new HashMap<>();
-        for (PosteringsDetalj detalj : posteringsDetaljer) {
-            String key = detalj.getHovedBeskrivelse() + DELIMITER + detalj.getUnderBeskrivelse();
-            ytelsesBetaling.put(key, detalj.getBelop());
-        }
-        return ytelsesBetaling;
-    }
 
     public Periode getPeriode() {
         return periode;

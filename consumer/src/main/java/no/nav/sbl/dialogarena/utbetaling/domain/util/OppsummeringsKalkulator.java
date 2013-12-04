@@ -18,6 +18,8 @@ public class OppsummeringsKalkulator {
                     utbetaling.getBruttoBelop() - utbetaling.getNettoBelop() :
                     utbetaling.getTrekk();
         }
+
+//        oppsummering.ytelserUtbetalt = hentYtelserOgSummerBelopPerUnderytelse(utbetalinger);
         return oppsummering;
     }
 }

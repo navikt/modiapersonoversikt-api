@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
 import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
+import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 
@@ -56,13 +58,19 @@ public class UtbetalingListeUtils {
         return ytelser;
     }
 
-    public static Map<String, Double> hentYtelserOgSummerBelopPerUnderytelse(List<Utbetaling> utbetalinger) {
-        Map<String, Double> oppsummert = new HashMap<>();
+    public static Map<String, Map<String, Double>> hentYtelserOgSummerBelopPerUnderytelse(List<Utbetaling> utbetalinger) {
+
+        List<PosteringsDetalj> detaljer = new ArrayList<>();
         for (Utbetaling utbetaling : utbetalinger) {
-            Map<String, Double> perUnderYtelse = utbetaling.getBelopPerUnderYtelser();
-            summerMapVerdier(oppsummert, perUnderYtelse);
+            for (Bilag bilag : utbetaling.getBilag()) {
+                detaljer.addAll(bilag.getPosteringsDetaljer());
+            }
         }
-        return oppsummert;
+        Map<String, Map<String, Double>> ytelsesBelopMap = new HashMap<>();
+        for (PosteringsDetalj detalj : detaljer) {
+            leggSammenIResultatMap(ytelsesBelopMap, detalj.getHovedBeskrivelse(), detalj.getUnderBeskrivelse(), detalj.getBelop());
+        }
+        return ytelsesBelopMap;
     }
 
     public static void summerMapVerdier(Map<String, Double> resultat, Map<String, Double> doubleMap) {
@@ -78,6 +86,14 @@ public class UtbetalingListeUtils {
         ArrayList<String> list = new ArrayList<>(ytelser);
         Collections.sort(list);
         return list;
+    }
+
+    private static void leggSammenIResultatMap(Map<String, Map<String, Double>> resultatMap, String hoved, String under, Double detaljBelop) {
+        Map<String, Double> map = resultatMap.get(hoved);
+        if(map == null) { map = new HashMap<>();   }
+        Double belop = detaljBelop + (map.get(under) != null? map.get(under) : 0.0);
+        map.put(under, belop);
+        resultatMap.put(hoved, map);
     }
 
     private static Set<String> hentYtelser(List<Utbetaling> utbetalinger) {
