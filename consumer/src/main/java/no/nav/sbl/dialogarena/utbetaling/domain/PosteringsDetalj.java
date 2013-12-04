@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class PosteringsDetalj implements Serializable {
 
     private String hovedBeskrivelse;
-    private String underBeskrivelse;
+    private String underBeskrivelse = "-";
     private String kontoNr;
     private Double sats;
     private Integer antall;

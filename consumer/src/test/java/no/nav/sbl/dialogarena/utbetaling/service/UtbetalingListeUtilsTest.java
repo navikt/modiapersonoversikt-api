@@ -44,7 +44,7 @@ public class UtbetalingListeUtilsTest {
     }
 
     @Test
-    public void skalHenteYtelserOgSummereBelop() throws Exception {
+    public void hentYtelserOgSummerBelop_SummerPerHovedtype() throws Exception {
 
         PosteringsDetalj dagpenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("Dagpenger").setBelop(1000.0).createPosteringsDetalj();
         PosteringsDetalj sykepenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("Sykepenger").setBelop(200.0).createPosteringsDetalj();
@@ -62,6 +62,26 @@ public class UtbetalingListeUtilsTest {
         assertThat(belopPerYtelse.get("Sykepenger"), is(200.0));
         assertThat(belopPerYtelse.get("Barnetrygd"), is(600.0));
         assertThat(belopPerYtelse.get("Skatt"), is(300.0));
+    }
+
+
+    @Test
+    public void hentYtelserOgSummerBelop_SummerPerUndertype() throws Exception {
+        PosteringsDetalj dagpenger_grunn = new PosteringsDetaljBuilder().setHovedBeskrivelse("Dagpenger").setUnderBeskrivelse("Grunnbeløp").setBelop(1000.0).createPosteringsDetalj();
+        PosteringsDetalj dagpenger_tillegg = new PosteringsDetaljBuilder().setHovedBeskrivelse("Dagpenger").setUnderBeskrivelse("Tillegg").setBelop(1000.0).createPosteringsDetalj();
+        PosteringsDetalj skatt = new PosteringsDetaljBuilder().setHovedBeskrivelse("Skatt").setBelop(100.0).createPosteringsDetalj();
+
+        Bilag bilag1 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(dagpenger_grunn, dagpenger_tillegg, skatt)).createBilag();
+        Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(dagpenger_grunn, skatt)).createBilag();
+
+        Utbetaling utbetaling1 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1)).createUtbetaling();
+        Utbetaling utbetaling2 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag2)).createUtbetaling();
+
+        Map<String, Double> belopPerYtelse = UtbetalingListeUtils.hentYtelserOgSummerBelopPerUnderytelse(asList(utbetaling1, utbetaling2));
+
+        assertThat(belopPerYtelse.get("Dagpenger_Grunnbeløp"), is(2000.0));
+        assertThat(belopPerYtelse.get("Dagpenger_Tillegg"), is(1000.0));
+        assertThat(belopPerYtelse.get("Skatt_-"), is(200.0));
     }
 
 }
