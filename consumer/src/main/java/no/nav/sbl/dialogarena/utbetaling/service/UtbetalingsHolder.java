@@ -35,7 +35,7 @@ public class UtbetalingsHolder implements Serializable {
         return resultat;
     }
 
-    public class UtbetalingServiceResultat {
+    public final class UtbetalingServiceResultat {
 
         private String fnr;
 

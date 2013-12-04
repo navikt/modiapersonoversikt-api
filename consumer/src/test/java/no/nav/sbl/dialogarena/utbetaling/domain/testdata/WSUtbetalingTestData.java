@@ -20,8 +20,8 @@ public class WSUtbetalingTestData {
     private static final String NAVN = "Kjell Olsen";
     public static final String UTBETALT = "MOTTATT_KONTOFØRER";
     public static final String MOTTATT_KONTOFØRER = "MOTTATT KONTOFØRER";
+    private static final String STATUS_KODE = "0018";
     private static String fnr;
-    private static String STATUS_KODE = "0018";
 
     public static List<WSUtbetaling> getWsUtbetalinger(String fNr) {
         fnr = fNr;
