@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.utbetaling.service;
+package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;

@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.domain.Oppsummering;
 import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.logikk.OppsummeringsKalkulator;
+import no.nav.sbl.dialogarena.utbetaling.domain.util.OppsummeringsKalkulator;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;

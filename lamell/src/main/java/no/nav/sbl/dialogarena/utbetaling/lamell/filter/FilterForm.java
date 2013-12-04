@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
+import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -19,11 +20,11 @@ public class FilterForm extends Form {
 
     private static final int AAR_TILBAKE = 3;
 
-    private FilterProperties filter;
+    private FilterParametere filterParametere;
 
-    public FilterForm(String id, FilterProperties filter) {
+    public FilterForm(String id, FilterParametere filterParametere) {
         super(id);
-        this.filter = filter;
+        this.filterParametere = filterParametere;
         add(
                 createMottakerButton("visBruker"),
                 createMottakerButton("visArbeidsgiver"),
@@ -33,7 +34,7 @@ public class FilterForm extends Form {
     }
 
     private AjaxLink<Boolean> createMottakerButton(final String mottaker) {
-        AjaxLink<Boolean> mottakerButton = new AjaxLink<Boolean>(mottaker, new PropertyModel<Boolean>(filter, mottaker)) {
+        AjaxLink<Boolean> mottakerButton = new AjaxLink<Boolean>(mottaker, new PropertyModel<Boolean>(filterParametere, mottaker)) {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 setModelObject(!getModelObject());
@@ -57,8 +58,8 @@ public class FilterForm extends Form {
                 .build();
 
         DateRangeModel dateRangeModel = new DateRangeModel(
-                new PropertyModel<LocalDate>(filter, "startDato"),
-                new PropertyModel<LocalDate>(filter, "sluttDato"));
+                new PropertyModel<LocalDate>(filterParametere, "startDato"),
+                new PropertyModel<LocalDate>(filterParametere, "sluttDato"));
 
         return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }
@@ -73,6 +74,6 @@ public class FilterForm extends Form {
     }
 
     private void sendFilterEndretEvent() {
-        send(getPage(), Broadcast.DEPTH, FilterProperties.ENDRET);
+        send(getPage(), Broadcast.DEPTH, FilterParametere.ENDRET);
     }
 }

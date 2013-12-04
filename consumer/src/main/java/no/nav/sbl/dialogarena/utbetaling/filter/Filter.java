@@ -1,6 +1,5 @@
-package no.nav.sbl.dialogarena.utbetaling.logikk;
+package no.nav.sbl.dialogarena.utbetaling.filter;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.LocalDate;
 
@@ -10,9 +9,9 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.Mottaker.BRUKER;
 
 public class Filter {
 
-    public static boolean filtrer(Utbetaling utbetaling, FilterParametere params) {
-        boolean innenforDatoer = Filter.filtrerPaaDatoer(utbetaling.getUtbetalingsDato().toLocalDate(), params.startDato, params.sluttDato);
-        boolean brukerSkalVises = Filter.filtrerPaaMottaker(utbetaling.getMottaker().getMottakertypeType(), params.visArbeidsgiver, params.visBruker);
+    public static boolean filtrer(Utbetaling utbetaling, FilterParametere filterParametere) {
+        boolean innenforDatoer = filtrerPaaDatoer(utbetaling.getUtbetalingsDato().toLocalDate(), filterParametere.getStartDato(), filterParametere.getSluttDato());
+        boolean brukerSkalVises = filtrerPaaMottaker(utbetaling.getMottaker().getMottakertypeType(), filterParametere.getVisArbeidsgiver(), filterParametere.getVisBruker());
         return innenforDatoer && brukerSkalVises;
     }
 

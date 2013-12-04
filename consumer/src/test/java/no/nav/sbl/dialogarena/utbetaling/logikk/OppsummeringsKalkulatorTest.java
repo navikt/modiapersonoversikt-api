@@ -4,6 +4,7 @@ package no.nav.sbl.dialogarena.utbetaling.logikk;
 import no.nav.sbl.dialogarena.utbetaling.domain.Oppsummering;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
+import no.nav.sbl.dialogarena.utbetaling.domain.util.OppsummeringsKalkulator;
 import org.junit.Test;
 
 import java.util.Arrays;
