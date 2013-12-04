@@ -1,9 +1,10 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
 
-import no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil;
-
 import java.io.Serializable;
+import java.util.Map;
+
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class Oppsummering implements Serializable {
 
@@ -11,18 +12,18 @@ public class Oppsummering implements Serializable {
     public double trekk;
     public double brutto;
     public String valuta = "kr";
-//    public Map<String, Map<String, Double>> ytelserUtbetalt;
+    public Map<String, Map<String, Double>> ytelserUtbetalt;
 
 
     public String getUtbetalt() {
-        return ValutaUtil.getBelopString(this.utbetalt, this.valuta);
+        return getBelopString(this.utbetalt, this.valuta);
     }
 
     public String getTrekk() {
-        return ValutaUtil.getBelopString(this.trekk, this.valuta);
+        return getBelopString(this.trekk, this.valuta);
     }
 
     public String getBrutto() {
-        return ValutaUtil.getBelopString(this.brutto, this.valuta);
+        return getBelopString(this.brutto, this.valuta);
     }
 }

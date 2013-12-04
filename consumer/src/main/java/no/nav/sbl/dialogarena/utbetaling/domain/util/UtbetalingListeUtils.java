@@ -90,8 +90,8 @@ public class UtbetalingListeUtils {
 
     private static void leggSammenIResultatMap(Map<String, Map<String, Double>> resultatMap, String hoved, String under, Double detaljBelop) {
         Map<String, Double> map = resultatMap.get(hoved);
-        if(map == null) { map = new HashMap<>();   }
-        Double belop = detaljBelop + (map.get(under) != null? map.get(under) : 0.0);
+        if (map == null) { map = new HashMap<>(); }
+        Double belop = (detaljBelop != null ? detaljBelop : 0.0) + (map.get(under) != null ? map.get(under) : 0.0);
         map.put(under, belop);
         resultatMap.put(hoved, map);
     }
