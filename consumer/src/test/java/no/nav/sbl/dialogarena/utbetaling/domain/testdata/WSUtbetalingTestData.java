@@ -18,8 +18,8 @@ public class WSUtbetalingTestData {
 
     private static final String KONTO_NR = "12345678900";
     private static final String NAVN = "Kjell Olsen";
-    public static final String UTBETALT = "MOTTATT_KONTOFØRER";
-    public static final String MOTTATT_KONTOFØRER = "MOTTATT KONTOFØRER";
+    private static final String UTBETALT = "MOTTATT_KONTOFORER";
+    private static final String MOTTATT_KONTOFORER = "MOTTATT KONTOFØRER";
     private static final String STATUS_KODE = "0018";
     private static String fnr;
 
@@ -47,7 +47,7 @@ public class WSUtbetalingTestData {
         utbetaling.withNettobelop(1000.0)
                 .withBruttobelop(1200.0)
                 .withTrekk(200.0)
-                .withStatusBeskrivelse(MOTTATT_KONTOFØRER)
+                .withStatusBeskrivelse(MOTTATT_KONTOFORER)
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createTrygdetMottaker())
                 .withUtbetalingDato(now().minusDays(4))

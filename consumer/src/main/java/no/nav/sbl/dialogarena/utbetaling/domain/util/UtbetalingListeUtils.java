@@ -66,10 +66,10 @@ public class UtbetalingListeUtils {
     }
 
     public static void summerMapVerdier(Map<String, Double> resultat, Map<String, Double> doubleMap) {
-        for (String key : doubleMap.keySet()) {
-            Double belop = (doubleMap.get(key) != null ? doubleMap.get(key) : 0.0) +
-                    (resultat.get(key) != null ? resultat.get(key) : 0.0);
-            resultat.put(key, belop);
+        for (Map.Entry<String, Double> entry : doubleMap.entrySet()) {
+            Double belop = (entry.getValue() != null ? entry.getValue() : 0.0) +
+                    (resultat.get(entry.getKey()) != null ? resultat.get(entry.getKey()) : 0.0);
+            resultat.put(entry.getKey(), belop);
         }
     }
 
