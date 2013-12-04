@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterProperties;
+import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
@@ -20,14 +20,14 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 
 public class MaanedsPanel extends Panel {
 
-    public MaanedsPanel(String id, List<Utbetaling> utbetalingsliste, FilterProperties filter) {
+    public MaanedsPanel(String id, List<Utbetaling> utbetalingsliste, FilterParametere filterParametere) {
         super(id);
 
-        add(createOppsummeringsPanel(utbetalingsliste, filter), createUtbetalingListView(utbetalingsliste));
+        add(createOppsummeringsPanel(utbetalingsliste, filterParametere), createUtbetalingListView(utbetalingsliste));
     }
 
-    private OppsummeringPanel createOppsummeringsPanel(List<Utbetaling> utbetalingsliste, FilterProperties filter) {
-        CompoundPropertyModel<OppsummeringProperties> oppsummeringsModel = createOppsummeringPropertiesModel(utbetalingsliste, filter);
+    private OppsummeringPanel createOppsummeringsPanel(List<Utbetaling> utbetalingsliste, FilterParametere filterParametere) {
+        CompoundPropertyModel<OppsummeringProperties> oppsummeringsModel = createOppsummeringPropertiesModel(utbetalingsliste, filterParametere);
         OppsummeringPanel oppsummeringsPanel = new OppsummeringPanel("oppsummeringsPanel", oppsummeringsModel);
         oppsummeringsPanel.add(visibleIf(new Model<>(oppsummeringsModel.getObject().getUtbetalinger().size() > 1)));
         return oppsummeringsPanel;
@@ -42,7 +42,7 @@ public class MaanedsPanel extends Panel {
         };
     }
 
-    private CompoundPropertyModel<OppsummeringProperties> createOppsummeringPropertiesModel(List<Utbetaling> liste, FilterProperties filter) {
+    private CompoundPropertyModel<OppsummeringProperties> createOppsummeringPropertiesModel(List<Utbetaling> liste, FilterParametere filterParametere) {
         if (liste.isEmpty()) {
             return new CompoundPropertyModel<>(new OppsummeringProperties(new ArrayList<Utbetaling>(), LocalDate.now(), LocalDate.now()));
         }
@@ -50,10 +50,10 @@ public class MaanedsPanel extends Panel {
         LocalDate startDato = liste.get(liste.size() - 1).getUtbetalingsDato().dayOfMonth().withMinimumValue().toLocalDate();
         LocalDate sluttDato = liste.get(0).getUtbetalingsDato().dayOfMonth().withMaximumValue().toLocalDate();
 
-        if (filter.getStartDato().isAfter(startDato) && filter.getStartDato().isBefore(sluttDato))
-            startDato = filter.getStartDato();
-        if (filter.getSluttDato().isBefore(sluttDato) && filter.getSluttDato().isAfter(startDato))
-            sluttDato = filter.getSluttDato();
+        if (filterParametere.getStartDato().isAfter(startDato) && filterParametere.getStartDato().isBefore(sluttDato))
+            startDato = filterParametere.getStartDato();
+        if (filterParametere.getSluttDato().isBefore(sluttDato) && filterParametere.getSluttDato().isAfter(startDato))
+            sluttDato = filterParametere.getSluttDato();
 
         return new CompoundPropertyModel<>(new OppsummeringProperties(liste, startDato, sluttDato));
     }

@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.utbetaling.logikk;
+package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Oppsummering;
