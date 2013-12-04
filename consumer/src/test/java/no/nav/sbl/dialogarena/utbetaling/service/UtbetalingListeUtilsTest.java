@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingListeUtils.hentYtelserFraUtbetalinger;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelserFraUtbetalinger;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelserOgSummerBelop;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -43,7 +44,7 @@ public class UtbetalingListeUtilsTest {
     }
 
     @Test
-    public void hentYtelserOgSummerBelop() throws Exception {
+    public void skalHenteYtelserOgSummereBelop() throws Exception {
 
         PosteringsDetalj dagpenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("Dagpenger").setBelop(1000.0).createPosteringsDetalj();
         PosteringsDetalj sykepenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("Sykepenger").setBelop(200.0).createPosteringsDetalj();
@@ -55,7 +56,7 @@ public class UtbetalingListeUtilsTest {
         Utbetaling utbetaling1 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1)).createUtbetaling();
         Utbetaling utbetaling2 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1, bilag2)).createUtbetaling();
 
-        Map<String,Double> belopPerYtelse = UtbetalingListeUtils.hentYtelserOgSummerBelop(asList(utbetaling1, utbetaling2));
+        Map<String,Double> belopPerYtelse = hentYtelserOgSummerBelop(asList(utbetaling1, utbetaling2));
 
         assertThat(belopPerYtelse.get("Dagpenger"), is(3000.0));
         assertThat(belopPerYtelse.get("Sykepenger"), is(200.0));
