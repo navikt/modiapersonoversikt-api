@@ -23,6 +23,7 @@ import static org.apache.commons.lang3.StringUtils.join;
 public class Bilag implements Serializable {
 
     public static final String SKATT = "skatt";
+    public static final String DELIMITER = "_";
     private String melding;
     private List<PosteringsDetalj> posteringsDetaljer;
     private Periode periode;
@@ -42,13 +43,37 @@ public class Bilag implements Serializable {
         }
     }
 
-    public Map<String, Double> getBelopPerYtelse(){
+    public Map<String, Double> getBelopPerYtelse() {
         Map<String, Double> ytelsesBetaling = new HashMap<>();
         for (PosteringsDetalj detalj : posteringsDetaljer) {
             ytelsesBetaling.put(detalj.getHovedBeskrivelse(), detalj.getBelop());
         }
         return ytelsesBetaling;
     }
+
+    public Map<String, Double> getBelopPerUnderYtelse() {
+        Map<String, Double> ytelsesBetaling = new HashMap<>();
+        for (PosteringsDetalj detalj : posteringsDetaljer) {
+            String key = detalj.getHovedBeskrivelse() + DELIMITER + detalj.getUnderBeskrivelse();
+            ytelsesBetaling.put(key, detalj.getBelop());
+        }
+        return ytelsesBetaling;
+    }
+
+//    public Map<String, Map<String, Double>> getBelopPerUnderYtelse_() {
+//        Map<String, Map<String, Double>> ytelsesBetaling = new HashMap<>();
+//
+//        for (PosteringsDetalj detalj : posteringsDetaljer) {
+//            Map<String, Double> map = ytelsesBetaling.get(detalj.getHovedBeskrivelse());
+//            if (map == null) {
+//                map = new HashMap<>();
+//            }
+//            String underBeskrivelse = detalj.getUnderBeskrivelse();
+//            map.put(underBeskrivelse, detalj.getBelop() + (map.get(underBeskrivelse) != null ? map.get(underBeskrivelse) : 0.0));
+//            ytelsesBetaling.put(detalj.getHovedBeskrivelse(), map);
+//        }
+//        return ytelsesBetaling;
+//    }
 
     public Periode getPeriode() {
         return periode;
@@ -79,6 +104,6 @@ public class Bilag implements Serializable {
             strings.add(wsMelding.getMeldingtekst());
         }
 
-       return join(strings, ", ");
+        return join(strings, ", ");
     }
 }

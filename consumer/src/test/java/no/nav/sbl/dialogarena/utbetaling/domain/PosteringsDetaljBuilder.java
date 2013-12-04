@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 public class PosteringsDetaljBuilder {
 
     private String hovedBeskrivelse = "Alderspensjon";
-    private String underBeskrivelse = "hovedutbetaling";
+    private String underBeskrivelse = "-";
     private Double sats = 150.0;
     private Integer antall = 2;
     private String kontoNr = "12345678900";

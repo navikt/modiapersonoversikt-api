@@ -20,9 +20,11 @@ public class UtbetalingListeUtils {
         List<Utbetaling> currentMaanedListe = new ArrayList<>();
         List<List<Utbetaling>> utbetalingerFordeltPerMaaned = new ArrayList<>();
 
-        for(Utbetaling utbetaling : synligeUtbetalinger) {
+        for (Utbetaling utbetaling : synligeUtbetalinger) {
             int maaned = utbetaling.getUtbetalingsDato().getMonthOfYear();
-            if(currentMaaned == 0) { currentMaaned = maaned; }
+            if (currentMaaned == 0) {
+                currentMaaned = maaned;
+            }
             if (maaned != currentMaaned) {
                 utbetalingerFordeltPerMaaned.add(currentMaanedListe);
                 currentMaanedListe = new ArrayList<>();
@@ -45,19 +47,30 @@ public class UtbetalingListeUtils {
         return resultat;
     }
 
-
     public static Map<String, Double> hentYtelserOgSummerBelop(List<Utbetaling> utbetalinger) {
         Map<String, Double> ytelser = new HashMap<>();
-
         for (Utbetaling utbetaling : utbetalinger) {
-            Map<String, Double> belopPerYtelse = utbetaling.getBelopPerYtelse();
-            for (String key : belopPerYtelse.keySet()) {
-                Double belop = (belopPerYtelse.get(key) != null ? belopPerYtelse.get(key) : 0.0)  +
-                               (ytelser.get(key) != null ? ytelser.get(key) : 0.0);
-                ytelser.put(key, belop);
-            }
+            Map<String, Double> belopPerYtelse = utbetaling.getBelopPerYtelser();
+            summerMapVerdier(ytelser, belopPerYtelse);
         }
         return ytelser;
+    }
+
+    public static Map<String, Double> hentYtelserOgSummerBelopPerUnderytelse(List<Utbetaling> utbetalinger) {
+        Map<String, Double> oppsummert = new HashMap<>();
+        for (Utbetaling utbetaling : utbetalinger) {
+            Map<String, Double> perUnderYtelse = utbetaling.getBelopPerUnderYtelser();
+            summerMapVerdier(oppsummert, perUnderYtelse);
+        }
+        return oppsummert;
+    }
+
+    public static void summerMapVerdier(Map<String, Double> resultat, Map<String, Double> doubleMap) {
+        for (String key : doubleMap.keySet()) {
+            Double belop = (doubleMap.get(key) != null ? doubleMap.get(key) : 0.0) +
+                    (resultat.get(key) != null ? resultat.get(key) : 0.0);
+            resultat.put(key, belop);
+        }
     }
 
     public static List<String> hentYtelserFraUtbetalinger(List<Utbetaling> utbetalinger) {
@@ -74,6 +87,4 @@ public class UtbetalingListeUtils {
         }
         return ytelser;
     }
-
-
 }
