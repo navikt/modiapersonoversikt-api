@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetaljBuilder;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
+import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils;
 import org.junit.Test;
 
 import java.util.Arrays;

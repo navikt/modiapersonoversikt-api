@@ -16,7 +16,7 @@ import java.util.TreeSet;
 
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
-import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingListeUtils.summerMapVerdier;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerMapVerdier;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.joda.time.DateTime.now;
 
