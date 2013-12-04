@@ -50,10 +50,12 @@ public class MaanedsPanel extends Panel {
         LocalDate startDato = liste.get(liste.size() - 1).getUtbetalingsDato().dayOfMonth().withMinimumValue().toLocalDate();
         LocalDate sluttDato = liste.get(0).getUtbetalingsDato().dayOfMonth().withMaximumValue().toLocalDate();
 
-        if (filterParametere.getStartDato().isAfter(startDato) && filterParametere.getStartDato().isBefore(sluttDato))
+        if (filterParametere.getStartDato().isAfter(startDato) && filterParametere.getStartDato().isBefore(sluttDato)) {
             startDato = filterParametere.getStartDato();
-        if (filterParametere.getSluttDato().isBefore(sluttDato) && filterParametere.getSluttDato().isAfter(startDato))
+        }
+        if (filterParametere.getSluttDato().isBefore(sluttDato) && filterParametere.getSluttDato().isAfter(startDato)) {
             sluttDato = filterParametere.getSluttDato();
+        }
 
         return new CompoundPropertyModel<>(new OppsummeringProperties(liste, startDato, sluttDato));
     }

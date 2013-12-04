@@ -37,7 +37,7 @@ public class UtbetalingListeUtilsTest {
 
         List<String> beskrivelser = hentYtelserFraUtbetalinger(asList(utbetaling1, utbetaling2));
 
-        assertThat(beskrivelser.size(), is(3) );
+        assertThat(beskrivelser.size(), is(3));
         assertThat(beskrivelser.contains("Dagpenger"), is(equalTo(true)));
         assertThat(beskrivelser.contains("Sykepenger"), is(equalTo(true)));
         assertThat(beskrivelser.contains("Barnetrygd"), is(equalTo(true)));
@@ -57,7 +57,7 @@ public class UtbetalingListeUtilsTest {
         Utbetaling utbetaling1 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1)).createUtbetaling();
         Utbetaling utbetaling2 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1, bilag2)).createUtbetaling();
 
-        Map<String,Double> belopPerYtelse = hentYtelserOgSummerBelop(asList(utbetaling1, utbetaling2));
+        Map<String, Double> belopPerYtelse = hentYtelserOgSummerBelop(asList(utbetaling1, utbetaling2));
 
         assertThat(belopPerYtelse.get("Dagpenger"), is(3000.0));
         assertThat(belopPerYtelse.get("Sykepenger"), is(200.0));
@@ -65,15 +65,14 @@ public class UtbetalingListeUtilsTest {
         assertThat(belopPerYtelse.get("Skatt"), is(300.0));
     }
 
-
     @Test
     public void hentYtelserOgSummerBelop_SummerPerUndertype() throws Exception {
-        PosteringsDetalj dagpenger_grunn = new PosteringsDetaljBuilder().setHovedBeskrivelse("Dagpenger").setUnderBeskrivelse("Grunnbeløp").setBelop(1000.0).createPosteringsDetalj();
-        PosteringsDetalj dagpenger_tillegg = new PosteringsDetaljBuilder().setHovedBeskrivelse("Dagpenger").setUnderBeskrivelse("Tillegg").setBelop(1000.0).createPosteringsDetalj();
+        PosteringsDetalj dagpengerGrunn = new PosteringsDetaljBuilder().setHovedBeskrivelse("Dagpenger").setUnderBeskrivelse("Grunnbeløp").setBelop(1000.0).createPosteringsDetalj();
+        PosteringsDetalj dagpengerTillegg = new PosteringsDetaljBuilder().setHovedBeskrivelse("Dagpenger").setUnderBeskrivelse("Tillegg").setBelop(1000.0).createPosteringsDetalj();
         PosteringsDetalj skatt = new PosteringsDetaljBuilder().setHovedBeskrivelse("Skatt").setBelop(100.0).createPosteringsDetalj();
 
-        Bilag bilag1 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(dagpenger_grunn, dagpenger_tillegg, skatt)).createBilag();
-        Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(dagpenger_grunn, skatt)).createBilag();
+        Bilag bilag1 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(dagpengerGrunn, dagpengerTillegg, skatt)).createBilag();
+        Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(dagpengerGrunn, skatt)).createBilag();
 
         Utbetaling utbetaling1 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1)).createUtbetaling();
         Utbetaling utbetaling2 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag2)).createUtbetaling();
