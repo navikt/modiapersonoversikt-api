@@ -6,6 +6,8 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 
 import java.util.List;
 
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelserOgSummerBelopPerUnderytelse;
+
 public class OppsummeringsKalkulator {
 
     public static Oppsummering regnUtOppsummering(List<Utbetaling> utbetalinger) {
@@ -19,7 +21,7 @@ public class OppsummeringsKalkulator {
                     utbetaling.getTrekk();
         }
 
-//        oppsummering.ytelserUtbetalt = hentYtelserOgSummerBelopPerUnderytelse(utbetalinger);
+        oppsummering.ytelserUtbetalt = hentYtelserOgSummerBelopPerUnderytelse(utbetalinger);
         return oppsummering;
     }
 }
