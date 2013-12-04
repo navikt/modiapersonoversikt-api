@@ -156,15 +156,6 @@ public class Utbetaling implements Serializable {
         return oppsummert;
     }
 
-    public Map<String, Double> getBelopPerUnderYtelser() {
-        Map<String, Double> oppsummert = new HashMap<>();
-        for (Bilag bilag1 : bilag) {
-            Map<String, Double> underYtelse = bilag1.getBelopPerUnderYtelse();
-            summerMapVerdier(oppsummert, underYtelse);
-        }
-        return oppsummert;
-    }
-
     public Set<String> getBeskrivelser() {
         Set<String> beskrivelser = new TreeSet<>();
         for (Bilag detalj : bilag) {

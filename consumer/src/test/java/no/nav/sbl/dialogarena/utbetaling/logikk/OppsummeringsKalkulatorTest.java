@@ -26,6 +26,7 @@ public class OppsummeringsKalkulatorTest {
         assertThat(oppsummering.brutto, is(2200.0));
         assertThat(oppsummering.utbetalt, is(1500.0));
         assertThat(oppsummering.trekk, is(700.0));
+//        assertThat(oppsummering.ytelserUtbetalt, is(not(null)));
     }
 
 }
