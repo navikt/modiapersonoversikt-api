@@ -60,21 +60,6 @@ public class Bilag implements Serializable {
         return ytelsesBetaling;
     }
 
-//    public Map<String, Map<String, Double>> getBelopPerUnderYtelse_() {
-//        Map<String, Map<String, Double>> ytelsesBetaling = new HashMap<>();
-//
-//        for (PosteringsDetalj detalj : posteringsDetaljer) {
-//            Map<String, Double> map = ytelsesBetaling.get(detalj.getHovedBeskrivelse());
-//            if (map == null) {
-//                map = new HashMap<>();
-//            }
-//            String underBeskrivelse = detalj.getUnderBeskrivelse();
-//            map.put(underBeskrivelse, detalj.getBelop() + (map.get(underBeskrivelse) != null ? map.get(underBeskrivelse) : 0.0));
-//            ytelsesBetaling.put(detalj.getHovedBeskrivelse(), map);
-//        }
-//        return ytelsesBetaling;
-//    }
-
     public Periode getPeriode() {
         return periode;
     }
