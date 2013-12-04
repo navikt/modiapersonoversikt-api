@@ -14,6 +14,11 @@ public class PosteringsDetaljBuilder {
         return this;
     }
 
+    public PosteringsDetaljBuilder setBelop(Double belop) {
+        this.belop = belop;
+        return this;
+    }
+
     public PosteringsDetaljBuilder setSats(Double sats) {
         this.sats = sats;
         return this;

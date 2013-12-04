@@ -153,7 +153,7 @@ public class Utbetaling implements Serializable {
         for (Bilag bilag1 : bilag) {
             Map<String,Double> belopPerYtelse = bilag1.getBelopPerYtelse();
             for (String key : belopPerYtelse.keySet()) {
-                Double belop = belopPerYtelse.get(key) + oppsummert.get(key);
+                Double belop = belopPerYtelse.get(key) + (oppsummert.get(key) != null? oppsummert.get(key) : 0.0 );
                 oppsummert.put(key, belop);
             }
         }

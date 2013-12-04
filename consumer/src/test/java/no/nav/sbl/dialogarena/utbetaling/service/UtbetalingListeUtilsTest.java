@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.service.UtbetalingListeUtils.hentYtelserFraUtbetalinger;
@@ -39,6 +40,27 @@ public class UtbetalingListeUtilsTest {
         assertThat(beskrivelser.contains("Sykepenger"), is(equalTo(true)));
         assertThat(beskrivelser.contains("Barnetrygd"), is(equalTo(true)));
         assertThat(utbetaling1.getBeskrivelse(), is("Barnetrygd, Dagpenger"));
+    }
+
+    @Test
+    public void hentYtelserOgSummerBelop() throws Exception {
+
+        PosteringsDetalj dagpenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("Dagpenger").setBelop(1000.0).createPosteringsDetalj();
+        PosteringsDetalj sykepenger = new PosteringsDetaljBuilder().setHovedBeskrivelse("Sykepenger").setBelop(200.0).createPosteringsDetalj();
+        PosteringsDetalj barnetrygd = new PosteringsDetaljBuilder().setHovedBeskrivelse("Barnetrygd").setBelop(300.0).createPosteringsDetalj();
+        PosteringsDetalj skatt = new PosteringsDetaljBuilder().setHovedBeskrivelse("Skatt").setBelop(100.0).createPosteringsDetalj();
+
+        Bilag bilag1 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(dagpenger, barnetrygd, skatt)).createBilag();
+        Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(Arrays.asList(dagpenger, sykepenger, skatt)).createBilag();
+        Utbetaling utbetaling1 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1)).createUtbetaling();
+        Utbetaling utbetaling2 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1, bilag2)).createUtbetaling();
+
+        Map<String,Double> belopPerYtelse = UtbetalingListeUtils.hentYtelserOgSummerBelop(asList(utbetaling1, utbetaling2));
+
+        assertThat(belopPerYtelse.get("Dagpenger"), is(3000.0));
+        assertThat(belopPerYtelse.get("Sykepenger"), is(200.0));
+        assertThat(belopPerYtelse.get("Barnetrygd"), is(600.0));
+        assertThat(belopPerYtelse.get("Skatt"), is(300.0));
     }
 
 }
