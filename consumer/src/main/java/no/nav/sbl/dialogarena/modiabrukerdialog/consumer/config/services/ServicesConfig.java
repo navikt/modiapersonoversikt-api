@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
-import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
+import no.nav.sbl.dialogarena.utbetaling.lamell.context.UbetalingLamellContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
  * til sine komponenter
  */
 @Configuration
-@Import({UtbetalingConfig.class})
+@Import({UbetalingLamellContext.class})
 public class ServicesConfig {
 
 }
