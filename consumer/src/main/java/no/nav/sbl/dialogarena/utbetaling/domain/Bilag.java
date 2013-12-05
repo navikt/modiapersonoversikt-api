@@ -42,13 +42,14 @@ public class Bilag implements Serializable {
         }
     }
 
-    public Map<String, Double> getBelopPerYtelse(){
+    public Map<String, Double> getBelopPerYtelse() {
         Map<String, Double> ytelsesBetaling = new HashMap<>();
         for (PosteringsDetalj detalj : posteringsDetaljer) {
             ytelsesBetaling.put(detalj.getHovedBeskrivelse(), detalj.getBelop());
         }
         return ytelsesBetaling;
     }
+
 
     public Periode getPeriode() {
         return periode;
@@ -79,6 +80,6 @@ public class Bilag implements Serializable {
             strings.add(wsMelding.getMeldingtekst());
         }
 
-       return join(strings, ", ");
+        return join(strings, ", ");
     }
 }

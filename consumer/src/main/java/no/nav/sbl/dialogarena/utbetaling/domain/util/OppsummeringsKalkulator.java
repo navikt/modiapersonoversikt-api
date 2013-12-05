@@ -1,10 +1,12 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Oppsummering;
+import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.Oppsummering;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 
 import java.util.List;
+
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelserOgSummerBelopPerUnderytelse;
 
 public class OppsummeringsKalkulator {
 
@@ -18,6 +20,8 @@ public class OppsummeringsKalkulator {
                     utbetaling.getBruttoBelop() - utbetaling.getNettoBelop() :
                     utbetaling.getTrekk();
         }
+
+        oppsummering.ytelserUtbetalt = hentYtelserOgSummerBelopPerUnderytelse(utbetalinger);
         return oppsummering;
     }
 }

@@ -65,7 +65,7 @@ public class UtbetalingServiceTest {
     @Test
     public void skalTransformereUtbetaling() throws Exception {
         WSUtbetaling wsUtbetaling = createUtbetaling1();
-        String alderspensjon = "Alderspensjon";
+        String alderspensjon = "Dagpenger";
 
         when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenReturn(new WSHentUtbetalingListeResponse().withUtbetalingListe(wsUtbetaling));
         Utbetaling u = service.hentUtbetalinger(FNR, new DateTime(), new DateTime()).get(0);
