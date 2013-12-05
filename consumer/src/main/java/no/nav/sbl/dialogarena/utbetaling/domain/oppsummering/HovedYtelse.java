@@ -5,15 +5,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class HovedBeskrivelse implements Serializable {
+public class HovedYtelse implements Serializable {
     private String hovedYtelsesBeskrivelse;
-    private List<UnderBeskrivelse> underYtelsesBeskrivelser;
+    private List<UnderYtelse> underYtelsesBeskrivelser;
 
-    HovedBeskrivelse(Map.Entry<String, Map<String, Double>> ytelseUtbetalt, String valuta) {
+    HovedYtelse(Map.Entry<String, Map<String, Double>> ytelseUtbetalt, String valuta) {
         hovedYtelsesBeskrivelse = ytelseUtbetalt.getKey();
         underYtelsesBeskrivelser = new ArrayList<>();
         for (Map.Entry<String, Double> indreEntry : ytelseUtbetalt.getValue().entrySet()) {
-            underYtelsesBeskrivelser.add(new UnderBeskrivelse(indreEntry, valuta));
+            underYtelsesBeskrivelser.add(new UnderYtelse(indreEntry, valuta));
         }
     }
 
@@ -21,7 +21,7 @@ public class HovedBeskrivelse implements Serializable {
         return hovedYtelsesBeskrivelse;
     }
 
-    public List<UnderBeskrivelse> getUnderYtelsesBeskrivelser() {
+    public List<UnderYtelse> getUnderYtelsesBeskrivelser() {
         return underYtelsesBeskrivelser;
     }
 }

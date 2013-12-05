@@ -5,12 +5,12 @@ import java.util.Map;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
-public class UnderBeskrivelse implements Serializable {
+public class UnderYtelse implements Serializable {
     private String underYtelsesBeskrivelse;
     private Double ytelsesBelop;
     private String valuta;
 
-    UnderBeskrivelse(Map.Entry<String, Double> indreEntry, String valuta) {
+    UnderYtelse(Map.Entry<String, Double> indreEntry, String valuta) {
         this.valuta = valuta;
         underYtelsesBeskrivelse = indreEntry.getKey();
         ytelsesBelop = indreEntry.getValue();

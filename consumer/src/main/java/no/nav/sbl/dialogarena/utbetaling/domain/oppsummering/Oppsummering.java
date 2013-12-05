@@ -16,7 +16,7 @@ public class Oppsummering implements Serializable {
     public String valuta = "kr";
     public Map<String, Map<String, Double>> ytelserUtbetalt;
 
-    private List<HovedBeskrivelse> hovedYtelsesBeskrivelser;
+    private List<HovedYtelse> hovedYtelsesBeskrivelser;
 
     public String getUtbetalt() {
         return getBelopString(this.utbetalt, this.valuta);
@@ -30,11 +30,11 @@ public class Oppsummering implements Serializable {
         return getBelopString(this.brutto, this.valuta);
     }
 
-    public List<HovedBeskrivelse> getHovedYtelsesBeskrivelser() {
+    public List<HovedYtelse> getHovedYtelsesBeskrivelser() {
         if(hovedYtelsesBeskrivelser == null) {
             hovedYtelsesBeskrivelser = new ArrayList<>();
             for (Map.Entry<String, Map<String, Double>> entry : ytelserUtbetalt.entrySet()) {
-                hovedYtelsesBeskrivelser.add(new HovedBeskrivelse(entry, this.valuta));
+                hovedYtelsesBeskrivelser.add(new HovedYtelse(entry, this.valuta));
             }
         }
         return this.hovedYtelsesBeskrivelser;
