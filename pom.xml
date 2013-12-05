@@ -650,7 +650,6 @@
                 <version>${spring.version}</version>
             </dependency>
 
-
             <!--HAMCREST-->
             <dependency>
                 <groupId>org.hamcrest</groupId>
@@ -668,7 +667,6 @@
                 <version>1.3</version>
                 <scope>test</scope>
             </dependency>
-
 
             <dependency>
                 <groupId>no.nav.modig</groupId>
@@ -791,8 +789,8 @@
                         <id>Check illegal or unwanted dependencies</id>
                         <phase>package</phase>
                         <goals>
-                            <!--<goal>failon-unwanted-dependencies</goal>-->
-                            <!--<goal>report-unapproved-dependencies</goal>-->
+                            <goal>failon-unwanted-dependencies</goal>
+                            <goal>report-unapproved-dependencies</goal>
                         </goals>
                     </execution>
                 </executions>
