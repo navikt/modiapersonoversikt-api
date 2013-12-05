@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class PosteringsDetalj implements Serializable {
 
     private String hovedBeskrivelse;
-    private String underBeskrivelse;
+    private String underBeskrivelse = " - ";
     private String kontoNr;
     private Double sats;
     private Integer antall;
@@ -29,7 +29,7 @@ public class PosteringsDetalj implements Serializable {
     };
     PosteringsDetalj(String hovedBeskrivelse, String underBeskrivelse, String kontoNr, Double sats, Integer antall, Double belop) {
         this.hovedBeskrivelse = hovedBeskrivelse;
-        this.underBeskrivelse = underBeskrivelse;
+        this.underBeskrivelse = transformUnderBeskrivelse(underBeskrivelse);
         this.kontoNr = kontoNr;
         this.sats = sats;
         this.antall = antall;
@@ -38,11 +38,15 @@ public class PosteringsDetalj implements Serializable {
 
     public PosteringsDetalj(WSPosteringsdetaljer wsPosteringsdetaljer) {
         this.hovedBeskrivelse = wsPosteringsdetaljer.getKontoBeskrHoved();
-        this.underBeskrivelse = wsPosteringsdetaljer.getKontoBeskrUnder();
+        this.underBeskrivelse = transformUnderBeskrivelse(wsPosteringsdetaljer.getKontoBeskrUnder());
         this.kontoNr = wsPosteringsdetaljer.getKontonr();
         this.sats = wsPosteringsdetaljer.getSats();
         this.antall = wsPosteringsdetaljer.getAntall();
         this.belop = wsPosteringsdetaljer.getBelop();
+    }
+
+    private String transformUnderBeskrivelse(String beskrUnder) {
+        return beskrUnder != null && !beskrUnder.isEmpty() ? beskrUnder : " - ";
     }
 
     public Double getBelop() {

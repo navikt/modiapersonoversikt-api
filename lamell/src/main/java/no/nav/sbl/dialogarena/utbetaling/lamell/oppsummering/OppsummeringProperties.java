@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 
 import no.nav.sbl.dialogarena.time.Datoformat;
-import no.nav.sbl.dialogarena.utbetaling.domain.Oppsummering;
+import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.Oppsummering;
 import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.util.OppsummeringsKalkulator;

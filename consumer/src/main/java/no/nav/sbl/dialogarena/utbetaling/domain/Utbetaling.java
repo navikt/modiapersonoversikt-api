@@ -16,6 +16,7 @@ import java.util.TreeSet;
 
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerMapVerdier;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.joda.time.DateTime.now;
 
@@ -23,7 +24,6 @@ public class Utbetaling implements Serializable {
 
     public static final LocalDate DEFAULT_STARTDATO = now().minusMonths(3).toLocalDate();
     public static final LocalDate DEFAULT_SLUTTDATO = now().toLocalDate();
-
     private final String utbetalingId;
     private String fnr;
     private List<Bilag> bilag = new ArrayList<>();
@@ -70,7 +70,6 @@ public class Utbetaling implements Serializable {
         this.mottaker = new Mottaker(fnr, wsUtbetaling.getUtbetalingMottaker());
         this.periode = new Periode(wsUtbetaling.getUtbetalingsPeriode());
     }
-
 
     public String getFnr() {
         return fnr;
@@ -144,18 +143,15 @@ public class Utbetaling implements Serializable {
         return ValutaUtil.getBelopString(this.nettoBelop, this.valuta);
     }
 
-    public boolean harYtelse(String ytelse){
+    public boolean harYtelse(String ytelse) {
         return getBeskrivelser().contains(ytelse);
     }
 
-    public Map<String, Double> getBelopPerYtelse(){
+    public Map<String, Double> getBelopPerYtelser() {
         Map<String, Double> oppsummert = new HashMap<>();
         for (Bilag bilag1 : bilag) {
-            Map<String,Double> belopPerYtelse = bilag1.getBelopPerYtelse();
-            for (String key : belopPerYtelse.keySet()) {
-                Double belop = belopPerYtelse.get(key) + (oppsummert.get(key) != null? oppsummert.get(key) : 0.0 );
-                oppsummert.put(key, belop);
-            }
+            Map<String, Double> belopPerYtelse = bilag1.getBelopPerYtelse();
+            summerMapVerdier(oppsummert, belopPerYtelse);
         }
         return oppsummert;
     }
