@@ -17,9 +17,9 @@ import java.util.List;
 
 public class UtbetalingPanel extends Panel {
 
+
     public UtbetalingPanel(String id, Utbetaling utbetaling) {
         super(id, new CompoundPropertyModel<>(utbetaling));
-
         WebMarkupContainer bilagWrapper = createBilagWrapper(utbetaling.getBilag());
 
         add(
@@ -36,11 +36,10 @@ public class UtbetalingPanel extends Panel {
     }
 
     private WebMarkupContainer createBilagWrapper(List<Bilag> bilagsliste) {
-        WebMarkupContainer bilagWrapper = new WebMarkupContainer("bilagWrapper");
-        bilagWrapper.add(createBilagListView(bilagsliste));
-        bilagWrapper.setOutputMarkupPlaceholderTag(true);
-        bilagWrapper.setVisibilityAllowed(false);
-        return bilagWrapper;
+        return (WebMarkupContainer) new WebMarkupContainer("bilagWrapper")
+                .add(createBilagListView(bilagsliste))
+                .setOutputMarkupPlaceholderTag(true)
+                .setVisibilityAllowed(false);
     }
 
     private ListView<Bilag> createBilagListView(List<Bilag> bilagsliste) {

@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -26,11 +27,10 @@ public class MaanedsPanel extends Panel {
         add(createOppsummeringsPanel(utbetalingsliste, filterParametere), createUtbetalingListView(utbetalingsliste));
     }
 
-    private OppsummeringPanel createOppsummeringsPanel(List<Utbetaling> utbetalingsliste, FilterParametere filterParametere) {
+    private Component createOppsummeringsPanel(List<Utbetaling> utbetalingsliste, FilterParametere filterParametere) {
         CompoundPropertyModel<OppsummeringProperties> oppsummeringsModel = createOppsummeringPropertiesModel(utbetalingsliste, filterParametere);
-        OppsummeringPanel oppsummeringsPanel = new OppsummeringPanel("oppsummeringsPanel", oppsummeringsModel);
-        oppsummeringsPanel.add(visibleIf(new Model<>(oppsummeringsModel.getObject().getUtbetalinger().size() > 1)));
-        return oppsummeringsPanel;
+        return new OppsummeringPanel("oppsummeringsPanel", oppsummeringsModel)
+                .add(visibleIf(new Model<>(oppsummeringsModel.getObject().getUtbetalinger().size() > 1)));
     }
 
     private ListView<Utbetaling> createUtbetalingListView(List<Utbetaling> utbetalingsliste) {
