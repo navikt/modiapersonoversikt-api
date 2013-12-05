@@ -8,9 +8,11 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterForm;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsHolder;
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -39,11 +41,17 @@ public class UtbetalingLerret extends Lerret {
         instansierFelter(fnr);
 
         add(
+                createArenaLink(fnr),
                 new FeedbackPanel("feedbackpanel").setOutputMarkupId(true),
                 new FilterForm("filterForm", filterParametere),
                 totalOppsummeringPanel.setOutputMarkupPlaceholderTag(true),
                 utbetalingslisteContainer.setOutputMarkupId(true)
         );
+    }
+
+    private ExternalLink createArenaLink(String fnr) {
+        String arenaUrlTilBruker = "server.arena" + "arena.meldingerUtbetalinger.url" + fnr;
+        return new ExternalLink("arenalink", arenaUrlTilBruker, "ARENALINK");
     }
 
     private void instansierFelter(String fnr) {
@@ -57,18 +65,14 @@ public class UtbetalingLerret extends Lerret {
                 new CompoundPropertyModel<>(new OppsummeringProperties(liste, filterParametere.getStartDato(), filterParametere.getSluttDato())));
     }
 
-    private ListView<List<Utbetaling>> createMaanedsPanelListe() {
+    private Component createMaanedsPanelListe() {
         List<List<Utbetaling>> maanedsListe = utbetalingsHolder.getResultat().hentFiltrertUtbetalingerPerMaaned(filterParametere);
-
-        ListView<List<Utbetaling>> utbetalingerPerMaaned = new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
+        return new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
             @Override
             protected void populateItem(ListItem<List<Utbetaling>> item) {
                 item.add(new MaanedsPanel("maanedsPanel", item.getModelObject(), filterParametere));
             }
-        };
-        utbetalingerPerMaaned.setOutputMarkupId(true);
-
-        return utbetalingerPerMaaned;
+        }.setOutputMarkupId(true);
     }
 
     @RunOnEvents(FilterParametere.ENDRET)
@@ -80,9 +84,7 @@ public class UtbetalingLerret extends Lerret {
                 filterParametere.getStartDato(),
                 filterParametere.getSluttDato()));
         totalOppsummeringPanel.setVisibilityAllowed(synligeUtbetalinger.size() > 1);
-
         utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe());
-
         target.add(totalOppsummeringPanel, utbetalingslisteContainer);
     }
 
