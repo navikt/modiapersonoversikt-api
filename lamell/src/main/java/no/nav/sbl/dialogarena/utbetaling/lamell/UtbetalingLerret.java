@@ -32,6 +32,9 @@ public class UtbetalingLerret extends Lerret {
     @Inject
     private UtbetalingsHolder utbetalingsHolder;
 
+    @Inject
+    private String arenaUtbetalingUrl;
+
     private FilterParametere filterParametere;
     private OppsummeringPanel totalOppsummeringPanel;
     private MarkupContainer utbetalingslisteContainer;
@@ -41,17 +44,12 @@ public class UtbetalingLerret extends Lerret {
         instansierFelter(fnr);
 
         add(
-                createArenaLink(fnr),
+                new ExternalLink("arenalink", arenaUtbetalingUrl + fnr, "ARENALINK"),
                 new FeedbackPanel("feedbackpanel").setOutputMarkupId(true),
                 new FilterForm("filterForm", filterParametere),
                 totalOppsummeringPanel.setOutputMarkupPlaceholderTag(true),
                 utbetalingslisteContainer.setOutputMarkupId(true)
         );
-    }
-
-    private ExternalLink createArenaLink(String fnr) {
-        String arenaUrlTilBruker = "server.arena" + "arena.meldingerUtbetalinger.url" + fnr;
-        return new ExternalLink("arenalink", arenaUrlTilBruker, "ARENALINK");
     }
 
     private void instansierFelter(String fnr) {

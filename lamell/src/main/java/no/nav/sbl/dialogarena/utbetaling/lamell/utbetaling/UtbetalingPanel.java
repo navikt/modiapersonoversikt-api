@@ -17,7 +17,6 @@ import java.util.List;
 
 public class UtbetalingPanel extends Panel {
 
-
     public UtbetalingPanel(String id, Utbetaling utbetaling) {
         super(id, new CompoundPropertyModel<>(utbetaling));
         WebMarkupContainer bilagWrapper = createBilagWrapper(utbetaling.getBilag());
