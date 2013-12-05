@@ -14,15 +14,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-
+/**
+ * Hjelpefunksjoner for å jobbe med lister av Utbetaling.
+ */
 public class UtbetalingListeUtils {
 
-    public static List<List<Utbetaling>> splittUtbetalingerPerMaaned(List<Utbetaling> synligeUtbetalinger) {
+    /**
+     * Splitter en liste av Utbetalinger i en liste av utbetalinger.
+     * @return En liste av utbetalinger per måned
+     */
+    public static List<List<Utbetaling>> splittUtbetalingerPerMaaned(List<Utbetaling> utbetalinger) {
         int currentMaaned = 0;
         List<Utbetaling> currentMaanedListe = new ArrayList<>();
         List<List<Utbetaling>> utbetalingerFordeltPerMaaned = new ArrayList<>();
 
-        for (Utbetaling utbetaling : synligeUtbetalinger) {
+        for (Utbetaling utbetaling : utbetalinger) {
             int maaned = utbetaling.getUtbetalingsDato().getMonthOfYear();
             if (currentMaaned == 0) {
                 currentMaaned = maaned;
@@ -38,6 +44,9 @@ public class UtbetalingListeUtils {
         return utbetalingerFordeltPerMaaned;
     }
 
+    /**
+     * Filtrerer en liste av utbetalinger på periode.
+     */
     public static List<Utbetaling> hentUtbetalingerFraPeriode(List<Utbetaling> utbetalinger, DateTime startDato, DateTime sluttDato) {
         Periode periode = new Periode(startDato, sluttDato);
         ArrayList<Utbetaling> resultat = new ArrayList<>();
@@ -49,7 +58,10 @@ public class UtbetalingListeUtils {
         return resultat;
     }
 
-    public static Map<String, Double> hentYtelserOgSummerBelop(List<Utbetaling> utbetalinger) {
+    /**
+     * Summerer beløpene fra alle posteringsdetaljer med samme hovedbeskrivelse.
+     */
+    public static Map<String, Double> summerBelopForHovedytelser(List<Utbetaling> utbetalinger) {
         Map<String, Double> ytelser = new HashMap<>();
         for (Utbetaling utbetaling : utbetalinger) {
             Map<String, Double> belopPerYtelse = utbetaling.getBelopPerYtelser();
@@ -58,7 +70,10 @@ public class UtbetalingListeUtils {
         return ytelser;
     }
 
-    public static Map<String, Map<String, Double>> hentYtelserOgSummerBelopPerUnderytelse(List<Utbetaling> utbetalinger) {
+    /**
+     * Summerer beløpene fra alle posteringsdetaljer med samme hovedbeskrivelse og underbeskrivelse.
+     */
+    public static Map<String, Map<String, Double>> summerBelopForUnderytelser(List<Utbetaling> utbetalinger) {
 
         List<PosteringsDetalj> detaljer = new ArrayList<>();
         for (Utbetaling utbetaling : utbetalinger) {
@@ -73,14 +88,20 @@ public class UtbetalingListeUtils {
         return ytelsesBelopMap;
     }
 
-    public static void summerMapVerdier(Map<String, Double> resultat, Map<String, Double> doubleMap) {
-        for (Map.Entry<String, Double> entry : doubleMap.entrySet()) {
+    /**
+     * Summerer doubles fra inputmap og legger dem i resultat.
+     */
+    public static void summerMapVerdier(Map<String, Double> resultat, Map<String, Double> input) {
+        for (Map.Entry<String, Double> entry : input.entrySet()) {
             Double belop = (entry.getValue() != null ? entry.getValue() : 0.0) +
                     (resultat.get(entry.getKey()) != null ? resultat.get(entry.getKey()) : 0.0);
             resultat.put(entry.getKey(), belop);
         }
     }
 
+    /**
+     * Henter ut en sortert liste av unike hovedbeskrivelser fra en liste av utbetalinger.
+     */
     public static List<String> hentYtelserFraUtbetalinger(List<Utbetaling> utbetalinger) {
         Set<String> ytelser = hentYtelser(utbetalinger);
         ArrayList<String> list = new ArrayList<>(ytelser);
@@ -88,14 +109,20 @@ public class UtbetalingListeUtils {
         return list;
     }
 
-    private static void leggSammenIResultatMap(Map<String, Map<String, Double>> resultatMap, String hoved, String under, Double detaljBelop) {
-        Map<String, Double> map = resultatMap.get(hoved);
+    /**
+     * Legger til en verdi til et map av maps, med nøklene hovedKey og underKey.
+     */
+    private static void leggSammenIResultatMap(Map<String, Map<String, Double>> resultatMap, String hovedKey, String underKey, Double verdi) {
+        Map<String, Double> map = resultatMap.get(hovedKey);
         if (map == null) { map = new HashMap<>(); }
-        Double belop = (detaljBelop != null ? detaljBelop : 0.0) + (map.get(under) != null ? map.get(under) : 0.0);
-        map.put(under, belop);
-        resultatMap.put(hoved, map);
+        Double belop = (verdi != null ? verdi : 0.0) + (map.get(underKey) != null ? map.get(underKey) : 0.0);
+        map.put(underKey, belop);
+        resultatMap.put(hovedKey, map);
     }
 
+    /**
+     * Henter ut et Set av hovedbeskrivelser fra en liste av utbetalinger.
+     */
     private static Set<String> hentYtelser(List<Utbetaling> utbetalinger) {
         Set<String> ytelser = new TreeSet<>();
         for (Utbetaling utbetaling : utbetalinger) {
