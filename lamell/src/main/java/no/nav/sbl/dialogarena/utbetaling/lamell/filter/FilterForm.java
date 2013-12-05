@@ -9,7 +9,9 @@ import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.joda.time.LocalDate;
 
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
@@ -24,13 +26,17 @@ public class FilterForm extends Form {
 
     public FilterForm(String id, FilterParametere filterParametere) {
         super(id);
+
         this.filterParametere = filterParametere;
+        FeedbackPanel feedbackpanel = new FeedbackPanel("feedbackpanel");
+
         add(
+                feedbackpanel.setOutputMarkupId(true),
                 createMottakerButton("visBruker"),
                 createMottakerButton("visArbeidsgiver"),
                 createDateRangePicker()
         );
-        add(createDateRangePickerChangeBehaviour());
+        add(createDateRangePickerChangeBehaviour(feedbackpanel));
     }
 
     private AjaxLink<Boolean> createMottakerButton(final String mottaker) {
@@ -64,11 +70,21 @@ public class FilterForm extends Form {
         return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }
 
-    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour() {
+    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour(final FeedbackPanel feedbackpanel) {
         return new AjaxFormSubmitBehavior("onchange") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                sendFilterEndretEvent();
+                if (filterParametere.getStartDato() == null || filterParametere.getSluttDato() == null) {
+                    error(new StringResourceModel("filterform.required", FilterForm.this, null).getString());
+                    onError(target);
+                } else {
+                    sendFilterEndretEvent();
+                }
+            }
+
+            @Override
+            protected void onError(AjaxRequestTarget target) {
+                target.add(feedbackpanel);
             }
         };
     }
