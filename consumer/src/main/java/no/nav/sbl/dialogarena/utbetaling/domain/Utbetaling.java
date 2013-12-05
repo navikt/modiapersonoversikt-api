@@ -17,12 +17,12 @@ import java.util.TreeSet;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static org.apache.commons.lang3.StringUtils.join;
-import static org.joda.time.DateTime.now;
+import static org.joda.time.LocalDate.now;
 
 public class Utbetaling implements Serializable {
 
-    public static final LocalDate DEFAULT_STARTDATO = now().minusMonths(3).toLocalDate();
-    public static final LocalDate DEFAULT_SLUTTDATO = now().toLocalDate();
+    public static final LocalDate DEFAULT_STARTDATO = now().minusMonths(3);
+    public static final LocalDate DEFAULT_SLUTTDATO = now();
 
     private final String utbetalingId;
     private String fnr;

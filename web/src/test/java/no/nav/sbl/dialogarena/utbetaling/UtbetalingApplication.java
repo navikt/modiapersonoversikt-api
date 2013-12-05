@@ -60,6 +60,8 @@ public class UtbetalingApplication extends WebApplication {
                 .addScripts(Widget.JS_RESOURCE,
                         ShortcutListenerResourceReference.get())
                 .configure(this);
+
+        mountPage("widget", UtbetalingwidgetTestPage.class);
     }
 
 }
