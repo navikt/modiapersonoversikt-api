@@ -76,10 +76,10 @@ public class FilterForm extends Form {
             protected void onSubmit(AjaxRequestTarget target) {
                 if (filterParametere.getStartDato() == null || filterParametere.getSluttDato() == null) {
                     error(new StringResourceModel("filterform.required", FilterForm.this, null).getString());
-                    onError(target);
                 } else {
                     sendFilterEndretEvent();
                 }
+                target.add(feedbackpanel);
             }
 
             @Override
