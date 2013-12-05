@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.logikk;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
 import no.nav.sbl.dialogarena.utbetaling.domain.BilagBuilder;
-import no.nav.sbl.dialogarena.utbetaling.domain.Oppsummering;
+import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.Oppsummering;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetaljBuilder;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
