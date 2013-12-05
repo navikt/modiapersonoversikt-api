@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Oppsummering;
+import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.Oppsummering;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 
 import java.util.List;
