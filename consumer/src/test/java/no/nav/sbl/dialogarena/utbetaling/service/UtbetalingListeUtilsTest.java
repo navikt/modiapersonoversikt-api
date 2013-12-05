@@ -15,7 +15,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelserFraUtbetalinger;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelserOgSummerBelop;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerBelopForHovedytelser;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -63,7 +63,7 @@ public class UtbetalingListeUtilsTest {
         Utbetaling utbetaling1 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1)).createUtbetaling();
         Utbetaling utbetaling2 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1, bilag2)).createUtbetaling();
 
-        Map<String, Double> belopPerYtelse = hentYtelserOgSummerBelop(asList(utbetaling1, utbetaling2));
+        Map<String, Double> belopPerYtelse = summerBelopForHovedytelser(asList(utbetaling1, utbetaling2));
 
         assertThat(belopPerYtelse.get(DAGPENGER), is(3000.0));
         assertThat(belopPerYtelse.get(SYKEPENGER), is(200.0));
@@ -81,7 +81,7 @@ public class UtbetalingListeUtilsTest {
         Bilag bilag = new BilagBuilder().setPosteringsDetaljer(asList(dagpengerGrunn, dagpengerGrunn, dagpengerTillegg, dagpengerTillegg, skatt)).createBilag();
         Utbetaling utbetaling = new UtbetalingBuilder().setBilag(asList(bilag)).createUtbetaling();
 
-        Map<String,Map<String,Double>> belopPerUnderYtelse = UtbetalingListeUtils.hentYtelserOgSummerBelopPerUnderytelse(asList(utbetaling));
+        Map<String,Map<String,Double>> belopPerUnderYtelse = UtbetalingListeUtils.summerBelopForUnderytelser(asList(utbetaling));
 
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Grunnbeløp"), is(2000.0));
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Tillegg"), is(2000.0));
@@ -99,7 +99,7 @@ public class UtbetalingListeUtilsTest {
         Utbetaling utbetaling1 = new UtbetalingBuilder().setBilag(asList(bilag1)).createUtbetaling();
         Utbetaling utbetaling2 = new UtbetalingBuilder().setBilag(asList(bilag2)).createUtbetaling();
 
-        Map<String,Map<String,Double>> belopPerUnderYtelse = UtbetalingListeUtils.hentYtelserOgSummerBelopPerUnderytelse(asList(utbetaling1, utbetaling2));
+        Map<String,Map<String,Double>> belopPerUnderYtelse = UtbetalingListeUtils.summerBelopForUnderytelser(asList(utbetaling1, utbetaling2));
 
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Grunnbeløp"), is(4000.0));
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Tillegg"), is(2000.0));
