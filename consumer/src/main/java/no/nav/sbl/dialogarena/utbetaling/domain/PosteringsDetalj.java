@@ -8,9 +8,10 @@ import java.io.Serializable;
 public class PosteringsDetalj implements Serializable {
 
     private static final String SKATT = "Skatt";
+    private static final String UTBETALT = "Utbetalt";
 
     private String hovedBeskrivelse;
-    private String underBeskrivelse = "Standard";
+    private String underBeskrivelse;
     private String kontoNr;
     private Double sats;
     private Integer antall;
@@ -33,7 +34,7 @@ public class PosteringsDetalj implements Serializable {
 
     PosteringsDetalj(String hovedBeskrivelse, String underBeskrivelse, String kontoNr, Double sats, Integer antall, Double belop) {
         this.hovedBeskrivelse = hovedBeskrivelse;
-        this.underBeskrivelse = transformUnderBeskrivelse(underBeskrivelse);
+        this.underBeskrivelse = transformUnderBeskrivelse(underBeskrivelse, hovedBeskrivelse);
         this.kontoNr = kontoNr;
         this.sats = sats;
         this.antall = antall;
@@ -43,15 +44,16 @@ public class PosteringsDetalj implements Serializable {
 
     public PosteringsDetalj(WSPosteringsdetaljer wsPosteringsdetaljer) {
         this.hovedBeskrivelse = wsPosteringsdetaljer.getKontoBeskrHoved();
-        this.underBeskrivelse = transformUnderBeskrivelse(wsPosteringsdetaljer.getKontoBeskrUnder());
+        this.underBeskrivelse = transformUnderBeskrivelse(wsPosteringsdetaljer.getKontoBeskrUnder(), hovedBeskrivelse);
         this.kontoNr = wsPosteringsdetaljer.getKontonr();
         this.sats = wsPosteringsdetaljer.getSats();
         this.antall = wsPosteringsdetaljer.getAntall();
         this.belop = wsPosteringsdetaljer.getBelop();
         this.skatt = "Skatt".equalsIgnoreCase(hovedBeskrivelse);
     }
-    private String transformUnderBeskrivelse(String beskrUnder) {
-        return beskrUnder != null && !beskrUnder.isEmpty() ? beskrUnder : " - ";
+    private String transformUnderBeskrivelse(String beskrUnder, String hovedBeskrivelse) {
+        String beskr = beskrUnder != null && !beskrUnder.isEmpty() ? beskrUnder : hovedBeskrivelse;
+        return beskr != null && !beskr.isEmpty() ? beskr : UTBETALT;
     }
 
     public boolean isSkatt() {
