@@ -10,6 +10,7 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.joda.time.LocalDate;
@@ -18,25 +19,27 @@ import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.Da
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static org.joda.time.LocalDate.now;
 
-public class FilterForm extends Form {
+public class FilterFormPanel extends Panel {
 
     private static final int AAR_TILBAKE = 3;
 
     private FilterParametere filterParametere;
 
-    public FilterForm(String id, FilterParametere filterParametere) {
+    public FilterFormPanel(String id, FilterParametere filterParametere) {
         super(id);
 
         this.filterParametere = filterParametere;
-        FeedbackPanel feedbackpanel = new FeedbackPanel("feedbackpanel");
 
-        add(
+        add(createFilterForm(new FeedbackPanel("feedbackpanel")));
+    }
+
+    private Form createFilterForm(FeedbackPanel feedbackpanel) {
+        return (Form) new Form("filterForm").add(
                 feedbackpanel.setOutputMarkupId(true),
                 createMottakerButton("visBruker"),
                 createMottakerButton("visArbeidsgiver"),
-                createDateRangePicker()
-        );
-        add(createDateRangePickerChangeBehaviour(feedbackpanel));
+                createDateRangePicker())
+                .add(createDateRangePickerChangeBehaviour(feedbackpanel));
     }
 
     private AjaxLink<Boolean> createMottakerButton(final String mottaker) {
@@ -75,7 +78,7 @@ public class FilterForm extends Form {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 if (filterParametere.getStartDato() == null || filterParametere.getSluttDato() == null) {
-                    error(new StringResourceModel("filterform.required", FilterForm.this, null).getString());
+                    error(new StringResourceModel("filterform.required", FilterFormPanel.this, null).getString());
                 } else {
                     sendFilterEndretEvent();
                 }
