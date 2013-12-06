@@ -11,7 +11,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelM
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
-import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
+import no.nav.sbl.dialogarena.utbetaling.lamell.context.UbetalingLamellContext;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -36,7 +36,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         HentPersonPanelMockContext.class,
         SykepengerWidgetMockContext.class,
         AktorPortTypeMock.class,
-        UtbetalingConfig.class,
+        UbetalingLamellContext.class,
         UtbetalingPortTypeMock.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)

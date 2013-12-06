@@ -6,7 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Utbetaling
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
-import no.nav.sbl.dialogarena.utbetaling.config.UtbetalingConfig;
+import no.nav.sbl.dialogarena.utbetaling.lamell.context.UbetalingLamellContext;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,7 +21,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
         KjerneinfoPepMockContext.class,
         SykepengerWidgetMockContext.class,
         AktorPortTypeMock.class,
-        UtbetalingConfig.class,
+        UbetalingLamellContext.class,
         UtbetalingPortTypeMock.class
 })
 public class OversiktLerretTest extends WicketPageTest {
