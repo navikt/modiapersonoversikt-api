@@ -10,10 +10,17 @@ import java.util.Map;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class HovedYtelse implements Serializable {
+    public static class HovedYtelseComparator {
+        public final static Comparator<HovedYtelse> NAVN = new Comparator<HovedYtelse>() {
+            @Override
+            public int compare(HovedYtelse o1, HovedYtelse o2) {
+                return o1.getHovedYtelsesBeskrivelse().compareTo(o2.getHovedYtelsesBeskrivelse());
+            }
+        };
+    }
     private String hovedYtelsesBeskrivelse;
     private List<UnderYtelse> underYtelsesBeskrivelser;
     private String valuta;
-
 
     HovedYtelse(Map.Entry<String, Map<String, Double>> ytelseUtbetalt, String valuta) {
         this.valuta = valuta;
@@ -61,14 +68,5 @@ public class HovedYtelse implements Serializable {
             sum += ytelse.getBelop();
         }
         return sum;
-    }
-
-    public static class HovedYtelseComparator {
-        public final static Comparator<HovedYtelse> NAVN = new Comparator<HovedYtelse>() {
-            @Override
-            public int compare(HovedYtelse o1, HovedYtelse o2) {
-                return o1.getHovedYtelsesBeskrivelse().compareTo(o2.getHovedYtelsesBeskrivelse());
-            }
-        };
     }
 }
