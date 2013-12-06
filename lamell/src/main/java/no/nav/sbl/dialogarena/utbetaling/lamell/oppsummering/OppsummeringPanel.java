@@ -28,23 +28,26 @@ public class OppsummeringPanel extends Panel {
         ListView<HovedYtelse> listView = new ListView<HovedYtelse>("oppsummering.hovedYtelsesBeskrivelser") {
             @Override
             protected void populateItem(ListItem<HovedYtelse> item) {
-                ListView<UnderYtelse> underBeskrivelseListView = new ListView<UnderYtelse>("underYtelsesBeskrivelser", item.getModelObject().getUnderYtelsesBeskrivelser()) {
-                    @Override
-                    protected void populateItem(ListItem<UnderYtelse> item) {
-                        item.add(
-                                new Label("underYtelsesBeskrivelse", item.getModelObject().getUnderYtelsesBeskrivelse()),
-                                new Label("ytelsesBelop", item.getModelObject().getYtelsesBelop()),
-                                new Label("trekkBelop", item.getModelObject().getTrekkBelop())
-                        );
-                    }
-                };
                 item.add(
                         new Label("hovedYtelsesBeskrivelse", item.getModelObject().getHovedYtelsesBeskrivelse()),
                         new Label("bruttoUnderytelser", item.getModelObject().getBruttoUnderytelser()),
                         new Label("trekkUnderytelser", item.getModelObject().getTrekkUnderytelser()),
                         new Label("nettoUnderytelser", item.getModelObject().getNettoUnderytelser()),
-                        underBeskrivelseListView
+                        lagUnderBeskrivelseListView(item)
                 );
+            }
+
+            private ListView<UnderYtelse> lagUnderBeskrivelseListView(final ListItem<HovedYtelse> item) {
+                return new ListView<UnderYtelse>("underYtelsesBeskrivelser", item.getModelObject().getUnderYtelsesBeskrivelser()) {
+                                @Override
+                                protected void populateItem(ListItem<UnderYtelse> item) {
+                                    item.add(
+                                            new Label("underYtelsesBeskrivelse", item.getModelObject().getUnderYtelsesBeskrivelse()),
+                                            new Label("ytelsesBelop", item.getModelObject().getYtelsesBelop()),
+                                            new Label("trekkBelop", item.getModelObject().getTrekkBelop())
+                                    );
+                                }
+                            };
             }
         };
 
