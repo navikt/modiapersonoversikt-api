@@ -36,7 +36,7 @@ public class Oppsummering implements Serializable {
             for (Map.Entry<String, Map<String, Double>> entry : ytelserUtbetalt.entrySet()) {
                 hovedYtelsesBeskrivelser.add(new HovedYtelse(entry, this.valuta));
             }
-            Collections.sort(hovedYtelsesBeskrivelser);
+            Collections.sort(hovedYtelsesBeskrivelser, HovedYtelse.HovedYtelseComparator.NAVN);
         }
         return this.hovedYtelsesBeskrivelser;
     }

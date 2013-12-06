@@ -1,11 +1,12 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.oppsummering;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.Map;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
-public class UnderYtelse implements Serializable, Comparable<UnderYtelse> {
+public class UnderYtelse implements Serializable {
     private String underYtelsesBeskrivelse;
     private Double ytelsesBelop;
     private String valuta;
@@ -18,17 +19,12 @@ public class UnderYtelse implements Serializable, Comparable<UnderYtelse> {
         trekk = ytelsesBelop != null && ytelsesBelop < 0;
     }
 
-    @Override
-    public int compareTo(UnderYtelse ytelse) {
-        return underYtelsesBeskrivelse.compareTo(ytelse.underYtelsesBeskrivelse);
-    }
-
     public String getTrekkBelop() {
-        return trekk? getBelopString(ytelsesBelop, this.valuta) : "";
+        return trekk ? getBelopString(ytelsesBelop, this.valuta) : "";
     }
 
     public String getYtelsesBelop() {
-        return trekk? "" : getBelopString(ytelsesBelop, this.valuta);
+        return trekk ? "" : getBelopString(ytelsesBelop, this.valuta);
     }
 
     public String getUnderYtelsesBeskrivelse() {
@@ -39,7 +35,16 @@ public class UnderYtelse implements Serializable, Comparable<UnderYtelse> {
         return trekk;
     }
 
-    Double getBelop(){
+    Double getBelop() {
         return ytelsesBelop;
+    }
+
+    public static class UnderYtelseComparator {
+        public static Comparator<UnderYtelse> NAVN = new Comparator<UnderYtelse>() {
+            @Override
+            public int compare(UnderYtelse o1, UnderYtelse o2) {
+                return o1.getUnderYtelsesBeskrivelse().compareTo(o2.getUnderYtelsesBeskrivelse());
+            }
+        };
     }
 }
