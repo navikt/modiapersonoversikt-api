@@ -15,14 +15,15 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class MaanedsPanel extends Panel {
+
     private static final boolean VIS_DETALJER = false;
 
     public MaanedsPanel(String id, List<Utbetaling> utbetalingsliste, FilterParametere filterParametere) {
         super(id);
-
-        add(createOppsummeringsPanel(utbetalingsliste, filterParametere), createUtbetalingListView(utbetalingsliste));
+        add(
+                createOppsummeringsPanel(utbetalingsliste, filterParametere),
+                createUtbetalingListView(utbetalingsliste));
     }
 
     private Component createOppsummeringsPanel(List<Utbetaling> utbetalingsliste, FilterParametere filterParametere) {

@@ -45,7 +45,7 @@ public class UtbetalingLerret extends Lerret {
 
         add(
                 new ExternalLink("arenalink", arenaUtbetalingUrl + fnr, new StringResourceModel("arena.link.label", UtbetalingLerret.this, null).getString()),
-                new FilterFormPanel("filterFormPanel", filterParametere),
+                new FilterFormPanel("filterForm", filterParametere),
                 totalOppsummeringPanel.setOutputMarkupPlaceholderTag(true),
                 utbetalingslisteContainer.setOutputMarkupId(true)
         );
@@ -54,7 +54,7 @@ public class UtbetalingLerret extends Lerret {
     private void instansierFelter(String fnr) {
         filterParametere = new FilterParametere(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
         totalOppsummeringPanel = createTotalOppsummeringPanel(utbetalingsHolder.withFnr(fnr).getSynligeUtbetalinger(filterParametere));
-        utbetalingslisteContainer = new WebMarkupContainer("utbetalingslisteContainer").add(createMaanedsPanelListe());
+        utbetalingslisteContainer = new WebMarkupContainer("utbetalingslisteContainer").add(opprettMaanedsPanelListe());
     }
 
     private OppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
@@ -62,27 +62,26 @@ public class UtbetalingLerret extends Lerret {
                 new CompoundPropertyModel<>(new OppsummeringProperties(liste, filterParametere.getStartDato(), filterParametere.getSluttDato())), true);
     }
 
-    private Component createMaanedsPanelListe() {
+    private Component opprettMaanedsPanelListe() {
         List<List<Utbetaling>> maanedsListe = utbetalingsHolder.getResultat().hentFiltrertUtbetalingerPerMaaned(filterParametere);
         return new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
             @Override
             protected void populateItem(ListItem<List<Utbetaling>> item) {
                 item.add(new MaanedsPanel("maanedsPanel", item.getModelObject(), filterParametere));
             }
-        };
+        }.setOutputMarkupId(true);
     }
 
     @RunOnEvents(FilterParametere.ENDRET)
     @SuppressWarnings("unused")
     private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
-        //TODO: Vis snurrepipp mens ting blir oppdatert
         List<Utbetaling> synligeUtbetalinger = utbetalingsHolder.getResultat().getSynligeUtbetalinger(filterParametere);
         totalOppsummeringPanel.setDefaultModelObject(new OppsummeringProperties(
                 synligeUtbetalinger,
                 filterParametere.getStartDato(),
                 filterParametere.getSluttDato()));
-
-        utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe());
+        totalOppsummeringPanel.setVisibilityAllowed(synligeUtbetalinger.size() > 1);
+        utbetalingslisteContainer.addOrReplace(opprettMaanedsPanelListe());
         target.add(totalOppsummeringPanel, utbetalingslisteContainer);
     }
 
