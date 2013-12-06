@@ -29,6 +29,7 @@ public class WSUtbetalingTestData {
     private static final String SKATT = "Skatt";
     private static final String DAGPENGER = "Dagpenger";
     private static final String FORELDREPENGER = "Foreldrepenger";
+    private static final String VALUTA = "NOK";
     private static String fnr;
 
     public static List<WSUtbetaling> getWsUtbetalinger(String fNr) {
@@ -94,7 +95,7 @@ public class WSUtbetalingTestData {
         utbetaling.withNettobelop(2500.0)
                 .withBruttobelop(3000.0)
                 .withTrekk(500.0)
-                .withValuta("kr")
+                .withValuta(VALUTA)
                 .withStatusBeskrivelse(UTBETALT)
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withStatusKode(STATUS_KODE)
@@ -113,7 +114,7 @@ public class WSUtbetalingTestData {
         utbetaling.withNettobelop(3000.00)
                 .withBruttobelop(4000.0)
                 .withTrekk(1000.0)
-                .withValuta("kr")
+                .withValuta(VALUTA)
                 .withStatusBeskrivelse(UTBETALT)
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withStatusKode(STATUS_KODE)
