@@ -16,6 +16,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
@@ -43,7 +44,7 @@ public class UtbetalingLerret extends Lerret {
         instansierFelter(fnr);
 
         add(
-                new ExternalLink("arenalink", arenaUtbetalingUrl + fnr, "ARENALINK"),
+                new ExternalLink("arenalink", arenaUtbetalingUrl + fnr, new StringResourceModel("arena.link.label", UtbetalingLerret.this, null).getString()),
                 new FilterForm("filterForm", filterParametere),
                 totalOppsummeringPanel.setOutputMarkupPlaceholderTag(true),
                 utbetalingslisteContainer.setOutputMarkupId(true)
