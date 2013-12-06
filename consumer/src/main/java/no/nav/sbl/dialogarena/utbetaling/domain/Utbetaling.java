@@ -24,6 +24,7 @@ public class Utbetaling implements Serializable {
 
     public static final LocalDate DEFAULT_STARTDATO = now().minusMonths(3).toLocalDate();
     public static final LocalDate DEFAULT_SLUTTDATO = now().toLocalDate();
+    private static final String VALUTA = "NOK";
     private final String utbetalingId;
     private String fnr;
     private List<Bilag> bilag = new ArrayList<>();
@@ -165,7 +166,7 @@ public class Utbetaling implements Serializable {
     }
 
     private String transformValuta(String wsValuta) {
-        return (wsValuta == null || wsValuta.isEmpty()) ? "kr" : wsValuta;
+        return (wsValuta == null || wsValuta.isEmpty()) ? VALUTA : wsValuta;
     }
 
     private Set<String> getKontoNrFromBilag() {
