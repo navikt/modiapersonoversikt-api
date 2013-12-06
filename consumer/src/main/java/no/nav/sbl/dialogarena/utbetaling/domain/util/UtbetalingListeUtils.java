@@ -98,7 +98,8 @@ public class UtbetalingListeUtils {
                 skatteDetaljer.add(detalj);
             }
         }
-        if (skatteDetaljer.size() > 0) {
+
+        if (skatteDetaljer.isEmpty()) {
             PosteringsDetalj detalj = getFinnVanligsteYtelse(detaljer);
             String beskrivelse = detalj.getHovedBeskrivelse();
             for (PosteringsDetalj skatt : skatteDetaljer) {

@@ -64,7 +64,7 @@ public class HovedYtelse implements Serializable {
     }
 
     public static class HovedYtelseComparator {
-        public static Comparator<HovedYtelse> NAVN = new Comparator<HovedYtelse>() {
+        public final static Comparator<HovedYtelse> NAVN = new Comparator<HovedYtelse>() {
             @Override
             public int compare(HovedYtelse o1, HovedYtelse o2) {
                 return o1.getHovedYtelsesBeskrivelse().compareTo(o2.getHovedYtelsesBeskrivelse());
