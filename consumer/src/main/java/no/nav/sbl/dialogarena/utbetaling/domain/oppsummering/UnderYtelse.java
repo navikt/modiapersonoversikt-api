@@ -9,18 +9,32 @@ public class UnderYtelse implements Serializable {
     private String underYtelsesBeskrivelse;
     private Double ytelsesBelop;
     private String valuta;
+    private boolean trekk = false;
 
     UnderYtelse(Map.Entry<String, Double> indreEntry, String valuta) {
         this.valuta = valuta;
         underYtelsesBeskrivelse = indreEntry.getKey();
         ytelsesBelop = indreEntry.getValue();
+        trekk = ytelsesBelop != null && ytelsesBelop < 0;
+    }
+
+    public String getTrekkBelop() {
+        return trekk? getBelopString(ytelsesBelop, this.valuta) : "";
     }
 
     public String getYtelsesBelop() {
-        return getBelopString(ytelsesBelop, this.valuta);
+        return trekk? "" : getBelopString(ytelsesBelop, this.valuta);
     }
 
     public String getUnderYtelsesBeskrivelse() {
         return underYtelsesBeskrivelse;
+    }
+
+    public boolean isTrekk() {
+        return trekk;
+    }
+
+    Double getBelop(){
+        return ytelsesBelop;
     }
 }

@@ -25,34 +25,35 @@ public class OppsummeringPanel extends Panel {
     }
 
     private MarkupContainer createYtelsesOppsummering(boolean visDetaljer) {
-        return (MarkupContainer) new WebMarkupContainer("oppsummeringDetalj")
-                .add(lagHovedYtelseListView())
-                .setOutputMarkupPlaceholderTag(true)
-                .setVisibilityAllowed(visDetaljer);
-    }
-
-    private ListView<HovedYtelse> lagHovedYtelseListView() {
-        return new ListView<HovedYtelse>("oppsummering.hovedYtelsesBeskrivelser") {
-                @Override
-                protected void populateItem(ListItem<HovedYtelse> item) {
-                    item.add(
-                            new Label("hovedYtelsesBeskrivelse", item.getModelObject().getHovedYtelsesBeskrivelse()),
-                            lagUnderBeskrivelseListView(item)
-                    );
-                }
-            };
-    }
-
-    private ListView<UnderYtelse> lagUnderBeskrivelseListView(final ListItem<HovedYtelse> item) {
-        return new ListView<UnderYtelse>("underYtelsesBeskrivelser", item.getModelObject().getUnderYtelsesBeskrivelser()) {
+        ListView<HovedYtelse> listView = new ListView<HovedYtelse>("oppsummering.hovedYtelsesBeskrivelser") {
             @Override
-            protected void populateItem(ListItem<UnderYtelse> item) {
+            protected void populateItem(ListItem<HovedYtelse> item) {
+                ListView<UnderYtelse> underBeskrivelseListView = new ListView<UnderYtelse>("underYtelsesBeskrivelser", item.getModelObject().getUnderYtelsesBeskrivelser()) {
+                    @Override
+                    protected void populateItem(ListItem<UnderYtelse> item) {
+                        item.add(
+                                new Label("underYtelsesBeskrivelse", item.getModelObject().getUnderYtelsesBeskrivelse()),
+                                new Label("ytelsesBelop", item.getModelObject().getYtelsesBelop()),
+                                new Label("trekkBelop", item.getModelObject().getTrekkBelop())
+                        );
+                    }
+                };
                 item.add(
-                        new Label("underYtelsesBeskrivelse", item.getModelObject().getUnderYtelsesBeskrivelse()),
-                        new Label("ytelsesBelop", item.getModelObject().getYtelsesBelop())
+                        new Label("hovedYtelsesBeskrivelse", item.getModelObject().getHovedYtelsesBeskrivelse()),
+                        new Label("bruttoUnderytelser", item.getModelObject().getBruttoUnderytelser()),
+                        new Label("trekkUnderytelser", item.getModelObject().getTrekkUnderytelser()),
+                        new Label("nettoUnderytelser", item.getModelObject().getNettoUnderytelser()),
+                        underBeskrivelseListView
                 );
             }
         };
+
+        WebMarkupContainer detalj = new WebMarkupContainer("oppsummeringDetalj");
+        detalj.add(listView)
+              .setOutputMarkupPlaceholderTag(true)
+              .setVisibilityAllowed(visDetaljer);
+
+        return detalj;
     }
 
 }
