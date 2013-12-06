@@ -159,12 +159,10 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         });
     }
 
-
     private static final Predicate<Lamell> MODIFIED_LAMELL = new Predicate<Lamell>() {
         @Override
         public boolean evaluate(Lamell lamell) {
-            return true;
-//            lamell.isModified();
+            return lamell.isModified();
         }
     };
 
