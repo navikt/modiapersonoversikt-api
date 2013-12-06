@@ -1,30 +1,38 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
+
     <div class="oppsummering">
-        <div class="element">
-            <label>
-                <wicket:message key="utbetaling.lamell.oppsummering.periode"/>
-            </label>
-            <span wicket:id="oppsummertPeriode"></span>
-        </div>
-        <div class="element">
-            <label>
-                <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
-            </label>
-            <span wicket:id="oppsummering.brutto"></span>
-        </div>
-        <div class="element">
-            <label>
-                <wicket:message key="utbetaling.lamell.oppsummering.trekk"/>
-            </label>
-            <span wicket:id="oppsummering.trekk"></span>
-        </div>
-        <div class="element">
-            <label>
-                <wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/>
-            </label>
-            <span wicket:id="oppsummering.utbetalt"></span>
-        </div>
+        <a href="#" wicket:id="visDetaljer" class="dropdown">
+            <div wicket:id="oppsummeringsLinje" class="oppsummeringsLinje">
+                <div class="element">
+                    <label>
+                        <wicket:message key="utbetaling.lamell.oppsummering.periode"/>
+                    </label>
+                    <span wicket:id="oppsummertPeriode"></span>
+                </div>
+                <div class="element">
+                    <label>
+                        <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
+                    </label>
+                    <span wicket:id="oppsummering.brutto"></span>
+                </div>
+                <div class="element">
+                    <label>
+                        <wicket:message key="utbetaling.lamell.oppsummering.trekk"/>
+                    </label>
+                    <span wicket:id="oppsummering.trekk"></span>
+                </div>
+                <div class="element">
+                    <label>
+                        <wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/>
+                    </label>
+                    <span wicket:id="oppsummering.utbetalt"></span>
+                </div>
+                <div wicket:id="vKnapp" class="element">[]
+                </div>
+
+            </div>
+        </a>
 
         <div wicket:id="oppsummeringDetalj">
             <div class="hovedbeskrivelse" wicket:id="oppsummering.hovedYtelsesBeskrivelser">
@@ -40,6 +48,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
 </wicket:panel>

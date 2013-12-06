@@ -2,7 +2,10 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.HovedYtelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.UnderYtelse;
+import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -15,13 +18,26 @@ public class OppsummeringPanel extends Panel {
     public OppsummeringPanel(String id, IModel<OppsummeringProperties> model, boolean visDetaljer) {
         super(id, model);
 
-        add(
+        MarkupContainer topplinje = createTopplinje(visDetaljer);
+
+        MarkupContainer ytelsesDetalj = createYtelsesOppsummering(visDetaljer);
+        AjaxLink<Void> visDetaljerLink = lagUtvidelsesKnapp(ytelsesDetalj, visDetaljer);
+        visDetaljerLink.add(topplinje);
+        add(visDetaljerLink, ytelsesDetalj);
+    }
+
+    private MarkupContainer createTopplinje(boolean visDetaljer) {
+        MarkupContainer topplinje = new WebMarkupContainer("oppsummeringsLinje");
+        Label v = new Label("vKnapp", "V");
+        v.setVisibilityAllowed(visDetaljer);
+        topplinje.add(
                 new Label("oppsummertPeriode"),
                 new Label("oppsummering.utbetalt"),
                 new Label("oppsummering.trekk"),
                 new Label("oppsummering.brutto"),
-                createYtelsesOppsummering(visDetaljer)
+                v
         );
+        return topplinje;
     }
 
     private MarkupContainer createYtelsesOppsummering(boolean visDetaljer) {
@@ -57,6 +73,19 @@ public class OppsummeringPanel extends Panel {
               .setVisibilityAllowed(visDetaljer);
 
         return detalj;
+    }
+
+    private AjaxLink<Void> lagUtvidelsesKnapp(final Component hidden, final boolean visDetaljer) {
+        AjaxLink<Void> link = new AjaxLink<Void>("visDetaljer") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                if (!visDetaljer) { return; }
+                hidden.setVisibilityAllowed(!hidden.isVisibleInHierarchy());
+                target.add(hidden);
+            }
+        };
+        link.setEnabled(visDetaljer);
+        return link;
     }
 
 }
