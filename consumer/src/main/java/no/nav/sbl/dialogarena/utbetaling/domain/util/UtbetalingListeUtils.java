@@ -21,6 +21,7 @@ public class UtbetalingListeUtils {
 
     /**
      * Splitter en liste av Utbetalinger i en liste av utbetalinger.
+     *
      * @return En liste av utbetalinger per måned
      */
     public static List<List<Utbetaling>> splittUtbetalingerPerMaaned(List<Utbetaling> utbetalinger) {
@@ -78,7 +79,9 @@ public class UtbetalingListeUtils {
         List<PosteringsDetalj> detaljer = new ArrayList<>();
         for (Utbetaling utbetaling : utbetalinger) {
             for (Bilag bilag : utbetaling.getBilag()) {
-                detaljer.addAll(bilag.getPosteringsDetaljer());
+                List<PosteringsDetalj> detaljer1 = bilag.getPosteringsDetaljer();
+                trekkUtSkatteOpplysninger(detaljer1);
+                detaljer.addAll(detaljer1);
             }
         }
         Map<String, Map<String, Double>> ytelsesBelopMap = new HashMap<>();
@@ -86,6 +89,41 @@ public class UtbetalingListeUtils {
             leggSammenIResultatMap(ytelsesBelopMap, detalj.getHovedBeskrivelse(), detalj.getUnderBeskrivelse(), detalj.getBelop());
         }
         return ytelsesBelopMap;
+    }
+
+    private static void trekkUtSkatteOpplysninger(List<PosteringsDetalj> detaljer) {
+        List<PosteringsDetalj> skatteDetaljer = new ArrayList<>();
+        for (PosteringsDetalj detalj : detaljer) {
+            if (detalj.isSkatt()) {
+                skatteDetaljer.add(detalj);
+            }
+        }
+        if (skatteDetaljer.size() > 0) {
+            PosteringsDetalj detalj = getFinnVanligsteYtelse(detaljer);
+            String beskrivelse = detalj.getHovedBeskrivelse();
+            for (PosteringsDetalj skatt : skatteDetaljer) {
+                skatt.setHovedBeskrivelse(beskrivelse);
+            }
+        }
+    }
+
+    /**
+     * Henter ut ytelsen med høyest frekvens i listen av posteringsdetaljer
+     */
+    private static PosteringsDetalj getFinnVanligsteYtelse(List<PosteringsDetalj> detaljer1) {
+        Map<String, Integer> frekvens = new HashMap<>();
+        int highestCount = 0;
+        PosteringsDetalj pdetalj = null;
+        for (PosteringsDetalj detalj : detaljer1) {
+            String key = detalj.getHovedBeskrivelse();
+            Integer count = 1 + (frekvens.get(key) != null ? frekvens.get(key) : 0);
+            if (count > highestCount) {
+                highestCount = count;
+                pdetalj = detalj;
+            }
+            frekvens.put(key, count);
+        }
+        return pdetalj;
     }
 
     /**
@@ -114,7 +152,9 @@ public class UtbetalingListeUtils {
      */
     private static void leggSammenIResultatMap(Map<String, Map<String, Double>> resultatMap, String hovedKey, String underKey, Double verdi) {
         Map<String, Double> map = resultatMap.get(hovedKey);
-        if (map == null) { map = new HashMap<>(); }
+        if (map == null) {
+            map = new HashMap<>();
+        }
         Double belop = (verdi != null ? verdi : 0.0) + (map.get(underKey) != null ? map.get(underKey) : 0.0);
         map.put(underKey, belop);
         resultatMap.put(hovedKey, map);
