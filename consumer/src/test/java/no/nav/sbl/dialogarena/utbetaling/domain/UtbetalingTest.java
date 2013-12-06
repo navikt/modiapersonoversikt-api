@@ -119,7 +119,7 @@ public class UtbetalingTest {
         assertThat(u.getNettoBelop(), is(wsUtbetaling.getNettobelop()));
         assertThat(u.getBruttoBelop(), is(wsUtbetaling.getBruttobelop()));
         assertThat(u.getBeskrivelse(), is(dagpenger));
-        assertThat(u.getStatuskode(), is(wsUtbetaling.getStatusKode()));
+        assertThat(u.getStatusBeskrivelse(), is(wsUtbetaling.getStatusBeskrivelse()));
         assertThat(u.getKontoNr(), is(kontoNr));
 
         assertThat(u.getBilag().size(), is(wsUtbetaling.getBilagListe().size()));

@@ -24,7 +24,7 @@ public class UtbetalingPanel extends Panel {
         add(
                 bilagWrapper,
                 createExpandButton(bilagWrapper),
-                new Label("statuskode"),
+                new Label("statusBeskrivelse"),
                 new Label("kortUtbetalingsDato"),
                 new Label("beskrivelse"),
                 new Label("belopMedValuta"),
