@@ -40,7 +40,7 @@ public class UnderYtelse implements Serializable {
     }
 
     public static class UnderYtelseComparator {
-        public static Comparator<UnderYtelse> NAVN = new Comparator<UnderYtelse>() {
+        public static final Comparator<UnderYtelse> NAVN = new Comparator<UnderYtelse>() {
             @Override
             public int compare(UnderYtelse o1, UnderYtelse o2) {
                 return o1.getUnderYtelsesBeskrivelse().compareTo(o2.getUnderYtelsesBeskrivelse());
