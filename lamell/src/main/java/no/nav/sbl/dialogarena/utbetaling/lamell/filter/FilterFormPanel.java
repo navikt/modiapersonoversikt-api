@@ -8,6 +8,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -50,6 +52,11 @@ public class FilterFormPanel extends Panel {
                 sendFilterEndretEvent();
                 target.add(this);
             }
+
+            @Override
+            public void renderHead(IHeaderResponse response) {
+                response.render(OnLoadHeaderItem.forScript(createSnurrepippJS("input:button", "click")));
+            }
         };
         mottakerButton.add(hasCssClassIf("valgt", mottakerButton.getModel()));
 
@@ -70,7 +77,14 @@ public class FilterFormPanel extends Panel {
                 new PropertyModel<LocalDate>(filterParametere, "startDato"),
                 new PropertyModel<LocalDate>(filterParametere, "sluttDato"));
 
-        return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
+        return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato) {
+
+            @Override
+            public void renderHead(IHeaderResponse response) {
+                response.render(OnLoadHeaderItem.forScript(createSnurrepippJS("input", "change")));
+                super.renderHead(response);
+            }
+        };
     }
 
     private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour(final FeedbackPanel feedbackpanel) {
@@ -90,6 +104,12 @@ public class FilterFormPanel extends Panel {
                 target.add(feedbackpanel);
             }
         };
+    }
+
+    private String createSnurrepippJS(String selector, String event) {
+        return "$('"+selector+"').on('"+event+"', function() {" +
+                "   window.Modig.ajaxLoader.showLoader('.utbetalinger', '', 'img/ajaxloader/hvit/loader_hvit_64.gif', '');" +
+                "});";
     }
 
     private void sendFilterEndretEvent() {
