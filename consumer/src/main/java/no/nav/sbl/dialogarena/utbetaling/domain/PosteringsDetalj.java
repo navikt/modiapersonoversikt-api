@@ -7,12 +7,15 @@ import java.io.Serializable;
 
 public class PosteringsDetalj implements Serializable {
 
+    private static final String SKATT = "Skatt";
+
     private String hovedBeskrivelse;
-    private String underBeskrivelse = " - ";
+    private String underBeskrivelse = "Standard";
     private String kontoNr;
     private Double sats;
     private Integer antall;
     private Double belop;
+    private boolean skatt = false;
 
     public static final Transformer<PosteringsDetalj, String> POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER = new Transformer<PosteringsDetalj, String>() {
         @Override
@@ -27,6 +30,7 @@ public class PosteringsDetalj implements Serializable {
             return posteringsDetalj.getKontoNr();
         }
     };
+
     PosteringsDetalj(String hovedBeskrivelse, String underBeskrivelse, String kontoNr, Double sats, Integer antall, Double belop) {
         this.hovedBeskrivelse = hovedBeskrivelse;
         this.underBeskrivelse = transformUnderBeskrivelse(underBeskrivelse);
@@ -34,6 +38,7 @@ public class PosteringsDetalj implements Serializable {
         this.sats = sats;
         this.antall = antall;
         this.belop = belop;
+        this.skatt = SKATT.equalsIgnoreCase(hovedBeskrivelse);
     }
 
     public PosteringsDetalj(WSPosteringsdetaljer wsPosteringsdetaljer) {
@@ -43,10 +48,14 @@ public class PosteringsDetalj implements Serializable {
         this.sats = wsPosteringsdetaljer.getSats();
         this.antall = wsPosteringsdetaljer.getAntall();
         this.belop = wsPosteringsdetaljer.getBelop();
+        this.skatt = "Skatt".equalsIgnoreCase(hovedBeskrivelse);
     }
-
     private String transformUnderBeskrivelse(String beskrUnder) {
         return beskrUnder != null && !beskrUnder.isEmpty() ? beskrUnder : " - ";
+    }
+
+    public boolean isSkatt() {
+        return skatt;
     }
 
     public Double getBelop() {
@@ -63,6 +72,10 @@ public class PosteringsDetalj implements Serializable {
 
     public String getHovedBeskrivelse() {
         return hovedBeskrivelse;
+    }
+
+    public void setHovedBeskrivelse(String hovedBeskrivelse) {
+        this.hovedBeskrivelse = hovedBeskrivelse;
     }
 
     public String getUnderBeskrivelse() {
