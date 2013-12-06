@@ -10,16 +10,14 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-
 
 public class MaanedsPanel extends Panel {
+    private static final boolean VIS_DETALJER = false;
 
     public MaanedsPanel(String id, List<Utbetaling> utbetalingsliste, FilterParametere filterParametere) {
         super(id);
@@ -28,9 +26,9 @@ public class MaanedsPanel extends Panel {
     }
 
     private Component createOppsummeringsPanel(List<Utbetaling> utbetalingsliste, FilterParametere filterParametere) {
-        CompoundPropertyModel<OppsummeringProperties> oppsummeringsModel = createOppsummeringPropertiesModel(utbetalingsliste, filterParametere);
-        return new OppsummeringPanel("oppsummeringsPanel", oppsummeringsModel, false)
-                .add(visibleIf(new Model<>(oppsummeringsModel.getObject().getUtbetalinger().size() > 1)));
+        return new OppsummeringPanel("oppsummeringsPanel",
+                                     createOppsummeringPropertiesModel(utbetalingsliste, filterParametere),
+                                     VIS_DETALJER);
     }
 
     private ListView<Utbetaling> createUtbetalingListView(List<Utbetaling> utbetalingsliste) {
