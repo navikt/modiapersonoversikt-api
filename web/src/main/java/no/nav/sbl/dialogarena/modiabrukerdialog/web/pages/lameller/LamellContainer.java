@@ -18,7 +18,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.slf4j.Logger;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -44,15 +43,11 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
     public static final String PANEL = "panel";
 
-    private static LerretHolder lerretHolder = new LerretHolder();
-
-    private final List<Lerret> lerretList = new ArrayList<>();
     private String fnrFromRequest;
 
     public LamellContainer(String id, String fnrFromRequest) {
         super(id, createLamellFactories(fnrFromRequest));
         this.fnrFromRequest = fnrFromRequest;
-        lerretList.addAll(lerretHolder.lerreter);
     }
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
@@ -84,7 +79,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     public boolean hasUnsavedChanges() {
-        return on(lerretList).exists(MODIFIED_LERRET);
+        return on(getLameller()).exists(MODIFIED_LAMELL);
     }
 
     private String createLamellIfMissing(String type, String itemId) {
@@ -132,7 +127,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new BrukerprofilPanel(id, of(fnrFromRequest)));
+                return new BrukerprofilPanel(id, of(fnrFromRequest));
             }
         });
     }
@@ -141,7 +136,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new GenericLerret(id, new KontrakterPanel(PANEL, of(fnrFromRequest))));
+                return new GenericLerret(id, new KontrakterPanel(PANEL, of(fnrFromRequest)));
             }
         });
     }
@@ -150,7 +145,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new OversiktLerret(id, fnrFromRequest));
+                return new OversiktLerret(id, fnrFromRequest);
             }
         });
     }
@@ -159,33 +154,16 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         return newLamellFactory(LAMELL_UTBETALINGER, "U", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return addLerretToListAndReturn(new UtbetalingLerret(id, fnrFromRequest));
+                return new UtbetalingLerret(id, fnrFromRequest);
             }
         });
     }
 
-    private static Lerret addLerretToListAndReturn(Lerret lerret) {
-        lerretHolder.lerreter.add(lerret);
-        return lerret;
-    }
-
-    private static final Predicate<Lerret> MODIFIED_LERRET = new Predicate<Lerret>() {
+    private static final Predicate<Lamell> MODIFIED_LAMELL = new Predicate<Lamell>() {
         @Override
-        public boolean evaluate(Lerret lerret) {
-            return lerret.isModified();
+        public boolean evaluate(Lamell lamell) {
+            return lamell.isModified();
         }
     };
-
-    /**
-     * Workaround klasse for å midlertidig holde på lerreter fordi LamellPanel i
-     * modig-wicket mangler funksjonalitet for dette
-     */
-    private static class LerretHolder {
-        List<Lerret> lerreter;
-
-        LerretHolder() {
-            this.lerreter = new ArrayList<>();
-        }
-    }
 
 }
