@@ -4,7 +4,7 @@ import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
-import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterForm;
+import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsHolder;
@@ -45,7 +45,7 @@ public class UtbetalingLerret extends Lerret {
 
         add(
                 new ExternalLink("arenalink", arenaUtbetalingUrl + fnr, new StringResourceModel("arena.link.label", UtbetalingLerret.this, null).getString()),
-                new FilterForm("filterForm", filterParametere),
+                new FilterFormPanel("filterFormPanel", filterParametere),
                 totalOppsummeringPanel.setOutputMarkupPlaceholderTag(true),
                 utbetalingslisteContainer.setOutputMarkupId(true)
         );
@@ -69,18 +69,19 @@ public class UtbetalingLerret extends Lerret {
             protected void populateItem(ListItem<List<Utbetaling>> item) {
                 item.add(new MaanedsPanel("maanedsPanel", item.getModelObject(), filterParametere));
             }
-        }.setOutputMarkupId(true);
+        };
     }
 
     @RunOnEvents(FilterParametere.ENDRET)
     @SuppressWarnings("unused")
     private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
+        //TODO: Vis snurrepipp mens ting blir oppdatert
         List<Utbetaling> synligeUtbetalinger = utbetalingsHolder.getResultat().getSynligeUtbetalinger(filterParametere);
         totalOppsummeringPanel.setDefaultModelObject(new OppsummeringProperties(
                 synligeUtbetalinger,
                 filterParametere.getStartDato(),
                 filterParametere.getSluttDato()));
-        totalOppsummeringPanel.setVisibilityAllowed(synligeUtbetalinger.size() > 1);
+
         utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe());
         target.add(totalOppsummeringPanel, utbetalingslisteContainer);
     }
