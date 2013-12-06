@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain.oppsummering;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +16,6 @@ public class Oppsummering implements Serializable {
     public double brutto;
     public String valuta = "kr";
     public Map<String, Map<String, Double>> ytelserUtbetalt;
-
     private List<HovedYtelse> hovedYtelsesBeskrivelser;
 
     public String getUtbetalt() {
@@ -36,6 +36,7 @@ public class Oppsummering implements Serializable {
             for (Map.Entry<String, Map<String, Double>> entry : ytelserUtbetalt.entrySet()) {
                 hovedYtelsesBeskrivelser.add(new HovedYtelse(entry, this.valuta));
             }
+            Collections.sort(hovedYtelsesBeskrivelser);
         }
         return this.hovedYtelsesBeskrivelser;
     }
