@@ -34,7 +34,8 @@ public class OppsummeringsKalkulatorTest {
 
     @Test
     public void testRegnUtOppsummering_Ytelser() throws Exception {
-        PosteringsDetalj detalj = new PosteringsDetaljBuilder().setHovedBeskrivelse("Alderspensjon").setBelop(1000.0).createPosteringsDetalj();
+        final String alderspensjon = "Alderspensjon";
+        PosteringsDetalj detalj = new PosteringsDetaljBuilder().setHovedBeskrivelse(alderspensjon).setBelop(1000.0).createPosteringsDetalj();
         Bilag bilag1 = new BilagBuilder().setPosteringsDetaljer(asList(detalj)).createBilag();
         Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(asList(detalj, detalj)).createBilag();
         Bilag bilag3 = new BilagBuilder().setPosteringsDetaljer(asList(detalj, detalj)).createBilag();
@@ -42,7 +43,7 @@ public class OppsummeringsKalkulatorTest {
         Utbetaling utbetaling = new UtbetalingBuilder().setBilag(asList(bilag1, bilag2, bilag3)).createUtbetaling();
         Oppsummering oppsummering = OppsummeringsKalkulator.regnUtOppsummering(asList(utbetaling));
 
-        assertThat(oppsummering.ytelserUtbetalt.get("Alderspensjon").get("-"), is(5000.0));
+        assertThat(oppsummering.ytelserUtbetalt.get(alderspensjon).get(alderspensjon), is(5000.0));
     }
 
 }
