@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.HovedYtelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.UnderYtelse;
+import org.apache.wicket.MarkupContainer;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -10,7 +12,7 @@ import org.apache.wicket.model.IModel;
 
 public class OppsummeringPanel extends Panel {
 
-    public OppsummeringPanel(String id, IModel<OppsummeringProperties> model) {
+    public OppsummeringPanel(String id, IModel<OppsummeringProperties> model, boolean visDetaljer) {
         super(id, model);
 
         add(
@@ -18,11 +20,11 @@ public class OppsummeringPanel extends Panel {
                 new Label("oppsummering.utbetalt"),
                 new Label("oppsummering.trekk"),
                 new Label("oppsummering.brutto"),
-                createYtelsesOppsummering()
+                createYtelsesOppsummering(visDetaljer)
         );
     }
 
-    private ListView<HovedYtelse> createYtelsesOppsummering() {
+    private MarkupContainer createYtelsesOppsummering(boolean visDetaljer) {
         ListView<HovedYtelse> listView = new ListView<HovedYtelse>("oppsummering.hovedYtelsesBeskrivelser") {
             @Override
             protected void populateItem(ListItem<HovedYtelse> item) {
@@ -39,7 +41,13 @@ public class OppsummeringPanel extends Panel {
                 item.add(underBeskrivelseListView);
             }
         };
-        return listView;
+
+        WebMarkupContainer detalj = new WebMarkupContainer("oppsummeringDetalj");
+        detalj.add(listView)
+              .setOutputMarkupPlaceholderTag(true)
+              .setVisibilityAllowed(visDetaljer);
+
+        return detalj;
     }
 
 }

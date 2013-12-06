@@ -29,7 +29,7 @@ public class MaanedsPanel extends Panel {
 
     private Component createOppsummeringsPanel(List<Utbetaling> utbetalingsliste, FilterParametere filterParametere) {
         CompoundPropertyModel<OppsummeringProperties> oppsummeringsModel = createOppsummeringPropertiesModel(utbetalingsliste, filterParametere);
-        return new OppsummeringPanel("oppsummeringsPanel", oppsummeringsModel)
+        return new OppsummeringPanel("oppsummeringsPanel", oppsummeringsModel, false)
                 .add(visibleIf(new Model<>(oppsummeringsModel.getObject().getUtbetalinger().size() > 1)));
     }
 

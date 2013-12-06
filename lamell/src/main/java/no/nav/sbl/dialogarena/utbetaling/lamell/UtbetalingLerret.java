@@ -59,7 +59,7 @@ public class UtbetalingLerret extends Lerret {
 
     private OppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
         return new OppsummeringPanel("totalOppsummeringPanel",
-                new CompoundPropertyModel<>(new OppsummeringProperties(liste, filterParametere.getStartDato(), filterParametere.getSluttDato())));
+                new CompoundPropertyModel<>(new OppsummeringProperties(liste, filterParametere.getStartDato(), filterParametere.getSluttDato())), true);
     }
 
     private Component createMaanedsPanelListe() {
