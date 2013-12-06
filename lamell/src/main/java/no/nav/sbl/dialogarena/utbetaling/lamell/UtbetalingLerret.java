@@ -45,7 +45,7 @@ public class UtbetalingLerret extends Lerret {
 
         add(
                 new ExternalLink("arenalink", arenaUtbetalingUrl + fnr, new StringResourceModel("arena.link.label", UtbetalingLerret.this, null).getString()),
-                new FilterFormPanel("filterForm", filterParametere),
+                new FilterFormPanel("filterFormPanel", filterParametere),
                 totalOppsummeringPanel.setOutputMarkupPlaceholderTag(true),
                 utbetalingslisteContainer.setOutputMarkupId(true)
         );
