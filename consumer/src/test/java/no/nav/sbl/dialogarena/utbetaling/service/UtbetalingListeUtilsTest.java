@@ -85,7 +85,7 @@ public class UtbetalingListeUtilsTest {
 
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Grunnbeløp"), is(2000.0));
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Tillegg"), is(2000.0));
-        assertThat(belopPerUnderYtelse.get(SKATT).get("-"), is(100.0));
+        assertThat(belopPerUnderYtelse.get(DAGPENGER).get(SKATT), is(100.0));
     }
 
     @Test
@@ -103,7 +103,7 @@ public class UtbetalingListeUtilsTest {
 
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Grunnbeløp"), is(4000.0));
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Tillegg"), is(2000.0));
-        assertThat(belopPerUnderYtelse.get(SKATT).get("-"), is(200.0));
+        assertThat(belopPerUnderYtelse.get(DAGPENGER).get(SKATT), is(200.0));
     }
 
 }
