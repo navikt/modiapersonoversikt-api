@@ -2,12 +2,13 @@ package no.nav.sbl.dialogarena.utbetaling.domain.oppsummering;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
-public class HovedYtelse implements Serializable {
+public class HovedYtelse implements Serializable, Comparable<HovedYtelse> {
     private String hovedYtelsesBeskrivelse;
     private List<UnderYtelse> underYtelsesBeskrivelser;
     private String valuta;
@@ -20,6 +21,12 @@ public class HovedYtelse implements Serializable {
         for (Map.Entry<String, Double> indreEntry : ytelseUtbetalt.getValue().entrySet()) {
             underYtelsesBeskrivelser.add(new UnderYtelse(indreEntry, valuta));
         }
+        Collections.sort(underYtelsesBeskrivelser);
+    }
+
+    @Override
+    public int compareTo(HovedYtelse ytelse) {
+        return hovedYtelsesBeskrivelse.compareTo(ytelse.hovedYtelsesBeskrivelse);
     }
 
     public String getHovedYtelsesBeskrivelse() {
@@ -59,5 +66,4 @@ public class HovedYtelse implements Serializable {
         }
         return sum;
     }
-
 }

@@ -5,7 +5,7 @@ import java.util.Map;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
-public class UnderYtelse implements Serializable {
+public class UnderYtelse implements Serializable, Comparable<UnderYtelse> {
     private String underYtelsesBeskrivelse;
     private Double ytelsesBelop;
     private String valuta;
@@ -16,6 +16,11 @@ public class UnderYtelse implements Serializable {
         underYtelsesBeskrivelse = indreEntry.getKey();
         ytelsesBelop = indreEntry.getValue();
         trekk = ytelsesBelop != null && ytelsesBelop < 0;
+    }
+
+    @Override
+    public int compareTo(UnderYtelse ytelse) {
+        return underYtelsesBeskrivelse.compareTo(ytelse.underYtelsesBeskrivelse);
     }
 
     public String getTrekkBelop() {
