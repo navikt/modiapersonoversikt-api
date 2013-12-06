@@ -27,7 +27,7 @@ public class Utbetaling implements Serializable {
     private final String utbetalingId;
     private String fnr;
     private List<Bilag> bilag = new ArrayList<>();
-    private String statuskode;
+    private String statusBeskrivelse;
     private DateTime utbetalingsDato;
     private double bruttoBelop;
     private double nettoBelop;
@@ -38,10 +38,10 @@ public class Utbetaling implements Serializable {
     private Periode periode;
 
     //CHECKSTYLE:OFF
-    Utbetaling(String fnr, List<Bilag> bilag, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode, double trekk) {
+    Utbetaling(String fnr, List<Bilag> bilag, String status, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode, double trekk) {
         this.fnr = fnr;
         this.bilag = bilag;
-        this.statuskode = statuskode;
+        this.statusBeskrivelse = status;
         this.utbetalingsDato = utbetalingsDato;
         this.bruttoBelop = bruttoBelop;
         this.nettoBelop = nettoBelop;
@@ -59,7 +59,7 @@ public class Utbetaling implements Serializable {
             bilag.add(new Bilag(wsBilag));
         }
         this.fnr = fnr;
-        this.statuskode = wsUtbetaling.getStatusKode();
+        this.statusBeskrivelse = wsUtbetaling.getStatusBeskrivelse();
         this.utbetalingsDato = wsUtbetaling.getUtbetalingDato();
         this.bruttoBelop = wsUtbetaling.getBruttobelop();
         this.nettoBelop = wsUtbetaling.getNettobelop();
@@ -107,8 +107,8 @@ public class Utbetaling implements Serializable {
         return periode;
     }
 
-    public String getStatuskode() {
-        return statuskode;
+    public String getStatusBeskrivelse() {
+        return statusBeskrivelse;
     }
 
     public DateTime getUtbetalingsDato() {

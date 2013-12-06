@@ -18,7 +18,7 @@ public class WSUtbetalingTestData {
 
     private static final String KONTO_NR = "***REMOVED***";
     private static final String NAVN = "Kjell Olsen";
-    private static final String UTBETALT = "MOTTATT_KONTOFORER";
+    private static final String UTBETALT = "UTBETALT";
     private static final String MOTTATT_KONTOFORER = "MOTTATT KONTOFØRER";
     private static final String STATUS_KODE = "0018";
     private static final Double BELOP = 1000.0;
