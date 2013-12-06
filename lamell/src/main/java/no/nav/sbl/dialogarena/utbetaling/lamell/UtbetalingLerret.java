@@ -84,5 +84,4 @@ public class UtbetalingLerret extends Lerret {
         utbetalingslisteContainer.addOrReplace(opprettMaanedsPanelListe());
         target.add(totalOppsummeringPanel, utbetalingslisteContainer);
     }
-
 }
