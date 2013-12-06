@@ -99,8 +99,8 @@ public class UtbetalingListeUtils {
             }
         }
 
-        if (skatteDetaljer.isEmpty()) {
-            PosteringsDetalj detalj = getFinnVanligsteYtelse(detaljer);
+        if (!skatteDetaljer.isEmpty()) {
+            PosteringsDetalj detalj = finnVanligsteYtelse(detaljer);
             String beskrivelse = detalj.getHovedBeskrivelse();
             for (PosteringsDetalj skatt : skatteDetaljer) {
                 skatt.setHovedBeskrivelse(beskrivelse);
@@ -111,7 +111,7 @@ public class UtbetalingListeUtils {
     /**
      * Henter ut ytelsen med høyest frekvens i listen av posteringsdetaljer
      */
-    private static PosteringsDetalj getFinnVanligsteYtelse(List<PosteringsDetalj> detaljer1) {
+    private static PosteringsDetalj finnVanligsteYtelse(List<PosteringsDetalj> detaljer1) {
         Map<String, Integer> frekvens = new HashMap<>();
         int highestCount = 0;
         PosteringsDetalj pdetalj = null;
