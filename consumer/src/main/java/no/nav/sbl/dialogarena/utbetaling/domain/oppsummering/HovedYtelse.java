@@ -3,12 +3,13 @@ package no.nav.sbl.dialogarena.utbetaling.domain.oppsummering;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
-public class HovedYtelse implements Serializable, Comparable<HovedYtelse> {
+public class HovedYtelse implements Serializable {
     private String hovedYtelsesBeskrivelse;
     private List<UnderYtelse> underYtelsesBeskrivelser;
     private String valuta;
@@ -21,12 +22,7 @@ public class HovedYtelse implements Serializable, Comparable<HovedYtelse> {
         for (Map.Entry<String, Double> indreEntry : ytelseUtbetalt.getValue().entrySet()) {
             underYtelsesBeskrivelser.add(new UnderYtelse(indreEntry, valuta));
         }
-        Collections.sort(underYtelsesBeskrivelser);
-    }
-
-    @Override
-    public int compareTo(HovedYtelse ytelse) {
-        return hovedYtelsesBeskrivelse.compareTo(ytelse.hovedYtelsesBeskrivelse);
+        Collections.sort(underYtelsesBeskrivelser, UnderYtelse.UnderYtelseComparator.NAVN);
     }
 
     public String getHovedYtelsesBeskrivelse() {
@@ -52,7 +48,7 @@ public class HovedYtelse implements Serializable, Comparable<HovedYtelse> {
     private Double lagBrutto() {
         Double sum = 0.0;
         for (UnderYtelse ytelse : underYtelsesBeskrivelser) {
-            if(ytelse.isTrekk()) continue;
+            if(ytelse.isTrekk()) { continue; }
             sum += ytelse.getBelop();
         }
         return sum;
@@ -61,9 +57,18 @@ public class HovedYtelse implements Serializable, Comparable<HovedYtelse> {
     private Double lagTrekk() {
         Double sum = 0.0;
         for (UnderYtelse ytelse : underYtelsesBeskrivelser) {
-            if(!ytelse.isTrekk()) continue;
+            if(!ytelse.isTrekk()) { continue; }
             sum += ytelse.getBelop();
         }
         return sum;
+    }
+
+    public static class HovedYtelseComparator {
+        public static Comparator<HovedYtelse> NAVN = new Comparator<HovedYtelse>() {
+            @Override
+            public int compare(HovedYtelse o1, HovedYtelse o2) {
+                return o1.getHovedYtelsesBeskrivelse().compareTo(o2.getHovedYtelsesBeskrivelse());
+            }
+        };
     }
 }
