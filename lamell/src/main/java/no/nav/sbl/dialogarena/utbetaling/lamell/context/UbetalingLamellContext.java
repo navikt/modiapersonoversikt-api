@@ -12,11 +12,11 @@ public class UbetalingLamellContext {
     @Value("${server.arena.url}")
     private String arenaServerUrl;
 
-    private String arenaMeldingerUtbetalinger = "?oppstart_skj=UB_22_MELDEHISTORIKK&fodselsnr=";
+    private static final String ARENA_MELDINGER_UTBETALINGER = "?oppstart_skj=UB_22_MELDEHISTORIKK&fodselsnr=";
 
     @Bean
     public String arenaUtbetalingUrl() {
-        return arenaServerUrl + arenaMeldingerUtbetalinger;
+        return arenaServerUrl + ARENA_MELDINGER_UTBETALINGER;
     }
 
     @Bean
