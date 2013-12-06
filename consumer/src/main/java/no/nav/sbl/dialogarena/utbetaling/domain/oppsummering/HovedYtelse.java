@@ -11,7 +11,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopS
 
 public class HovedYtelse implements Serializable {
     public static class HovedYtelseComparator {
-        public final static Comparator<HovedYtelse> NAVN = new Comparator<HovedYtelse>() {
+        public static final Comparator<HovedYtelse> NAVN = new Comparator<HovedYtelse>() {
             @Override
             public int compare(HovedYtelse o1, HovedYtelse o2) {
                 return o1.getHovedYtelsesBeskrivelse().compareTo(o2.getHovedYtelsesBeskrivelse());
