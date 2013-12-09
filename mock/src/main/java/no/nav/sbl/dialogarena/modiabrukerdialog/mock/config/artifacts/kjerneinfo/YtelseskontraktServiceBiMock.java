@@ -35,14 +35,13 @@ public class YtelseskontraktServiceBiMock {
     }
 
     private static YtelseskontraktResponse lagYtelsesMockRespons() {
-        FimHentYtelseskontraktListeResponse ytelseskontraktListeResponse = new FimHentYtelseskontraktListeResponse();
-        ytelseskontraktListeResponse.setBruker(new FimBruker().withRettighetsgruppe(new FimRettighetsgruppe().withRettighetsGruppe("test")));
-        ytelseskontraktListeResponse.withYtelseskontraktListe(createYtelsesKontrakterDonald());
-        YtelseskontraktMapper mapper = new YtelseskontraktMapper();
-        return mapper.map(ytelseskontraktListeResponse, YtelseskontraktResponse.class);
+        FimHentYtelseskontraktListeResponse respons = new FimHentYtelseskontraktListeResponse();
+        respons.setBruker(new FimBruker().withRettighetsgruppe(new FimRettighetsgruppe().withRettighetsGruppe("test")));
+        respons.withYtelseskontraktListe(createYtelsesKontrakter());
+        return new YtelseskontraktMapper().map(respons, YtelseskontraktResponse.class);
     }
 
-    private static List<FimYtelseskontrakt> createYtelsesKontrakterDonald() {
+    private static List<FimYtelseskontrakt> createYtelsesKontrakter() {
         FimVedtak vedtak7 = new FimVedtak();
         vedtak7.setPeriodetypeForYtelse("Lang periode");
         vedtak7.setUttaksgrad(new BigInteger("100"));
