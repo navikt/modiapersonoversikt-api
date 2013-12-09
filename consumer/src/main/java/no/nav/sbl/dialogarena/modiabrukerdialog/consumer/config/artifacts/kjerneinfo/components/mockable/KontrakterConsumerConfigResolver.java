@@ -18,8 +18,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.mockableimpl.KontrakterConsumerConfigImpl.createOppfolgingskontraktService;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.mockableimpl.KontrakterConsumerConfigImpl.createYtelseskontraktService;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.KontrakterMock.getOppfolgingskontraktServiceBi;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.KontrakterMock.getYtelseskontraktServiceBiMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.OppfolgingskontraktServiceBiMock.getOppfolgingskontraktServiceBiMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.YtelseskontraktServiceBiMock.getYtelseskontraktServiceBiMock;
 
 @Configuration
 @Import({
@@ -57,7 +57,7 @@ public class KontrakterConsumerConfigResolver {
     public OppfolgingskontraktServiceBi oppfolgingskontraktServiceBi() {
         return createSwitcher(
                 createOppfolgingskontraktService(oppfoelgingPortType, selftestOppfoelgingPortType),
-                getOppfolgingskontraktServiceBi(),
+                getOppfolgingskontraktServiceBiMock(),
                 KJERNEINFO_KEY,
                 OppfolgingskontraktServiceBi.class);
     }
