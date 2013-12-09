@@ -2,12 +2,17 @@
 <wicket:panel>
     <form wicket:id="filterForm" class="filter-form">
         <div wicket:id="feedbackpanel"></div>
-        <div class="utbetaling-til-filter">
-            <label>Utbetaling til</label>
-            <input type="button" wicket:id="visBruker" value="Bruker" class="knapp-utbetaling-til-filter"/><!-- Denne fjerner whitespace mellom elementene
-         --><input type="button" wicket:id="visArbeidsgiver" value="Arbeidsgiver" class="knapp-utbetaling-til-filter"/>
+        <div class="filter-block">
+            <label><wicket:message key="utbetaling.lamell.filter.datofilter-overskrift"/></label>
+            <div wicket:id="datoFilter" class="dato-plukker-filter"></div>
         </div>
-        <div wicket:id="datoFilter" class="dato-plukker-filter"></div>
+        <div class="filter-block">
+            <label><wicket:message key="utbetaling.lamell.filter.mottaker-overskrift"/></label>
+            <div>
+                <input type="button" wicket:id="visBruker" value="Bruker" class="knapp-filter"/><!-- Fjerner whitespace mellom elementene
+             --><input type="button" wicket:id="visArbeidsgiver" value="Arbeidsgiver" class="knapp-filter"/>
+            </div>
+        </div>
     </form>
 </wicket:panel>
 </html>

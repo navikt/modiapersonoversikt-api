@@ -1,53 +1,75 @@
-@filterFormWidth: 35%;
-@utbetalingerContainerWidth: 65%;
+@kolonneVenstreWidth: 35%;
+@kolonneHoyreWidth: 65%;
+@borderColor: #d1cfcf;
 
-.filter-form {
-  width: @filterFormWidth;
-  margin: 0;
+.kolonne-venstre {
   float: left;
-  .utbetaling-til-filter {
-    display: inline-block;
-    label {
-      display: block;
-      cursor: default;
+  padding-right: 2rem;
+  width: @kolonneVenstreWidth;
+
+  .arena-lenke {
+    font-family: "Modus", Helvetica, Arial, sans-serif;
+    font-size: 1.3rem;
+    font-weight: bold;
+    display: block;
+    color: #0ca9e1;
+  }
+
+  .filter-form {
+    .filter-block {
+      margin-top: 3rem;
+      label {
+        cursor: default;
+        font-size: 0.875rem !important;
+      }
+      div {
+        text-align: center;
+        border: 1px solid @borderColor;
+        background-color: #f1f1f1;
+        padding: 1.5rem 2rem;
+        margin-top: 0.4rem;
+      }
     }
-    .knapp-utbetaling-til-filter {
-      width: 12em;
+
+    .knapp-filter {
+      width: 100%;
       padding-top: 5px;
       padding-bottom: 5px;
-      margin: 0;
+      margin-bottom: 0.5rem;
+      text-align: left;
       &.valgt {
         color: white;
         background-color: #8c8c8c;
         background-image: none;
         box-shadow: inset 0 0 10px #7b7b7b;
-        &:first-child {
-          border-right: 0;
-        }
-        &:last-child {
-          border-left: 0;
-        }
       }
     }
-  }
-  .dato-plukker-filter {
-    display: inline-block;
-    margin-left: 4rem;
-    label {
+
+    .dato-plukker-filter {
       display: inline-block;
-      span {
-        display: block;
+      label {
+        display: inline-block;
+        margin: 0;
+        width: 49%;
+        text-align: left;
+        &:nth-child(1) {
+          float: left;
+        }
+        &:nth-child(2) {
+          float: right;
+        }
+        input {
+          width: 100%;
+        }
       }
     }
   }
 }
 
-.utbetalinger-container {
-  width: @utbetalingerContainerWidth;
-  margin: 0;
+.kolonne-hoyre {
+  width: @kolonneHoyreWidth;
   float: right;
   .oppsummering {
-    padding-top: 40px;
     padding-bottom: 40px;
     width: 100%;
 
