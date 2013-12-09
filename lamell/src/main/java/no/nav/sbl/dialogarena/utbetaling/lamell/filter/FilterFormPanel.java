@@ -14,7 +14,6 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
 import org.joda.time.LocalDate;
 
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
@@ -23,6 +22,7 @@ import static org.joda.time.LocalDate.now;
 
 public class FilterFormPanel extends Panel {
 
+    public static final String FEIL = "filter.feil";
     private static final int AAR_TILBAKE = 3;
 
     private FilterParametere filterParametere;
@@ -32,16 +32,18 @@ public class FilterFormPanel extends Panel {
 
         this.filterParametere = filterParametere;
 
-        add(createFilterForm(new FeedbackPanel("feedbackpanel")));
+        add(createFilterForm());
     }
 
-    private Form createFilterForm(FeedbackPanel feedbackpanel) {
-        return (Form) new Form("filterForm").add(
-                feedbackpanel.setOutputMarkupId(true),
+    private Form createFilterForm() {
+        Form filterForm = new Form("filterForm");
+        return (Form) filterForm.add(
+                new FeedbackPanel("feedbackpanel"),
                 createMottakerButton("visBruker"),
                 createMottakerButton("visArbeidsgiver"),
                 createDateRangePicker())
-                .add(createDateRangePickerChangeBehaviour(feedbackpanel));
+                .add(createDateRangePickerChangeBehaviour(filterForm))
+                .setOutputMarkupId(true);
     }
 
     private AjaxLink<Boolean> createMottakerButton(final String mottaker) {
@@ -87,21 +89,18 @@ public class FilterFormPanel extends Panel {
         };
     }
 
-    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour(final FeedbackPanel feedbackpanel) {
+    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour(final Form filterForm) {
         return new AjaxFormSubmitBehavior("onchange") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
-                if (filterParametere.getStartDato() == null || filterParametere.getSluttDato() == null) {
-                    error(new StringResourceModel("filterform.required", FilterFormPanel.this, null).getString());
-                } else {
-                    sendFilterEndretEvent();
-                }
-                target.add(feedbackpanel);
+                sendFilterEndretEvent();
+                target.add(filterForm);
             }
 
             @Override
             protected void onError(AjaxRequestTarget target) {
-                target.add(feedbackpanel);
+                sendFilterFeilEvent();
+                target.add(filterForm);
             }
         };
     }
@@ -114,5 +113,9 @@ public class FilterFormPanel extends Panel {
 
     private void sendFilterEndretEvent() {
         send(getPage(), Broadcast.DEPTH, FilterParametere.ENDRET);
+    }
+
+    private void sendFilterFeilEvent() {
+        send(getPage(), Broadcast.DEPTH, FEIL);
     }
 }
