@@ -4,25 +4,17 @@
     <title>Utbetalinger</title>
 </head>
 <body style="background-color: white">
-<div style="width: 1920px;">
-<div class="" style="width:69.8%">
+<div class="" style="width: 50%">
     <section class="lameller">
         <article class="lamell selected">
-            <div wicket:id="utbetaling"></div>
+            <wicket:container wicket:id="utbetaling"></wicket:container>
         </article>
-        <article class="lamell">
-            <div class="clearfix lerret" style="width: 100%;" >
-                <div class="kolonne" style="padding-right: 30px;">
-                    <article wicket:id="utbetalingWidget" class="widget-utbetaling">[]</article>
-                </div>
-                <div class="kolonne">
-
-                </div>
+        <div class="clearfix lerret" style="width: 100%;" >
+            <div class="kolonne">
+                <article wicket:id="utbetalingWidget" class="widget-utbetaling">[]</article>
             </div>
-
-        </article>
+        </div>
     </section>
-</div>
 </div>
 </body>
 </html>
