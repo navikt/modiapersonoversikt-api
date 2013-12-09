@@ -8,7 +8,10 @@
     </div>
 
     <div class="kolonne-hoyre">
-        <div wicket:id="totalOppsummeringPanel"></div>
+        <div class="utbetaling-ramme oppsummering">
+            <div class="utbetaling-ramme-header"><wicket:message key="utbetaling.lamell.oppsummering-total-overskrift"/></div>
+            <div class="utbetaling-ramme-innhold" wicket:id="totalOppsummeringPanel"></div>
+        </div>
 
         <div wicket:id="utbetalingslisteContainer" class="utbetalinger">
             <wicket:container wicket:id="maanedsPaneler">
