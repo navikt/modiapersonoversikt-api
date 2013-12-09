@@ -7,14 +7,16 @@ import java.util.Map;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class UnderYtelse implements Serializable {
+
     public static class UnderYtelseComparator {
-        public final static Comparator<UnderYtelse> NAVN = new Comparator<UnderYtelse>() {
+        public static final Comparator<UnderYtelse> NAVN = new Comparator<UnderYtelse>() {
             @Override
             public int compare(UnderYtelse o1, UnderYtelse o2) {
                 return o1.getUnderYtelsesBeskrivelse().compareTo(o2.getUnderYtelsesBeskrivelse());
             }
         };
     }
+
     private String underYtelsesBeskrivelse;
     private Double ytelsesBelop;
     private String valuta;
