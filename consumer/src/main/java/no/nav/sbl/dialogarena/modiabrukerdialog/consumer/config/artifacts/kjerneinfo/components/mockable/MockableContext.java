@@ -9,7 +9,8 @@ import org.springframework.context.annotation.Import;
         BehandleBrukerprofilConsumerConfigResolver.class,
         PersonKjerneinfoConsumerConfigResolver.class,
         PersonKjerneinfoMapperConfigResolver.class,
-        SykmeldingsperioderPanelConfigResolver.class
+        SykmeldingsperioderPanelConfigResolver.class,
+        KontrakterConsumerConfigResolver.class
 })
 public class MockableContext {
 
