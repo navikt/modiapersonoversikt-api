@@ -44,7 +44,7 @@ public class UtbetalingLerret extends Lerret {
         instansierFelter(fnr);
 
         add(
-                new ExternalLink("arenalink", arenaUtbetalingUrl + fnr, new StringResourceModel("arena.link.label", UtbetalingLerret.this, null).getString()),
+                new ExternalLink("arenalink", arenaUtbetalingUrl + fnr),
                 new FilterFormPanel("filterFormPanel", filterParametere),
                 totalOppsummeringPanel.setOutputMarkupPlaceholderTag(true),
                 utbetalingslisteContainer.setOutputMarkupId(true)

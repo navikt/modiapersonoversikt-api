@@ -1,11 +1,13 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
 
-    <a href="#" wicket:id="arenalink"></a>
+    <div class="kolonne-venstre">
+        <label><wicket:message key="utbetaling.lamell.arena-link-label"/></label>
+        <a href="#" wicket:id="arenalink" class="arena-lenke"><wicket:message key="utbetaling.lamell.arena-link-tekst"/></a>
+        <wicket:container wicket:id="filterFormPanel"/>
+    </div>
 
-    <wicket:container wicket:id="filterFormPanel"/>
-
-    <div class="utbetalinger-container">
+    <div class="kolonne-hoyre">
         <div wicket:id="totalOppsummeringPanel"></div>
 
         <div wicket:id="utbetalingslisteContainer" class="utbetalinger">
