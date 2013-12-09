@@ -14,6 +14,7 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.LocalDate;
 
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
@@ -106,8 +107,9 @@ public class FilterFormPanel extends Panel {
     }
 
     private String createSnurrepippJS(String selector, String event) {
+        String contextRoot = WebApplication.get().getServletContext().getContextPath();
         return "$('"+selector+"').on('"+event+"', function() {" +
-                "   window.Modig.ajaxLoader.showLoader('.utbetalinger', '', 'img/ajaxloader/hvit/loader_hvit_64.gif', '');" +
+                "   window.Modig.ajaxLoader.showLoader('.utbetalinger', '', '"+contextRoot+"/img/ajaxloader/hvit/loader_hvit_64.gif', '');" +
                 "});";
     }
 
