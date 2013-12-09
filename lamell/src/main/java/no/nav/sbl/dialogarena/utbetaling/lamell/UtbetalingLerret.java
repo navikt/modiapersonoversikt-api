@@ -84,4 +84,10 @@ public class UtbetalingLerret extends Lerret {
         utbetalingslisteContainer.addOrReplace(opprettMaanedsPanelListe());
         target.add(totalOppsummeringPanel, utbetalingslisteContainer);
     }
+
+    @RunOnEvents(FilterFormPanel.FEIL)
+    @SuppressWarnings("unused")
+    private void skjulSnurrepippVedFeil(AjaxRequestTarget target) {
+        target.add(utbetalingslisteContainer);
+    }
 }

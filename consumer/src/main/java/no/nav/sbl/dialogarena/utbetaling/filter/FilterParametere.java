@@ -36,4 +36,16 @@ public class FilterParametere implements Serializable {
     public LocalDate getStartDato() {
         return startDato;
     }
+
+    public void setStartDato(LocalDate startDato) {
+        if (startDato != null) {
+            this.startDato = startDato;
+        }
+    }
+
+    public void setSluttDato(LocalDate sluttDato) {
+        if (sluttDato != null) {
+            this.sluttDato = sluttDato;
+        }
+    }
 }
