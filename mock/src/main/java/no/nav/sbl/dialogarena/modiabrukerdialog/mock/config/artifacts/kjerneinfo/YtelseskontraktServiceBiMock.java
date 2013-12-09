@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo;
 
 import no.nav.kontrakter.consumer.fim.mapping.YtelseskontraktMapper;
-import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktResponse;
