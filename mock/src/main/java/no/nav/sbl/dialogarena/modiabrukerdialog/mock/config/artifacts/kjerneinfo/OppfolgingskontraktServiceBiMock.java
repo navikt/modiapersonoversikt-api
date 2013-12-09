@@ -28,29 +28,6 @@ import static org.mockito.Mockito.when;
 
 public class OppfolgingskontraktServiceBiMock {
 
-    private static final String OPPFOELGINGSPUNKT_STATUS_FULLFORT = "Fullført";
-    private static final String OPPFOELGINGSPUNKT_STATUS_AVBRUTT = "Avbrutt";
-    private static final String OPPFOELGINGSPUNKTTYPE_SAMTALE = "Individuell samtale";
-    private static final String OPPFOELGINGSPUNKTTYPE_GRUPPEAKTIVITETER = "Gruppeaktiviteter";
-    private static final String OPPFOELGINGSPUNKT_AKTIVITETSNAVN_UTREDNING = "Utredning i spesialenhet/andrelinje";
-    private static final String OPPFOELGINGSPUNKT_AKTIVITETSNAVN_INFO_AAP = "Informasjonsmøte om arbeidsavklaringspenger";
-    private static final String AKTIVITETSTATUS_PLANLAGT = "Planlagt";
-    private static final String AKTIVITETSTATUS_AVBRUTT = "Avbrutt";
-    private static final String AKTIVITETSTATUS_FULLFORT = "Fullført";
-    private static final String AKTIVITETSTATUS_AVBRUTT_GJONNOMFORING = "Avbrutt gjennomføring";
-    private static final String PLAN_HOVEDMAAL_BEHOLDE_ARBEID = "Beholde arbeid";
-    private static final String PLAN_HOVEDMAAL_SKAFFE_ARBEID = "Skaffe arbeid";
-    private static final String PLAN_HOVEDMAAL_OKE_DELTAGELSE = "Øke deltakelse eller mål om arbeid";
-    private static final String PLANSTATUS_GODKJENT = "Godkjent";
-    private static final String PLANSTATUS_AVBRUTT = "Avbrutt";
-    private static final String PLANSTATUS_ERSTATTET_AV_NY = "Erstattet av ny";
-    private static final String PLANTYPE_AKTIVITET = "aktivitetsplan";
-    private static final String PLANTYPE_INDIVIDUELL = "individuellPlan";
-    private static final String PLANTYPE_KVLIFISERINGSPROGRAM = "Kvalifieringsprogram";
-    private static final String TILTAKSDELTAKELSESTATUS_AKTUELL = "Aktuell";
-    private static final String TILTAKSDELTAKELSESTATUS_FULLFORT = "Fullført";
-    private static final String TILTAKSDELTAKELSESTATUS_GJENNOMFORES = "Gjennomføres";
-
     public static OppfolgingskontraktServiceBi getOppfolgingskontraktServiceBiMock() {
         OppfolgingskontraktServiceBi mock = mock(OppfolgingskontraktServiceBi.class);
         when(mock.hentOppfolgingskontrakter(any(OppfolgingskontraktRequest.class))).thenReturn(lagOppfolgingsMockRespons());
@@ -60,43 +37,32 @@ public class OppfolgingskontraktServiceBiMock {
     private static OppfolgingskontraktResponse lagOppfolgingsMockRespons() {
         FimOppHentOppfoelgingskontraktListeResponse respons = new FimOppHentOppfoelgingskontraktListeResponse();
         respons.withOppfoelgingskontraktListe(createOppfoelgingskontrakt());
-
-
         return new OppfolgingskontraktMapper().map(respons, OppfolgingskontraktResponse.class);
     }
 
     private static FimOppOppfoelgingskontrakt createOppfoelgingskontrakt() {
-        FimOppOppfoelgingskontrakt kontrakt = new FimOppOppfoelgingskontrakt();
-        kontrakt.setGjelderBruker(createBruker());
-        kontrakt.setStatus("Aktiv");
-
-        kontrakt.setIhtGjeldendeVedtak(createVedtak(null, null, null, null));
-        kontrakt.withAvYtelse(createYtelseskontrakt(null, null, DateUtils.getRandomDate()));
-
-        kontrakt.withHarOppfoelgingspunkt(
-                createOppfoelgingspunkt(OPPFOELGINGSPUNKTTYPE_SAMTALE, OPPFOELGINGSPUNKT_STATUS_AVBRUTT, DateUtils.getRandomLocalDateTime()),
-                createOppfoelgingspunkt(OPPFOELGINGSPUNKTTYPE_SAMTALE, OPPFOELGINGSPUNKT_STATUS_FULLFORT, DateUtils.getRandomLocalDateTime()),
-                createOppfoelgingspunkt(OPPFOELGINGSPUNKTTYPE_GRUPPEAKTIVITETER, OPPFOELGINGSPUNKT_AKTIVITETSNAVN_UTREDNING, DateUtils.getRandomLocalDateTime()),
-                createOppfoelgingspunkt(OPPFOELGINGSPUNKTTYPE_GRUPPEAKTIVITETER, OPPFOELGINGSPUNKT_AKTIVITETSNAVN_INFO_AAP, DateUtils.getRandomLocalDateTime())
-        );
-
-        kontrakt.withMedAktivitet(
-                createAktivitet("Aktivitetsnavn 1", AKTIVITETSTATUS_PLANLAGT, null, null, true),
-                createAktivitet("Aktivitetsnavn 2", AKTIVITETSTATUS_AVBRUTT, null, null, false),
-                createAktivitet("Aktivitetsnavn 3", AKTIVITETSTATUS_FULLFORT, null, null, false),
-                createAktivitet("Aktivitetsnavn 4", AKTIVITETSTATUS_AVBRUTT_GJONNOMFORING, null, null, false),
-                createTiltaksaktivitet(AKTIVITETSTATUS_PLANLAGT, TILTAKSDELTAKELSESTATUS_AKTUELL, null, null),
-                createTiltaksaktivitet(AKTIVITETSTATUS_PLANLAGT, TILTAKSDELTAKELSESTATUS_FULLFORT, null, null),
-                createTiltaksaktivitet(AKTIVITETSTATUS_AVBRUTT_GJONNOMFORING, TILTAKSDELTAKELSESTATUS_GJENNOMFORES, null, null)
-        );
-
-        kontrakt.withMedPlan(
-                createPlan(PLANSTATUS_GODKJENT, PLANTYPE_AKTIVITET, PLAN_HOVEDMAAL_BEHOLDE_ARBEID, null, null),
-                createPlan(PLANSTATUS_AVBRUTT, PLANTYPE_INDIVIDUELL, PLAN_HOVEDMAAL_OKE_DELTAGELSE, null, null),
-                createPlan(PLANSTATUS_ERSTATTET_AV_NY, PLANTYPE_KVLIFISERINGSPROGRAM, PLAN_HOVEDMAAL_SKAFFE_ARBEID, null, null)
-        );
-
-        return kontrakt;
+        return new FimOppOppfoelgingskontrakt()
+                .withGjelderBruker(createBruker())
+                .withStatus("Aktiv")
+                .withIhtGjeldendeVedtak(createVedtak(null, null, null, null))
+                .withAvYtelse(createYtelseskontrakt(null, null, DateUtils.getRandomDate()))
+                .withHarOppfoelgingspunkt(
+                        createOppfoelgingspunkt("Individuell samtale", "Avbrutt", DateUtils.getRandomLocalDateTime()),
+                        createOppfoelgingspunkt("Individuell samtale", "Fullført", DateUtils.getRandomLocalDateTime()),
+                        createOppfoelgingspunkt("Gruppeaktiviteter", "Utredning i spesialenhet/andrelinje", DateUtils.getRandomLocalDateTime()),
+                        createOppfoelgingspunkt("Gruppeaktiviteter", "Informasjonsmøte om arbeidsavklaringspenger", DateUtils.getRandomLocalDateTime()))
+                .withMedAktivitet(
+                        createAktivitet("Aktivitetsnavn 1", "Planlagt", null, null, true),
+                        createAktivitet("Aktivitetsnavn 2", "Avbrutt", null, null, false),
+                        createAktivitet("Aktivitetsnavn 3", "Fullført", null, null, false),
+                        createAktivitet("Aktivitetsnavn 4", "Avbrutt gjennomføring", null, null, false),
+                        createTiltaksaktivitet("Planlagt", "Aktuell", null, null),
+                        createTiltaksaktivitet("Planlagt", "Fullført", null, null),
+                        createTiltaksaktivitet("Avbrutt gjennomføring", "Gjennomføres", null, null))
+                .withMedPlan(
+                        createPlan("Godkjent", "aktivitetsplan", "Beholde arbeid", null, null),
+                        createPlan("Avbrutt", "individuellPlan", "Øke deltakelse eller mål om arbeid", null, null),
+                        createPlan("Erstattet av ny", "Kvalifieringsprogram", "Skaffe arbeid", null, null));
     }
 
     private static FimOppPlan createPlan(String status, String type, String hovedmal, Date fra, Date til) {
