@@ -8,15 +8,18 @@
     </div>
 
     <div class="kolonne-hoyre">
-        <div class="utbetaling-ramme oppsummering">
+        <div class="utbetaling-ramme">
             <div class="utbetaling-ramme-header"><wicket:message key="utbetaling.lamell.oppsummering-total-overskrift"/></div>
-            <div class="utbetaling-ramme-innhold" wicket:id="totalOppsummeringPanel"></div>
+            <div class="utbetaling-ramme-innhold oppsummering-total" wicket:id="totalOppsummeringPanel"></div>
         </div>
 
-        <div wicket:id="utbetalingslisteContainer" class="utbetalinger">
-            <wicket:container wicket:id="maanedsPaneler">
-                <wicket:container wicket:id="maanedsPanel"/>
-            </wicket:container>
+        <div class="utbetaling-ramme">
+            <div class="utbetaling-ramme-header"><wicket:message key="utbetaling.lamell.utbetalinger-utfort"/></div>
+            <div class="utbetaling-ramme-innhold utbetalinger" wicket:id="utbetalingslisteContainer">
+                <wicket:container wicket:id="maanedsPaneler">
+                    <wicket:container wicket:id="maanedsPanel"/>
+                </wicket:container>
+            </div>
         </div>
     </div>
 
