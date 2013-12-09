@@ -1,10 +1,12 @@
 @kolonneVenstreWidth: 35%;
 @kolonneHoyreWidth: 65%;
 @borderColor: #d1cfcf;
+@boxGray: #f1f1f1;
+@sidePadding: 2rem;
 
 .kolonne-venstre {
   float: left;
-  padding-right: 2rem;
+  padding-right: @sidePadding;
   width: @kolonneVenstreWidth;
 
   .arena-lenke {
@@ -25,8 +27,8 @@
       div {
         text-align: center;
         border: 1px solid @borderColor;
-        background-color: #f1f1f1;
-        padding: 1.5rem 2rem;
+        background-color: @boxGray;
+        padding: 1.5rem @sidePadding;
         margin-top: 0.4rem;
       }
     }
@@ -69,31 +71,47 @@
 .kolonne-hoyre {
   width: @kolonneHoyreWidth;
   float: right;
-  .oppsummering {
-    padding-bottom: 40px;
-    width: 100%;
 
-    a {
-      color: #3E3832;
+  .utbetaling-ramme {
+    margin-bottom: 2rem;
+    border: 1px solid @borderColor;
+    .utbetaling-ramme-header {
+      padding: 1rem 0;
+      font-family: 'Modus', Helvetica, Arial, sans-serif;
+      font-weight: 600;
+      font-size: 1.3rem;
+      text-align: center;
+      background-color: @boxGray;
+      border-bottom: 1px solid @borderColor;
+      text-transform: uppercase;
     }
+    .utbetaling-ramme-innhold {
+      background-color: white;
+      padding: 1.5rem @sidePadding;
+    }
+  }
 
-    .oppsummeringsLinje {
-      padding-bottom: 20px;
+  .oppsummering {
+    font-family: 'Modus', Helvetica, Arial, sans-serif;
+    width: 100%;
+    font-size: 0.9rem;
+    font-weight: 600;
+    .oppsummeringslinje {
+      cursor: pointer;
       .element {
         display: inline-block;
         padding-right: 20px;
         label {
           display: block;
-          cursor: default;
-        }
-        span {
-          display: block;
         }
       }
     }
-
     table {
+      border-top: 1px solid @borderColor;
+      margin-top: 1rem;
+      padding-top: 1rem;
       text-align: left;
+      width: 100%;
       th {
         text-transform: uppercase;
         font-weight: normal;
@@ -101,17 +119,17 @@
         font-size: 0.857rem;
       }
       td {
-        padding-right: 20px;
-
+        padding-right: 10px;
+      }
+      tbody:not(:first-of-type) tr:first-child td {
+        padding-top: 0.5rem;
+      }
+      tbody:not(:last-of-type) tr:last-child td {
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid @borderColor;
       }
       .hovedytelse {
-        padding-left: 0px;
         font-weight: bold;
-        text-align: left;
-
-      }
-      .tall {
-        text-align: right;
       }
     }
   }

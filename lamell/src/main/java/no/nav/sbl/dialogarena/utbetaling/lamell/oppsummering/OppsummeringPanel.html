@@ -1,96 +1,88 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
 
-    <div class="oppsummering">
-        <a href="#" wicket:id="visDetaljer" class="dropdown">
-            <div wicket:id="oppsummeringsLinje" class="oppsummeringsLinje">
-                <div class="element">
-                    <label>
-                        <wicket:message key="utbetaling.lamell.oppsummering.periode"/>
-                    </label>
-                    <span wicket:id="oppsummertPeriode"></span>
-                </div>
-                <div class="element">
-                    <label>
-                        <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
-                    </label>
-                    <span wicket:id="oppsummering.brutto"></span>
-                </div>
-                <div class="element">
-                    <label>
-                        <wicket:message key="utbetaling.lamell.oppsummering.trekk"/>
-                    </label>
-                    <span wicket:id="oppsummering.trekk"></span>
-                </div>
-                <div class="element">
-                    <label>
-                        <wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/>
-                    </label>
-                    <span wicket:id="oppsummering.utbetalt"></span>
-                </div>
-                <div wicket:id="vKnapp" class="element">[]
-                </div>
-
-            </div>
-        </a>
-
-        <div wicket:id="oppsummeringDetalj">
-            <hr/>
-            <table>
-                <thead>
-                <th>
-                    <wicket:message key="utbetaling.lamell.oppsummering.ytelse"/>
-                </th>
-                <th>
-                    <wicket:message key="utbetaling.lamell.oppsummering.delbelop"/>
-                </th>
-                <th>
-                    <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
-                </th>
-                <th>
-                    <wicket:message key="utbetaling.lamell.oppsummering.trekk"/>
-                </th>
-                <th>
-                    <wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/>
-                </th>
-                </thead>
-                <tbody wicket:id="oppsummering.hovedYtelsesBeskrivelser">
-                <tr >
-                    <td>
-                        <span class="hovedytelse" wicket:id="hovedYtelsesBeskrivelse">[]</span>
-                    </td>
-                    <td></td>
-                    <td>
-                        <span class="brutto" wicket:id="bruttoUnderytelser">[]</span>
-                    </td>
-                    <td>
-                        <span class="trekk" wicket:id="trekkUnderytelser">[]</span>
-                    </td>
-                    <td>
-                        <span class="netto" wicket:id="nettoUnderytelser">[]</span>
-                    </td>
-                    <td>
-
-                    </td>
-                </tr>
-                <tr wicket:id="underYtelsesBeskrivelser">
-                    <td>
-                        <span class="tall" wicket:id="underYtelsesBeskrivelse">[]</span>
-                    </td>
-                    <td>
-                        <span class="tall" wicket:id="ytelsesBelop">[]</span>
-                    </td>
-                    <td></td>
-                    <td>
-                        <span class="tall" wicket:id="trekkBelop">[]</span>
-                    </td>
-                    <td></td>
-                </tr>
-
-                </tbody>
-            </table>
+    <div wicket:id="oppsummeringsLinje" class="oppsummeringslinje">
+        <div class="element">
+            <label>
+                <wicket:message key="utbetaling.lamell.oppsummering.periode"/>
+            </label>
+            <span wicket:id="oppsummertPeriode"></span>
         </div>
+        <div class="element">
+            <label>
+                <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
+            </label>
+            <span wicket:id="oppsummering.brutto"></span>
+        </div>
+        <div class="element">
+            <label>
+                <wicket:message key="utbetaling.lamell.oppsummering.trekk"/>
+            </label>
+            <span wicket:id="oppsummering.trekk"></span>
+        </div>
+        <div class="element">
+            <label>
+                <wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/>
+            </label>
+            <span wicket:id="oppsummering.utbetalt"></span>
+        </div>
+        <div class="element">V</div>
+    </div>
 
+    <div wicket:id="oppsummeringDetalj">
+        <table cellspacing="0">
+            <thead>
+            <th>
+                <wicket:message key="utbetaling.lamell.oppsummering.ytelse"/>
+            </th>
+            <th>
+                <wicket:message key="utbetaling.lamell.oppsummering.delbelop"/>
+            </th>
+            <th>
+                <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
+            </th>
+            <th>
+                <wicket:message key="utbetaling.lamell.oppsummering.trekk"/>
+            </th>
+            <th>
+                <wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/>
+            </th>
+            </thead>
+            <tbody wicket:id="oppsummering.hovedYtelsesBeskrivelser">
+            <tr >
+                <td>
+                    <span class="hovedytelse" wicket:id="hovedYtelsesBeskrivelse">[]</span>
+                </td>
+                <td></td>
+                <td>
+                    <span class="brutto" wicket:id="bruttoUnderytelser">[]</span>
+                </td>
+                <td>
+                    <span class="trekk" wicket:id="trekkUnderytelser">[]</span>
+                </td>
+                <td>
+                    <span class="netto" wicket:id="nettoUnderytelser">[]</span>
+                </td>
+                <td>
+
+                </td>
+            </tr>
+            <tr wicket:id="underYtelsesBeskrivelser">
+                <td>
+                    <span class="tall" wicket:id="underYtelsesBeskrivelse">[]</span>
+                </td>
+                <td>
+                    <span class="tall" wicket:id="ytelsesBelop">[]</span>
+                </td>
+                <td></td>
+                <td>
+                    <span class="tall" wicket:id="trekkBelop">[]</span>
+                </td>
+                <td></td>
+            </tr>
+
+            </tbody>
+        </table>
     </div>
 
 </wicket:panel>
