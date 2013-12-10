@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils;
 import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
@@ -17,9 +18,11 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.joda.time.LocalTime;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Set;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_SLUTTDATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_STARTDATO;
@@ -51,8 +54,11 @@ public class UtbetalingLerret extends Lerret {
     }
 
     private void instansierFelter(String fnr) {
-        filterParametere = new FilterParametere(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true);
-        totalOppsummeringPanel = createTotalOppsummeringPanel(utbetalingsHolder.withFnr(fnr).getSynligeUtbetalinger(filterParametere));
+        List<Utbetaling> utbetalinger = utbetalingsHolder.withFnr(fnr).hentUtbetalinger(DEFAULT_STARTDATO.toDateTimeAtStartOfDay(), DEFAULT_SLUTTDATO.toDateTime(new LocalTime(23, 59)));
+
+        Set<String> strings = UtbetalingListeUtils.hentYtelser(utbetalinger);
+        filterParametere = new FilterParametere(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true, strings);
+        totalOppsummeringPanel = createTotalOppsummeringPanel(utbetalingsHolder.getResultat().getSynligeUtbetalinger(filterParametere));
         utbetalingslisteContainer = new WebMarkupContainer("utbetalingslisteContainer").add(opprettMaanedsPanelListe());
     }
 

@@ -117,6 +117,17 @@ public class UtbetalingListeUtils {
     }
 
     /**
+     * Henter ut et Set av hovedbeskrivelser fra en liste av utbetalinger.
+     */
+    public static Set<String> hentYtelser(List<Utbetaling> utbetalinger) {
+        Set<String> ytelser = new TreeSet<>();
+        for (Utbetaling utbetaling : utbetalinger) {
+            ytelser.addAll(utbetaling.getBeskrivelser());
+        }
+        return ytelser;
+    }
+
+    /**
      * Legger til en verdi til et map av maps, med nøklene hovedKey og underKey.
      */
     private static void leggSammenIResultatMap(Map<String, Map<String, Double>> resultatMap, String hovedKey, String underKey, Double verdi) {
@@ -127,16 +138,5 @@ public class UtbetalingListeUtils {
         Double belop = (verdi != null ? verdi : 0.0) + (map.get(underKey) != null ? map.get(underKey) : 0.0);
         map.put(underKey, belop);
         resultatMap.put(hovedKey, map);
-    }
-
-    /**
-     * Henter ut et Set av hovedbeskrivelser fra en liste av utbetalinger.
-     */
-    private static Set<String> hentYtelser(List<Utbetaling> utbetalinger) {
-        Set<String> ytelser = new TreeSet<>();
-        for (Utbetaling utbetaling : utbetalinger) {
-            ytelser.addAll(utbetaling.getBeskrivelser());
-        }
-        return ytelser;
     }
 }
