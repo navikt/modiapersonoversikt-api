@@ -108,8 +108,11 @@ public class FilterFormPanel extends Panel {
 
     private String createSnurrepippJS(String selector, String event) {
         String contextRoot = WebApplication.get().getServletContext().getContextPath();
+        String targetSelector = ".oppsummeringslinje:first";
+        String insertMethod = "replace";
+
         return "$('"+selector+"').on('"+event+"', function() {" +
-                "   window.Modig.ajaxLoader.showLoader('.utbetalinger', '', '"+contextRoot+"/img/ajaxloader/hvit/loader_hvit_64.gif', '');" +
+                "   window.Modig.ajaxLoader.showLoader('"+targetSelector+"', '"+insertMethod+"', '"+contextRoot+"/img/ajaxloader/hvit/loader_hvit_48.gif', '');" +
                 "});";
     }
 
