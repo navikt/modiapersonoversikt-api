@@ -16,11 +16,16 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.LocalDate;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
@@ -54,15 +59,36 @@ public class FilterFormPanel extends Panel {
                 .setOutputMarkupId(true);
     }
 
+    private static class ValgtYtelseVM implements Serializable {
+        AbstractReadOnlyModel<Boolean> valgtModell;
+        final ValgtYtelse valgtYtelse;
 
-    private ListView<ValgtYtelse> createYtelser() {
-        return new ListView<ValgtYtelse>("ytelsesKnappeFilter", new CompoundPropertyModel<>(filterParametere.getValgteYtelser())) {
+        private ValgtYtelseVM(final ValgtYtelse valgtYtelse) {
+            this.valgtYtelse = valgtYtelse;
+            this.valgtModell = new AbstractReadOnlyModel<Boolean>() {
+                @Override
+                public Boolean getObject() {
+                    return valgtYtelse.getValgt();
+                }
+            };
+        }
+    }
+
+    private ListView<ValgtYtelseVM> createYtelser() {
+
+        List<ValgtYtelseVM> ytelseVMer = new ArrayList<>();
+        for (ValgtYtelse ytelse : filterParametere.getValgteYtelser()) {
+            ytelseVMer.add(new ValgtYtelseVM(ytelse));
+        }
+
+        return new ListView<ValgtYtelseVM>("ytelsesKnappeFilter", new CompoundPropertyModel<>(ytelseVMer)) {
+
             @Override
-            protected void populateItem(ListItem<ValgtYtelse> item) {
-                AjaxLink<ValgtYtelse> knapp = new AjaxLink<ValgtYtelse>("ytelse", item.getModel()) {
+            protected void populateItem(ListItem<ValgtYtelseVM> item) {
+                AjaxLink<ValgtYtelseVM> knapp = new AjaxLink<ValgtYtelseVM>("valgtYtelse.ytelse", item.getModel()) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        getModelObject().setValgt((!getModelObject().getValgt()));
+                        getModelObject().valgtYtelse.setValgt((!getModelObject().valgtYtelse.getValgt()));
                         sendFilterEndretEvent();
                         target.add(this);
                     }
@@ -72,9 +98,8 @@ public class FilterFormPanel extends Panel {
                         response.render(OnLoadHeaderItem.forScript(createSnurrepippJS("input:button", "click")));
                     }
                 };
-                knapp.add(new Label("knappLabel", knapp.getModelObject().getYtelse()));
-
-                knapp.add(hasCssClassIf("valgt", new Model<>(knapp.getModelObject().getValgt())));
+                knapp.add(new Label("knappLabel", knapp.getModelObject().valgtYtelse.getYtelse()));
+                knapp.add(hasCssClassIf("valgt", knapp.getModelObject().valgtModell));
                 item.add(knapp);
             }
         };
