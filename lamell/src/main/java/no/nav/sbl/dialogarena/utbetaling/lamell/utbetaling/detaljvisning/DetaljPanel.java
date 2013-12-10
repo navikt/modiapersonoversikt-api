@@ -3,14 +3,14 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning;
 import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 
 import java.util.List;
 
-public class DetaljPanel extends WebMarkupContainer {
+public class DetaljPanel extends Panel {
 
     private Utbetaling utbetaling;
 
@@ -18,6 +18,10 @@ public class DetaljPanel extends WebMarkupContainer {
         super(id);
         this.utbetaling = utbetaling;
         add(
+                new Label("mottatt", utbetaling.getMottaker().getNavn()),
+                new Label("konto", utbetaling.getKontoNr()),
+                new Label("ytelsesinfo", utbetaling.getBeskrivelse()),
+                new Label("periode", utbetaling.getPeriodeMedKortDato()),
                 createBilagListView(utbetaling.getBilag())
         );
     }

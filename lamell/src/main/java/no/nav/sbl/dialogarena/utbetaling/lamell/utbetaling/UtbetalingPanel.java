@@ -29,7 +29,7 @@ public class UtbetalingPanel extends Panel {
     }
 
     private DetaljPanel createDetaljPanel(Utbetaling utbetaling) {
-        return (DetaljPanel) new DetaljPanel("bilagWrapper", utbetaling)
+        return (DetaljPanel) new DetaljPanel("detaljpanel", utbetaling)
                 .setOutputMarkupPlaceholderTag(true)
                 .setVisibilityAllowed(false);
     }
