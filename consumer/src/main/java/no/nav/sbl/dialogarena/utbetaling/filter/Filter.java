@@ -34,7 +34,7 @@ public class Filter {
         List<String> ytelserIUtbetaling = UtbetalingListeUtils.hentYtelserFraUtbetalinger(Arrays.asList(utbetaling));
         for (String ytelse : ytelserIUtbetaling) {
             for (FilterParametere.ValgtYtelse valgtYtelse : valgteYtelser) {
-                if(!valgtYtelse.getValgt() && ytelse.equalsIgnoreCase(valgtYtelse.getYtelse())) {
+                if(valgtYtelse.getValgt() && ytelse.equalsIgnoreCase(valgtYtelse.getYtelse())) {
                     return true;
                 }
             }

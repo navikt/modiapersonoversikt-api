@@ -30,7 +30,7 @@ public class FilterParametere implements Serializable {
     private List<ValgtYtelse> lagValgteYtelser(Set<String> hovedYtelser) {
         List<ValgtYtelse> list = new ArrayList<>();
         for (String ytelse : hovedYtelser) {
-            list.add(new ValgtYtelse(false, ytelse));
+            list.add(new ValgtYtelse(true, ytelse));
         }
         return list;
     }
