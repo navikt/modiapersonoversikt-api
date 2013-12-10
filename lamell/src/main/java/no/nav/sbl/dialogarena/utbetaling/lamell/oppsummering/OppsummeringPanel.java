@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.HovedYtelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.UnderYtelse;
-import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -19,27 +18,18 @@ public class OppsummeringPanel extends Panel {
         super(id, model);
 
         MarkupContainer ytelsesDetalj = createYtelsesOppsummering(visDetaljer);
-        add(createTopplinje(ytelsesDetalj, visDetaljer), ytelsesDetalj);
+        add(createTopplinje(), ytelsesDetalj);
+        add(createClickBehavior(visDetaljer, ytelsesDetalj));
     }
 
-    private MarkupContainer createTopplinje(final Component skjult, final boolean visDetaljer) {
-        return (MarkupContainer) new WebMarkupContainer("oppsummeringsLinje")
+    private MarkupContainer createTopplinje() {
+        return new WebMarkupContainer("oppsummeringsLinje")
                 .add(
                         new Label("oppsummertPeriode"),
                         new Label("oppsummering.utbetalt"),
                         new Label("oppsummering.trekk"),
                         new Label("oppsummering.brutto")
-                )
-                .add(new AjaxEventBehavior("click") {
-                    @Override
-                    protected void onEvent(AjaxRequestTarget target) {
-                        if (!visDetaljer) {
-                            return;
-                        }
-                        skjult.setVisibilityAllowed(!skjult.isVisibleInHierarchy());
-                        target.add(skjult);
-                    }
-                });
+                );
     }
 
     private MarkupContainer createYtelsesOppsummering(boolean visDetaljer) {
@@ -75,5 +65,18 @@ public class OppsummeringPanel extends Panel {
                 .setVisibilityAllowed(visDetaljer);
 
         return detalj;
+    }
+
+    private AjaxEventBehavior createClickBehavior(final boolean visDetaljer, final MarkupContainer ytelsesDetalj) {
+        return new AjaxEventBehavior("click") {
+            @Override
+            protected void onEvent(AjaxRequestTarget target) {
+                if (!visDetaljer) {
+                    return;
+                }
+                ytelsesDetalj.setVisibilityAllowed(!ytelsesDetalj.isVisibleInHierarchy());
+                target.add(ytelsesDetalj);
+            }
+        };
     }
 }

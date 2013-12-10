@@ -1,5 +1,5 @@
-@kolonneVenstreWidth: 35%;
-@kolonneHoyreWidth: 65%;
+@kolonneVenstreWidth: 33%;
+@kolonneHoyreWidth: 67%;
 @borderColor: #d1cfcf;
 @boxGray: #f1f1f1;
 @sidePadding: 2rem;
@@ -76,19 +76,21 @@
   width: @kolonneHoyreWidth;
   float: right;
 
+  .element {
+    display: inline-block;
+    text-transform: uppercase;
+    padding-right: 1rem;
+    font-weight: 600;
+    label {
+      display: block;
+      margin: 0;
+    }
+  }
+
   .utbetaling-ramme {
     margin-bottom: 2rem;
     border: 1px solid @borderColor;
 
-    .oppsummeringslinje .element{
-      display: inline-block;
-      padding-right: 20px;
-      text-transform: uppercase;
-      label {
-        display: block;
-        margin: 0;
-      }
-    }
     .utbetaling-ramme-header {
       padding: 1rem 0;
       font-family: 'Modus', Helvetica, Arial, sans-serif;
@@ -108,11 +110,8 @@
   .oppsummering-total {
     font-family: 'Modus', Helvetica, Arial, sans-serif;
     width: 100%;
-    font-weight: 600;
     padding: @toppBunnPadding @sidePadding;
-    .oppsummeringslinje {
-      cursor: pointer;
-    }
+    cursor: pointer;
     table {
       border-top: 1px solid @borderColor;
       margin-top: 1rem;
@@ -147,7 +146,6 @@
       color: #b7b1a9;
       padding: @toppBunnPadding @sidePadding;
       .element{
-        font-weight: 600;
         label {
           cursor: default;
         }
@@ -170,6 +168,13 @@
     .utbetalingslinje {
       padding: @toppBunnPadding @sidePadding;
       border-bottom: 1px solid @borderColor;
+      cursor: pointer;
+      &:last-of-type {
+        border: none;
+      }
+      .dropdown {
+        float: right;
+      }
     }
   }
 }

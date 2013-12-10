@@ -3,9 +3,8 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -23,15 +22,15 @@ public class UtbetalingPanel extends Panel {
 
         add(
                 bilagWrapper,
-                createExpandButton(bilagWrapper),
                 new Label("statusBeskrivelse"),
                 new Label("kortUtbetalingsDato"),
                 new Label("beskrivelse"),
-                new Label("belopMedValuta"),
-                new Label("kontoNr"),
                 new Label("periodeMedKortDato"),
-                new Label("mottaker.navn")
+                new Label("bruttoBelop"),
+                new Label("trekk"),
+                new Label("belopMedValuta")
         );
+        add(createClickBehavior(bilagWrapper));
     }
 
     private WebMarkupContainer createBilagWrapper(List<Bilag> bilagsliste) {
@@ -66,12 +65,12 @@ public class UtbetalingPanel extends Panel {
         };
     }
 
-    private AjaxLink<Void> createExpandButton(final Component hidden) {
-        return new AjaxLink<Void>("expandbutton") {
+    private AjaxEventBehavior createClickBehavior(final WebMarkupContainer container) {
+        return new AjaxEventBehavior("click") {
             @Override
-            public void onClick(AjaxRequestTarget target) {
-                hidden.setVisibilityAllowed(!hidden.isVisibleInHierarchy());
-                target.add(hidden);
+            protected void onEvent(AjaxRequestTarget target) {
+                container.setVisibilityAllowed(!container.isVisibleInHierarchy());
+                target.add(container);
             }
         };
     }
