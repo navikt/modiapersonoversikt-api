@@ -79,11 +79,13 @@ public class UtbetalingListeUtils {
         List<PosteringsDetalj> detaljer = new ArrayList<>();
         for (Utbetaling utbetaling : utbetalinger) {
             for (Bilag bilag : utbetaling.getBilag()) {
-                List<PosteringsDetalj> detaljer1 = bilag.getPosteringsDetaljer();
-                trekkUtSkatteOpplysninger(detaljer1);
-                detaljer.addAll(detaljer1);
+                detaljer.addAll(bilag.getPosteringsDetaljer());
             }
         }
+        return summerBelopForPosteringsDetaljer(detaljer);
+    }
+
+    private static Map<String, Map<String, Double>> summerBelopForPosteringsDetaljer(List<PosteringsDetalj> detaljer) {
         Map<String, Map<String, Double>> ytelsesBelopMap = new HashMap<>();
         for (PosteringsDetalj detalj : detaljer) {
             leggSammenIResultatMap(ytelsesBelopMap, detalj.getHovedBeskrivelse(), detalj.getUnderBeskrivelse(), detalj.getBelop());
@@ -91,41 +93,6 @@ public class UtbetalingListeUtils {
         return ytelsesBelopMap;
     }
 
-    private static void trekkUtSkatteOpplysninger(List<PosteringsDetalj> detaljer) {
-        List<PosteringsDetalj> skatteDetaljer = new ArrayList<>();
-        for (PosteringsDetalj detalj : detaljer) {
-            if (detalj.isSkatt()) {
-                skatteDetaljer.add(detalj);
-            }
-        }
-
-        if (!skatteDetaljer.isEmpty()) {
-            PosteringsDetalj detalj = finnVanligsteYtelse(detaljer);
-            String beskrivelse = detalj.getHovedBeskrivelse();
-            for (PosteringsDetalj skatt : skatteDetaljer) {
-                skatt.setHovedBeskrivelse(beskrivelse);
-            }
-        }
-    }
-
-    /**
-     * Henter ut ytelsen med høyest frekvens i listen av posteringsdetaljer
-     */
-    private static PosteringsDetalj finnVanligsteYtelse(List<PosteringsDetalj> detaljer1) {
-        Map<String, Integer> frekvens = new HashMap<>();
-        int highestCount = 0;
-        PosteringsDetalj pdetalj = null;
-        for (PosteringsDetalj detalj : detaljer1) {
-            String key = detalj.getHovedBeskrivelse();
-            Integer count = 1 + (frekvens.get(key) != null ? frekvens.get(key) : 0);
-            if (count > highestCount) {
-                highestCount = count;
-                pdetalj = detalj;
-            }
-            frekvens.put(key, count);
-        }
-        return pdetalj;
-    }
 
     /**
      * Summerer doubles fra inputmap og legger dem i resultat.

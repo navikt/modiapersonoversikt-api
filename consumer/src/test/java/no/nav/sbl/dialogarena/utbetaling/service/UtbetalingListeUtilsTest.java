@@ -76,7 +76,7 @@ public class UtbetalingListeUtilsTest {
     public void testGetBelopPerUnderYtelse_EnUtbetaling_EttBilag() throws Exception {
         PosteringsDetalj dagpengerGrunn = new PosteringsDetaljBuilder().setHovedBeskrivelse(DAGPENGER).setUnderBeskrivelse("Grunnbeløp").setBelop(1000.0).createPosteringsDetalj();
         PosteringsDetalj dagpengerTillegg = new PosteringsDetaljBuilder().setHovedBeskrivelse(DAGPENGER).setUnderBeskrivelse("Tillegg").setBelop(1000.0).createPosteringsDetalj();
-        PosteringsDetalj skatt = new PosteringsDetaljBuilder().setHovedBeskrivelse(SKATT).setBelop(100.0).createPosteringsDetalj();
+        PosteringsDetalj skatt = new PosteringsDetaljBuilder().setHovedBeskrivelse(DAGPENGER).setUnderBeskrivelse(SKATT).setBelop(-100.0).createPosteringsDetalj();
 
         Bilag bilag = new BilagBuilder().setPosteringsDetaljer(asList(dagpengerGrunn, dagpengerGrunn, dagpengerTillegg, dagpengerTillegg, skatt)).createBilag();
         Utbetaling utbetaling = new UtbetalingBuilder().setBilag(asList(bilag)).createUtbetaling();
@@ -85,14 +85,14 @@ public class UtbetalingListeUtilsTest {
 
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Grunnbeløp"), is(2000.0));
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Tillegg"), is(2000.0));
-        assertThat(belopPerUnderYtelse.get(DAGPENGER).get(SKATT), is(100.0));
+        assertThat(belopPerUnderYtelse.get(DAGPENGER).get(SKATT), is(-100.0));
     }
 
     @Test
     public void testGetBelopPerUnderYtelse_FlereUtbetalinger_FlereBilag() throws Exception {
         PosteringsDetalj dagpengerGrunn = new PosteringsDetaljBuilder().setHovedBeskrivelse(DAGPENGER).setUnderBeskrivelse("Grunnbeløp").setBelop(1000.0).createPosteringsDetalj();
         PosteringsDetalj dagpengerTillegg = new PosteringsDetaljBuilder().setHovedBeskrivelse(DAGPENGER).setUnderBeskrivelse("Tillegg").setBelop(1000.0).createPosteringsDetalj();
-        PosteringsDetalj skatt = new PosteringsDetaljBuilder().setHovedBeskrivelse(SKATT).setBelop(100.0).createPosteringsDetalj();
+        PosteringsDetalj skatt = new PosteringsDetaljBuilder().setHovedBeskrivelse(DAGPENGER).setUnderBeskrivelse(SKATT).setBelop(-100.0).createPosteringsDetalj();
 
         Bilag bilag1 = new BilagBuilder().setPosteringsDetaljer(asList(dagpengerGrunn, dagpengerGrunn, dagpengerTillegg, dagpengerTillegg, skatt)).createBilag();
         Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(asList(dagpengerGrunn, dagpengerGrunn, skatt)).createBilag();
@@ -103,7 +103,7 @@ public class UtbetalingListeUtilsTest {
 
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Grunnbeløp"), is(4000.0));
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Tillegg"), is(2000.0));
-        assertThat(belopPerUnderYtelse.get(DAGPENGER).get(SKATT), is(200.0));
+        assertThat(belopPerUnderYtelse.get(DAGPENGER).get(SKATT), is(-200.0));
     }
 
 }
