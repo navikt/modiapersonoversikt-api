@@ -10,15 +10,21 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.list.ListItem;
+import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.LocalDate;
 
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.*;
 import static org.joda.time.LocalDate.now;
 
 public class FilterFormPanel extends Panel {
@@ -42,9 +48,36 @@ public class FilterFormPanel extends Panel {
                 new FeedbackPanel("feedbackpanel"),
                 createMottakerButton("visBruker"),
                 createMottakerButton("visArbeidsgiver"),
+                createYtelser(),
                 createDateRangePicker())
                 .add(createDateRangePickerChangeBehaviour(filterForm))
                 .setOutputMarkupId(true);
+    }
+
+
+    private ListView<ValgtYtelse> createYtelser() {
+        return new ListView<ValgtYtelse>("ytelsesKnappeFilter", new CompoundPropertyModel<>(filterParametere.getValgteYtelser())) {
+            @Override
+            protected void populateItem(ListItem<ValgtYtelse> item) {
+                AjaxLink<ValgtYtelse> knapp = new AjaxLink<ValgtYtelse>("ytelse", item.getModel()) {
+                    @Override
+                    public void onClick(AjaxRequestTarget target) {
+                        getModelObject().setValgt((!getModelObject().getValgt()));
+                        sendFilterEndretEvent();
+                        target.add(this);
+                    }
+
+                    @Override
+                    public void renderHead(IHeaderResponse response) {
+                        response.render(OnLoadHeaderItem.forScript(createSnurrepippJS("input:button", "click")));
+                    }
+                };
+                knapp.add(new Label("knappLabel", knapp.getModelObject().getYtelse()));
+
+                knapp.add(hasCssClassIf("valgt", new Model<>(knapp.getModelObject().getValgt())));
+                item.add(knapp);
+            }
+        };
     }
 
     private AjaxLink<Boolean> createMottakerButton(final String mottaker) {
@@ -116,7 +149,7 @@ public class FilterFormPanel extends Panel {
     }
 
     private void sendFilterEndretEvent() {
-        send(getPage(), Broadcast.DEPTH, FilterParametere.ENDRET);
+        send(getPage(), Broadcast.DEPTH, ENDRET);
     }
 
     private void sendFilterFeilEvent() {

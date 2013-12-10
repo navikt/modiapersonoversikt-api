@@ -13,6 +13,15 @@
              --><input type="button" wicket:id="visArbeidsgiver" value="Arbeidsgiver" class="knapp-filter"/>
             </div>
         </div>
+
+        <div class="filter-block">
+            <label><wicket:message key="utbetaling.lamell.filter.ytelser"/></label>
+            <div wicket:id="ytelsesKnappeFilter">
+                <a href="" wicket:id="ytelse" class="knapp-filter">
+                    <wicket:container wicket:id="knappLabel">[]</wicket:container>
+                </a>
+            </div>
+        </div>
     </form>
 </wicket:panel>
 </html>
