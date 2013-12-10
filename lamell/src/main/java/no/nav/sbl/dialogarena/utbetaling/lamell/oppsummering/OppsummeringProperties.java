@@ -1,15 +1,16 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 
-import no.nav.sbl.dialogarena.time.Datoformat;
-import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.Oppsummering;
 import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.domain.util.OppsummeringsKalkulator;
+import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.Oppsummering;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.List;
+
+import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.OppsummeringsKalkulator.regnUtOppsummering;
 
 
 public class OppsummeringProperties implements Serializable {
@@ -25,11 +26,7 @@ public class OppsummeringProperties implements Serializable {
         this.sluttDato = sluttDato;
         this.startDato = startDato;
         periode = createPeriode(startDato, sluttDato);
-        oppsummering = regnUtOppsummering();
-    }
-
-    private Oppsummering regnUtOppsummering() {
-        return OppsummeringsKalkulator.regnUtOppsummering(utbetalinger);
+        oppsummering = regnUtOppsummering(utbetalinger);
     }
 
     private Periode createPeriode(LocalDate start, LocalDate slutt) {
@@ -53,6 +50,6 @@ public class OppsummeringProperties implements Serializable {
     }
 
     public String getOppsummertPeriode() {
-        return periode.getPeriodeString(Datoformat.KORT);
+        return periode.getPeriodeString(KORT);
     }
 }

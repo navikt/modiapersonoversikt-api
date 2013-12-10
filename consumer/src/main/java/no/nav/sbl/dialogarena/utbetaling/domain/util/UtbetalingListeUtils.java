@@ -7,12 +7,13 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+
+import static java.util.Collections.sort;
 
 /**
  * Hjelpefunksjoner for å jobbe med lister av Utbetaling.
@@ -111,7 +112,7 @@ public class UtbetalingListeUtils {
     public static List<String> hentYtelserFraUtbetalinger(List<Utbetaling> utbetalinger) {
         Set<String> ytelser = hentYtelser(utbetalinger);
         ArrayList<String> list = new ArrayList<>(ytelser);
-        Collections.sort(list);
+        sort(list);
         return list;
     }
 

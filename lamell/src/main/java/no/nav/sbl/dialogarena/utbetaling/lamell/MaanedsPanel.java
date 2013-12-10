@@ -15,6 +15,8 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.joda.time.LocalDate.now;
+
 public class MaanedsPanel extends Panel {
 
     private static final boolean VIS_DETALJER = false;
@@ -43,7 +45,7 @@ public class MaanedsPanel extends Panel {
 
     private CompoundPropertyModel<OppsummeringProperties> createOppsummeringPropertiesModel(List<Utbetaling> liste, FilterParametere filterParametere) {
         if (liste.isEmpty()) {
-            return new CompoundPropertyModel<>(new OppsummeringProperties(new ArrayList<Utbetaling>(), LocalDate.now(), LocalDate.now()));
+            return new CompoundPropertyModel<>(new OppsummeringProperties(new ArrayList<Utbetaling>(), now(), now()));
         }
 
         LocalDate startDato = liste.get(liste.size() - 1).getUtbetalingsDato().dayOfMonth().withMinimumValue().toLocalDate();
