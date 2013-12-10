@@ -17,11 +17,9 @@
         <div class="filter-block">
             <label><wicket:message key="utbetaling.lamell.filter.ytelser"/></label>
             <div>
-              <div wicket:id="ytelsesKnappeFilter">
-                <a href="" wicket:id="valgtYtelse.ytelse" class="knapp-filter">
-                    <wicket:container wicket:id="knappLabel">[]</wicket:container>
-                </a>
-              </div>
+              <wicket:container wicket:id="ytelsesKnappeFilter">
+                <input type="button" wicket:id="valgtYtelse.ytelse" class="knapp-filter" />
+              </wicket:container>
             </div>
         </div>
     </form>

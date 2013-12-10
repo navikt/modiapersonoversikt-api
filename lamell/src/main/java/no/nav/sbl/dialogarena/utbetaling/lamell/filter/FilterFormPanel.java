@@ -4,9 +4,11 @@ import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
@@ -98,7 +100,7 @@ public class FilterFormPanel extends Panel {
                         response.render(OnLoadHeaderItem.forScript(createSnurrepippJS("input:button", "click")));
                     }
                 };
-                knapp.add(new Label("knappLabel", knapp.getModelObject().valgtYtelse.getYtelse()));
+                knapp.add(new AttributeModifier("value", item.getModelObject().valgtYtelse.getYtelse()));
                 knapp.add(hasCssClassIf("valgt", knapp.getModelObject().valgtModell));
                 item.add(knapp);
             }
