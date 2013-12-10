@@ -52,7 +52,6 @@ public class Bilag implements Serializable {
         return periode;
     }
 
-
     public String getMelding() {
         return melding;
     }
@@ -77,7 +76,6 @@ public class Bilag implements Serializable {
         for (WSMelding wsMelding : meldingListe) {
             strings.add(wsMelding.getMeldingtekst());
         }
-
         return join(strings, ", ");
     }
 
@@ -85,7 +83,6 @@ public class Bilag implements Serializable {
         for (WSPosteringsdetaljer wsPosteringsdetaljer : detaljer) {
             posteringsDetaljer.add(new PosteringsDetalj(wsPosteringsdetaljer));
         }
-
         trekkUtSkatteOpplysninger(posteringsDetaljer);
     }
 

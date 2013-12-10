@@ -2,14 +2,16 @@ package no.nav.sbl.dialogarena.utbetaling.domain.oppsummering;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.sort;
+import static no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.UnderYtelse.UnderYtelseComparator.NAVN;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class HovedYtelse implements Serializable {
+
     public static class HovedYtelseComparator {
         public static final Comparator<HovedYtelse> NAVN = new Comparator<HovedYtelse>() {
             @Override
@@ -18,6 +20,7 @@ public class HovedYtelse implements Serializable {
             }
         };
     }
+
     private String hovedYtelsesBeskrivelse;
     private List<UnderYtelse> underYtelsesBeskrivelser;
     private String valuta;
@@ -29,7 +32,7 @@ public class HovedYtelse implements Serializable {
         for (Map.Entry<String, Double> indreEntry : ytelseUtbetalt.getValue().entrySet()) {
             underYtelsesBeskrivelser.add(new UnderYtelse(indreEntry, valuta));
         }
-        Collections.sort(underYtelsesBeskrivelser, UnderYtelse.UnderYtelseComparator.NAVN);
+        sort(underYtelsesBeskrivelser, NAVN);
     }
 
     public String getHovedYtelsesBeskrivelse() {

@@ -49,7 +49,7 @@ public class PosteringsDetalj implements Serializable {
         this.sats = wsPosteringsdetaljer.getSats();
         this.antall = wsPosteringsdetaljer.getAntall();
         this.belop = wsPosteringsdetaljer.getBelop();
-        this.skatt = "Skatt".equalsIgnoreCase(hovedBeskrivelse);
+        this.skatt = SKATT.equalsIgnoreCase(hovedBeskrivelse);
     }
     private String transformUnderBeskrivelse(String beskrUnder, String hovedBeskrivelse) {
         String beskr = beskrUnder != null && !beskrUnder.isEmpty() ? beskrUnder : hovedBeskrivelse;
