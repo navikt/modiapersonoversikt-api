@@ -4,7 +4,6 @@ import no.nav.kjerneinfo.common.mockutils.DateUtils;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktResponse;
-import no.nav.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory;
 import no.nav.kontrakter.consumer.utils.OppfolgingskontraktMapper;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppAktivitet;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppBruker;
@@ -22,6 +21,10 @@ import org.joda.time.LocalDateTime;
 
 import java.util.Date;
 
+import static no.nav.kjerneinfo.common.mockutils.DateUtils.convertDateTimeToXmlGregorianCalendar;
+import static no.nav.kjerneinfo.common.mockutils.DateUtils.convertDateToXmlGregorianCalendar;
+import static no.nav.kjerneinfo.common.mockutils.DateUtils.getRandomDatePair;
+import static no.nav.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory.YTELSESSTATUS_AKTIV;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -66,128 +69,75 @@ public class OppfolgingskontraktServiceBiMock {
     }
 
     private static FimOppPlan createPlan(String status, String type, String hovedmal, Date fra, Date til) {
-        FimOppPlan plan = new FimOppPlan();
-        plan.setHovedmaal(hovedmal);
-        if (fra == null) {
-            plan.setPeriode(createRandomPeriode());
-        } else {
-            plan.setPeriode(createPeriode(fra, til));
-        }
-        plan.setPlanstatus(status);
-        plan.setPlantype(type);
-        return plan;
+        return new FimOppPlan()
+                .withHovedmaal(hovedmal)
+                .withPlantype(type)
+                .withPlanstatus(status)
+                .withPeriode(fra == null ? createRandomPeriode() : createPeriode(fra, til));
     }
 
     private static FimOppPeriode createPeriode(Date fom, Date tom) {
-        FimOppPeriode periode = new FimOppPeriode();
-        periode.setFom(DateUtils.convertDateToXmlGregorianCalendar(fom));
-        periode.setTom(DateUtils.convertDateToXmlGregorianCalendar(tom));
-        return periode;
+        return new FimOppPeriode()
+                .withFom(convertDateToXmlGregorianCalendar(fom))
+                .withTom(convertDateToXmlGregorianCalendar(tom));
     }
 
     private static FimOppPeriode createRandomPeriode() {
-        Date[] datePair = DateUtils.getRandomDatePair();
+        Date[] datePair = getRandomDatePair();
         return createPeriode(datePair[0], datePair[1]);
     }
 
 
     private static FimOppTiltaksaktivitet createTiltaksaktivitet(String status, String deltakelsestatus, Date fra, Date til) {
-        FimOppTiltaksaktivitet aktivitet = new FimOppTiltaksaktivitet();
-        aktivitet.setStatus(status);
-        if (fra == null) {
-            aktivitet.setPeriode(createRandomPeriode());
-        } else {
-            aktivitet.setPeriode(createPeriode(fra, til));
-        }
-        aktivitet.setAktivitetsnavn("Tiltaksaktivitetnavn");
-        aktivitet.setTiltaksdeltakelsestatus(deltakelsestatus);
-        return aktivitet;
+        return new FimOppTiltaksaktivitet()
+                .withStatus(status)
+                .withAktivitetsnavn("Tiltaksaktivitetnavn")
+                .withTiltaksdeltakelsestatus(deltakelsestatus)
+                .withPeriode(fra == null ? createRandomPeriode() : createPeriode(fra, til));
     }
 
     private static FimOppAktivitet createAktivitet(String navn, String status, Date fra, Date til, boolean sensitiv) {
-        FimOppAktivitet aktivitet = new FimOppAktivitet();
-        aktivitet.setAktivitetsnavn(navn);
-        if (fra == null) {
-            aktivitet.setPeriode(createRandomPeriode());
-        } else {
-            aktivitet.setPeriode(createPeriode(fra, til));
-        }
-        aktivitet.setStatus(status);
-        aktivitet.setSensitiv(sensitiv);
-        return aktivitet;
+        return new FimOppAktivitet()
+                .withAktivitetsnavn(navn)
+                .withStatus(status)
+                .withSensitiv(sensitiv)
+                .withPeriode(fra == null ? createRandomPeriode() : createPeriode(fra, til));
     }
 
     private static FimOppOppfoelgingspunkt createOppfoelgingspunkt(String type, String status, LocalDateTime trefftidspunkt) {
-        FimOppOppfoelgingspunkt punkt = new FimOppOppfoelgingspunkt();
-        punkt.setDato(DateUtils.convertDateTimeToXmlGregorianCalendar(trefftidspunkt));
-        punkt.setStatus(status);
-        punkt.setType(type);
-        return punkt;
+        return new FimOppOppfoelgingspunkt()
+                .withDato(convertDateTimeToXmlGregorianCalendar(trefftidspunkt))
+                .withStatus(status)
+                .withType(type);
     }
 
     private static FimOppYtelseskontrakt createYtelseskontrakt(String status, String type, Date datoKravMottat) {
-        FimOppYtelseskontrakt kontrakt = new FimOppYtelseskontrakt();
-
-        if (datoKravMottat == null) {
-            kontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(new Date()));
-        } else {
-            kontrakt.setDatoKravMottatt(DateUtils.convertDateToXmlGregorianCalendar(datoKravMottat));
-        }
-
-        if (status == null) {
-            kontrakt.setStatus("YtelseskontraktStatus");
-        } else {
-            kontrakt.setStatus(status);
-        }
-
-        if (type == null) {
-            kontrakt.setYtelsestype("Ytelsestype");
-        } else {
-            kontrakt.setYtelsestype(type);
-        }
-        return kontrakt;
+        return new FimOppYtelseskontrakt()
+                .withDatoKravMottatt(datoKravMottat == null ? convertDateToXmlGregorianCalendar(new Date()) : convertDateToXmlGregorianCalendar(datoKravMottat))
+                .withStatus(status == null ? "YtelseskontraktStatus" : status)
+                .withYtelsestype(type == null ? "Ytelsestype" : type);
     }
 
     private static FimOppVedtak createVedtak(String status, Date fra, Date til, Date datoKravMottatt) {
-        FimOppVedtak vedtak = new FimOppVedtak();
-        if (status == null) {
-            vedtak.setStatus(YtelseskontraktMockFactory.YTELSESSTATUS_AKTIV);
-        } else {
-            vedtak.setStatus(status);
-        }
-
-        if (fra == null) {
-            vedtak.setVedtaksperiode(createPeriode(new Date(), new Date()));
-        } else {
-            vedtak.setVedtaksperiode(createPeriode(fra, til));
-        }
-
-        if (datoKravMottatt == null) {
-            vedtak.setOmYtelse(createYtelseskontrakt(null, null, new Date()));
-        } else {
-            vedtak.setOmYtelse(createYtelseskontrakt(null, null, datoKravMottatt));
-        }
-        return vedtak;
+        return new FimOppVedtak()
+                .withStatus(status == null ? YTELSESSTATUS_AKTIV : status)
+                .withVedtaksperiode(fra == null ? createRandomPeriode() : createPeriode(fra, til))
+                .withOmYtelse(datoKravMottatt == null ? createYtelseskontrakt(null, null, new Date()) : createYtelseskontrakt(null, null, datoKravMottatt));
     }
 
     private static FimOppBruker createBruker() {
-        FimOppBruker bruker = new FimOppBruker();
-        bruker.setFormidlingsgruppe("50000");
-        bruker.withServicegruppe(createServicegruppe());
-        bruker.withMeldeplikt(createMeldeplikt());
-        return bruker;
+        return new FimOppBruker()
+            .withFormidlingsgruppe("50000")
+            .withServicegruppe(createServicegruppe())
+            .withMeldeplikt(createMeldeplikt());
     }
 
     private static FimOppMeldeplikt createMeldeplikt() {
-        FimOppMeldeplikt meldeplikt = new FimOppMeldeplikt();
-        meldeplikt.setMeldeplikt(true);
-        return meldeplikt;
+        return new FimOppMeldeplikt().withMeldeplikt(true);
     }
 
     private static FimOppServiceGruppe createServicegruppe() {
-        FimOppServiceGruppe serviceGruppe = new FimOppServiceGruppe();
-        serviceGruppe.setServiceGruppe("Servicegruppe");
-        return serviceGruppe;
+        return new FimOppServiceGruppe().withServiceGruppe("Servicegruppe");
     }
 
 }
