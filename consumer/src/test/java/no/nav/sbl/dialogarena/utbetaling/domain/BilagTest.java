@@ -6,7 +6,9 @@ import org.junit.Test;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.*;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling1;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling4;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling5;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
