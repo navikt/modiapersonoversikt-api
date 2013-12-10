@@ -3,8 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.jettyrunner.JettyNormal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.jettyrunner.JettyRunner;
 
-import java.io.IOException;
-
 import static java.lang.System.setProperty;
 
 
@@ -16,7 +14,7 @@ import static java.lang.System.setProperty;
  */
 public class StartJetty {
 
-    public static void main(String[] args) throws IOException, NoSuchFieldException, IllegalAccessException {
+    public static void main(String[] args) {
         getJetty().run();
     }
 
