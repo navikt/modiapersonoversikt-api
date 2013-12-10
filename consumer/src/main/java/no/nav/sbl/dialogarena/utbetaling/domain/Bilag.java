@@ -37,9 +37,7 @@ public class Bilag implements Serializable {
         melding = transformMelding(wsBilag);
         posteringsDetaljer = new ArrayList<>();
         periode = new Periode(wsBilag.getBilagPeriode());
-        for (WSPosteringsdetaljer wsPosteringsdetaljer : wsBilag.getPosteringsdetaljerListe()) {
-            posteringsDetaljer.add(new PosteringsDetalj(wsPosteringsdetaljer));
-        }
+        transformPosteringsDetaljer(wsBilag.getPosteringsdetaljerListe());
     }
 
     public Map<String, Double> getBelopPerYtelse() {
@@ -50,10 +48,10 @@ public class Bilag implements Serializable {
         return ytelsesBetaling;
     }
 
-
     public Periode getPeriode() {
         return periode;
     }
+
 
     public String getMelding() {
         return melding;
@@ -81,5 +79,53 @@ public class Bilag implements Serializable {
         }
 
         return join(strings, ", ");
+    }
+
+    private void transformPosteringsDetaljer(List<WSPosteringsdetaljer> detaljer) {
+        for (WSPosteringsdetaljer wsPosteringsdetaljer : detaljer) {
+            posteringsDetaljer.add(new PosteringsDetalj(wsPosteringsdetaljer));
+        }
+
+        trekkUtSkatteOpplysninger(posteringsDetaljer);
+    }
+
+
+    /**
+     * Kobler skattetrekket til den ytelsen som gjenstas oftest i bilaget.
+     */
+    private static void trekkUtSkatteOpplysninger(List<PosteringsDetalj> detaljer) {
+        List<PosteringsDetalj> skatteDetaljer = new ArrayList<>();
+        for (PosteringsDetalj detalj : detaljer) {
+            if (detalj.isSkatt()) {
+                skatteDetaljer.add(detalj);
+            }
+        }
+        if (skatteDetaljer.isEmpty()) {
+            return;
+        }
+        PosteringsDetalj detalj = finnVanligsteYtelse(detaljer);
+        String beskrivelse = detalj.getHovedBeskrivelse();
+        for (PosteringsDetalj skatt : skatteDetaljer) {
+            skatt.setHovedBeskrivelse(beskrivelse);
+        }
+    }
+
+    /**
+     * Henter ut ytelsen med høyest frekvens i listen av posteringsdetaljer
+     */
+    private static PosteringsDetalj finnVanligsteYtelse(List<PosteringsDetalj> detaljer1) {
+        Map<String, Integer> frekvens = new HashMap<>();
+        int highestCount = 0;
+        PosteringsDetalj pdetalj = null;
+        for (PosteringsDetalj detalj : detaljer1) {
+            String key = detalj.getHovedBeskrivelse();
+            Integer count = 1 + (frekvens.get(key) != null ? frekvens.get(key) : 0);
+            if (count > highestCount) {
+                highestCount = count;
+                pdetalj = detalj;
+            }
+            frekvens.put(key, count);
+        }
+        return pdetalj;
     }
 }
