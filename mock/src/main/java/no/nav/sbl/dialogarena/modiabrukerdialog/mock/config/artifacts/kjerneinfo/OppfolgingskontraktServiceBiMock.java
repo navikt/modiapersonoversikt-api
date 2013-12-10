@@ -5,6 +5,7 @@ import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktSer
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktRequest;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.OppfolgingskontraktResponse;
 import no.nav.kontrakter.consumer.utils.OppfolgingskontraktMapper;
+import no.nav.kontrakter.domain.oppfolging.SYFOPunkt;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppAktivitet;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppBruker;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppMeldeplikt;
@@ -19,12 +20,15 @@ import no.nav.tjeneste.virksomhet.oppfoelging.v1.informasjon.FimOppYtelseskontra
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.meldinger.FimOppHentOppfoelgingskontraktListeResponse;
 import org.joda.time.LocalDateTime;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import static no.nav.kjerneinfo.common.mockutils.DateUtils.convertDateTimeToXmlGregorianCalendar;
 import static no.nav.kjerneinfo.common.mockutils.DateUtils.convertDateToXmlGregorianCalendar;
 import static no.nav.kjerneinfo.common.mockutils.DateUtils.getRandomDatePair;
 import static no.nav.kontrakter.consumer.fim.ytelseskontrakt.mock.YtelseskontraktMockFactory.YTELSESSTATUS_AKTIV;
+import static org.joda.time.LocalDate.now;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -40,7 +44,20 @@ public class OppfolgingskontraktServiceBiMock {
     private static OppfolgingskontraktResponse lagOppfolgingsMockRespons() {
         FimOppHentOppfoelgingskontraktListeResponse respons = new FimOppHentOppfoelgingskontraktListeResponse();
         respons.withOppfoelgingskontraktListe(createOppfoelgingskontrakt());
-        return new OppfolgingskontraktMapper().map(respons, OppfolgingskontraktResponse.class);
+        OppfolgingskontraktResponse returRespons = new OppfolgingskontraktMapper().map(respons, OppfolgingskontraktResponse.class);
+        returRespons.setSyfoPunkter(createSYFOpunkter());
+        return returRespons;
+    }
+
+    private static List<SYFOPunkt> createSYFOpunkter() {
+        List<SYFOPunkt> syfoPunkter = new ArrayList<>();
+        SYFOPunkt syfoPunkt = new SYFOPunkt();
+        syfoPunkt.setSyfoHendelse("Mottatt rapport");
+        syfoPunkt.setStatus("Godkjent");
+        syfoPunkt.setDato(now().minusMonths(1));
+        syfoPunkter.add(syfoPunkt);
+        syfoPunkter.add(syfoPunkt);
+        return syfoPunkter;
     }
 
     private static FimOppOppfoelgingskontrakt createOppfoelgingskontrakt() {
