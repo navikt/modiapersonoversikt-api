@@ -63,7 +63,7 @@ public class UtbetalingVMTest {
         assertThat(utbetaling.getBeskrivelse(), is(equalTo(utbetalingVM.getBeskrivelse())));
         assertThat(utbetaling.getPeriode().getPeriode(), is(equalTo(utbetalingVM.getPeriode())));
         assertThat(utbetaling.getValuta(), is(equalTo(utbetalingVM.getValuta())));
-        assertThat(utbetaling.getStatuskode(), is(equalTo(utbetalingVM.getStatus())));
+        assertThat(utbetaling.getStatusBeskrivelse(), is(equalTo(utbetalingVM.getStatus())));
         assertThat(utbetaling.getStartDate(), is(equalTo(utbetalingVM.getStartDato())));
         assertThat(utbetaling.getEndDate(), is(equalTo(utbetalingVM.getSluttDato())));
         assertThat(utbetaling.getUtbetalingId(), is(equalTo(utbetalingVM.getUtbetalingId())));

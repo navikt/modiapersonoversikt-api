@@ -1,107 +1,192 @@
-.utbetalinglamell {
-  margin: 0px;
-  padding: 0px;
-  width: 900px;
+@kolonneVenstreWidth: 35%;
+@kolonneHoyreWidth: 65%;
+@borderColor: #d1cfcf;
+@boxGray: #f1f1f1;
+@sidePadding: 2rem;
+@toppBunnPadding: 1.5rem;
 
-  .oppsummering{
-    padding-top: 40px;
-    padding-bottom: 40px;
-    width: 100%;
+.kolonne-venstre {
+  float: left;
+  padding-right: @sidePadding;
+  width: @kolonneVenstreWidth;
 
-    .element {
-      display: inline-block;
-      padding-right: 20px;
-      label {
-        display: block;
-        cursor: default;
-      }
-      span {
-        display: block;
-      }
-    }
+  .arena-lenke {
+    font-family: "Modus", Helvetica, Arial, sans-serif;
+    font-size: 1.3rem;
+    font-weight: bold;
+    display: block;
+    color: #0ca9e1;
   }
 
   .filter-form {
-    border-top: 1px solid #d6cece;
-    border-bottom: 1px solid #d6cece;
-    padding: 1rem 0 2rem 0;
-    .utbetaling-til-filter {
+    .filter-block {
+      margin-top: 3rem;
+      label {
+        cursor: default;
+        font-size: 0.875rem !important;
+      }
+      div {
+        text-align: center;
+        border: 1px solid @borderColor;
+        background-color: @boxGray;
+        padding: @toppBunnPadding @sidePadding;
+        margin-top: 0.4rem;
+      }
+    }
+
+    .knapp-filter {
+      width: 100%;
+      padding-top: 5px;
+      padding-bottom: 5px;
+      margin-bottom: 0.5rem;
+      text-align: left;
+      &.valgt {
+        color: white;
+        background-color: #8c8c8c;
+        background-image: none;
+        box-shadow: inset 0 0 10px #7b7b7b;
+      }
+      &:last-of-type {
+        margin: 0;
+      }
+    }
+
+    .dato-plukker-filter {
       display: inline-block;
       label {
-        display: block;
-        cursor: default;
-      }
-      .knapp-utbetaling-til-filter {
-        width: 12em;
-        padding-top: 5px;
-        padding-bottom: 5px;
+        display: inline-block;
         margin: 0;
-        &.valgt {
-          color: white;
-          background-color: #8c8c8c;
-          background-image: none;
-          box-shadow: inset 0 0 10px #7b7b7b;
-          &:first-child {
-            border-right: 0;
-          }
-          &:last-child {
-            border-left: 0;
-          }
+        width: 49%;
+        text-align: left;
+        &:nth-child(1) {
+          float: left;
+        }
+        &:nth-child(2) {
+          float: right;
+        }
+        input {
+          width: 100%;
         }
       }
     }
-    .dato-plukker-filter {
-      display: inline-block;
-      margin-left: 4rem;
-      label {
-        display: inline-block;
-        span {
-          display: block;
-        }
+  }
+}
+
+.kolonne-hoyre {
+  position: relative;
+  width: @kolonneHoyreWidth;
+  float: right;
+  font-family: 'Modus', Helvetica, Arial, sans-serif;
+
+  #modiaAjaxLoader {
+    position: absolute;
+    top: 8px;
+  }
+
+  .element {
+    display: inline-block;
+    text-transform: uppercase;
+    padding-right: 1rem;
+    font-weight: 600;
+    label {
+      width: auto;
+      display: block;
+      margin: 0;
+    }
+  }
+
+  .utbetaling-ramme {
+    margin-bottom: 2rem;
+    border: 1px solid @borderColor;
+
+    .utbetaling-ramme-header {
+      padding: 1rem 0;
+      font-weight: 600;
+      font-size: 1.3rem;
+      text-align: center;
+      background-color: @boxGray;
+      border-bottom: 1px solid @borderColor;
+      text-transform: uppercase;
+    }
+    .utbetaling-ramme-innhold {
+      background-color: white;
+      font-size: 0.9rem;
+    }
+  }
+
+  .oppsummering-total {
+    width: 100%;
+    padding: @toppBunnPadding @sidePadding;
+    cursor: pointer;
+    table {
+      border-top: 1px solid @borderColor;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      text-align: left;
+      width: 100%;
+      th {
+        text-transform: uppercase;
+        font-weight: normal;
+        color: #B7B1A9;
+        font-size: 0.857rem;
+      }
+      td {
+        padding-right: 10px;
+      }
+      tbody:not(:first-of-type) tr:first-child td {
+        padding-top: 0.5rem;
+      }
+      tbody:not(:last-of-type) tr:last-child td {
+        padding-bottom: 0.5rem;
+        border-bottom: 1px solid @borderColor;
+      }
+      .hovedytelse {
+        font-weight: bold;
       }
     }
   }
 
   .utbetalinger {
-    .utbetaling-linje {
-      border-bottom: 1px solid #d6cece;
-      .main{
-        display: inline-block;
-        margin-bottom: 1em;
-        width: 75%;
-        .type {
+    .oppsummeringslinje {
+      background-color: #333333;
+      color: #b7b1a9;
+      padding: @toppBunnPadding @sidePadding;
+      .element{
+        label {
+          cursor: default;
+        }
+        &:first-of-type {
+          label {
+            display: none;
+          }
           span {
-            float: right;
-          }
-          * {
-            margin: 1rem 0 1rem 0;
-            color: black;
-            font-size: 1.5rem;
-          }
-        }
-        .kontonummer, .periode {
-          display: inline-block;
-          * {
-            margin: 0;
+            font-size: 1.2rem;
             display: block;
+            margin-top: 10px;
           }
         }
-        * {
-          margin-right: 2rem;
+        &:not(:first-of-type) {
+          float: right;
         }
       }
-      .status{
-        display: inline-block;
-        width: 14%;
+    }
+    .utbetalingslinje {
+      padding: @toppBunnPadding @sidePadding;
+      border-bottom: 1px solid @borderColor;
+      cursor: pointer;
+      &:last-of-type {
+        border: none;
       }
-      .dropdown{
-        float: right;
-        display: inline-block;
-        text-align: center;
-      }
-      .bilag-liste {
-        .bilag {
-          margin-bottom: 1em;
+      .statusindikator {
+        * {
+          display: inline-block;
+          vertical-align: middle;
+        }
+        .dot {
+          height: 1rem;
+          width: 1rem;
+          background-color: #0ca9e1;
+          border-radius: 50%;
         }
       }
     }

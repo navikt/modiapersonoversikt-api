@@ -1,0 +1,45 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<wicket:panel>
+
+    <div>
+        <wicket:message key="mottatt.label"/>
+        <span wicket:id="mottatt"></span>
+    </div>
+    <div>
+        <wicket:message key="konto.label"/>
+        <span wicket:id="konto"></span>
+    </div>
+    <div>
+        <wicket:message key="ytelsesinfo.label"/>
+        <span wicket:id="ytelsesinfo"></span>
+    </div>
+    <div>
+        <wicket:message key="periode.label"/>
+        <span wicket:id="periode"></span>
+    </div>
+
+        <div wicket:id="bilag-liste" class="bilag-liste">
+            <div class="bilag">
+                <p wicket:id="melding"></p>
+
+                <div wicket:id="posteringsdetalj-liste" class="posteringsdetalj-liste">
+                    <span wicket:id="hovedbeskrivelse"></span>
+                    <span wicket:id="underbeskrivelse"></span>
+                    <div>
+                        <wicket:message key="utbetaling.lamell.utbetaling.konto"/>
+                        <span wicket:id="kontonr"></span>
+                    </div>
+                    <div>
+                        <wicket:message key="utbetaling.lamell.utbetaling.antall"/>
+                        <span wicket:id="antall"></span>
+                    </div>
+                    <div>
+                        <wicket:message key="utbetaling.lamell.utbetaling.sats"/>
+                        <span wicket:id="sats"></span>
+                    </div>
+                </div>
+            </div>
+    </div>
+
+</wicket:panel>
+</html>

@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import static org.joda.time.DateTime.parse;
 import static org.joda.time.format.DateTimeFormat.forPattern;
@@ -50,6 +51,9 @@ public class Periode implements Serializable {
     }
 
     public String getPeriodeString(Transformer<DateTime, String> datoFormat) {
+        if (startDato.getMonthOfYear() == sluttDato.getMonthOfYear()) {
+            return startDato.toString("MMMM", Locale.forLanguageTag("nb"));
+        }
         return datoFormat.transform(startDato) + " " + DELIMITER + " " + datoFormat.transform(sluttDato);
     }
 

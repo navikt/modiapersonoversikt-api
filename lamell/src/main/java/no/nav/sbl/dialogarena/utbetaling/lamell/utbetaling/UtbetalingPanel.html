@@ -1,52 +1,31 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
 
-    <div class="utbetaling-linje">
-        <button wicket:id="expandbutton" class="dropdown">V</button>
-        <div class="main">
-            <div class="status" wicket:id="statuskode"></div>
+    <div class="main">
+        <div class="statusindikator">
+            <div class="dot"></div>
             <div class="dato" wicket:id="kortUtbetalingsDato"></div>
-            <div class="type">
-                <label wicket:id="beskrivelse"></label><span wicket:id="belopMedValuta"></span>
-            </div>
-            <div class="kontonummer">
-                <label><wicket:message key="utbetaling.lamell.utbetaling.konto"/></label>
-                <span wicket:id="kontoNr"></span>
-            </div>
-            <div class="periode">
-                <label><wicket:message key="utbetaling.lamell.utbetaling.periode"/></label>
-                <span wicket:id="periodeMedKortDato"></span>
-            </div>
-            <div>
-                <span wicket:id="mottaker.navn"/>
-            </div>
+            <div class="status" wicket:id="statusBeskrivelse"></div>
         </div>
-
-        <div wicket:id="bilagWrapper">
-            <div wicket:id="bilag-liste" class="bilag-liste">
-                <div class="bilag">
-                    <p wicket:id="melding"></p>
-
-                    <div wicket:id="posteringsdetalj-liste" class="posteringsdetalj-liste">
-                        <span wicket:id="hovedbeskrivelse"></span>
-                        <span wicket:id="underbeskrivelse"></span>
-                        <div>
-                            <wicket:message key="utbetaling.lamell.konto"/>
-                            <span wicket:id="kontonr"></span>
-                        </div>
-                        <div>
-                            <wicket:message key="utbetaling.lamell.antall"/>
-                            <span wicket:id="antall"></span>
-                        </div>
-                        <div>
-                            <wicket:message key="utbetaling.lamell.sats"/>
-                            <span wicket:id="sats"></span>
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="element">
+            <label wicket:id="beskrivelse"></label>
+            <span wicket:id="periodeMedKortDato"></span>
+        </div>
+        <div class="element">
+            <label><wicket:message key="utbetaling.lamell.utbetaling.brutto"/></label>
+            <span wicket:id="bruttoBelopMedValuta"></span>
+        </div>
+        <div class="element">
+            <label><wicket:message key="utbetaling.lamell.utbetaling.trekk"/></label>
+            <span wicket:id="trekkMedValuta"></span>
+        </div>
+        <div class="element">
+            <label><wicket:message key="utbetaling.lamell.utbetaling.utbetalt"/></label>
+            <span wicket:id="belopMedValuta"></span>
         </div>
     </div>
+
+    <div wicket:id="detaljpanel"/>
 
 </wicket:panel>
 </html>

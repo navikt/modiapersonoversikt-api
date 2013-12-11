@@ -107,7 +107,7 @@ public class UtbetalingTest {
     @Test
     public void skalTransformereUtbetaling() throws Exception {
         WSUtbetaling wsUtbetaling = WSUtbetalingTestData.createUtbetaling1();
-        String alderspensjon = "Alderspensjon";
+        String dagpenger = "Dagpenger";
         String kontoNr = "***REMOVED***";
         String fnr = "12345678978";
 
@@ -118,8 +118,8 @@ public class UtbetalingTest {
         assertThat(u.getEndDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato()));
         assertThat(u.getNettoBelop(), is(wsUtbetaling.getNettobelop()));
         assertThat(u.getBruttoBelop(), is(wsUtbetaling.getBruttobelop()));
-        assertThat(u.getBeskrivelse(), is(alderspensjon));
-        assertThat(u.getStatuskode(), is(wsUtbetaling.getStatusKode()));
+        assertThat(u.getBeskrivelse(), is(dagpenger));
+        assertThat(u.getStatusBeskrivelse(), is(wsUtbetaling.getStatusBeskrivelse()));
         assertThat(u.getKontoNr(), is(kontoNr));
 
         assertThat(u.getBilag().size(), is(wsUtbetaling.getBilagListe().size()));

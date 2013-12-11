@@ -15,7 +15,7 @@ import javax.jws.WebParam;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.getWsUtbetalinger;
 
 @Configuration
-public class UtbetalingStubConfig {
+public class UtbetalingPortTypeStubConfig {
 
     private static final String FNR = "***REMOVED***";
 

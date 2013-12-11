@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.joda.time.DateTime;
@@ -16,18 +15,20 @@ import java.util.TreeSet;
 
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerMapVerdier;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static org.apache.commons.lang3.StringUtils.join;
-import static org.joda.time.LocalDate.now;
+import static org.joda.time.DateTime.now;
 
 public class Utbetaling implements Serializable {
 
-    public static final LocalDate DEFAULT_STARTDATO = now().minusMonths(3);
-    public static final LocalDate DEFAULT_SLUTTDATO = now();
-
+    public static final LocalDate DEFAULT_STARTDATO = now().minusMonths(3).toLocalDate();
+    public static final LocalDate DEFAULT_SLUTTDATO = now().toLocalDate();
+    private static final String VALUTA = "NOK";
     private final String utbetalingId;
     private String fnr;
     private List<Bilag> bilag = new ArrayList<>();
-    private String statuskode;
+    private String statusBeskrivelse;
     private DateTime utbetalingsDato;
     private double bruttoBelop;
     private double nettoBelop;
@@ -38,10 +39,10 @@ public class Utbetaling implements Serializable {
     private Periode periode;
 
     //CHECKSTYLE:OFF
-    Utbetaling(String fnr, List<Bilag> bilag, String statuskode, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode, double trekk) {
+    Utbetaling(String fnr, List<Bilag> bilag, String status, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode, double trekk) {
         this.fnr = fnr;
         this.bilag = bilag;
-        this.statuskode = statuskode;
+        this.statusBeskrivelse = status;
         this.utbetalingsDato = utbetalingsDato;
         this.bruttoBelop = bruttoBelop;
         this.nettoBelop = nettoBelop;
@@ -59,7 +60,7 @@ public class Utbetaling implements Serializable {
             bilag.add(new Bilag(wsBilag));
         }
         this.fnr = fnr;
-        this.statuskode = wsUtbetaling.getStatusKode();
+        this.statusBeskrivelse = wsUtbetaling.getStatusBeskrivelse();
         this.utbetalingsDato = wsUtbetaling.getUtbetalingDato();
         this.bruttoBelop = wsUtbetaling.getBruttobelop();
         this.nettoBelop = wsUtbetaling.getNettobelop();
@@ -70,7 +71,6 @@ public class Utbetaling implements Serializable {
         this.mottaker = new Mottaker(fnr, wsUtbetaling.getUtbetalingMottaker());
         this.periode = new Periode(wsUtbetaling.getUtbetalingsPeriode());
     }
-
 
     public String getFnr() {
         return fnr;
@@ -108,8 +108,8 @@ public class Utbetaling implements Serializable {
         return periode;
     }
 
-    public String getStatuskode() {
-        return statuskode;
+    public String getStatusBeskrivelse() {
+        return statusBeskrivelse;
     }
 
     public DateTime getUtbetalingsDato() {
@@ -140,22 +140,27 @@ public class Utbetaling implements Serializable {
         return optional(periode.getStartDato()).map(KORT).getOrElse("") + " - " + optional(periode.getSluttDato()).map(KORT).getOrElse("");
     }
 
-    public String getBelopMedValuta() {
-        return ValutaUtil.getBelopString(this.nettoBelop, this.valuta);
+    public String getBruttoBelopMedValuta() {
+        return getBelopString(bruttoBelop);
     }
 
-    public boolean harYtelse(String ytelse){
+    public String getTrekkMedValuta() {
+        return getBelopString(trekk);
+    }
+
+    public String getBelopMedValuta() {
+        return getBelopString(nettoBelop);
+    }
+
+    public boolean harYtelse(String ytelse) {
         return getBeskrivelser().contains(ytelse);
     }
 
-    public Map<String, Double> getBelopPerYtelse(){
+    public Map<String, Double> getBelopPerYtelser() {
         Map<String, Double> oppsummert = new HashMap<>();
         for (Bilag bilag1 : bilag) {
-            Map<String,Double> belopPerYtelse = bilag1.getBelopPerYtelse();
-            for (String key : belopPerYtelse.keySet()) {
-                Double belop = belopPerYtelse.get(key) + (oppsummert.get(key) != null? oppsummert.get(key) : 0.0 );
-                oppsummert.put(key, belop);
-            }
+            Map<String, Double> belopPerYtelse = bilag1.getBelopPerYtelse();
+            summerMapVerdier(oppsummert, belopPerYtelse);
         }
         return oppsummert;
     }
@@ -169,7 +174,7 @@ public class Utbetaling implements Serializable {
     }
 
     private String transformValuta(String wsValuta) {
-        return (wsValuta == null || wsValuta.isEmpty()) ? "kr" : wsValuta;
+        return (wsValuta == null || wsValuta.isEmpty()) ? VALUTA : wsValuta;
     }
 
     private Set<String> getKontoNrFromBilag() {

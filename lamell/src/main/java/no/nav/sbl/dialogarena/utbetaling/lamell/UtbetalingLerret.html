@@ -1,25 +1,25 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
 
-    <div class="utbetalinglamell">
-        <div wicket:id="feedbackpanel"/>
+    <div class="kolonne-venstre">
+        <label><wicket:message key="utbetaling.lamell.arena-link-label"/></label>
+        <a href="#" wicket:id="arenalink" class="arena-lenke"><wicket:message key="utbetaling.lamell.arena-link-tekst"/></a>
+        <wicket:container wicket:id="filterFormPanel"/>
+    </div>
 
-        <form wicket:id="filterForm" class="filter-form">
-            <div class="utbetaling-til-filter">
-                <label>Utbetaling til</label>
-                <input type="button" wicket:id="visBruker" value="Bruker" class="knapp-utbetaling-til-filter"/><!-- Denne fjerner whitespace mellom elementene
-                --><input type="button" wicket:id="visArbeidsgiver" value="Arbeidsgiver"
-                          class="knapp-utbetaling-til-filter"/>
+    <div class="kolonne-hoyre">
+        <div class="utbetaling-ramme">
+            <div class="utbetaling-ramme-header"><wicket:message key="utbetaling.lamell.oppsummering-total-overskrift"/></div>
+            <div class="utbetaling-ramme-innhold oppsummering-total" wicket:id="totalOppsummeringPanel"></div>
+        </div>
+
+        <div class="utbetaling-ramme">
+            <div class="utbetaling-ramme-header"><wicket:message key="utbetaling.lamell.utbetalinger-utfort"/></div>
+            <div class="utbetaling-ramme-innhold utbetalinger" wicket:id="utbetalingslisteContainer">
+                <wicket:container wicket:id="maanedsPaneler">
+                    <wicket:container wicket:id="maanedsPanel"/>
+                </wicket:container>
             </div>
-            <div wicket:id="datoFilter" class="dato-plukker-filter"/>
-        </form>
-
-        <div wicket:id="totalOppsummeringPanel"></div>
-
-        <div wicket:id="utbetalingslisteContainer" class="utbetalinger">
-            <wicket:container wicket:id="maanedsPaneler">
-                <wicket:container wicket:id="maanedsPanel"/>
-            </wicket:container>
         </div>
     </div>
 
