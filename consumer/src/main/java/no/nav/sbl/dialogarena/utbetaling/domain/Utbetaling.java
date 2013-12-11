@@ -131,10 +131,10 @@ public class Utbetaling implements Serializable {
     public double getTrekk() {
         return trekk;
     }
-//
-//    public String getKortUtbetalingsDato() {
-//        return optional(utbetalingsDato).map(KORT).getOrElse("Ingen utbetalingsdato");
-//    }
+
+    public String getKortUtbetalingsDato() {
+        return optional(utbetalingsDato).map(KORT).getOrElse("Ingen utbetalingsdato");
+    }
 
     public String getPeriodeMedKortDato() {
         return optional(periode.getStartDato()).map(KORT).getOrElse("") + " - " + optional(periode.getSluttDato()).map(KORT).getOrElse("");
