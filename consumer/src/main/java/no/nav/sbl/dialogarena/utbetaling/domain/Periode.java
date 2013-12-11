@@ -109,4 +109,9 @@ public class Periode implements Serializable {
             sluttDato = null;
         }
     }
+
+    public static Interval intervall(LocalDate start, LocalDate slutt) {
+    	return new Interval(start.toDateTimeAtStartOfDay(), slutt.toDateTimeAtStartOfDay());
+    }
+
 }
