@@ -47,9 +47,9 @@ public class UtbetalingsHolderTest {
         Utbetaling utbetaling2 = new UtbetalingBuilder().setUtbetalingsDato(dato2).createUtbetaling();
 
         List<Utbetaling> utbetalinger = asList(utbetaling1, utbetaling2);
-        when(utbetalingService.hentUtbetalinger(FNR, dato1, dato2)).thenReturn(utbetalinger);
-        utbetalingsHolder.getResultat().refreshUtbetalinger(dato1, dato2);
-        List<Utbetaling> utbetalingsResultat = utbetalingsHolder.getResultat().hentUtbetalinger(periodeStart, periodeSlutt);
+        when(utbetalingService.hentUtbetalinger(FNR, dato1.toLocalDate(), dato2.toLocalDate())).thenReturn(utbetalinger);
+        utbetalingsHolder.getResultat().refreshUtbetalinger(dato1.toLocalDate(), dato2.toLocalDate());
+        List<Utbetaling> utbetalingsResultat = utbetalingsHolder.getResultat().hentUtbetalinger(periodeStart.toLocalDate(), periodeSlutt.toLocalDate());
 
         assertThat(utbetalingsResultat.size(), is(2));
         assertThat(utbetalingsResultat.get(0).getBeskrivelse(), is(utbetaling1.getBeskrivelse()));
@@ -69,9 +69,9 @@ public class UtbetalingsHolderTest {
         Utbetaling utbetaling2 = new UtbetalingBuilder().setUtbetalingsDato(dato2).createUtbetaling();
 
         List<Utbetaling> utbetalinger = asList(utbetaling1, utbetaling2);
-        when(utbetalingService.hentUtbetalinger(FNR, dato1, dato2)).thenReturn(utbetalinger);
-        utbetalingsHolder.getResultat().refreshUtbetalinger(dato1, dato2);
-        List<Utbetaling> utbetalingsResultat = utbetalingsHolder.getResultat().hentUtbetalinger(periodeStart, periodeSlutt);
+        when(utbetalingService.hentUtbetalinger(FNR, dato1.toLocalDate(), dato2.toLocalDate())).thenReturn(utbetalinger);
+        utbetalingsHolder.getResultat().refreshUtbetalinger(dato1.toLocalDate(), dato2.toLocalDate());
+        List<Utbetaling> utbetalingsResultat = utbetalingsHolder.getResultat().hentUtbetalinger(periodeStart.toLocalDate(), periodeSlutt.toLocalDate());
 
         assertThat(utbetalingsResultat.size(), is(1));
         assertThat(utbetalingsResultat.get(0).getBeskrivelse(), is(utbetaling1.getBeskrivelse()));
@@ -89,9 +89,9 @@ public class UtbetalingsHolderTest {
         Utbetaling utbetaling2 = new UtbetalingBuilder().setUtbetalingsDato(dato2).createUtbetaling();
 
         List<Utbetaling> utbetalinger = asList(utbetaling1, utbetaling2);
-        when(utbetalingService.hentUtbetalinger(FNR, dato1, dato2)).thenReturn(utbetalinger);
-        utbetalingsHolder.getResultat().refreshUtbetalinger(dato1, dato2);
-        List<Utbetaling> utbetalingsResultat = utbetalingsHolder.getResultat().hentUtbetalinger(periodeStart, periodeSlutt);
+        when(utbetalingService.hentUtbetalinger(FNR, dato1.toLocalDate(), dato2.toLocalDate())).thenReturn(utbetalinger);
+        utbetalingsHolder.getResultat().refreshUtbetalinger(dato1.toLocalDate(), dato2.toLocalDate());
+        List<Utbetaling> utbetalingsResultat = utbetalingsHolder.getResultat().hentUtbetalinger(periodeStart.toLocalDate(), periodeSlutt.toLocalDate());
 
         assertThat(utbetalingsResultat.size(), is(0));
     }
