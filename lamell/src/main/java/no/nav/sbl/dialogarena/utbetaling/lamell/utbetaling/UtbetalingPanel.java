@@ -21,8 +21,8 @@ public class UtbetalingPanel extends Panel {
                 new Label("kortUtbetalingsDato"),
                 new Label("beskrivelse"),
                 new Label("periodeMedKortDato"),
-                new Label("bruttoBelop"),
-                new Label("trekk"),
+                new Label("bruttoBelopMedValuta"),
+                new Label("trekkMedValuta"),
                 new Label("belopMedValuta")
         );
         add(createClickBehavior(detaljPanel));

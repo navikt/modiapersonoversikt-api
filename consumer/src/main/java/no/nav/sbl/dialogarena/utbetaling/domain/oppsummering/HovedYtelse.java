@@ -23,14 +23,12 @@ public class HovedYtelse implements Serializable {
 
     private String hovedYtelsesBeskrivelse;
     private List<UnderYtelse> underYtelsesBeskrivelser;
-    private String valuta;
 
-    HovedYtelse(Map.Entry<String, Map<String, Double>> ytelseUtbetalt, String valuta) {
-        this.valuta = valuta;
+    HovedYtelse(Map.Entry<String, Map<String, Double>> ytelseUtbetalt) {
         hovedYtelsesBeskrivelse = ytelseUtbetalt.getKey();
         underYtelsesBeskrivelser = new ArrayList<>();
         for (Map.Entry<String, Double> indreEntry : ytelseUtbetalt.getValue().entrySet()) {
-            underYtelsesBeskrivelser.add(new UnderYtelse(indreEntry, valuta));
+            underYtelsesBeskrivelser.add(new UnderYtelse(indreEntry));
         }
         sort(underYtelsesBeskrivelser, NAVN);
     }
@@ -44,15 +42,15 @@ public class HovedYtelse implements Serializable {
     }
 
     public String getBruttoUnderytelser(){
-        return getBelopString(lagBrutto(), valuta);
+        return getBelopString(lagBrutto());
     }
 
     public String getTrekkUnderytelser(){
-        return getBelopString(lagTrekk(), valuta);
+        return getBelopString(lagTrekk());
     }
 
     public String getNettoUnderytelser(){
-        return getBelopString(lagBrutto() + lagTrekk(), valuta);
+        return getBelopString(lagBrutto() + lagTrekk());
     }
 
     private Double lagBrutto() {

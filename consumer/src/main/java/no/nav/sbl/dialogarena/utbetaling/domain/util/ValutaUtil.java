@@ -8,9 +8,9 @@ import static java.util.Locale.forLanguageTag;
 
 public class ValutaUtil {
 
-    public static String getBelopString(double belop, String valuta) {
+    public static String getBelopString(double belop) {
         NumberFormat currencyInstance = getNumberInstance(forLanguageTag("nb-no"));
         currencyInstance.setMinimumFractionDigits(2);
-        return currencyInstance.format(belop) + " " + valuta;
+        return currencyInstance.format(belop);
     }
 }
