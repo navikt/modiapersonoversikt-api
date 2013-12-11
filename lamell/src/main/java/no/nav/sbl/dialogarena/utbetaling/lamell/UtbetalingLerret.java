@@ -78,7 +78,6 @@ public class UtbetalingLerret extends Lerret {
     }
 
     @RunOnEvents(FilterParametere.ENDRET)
-    @SuppressWarnings("unused")
     private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
         List<Utbetaling> synligeUtbetalinger = utbetalingsHolder.getResultat().getSynligeUtbetalinger(filterParametere);
         totalOppsummeringPanel.setDefaultModelObject(new OppsummeringProperties(
@@ -91,7 +90,6 @@ public class UtbetalingLerret extends Lerret {
     }
 
     @RunOnEvents(FilterFormPanel.FEIL)
-    @SuppressWarnings("unused")
     private void skjulSnurrepippVedFeil(AjaxRequestTarget target) {
         target.add(utbetalingslisteContainer);
     }

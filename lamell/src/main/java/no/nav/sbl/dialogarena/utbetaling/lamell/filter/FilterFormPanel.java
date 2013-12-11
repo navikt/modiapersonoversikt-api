@@ -1,18 +1,27 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
+import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
+import static org.joda.time.LocalDate.now;
+
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
+import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ValgtYtelse;
+
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -20,19 +29,9 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.LocalDate;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.*;
-import static org.joda.time.LocalDate.now;
 
 public class FilterFormPanel extends Panel {
 
@@ -49,9 +48,9 @@ public class FilterFormPanel extends Panel {
         add(createFilterForm());
     }
 
-    private Form createFilterForm() {
-        Form filterForm = new Form("filterForm");
-        return (Form) filterForm.add(
+    private Form<?> createFilterForm() {
+        Form<?> filterForm = new Form<>("filterForm");
+        return (Form<?>) filterForm.add(
                 new FeedbackPanel("feedbackpanel"),
                 createMottakerButton("visBruker"),
                 createMottakerButton("visArbeidsgiver"),
@@ -150,7 +149,7 @@ public class FilterFormPanel extends Panel {
         };
     }
 
-    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour(final Form filterForm) {
+    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour(final Form<?> filterForm) {
         return new AjaxFormSubmitBehavior("onchange") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {

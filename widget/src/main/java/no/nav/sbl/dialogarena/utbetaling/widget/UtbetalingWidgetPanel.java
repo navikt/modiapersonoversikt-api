@@ -32,17 +32,17 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
     }
 
     private String getSluttDato(UtbetalingVM utbetalingVM) {
-        StringResourceModel stringResourceModel = new StringResourceModel("sluttdato.mangler", this, new Model());
+        StringResourceModel stringResourceModel = new StringResourceModel("sluttdato.mangler", this, new Model<>());
         return optional(utbetalingVM.getSluttDato()).map(KORT).getOrElse(stringResourceModel.getString());
     }
 
     private String getStartDato(UtbetalingVM utbetalingVM) {
-        StringResourceModel stringResourceModel = new StringResourceModel("startdato.mangler", this, new Model());
+        StringResourceModel stringResourceModel = new StringResourceModel("startdato.mangler", this, new Model<>());
         return optional(utbetalingVM.getStartDato()).map(KORT).getOrElse(stringResourceModel.getString());
     }
 
     private Label createUtbetalingsDatoLabel(UtbetalingVM utbetalingVM) {
-        StringResourceModel stringResourceModel = new StringResourceModel("utbetalingdato.mangler", this, new Model());
+        StringResourceModel stringResourceModel = new StringResourceModel("utbetalingdato.mangler", this, new Model<>());
         return new Label("utbetalingsDato", optional(utbetalingVM.getUtbetalingsDato()).map(KORT).getOrElse(stringResourceModel.getString()));
     }
 
