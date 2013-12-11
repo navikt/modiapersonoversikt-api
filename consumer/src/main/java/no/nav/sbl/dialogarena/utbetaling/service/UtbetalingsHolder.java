@@ -4,6 +4,8 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 import javax.inject.Inject;
 import java.io.Serializable;
@@ -54,6 +56,10 @@ public class UtbetalingsHolder implements Serializable {
 
         public List<Utbetaling> hentUtbetalinger(DateTime startDato, DateTime sluttDato) {
             return hentUtbetalingerFraPeriode(utbetalinger, startDato, sluttDato);
+        }
+
+        public List<Utbetaling> hentUtbetalinger(LocalDate startDato, LocalDate sluttDato) {
+            return hentUtbetalingerFraPeriode(utbetalinger, startDato.toDateTimeAtStartOfDay(), sluttDato.toDateTime(new LocalTime(23,59)));
         }
 
         public List<Utbetaling> getSynligeUtbetalinger(FilterParametere params) {
