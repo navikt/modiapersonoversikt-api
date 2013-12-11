@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning;
 import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -12,7 +13,8 @@ import java.util.List;
 
 public class DetaljPanel extends Panel {
 
-    private Utbetaling utbetaling;
+    @SuppressWarnings("unused")
+	private Utbetaling utbetaling;
 
     public DetaljPanel(String id, Utbetaling utbetaling) {
         super(id);
