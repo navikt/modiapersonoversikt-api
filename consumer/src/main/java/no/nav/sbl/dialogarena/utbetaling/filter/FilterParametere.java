@@ -117,13 +117,5 @@ public class FilterParametere implements Serializable {
         public String getYtelse() {
             return ytelse;
         }
-
-        @Override
-        public String toString() {
-            return "ValgtYtelse{" +
-                    "valgt=" + valgt +
-                    ", ytelse='" + ytelse + '\'' +
-                    '}';
-        }
     }
 }

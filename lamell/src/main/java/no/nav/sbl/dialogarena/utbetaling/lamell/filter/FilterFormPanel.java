@@ -44,7 +44,6 @@ public class FilterFormPanel extends Panel {
 
     private MarkupContainer ytelsesContainer;
     private List<ValgtYtelseVM> ytelseVMer;
-    private ListView<ValgtYtelseVM> listView;
 
     public FilterFormPanel(String id, FilterParametere filterParametere) {
         super(id);
@@ -70,7 +69,7 @@ public class FilterFormPanel extends Panel {
 
         ytelsesContainer = new WebMarkupContainer("ytelsesContainer");
         ytelsesContainer.setOutputMarkupId(true);
-        listView = new ListView<ValgtYtelseVM>("ytelsesKnappeFilter", new CompoundPropertyModel<>(ytelseVMer)) {
+        ListView<ValgtYtelseVM> listView = new ListView<ValgtYtelseVM>("ytelsesKnappeFilter", new CompoundPropertyModel<>(ytelseVMer)) {
 
             @Override
             protected void populateItem(ListItem<ValgtYtelseVM> item) {
@@ -101,7 +100,6 @@ public class FilterFormPanel extends Panel {
     private void lagValgteYtelserVM() {
         ytelseVMer = new ArrayList<>();
         List<ValgtYtelse> valgteYtelser = filterParametere.getValgteYtelser();
-        System.out.println("valgteYtelser = " + valgteYtelser);
         for (ValgtYtelse ytelse : valgteYtelser) {
             ytelseVMer.add(new ValgtYtelseVM(ytelse));
         }
@@ -186,11 +184,10 @@ public class FilterFormPanel extends Panel {
     @RunOnEvents(FilterParametere.HOVEDYTELSER_ENDRET)
     private void oppdaterYtelsesKnapper(AjaxRequestTarget target) {
         lagValgteYtelserVM();
-        //ytelsesContainer.addOrReplace(listView);
         target.add(ytelsesContainer);
     }
 
-    private static class ValgtYtelseVM implements Serializable {
+    private static final class ValgtYtelseVM implements Serializable {
         final ValgtYtelse valgtYtelse;
         AbstractReadOnlyModel<Boolean> valgtModell;
 

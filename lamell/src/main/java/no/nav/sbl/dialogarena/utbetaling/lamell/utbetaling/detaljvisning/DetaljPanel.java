@@ -13,12 +13,8 @@ import java.util.List;
 
 public class DetaljPanel extends Panel {
 
-    @SuppressWarnings("unused")
-	private Utbetaling utbetaling;
-
     public DetaljPanel(String id, Utbetaling utbetaling) {
         super(id);
-        this.utbetaling = utbetaling;
         add(
                 new Label("mottatt", utbetaling.getMottaker().getNavn()),
                 new Label("konto", utbetaling.getKontoNr()),
