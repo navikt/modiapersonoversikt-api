@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.joda.time.DateTime;
@@ -17,7 +16,7 @@ import java.util.TreeSet;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerMapVerdier;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.*;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.joda.time.DateTime.now;
 
@@ -132,10 +131,10 @@ public class Utbetaling implements Serializable {
     public double getTrekk() {
         return trekk;
     }
-
-    public String getKortUtbetalingsDato() {
-        return optional(utbetalingsDato).map(KORT).getOrElse("Ingen utbetalingsdato");
-    }
+//
+//    public String getKortUtbetalingsDato() {
+//        return optional(utbetalingsDato).map(KORT).getOrElse("Ingen utbetalingsdato");
+//    }
 
     public String getPeriodeMedKortDato() {
         return optional(periode.getStartDato()).map(KORT).getOrElse("") + " - " + optional(periode.getSluttDato()).map(KORT).getOrElse("");
