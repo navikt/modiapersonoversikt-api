@@ -11,6 +11,7 @@ import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsHolder;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -25,11 +26,12 @@ import java.util.List;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_SLUTTDATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_STARTDATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.HOVEDYTELSER_ENDRET;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
 
 public class UtbetalingLerret extends Lerret {
 
     public static final PackageResourceReference UTBETALING_LAMELL_LESS = new PackageResourceReference(UtbetalingLerret.class, "utbetaling.less");
-
     @Inject
     private UtbetalingsHolder utbetalingsHolder;
 
@@ -37,8 +39,10 @@ public class UtbetalingLerret extends Lerret {
     private String arenaUtbetalingUrl;
 
     private FilterParametere filterParametere;
+    private FilterFormPanel filterFormPanel;
     private OppsummeringPanel totalOppsummeringPanel;
     private MarkupContainer utbetalingslisteContainer;
+
 
     public UtbetalingLerret(String id, String fnr) {
         super(id);
@@ -46,7 +50,7 @@ public class UtbetalingLerret extends Lerret {
 
         add(
                 new ExternalLink("arenalink", arenaUtbetalingUrl + fnr),
-                new FilterFormPanel("filterFormPanel", filterParametere),
+                filterFormPanel,
                 totalOppsummeringPanel.setOutputMarkupPlaceholderTag(true),
                 utbetalingslisteContainer.setOutputMarkupId(true)
         );
@@ -58,6 +62,9 @@ public class UtbetalingLerret extends Lerret {
         filterParametere = new FilterParametere(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true, hentYtelser(utbetalinger));
         totalOppsummeringPanel = createTotalOppsummeringPanel(utbetalingsHolder.getResultat().getSynligeUtbetalinger(filterParametere));
         utbetalingslisteContainer = new WebMarkupContainer("utbetalingslisteContainer").add(opprettMaanedsPanelListe());
+
+        filterFormPanel = new FilterFormPanel("filterFormPanel", filterParametere);
+        filterFormPanel.setOutputMarkupId(true);
     }
 
     private OppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
@@ -75,8 +82,12 @@ public class UtbetalingLerret extends Lerret {
         }.setOutputMarkupId(true);
     }
 
-    @RunOnEvents(FilterParametere.ENDRET)
+    @RunOnEvents(ENDRET)
     private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
+        List<Utbetaling> alleUtbetalinger = utbetalingsHolder.getResultat().hentUtbetalinger(filterParametere.getStartDato(), filterParametere.getSluttDato());
+        filterParametere.setYtelser(hentYtelser(alleUtbetalinger));
+        sendYtelserEndretEvent();
+
         List<Utbetaling> synligeUtbetalinger = utbetalingsHolder.getResultat().getSynligeUtbetalinger(filterParametere);
         totalOppsummeringPanel.setDefaultModelObject(new OppsummeringProperties(
                 synligeUtbetalinger,
@@ -91,4 +102,10 @@ public class UtbetalingLerret extends Lerret {
     private void skjulSnurrepippVedFeil(AjaxRequestTarget target) {
         target.add(totalOppsummeringPanel);
     }
+
+    private void sendYtelserEndretEvent() {
+        send(getPage(), Broadcast.DEPTH, HOVEDYTELSER_ENDRET);
+    }
+
+
 }

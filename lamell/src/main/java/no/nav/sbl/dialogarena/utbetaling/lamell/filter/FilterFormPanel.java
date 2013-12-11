@@ -1,27 +1,20 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
-import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
-import static org.joda.time.LocalDate.now;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
+import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ValgtYtelse;
-
 import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -33,6 +26,15 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.LocalDate;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
+import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
+import static org.joda.time.LocalDate.now;
+
 public class FilterFormPanel extends Panel {
 
     public static final String FEIL = "filter.feil";
@@ -40,11 +42,14 @@ public class FilterFormPanel extends Panel {
 
     private FilterParametere filterParametere;
 
+    private MarkupContainer ytelsesContainer;
+    private List<ValgtYtelseVM> ytelseVMer;
+    private ListView<ValgtYtelseVM> listView;
+
     public FilterFormPanel(String id, FilterParametere filterParametere) {
         super(id);
 
         this.filterParametere = filterParametere;
-
         add(createFilterForm());
     }
 
@@ -60,29 +65,12 @@ public class FilterFormPanel extends Panel {
                 .setOutputMarkupId(true);
     }
 
-    private static class ValgtYtelseVM implements Serializable {
-        AbstractReadOnlyModel<Boolean> valgtModell;
-        final ValgtYtelse valgtYtelse;
+    private MarkupContainer createYtelser() {
+        lagValgteYtelserVM();
 
-        private ValgtYtelseVM(final ValgtYtelse valgtYtelse) {
-            this.valgtYtelse = valgtYtelse;
-            this.valgtModell = new AbstractReadOnlyModel<Boolean>() {
-                @Override
-                public Boolean getObject() {
-                    return valgtYtelse.getValgt();
-                }
-            };
-        }
-    }
-
-    private ListView<ValgtYtelseVM> createYtelser() {
-
-        List<ValgtYtelseVM> ytelseVMer = new ArrayList<>();
-        for (ValgtYtelse ytelse : filterParametere.getValgteYtelser()) {
-            ytelseVMer.add(new ValgtYtelseVM(ytelse));
-        }
-
-        return new ListView<ValgtYtelseVM>("ytelsesKnappeFilter", new CompoundPropertyModel<>(ytelseVMer)) {
+        ytelsesContainer = new WebMarkupContainer("ytelsesContainer");
+        ytelsesContainer.setOutputMarkupId(true);
+        listView = new ListView<ValgtYtelseVM>("ytelsesKnappeFilter", new CompoundPropertyModel<>(ytelseVMer)) {
 
             @Override
             protected void populateItem(ListItem<ValgtYtelseVM> item) {
@@ -101,9 +89,22 @@ public class FilterFormPanel extends Panel {
                 };
                 knapp.add(new AttributeModifier("value", item.getModelObject().valgtYtelse.getYtelse()));
                 knapp.add(hasCssClassIf("valgt", knapp.getModelObject().valgtModell));
+                knapp.setOutputMarkupId(true);
                 item.add(knapp);
             }
         };
+        listView.setOutputMarkupId(true);
+        ytelsesContainer.add(listView);
+        return ytelsesContainer;
+    }
+
+    private void lagValgteYtelserVM() {
+        ytelseVMer = new ArrayList<>();
+        List<ValgtYtelse> valgteYtelser = filterParametere.getValgteYtelser();
+        System.out.println("valgteYtelser = " + valgteYtelser);
+        for (ValgtYtelse ytelse : valgteYtelser) {
+            ytelseVMer.add(new ValgtYtelseVM(ytelse));
+        }
     }
 
     private AjaxLink<Boolean> createMottakerButton(final String mottaker) {
@@ -169,8 +170,8 @@ public class FilterFormPanel extends Panel {
         String contextRoot = WebApplication.get().getServletContext().getContextPath();
         String targetSelector = ".oppsummering-total";
 
-        return "$('"+selector+"').on('"+event+"', function() {" +
-                "   window.Modig.ajaxLoader.showLoader('"+targetSelector+"', '', '"+contextRoot+"/img/ajaxloader/graa/loader_graa_32.gif', '');" +
+        return "$('" + selector + "').on('" + event + "', function() {" +
+                "   window.Modig.ajaxLoader.showLoader('" + targetSelector + "', '', '" + contextRoot + "/img/ajaxloader/graa/loader_graa_32.gif', '');" +
                 "});";
     }
 
@@ -180,5 +181,27 @@ public class FilterFormPanel extends Panel {
 
     private void sendFilterFeilEvent() {
         send(getPage(), Broadcast.DEPTH, FEIL);
+    }
+
+    @RunOnEvents(FilterParametere.HOVEDYTELSER_ENDRET)
+    private void oppdaterYtelsesKnapper(AjaxRequestTarget target) {
+        lagValgteYtelserVM();
+        //ytelsesContainer.addOrReplace(listView);
+        target.add(ytelsesContainer);
+    }
+
+    private static class ValgtYtelseVM implements Serializable {
+        final ValgtYtelse valgtYtelse;
+        AbstractReadOnlyModel<Boolean> valgtModell;
+
+        private ValgtYtelseVM(final ValgtYtelse valgtYtelse) {
+            this.valgtYtelse = valgtYtelse;
+            this.valgtModell = new AbstractReadOnlyModel<Boolean>() {
+                @Override
+                public Boolean getObject() {
+                    return valgtYtelse.getValgt();
+                }
+            };
+        }
     }
 }
