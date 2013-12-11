@@ -1,5 +1,15 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.HOVEDYTELSER_ENDRET;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
@@ -8,6 +18,7 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsHolder;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -18,16 +29,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.joda.time.LocalTime;
-
-import javax.inject.Inject;
-import java.util.List;
-
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_SLUTTDATO;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_STARTDATO;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.HOVEDYTELSER_ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
 
 public class UtbetalingLerret extends Lerret {
 
@@ -57,9 +58,8 @@ public class UtbetalingLerret extends Lerret {
     }
 
     private void instansierFelter(String fnr) {
-        List<Utbetaling> utbetalinger = utbetalingsHolder.withFnr(fnr).hentUtbetalinger(DEFAULT_STARTDATO.toDateTimeAtStartOfDay(), DEFAULT_SLUTTDATO.toDateTime(new LocalTime(23, 59)));
-
-        filterParametere = new FilterParametere(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true, hentYtelser(utbetalinger));
+        List<Utbetaling> utbetalinger = utbetalingsHolder.withFnr(fnr).hentUtbetalinger(defaultStartDato(), defaultSluttDato());
+        filterParametere = new FilterParametere(defaultStartDato(), defaultSluttDato(), true, true, hentYtelser(utbetalinger));
         totalOppsummeringPanel = createTotalOppsummeringPanel(utbetalingsHolder.getResultat().getSynligeUtbetalinger(filterParametere));
         utbetalingslisteContainer = new WebMarkupContainer("utbetalingslisteContainer").add(opprettMaanedsPanelListe());
 

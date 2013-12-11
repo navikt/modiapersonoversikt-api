@@ -1,22 +1,19 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
+import static no.nav.sbl.dialogarena.utbetaling.filter.Filter.filtrer;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
-
-import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_SLUTTDATO;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.DEFAULT_STARTDATO;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
-import static no.nav.sbl.dialogarena.utbetaling.filter.Filter.filtrer;
+import javax.inject.Inject;
+
+import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
+
+import org.joda.time.LocalDate;
 
 public class UtbetalingsHolder implements Serializable {
 
@@ -43,10 +40,10 @@ public class UtbetalingsHolder implements Serializable {
 
         private UtbetalingServiceResultat(String fnr) {
             this.fnr = fnr;
-            refreshUtbetalinger(DEFAULT_STARTDATO.toDateTimeAtStartOfDay(), DEFAULT_SLUTTDATO.toDateTimeAtStartOfDay());
+            refreshUtbetalinger(Utbetaling.defaultStartDato(), Utbetaling.defaultSluttDato());
         }
 
-        public void refreshUtbetalinger(DateTime startdato, DateTime sluttdato) {
+        public void refreshUtbetalinger(LocalDate startdato, LocalDate sluttdato) {
             utbetalinger = utbetalingService.hentUtbetalinger(fnr, startdato, sluttdato);
         }
 
@@ -54,12 +51,8 @@ public class UtbetalingsHolder implements Serializable {
             return splittUtbetalingerPerMaaned(getSynligeUtbetalinger(filterParametre));
         }
 
-        public List<Utbetaling> hentUtbetalinger(DateTime startDato, DateTime sluttDato) {
-            return hentUtbetalingerFraPeriode(utbetalinger, startDato, sluttDato);
-        }
-
         public List<Utbetaling> hentUtbetalinger(LocalDate startDato, LocalDate sluttDato) {
-            return hentUtbetalingerFraPeriode(utbetalinger, startDato.toDateTimeAtStartOfDay(), sluttDato.toDateTime(new LocalTime(23,59)));
+            return hentUtbetalingerFraPeriode(utbetalinger, startDato, sluttDato);
         }
 
         public List<Utbetaling> getSynligeUtbetalinger(FilterParametere params) {
