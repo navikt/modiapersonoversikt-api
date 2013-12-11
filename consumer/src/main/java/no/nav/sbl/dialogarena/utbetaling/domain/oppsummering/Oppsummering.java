@@ -15,27 +15,26 @@ public class Oppsummering implements Serializable {
     public double utbetalt;
     public double trekk;
     public double brutto;
-    public String valuta = "kr";
     public Map<String, Map<String, Double>> ytelserUtbetalt;
     private List<HovedYtelse> hovedYtelsesBeskrivelser;
 
     public String getUtbetalt() {
-        return getBelopString(this.utbetalt, this.valuta);
+        return getBelopString(this.utbetalt);
     }
 
     public String getTrekk() {
-        return getBelopString(this.trekk, this.valuta);
+        return getBelopString(this.trekk);
     }
 
     public String getBrutto() {
-        return getBelopString(this.brutto, this.valuta);
+        return getBelopString(this.brutto);
     }
 
     public List<HovedYtelse> getHovedYtelsesBeskrivelser() {
         if (hovedYtelsesBeskrivelser == null) {
             hovedYtelsesBeskrivelser = new ArrayList<>();
             for (Map.Entry<String, Map<String, Double>> entry : ytelserUtbetalt.entrySet()) {
-                hovedYtelsesBeskrivelser.add(new HovedYtelse(entry, this.valuta));
+                hovedYtelsesBeskrivelser.add(new HovedYtelse(entry));
             }
             sort(hovedYtelsesBeskrivelser, NAVN);
         }

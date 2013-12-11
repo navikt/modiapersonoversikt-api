@@ -17,6 +17,7 @@ import java.util.TreeSet;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerMapVerdier;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.*;
 import static org.apache.commons.lang3.StringUtils.join;
 import static org.joda.time.DateTime.now;
 
@@ -140,8 +141,16 @@ public class Utbetaling implements Serializable {
         return optional(periode.getStartDato()).map(KORT).getOrElse("") + " - " + optional(periode.getSluttDato()).map(KORT).getOrElse("");
     }
 
+    public String getBruttoBelopMedValuta() {
+        return getBelopString(bruttoBelop);
+    }
+
+    public String getTrekkMedValuta() {
+        return getBelopString(trekk);
+    }
+
     public String getBelopMedValuta() {
-        return ValutaUtil.getBelopString(this.nettoBelop, this.valuta);
+        return getBelopString(nettoBelop);
     }
 
     public boolean harYtelse(String ytelse) {
