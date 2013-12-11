@@ -47,7 +47,7 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
     }
 
     public String getStatus() {
-        return utbetaling.getStatuskode();
+        return utbetaling.getStatusBeskrivelse();
     }
 
     public DateTime getStartDato() {
