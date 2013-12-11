@@ -89,6 +89,6 @@ public class UtbetalingLerret extends Lerret {
 
     @RunOnEvents(FilterFormPanel.FEIL)
     private void skjulSnurrepippVedFeil(AjaxRequestTarget target) {
-        target.add(utbetalingslisteContainer);
+        target.add(totalOppsummeringPanel);
     }
 }
