@@ -115,7 +115,7 @@ public class UtbetalingLerret extends Lerret {
             @Override
             protected void populateItem(ListItem<List<Utbetaling>> item) {
                 item.add(new MaanedsPanel("maanedsPanel", item.getModelObject()));
-                item.add(visibleIf(new Model<>(item.getModelObject().isEmpty())));
+                item.add(visibleIf(new Model<>(!item.getModelObject().isEmpty())));
             }
         };
     }
