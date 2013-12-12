@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
-import no.nav.sbl.dialogarena.utbetaling.domain.Mottaker;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -60,10 +59,6 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
 
     public String getUtbetalingId(){
         return utbetaling.getUtbetalingId();
-    }
-
-    public Mottaker getMottaker() {
-        return utbetaling.getMottaker();
     }
 
     @Override

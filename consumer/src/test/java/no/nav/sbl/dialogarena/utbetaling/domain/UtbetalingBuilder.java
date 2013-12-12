@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 
 public class UtbetalingBuilder {
 
@@ -19,7 +20,8 @@ public class UtbetalingBuilder {
     private String kontoNr = "1234 25 25814";
     private String utbetalingId = "1";
     private String fnr = "12345678978";
-    private Mottaker mottaker = new Mottaker(Mottaker.BRUKER, "Per Frode Kjellsen");
+    private String mottakernavn = "Per Frode Kjellsen";
+    private String mottakertype = BRUKER;
     private Periode periode = new Periode(new DateTime().minusDays(32), new DateTime().minusDays(2));
 
     public UtbetalingBuilder() {
@@ -35,8 +37,13 @@ public class UtbetalingBuilder {
         return this;
     }
 
-    public UtbetalingBuilder setMottaker(Mottaker mottaker) {
-        this.mottaker = mottaker;
+    public UtbetalingBuilder setMottakernavn(String mottakernavn) {
+        this.mottakernavn = mottakernavn;
+        return this;
+    }
+
+    public UtbetalingBuilder setMottakertype(String mottakertype) {
+        this.mottakertype = mottakertype;
         return this;
     }
 
@@ -96,7 +103,19 @@ public class UtbetalingBuilder {
     }
 
     public Utbetaling createUtbetaling() {
-        return new Utbetaling(fnr, bilag, statusbeskrivelse, utbetalingsDato, bruttoBelop, nettoBelop, valuta, kontoNr, utbetalingId, mottaker, periode, trekk);
+        Utbetaling utbetaling = new Utbetaling(utbetalingId);
+        utbetaling.fnr = fnr;
+        utbetaling.bilag = bilag;
+        utbetaling.utbetalingsDato = utbetalingsDato;
+        utbetaling.bruttoBelop = bruttoBelop;
+        utbetaling.nettoBelop = nettoBelop;
+        utbetaling.valuta = valuta;
+        utbetaling.kontoNr = kontoNr;
+        utbetaling.periode = periode;
+        utbetaling.trekk = trekk;
+        utbetaling.mottakernavn = mottakernavn;
+        utbetaling.mottakertype = mottakertype;
+        return utbetaling;
     }
 
 }
