@@ -1,20 +1,20 @@
 package no.nav.sbl.dialogarena.utbetaling.filter;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import org.apache.commons.collections15.Predicate;
+import org.joda.time.LocalDate;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-
-import org.apache.commons.collections15.Predicate;
-import org.joda.time.LocalDate;
-
 
 public class FilterParametere implements Serializable, Predicate<Utbetaling> {
 
     public static final String ENDRET = "filterParametere.endret";
+    public static final String FEIL = "filter.feil";
     public static final String HOVEDYTELSER_ENDRET = "hovedytelser.endret";
 
     private LocalDate startDato;
@@ -100,6 +100,11 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         oppdaterValgteYtelser(hovedYtelser);
     }
 
+    @Override
+    public boolean evaluate(Utbetaling object) {
+        return Filter.filtrer(object, this);
+    }
+
     public static class ValgtYtelse implements Serializable {
         private Boolean valgt;
         private String ytelse;
@@ -121,10 +126,5 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
             return ytelse;
         }
     }
-
-	@Override
-	public boolean evaluate(Utbetaling object) {
-		return Filter.filtrer(object, this);
-	}
 
 }
