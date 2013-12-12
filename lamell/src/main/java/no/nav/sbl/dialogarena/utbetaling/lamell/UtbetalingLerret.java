@@ -1,14 +1,30 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Periode.intervall;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.HOVEDYTELSER_ENDRET;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils;
 import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsResultat;
+
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -20,18 +36,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.LocalDate;
-
-import javax.inject.Inject;
-import java.util.List;
-
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Periode.intervall;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 
 public class UtbetalingLerret extends Lerret {
 
@@ -78,11 +82,12 @@ public class UtbetalingLerret extends Lerret {
     @RunOnEvents(ENDRET)
     private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
     	oppdaterCacheOmNodvendig();
-        List<Utbetaling> alleUtbetalinger = resultatCache.hentUtbetalinger(filterParametere.getStartDato(), filterParametere.getSluttDato());
+
+        List<Utbetaling> alleUtbetalinger = hentUtbetalingerFraPeriode(resultatCache.utbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato());
         filterParametere.setYtelser(hentYtelser(alleUtbetalinger));
         sendYtelserEndretEvent();
 
-        List<Utbetaling> synligeUtbetalinger = resultatCache.getSynligeUtbetalinger(filterParametere);
+        List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
         totalOppsummeringPanel.setDefaultModelObject(new OppsummeringProperties(
                 synligeUtbetalinger,
                 filterParametere.getStartDato(),
@@ -105,7 +110,7 @@ public class UtbetalingLerret extends Lerret {
     }
 
     private static Component opprettMaanedsPanelListe(UtbetalingsResultat resultat, final FilterParametere filter) {
-        List<List<Utbetaling>> maanedsListe = resultat.hentFiltrertUtbetalingerPerMaaned(filter);
+        List<List<Utbetaling>> maanedsListe = UtbetalingListeUtils.splittUtbetalingerPerMaaned(on(resultat.utbetalinger).filter(filter).collect());
         return new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
             @Override
             protected void populateItem(ListItem<List<Utbetaling>> item) {
