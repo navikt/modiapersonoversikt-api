@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
+import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.IngenUtbetalingerPanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsHolder;
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
@@ -39,6 +40,7 @@ public class UtbetalingLerret extends Lerret {
     private FilterParametere filterParametere;
     private OppsummeringPanel totalOppsummeringPanel;
     private MarkupContainer utbetalingslisteContainer;
+    private IngenUtbetalingerPanel ingenutbetalinger;
 
     public UtbetalingLerret(String id, String fnr) {
         super(id);
@@ -48,6 +50,7 @@ public class UtbetalingLerret extends Lerret {
                 new ExternalLink("arenalink", arenaUtbetalingUrl + fnr),
                 new FilterFormPanel("filterFormPanel", filterParametere),
                 totalOppsummeringPanel.setOutputMarkupPlaceholderTag(true),
+                ingenutbetalinger.setOutputMarkupPlaceholderTag(true),
                 utbetalingslisteContainer.setOutputMarkupId(true)
         );
     }
@@ -56,8 +59,11 @@ public class UtbetalingLerret extends Lerret {
         List<Utbetaling> utbetalinger = utbetalingsHolder.withFnr(fnr).hentUtbetalinger(DEFAULT_STARTDATO.toDateTimeAtStartOfDay(), DEFAULT_SLUTTDATO.toDateTime(new LocalTime(23, 59)));
 
         filterParametere = new FilterParametere(DEFAULT_STARTDATO, DEFAULT_SLUTTDATO, true, true, hentYtelser(utbetalinger));
-        totalOppsummeringPanel = createTotalOppsummeringPanel(utbetalingsHolder.getResultat().getSynligeUtbetalinger(filterParametere));
+        List<Utbetaling> synligeUtbetalinger = utbetalingsHolder.getResultat().getSynligeUtbetalinger(filterParametere);
+        totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
+        ingenutbetalinger = new IngenUtbetalingerPanel("ingenutbetalinger");
         utbetalingslisteContainer = new WebMarkupContainer("utbetalingslisteContainer").add(opprettMaanedsPanelListe());
+        endreSynligeKomponenter(synligeUtbetalinger.isEmpty());
     }
 
     private OppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
@@ -82,13 +88,18 @@ public class UtbetalingLerret extends Lerret {
                 synligeUtbetalinger,
                 filterParametere.getStartDato(),
                 filterParametere.getSluttDato()));
-        totalOppsummeringPanel.setVisibilityAllowed(synligeUtbetalinger.size() > 1);
+        endreSynligeKomponenter(synligeUtbetalinger.isEmpty());
         utbetalingslisteContainer.addOrReplace(opprettMaanedsPanelListe());
-        target.add(totalOppsummeringPanel, utbetalingslisteContainer);
+        target.add(totalOppsummeringPanel, ingenutbetalinger, utbetalingslisteContainer);
     }
 
     @RunOnEvents(FilterFormPanel.FEIL)
     private void skjulSnurrepippVedFeil(AjaxRequestTarget target) {
         target.add(totalOppsummeringPanel);
+    }
+
+    private void endreSynligeKomponenter(boolean ingenSynligeUtbetalinger) {
+        totalOppsummeringPanel.setVisibilityAllowed(!ingenSynligeUtbetalinger);
+        ingenutbetalinger.setVisibilityAllowed(ingenSynligeUtbetalinger);
     }
 }
