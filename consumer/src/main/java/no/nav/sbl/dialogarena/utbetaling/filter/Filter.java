@@ -7,15 +7,15 @@ import org.joda.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.utbetaling.domain.Mottaker.ARBEIDSGIVER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Mottaker.BRUKER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 
 
 public class Filter {
 
     public static boolean filtrer(Utbetaling utbetaling, FilterParametere filterParametere) {
         boolean innenforDatoer = filtrerPaaDatoer(utbetaling.getUtbetalingsDato().toLocalDate(), filterParametere.getStartDato(), filterParametere.getSluttDato());
-        boolean brukerSkalVises = filtrerPaaMottaker(utbetaling.getMottaker().getMottakertypeType(), filterParametere.getVisArbeidsgiver(), filterParametere.getVisBruker());
+        boolean brukerSkalVises = filtrerPaaMottaker(utbetaling.mottakertype, filterParametere.getVisArbeidsgiver(), filterParametere.getVisBruker());
         boolean harYtelse = filtrerPaaYtelser(utbetaling, filterParametere.getValgteYtelser());
         return innenforDatoer && brukerSkalVises && harYtelse;
     }

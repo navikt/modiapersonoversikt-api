@@ -1,18 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Periode.intervall;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.HOVEDYTELSER_ENDRET;
-
-import java.util.List;
-
-import javax.inject.Inject;
-
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
@@ -22,7 +9,6 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsResultat;
-
 import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -31,9 +17,21 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.LocalDate;
+
+import javax.inject.Inject;
+import java.util.List;
+
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Periode.intervall;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 
 public class UtbetalingLerret extends Lerret {
 
@@ -41,7 +39,6 @@ public class UtbetalingLerret extends Lerret {
 
     @Inject
     private String arenaUtbetalingUrl;
-
     @Inject
     private UtbetalingService service;
 
@@ -104,7 +101,7 @@ public class UtbetalingLerret extends Lerret {
 
     private OppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
         return new OppsummeringPanel("totalOppsummeringPanel",
-                new CompoundPropertyModel<>(new OppsummeringProperties(liste, filterParametere.getStartDato(), filterParametere.getSluttDato())), true);
+               new OppsummeringProperties(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()), true);
     }
 
     private static Component opprettMaanedsPanelListe(UtbetalingsResultat resultat, final FilterParametere filter) {
@@ -112,9 +109,10 @@ public class UtbetalingLerret extends Lerret {
         return new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
             @Override
             protected void populateItem(ListItem<List<Utbetaling>> item) {
-                item.add(new MaanedsPanel("maanedsPanel", item.getModelObject(), filter));
+                item.add(new MaanedsPanel("maanedsPanel", item.getModelObject()));
+                item.add(visibleIf(new Model<>(item.getModelObject().isEmpty())));
             }
-        }.setOutputMarkupId(true);
+        };
     }
 
     @RunOnEvents(FilterFormPanel.FEIL)

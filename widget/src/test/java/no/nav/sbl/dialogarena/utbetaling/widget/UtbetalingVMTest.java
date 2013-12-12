@@ -55,18 +55,4 @@ public class UtbetalingVMTest {
         UtbetalingVM utbetalingVM = UtbetalingVM.UTBETALING_UTBETALINGVM_TRANSFORMER.transform(utbetaling);
         assertThat(utbetaling.getStartDate(), is(equalTo(utbetalingVM.getStartDato())));
     }
-
-    @Test
-    public void gettersWorkCorrectly(){
-        Utbetaling utbetaling = new UtbetalingBuilder().createUtbetaling();
-        UtbetalingVM utbetalingVM = new UtbetalingVM(utbetaling);
-        assertThat(utbetaling.getBeskrivelse(), is(equalTo(utbetalingVM.getBeskrivelse())));
-        assertThat(utbetaling.getPeriode().getPeriode(), is(equalTo(utbetalingVM.getPeriode())));
-        assertThat(utbetaling.getValuta(), is(equalTo(utbetalingVM.getValuta())));
-        assertThat(utbetaling.getStatusBeskrivelse(), is(equalTo(utbetalingVM.getStatus())));
-        assertThat(utbetaling.getStartDate(), is(equalTo(utbetalingVM.getStartDato())));
-        assertThat(utbetaling.getEndDate(), is(equalTo(utbetalingVM.getSluttDato())));
-        assertThat(utbetaling.getUtbetalingId(), is(equalTo(utbetalingVM.getUtbetalingId())));
-        assertThat(MottakerComparator.equals(utbetaling.getMottaker(), utbetalingVM.getMottaker()), is(true));
-    }
 }
