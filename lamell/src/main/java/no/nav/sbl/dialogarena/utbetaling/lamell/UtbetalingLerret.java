@@ -1,9 +1,11 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Periode.intervall;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
 import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 
@@ -68,7 +70,8 @@ public class UtbetalingLerret extends Lerret {
     	resultatCache = new UtbetalingsResultat(fnr, startDato, sluttDato, utbetalinger);
 
         filterParametere = new FilterParametere(startDato, sluttDato, true, true, hentYtelser(utbetalinger));
-        totalOppsummeringPanel = createTotalOppsummeringPanel(resultatCache.getSynligeUtbetalinger(filterParametere));
+        List<Utbetaling> synlige = on(utbetalinger).filter(filterParametere).collect();
+		totalOppsummeringPanel = createTotalOppsummeringPanel(synlige);
         utbetalingslisteContainer = new WebMarkupContainer("utbetalingslisteContainer").add(opprettMaanedsPanelListe(resultatCache, filterParametere));
 
         filterFormPanel = new FilterFormPanel("filterFormPanel", filterParametere);
