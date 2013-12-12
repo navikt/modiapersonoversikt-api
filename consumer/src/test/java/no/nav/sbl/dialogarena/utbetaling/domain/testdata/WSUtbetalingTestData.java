@@ -1,17 +1,21 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.testdata;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static org.joda.time.DateTime.now;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMottaker;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPeriode;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+
+import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.joda.time.DateTime.now;
+import org.joda.time.Interval;
 
 
 public class WSUtbetalingTestData {
@@ -32,7 +36,7 @@ public class WSUtbetalingTestData {
     private static final String VALUTA = "NOK";
     private static String fnr;
 
-    public static List<WSUtbetaling> getWsUtbetalinger(String fNr) {
+    public static List<WSUtbetaling> getWsUtbetalinger(String fNr, DateTime startDato, DateTime sluttDato) {
         fnr = fNr;
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
         utbetalinger.add(createUtbetaling1());
@@ -43,7 +47,14 @@ public class WSUtbetalingTestData {
         utbetalinger.add(createUtbetaling6());
         utbetalinger.add(createUtbetaling7());
         utbetalinger.add(createUtbetaling8());
-        return utbetalinger;
+
+        final Interval periode = new Interval(startDato, sluttDato);
+        Predicate<WSUtbetaling> innenPeriode = new Predicate<WSUtbetaling>() {
+        	public boolean evaluate(WSUtbetaling object) {
+        		return periode.contains(object.getUtbetalingDato());
+        	}
+        };
+        return on(utbetalinger).filter(innenPeriode).collect();
     }
 
     public static WSUtbetaling createUtbetaling1() {

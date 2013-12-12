@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.utbetaling.domain.testdata;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+
+import org.joda.time.DateTime;
 import org.junit.Test;
 
 import java.util.List;
@@ -14,7 +16,7 @@ public class WSUtbetalingTestDataTest {
 
     @Test
     public void testBelopITestData() throws Exception {
-        List<WSUtbetaling> utbetalinger = WSUtbetalingTestData.getWsUtbetalinger("");
+        List<WSUtbetaling> utbetalinger = WSUtbetalingTestData.getWsUtbetalinger("", DateTime.now().minusMonths(3), DateTime.now());
 
         for (WSUtbetaling utbetaling : utbetalinger) {
 
