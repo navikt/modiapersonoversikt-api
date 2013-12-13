@@ -18,10 +18,24 @@ public class PosteringsDetalj implements Serializable {
     private Double belop;
     private boolean skatt = false;
 
-    public static final Transformer<PosteringsDetalj, String> POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER = new Transformer<PosteringsDetalj, String>() {
+    public static final Transformer<PosteringsDetalj, String> HOVEDBESKRIVELSE = new Transformer<PosteringsDetalj, String>() {
         @Override
         public String transform(PosteringsDetalj posteringsDetalj) {
-            return posteringsDetalj.getHovedBeskrivelse();
+            return posteringsDetalj.hovedBeskrivelse;
+        }
+    };
+
+    public static final Transformer<PosteringsDetalj, String> UNDERBESKRIVELSE = new Transformer<PosteringsDetalj, String>() {
+        @Override
+        public String transform(PosteringsDetalj posteringsDetalj) {
+            return posteringsDetalj.underBeskrivelse;
+        }
+    };
+
+    public static final Transformer<PosteringsDetalj, Double> BELOP = new Transformer<PosteringsDetalj, Double>() {
+        @Override
+        public Double transform(PosteringsDetalj posteringsDetalj) {
+            return posteringsDetalj.belop;
         }
     };
 

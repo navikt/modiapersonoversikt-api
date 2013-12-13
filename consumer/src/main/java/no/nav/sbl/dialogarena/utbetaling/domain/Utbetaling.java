@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import com.sun.xml.internal.ws.util.UtilException;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.apache.commons.collections15.Transformer;
@@ -179,6 +180,13 @@ public class Utbetaling implements Serializable {
             return utbetaling.getTrekk() == 0.0 ?
                     utbetaling.getBruttoBelop() - utbetaling.getNettoBelop() :
                     utbetaling.getTrekk();
+        }
+    };
+
+    public static final Transformer<Utbetaling, List<Bilag>> BILAG = new Transformer<Utbetaling, List<Bilag>>() {
+        @Override
+        public List<Bilag> transform(Utbetaling utbetaling) {
+            return utbetaling.bilag;
         }
     };
 

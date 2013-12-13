@@ -1,6 +1,12 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
 import static java.util.Collections.sort;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Bilag.POSTERINGSDETALJER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.HOVEDBESKRIVELSE;
+import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.UNDERBESKRIVELSE;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BILAG;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,10 +15,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
+import no.nav.modig.lang.collections.ReduceUtils;
+import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
@@ -66,21 +74,37 @@ public class UtbetalingListeUtils {
      */
     public static Map<String, Map<String, Double>> summerBelopForUnderytelser(List<Utbetaling> utbetalinger) {
 
-        List<PosteringsDetalj> detaljer = new ArrayList<>();
-        for (Utbetaling utbetaling : utbetalinger) {
-            for (Bilag bilag : utbetaling.getBilag()) {
-                detaljer.addAll(bilag.getPosteringsDetaljer());
+        // Map<Hovedytelse, Map<Underytelse, sum(belop)>>
+
+        Map<String, List<PosteringsDetalj>> perHovedYtelse =
+                on(utbetalinger)
+                        .flatmap(BILAG)
+                        .flatmap(POSTERINGSDETALJER)
+                        .reduce(indexBy(HOVEDBESKRIVELSE));
+
+
+        final Transformer<List<PosteringsDetalj>, Double> posteringslisteTilSumAvBelop = new Transformer<List<PosteringsDetalj>, Double>() {
+            public Double transform(List<PosteringsDetalj> posteringsDetaljs) {
+                return on(posteringsDetaljs).map(PosteringsDetalj.BELOP).reduce(ReduceUtils.sumDouble);
             }
-        }
-        return summerBelopForPosteringsDetaljer(detaljer);
+        };
+
+        final Transformer<List<PosteringsDetalj>, Map<String, Double>> posteringslisteTilSumPerUnderytelse = new Transformer<List<PosteringsDetalj>, Map<String, Double>>() {
+            public Map<String, Double> transform(List<PosteringsDetalj> posteringsDetaljs) {
+                Map<String, List<PosteringsDetalj>> perUnderytelse = on(posteringsDetaljs).reduce(ReduceUtils.indexBy(UNDERBESKRIVELSE));
+                return transformMapValues(perUnderytelse, posteringslisteTilSumAvBelop);
+            }
+        };
+
+        return transformMapValues(perHovedYtelse, posteringslisteTilSumPerUnderytelse);
     }
 
-    private static Map<String, Map<String, Double>> summerBelopForPosteringsDetaljer(List<PosteringsDetalj> detaljer) {
-        Map<String, Map<String, Double>> ytelsesBelopMap = new HashMap<>();
-        for (PosteringsDetalj detalj : detaljer) {
-            leggSammenIResultatMap(ytelsesBelopMap, detalj.getHovedBeskrivelse(), detalj.getUnderBeskrivelse(), detalj.getBelop());
+    public static <KEY,OLDVALUE,NEWVALUE> Map<KEY,NEWVALUE> transformMapValues(Map<KEY,OLDVALUE> original, Transformer<? super OLDVALUE, NEWVALUE> fn) {
+        Map<KEY, NEWVALUE> map = new HashMap<>();
+        for (KEY key : original.keySet()) {
+            map.put(key, fn.transform(original.get(key)));
         }
-        return ytelsesBelopMap;
+        return map;
     }
 
 
