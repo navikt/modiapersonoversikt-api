@@ -10,10 +10,10 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
-import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 /**
@@ -51,26 +51,14 @@ public class UtbetalingListeUtils {
      * Filtrerer en liste av utbetalinger på periode.
      */
     public static List<Utbetaling> hentUtbetalingerFraPeriode(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
-        Periode periode = new Periode(startDato, sluttDato);
+        Interval intervall = new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime());
         ArrayList<Utbetaling> resultat = new ArrayList<>();
         for (Utbetaling utbetaling : utbetalinger) {
-            if (periode.containsDate(utbetaling.getUtbetalingsDato())) {
+            if (intervall.contains(utbetaling.getUtbetalingsDato())) {
                 resultat.add(utbetaling);
             }
         }
         return resultat;
-    }
-
-    /**
-     * Summerer beløpene fra alle posteringsdetaljer med samme hovedbeskrivelse.
-     */
-    public static Map<String, Double> summerBelopForHovedytelser(List<Utbetaling> utbetalinger) {
-        Map<String, Double> ytelser = new HashMap<>();
-        for (Utbetaling utbetaling : utbetalinger) {
-            Map<String, Double> belopPerYtelse = utbetaling.getBelopPerYtelser();
-            summerMapVerdier(ytelser, belopPerYtelse);
-        }
-        return ytelser;
     }
 
     /**

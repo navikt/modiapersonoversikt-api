@@ -1,24 +1,20 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerMapVerdier;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
-import static org.apache.commons.lang3.StringUtils.join;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
-
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
+import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
+import static org.apache.commons.lang3.StringUtils.join;
 
 public class Utbetaling implements Serializable {
 
@@ -44,7 +40,8 @@ public class Utbetaling implements Serializable {
     public String kontoNr;
     public String mottakertype;
     public String mottakernavn;
-    public Periode periode;
+    public DateTime startDato;
+    public DateTime sluttDato;
 
     public Utbetaling(String utbetalingId) {
         this.utbetalingId = utbetalingId;
@@ -65,7 +62,8 @@ public class Utbetaling implements Serializable {
         this.valuta = transformValuta(wsUtbetaling.getValuta());
         this.mottakernavn =  wsUtbetaling.getUtbetalingMottaker().getNavn();
         this.mottakertype = fnr.equals(wsUtbetaling.getUtbetalingMottaker().getMottakerId()) ? BRUKER : ARBEIDSGIVER;
-        this.periode = new Periode(wsUtbetaling.getUtbetalingsPeriode());
+        this.startDato = wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato();
+        this.sluttDato = wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato();
     }
 
     public String getKontoNr() {
@@ -85,15 +83,11 @@ public class Utbetaling implements Serializable {
     }
 
     public DateTime getStartDate() {
-        return periode != null ? periode.getStartDato() : null;
+        return startDato;
     }
 
     public DateTime getEndDate() {
-        return periode != null ? periode.getSluttDato() : null;
-    }
-
-    public Periode getPeriode() {
-        return periode;
+        return sluttDato;
     }
 
     public String getStatusBeskrivelse() {
@@ -125,7 +119,7 @@ public class Utbetaling implements Serializable {
     }
 
     public String getPeriodeMedKortDato() {
-        return optional(periode.getStartDato()).map(KORT).getOrElse("") + " - " + optional(periode.getSluttDato()).map(KORT).getOrElse("");
+        return optional(startDato).map(KORT).getOrElse("") + " - " + optional(sluttDato).map(KORT).getOrElse("");
     }
 
     public String getBruttoBelopMedValuta() {
@@ -142,15 +136,6 @@ public class Utbetaling implements Serializable {
 
     public boolean harYtelse(String ytelse) {
         return getBeskrivelser().contains(ytelse);
-    }
-
-    public Map<String, Double> getBelopPerYtelser() {
-        Map<String, Double> oppsummert = new HashMap<>();
-        for (Bilag bilag1 : bilag) {
-            Map<String, Double> belopPerYtelse = bilag1.getBelopPerYtelse();
-            summerMapVerdier(oppsummert, belopPerYtelse);
-        }
-        return oppsummert;
     }
 
     public Set<String> getBeskrivelser() {

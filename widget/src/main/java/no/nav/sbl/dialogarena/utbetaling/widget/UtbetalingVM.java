@@ -32,10 +32,6 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
         return utbetaling.getBeskrivelse();
     }
 
-    public String getPeriode() {
-        return utbetaling.getPeriode().getPeriode();
-    }
-
     public String getBelop() {
         return formaterBelop(utbetaling.getNettoBelop());
     }
