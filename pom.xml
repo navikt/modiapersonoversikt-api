@@ -26,12 +26,12 @@
         <spring.version>3.2.4.RELEASE</spring.version>
         <modig.frontend.version>1.1.6</modig.frontend.version>
         <modig.security.version>1.0.19</modig.security.version>
-	<modig.log.version>1.1.2</modig.log.version>
+	    <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
-        <modig.wicket.version>2.0.1-SNAPSHOT</modig.wicket.version>
+        <modig.wicket.version>2.0.0-alpha.2</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
-        <modig.lang.version>1.0.0</modig.lang.version>
+        <modig.lang.version>2.0.0-SNAPSHOT</modig.lang.version>
         <modig.frontend.wicket.version>1.0.33</modig.frontend.wicket.version>
         <modig.core.version>1.0.1</modig.core.version>
         <modig.security.version>1.0.11</modig.security.version>
@@ -108,7 +108,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-wicket</artifactId>
-                <version>2.0.0</version>
+                <version>${modig.wicket.version}</version>
                 <exclusions>
                     <exclusion>
                         <groupId>commons-logging</groupId>
@@ -126,7 +126,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-lang</artifactId>
-                <version>1.2.0</version>
+                <version>${modig.lang.version}</version>
             </dependency>
 
             <dependency>
@@ -150,7 +150,7 @@
             <dependency>
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-core</artifactId>
-                <version>1.0.1</version>
+                <version>${modig.core.version}</version>
             </dependency>
 
             <dependency>
