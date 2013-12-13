@@ -12,11 +12,17 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopS
 
 public class Oppsummering implements Serializable {
 
-    public double utbetalt;
-    public double trekk;
-    public double brutto;
-    public Map<String, Map<String, Double>> ytelserUtbetalt;
-    private List<HovedYtelse> hovedYtelsesBeskrivelser;
+    public final double utbetalt;
+    public final double trekk;
+    public final double brutto;
+    public final Map<String, Map<String, Double>> ytelserUtbetalt;
+
+    public Oppsummering(double utbetalt, double trekk, double brutto, Map<String, Map<String, Double>> ytelserUtbetalt) {
+        this.utbetalt = utbetalt;
+        this.trekk = trekk;
+        this.brutto = brutto;
+        this.ytelserUtbetalt = ytelserUtbetalt;
+    }
 
     public String getUtbetalt() {
         return getBelopString(this.utbetalt);
@@ -31,14 +37,12 @@ public class Oppsummering implements Serializable {
     }
 
     public List<HovedYtelse> getHovedYtelsesBeskrivelser() {
-        if (hovedYtelsesBeskrivelser == null) {
-            hovedYtelsesBeskrivelser = new ArrayList<>();
-            for (Map.Entry<String, Map<String, Double>> entry : ytelserUtbetalt.entrySet()) {
-                hovedYtelsesBeskrivelser.add(new HovedYtelse(entry));
-            }
-            sort(hovedYtelsesBeskrivelser, NAVN);
+        List<HovedYtelse> hovedYtelsesBeskrivelser = new ArrayList<>();
+        for (String hovedytelse : ytelserUtbetalt.keySet()) {
+            hovedYtelsesBeskrivelser.add(new HovedYtelse(hovedytelse, ytelserUtbetalt.get(hovedytelse)));
         }
-        return this.hovedYtelsesBeskrivelser;
+        sort(hovedYtelsesBeskrivelser, NAVN);
+        return hovedYtelsesBeskrivelser;
     }
 
 }

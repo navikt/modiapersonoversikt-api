@@ -24,11 +24,11 @@ public class HovedYtelse implements Serializable {
     private String hovedYtelsesBeskrivelse;
     private List<UnderYtelse> underYtelsesBeskrivelser;
 
-    HovedYtelse(Map.Entry<String, Map<String, Double>> ytelseUtbetalt) {
-        hovedYtelsesBeskrivelse = ytelseUtbetalt.getKey();
+    public HovedYtelse(String beskrivelse, Map<String, Double> underytelser) {
+        hovedYtelsesBeskrivelse = beskrivelse;
         underYtelsesBeskrivelser = new ArrayList<>();
-        for (Map.Entry<String, Double> indreEntry : ytelseUtbetalt.getValue().entrySet()) {
-            underYtelsesBeskrivelser.add(new UnderYtelse(indreEntry));
+        for (String underytelse : underytelser.keySet()) {
+            underYtelsesBeskrivelser.add(new UnderYtelse(underytelse, underytelser.get(underytelse)));
         }
         sort(underYtelsesBeskrivelser, NAVN);
     }

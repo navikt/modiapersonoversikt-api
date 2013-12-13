@@ -12,8 +12,10 @@ import no.nav.sbl.dialogarena.utbetaling.domain.util.OppsummeringsKalkulator;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerBelopForUnderytelser;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -41,9 +43,8 @@ public class OppsummeringsKalkulatorTest {
         Bilag bilag3 = new BilagBuilder().setPosteringsDetaljer(asList(detalj, detalj)).createBilag();
 
         Utbetaling utbetaling = new UtbetalingBuilder().setBilag(asList(bilag1, bilag2, bilag3)).createUtbetaling();
-        Oppsummering oppsummering = OppsummeringsKalkulator.regnUtOppsummering(asList(utbetaling));
-
-        assertThat(oppsummering.ytelserUtbetalt.get(alderspensjon).get(alderspensjon), is(5000.0));
+        Map<String,Map<String,Double>> ytelserUtbetalt = summerBelopForUnderytelser(asList(utbetaling));
+        assertThat(ytelserUtbetalt.get(alderspensjon).get(alderspensjon), is(5000.0));
     }
 
 }
