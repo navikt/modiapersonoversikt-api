@@ -35,7 +35,6 @@ public class OppsummeringVM implements Serializable {
         this.utbetalinger = utbetalinger;
         this.sluttDato = sluttDato;
         this.startDato = startDato;
-
         this.utbetalt = getBelopString(on(utbetalinger).map(NETTO).reduce(sumDouble));
         this.trekk = getBelopString(on(utbetalinger).map(BEREGNET_TREKK).reduce(sumDouble));
         this.brutto = getBelopString(on(utbetalinger).map(BRUTTO).reduce(sumDouble));

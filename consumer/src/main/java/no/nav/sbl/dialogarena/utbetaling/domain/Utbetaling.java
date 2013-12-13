@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import com.sun.xml.internal.ws.util.UtilException;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.apache.commons.collections15.Transformer;
