@@ -21,9 +21,9 @@ public class UnderYtelse implements Serializable {
     private Double ytelsesBelop;
     private boolean trekk = false;
 
-    UnderYtelse(Map.Entry<String, Double> indreEntry) {
-        underYtelsesBeskrivelse = indreEntry.getKey();
-        ytelsesBelop = indreEntry.getValue();
+    UnderYtelse(String beskrivelse, Double belop) {
+        underYtelsesBeskrivelse = beskrivelse;
+        ytelsesBelop = belop;
         trekk = ytelsesBelop != null && ytelsesBelop < 0;
     }
 
