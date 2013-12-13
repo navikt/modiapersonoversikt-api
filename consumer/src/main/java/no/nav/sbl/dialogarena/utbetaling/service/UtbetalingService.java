@@ -1,5 +1,10 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
@@ -10,18 +15,16 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeForMangeFore
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkkeFunnet;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeUgyldigDato;
 import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
-import org.joda.time.DateTime;
 
-import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 public class UtbetalingService {
 
     @Inject
     private UtbetalingPortType utbetalingPortType;
 
-    public List<Utbetaling> hentUtbetalinger(String fnr, DateTime startDato, DateTime sluttDato) {
+    public List<Utbetaling> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
         return transformUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato), fnr);
     }
 
@@ -33,7 +36,7 @@ public class UtbetalingService {
         return utbetalinger;
     }
 
-    private List<WSUtbetaling> getWSUtbetalinger(String fnr, DateTime startDato, DateTime sluttDato) {
+    private List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
         try {
             return utbetalingPortType.hentUtbetalingListe(createRequest(fnr, startDato, sluttDato)).getUtbetalingListe();
         } catch (HentUtbetalingListeMottakerIkkeFunnet hentUtbetalingListeMottakerIkkeFunnet) {
@@ -49,10 +52,10 @@ public class UtbetalingService {
         }
     }
 
-    private WSHentUtbetalingListeRequest createRequest(String fnr, DateTime startDato, DateTime sluttDato) {
+    private WSHentUtbetalingListeRequest createRequest(String fnr, LocalDate startDato, LocalDate sluttDato) {
         return new WSHentUtbetalingListeRequest()
                 .withMottaker(fnr)
-                .withPeriode(new WSPeriode().withFom(startDato).withTom(sluttDato));
+                .withPeriode(new WSPeriode().withFom(startDato.toDateTimeAtStartOfDay()).withTom(sluttDato.toDateTime(new LocalTime(23, 59))));
     }
 
 }

@@ -1,9 +1,10 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
+import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerMapVerdier;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
+import static org.apache.commons.lang3.StringUtils.join;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -13,17 +14,22 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerMapVerdier;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
-import static org.apache.commons.lang3.StringUtils.join;
-import static org.joda.time.DateTime.now;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 public class Utbetaling implements Serializable {
 
-    public static final LocalDate DEFAULT_STARTDATO = now().minusMonths(3).toLocalDate();
-    public static final LocalDate DEFAULT_SLUTTDATO = now().toLocalDate();
+    public static final LocalDate defaultStartDato() {
+    	return LocalDate.now().minusMonths(3);
+    }
+
+    public static final LocalDate defaultSluttDato() {
+    	return LocalDate.now();
+    }
+
     private static final String VALUTA = "NOK";
     private final String utbetalingId;
     private String fnr;
