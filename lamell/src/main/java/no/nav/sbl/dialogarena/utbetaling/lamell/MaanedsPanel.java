@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
-import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
+import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -40,15 +40,15 @@ public class MaanedsPanel extends Panel {
         };
     }
 
-    private OppsummeringProperties createOppsummeringProperties(List<Utbetaling> liste) {
+    private OppsummeringVM createOppsummeringProperties(List<Utbetaling> liste) {
         if (liste.isEmpty()) {
-            return new OppsummeringProperties(new ArrayList<Utbetaling>(), now(), now());
+            return new OppsummeringVM(new ArrayList<Utbetaling>(), now(), now());
         }
 
         LocalDate startDato = liste.get(liste.size() - 1).getUtbetalingsDato().dayOfMonth().withMinimumValue().toLocalDate();
         LocalDate sluttDato = liste.get(0).getUtbetalingsDato().dayOfMonth().withMaximumValue().toLocalDate();
 
-        return new OppsummeringProperties(liste, startDato, sluttDato);
+        return new OppsummeringVM(liste, startDato, sluttDato);
     }
 
 }

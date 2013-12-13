@@ -14,8 +14,8 @@ import org.apache.wicket.model.CompoundPropertyModel;
 
 public class OppsummeringPanel extends Panel {
 
-    public OppsummeringPanel(String id, OppsummeringProperties oppsummeringProperties, boolean visDetaljer) {
-        super(id, new CompoundPropertyModel<>(oppsummeringProperties));
+    public OppsummeringPanel(String id, OppsummeringVM oppsummeringVM, boolean visDetaljer) {
+        super(id, new CompoundPropertyModel<>(oppsummeringVM));
 
         MarkupContainer ytelsesDetalj = createYtelsesOppsummering(visDetaljer);
 
@@ -27,14 +27,14 @@ public class OppsummeringPanel extends Panel {
         return new WebMarkupContainer("oppsummeringsLinje")
                 .add(
                         new Label("oppsummertPeriode"),
-                        new Label("oppsummering.utbetalt"),
-                        new Label("oppsummering.trekk"),
-                        new Label("oppsummering.brutto")
+                        new Label("utbetalt"),
+                        new Label("trekk"),
+                        new Label("brutto")
                 );
     }
 
     private MarkupContainer createYtelsesOppsummering(boolean visDetaljer) {
-        ListView<HovedYtelse> listView = new ListView<HovedYtelse>("oppsummering.hovedYtelsesBeskrivelser") {
+        ListView<HovedYtelse> listView = new ListView<HovedYtelse>("hovedytelser") {
             @Override
             protected void populateItem(ListItem<HovedYtelse> item) {
                 item.add(

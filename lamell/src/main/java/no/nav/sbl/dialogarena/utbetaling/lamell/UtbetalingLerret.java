@@ -7,7 +7,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils;
 import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
-import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
+import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsResultat;
 import org.apache.wicket.Component;
@@ -88,7 +88,7 @@ public class UtbetalingLerret extends Lerret {
         sendYtelserEndretEvent();
 
         List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
-        totalOppsummeringPanel.setDefaultModelObject(new OppsummeringProperties(
+        totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(
                 synligeUtbetalinger,
                 filterParametere.getStartDato(),
                 filterParametere.getSluttDato()));
@@ -110,7 +110,7 @@ public class UtbetalingLerret extends Lerret {
 
     private OppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
         return new OppsummeringPanel("totalOppsummeringPanel",
-               new OppsummeringProperties(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()), true);
+               new OppsummeringVM(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()), true);
     }
 
     private static Component opprettMaanedsPanelListe(UtbetalingsResultat resultat, final FilterParametere filter) {
