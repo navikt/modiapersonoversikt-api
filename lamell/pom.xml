@@ -24,6 +24,11 @@
         </dependency>
 
         <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-lang</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-time</artifactId>
         </dependency>
@@ -56,6 +61,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>net.sourceforge.collections</groupId>
+            <artifactId>collections-generic</artifactId>
         </dependency>
 
     </dependencies>

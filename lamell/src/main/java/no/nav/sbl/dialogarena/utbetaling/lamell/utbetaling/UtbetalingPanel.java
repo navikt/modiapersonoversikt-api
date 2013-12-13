@@ -13,6 +13,7 @@ public class UtbetalingPanel extends Panel {
 
     public UtbetalingPanel(String id, Utbetaling utbetaling) {
         super(id, new CompoundPropertyModel<>(utbetaling));
+
         DetaljPanel detaljPanel = createDetaljPanel(utbetaling);
 
         add(

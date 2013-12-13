@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -25,31 +26,23 @@ public class Bilag implements Serializable {
     public static final String SKATT = "skatt";
     private String melding;
     private List<PosteringsDetalj> posteringsDetaljer;
-    private Periode periode;
-
-    Bilag(String melding, List<PosteringsDetalj> posteringsDetaljer, Periode periode) {
-        this.melding = melding;
-        this.posteringsDetaljer = posteringsDetaljer;
-        this.periode = periode;
-    }
+    private DateTime startDato;
+    private DateTime sluttDato;
 
     public Bilag(WSBilag wsBilag) {
-        melding = transformMelding(wsBilag);
-        posteringsDetaljer = new ArrayList<>();
-        periode = new Periode(wsBilag.getBilagPeriode());
+        this.melding = transformMelding(wsBilag);
+        this.posteringsDetaljer = new ArrayList<>();
+        this.startDato = wsBilag.getBilagPeriode().getPeriodeFomDato();
+        this.sluttDato = wsBilag.getBilagPeriode().getPeriodeTomDato();
         transformPosteringsDetaljer(wsBilag.getPosteringsdetaljerListe());
     }
 
-    public Map<String, Double> getBelopPerYtelse() {
-        Map<String, Double> ytelsesBetaling = new HashMap<>();
-        for (PosteringsDetalj detalj : posteringsDetaljer) {
-            ytelsesBetaling.put(detalj.getHovedBeskrivelse(), detalj.getBelop());
-        }
-        return ytelsesBetaling;
+    public DateTime getStartDato() {
+        return startDato;
     }
 
-    public Periode getPeriode() {
-        return periode;
+    public DateTime getSluttDato() {
+        return sluttDato;
     }
 
     public String getMelding() {
