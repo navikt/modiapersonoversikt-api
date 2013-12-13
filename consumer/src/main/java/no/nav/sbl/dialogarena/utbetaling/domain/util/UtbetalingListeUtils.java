@@ -1,10 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
-import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
-import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import org.joda.time.DateTime;
+import static java.util.Collections.sort;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +9,12 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static java.util.Collections.sort;
+import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
+import no.nav.sbl.dialogarena.utbetaling.domain.Periode;
+import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
+import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+
+import org.joda.time.LocalDate;
 
 /**
  * Hjelpefunksjoner for å jobbe med lister av Utbetaling.
@@ -49,7 +50,7 @@ public class UtbetalingListeUtils {
     /**
      * Filtrerer en liste av utbetalinger på periode.
      */
-    public static List<Utbetaling> hentUtbetalingerFraPeriode(List<Utbetaling> utbetalinger, DateTime startDato, DateTime sluttDato) {
+    public static List<Utbetaling> hentUtbetalingerFraPeriode(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
         Periode periode = new Periode(startDato, sluttDato);
         ArrayList<Utbetaling> resultat = new ArrayList<>();
         for (Utbetaling utbetaling : utbetalinger) {
