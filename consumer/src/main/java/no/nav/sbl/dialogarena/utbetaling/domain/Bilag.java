@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -17,7 +18,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalToIgnoreCase;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.HOVEDBESKRIVELSE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.POSTERINGS_DETALJ_KONTONR_TRANSFORMER;
 import static org.apache.commons.lang3.StringUtils.join;
 
@@ -59,8 +60,8 @@ public class Bilag implements Serializable {
 
     public Set<String> getBeskrivelserFromDetaljer() {
         return on(posteringsDetaljer)
-                .filter(where(POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER, not(equalToIgnoreCase(SKATT))))
-                .map(POSTERINGS_DETALJ_HOVEDBESKRIVELSE_TRANSFORMER).collectIn(new TreeSet<String>());
+                .filter(where(HOVEDBESKRIVELSE, not(equalToIgnoreCase(SKATT))))
+                .map(HOVEDBESKRIVELSE).collectIn(new TreeSet<String>());
     }
 
     private String transformMelding(WSBilag wsBilag) {
@@ -118,4 +119,12 @@ public class Bilag implements Serializable {
         }
         return pdetalj;
     }
+
+    public static final Transformer<Bilag, List<PosteringsDetalj>> POSTERINGSDETALJER = new Transformer<Bilag, List<PosteringsDetalj>>() {
+        @Override
+        public List<PosteringsDetalj> transform(Bilag bilag) {
+            return bilag.posteringsDetaljer;
+        }
+    };
+
 }
