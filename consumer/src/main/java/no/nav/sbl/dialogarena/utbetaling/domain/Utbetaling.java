@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
@@ -157,5 +158,28 @@ public class Utbetaling implements Serializable {
         }
         return kontoNrSet;
     }
+
+    public static final Transformer<Utbetaling, Double> BRUTTO = new Transformer<Utbetaling, Double>() {
+        @Override
+        public Double transform(Utbetaling utbetaling) {
+            return utbetaling.getBruttoBelop();
+        }
+    };
+
+    public static final Transformer<Utbetaling, Double> NETTO = new Transformer<Utbetaling, Double>() {
+        @Override
+        public Double transform(Utbetaling utbetaling) {
+            return utbetaling.getNettoBelop();
+        }
+    };
+
+    public static final Transformer<Utbetaling, Double> BEREGNET_TREKK = new Transformer<Utbetaling, Double>() {
+        @Override
+        public Double transform(Utbetaling utbetaling) {
+            return utbetaling.getTrekk() == 0.0 ?
+                    utbetaling.getBruttoBelop() - utbetaling.getNettoBelop() :
+                    utbetaling.getTrekk();
+        }
+    };
 
 }

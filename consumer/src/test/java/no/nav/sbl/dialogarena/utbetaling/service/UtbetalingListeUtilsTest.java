@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetaljBuilder;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
 import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils;
+import org.hamcrest.core.Is;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelserFraUtbetalinger;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerBelopForUnderytelser;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerMapVerdier;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -139,6 +141,19 @@ public class UtbetalingListeUtilsTest {
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Grunnbeløp"), is(4000.0));
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get("Tillegg"), is(2000.0));
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get(SKATT), is(-200.0));
+    }
+
+    @Test
+    public void testRegnUtOppsummering_Ytelser() throws Exception {
+        final String alderspensjon = "Alderspensjon";
+        PosteringsDetalj detalj = new PosteringsDetaljBuilder().setHovedBeskrivelse(alderspensjon).setBelop(1000.0).createPosteringsDetalj();
+        Bilag bilag1 = new BilagBuilder().setPosteringsDetaljer(asList(detalj)).createBilag();
+        Bilag bilag2 = new BilagBuilder().setPosteringsDetaljer(asList(detalj, detalj)).createBilag();
+        Bilag bilag3 = new BilagBuilder().setPosteringsDetaljer(asList(detalj, detalj)).createBilag();
+
+        Utbetaling utbetaling = new UtbetalingBuilder().setBilag(asList(bilag1, bilag2, bilag3)).createUtbetaling();
+        Map<String,Map<String,Double>> ytelserUtbetalt = summerBelopForUnderytelser(asList(utbetaling));
+        assertThat(ytelserUtbetalt.get(alderspensjon).get(alderspensjon), Is.is(5000.0));
     }
 
 }
