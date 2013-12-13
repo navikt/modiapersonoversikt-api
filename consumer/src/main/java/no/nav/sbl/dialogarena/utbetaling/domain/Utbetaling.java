@@ -1,65 +1,51 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerMapVerdier;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
-import static org.apache.commons.lang3.StringUtils.join;
-
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
-
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
+import static org.apache.commons.lang3.StringUtils.join;
+
 public class Utbetaling implements Serializable {
 
-    public static final LocalDate defaultStartDato() {
+    public static final String BRUKER = "bruker";
+    public static final String ARBEIDSGIVER = "arbeidsgiver";
+
+    public static LocalDate defaultStartDato() {
     	return LocalDate.now().minusMonths(3);
     }
-
-    public static final LocalDate defaultSluttDato() {
+    public static LocalDate defaultSluttDato() {
     	return LocalDate.now();
     }
 
-    private static final String VALUTA = "NOK";
-    private final String utbetalingId;
-    private String fnr;
-    private List<Bilag> bilag = new ArrayList<>();
-    private String statusBeskrivelse;
-    private DateTime utbetalingsDato;
-    private double bruttoBelop;
-    private double nettoBelop;
-    private double trekk;
-    private String valuta;
-    private String kontoNr;
-    private Mottaker mottaker;
-    private Periode periode;
+    public final String utbetalingId;
+    public String fnr;
+    public List<Bilag> bilag = new ArrayList<>();
+    public String statusBeskrivelse;
+    public DateTime utbetalingsDato;
+    public double bruttoBelop;
+    public double nettoBelop;
+    public double trekk;
+    public String valuta;
+    public String kontoNr;
+    public String mottakertype;
+    public String mottakernavn;
+    public DateTime startDato;
+    public DateTime sluttDato;
 
-    //CHECKSTYLE:OFF
-    Utbetaling(String fnr, List<Bilag> bilag, String status, DateTime utbetalingsDato, double bruttoBelop, double nettoBelop, String valuta, String kontoNr, String utbetalingId, Mottaker mottaker, Periode periode, double trekk) {
-        this.fnr = fnr;
-        this.bilag = bilag;
-        this.statusBeskrivelse = status;
-        this.utbetalingsDato = utbetalingsDato;
-        this.bruttoBelop = bruttoBelop;
-        this.nettoBelop = nettoBelop;
-        this.valuta = valuta;
-        this.kontoNr = kontoNr;
+    public Utbetaling(String utbetalingId) {
         this.utbetalingId = utbetalingId;
-        this.mottaker = mottaker;
-        this.periode = periode;
-        this.trekk = trekk;
     }
-    //CHECKSTYLE:ON
 
     public Utbetaling(String fnr, WSUtbetaling wsUtbetaling) {
         for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
@@ -74,16 +60,10 @@ public class Utbetaling implements Serializable {
         this.kontoNr = join(getKontoNrFromBilag(), ", ");
         this.utbetalingId = wsUtbetaling.getUtbetalingId();
         this.valuta = transformValuta(wsUtbetaling.getValuta());
-        this.mottaker = new Mottaker(fnr, wsUtbetaling.getUtbetalingMottaker());
-        this.periode = new Periode(wsUtbetaling.getUtbetalingsPeriode());
-    }
-
-    public String getFnr() {
-        return fnr;
-    }
-
-    public Mottaker getMottaker() {
-        return mottaker;
+        this.mottakernavn =  wsUtbetaling.getUtbetalingMottaker().getNavn();
+        this.mottakertype = fnr.equals(wsUtbetaling.getUtbetalingMottaker().getMottakerId()) ? BRUKER : ARBEIDSGIVER;
+        this.startDato = wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato();
+        this.sluttDato = wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato();
     }
 
     public String getKontoNr() {
@@ -103,15 +83,11 @@ public class Utbetaling implements Serializable {
     }
 
     public DateTime getStartDate() {
-        return periode != null ? periode.getStartDato() : null;
+        return startDato;
     }
 
     public DateTime getEndDate() {
-        return periode != null ? periode.getSluttDato() : null;
-    }
-
-    public Periode getPeriode() {
-        return periode;
+        return sluttDato;
     }
 
     public String getStatusBeskrivelse() {
@@ -143,7 +119,7 @@ public class Utbetaling implements Serializable {
     }
 
     public String getPeriodeMedKortDato() {
-        return optional(periode.getStartDato()).map(KORT).getOrElse("") + " - " + optional(periode.getSluttDato()).map(KORT).getOrElse("");
+        return optional(startDato).map(KORT).getOrElse("") + " - " + optional(sluttDato).map(KORT).getOrElse("");
     }
 
     public String getBruttoBelopMedValuta() {
@@ -162,15 +138,6 @@ public class Utbetaling implements Serializable {
         return getBeskrivelser().contains(ytelse);
     }
 
-    public Map<String, Double> getBelopPerYtelser() {
-        Map<String, Double> oppsummert = new HashMap<>();
-        for (Bilag bilag1 : bilag) {
-            Map<String, Double> belopPerYtelse = bilag1.getBelopPerYtelse();
-            summerMapVerdier(oppsummert, belopPerYtelse);
-        }
-        return oppsummert;
-    }
-
     public Set<String> getBeskrivelser() {
         Set<String> beskrivelser = new TreeSet<>();
         for (Bilag detalj : bilag) {
@@ -180,7 +147,7 @@ public class Utbetaling implements Serializable {
     }
 
     private String transformValuta(String wsValuta) {
-        return (wsValuta == null || wsValuta.isEmpty()) ? VALUTA : wsValuta;
+        return (wsValuta == null || wsValuta.isEmpty()) ? "NOK" : wsValuta;
     }
 
     private Set<String> getKontoNrFromBilag() {

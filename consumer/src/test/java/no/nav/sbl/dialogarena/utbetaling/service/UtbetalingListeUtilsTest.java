@@ -10,12 +10,13 @@ import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelserFraUtbetalinger;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerBelopForHovedytelser;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerMapVerdier;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
@@ -65,10 +66,44 @@ public class UtbetalingListeUtilsTest {
 
         Map<String, Double> belopPerYtelse = summerBelopForHovedytelser(asList(utbetaling1, utbetaling2));
 
-        assertThat(belopPerYtelse.get(DAGPENGER), is(3000.0));
+        assertThat(belopPerYtelse.get(DAGPENGER), is(3300.0));
         assertThat(belopPerYtelse.get(SYKEPENGER), is(200.0));
         assertThat(belopPerYtelse.get(BARNETRYGD), is(600.0));
-        assertThat(belopPerYtelse.get(SKATT), is(300.0));
+    }
+
+    /**
+     * Summerer beløpene fra alle posteringsdetaljer med samme hovedbeskrivelse.
+     */
+    public static Map<String, Double> summerBelopForHovedytelser(List<Utbetaling> utbetalinger) {
+        Map<String, Double> ytelser = new HashMap<>();
+        for (Utbetaling utbetaling : utbetalinger) {
+            Map<String, Double> belopPerYtelse = getBelopPerYtelser(utbetaling);
+            summerMapVerdier(ytelser, belopPerYtelse);
+        }
+        return ytelser;
+    }
+
+    public static Map<String, Double> getBelopPerYtelser(Utbetaling utbetaling) {
+        Map<String, Double> oppsummert = new HashMap<>();
+        for (Bilag bilag : utbetaling.getBilag()) {
+            Map<String, Double> belopPerYtelse = getBelopPerYtelse(bilag);
+            summerMapVerdier(oppsummert, belopPerYtelse);
+        }
+        return oppsummert;
+    }
+
+
+    public static Map<String, Double> getBelopPerYtelse(Bilag bilag) {
+        Map<String, Double> ytelsesBetaling = new HashMap<>();
+        for (PosteringsDetalj detalj : bilag.getPosteringsDetaljer()) {
+            if (ytelsesBetaling.containsKey(detalj.getHovedBeskrivelse())) {
+                Double sum = ytelsesBetaling.get(detalj.getHovedBeskrivelse()) + detalj.getBelop();
+                ytelsesBetaling.put(detalj.getHovedBeskrivelse(), sum);
+            } else {
+                ytelsesBetaling.put(detalj.getHovedBeskrivelse(), detalj.getBelop());
+            }
+        }
+        return ytelsesBetaling;
     }
 
 

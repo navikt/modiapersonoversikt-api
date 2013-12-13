@@ -10,14 +10,15 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.CompoundPropertyModel;
 
 public class OppsummeringPanel extends Panel {
 
-    public OppsummeringPanel(String id, IModel<OppsummeringProperties> model, boolean visDetaljer) {
-        super(id, model);
+    public OppsummeringPanel(String id, OppsummeringProperties oppsummeringProperties, boolean visDetaljer) {
+        super(id, new CompoundPropertyModel<>(oppsummeringProperties));
 
         MarkupContainer ytelsesDetalj = createYtelsesOppsummering(visDetaljer);
+
         add(createTopplinje(), ytelsesDetalj);
         add(createClickBehavior(visDetaljer, ytelsesDetalj));
     }
@@ -58,13 +59,10 @@ public class OppsummeringPanel extends Panel {
                 };
             }
         };
-
-        WebMarkupContainer detalj = new WebMarkupContainer("oppsummeringDetalj");
-        detalj.add(listView)
+        return (MarkupContainer) new WebMarkupContainer("oppsummeringDetalj")
+                .add(listView)
                 .setOutputMarkupPlaceholderTag(true)
                 .setVisibilityAllowed(visDetaljer);
-
-        return detalj;
     }
 
     private AjaxEventBehavior createClickBehavior(final boolean visDetaljer, final MarkupContainer ytelsesDetalj) {

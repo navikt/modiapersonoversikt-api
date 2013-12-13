@@ -16,7 +16,7 @@ public class DetaljPanel extends Panel {
     public DetaljPanel(String id, Utbetaling utbetaling) {
         super(id);
         add(
-                new Label("mottatt", utbetaling.getMottaker().getNavn()),
+                new Label("mottatt", utbetaling.mottakernavn),
                 new Label("konto", utbetaling.getKontoNr()),
                 new Label("ytelsesinfo", utbetaling.getBeskrivelse()),
                 new Label("periode", utbetaling.getPeriodeMedKortDato()),

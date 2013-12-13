@@ -26,29 +26,27 @@ import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.LocalDate;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.FEIL;
+import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 import static org.joda.time.LocalDate.now;
 
 public class FilterFormPanel extends Panel {
 
-    public static final String FEIL = "filter.feil";
     private static final int AAR_TILBAKE = 3;
 
     private FilterParametere filterParametere;
 
     private MarkupContainer ytelsesContainer;
-    private List<ValgtYtelseVM> ytelseVMer;
 
     public FilterFormPanel(String id, FilterParametere filterParametere) {
         super(id);
 
         this.filterParametere = filterParametere;
+        this.ytelsesContainer = createYtelser();
+        
         add(createFilterForm());
     }
 
@@ -65,18 +63,13 @@ public class FilterFormPanel extends Panel {
     }
 
     private MarkupContainer createYtelser() {
-        lagValgteYtelserVM();
-
-        ytelsesContainer = new WebMarkupContainer("ytelsesContainer");
-        ytelsesContainer.setOutputMarkupId(true);
-        ListView<ValgtYtelseVM> listView = new ListView<ValgtYtelseVM>("ytelsesKnappeFilter", new CompoundPropertyModel<>(ytelseVMer)) {
-
+        ListView<ValgtYtelse> listView = new ListView<ValgtYtelse>("ytelsesKnappeFilter", new CompoundPropertyModel<>(filterParametere.getValgteYtelser())) {
             @Override
-            protected void populateItem(ListItem<ValgtYtelseVM> item) {
-                AjaxLink<ValgtYtelseVM> knapp = new AjaxLink<ValgtYtelseVM>("valgtYtelse.ytelse", item.getModel()) {
+            protected void populateItem(ListItem<ValgtYtelse> item) {
+                final AjaxLink<ValgtYtelse> knapp = new AjaxLink<ValgtYtelse>("valgtYtelse.ytelse", item.getModel()) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        getModelObject().valgtYtelse.setValgt((!getModelObject().valgtYtelse.getValgt()));
+                        getModelObject().setValgt((!getModelObject().getValgt()));
                         sendFilterEndretEvent();
                         target.add(this);
                     }
@@ -86,23 +79,17 @@ public class FilterFormPanel extends Panel {
                         response.render(OnLoadHeaderItem.forScript(createSnurrepippJS("input:button", "click")));
                     }
                 };
-                knapp.add(new AttributeModifier("value", item.getModelObject().valgtYtelse.getYtelse()));
-                knapp.add(hasCssClassIf("valgt", knapp.getModelObject().valgtModell));
-                knapp.setOutputMarkupId(true);
+                knapp.add(new AttributeModifier("value", item.getModelObject().getYtelse()));
+                knapp.add(hasCssClassIf("valgt", new AbstractReadOnlyModel<Boolean>() {
+                    @Override
+                    public Boolean getObject() {
+                        return knapp.getModelObject().getValgt();
+                    }
+                }));
                 item.add(knapp);
             }
         };
-        listView.setOutputMarkupId(true);
-        ytelsesContainer.add(listView);
-        return ytelsesContainer;
-    }
-
-    private void lagValgteYtelserVM() {
-        ytelseVMer = new ArrayList<>();
-        List<ValgtYtelse> valgteYtelser = filterParametere.getValgteYtelser();
-        for (ValgtYtelse ytelse : valgteYtelser) {
-            ytelseVMer.add(new ValgtYtelseVM(ytelse));
-        }
+        return (MarkupContainer) new WebMarkupContainer("ytelsesContainer").add(listView).setOutputMarkupId(true);
     }
 
     private AjaxLink<Boolean> createMottakerButton(final String mottaker) {
@@ -181,24 +168,8 @@ public class FilterFormPanel extends Panel {
         send(getPage(), Broadcast.DEPTH, FEIL);
     }
 
-    @RunOnEvents(FilterParametere.HOVEDYTELSER_ENDRET)
+    @RunOnEvents(HOVEDYTELSER_ENDRET)
     private void oppdaterYtelsesKnapper(AjaxRequestTarget target) {
-        lagValgteYtelserVM();
         target.add(ytelsesContainer);
-    }
-
-    private static final class ValgtYtelseVM implements Serializable {
-        final ValgtYtelse valgtYtelse;
-        AbstractReadOnlyModel<Boolean> valgtModell;
-
-        private ValgtYtelseVM(final ValgtYtelse valgtYtelse) {
-            this.valgtYtelse = valgtYtelse;
-            this.valgtModell = new AbstractReadOnlyModel<Boolean>() {
-                @Override
-                public Boolean getObject() {
-                    return valgtYtelse.getValgt();
-                }
-            };
-        }
     }
 }
