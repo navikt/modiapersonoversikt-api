@@ -22,7 +22,8 @@ public class UtbetalingBuilder {
     private String fnr = "12345678978";
     private String mottakernavn = "Per Frode Kjellsen";
     private String mottakertype = BRUKER;
-    private Periode periode = new Periode(new DateTime().minusDays(32), new DateTime().minusDays(2));
+    private DateTime startDato = new DateTime().minusDays(32);
+    private DateTime sluttDato = new DateTime().minusDays(2);
 
     public UtbetalingBuilder() {
         bilag.addAll(asList(
@@ -57,13 +58,13 @@ public class UtbetalingBuilder {
         return this;
     }
 
-    public UtbetalingBuilder setPeriode(String periode) {
-        this.periode = new Periode(periode);
+    public UtbetalingBuilder setStartDato(DateTime startDato) {
+        this.startDato = startDato;
         return this;
     }
 
-    public UtbetalingBuilder setPeriode(Periode periode) {
-        this.periode = periode;
+    public UtbetalingBuilder setSluttDato(DateTime sluttDato) {
+        this.sluttDato = sluttDato;
         return this;
     }
 
@@ -111,7 +112,8 @@ public class UtbetalingBuilder {
         utbetaling.nettoBelop = nettoBelop;
         utbetaling.valuta = valuta;
         utbetaling.kontoNr = kontoNr;
-        utbetaling.periode = periode;
+        utbetaling.startDato = startDato;
+        utbetaling.sluttDato = sluttDato;
         utbetaling.trekk = trekk;
         utbetaling.mottakernavn = mottakernavn;
         utbetaling.mottakertype = mottakertype;

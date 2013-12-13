@@ -20,6 +20,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 import javax.inject.Inject;
@@ -27,7 +29,6 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Periode.intervall;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
@@ -97,7 +98,11 @@ public class UtbetalingLerret extends Lerret {
     }
 
 	private void oppdaterCacheOmNodvendig() {
-		if (!intervall(resultatCache.startDato, resultatCache.sluttDato).contains(intervall(filterParametere.getStartDato(), filterParametere.getSluttDato()))) {
+        DateTime cacheStartDato = resultatCache.startDato.toDateTimeAtStartOfDay();
+        DateTime cacheSluttDato = resultatCache.sluttDato.toDateMidnight().toDateTime();
+        DateTime filterStartDato = filterParametere.getStartDato().toDateTimeAtStartOfDay();
+        DateTime filterSluttDato = filterParametere.getSluttDato().toDateMidnight().toDateTime();
+        if (!new Interval(cacheStartDato, cacheSluttDato).contains(new Interval(filterStartDato, filterSluttDato))) {
 			List<Utbetaling> utbetalinger = service.hentUtbetalinger(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
 	    	resultatCache = new UtbetalingsResultat(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato(), utbetalinger);
 		}
