@@ -2,25 +2,24 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-
-import org.apache.wicket.markup.html.panel.Panel;
+import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.Panel;
 
 import java.util.List;
 
 public class DetaljPanel extends Panel {
 
-    public DetaljPanel(String id, Utbetaling utbetaling) {
+    public DetaljPanel(String id, UtbetalingVM utbetalingVM) {
         super(id);
         add(
-                new Label("mottatt", utbetaling.mottakernavn),
-                new Label("konto", utbetaling.getKontoNr()),
-                new Label("ytelsesinfo", utbetaling.getBeskrivelse()),
-                new Label("periode", utbetaling.getPeriodeMedKortDato()),
-                createBilagListView(utbetaling.getBilag())
+                new Label("mottatt", utbetalingVM.utbetaling.mottakernavn),
+                new Label("konto", utbetalingVM.utbetaling.getKontoNr()),
+                new Label("ytelsesinfo", utbetalingVM.getBeskrivelse()),
+                new Label("periode", utbetalingVM.getPeriodeMedKortDato()),
+                createBilagListView(utbetalingVM.utbetaling.getBilag())
         );
     }
 

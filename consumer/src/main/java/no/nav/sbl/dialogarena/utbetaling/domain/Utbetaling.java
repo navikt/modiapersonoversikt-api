@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static org.apache.commons.lang3.StringUtils.join;
 
 public class Utbetaling implements Serializable {
@@ -78,10 +75,6 @@ public class Utbetaling implements Serializable {
         return bilag;
     }
 
-    public String getBeskrivelse() {
-        return join(getBeskrivelser(), ", ");
-    }
-
     public DateTime getStartDate() {
         return startDato;
     }
@@ -104,30 +97,6 @@ public class Utbetaling implements Serializable {
 
     public double getTrekk() {
         return trekk;
-    }
-
-    public String getKortUtbetalingsDato() {
-        return optional(utbetalingsDato).map(KORT).getOrElse("Ingen utbetalingsdato");
-    }
-
-    public String getPeriodeMedKortDato() {
-        return optional(startDato).map(KORT).getOrElse("") + " - " + optional(sluttDato).map(KORT).getOrElse("");
-    }
-
-    public String getBruttoBelopMedValuta() {
-        return getBelopString(bruttoBelop);
-    }
-
-    public String getTrekkMedValuta() {
-        return getBelopString(trekk);
-    }
-
-    public String getBelopMedValuta() {
-        return getBelopString(nettoBelop);
-    }
-
-    public boolean harYtelse(String ytelse) {
-        return getBeskrivelser().contains(ytelse);
     }
 
     public Set<String> getBeskrivelser() {

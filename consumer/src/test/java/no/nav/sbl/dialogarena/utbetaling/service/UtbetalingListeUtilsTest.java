@@ -17,8 +17,10 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelserFraUtbetalinger;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerBelopForUnderytelser;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 
 
@@ -44,11 +46,8 @@ public class UtbetalingListeUtilsTest {
         List<String> beskrivelser = hentYtelserFraUtbetalinger(asList(utbetaling1, utbetaling2));
 
         assertThat(beskrivelser.size(), is(3));
-        assertThat(beskrivelser.contains(DAGPENGER), is(equalTo(true)));
-        assertThat(beskrivelser.contains(SYKEPENGER), is(equalTo(true)));
-        assertThat(beskrivelser.contains(BARNETRYGD), is(equalTo(true)));
-        assertThat(beskrivelser.contains(SKATT), is(equalTo(false)));
-        assertThat(utbetaling1.getBeskrivelse(), is(BARNETRYGD + ", " + DAGPENGER));
+        assertThat(beskrivelser, containsInAnyOrder(DAGPENGER, SYKEPENGER, BARNETRYGD));
+        assertThat(beskrivelser, not(contains(SKATT)));
     }
 
     @Test

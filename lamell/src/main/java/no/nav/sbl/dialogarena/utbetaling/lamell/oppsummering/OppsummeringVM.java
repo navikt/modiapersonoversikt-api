@@ -1,13 +1,14 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import org.apache.commons.collections15.Transformer;
+import org.joda.time.LocalDate;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import org.apache.commons.collections15.Transformer;
-import org.joda.time.LocalDate;
 
 import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
 import static no.nav.modig.lang.collections.IterUtils.on;

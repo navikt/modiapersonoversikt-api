@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling1;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -75,6 +76,6 @@ public class UtbetalingServiceTest {
         assertThat(u.getEndDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato()));
         assertThat(u.nettoBelop, is(wsUtbetaling.getNettobelop()));
         assertThat(u.bruttoBelop, is(wsUtbetaling.getBruttobelop()));
-        assertThat(u.getBeskrivelse(), is(alderspensjon));
+        assertThat(u.getBeskrivelser(), contains(alderspensjon));
     }
 }
