@@ -36,6 +36,7 @@ public class UtbetalingApplication extends WebApplication {
     @Override
     protected void init() {
         setupSpringInjector();
+        Locale.setDefault(new Locale("nb", "no"));
         getMarkupSettings().setStripWicketTags(true);
 
         Datoformat.brukLocaleFra(new Factory<Locale>() {

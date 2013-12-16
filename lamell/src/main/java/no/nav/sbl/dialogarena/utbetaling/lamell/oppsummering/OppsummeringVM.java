@@ -45,7 +45,7 @@ public class OppsummeringVM implements Serializable {
 
     public String getOppsummertPeriode() {
         if (startDato.getMonthOfYear() == sluttDato.getMonthOfYear()) {
-            return startDato.toString("MMMM", Locale.forLanguageTag("nb"));
+            return startDato.toString("MMMM", Locale.getDefault());
         }
         return KORT.transform(startDato.toDateTimeAtStartOfDay()) + " - " + KORT.transform(sluttDato.toDateMidnight().toDateTime());
     }
