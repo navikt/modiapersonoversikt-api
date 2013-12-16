@@ -10,6 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.Filter.filtrer;
+
 
 public class FilterParametere implements Serializable, Predicate<Utbetaling> {
 
@@ -101,8 +103,8 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     }
 
     @Override
-    public boolean evaluate(Utbetaling object) {
-        return Filter.filtrer(object, this);
+    public boolean evaluate(Utbetaling utbetaling) {
+        return filtrer(utbetaling, this);
     }
 
     public static class ValgtYtelse implements Serializable {

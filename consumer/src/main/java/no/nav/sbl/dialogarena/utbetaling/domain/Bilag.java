@@ -15,16 +15,11 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.equalToIgnoreCase;
-import static no.nav.modig.lang.collections.PredicateUtils.not;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.HOVEDBESKRIVELSE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.KONTONR;
 import static org.apache.commons.lang3.StringUtils.join;
 
 public class Bilag implements Serializable {
 
-    public static final String SKATT = "skatt";
     private String melding;
     private List<PosteringsDetalj> posteringsDetaljer;
     private DateTime startDato;
@@ -56,12 +51,6 @@ public class Bilag implements Serializable {
 
     public Set<? extends String> getKontoNrFromDetaljer() {
         return on(posteringsDetaljer).map(KONTONR).collectIn(new TreeSet<String>());
-    }
-
-    public Set<String> getBeskrivelserFromDetaljer() {
-        return on(posteringsDetaljer)
-                .filter(where(HOVEDBESKRIVELSE, not(equalToIgnoreCase(SKATT))))
-                .map(HOVEDBESKRIVELSE).collectIn(new TreeSet<String>());
     }
 
     private String transformMelding(WSBilag wsBilag) {

@@ -11,11 +11,11 @@ import org.hamcrest.core.Is;
 import org.junit.Test;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelserFraUtbetalinger;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerBelopForUnderytelser;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsInAnyOrder;
@@ -43,7 +43,7 @@ public class UtbetalingListeUtilsTest {
         Utbetaling utbetaling1 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1)).createUtbetaling();
         Utbetaling utbetaling2 = new UtbetalingBuilder().setBilag(Arrays.asList(bilag1, bilag2)).createUtbetaling();
 
-        List<String> beskrivelser = hentYtelserFraUtbetalinger(asList(utbetaling1, utbetaling2));
+        Set<String> beskrivelser = hentYtelser(asList(utbetaling1, utbetaling2));
 
         assertThat(beskrivelser.size(), is(3));
         assertThat(beskrivelser, containsInAnyOrder(DAGPENGER, SYKEPENGER, BARNETRYGD));
