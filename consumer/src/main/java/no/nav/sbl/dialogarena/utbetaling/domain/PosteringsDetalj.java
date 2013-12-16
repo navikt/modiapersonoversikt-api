@@ -39,7 +39,7 @@ public class PosteringsDetalj implements Serializable {
         }
     };
 
-    public static final Transformer<PosteringsDetalj, String> POSTERINGS_DETALJ_KONTONR_TRANSFORMER = new Transformer<PosteringsDetalj, String>() {
+    public static final Transformer<PosteringsDetalj, String> KONTONR = new Transformer<PosteringsDetalj, String>() {
         @Override
         public String transform(PosteringsDetalj posteringsDetalj) {
             return posteringsDetalj.getKontoNr();

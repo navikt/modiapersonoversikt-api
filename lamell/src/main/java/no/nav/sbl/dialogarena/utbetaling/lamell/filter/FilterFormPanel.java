@@ -4,8 +4,7 @@ import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
-import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ValgtYtelse;
+import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.ValgtYtelse;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -28,9 +27,9 @@ import org.joda.time.LocalDate;
 
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.FEIL;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.HOVEDYTELSER_ENDRET;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.ENDRET;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FEIL;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 import static org.joda.time.LocalDate.now;
 
 public class FilterFormPanel extends Panel {

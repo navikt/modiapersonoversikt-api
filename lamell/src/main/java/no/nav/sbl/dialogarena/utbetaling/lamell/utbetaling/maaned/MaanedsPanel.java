@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.utbetaling.lamell;
+package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
