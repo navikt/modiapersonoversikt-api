@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.utbetaling.filter;
+package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils;
