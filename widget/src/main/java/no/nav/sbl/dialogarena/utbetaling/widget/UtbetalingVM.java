@@ -68,7 +68,7 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
     }
 
     private String formaterBelop(double nettoBelop) {
-        NumberFormat nf = NumberFormat.getNumberInstance(Locale.forLanguageTag("nb"));
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.getDefault());
         nf.setGroupingUsed(true);
         nf.setMinimumFractionDigits(2);
         return nf.format(nettoBelop);
