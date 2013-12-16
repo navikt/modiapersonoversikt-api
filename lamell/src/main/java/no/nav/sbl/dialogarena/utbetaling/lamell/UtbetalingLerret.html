@@ -11,12 +11,13 @@
         <div class="utbetaling-ramme">
             <div class="utbetaling-ramme-header"><wicket:message key="utbetaling.lamell.oppsummering-total-overskrift"/></div>
             <div wicket:id="ingenutbetalinger"></div>
+            <div wicket:id="feilutbetalinger"></div>
             <div class="utbetaling-ramme-innhold oppsummering-total" wicket:id="totalOppsummeringPanel"></div>
         </div>
 
-        <div class="utbetaling-ramme">
+        <div class="utbetaling-ramme" wicket:id="utbetalingslisteContainer">
             <div class="utbetaling-ramme-header"><wicket:message key="utbetaling.lamell.utbetalinger-utfort"/></div>
-            <div class="utbetaling-ramme-innhold utbetalinger" wicket:id="utbetalingslisteContainer">
+            <div class="utbetaling-ramme-innhold utbetalinger">
                 <wicket:container wicket:id="maanedsPaneler">
                     <wicket:container wicket:id="maanedsPanel"/>
                 </wicket:container>
