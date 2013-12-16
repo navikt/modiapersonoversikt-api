@@ -10,6 +10,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.TreeSet;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
@@ -30,7 +31,6 @@ public class UtbetalingTest {
         assertThat(beskrivelser.size(), is(2));
         assertThat(beskrivelser.contains("Dagpenger"), is(equalTo(true)));
         assertThat(beskrivelser.contains("Sykepenger"), is(equalTo(true)));
-        assertThat(utbetaling.getBeskrivelse(), is("Dagpenger, Sykepenger"));
     }
 
     @Test
@@ -47,7 +47,6 @@ public class UtbetalingTest {
         assertThat(beskrivelser.size(), is(2));
         assertThat(beskrivelser.contains("Dagpenger"), is(equalTo(true)));
         assertThat(beskrivelser.contains("Sykepenger"), is(equalTo(true)));
-        assertThat(utbetaling.getBeskrivelse(), is("Dagpenger, Sykepenger"));
     }
 
     @Test
@@ -63,7 +62,6 @@ public class UtbetalingTest {
 
         assertThat(beskrivelser.size(), is(1));
         assertThat(beskrivelser.contains(""), is(equalTo(true)));
-        assertThat(utbetaling.getBeskrivelse(), is(""));
     }
 
     @Test
@@ -96,7 +94,7 @@ public class UtbetalingTest {
         assertThat(u.getEndDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato()));
         assertThat(u.nettoBelop, is(wsUtbetaling.getNettobelop()));
         assertThat(u.bruttoBelop, is(wsUtbetaling.getBruttobelop()));
-        assertThat(u.getBeskrivelse(), is(dagpenger));
+        assertThat(u.getBeskrivelser(), contains(dagpenger));
         assertThat(u.getStatusBeskrivelse(), is(wsUtbetaling.getStatusBeskrivelse()));
         assertThat(u.getKontoNr(), is(kontoNr));
 

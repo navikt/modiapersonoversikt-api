@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import static org.apache.commons.lang3.StringUtils.join;
+
+
 public class UtbetalingVM implements FeedItemVM, Serializable {
 
     public static final Transformer<Utbetaling, UtbetalingVM> UTBETALING_UTBETALINGVM_TRANSFORMER = new Transformer<Utbetaling, UtbetalingVM>() {
@@ -29,7 +32,7 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
     }
 
     public String getBeskrivelse() {
-        return utbetaling.getBeskrivelse();
+        return join(utbetaling.getBeskrivelser(), ", ");
     }
 
     public String getBelop() {

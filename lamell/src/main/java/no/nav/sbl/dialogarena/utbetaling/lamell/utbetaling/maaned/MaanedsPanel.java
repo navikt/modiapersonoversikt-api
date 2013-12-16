@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
@@ -27,7 +28,7 @@ public class MaanedsPanel extends Panel {
 
     private OppsummeringPanel createOppsummeringsPanel(List<Utbetaling> utbetalingsliste) {
         return new OppsummeringPanel("oppsummeringsPanel",
-                createOppsummeringProperties(utbetalingsliste),
+                createOppsummeringVM(utbetalingsliste),
                 VIS_DETALJER);
     }
 
@@ -35,12 +36,12 @@ public class MaanedsPanel extends Panel {
         return new ListView<Utbetaling>("utbetalinger", utbetalingsliste) {
             @Override
             protected void populateItem(ListItem<Utbetaling> item) {
-                item.add(new UtbetalingPanel("utbetaling", item.getModelObject()));
+                item.add(new UtbetalingPanel("utbetaling", new UtbetalingVM(item.getModelObject())));
             }
         };
     }
 
-    private OppsummeringVM createOppsummeringProperties(List<Utbetaling> liste) {
+    private OppsummeringVM createOppsummeringVM(List<Utbetaling> liste) {
         if (liste.isEmpty()) {
             return new OppsummeringVM(new ArrayList<Utbetaling>(), now(), now());
         }
