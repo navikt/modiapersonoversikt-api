@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.HovedYtelse;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
@@ -15,10 +15,7 @@ import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BEREGNET_TREKK;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUTTO;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.NETTO;
-import static no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.HovedYtelse.HovedYtelseComparator.NAVN;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.HovedYtelseVM.HovedYtelseComparator.NAVN;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.summerBelopForUnderytelser;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
@@ -28,8 +25,8 @@ public class OppsummeringVM implements Serializable {
     private List<Utbetaling> utbetalinger;
     private LocalDate sluttDato;
     private LocalDate startDato;
+    private List<HovedYtelseVM> hovedytelser;
     public String utbetalt, trekk, brutto;
-    public List<HovedYtelse> hovedytelser;
 
     public OppsummeringVM(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
         this.utbetalinger = utbetalinger;
@@ -41,7 +38,7 @@ public class OppsummeringVM implements Serializable {
         this.hovedytelser = new ArrayList<>();
         Map<String,Map<String,Double>> ytelserUtbetalt = summerBelopForUnderytelser(utbetalinger);
         for (String hovedytelse : ytelserUtbetalt.keySet()) {
-            hovedytelser.add(new HovedYtelse(hovedytelse, ytelserUtbetalt.get(hovedytelse)));
+            hovedytelser.add(new HovedYtelseVM(hovedytelse, ytelserUtbetalt.get(hovedytelse)));
         }
         sort(hovedytelser, NAVN);
     }
@@ -64,4 +61,27 @@ public class OppsummeringVM implements Serializable {
         }
         return KORT.transform(startDato.toDateTimeAtStartOfDay()) + " - " + KORT.transform(sluttDato.toDateMidnight().toDateTime());
     }
+
+    private static final Transformer<Utbetaling, Double> BRUTTO = new Transformer<Utbetaling, Double>() {
+        @Override
+        public Double transform(Utbetaling utbetaling) {
+            return utbetaling.bruttoBelop;
+        }
+    };
+
+    private static final Transformer<Utbetaling, Double> NETTO = new Transformer<Utbetaling, Double>() {
+        @Override
+        public Double transform(Utbetaling utbetaling) {
+            return utbetaling.nettoBelop;
+        }
+    };
+
+    private static final Transformer<Utbetaling, Double> BEREGNET_TREKK = new Transformer<Utbetaling, Double>() {
+        @Override
+        public Double transform(Utbetaling utbetaling) {
+            return utbetaling.getTrekk() == 0.0 ?
+                    utbetaling.bruttoBelop - utbetaling.nettoBelop :
+                    utbetaling.getTrekk();
+        }
+    };
 }

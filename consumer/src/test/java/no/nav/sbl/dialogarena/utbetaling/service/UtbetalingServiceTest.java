@@ -73,8 +73,8 @@ public class UtbetalingServiceTest {
         assertThat(u.getUtbetalingsDato(), is(wsUtbetaling.getUtbetalingDato()));
         assertThat(u.getStartDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato()));
         assertThat(u.getEndDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato()));
-        assertThat(u.getNettoBelop(), is(wsUtbetaling.getNettobelop()));
-        assertThat(u.getBruttoBelop(), is(wsUtbetaling.getBruttobelop()));
+        assertThat(u.nettoBelop, is(wsUtbetaling.getNettobelop()));
+        assertThat(u.bruttoBelop, is(wsUtbetaling.getBruttobelop()));
         assertThat(u.getBeskrivelse(), is(alderspensjon));
     }
 }

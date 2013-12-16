@@ -33,7 +33,7 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
     }
 
     public String getBelop() {
-        return formaterBelop(utbetaling.getNettoBelop());
+        return formaterBelop(utbetaling.nettoBelop);
     }
 
     public String getValuta() {
