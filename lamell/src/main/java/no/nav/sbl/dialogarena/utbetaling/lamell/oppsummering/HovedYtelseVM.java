@@ -2,26 +2,24 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import org.apache.commons.collections15.Transformer;
 
 import static java.util.Collections.sort;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class HovedYtelseVM implements Serializable {
 
-    public static class HovedYtelseComparator {
-        public static final Comparator<HovedYtelseVM> NAVN = new Comparator<HovedYtelseVM>() {
-            @Override
-            public int compare(HovedYtelseVM o1, HovedYtelseVM o2) {
-                return o1.getHovedYtelsesBeskrivelse().compareTo(o2.getHovedYtelsesBeskrivelse());
-            }
-        };
-    }
-
     private String hovedYtelsesBeskrivelse;
     private List<UnderYtelseVM> underYtelsesBeskrivelser;
+
+    public static final Transformer<HovedYtelseVM, String> NAVN = new Transformer<HovedYtelseVM, String>() {
+        @Override
+        public String transform(HovedYtelseVM hovedYtelseVM) {
+            return hovedYtelseVM.hovedYtelsesBeskrivelse;
+        }
+    };
 
     public HovedYtelseVM(String beskrivelse, Map<String, Double> underytelser) {
         hovedYtelsesBeskrivelse = beskrivelse;
