@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
@@ -19,7 +21,6 @@ import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Bilag.POSTERINGSDETALJER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.HOVEDBESKRIVELSE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.UNDERBESKRIVELSE;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BILAG;
 
 /**
  * Hjelpefunksjoner for å jobbe med lister av Utbetaling.
@@ -110,5 +111,12 @@ public class UtbetalingListeUtils {
         }
         return ytelser;
     }
+
+    private static final Transformer<Utbetaling, List<Bilag>> BILAG = new Transformer<Utbetaling, List<Bilag>>() {
+        @Override
+        public List<Bilag> transform(Utbetaling utbetaling) {
+            return utbetaling.bilag;
+        }
+    };
 
 }

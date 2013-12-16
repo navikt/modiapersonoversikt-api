@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.HovedYtelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.oppsummering.UnderYtelse;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -34,9 +32,9 @@ public class OppsummeringPanel extends Panel {
     }
 
     private MarkupContainer createYtelsesOppsummering(boolean visDetaljer) {
-        ListView<HovedYtelse> listView = new ListView<HovedYtelse>("hovedytelser") {
+        ListView<HovedYtelseVM> listView = new ListView<HovedYtelseVM>("hovedytelser") {
             @Override
-            protected void populateItem(ListItem<HovedYtelse> item) {
+            protected void populateItem(ListItem<HovedYtelseVM> item) {
                 item.add(
                         new Label("hovedYtelsesBeskrivelse", item.getModelObject().getHovedYtelsesBeskrivelse()),
                         new Label("bruttoUnderytelser", item.getModelObject().getBruttoUnderytelser()),
@@ -46,10 +44,10 @@ public class OppsummeringPanel extends Panel {
                 );
             }
 
-            private ListView<UnderYtelse> lagUnderBeskrivelseListView(final ListItem<HovedYtelse> item) {
-                return new ListView<UnderYtelse>("underYtelsesBeskrivelser", item.getModelObject().getUnderYtelsesBeskrivelser()) {
+            private ListView<UnderYtelseVM> lagUnderBeskrivelseListView(final ListItem<HovedYtelseVM> item) {
+                return new ListView<UnderYtelseVM>("underYtelsesBeskrivelser", item.getModelObject().getUnderYtelsesBeskrivelser()) {
                     @Override
-                    protected void populateItem(ListItem<UnderYtelse> item) {
+                    protected void populateItem(ListItem<UnderYtelseVM> item) {
                         item.add(
                                 new Label("underYtelsesBeskrivelse", item.getModelObject().getUnderYtelsesBeskrivelse()),
                                 new Label("ytelsesBelop", item.getModelObject().getYtelsesBelop()),

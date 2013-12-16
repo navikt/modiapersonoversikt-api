@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
@@ -23,10 +22,10 @@ public class Utbetaling implements Serializable {
     public static final String ARBEIDSGIVER = "arbeidsgiver";
 
     public static LocalDate defaultStartDato() {
-    	return LocalDate.now().minusMonths(3);
+        return LocalDate.now().minusMonths(3);
     }
     public static LocalDate defaultSluttDato() {
-    	return LocalDate.now();
+        return LocalDate.now();
     }
 
     public final String utbetalingId;
@@ -99,16 +98,8 @@ public class Utbetaling implements Serializable {
         return utbetalingsDato;
     }
 
-    public double getBruttoBelop() {
-        return bruttoBelop;
-    }
-
     public String getUtbetalingId() {
         return utbetalingId;
-    }
-
-    public double getNettoBelop() {
-        return nettoBelop;
     }
 
     public double getTrekk() {
@@ -158,35 +149,5 @@ public class Utbetaling implements Serializable {
         }
         return kontoNrSet;
     }
-
-    public static final Transformer<Utbetaling, Double> BRUTTO = new Transformer<Utbetaling, Double>() {
-        @Override
-        public Double transform(Utbetaling utbetaling) {
-            return utbetaling.getBruttoBelop();
-        }
-    };
-
-    public static final Transformer<Utbetaling, Double> NETTO = new Transformer<Utbetaling, Double>() {
-        @Override
-        public Double transform(Utbetaling utbetaling) {
-            return utbetaling.getNettoBelop();
-        }
-    };
-
-    public static final Transformer<Utbetaling, Double> BEREGNET_TREKK = new Transformer<Utbetaling, Double>() {
-        @Override
-        public Double transform(Utbetaling utbetaling) {
-            return utbetaling.getTrekk() == 0.0 ?
-                    utbetaling.getBruttoBelop() - utbetaling.getNettoBelop() :
-                    utbetaling.getTrekk();
-        }
-    };
-
-    public static final Transformer<Utbetaling, List<Bilag>> BILAG = new Transformer<Utbetaling, List<Bilag>>() {
-        @Override
-        public List<Bilag> transform(Utbetaling utbetaling) {
-            return utbetaling.bilag;
-        }
-    };
 
 }
