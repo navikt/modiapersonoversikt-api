@@ -107,6 +107,15 @@
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-common</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-lang</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.collections</groupId>
+            <artifactId>collections-generic</artifactId>
+        </dependency>
+
 
     </dependencies>
 
