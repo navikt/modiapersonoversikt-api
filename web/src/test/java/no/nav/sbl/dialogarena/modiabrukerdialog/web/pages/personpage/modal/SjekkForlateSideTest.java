@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal;
 
+import no.nav.modig.wicket.test.internal.Parameters;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
@@ -35,23 +36,25 @@ public class SjekkForlateSideTest extends WicketPageTest {
 
     private SjekkForlateSideAnswer answer;
     private SjekkForlateSide sjekkForlateSide;
+    private Parameters parameters;
 
     @Override
     protected void additionalSetup() {
+        parameters = new Parameters().param("fnr", "11111111111");
         answer = new SjekkForlateSideAnswer();
         sjekkForlateSide = new SjekkForlateSide("id", new RedirectModalWindow("modigModalWindow"), answer);
     }
 
     @Test
     public void skalOppretteSjekkForlateSide() {
-        wicket.goTo(PersonPage.class).goToPageWith(sjekkForlateSide)
+        wicket.goTo(PersonPage.class, parameters).goToPageWith(sjekkForlateSide)
                 .should().containComponent(withId("closeDiscard").and(ofType(AjaxLink.class)))
                 .should().containComponent(withId("closeCancel").and(ofType(AjaxLink.class)));
     }
 
     @Test
     public void skalReturnereCancelAswer() {
-        wicket.goTo(PersonPage.class).goToPageWith(sjekkForlateSide)
+        wicket.goTo(PersonPage.class, parameters).goToPageWith(sjekkForlateSide)
                 .click().link(withId("closeCancel"));
         assertTrue(answer.is(CANCEL));
         assertFalse(answer.is(DISCARD));
@@ -59,7 +62,7 @@ public class SjekkForlateSideTest extends WicketPageTest {
 
     @Test
     public void skalReturnereDiscardAswer() {
-        wicket.goTo(PersonPage.class)
+        wicket.goTo(PersonPage.class, parameters)
                 .goToPageWith(sjekkForlateSide)
                 .click().link(withId("closeDiscard"));
         assertTrue(answer.is(DISCARD));

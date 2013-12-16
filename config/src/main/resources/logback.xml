@@ -3,57 +3,51 @@
     <property name="MAIN_APPLICATION" value="modiabrukerdialog" />
 
     <appender name="exceptionlog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}_error.log</File>
-        <encoder>
-            <pattern>%date %level [%thread] - [%file:%line], %X{callId} - %m%n</pattern>
-        </encoder>
+        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}-error-%d{yyyy-MM-dd}.gz</FileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
             <level>ERROR</level>
         </filter>
-        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <maxIndex>10</maxIndex>
-            <FileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}_error.log.%i</FileNamePattern>
-        </rollingPolicy>
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>10MB</MaxFileSize>
-        </triggeringPolicy>
-    </appender>
-
-    <appender name="infolog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}.log</File>
         <encoder>
             <pattern>%date %level [%thread] - [%file:%line], %X{callId} - %m%n</pattern>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
-            <maxIndex>10</maxIndex>
-            <FileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}.log.%i</FileNamePattern>
+    </appender>
+
+    <appender name="infolog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-info.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}-info-%d{yyyy-MM-dd}.gz</FileNamePattern>
+            <maxHistory>90</maxHistory>
         </rollingPolicy>
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>10MB</MaxFileSize>
-        </triggeringPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] - [%file:%line], %X{callId} - %m%n</pattern>
+        </encoder>
     </appender>
 
     <!-- The sporingslogg-Appender- Logs access to sensitive information -->
     <appender name="sporinglog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}.sporing</File>
+        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-sporing.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}-sporing-%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <maxHistory>95</maxHistory>
+        </rollingPolicy>
         <encoder>
             <pattern>%d [%-5level] [%thread] %logger{5} - [%X{consumerId}, %X{callId}, %X{userId}] - %m%n</pattern>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}.sporing.%d</fileNamePattern>
-            <maxHistory>95</maxHistory>
-        </rollingPolicy>
     </appender>
 
     <appender name="personaccessappender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}_personaccess.log</File>
+        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-personaccess.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}-personaccess-%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <maxHistory>95</maxHistory>
+        </rollingPolicy>
         <encoder>
             <pattern>%date %level [%thread] - [%file:%line] - %m%n</pattern>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}_personaccess.log.%d</fileNamePattern>
-            <maxHistory>95</maxHistory>
-        </rollingPolicy>
     </appender>
 
     <logger name="no.nav.modig.common.SporingsLogger" level="INFO">
