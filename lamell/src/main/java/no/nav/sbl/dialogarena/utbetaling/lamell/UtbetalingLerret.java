@@ -80,24 +80,6 @@ public class UtbetalingLerret extends Lerret {
         filterFormPanel.setOutputMarkupId(true);
     }
 
-    @RunOnEvents(ENDRET)
-    private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
-    	oppdaterCacheOmNodvendig();
-
-        List<Utbetaling> alleUtbetalinger = hentUtbetalingerFraPeriode(resultatCache.utbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato());
-        filterParametere.setYtelser(hentYtelser(alleUtbetalinger));
-        sendYtelserEndretEvent();
-
-        List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
-        totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(
-                synligeUtbetalinger,
-                filterParametere.getStartDato(),
-                filterParametere.getSluttDato()));
-        totalOppsummeringPanel.setVisibilityAllowed(synligeUtbetalinger.size() > 1);
-        utbetalingslisteContainer.addOrReplace(opprettMaanedsPanelListe(resultatCache, filterParametere));
-        target.add(totalOppsummeringPanel, utbetalingslisteContainer);
-    }
-
 	private void oppdaterCacheOmNodvendig() {
         DateTime cacheStartDato = resultatCache.startDato.toDateTimeAtStartOfDay();
         DateTime cacheSluttDato = resultatCache.sluttDato.toDateMidnight().toDateTime();
@@ -123,6 +105,24 @@ public class UtbetalingLerret extends Lerret {
                 item.add(visibleIf(new Model<>(!item.getModelObject().isEmpty())));
             }
         };
+    }
+
+    @RunOnEvents(ENDRET)
+    private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
+        oppdaterCacheOmNodvendig();
+
+        List<Utbetaling> alleUtbetalinger = hentUtbetalingerFraPeriode(resultatCache.utbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato());
+        filterParametere.setYtelser(hentYtelser(alleUtbetalinger));
+        sendYtelserEndretEvent();
+
+        List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
+        totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(
+                synligeUtbetalinger,
+                filterParametere.getStartDato(),
+                filterParametere.getSluttDato()));
+        totalOppsummeringPanel.setVisibilityAllowed(synligeUtbetalinger.size() > 0);
+        utbetalingslisteContainer.addOrReplace(opprettMaanedsPanelListe(resultatCache, filterParametere));
+        target.add(totalOppsummeringPanel, utbetalingslisteContainer);
     }
 
     @RunOnEvents(FEIL)

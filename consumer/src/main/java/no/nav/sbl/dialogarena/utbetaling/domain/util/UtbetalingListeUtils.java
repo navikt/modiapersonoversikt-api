@@ -14,13 +14,13 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Bilag.POSTERINGSDETALJER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.HOVEDBESKRIVELSE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.UNDERBESKRIVELSE;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BESKRIVELSER;
 
 /**
  * Hjelpefunksjoner for å jobbe med lister av Utbetaling.
@@ -92,24 +92,10 @@ public class UtbetalingListeUtils {
     }
 
     /**
-     * Henter ut en sortert liste av unike hovedbeskrivelser fra en liste av utbetalinger.
-     */
-    public static List<String> hentYtelserFraUtbetalinger(List<Utbetaling> utbetalinger) {
-        Set<String> ytelser = hentYtelser(utbetalinger);
-        ArrayList<String> list = new ArrayList<>(ytelser);
-        sort(list);
-        return list;
-    }
-
-    /**
      * Henter ut et Set av hovedbeskrivelser fra en liste av utbetalinger.
      */
     public static Set<String> hentYtelser(List<Utbetaling> utbetalinger) {
-        Set<String> ytelser = new TreeSet<>();
-        for (Utbetaling utbetaling : utbetalinger) {
-            ytelser.addAll(utbetaling.getBeskrivelser());
-        }
-        return ytelser;
+        return on(utbetalinger).flatmap(BESKRIVELSER).collectIn(new TreeSet<String>());
     }
 
     private static final Transformer<Utbetaling, List<Bilag>> BILAG = new Transformer<Utbetaling, List<Bilag>>() {

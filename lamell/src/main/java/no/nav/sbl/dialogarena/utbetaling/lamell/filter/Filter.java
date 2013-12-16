@@ -1,14 +1,15 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils;
 import org.joda.time.LocalDate;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
 
 
 public class Filter {
@@ -31,7 +32,7 @@ public class Filter {
     }
 
     private static boolean filtrerPaaYtelser(Utbetaling utbetaling, List<FilterParametere.ValgtYtelse> valgteYtelser) {
-        List<String> ytelserIUtbetaling = UtbetalingListeUtils.hentYtelserFraUtbetalinger(Arrays.asList(utbetaling));
+        Set<String> ytelserIUtbetaling = hentYtelser(Arrays.asList(utbetaling));
         for (String ytelse : ytelserIUtbetaling) {
             for (FilterParametere.ValgtYtelse valgtYtelse : valgteYtelser) {
                 if(valgtYtelse.getValgt() && ytelse.equalsIgnoreCase(valgtYtelse.getYtelse())) {

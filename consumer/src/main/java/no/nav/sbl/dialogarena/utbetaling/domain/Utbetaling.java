@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import no.nav.modig.lang.collections.IterUtils;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
@@ -11,6 +13,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.equalToIgnoreCase;
+import static no.nav.modig.lang.collections.PredicateUtils.not;
+import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Bilag.POSTERINGSDETALJER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.HOVEDBESKRIVELSE;
 import static org.apache.commons.lang3.StringUtils.join;
 
 public class Utbetaling implements Serializable {
@@ -100,12 +108,19 @@ public class Utbetaling implements Serializable {
     }
 
     public Set<String> getBeskrivelser() {
-        Set<String> beskrivelser = new TreeSet<>();
-        for (Bilag detalj : bilag) {
-            beskrivelser.addAll(detalj.getBeskrivelserFromDetaljer());
-        }
-        return beskrivelser;
+        return on(bilag)
+                .flatmap(POSTERINGSDETALJER)
+                .filter(where(HOVEDBESKRIVELSE, not(equalToIgnoreCase("skatt"))))
+                .map(HOVEDBESKRIVELSE)
+                .collectIn(new TreeSet<String>());
     }
+
+    public static final Transformer<Utbetaling, Set<String>> BESKRIVELSER = new Transformer<Utbetaling, Set<String>>() {
+        @Override
+        public Set<String> transform(Utbetaling utbetaling) {
+            return utbetaling.getBeskrivelser();
+        }
+    };
 
     private String transformValuta(String wsValuta) {
         return (wsValuta == null || wsValuta.isEmpty()) ? "NOK" : wsValuta;
