@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain.util;
 import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
 import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -11,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -80,14 +82,14 @@ public class UtbetalingListeUtils {
                         .reduce(indexBy(HOVEDBESKRIVELSE));
 
         Map<String, Map<String, Double>> resultat = new HashMap<>();
-        for (String hovedytelse : perHovedYtelse.keySet()) {
-            Map<String, List<PosteringsDetalj>> perUnderytelse = on(perHovedYtelse.get(hovedytelse)).reduce(indexBy(UNDERBESKRIVELSE));
+        for (Entry<String, List<PosteringsDetalj>> hovedytelse : perHovedYtelse.entrySet()) {
+            Map<String, List<PosteringsDetalj>> perUnderytelse = on(hovedytelse.getValue()).reduce(indexBy(UNDERBESKRIVELSE));
             Map<String, Double> belopPerUnderytelse = new HashMap<>();
-            for (String underytelse : perUnderytelse.keySet()) {
-                Double sumBelop = on(perUnderytelse.get(underytelse)).map(PosteringsDetalj.BELOP).reduce(sumDouble);
-                belopPerUnderytelse.put(underytelse, sumBelop);
+            for (Entry<String, List<PosteringsDetalj>> underytelse : perUnderytelse.entrySet()) {
+                Double sumBelop = on(underytelse.getValue()).map(PosteringsDetalj.BELOP).reduce(sumDouble);
+                belopPerUnderytelse.put(underytelse.getKey(), sumBelop);
             }
-            resultat.put(hovedytelse, belopPerUnderytelse);
+            resultat.put(hovedytelse.getKey(), belopPerUnderytelse);
         }
         return resultat;
     }
