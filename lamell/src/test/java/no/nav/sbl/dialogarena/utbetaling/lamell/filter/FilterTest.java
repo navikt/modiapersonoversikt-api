@@ -28,7 +28,7 @@ public class FilterTest {
         barnetrygd.hovedBeskrivelse = BARNETRYGD;
         Bilag bilag = new Bilag();
         bilag.posteringsDetaljer = asList(dagpenger, barnetrygd);
-        utbetaling = new Utbetaling(UUID.randomUUID().toString());
+        utbetaling = new UtbetalingBuilder().setUtbetalingsDato(UUID.randomUUID().toString()).createUtbetaling();
         utbetaling.startDato = DateTime.now().minusDays(1);
         utbetaling.utbetalingsDato = DateTime.now();
         utbetaling.mottakertype = "bruker";

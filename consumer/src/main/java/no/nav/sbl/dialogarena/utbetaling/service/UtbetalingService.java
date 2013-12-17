@@ -28,7 +28,7 @@ public class UtbetalingService {
         return new Transformer<WSUtbetaling, Utbetaling>() {
             @Override
             public Utbetaling transform(WSUtbetaling wsUtbetaling) {
-                return new Utbetaling(fnr, wsUtbetaling);
+                return Utbetaling.getBuilder().createUtbetaling();
             }
         };
     }
