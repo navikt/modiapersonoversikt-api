@@ -98,7 +98,7 @@ public class UtbetalingBuilder {
     }
 
     public Utbetaling createUtbetaling() {
-        Utbetaling utbetaling = new Utbetaling(utbetalingId);
+        Utbetaling utbetaling = new UtbetalingBuilder().setUtbetalingsDato(utbetalingId).createUtbetaling();
         utbetaling.fnr = fnr;
         utbetaling.bilag = bilag;
         utbetaling.utbetalingsDato = utbetalingsDato;

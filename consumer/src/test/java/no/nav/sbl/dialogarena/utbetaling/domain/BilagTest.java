@@ -22,7 +22,7 @@ public class BilagTest {
 
     @Test
     public void skattSettesTilUnderytelseAvVanligsteHovedytelseIBidrag_EnUtbetaling_EttBilag() throws Exception {
-        Utbetaling utb = new Utbetaling("", createUtbetaling1());
+        Utbetaling utb = new UtbetalingBuilder().setUtbetalingsDato("").setPeriode(createUtbetaling1()).createUtbetaling();
         Map<String,Map<String,Double>> belopPerUnderYtelse = UtbetalingListeUtils.summerBelopForUnderytelser(asList(utb));
 
         assertThat(belopPerUnderYtelse.get(DAGPENGER).get(GRUNNBELOP), is(2000.0));
@@ -32,8 +32,8 @@ public class BilagTest {
     @Test
     public void skattSettesTilUnderytelseAvVanligsteHovedytelseIBidrag_FlereUtbetalinger_FlereBilag() throws Exception {
 
-        Utbetaling utbetaling = new Utbetaling("", createUtbetaling4());
-        Utbetaling utbetaling1 = new Utbetaling("", createUtbetaling5());
+        Utbetaling utbetaling = new UtbetalingBuilder().setUtbetalingsDato("").setPeriode(createUtbetaling4()).createUtbetaling();
+        Utbetaling utbetaling1 = new UtbetalingBuilder().setUtbetalingsDato("").setPeriode(createUtbetaling5()).createUtbetaling();
 
         Map<String, Map<String,Double>> belopPerUnderYtelse = UtbetalingListeUtils.summerBelopForUnderytelser(asList(utbetaling, utbetaling1));
 

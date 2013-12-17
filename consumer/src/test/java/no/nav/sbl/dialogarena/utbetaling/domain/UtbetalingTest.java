@@ -87,7 +87,7 @@ public class UtbetalingTest {
         String kontoNr = "***REMOVED***";
         String fnr = "12345678978";
 
-        Utbetaling u = new Utbetaling(fnr, wsUtbetaling);
+        Utbetaling u = new UtbetalingBuilder().setUtbetalingsDato(fnr).setPeriode(wsUtbetaling).createUtbetaling();
 
         assertThat(u.getUtbetalingsDato(), is(wsUtbetaling.getUtbetalingDato()));
         assertThat(u.getStartDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato()));

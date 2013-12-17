@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import java.util.Locale;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
 import org.apache.commons.lang3.SerializationUtils;
 import org.junit.Before;
 import org.junit.Test;
