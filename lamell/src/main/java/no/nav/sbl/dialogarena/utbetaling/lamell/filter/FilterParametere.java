@@ -22,8 +22,8 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     private LocalDate startDato;
     private LocalDate sluttDato;
 
-    private Boolean visBruker;
-    private Boolean visArbeidsgiver;
+    public Boolean visBruker;
+    public Boolean visArbeidsgiver;
 
     public Set<String> alleYtelser;
     public Set<String> uonskedeYtelser;
@@ -37,18 +37,6 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
 
         this.alleYtelser = hovedYtelser;
         this.uonskedeYtelser = new HashSet<>();
-    }
-
-    private void oppdaterValgteYtelser(Set<String> hovedYtelser) {
-        alleYtelser = hovedYtelser;
-    }
-
-    public Boolean getVisArbeidsgiver() {
-        return visArbeidsgiver;
-    }
-
-    public Boolean getVisBruker() {
-        return visBruker;
     }
 
     public LocalDate getSluttDato() {
@@ -72,7 +60,7 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     }
 
     public void setYtelser(Set<String> hovedYtelser) {
-        oppdaterValgteYtelser(hovedYtelser);
+        alleYtelser = hovedYtelser;
     }
 
     @Override

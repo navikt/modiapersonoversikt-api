@@ -65,10 +65,10 @@ public class FilterFormPanel extends Panel {
 
     private MarkupContainer createYtelser() {
         List<String> alleYtelser = new ArrayList<>(filterParametere.alleYtelser);
-        ListView<String> listView = new ListView<String>("ytelsesKnappeFilter", new CompoundPropertyModel<>(alleYtelser)) {
+        ListView<String> listView = new ListView<String>("ytelseFilter", new CompoundPropertyModel<>(alleYtelser)) {
             @Override
             protected void populateItem(final ListItem<String> item) {
-                final AjaxLink<String> knapp = new AjaxLink<String>("valgtYtelse.ytelse", item.getModel()) {
+                final AjaxLink<String> knapp = new AjaxLink<String>("ytelseKnapp", item.getModel()) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         String ytelse = item.getModelObject();
@@ -77,6 +77,7 @@ public class FilterFormPanel extends Panel {
                         } else {
                             filterParametere.uonskedeYtelser.add(ytelse);
                         }
+
                         sendFilterEndretEvent();
                         target.add(this);
                     }
@@ -96,7 +97,7 @@ public class FilterFormPanel extends Panel {
                 item.add(knapp);
             }
         };
-        return (MarkupContainer) new WebMarkupContainer("ytelsesContainer").add(listView).setOutputMarkupId(true);
+        return (MarkupContainer) new WebMarkupContainer("ytelseContainer").add(listView).setOutputMarkupId(true);
     }
 
     private AjaxLink<Boolean> createMottakerButton(final String mottaker) {
