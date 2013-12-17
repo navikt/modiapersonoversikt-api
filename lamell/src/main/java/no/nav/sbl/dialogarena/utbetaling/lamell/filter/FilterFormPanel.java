@@ -19,7 +19,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.LocalDate;
@@ -64,8 +64,14 @@ public class FilterFormPanel extends Panel {
     }
 
     private MarkupContainer createYtelser() {
-        List<String> alleYtelser = new ArrayList<>(filterParametere.alleYtelser);
-        ListView<String> listView = new ListView<String>("ytelseFilter", new CompoundPropertyModel<>(alleYtelser)) {
+
+        IModel<List<String>> alleYtelserModel = new AbstractReadOnlyModel<List<String>>() {
+            @Override
+            public List<String> getObject() {
+                return new ArrayList<>(filterParametere.alleYtelser);
+            }
+        };
+        ListView<String> listView = new ListView<String>("ytelseFilter", alleYtelserModel) {
             @Override
             protected void populateItem(final ListItem<String> item) {
                 final AjaxLink<String> knapp = new AjaxLink<String>("ytelseKnapp", item.getModel()) {
