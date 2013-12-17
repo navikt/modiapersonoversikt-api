@@ -47,17 +47,17 @@ public class FilterFormPanel extends Panel {
 
         this.filterParametere = filterParametere;
         this.ytelsesContainer = createYtelser();
-        
+
         add(createFilterForm());
     }
 
-    private Form<?> createFilterForm() {
-        Form<?> filterForm = new Form<>("filterForm");
-        return (Form<?>) filterForm.add(
+    private Form createFilterForm() {
+        Form filterForm = new Form<>("filterForm");
+        return (Form) filterForm.add(
                 new FeedbackPanel("feedbackpanel"),
                 createMottakerButton("visBruker"),
                 createMottakerButton("visArbeidsgiver"),
-                createYtelser(),
+                ytelsesContainer,
                 createDateRangePicker())
                 .add(createDateRangePickerChangeBehaviour(filterForm))
                 .setOutputMarkupId(true);
