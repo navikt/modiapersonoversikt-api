@@ -9,17 +9,17 @@
         <div class="filter-block">
             <label><wicket:message key="utbetaling.lamell.filter.mottaker-overskrift"/></label>
             <div>
-                <input type="button" wicket:id="visBruker" value="Bruker" class="knapp-filter"/><!-- Fjerner whitespace mellom elementene
-             --><input type="button" wicket:id="visArbeidsgiver" value="Arbeidsgiver" class="knapp-filter"/>
+                <input type="button" wicket:id="visBruker" value="Bruker" class="knapp-filter"/>
+                <input type="button" wicket:id="visArbeidsgiver" value="Arbeidsgiver" class="knapp-filter"/>
             </div>
         </div>
 
-        <div class="filter-block" wicket:id="ytelsesContainer">
+        <div class="filter-block" wicket:id="ytelseContainer">
             <label><wicket:message key="utbetaling.lamell.filter.ytelser"/></label>
             <div>
-              <wicket:container wicket:id="ytelsesKnappeFilter">
-                <input type="button" wicket:id="valgtYtelse.ytelse" class="knapp-filter" />
-              </wicket:container>
+                <wicket:container wicket:id="ytelseFilter">
+                    <input type="button" wicket:id="ytelseKnapp" class="knapp-filter" />
+                </wicket:container>
             </div>
         </div>
     </form>
