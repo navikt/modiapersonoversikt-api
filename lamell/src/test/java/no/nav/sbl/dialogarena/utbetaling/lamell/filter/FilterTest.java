@@ -12,7 +12,6 @@ import java.util.HashSet;
 import java.util.UUID;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.Filter.filtrer;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -40,7 +39,7 @@ public class FilterTest {
     public void skalBeholdeYtelserSomErOnskede() {
         FilterParametere filterparams = new FilterParametere(LocalDate.now().minusYears(1), LocalDate.now(), true, true,
                 new HashSet<>(asList(DAGPENGER, BARNETRYGD)));
-        assertTrue(filtrer(utbetaling, filterparams));
+        assertTrue(filterparams.evaluate(utbetaling));
 
     }
 
@@ -49,7 +48,7 @@ public class FilterTest {
         FilterParametere filterparams = new FilterParametere(LocalDate.now().minusYears(1), LocalDate.now(), true, true,
                 new HashSet<>(asList(DAGPENGER, BARNETRYGD)));
         filterparams.uonskedeYtelser.add(DAGPENGER);
-        assertTrue(filtrer(utbetaling, filterparams));
+        assertTrue(filterparams.evaluate(utbetaling));
     }
 
     @Test
@@ -58,6 +57,6 @@ public class FilterTest {
                 new HashSet<>(asList(DAGPENGER, BARNETRYGD)));
         filterparams.uonskedeYtelser.add(DAGPENGER);
         filterparams.uonskedeYtelser.add(BARNETRYGD);
-        assertFalse(filtrer(utbetaling, filterparams));
+        assertFalse(filterparams.evaluate(utbetaling));
     }
 }
