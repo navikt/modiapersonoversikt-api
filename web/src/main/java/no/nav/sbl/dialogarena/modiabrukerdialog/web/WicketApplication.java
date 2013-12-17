@@ -70,6 +70,7 @@ public class WicketApplication extends WebApplication {
     @Override
     protected void init() {
         super.init();
+        Locale.setDefault(new Locale("nb", "no"));
         if (usesDevelopmentConfig()) {
             getResourceSettings().setResourcePollFrequency(ONE_SECOND);
         }
@@ -149,7 +150,6 @@ public class WicketApplication extends WebApplication {
     @Override
     public Session newSession(Request request, Response response) {
         Session session = super.newSession(request, response);
-        session.setLocale(new Locale("nb")); // Vis kun bokmaal i leveranse 1
 	    session.setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, false);
         return session;
     }
