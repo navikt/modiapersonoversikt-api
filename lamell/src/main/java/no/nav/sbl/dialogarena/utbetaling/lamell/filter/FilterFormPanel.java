@@ -4,7 +4,6 @@ import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.ValgtYtelse;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -24,6 +23,9 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.LocalDate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
@@ -62,13 +64,19 @@ public class FilterFormPanel extends Panel {
     }
 
     private MarkupContainer createYtelser() {
-        ListView<ValgtYtelse> listView = new ListView<ValgtYtelse>("ytelsesKnappeFilter", new CompoundPropertyModel<>(filterParametere.getValgteYtelser())) {
+        List<String> alleYtelser = new ArrayList<>(filterParametere.alleYtelser);
+        ListView<String> listView = new ListView<String>("ytelsesKnappeFilter", new CompoundPropertyModel<>(alleYtelser)) {
             @Override
-            protected void populateItem(ListItem<ValgtYtelse> item) {
-                final AjaxLink<ValgtYtelse> knapp = new AjaxLink<ValgtYtelse>("valgtYtelse.ytelse", item.getModel()) {
+            protected void populateItem(final ListItem<String> item) {
+                final AjaxLink<String> knapp = new AjaxLink<String>("valgtYtelse.ytelse", item.getModel()) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        getModelObject().setValgt((!getModelObject().getValgt()));
+                        String ytelse = item.getModelObject();
+                        if (filterParametere.uonskedeYtelser.contains(ytelse)) {
+                            filterParametere.uonskedeYtelser.remove(ytelse);
+                        } else {
+                            filterParametere.uonskedeYtelser.add(ytelse);
+                        }
                         sendFilterEndretEvent();
                         target.add(this);
                     }
@@ -78,11 +86,11 @@ public class FilterFormPanel extends Panel {
                         response.render(OnLoadHeaderItem.forScript(createSnurrepippJS("input:button", "click")));
                     }
                 };
-                knapp.add(new AttributeModifier("value", item.getModelObject().getYtelse()));
+                knapp.add(new AttributeModifier("value", item.getModelObject()));
                 knapp.add(hasCssClassIf("valgt", new AbstractReadOnlyModel<Boolean>() {
                     @Override
                     public Boolean getObject() {
-                        return knapp.getModelObject().getValgt();
+                        return !filterParametere.uonskedeYtelser.contains(knapp.getModelObject());
                     }
                 }));
                 item.add(knapp);

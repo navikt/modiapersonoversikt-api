@@ -3,8 +3,6 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.LocalDate;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Set;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
@@ -17,7 +15,7 @@ public class Filter {
     public static boolean filtrer(Utbetaling utbetaling, FilterParametere filterParametere) {
         boolean innenforDatoer = filtrerPaaDatoer(utbetaling.getUtbetalingsDato().toLocalDate(), filterParametere.getStartDato(), filterParametere.getSluttDato());
         boolean brukerSkalVises = filtrerPaaMottaker(utbetaling.mottakertype, filterParametere.getVisArbeidsgiver(), filterParametere.getVisBruker());
-        boolean harYtelse = filtrerPaaYtelser(utbetaling, filterParametere.getValgteYtelser());
+        boolean harYtelse = filtrerPaaYtelser(utbetaling, filterParametere.uonskedeYtelser);
         return innenforDatoer && brukerSkalVises && harYtelse;
     }
 
@@ -31,13 +29,10 @@ public class Filter {
         return arbeidsgiverVises || brukerVises;
     }
 
-    private static boolean filtrerPaaYtelser(Utbetaling utbetaling, List<FilterParametere.ValgtYtelse> valgteYtelser) {
-        Set<String> ytelserIUtbetaling = hentYtelser(Arrays.asList(utbetaling));
-        for (String ytelse : ytelserIUtbetaling) {
-            for (FilterParametere.ValgtYtelse valgtYtelse : valgteYtelser) {
-                if(valgtYtelse.getValgt() && ytelse.equalsIgnoreCase(valgtYtelse.getYtelse())) {
-                    return true;
-                }
+    private static boolean filtrerPaaYtelser(Utbetaling utbetaling, Set<String> uonskedeYtelser) {
+        for (String ytelse : hentYtelser(utbetaling)) {
+            if (!uonskedeYtelser.contains(ytelse)) {
+                return true;
             }
         }
         return false;

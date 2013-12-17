@@ -10,13 +10,13 @@ public class PosteringsDetalj implements Serializable {
     private static final String SKATT = "Skatt";
     private static final String UTBETALT = "Utbetalt";
 
-    private String hovedBeskrivelse;
-    private String underBeskrivelse;
-    private String kontoNr;
-    private Double sats;
-    private Integer antall;
-    private Double belop;
-    private boolean skatt = false;
+    public String hovedBeskrivelse;
+    public String underBeskrivelse;
+    public String kontoNr;
+    public Double sats;
+    public Integer antall;
+    public Double belop;
+    public boolean skatt = false;
 
     public static final Transformer<PosteringsDetalj, String> HOVEDBESKRIVELSE = new Transformer<PosteringsDetalj, String>() {
         @Override
@@ -55,6 +55,8 @@ public class PosteringsDetalj implements Serializable {
         this.belop = belop;
         this.skatt = SKATT.equalsIgnoreCase(hovedBeskrivelse);
     }
+
+    public PosteringsDetalj() {}
 
     public PosteringsDetalj(WSPosteringsdetaljer wsPosteringsdetaljer) {
         this.hovedBeskrivelse = wsPosteringsdetaljer.getKontoBeskrHoved();
