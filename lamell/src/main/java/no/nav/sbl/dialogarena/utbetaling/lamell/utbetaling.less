@@ -118,6 +118,9 @@
     width: 100%;
     padding: @toppBunnPadding @sidePadding;
     cursor: pointer;
+    .oppsummeringssummer {
+      display: inline-block;
+    }
     table {
       border-top: 1px solid @borderColor;
       margin-top: 1rem;
@@ -151,11 +154,14 @@
       background-color: #333333;
       color: #b7b1a9;
       padding: @toppBunnPadding @sidePadding;
+      .oppsummeringssummer {
+        float: right;
+      }
       .element{
         label {
           cursor: default;
         }
-        &:first-of-type {
+        &.oppsummeringsperiode {
           label {
             display: none;
           }
@@ -164,9 +170,6 @@
             display: block;
             margin-top: 10px;
           }
-        }
-        &:not(:first-of-type) {
-          float: right;
         }
       }
     }
