@@ -5,9 +5,7 @@ import org.apache.commons.collections15.Predicate;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.Filter.filtrer;
@@ -23,47 +21,22 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     private LocalDate sluttDato;
     private Boolean visBruker;
     private Boolean visArbeidsgiver;
-    private List<ValgtYtelse> valgteYtelser;
+
+    public Set<String> alleYtelser;
+    public Set<String> uonskedeYtelser;
 
     public FilterParametere(LocalDate startDato, LocalDate sluttDato, Boolean visBruker, Boolean visArbeidsgiver, Set<String> hovedYtelser) {
         this.startDato = startDato;
         this.sluttDato = sluttDato;
         this.visBruker = visBruker;
         this.visArbeidsgiver = visArbeidsgiver;
-        this.valgteYtelser = lagValgteYtelser(hovedYtelser);
-    }
 
-    private List<ValgtYtelse> lagValgteYtelser(Set<String> hovedYtelser) {
-        List<ValgtYtelse> list = new ArrayList<>();
-        for (String ytelse : hovedYtelser) {
-            list.add(new ValgtYtelse(true, ytelse));
-        }
-        return list;
+        this.alleYtelser = hovedYtelser;
+        this.uonskedeYtelser = new HashSet<>();
     }
 
     private void oppdaterValgteYtelser(Set<String> hovedYtelser) {
-
-        // Ta vekk valgtYtelser som ikke er en del av hovedytelser
-        List<ValgtYtelse> skalFjernes = new ArrayList<>();
-        for (ValgtYtelse valgtYtelse : valgteYtelser) {
-            if (!hovedYtelser.contains(valgtYtelse.getYtelse())) {
-                skalFjernes.add(valgtYtelse);
-            }
-        }
-        valgteYtelser.removeAll(skalFjernes);
-
-        // Legg til nye hovedytelser som ikke er i valgteytelser
-        if(hovedYtelser.size() > valgteYtelser.size()) {
-            Set<String> ytelser = new HashSet<>();
-            for (ValgtYtelse valgtYtelse : valgteYtelser) {
-                ytelser.add(valgtYtelse.getYtelse());
-            }
-            for (String hovedYtelse : hovedYtelser) {
-                if(!ytelser.contains(hovedYtelse)) {
-                    valgteYtelser.add(new ValgtYtelse(true, hovedYtelse));
-                }
-            }
-        }
+        alleYtelser = hovedYtelser;
     }
 
     public Boolean getVisArbeidsgiver() {
@@ -72,10 +45,6 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
 
     public Boolean getVisBruker() {
         return visBruker;
-    }
-
-    public List<ValgtYtelse> getValgteYtelser() {
-        return valgteYtelser;
     }
 
     public LocalDate getSluttDato() {
@@ -105,28 +74,6 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     @Override
     public boolean evaluate(Utbetaling utbetaling) {
         return filtrer(utbetaling, this);
-    }
-
-    public static class ValgtYtelse implements Serializable {
-        private Boolean valgt;
-        private String ytelse;
-
-        public ValgtYtelse(Boolean valgt, String ytelse) {
-            this.valgt = valgt;
-            this.ytelse = ytelse;
-        }
-
-        public Boolean getValgt() {
-            return valgt;
-        }
-
-        public void setValgt(Boolean valgt) {
-            this.valgt = valgt;
-        }
-
-        public String getYtelse() {
-            return ytelse;
-        }
     }
 
 }

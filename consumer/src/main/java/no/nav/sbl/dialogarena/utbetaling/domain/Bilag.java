@@ -20,10 +20,12 @@ import static org.apache.commons.lang3.StringUtils.join;
 
 public class Bilag implements Serializable {
 
-    private String melding;
-    private List<PosteringsDetalj> posteringsDetaljer;
-    private DateTime startDato;
-    private DateTime sluttDato;
+    public String melding;
+    public List<PosteringsDetalj> posteringsDetaljer;
+    public DateTime startDato;
+    public DateTime sluttDato;
+
+    public Bilag() {}
 
     public Bilag(WSBilag wsBilag) {
         this.melding = transformMelding(wsBilag);

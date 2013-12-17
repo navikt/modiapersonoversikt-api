@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
@@ -94,6 +95,9 @@ public class UtbetalingListeUtils {
     /**
      * Henter ut et Set av hovedbeskrivelser fra en liste av utbetalinger.
      */
+    public static Set<String> hentYtelser(Utbetaling... utbetalinger) {
+        return hentYtelser(asList(utbetalinger));
+    }
     public static Set<String> hentYtelser(List<Utbetaling> utbetalinger) {
         return on(utbetalinger).flatmap(BESKRIVELSER).collectIn(new TreeSet<String>());
     }
