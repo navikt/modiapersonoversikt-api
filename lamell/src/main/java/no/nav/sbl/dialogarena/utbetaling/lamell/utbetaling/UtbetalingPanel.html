@@ -7,25 +7,33 @@
             <div class="dato" wicket:id="kortUtbetalingsDato"></div>
             <div class="status" wicket:id="statusBeskrivelse"></div>
         </div>
+        <div class="skriv-ut ikke-print">
+            <a wicket:id="skriv-ut">Skriv ut</a>
+        </div>
         <div class="element">
             <label wicket:id="beskrivelse"></label>
             <span wicket:id="periodeMedKortDato"></span>
         </div>
         <div class="element">
-            <label><wicket:message key="utbetaling.lamell.utbetaling.brutto"/></label>
+            <label>
+                <wicket:message key="utbetaling.lamell.utbetaling.brutto"/>
+            </label>
             <span wicket:id="bruttoBelopMedValuta"></span>
         </div>
         <div class="element">
-            <label><wicket:message key="utbetaling.lamell.utbetaling.trekk"/></label>
+            <label>
+                <wicket:message key="utbetaling.lamell.utbetaling.trekk"/>
+            </label>
             <span wicket:id="trekkMedValuta"></span>
         </div>
         <div class="element">
-            <label><wicket:message key="utbetaling.lamell.utbetaling.utbetalt"/></label>
+            <label>
+                <wicket:message key="utbetaling.lamell.utbetaling.utbetalt"/>
+            </label>
             <span wicket:id="belopMedValuta"></span>
         </div>
     </div>
 
-    <div wicket:id="detaljpanel"/>
-
+    <div wicket:id="detaljpanel" class="detaljpanel"></div>
 </wicket:panel>
 </html>
