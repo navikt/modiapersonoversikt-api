@@ -104,14 +104,14 @@ public class UtbetalingTransformer {
             UtbetalingTransformObjekt forsteObjektIListe = transformObjektListe.get(0);
             UtbetalingBuilder utbetalingBuilder = lagUtbetalingBuilder(forsteObjektIListe);
             List<Underytelse> underytelser = new ArrayList<>();
-            underytelser.add(new Underytelse(forsteObjektIListe.getUnderYtelse(), forsteObjektIListe.getAntall(), forsteObjektIListe.getBelop(), forsteObjektIListe.getSats()));
+            underytelser.add(new Underytelse(forsteObjektIListe.getUnderYtelse(), forsteObjektIListe.getSpesifikasjon(), forsteObjektIListe.getAntall(), forsteObjektIListe.getBelop(), forsteObjektIListe.getSats()));
 
             List<UtbetalingTransformObjekt> skalFjernes = new ArrayList<>();
 
             for (UtbetalingTransformObjekt objekt : transformObjektListe.subList(1, transformObjektListe.size())) {
-                if (UtbetalingTransformObjekt.equals(forsteObjektIListe, objekt)) {
+                if (forsteObjektIListe.equals(objekt)) {
                     // TODO: slå sammen meldinger
-                    underytelser.add(new Underytelse(objekt.getUnderYtelse(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
+                    underytelser.add(new Underytelse(objekt.getUnderYtelse(), forsteObjektIListe.getSpesifikasjon(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
                     skalFjernes.add(objekt);
                 }
             }
@@ -178,7 +178,8 @@ public class UtbetalingTransformer {
                 .withStatus(objekt.getStatus())
                 .withPeriode(objekt.getPeriode())
                 .withValuta(objekt.getValuta())
-                .withMottaker(objekt.getMottaker())
+                .withMottakernavn(objekt.getMottaker())
+                .withMottakerId(objekt.getMottakerId())
                 .withUtbetalingsDato(objekt.getUtbetalingsDato());
     }
 
