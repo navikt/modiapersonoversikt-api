@@ -288,7 +288,7 @@
     </build>
 
     <scm>
-        <developerConnection>scm:git:ssh://git@a34apvl029.devillo.no:7999/dial/modia-utbetalinger.git</developerConnection>
+        <developerConnection>http://stash.devillo.no/scm/dial/modia-utbetalinger.git</developerConnection>
         <url>http://stash.devillo.no/scm/dial/modia-utbetalinger.git</url>
         <tag>HEAD</tag>
     </scm>
