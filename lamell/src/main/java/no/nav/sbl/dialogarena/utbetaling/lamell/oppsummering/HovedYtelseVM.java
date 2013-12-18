@@ -1,10 +1,11 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
+import org.apache.commons.collections15.Transformer;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import org.apache.commons.collections15.Transformer;
 
 import static java.util.Collections.sort;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
@@ -24,8 +25,8 @@ public class HovedYtelseVM implements Serializable {
     public HovedYtelseVM(String beskrivelse, Map<String, Double> underytelser) {
         hovedYtelsesBeskrivelse = beskrivelse;
         underYtelsesBeskrivelser = new ArrayList<>();
-        for (String underytelse : underytelser.keySet()) {
-            underYtelsesBeskrivelser.add(new UnderYtelseVM(underytelse, underytelser.get(underytelse)));
+        for (Map.Entry<String, Double> underytelse : underytelser.entrySet()) {
+            underYtelsesBeskrivelser.add(new UnderYtelseVM(underytelse.getKey(), underytelse.getValue()));
         }
         sort(underYtelsesBeskrivelser, UnderYtelseVM.UnderYtelseComparator.NAVN);
     }
