@@ -7,11 +7,14 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.getBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -19,16 +22,32 @@ import static org.junit.Assert.assertTrue;
 
 public class UtbetalingListeUtilsTest {
 
+    private static final String DAGPENGER = "Dagpenger";
+    private static final String SYKEPENGER = "Sykepenger";
+    private static final String BARNETRYGD = "Barnetrygd";
+
     private static List<Utbetaling> utbetalingsliste;
 
     @BeforeClass
     public static void settOppUtbetalingsliste() {
-        Utbetaling utbetaling1 = getBuilder().withUtbetalingsDato(now()).withMelding("utbetaling1").createUtbetaling();
-        Utbetaling utbetaling2 = getBuilder().withUtbetalingsDato(now()).withMelding("utbetaling2").createUtbetaling();
-        Utbetaling utbetaling3 = getBuilder().withUtbetalingsDato(now().minusMonths(1)).withMelding("utbetaling3").createUtbetaling();
-        Utbetaling utbetaling4 = getBuilder().withUtbetalingsDato(now().minusMonths(3)).withMelding("utbetaling4").createUtbetaling();
+        Utbetaling utbetaling1 = getBuilder().withUtbetalingsDato(now()).withMelding("utbetaling1").withHovedytelse(DAGPENGER)
+                .createUtbetaling();
+        Utbetaling utbetaling2 = getBuilder().withUtbetalingsDato(now()).withMelding("utbetaling2").withHovedytelse(SYKEPENGER)
+                .createUtbetaling();
+        Utbetaling utbetaling3 = getBuilder().withUtbetalingsDato(now().minusMonths(1)).withMelding("utbetaling3").withHovedytelse(SYKEPENGER)
+                .createUtbetaling();
+        Utbetaling utbetaling4 = getBuilder().withUtbetalingsDato(now().minusMonths(3)).withMelding("utbetaling4").withHovedytelse(BARNETRYGD)
+                .createUtbetaling();
 
         utbetalingsliste = asList(utbetaling1, utbetaling2, utbetaling3, utbetaling4);
+    }
+
+    @Test
+    public void hentYtelser_inneholderNoyaktigAlleHovedYtelser() {
+        Set<String> ytelser = hentYtelser(utbetalingsliste);
+
+        assertThat(ytelser.size(), is(3));
+        assertThat(ytelser, containsInAnyOrder(DAGPENGER, SYKEPENGER, BARNETRYGD));
     }
 
     @Test

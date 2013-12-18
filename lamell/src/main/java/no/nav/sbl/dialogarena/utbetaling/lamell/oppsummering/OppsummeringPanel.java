@@ -32,9 +32,9 @@ public class OppsummeringPanel extends Panel {
     }
 
     private MarkupContainer createYtelsesOppsummering(boolean visDetaljer) {
-        ListView<HovedYtelseVM> listView = new ListView<HovedYtelseVM>("hovedytelser") {
+        ListView<HovedytelseVM> listView = new ListView<HovedytelseVM>("hovedytelser") {
             @Override
-            protected void populateItem(ListItem<HovedYtelseVM> item) {
+            protected void populateItem(ListItem<HovedytelseVM> item) {
                 item.add(
                         new Label("hovedYtelsesBeskrivelse", item.getModelObject().getHovedYtelsesBeskrivelse()),
                         new Label("bruttoUnderytelser", item.getModelObject().getBruttoUnderytelser()),
@@ -44,10 +44,10 @@ public class OppsummeringPanel extends Panel {
                 );
             }
 
-            private ListView<UnderYtelseVM> lagUnderBeskrivelseListView(final ListItem<HovedYtelseVM> item) {
-                return new ListView<UnderYtelseVM>("underYtelsesBeskrivelser", item.getModelObject().getUnderYtelsesBeskrivelser()) {
+            private ListView<UnderytelseVM> lagUnderBeskrivelseListView(final ListItem<HovedytelseVM> item) {
+                return new ListView<UnderytelseVM>("underYtelsesBeskrivelser", item.getModelObject().getUnderYtelsesBeskrivelser()) {
                     @Override
-                    protected void populateItem(ListItem<UnderYtelseVM> item) {
+                    protected void populateItem(ListItem<UnderytelseVM> item) {
                         item.add(
                                 new Label("underYtelsesBeskrivelse", item.getModelObject().getUnderYtelsesBeskrivelse()),
                                 new Label("ytelsesBelop", item.getModelObject().getYtelsesBelop()),
