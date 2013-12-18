@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.LocalDate;
 
 import java.util.Comparator;
 
@@ -16,9 +18,7 @@ final class UtbetalingTransformObjekt {
     private String melding;
     private String hovedYtelse;
     private String underYtelse;
-
     private Double belop;
-
     private Interval periode;
     private int antall;
     private Double sats;
@@ -31,6 +31,37 @@ final class UtbetalingTransformObjekt {
         return new UtbetalingTransformObjektBuilder();
     }
 
+    public static final Transformer<UtbetalingTransformObjekt, DateTime> UTBETALINGS_DATO = new Transformer<UtbetalingTransformObjekt, DateTime>() {
+        @Override
+        public DateTime transform(UtbetalingTransformObjekt utbetalingTransformObjekt) {
+            return utbetalingTransformObjekt.getUtbetalingsDato();
+        }
+    };
+
+    public static final Transformer<UtbetalingTransformObjekt, LocalDate> UTBETALINGS_DAG = new Transformer<UtbetalingTransformObjekt, LocalDate>() {
+        @Override
+        public LocalDate transform(UtbetalingTransformObjekt utbetalingTransformObjekt) {
+            return utbetalingTransformObjekt.getUtbetalingsDato().toLocalDate();
+        }
+    };
+
+
+
+    public static boolean equals(UtbetalingTransformObjekt left, UtbetalingTransformObjekt right) {
+        if (left == right) return true;
+        if(left != null && right == null) { return false; }
+
+        if (left.hovedYtelse != null ? !left.hovedYtelse.equals(right.hovedYtelse) : right.hovedYtelse != null) return false;
+        if (left.kontonummer != null ? !left.kontonummer.equals(right.kontonummer) : right.kontonummer != null) return false;
+        if (left.mottaker != null ? !left.mottaker.equals(right.mottaker) : right.mottaker != null) return false;
+        if (left.mottakerId != null ? !left.mottakerId.equals(right.mottakerId) : right.mottakerId != null) return false;
+        if (left.periode != null ? !left.periode.equals(right.periode) : right.periode != null) return false;
+        if (left.status != null ? !left.status.equals(right.status) : right.status != null) return false;
+        if (left.valuta != null ? !left.valuta.equals(right.valuta) : right.valuta != null) return false;
+
+        return true;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -38,15 +69,12 @@ final class UtbetalingTransformObjekt {
 
         UtbetalingTransformObjekt that = (UtbetalingTransformObjekt) o;
 
-        if (antall != that.antall) return false;
         if (hovedYtelse != null ? !hovedYtelse.equals(that.hovedYtelse) : that.hovedYtelse != null) return false;
         if (kontonummer != null ? !kontonummer.equals(that.kontonummer) : that.kontonummer != null) return false;
         if (mottaker != null ? !mottaker.equals(that.mottaker) : that.mottaker != null) return false;
         if (mottakerId != null ? !mottakerId.equals(that.mottakerId) : that.mottakerId != null) return false;
         if (periode != null ? !periode.equals(that.periode) : that.periode != null) return false;
-        if (sats != null ? !sats.equals(that.sats) : that.sats != null) return false;
         if (status != null ? !status.equals(that.status) : that.status != null) return false;
-        if (underYtelse != null ? !underYtelse.equals(that.underYtelse) : that.underYtelse != null) return false;
         if (utbetalingsDato != null ? !utbetalingsDato.equals(that.utbetalingsDato) : that.utbetalingsDato != null)
             return false;
         if (valuta != null ? !valuta.equals(that.valuta) : that.valuta != null) return false;
@@ -62,16 +90,12 @@ final class UtbetalingTransformObjekt {
         result = 31 * result + (kontonummer != null ? kontonummer.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (hovedYtelse != null ? hovedYtelse.hashCode() : 0);
-        result = 31 * result + (underYtelse != null ? underYtelse.hashCode() : 0);
         result = 31 * result + (periode != null ? periode.hashCode() : 0);
-        result = 31 * result + antall;
-        result = 31 * result + (sats != null ? sats.hashCode() : 0);
         result = 31 * result + (valuta != null ? valuta.hashCode() : 0);
         return result;
     }
 
     public static final class TransformComparator {
-
         public static Comparator<UtbetalingTransformObjekt> DATO = new Comparator<UtbetalingTransformObjekt>() {
             @Override
             public int compare(UtbetalingTransformObjekt o1, UtbetalingTransformObjekt o2) {
@@ -79,6 +103,8 @@ final class UtbetalingTransformObjekt {
             }
         };
     }
+
+
     public int getAntall() {
         return antall;
     }
@@ -231,6 +257,4 @@ final class UtbetalingTransformObjekt {
             return transformObjekt;
         }
     }
-
-
 }
