@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning.DetaljPanel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 
@@ -12,10 +12,9 @@ public class UtbetalingPanel extends Panel {
     public UtbetalingPanel(String id, UtbetalingVM utbetalingVM) {
         super(id);
 
-        DetaljPanel detaljPanel = createDetaljPanel(utbetalingVM);
-
         add(
-                detaljPanel,
+                createSkrivUtLink("skriv-ut"),
+                new DetaljPanel("detaljpanel", utbetalingVM),
                 new Label("statusBeskrivelse", utbetalingVM.getStatus()),
                 new Label("kortUtbetalingsDato", utbetalingVM.getKortUtbetalingsDato()),
                 new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
@@ -24,21 +23,27 @@ public class UtbetalingPanel extends Panel {
                 new Label("trekkMedValuta", utbetalingVM.getTrekkMedValuta()),
                 new Label("belopMedValuta", utbetalingVM.getBelopMedValuta())
         );
-        add(createClickBehavior(detaljPanel));
+        add(createClickBehavior());
     }
 
-    private DetaljPanel createDetaljPanel(UtbetalingVM utbetalingVM) {
-        return (DetaljPanel) new DetaljPanel("detaljpanel", utbetalingVM)
-                .setOutputMarkupPlaceholderTag(true)
-                .setVisibilityAllowed(false);
-    }
-
-    private AjaxEventBehavior createClickBehavior(final WebMarkupContainer container) {
+    private AjaxEventBehavior createClickBehavior() {
         return new AjaxEventBehavior("click") {
             @Override
             protected void onEvent(AjaxRequestTarget target) {
-                container.setVisibilityAllowed(!container.isVisibleInHierarchy());
-                target.add(container);
+                target.appendJavaScript("$('#" + getMarkupId() + " .detaljpanel').animate({height: 'toggle'}, 300);");
+            }
+        };
+    }
+
+    private AjaxLink<Void> createSkrivUtLink(String id) {
+        return new AjaxLink<Void>(id) {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                String utbetalingslinje = "$('#" + getMarkupId() + "').closest('.utbetalingslinje')";
+                String javascript = utbetalingslinje + ".children('.detaljpanel').show();" +
+                                "$('body > .print .content').html(" + "'<div class=\"kolonne-hoyre\">'+" + utbetalingslinje + ".html()" + "+'</div>'" + ");" +
+                                "window.print();";
+                target.appendJavaScript(javascript);
             }
         };
     }

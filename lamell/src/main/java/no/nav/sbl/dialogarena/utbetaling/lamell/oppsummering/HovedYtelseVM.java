@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import org.apache.commons.collections15.Transformer;
 
