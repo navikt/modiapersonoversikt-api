@@ -5,12 +5,31 @@ import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import static java.util.Arrays.asList;
 
 /**
  * Hjelpefunksjoner for å jobbe med lister av Utbetaling.
  */
 public class UtbetalingListeUtils {
+
+    public static Map<String, Map<String, Double>> summerBelopForUnderytelser(List<Utbetaling> utbetalinger) {
+        //TODO: Summer beløpene
+        return new HashMap<>();
+    }
+
+    public static Set<String> hentYtelser(Utbetaling... utbetalinger) {
+        return hentYtelser(asList(utbetalinger));
+    }
+    public static Set<String> hentYtelser(List<Utbetaling> utbetalinger) {
+        //TODO: Hent alle ytelser fra utbetalinger
+        return new HashSet<>();
+    }
 
     /**
      * Splitter en liste av Utbetalinger i en liste av utbetalinger.
@@ -24,7 +43,7 @@ public class UtbetalingListeUtils {
         List<List<Utbetaling>> utbetalingerFordeltPerMaaned = new ArrayList<>();
 
         for (Utbetaling utbetaling : utbetalinger) {
-            int maaned = utbetaling.getUtbetalingsDato().getMonthOfYear();
+            int maaned = utbetaling.getUtbetalingsdato().getMonthOfYear();
             if (currentMaaned == 0) {
                 currentMaaned = maaned;
             }
@@ -46,7 +65,7 @@ public class UtbetalingListeUtils {
         Interval intervall = new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime().plusDays(1));
         ArrayList<Utbetaling> resultat = new ArrayList<>();
         for (Utbetaling utbetaling : utbetalinger) {
-            if (intervall.contains(utbetaling.getUtbetalingsDato())) {
+            if (intervall.contains(utbetaling.getUtbetalingsdato())) {
                 resultat.add(utbetaling);
             }
         }

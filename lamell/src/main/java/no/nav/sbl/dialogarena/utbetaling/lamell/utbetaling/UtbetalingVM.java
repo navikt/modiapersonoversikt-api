@@ -5,41 +5,50 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
-import static org.apache.commons.lang3.StringUtils.join;
 
 public class UtbetalingVM {
 
-    public Utbetaling utbetaling;
+    private Utbetaling utbetaling;
 
     public UtbetalingVM(Utbetaling utbetaling) {
         this.utbetaling = utbetaling;
     }
 
+    public String getStatus() {
+        return utbetaling.getStatus();
+    }
+
     public String getBeskrivelse() {
-        return join(utbetaling.getBeskrivelser(), ", ");
+        return utbetaling.getHovedytelse();
+    }
+
+    public String getMottakerId() {
+        return utbetaling.getMottakerId();
+    }
+
+    public String getKontonr() {
+        return utbetaling.getKontonr();
     }
 
     public String getKortUtbetalingsDato() {
-        return optional(utbetaling.utbetalingsDato).map(KORT).getOrElse("Ingen utbetalingsdato");
+        return optional(utbetaling.getUtbetalingsdato()).map(KORT).getOrElse("Ingen utbetalingsdato");
     }
 
     public String getPeriodeMedKortDato() {
-        return optional(utbetaling.startDato).map(KORT).getOrElse("") + " - " + optional(utbetaling.sluttDato).map(KORT).getOrElse("");
+        return optional(utbetaling.getPeriode().getStart()).map(KORT).getOrElse("") + " - "
+                + optional(utbetaling.getPeriode().getEnd()).map(KORT).getOrElse("");
     }
 
     public String getBruttoBelopMedValuta() {
-        return getBelopString(utbetaling.bruttoBelop);
+        return getBelopString(utbetaling.getBrutto());
     }
 
     public String getTrekkMedValuta() {
-        return getBelopString(utbetaling.trekk);
+        return getBelopString(utbetaling.getTrekk());
     }
 
     public String getBelopMedValuta() {
-        return getBelopString(utbetaling.nettoBelop);
+        return getBelopString(utbetaling.getUtbetalt());
     }
 
-    public boolean harYtelse(String ytelse) {
-        return utbetaling.getBeskrivelser().contains(ytelse);
-    }
 }

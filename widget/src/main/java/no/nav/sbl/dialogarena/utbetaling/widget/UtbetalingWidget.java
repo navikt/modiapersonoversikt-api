@@ -15,7 +15,7 @@ import java.util.List;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
-import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingVM.UTBETALING_UTBETALINGVM_TRANSFORMER;
+import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingVM.TIL_UTBETALINGVM;
 
 public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
 
@@ -37,7 +37,7 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
     }
 
     private List<UtbetalingVM> transformToVMs(List<Utbetaling> utbetalinger) {
-        return on(utbetalinger).map(UTBETALING_UTBETALINGVM_TRANSFORMER).collect(new UtbetalingVMComparator());
+        return on(utbetalinger).map(TIL_UTBETALINGVM).collect(new UtbetalingVMComparator());
     }
 
     @Override

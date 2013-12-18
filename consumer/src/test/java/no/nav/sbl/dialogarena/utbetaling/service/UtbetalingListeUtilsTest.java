@@ -73,7 +73,7 @@ public class UtbetalingListeUtilsTest {
         List<Utbetaling> utbetalingsperiode = hentUtbetalingerFraPeriode(utbetalingsliste, startDato.toLocalDate(), sluttDato.toLocalDate());
 
         for (Utbetaling utbetaling : utbetalingsperiode) {
-            assertTrue(intervall.contains(utbetaling.getUtbetalingsDato()));
+            assertTrue(intervall.contains(utbetaling.getUtbetalingsdato()));
         }
     }
 

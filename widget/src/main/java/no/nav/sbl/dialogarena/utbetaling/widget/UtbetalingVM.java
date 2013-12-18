@@ -9,12 +9,10 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
-import static org.apache.commons.lang3.StringUtils.join;
-
 
 public class UtbetalingVM implements FeedItemVM, Serializable {
 
-    public static final Transformer<Utbetaling, UtbetalingVM> UTBETALING_UTBETALINGVM_TRANSFORMER = new Transformer<Utbetaling, UtbetalingVM>() {
+    public static final Transformer<Utbetaling, UtbetalingVM> TIL_UTBETALINGVM = new Transformer<Utbetaling, UtbetalingVM>() {
         @Override
         public UtbetalingVM transform(Utbetaling utbetaling) {
             return new UtbetalingVM(utbetaling);
@@ -28,15 +26,15 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
     }
 
     public DateTime getUtbetalingsDato() {
-        return utbetaling.getUtbetalingsDato();
+        return utbetaling.getUtbetalingsdato();
     }
 
     public String getBeskrivelse() {
-        return join(utbetaling.getBeskrivelser(), ", ");
+        return utbetaling.getHovedytelse();
     }
 
     public String getBelop() {
-        return formaterBelop(utbetaling.nettoBelop);
+        return formaterBelop(utbetaling.getUtbetalt());
     }
 
     public String getValuta() {
@@ -45,15 +43,15 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
     }
 
     public String getStatus() {
-        return utbetaling.getStatusBeskrivelse();
+        return utbetaling.getStatus();
     }
 
     public DateTime getStartDato() {
-        return utbetaling.getStartDate();
+        return utbetaling.getPeriode().getStart();
     }
 
     public DateTime getSluttDato() {
-        return utbetaling.getEndDate();
+        return utbetaling.getPeriode().getEnd();
     }
 
     public String getUtbetalingId(){

@@ -1,17 +1,16 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
-import java.util.Locale;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import org.apache.commons.lang3.SerializationUtils;
+import org.joda.time.Interval;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Locale;
 
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.getBuilder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 
 public class UtbetalingVMTest {
@@ -22,30 +21,9 @@ public class UtbetalingVMTest {
     }
 
     @Test
-    public void canSerializeObject() {
-        Utbetaling utbetaling1 = new UtbetalingBuilder().createUtbetaling();
-        SerializationUtils.serialize(utbetaling1);
-
-        UtbetalingVM utbetalingVM = new UtbetalingVM(utbetaling1);
-        SerializationUtils.serialize(utbetalingVM);
-    }
-
-    @Test
-    public void canSerializeListOfObject() {
-        Utbetaling utbetaling = new UtbetalingBuilder().createUtbetaling();
-        List<UtbetalingVM> utbetalingVMer = new ArrayList<>();
-        UtbetalingVM utbetalingVM = new UtbetalingVM(utbetaling);
-        utbetalingVMer.add(utbetalingVM);
-        utbetalingVMer.add(utbetalingVM);
-        utbetalingVMer.add(utbetalingVM);
-        utbetalingVMer.add(utbetalingVM);
-        SerializationUtils.serialize((Serializable) utbetalingVMer);
-    }
-
-    @Test
     public void belopFormateres_medGruppering_medKomma_medToDesimaler() throws Exception {
         double belop = 67856565.6;
-        Utbetaling utbetaling = new UtbetalingBuilder().setNettoBelop(belop).createUtbetaling();
+        Utbetaling utbetaling = getBuilder().withUtbetalt(belop).createUtbetaling();
         UtbetalingVM vm = new UtbetalingVM(utbetaling);
 
         String belop1 = vm.getBelop();
@@ -57,8 +35,8 @@ public class UtbetalingVMTest {
 
     @Test
     public void transformerWorksCorrectly(){
-        Utbetaling utbetaling = new UtbetalingBuilder().createUtbetaling();
-        UtbetalingVM utbetalingVM = UtbetalingVM.UTBETALING_UTBETALINGVM_TRANSFORMER.transform(utbetaling);
-        assertThat(utbetaling.getStartDate(), is(equalTo(utbetalingVM.getStartDato())));
+        Utbetaling utbetaling = getBuilder().withPeriode(new Interval(now().minusDays(7), now())).createUtbetaling();
+        UtbetalingVM utbetalingVM = UtbetalingVM.TIL_UTBETALINGVM.transform(utbetaling);
+        assertThat(utbetaling.getPeriode().getStart(), is(equalTo(utbetalingVM.getStartDato())));
     }
 }

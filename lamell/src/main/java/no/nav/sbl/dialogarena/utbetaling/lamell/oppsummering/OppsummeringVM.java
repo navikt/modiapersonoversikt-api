@@ -54,14 +54,14 @@ public class OppsummeringVM implements Serializable {
     private static final Transformer<Utbetaling, Double> BRUTTO = new Transformer<Utbetaling, Double>() {
         @Override
         public Double transform(Utbetaling utbetaling) {
-            return utbetaling.bruttoBelop;
+            return utbetaling.getBrutto();
         }
     };
 
     private static final Transformer<Utbetaling, Double> NETTO = new Transformer<Utbetaling, Double>() {
         @Override
         public Double transform(Utbetaling utbetaling) {
-            return utbetaling.nettoBelop;
+            return utbetaling.getUtbetalt();
         }
     };
 
@@ -69,7 +69,7 @@ public class OppsummeringVM implements Serializable {
         @Override
         public Double transform(Utbetaling utbetaling) {
             return utbetaling.getTrekk() == 0.0 ?
-                    utbetaling.bruttoBelop - utbetaling.nettoBelop :
+                    utbetaling.getBrutto() - utbetaling.getUtbetalt() :
                     utbetaling.getTrekk();
         }
     };

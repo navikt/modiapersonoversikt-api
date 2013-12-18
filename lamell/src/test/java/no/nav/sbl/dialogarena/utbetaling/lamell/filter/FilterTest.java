@@ -2,14 +2,15 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
 import java.util.HashSet;
-import java.util.UUID;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.getBuilder;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -20,17 +21,12 @@ public class FilterTest {
     private static Utbetaling utbetaling;
 
     static {
-        PosteringsDetalj dagpenger = new PosteringsDetalj();
-        dagpenger.hovedBeskrivelse = DAGPENGER;
-        PosteringsDetalj barnetrygd = new PosteringsDetalj();
-        barnetrygd.hovedBeskrivelse = BARNETRYGD;
-        Bilag bilag = new Bilag();
-        bilag.posteringsDetaljer = asList(dagpenger, barnetrygd);
-        utbetaling = new UtbetalingBuilder().setUtbetalingsDato(UUID.randomUUID().toString()).createUtbetaling();
-        utbetaling.startDato = DateTime.now().minusDays(1);
-        utbetaling.utbetalingsDato = DateTime.now();
-        utbetaling.mottakertype = "bruker";
-        utbetaling.bilag = asList(bilag);
+
+        utbetaling = getBuilder()
+                .withUtbetalingsDato(now())
+                .withPeriode(new Interval(now().minusDays(1), now()))
+                .withMottakerId("bruker")
+                .createUtbetaling();
     }
 
     @Test

@@ -49,10 +49,12 @@ public class UtbetalingVMComparatorTest {
 
     private UtbetalingVM lagUtbetalingVM(DateTime utbetalingsDato) {
         return new UtbetalingVM(
-                new UtbetalingBuilder().setValuta("kr").setMottakernavn("Arbeidsgiver").setMottakertype(Utbetaling.ARBEIDSGIVER)
-                        .setKontoNr("123").setUtbetalingId("1").setUtbetalingsDato(utbetalingsDato)
+                Utbetaling.getBuilder()
+                        .withValuta("kr")
+                        .withMottakerId("Arbeidsgiver")
+                        .withKontonr("123")
+                        .withUtbetalingsDato(utbetalingsDato)
                         .createUtbetaling()
-
         );
     }
 }
