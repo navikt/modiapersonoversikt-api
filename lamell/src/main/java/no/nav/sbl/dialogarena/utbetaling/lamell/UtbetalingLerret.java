@@ -125,7 +125,7 @@ public class UtbetalingLerret extends Lerret {
                 synligeUtbetalinger,
                 filterParametere.getStartDato(),
                 filterParametere.getSluttDato()));
-        totalOppsummeringPanel.setVisibilityAllowed(synligeUtbetalinger.size() > 0);
+        totalOppsummeringPanel.setVisibilityAllowed(!synligeUtbetalinger.isEmpty());
 
         utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe());
 
