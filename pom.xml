@@ -15,8 +15,8 @@
 
     <properties>
         <spring.version>3.2.3.RELEASE</spring.version>
-        <modig.wicket.version>2.0.1-SNAPSHOT</modig.wicket.version>
-        <wicket.version>6.10.0</wicket.version>
+        <modig.wicket.version>2.0.0-alpha.3</modig.wicket.version>
+        <wicket.version>6.11.0</wicket.version>
         <modig.frontend.version>1.1.5</modig.frontend.version>
 
         <utbetaling.tjenestespesifikasjon.version>1.0.1</utbetaling.tjenestespesifikasjon.version>
