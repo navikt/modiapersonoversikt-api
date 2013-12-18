@@ -10,7 +10,6 @@ import java.util.Set;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
 
 
 public class FilterParametere implements Serializable, Predicate<Utbetaling> {
@@ -82,12 +81,7 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     }
 
     private boolean filtrerPaaYtelser(Utbetaling utbetaling) {
-        for (String ytelse : hentYtelser(utbetaling)) {
-            if (!uonskedeYtelser.contains(ytelse)) {
-                return true;
-            }
-        }
-        return false;
+        return !uonskedeYtelser.contains(utbetaling.getHovedytelse());
     }
 
 }

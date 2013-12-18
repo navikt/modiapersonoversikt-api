@@ -3,38 +3,39 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
+import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import org.apache.commons.collections15.Transformer;
 
 import static java.util.Collections.sort;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
-public class HovedYtelseVM implements Serializable {
+public class HovedytelseVM implements Serializable {
 
     private String hovedYtelsesBeskrivelse;
-    private List<UnderYtelseVM> underYtelsesBeskrivelser;
+    private List<UnderytelseVM> underYtelsesBeskrivelser;
 
-    public static final Transformer<HovedYtelseVM, String> NAVN = new Transformer<HovedYtelseVM, String>() {
+    public static final Transformer<HovedytelseVM, String> NAVN = new Transformer<HovedytelseVM, String>() {
         @Override
-        public String transform(HovedYtelseVM hovedYtelseVM) {
-            return hovedYtelseVM.hovedYtelsesBeskrivelse;
+        public String transform(HovedytelseVM hovedytelseVM) {
+            return hovedytelseVM.hovedYtelsesBeskrivelse;
         }
     };
 
-    public HovedYtelseVM(String beskrivelse, Map<String, Double> underytelser) {
+    public HovedytelseVM(String beskrivelse, List<Underytelse> underytelser) {
         hovedYtelsesBeskrivelse = beskrivelse;
         underYtelsesBeskrivelser = new ArrayList<>();
-        for (String underytelse : underytelser.keySet()) {
-            underYtelsesBeskrivelser.add(new UnderYtelseVM(underytelse, underytelser.get(underytelse)));
+        for (Underytelse underytelse : underytelser) {
+            underYtelsesBeskrivelser.add(new UnderytelseVM(underytelse.getTittel(), underytelse.getBelop()));
         }
-        sort(underYtelsesBeskrivelser, UnderYtelseVM.UnderYtelseComparator.NAVN);
+        sort(underYtelsesBeskrivelser, UnderytelseVM.UnderYtelseComparator.NAVN);
     }
 
     public String getHovedYtelsesBeskrivelse() {
         return hovedYtelsesBeskrivelse;
     }
 
-    public List<UnderYtelseVM> getUnderYtelsesBeskrivelser() {
+    public List<UnderytelseVM> getUnderYtelsesBeskrivelser() {
         return underYtelsesBeskrivelser;
     }
 
@@ -52,7 +53,7 @@ public class HovedYtelseVM implements Serializable {
 
     private Double lagBrutto() {
         Double sum = 0.0;
-        for (UnderYtelseVM ytelse : underYtelsesBeskrivelser) {
+        for (UnderytelseVM ytelse : underYtelsesBeskrivelser) {
             if(ytelse.isTrekk()) { continue; }
             sum += ytelse.getBelop();
         }
@@ -61,7 +62,7 @@ public class HovedYtelseVM implements Serializable {
 
     private Double lagTrekk() {
         Double sum = 0.0;
-        for (UnderYtelseVM ytelse : underYtelsesBeskrivelser) {
+        for (UnderytelseVM ytelse : underYtelsesBeskrivelser) {
             if(!ytelse.isTrekk()) { continue; }
             sum += ytelse.getBelop();
         }

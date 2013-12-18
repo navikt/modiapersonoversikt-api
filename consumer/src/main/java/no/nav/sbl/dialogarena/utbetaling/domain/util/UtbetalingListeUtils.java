@@ -1,35 +1,36 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.collections.IterUtils.on;
 
 /**
  * Hjelpefunksjoner for å jobbe med lister av Utbetaling.
  */
 public class UtbetalingListeUtils {
 
-    public static Map<String, Map<String, Double>> summerBelopForUnderytelser(List<Utbetaling> utbetalinger) {
-        //TODO: Summer beløpene
-        return new HashMap<>();
-    }
-
     public static Set<String> hentYtelser(Utbetaling... utbetalinger) {
         return hentYtelser(asList(utbetalinger));
     }
     public static Set<String> hentYtelser(List<Utbetaling> utbetalinger) {
-        //TODO: Hent alle ytelser fra utbetalinger
-        return new HashSet<>();
+        return on(utbetalinger).map(HOVEDYTELSE).collectIn(new HashSet<String>());
     }
+
+    private static final Transformer<Utbetaling, String> HOVEDYTELSE = new Transformer<Utbetaling, String>() {
+        @Override
+        public String transform(Utbetaling utbetaling) {
+            return utbetaling.getHovedytelse();
+        }
+    };
 
     /**
      * Splitter en liste av Utbetalinger i en liste av utbetalinger.
