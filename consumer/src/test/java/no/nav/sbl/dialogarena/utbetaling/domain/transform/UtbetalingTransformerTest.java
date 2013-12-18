@@ -2,16 +2,13 @@ package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling1;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -78,20 +75,4 @@ public class UtbetalingTransformerTest {
         assertThat(utbetalinger.get(0).getUnderytelser().size(), is(4));
     }
 
-
-    @Test
-    public void trekkTransformObjekterFraSammeDato() throws Exception {
-        transformer = new UtbetalingTransformer();
-        WSUtbetaling wsUtbetaling = createUtbetaling1();
-        LocalDate utbetalingsDato = wsUtbetaling.getUtbetalingDato().toLocalDate();
-
-        transformer.transformerSkatt(asList(wsUtbetaling));
-        List<UtbetalingTransformObjekt> transformObjekter = transformer.createTransformObjekter(asList(wsUtbetaling));
-
-        Map<LocalDate, List<UtbetalingTransformObjekt>> map  = transformer.trekkUtTransformObjekterFraSammeDag(transformObjekter);
-
-        assertThat(map.size(), is(1));
-        assertThat(map.keySet(), contains(utbetalingsDato));
-        assertThat(map.get(utbetalingsDato).size(), is(4));
-    }
 }
