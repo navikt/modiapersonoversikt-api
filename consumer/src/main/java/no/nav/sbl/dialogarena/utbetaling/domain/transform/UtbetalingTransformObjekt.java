@@ -15,6 +15,9 @@ final class UtbetalingTransformObjekt {
     private String mottakerId;
     private String kontonummer;
     private String status;
+
+    private String spesifikasjon;
+
     private String melding;
     private String hovedYtelse;
     private String underYtelse;
@@ -23,7 +26,6 @@ final class UtbetalingTransformObjekt {
     private int antall;
     private Double sats;
     private String valuta;
-
     private UtbetalingTransformObjekt() {
     }
 
@@ -45,23 +47,6 @@ final class UtbetalingTransformObjekt {
         }
     };
 
-
-
-    public static boolean equals(UtbetalingTransformObjekt left, UtbetalingTransformObjekt right) {
-        if (left == right) return true;
-        if(left != null && right == null) { return false; }
-
-        if (left.hovedYtelse != null ? !left.hovedYtelse.equals(right.hovedYtelse) : right.hovedYtelse != null) return false;
-        if (left.kontonummer != null ? !left.kontonummer.equals(right.kontonummer) : right.kontonummer != null) return false;
-        if (left.mottaker != null ? !left.mottaker.equals(right.mottaker) : right.mottaker != null) return false;
-        if (left.mottakerId != null ? !left.mottakerId.equals(right.mottakerId) : right.mottakerId != null) return false;
-        if (left.periode != null ? !left.periode.equals(right.periode) : right.periode != null) return false;
-        if (left.status != null ? !left.status.equals(right.status) : right.status != null) return false;
-        if (left.valuta != null ? !left.valuta.equals(right.valuta) : right.valuta != null) return false;
-
-        return true;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -78,6 +63,7 @@ final class UtbetalingTransformObjekt {
         if (utbetalingsDato != null ? !utbetalingsDato.equals(that.utbetalingsDato) : that.utbetalingsDato != null)
             return false;
         if (valuta != null ? !valuta.equals(that.valuta) : that.valuta != null) return false;
+        if (spesifikasjon != null ? !spesifikasjon.equals(that.spesifikasjon) : that.spesifikasjon != null) return false;
 
         return true;
     }
@@ -96,6 +82,7 @@ final class UtbetalingTransformObjekt {
     }
 
     public static final class TransformComparator {
+
         public static Comparator<UtbetalingTransformObjekt> DATO = new Comparator<UtbetalingTransformObjekt>() {
             @Override
             public int compare(UtbetalingTransformObjekt o1, UtbetalingTransformObjekt o2) {
@@ -103,11 +90,10 @@ final class UtbetalingTransformObjekt {
             }
         };
     }
-
-
     public int getAntall() {
         return antall;
     }
+
 
     public Double getBelop() {
         return belop;
@@ -115,6 +101,10 @@ final class UtbetalingTransformObjekt {
 
     public void setBelop(Double belop) {
         this.belop = belop;
+    }
+
+    public String getSpesifikasjon() {
+        return spesifikasjon;
     }
 
     public Interval getPeriode() {
@@ -179,6 +169,13 @@ final class UtbetalingTransformObjekt {
         private DateTime utbetalingsDato;
         private Interval periode;
         private String valuta;
+
+        private String spesifikasjon;
+
+        public UtbetalingTransformObjektBuilder withSpesifikasjon(String spesifikasjon) {
+            this.spesifikasjon = spesifikasjon;
+            return this;
+        }
 
         public UtbetalingTransformObjektBuilder withAntall(int antall) {
             this.antall = antall;
@@ -254,6 +251,7 @@ final class UtbetalingTransformObjekt {
             transformObjekt.utbetalingsDato = this.utbetalingsDato;
             transformObjekt.periode = this.periode;
             transformObjekt.valuta = this.valuta;
+            transformObjekt.spesifikasjon = this.spesifikasjon;
             return transformObjekt;
         }
     }
