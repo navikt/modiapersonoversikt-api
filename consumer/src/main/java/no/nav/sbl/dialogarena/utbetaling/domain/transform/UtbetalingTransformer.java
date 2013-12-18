@@ -10,7 +10,6 @@ import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.Interval;
-import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -24,7 +23,6 @@ import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.TransformComparator.DATO;
-import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.UTBETALINGS_DAG;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.getBuilder;
 import static org.apache.commons.lang3.StringUtils.join;
 
@@ -90,50 +88,18 @@ public class UtbetalingTransformer {
         return belopPerUnderytelse;
     }
 
-    /**
-     * Kobler skattetrekket til den ytelsen som gjenstas oftest i bilaget.
-     */
-    private static void trekkUtSkatteOpplysninger(List<WSPosteringsdetaljer> detaljer) {
-        List<WSPosteringsdetaljer> skatteDetaljer = new ArrayList<>();
-        for (WSPosteringsdetaljer detalj : detaljer) {
-            if ("SKATT".equalsIgnoreCase(detalj.getKontoBeskrHoved())) {
-                skatteDetaljer.add(detalj);
-            }
-        }
-        if (skatteDetaljer.isEmpty()) {
-            return;
-        }
-        WSPosteringsdetaljer detalj = finnVanligsteYtelse(detaljer);
-        String beskrivelse = detalj.getKontoBeskrHoved();
-        for (WSPosteringsdetaljer skatt : skatteDetaljer) {
-            skatt.setKontoBeskrHoved(beskrivelse);
-        }
+    public List<Utbetaling> createUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
+        transformerSkatt(wsUtbetalinger);
+        List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(wsUtbetalinger);
+        Collections.sort(transformObjekter, DATO);
+
+        return transformerTilUtbetalinger(transformObjekter);
     }
 
-    /**
-     * Henter ut ytelsen med høyest frekvens i listen av posteringsdetaljer
-     */
-    private static WSPosteringsdetaljer finnVanligsteYtelse(List<WSPosteringsdetaljer> detaljer1) {
-        Map<String, Integer> frekvens = new HashMap<>();
-        int highestCount = 0;
-        WSPosteringsdetaljer pdetalj = null;
-        for (WSPosteringsdetaljer detalj : detaljer1) {
-            String key = detalj.getKontoBeskrHoved();
-            Integer count = 1 + (frekvens.get(key) != null ? frekvens.get(key) : 0);
-            if (count > highestCount) {
-                highestCount = count;
-                pdetalj = detalj;
-            }
-            frekvens.put(key, count);
-        }
-        return pdetalj;
-    }
-
-    public static List<Utbetaling> flatmapTransformObjektTilUtbetalinger(List<UtbetalingTransformObjekt> transformObjektListe) {
+    static List<Utbetaling> transformerTilUtbetalinger(List<UtbetalingTransformObjekt> transformObjektListe) {
         List<Utbetaling> nyeUtbetalinger = new ArrayList<>();
 
         // trekk ut underytelser, legg i samme utbetaling
-        //for (List<UtbetalingTransformObjekt> transformObjektListe : transformListe) {
         while (transformObjektListe.size() > 1) {
             UtbetalingTransformObjekt forsteObjektIListe = transformObjektListe.get(0);
             UtbetalingBuilder utbetalingBuilder = lagUtbetalingBuilder(forsteObjektIListe);
@@ -154,28 +120,7 @@ public class UtbetalingTransformer {
             // TODO: slå sammen underytelser
             nyeUtbetalinger.add(utbetalingBuilder.withUnderytelser(underytelser).createUtbetaling());
         }
-//        }
         return nyeUtbetalinger;
-    }
-
-    public List<Utbetaling> createUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
-
-        transformerSkatt(wsUtbetalinger);
-        // 2. gjør om alle WSUtbetalinger til transformobjekter
-        List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(wsUtbetalinger);
-
-        // 3. hvis to transformobjekter er like,
-        // slå sammen beløp og melding. Lag nye utbetalinger
-        Collections.sort(transformObjekter, DATO);
-//        Map<LocalDate, List<UtbetalingTransformObjekt>> dateListMap = trekkUtTransformObjekterFraSammeDag(transformObjekter);
-
-        return flatmapTransformObjektTilUtbetalinger(transformObjekter);
-    }
-
-    Map<LocalDate, List<UtbetalingTransformObjekt>> trekkUtTransformObjekterFraSammeDag(List<UtbetalingTransformObjekt> transformObjekter) {
-        Collections.sort(transformObjekter, DATO);
-        Map<LocalDate, List<UtbetalingTransformObjekt>> map = on(transformObjekter).reduce(indexBy(UTBETALINGS_DAG));
-        return map;
     }
 
     void transformerSkatt(List<WSUtbetaling> wsUtbetalinger) {
@@ -254,5 +199,44 @@ public class UtbetalingTransformer {
             strings.add(wsMelding.getMeldingtekst());
         }
         return join(strings, delimiter);
+    }
+
+    /**
+     * Kobler skattetrekket til den ytelsen som gjenstas oftest i bilaget.
+     */
+    private static void trekkUtSkatteOpplysninger(List<WSPosteringsdetaljer> detaljer) {
+        List<WSPosteringsdetaljer> skatteDetaljer = new ArrayList<>();
+        for (WSPosteringsdetaljer detalj : detaljer) {
+            if ("SKATT".equalsIgnoreCase(detalj.getKontoBeskrHoved())) {
+                skatteDetaljer.add(detalj);
+            }
+        }
+        if (skatteDetaljer.isEmpty()) {
+            return;
+        }
+        WSPosteringsdetaljer detalj = finnVanligsteYtelse(detaljer);
+        String beskrivelse = detalj.getKontoBeskrHoved();
+        for (WSPosteringsdetaljer skatt : skatteDetaljer) {
+            skatt.setKontoBeskrHoved(beskrivelse);
+        }
+    }
+
+    /**
+     * Henter ut ytelsen med høyest frekvens i listen av posteringsdetaljer
+     */
+    private static WSPosteringsdetaljer finnVanligsteYtelse(List<WSPosteringsdetaljer> detaljer1) {
+        Map<String, Integer> frekvens = new HashMap<>();
+        int highestCount = 0;
+        WSPosteringsdetaljer pdetalj = null;
+        for (WSPosteringsdetaljer detalj : detaljer1) {
+            String key = detalj.getKontoBeskrHoved();
+            Integer count = 1 + (frekvens.get(key) != null ? frekvens.get(key) : 0);
+            if (count > highestCount) {
+                highestCount = count;
+                pdetalj = detalj;
+            }
+            frekvens.put(key, count);
+        }
+        return pdetalj;
     }
 }
