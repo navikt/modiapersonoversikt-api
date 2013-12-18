@@ -43,7 +43,6 @@ public class UtbetalingPanel extends Panel {
                 String javascript = utbetalingslinje + ".children('.detaljpanel').show();" +
                                 "$('body > .print .content').html(" + "'<div class=\"kolonne-hoyre\">'+" + utbetalingslinje + ".html()" + "+'</div>'" + ");" +
                                 "window.print();";
-                System.out.println(javascript);
                 target.appendJavaScript(javascript);
             }
         };
