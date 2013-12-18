@@ -34,7 +34,7 @@ public class WSUtbetalingTestData {
     private static final String DAGPENGER = "Dagpenger";
     private static final String FORELDREPENGER = "Foreldrepenger";
     private static final String VALUTA = "NOK";
-    private static String fnr;
+    private static String fnr = "12345678912";
 
     public static List<WSUtbetaling> getWsUtbetalinger(String fNr, DateTime startDato, DateTime sluttDato) {
         fnr = fNr;
@@ -62,13 +62,15 @@ public class WSUtbetalingTestData {
         Double belop = BELOP;
         WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, GRUNNBELOP, 1, 1.0, belop);
         WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1, 1.0, trekk);
-        WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1, posteringsdetalj2);
-        WSBilag bilag2 = createBilag("bilag2", posteringsdetalj1, posteringsdetalj2);
+        WSBilag bilag1 = createBilag("Dette er bilagsmelding 1.", posteringsdetalj1, posteringsdetalj2);
+        WSBilag bilag2 = createBilag("Dette er bilagsmelding 2,", posteringsdetalj1, posteringsdetalj2);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(2 * (belop + trekk))
                 .withBruttobelop(2 * belop)
                 .withTrekk(2 * trekk)
+                .withValuta(VALUTA)
+                .withGironr(KONTO_NR)
                 .withStatusBeskrivelse(MOTTATT_KONTOFORER)
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createTrygdetMottaker())
