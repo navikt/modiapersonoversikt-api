@@ -72,24 +72,6 @@ public class Utbetaling implements Serializable {
         return underytelser;
     }
 
-    public void setUnderytelser(List<Underytelse> underytelser) {
-        this.underytelser = underytelser;
-    }
-
-    public class Underytelse {
-        public String tittel;
-        public int antall;
-        public double belop;
-        public double sats;
-
-        public Underytelse(String tittel, int antall, double belop, double sats) {
-            this.tittel = tittel;
-            this.antall = antall;
-            this.belop = belop;
-            this.sats = sats;
-        }
-    }
-
     public static class UtbetalingBuilder {
         private DateTime utbetalingsDato;
         private Interval periode;
@@ -99,7 +81,7 @@ public class Utbetaling implements Serializable {
         private String hovedytelse;
         private String kontonr;
         private String valuta;
-        private List<Utbetaling.Underytelse> underytelser = new ArrayList<>();
+        private List<Underytelse> underytelser = new ArrayList<>();
 
         public UtbetalingBuilder withUtbetalingsDato(DateTime utbetalingsDato) {
             this.utbetalingsDato = utbetalingsDato;

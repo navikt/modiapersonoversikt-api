@@ -63,19 +63,4 @@ public class UtbetalingServiceTest {
         service.hentUtbetalinger(FNR, new LocalDate(), new LocalDate());
     }
 
-    @Test
-    public void skalTransformereUtbetaling() throws Exception {
-        WSUtbetaling wsUtbetaling = createUtbetaling1();
-        String alderspensjon = "Dagpenger";
-
-        when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenReturn(new WSHentUtbetalingListeResponse().withUtbetalingListe(wsUtbetaling));
-        Utbetaling u = service.hentUtbetalinger(FNR, new LocalDate(), new LocalDate()).get(0);
-
-        assertThat(u.getUtbetalingsDato(), is(wsUtbetaling.getUtbetalingDato()));
-        assertThat(u.getStartDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato()));
-        assertThat(u.getEndDate(), is(wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato()));
-        assertThat(u.nettoBelop, is(wsUtbetaling.getNettobelop()));
-        assertThat(u.bruttoBelop, is(wsUtbetaling.getBruttobelop()));
-        assertThat(u.getBeskrivelser(), contains(alderspensjon));
-    }
 }

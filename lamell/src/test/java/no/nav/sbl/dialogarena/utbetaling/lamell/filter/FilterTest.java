@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
-import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
