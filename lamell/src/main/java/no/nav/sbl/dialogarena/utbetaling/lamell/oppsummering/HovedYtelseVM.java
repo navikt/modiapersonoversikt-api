@@ -10,32 +10,32 @@ import org.apache.commons.collections15.Transformer;
 import static java.util.Collections.sort;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
-public class HovedytelseVM implements Serializable {
+public class HovedYtelseVM implements Serializable {
 
     private String hovedYtelsesBeskrivelse;
-    private List<UnderytelseVM> underYtelsesBeskrivelser;
+    private List<UnderYtelseVM> underYtelsesBeskrivelser;
 
-    public static final Transformer<HovedytelseVM, String> NAVN = new Transformer<HovedytelseVM, String>() {
+    public static final Transformer<HovedYtelseVM, String> NAVN = new Transformer<HovedYtelseVM, String>() {
         @Override
-        public String transform(HovedytelseVM hovedytelseVM) {
+        public String transform(HovedYtelseVM hovedytelseVM) {
             return hovedytelseVM.hovedYtelsesBeskrivelse;
         }
     };
 
-    public HovedytelseVM(String beskrivelse, List<Underytelse> underytelser) {
+    public HovedYtelseVM(String beskrivelse, List<Underytelse> underytelser) {
         hovedYtelsesBeskrivelse = beskrivelse;
         underYtelsesBeskrivelser = new ArrayList<>();
         for (Underytelse underytelse : underytelser) {
-            underYtelsesBeskrivelser.add(new UnderytelseVM(underytelse.getTittel(), underytelse.getBelop()));
+            underYtelsesBeskrivelser.add(new UnderYtelseVM(underytelse.getTittel(), underytelse.getBelop()));
         }
-        sort(underYtelsesBeskrivelser, UnderytelseVM.UnderYtelseComparator.NAVN);
+        sort(underYtelsesBeskrivelser, UnderYtelseVM.UnderYtelseComparator.NAVN);
     }
 
     public String getHovedYtelsesBeskrivelse() {
         return hovedYtelsesBeskrivelse;
     }
 
-    public List<UnderytelseVM> getUnderYtelsesBeskrivelser() {
+    public List<UnderYtelseVM> getUnderYtelsesBeskrivelser() {
         return underYtelsesBeskrivelser;
     }
 
@@ -53,7 +53,7 @@ public class HovedytelseVM implements Serializable {
 
     private Double lagBrutto() {
         Double sum = 0.0;
-        for (UnderytelseVM ytelse : underYtelsesBeskrivelser) {
+        for (UnderYtelseVM ytelse : underYtelsesBeskrivelser) {
             if(ytelse.isTrekk()) { continue; }
             sum += ytelse.getBelop();
         }
@@ -62,7 +62,7 @@ public class HovedytelseVM implements Serializable {
 
     private Double lagTrekk() {
         Double sum = 0.0;
-        for (UnderytelseVM ytelse : underYtelsesBeskrivelser) {
+        for (UnderYtelseVM ytelse : underYtelsesBeskrivelser) {
             if(!ytelse.isTrekk()) { continue; }
             sum += ytelse.getBelop();
         }

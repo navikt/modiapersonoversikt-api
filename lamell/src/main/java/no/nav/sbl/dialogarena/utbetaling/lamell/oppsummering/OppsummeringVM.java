@@ -14,7 +14,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.HovedytelseVM.NAVN;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.HovedYtelseVM.NAVN;
 
 
 public class OppsummeringVM implements Serializable {
@@ -22,7 +22,7 @@ public class OppsummeringVM implements Serializable {
     public List<Utbetaling> utbetalinger;
     public LocalDate sluttDato;
     public LocalDate startDato;
-    public List<HovedytelseVM> hovedytelser;
+    public List<HovedYtelseVM> hovedytelser;
     public String utbetalt, trekk, brutto;
 
     public OppsummeringVM(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
@@ -42,10 +42,10 @@ public class OppsummeringVM implements Serializable {
         return KORT.transform(startDato.toDateTimeAtStartOfDay()) + " - " + KORT.transform(sluttDato.toDateMidnight().toDateTime());
     }
 
-    private static final Transformer<Utbetaling, HovedytelseVM> TIL_HOVEDYTELSE = new Transformer<Utbetaling, HovedytelseVM>() {
+    private static final Transformer<Utbetaling, HovedYtelseVM> TIL_HOVEDYTELSE = new Transformer<Utbetaling, HovedYtelseVM>() {
         @Override
-        public HovedytelseVM transform(Utbetaling utbetaling) {
-            return new HovedytelseVM(utbetaling.getHovedytelse(), utbetaling.getUnderytelser());
+        public HovedYtelseVM transform(Utbetaling utbetaling) {
+            return new HovedYtelseVM(utbetaling.getHovedytelse(), utbetaling.getUnderytelser());
         }
     };
 
