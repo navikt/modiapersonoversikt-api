@@ -43,7 +43,7 @@ public class UtbetalingListeUtils {
      * Filtrerer en liste av utbetalinger på periode.
      */
     public static List<Utbetaling> hentUtbetalingerFraPeriode(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
-        Interval intervall = new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime());
+        Interval intervall = new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime().plusDays(1));
         ArrayList<Utbetaling> resultat = new ArrayList<>();
         for (Utbetaling utbetaling : utbetalinger) {
             if (intervall.contains(utbetaling.getUtbetalingsDato())) {

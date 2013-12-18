@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
-import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
