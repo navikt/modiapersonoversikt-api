@@ -46,8 +46,8 @@ public class MaanedsPanel extends Panel {
             return new OppsummeringVM(new ArrayList<Utbetaling>(), now(), now());
         }
 
-        LocalDate startDato = liste.get(liste.size() - 1).getUtbetalingsDato().dayOfMonth().withMinimumValue().toLocalDate();
-        LocalDate sluttDato = liste.get(0).getUtbetalingsDato().dayOfMonth().withMaximumValue().toLocalDate();
+        LocalDate startDato = liste.get(liste.size() - 1).getUtbetalingsdato().dayOfMonth().withMinimumValue().toLocalDate();
+        LocalDate sluttDato = liste.get(0).getUtbetalingsdato().dayOfMonth().withMaximumValue().toLocalDate();
 
         return new OppsummeringVM(liste, startDato, sluttDato);
     }
