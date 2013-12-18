@@ -81,3 +81,27 @@ body {
   height: 100%;
   width: 100%;
 }
+
+body > .print {
+  display: none;;
+}
+
+@media print {
+  body > *:not(.print) {
+    display: none;
+  }
+
+  body > .print {
+    display: block;
+    padding: 2rem;
+    img {
+      display: block;
+      margin: 0 auto 20px;
+    }
+    .content {
+      .ikke-print {
+        display: none;
+      }
+    }
+  }
+}
