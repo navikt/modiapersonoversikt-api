@@ -11,6 +11,14 @@ import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling1;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling2;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling3;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling4;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling5;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling6;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling7;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling8;
+import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.createTransformObjekter;
+import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.createUtbetalinger;
+import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.transformerSkatt;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -18,18 +26,12 @@ public class UtbetalingTransformerTest {
 
     private static final String FORSKUDDSTREKK_SKATT = "Forskuddstrekk skatt";
     private static final String GRUNNBELØP = "Grunnbeløp";
-    private UtbetalingTransformer transformer;
-
-    @Before
-    public void setUp() throws Exception {
-        transformer = new UtbetalingTransformer();
-    }
 
     @Test
     public void testUtbetalingerBlirTransformertTilTransformObjekter() throws Exception {
         WSUtbetaling wsUtbetaling = createUtbetaling1();
 
-        List<UtbetalingTransformObjekt> transformObjekter = transformer.createTransformObjekter(asList(wsUtbetaling));
+        List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(asList(wsUtbetaling));
 
         assertThat(transformObjekter.size(), is(4));
         assertThat(transformObjekter.get(0).getUtbetalingsDato(), is(wsUtbetaling.getUtbetalingDato()));
@@ -51,11 +53,10 @@ public class UtbetalingTransformerTest {
 
     @Test
     public void testSkattBlirLagtSomUnderYtelse() throws Exception {
-        transformer = new UtbetalingTransformer();
         WSUtbetaling wsUtbetaling = createUtbetaling1();
 
-        transformer.transformerSkatt(asList(wsUtbetaling));
-        List<UtbetalingTransformObjekt> transformObjekter = transformer.createTransformObjekter(asList(wsUtbetaling));
+        transformerSkatt(asList(wsUtbetaling));
+        List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(asList(wsUtbetaling));
 
         for (UtbetalingTransformObjekt transformObjekt : transformObjekter) {
             assertThat(transformObjekt.getHovedYtelse().equalsIgnoreCase("Dagpenger"), is(true));
@@ -68,7 +69,7 @@ public class UtbetalingTransformerTest {
 
     @Test
     public void lagUtbetalinger_FireYtelser_Gir_EnUtbetaling() throws Exception {
-        List<Utbetaling> utbetalinger = transformer.createUtbetalinger(asList(createUtbetaling1()));
+        List<Utbetaling> utbetalinger = createUtbetalinger(asList(createUtbetaling1()));
 
         assertThat(utbetalinger.size(), is(1));
         assertThat(utbetalinger.get(0).getHovedytelse(), is("Dagpenger"));
@@ -78,12 +79,12 @@ public class UtbetalingTransformerTest {
     }
 
     @Test
-    public void lagUtbetalinger_Ytelser_Gir_ToUtbetalinger() throws Exception {
-        List<Utbetaling> utbetalinger = transformer.createUtbetalinger(asList(createUtbetaling1(), createUtbetaling3(), createUtbetaling2()));
+    public void lagUtbetalinger_Ytelser_Gir_FlereUtbetalinger() throws Exception {
+        List<Utbetaling> utbetalinger = createUtbetalinger(asList(createUtbetaling1(), createUtbetaling3(), createUtbetaling2()));
 
         assertThat(utbetalinger.size(), is(3));
         assertThat(utbetalinger.get(0).getHovedytelse(), is("Dagpenger"));
-        assertThat(utbetalinger.get(0).getUnderytelser().size(), is(2));
+        assertThat(utbetalinger.get(0).getUnderytelser().size(), is(1));
         assertThat(utbetalinger.get(0).getBrutto(), is(2000.0));
         assertThat(utbetalinger.get(0).getTrekk(), is(-700.0));
         assertThat(utbetalinger.get(0).getUtbetalt(), is(1300.0));
@@ -103,7 +104,7 @@ public class UtbetalingTransformerTest {
 
     @Test
     public void lagUtbetalinger_slaaSammenUnderYtelserMedSammeTittel() throws Exception {
-        List<Utbetaling> utbetalinger = transformer.createUtbetalinger(asList(createUtbetaling1()));
+        List<Utbetaling> utbetalinger = createUtbetalinger(asList(createUtbetaling1()));
 
         assertThat(utbetalinger.size(), is(2));
         assertThat(utbetalinger.get(0).getHovedytelse(), is("Dagpenger"));
@@ -120,6 +121,21 @@ public class UtbetalingTransformerTest {
         assertThat(utbetalinger.get(1).getUnderytelser().get(0).getAntall(), is(1));
         assertThat(utbetalinger.get(1).getUnderytelser().get(0).getSats(), is(1.0));
         assertThat(utbetalinger.get(1).getUnderytelser().get(0).getBelop(), is(-700.0));
+    }
+
+    @Test
+    public void lagMangeUtbetalinger() throws Exception {
+
+        List<Utbetaling> utbetalinger = createUtbetalinger(asList(createUtbetaling1(),
+                createUtbetaling2(),
+                createUtbetaling3(),
+                createUtbetaling4(),
+                createUtbetaling5(),
+                createUtbetaling6(),
+                createUtbetaling7(),
+                createUtbetaling8()));
+        assertThat(utbetalinger.size(), is(7));
+
     }
 
 
