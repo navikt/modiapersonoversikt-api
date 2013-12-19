@@ -18,6 +18,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -40,6 +41,7 @@ import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.H
 public class UtbetalingLerret extends Lerret {
 
     public static final PackageResourceReference UTBETALING_LAMELL_LESS = new PackageResourceReference(UtbetalingLerret.class, "utbetaling.less");
+    public static final JavaScriptResourceReference UTBETALING_LAMELL_JS = new JavaScriptResourceReference(UtbetalingLerret.class, "utbetaling.js");
 
     @Inject
     private String arenaUtbetalingUrl;
