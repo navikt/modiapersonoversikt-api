@@ -86,10 +86,21 @@ public class UtbetalingTransformerTest {
         assertThat(utbetalinger.size(), is(3));
         assertThat(utbetalinger.get(0).getHovedytelse(), is("Dagpenger"));
         assertThat(utbetalinger.get(0).getUnderytelser().size(), is(4));
+        assertThat(utbetalinger.get(0).getBrutto(), is(2000.0));
+        assertThat(utbetalinger.get(0).getTrekk(), is(-700.0));
+        assertThat(utbetalinger.get(0).getUtbetalt(), is(1300.0));
+
         assertThat(utbetalinger.get(1).getHovedytelse(), is("Foreldrepenger"));
         assertThat(utbetalinger.get(1).getUnderytelser().size(), is(2));
+        assertThat(utbetalinger.get(1).getBrutto(), is(1000.0));
+        assertThat(utbetalinger.get(1).getTrekk(), is(-350.0));
+        assertThat(utbetalinger.get(1).getUtbetalt(), is(650.0));
+
         assertThat(utbetalinger.get(2).getHovedytelse(), is("Uføre"));
         assertThat(utbetalinger.get(2).getUnderytelser().size(), is(4));
+        assertThat(utbetalinger.get(2).getBrutto(), is(2500.0));
+        assertThat(utbetalinger.get(2).getTrekk(), is(-1700.0));
+        assertThat(utbetalinger.get(2).getUtbetalt(), is(800.0));
     }
 
 

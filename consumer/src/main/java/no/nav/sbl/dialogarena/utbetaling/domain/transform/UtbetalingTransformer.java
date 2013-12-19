@@ -57,41 +57,41 @@ public class UtbetalingTransformer {
             return wsPosteringsdetaljer.getKontoBeskrUnder();
         }
     };
-    public static final Transformer<WSPosteringsdetaljer, Double> BELOP = new Transformer<WSPosteringsdetaljer, Double>() {
+    public static final Transformer<Underytelse, Double> UTBETALT_BELOP = new Transformer<Underytelse, Double>() {
         @Override
-        public Double transform(WSPosteringsdetaljer wsPosteringsdetaljer) {
-            return wsPosteringsdetaljer.getBelop();
+        public Double transform(Underytelse underytelse) {
+            double belop = underytelse.getBelop();
+            return (belop >= 0.0? belop :  0.0);
         }
     };
 
-    public static Map<String, Map<String, Double>> summerBelopForUnderytelser(List<WSUtbetaling> utbetalinger) {
-        Map<String, List<WSPosteringsdetaljer>> perHovedYtelse =
-                on(utbetalinger)
-                        .flatmap(BILAG)
-                        .flatmap(POSTERINGSDETALJER)
-                        .reduce(indexBy(HOVEDBESKRIVELSE));
-
-        Map<String, Map<String, Double>> resultat = getSumPerHovedYtelse(perHovedYtelse);
-        return resultat;
-    }
-
-    private static Map<String, Map<String, Double>> getSumPerHovedYtelse(Map<String, List<WSPosteringsdetaljer>> perHovedYtelse) {
-        Map<String, Map<String, Double>> resultat = new HashMap<>();
-        for (Map.Entry<String, List<WSPosteringsdetaljer>> hovedytelse : perHovedYtelse.entrySet()) {
-            Map<String, List<WSPosteringsdetaljer>> perUnderytelse = on(hovedytelse.getValue()).reduce(indexBy(UNDERBESKRIVELSE));
-            resultat.put(hovedytelse.getKey(), getSumPerUnderYtelse(perUnderytelse));
+    public static final Transformer<Underytelse, Double> TREKK_BELOP = new Transformer<Underytelse, Double>() {
+        @Override
+        public Double transform(Underytelse underytelse) {
+            double belop = underytelse.getBelop();
+            return (belop < 0.0? belop :  0.0);
         }
-        return resultat;
+    };
+//
+//    public static Map<String, Map<String, Double>> summerBelopForUnderytelser(List<WSUtbetaling> utbetalinger) {
+//        Map<String, List<WSPosteringsdetaljer>> perHovedYtelse =
+//                on(utbetalinger)
+//                        .flatmap(BILAG)
+//                        .flatmap(POSTERINGSDETALJER)
+//                        .reduce(indexBy(HOVEDBESKRIVELSE));
+//
+//        Map<String, Map<String, Double>> resultat = getSumPerHovedYtelse(perHovedYtelse);
+//        return resultat;
+//    }
+
+    private static Double getBrutto(List<Underytelse> underytelser) {
+        return on(underytelser).map(UTBETALT_BELOP).reduce(sumDouble);
     }
 
-    private static Map<String, Double> getSumPerUnderYtelse(Map<String, List<WSPosteringsdetaljer>> underytelser) {
-        Map<String, Double> belopPerUnderytelse = new HashMap<>();
-        for (Map.Entry<String, List<WSPosteringsdetaljer>> underytelse : underytelser.entrySet()) {
-            Double sumBelop = on(underytelse.getValue()).map(BELOP).reduce(sumDouble);
-            belopPerUnderytelse.put(underytelse.getKey(), sumBelop);
-        }
-        return belopPerUnderytelse;
+    private static Double getTrekk(List<Underytelse> underytelser) {
+        return on(underytelser).map(TREKK_BELOP).reduce(sumDouble);
     }
+
 
     public List<Utbetaling> createUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
         transformerSkatt(wsUtbetalinger);
@@ -103,8 +103,7 @@ public class UtbetalingTransformer {
 
     Map<LocalDate, List<UtbetalingTransformObjekt>> trekkUtTransformObjekterFraSammeDag(List<UtbetalingTransformObjekt> transformObjekter) {
         Collections.sort(transformObjekter, DATO);
-        Map<LocalDate, List<UtbetalingTransformObjekt>> map = on(transformObjekter).reduce(indexBy(UTBETALINGS_DAG));
-        return map;
+        return on(transformObjekter).reduce(indexBy(UTBETALINGS_DAG));
     }
 
 
@@ -131,15 +130,24 @@ public class UtbetalingTransformer {
                 transformObjektListe.removeAll(skalFjernes);
 
                 utbetalingBuilder.withMelding(join(meldinger, ". "));
+                leggSammenBelop(utbetalingBuilder, underytelser);
 
                 // TODO: slå sammen underytelser
-                // TODO: regn ut brutto, trekk, utbetalt
                 nyeUtbetalinger.add(utbetalingBuilder.withUnderytelser(underytelser).createUtbetaling());
             }
         }
         Collections.sort(nyeUtbetalinger, UTBETALING_DATO);
         return nyeUtbetalinger;
     }
+
+    private static void leggSammenBelop(UtbetalingBuilder utbetalingBuilder, List<Underytelse> underytelser) {
+        Double brutto = getBrutto(underytelser);
+        Double trekk = getTrekk(underytelser);
+        utbetalingBuilder.withBrutto(brutto);
+        utbetalingBuilder.withTrekk(trekk);
+        utbetalingBuilder.withUtbetalt(brutto + trekk);
+    }
+
 
     void transformerSkatt(List<WSUtbetaling> wsUtbetalinger) {
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
@@ -203,12 +211,6 @@ public class UtbetalingTransformer {
 
     private String transformerUnderbeskrivelse(String kontoBeskrUnder, String kontoBeskrHoved) {
         return (kontoBeskrUnder != null && !kontoBeskrUnder.isEmpty() ? kontoBeskrUnder : kontoBeskrHoved);
-    }
-
-    private void setMeldinger(UtbetalingTransformObjekt transformObjekt, String delimiter, Set<String> meldinger) {
-        if (transformObjekt != null && !meldinger.isEmpty()) {
-            transformObjekt.setMelding(join(meldinger, delimiter));
-        }
     }
 
     private String transformMelding(WSBilag wsBilag, String delimiter) {
