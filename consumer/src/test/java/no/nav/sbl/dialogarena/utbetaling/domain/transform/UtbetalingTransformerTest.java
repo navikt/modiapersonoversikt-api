@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,6 +16,8 @@ import static org.junit.Assert.assertThat;
 
 public class UtbetalingTransformerTest {
 
+    private static final String FORSKUDDSTREKK_SKATT = "Forskuddstrekk skatt";
+    private static final String GRUNNBELØP = "Grunnbeløp";
     private UtbetalingTransformer transformer;
 
     @Before
@@ -56,18 +57,14 @@ public class UtbetalingTransformerTest {
         transformer.transformerSkatt(asList(wsUtbetaling));
         List<UtbetalingTransformObjekt> transformObjekter = transformer.createTransformObjekter(asList(wsUtbetaling));
 
-        String grunnbelop = "Grunnbeløp";
-        String forskuddstrekkSkatt = "Forskuddstrekk skatt";
         for (UtbetalingTransformObjekt transformObjekt : transformObjekter) {
             assertThat(transformObjekt.getHovedYtelse().equalsIgnoreCase("Dagpenger"), is(true));
         }
-        assertThat(transformObjekter.get(0).getUnderYtelse().equalsIgnoreCase(grunnbelop), is(true));
-        assertThat(transformObjekter.get(1).getUnderYtelse().equalsIgnoreCase(forskuddstrekkSkatt), is(true));
-        assertThat(transformObjekter.get(2).getUnderYtelse().equalsIgnoreCase(grunnbelop), is(true));
-        assertThat(transformObjekter.get(3).getUnderYtelse().equalsIgnoreCase(forskuddstrekkSkatt), is(true));
+        assertThat(transformObjekter.get(0).getUnderYtelse().equalsIgnoreCase(GRUNNBELØP), is(true));
+        assertThat(transformObjekter.get(1).getUnderYtelse().equalsIgnoreCase(FORSKUDDSTREKK_SKATT), is(true));
+        assertThat(transformObjekter.get(2).getUnderYtelse().equalsIgnoreCase(GRUNNBELØP), is(true));
+        assertThat(transformObjekter.get(3).getUnderYtelse().equalsIgnoreCase(FORSKUDDSTREKK_SKATT), is(true));
     }
-
-
 
     @Test
     public void lagUtbetalinger_FireYtelser_Gir_EnUtbetaling() throws Exception {
@@ -75,9 +72,10 @@ public class UtbetalingTransformerTest {
 
         assertThat(utbetalinger.size(), is(1));
         assertThat(utbetalinger.get(0).getHovedytelse(), is("Dagpenger"));
-        assertThat(utbetalinger.get(0).getUnderytelser().size(), is(4));
+        assertThat(utbetalinger.get(0).getUnderytelser().size(), is(2));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getTittel(), is(FORSKUDDSTREKK_SKATT));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getTittel(), is(GRUNNBELØP));
     }
-
 
     @Test
     public void lagUtbetalinger_Ytelser_Gir_ToUtbetalinger() throws Exception {
@@ -85,7 +83,7 @@ public class UtbetalingTransformerTest {
 
         assertThat(utbetalinger.size(), is(3));
         assertThat(utbetalinger.get(0).getHovedytelse(), is("Dagpenger"));
-        assertThat(utbetalinger.get(0).getUnderytelser().size(), is(4));
+        assertThat(utbetalinger.get(0).getUnderytelser().size(), is(2));
         assertThat(utbetalinger.get(0).getBrutto(), is(2000.0));
         assertThat(utbetalinger.get(0).getTrekk(), is(-700.0));
         assertThat(utbetalinger.get(0).getUtbetalt(), is(1300.0));
@@ -97,12 +95,32 @@ public class UtbetalingTransformerTest {
         assertThat(utbetalinger.get(1).getUtbetalt(), is(650.0));
 
         assertThat(utbetalinger.get(2).getHovedytelse(), is("Uføre"));
-        assertThat(utbetalinger.get(2).getUnderytelser().size(), is(4));
+        assertThat(utbetalinger.get(2).getUnderytelser().size(), is(3));
         assertThat(utbetalinger.get(2).getBrutto(), is(2500.0));
         assertThat(utbetalinger.get(2).getTrekk(), is(-1700.0));
         assertThat(utbetalinger.get(2).getUtbetalt(), is(800.0));
     }
 
+    @Test
+    public void lagUtbetalinger_slaaSammenUnderYtelserMedSammeTittel() throws Exception {
+        List<Utbetaling> utbetalinger = transformer.createUtbetalinger(asList(createUtbetaling1()));
+
+        assertThat(utbetalinger.size(), is(2));
+        assertThat(utbetalinger.get(0).getHovedytelse(), is("Dagpenger"));
+        assertThat(utbetalinger.get(0).getUnderytelser().size(), is(1));
+
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getTittel(), is(GRUNNBELØP));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getSpesifikasjon(), is("Ekstra detaljinfo"));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getAntall(), is(12));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getSats(), is(123.0));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getBelop(), is(2000.0));
+
+        assertThat(utbetalinger.get(1).getUnderytelser().get(0).getTittel(), is(FORSKUDDSTREKK_SKATT));
+        assertThat(utbetalinger.get(1).getUnderytelser().get(0).getSpesifikasjon(), is(""));
+        assertThat(utbetalinger.get(1).getUnderytelser().get(0).getAntall(), is(1));
+        assertThat(utbetalinger.get(1).getUnderytelser().get(0).getSats(), is(1.0));
+        assertThat(utbetalinger.get(1).getUnderytelser().get(0).getBelop(), is(-700.0));
+    }
 
 
 }
