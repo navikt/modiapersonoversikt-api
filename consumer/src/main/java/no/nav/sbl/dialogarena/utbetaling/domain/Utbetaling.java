@@ -6,6 +6,7 @@ import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,14 +14,6 @@ public class Utbetaling implements Serializable {
 
     public static final String BRUKER = "bruker";
     public static final String ARBEIDSGIVER = "arbeidsgiver";
-
-    public static LocalDate defaultStartDato() {
-        return LocalDate.now().minusMonths(3);
-    }
-    public static LocalDate defaultSluttDato() {
-        return LocalDate.now();
-    }
-
     private String utbetalingId;
     private DateTime utbetalingsdato;
     private Interval periode;
@@ -36,7 +29,16 @@ public class Utbetaling implements Serializable {
     private double utbetalt;
     private List<Underytelse> underytelser;
 
-    private Utbetaling(){}
+    private Utbetaling() {
+    }
+
+    public static LocalDate defaultStartDato() {
+        return LocalDate.now().minusMonths(3);
+    }
+
+    public static LocalDate defaultSluttDato() {
+        return LocalDate.now();
+    }
 
     public static UtbetalingBuilder getBuilder() {
         return new UtbetalingBuilder();
@@ -174,7 +176,6 @@ public class Utbetaling implements Serializable {
             return this;
         }
 
-
         public UtbetalingBuilder withUtbetalt(double utbetalt) {
             this.utbetalt = utbetalt;
             return this;
@@ -197,6 +198,15 @@ public class Utbetaling implements Serializable {
             utbetaling.utbetalt = this.utbetalt;
             utbetaling.underytelser = this.underytelser;
             return utbetaling;
+        }
+
+        public static final class UtbetalingComparator {
+            public static Comparator<Utbetaling> UTBETALING_DATO = new Comparator<Utbetaling>() {
+                @Override
+                public int compare(Utbetaling o1, Utbetaling o2) {
+                    return o1.getUtbetalingsdato().compareTo(o2.getUtbetalingsdato());
+                }
+            };
         }
     }
 }

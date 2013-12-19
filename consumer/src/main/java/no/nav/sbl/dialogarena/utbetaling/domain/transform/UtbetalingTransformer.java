@@ -10,8 +10,10 @@ import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.Interval;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -22,7 +24,9 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder.UtbetalingComparator.UTBETALING_DATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.TransformComparator.DATO;
+import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.UTBETALINGS_DAG;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.getBuilder;
 import static org.apache.commons.lang3.StringUtils.join;
 
@@ -91,35 +95,45 @@ public class UtbetalingTransformer {
     public List<Utbetaling> createUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
         transformerSkatt(wsUtbetalinger);
         List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(wsUtbetalinger);
-        Collections.sort(transformObjekter, DATO);
 
-        return transformerTilUtbetalinger(transformObjekter);
+        Map<LocalDate, List<UtbetalingTransformObjekt>> listMap = trekkUtTransformObjekterFraSammeDag(transformObjekter);
+        return transformerTilUtbetalinger(listMap.values());
     }
 
-    static List<Utbetaling> transformerTilUtbetalinger(List<UtbetalingTransformObjekt> transformObjektListe) {
+    Map<LocalDate, List<UtbetalingTransformObjekt>> trekkUtTransformObjekterFraSammeDag(List<UtbetalingTransformObjekt> transformObjekter) {
+        Collections.sort(transformObjekter, DATO);
+        Map<LocalDate, List<UtbetalingTransformObjekt>> map = on(transformObjekter).reduce(indexBy(UTBETALINGS_DAG));
+        return map;
+    }
+
+
+    static List<Utbetaling> transformerTilUtbetalinger(Collection<List<UtbetalingTransformObjekt>> transformObjekter) {
         List<Utbetaling> nyeUtbetalinger = new ArrayList<>();
 
         // trekk ut underytelser, legg i samme utbetaling
-        while (transformObjektListe.size() > 1) {
-            UtbetalingTransformObjekt forsteObjektIListe = transformObjektListe.get(0);
-            UtbetalingBuilder utbetalingBuilder = lagUtbetalingBuilder(forsteObjektIListe);
-            List<Underytelse> underytelser = new ArrayList<>();
-            underytelser.add(new Underytelse(forsteObjektIListe.getUnderYtelse(), forsteObjektIListe.getSpesifikasjon(), forsteObjektIListe.getAntall(), forsteObjektIListe.getBelop(), forsteObjektIListe.getSats()));
+        for (List<UtbetalingTransformObjekt> transformObjektListe : transformObjekter) {
+            while (transformObjektListe.size() > 1) {
+                UtbetalingTransformObjekt forsteObjektIListe = transformObjektListe.get(0);
+                UtbetalingBuilder utbetalingBuilder = lagUtbetalingBuilder(forsteObjektIListe);
+                List<Underytelse> underytelser = new ArrayList<>();
+                underytelser.add(new Underytelse(forsteObjektIListe.getUnderYtelse(), forsteObjektIListe.getSpesifikasjon(), forsteObjektIListe.getAntall(), forsteObjektIListe.getBelop(), forsteObjektIListe.getSats()));
 
-            List<UtbetalingTransformObjekt> skalFjernes = new ArrayList<>();
-
-            for (UtbetalingTransformObjekt objekt : transformObjektListe.subList(1, transformObjektListe.size())) {
-                if (forsteObjektIListe.equals(objekt)) {
-                    // TODO: slå sammen meldinger
-                    underytelser.add(new Underytelse(objekt.getUnderYtelse(), forsteObjektIListe.getSpesifikasjon(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
-                    skalFjernes.add(objekt);
+                List<UtbetalingTransformObjekt> skalFjernes = new ArrayList<>();
+                for (UtbetalingTransformObjekt objekt : transformObjektListe.subList(1, transformObjektListe.size())) {
+                    if (forsteObjektIListe.equals(objekt)) {
+                        underytelser.add(new Underytelse(objekt.getUnderYtelse(), forsteObjektIListe.getSpesifikasjon(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
+                        skalFjernes.add(objekt);
+                    }
                 }
-            }
-            transformObjektListe.removeAll(skalFjernes);
+                transformObjektListe.removeAll(skalFjernes);
 
-            // TODO: slå sammen underytelser
-            nyeUtbetalinger.add(utbetalingBuilder.withUnderytelser(underytelser).createUtbetaling());
+                // TODO: slå sammen meldinger
+                // TODO: slå sammen underytelser
+                // TODO: regn ut brutto, trekk, utbetalt
+                nyeUtbetalinger.add(utbetalingBuilder.withUnderytelser(underytelser).createUtbetaling());
+            }
         }
+        Collections.sort(nyeUtbetalinger, UTBETALING_DATO);
         return nyeUtbetalinger;
     }
 

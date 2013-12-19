@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,6 +10,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling1;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling2;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling3;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -64,15 +67,31 @@ public class UtbetalingTransformerTest {
         assertThat(transformObjekter.get(3).getUnderYtelse().equalsIgnoreCase(forskuddstrekkSkatt), is(true));
     }
 
-    @Test
-    public void lagUtbetalinger() throws Exception {
-        WSUtbetaling wsUtbetaling = createUtbetaling1();
-        List<Utbetaling> utbetalinger = transformer.createUtbetalinger(asList(wsUtbetaling));
 
-        System.out.println("utbetalinger = " + utbetalinger);
+
+    @Test
+    public void lagUtbetalinger_FireYtelser_Gir_EnUtbetaling() throws Exception {
+        List<Utbetaling> utbetalinger = transformer.createUtbetalinger(asList(createUtbetaling1()));
+
         assertThat(utbetalinger.size(), is(1));
         assertThat(utbetalinger.get(0).getHovedytelse(), is("Dagpenger"));
         assertThat(utbetalinger.get(0).getUnderytelser().size(), is(4));
     }
+
+
+    @Test
+    public void lagUtbetalinger_Ytelser_Gir_ToUtbetalinger() throws Exception {
+        List<Utbetaling> utbetalinger = transformer.createUtbetalinger(asList(createUtbetaling1(), createUtbetaling3(), createUtbetaling2()));
+
+        assertThat(utbetalinger.size(), is(3));
+        assertThat(utbetalinger.get(0).getHovedytelse(), is("Dagpenger"));
+        assertThat(utbetalinger.get(0).getUnderytelser().size(), is(4));
+        assertThat(utbetalinger.get(1).getHovedytelse(), is("Foreldrepenger"));
+        assertThat(utbetalinger.get(1).getUnderytelser().size(), is(2));
+        assertThat(utbetalinger.get(2).getHovedytelse(), is("Uføre"));
+        assertThat(utbetalinger.get(2).getUnderytelser().size(), is(4));
+    }
+
+
 
 }
