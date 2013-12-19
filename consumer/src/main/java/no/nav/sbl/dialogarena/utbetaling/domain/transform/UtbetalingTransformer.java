@@ -109,21 +109,23 @@ public class UtbetalingTransformer {
     }
 
     private static List<Underytelse> leggSammenUnderYtelser(List<Underytelse> underytelser) {
+        ArrayList<Underytelse> ytelser = on(underytelser).collectIn(new ArrayList<Underytelse>());
         List<Underytelse> resultat = new ArrayList<>();
 
-        while (underytelser.size() > 1) {
-            Underytelse ytelse1 = underytelser.get(0);
+        while (ytelser.size() > 1) {
+            Underytelse ytelse1 = ytelser.get(0);
             Set<Underytelse> alleredeLagtTil = new HashSet<>();
-            for (Underytelse ytelse2 : underytelser.subList(1, underytelser.size())) {
+            for (Underytelse ytelse2 : ytelser.subList(1, ytelser.size())) {
                 if (ytelse1.equals(ytelse2)) {
                     Underytelse underytelse = mergeLikeUnderYtelser(ytelse1.getTittel(), ytelse1, ytelse2);
                     resultat.add(underytelse);
-                    alleredeLagtTil.add(underytelse);
+                } else {
+                    resultat.add(ytelse2);
                 }
+                alleredeLagtTil.add(ytelse2);
             }
-            underytelser.removeAll(alleredeLagtTil);
+            ytelser.removeAll(alleredeLagtTil);
         }
-        resultat.addAll(underytelser);
         return resultat;
     }
 
@@ -228,7 +230,7 @@ public class UtbetalingTransformer {
         return pdetalj;
     }
 
-    public List<Utbetaling> createUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
+    public static List<Utbetaling> createUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
         transformerSkatt(wsUtbetalinger);
         List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(wsUtbetalinger);
 
@@ -236,12 +238,12 @@ public class UtbetalingTransformer {
         return transformerTilUtbetalinger(listMap.values());
     }
 
-    Map<LocalDate, List<UtbetalingTransformObjekt>> trekkUtTransformObjekterFraSammeDag(List<UtbetalingTransformObjekt> transformObjekter) {
+    static Map<LocalDate, List<UtbetalingTransformObjekt>> trekkUtTransformObjekterFraSammeDag(List<UtbetalingTransformObjekt> transformObjekter) {
         Collections.sort(transformObjekter, DATO);
         return on(transformObjekter).reduce(indexBy(UTBETALINGS_DAG));
     }
 
-    void transformerSkatt(List<WSUtbetaling> wsUtbetalinger) {
+    static void transformerSkatt(List<WSUtbetaling> wsUtbetalinger) {
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
             for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
                 trekkUtSkatteOpplysninger(wsBilag.getPosteringsdetaljerListe());
@@ -249,7 +251,7 @@ public class UtbetalingTransformer {
         }
     }
 
-    List<UtbetalingTransformObjekt> createTransformObjekter(List<WSUtbetaling> wsUtbetalinger) {
+    static List<UtbetalingTransformObjekt> createTransformObjekter(List<WSUtbetaling> wsUtbetalinger) {
 
         List<UtbetalingTransformObjekt> list = new ArrayList<>();
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
@@ -289,11 +291,11 @@ public class UtbetalingTransformer {
         return list;
     }
 
-    private String transformerUnderbeskrivelse(String kontoBeskrUnder, String kontoBeskrHoved) {
+    private static String transformerUnderbeskrivelse(String kontoBeskrUnder, String kontoBeskrHoved) {
         return (kontoBeskrUnder != null && !kontoBeskrUnder.isEmpty() ? kontoBeskrUnder : kontoBeskrHoved);
     }
 
-    private String transformMelding(WSBilag wsBilag, String delimiter) {
+    private static String transformMelding(WSBilag wsBilag, String delimiter) {
         List<WSMelding> meldingListe = wsBilag.getMeldingListe();
         List<String> strings = new ArrayList<>();
         for (WSMelding wsMelding : meldingListe) {
