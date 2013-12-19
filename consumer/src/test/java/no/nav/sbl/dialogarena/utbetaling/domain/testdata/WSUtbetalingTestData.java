@@ -34,10 +34,10 @@ public class WSUtbetalingTestData {
     private static final String DAGPENGER = "Dagpenger";
     private static final String FORELDREPENGER = "Foreldrepenger";
     private static final String VALUTA = "NOK";
-    private static String fnr = "12345678912";
     private static DateTime forsteDesember = new DateTime(2013, 12, 1, 12, 0);
     private static final String SPESIFIKASJON = "";
     private static final String SPESIFIKASJON_1 = "Ekstra detaljinfo";
+    private static String fnr;
 
     public static List<WSUtbetaling> getWsUtbetalinger(String fNr, DateTime startDato, DateTime sluttDato) {
         fnr = fNr;
