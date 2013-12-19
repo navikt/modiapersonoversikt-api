@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -119,15 +120,18 @@ public class UtbetalingTransformer {
                 underytelser.add(new Underytelse(forsteObjektIListe.getUnderYtelse(), forsteObjektIListe.getSpesifikasjon(), forsteObjektIListe.getAntall(), forsteObjektIListe.getBelop(), forsteObjektIListe.getSats()));
 
                 List<UtbetalingTransformObjekt> skalFjernes = new ArrayList<>();
+                Set<String> meldinger = new HashSet<>();
                 for (UtbetalingTransformObjekt objekt : transformObjektListe.subList(1, transformObjektListe.size())) {
                     if (forsteObjektIListe.equals(objekt)) {
+                        meldinger.add(objekt.getMelding());
                         underytelser.add(new Underytelse(objekt.getUnderYtelse(), forsteObjektIListe.getSpesifikasjon(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
                         skalFjernes.add(objekt);
                     }
                 }
                 transformObjektListe.removeAll(skalFjernes);
 
-                // TODO: slå sammen meldinger
+                utbetalingBuilder.withMelding(join(meldinger, ". "));
+
                 // TODO: slå sammen underytelser
                 // TODO: regn ut brutto, trekk, utbetalt
                 nyeUtbetalinger.add(utbetalingBuilder.withUnderytelser(underytelser).createUtbetaling());
