@@ -35,6 +35,7 @@ public class WSUtbetalingTestData {
     private static final String FORELDREPENGER = "Foreldrepenger";
     private static final String VALUTA = "NOK";
     private static String fnr = "12345678912";
+    private static DateTime forsteDesember = new DateTime(2013, 12, 1, 12, 0);
 
     public static List<WSUtbetaling> getWsUtbetalinger(String fNr, DateTime startDato, DateTime sluttDato) {
         fnr = fNr;
@@ -74,7 +75,7 @@ public class WSUtbetalingTestData {
                 .withStatusBeskrivelse(MOTTATT_KONTOFORER)
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createTrygdetMottaker())
-                .withUtbetalingDato(now().minusDays(4))
+                .withUtbetalingDato(forsteDesember)
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 1, 23, 0, 0), new DateTime(2011, 1, 24, 0, 0)));
         utbetaling.withBilagListe(bilag1, bilag2);
         return utbetaling;
@@ -121,7 +122,7 @@ public class WSUtbetalingTestData {
                 .withStatusBeskrivelse(UTBETALT)
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withStatusKode(STATUS_KODE)
-                .withUtbetalingDato(now().minusDays(10))
+                .withUtbetalingDato(forsteDesember)
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 3, 23, 0, 0), new DateTime(2011, 3, 24, 0, 0)));
         utbetaling.withBilagListe(bilag1);
         return utbetaling;
