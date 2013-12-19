@@ -1,18 +1,16 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
-import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils;
-import no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
+import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
-import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringProperties;
 import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.UtbetalingerMessagePanel;
+import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
+import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned.MaanedsPanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsResultat;
-import org.apache.wicket.Component;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
@@ -21,6 +19,7 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -35,13 +34,15 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDa
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.FEIL;
-import static no.nav.sbl.dialogarena.utbetaling.filter.FilterParametere.HOVEDYTELSER_ENDRET;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.ENDRET;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FEIL;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 
 public class UtbetalingLerret extends Lerret {
 
     public static final PackageResourceReference UTBETALING_LAMELL_LESS = new PackageResourceReference(UtbetalingLerret.class, "utbetaling.less");
+    public static final JavaScriptResourceReference UTBETALING_LAMELL_JS = new JavaScriptResourceReference(UtbetalingLerret.class, "utbetaling.js");
 
     @Inject
     private String arenaUtbetalingUrl;
@@ -50,7 +51,6 @@ public class UtbetalingLerret extends Lerret {
 
     private UtbetalingsResultat resultatCache;
     private FilterParametere filterParametere;
-    private FilterFormPanel filterFormPanel;
     private OppsummeringPanel totalOppsummeringPanel;
     private MarkupContainer utbetalingslisteContainer;
     private UtbetalingerMessagePanel ingenutbetalinger;
@@ -62,74 +62,56 @@ public class UtbetalingLerret extends Lerret {
 
         add(
                 new ExternalLink("arenalink", arenaUtbetalingUrl + fnr),
-                filterFormPanel,
-                totalOppsummeringPanel.setOutputMarkupPlaceholderTag(true),
-                ingenutbetalinger.setOutputMarkupPlaceholderTag(true),
+                createFilterFormPanel(),
+                totalOppsummeringPanel,
+                utbetalingslisteContainer,
                 feilutbetalinger.setOutputMarkupPlaceholderTag(true),
                 utbetalingslisteContainer.setOutputMarkupPlaceholderTag(true)
         );
     }
 
     private void instansierFelter(String fnr) {
-    	LocalDate startDato = defaultStartDato();
-		LocalDate sluttDato = defaultSluttDato();
-		List<Utbetaling> utbetalinger = service.hentUtbetalinger(fnr, startDato, sluttDato);
-    	resultatCache = new UtbetalingsResultat(fnr, startDato, sluttDato, utbetalinger);
+        LocalDate startDato = defaultStartDato();
+        LocalDate sluttDato = defaultSluttDato();
+        List<Utbetaling> utbetalinger = service.hentUtbetalinger(fnr, startDato, sluttDato);
+        resultatCache = new UtbetalingsResultat(fnr, startDato, sluttDato, utbetalinger);
 
         filterParametere = new FilterParametere(startDato, sluttDato, true, true, hentYtelser(utbetalinger));
-        List<Utbetaling> synlige = on(utbetalinger).filter(filterParametere).collect();
-		totalOppsummeringPanel = createTotalOppsummeringPanel(synlige);
+
+        totalOppsummeringPanel = createTotalOppsummeringPanel(on(utbetalinger).filter(filterParametere).collect());
         ingenutbetalinger = new UtbetalingerMessagePanel("ingenutbetalinger", "ingen.utbetalinger", "-ikon-stjerne");
         feilutbetalinger = new UtbetalingerMessagePanel("feilutbetalinger", "feil.utbetalinger", "-ikon-feil");
-        utbetalingslisteContainer = new WebMarkupContainer("utbetalingslisteContainer").add(opprettMaanedsPanelListe(resultatCache, filterParametere));
-        endreSynligeKomponenter(synlige.isEmpty());
-
-        filterFormPanel = new FilterFormPanel("filterFormPanel", filterParametere);
-        filterFormPanel.setOutputMarkupId(true);
+        //todo endre synlighet
+        utbetalingslisteContainer = (MarkupContainer) new WebMarkupContainer("utbetalingslisteContainer")
+                .add(createMaanedsPanelListe())
+                .setOutputMarkupId(true);
     }
 
-    @RunOnEvents(ENDRET)
-    private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
-        try {
-            oppdaterCacheOmNodvendig();
-
-            List<Utbetaling> alleUtbetalinger = hentUtbetalingerFraPeriode(resultatCache.utbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato());
-            filterParametere.setYtelser(hentYtelser(alleUtbetalinger));
-            sendYtelserEndretEvent();
-
-            List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
-            totalOppsummeringPanel.setDefaultModelObject(new OppsummeringProperties(
-                    synligeUtbetalinger,
-                    filterParametere.getStartDato(),
-                    filterParametere.getSluttDato()));
-            utbetalingslisteContainer.addOrReplace(opprettMaanedsPanelListe(resultatCache, filterParametere));
-            endreSynligeKomponenter(synligeUtbetalinger.isEmpty());
-        } catch (ApplicationException ae) {
-            feilutbetalinger.setVisibilityAllowed(true);
-            totalOppsummeringPanel.setVisibilityAllowed(false);
-            utbetalingslisteContainer.setVisibilityAllowed(false);
-        }
-        target.add(totalOppsummeringPanel, ingenutbetalinger, feilutbetalinger, utbetalingslisteContainer);
-    }
-
-	private void oppdaterCacheOmNodvendig() {
+    private void oppdaterCacheOmNodvendig() {
         DateTime cacheStartDato = resultatCache.startDato.toDateTimeAtStartOfDay();
         DateTime cacheSluttDato = resultatCache.sluttDato.toDateMidnight().toDateTime();
         DateTime filterStartDato = filterParametere.getStartDato().toDateTimeAtStartOfDay();
         DateTime filterSluttDato = filterParametere.getSluttDato().toDateMidnight().toDateTime();
         if (!new Interval(cacheStartDato, cacheSluttDato).contains(new Interval(filterStartDato, filterSluttDato))) {
-			List<Utbetaling> utbetalinger = service.hentUtbetalinger(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
-	    	resultatCache = new UtbetalingsResultat(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato(), utbetalinger);
-		}
-	}
-
-    private OppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
-        return new OppsummeringPanel("totalOppsummeringPanel",
-               new OppsummeringProperties(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()), true);
+            List<Utbetaling> utbetalinger = service.hentUtbetalinger(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
+            resultatCache = new UtbetalingsResultat(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato(), utbetalinger);
+        }
     }
 
-    private static Component opprettMaanedsPanelListe(UtbetalingsResultat resultat, final FilterParametere filter) {
-        List<List<Utbetaling>> maanedsListe = UtbetalingListeUtils.splittUtbetalingerPerMaaned(on(resultat.utbetalinger).filter(filter).collect());
+    private FilterFormPanel createFilterFormPanel() {
+        return (FilterFormPanel) new FilterFormPanel("filterFormPanel", filterParametere).setOutputMarkupId(true);
+    }
+
+    private OppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
+        return (OppsummeringPanel) new OppsummeringPanel(
+                "totalOppsummeringPanel",
+                new OppsummeringVM(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()),
+                true)
+                .setOutputMarkupPlaceholderTag(true);
+    }
+
+    private ListView<List<Utbetaling>> createMaanedsPanelListe() {
+        List<List<Utbetaling>> maanedsListe = splittUtbetalingerPerMaaned(on(resultatCache.utbetalinger).filter(filterParametere).collect());
         return new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
             @Override
             protected void populateItem(ListItem<List<Utbetaling>> item) {
@@ -137,6 +119,26 @@ public class UtbetalingLerret extends Lerret {
                 item.add(visibleIf(new Model<>(!item.getModelObject().isEmpty())));
             }
         };
+    }
+
+    @RunOnEvents(ENDRET)
+    private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
+        oppdaterCacheOmNodvendig();
+
+        List<Utbetaling> alleUtbetalinger = hentUtbetalingerFraPeriode(resultatCache.utbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato());
+        filterParametere.setYtelser(hentYtelser(alleUtbetalinger));
+        sendYtelserEndretEvent();
+
+        List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
+        totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(
+                synligeUtbetalinger,
+                filterParametere.getStartDato(),
+                filterParametere.getSluttDato()));
+        totalOppsummeringPanel.setVisibilityAllowed(!synligeUtbetalinger.isEmpty());
+
+        utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe());
+
+        target.add(totalOppsummeringPanel, utbetalingslisteContainer);
     }
 
     @RunOnEvents(FEIL)

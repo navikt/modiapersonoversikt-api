@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
+import java.util.Locale;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.UtbetalingBuilder;
 import org.apache.commons.lang3.SerializationUtils;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.io.Serializable;
@@ -14,6 +16,11 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
 public class UtbetalingVMTest {
+
+    @Before
+    public void init() {
+        Locale.setDefault(new Locale("nb", "no"));
+    }
 
     @Test
     public void canSerializeObject() {

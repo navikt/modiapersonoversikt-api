@@ -1,48 +1,48 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning.DetaljPanel;
-import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.CompoundPropertyModel;
 
 public class UtbetalingPanel extends Panel {
 
-    public UtbetalingPanel(String id, Utbetaling utbetaling) {
-        super(id, new CompoundPropertyModel<>(utbetaling));
-
-        DetaljPanel detaljPanel = createDetaljPanel(utbetaling);
+    public UtbetalingPanel(String id, UtbetalingVM utbetalingVM) {
+        super(id);
 
         add(
-                detaljPanel,
-                new Label("statusBeskrivelse"),
-                new Label("kortUtbetalingsDato"),
-                new Label("beskrivelse"),
-                new Label("periodeMedKortDato"),
-                new Label("bruttoBelopMedValuta"),
-                new Label("trekkMedValuta"),
-                new Label("belopMedValuta")
+//                createSkrivUtLink("skriv-ut"),
+                new DetaljPanel("detaljpanel", utbetalingVM),
+                new Label("statusBeskrivelse", utbetalingVM.utbetaling.statusBeskrivelse),
+                new Label("kortUtbetalingsDato", utbetalingVM.getKortUtbetalingsDato()),
+                new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
+                new Label("periodeMedKortDato", utbetalingVM.getPeriodeMedKortDato()),
+                new Label("bruttoBelopMedValuta", utbetalingVM.getBruttoBelopMedValuta()),
+                new Label("trekkMedValuta", utbetalingVM.getTrekkMedValuta()),
+                new Label("belopMedValuta", utbetalingVM.getBelopMedValuta())
         );
-        add(createClickBehavior(detaljPanel));
+//        add(createClickBehavior());
     }
 
-    private DetaljPanel createDetaljPanel(Utbetaling utbetaling) {
-        return (DetaljPanel) new DetaljPanel("detaljpanel", utbetaling)
-                .setOutputMarkupPlaceholderTag(true)
-                .setVisibilityAllowed(false);
-    }
+//    private AjaxEventBehavior createClickBehavior() {
+//        return new AjaxEventBehavior("click") {
+//            @Override
+//            protected void onEvent(AjaxRequestTarget target) {
+//                target.appendJavaScript("$('#" + getMarkupId() + " .detaljpanel').animate({height: 'toggle'}, 300);");
+//            }
+//        };
+//    }
 
-    private AjaxEventBehavior createClickBehavior(final WebMarkupContainer container) {
-        return new AjaxEventBehavior("click") {
-            @Override
-            protected void onEvent(AjaxRequestTarget target) {
-                container.setVisibilityAllowed(!container.isVisibleInHierarchy());
-                target.add(container);
-            }
-        };
-    }
+//    private AjaxLink<Void> createSkrivUtLink(String id) {
+//        return new AjaxLink<Void>(id) {
+//            @Override
+//            public void onClick(AjaxRequestTarget target) {
+//                String utbetalingslinje = "$('#" + getMarkupId() + "').closest('.utbetalingslinje')";
+//                String javascript = utbetalingslinje + ".children('.detaljpanel').show();" +
+//                                "$('body > .print .content').html(" + "'<div class=\"kolonne-hoyre\">'+" + utbetalingslinje + ".html()" + "+'</div>'" + ");" +
+//                                "window.print();";
+//                target.appendJavaScript(javascript);
+//            }
+//        };
+//    }
 
 }
