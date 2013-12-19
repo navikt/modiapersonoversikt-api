@@ -63,8 +63,8 @@ public class WSUtbetalingTestData {
         Double belop = BELOP;
         WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, GRUNNBELOP, 1, 1.0, belop);
         WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1, 1.0, trekk);
-        WSBilag bilag1 = createBilag("Dette er bilagsmelding 1.", posteringsdetalj1, posteringsdetalj2);
-        WSBilag bilag2 = createBilag("Dette er bilagsmelding 2,", posteringsdetalj1, posteringsdetalj2);
+        WSBilag bilag1 = createBilag("Dette er bilagsmelding 1", posteringsdetalj1, posteringsdetalj2);
+        WSBilag bilag2 = createBilag("Dette er bilagsmelding 2", posteringsdetalj1, posteringsdetalj2);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(2 * (belop + trekk))
