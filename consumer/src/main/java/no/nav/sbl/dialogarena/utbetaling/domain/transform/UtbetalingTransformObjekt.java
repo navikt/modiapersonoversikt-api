@@ -15,9 +15,7 @@ final class UtbetalingTransformObjekt {
     private String mottakerId;
     private String kontonummer;
     private String status;
-
     private String spesifikasjon;
-
     private String melding;
     private String hovedYtelse;
     private String underYtelse;
@@ -63,7 +61,6 @@ final class UtbetalingTransformObjekt {
         if (utbetalingsDato != null ? !utbetalingsDato.equals(that.utbetalingsDato) : that.utbetalingsDato != null)
             return false;
         if (valuta != null ? !valuta.equals(that.valuta) : that.valuta != null) return false;
-        if (spesifikasjon != null ? !spesifikasjon.equals(that.spesifikasjon) : that.spesifikasjon != null) return false;
 
         return true;
     }
