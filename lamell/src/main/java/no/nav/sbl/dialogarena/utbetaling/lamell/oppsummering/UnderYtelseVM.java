@@ -1,17 +1,16 @@
-package no.nav.sbl.dialogarena.utbetaling.domain.oppsummering;
+package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import java.util.Map;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
-public class UnderYtelse implements Serializable {
+public class UnderYtelseVM implements Serializable {
 
     public static class UnderYtelseComparator {
-        public static final Comparator<UnderYtelse> NAVN = new Comparator<UnderYtelse>() {
+        public static final Comparator<UnderYtelseVM> NAVN = new Comparator<UnderYtelseVM>() {
             @Override
-            public int compare(UnderYtelse o1, UnderYtelse o2) {
+            public int compare(UnderYtelseVM o1, UnderYtelseVM o2) {
                 return o1.getUnderYtelsesBeskrivelse().compareTo(o2.getUnderYtelsesBeskrivelse());
             }
         };
@@ -21,9 +20,9 @@ public class UnderYtelse implements Serializable {
     private Double ytelsesBelop;
     private boolean trekk = false;
 
-    UnderYtelse(Map.Entry<String, Double> indreEntry) {
-        underYtelsesBeskrivelse = indreEntry.getKey();
-        ytelsesBelop = indreEntry.getValue();
+    UnderYtelseVM(String beskrivelse, Double belop) {
+        underYtelsesBeskrivelse = beskrivelse;
+        ytelsesBelop = belop;
         trekk = ytelsesBelop != null && ytelsesBelop < 0;
     }
 

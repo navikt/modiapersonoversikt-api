@@ -36,6 +36,7 @@ public class UtbetalingApplication extends WebApplication {
     @Override
     protected void init() {
         setupSpringInjector();
+        Locale.setDefault(new Locale("nb", "no"));
         getMarkupSettings().setStripWicketTags(true);
 
         Datoformat.brukLocaleFra(new Factory<Locale>() {
@@ -57,8 +58,7 @@ public class UtbetalingApplication extends WebApplication {
                                 .done())
                 .withResourcePacking(this.usesDeploymentConfig())
                 .addLess(UtbetalingLerret.UTBETALING_LAMELL_LESS, UtbetalingWidget.UTBETALING_WIDGET_LESS)
-                .addScripts(Widget.JS_RESOURCE,
-                        ShortcutListenerResourceReference.get())
+                .addScripts(UtbetalingLerret.UTBETALING_LAMELL_JS, Widget.JS_RESOURCE, ShortcutListenerResourceReference.get())
                 .configure(this);
 
         mountPage("widget", UtbetalingwidgetTestPage.class);

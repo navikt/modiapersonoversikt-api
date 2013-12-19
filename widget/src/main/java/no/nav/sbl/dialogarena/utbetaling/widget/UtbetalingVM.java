@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import static org.apache.commons.lang3.StringUtils.join;
+
+
 public class UtbetalingVM implements FeedItemVM, Serializable {
 
     public static final Transformer<Utbetaling, UtbetalingVM> UTBETALING_UTBETALINGVM_TRANSFORMER = new Transformer<Utbetaling, UtbetalingVM>() {
@@ -29,11 +32,11 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
     }
 
     public String getBeskrivelse() {
-        return utbetaling.getBeskrivelse();
+        return join(utbetaling.getBeskrivelser(), ", ");
     }
 
     public String getBelop() {
-        return formaterBelop(utbetaling.getNettoBelop());
+        return formaterBelop(utbetaling.nettoBelop);
     }
 
     public String getValuta() {
@@ -68,7 +71,7 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
     }
 
     private String formaterBelop(double nettoBelop) {
-        NumberFormat nf = NumberFormat.getNumberInstance(Locale.forLanguageTag("nb"));
+        NumberFormat nf = NumberFormat.getNumberInstance(Locale.getDefault());
         nf.setGroupingUsed(true);
         nf.setMinimumFractionDigits(2);
         return nf.format(nettoBelop);

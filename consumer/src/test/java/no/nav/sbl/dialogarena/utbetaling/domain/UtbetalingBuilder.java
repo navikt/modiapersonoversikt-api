@@ -11,7 +11,6 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 public class UtbetalingBuilder {
 
     private List<Bilag> bilag = new ArrayList<>();
-    private String statusbeskrivelse = "UTBETALT";
     private DateTime utbetalingsDato = DateTime.now().minus(1);
     private double bruttoBelop = 6000.0;
     private double nettoBelop = 4800.0;
@@ -65,11 +64,6 @@ public class UtbetalingBuilder {
 
     public UtbetalingBuilder setSluttDato(DateTime sluttDato) {
         this.sluttDato = sluttDato;
-        return this;
-    }
-
-    public UtbetalingBuilder setStatusbeskrivelse(String statusbeskrivelse) {
-        this.statusbeskrivelse = statusbeskrivelse;
         return this;
     }
 

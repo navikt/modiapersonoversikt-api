@@ -1,20 +1,29 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
-import static java.util.Collections.sort;
+import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
+import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
+import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+
+import org.apache.commons.collections15.Transformer;
+import org.joda.time.Interval;
+import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.TreeSet;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Bilag;
-import no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-
-import org.joda.time.Interval;
-import org.joda.time.LocalDate;
+import static java.util.Arrays.asList;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
+import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Bilag.POSTERINGSDETALJER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.HOVEDBESKRIVELSE;
+import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.UNDERBESKRIVELSE;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BESKRIVELSER;
 
 /**
  * Hjelpefunksjoner for å jobbe med lister av Utbetaling.
@@ -26,6 +35,7 @@ public class UtbetalingListeUtils {
      *
      * @return En liste av utbetalinger per måned
      */
+
     public static List<List<Utbetaling>> splittUtbetalingerPerMaaned(List<Utbetaling> utbetalinger) {
         int currentMaaned = 0;
         List<Utbetaling> currentMaanedListe = new ArrayList<>();
@@ -65,67 +75,40 @@ public class UtbetalingListeUtils {
      * Summerer beløpene fra alle posteringsdetaljer med samme hovedbeskrivelse og underbeskrivelse.
      */
     public static Map<String, Map<String, Double>> summerBelopForUnderytelser(List<Utbetaling> utbetalinger) {
+        Map<String, List<PosteringsDetalj>> perHovedYtelse =
+                on(utbetalinger)
+                        .flatmap(BILAG)
+                        .flatmap(POSTERINGSDETALJER)
+                        .reduce(indexBy(HOVEDBESKRIVELSE));
 
-        List<PosteringsDetalj> detaljer = new ArrayList<>();
-        for (Utbetaling utbetaling : utbetalinger) {
-            for (Bilag bilag : utbetaling.getBilag()) {
-                detaljer.addAll(bilag.getPosteringsDetaljer());
+        Map<String, Map<String, Double>> resultat = new HashMap<>();
+        for (Entry<String, List<PosteringsDetalj>> hovedytelse : perHovedYtelse.entrySet()) {
+            Map<String, List<PosteringsDetalj>> perUnderytelse = on(hovedytelse.getValue()).reduce(indexBy(UNDERBESKRIVELSE));
+            Map<String, Double> belopPerUnderytelse = new HashMap<>();
+            for (Entry<String, List<PosteringsDetalj>> underytelse : perUnderytelse.entrySet()) {
+                Double sumBelop = on(underytelse.getValue()).map(PosteringsDetalj.BELOP).reduce(sumDouble);
+                belopPerUnderytelse.put(underytelse.getKey(), sumBelop);
             }
+            resultat.put(hovedytelse.getKey(), belopPerUnderytelse);
         }
-        return summerBelopForPosteringsDetaljer(detaljer);
-    }
-
-    private static Map<String, Map<String, Double>> summerBelopForPosteringsDetaljer(List<PosteringsDetalj> detaljer) {
-        Map<String, Map<String, Double>> ytelsesBelopMap = new HashMap<>();
-        for (PosteringsDetalj detalj : detaljer) {
-            leggSammenIResultatMap(ytelsesBelopMap, detalj.getHovedBeskrivelse(), detalj.getUnderBeskrivelse(), detalj.getBelop());
-        }
-        return ytelsesBelopMap;
-    }
-
-
-    /**
-     * Summerer doubles fra inputmap og legger dem i resultat.
-     */
-    public static void summerMapVerdier(Map<String, Double> resultat, Map<String, Double> input) {
-        for (Map.Entry<String, Double> entry : input.entrySet()) {
-            Double belop = (entry.getValue() != null ? entry.getValue() : 0.0) +
-                    (resultat.get(entry.getKey()) != null ? resultat.get(entry.getKey()) : 0.0);
-            resultat.put(entry.getKey(), belop);
-        }
-    }
-
-    /**
-     * Henter ut en sortert liste av unike hovedbeskrivelser fra en liste av utbetalinger.
-     */
-    public static List<String> hentYtelserFraUtbetalinger(List<Utbetaling> utbetalinger) {
-        Set<String> ytelser = hentYtelser(utbetalinger);
-        ArrayList<String> list = new ArrayList<>(ytelser);
-        sort(list);
-        return list;
+        return resultat;
     }
 
     /**
      * Henter ut et Set av hovedbeskrivelser fra en liste av utbetalinger.
      */
+    public static Set<String> hentYtelser(Utbetaling... utbetalinger) {
+        return hentYtelser(asList(utbetalinger));
+    }
     public static Set<String> hentYtelser(List<Utbetaling> utbetalinger) {
-        Set<String> ytelser = new TreeSet<>();
-        for (Utbetaling utbetaling : utbetalinger) {
-            ytelser.addAll(utbetaling.getBeskrivelser());
-        }
-        return ytelser;
+        return on(utbetalinger).flatmap(BESKRIVELSER).collectIn(new TreeSet<String>());
     }
 
-    /**
-     * Legger til en verdi til et map av maps, med nøklene hovedKey og underKey.
-     */
-    private static void leggSammenIResultatMap(Map<String, Map<String, Double>> resultatMap, String hovedKey, String underKey, Double verdi) {
-        Map<String, Double> map = resultatMap.get(hovedKey);
-        if (map == null) {
-            map = new HashMap<>();
+    private static final Transformer<Utbetaling, List<Bilag>> BILAG = new Transformer<Utbetaling, List<Bilag>>() {
+        @Override
+        public List<Bilag> transform(Utbetaling utbetaling) {
+            return utbetaling.bilag;
         }
-        Double belop = (verdi != null ? verdi : 0.0) + (map.get(underKey) != null ? map.get(underKey) : 0.0);
-        map.put(underKey, belop);
-        resultatMap.put(hovedKey, map);
-    }
+    };
+
 }

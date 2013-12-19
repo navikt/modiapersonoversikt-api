@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
@@ -11,9 +12,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.equalToIgnoreCase;
+import static no.nav.modig.lang.collections.PredicateUtils.not;
+import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Bilag.POSTERINGSDETALJER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.PosteringsDetalj.HOVEDBESKRIVELSE;
 import static org.apache.commons.lang3.StringUtils.join;
 
 public class Utbetaling implements Serializable {
@@ -22,10 +26,10 @@ public class Utbetaling implements Serializable {
     public static final String ARBEIDSGIVER = "arbeidsgiver";
 
     public static LocalDate defaultStartDato() {
-    	return LocalDate.now().minusMonths(3);
+        return LocalDate.now().minusMonths(3);
     }
     public static LocalDate defaultSluttDato() {
-    	return LocalDate.now();
+        return LocalDate.now();
     }
 
     public final String utbetalingId;
@@ -78,10 +82,6 @@ public class Utbetaling implements Serializable {
         return bilag;
     }
 
-    public String getBeskrivelse() {
-        return join(getBeskrivelser(), ", ");
-    }
-
     public DateTime getStartDate() {
         return startDato;
     }
@@ -98,53 +98,28 @@ public class Utbetaling implements Serializable {
         return utbetalingsDato;
     }
 
-    public double getBruttoBelop() {
-        return bruttoBelop;
-    }
-
     public String getUtbetalingId() {
         return utbetalingId;
-    }
-
-    public double getNettoBelop() {
-        return nettoBelop;
     }
 
     public double getTrekk() {
         return trekk;
     }
 
-    public String getKortUtbetalingsDato() {
-        return optional(utbetalingsDato).map(KORT).getOrElse("Ingen utbetalingsdato");
-    }
-
-    public String getPeriodeMedKortDato() {
-        return optional(startDato).map(KORT).getOrElse("") + " - " + optional(sluttDato).map(KORT).getOrElse("");
-    }
-
-    public String getBruttoBelopMedValuta() {
-        return getBelopString(bruttoBelop);
-    }
-
-    public String getTrekkMedValuta() {
-        return getBelopString(trekk);
-    }
-
-    public String getBelopMedValuta() {
-        return getBelopString(nettoBelop);
-    }
-
-    public boolean harYtelse(String ytelse) {
-        return getBeskrivelser().contains(ytelse);
-    }
-
     public Set<String> getBeskrivelser() {
-        Set<String> beskrivelser = new TreeSet<>();
-        for (Bilag detalj : bilag) {
-            beskrivelser.addAll(detalj.getBeskrivelserFromDetaljer());
-        }
-        return beskrivelser;
+        return on(bilag)
+                .flatmap(POSTERINGSDETALJER)
+                .filter(where(HOVEDBESKRIVELSE, not(equalToIgnoreCase("skatt"))))
+                .map(HOVEDBESKRIVELSE)
+                .collectIn(new TreeSet<String>());
     }
+
+    public static final Transformer<Utbetaling, Set<String>> BESKRIVELSER = new Transformer<Utbetaling, Set<String>>() {
+        @Override
+        public Set<String> transform(Utbetaling utbetaling) {
+            return utbetaling.getBeskrivelser();
+        }
+    };
 
     private String transformValuta(String wsValuta) {
         return (wsValuta == null || wsValuta.isEmpty()) ? "NOK" : wsValuta;
