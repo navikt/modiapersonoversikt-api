@@ -58,8 +58,6 @@ final class UtbetalingTransformObjekt {
         if (mottakerId != null ? !mottakerId.equals(that.mottakerId) : that.mottakerId != null) return false;
         if (periode != null ? !periode.equals(that.periode) : that.periode != null) return false;
         if (status != null ? !status.equals(that.status) : that.status != null) return false;
-        if (utbetalingsDato != null ? !utbetalingsDato.equals(that.utbetalingsDato) : that.utbetalingsDato != null)
-            return false;
         if (valuta != null ? !valuta.equals(that.valuta) : that.valuta != null) return false;
 
         return true;
