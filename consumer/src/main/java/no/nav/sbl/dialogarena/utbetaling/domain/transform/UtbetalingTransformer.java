@@ -22,13 +22,15 @@ import java.util.Set;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder.UtbetalingComparator.UTBETALING_DATO;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.getBrutto;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.getTrekk;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingComparator.UTBETALING_DATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.TransformComparator.DATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.UTBETALINGS_DAG;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.getBuilder;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.getBrutto;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.getTrekk;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.leggSammenUnderYtelser;
 import static org.apache.commons.lang3.StringUtils.join;
 
 public final class UtbetalingTransformer {
@@ -91,32 +93,37 @@ public final class UtbetalingTransformer {
     }
 
     static List<Utbetaling> transformerTilUtbetalinger(Collection<List<UtbetalingTransformObjekt>> transformObjekter) {
+
         List<Utbetaling> nyeUtbetalinger = new ArrayList<>();
 
         // trekk ut underytelser, legg i samme utbetaling
         for (List<UtbetalingTransformObjekt> transformObjektListe : transformObjekter) {
-            while (transformObjektListe.size() > 1) {
-                UtbetalingTransformObjekt forsteObjektIListe = transformObjektListe.get(0);
-                UtbetalingBuilder utbetalingBuilder = lagUtbetalingBuilder(forsteObjektIListe);
+
+            List<UtbetalingTransformObjekt> nyListe = on(transformObjektListe).collectIn(new ArrayList<UtbetalingTransformObjekt>());
+            Collections.sort(nyListe, DATO);
+
+            while (nyListe.size() > 1) {
+                UtbetalingTransformObjekt forst = nyListe.get(0);
+
+                UtbetalingBuilder utbetalingBuilder = lagUtbetalingBuilder(forst);
                 List<Underytelse> underytelser = new ArrayList<>();
-                underytelser.add(new Underytelse(forsteObjektIListe.getUnderYtelse(), forsteObjektIListe.getSpesifikasjon(), forsteObjektIListe.getAntall(), forsteObjektIListe.getBelop(), forsteObjektIListe.getSats()));
+                underytelser.add(new Underytelse(forst.getUnderYtelse(), forst.getSpesifikasjon(), forst.getAntall(), forst.getBelop(), forst.getSats()));
 
                 List<UtbetalingTransformObjekt> skalFjernes = new ArrayList<>();
                 Set<String> meldinger = new HashSet<>();
-                for (UtbetalingTransformObjekt objekt : transformObjektListe.subList(1, transformObjektListe.size())) {
-                    if (forsteObjektIListe.equals(objekt)) {
+                for (UtbetalingTransformObjekt objekt : nyListe.subList(1, nyListe.size())) {
+                    if (forst.equals(objekt)) {
                         meldinger.add(objekt.getMelding());
-                        underytelser.add(new Underytelse(objekt.getUnderYtelse(), forsteObjektIListe.getSpesifikasjon(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
+                        underytelser.add(new Underytelse(objekt.getUnderYtelse(), forst.getSpesifikasjon(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
                         skalFjernes.add(objekt);
                     }
                 }
-                transformObjektListe.removeAll(skalFjernes);
+                nyListe.removeAll(skalFjernes);
 
                 utbetalingBuilder.withMelding(join(meldinger, ". "));
                 leggSammenBelop(utbetalingBuilder, underytelser);
 
-//                Collections.sort(underytelser, TITTEL);
-//                underytelser = leggSammenUnderYtelser(underytelser);
+                underytelser = leggSammenUnderYtelser(underytelser);
                 nyeUtbetalinger.add(utbetalingBuilder.withUnderytelser(underytelser).createUtbetaling());
             }
         }
