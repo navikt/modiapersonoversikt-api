@@ -1,6 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+
+import java.util.List;
 
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
@@ -28,6 +31,10 @@ public class UtbetalingVM {
 
     public String getKontonr() {
         return utbetaling.getKontonr();
+    }
+
+    public List<Underytelse> getUnderytelser() {
+        return utbetaling.getUnderytelser();
     }
 
     public String getKortUtbetalingsDato() {
