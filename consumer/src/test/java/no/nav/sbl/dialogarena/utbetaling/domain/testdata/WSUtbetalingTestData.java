@@ -89,12 +89,12 @@ public class WSUtbetalingTestData {
         Double belop1 = BELOP;
         Double belop4 = -BELOP;
         Double belop2 = BELOP;
-        WSPosteringsdetaljer posteringsdetalj0 = createPosteringsDetalj("Uføre", KONTO_NR, "Tilleggsytelse", 1, 1.0, belop0, SPESIFIKASJON);
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Uføre", KONTO_NR, "Tilleggsytelse", 1, 1.0, belop1, SPESIFIKASJON);
-        WSPosteringsdetaljer posteringsdetalj4 = createPosteringsDetalj("Uføre", KONTO_NR, "Tilleggsytelse tilbakebetalt", 1, 1.0, belop4, SPESIFIKASJON);
-        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj("Foreldrepenger", KONTO_NR, "", 1, 1.0, belop2, SPESIFIKASJON);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1, 1.0, trekk, SPESIFIKASJON);
-        WSBilag bilag2 = createBilag("bilag2", posteringsdetalj0, posteringsdetalj1, posteringsdetalj2, posteringsdetalj3, posteringsdetalj4);
+        WSPosteringsdetaljer uforeDetalj1 = createPosteringsDetalj("Uføre", KONTO_NR, "Tilleggsytelse", 1, 1.0, belop0, SPESIFIKASJON);
+        WSPosteringsdetaljer uforeDetalj2 = createPosteringsDetalj("Uføre", KONTO_NR, "Tilleggsytelse", 1, 1.0, belop1, SPESIFIKASJON);
+        WSPosteringsdetaljer uforeDetalj3 = createPosteringsDetalj("Uføre", KONTO_NR, "Tilleggsytelse tilbakebetalt", 1, 1.0, belop4, SPESIFIKASJON);
+        WSPosteringsdetaljer foreldrePengerDetalj = createPosteringsDetalj(FORELDREPENGER, KONTO_NR, "", 1, 1.0, belop2, SPESIFIKASJON);
+        WSPosteringsdetaljer skatt = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1, 1.0, trekk, SPESIFIKASJON);
+        WSBilag bilag2 = createBilag("bilag2", uforeDetalj1, uforeDetalj2, foreldrePengerDetalj, skatt, uforeDetalj3);
 
         double brutto = belop0 + belop1 + belop2 + belop4;
         WSUtbetaling utbetaling = new WSUtbetaling();
