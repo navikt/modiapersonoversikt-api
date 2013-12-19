@@ -1,8 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import java.io.Serializable;
 import java.util.Comparator;
 
-public class Underytelse {
+public class Underytelse implements Serializable {
     private String tittel;
     private String spesifikasjon;
     private int antall;
@@ -35,6 +36,17 @@ public class Underytelse {
 
     public double getSats() {
         return sats;
+    }
+
+    @Override
+    public String toString() {
+        return "Underytelse{" +
+                "tittel='" + tittel + '\'' +
+                ", belop=" + belop +
+                ", antall=" + antall +
+                ", sats=" + sats +
+                ", spesifikasjon='" + spesifikasjon + '\'' +
+                '}';
     }
 
     @Override
