@@ -162,7 +162,7 @@ public class UtbetalingTransformer {
                 utbetalingBuilder.withMelding(join(meldinger, ". "));
                 leggSammenBelop(utbetalingBuilder, underytelser);
 
-                underytelser = leggSammenUnderYtelser(underytelser);
+//                underytelser = leggSammenUnderYtelser(underytelser);
                 nyeUtbetalinger.add(utbetalingBuilder.withUnderytelser(underytelser).createUtbetaling());
             }
         }
