@@ -1,9 +1,31 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import org.apache.commons.collections15.Transformer;
+
 import java.io.Serializable;
 import java.util.Comparator;
 
 public class Underytelse implements Serializable {
+    public static final Transformer<Underytelse, Double> UTBETALT_BELOP = new Transformer<Underytelse, Double>() {
+        @Override
+        public Double transform(Underytelse underytelse) {
+            double belop = underytelse.getBelop();
+            return (belop >= 0.0 ? belop : 0.0);
+        }
+    };
+    public static final Transformer<Underytelse, Double> TREKK_BELOP = new Transformer<Underytelse, Double>() {
+        @Override
+        public Double transform(Underytelse underytelse) {
+            double belop = underytelse.getBelop();
+            return (belop < 0.0 ? belop : 0.0);
+        }
+    };
+    public static final Transformer<Underytelse, String> UNDERYTELSE_TITTEL = new Transformer<Underytelse, String>() {
+        @Override
+        public String transform(Underytelse underytelse) {
+            return underytelse.getTittel();
+        }
+    };
     private String tittel;
     private String spesifikasjon;
     private int antall;
@@ -58,9 +80,7 @@ public class Underytelse implements Serializable {
 
         if (antall != that.antall) return false;
         if (Double.compare(that.sats, sats) != 0) return false;
-        if (tittel != null ? !tittel.equals(that.tittel) : that.tittel != null) return false;
-
-        return true;
+        return !(tittel != null ? !tittel.equals(that.tittel) : that.tittel != null);
     }
 
     @Override
