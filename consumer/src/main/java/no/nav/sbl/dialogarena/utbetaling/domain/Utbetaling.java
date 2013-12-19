@@ -199,14 +199,14 @@ public class Utbetaling implements Serializable {
             utbetaling.underytelser = this.underytelser;
             return utbetaling;
         }
+    }
 
-        public static final class UtbetalingComparator {
-            public static Comparator<Utbetaling> UTBETALING_DATO = new Comparator<Utbetaling>() {
-                @Override
-                public int compare(Utbetaling o1, Utbetaling o2) {
-                    return o1.getUtbetalingsdato().compareTo(o2.getUtbetalingsdato());
-                }
-            };
-        }
+    public static final class UtbetalingComparator {
+        public static Comparator<Utbetaling> UTBETALING_DATO = new Comparator<Utbetaling>() {
+            @Override
+            public int compare(Utbetaling o1, Utbetaling o2) {
+                return o1.getUtbetalingsdato().compareTo(o2.getUtbetalingsdato());
+            }
+        };
     }
 }
