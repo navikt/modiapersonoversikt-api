@@ -1,18 +1,18 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
-import java.util.List;
-import javax.inject.Inject;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSPeriode;
 import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
+import javax.inject.Inject;
+import java.util.List;
+
+import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.createUtbetalinger;
 
 public class UtbetalingService {
 
@@ -20,17 +20,7 @@ public class UtbetalingService {
     private UtbetalingPortType utbetalingPortType;
 
     public List<Utbetaling> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-        List<WSUtbetaling> wsUtbetalinger = getWSUtbetalinger(fnr, startDato, sluttDato);
-        return on(wsUtbetalinger).map(tilUtbetaling(fnr)).collect();
-    }
-
-    private static Transformer<WSUtbetaling, Utbetaling> tilUtbetaling(final String fnr) {
-        return new Transformer<WSUtbetaling, Utbetaling>() {
-            @Override
-            public Utbetaling transform(WSUtbetaling wsUtbetaling) {
-                return Utbetaling.getBuilder().createUtbetaling();
-            }
-        };
+        return createUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato));
     }
 
     private List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
