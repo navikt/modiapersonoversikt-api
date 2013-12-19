@@ -68,7 +68,7 @@ public class Underytelse implements Serializable {
                 ", antall=" + antall +
                 ", sats=" + sats +
                 ", spesifikasjon='" + spesifikasjon + '\'' +
-                '}';
+                '}' + "\n";
     }
 
     @Override
@@ -101,6 +101,43 @@ public class Underytelse implements Serializable {
                 return o1.getTittel().compareTo(o2.getTittel());
             }
         };
+    }
+
+    public static final class UnderytelseBuilder {
+        private String tittel;
+        private String spesifikasjon;
+        private int antall;
+        private double belop;
+        private double sats;
+
+        public UnderytelseBuilder setTittel(String tittel) {
+            this.tittel = tittel;
+            return this;
+        }
+
+        public UnderytelseBuilder setSpesifikasjon(String spesifikasjon) {
+            this.spesifikasjon = spesifikasjon;
+            return this;
+        }
+
+        public UnderytelseBuilder setAntall(int antall) {
+            this.antall = antall;
+            return this;
+        }
+
+        public UnderytelseBuilder setBelop(double belop) {
+            this.belop = belop;
+            return this;
+        }
+
+        public UnderytelseBuilder setSats(double sats) {
+            this.sats = sats;
+            return this;
+        }
+
+        public Underytelse createUnderytelse() {
+            return new Underytelse(tittel, spesifikasjon, antall, belop, sats);
+        }
     }
 
 }
