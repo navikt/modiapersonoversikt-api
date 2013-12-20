@@ -5,8 +5,8 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere;
-import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
+import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.TotalOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned.MaanedsPanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsResultat;
@@ -50,7 +50,7 @@ public class UtbetalingLerret extends Lerret {
 
     private UtbetalingsResultat resultatCache;
     private FilterParametere filterParametere;
-    private OppsummeringPanel totalOppsummeringPanel;
+    private TotalOppsummeringPanel totalOppsummeringPanel;
     private MarkupContainer utbetalingslisteContainer;
 
     public UtbetalingLerret(String id, String fnr) {
@@ -95,11 +95,10 @@ public class UtbetalingLerret extends Lerret {
         return (FilterFormPanel) new FilterFormPanel("filterFormPanel", filterParametere).setOutputMarkupId(true);
     }
 
-    private OppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
-        return (OppsummeringPanel) new OppsummeringPanel(
+    private TotalOppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
+        return (TotalOppsummeringPanel) new TotalOppsummeringPanel(
                 "totalOppsummeringPanel",
-                new OppsummeringVM(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()),
-                true)
+                new OppsummeringVM(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()))
                 .setOutputMarkupPlaceholderTag(true);
     }
 

@@ -118,33 +118,44 @@
     width: 100%;
     padding: @toppBunnPadding @sidePadding;
     cursor: pointer;
-    .oppsummeringssummer {
-      display: inline-block;
+    .main {
+      position: relative;
+      .oppsummeringssummer {
+        display: inline-block;
+      }
+      .skriv-ut {
+        position: absolute;
+        top: 0;
+        right: 0;
+      }
     }
-    table {
-      border-top: 1px solid @borderColor;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      text-align: left;
-      width: 100%;
-      th {
-        text-transform: uppercase;
-        font-weight: normal;
-        color: #B7B1A9;
-        font-size: 0.857rem;
-      }
-      td {
-        padding-right: 10px;
-      }
-      tbody:not(:first-of-type) tr:first-child td {
-        padding-top: 0.5rem;
-      }
-      tbody:not(:last-of-type) tr:last-child td {
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid @borderColor;
-      }
-      .hovedytelse {
-        font-weight: bold;
+    .detaljpanel {
+      display: none;
+      table {
+        border-top: 1px solid @borderColor;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        text-align: left;
+        width: 100%;
+        th {
+          text-transform: uppercase;
+          font-weight: normal;
+          color: #B7B1A9;
+          font-size: 0.857rem;
+        }
+        td {
+          padding-right: 10px;
+        }
+        tbody:not(:first-of-type) tr:first-child td {
+          padding-top: 0.5rem;
+        }
+        tbody:not(:last-of-type) tr:last-child td {
+          padding-bottom: 0.5rem;
+          border-bottom: 1px solid @borderColor;
+        }
+        .hovedytelse {
+          font-weight: bold;
+        }
       }
     }
   }

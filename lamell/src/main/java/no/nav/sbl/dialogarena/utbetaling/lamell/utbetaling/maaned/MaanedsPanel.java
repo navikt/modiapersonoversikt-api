@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.MaanedOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
-import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -17,8 +17,6 @@ import static org.joda.time.LocalDate.now;
 
 public class MaanedsPanel extends Panel {
 
-    private static final boolean VIS_DETALJER = false;
-
     public MaanedsPanel(String id, List<Utbetaling> utbetalingsliste) {
         super(id);
         add(
@@ -26,10 +24,9 @@ public class MaanedsPanel extends Panel {
                 createUtbetalingListView(utbetalingsliste));
     }
 
-    private OppsummeringPanel createOppsummeringsPanel(List<Utbetaling> utbetalingsliste) {
-        return new OppsummeringPanel("oppsummeringsPanel",
-                createOppsummeringVM(utbetalingsliste),
-                VIS_DETALJER);
+    private MaanedOppsummeringPanel createOppsummeringsPanel(List<Utbetaling> utbetalingsliste) {
+        return new MaanedOppsummeringPanel("oppsummeringsPanel",
+                createOppsummeringVM(utbetalingsliste));
     }
 
     private ListView<Utbetaling> createUtbetalingListView(List<Utbetaling> utbetalingsliste) {
