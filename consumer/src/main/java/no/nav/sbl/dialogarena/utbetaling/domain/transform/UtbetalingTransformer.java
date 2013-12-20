@@ -40,18 +40,9 @@ public final class UtbetalingTransformer {
         transformerSkatt(wsUtbetalinger);
         List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(wsUtbetalinger, fnr);
 
-        Map<LocalDate, List<UtbetalingTransformObjekt>> listMap = trekkUtTransformObjekterFraSammeDag(transformObjekter);
-        return transformerTilUtbetalinger(listMap.values());
+        return transformerTilUtbetalinger(trekkUtTransformObjekterFraSammeDag(transformObjekter).values());
     }
 
-
-    static void transformerSkatt(List<WSUtbetaling> wsUtbetalinger) {
-        for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
-            for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
-                trekkUtSkatteOpplysninger(wsBilag.getPosteringsdetaljerListe());
-            }
-        }
-    }
 
     static List<UtbetalingTransformObjekt> createTransformObjekter(List<WSUtbetaling> wsUtbetalinger, String fnr) {
 
@@ -95,15 +86,7 @@ public final class UtbetalingTransformer {
         return list;
     }
 
-    private static String transformMottakerKode(WSMottaker wsMottaker, String fnr) {
-        if(wsMottaker == null) { return BRUKER; }
-        if(!fnr.equals(wsMottaker.getMottakerId())) {
-            return ARBEIDSGIVER;
-        }
-        return BRUKER;
-    }
-
-    static List<Utbetaling> transformerTilUtbetalinger(Collection<List<UtbetalingTransformObjekt>> transformObjekter) {
+    private static List<Utbetaling> transformerTilUtbetalinger(Collection<List<UtbetalingTransformObjekt>> transformObjekter) {
 
         List<Utbetaling> nyeUtbetalinger = new ArrayList<>();
 
@@ -142,12 +125,12 @@ public final class UtbetalingTransformer {
         return nyeUtbetalinger;
     }
 
-    private static void leggSammenBelop(UtbetalingBuilder utbetalingBuilder, List<Underytelse> underytelser) {
-        Double brutto = getBrutto(underytelser);
-        Double trekk = getTrekk(underytelser);
-        utbetalingBuilder.withBrutto(brutto);
-        utbetalingBuilder.withTrekk(trekk);
-        utbetalingBuilder.withUtbetalt(brutto + trekk);
+    static void transformerSkatt(List<WSUtbetaling> wsUtbetalinger) {
+        for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
+            for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
+                trekkUtSkatteOpplysninger(wsBilag.getPosteringsdetaljerListe());
+            }
+        }
     }
 
     /**
@@ -170,11 +153,6 @@ public final class UtbetalingTransformer {
         }
     }
 
-    private static Map<LocalDate, List<UtbetalingTransformObjekt>> trekkUtTransformObjekterFraSammeDag(List<UtbetalingTransformObjekt> transformObjekter) {
-        Collections.sort(transformObjekter, DATO);
-        return on(transformObjekter).reduce(indexBy(UTBETALINGS_DAG));
-    }
-
     /**
      * Henter ut ytelsen med høyest frekvens i listen av posteringsdetaljer
      */
@@ -192,6 +170,27 @@ public final class UtbetalingTransformer {
             frekvens.put(key, count);
         }
         return pdetalj;
+    }
+
+    private static Map<LocalDate, List<UtbetalingTransformObjekt>> trekkUtTransformObjekterFraSammeDag(List<UtbetalingTransformObjekt> transformObjekter) {
+        Collections.sort(transformObjekter, DATO);
+        return on(transformObjekter).reduce(indexBy(UTBETALINGS_DAG));
+    }
+
+    private static void leggSammenBelop(UtbetalingBuilder utbetalingBuilder, List<Underytelse> underytelser) {
+        Double brutto = getBrutto(underytelser);
+        Double trekk = getTrekk(underytelser);
+        utbetalingBuilder.withBrutto(brutto);
+        utbetalingBuilder.withTrekk(trekk);
+        utbetalingBuilder.withUtbetalt(brutto + trekk);
+    }
+
+    private static String transformMottakerKode(WSMottaker wsMottaker, String fnr) {
+        if(wsMottaker == null) { return BRUKER; }
+        if(!fnr.equals(wsMottaker.getMottakerId())) {
+            return ARBEIDSGIVER;
+        }
+        return BRUKER;
     }
 
     private static String transformerUnderbeskrivelse(String kontoBeskrUnder, String kontoBeskrHoved) {
