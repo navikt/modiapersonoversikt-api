@@ -9,5 +9,4 @@ public class UtbetalingwidgetTestPage extends WebPage {
         String fnr = "***REMOVED***";
         add(new UtbetalingWidget("utbetalingWidget", "U", fnr));
     }
-
 }
