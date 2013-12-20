@@ -143,21 +143,35 @@ public class UtbetalingTransformerTest {
     }
 
     @Test
-    public void testLeggSammenUnderYtelser() throws Exception {
+    public void testLeggSammenUnderYtelser_MangeUnderYtelser_BlirSlaattSammen() throws Exception {
         String spesifikasjon = "Ekstra opplysning";
         String spesifikasjon1 = "Mer info";
         Underytelse ytelse1 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
         Underytelse ytelse2 = new UnderytelseBuilder().setTittel("Grønn").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
         Underytelse ytelse3 = new UnderytelseBuilder().setTittel("Blå").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(100.0).setSats(1.0).createUnderytelse();
         Underytelse ytelse4 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon1).setAntall(1).setBelop(10.0).setSats(1.0).createUnderytelse();
+        Underytelse ytelse5 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon1).setAntall(1).setBelop(10.0).setSats(1.0).createUnderytelse();
 
-        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1, ytelse2, ytelse3, ytelse4));
+        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1, ytelse2, ytelse3, ytelse4, ytelse5));
 
         assertThat(underytelser.size(), is(3));
         assertThat(underytelser.get(0).getTittel(), is("Blå"));
         assertThat(underytelser.get(1).getTittel(), is("Grønn"));
         assertThat(underytelser.get(2).getTittel(), is("Rød"));
-        assertThat(underytelser.get(2).getBelop(), is(1010.0));
+        assertThat(underytelser.get(2).getBelop(), is(1020.0));
         assertThat(underytelser.get(2).getSpesifikasjon(), is(spesifikasjon + ". " + spesifikasjon1));
+    }
+
+    @Test
+    public void testLeggSammenUnderYtelser_BareEnUnderytelse_BlirMedIResultat() throws Exception {
+        String spesifikasjon = "Ekstra opplysning";
+        Underytelse ytelse1 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
+
+        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1));
+
+        assertThat(underytelser.size(), is(1));
+        assertThat(underytelser.get(0).getTittel(), is("Rød"));
+        assertThat(underytelser.get(0).getBelop(), is(1000.0));
+        assertThat(underytelser.get(0).getSpesifikasjon(), is(spesifikasjon));
     }
 }
