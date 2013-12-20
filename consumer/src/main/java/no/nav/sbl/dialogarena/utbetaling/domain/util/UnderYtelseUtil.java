@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
@@ -43,7 +44,6 @@ public class UnderYtelseUtil {
             List<Underytelse> skalMerges = new ArrayList<>();
             skalMerges.add(ytelse1);
 
-            List<Underytelse> skalFjernes = new ArrayList<>();
             for (Underytelse ytelse2 : ytelser.subList(1, ytelser.size())) {
                 if (ytelse1.equals(ytelse2)) {
                     skalMerges.add(ytelse2);
@@ -51,6 +51,7 @@ public class UnderYtelseUtil {
             }
             mergeLikeUnderYtelser(skalMerges, builder);
 
+            List<Underytelse> skalFjernes = new ArrayList<>();
             skalFjernes.add(ytelse1);
             ytelser.removeAll(skalFjernes);
             resultat.add(builder.createUnderytelse());
@@ -61,7 +62,7 @@ public class UnderYtelseUtil {
 
     private static UnderytelseBuilder mergeLikeUnderYtelser(List<Underytelse> ytelser, UnderytelseBuilder builder) {
         Double belop = on(ytelser).map(BELOP).reduce(sumDouble);
-        HashSet<String> spesifikasjoner = on(ytelser).map(SPESIFIKASJON).collectIn(new HashSet<String>());
+        Set<String> spesifikasjoner = on(ytelser).map(SPESIFIKASJON).collectIn(new HashSet<String>());
         String spesifikasjon = join(spesifikasjoner, ". ");
         return builder.setSpesifikasjon(spesifikasjon).setBelop(belop);
     }
