@@ -217,7 +217,7 @@ public final class UtbetalingTransformer {
                 .withMottakernavn(objekt.getMottaker())
                 .withMottakerId(objekt.getMottakerId())
                 .withMottakerkode(objekt.getMottakerKode())
-                .withUtbetalingsDato(objekt.getUtbetalingsDato());
+                .withUtbetalingsDato(objekt.getUtbetalingsdato());
     }
 
 
