@@ -205,7 +205,7 @@ public class Utbetaling implements Serializable {
         public static Comparator<Utbetaling> UTBETALING_DATO = new Comparator<Utbetaling>() {
             @Override
             public int compare(Utbetaling o1, Utbetaling o2) {
-                return o1.getUtbetalingsdato().compareTo(o2.getUtbetalingsdato());
+                return -o1.getUtbetalingsdato().compareTo(o2.getUtbetalingsdato());
             }
         };
     }
