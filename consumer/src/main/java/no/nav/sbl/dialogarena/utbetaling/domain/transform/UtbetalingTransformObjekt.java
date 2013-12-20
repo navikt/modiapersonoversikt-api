@@ -95,10 +95,6 @@ final class UtbetalingTransformObjekt {
         return belop;
     }
 
-    public void setBelop(Double belop) {
-        this.belop = belop;
-    }
-
     public String getSpesifikasjon() {
         return spesifikasjon;
     }
