@@ -6,8 +6,6 @@ import no.nav.modig.modia.widget.panels.EmptyListing;
 import no.nav.modig.modia.widget.panels.ErrorListing;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
-
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
@@ -15,7 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-
 import java.util.List;
 
 import static java.util.Arrays.asList;

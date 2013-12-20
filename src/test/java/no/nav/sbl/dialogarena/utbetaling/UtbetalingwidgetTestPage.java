@@ -9,5 +9,4 @@ public class UtbetalingwidgetTestPage extends WebPage {
         String fnr = "12345612345";
         add(new UtbetalingWidget("utbetalingWidget", "U", fnr));
     }
-
 }
