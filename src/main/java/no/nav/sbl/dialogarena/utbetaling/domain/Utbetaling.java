@@ -10,7 +10,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 
-public class Utbetaling implements Serializable {
+public final class Utbetaling implements Serializable {
 
     public static final String BRUKER = "bruker";
     public static final String ARBEIDSGIVER = "arbeidsgiver";
@@ -213,7 +213,7 @@ public class Utbetaling implements Serializable {
     }
 
     public static final class UtbetalingComparator {
-        public static Comparator<Utbetaling> UTBETALING_DATO = new Comparator<Utbetaling>() {
+        public static final Comparator<Utbetaling> UTBETALING_DATO = new Comparator<Utbetaling>() {
             @Override
             public int compare(Utbetaling o1, Utbetaling o2) {
                 return -o1.getUtbetalingsdato().compareTo(o2.getUtbetalingsdato());

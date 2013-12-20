@@ -4,8 +4,6 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
-
 public class DetaljPanel extends Panel {
 
     public DetaljPanel(String id, UtbetalingVM utbetalingVM) {

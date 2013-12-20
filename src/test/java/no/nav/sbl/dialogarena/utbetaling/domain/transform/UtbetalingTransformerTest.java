@@ -27,7 +27,7 @@ import static org.junit.Assert.assertThat;
 public class UtbetalingTransformerTest {
 
     private static final String FORSKUDDSTREKK_SKATT = "Forskuddstrekk skatt";
-    private static final String GRUNNBELØP = "Grunnbeløp";
+    private static final String GRUNNBELOP = "Grunnbeløp";
     private static final String FNR = "12345678978";
 
     @Test
@@ -37,12 +37,12 @@ public class UtbetalingTransformerTest {
         List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(asList(wsUtbetaling), FNR);
 
         assertThat(transformObjekter.size(), is(4));
-        assertThat(transformObjekter.get(0).getUtbetalingsDato(), is(wsUtbetaling.getUtbetalingDato()));
+        assertThat(transformObjekter.get(0).getUtbetalingsdato(), is(wsUtbetaling.getUtbetalingDato()));
         assertThat(transformObjekter.get(0).getKontonummer(), is(wsUtbetaling.getGironr()));
         assertThat(transformObjekter.get(0).getValuta(), is(wsUtbetaling.getValuta()));
         assertThat(transformObjekter.get(0).getMottaker(), is(wsUtbetaling.getUtbetalingMottaker().getNavn()));
         assertThat(transformObjekter.get(0).getMottakerId(), is(wsUtbetaling.getUtbetalingMottaker().getMottakerId()));
-        assertThat(transformObjekter.get(0).getUtbetalingsDato(), is(wsUtbetaling.getUtbetalingDato()));
+        assertThat(transformObjekter.get(0).getUtbetalingsdato(), is(wsUtbetaling.getUtbetalingDato()));
 
         Double detaljBelop1 = wsUtbetaling.getBilagListe().get(0).getPosteringsdetaljerListe().get(0).getBelop();
         Double detaljBelop2 = wsUtbetaling.getBilagListe().get(0).getPosteringsdetaljerListe().get(1).getBelop();
@@ -64,9 +64,9 @@ public class UtbetalingTransformerTest {
         for (UtbetalingTransformObjekt transformObjekt : transformObjekter) {
             assertThat(transformObjekt.getHovedYtelse().equalsIgnoreCase("Dagpenger"), is(true));
         }
-        assertThat(transformObjekter.get(0).getUnderYtelse().equalsIgnoreCase(GRUNNBELØP), is(true));
+        assertThat(transformObjekter.get(0).getUnderYtelse().equalsIgnoreCase(GRUNNBELOP), is(true));
         assertThat(transformObjekter.get(1).getUnderYtelse().equalsIgnoreCase(FORSKUDDSTREKK_SKATT), is(true));
-        assertThat(transformObjekter.get(2).getUnderYtelse().equalsIgnoreCase(GRUNNBELØP), is(true));
+        assertThat(transformObjekter.get(2).getUnderYtelse().equalsIgnoreCase(GRUNNBELOP), is(true));
         assertThat(transformObjekter.get(3).getUnderYtelse().equalsIgnoreCase(FORSKUDDSTREKK_SKATT), is(true));
     }
 
@@ -78,7 +78,7 @@ public class UtbetalingTransformerTest {
         assertThat(utbetalinger.get(0).getHovedytelse(), is("Dagpenger"));
         assertThat(utbetalinger.get(0).getUnderytelser().size(), is(2));
         assertThat(utbetalinger.get(0).getUnderytelser().get(0).getTittel(), is(FORSKUDDSTREKK_SKATT));
-        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getTittel(), is(GRUNNBELØP));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getTittel(), is(GRUNNBELOP));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class UtbetalingTransformerTest {
         assertThat(utbetalinger.get(0).getUnderytelser().get(0).getSats(), is(1.0));
         assertThat(utbetalinger.get(0).getUnderytelser().get(0).getBelop(), is(-700.0));
 
-        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getTittel(), is(GRUNNBELØP));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getTittel(), is(GRUNNBELOP));
         assertThat(utbetalinger.get(0).getUnderytelser().get(1).getSpesifikasjon(), is(info));
         assertThat(utbetalinger.get(0).getUnderytelser().get(1).getAntall(), is(12));
         assertThat(utbetalinger.get(0).getUnderytelser().get(1).getSats(), is(123.0));

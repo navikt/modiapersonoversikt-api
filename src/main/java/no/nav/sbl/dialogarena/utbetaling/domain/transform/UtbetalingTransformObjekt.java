@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
 import org.apache.commons.collections15.Transformer;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -9,7 +10,7 @@ import java.util.Comparator;
 
 
 final class UtbetalingTransformObjekt {
-    private DateTime utbetalingsDato;
+    private DateTime utbetalingsdato;
 
     private String mottaker;
     private String mottakerId;
@@ -35,14 +36,14 @@ final class UtbetalingTransformObjekt {
     public static final Transformer<UtbetalingTransformObjekt, DateTime> UTBETALINGS_DATO = new Transformer<UtbetalingTransformObjekt, DateTime>() {
         @Override
         public DateTime transform(UtbetalingTransformObjekt utbetalingTransformObjekt) {
-            return utbetalingTransformObjekt.getUtbetalingsDato();
+            return utbetalingTransformObjekt.getUtbetalingsdato();
         }
     };
 
     public static final Transformer<UtbetalingTransformObjekt, LocalDate> UTBETALINGS_DAG = new Transformer<UtbetalingTransformObjekt, LocalDate>() {
         @Override
         public LocalDate transform(UtbetalingTransformObjekt utbetalingTransformObjekt) {
-            return utbetalingTransformObjekt.getUtbetalingsDato().toLocalDate();
+            return utbetalingTransformObjekt.getUtbetalingsdato().toLocalDate();
         }
     };
 
@@ -53,21 +54,21 @@ final class UtbetalingTransformObjekt {
 
         UtbetalingTransformObjekt that = (UtbetalingTransformObjekt) o;
 
-        if (hovedYtelse != null ? !hovedYtelse.equals(that.hovedYtelse) : that.hovedYtelse != null) return false;
-        if (kontonummer != null ? !kontonummer.equals(that.kontonummer) : that.kontonummer != null) return false;
-        if (mottaker != null ? !mottaker.equals(that.mottaker) : that.mottaker != null) return false;
-        if (mottakerId != null ? !mottakerId.equals(that.mottakerId) : that.mottakerId != null) return false;
-        if (mottakerKode != null ? !mottakerKode.equals(that.mottakerKode) : that.mottakerKode != null) return false;
-        if (periode != null ? !periode.equals(that.periode) : that.periode != null) return false;
-        if (status != null ? !status.equals(that.status) : that.status != null) return false;
-        if (valuta != null ? !valuta.equals(that.valuta) : that.valuta != null) return false;
-
-        return true;
+        return new EqualsBuilder()
+                .append(hovedYtelse, that.hovedYtelse)
+                .append(kontonummer, that.kontonummer)
+                .append(mottaker, that.mottaker)
+                .append(mottakerId, that.mottakerId)
+                .append(mottakerKode, that.mottakerKode)
+                .append(periode, that.periode)
+                .append(status, that.status)
+                .append(valuta, that.valuta)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        int result = utbetalingsDato != null ? utbetalingsDato.hashCode() : 0;
+        int result = utbetalingsdato != null ? utbetalingsdato.hashCode() : 0;
         result = 31 * result + (mottaker != null ? mottaker.hashCode() : 0);
         result = 31 * result + (mottakerId != null ? mottakerId.hashCode() : 0);
         result = 31 * result + (mottakerKode != null ? mottakerKode.hashCode() : 0);
@@ -81,10 +82,10 @@ final class UtbetalingTransformObjekt {
 
     public static final class TransformComparator {
 
-        public static Comparator<UtbetalingTransformObjekt> DATO = new Comparator<UtbetalingTransformObjekt>() {
+        public static final Comparator<UtbetalingTransformObjekt> DATO = new Comparator<UtbetalingTransformObjekt>() {
             @Override
             public int compare(UtbetalingTransformObjekt o1, UtbetalingTransformObjekt o2) {
-                return o1.getUtbetalingsDato().compareTo(o2.getUtbetalingsDato());
+                return o1.getUtbetalingsdato().compareTo(o2.getUtbetalingsdato());
             }
         };
     }
@@ -144,8 +145,8 @@ final class UtbetalingTransformObjekt {
         this.melding = melding;
     }
 
-    public DateTime getUtbetalingsDato() {
-        return utbetalingsDato;
+    public DateTime getUtbetalingsdato() {
+        return utbetalingsdato;
     }
 
     public String getValuta() {
@@ -251,7 +252,7 @@ final class UtbetalingTransformObjekt {
             transformObjekt.sats = this.sats;
             transformObjekt.status = this.status;
             transformObjekt.underYtelse = this.underYtelse;
-            transformObjekt.utbetalingsDato = this.utbetalingsDato;
+            transformObjekt.utbetalingsdato = this.utbetalingsDato;
             transformObjekt.periode = this.periode;
             transformObjekt.valuta = this.valuta;
             transformObjekt.spesifikasjon = this.spesifikasjon;

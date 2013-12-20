@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import org.apache.commons.collections15.Transformer;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -9,15 +10,15 @@ public class Underytelse implements Serializable {
     public static final Transformer<Underytelse, Double> UTBETALT_BELOP = new Transformer<Underytelse, Double>() {
         @Override
         public Double transform(Underytelse underytelse) {
-            double belop = underytelse.getBelop();
-            return (belop >= 0.0 ? belop : 0.0);
+            double underytelseBelop = underytelse.getBelop();
+            return (underytelseBelop >= 0.0 ? underytelseBelop : 0.0);
         }
     };
     public static final Transformer<Underytelse, Double> TREKK_BELOP = new Transformer<Underytelse, Double>() {
         @Override
         public Double transform(Underytelse underytelse) {
-            double belop = underytelse.getBelop();
-            return (belop < 0.0 ? belop : 0.0);
+            double underytelseBelop = underytelse.getBelop();
+            return (underytelseBelop < 0.0 ? underytelseBelop : 0.0);
         }
     };
     public static final Transformer<Underytelse, Double> BELOP = new Transformer<Underytelse, Double>() {
@@ -86,14 +87,19 @@ public class Underytelse implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Underytelse)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof Underytelse)) {
+            return false;
+        }
 
         Underytelse that = (Underytelse) o;
-
-        if (antall != that.antall) return false;
-        if (Double.compare(that.sats, sats) != 0) return false;
-        return !(tittel != null ? !tittel.equals(that.tittel) : that.tittel != null);
+        return new EqualsBuilder()
+                .append(antall, that.antall)
+                .append(sats, that.sats)
+                .append(tittel, that.tittel)
+                .isEquals();
     }
 
     @Override
@@ -108,7 +114,7 @@ public class Underytelse implements Serializable {
     }
 
     public static final class UnderytelseComparator {
-        public static Comparator<Underytelse> TITTEL = new Comparator<Underytelse>() {
+        public static final Comparator<Underytelse> TITTEL = new Comparator<Underytelse>() {
             @Override
             public int compare(Underytelse o1, Underytelse o2) {
                 return o1.getTittel().compareTo(o2.getTittel());
