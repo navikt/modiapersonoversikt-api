@@ -1,7 +1,7 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
 
-    <div wicket:id="oppsummeringsLinje">
+    <div>
         <div class="element oppsummeringsperiode">
             <label>
                 <wicket:message key="utbetaling.lamell.oppsummering.periode"/>
@@ -28,62 +28,6 @@
                 <span wicket:id="utbetalt"></span>
             </div>
         </div>
-    </div>
-
-    <div wicket:id="oppsummeringDetalj">
-        <table cellspacing="0">
-            <thead>
-            <th>
-                <wicket:message key="utbetaling.lamell.oppsummering.ytelse"/>
-            </th>
-            <th>
-                <wicket:message key="utbetaling.lamell.oppsummering.delbelop"/>
-            </th>
-            <th>
-                <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
-            </th>
-            <th>
-                <wicket:message key="utbetaling.lamell.oppsummering.trekk"/>
-            </th>
-            <th>
-                <wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/>
-            </th>
-            </thead>
-            <tbody wicket:id="hovedytelser">
-            <tr >
-                <td>
-                    <span class="hovedytelse" wicket:id="hovedYtelsesBeskrivelse">[]</span>
-                </td>
-                <td></td>
-                <td>
-                    <span class="brutto" wicket:id="bruttoUnderytelser">[]</span>
-                </td>
-                <td>
-                    <span class="trekk" wicket:id="trekkUnderytelser">[]</span>
-                </td>
-                <td>
-                    <span class="netto" wicket:id="nettoUnderytelser">[]</span>
-                </td>
-                <td>
-
-                </td>
-            </tr>
-            <tr wicket:id="underYtelsesBeskrivelser">
-                <td>
-                    <span class="tall" wicket:id="underYtelsesBeskrivelse">[]</span>
-                </td>
-                <td>
-                    <span class="tall" wicket:id="ytelsesBelop">[]</span>
-                </td>
-                <td></td>
-                <td>
-                    <span class="tall" wicket:id="trekkBelop">[]</span>
-                </td>
-                <td></td>
-            </tr>
-
-            </tbody>
-        </table>
     </div>
 
 </wicket:panel>
