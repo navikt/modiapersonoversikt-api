@@ -22,7 +22,8 @@ import java.util.Set;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseBuilder;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingComparator.UTBETALING_DATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.TransformComparator.DATO;
@@ -35,9 +36,9 @@ import static org.apache.commons.lang3.StringUtils.join;
 
 public final class UtbetalingTransformer {
 
-    public static List<Utbetaling> createUtbetalinger(List<WSUtbetaling> wsUtbetalinger) {
+    public static List<Utbetaling> createUtbetalinger(List<WSUtbetaling> wsUtbetalinger, String fnr) {
         transformerSkatt(wsUtbetalinger);
-        List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(wsUtbetalinger);
+        List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(wsUtbetalinger, fnr);
 
         Map<LocalDate, List<UtbetalingTransformObjekt>> listMap = trekkUtTransformObjekterFraSammeDag(transformObjekter);
         return transformerTilUtbetalinger(listMap.values());
@@ -52,13 +53,14 @@ public final class UtbetalingTransformer {
         }
     }
 
-    static List<UtbetalingTransformObjekt> createTransformObjekter(List<WSUtbetaling> wsUtbetalinger) {
+    static List<UtbetalingTransformObjekt> createTransformObjekter(List<WSUtbetaling> wsUtbetalinger, String fnr) {
 
         List<UtbetalingTransformObjekt> list = new ArrayList<>();
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
             WSMottaker wsMottaker = wsUtbetaling.getUtbetalingMottaker();
             String mottakerId = wsMottaker != null ? wsMottaker.getMottakerId() : "";
             String mottaker = wsMottaker != null ? wsMottaker.getNavn() : "";
+            String mottakerKode = transformMottakerKode(wsMottaker, fnr);
 
             Interval periode = wsUtbetaling.getUtbetalingsPeriode() != null ?
                     new Interval(wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato(), wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato())
@@ -76,6 +78,7 @@ public final class UtbetalingTransformer {
                             .withKontonummer(wsUtbetaling.getGironr())
                             .withMottaker(mottaker)
                             .withMottakerId(mottakerId)
+                            .withMottakerKode(mottakerKode)
                             .withSats(detalj.getSats())
                             .withStatus(wsUtbetaling.getStatusBeskrivelse())
                             .withSpesifikasjon(detalj.getSpesifikasjon())
@@ -90,6 +93,14 @@ public final class UtbetalingTransformer {
             }
         }
         return list;
+    }
+
+    private static String transformMottakerKode(WSMottaker wsMottaker, String fnr) {
+        if(wsMottaker == null) { return BRUKER; }
+        if(!fnr.equals(wsMottaker.getMottakerId())) {
+            return ARBEIDSGIVER;
+        }
+        return BRUKER;
     }
 
     static List<Utbetaling> transformerTilUtbetalinger(Collection<List<UtbetalingTransformObjekt>> transformObjekter) {
@@ -206,6 +217,7 @@ public final class UtbetalingTransformer {
                 .withValuta(objekt.getValuta())
                 .withMottakernavn(objekt.getMottaker())
                 .withMottakerId(objekt.getMottakerId())
+                .withMottakerkode(objekt.getMottakerKode())
                 .withUtbetalingsDato(objekt.getUtbetalingsDato());
     }
 
