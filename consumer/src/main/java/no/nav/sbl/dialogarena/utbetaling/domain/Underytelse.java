@@ -20,6 +20,19 @@ public class Underytelse implements Serializable {
             return (belop < 0.0 ? belop : 0.0);
         }
     };
+    public static final Transformer<Underytelse, Double> BELOP = new Transformer<Underytelse, Double>() {
+        @Override
+        public Double transform(Underytelse underytelse) {
+            return underytelse.getBelop();
+        }
+    };
+    public static final Transformer<Underytelse, String> SPESIFIKASJON = new Transformer<Underytelse, String>() {
+        @Override
+        public String transform(Underytelse underytelse) {
+            return underytelse.getSpesifikasjon();
+        }
+    };
+
     public static final Transformer<Underytelse, String> UNDERYTELSE_TITTEL = new Transformer<Underytelse, String>() {
         @Override
         public String transform(Underytelse underytelse) {

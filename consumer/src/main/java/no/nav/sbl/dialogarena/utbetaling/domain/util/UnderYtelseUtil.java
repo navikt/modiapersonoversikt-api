@@ -3,14 +3,14 @@ package no.nav.sbl.dialogarena.utbetaling.domain.util;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.BELOP;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.SPESIFIKASJON;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.TREKK_BELOP;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UTBETALT_BELOP;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseBuilder;
@@ -32,38 +32,48 @@ public class UnderYtelseUtil {
         Collections.sort(ytelser, TITTEL);
 
         List<Underytelse> resultat = new ArrayList<>();
+        if(ytelser.size() == 1) {
+            resultat.add(getUnderytelseBuilder(ytelser.get(0)).createUnderytelse());
+        }
 
         while (ytelser.size() > 1) {
-            UnderytelseBuilder builder = new UnderytelseBuilder();
             Underytelse ytelse1 = ytelser.get(0);
-            builder = builder.setTittel(ytelse1.getTittel())
-                             .setAntall(ytelse1.getAntall())
-                             .setSats(ytelse1.getSats())
-                             .setSpesifikasjon(ytelse1.getSpesifikasjon())
-                             .setBelop(ytelse1.getBelop());
+            UnderytelseBuilder builder = getUnderytelseBuilder(ytelse1);
 
-            Set<Underytelse> alleredeLagtTil = new HashSet<>();
+            List<Underytelse> skalMerges = new ArrayList<>();
+            skalMerges.add(ytelse1);
+
+            List<Underytelse> skalFjernes = new ArrayList<>();
             for (Underytelse ytelse2 : ytelser.subList(1, ytelser.size())) {
                 if (ytelse1.equals(ytelse2)) {
-                    builder = mergeLikeUnderYtelser(ytelse1, ytelse2, builder);
-                    alleredeLagtTil.add(ytelse2);
+                    skalMerges.add(ytelse2);
                 }
             }
-            alleredeLagtTil.add(ytelse1);
-            ytelser.removeAll(alleredeLagtTil);
+            mergeLikeUnderYtelser(skalMerges, builder);
 
+            skalFjernes.add(ytelse1);
+            ytelser.removeAll(skalFjernes);
             resultat.add(builder.createUnderytelse());
         }
 
         return resultat;
     }
 
-    private static UnderytelseBuilder mergeLikeUnderYtelser(Underytelse a, Underytelse b, UnderytelseBuilder builder) {
-        Double belop = a.getBelop() + b.getBelop();
-        Set<String> spesifikasjoner = new HashSet<>();
-        spesifikasjoner.addAll(Arrays.asList(a.getSpesifikasjon(), b.getSpesifikasjon()));
+    private static UnderytelseBuilder mergeLikeUnderYtelser(List<Underytelse> ytelser, UnderytelseBuilder builder) {
+        Double belop = on(ytelser).map(BELOP).reduce(sumDouble);
+        HashSet<String> spesifikasjoner = on(ytelser).map(SPESIFIKASJON).collectIn(new HashSet<String>());
         String spesifikasjon = join(spesifikasjoner, ". ");
-        return builder.setSpesifikasjon(spesifikasjon).setAntall(a.getAntall()).setBelop(belop).setSats(a.getSats());
+        return builder.setSpesifikasjon(spesifikasjon).setBelop(belop);
+    }
+
+    private static UnderytelseBuilder getUnderytelseBuilder(Underytelse ytelse1) {
+        UnderytelseBuilder builder = new UnderytelseBuilder();
+        builder = builder.setTittel(ytelse1.getTittel())
+                .setAntall(ytelse1.getAntall())
+                .setSats(ytelse1.getSats())
+                .setBelop(ytelse1.getBelop())
+                .setSpesifikasjon(ytelse1.getSpesifikasjon());
+        return builder;
     }
 
 }
