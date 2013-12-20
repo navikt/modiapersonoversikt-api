@@ -33,7 +33,7 @@ public class FilterTest {
     public void filtrererBortUtbetalingUtenforDatointervall() {
         Utbetaling utbetaling = getBuilder()
                 .withUtbetalingsDato(now().minusYears(2))
-                .withMottakerId(BRUKER)
+                .withMottakerkode(BRUKER)
                 .withHovedytelse(DAGPENGER)
                 .createUtbetaling();
 
@@ -44,7 +44,7 @@ public class FilterTest {
     public void filtrererBortUtbetalingForAnnenMottakertype() {
         Utbetaling utbetaling = getBuilder()
                 .withUtbetalingsDato(now())
-                .withMottakerId(ARBEIDSGIVER)
+                .withMottakerkode(ARBEIDSGIVER)
                 .withHovedytelse(DAGPENGER)
                 .createUtbetaling();
 
@@ -57,7 +57,7 @@ public class FilterTest {
     public void skalBeholdeYtelsenHvisUtbetalingenInneholderEnYtelseManVilHa() {
         Utbetaling utbetaling = getBuilder()
                 .withUtbetalingsDato(now())
-                .withMottakerId(BRUKER)
+                .withMottakerkode(BRUKER)
                 .withHovedytelse(DAGPENGER)
                 .createUtbetaling();
 
@@ -70,7 +70,7 @@ public class FilterTest {
     public void skalIkkeBeholdeYtelsenHvisAlleUtbetalingerErUonskede() {
         Utbetaling utbetaling = getBuilder()
                 .withUtbetalingsDato(now())
-                .withMottakerId(BRUKER)
+                .withMottakerkode(BRUKER)
                 .withHovedytelse(DAGPENGER)
                 .createUtbetaling();
 
