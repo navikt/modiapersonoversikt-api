@@ -8,6 +8,10 @@ $(document).on('click', utbetalingslinjeSelector, function (e) {
     }
 });
 
+$(document).on('click', '.utbetaling-ramme .oppsummering-total', function() {
+    $(this).children('.detaljpanel').animate({height: 'toggle'}, 300);
+});
+
 $(document).on('click', utbetalingslinjeSelector + ' .skriv-ut', function() {
     var utbetalingslinje = $(this).closest(utbetalingslinjeSelector).clone();
     utbetalingslinje.children('.detaljpanel').css('display', 'block');

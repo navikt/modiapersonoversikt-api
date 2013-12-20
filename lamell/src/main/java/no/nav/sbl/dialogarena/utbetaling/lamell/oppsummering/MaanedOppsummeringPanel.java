@@ -10,15 +10,15 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 
-public class OppsummeringPanel extends Panel {
+public class MaanedOppsummeringPanel extends Panel {
 
-    public OppsummeringPanel(String id, OppsummeringVM oppsummeringVM, boolean visDetaljer) {
+    public MaanedOppsummeringPanel(String id, OppsummeringVM oppsummeringVM) {
         super(id, new CompoundPropertyModel<>(oppsummeringVM));
 
-        MarkupContainer ytelsesDetalj = createYtelsesOppsummering(visDetaljer);
+        MarkupContainer ytelsesDetalj = createYtelsesOppsummering();
 
         add(createTopplinje(), ytelsesDetalj);
-        add(createClickBehavior(visDetaljer, ytelsesDetalj));
+        add(createClickBehavior(ytelsesDetalj));
     }
 
     private MarkupContainer createTopplinje() {
@@ -31,7 +31,7 @@ public class OppsummeringPanel extends Panel {
                 );
     }
 
-    private MarkupContainer createYtelsesOppsummering(boolean visDetaljer) {
+    private MarkupContainer createYtelsesOppsummering() {
         ListView<HovedYtelseVM> listView = new ListView<HovedYtelseVM>("hovedytelser") {
             @Override
             protected void populateItem(ListItem<HovedYtelseVM> item) {
@@ -60,16 +60,13 @@ public class OppsummeringPanel extends Panel {
         return (MarkupContainer) new WebMarkupContainer("oppsummeringDetalj")
                 .add(listView)
                 .setOutputMarkupPlaceholderTag(true)
-                .setVisibilityAllowed(visDetaljer);
+                .setVisibilityAllowed(false);
     }
 
-    private AjaxEventBehavior createClickBehavior(final boolean visDetaljer, final MarkupContainer ytelsesDetalj) {
+    private AjaxEventBehavior createClickBehavior(final MarkupContainer ytelsesDetalj) {
         return new AjaxEventBehavior("click") {
             @Override
             protected void onEvent(AjaxRequestTarget target) {
-                if (!visDetaljer) {
-                    return;
-                }
                 ytelsesDetalj.setVisibilityAllowed(!ytelsesDetalj.isVisibleInHierarchy());
                 target.add(ytelsesDetalj);
             }
