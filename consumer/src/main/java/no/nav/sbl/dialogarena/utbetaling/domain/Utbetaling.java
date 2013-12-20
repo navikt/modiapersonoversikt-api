@@ -20,6 +20,7 @@ public class Utbetaling implements Serializable {
     private String status;
     private String mottakerId;
     private String mottakernavn;
+    private String mottakerkode;
     private String melding;
     private String hovedytelse;
     private String kontonr;
@@ -28,7 +29,6 @@ public class Utbetaling implements Serializable {
     private double trekk;
     private double utbetalt;
     private List<Underytelse> underytelser;
-
     private Utbetaling() {
     }
 
@@ -66,6 +66,10 @@ public class Utbetaling implements Serializable {
 
     public String getMottakernavn() {
         return mottakernavn;
+    }
+
+    public String getMottakerkode() {
+        return mottakerkode;
     }
 
     public String getMelding() {
@@ -107,6 +111,7 @@ public class Utbetaling implements Serializable {
         private String status;
         private String mottakerId;
         private String mottakernavn;
+        private String mottakerkode;
         private String melding;
         private String hovedytelse;
         private String kontonr;
@@ -138,6 +143,11 @@ public class Utbetaling implements Serializable {
 
         public UtbetalingBuilder withMottakernavn(String mottakernavn) {
             this.mottakernavn = mottakernavn;
+            return this;
+        }
+
+        public UtbetalingBuilder withMottakerkode(String mottakerkode) {
+            this.mottakerkode = mottakerkode;
             return this;
         }
 
@@ -189,6 +199,7 @@ public class Utbetaling implements Serializable {
             utbetaling.status = this.status;
             utbetaling.mottakerId = this.mottakerId;
             utbetaling.mottakernavn = this.mottakernavn;
+            utbetaling.mottakerkode = this.mottakerkode;
             utbetaling.melding = this.melding;
             utbetaling.hovedytelse = this.hovedytelse;
             utbetaling.kontonr = this.kontonr;

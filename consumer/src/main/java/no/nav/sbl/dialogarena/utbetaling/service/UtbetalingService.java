@@ -20,7 +20,7 @@ public class UtbetalingService {
     private UtbetalingPortType utbetalingPortType;
 
     public List<Utbetaling> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-        return createUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato));
+        return createUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato), fnr);
     }
 
     private List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
