@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -220,4 +221,19 @@ public final class Utbetaling implements Serializable {
             }
         };
     }
+
+    public static final Transformer<Utbetaling, String> HOVEDYTELSE = new Transformer<Utbetaling, String>() {
+        @Override
+        public String transform(Utbetaling utbetaling) {
+            return utbetaling.getHovedytelse();
+        }
+    };
+
+    public static final Transformer<Utbetaling, List<Underytelse>> UNDERYTELSER = new Transformer<Utbetaling, List<Underytelse>>() {
+        @Override
+        public List<Underytelse> transform(Utbetaling utbetaling) {
+            return utbetaling.getUnderytelser();
+        }
+    };
+
 }

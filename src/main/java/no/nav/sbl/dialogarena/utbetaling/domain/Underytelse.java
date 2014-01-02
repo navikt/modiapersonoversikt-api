@@ -34,12 +34,6 @@ public class Underytelse implements Serializable {
         }
     };
 
-    public static final Transformer<Underytelse, String> UNDERYTELSE_TITTEL = new Transformer<Underytelse, String>() {
-        @Override
-        public String transform(Underytelse underytelse) {
-            return underytelse.getTittel();
-        }
-    };
     private String tittel;
     private String spesifikasjon;
     private int antall;
@@ -47,7 +41,7 @@ public class Underytelse implements Serializable {
     private double sats;
 
     public Underytelse(String tittel, String spesifikasjon, int antall, double belop, double sats) {
-        this.tittel = tittel;
+        this.tittel = tittel != null? tittel.trim(): "";
         this.spesifikasjon = spesifikasjon;
         this.antall = antall;
         this.belop = belop;
@@ -118,6 +112,21 @@ public class Underytelse implements Serializable {
             @Override
             public int compare(Underytelse o1, Underytelse o2) {
                 return o1.getTittel().compareTo(o2.getTittel());
+            }
+        };
+
+        public static final Comparator<Underytelse> TITTEL_ANTALL_SATS = new Comparator<Underytelse>() {
+            @Override
+            public int compare(Underytelse o1, Underytelse o2) {
+                int compareAntall = Integer.valueOf(o1.getAntall()).compareTo(o2.getAntall());
+                int compareSats = Double.valueOf(o1.getSats()).compareTo(o2.getSats());
+                if(compareAntall == 0 && compareSats == 0) {
+                    return o1.getTittel().compareTo(o2.getTittel());
+                }
+                if(compareAntall != 0) {
+                    return compareAntall;
+                }
+                return compareSats;
             }
         };
     }

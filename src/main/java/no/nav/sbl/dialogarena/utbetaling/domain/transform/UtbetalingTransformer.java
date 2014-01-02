@@ -22,6 +22,7 @@ import java.util.Set;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL_ANTALL_SATS;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
@@ -117,7 +118,7 @@ public final class UtbetalingTransformer {
                 utbetalingBuilder.withMelding(join(meldinger, ". "));
                 leggSammenBelop(utbetalingBuilder, underytelser);
 
-                underytelser = leggSammenUnderYtelser(underytelser);
+                underytelser = leggSammenUnderYtelser(underytelser, TITTEL_ANTALL_SATS);
                 nyeUtbetalinger.add(utbetalingBuilder.withUnderytelser(underytelser).createUtbetaling());
             }
         }
