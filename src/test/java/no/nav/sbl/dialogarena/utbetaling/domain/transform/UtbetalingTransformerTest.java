@@ -9,6 +9,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseBuilder;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL_ANTALL_SATS;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling1;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling2;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling3;
@@ -87,7 +89,7 @@ public class UtbetalingTransformerTest {
 
         assertThat(utbetalinger.size(), is(3));
         assertThat(utbetalinger.get(0).getHovedytelse(), is("Uføre"));
-        assertThat(utbetalinger.get(0).getUnderytelser().size(), is(2));
+        assertThat(utbetalinger.get(0).getUnderytelser().size(), is(3));
         assertThat(utbetalinger.get(0).getBrutto(), is(2500.0));
         assertThat(utbetalinger.get(0).getTrekk(), is(-1700.0));
         assertThat(utbetalinger.get(0).getUtbetalt(), is(800.0));
@@ -99,7 +101,7 @@ public class UtbetalingTransformerTest {
         assertThat(utbetalinger.get(1).getUtbetalt(), is(1300.0));
 
         assertThat(utbetalinger.get(2).getHovedytelse(), is("Foreldrepenger"));
-        assertThat(utbetalinger.get(2).getUnderytelser().size(), is(1));
+        assertThat(utbetalinger.get(2).getUnderytelser().size(), is(2));
         assertThat(utbetalinger.get(2).getBrutto(), is(1000.0));
         assertThat(utbetalinger.get(2).getTrekk(), is(-350.0));
         assertThat(utbetalinger.get(2).getUtbetalt(), is(650.0));
@@ -154,7 +156,7 @@ public class UtbetalingTransformerTest {
         Underytelse ytelse4 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon1).setAntall(1).setBelop(10.0).setSats(1.0).createUnderytelse();
         Underytelse ytelse5 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon1).setAntall(1).setBelop(10.0).setSats(1.0).createUnderytelse();
 
-        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1, ytelse2, ytelse3, ytelse4, ytelse5));
+        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1, ytelse2, ytelse3, ytelse4, ytelse5), TITTEL_ANTALL_SATS);
 
         assertThat(underytelser.size(), is(3));
         assertThat(underytelser.get(0).getTittel(), is("Blå"));
@@ -169,11 +171,27 @@ public class UtbetalingTransformerTest {
         String spesifikasjon = "Ekstra opplysning";
         Underytelse ytelse1 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
 
-        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1));
+        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1), TITTEL_ANTALL_SATS);
 
         assertThat(underytelser.size(), is(1));
         assertThat(underytelser.get(0).getTittel(), is("Rød"));
         assertThat(underytelser.get(0).getBelop(), is(1000.0));
         assertThat(underytelser.get(0).getSpesifikasjon(), is(spesifikasjon));
+    }
+
+    @Test
+    public void testLeggSammenUnderYtelser_ToUnderYtelserMedForskjelligTittel_BlirIkkeSlaattSammen() throws Exception {
+        String spesifikasjon = "Ekstra opplysning";
+        Underytelse ytelse1 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
+        Underytelse ytelse2 = new UnderytelseBuilder().setTittel("Grønn").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
+
+        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1, ytelse2), TITTEL);
+
+        assertThat(underytelser.size(), is(2));
+        assertThat(underytelser.get(0).getTittel(), is("Grønn"));
+        assertThat(underytelser.get(0).getBelop(), is(1000.0));
+        assertThat(underytelser.get(1).getTittel(), is("Rød"));
+        assertThat(underytelser.get(1).getBelop(), is(1000.0));
+        assertThat(underytelser.get(1).getSpesifikasjon(), is(spesifikasjon));
     }
 }
