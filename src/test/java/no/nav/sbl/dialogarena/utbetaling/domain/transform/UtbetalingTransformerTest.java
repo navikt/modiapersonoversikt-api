@@ -9,7 +9,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseBuilder;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL_ANTALL_SATS;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling1;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling2;
@@ -185,7 +184,7 @@ public class UtbetalingTransformerTest {
         Underytelse ytelse1 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
         Underytelse ytelse2 = new UnderytelseBuilder().setTittel("Grønn").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
 
-        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1, ytelse2), TITTEL);
+        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1, ytelse2), TITTEL_ANTALL_SATS);
 
         assertThat(underytelser.size(), is(2));
         assertThat(underytelser.get(0).getTittel(), is("Grønn"));
