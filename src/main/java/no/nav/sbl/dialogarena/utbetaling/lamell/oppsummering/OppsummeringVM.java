@@ -8,11 +8,11 @@ import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
@@ -86,7 +86,7 @@ public class OppsummeringVM implements Serializable {
             List<Underytelse> sammenlagteUnderytelser = leggSammenUnderYtelser(underytelser, TITTEL_ANTALL_SATS);
             hovedYtelseVMs.add(new HovedYtelseVM(entry.getKey(), sammenlagteUnderytelser));
         }
-        Collections.sort(hovedYtelseVMs, HOVEDYTELSE_NAVN);
+        sort(hovedYtelseVMs, HOVEDYTELSE_NAVN);
         return hovedYtelseVMs;
     }
 }
