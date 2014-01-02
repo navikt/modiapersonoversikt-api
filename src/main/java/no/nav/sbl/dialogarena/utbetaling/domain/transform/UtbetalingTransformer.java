@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL_ANTALL_SATS;
@@ -95,7 +96,7 @@ public final class UtbetalingTransformer {
         for (List<UtbetalingTransformObjekt> transformObjektListe : transformObjekter) {
 
             List<UtbetalingTransformObjekt> nyListe = on(transformObjektListe).collectIn(new ArrayList<UtbetalingTransformObjekt>());
-            Collections.sort(nyListe, DATO);
+            sort(nyListe, DATO);
 
             while (nyListe.size() > 1) {
                 UtbetalingTransformObjekt forst = nyListe.get(0);
@@ -122,7 +123,7 @@ public final class UtbetalingTransformer {
                 nyeUtbetalinger.add(utbetalingBuilder.withUnderytelser(underytelser).createUtbetaling());
             }
         }
-        Collections.sort(nyeUtbetalinger, UTBETALING_DATO);
+        sort(nyeUtbetalinger, UTBETALING_DATO);
         return nyeUtbetalinger;
     }
 
@@ -174,7 +175,7 @@ public final class UtbetalingTransformer {
     }
 
     private static Map<LocalDate, List<UtbetalingTransformObjekt>> trekkUtTransformObjekterFraSammeDag(List<UtbetalingTransformObjekt> transformObjekter) {
-        Collections.sort(transformObjekter, DATO);
+        sort(transformObjekter, DATO);
         return on(transformObjekter).reduce(indexBy(UTBETALINGS_DAG));
     }
 

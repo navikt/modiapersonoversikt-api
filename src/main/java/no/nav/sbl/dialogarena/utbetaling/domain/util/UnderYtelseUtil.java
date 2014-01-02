@@ -3,12 +3,12 @@ package no.nav.sbl.dialogarena.utbetaling.domain.util;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.BELOP;
@@ -31,7 +31,7 @@ public class UnderYtelseUtil {
 
     public static List<Underytelse> leggSammenUnderYtelser(List<Underytelse> underytelser, Comparator<Underytelse> comparator) {
         ArrayList<Underytelse> ytelser = on(underytelser).collectIn(new ArrayList<Underytelse>());
-        Collections.sort(ytelser, TITTEL);
+        sort(ytelser, TITTEL);
 
         List<Underytelse> resultat = new ArrayList<>();
         while (ytelser.size() >= 1) {
