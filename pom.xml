@@ -77,19 +77,7 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>utbetalinger-lamell</artifactId>
-                <version>${utbetaling.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>utbetalinger-widget</artifactId>
-                <version>${utbetaling.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>utbetalinger-consumer</artifactId>
+                <artifactId>modia-utbetalinger</artifactId>
                 <version>${utbetaling.version}</version>
             </dependency>
 

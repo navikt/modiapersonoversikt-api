@@ -124,12 +124,7 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>utbetalinger-consumer</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>utbetalinger-lamell</artifactId>
+            <artifactId>modia-utbetalinger</artifactId>
         </dependency>
 
         <dependency>
