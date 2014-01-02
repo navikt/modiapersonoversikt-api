@@ -69,8 +69,6 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public void handleWidgetItemEvent(String linkId) {
         if (LAMELL_KONTRAKTER.equalsIgnoreCase(linkId)) {
             goToLamell(LAMELL_KONTRAKTER);
-        } else if (LAMELL_UTBETALINGER.equalsIgnoreCase(linkId)){
-            goToLamell(LAMELL_UTBETALINGER);
         } else {
             ApplicationException exc = new ApplicationException("Feedlenke med ukjent type <" + linkId + "> klikket");
             logger.warn("ukjent widgetId: " + linkId, exc);
