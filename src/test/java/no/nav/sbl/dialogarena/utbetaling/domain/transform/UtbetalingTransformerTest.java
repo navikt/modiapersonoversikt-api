@@ -3,11 +3,13 @@ package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+import org.apache.commons.collections15.Predicate;
 import org.junit.Test;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL_ANTALL_SATS;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling1;
@@ -86,24 +88,30 @@ public class UtbetalingTransformerTest {
     public void lagUtbetalinger_Ytelser_Gir_FlereUtbetalinger() throws Exception {
         List<Utbetaling> utbetalinger = createUtbetalinger(asList(createUtbetaling1(), createUtbetaling3(), createUtbetaling2()), FNR);
 
-        assertThat(utbetalinger.size(), is(3));
+        assertThat(utbetalinger.size(), is(4));
         assertThat(utbetalinger.get(0).getHovedytelse(), is("Uføre"));
         assertThat(utbetalinger.get(0).getUnderytelser().size(), is(3));
         assertThat(utbetalinger.get(0).getBrutto(), is(2500.0));
         assertThat(utbetalinger.get(0).getTrekk(), is(-1700.0));
         assertThat(utbetalinger.get(0).getUtbetalt(), is(800.0));
 
-        assertThat(utbetalinger.get(1).getHovedytelse(), is("Dagpenger"));
-        assertThat(utbetalinger.get(1).getUnderytelser().size(), is(2));
-        assertThat(utbetalinger.get(1).getBrutto(), is(2000.0));
-        assertThat(utbetalinger.get(1).getTrekk(), is(-700.0));
-        assertThat(utbetalinger.get(1).getUtbetalt(), is(1300.0));
+        assertThat(utbetalinger.get(1).getHovedytelse(), is("Foreldrepenger"));
+        assertThat(utbetalinger.get(1).getUnderytelser().size(), is(1));
+        assertThat(utbetalinger.get(1).getBrutto(), is(1000.0));
+        assertThat(utbetalinger.get(1).getTrekk(), is(0.0));
+        assertThat(utbetalinger.get(1).getUtbetalt(), is(1000.0));
 
-        assertThat(utbetalinger.get(2).getHovedytelse(), is("Foreldrepenger"));
+        assertThat(utbetalinger.get(2).getHovedytelse(), is("Dagpenger"));
         assertThat(utbetalinger.get(2).getUnderytelser().size(), is(2));
-        assertThat(utbetalinger.get(2).getBrutto(), is(1000.0));
-        assertThat(utbetalinger.get(2).getTrekk(), is(-350.0));
-        assertThat(utbetalinger.get(2).getUtbetalt(), is(650.0));
+        assertThat(utbetalinger.get(2).getBrutto(), is(2000.0));
+        assertThat(utbetalinger.get(2).getTrekk(), is(-700.0));
+        assertThat(utbetalinger.get(2).getUtbetalt(), is(1300.0));
+
+        assertThat(utbetalinger.get(3).getHovedytelse(), is("Foreldrepenger"));
+        assertThat(utbetalinger.get(3).getUnderytelser().size(), is(2));
+        assertThat(utbetalinger.get(3).getBrutto(), is(1000.0));
+        assertThat(utbetalinger.get(3).getTrekk(), is(-350.0));
+        assertThat(utbetalinger.get(3).getUtbetalt(), is(650.0));
     }
 
     @Test
@@ -141,8 +149,22 @@ public class UtbetalingTransformerTest {
                 createUtbetaling7(),
                 createUtbetaling8()),
                 FNR);
-        assertThat(utbetalinger.size(), is(6));
 
+        final String ytelse = "Høreapparater";
+        final String ytelse1 = "Dagpenger";
+        final String ytelse2 = "Uføre";
+        final String ytelse3 = "Foreldrepenger";
+        List<Utbetaling> horeApparater = filtrer(utbetalinger, ytelse);
+        List<Utbetaling> dagpenger = filtrer(utbetalinger, ytelse1);
+        List<Utbetaling> ufore = filtrer(utbetalinger, ytelse2);
+        List<Utbetaling> foreldrepenger = filtrer(utbetalinger, ytelse3);
+
+        assertThat(utbetalinger.size(), is(8));
+        assertThat(horeApparater.size(), is(1));
+        assertThat(horeApparater.get(0).getHovedytelse(), is(ytelse));
+        assertThat(dagpenger.size(), is(4));
+        assertThat(ufore.size(), is(1));
+        assertThat(foreldrepenger.size(), is(2));
     }
 
     @Test
@@ -192,5 +214,18 @@ public class UtbetalingTransformerTest {
         assertThat(underytelser.get(1).getTittel(), is("Rød"));
         assertThat(underytelser.get(1).getBelop(), is(1000.0));
         assertThat(underytelser.get(1).getSpesifikasjon(), is(spesifikasjon));
+    }
+
+    private List<Utbetaling> filtrer(List<Utbetaling> utbetalinger, String ytelse) {
+        Predicate<Utbetaling> harYtelse = lagStringPredikat(ytelse);
+        return on(utbetalinger).filter(harYtelse).collect();
+    }
+
+    private Predicate<Utbetaling> lagStringPredikat(final String ytelse) {
+        return new Predicate<Utbetaling>() {
+            public boolean evaluate(Utbetaling object) {
+                return ytelse.equalsIgnoreCase(object.getHovedytelse());
+            }
+        };
     }
 }
