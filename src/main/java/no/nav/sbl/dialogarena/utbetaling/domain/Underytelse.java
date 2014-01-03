@@ -118,15 +118,16 @@ public class Underytelse implements Serializable {
         public static final Comparator<Underytelse> TITTEL_ANTALL_SATS = new Comparator<Underytelse>() {
             @Override
             public int compare(Underytelse o1, Underytelse o2) {
-                int compareAntall = Integer.valueOf(o1.getAntall()).compareTo(o2.getAntall());
-                int compareSats = Double.valueOf(o1.getSats()).compareTo(o2.getSats());
-                if(compareAntall == 0 && compareSats == 0) {
-                    return o1.getTittel().compareTo(o2.getTittel());
+                int compareTittel = o1.getTittel().compareTo(o2.getTittel());
+                if(compareTittel == 0) {
+                    int compareAntall = Integer.valueOf(o1.getAntall()).compareTo(o2.getAntall());
+                    int compareSats = Double.valueOf(o1.getSats()).compareTo(o2.getSats());
+                    if(compareAntall != 0) {
+                        return compareAntall;
+                    }
+                    return compareSats;
                 }
-                if(compareAntall != 0) {
-                    return compareAntall;
-                }
-                return compareSats;
+                return compareTittel;
             }
         };
     }
