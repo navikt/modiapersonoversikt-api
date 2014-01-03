@@ -9,6 +9,7 @@ public class DetaljPanel extends Panel {
     public DetaljPanel(String id, UtbetalingVM utbetalingVM) {
         super(id);
         setMarkupId("detaljpanel-" + utbetalingVM.getUtbetalingId());
+
         add(
                 new Label("mottakerid", utbetalingVM.getMottakerId()),
                 new Label("konto", utbetalingVM.getKontonr()),

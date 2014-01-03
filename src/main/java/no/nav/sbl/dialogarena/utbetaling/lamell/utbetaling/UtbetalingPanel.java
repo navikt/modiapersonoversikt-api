@@ -10,7 +10,6 @@ public class UtbetalingPanel extends Panel {
         super(id);
 
         add(
-//                createSkrivUtLink("skriv-ut"),
                 new DetaljPanel("detaljpanel", utbetalingVM),
                 new Label("statusBeskrivelse", utbetalingVM.getStatus()),
                 new Label("kortUtbetalingsDato", utbetalingVM.getKortUtbetalingsDato()),
@@ -20,29 +19,6 @@ public class UtbetalingPanel extends Panel {
                 new Label("trekkMedValuta", utbetalingVM.getTrekkMedValuta()),
                 new Label("belopMedValuta", utbetalingVM.getBelopMedValuta())
         );
-//        add(createClickBehavior());
     }
-
-//    private AjaxEventBehavior createClickBehavior() {
-//        return new AjaxEventBehavior("click") {
-//            @Override
-//            protected void onEvent(AjaxRequestTarget target) {
-//                target.appendJavaScript("$('#" + getMarkupId() + " .detaljpanel').animate({height: 'toggle'}, 300);");
-//            }
-//        };
-//    }
-
-//    private AjaxLink<Void> createSkrivUtLink(String id) {
-//        return new AjaxLink<Void>(id) {
-//            @Override
-//            public void onClick(AjaxRequestTarget target) {
-//                String utbetalingslinje = "$('#" + getMarkupId() + "').closest('.utbetalingslinje')";
-//                String javascript = utbetalingslinje + ".children('.detaljpanel').show();" +
-//                                "$('body > .print .content').html(" + "'<div class=\"kolonne-hoyre\">'+" + utbetalingslinje + ".html()" + "+'</div>'" + ");" +
-//                                "window.print();";
-//                target.appendJavaScript(javascript);
-//            }
-//        };
-//    }
 
 }
