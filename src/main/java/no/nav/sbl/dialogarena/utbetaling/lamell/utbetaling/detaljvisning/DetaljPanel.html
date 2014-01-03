@@ -1,25 +1,24 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
 
+    <!-- header row -->
     <div>
         <wicket:message key="mottatt.label"/>
-        <span wicket:id="mottakerid"></span>
-    </div>
-    <div>
         <wicket:message key="konto.label"/>
-        <span wicket:id="konto"></span>
-    </div>
-    <div>
         <wicket:message key="ytelsesinfo.label"/>
-        <span wicket:id="ytelsesinfo"></span>
-    </div>
-    <div>
-        <wicket:message key="periode.label"/>
-        <span wicket:id="periode"></span>
     </div>
 
+    <!-- data rows -->
     <div>
-        <span wicket:id="underytelser">[]</span>
+        <span wicket:id="mottakerid">[]</span>
+        <span wicket:id="konto">[]</span>
+        <span wicket:id="ytelsesinfo">[]</span>
+    </div>
+
+    <!-- bilagsmelding -->
+    <div>
+        <wicket:message key="bilagsmelding.header"/>
+        <span wicket:id="bilagsmelding">[]</span>
     </div>
 
 

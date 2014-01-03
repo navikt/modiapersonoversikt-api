@@ -14,8 +14,7 @@ public class DetaljPanel extends Panel {
                 new Label("mottakerid", utbetalingVM.getMottakerId()),
                 new Label("konto", utbetalingVM.getKontonr()),
                 new Label("ytelsesinfo", utbetalingVM.getBeskrivelse()),
-                new Label("underytelser", utbetalingVM.getUnderytelser().toString()),
-                new Label("periode", utbetalingVM.getPeriodeMedKortDato())
+                new Label("bilagsmelding", "TODO fiks bilagsmelding")
         );
     }
 }
