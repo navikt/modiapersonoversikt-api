@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
@@ -11,7 +12,6 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.UtbetalingerMessagePanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned.MaanedsPanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsResultat;
-import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -24,8 +24,11 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -41,6 +44,8 @@ import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.H
 
 public class UtbetalingLerret extends Lerret {
 
+    private static final Logger LOG = LoggerFactory.getLogger(UtbetalingLerret.class);
+
     public static final PackageResourceReference UTBETALING_LAMELL_LESS = new PackageResourceReference(UtbetalingLerret.class, "utbetaling.less");
     public static final JavaScriptResourceReference UTBETALING_LAMELL_JS = new JavaScriptResourceReference(UtbetalingLerret.class, "utbetaling.js");
 
@@ -52,9 +57,9 @@ public class UtbetalingLerret extends Lerret {
     private UtbetalingsResultat resultatCache;
     private FilterParametere filterParametere;
     private TotalOppsummeringPanel totalOppsummeringPanel;
-    private MarkupContainer utbetalingslisteContainer;
+    private WebMarkupContainer utbetalingslisteContainer;
     private UtbetalingerMessagePanel ingenutbetalinger;
-    private UtbetalingerMessagePanel feilutbetalinger;
+    private UtbetalingerMessagePanel feilmelding;
 
     public UtbetalingLerret(String id, String fnr) {
         super(id);
@@ -65,26 +70,30 @@ public class UtbetalingLerret extends Lerret {
                 createFilterFormPanel(),
                 totalOppsummeringPanel,
                 utbetalingslisteContainer,
-                feilutbetalinger.setOutputMarkupPlaceholderTag(true),
-                utbetalingslisteContainer.setOutputMarkupPlaceholderTag(true)
+                ingenutbetalinger,
+                feilmelding
         );
     }
 
     private void instansierFelter(String fnr) {
+        ingenutbetalinger = new UtbetalingerMessagePanel("ingenutbetalinger", "ingen.utbetalinger", "-ikon-stjerne");
+        ingenutbetalinger.setOutputMarkupPlaceholderTag(true);
+        feilmelding = new UtbetalingerMessagePanel("feilmelding", "feil.utbetalinger", "-ikon-feil");
+        feilmelding.setOutputMarkupPlaceholderTag(true);
+
+
         LocalDate startDato = defaultStartDato();
         LocalDate sluttDato = defaultSluttDato();
-        List<Utbetaling> utbetalinger = service.hentUtbetalinger(fnr, startDato, sluttDato);
-        resultatCache = new UtbetalingsResultat(fnr, startDato, sluttDato, utbetalinger);
+        resultatCache = hentUtbetalingsResultat(fnr, startDato, sluttDato);
+        filterParametere = new FilterParametere(startDato, sluttDato, true, true, hentYtelser(resultatCache.utbetalinger));
 
-        filterParametere = new FilterParametere(startDato, sluttDato, true, true, hentYtelser(utbetalinger));
-
-        totalOppsummeringPanel = createTotalOppsummeringPanel(on(utbetalinger).filter(filterParametere).collect());
-        ingenutbetalinger = new UtbetalingerMessagePanel("ingenutbetalinger", "ingen.utbetalinger", "-ikon-stjerne");
-        feilutbetalinger = new UtbetalingerMessagePanel("feilutbetalinger", "feil.utbetalinger", "-ikon-feil");
-        //todo endre synlighet
-        utbetalingslisteContainer = (MarkupContainer) new WebMarkupContainer("utbetalingslisteContainer")
+        List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
+        totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
+        utbetalingslisteContainer = (WebMarkupContainer) new WebMarkupContainer("utbetalingslisteContainer")
                 .add(createMaanedsPanelListe())
-                .setOutputMarkupId(true);
+                .setOutputMarkupPlaceholderTag(true);
+
+        endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
     }
 
     private void oppdaterCacheOmNodvendig() {
@@ -93,8 +102,20 @@ public class UtbetalingLerret extends Lerret {
         DateTime filterStartDato = filterParametere.getStartDato().toDateTimeAtStartOfDay();
         DateTime filterSluttDato = filterParametere.getSluttDato().toDateMidnight().toDateTime();
         if (!new Interval(cacheStartDato, cacheSluttDato).contains(new Interval(filterStartDato, filterSluttDato))) {
-            List<Utbetaling> utbetalinger = service.hentUtbetalinger(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
-            resultatCache = new UtbetalingsResultat(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato(), utbetalinger);
+            resultatCache = hentUtbetalingsResultat(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
+        }
+    }
+
+    private UtbetalingsResultat hentUtbetalingsResultat(String fnr, LocalDate startDato, LocalDate sluttDato) {
+        try {
+            List<Utbetaling> utbetalinger = service.hentUtbetalinger(fnr, startDato, sluttDato);
+            feilmelding.setVisibilityAllowed(false);
+            return new UtbetalingsResultat(fnr, startDato, sluttDato, utbetalinger);
+        } catch (ApplicationException ae) {
+            LOG.warn("Noe feilet ved henting av utbetalinger for fnr {}", fnr, ae);
+            feilmelding.setVisibilityAllowed(true);
+            LocalDate now = LocalDate.now();
+            return resultatCache != null ? resultatCache : new UtbetalingsResultat(fnr, now, now, new ArrayList<Utbetaling>());
         }
     }
 
@@ -129,15 +150,11 @@ public class UtbetalingLerret extends Lerret {
         sendYtelserEndretEvent();
 
         List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
-        totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(
-                synligeUtbetalinger,
-                filterParametere.getStartDato(),
-                filterParametere.getSluttDato()));
-        totalOppsummeringPanel.setVisibilityAllowed(!synligeUtbetalinger.isEmpty());
-
+        totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(synligeUtbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato()));
         utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe());
 
-        target.add(totalOppsummeringPanel, utbetalingslisteContainer);
+        endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
+        target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);
     }
 
     @RunOnEvents(FEIL)
@@ -145,15 +162,23 @@ public class UtbetalingLerret extends Lerret {
         target.add(totalOppsummeringPanel);
     }
 
-    private void endreSynligeKomponenter(boolean ingenSynligeUtbetalinger) {
-        totalOppsummeringPanel.setVisibilityAllowed(!ingenSynligeUtbetalinger);
-        utbetalingslisteContainer.setVisibilityAllowed(!ingenSynligeUtbetalinger);
-        ingenutbetalinger.setVisibilityAllowed(ingenSynligeUtbetalinger);
-        feilutbetalinger.setVisibilityAllowed(false);
-    }
-
     private void sendYtelserEndretEvent() {
         send(getPage(), Broadcast.DEPTH, HOVEDYTELSER_ENDRET);
     }
 
+    private void endreSynligeKomponenter(boolean synligeUtbetalinger) {
+        if (feilmelding.isVisibilityAllowed()) {
+            skjulAllUtbetalingsinfo();
+        } else {
+            totalOppsummeringPanel.setVisibilityAllowed(synligeUtbetalinger);
+            utbetalingslisteContainer.setVisibilityAllowed(synligeUtbetalinger);
+            ingenutbetalinger.setVisibilityAllowed(!synligeUtbetalinger);
+        }
+    }
+
+    private void skjulAllUtbetalingsinfo() {
+        totalOppsummeringPanel.setVisibilityAllowed(false);
+        utbetalingslisteContainer.setVisibilityAllowed(false);
+        ingenutbetalinger.setVisibilityAllowed(false);
+    }
 }
