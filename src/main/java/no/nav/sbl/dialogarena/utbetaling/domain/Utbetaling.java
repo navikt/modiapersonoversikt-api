@@ -9,13 +9,11 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 public final class Utbetaling implements Serializable {
 
     public static final String BRUKER = "bruker";
     public static final String ARBEIDSGIVER = "arbeidsgiver";
-    private String utbetalingId;
     private DateTime utbetalingsdato;
     private Interval periode;
     private String status;
@@ -46,7 +44,7 @@ public final class Utbetaling implements Serializable {
     }
 
     public String getUtbetalingId() {
-        return utbetalingId;
+        return ("" + utbetalingsdato.getDayOfMonth() + utbetalingsdato.getMonthOfYear() + utbetalingsdato.getYear() + mottakerId + hovedytelse);
     }
 
     public DateTime getUtbetalingsdato() {
@@ -106,7 +104,6 @@ public final class Utbetaling implements Serializable {
     }
 
     public static class UtbetalingBuilder {
-        private String utbetalingId = UUID.randomUUID().toString();
         private DateTime utbetalingsDato;
         private Interval periode;
         private String status;
@@ -194,7 +191,6 @@ public final class Utbetaling implements Serializable {
 
         public Utbetaling createUtbetaling() {
             Utbetaling utbetaling = new Utbetaling();
-            utbetaling.utbetalingId = this.utbetalingId;
             utbetaling.utbetalingsdato = this.utbetalingsDato;
             utbetaling.periode = this.periode;
             utbetaling.status = this.status;
