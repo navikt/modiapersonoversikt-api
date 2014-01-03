@@ -132,7 +132,8 @@ public class UtbetalingLerret extends Lerret {
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
-        target.appendJavaScript("$('#detaljpanel-" + payload.getItemId() + "').animate({height: 'toggle'}, 900);");
+        String detaljPanelID = "detaljpanel-" + payload.getItemId();
+        target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('"+detaljPanelID + "');");
     }
 
     private void oppdaterSynligeUtbetalinger() {

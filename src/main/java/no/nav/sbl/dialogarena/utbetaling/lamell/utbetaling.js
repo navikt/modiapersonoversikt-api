@@ -18,3 +18,17 @@ $(document).on('click', utbetalingslinjeSelector + ' .skriv-ut', function() {
     $('body > .print .content').html('<div class="kolonne-hoyre">' + utbetalingslinje.html() + '</div>');
     window.print();
 });
+
+
+
+var Utbetalinger = (function() {
+    var haandterDetaljPanelVisning = function(detaljPanelID) {
+        var $detaljPanel = $("#" + detaljPanelID);
+        $detaljPanel.animate({height: 'toggle'}, 900);
+        $('html,body').animate({scrollTop: $($detaljPanel).parent().offset().top - 76}, 'slow');
+        $detaljPanel.focus();
+    }
+    return {
+        haandterDetaljPanelVisning : haandterDetaljPanelVisning
+    }
+})();
