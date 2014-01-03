@@ -14,8 +14,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 
 public class FilterParametere implements Serializable, Predicate<Utbetaling> {
 
-    public static final String ENDRET = "filterParametere.endret";
-    public static final String FEIL = "filter.feil";
+    public static final String FILTER_ENDRET = "filterParametere.endret";
     public static final String HOVEDYTELSER_ENDRET = "hovedytelser.endret";
 
     private LocalDate startDato;

@@ -9,7 +9,10 @@
 
     <div class="kolonne-hoyre">
         <div class="utbetaling-ramme">
-            <div class="utbetaling-ramme-header"><wicket:message key="utbetaling.lamell.oppsummering-total-overskrift"/></div>
+            <div class="utbetaling-ramme-header">
+                <div id="ajax-indikator" style="display: none;"></div>
+                <wicket:message key="utbetaling.lamell.oppsummering-total-overskrift"/>
+            </div>
             <div wicket:id="ingenutbetalinger"></div>
             <div wicket:id="feilmelding" class="feilmelding"></div>
             <div class="utbetaling-ramme-innhold oppsummering-total" wicket:id="totalOppsummeringPanel"></div>

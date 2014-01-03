@@ -7,11 +7,10 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -21,7 +20,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -30,8 +28,7 @@ import java.util.List;
 import static java.util.Collections.sort;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FEIL;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 import static org.joda.time.LocalDate.now;
 
@@ -77,7 +74,7 @@ public class FilterFormPanel extends Panel {
         ListView<String> listView = new ListView<String>("ytelseFilter", alleYtelserModel) {
             @Override
             protected void populateItem(final ListItem<String> item) {
-                final AjaxLink<String> knapp = new AjaxLink<String>("ytelseKnapp", item.getModel()) {
+                final IndicatingFilterAjaxLink<String> knapp = new IndicatingFilterAjaxLink<String>("ytelseKnapp", item.getModel()) {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         String ytelse = item.getModelObject();
@@ -89,11 +86,6 @@ public class FilterFormPanel extends Panel {
 
                         sendFilterEndretEvent();
                         target.add(this);
-                    }
-
-                    @Override
-                    public void renderHead(IHeaderResponse response) {
-                        response.render(OnLoadHeaderItem.forScript(createSnurrepippJS("input:button", "click")));
                     }
                 };
                 knapp.add(new AttributeModifier("value", item.getModelObject()));
@@ -110,17 +102,12 @@ public class FilterFormPanel extends Panel {
     }
 
     private AjaxLink<Boolean> createMottakerButton(final String mottaker) {
-        AjaxLink<Boolean> mottakerButton = new AjaxLink<Boolean>(mottaker, new PropertyModel<Boolean>(filterParametere, mottaker)) {
+        IndicatingFilterAjaxLink<Boolean> mottakerButton = new IndicatingFilterAjaxLink<Boolean>(mottaker, new PropertyModel<Boolean>(filterParametere, mottaker)) {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 setModelObject(!getModelObject());
                 sendFilterEndretEvent();
                 target.add(this);
-            }
-
-            @Override
-            public void renderHead(IHeaderResponse response) {
-                response.render(OnLoadHeaderItem.forScript(createSnurrepippJS("input:button", "click")));
             }
         };
         mottakerButton.add(hasCssClassIf("valgt", mottakerButton.getModel()));
@@ -142,18 +129,11 @@ public class FilterFormPanel extends Panel {
                 new PropertyModel<LocalDate>(filterParametere, "startDato"),
                 new PropertyModel<LocalDate>(filterParametere, "sluttDato"));
 
-        return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato) {
-
-            @Override
-            public void renderHead(IHeaderResponse response) {
-                response.render(OnLoadHeaderItem.forScript(createSnurrepippJS("input", "change")));
-                super.renderHead(response);
-            }
-        };
+        return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }
 
     private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour(final Form<?> filterForm) {
-        return new AjaxFormSubmitBehavior("onchange") {
+        return new IndicatingFilterAjaxFormSubmitBehavior("onchange") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 sendFilterEndretEvent();
@@ -162,31 +142,39 @@ public class FilterFormPanel extends Panel {
 
             @Override
             protected void onError(AjaxRequestTarget target) {
-                sendFilterFeilEvent();
                 target.add(filterForm);
             }
         };
     }
 
-    private String createSnurrepippJS(String selector, String event) {
-        String contextRoot = WebApplication.get().getServletContext().getContextPath();
-        String targetSelector = ".oppsummering-total";
-
-        return "$('" + selector + "').on('" + event + "', function() {" +
-                "   window.Modig.ajaxLoader.showLoader('" + targetSelector + "', '', '" + contextRoot + "/img/ajaxloader/graa/loader_graa_32.gif', '');" +
-                "});";
-    }
-
     private void sendFilterEndretEvent() {
-        send(getPage(), Broadcast.DEPTH, ENDRET);
-    }
-
-    private void sendFilterFeilEvent() {
-        send(getPage(), Broadcast.DEPTH, FEIL);
+        send(getPage(), Broadcast.DEPTH, FILTER_ENDRET);
     }
 
     @RunOnEvents(HOVEDYTELSER_ENDRET)
     private void oppdaterYtelsesKnapper(AjaxRequestTarget target) {
         target.add(ytelsesContainer);
+    }
+
+    protected abstract class IndicatingFilterAjaxLink<T> extends AjaxLink<T> implements IAjaxIndicatorAware {
+        public IndicatingFilterAjaxLink(String id, IModel<T> model) {
+            super(id, model);
+        }
+
+        @Override
+        public String getAjaxIndicatorMarkupId() {
+            return "ajax-indikator";
+        }
+    }
+
+    protected abstract class IndicatingFilterAjaxFormSubmitBehavior extends AjaxFormSubmitBehavior implements IAjaxIndicatorAware {
+        public IndicatingFilterAjaxFormSubmitBehavior(String event) {
+            super(event);
+        }
+
+        @Override
+        public String getAjaxIndicatorMarkupId() {
+            return "ajax-indikator";
+        }
     }
 }

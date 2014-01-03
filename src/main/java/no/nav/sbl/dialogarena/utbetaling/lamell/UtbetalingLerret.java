@@ -42,8 +42,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDa
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FEIL;
+import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 
 public class UtbetalingLerret extends Lerret {
@@ -144,7 +143,7 @@ public class UtbetalingLerret extends Lerret {
         };
     }
 
-    @RunOnEvents(ENDRET)
+    @RunOnEvents(FILTER_ENDRET)
     private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
         oppdaterCacheOmNodvendig();
 
@@ -157,11 +156,6 @@ public class UtbetalingLerret extends Lerret {
 
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
         target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);
-    }
-
-    @RunOnEvents(FEIL)
-    private void skjulSnurrepippVedFeil(AjaxRequestTarget target) {
-        target.add(totalOppsummeringPanel);
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)

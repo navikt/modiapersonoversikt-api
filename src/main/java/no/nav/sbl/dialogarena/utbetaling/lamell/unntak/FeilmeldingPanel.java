@@ -10,6 +10,6 @@ public class FeilmeldingPanel extends UtbetalingerMessagePanel {
 
     public FeilmeldingPanel(String id, String messageKey, String cssClass) {
         super(id, messageKey, cssClass);
-        add(new AjaxEventLink<>("prov-igjen", FilterParametere.ENDRET));
+        add(new AjaxEventLink<>("prov-igjen", FilterParametere.FILTER_ENDRET));
     }
 }
