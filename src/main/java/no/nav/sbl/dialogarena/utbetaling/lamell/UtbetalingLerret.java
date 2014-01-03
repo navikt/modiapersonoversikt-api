@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
+import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
@@ -28,6 +29,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
@@ -136,6 +138,11 @@ public class UtbetalingLerret extends Lerret {
     @RunOnEvents(FEIL)
     private void skjulSnurrepippVedFeil(AjaxRequestTarget target) {
         target.add(totalOppsummeringPanel);
+    }
+
+    @RunOnEvents(FEED_ITEM_CLICKED)
+    private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
+        target.appendJavaScript("$('#detaljpanel-" + payload.getItemId() + "').animate({height: 'toggle'}, 1800);");
     }
 
     private void sendYtelserEndretEvent() {
