@@ -57,7 +57,6 @@ public class UtbetalingLerret extends Lerret {
 
     public UtbetalingLerret(String id, String fnr) {
         super(id);
-
         instansierFelter(fnr);
 
         add(
@@ -119,20 +118,11 @@ public class UtbetalingLerret extends Lerret {
     private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
         oppdaterCacheOmNodvendig();
 
-        List<Utbetaling> alleUtbetalinger = hentUtbetalingerFraPeriode(resultatCache.utbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato());
-        filterParametere.setYtelser(hentYtelser(alleUtbetalinger));
+        filterParametere.setYtelser(hentYtelser(hentUtbetalingerFraPeriode(resultatCache.utbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato())));
         sendYtelserEndretEvent();
+        oppdaterSynligeUtbetalinger();
 
-        List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
-        totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(
-                synligeUtbetalinger,
-                filterParametere.getStartDato(),
-                filterParametere.getSluttDato()));
-        totalOppsummeringPanel.setVisibilityAllowed(!synligeUtbetalinger.isEmpty());
-
-        utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe());
-
-        target.add(totalOppsummeringPanel, utbetalingslisteContainer);
+        target.add(totalOppsummeringPanel, utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe()));
     }
 
     @RunOnEvents(FEIL)
@@ -142,7 +132,16 @@ public class UtbetalingLerret extends Lerret {
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
-        target.appendJavaScript("$('#detaljpanel-" + payload.getItemId() + "').animate({height: 'toggle'}, 1800);");
+        target.appendJavaScript("$('#detaljpanel-" + payload.getItemId() + "').animate({height: 'toggle'}, 900);");
+    }
+
+    private void oppdaterSynligeUtbetalinger() {
+        List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
+        totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(
+                synligeUtbetalinger,
+                filterParametere.getStartDato(),
+                filterParametere.getSluttDato()));
+        totalOppsummeringPanel.setVisibilityAllowed(!synligeUtbetalinger.isEmpty());
     }
 
     private void sendYtelserEndretEvent() {

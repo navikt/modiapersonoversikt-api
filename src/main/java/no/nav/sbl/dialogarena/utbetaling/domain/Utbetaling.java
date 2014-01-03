@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static org.joda.time.LocalDate.now;
+
 public final class Utbetaling implements Serializable {
 
     public static final String BRUKER = "bruker";
@@ -28,21 +30,24 @@ public final class Utbetaling implements Serializable {
     private double trekk;
     private double utbetalt;
     private List<Underytelse> underytelser;
-    private Utbetaling() {
-    }
+    private Utbetaling() {}
 
     public static LocalDate defaultStartDato() {
-        return LocalDate.now().minusMonths(3);
+        return now().minusMonths(3);
     }
 
     public static LocalDate defaultSluttDato() {
-        return LocalDate.now();
+        return now();
     }
 
     public static UtbetalingBuilder getBuilder() {
         return new UtbetalingBuilder();
     }
 
+    /**
+     * Minste felles multiplum for å unikt identifisere en betaling er
+     * dato, mottaker og hovedytelse.
+     */
     public String getUtbetalingId() {
         return ("" + utbetalingsdato.getDayOfMonth() + utbetalingsdato.getMonthOfYear() + utbetalingsdato.getYear() + mottakerId + hovedytelse);
     }
