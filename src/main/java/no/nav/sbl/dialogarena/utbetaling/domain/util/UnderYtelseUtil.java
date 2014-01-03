@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -30,13 +31,12 @@ public class UnderYtelseUtil {
     }
 
     public static List<Underytelse> leggSammenUnderYtelser(List<Underytelse> underytelser, Comparator<Underytelse> comparator) {
-        ArrayList<Underytelse> ytelser = on(underytelser).collectIn(new ArrayList<Underytelse>());
+        LinkedList<Underytelse> ytelser = on(underytelser).collectIn(new LinkedList<Underytelse>());
         sort(ytelser, TITTEL);
 
         List<Underytelse> resultat = new ArrayList<>();
         while (ytelser.size() >= 1) {
             Underytelse ytelse1 = ytelser.get(0);
-            UnderytelseBuilder builder = getUnderytelseBuilder(ytelse1);
 
             List<Underytelse> skalMerges = new ArrayList<>();
             skalMerges.add(ytelse1);
@@ -46,32 +46,24 @@ public class UnderYtelseUtil {
                     skalMerges.add(ytelse2);
                 }
             }
-            mergeLikeUnderYtelser(skalMerges, builder);
+            UnderytelseBuilder builder = mergeLikeUnderYtelser(skalMerges);
 
-            List<Underytelse> skalFjernes = new ArrayList<>();
-            skalFjernes.add(ytelse1);
-            ytelser.removeAll(skalFjernes);
             resultat.add(builder.createUnderytelse());
+            ytelser.removeAll(skalMerges);
         }
 
         return resultat;
     }
 
-    private static UnderytelseBuilder mergeLikeUnderYtelser(List<Underytelse> ytelser, UnderytelseBuilder builder) {
+    private static UnderytelseBuilder mergeLikeUnderYtelser(List<Underytelse> ytelser) {
         Double belop = on(ytelser).map(BELOP).reduce(sumDouble);
         Set<String> spesifikasjoner = on(ytelser).map(SPESIFIKASJON).collectIn(new HashSet<String>());
         String spesifikasjon = join(spesifikasjoner, ". ");
-        return builder.setSpesifikasjon(spesifikasjon).setBelop(belop);
+        Underytelse ytelse = ytelser.get(0);
+        return new UnderytelseBuilder().setSpesifikasjon(spesifikasjon)
+                      .setBelop(belop)
+                      .setTittel(ytelse.getTittel())
+                      .setAntall(ytelse.getAntall())
+                      .setSats(ytelse.getSats());
     }
-
-    private static UnderytelseBuilder getUnderytelseBuilder(Underytelse ytelse1) {
-        UnderytelseBuilder builder = new UnderytelseBuilder();
-        builder = builder.setTittel(ytelse1.getTittel())
-                .setAntall(ytelse1.getAntall())
-                .setSats(ytelse1.getSats())
-                .setBelop(ytelse1.getBelop())
-                .setSpesifikasjon(ytelse1.getSpesifikasjon());
-        return builder;
-    }
-
 }

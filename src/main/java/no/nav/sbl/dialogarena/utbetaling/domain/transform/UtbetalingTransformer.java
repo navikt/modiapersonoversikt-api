@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -134,8 +135,9 @@ public final class UtbetalingTransformer {
         Set<String> meldinger = on(skalMerges).map(UtbetalingTransformObjekt.MELDING).collectIn(new HashSet<String>());
         String melding = join(meldinger, ". ");
 
+        LinkedList<Underytelse> list = new LinkedList<>(underytelser);
         leggSammenBelop(utbetalingBuilder, underytelser);
-        underytelser = leggSammenUnderYtelser(underytelser, TITTEL_ANTALL_SATS);
+        underytelser = leggSammenUnderYtelser(list, TITTEL_ANTALL_SATS);
         utbetalingBuilder.withUnderytelser(underytelser).withMelding(melding);
     }
 
