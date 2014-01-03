@@ -215,10 +215,14 @@ public final class Utbetaling implements Serializable {
     }
 
     public static final class UtbetalingComparator {
-        public static final Comparator<Utbetaling> UTBETALING_DATO = new Comparator<Utbetaling>() {
+        public static final Comparator<Utbetaling> UTBETALING_DAG_YTELSE = new Comparator<Utbetaling>() {
             @Override
             public int compare(Utbetaling o1, Utbetaling o2) {
-                return -o1.getUtbetalingsdato().compareTo(o2.getUtbetalingsdato());
+                int compareDato = -o1.getUtbetalingsdato().toLocalDate().compareTo(o2.getUtbetalingsdato().toLocalDate());
+                if(compareDato == 0) {
+                    return o1.getHovedytelse().compareToIgnoreCase(o2.getHovedytelse());
+                }
+                return compareDato;
             }
         };
     }
