@@ -60,6 +60,8 @@ public class UtbetalingApplication extends WebApplication {
                 .addLess(UtbetalingLerret.UTBETALING_LAMELL_LESS, UtbetalingWidget.UTBETALING_WIDGET_LESS)
                 .addScripts(UtbetalingLerret.UTBETALING_LAMELL_JS, Widget.JS_RESOURCE, ShortcutListenerResourceReference.get())
                 .configure(this);
+
+        mountPage("widget", UtbetalingwidgetTestPage.class);
     }
 
 }
