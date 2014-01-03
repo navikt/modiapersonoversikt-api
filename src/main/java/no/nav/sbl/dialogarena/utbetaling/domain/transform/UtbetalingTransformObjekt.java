@@ -33,20 +33,6 @@ final class UtbetalingTransformObjekt {
         return new UtbetalingTransformObjektBuilder();
     }
 
-    public static final Transformer<UtbetalingTransformObjekt, DateTime> UTBETALINGS_DATO = new Transformer<UtbetalingTransformObjekt, DateTime>() {
-        @Override
-        public DateTime transform(UtbetalingTransformObjekt utbetalingTransformObjekt) {
-            return utbetalingTransformObjekt.getUtbetalingsdato();
-        }
-    };
-
-    public static final Transformer<UtbetalingTransformObjekt, LocalDate> UTBETALINGS_DAG = new Transformer<UtbetalingTransformObjekt, LocalDate>() {
-        @Override
-        public LocalDate transform(UtbetalingTransformObjekt utbetalingTransformObjekt) {
-            return utbetalingTransformObjekt.getUtbetalingsdato().toLocalDate();
-        }
-    };
-
     public static final Transformer<UtbetalingTransformObjekt, Double> BELOP = new Transformer<UtbetalingTransformObjekt, Double>() {
         @Override
         public Double transform(UtbetalingTransformObjekt utbetalingTransformObjekt) {
@@ -72,7 +58,10 @@ final class UtbetalingTransformObjekt {
 
         UtbetalingTransformObjekt that = (UtbetalingTransformObjekt) o;
 
+        LocalDate utbDato = utbetalingsdato != null? utbetalingsdato.toLocalDate() : new LocalDate();
+        LocalDate thatUtbDato = that.utbetalingsdato != null? that.utbetalingsdato.toLocalDate() : utbDato;
         return new EqualsBuilder()
+                .append(utbDato, thatUtbDato)
                 .append(hovedYtelse, that.hovedYtelse)
                 .append(kontonummer, that.kontonummer)
                 .append(mottaker, that.mottaker)
@@ -86,7 +75,7 @@ final class UtbetalingTransformObjekt {
 
     @Override
     public int hashCode() {
-        int result = utbetalingsdato != null ? utbetalingsdato.hashCode() : 0;
+        int result = utbetalingsdato != null ? utbetalingsdato.toLocalDate().hashCode() : 0;
         result = 31 * result + (mottaker != null ? mottaker.hashCode() : 0);
         result = 31 * result + (mottakerId != null ? mottakerId.hashCode() : 0);
         result = 31 * result + (mottakerKode != null ? mottakerKode.hashCode() : 0);
@@ -103,7 +92,7 @@ final class UtbetalingTransformObjekt {
         public static final Comparator<UtbetalingTransformObjekt> DATO = new Comparator<UtbetalingTransformObjekt>() {
             @Override
             public int compare(UtbetalingTransformObjekt o1, UtbetalingTransformObjekt o2) {
-                return o1.getUtbetalingsdato().compareTo(o2.getUtbetalingsdato());
+                return -o1.getUtbetalingsdato().toLocalDate().compareTo(o2.getUtbetalingsdato().toLocalDate());
             }
         };
     }
