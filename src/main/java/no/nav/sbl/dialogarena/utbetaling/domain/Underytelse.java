@@ -69,17 +69,6 @@ public class Underytelse implements Serializable {
     }
 
     @Override
-    public String toString() {
-        return "Underytelse{" +
-                "tittel='" + tittel + '\'' +
-                ", belop=" + belop +
-                ", antall=" + antall +
-                ", sats=" + sats +
-                ", spesifikasjon='" + spesifikasjon + '\'' +
-                '}' + "\n";
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;
@@ -93,6 +82,8 @@ public class Underytelse implements Serializable {
                 .append(antall, that.antall)
                 .append(sats, that.sats)
                 .append(tittel, that.tittel)
+                .append(belop, that.belop)
+                .append(spesifikasjon, that.spesifikasjon)
                 .isEquals();
     }
 
@@ -101,7 +92,10 @@ public class Underytelse implements Serializable {
         int result;
         long temp;
         result = tittel != null ? tittel.hashCode() : 0;
+        result = 31 * result + (spesifikasjon != null ? spesifikasjon.hashCode() : 0);
         result = 31 * result + antall;
+        temp = belop != +0.0d ? Double.doubleToLongBits(belop) : 0L;
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = sats != +0.0d ? Double.doubleToLongBits(sats) : 0L;
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
