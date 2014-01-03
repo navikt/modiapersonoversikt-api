@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.TotalOppsummeringPanel;
+import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.FeilmeldingPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.UtbetalingerMessagePanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned.MaanedsPanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
@@ -59,7 +60,7 @@ public class UtbetalingLerret extends Lerret {
     private TotalOppsummeringPanel totalOppsummeringPanel;
     private WebMarkupContainer utbetalingslisteContainer;
     private UtbetalingerMessagePanel ingenutbetalinger;
-    private UtbetalingerMessagePanel feilmelding;
+    private FeilmeldingPanel feilmelding;
 
     public UtbetalingLerret(String id, String fnr) {
         super(id);
@@ -78,7 +79,7 @@ public class UtbetalingLerret extends Lerret {
     private void instansierFelter(String fnr) {
         ingenutbetalinger = new UtbetalingerMessagePanel("ingenutbetalinger", "ingen.utbetalinger", "-ikon-stjerne");
         ingenutbetalinger.setOutputMarkupPlaceholderTag(true);
-        feilmelding = new UtbetalingerMessagePanel("feilmelding", "feil.utbetalinger", "-ikon-feil");
+        feilmelding = new FeilmeldingPanel("feilmelding", "feil.utbetalinger", "-ikon-feil");
         feilmelding.setOutputMarkupPlaceholderTag(true);
 
 
