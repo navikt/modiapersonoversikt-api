@@ -11,7 +11,9 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingComparator.UTBETALING_DAG_YTELSE;
 
 /**
  * Hjelpefunksjoner for å jobbe med lister av Utbetaling.
@@ -49,6 +51,7 @@ public class UtbetalingListeUtils {
                 currentMaaned = maaned;
             }
             if (maaned != currentMaaned) {
+                sort(currentMaanedListe, UTBETALING_DAG_YTELSE);
                 utbetalingerFordeltPerMaaned.add(currentMaanedListe);
                 currentMaanedListe = new ArrayList<>();
                 currentMaaned = maaned;
