@@ -13,6 +13,7 @@ import org.joda.time.Interval;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static org.joda.time.DateTime.now;
 
@@ -38,14 +39,16 @@ public class WSUtbetalingTestData {
     public static List<WSUtbetaling> getWsUtbetalinger(String fNr, DateTime startDato, DateTime sluttDato) {
         fnr = fNr;
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
-        utbetalinger.add(createUtbetaling1());
-        utbetalinger.add(createUtbetaling2());
-        utbetalinger.add(createUtbetaling3());
-        utbetalinger.add(createUtbetaling4());
-        utbetalinger.add(createUtbetaling5());
-        utbetalinger.add(createUtbetaling6());
-        utbetalinger.add(createUtbetaling7());
-        utbetalinger.add(createUtbetaling8());
+        utbetalinger.addAll(asList(
+                createUtbetaling1(),
+                createUtbetaling2(),
+                createUtbetaling3(),
+                createUtbetaling4(),
+                createUtbetaling5(),
+                createUtbetaling6(),
+                createUtbetaling7(),
+                createUtbetaling8()
+        ));
 
         final Interval periode = new Interval(startDato, sluttDato);
         Predicate<WSUtbetaling> innenPeriode = new Predicate<WSUtbetaling>() {
