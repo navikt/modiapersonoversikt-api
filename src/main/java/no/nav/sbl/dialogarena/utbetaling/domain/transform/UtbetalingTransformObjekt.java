@@ -47,10 +47,28 @@ final class UtbetalingTransformObjekt {
         }
     };
 
+    public static final Transformer<UtbetalingTransformObjekt, Double> BELOP = new Transformer<UtbetalingTransformObjekt, Double>() {
+        @Override
+        public Double transform(UtbetalingTransformObjekt utbetalingTransformObjekt) {
+            return utbetalingTransformObjekt.getBelop();
+        }
+    };
+
+    public static final Transformer<UtbetalingTransformObjekt, String> MELDING = new Transformer<UtbetalingTransformObjekt, String>() {
+        @Override
+        public String transform(UtbetalingTransformObjekt utbetalingTransformObjekt) {
+            return utbetalingTransformObjekt.getMelding();
+        }
+    };
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof UtbetalingTransformObjekt)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof UtbetalingTransformObjekt)) {
+            return false;
+        }
 
         UtbetalingTransformObjekt that = (UtbetalingTransformObjekt) o;
 

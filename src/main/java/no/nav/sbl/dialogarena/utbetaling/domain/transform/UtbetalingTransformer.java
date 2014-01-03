@@ -13,19 +13,19 @@ import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL_ANTALL_SATS;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingComparator.UTBETALING_DATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.TransformComparator.DATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.UTBETALINGS_DAG;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.getBuilder;
@@ -86,43 +86,57 @@ public final class UtbetalingTransformer {
         return list;
     }
 
-    private static List<Utbetaling> transformerTilUtbetalinger(Collection<List<UtbetalingTransformObjekt>> transformObjekter) {
 
+    /**
+     * Tar inn en collection av lister av transformobjekter. I hver liste har objektene samme dato.
+     */
+    private static List<Utbetaling> transformerTilUtbetalinger(Collection<List<UtbetalingTransformObjekt>> transformObjekter) {
         List<Utbetaling> nyeUtbetalinger = new ArrayList<>();
 
-        // trekk ut underytelser, legg i samme utbetaling
         for (List<UtbetalingTransformObjekt> transformObjektListe : transformObjekter) {
-
             List<UtbetalingTransformObjekt> nyListe = on(transformObjektListe).collectIn(new ArrayList<UtbetalingTransformObjekt>());
-            Collections.sort(nyListe, DATO);
 
-            while (nyListe.size() > 1) {
+            while (nyListe.size() >= 1) {
+                // sammenlign det første elementet i lista med alle andre elementer
                 UtbetalingTransformObjekt forst = nyListe.get(0);
 
                 UtbetalingBuilder utbetalingBuilder = lagUtbetalingBuilder(forst);
                 List<Underytelse> underytelser = new ArrayList<>();
                 underytelser.add(new Underytelse(forst.getUnderYtelse(), forst.getSpesifikasjon(), forst.getAntall(), forst.getBelop(), forst.getSats()));
 
-                List<UtbetalingTransformObjekt> skalFjernes = new ArrayList<>();
-                Set<String> meldinger = new HashSet<>();
+                List<UtbetalingTransformObjekt> skalMerges = new ArrayList<>();
+                skalMerges.add(forst);
+
                 for (UtbetalingTransformObjekt objekt : nyListe.subList(1, nyListe.size())) {
                     if (forst.equals(objekt)) {
-                        meldinger.add(objekt.getMelding());
                         underytelser.add(new Underytelse(objekt.getUnderYtelse(), forst.getSpesifikasjon(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
-                        skalFjernes.add(objekt);
+                        skalMerges.add(objekt);
                     }
                 }
+                mergeLikeObjekter(skalMerges, utbetalingBuilder, underytelser);
+
+                // fjern det første objektet i lista
+                List<UtbetalingTransformObjekt> skalFjernes = new ArrayList<>();
+                skalFjernes.add(forst);
                 nyListe.removeAll(skalFjernes);
 
-                utbetalingBuilder.withMelding(join(meldinger, ". "));
-                leggSammenBelop(utbetalingBuilder, underytelser);
-
-                underytelser = leggSammenUnderYtelser(underytelser);
-                nyeUtbetalinger.add(utbetalingBuilder.withUnderytelser(underytelser).createUtbetaling());
+                nyeUtbetalinger.add(utbetalingBuilder.createUtbetaling());
             }
         }
-        Collections.sort(nyeUtbetalinger, UTBETALING_DATO);
+
         return nyeUtbetalinger;
+    }
+
+    /**
+     * Setter sammen meldinger, underytelser og belop
+     */
+    private static void mergeLikeObjekter(List<UtbetalingTransformObjekt> skalMerges, UtbetalingBuilder utbetalingBuilder, List<Underytelse> underytelser) {
+        Set<String> meldinger = on(skalMerges).map(UtbetalingTransformObjekt.MELDING).collectIn(new HashSet<String>());
+        String melding = join(meldinger, ". ");
+
+        leggSammenBelop(utbetalingBuilder, underytelser);
+        underytelser = leggSammenUnderYtelser(underytelser, TITTEL_ANTALL_SATS);
+        utbetalingBuilder.withUnderytelser(underytelser).withMelding(melding);
     }
 
     static void transformerSkatt(List<WSUtbetaling> wsUtbetalinger) {
@@ -173,7 +187,7 @@ public final class UtbetalingTransformer {
     }
 
     private static Map<LocalDate, List<UtbetalingTransformObjekt>> trekkUtTransformObjekterFraSammeDag(List<UtbetalingTransformObjekt> transformObjekter) {
-        Collections.sort(transformObjekter, DATO);
+        sort(transformObjekter, DATO);
         return on(transformObjekter).reduce(indexBy(UTBETALINGS_DAG));
     }
 

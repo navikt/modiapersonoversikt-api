@@ -3,11 +3,12 @@ package no.nav.sbl.dialogarena.utbetaling.domain.util;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.BELOP;
@@ -28,16 +29,12 @@ public class UnderYtelseUtil {
         return on(underytelser).map(TREKK_BELOP).reduce(sumDouble);
     }
 
-    public static List<Underytelse> leggSammenUnderYtelser(List<Underytelse> underytelser) {
+    public static List<Underytelse> leggSammenUnderYtelser(List<Underytelse> underytelser, Comparator<Underytelse> comparator) {
         ArrayList<Underytelse> ytelser = on(underytelser).collectIn(new ArrayList<Underytelse>());
-        Collections.sort(ytelser, TITTEL);
+        sort(ytelser, TITTEL);
 
         List<Underytelse> resultat = new ArrayList<>();
-        if(ytelser.size() == 1) {
-            resultat.add(getUnderytelseBuilder(ytelser.get(0)).createUnderytelse());
-        }
-
-        while (ytelser.size() > 1) {
+        while (ytelser.size() >= 1) {
             Underytelse ytelse1 = ytelser.get(0);
             UnderytelseBuilder builder = getUnderytelseBuilder(ytelse1);
 
@@ -45,7 +42,7 @@ public class UnderYtelseUtil {
             skalMerges.add(ytelse1);
 
             for (Underytelse ytelse2 : ytelser.subList(1, ytelser.size())) {
-                if (ytelse1.equals(ytelse2)) {
+                if (comparator.compare(ytelse1,ytelse2) == 0) {
                     skalMerges.add(ytelse2);
                 }
             }

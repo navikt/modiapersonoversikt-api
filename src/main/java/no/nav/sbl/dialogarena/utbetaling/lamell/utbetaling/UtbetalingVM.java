@@ -17,6 +17,10 @@ public class UtbetalingVM {
         this.utbetaling = utbetaling;
     }
 
+    public String getUtbetalingId() {
+        return utbetaling.getUtbetalingId();
+    }
+
     public String getStatus() {
         return utbetaling.getStatus();
     }
