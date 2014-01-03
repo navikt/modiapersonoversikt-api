@@ -2,8 +2,11 @@ package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSMottaker;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.apache.commons.collections15.Predicate;
+import org.joda.time.DateTime;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.List;
@@ -13,6 +16,8 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL_ANTALL_SATS;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling1;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling2;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling3;
@@ -21,6 +26,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTest
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling6;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling7;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling8;
+import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.getWsUtbetalinger;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.createTransformObjekter;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.createUtbetalinger;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.transformerSkatt;
@@ -33,6 +39,11 @@ public class UtbetalingTransformerTest {
     private static final String FORSKUDDSTREKK_SKATT = "Forskuddstrekk skatt";
     private static final String GRUNNBELOP = "Grunnbeløp";
     private static final String FNR = "12345678978";
+
+    @BeforeClass
+    public static void setUp() throws Exception {
+        getWsUtbetalinger(FNR, new DateTime().minusMonths(6), new DateTime());
+    }
 
     @Test
     public void testUtbetalingerBlirTransformertTilTransformObjekter() throws Exception {
@@ -72,6 +83,26 @@ public class UtbetalingTransformerTest {
         assertThat(transformObjekter.get(1).getUnderYtelse().equalsIgnoreCase(FORSKUDDSTREKK_SKATT), is(true));
         assertThat(transformObjekter.get(2).getUnderYtelse().equalsIgnoreCase(GRUNNBELOP), is(true));
         assertThat(transformObjekter.get(3).getUnderYtelse().equalsIgnoreCase(FORSKUDDSTREKK_SKATT), is(true));
+    }
+
+    @Test
+    public void mottakerBlirOversatt_NullMottaker_GirBruker() throws Exception {
+        String mottaker = UtbetalingTransformer.transformMottakerKode(null, FNR);
+        assertThat(mottaker, is(BRUKER));
+    }
+
+    @Test
+    public void mottakerBlirOversatt_Mottaker_GirBruker() throws Exception {
+        WSMottaker wsMottaker = createUtbetaling1().getUtbetalingMottaker();
+        String mottaker = UtbetalingTransformer.transformMottakerKode(wsMottaker, wsMottaker.getMottakerId());
+        assertThat(mottaker, is(BRUKER));
+    }
+
+    @Test
+    public void mottakerBlirOversatt_IkkeMottaker_GirArbeidsgiver() throws Exception {
+        WSMottaker wsMottaker = createUtbetaling1().getUtbetalingMottaker();
+        String mottaker = UtbetalingTransformer.transformMottakerKode(wsMottaker, "21345");
+        assertThat(mottaker, is(ARBEIDSGIVER));
     }
 
     @Test
@@ -140,7 +171,6 @@ public class UtbetalingTransformerTest {
 
     @Test
     public void lagMangeUtbetalinger() throws Exception {
-
         List<Utbetaling> utbetalinger = createUtbetalinger(asList(createUtbetaling1(),
                 createUtbetaling2(),
                 createUtbetaling3(),
