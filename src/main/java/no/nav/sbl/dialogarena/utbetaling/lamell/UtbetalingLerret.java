@@ -24,6 +24,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -83,9 +84,9 @@ public class UtbetalingLerret extends Lerret {
 
     private void oppdaterCacheOmNodvendig() {
         DateTime cacheStartDato = resultatCache.startDato.toDateTimeAtStartOfDay();
-        DateTime cacheSluttDato = resultatCache.sluttDato.toDateMidnight().toDateTime();
+        DateTime cacheSluttDato = resultatCache.sluttDato.toDateTime(new LocalTime(23,59));
         DateTime filterStartDato = filterParametere.getStartDato().toDateTimeAtStartOfDay();
-        DateTime filterSluttDato = filterParametere.getSluttDato().toDateMidnight().toDateTime();
+        DateTime filterSluttDato = filterParametere.getSluttDato().toDateTime(new LocalTime(23,59));
         if (!new Interval(cacheStartDato, cacheSluttDato).contains(new Interval(filterStartDato, filterSluttDato))) {
             List<Utbetaling> utbetalinger = service.hentUtbetalinger(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
             resultatCache = new UtbetalingsResultat(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato(), utbetalinger);
