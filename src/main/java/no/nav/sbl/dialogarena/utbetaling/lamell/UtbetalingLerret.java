@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
@@ -25,6 +26,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
@@ -82,7 +85,6 @@ public class UtbetalingLerret extends Lerret {
         feilmelding = new FeilmeldingPanel("feilmelding", "feil.utbetalinger", "-ikon-feil");
         feilmelding.setOutputMarkupPlaceholderTag(true);
 
-
         LocalDate startDato = defaultStartDato();
         LocalDate sluttDato = defaultSluttDato();
         resultatCache = hentUtbetalingsResultat(fnr, startDato, sluttDato);
@@ -99,9 +101,9 @@ public class UtbetalingLerret extends Lerret {
 
     private void oppdaterCacheOmNodvendig() {
         DateTime cacheStartDato = resultatCache.startDato.toDateTimeAtStartOfDay();
-        DateTime cacheSluttDato = resultatCache.sluttDato.toDateMidnight().toDateTime();
+        DateTime cacheSluttDato = resultatCache.sluttDato.toDateTime(new LocalTime(23, 59));
         DateTime filterStartDato = filterParametere.getStartDato().toDateTimeAtStartOfDay();
-        DateTime filterSluttDato = filterParametere.getSluttDato().toDateMidnight().toDateTime();
+        DateTime filterSluttDato = filterParametere.getSluttDato().toDateTime(new LocalTime(23,59));
         if (!new Interval(cacheStartDato, cacheSluttDato).contains(new Interval(filterStartDato, filterSluttDato))) {
             resultatCache = hentUtbetalingsResultat(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
         }
@@ -146,8 +148,7 @@ public class UtbetalingLerret extends Lerret {
     private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
         oppdaterCacheOmNodvendig();
 
-        List<Utbetaling> alleUtbetalinger = hentUtbetalingerFraPeriode(resultatCache.utbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato());
-        filterParametere.setYtelser(hentYtelser(alleUtbetalinger));
+        filterParametere.setYtelser(hentYtelser(hentUtbetalingerFraPeriode(resultatCache.utbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato())));
         sendYtelserEndretEvent();
 
         List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
@@ -161,6 +162,11 @@ public class UtbetalingLerret extends Lerret {
     @RunOnEvents(FEIL)
     private void skjulSnurrepippVedFeil(AjaxRequestTarget target) {
         target.add(totalOppsummeringPanel);
+    }
+
+    @RunOnEvents(FEED_ITEM_CLICKED)
+    private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
+        target.appendJavaScript("$('#detaljpanel-" + payload.getItemId() + "').animate({height: 'toggle'}, 900);");
     }
 
     private void sendYtelserEndretEvent() {

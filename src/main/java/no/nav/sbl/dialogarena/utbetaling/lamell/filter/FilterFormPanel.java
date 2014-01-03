@@ -27,6 +27,7 @@ import org.joda.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.sort;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.ENDRET;
@@ -68,7 +69,9 @@ public class FilterFormPanel extends Panel {
         IModel<List<String>> alleYtelserModel = new AbstractReadOnlyModel<List<String>>() {
             @Override
             public List<String> getObject() {
-                return new ArrayList<>(filterParametere.alleYtelser);
+                ArrayList<String> ytelser = new ArrayList<>(filterParametere.alleYtelser);
+                sort(ytelser);
+                return ytelser;
             }
         };
         ListView<String> listView = new ListView<String>("ytelseFilter", alleYtelserModel) {

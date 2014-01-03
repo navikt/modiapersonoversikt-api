@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -8,13 +9,13 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
+
+import static org.joda.time.LocalDate.now;
 
 public final class Utbetaling implements Serializable {
 
     public static final String BRUKER = "bruker";
     public static final String ARBEIDSGIVER = "arbeidsgiver";
-    private String utbetalingId;
     private DateTime utbetalingsdato;
     private Interval periode;
     private String status;
@@ -29,23 +30,26 @@ public final class Utbetaling implements Serializable {
     private double trekk;
     private double utbetalt;
     private List<Underytelse> underytelser;
-    private Utbetaling() {
-    }
+    private Utbetaling() {}
 
     public static LocalDate defaultStartDato() {
-        return LocalDate.now().minusMonths(3);
+        return now().minusMonths(3);
     }
 
     public static LocalDate defaultSluttDato() {
-        return LocalDate.now();
+        return now();
     }
 
     public static UtbetalingBuilder getBuilder() {
         return new UtbetalingBuilder();
     }
 
+    /**
+     * Minste felles multiplum for å unikt identifisere en betaling er
+     * dato, mottaker og hovedytelse.
+     */
     public String getUtbetalingId() {
-        return utbetalingId;
+        return ("" + utbetalingsdato.getDayOfMonth() + utbetalingsdato.getMonthOfYear() + utbetalingsdato.getYear() + mottakerId + hovedytelse);
     }
 
     public DateTime getUtbetalingsdato() {
@@ -105,7 +109,6 @@ public final class Utbetaling implements Serializable {
     }
 
     public static class UtbetalingBuilder {
-        private String utbetalingId = UUID.randomUUID().toString();
         private DateTime utbetalingsDato;
         private Interval periode;
         private String status;
@@ -193,7 +196,6 @@ public final class Utbetaling implements Serializable {
 
         public Utbetaling createUtbetaling() {
             Utbetaling utbetaling = new Utbetaling();
-            utbetaling.utbetalingId = this.utbetalingId;
             utbetaling.utbetalingsdato = this.utbetalingsDato;
             utbetaling.periode = this.periode;
             utbetaling.status = this.status;
@@ -220,4 +222,19 @@ public final class Utbetaling implements Serializable {
             }
         };
     }
+
+    public static final Transformer<Utbetaling, String> HOVEDYTELSE = new Transformer<Utbetaling, String>() {
+        @Override
+        public String transform(Utbetaling utbetaling) {
+            return utbetaling.getHovedytelse();
+        }
+    };
+
+    public static final Transformer<Utbetaling, List<Underytelse>> UNDERYTELSER = new Transformer<Utbetaling, List<Underytelse>>() {
+        @Override
+        public List<Underytelse> transform(Utbetaling utbetaling) {
+            return utbetaling.getUnderytelser();
+        }
+    };
+
 }

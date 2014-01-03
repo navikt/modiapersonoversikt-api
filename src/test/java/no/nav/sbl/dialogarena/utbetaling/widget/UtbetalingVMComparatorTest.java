@@ -4,10 +4,10 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.sort;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.Assert.assertThat;
 
@@ -19,7 +19,7 @@ public class UtbetalingVMComparatorTest {
         UtbetalingVM utbetalingVM1Jan = lagUtbetalingVM(new DateTime(2013, 1, 1, 0, 0));
         UtbetalingVM utbetalingVM3Jan = lagUtbetalingVM(new DateTime(2013, 1, 3, 0, 0));
         List<UtbetalingVM> utbetalinger = asList(utbetalingVM2Jan, utbetalingVM1Jan, utbetalingVM3Jan);
-        Collections.sort(utbetalinger, new UtbetalingVMComparator());
+        sort(utbetalinger, new UtbetalingVMComparator());
 
         assertThat(utbetalinger, contains(utbetalingVM3Jan, utbetalingVM2Jan, utbetalingVM1Jan));
     }
@@ -31,7 +31,7 @@ public class UtbetalingVMComparatorTest {
         UtbetalingVM utbetalingVMUtenUtbetalingsdato = lagUtbetalingVM(null);
 
         List<UtbetalingVM> utbetalinger = asList(utbetalingVM2Jan, utbetalingVMUtenUtbetalingsdato, utbetalingVM3Jan);
-        Collections.sort(utbetalinger, new UtbetalingVMComparator());
+        sort(utbetalinger, new UtbetalingVMComparator());
 
         assertThat(utbetalinger, contains(utbetalingVMUtenUtbetalingsdato, utbetalingVM3Jan, utbetalingVM2Jan));
     }
@@ -42,7 +42,7 @@ public class UtbetalingVMComparatorTest {
         UtbetalingVM utbetalingVMUtenUtbetalingsdato2 = lagUtbetalingVM(null);
 
         List<UtbetalingVM> utbetalinger = asList(utbetalingVMUtenUtbetalingsdato1, utbetalingVMUtenUtbetalingsdato2);
-        Collections.sort(utbetalinger, new UtbetalingVMComparator());
+        sort(utbetalinger, new UtbetalingVMComparator());
 
         assertThat(utbetalinger, contains(utbetalingVMUtenUtbetalingsdato1, utbetalingVMUtenUtbetalingsdato2));
     }

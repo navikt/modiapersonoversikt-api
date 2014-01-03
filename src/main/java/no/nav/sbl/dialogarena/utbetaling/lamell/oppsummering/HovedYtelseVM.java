@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import org.apache.commons.collections15.Transformer;
@@ -66,5 +67,14 @@ public class HovedYtelseVM implements Serializable {
             sum += ytelse.getBelop();
         }
         return sum;
+    }
+
+    public static class HovedYtelseComparator {
+        public static final Comparator<HovedYtelseVM> HOVEDYTELSE_NAVN = new Comparator<HovedYtelseVM>() {
+            @Override
+            public int compare(HovedYtelseVM o1, HovedYtelseVM o2) {
+                return o1.getHovedYtelsesBeskrivelse().compareTo(o2.getHovedYtelsesBeskrivelse());
+            }
+        };
     }
 }
