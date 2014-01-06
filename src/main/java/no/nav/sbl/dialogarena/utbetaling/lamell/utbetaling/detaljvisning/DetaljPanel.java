@@ -7,8 +7,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 
-import java.util.List;
-
 public class DetaljPanel extends Panel {
 
     public DetaljPanel(String id, UtbetalingVM utbetalingVM) {
@@ -25,7 +23,7 @@ public class DetaljPanel extends Panel {
     }
 
     private ListView createYtelsesrader(final UtbetalingVM utbetalingVM) {
-        List<Underytelse> underytelser = utbetalingVM.getUnderytelser(); //TODO lag wicketmodell, smell inn i listview
+//        List<Underytelse> underytelser = utbetalingVM.getUnderytelser(); //TODO lag wicketmodell, smell inn i listview
         return new ListView<Underytelse>("ytelsesrader") {
             @Override
             protected void populateItem(ListItem<Underytelse> item) {
