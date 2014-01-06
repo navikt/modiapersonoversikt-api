@@ -24,14 +24,18 @@ public class TotalOppsummeringPanel extends Panel {
         super(id, new CompoundPropertyModel<>(oppsummeringVM));
         setOutputMarkupId(true);
 
-        add(new AjaxEventBehavior("click") {
+        add(createShowHideBehavior());
+        add(createTopplinje(), createYtelsesOppsummering());
+    }
+
+    private AjaxEventBehavior createShowHideBehavior() {
+        return new AjaxEventBehavior("click") {
             @Override
             protected void onEvent(AjaxRequestTarget target) {
                 skjult.setObject(!skjult.getObject());
                 target.appendJavaScript("$('#" + getMarkupId() + " .detaljpanel').animate({height: 'toggle'}, 300);");
             }
-        });
-        add(createTopplinje(), createYtelsesOppsummering());
+        };
     }
 
     private MarkupContainer createTopplinje() {
