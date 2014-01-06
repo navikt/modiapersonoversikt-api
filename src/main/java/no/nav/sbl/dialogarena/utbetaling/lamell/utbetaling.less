@@ -148,11 +148,16 @@
 
 .detaljpanel {
   table {
+    page-break-inside: auto;
     border-top: 1px solid @borderColor;
     margin-top: 1rem;
     padding-top: 1rem;
     text-align: left;
     width: 100%;
+    tbody {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
     th {
       text-transform: uppercase;
       font-weight: normal;
