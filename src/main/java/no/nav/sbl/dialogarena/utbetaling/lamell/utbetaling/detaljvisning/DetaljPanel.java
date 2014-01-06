@@ -17,11 +17,11 @@ public class DetaljPanel extends Panel {
         setMarkupId("detaljpanel-" + utbetalingVM.getUtbetalingId());
 
         add(
-                new Label("mottakerid", utbetalingVM.getMottakerId()),
+                new Label("mottakernavn", utbetalingVM.getMottakerNavn()),
                 new Label("konto", utbetalingVM.getKontonr()),
                 new Label("ytelsesinfo", utbetalingVM.getBeskrivelse()),
                 createYtelsesrader(utbetalingVM),
-                new Label("bilagsmelding", "TODO fiks bilagsmelding")
+                new Label("bilagsmelding", utbetalingVM.getMelding())
         );
     }
 
