@@ -19,7 +19,7 @@ import org.springframework.cache.annotation.Cacheable;
  */
 public class UtbetalingPortTypeImpl {
 
-    private String utbetalingEndpoint = "https://modapp-t11.adeo.no/utbetaling";
+    private static final String UTBETALING_ENDPOINT = "https://modapp-t11.adeo.no/utbetaling";
 
     public UtbetalingPortType utbetalingPortType() {
         return new UtbetalingPortType() {
@@ -35,7 +35,7 @@ public class UtbetalingPortTypeImpl {
     private UtbetalingPortType createUtbetalingPortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setWsdlLocation("utbetaling/no/nav/virksomhet/tjenester/utbetaling/utbetaling.wsdl");
-        proxyFactoryBean.setAddress(utbetalingEndpoint);
+        proxyFactoryBean.setAddress(UTBETALING_ENDPOINT);
         proxyFactoryBean.setServiceClass(UtbetalingPortType.class);
         proxyFactoryBean.getOutInterceptors().add(interceptor);
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
