@@ -29,8 +29,12 @@ public class UtbetalingVM {
         return utbetaling.getHovedytelse();
     }
 
-    public String getMottakerId() {
-        return utbetaling.getMottakerId();
+    public String getMelding() {
+        return utbetaling.getMelding();
+    }
+
+    public String getMottakerNavn() {
+        return utbetaling.getMottakernavn();
     }
 
     public String getKontonr() {
