@@ -34,6 +34,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
@@ -102,7 +103,7 @@ public class UtbetalingLerret extends Lerret {
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
     }
 
-    private HashMap<String, Boolean> mottakere() {
+    private Map<String, Boolean> mottakere() {
         HashMap<String, Boolean> mottakere = new HashMap<>();
         mottakere.put(ARBEIDSGIVER, true);
         mottakere.put(BRUKER, true);
