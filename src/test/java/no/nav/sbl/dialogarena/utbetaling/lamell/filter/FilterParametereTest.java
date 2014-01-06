@@ -6,17 +6,20 @@ import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.getBuilder;
+import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-public class FilterTest {
+public class FilterParametereTest {
 
     private static final String DAGPENGER = "Dagpenger";
     private static final String BARNETRYGD = "Barnetrygd";
@@ -25,7 +28,14 @@ public class FilterTest {
 
     @Before
     public void settOppFilter() {
-        filterparams = new FilterParametere(LocalDate.now().minusYears(1), LocalDate.now(), true, true,
+        HashMap<String, Boolean> mottakere = new HashMap<>();
+        mottakere.put(ARBEIDSGIVER, true);
+        mottakere.put(BRUKER, true);
+
+        filterparams = new FilterParametere(
+                LocalDate.now().minusYears(1),
+                LocalDate.now(),
+                mottakere,
                 new HashSet<>(asList(DAGPENGER, BARNETRYGD)));
     }
 
@@ -48,7 +58,7 @@ public class FilterTest {
                 .withHovedytelse(DAGPENGER)
                 .createUtbetaling();
 
-        filterparams.visArbeidsgiver = false;
+        filterparams.toggleMottaker(ARBEIDSGIVER);
 
         assertFalse(filterparams.evaluate(utbetaling));
     }
@@ -78,5 +88,19 @@ public class FilterTest {
         filterparams.uonskedeYtelser.add(BARNETRYGD);
 
         assertFalse(filterparams.evaluate(utbetaling));
+    }
+
+    @Test
+    public void skalToggleVerdiBasertPaaMottaker() {
+        assertThat(filterparams.viseMottaker(BRUKER), is(true));
+        filterparams.toggleMottaker(BRUKER);
+        assertThat(filterparams.viseMottaker(BRUKER), is(false));
+        filterparams.toggleMottaker(BRUKER);
+        assertThat(filterparams.viseMottaker(BRUKER), is(true));
+    }
+
+    @Test
+    public void skalIkkeViseMottakereSomIkkeFinnes() {
+        assertThat(filterparams.viseMottaker("someRandomMottaker"), is(false));
     }
 }

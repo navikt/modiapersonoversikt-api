@@ -4,12 +4,13 @@ import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
@@ -53,8 +54,8 @@ public class FilterFormPanel extends Panel {
         Form filterForm = new Form<>("filterForm");
         return (Form) filterForm.add(
                 new FeedbackPanel("feedbackpanel"),
-                createMottakerButton("visBruker"),
-                createMottakerButton("visArbeidsgiver"),
+                createMottakerButton("visBruker", Utbetaling.BRUKER),
+                createMottakerButton("visArbeidsgiver", Utbetaling.ARBEIDSGIVER),
                 ytelsesContainer,
                 createDateRangePicker())
                 .add(createDateRangePickerChangeBehaviour(filterForm))
@@ -74,9 +75,10 @@ public class FilterFormPanel extends Panel {
         ListView<String> listView = new ListView<String>("ytelseFilter", alleYtelserModel) {
             @Override
             protected void populateItem(final ListItem<String> item) {
-                final IndicatingFilterAjaxLink<String> knapp = new IndicatingFilterAjaxLink<String>("ytelseKnapp", item.getModel()) {
+                final IndicatingFilterAjaxButton knapp = new IndicatingFilterAjaxButton("ytelseKnapp", item.getModel()) {
+
                     @Override
-                    public void onClick(AjaxRequestTarget target) {
+                    protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                         String ytelse = item.getModelObject();
                         if (filterParametere.uonskedeYtelser.contains(ytelse)) {
                             filterParametere.uonskedeYtelser.remove(ytelse);
@@ -101,16 +103,23 @@ public class FilterFormPanel extends Panel {
         return (MarkupContainer) new WebMarkupContainer("ytelseContainer").add(listView).setOutputMarkupId(true);
     }
 
-    private AjaxLink<Boolean> createMottakerButton(final String mottaker) {
-        IndicatingFilterAjaxLink<Boolean> mottakerButton = new IndicatingFilterAjaxLink<Boolean>(mottaker, new PropertyModel<Boolean>(filterParametere, mottaker)) {
+    private IndicatingFilterAjaxButton createMottakerButton(final String id, final String mottaker) {
+        IndicatingFilterAjaxButton mottakerButton = new IndicatingFilterAjaxButton(id) {
             @Override
-            public void onClick(AjaxRequestTarget target) {
-                setModelObject(!getModelObject());
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                filterParametere.toggleMottaker(mottaker);
                 sendFilterEndretEvent();
                 target.add(this);
             }
+
+            @Override
+            protected void onBeforeRender() {
+                super.onBeforeRender();
+                Boolean erMottakerValgt = filterParametere.viseMottaker(mottaker);
+                String newClassname = getMarkupAttributes().get("class") + (erMottakerValgt ? " valgt" : "");
+                add(AttributeModifier.replace("class", newClassname));
+            }
         };
-        mottakerButton.add(hasCssClassIf("valgt", mottakerButton.getModel()));
 
         return mottakerButton;
     }
@@ -156,8 +165,12 @@ public class FilterFormPanel extends Panel {
         target.add(ytelsesContainer);
     }
 
-    protected abstract class IndicatingFilterAjaxLink<T> extends AjaxLink<T> implements IAjaxIndicatorAware {
-        public IndicatingFilterAjaxLink(String id, IModel<T> model) {
+    protected abstract class IndicatingFilterAjaxButton extends AjaxButton implements IAjaxIndicatorAware {
+        protected IndicatingFilterAjaxButton(String id) {
+            super(id);
+        }
+
+        public IndicatingFilterAjaxButton(String id, IModel<String> model) {
             super(id, model);
         }
 
