@@ -33,6 +33,7 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
 
     public UtbetalingWidget(String id, String initial, String fnr) {
         super(id, initial);
+
         try {
             List<Utbetaling> utbetalinger = utbetalingService.hentUtbetalinger(fnr, defaultStartDato(), defaultSluttDato());
             if (utbetalinger.isEmpty()) {
