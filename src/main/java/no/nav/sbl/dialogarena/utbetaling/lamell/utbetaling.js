@@ -1,13 +1,4 @@
-var oppsummeringTotalSelector = '.utbetaling-ramme .oppsummering-total';
 var utbetalingslinjeSelector = '.utbetaling-ramme .utbetalingslinje';
-
-$(document).on('click', oppsummeringTotalSelector, function(e) {
-    if ($(e.target).is('a')) {
-        e.preventDefault();
-    } else {
-        $(this).children('.detaljpanel').animate({height: 'toggle'}, 300);
-    }
-});
 
 $(document).on('click', utbetalingslinjeSelector, function (e) {
     if ($(e.target).is('a')) {
@@ -16,13 +7,6 @@ $(document).on('click', utbetalingslinjeSelector, function (e) {
         $(this).children('.detaljpanel').animate({height: 'toggle'}, 300);
     }
 });
-
-$(document).on('click', oppsummeringTotalSelector + ' .skriv-ut', function() {
-    var totalOppsummering = $(this).closest(oppsummeringTotalSelector).clone();
-    totalOppsummering.children('.detaljpanel').css('display', 'block');
-    skrivUt(totalOppsummering.html());
-});
-
 
 $(document).on('click', utbetalingslinjeSelector + ' .skriv-ut', function() {
     var utbetalingslinje = $(this).closest(utbetalingslinjeSelector).clone();
