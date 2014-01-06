@@ -81,6 +81,7 @@ public class UtbetalingLerret extends Lerret {
     private void instansierFelter(String fnr) {
         ingenutbetalinger = new UtbetalingerMessagePanel("ingenutbetalinger", "ingen.utbetalinger", "-ikon-stjerne");
         ingenutbetalinger.setOutputMarkupPlaceholderTag(true);
+
         feilmelding = new FeilmeldingPanel("feilmelding", "feil.utbetalinger", "-ikon-feil");
         feilmelding.setOutputMarkupPlaceholderTag(true);
 
@@ -103,6 +104,7 @@ public class UtbetalingLerret extends Lerret {
         DateTime cacheSluttDato = resultatCache.sluttDato.toDateTime(new LocalTime(23, 59));
         DateTime filterStartDato = filterParametere.getStartDato().toDateTimeAtStartOfDay();
         DateTime filterSluttDato = filterParametere.getSluttDato().toDateTime(new LocalTime(23,59));
+
         if (!new Interval(cacheStartDato, cacheSluttDato).contains(new Interval(filterStartDato, filterSluttDato))) {
             resultatCache = hentUtbetalingsResultat(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
         }
