@@ -86,54 +86,137 @@
     left: 29px;
     top: 8px;
   }
+}
 
+.element {
+  display: inline-block;
+  text-transform: uppercase;
+  padding-right: 1rem;
+  font-weight: 600;
+  label {
+    width: auto;
+    display: block;
+    margin: 0;
+  }
+}
 
-  .element {
-    display: inline-block;
-    text-transform: uppercase;
-    padding-right: 1rem;
+.utbetaling-ramme {
+  margin-bottom: 2rem;
+  border: 1px solid @borderColor;
+
+  .utbetaling-ramme-header {
+    padding: 1rem 0;
     font-weight: 600;
-    label {
-      width: auto;
-      display: block;
-      margin: 0;
+    font-size: 1.3rem;
+    text-align: center;
+    background-color: @boxGray;
+    border-bottom: 1px solid @borderColor;
+    text-transform: uppercase;
+  }
+  .utbetaling-ramme-innhold {
+    background-color: white;
+    font-size: 0.9rem;
+  }
+  .feilmelding {
+    text-align: center;
+    a {
+      display: inline-block;
+      padding-bottom: 15px;
     }
   }
+}
 
-  .utbetaling-ramme {
-    margin-bottom: 2rem;
-    border: 1px solid @borderColor;
-
-    .utbetaling-ramme-header {
-      padding: 1rem 0;
-      font-weight: 600;
-      font-size: 1.3rem;
-      text-align: center;
-      background-color: @boxGray;
-      border-bottom: 1px solid @borderColor;
-      text-transform: uppercase;
+.oppsummering-total {
+  width: 100%;
+  padding: @toppBunnPadding @sidePadding;
+  cursor: pointer;
+  .main {
+    position: relative;
+    .oppsummeringssummer {
+      display: inline-block;
     }
-    .utbetaling-ramme-innhold {
-      background-color: white;
-      font-size: 0.9rem;
+    .skriv-ut {
+      position: absolute;
+      top: 0;
+      right: 0;
     }
-	.feilmelding {
-		text-align: center;
-		a {
-			display: inline-block;
-			padding-bottom: 15px;
-		}
-	}
   }
+}
 
-  .oppsummering-total {
+.detaljpanel {
+  display: none;
+  table {
+    border-top: 1px solid @borderColor;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    text-align: left;
     width: 100%;
+    th {
+      text-transform: uppercase;
+      font-weight: normal;
+      color: #B7B1A9;
+      font-size: 0.857rem;
+    }
+    td {
+      padding-right: 10px;
+    }
+    tbody:not(:first-of-type) tr:first-child td {
+      padding-top: 0.5rem;
+    }
+    tbody:not(:last-of-type) tr:last-child td {
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid @borderColor;
+    }
+    .hovedytelse {
+      font-weight: bold;
+    }
+  }
+}
+
+.utbetalinger {
+  .oppsummeringslinje {
+    background-color: #333333;
+    color: #b7b1a9;
     padding: @toppBunnPadding @sidePadding;
+    .oppsummeringssummer {
+      float: right;
+    }
+    .element{
+      label {
+        cursor: default;
+      }
+      &.oppsummeringsperiode {
+        label {
+          display: none;
+        }
+        span {
+          font-size: 1.2rem;
+          display: block;
+          margin-top: 10px;
+        }
+      }
+    }
+  }
+  .utbetalingslinje {
+    padding: @toppBunnPadding @sidePadding;
+    border-bottom: 1px solid @borderColor;
     cursor: pointer;
+    &:last-of-type {
+      border: none;
+    }
     .main {
       position: relative;
-      .oppsummeringssummer {
-        display: inline-block;
+      .statusindikator {
+        * {
+          display: inline-block;
+          vertical-align: middle;
+        }
+        .dot {
+          height: 1rem;
+          width: 1rem;
+          background-color: #0ca9e1;
+          border-radius: 50%;
+        }
       }
       .skriv-ut {
         position: absolute;
@@ -143,95 +226,6 @@
     }
     .detaljpanel {
       display: none;
-      table {
-        border-top: 1px solid @borderColor;
-        margin-top: 1rem;
-        padding-top: 1rem;
-        text-align: left;
-        width: 100%;
-        th {
-          text-transform: uppercase;
-          font-weight: normal;
-          color: #B7B1A9;
-          font-size: 0.857rem;
-        }
-        td {
-          padding-right: 10px;
-        }
-        tbody:not(:first-of-type) tr:first-child td {
-          padding-top: 0.5rem;
-        }
-        tbody:not(:last-of-type) tr:last-child td {
-          padding-bottom: 0.5rem;
-          border-bottom: 1px solid @borderColor;
-        }
-        .hovedytelse {
-          font-weight: bold;
-        }
-      }
     }
-  }
-
-  .utbetalinger {
-    .oppsummeringslinje {
-      background-color: #333333;
-      color: #b7b1a9;
-      padding: @toppBunnPadding @sidePadding;
-      .oppsummeringssummer {
-        float: right;
-      }
-      .element{
-        label {
-          cursor: default;
-        }
-        &.oppsummeringsperiode {
-          label {
-            display: none;
-          }
-          span {
-            font-size: 1.2rem;
-            display: block;
-            margin-top: 10px;
-          }
-        }
-      }
-    }
-    .utbetalingslinje {
-      padding: @toppBunnPadding @sidePadding;
-      border-bottom: 1px solid @borderColor;
-      cursor: pointer;
-      &:last-of-type {
-        border: none;
-      }
-      .main {
-        position: relative;
-        .statusindikator {
-          * {
-            display: inline-block;
-            vertical-align: middle;
-          }
-          .dot {
-            height: 1rem;
-            width: 1rem;
-            background-color: #0ca9e1;
-            border-radius: 50%;
-          }
-        }
-        .skriv-ut {
-          position: absolute;
-          top: 0;
-          right: 0;
-        }
-      }
-      .detaljpanel {
-        display: none;
-      }
-    }
-  }
-}
-
-body > .print {
-  .kolonne-hoyre {
-    float: none;
   }
 }
