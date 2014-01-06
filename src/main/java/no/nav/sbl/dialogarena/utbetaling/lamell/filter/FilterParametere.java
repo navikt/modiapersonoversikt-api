@@ -6,10 +6,8 @@ import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 
 
 public class FilterParametere implements Serializable, Predicate<Utbetaling> {
@@ -20,18 +18,16 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     private LocalDate startDato;
     private LocalDate sluttDato;
 
-    public Boolean visBruker;
-    public Boolean visArbeidsgiver;
+    private Map<String, Boolean> mottakere;
 
     public Set<String> alleYtelser;
     public Set<String> uonskedeYtelser;
 
-    public FilterParametere(LocalDate startDato, LocalDate sluttDato, Boolean visBruker, Boolean visArbeidsgiver, Set<String> hovedYtelser) {
+    public FilterParametere(LocalDate startDato, LocalDate sluttDato, Map<String, Boolean> mottakere, Set<String> hovedYtelser) {
         this.startDato = startDato;
         this.sluttDato = sluttDato;
 
-        this.visBruker = visBruker;
-        this.visArbeidsgiver = visArbeidsgiver;
+        this.mottakere = mottakere;
 
         this.alleYtelser = hovedYtelser;
         this.uonskedeYtelser = new HashSet<>();
@@ -61,24 +57,29 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         alleYtelser = hovedYtelser;
     }
 
+    public void toggleMottaker(String mottaker) {
+        mottakere.put(mottaker, !viseMottaker(mottaker));
+    }
+
+    public boolean viseMottaker(String mottakerkode) {
+        if (mottakere.containsKey(mottakerkode)) {
+            return mottakere.get(mottakerkode);
+        }
+        return false;
+    }
+
     @Override
     public boolean evaluate(Utbetaling utbetaling) {
         boolean innenforDatoer = filtrerPaaDatoer(utbetaling.getUtbetalingsdato().toLocalDate());
-        boolean brukerSkalVises = filtrerPaaMottaker(utbetaling.getMottakerkode());
+        boolean mottakerSkalVises = viseMottaker(utbetaling.getMottakerkode());
         boolean harYtelse = filtrerPaaYtelser(utbetaling);
-        return  innenforDatoer
-                && brukerSkalVises
+        return innenforDatoer
+                && mottakerSkalVises
                 && harYtelse;
     }
 
     private boolean filtrerPaaDatoer(LocalDate utbetalingsDato) {
         return utbetalingsDato.isAfter(startDato.minusDays(1)) && utbetalingsDato.isBefore(sluttDato.plusDays(1));
-    }
-
-    private boolean filtrerPaaMottaker(String mottakerkode) {
-        boolean arbeidsgiverVises = visArbeidsgiver && ARBEIDSGIVER.equalsIgnoreCase(mottakerkode);
-        boolean brukerVises = visBruker && BRUKER.equalsIgnoreCase(mottakerkode);
-        return arbeidsgiverVises || brukerVises;
     }
 
     private boolean filtrerPaaYtelser(Utbetaling utbetaling) {

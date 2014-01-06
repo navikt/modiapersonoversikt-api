@@ -32,11 +32,14 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
@@ -88,7 +91,7 @@ public class UtbetalingLerret extends Lerret {
         LocalDate startDato = defaultStartDato();
         LocalDate sluttDato = defaultSluttDato();
         resultatCache = hentUtbetalingsResultat(fnr, startDato, sluttDato);
-        filterParametere = new FilterParametere(startDato, sluttDato, true, true, hentYtelser(resultatCache.utbetalinger));
+        filterParametere = new FilterParametere(startDato, sluttDato, mottakere(), hentYtelser(resultatCache.utbetalinger));
 
         List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
@@ -97,6 +100,13 @@ public class UtbetalingLerret extends Lerret {
                 .setOutputMarkupPlaceholderTag(true);
 
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
+    }
+
+    private HashMap<String, Boolean> mottakere() {
+        HashMap<String, Boolean> mottakere = new HashMap<>();
+        mottakere.put(ARBEIDSGIVER, true);
+        mottakere.put(BRUKER, true);
+        return mottakere;
     }
 
     private void oppdaterCacheOmNodvendig() {
