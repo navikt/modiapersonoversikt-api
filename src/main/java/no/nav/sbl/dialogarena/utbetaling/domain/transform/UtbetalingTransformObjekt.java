@@ -147,7 +147,6 @@ final class UtbetalingTransformObjekt {
         return underYtelse;
     }
 
-    //private String kildeSystem;
     public void setMelding(String melding) {
         this.melding = melding;
     }
