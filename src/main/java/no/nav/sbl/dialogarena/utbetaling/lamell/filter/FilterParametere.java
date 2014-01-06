@@ -66,7 +66,7 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         boolean innenforDatoer = filtrerPaaDatoer(utbetaling.getUtbetalingsdato().toLocalDate());
         boolean brukerSkalVises = filtrerPaaMottaker(utbetaling.getMottakerkode());
         boolean harYtelse = filtrerPaaYtelser(utbetaling);
-        return innenforDatoer
+        return  innenforDatoer
                 && brukerSkalVises
                 && harYtelse;
     }

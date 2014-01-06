@@ -117,7 +117,7 @@ public final class UtbetalingTransformer {
         return nyeUtbetalinger;
     }
 
-    private static void fjernForsteObjektILista(LinkedList<UtbetalingTransformObjekt> nyListe, UtbetalingTransformObjekt forst) {
+    private static void fjernForsteObjektILista(List<UtbetalingTransformObjekt> nyListe, UtbetalingTransformObjekt forst) {
         List<UtbetalingTransformObjekt> skalFjernes = new ArrayList<>();
         skalFjernes.add(forst);
         nyListe.removeAll(skalFjernes);
@@ -132,8 +132,9 @@ public final class UtbetalingTransformer {
 
         LinkedList<Underytelse> list = new LinkedList<>(underytelser);
         leggSammenBelop(utbetalingBuilder, underytelser);
-        underytelser = leggSammenUnderYtelser(list, TITTEL_ANTALL_SATS);
-        utbetalingBuilder.withUnderytelser(underytelser).withMelding(melding);
+
+        List<Underytelse> sammenlagteUnderytelser = leggSammenUnderYtelser(list, TITTEL_ANTALL_SATS);
+        utbetalingBuilder.withUnderytelser(sammenlagteUnderytelser).withMelding(melding);
     }
 
     static String transformMottakerKode(WSMottaker wsMottaker, String fnr) {
