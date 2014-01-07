@@ -69,6 +69,7 @@ public class WSUtbetalingTestData {
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(2 * (belop + trekk))
+                .withGironr("44442255555")
                 .withBruttobelop(2 * belop)
                 .withTrekk(2 * trekk)
                 .withStatusBeskrivelse(MOTTATT_KONTOFORER)
@@ -96,6 +97,7 @@ public class WSUtbetalingTestData {
         double brutto = belop0 + belop1 + belop2 + belop4;
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(brutto + trekk)
+                .withGironr("44442255555")
                 .withBruttobelop(brutto)
                 .withTrekk(trekk)
                 .withStatusBeskrivelse(UTBETALT)
@@ -115,6 +117,7 @@ public class WSUtbetalingTestData {
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(BELOP + trekk)
+                .withGironr("44442255555")
                 .withBruttobelop(BELOP)
                 .withTrekk(trekk)
                 .withValuta(VALUTA)
@@ -134,6 +137,7 @@ public class WSUtbetalingTestData {
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(0.0)
+                .withGironr("44442255555")
                 .withBruttobelop(0.0)
                 .withTrekk(0.0)
                 .withValuta(VALUTA)
@@ -154,6 +158,7 @@ public class WSUtbetalingTestData {
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(BELOP + trekk)
+                .withGironr("44442255555")
                 .withBruttobelop(BELOP)
                 .withTrekk(trekk)
                 .withStatusBeskrivelse(UTBETALT)
@@ -175,6 +180,7 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(belop + trekk)
                 .withBruttobelop(belop)
+                .withGironr("44442255555")
                 .withTrekk(trekk)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
@@ -194,6 +200,7 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(belop + trekk)
                 .withBruttobelop(belop)
+                .withGironr("44442255555")
                 .withTrekk(trekk)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
@@ -211,6 +218,7 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(utbetalt)
                 .withTrekk(0.0)
+                .withGironr("44442255555")
                 .withBruttobelop(utbetalt)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
