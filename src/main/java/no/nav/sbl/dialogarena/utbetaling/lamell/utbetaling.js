@@ -9,24 +9,34 @@ $(document).on('click', utbetalingslinjeSelector, function (e) {
 });
 
 $(document).on('click', utbetalingslinjeSelector + ' .skriv-ut', function() {
-    var utbetalingslinje = $(this).closest(utbetalingslinjeSelector).clone();
-    utbetalingslinje.children('.detaljpanel').css('display', 'block');
-    skrivUt(utbetalingslinje.html());
+    var $utbetalingslinje = $(this).closest(utbetalingslinjeSelector);
+    Utbetalinger.skrivUt($utbetalingslinje);
+    event.preventDefault();
 });
 
-function skrivUt(html) {
-    $('body > .print .content').html(html);
-    window.print();
-}
 
-var Utbetalinger = (function() {
-    var haandterDetaljPanelVisning = function(detaljPanelID) {
+var Utbetalinger = (function () {
+
+    var haandterDetaljPanelVisning = function (detaljPanelID) {
         var $detaljPanel = $("#" + detaljPanelID);
         $detaljPanel.animate({height: 'toggle'}, 900);
         $('html,body').animate({scrollTop: $($detaljPanel).parent().offset().top - 76}, 'slow');
         $detaljPanel.focus();
     };
+
+    var skrivUt = function ($element) {
+        var $printCopy = $element.clone();
+        $printCopy.children('.detaljpanel').css('display', 'block');
+        kopierOgSkrivUt($printCopy.html());
+    };
+
+    function kopierOgSkrivUt(html) {
+        $('body > .print .content').html(html);
+        window.print();
+    }
+
     return {
-        haandterDetaljPanelVisning : haandterDetaljPanelVisning
+        haandterDetaljPanelVisning: haandterDetaljPanelVisning,
+        skrivUt: skrivUt
     }
 })();
