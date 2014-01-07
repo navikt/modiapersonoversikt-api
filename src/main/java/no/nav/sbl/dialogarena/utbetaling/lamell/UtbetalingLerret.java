@@ -140,9 +140,8 @@ public class UtbetalingLerret extends Lerret {
 
     private TotalOppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
         return (TotalOppsummeringPanel) new TotalOppsummeringPanel(
-                "totalOppsummeringPanel",
-                new OppsummeringVM(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()))
-                .setOutputMarkupPlaceholderTag(true);
+                "totalOppsummeringPanel", new OppsummeringVM(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()));
+
     }
 
     private ListView<List<Utbetaling>> createMaanedsPanelListe() {

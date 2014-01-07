@@ -22,7 +22,7 @@ public class TotalOppsummeringPanel extends Panel {
 
     public TotalOppsummeringPanel(String id, OppsummeringVM oppsummeringVM) {
         super(id, new CompoundPropertyModel<>(oppsummeringVM));
-        setOutputMarkupId(true);
+        setOutputMarkupPlaceholderTag(true);
 
         add(createShowHideBehavior());
         add(createTopplinje(), createYtelsesOppsummering());
@@ -53,10 +53,7 @@ public class TotalOppsummeringPanel extends Panel {
         return  new AjaxLink<Void>("skriv-ut") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                target.appendJavaScript(
-                        "var totalOppsummering = $('#" + TotalOppsummeringPanel.this.getMarkupId() + "').clone();" +
-                        "totalOppsummering.children('.detaljpanel').css('display', 'block');" +
-                        "skrivUt(totalOppsummering.html());");
+                target.appendJavaScript("Utbetalinger.skrivUt($('#" + TotalOppsummeringPanel.this.getMarkupId() + "'));");
             }
         };
     }
