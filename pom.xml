@@ -826,7 +826,7 @@
         </plugins>
     </build>
     <scm>
-        <developerConnection>scm:git:ssh://git@a34apvl029.devillo.no:7999/dial/modiabrukerdialog.git</developerConnection>
+        <developerConnection>scm:git:ssh://git@stash.devillo.no:7999/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no/scm/dial/modiabrukerdialog.git</url>
         <tag>HEAD</tag>
     </scm>
