@@ -24,7 +24,7 @@
     <properties>
         <wicket.version>6.11.0</wicket.version>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <modig.frontend.version>1.1.6</modig.frontend.version>
+        <modig.frontend.version>1.1.7</modig.frontend.version>
         <modig.security.version>1.0.19</modig.security.version>
 	    <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
@@ -32,7 +32,6 @@
         <modig.wicket.version>2.0.0-alpha.3</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>2.0.0-alpha.2</modig.lang.version>
-        <modig.frontend.wicket.version>1.0.33</modig.frontend.wicket.version>
         <modig.core.version>1.0.1</modig.core.version>
         <modig.security.version>1.0.11</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
@@ -49,7 +48,6 @@
         <personsok.version>2.0.0-SPRINGFIX</personsok.version>
         <kjerneinfo.versjon>2.0.2-SPRINGFIX</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <sporsmalogsvar.version>1.18</sporsmalogsvar.version>
         <utbetaling.version>2.0.12-SNAPSHOT</utbetaling.version>
     </properties>
 
