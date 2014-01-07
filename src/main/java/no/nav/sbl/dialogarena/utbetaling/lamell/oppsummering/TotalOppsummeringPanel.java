@@ -15,6 +15,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class TotalOppsummeringPanel extends Panel {
 
@@ -33,7 +34,10 @@ public class TotalOppsummeringPanel extends Panel {
             @Override
             protected void onEvent(AjaxRequestTarget target) {
                 skjult.setObject(!skjult.getObject());
-                target.appendJavaScript("$('#" + getMarkupId() + " .detaljpanel').animate({height: 'toggle'}, 300);");
+                target.appendJavaScript(
+                        "$('#" + getMarkupId() + " .detaljpanel').animate({height: 'toggle'}, 300);" +
+                        "$('#" + getMarkupId() + " .ekspander-pil').toggleClass('ekspandert');");
+                target.add();
             }
         };
     }
@@ -45,7 +49,8 @@ public class TotalOppsummeringPanel extends Panel {
                         new Label("utbetalt"),
                         new Label("trekk"),
                         new Label("brutto"),
-                       createSkrivUtLink()
+                        createSkrivUtLink(),
+                        createPil()
                 );
     }
 
@@ -56,6 +61,12 @@ public class TotalOppsummeringPanel extends Panel {
                 target.appendJavaScript("Utbetalinger.skrivUt($('#" + TotalOppsummeringPanel.this.getMarkupId() + "'));");
             }
         };
+    }
+
+    private Component createPil() {
+        Component pil = new WebMarkupContainer("ekspander-pil");
+        pil.add(hasCssClassIf("ekspandert", not(skjult)));
+        return pil;
     }
 
     private MarkupContainer createYtelsesOppsummering() {
