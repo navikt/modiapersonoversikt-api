@@ -1,31 +1,49 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
 
-    <!-- header row -->
-    <div>
-        <wicket:message key="mottatt.label"/>
-        <wicket:message key="konto.label"/>
-        <wicket:message key="ytelsesinfo.label"/>
-    </div>
-
-    <!-- data rows -->
-    <div>
+    <div class="element">
+        <label>
+            <wicket:message key="mottatt.label"/>
+        </label>
         <span wicket:id="mottakernavn">[]</span>
+    </div>
+    <div class="element">
+        <label>
+            <wicket:message key="konto.label"/>
+        </label>
         <span wicket:id="konto">[]</span>
+    </div>
+    <div class="element">
+        <label>
+            <wicket:message key="ytelsesinfo.label"/>
+        </label>
         <span wicket:id="ytelsesinfo">[]</span>
     </div>
 
     <!-- ytelsesinfo -->
+    <div class="detaljpanel-element-header">
+        <wicket:message key="utbetaling.ytelse"/>
+    </div>
+    <div class="detaljpanel-element-header">
+        <wicket:message key="utbetaling.sats"/>
+    </div>
+    <div class="detaljpanel-element-header">
+        <wicket:message key="utbetaling.antall"/>
+    </div>
+    <div class="detaljpanel-element-header">
+        <wicket:message key="utbetaling.belop"/>
+    </div>
     <wicket:container wicket:id="underytelser">
-        <div wicket:id="underytelse" class="utbetalingslinje"></div>
+        <div wicket:id="underytelse" class="detaljpanel-ytelseslinje"></div>
     </wicket:container>
 
     <!-- bilagsmelding -->
-    <div>
-        <wicket:message key="bilagsmelding.header"/>
+    <div class="element">
+        <label>
+            <wicket:message key="bilagsmelding.header"/>
+        </label>
         <span wicket:id="bilagsmelding">[]</span>
     </div>
-
 
 </wicket:panel>
 </html>
