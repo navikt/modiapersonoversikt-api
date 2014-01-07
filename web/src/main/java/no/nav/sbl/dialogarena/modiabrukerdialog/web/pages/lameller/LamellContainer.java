@@ -4,6 +4,7 @@ import no.nav.brukerprofil.BrukerprofilPanel;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.modia.lamell.DefaultLamellFactory;
 import no.nav.modig.modia.lamell.LamellFactory;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.lamell.LerretFactory;
@@ -15,25 +16,24 @@ import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
 import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
-import static org.apache.wicket.model.Model.of;
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * Holder på lameller og tilhørende lerreter
  */
 public class LamellContainer extends TokenLamellPanel implements Serializable {
 
-    private Logger logger = getLogger(LamellContainer.class);
+    private Logger logger = LoggerFactory.getLogger(LamellContainer.class);
 
     public static final String LAMELL_KONTRAKTER = "kontrakter";
     public static final String LAMELL_UTBETALINGER = "utbetaling";
@@ -53,15 +53,17 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         String type = feedItemPayload.getType().toLowerCase();
         String lamellId = feedItemPayload.getType().toLowerCase();
+
         if (canHaveMoreThanOneLamell(type)) {
             lamellId = createLamellIfMissing(type, feedItemPayload.getItemId());
         }
+
         if (hasFactory(lamellId)) {
             goToLamell(lamellId);
             sendToLamell(lamellId, event.getPayload());
         } else {
             ApplicationException exc = new ApplicationException("Feedlenke med ukjent type <" + lamellId + "> klikket");
-            logger.warn("ukjent lamellId: " + lamellId, exc);
+            logger.warn("ukjent lamellId: {}", lamellId, exc);
             throw exc;
         }
     }
@@ -71,13 +73,13 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             goToLamell(LAMELL_KONTRAKTER);
         } else {
             ApplicationException exc = new ApplicationException("Feedlenke med ukjent type <" + linkId + "> klikket");
-            logger.warn("ukjent widgetId: " + linkId, exc);
+            logger.warn("ukjent widgetId: {}", linkId, exc);
             throw exc;
         }
     }
 
     public boolean hasUnsavedChanges() {
-        return on(getLameller()).exists(MODIFIED_LAMELL);
+        return on(getLameller()).exists(IS_LAMELL_MODIFIED);
     }
 
     private String createLamellIfMissing(String type, String itemId) {
@@ -91,16 +93,16 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     private LamellFactory createFactory(String type, String itemId) {
         final Panel panel;
         if (SYKEPENGER.equalsIgnoreCase(type)) {
-            panel = new SykmeldingsperiodePanel(PANEL, of(fnrFromRequest), of(itemId));
+            panel = new SykmeldingsperiodePanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else if (FORELDREPENGER.equalsIgnoreCase(type)) {
-            panel = new ForeldrepengerPanel(PANEL, of(fnrFromRequest), of(itemId));
+            panel = new ForeldrepengerPanel(PANEL, Model.of(fnrFromRequest), Model.of(itemId));
         } else {
             ApplicationException exc = new ApplicationException("Ukjent type lerret: " + type);
-            logger.warn("ukjent lerret: " + type, exc);
+            logger.warn("ukjent lerret: {}", type, exc);
             throw exc;
         }
 
-        return newLamellFactory(type, itemId, "", true, new LerretFactory() {
+        return DefaultLamellFactory.newLamellFactory(type, itemId, "", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
                 return new GenericLerret(id, panel);
@@ -108,7 +110,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         });
     }
 
-    private boolean canHaveMoreThanOneLamell(String type) {
+    private static boolean canHaveMoreThanOneLamell(String type) {
         return SYKEPENGER.equalsIgnoreCase(type) || FORELDREPENGER.equalsIgnoreCase(type);
     }
 
@@ -122,25 +124,25 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static LamellFactory createBrukerprofilLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
+        return DefaultLamellFactory.newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return new BrukerprofilPanel(id, of(fnrFromRequest));
+                return new BrukerprofilPanel(id, Model.of(fnrFromRequest));
             }
         });
     }
 
     private static LamellFactory createKontrakterLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
+        return DefaultLamellFactory.newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return new GenericLerret(id, new KontrakterPanel(PANEL, of(fnrFromRequest)));
+                return new GenericLerret(id, new KontrakterPanel(PANEL, Model.of(fnrFromRequest)));
             }
         });
     }
 
     private static LamellFactory createOversiktLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
+        return DefaultLamellFactory.newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
                 return new OversiktLerret(id, fnrFromRequest);
@@ -149,7 +151,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static LamellFactory createUtbetalingLamell(final String fnrFromRequest) {
-        return newLamellFactory(LAMELL_UTBETALINGER, "U", true, new LerretFactory() {
+        return DefaultLamellFactory.newLamellFactory(LAMELL_UTBETALINGER, "U", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
                 return new UtbetalingLerret(id, fnrFromRequest);
@@ -157,7 +159,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         });
     }
 
-    private static final Predicate<Lamell> MODIFIED_LAMELL = new Predicate<Lamell>() {
+    private static final Predicate<Lamell> IS_LAMELL_MODIFIED = new Predicate<Lamell>() {
         @Override
         public boolean evaluate(Lamell lamell) {
             return lamell.isModified();

@@ -70,12 +70,12 @@ public class PersonPage extends BasePage {
             hentPersonPanel,
             searchToggleButton,
             nullstillLink,
-            new PersonsokPanel("personsokPanel").setVisible(true),
             lamellContainer,
+            redirectPopup,
+            new PersonsokPanel("personsokPanel").setVisible(true),
 		    new VisittkortPanel("visittkort", fnr).setVisible(true),
 		    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
-            new TimeoutBoks("timeoutBoks", fnr),
-            redirectPopup
+            new TimeoutBoks("timeoutBoks", fnr)
         );
     }
 
@@ -109,7 +109,7 @@ public class PersonPage extends BasePage {
         try {
             lamellContainer.handleFeedItemEvent(event, feedItemPayload);
         } catch (ApplicationException e) {
-            logger.warn("Burde ikke skje, klarte ikke håndtere feeditemevent: " + e.getMessage(), e);
+            logger.warn("Burde ikke skje, klarte ikke håndtere feeditemevent: {}", e.getMessage(), e);
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
     }
@@ -119,7 +119,7 @@ public class PersonPage extends BasePage {
         try {
             lamellContainer.handleWidgetItemEvent(linkId);
         } catch (ApplicationException e) {
-            logger.warn("Burde ikke skje, klarte ikke håndtere widgetLink: " + e.getMessage(), e);
+            logger.warn("Burde ikke skje, klarte ikke håndtere widgetLink: {}", e.getMessage(), e);
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
     }
@@ -133,6 +133,11 @@ public class PersonPage extends BasePage {
 	public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
 		send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
 	}
+
+    @Override
+    public boolean isVersioned() {
+        return false;
+    }
 
     private class NullstillLink extends AjaxLink<Void> {
         public NullstillLink(String id) {
@@ -184,11 +189,6 @@ public class PersonPage extends BasePage {
                 return true;
             }
         };
-    }
-
-    @Override
-    public boolean isVersioned() {
-        return false;
     }
 
 }
