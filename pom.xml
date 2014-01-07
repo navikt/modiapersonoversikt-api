@@ -827,7 +827,7 @@
     </build>
     <scm>
         <developerConnection>scm:git:ssh://git@stash.devillo.no:7999/dial/modiabrukerdialog.git</developerConnection>
-        <url>http://stash.devillo.no/scm/dial/modiabrukerdialog.git</url>
+        <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
         <tag>HEAD</tag>
     </scm>
 
