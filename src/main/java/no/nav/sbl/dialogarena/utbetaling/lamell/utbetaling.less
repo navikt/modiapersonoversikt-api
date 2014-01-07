@@ -135,11 +135,6 @@
     .oppsummeringssummer {
       display: inline-block;
     }
-    .skriv-ut {
-      position: absolute;
-      top: 0;
-      right: 0;
-    }
   }
   .detaljpanel.skjult {
     display: none;
@@ -226,14 +221,41 @@
           border-radius: 50%;
         }
       }
-      .skriv-ut {
-        position: absolute;
-        top: 0;
-        right: 0;
-      }
     }
     .detaljpanel {
       display: none;
     }
+  }
+}
+
+.skriv-ut {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: transparent url('../img/print.svg') no-repeat;
+  width: 48px;
+  height: 12px;
+  &:hover {
+    background-image: url('../img/print_hover.svg');
+  }
+}
+
+.ekspander-pil {
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: transparent url('../img/pil.svg') no-repeat;
+  width: 17px;
+  height: 12px;
+  transform:rotate(180deg);
+  -ms-transform:rotate(180deg);
+  -webkit-transform:rotate(180deg);
+  &:hover {
+    background-image: url('../img/pil_hover.svg');
+  }
+  &.ekspandert {
+    transform:none;
+    -ms-transform:none;
+    -webkit-transform:none;
   }
 }
