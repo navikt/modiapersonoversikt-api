@@ -40,6 +40,7 @@ public class FilterFormPanel extends Panel {
     private FilterParametere filterParametere;
 
     private MarkupContainer ytelsesContainer;
+    private FeedbackPanel valideringsfeil;
 
     public FilterFormPanel(String id, FilterParametere filterParametere) {
         super(id);
@@ -52,13 +53,14 @@ public class FilterFormPanel extends Panel {
 
     private Form createFilterForm() {
         Form filterForm = new Form<>("filterForm");
+        valideringsfeil = new FeedbackPanel("feedbackpanel");
         return (Form) filterForm.add(
-                new FeedbackPanel("feedbackpanel"),
+                valideringsfeil.setOutputMarkupId(true),
                 createMottakerButton("visBruker", Utbetaling.BRUKER),
                 createMottakerButton("visArbeidsgiver", Utbetaling.ARBEIDSGIVER),
                 ytelsesContainer,
                 createDateRangePicker())
-                .add(createDateRangePickerChangeBehaviour(filterForm))
+                .add(createDateRangePickerChangeBehaviour())
                 .setOutputMarkupId(true);
     }
 
@@ -141,17 +143,17 @@ public class FilterFormPanel extends Panel {
         return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }
 
-    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour(final Form<?> filterForm) {
+    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour() {
         return new IndicatingFilterAjaxFormSubmitBehavior("onchange") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 sendFilterEndretEvent();
-                target.add(filterForm);
+                target.add(ytelsesContainer, valideringsfeil);
             }
 
             @Override
             protected void onError(AjaxRequestTarget target) {
-                target.add(filterForm);
+                target.add(valideringsfeil);
             }
         };
     }
