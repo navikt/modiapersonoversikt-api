@@ -169,7 +169,7 @@ public class UtbetalingTransformerTest {
         assertThat(utbetalinger.get(0).getUnderytelser().size(), is(2));
 
         assertThat(utbetalinger.get(0).getUnderytelser().get(0).getTittel(), is(FORSKUDDSTREKK_SKATT));
-        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getSpesifikasjon(), is(info));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getSpesifikasjon(), is(""));
         assertThat(utbetalinger.get(0).getUnderytelser().get(0).getAntall(), is(1));
         assertThat(utbetalinger.get(0).getUnderytelser().get(0).getSats(), is(1.0));
         assertThat(utbetalinger.get(0).getUnderytelser().get(0).getBelop(), is(-700.0));
