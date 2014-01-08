@@ -7,7 +7,9 @@ import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
@@ -34,37 +36,33 @@ public class UtbetalingListeUtils {
         }
     };
 
-    /**
-     * Splitter en liste av Utbetalinger i en liste av utbetalinger.
-     *
-     * @return En liste av utbetalinger per måned
-     */
-
     public static List<List<Utbetaling>> splittUtbetalingerPerMaaned(List<Utbetaling> utbetalinger) {
-        int currentMaaned = 0;
-        List<Utbetaling> currentMaanedListe = new ArrayList<>();
-        List<List<Utbetaling>> utbetalingerFordeltPerMaaned = new ArrayList<>();
-
+        ArrayList<Utbetaling> omfg = new ArrayList<>(utbetalinger);
+        sort(omfg, UTBETALING_DAG_YTELSE);
+        Map<Integer, Map<Integer, List<Utbetaling>>> aarsMap = new LinkedHashMap<>();
         for (Utbetaling utbetaling : utbetalinger) {
+            int aar = utbetaling.getUtbetalingsdato().getYear();
             int maaned = utbetaling.getUtbetalingsdato().getMonthOfYear();
-            if (currentMaaned == 0) {
-                currentMaaned = maaned;
+            if (!aarsMap.containsKey(aar)) {
+                aarsMap.put(aar, new LinkedHashMap<Integer, List<Utbetaling>>());
             }
-            if (maaned != currentMaaned) {
-                sort(currentMaanedListe, UTBETALING_DAG_YTELSE);
-                utbetalingerFordeltPerMaaned.add(currentMaanedListe);
-                currentMaanedListe = new ArrayList<>();
-                currentMaaned = maaned;
+            if (!aarsMap.get(aar).containsKey(maaned)) {
+                aarsMap.get(aar).put(maaned, new ArrayList<Utbetaling>());
             }
-            currentMaanedListe.add(utbetaling);
+            aarsMap.get(aar).get(maaned).add(utbetaling);
         }
-        utbetalingerFordeltPerMaaned.add(currentMaanedListe);
-        return utbetalingerFordeltPerMaaned;
+
+        List<List<Utbetaling>> utbetalingerSplittetPaaMaaned = new ArrayList<>();
+        for (Map<Integer, List<Utbetaling>> maanedsMap : aarsMap.values()) {
+            for (List<Utbetaling> utbetalingerIMaaned : maanedsMap.values()) {
+                sort(utbetalingerIMaaned, UTBETALING_DAG_YTELSE);
+                utbetalingerSplittetPaaMaaned.add(utbetalingerIMaaned);
+            }
+        }
+        return utbetalingerSplittetPaaMaaned;
+
     }
 
-    /**
-     * Filtrerer en liste av utbetalinger på periode.
-     */
     public static List<Utbetaling> hentUtbetalingerFraPeriode(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
         Interval intervall = new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime().plusDays(1));
         ArrayList<Utbetaling> resultat = new ArrayList<>();

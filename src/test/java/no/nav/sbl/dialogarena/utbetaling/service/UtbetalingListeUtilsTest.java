@@ -6,6 +6,7 @@ import org.joda.time.Interval;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -25,19 +26,22 @@ public class UtbetalingListeUtilsTest {
     private static final String DAGPENGER = "Dagpenger";
     private static final String SYKEPENGER = "Sykepenger";
     private static final String BARNETRYGD = "Barnetrygd";
+    private static final String JAN_2012_NR1 = "1. jan 2012 nr1";
+    private static final String JAN_2012_NR2 = "1. jan 2012 nr2";
+    private static final String MAR_2012_NR1 = "1. mar 2012 nr1";
+    private static final String SEP_2012_NR1 = "1. sep 2012 nr1";
+    private static final DateTime JAN_2012_DATE = new DateTime(2012, 1, 1, 0, 0);
+    private static final DateTime MAR_2012_DATE = new DateTime(2012, 3, 1, 0, 0);
+    private static final DateTime SEPT_2012_DATE = new DateTime(2012, 9, 1, 0, 0);
 
     private static List<Utbetaling> utbetalingsliste;
 
     @BeforeClass
     public static void settOppUtbetalingsliste() {
-        Utbetaling utbetaling1 = getBuilder().withUtbetalingsDato(now()).withMelding("utbetaling1").withHovedytelse(DAGPENGER)
-                .createUtbetaling();
-        Utbetaling utbetaling2 = getBuilder().withUtbetalingsDato(now()).withMelding("utbetaling2").withHovedytelse(SYKEPENGER)
-                .createUtbetaling();
-        Utbetaling utbetaling3 = getBuilder().withUtbetalingsDato(now().minusMonths(1)).withMelding("utbetaling3").withHovedytelse(SYKEPENGER)
-                .createUtbetaling();
-        Utbetaling utbetaling4 = getBuilder().withUtbetalingsDato(now().minusMonths(3)).withMelding("utbetaling4").withHovedytelse(BARNETRYGD)
-                .createUtbetaling();
+        Utbetaling utbetaling1 = getBuilder().withUtbetalingsDato(JAN_2012_DATE).withMelding(JAN_2012_NR1).withHovedytelse(DAGPENGER).createUtbetaling();
+        Utbetaling utbetaling2 = getBuilder().withUtbetalingsDato(JAN_2012_DATE).withMelding(JAN_2012_NR2).withHovedytelse(SYKEPENGER).createUtbetaling();
+        Utbetaling utbetaling3 = getBuilder().withUtbetalingsDato(MAR_2012_DATE).withMelding(MAR_2012_NR1).withHovedytelse(SYKEPENGER).createUtbetaling();
+        Utbetaling utbetaling4 = getBuilder().withUtbetalingsDato(SEPT_2012_DATE).withMelding(SEP_2012_NR1).withHovedytelse(BARNETRYGD).createUtbetaling();
 
         utbetalingsliste = asList(utbetaling1, utbetaling2, utbetaling3, utbetaling4);
     }
@@ -48,6 +52,15 @@ public class UtbetalingListeUtilsTest {
 
         assertThat(ytelser.size(), is(3));
         assertThat(ytelser, containsInAnyOrder(DAGPENGER, SYKEPENGER, BARNETRYGD));
+    }
+
+    @Test
+    public void splittUtbetalingerPerMaaned_splittetIRiktigAntallMaanederOverToAar() {
+        ArrayList<Utbetaling> utbetalinger = new ArrayList<>(utbetalingsliste);
+        Utbetaling utbetaling = getBuilder().withUtbetalingsDato(new DateTime(2014, 1, 1, 0, 0)).withMelding("1. jan 2014 nr1").createUtbetaling();
+        utbetalinger.add(utbetaling);
+
+        assertThat(splittUtbetalingerPerMaaned(utbetalinger).size(), is(4));
     }
 
     @Test
@@ -70,15 +83,15 @@ public class UtbetalingListeUtilsTest {
     public void splittUtbetalingerPerMaaned_inneholderRiktigUtbetalingPerMaaned() {
         List<List<Utbetaling>> maanedsliste = splittUtbetalingerPerMaaned(utbetalingsliste);
 
-        assertThat(maanedsliste.get(0).get(0).getMelding(), is("utbetaling1"));
-        assertThat(maanedsliste.get(0).get(1).getMelding(), is("utbetaling2"));
-        assertThat(maanedsliste.get(1).get(0).getMelding(), is("utbetaling3"));
-        assertThat(maanedsliste.get(2).get(0).getMelding(), is("utbetaling4"));
+        assertThat(maanedsliste.get(0).get(0).getMelding(), is(JAN_2012_NR1));
+        assertThat(maanedsliste.get(0).get(1).getMelding(), is(JAN_2012_NR2));
+        assertThat(maanedsliste.get(1).get(0).getMelding(), is(MAR_2012_NR1));
+        assertThat(maanedsliste.get(2).get(0).getMelding(), is(SEP_2012_NR1));
     }
 
     @Test
     public void hentUtbetalingerFraPeriode_inneholderRiktigAntallUtbetalinger() {
-        List<Utbetaling> utbetalingsperiode = hentUtbetalingerFraPeriode(utbetalingsliste, now().toLocalDate().minusMonths(2), now().toLocalDate());
+        List<Utbetaling> utbetalingsperiode = hentUtbetalingerFraPeriode(utbetalingsliste, JAN_2012_DATE.toLocalDate(), MAR_2012_DATE.toLocalDate());
 
         assertThat(utbetalingsperiode.size(), is(3));
     }

@@ -219,7 +219,7 @@ public final class Utbetaling implements Serializable {
             @Override
             public int compare(Utbetaling o1, Utbetaling o2) {
                 int compareDato = -o1.getUtbetalingsdato().toLocalDate().compareTo(o2.getUtbetalingsdato().toLocalDate());
-                if(compareDato == 0) {
+                if (compareDato == 0) {
                     return o1.getHovedytelse().compareToIgnoreCase(o2.getHovedytelse());
                 }
                 return compareDato;
