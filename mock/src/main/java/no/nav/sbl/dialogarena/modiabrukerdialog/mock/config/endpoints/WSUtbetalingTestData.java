@@ -69,13 +69,14 @@ public class WSUtbetalingTestData {
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(2 * (belop + trekk))
+                .withGironr("44442255555")
                 .withBruttobelop(2 * belop)
                 .withTrekk(2 * trekk)
                 .withStatusBeskrivelse(MOTTATT_KONTOFORER)
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createTrygdetMottaker())
                 .withUtbetalingDato(now().minusDays(4))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 1, 23, 0, 0), new DateTime(2011, 1, 24, 0, 0)));
+                .withUtbetalingsPeriode(createPeriode(now().minusDays(10).toDateTime(), now().minusDays(4).toDateTime()));
         utbetaling.withBilagListe(bilag1, bilag2);
         return utbetaling;
     }
@@ -96,13 +97,14 @@ public class WSUtbetalingTestData {
         double brutto = belop0 + belop1 + belop2 + belop4;
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(brutto + trekk)
+                .withGironr("44442255555")
                 .withBruttobelop(brutto)
                 .withTrekk(trekk)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createTrygdetMottaker())
                 .withUtbetalingDato(now().minusDays(7))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 2, 23, 0, 0), new DateTime(2011, 2, 24, 0, 0)));
+                .withUtbetalingsPeriode(createPeriode(now().minusDays(10).toDateTime(), now().minusDays(4).toDateTime()));
         utbetaling.withBilagListe(bilag2);
         return utbetaling;
     }
@@ -115,6 +117,7 @@ public class WSUtbetalingTestData {
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(BELOP + trekk)
+                .withGironr("44442255555")
                 .withBruttobelop(BELOP)
                 .withTrekk(trekk)
                 .withValuta(VALUTA)
@@ -122,7 +125,7 @@ public class WSUtbetalingTestData {
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingDato(now().minusDays(10))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 3, 23, 0, 0), new DateTime(2011, 3, 24, 0, 0)));
+                .withUtbetalingsPeriode(createPeriode(now().minusDays(10).toDateTime(), now().minusDays(4).toDateTime()));
         utbetaling.withBilagListe(bilag1);
         return utbetaling;
     }
@@ -134,6 +137,7 @@ public class WSUtbetalingTestData {
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(0.0)
+                .withGironr("44442255555")
                 .withBruttobelop(0.0)
                 .withTrekk(0.0)
                 .withValuta(VALUTA)
@@ -141,7 +145,7 @@ public class WSUtbetalingTestData {
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingDato(now().minusDays(40))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 4, 23, 0, 0), new DateTime(2011, 4, 24, 0, 0)));
+                .withUtbetalingsPeriode(createPeriode(now().minusDays(60).toDateTime(), now().minusDays(45).toDateTime()));
         utbetaling.withBilagListe(bilag2);
         return utbetaling;
     }
@@ -154,13 +158,14 @@ public class WSUtbetalingTestData {
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(BELOP + trekk)
+                .withGironr("44442255555")
                 .withBruttobelop(BELOP)
                 .withTrekk(trekk)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withUtbetalingDato(now().minusDays(84))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 5, 23, 0, 0), new DateTime(2011, 5, 24, 0, 0)));
+                .withUtbetalingsPeriode(createPeriode(now().minusDays(100).toDateTime(), now().minusDays(94).toDateTime()));
         utbetaling.withBilagListe(bilag1);
         return utbetaling;
     }
@@ -175,12 +180,13 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(belop + trekk)
                 .withBruttobelop(belop)
+                .withGironr("44442255555")
                 .withTrekk(trekk)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withUtbetalingDato(now().minusMonths(5))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
+                .withUtbetalingsPeriode(createPeriode(now().minusMonths(7).toDateTime(), now().minusMonths(6).toDateTime()));
         utbetaling.withBilagListe(bilag1);
         return utbetaling;
     }
@@ -194,12 +200,13 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(belop + trekk)
                 .withBruttobelop(belop)
+                .withGironr("44442255555")
                 .withTrekk(trekk)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withUtbetalingDato(now().minusMonths(5))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
+                .withUtbetalingsPeriode(createPeriode(now().minusMonths(7).toDateTime(), now().minusMonths(6).toDateTime()));
         utbetaling.withBilagListe(bilag1);
         return utbetaling;
     }
@@ -211,12 +218,13 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(utbetalt)
                 .withTrekk(0.0)
+                .withGironr("44442255555")
                 .withBruttobelop(utbetalt)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withUtbetalingDato(now().minusMonths(5))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
+                .withUtbetalingsPeriode(createPeriode(now().minusMonths(7).toDateTime(), now().minusMonths(6).toDateTime()));
         utbetaling.withBilagListe(bilag1);
         return utbetaling;
     }
