@@ -143,7 +143,7 @@ public class UtbetalingLerret extends Lerret {
     }
 
     private ListView<List<Utbetaling>> createMaanedsPanelListe() {
-        List<List<Utbetaling>> maanedsListe = splittUtbetalingerPerMaaned(on(resultatCache.utbetalinger).filter(filterParametere).collect());
+        List<List<Utbetaling>> maanedsListe = splittUtbetalingerPerMaaned(on(resultatCache.utbetalinger).filter(filterParametere).collectIn(new ArrayList<Utbetaling>()));
         return new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
             @Override
             protected void populateItem(ListItem<List<Utbetaling>> item) {

@@ -20,22 +20,35 @@
         <span wicket:id="ytelsesinfo">[]</span>
     </div>
 
-    <!-- ytelsesinfo -->
-    <div class="detaljpanel-element-header">
-        <wicket:message key="utbetaling.ytelse"/>
-    </div>
-    <div class="detaljpanel-element-header">
-        <wicket:message key="utbetaling.sats"/>
-    </div>
-    <div class="detaljpanel-element-header">
-        <wicket:message key="utbetaling.antall"/>
-    </div>
-    <div class="detaljpanel-element-header">
-        <wicket:message key="utbetaling.belop"/>
-    </div>
-    <wicket:container wicket:id="underytelser">
-        <div wicket:id="underytelse" class="detaljpanel-ytelseslinje"></div>
-    </wicket:container>
+    <!-- Detaljpanel -->
+    <table>
+        <thead>
+        <tr>
+            <th><wicket:message key="utbetaling.ytelse"/></th>
+            <th><wicket:message key="utbetaling.sats"/></th>
+            <th><wicket:message key="utbetaling.antall"/></th>
+            <th><wicket:message key="utbetaling.belop"/></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr wicket:id="underytelser">
+            <td>
+                <span class="underytelse" wicket:id="underytelse">[]</span>
+            </td>
+            <td></td>
+            <td>
+                <span class="sats" wicket:id="sats">[]</span>
+            </td>
+            <td>
+                <span class="antall" wicket:id="antall">[]</span>
+            </td>
+            <td>
+                <span class="belop" wicket:id="belop">[]</span>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
 
     <!-- bilagsmelding -->
     <div class="element">

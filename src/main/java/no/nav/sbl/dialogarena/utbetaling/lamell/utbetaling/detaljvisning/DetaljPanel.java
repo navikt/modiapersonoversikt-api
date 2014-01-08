@@ -17,16 +17,22 @@ public class DetaljPanel extends Panel {
                 new Label("mottakernavn", utbetalingVM.getMottakerNavn()),
                 new Label("konto", utbetalingVM.getKontonr()),
                 new Label("ytelsesinfo", utbetalingVM.getBeskrivelse()),
-                createYtelsesrader(utbetalingVM),
+                createUnderytelsesrader(utbetalingVM),
                 new Label("bilagsmelding", utbetalingVM.getMelding())
         );
     }
 
-    private ListView createYtelsesrader(final UtbetalingVM utbetalingVM) {
+    private ListView createUnderytelsesrader(final UtbetalingVM utbetalingVM) {
         return new ListView<Underytelse>("underytelser", utbetalingVM.getUnderytelser()) {
             @Override
             protected void populateItem(ListItem<Underytelse> item) {
-                item.add(new UnderytelsePanel("underytelse", item.getModelObject()));
+                item.add(
+                    new Label("underytelse", item.getModelObject().getTittel()),
+                    new Label("sats", item.getModelObject().getSats()),
+                    new Label("antall", item.getModelObject().getAntall()),
+                    new Label("belop", item.getModelObject().getBelop())
+
+                );
             }
         };
     }
