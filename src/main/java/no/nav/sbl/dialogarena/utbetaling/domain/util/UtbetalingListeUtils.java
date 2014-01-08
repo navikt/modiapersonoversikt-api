@@ -40,18 +40,30 @@ public class UtbetalingListeUtils {
         ArrayList<Utbetaling> sorterteUtbetalinger = new ArrayList<>(utbetalinger);
         sort(sorterteUtbetalinger, UTBETALING_DAG_YTELSE);
         Map<Integer, Map<Integer, List<Utbetaling>>> aarsMap = new LinkedHashMap<>();
+        leggTilUtbetalingerIAarsMap(sorterteUtbetalinger, aarsMap);
+        return trekkUtUtbetalingerPerMaaned(aarsMap);
+
+    }
+
+    private static void leggTilUtbetalingerIAarsMap(ArrayList<Utbetaling> sorterteUtbetalinger, Map<Integer, Map<Integer, List<Utbetaling>>> aarsMap) {
         for (Utbetaling utbetaling : sorterteUtbetalinger) {
             int aar = utbetaling.getUtbetalingsdato().getYear();
             int maaned = utbetaling.getUtbetalingsdato().getMonthOfYear();
-            if (!aarsMap.containsKey(aar)) {
-                aarsMap.put(aar, new LinkedHashMap<Integer, List<Utbetaling>>());
-            }
-            if (!aarsMap.get(aar).containsKey(maaned)) {
-                aarsMap.get(aar).put(maaned, new ArrayList<Utbetaling>());
-            }
+            leggTilNoklerForAarOgMaaned(aarsMap, aar, maaned);
             aarsMap.get(aar).get(maaned).add(utbetaling);
         }
+    }
 
+    private static void leggTilNoklerForAarOgMaaned(Map<Integer, Map<Integer, List<Utbetaling>>> aarsMap, int aar, int maaned) {
+        if (!aarsMap.containsKey(aar)) {
+            aarsMap.put(aar, new LinkedHashMap<Integer, List<Utbetaling>>());
+        }
+        if (!aarsMap.get(aar).containsKey(maaned)) {
+            aarsMap.get(aar).put(maaned, new ArrayList<Utbetaling>());
+        }
+    }
+
+    private static List<List<Utbetaling>> trekkUtUtbetalingerPerMaaned(Map<Integer, Map<Integer, List<Utbetaling>>> aarsMap) {
         List<List<Utbetaling>> utbetalingerSplittetPaaMaaned = new ArrayList<>();
         for (Map<Integer, List<Utbetaling>> maanedsMap : aarsMap.values()) {
             for (List<Utbetaling> utbetalingerIMaaned : maanedsMap.values()) {
@@ -59,7 +71,6 @@ public class UtbetalingListeUtils {
             }
         }
         return utbetalingerSplittetPaaMaaned;
-
     }
 
     public static List<Utbetaling> hentUtbetalingerFraPeriode(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
