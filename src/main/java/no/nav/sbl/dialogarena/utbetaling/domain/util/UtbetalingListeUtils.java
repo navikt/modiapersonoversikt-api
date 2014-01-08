@@ -37,15 +37,13 @@ public class UtbetalingListeUtils {
     };
 
     public static List<List<Utbetaling>> splittUtbetalingerPerMaaned(List<Utbetaling> utbetalinger) {
-        ArrayList<Utbetaling> sorterteUtbetalinger = new ArrayList<>(utbetalinger);
-        sort(sorterteUtbetalinger, UTBETALING_DAG_YTELSE);
+        sort(utbetalinger, UTBETALING_DAG_YTELSE);
         Map<Integer, Map<Integer, List<Utbetaling>>> aarsMap = new LinkedHashMap<>();
-        leggTilUtbetalingerIAarsMap(sorterteUtbetalinger, aarsMap);
+        leggTilUtbetalingerIAarsMap(utbetalinger, aarsMap);
         return trekkUtUtbetalingerPerMaaned(aarsMap);
-
     }
 
-    private static void leggTilUtbetalingerIAarsMap(ArrayList<Utbetaling> sorterteUtbetalinger, Map<Integer, Map<Integer, List<Utbetaling>>> aarsMap) {
+    private static void leggTilUtbetalingerIAarsMap(List<Utbetaling> sorterteUtbetalinger, Map<Integer, Map<Integer, List<Utbetaling>>> aarsMap) {
         for (Utbetaling utbetaling : sorterteUtbetalinger) {
             int aar = utbetaling.getUtbetalingsdato().getYear();
             int maaned = utbetaling.getUtbetalingsdato().getMonthOfYear();
