@@ -37,10 +37,10 @@ public class UtbetalingListeUtils {
     };
 
     public static List<List<Utbetaling>> splittUtbetalingerPerMaaned(List<Utbetaling> utbetalinger) {
-        ArrayList<Utbetaling> omfg = new ArrayList<>(utbetalinger);
-        sort(omfg, UTBETALING_DAG_YTELSE);
+        ArrayList<Utbetaling> sorterteUtbetalinger = new ArrayList<>(utbetalinger);
+        sort(sorterteUtbetalinger, UTBETALING_DAG_YTELSE);
         Map<Integer, Map<Integer, List<Utbetaling>>> aarsMap = new LinkedHashMap<>();
-        for (Utbetaling utbetaling : utbetalinger) {
+        for (Utbetaling utbetaling : sorterteUtbetalinger) {
             int aar = utbetaling.getUtbetalingsdato().getYear();
             int maaned = utbetaling.getUtbetalingsdato().getMonthOfYear();
             if (!aarsMap.containsKey(aar)) {
@@ -55,7 +55,6 @@ public class UtbetalingListeUtils {
         List<List<Utbetaling>> utbetalingerSplittetPaaMaaned = new ArrayList<>();
         for (Map<Integer, List<Utbetaling>> maanedsMap : aarsMap.values()) {
             for (List<Utbetaling> utbetalingerIMaaned : maanedsMap.values()) {
-                sort(utbetalingerIMaaned, UTBETALING_DAG_YTELSE);
                 utbetalingerSplittetPaaMaaned.add(utbetalingerIMaaned);
             }
         }

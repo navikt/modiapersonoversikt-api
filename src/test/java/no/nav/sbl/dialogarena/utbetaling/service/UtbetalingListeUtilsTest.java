@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -34,10 +34,10 @@ public class UtbetalingListeUtilsTest {
     private static final DateTime MAR_2012_DATE = new DateTime(2012, 3, 1, 0, 0);
     private static final DateTime SEPT_2012_DATE = new DateTime(2012, 9, 1, 0, 0);
 
-    private static List<Utbetaling> utbetalingsliste;
+    private List<Utbetaling> utbetalingsliste;
 
-    @BeforeClass
-    public static void settOppUtbetalingsliste() {
+    @Before
+    public void settOppUtbetalingsliste() {
         Utbetaling utbetaling1 = getBuilder().withUtbetalingsDato(JAN_2012_DATE).withMelding(JAN_2012_NR1).withHovedytelse(DAGPENGER).createUtbetaling();
         Utbetaling utbetaling2 = getBuilder().withUtbetalingsDato(JAN_2012_DATE).withMelding(JAN_2012_NR2).withHovedytelse(SYKEPENGER).createUtbetaling();
         Utbetaling utbetaling3 = getBuilder().withUtbetalingsDato(MAR_2012_DATE).withMelding(MAR_2012_NR1).withHovedytelse(SYKEPENGER).createUtbetaling();
@@ -74,19 +74,18 @@ public class UtbetalingListeUtilsTest {
     public void splittUtbetalingerPerMaaned_hverMaanedHarRiktigAntallUtbetalinger() {
         List<List<Utbetaling>> maanedsliste = splittUtbetalingerPerMaaned(utbetalingsliste);
 
-        assertThat(maanedsliste.get(0).size(), is(2));
+        assertThat(maanedsliste.get(0).size(), is(1));
         assertThat(maanedsliste.get(1).size(), is(1));
-        assertThat(maanedsliste.get(2).size(), is(1));
+        assertThat(maanedsliste.get(2).size(), is(2));
     }
 
     @Test
     public void splittUtbetalingerPerMaaned_inneholderRiktigUtbetalingPerMaaned() {
         List<List<Utbetaling>> maanedsliste = splittUtbetalingerPerMaaned(utbetalingsliste);
 
-        assertThat(maanedsliste.get(0).get(0).getMelding(), is(JAN_2012_NR1));
-        assertThat(maanedsliste.get(0).get(1).getMelding(), is(JAN_2012_NR2));
+        assertThat(maanedsliste.get(0).get(0).getMelding(), is(SEP_2012_NR1));
         assertThat(maanedsliste.get(1).get(0).getMelding(), is(MAR_2012_NR1));
-        assertThat(maanedsliste.get(2).get(0).getMelding(), is(SEP_2012_NR1));
+        assertThat(maanedsliste.get(2).get(0).getMelding(), is(JAN_2012_NR1));
     }
 
     @Test
