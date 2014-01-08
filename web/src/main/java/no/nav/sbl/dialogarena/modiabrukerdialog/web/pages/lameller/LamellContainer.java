@@ -4,7 +4,6 @@ import no.nav.brukerprofil.BrukerprofilPanel;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
-import no.nav.modig.modia.lamell.DefaultLamellFactory;
 import no.nav.modig.modia.lamell.LamellFactory;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.lamell.LerretFactory;
@@ -25,6 +24,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
 
@@ -102,7 +102,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             throw exc;
         }
 
-        return DefaultLamellFactory.newLamellFactory(type, itemId, "", true, new LerretFactory() {
+        return newLamellFactory(type, itemId, "", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
                 return new GenericLerret(id, panel);
@@ -124,7 +124,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static LamellFactory createBrukerprofilLamell(final String fnrFromRequest) {
-        return DefaultLamellFactory.newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
+        return newLamellFactory(LAMELL_BRUKERPROFIL, "B", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
                 return new BrukerprofilPanel(id, Model.of(fnrFromRequest));
@@ -133,7 +133,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static LamellFactory createKontrakterLamell(final String fnrFromRequest) {
-        return DefaultLamellFactory.newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
+        return newLamellFactory(LAMELL_KONTRAKTER, "T", new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
                 return new GenericLerret(id, new KontrakterPanel(PANEL, Model.of(fnrFromRequest)));
@@ -142,7 +142,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static LamellFactory createOversiktLamell(final String fnrFromRequest) {
-        return DefaultLamellFactory.newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
+        return newLamellFactory(LAMELL_OVERSIKT, "O", false, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
                 return new OversiktLerret(id, fnrFromRequest);
@@ -151,7 +151,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static LamellFactory createUtbetalingLamell(final String fnrFromRequest) {
-        return DefaultLamellFactory.newLamellFactory(LAMELL_UTBETALINGER, "U", true, new LerretFactory() {
+        return newLamellFactory(LAMELL_UTBETALINGER, "U", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
                 return new UtbetalingLerret(id, fnrFromRequest);
