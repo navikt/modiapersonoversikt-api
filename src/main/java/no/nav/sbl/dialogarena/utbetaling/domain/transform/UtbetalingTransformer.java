@@ -102,7 +102,7 @@ public final class UtbetalingTransformer {
 
             for (UtbetalingTransformObjekt objekt : nyListe.subList(1, nyListe.size())) {
                 if (forst.equals(objekt)) {
-                    underytelser.add(new Underytelse(objekt.getUnderYtelse(), forst.getSpesifikasjon(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
+                    underytelser.add(new Underytelse(objekt.getUnderYtelse(), objekt.getSpesifikasjon(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
                     skalMerges.add(objekt);
                 }
             }
