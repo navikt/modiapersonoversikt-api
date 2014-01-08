@@ -20,7 +20,7 @@ public class WicketApplicationTest {
     
     @Test
     public void newSessionShouldHaveNbLocale() throws Exception {
-        assertThat("nb", equalTo(createSession().getLocale().getLanguage()));
+        assertThat(createSession().getLocale().getLanguage(), equalTo("nb"));
     }
 
     private Session createSession() {
