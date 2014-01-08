@@ -7,6 +7,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
+
 public class DetaljPanel extends Panel {
 
     public DetaljPanel(String id, UtbetalingVM utbetalingVM) {
@@ -30,8 +32,7 @@ public class DetaljPanel extends Panel {
                     new Label("underytelse", item.getModelObject().getTittel()),
                     new Label("sats", item.getModelObject().getSats()),
                     new Label("antall", item.getModelObject().getAntall()),
-                    new Label("belop", item.getModelObject().getBelop())
-
+                    new Label("belop", getBelopString(item.getModelObject().getBelop()))
                 );
             }
         };
