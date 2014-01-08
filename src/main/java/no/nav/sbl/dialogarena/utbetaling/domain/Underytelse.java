@@ -1,12 +1,21 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.transform.Mergeable;
 import org.apache.commons.collections15.Transformer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
-public class Underytelse implements Serializable {
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
+import static org.apache.commons.lang3.StringUtils.join;
+
+public class Underytelse implements Serializable, Mergeable {
     public static final Transformer<Underytelse, Double> UTBETALT_BELOP = new Transformer<Underytelse, Double>() {
         @Override
         public Double transform(Underytelse underytelse) {
@@ -31,6 +40,13 @@ public class Underytelse implements Serializable {
         @Override
         public String transform(Underytelse underytelse) {
             return underytelse.getSpesifikasjon();
+        }
+    };
+
+    public static final Transformer<Mergeable, Underytelse> MERGEABLE_UNDERYTELSE = new Transformer<Mergeable, Underytelse>() {
+        @Override
+        public Underytelse transform(Mergeable underytelse) {
+            return (Underytelse) underytelse;
         }
     };
 
@@ -101,6 +117,22 @@ public class Underytelse implements Serializable {
         return result;
     }
 
+    @Override
+    public Underytelse doMerge(List<Mergeable> skalMerges) {
+        List<Underytelse> ytelser = on(skalMerges).map(MERGEABLE_UNDERYTELSE).collectIn(new ArrayList<Underytelse>());
+        if(ytelser.isEmpty()) { return null; }
+
+        Double belop = on(ytelser).map(BELOP).reduce(sumDouble);
+        Set<String> spesifikasjoner = on(ytelser).map(SPESIFIKASJON).collectIn(new HashSet<String>());
+        String spesifikasjon = join(spesifikasjoner, ". ");
+        Underytelse ytelse = ytelser.get(0);
+        return new UnderytelseBuilder().setSpesifikasjon(spesifikasjon)
+                .setBelop(belop)
+                .setTittel(ytelse.getTittel())
+                .setAntall(ytelse.getAntall())
+                .setSats(ytelse.getSats()).createUnderytelse();
+    }
+
     public static final class UnderytelseComparator {
         public static final Comparator<Underytelse> TITTEL = new Comparator<Underytelse>() {
             @Override
@@ -122,6 +154,20 @@ public class Underytelse implements Serializable {
                     return compareSats;
                 }
                 return compareTittel;
+            }
+        };
+
+        public static final Comparator<Mergeable> MERGEABLE_TITTEL = new Comparator<Mergeable>() {
+            @Override
+            public int compare(Mergeable o1, Mergeable o2) {
+                return TITTEL.compare((Underytelse) o1, (Underytelse) o2);
+            }
+        };
+
+        public static final Comparator<Mergeable> MERGEABLE_TITTEL_ANTALL_SATS = new Comparator<Mergeable>() {
+            @Override
+            public int compare(Mergeable o1, Mergeable o2) {
+                return TITTEL_ANTALL_SATS.compare((Underytelse) o1, (Underytelse) o2);
             }
         };
     }

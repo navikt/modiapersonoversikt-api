@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
@@ -11,22 +10,15 @@ import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.joda.time.Interval;
 
 import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
 
-import static java.util.Collections.sort;
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL_ANTALL_SATS;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
-import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.TransformComparator;
+import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.TransformComparator.MERGEABLE_ALLE_FELTER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.TransformComparator.MERGEABLE_DATO;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.getBuilder;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.getBrutto;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.getTrekk;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.leggSammenUnderYtelser;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.MergeUtil.merge;
 import static org.apache.commons.lang3.StringUtils.join;
 
 public final class UtbetalingTransformer {
@@ -35,7 +27,7 @@ public final class UtbetalingTransformer {
         transformerSkatt(wsUtbetalinger);
         List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(wsUtbetalinger, fnr);
 
-        return transformerTilUtbetalinger(transformObjekter);
+        return transformerTilUtbetalinger(transformObjekter, MERGEABLE_ALLE_FELTER);
     }
 
     static List<UtbetalingTransformObjekt> createTransformObjekter(List<WSUtbetaling> wsUtbetalinger, String fnr) {
@@ -83,51 +75,10 @@ public final class UtbetalingTransformer {
     /**
      * Tar inn en collection av lister av transformobjekter. I hver liste har objektene samme dato.
      */
-    private static List<Utbetaling> transformerTilUtbetalinger(List<UtbetalingTransformObjekt> transformObjekter) {
-        List<Utbetaling> nyeUtbetalinger = new ArrayList<>();
-
-        LinkedList<UtbetalingTransformObjekt> nyListe = on(transformObjekter).collectIn(new LinkedList<UtbetalingTransformObjekt>());
-        sort(nyListe, TransformComparator.DATO);
-
-        while (nyListe.size() >= 1) {
-            // sammenlign det første elementet i lista med alle andre elementer
-            UtbetalingTransformObjekt forst = nyListe.get(0);
-
-            UtbetalingBuilder utbetalingBuilder = lagUtbetalingBuilder(forst);
-            List<Underytelse> underytelser = new ArrayList<>();
-            underytelser.add(new Underytelse(forst.getUnderYtelse(), forst.getSpesifikasjon(), forst.getAntall(), forst.getBelop(), forst.getSats()));
-
-            List<UtbetalingTransformObjekt> skalMerges = new ArrayList<>();
-            skalMerges.add(forst);
-
-            for (UtbetalingTransformObjekt objekt : nyListe.subList(1, nyListe.size())) {
-                if (forst.equals(objekt)) {
-                    underytelser.add(new Underytelse(objekt.getUnderYtelse(), objekt.getSpesifikasjon(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
-                    skalMerges.add(objekt);
-                }
-            }
-            mergeLikeObjekter(skalMerges, utbetalingBuilder, underytelser);
-            nyListe.removeAll(skalMerges);
-
-            nyeUtbetalinger.add(utbetalingBuilder.createUtbetaling());
-        }
-
-        return nyeUtbetalinger;
+    private static List<Utbetaling> transformerTilUtbetalinger(List<UtbetalingTransformObjekt> transformObjekter, Comparator<Mergeable> comparator) {
+        return merge(new ArrayList<Mergeable>(transformObjekter), comparator, MERGEABLE_DATO);
     }
 
-    /**
-     * Setter sammen meldinger, underytelser og belop
-     */
-    private static void mergeLikeObjekter(List<UtbetalingTransformObjekt> skalMerges, UtbetalingBuilder utbetalingBuilder, List<Underytelse> underytelser) {
-        Set<String> meldinger = on(skalMerges).map(UtbetalingTransformObjekt.MELDING).collectIn(new HashSet<String>());
-        String melding = join(meldinger, ". ");
-
-        LinkedList<Underytelse> list = new LinkedList<>(underytelser);
-        leggSammenBelop(utbetalingBuilder, underytelser);
-
-        List<Underytelse> sammenlagteUnderytelser = leggSammenUnderYtelser(list, TITTEL_ANTALL_SATS);
-        utbetalingBuilder.withUnderytelser(sammenlagteUnderytelser).withMelding(melding);
-    }
 
     static String transformMottakerKode(WSMottaker wsMottaker, String fnr) {
         if (wsMottaker != null && !fnr.equals(wsMottaker.getMottakerId())) {
@@ -165,13 +116,6 @@ public final class UtbetalingTransformer {
         }
     }
 
-    private static void leggSammenBelop(UtbetalingBuilder utbetalingBuilder, List<Underytelse> underytelser) {
-        Double brutto = getBrutto(underytelser);
-        Double trekk = getTrekk(underytelser);
-        utbetalingBuilder.withBrutto(brutto);
-        utbetalingBuilder.withTrekk(trekk);
-        utbetalingBuilder.withUtbetalt(brutto + trekk);
-    }
 
     private static String transformerUnderbeskrivelse(String kontoBeskrUnder, String kontoBeskrHoved) {
         return (kontoBeskrUnder != null && !kontoBeskrUnder.isEmpty() ? kontoBeskrUnder : kontoBeskrHoved);
@@ -185,20 +129,4 @@ public final class UtbetalingTransformer {
         }
         return join(strings, delimiter);
     }
-
-    private static UtbetalingBuilder lagUtbetalingBuilder(UtbetalingTransformObjekt objekt) {
-        return Utbetaling.getBuilder()
-                .withHovedytelse(objekt.getHovedYtelse())
-                .withKontonr(objekt.getKontonummer())
-                .withMelding(objekt.getMelding())
-                .withStatus(objekt.getStatus())
-                .withPeriode(objekt.getPeriode())
-                .withValuta(objekt.getValuta())
-                .withMottakernavn(objekt.getMottaker())
-                .withMottakerId(objekt.getMottakerId())
-                .withMottakerkode(objekt.getMottakerKode())
-                .withUtbetalingsDato(objekt.getUtbetalingsdato());
-    }
-
-
 }
