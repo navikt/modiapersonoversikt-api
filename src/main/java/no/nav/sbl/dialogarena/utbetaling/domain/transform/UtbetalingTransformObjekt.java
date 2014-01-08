@@ -18,9 +18,9 @@ import java.util.Set;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_TITTEL;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_TITTEL_ANTALL_SATS;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.getBrutto;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.getTrekk;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.MergeUtil.merge;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.getBrutto;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.getTrekk;
 import static org.apache.commons.lang3.StringUtils.join;
 
 
