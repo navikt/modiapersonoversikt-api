@@ -153,7 +153,8 @@ public final class UtbetalingTransformer {
     }
 
     /**
-     * Kobler skattetrekket til den ytelsen som gjenstas oftest i bilaget.
+     * Kobler skattetrekket til ytelsen i bilaget.
+     * Forutsetter at alle posteringsdetaljer i et bilag har samme hovedytelse.
      */
     private static void trekkUtSkatteOpplysninger(List<WSPosteringsdetaljer> detaljer) {
         List<WSPosteringsdetaljer> skatteDetaljer = new ArrayList<>();
@@ -162,33 +163,14 @@ public final class UtbetalingTransformer {
                 skatteDetaljer.add(detalj);
             }
         }
-        if (skatteDetaljer.isEmpty()) {
+        if (skatteDetaljer.isEmpty() || detaljer.isEmpty()) {
             return;
         }
-        WSPosteringsdetaljer detalj = finnVanligsteYtelse(detaljer);
+        WSPosteringsdetaljer detalj = detaljer.get(0);
         String beskrivelse = detalj.getKontoBeskrHoved();
         for (WSPosteringsdetaljer skatt : skatteDetaljer) {
             skatt.setKontoBeskrHoved(beskrivelse);
         }
-    }
-
-    /**
-     * Henter ut ytelsen med høyest frekvens i listen av posteringsdetaljer
-     */
-    private static WSPosteringsdetaljer finnVanligsteYtelse(List<WSPosteringsdetaljer> detaljer1) {
-        Map<String, Integer> frekvens = new HashMap<>();
-        int highestCount = 0;
-        WSPosteringsdetaljer pdetalj = null;
-        for (WSPosteringsdetaljer detalj : detaljer1) {
-            String key = detalj.getKontoBeskrHoved();
-            Integer count = 1 + (frekvens.get(key) != null ? frekvens.get(key) : 0);
-            if (count > highestCount) {
-                highestCount = count;
-                pdetalj = detalj;
-            }
-            frekvens.put(key, count);
-        }
-        return pdetalj;
     }
 
     private static void leggSammenBelop(UtbetalingBuilder utbetalingBuilder, List<Underytelse> underytelser) {
