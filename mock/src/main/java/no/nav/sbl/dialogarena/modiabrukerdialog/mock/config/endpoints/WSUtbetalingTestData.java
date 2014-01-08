@@ -40,13 +40,14 @@ public class WSUtbetalingTestData {
         fnr = fNr;
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
         utbetalinger.addAll(asList(
+                createUtbetaling4(),
                 createUtbetaling1(),
                 createUtbetaling2(),
-                createUtbetaling3(),
-                createUtbetaling4(),
                 createUtbetaling5(),
-                createUtbetaling6(),
+                createUtbetaling3(),
                 createUtbetaling7(),
+                createUtbetaling6(),
+                createUtbetaling9(),
                 createUtbetaling8()
         ));
 
@@ -224,6 +225,25 @@ public class WSUtbetalingTestData {
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createArbeidsgiverMottaker())
                 .withUtbetalingDato(now().minusMonths(5))
+                .withUtbetalingsPeriode(createPeriode(now().minusMonths(7).toDateTime(), now().minusMonths(6).toDateTime()));
+        utbetaling.withBilagListe(bilag1);
+        return utbetaling;
+    }
+
+    public static WSUtbetaling createUtbetaling9() {
+        double utbetalt = BELOP * 0.7;
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 1, 1.0, utbetalt);
+        WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
+
+        WSUtbetaling utbetaling = new WSUtbetaling();
+        utbetaling.withNettobelop(utbetalt)
+                .withTrekk(0.0)
+                .withGironr("44442255555")
+                .withBruttobelop(utbetalt)
+                .withStatusBeskrivelse(UTBETALT)
+                .withStatusKode(STATUS_KODE)
+                .withUtbetalingMottaker(createArbeidsgiverMottaker())
+                .withUtbetalingDato(now().minusMonths(24))
                 .withUtbetalingsPeriode(createPeriode(now().minusMonths(7).toDateTime(), now().minusMonths(6).toDateTime()));
         utbetaling.withBilagListe(bilag1);
         return utbetaling;
