@@ -9,13 +9,14 @@ import org.joda.time.DateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseBuilder;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.TITTEL_ANTALL_SATS;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_TITTEL;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_TITTEL_ANTALL_SATS;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.createUtbetaling1;
@@ -30,7 +31,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTest
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.createTransformObjekter;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.createUtbetalinger;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.transformerSkatt;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.leggSammenUnderYtelser;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.MergeUtil.merge;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -209,7 +210,9 @@ public class UtbetalingTransformerTest {
         Underytelse ytelse4 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon1).setAntall(2).setBelop(10.0).setSats(1.0).createUnderytelse();
         Underytelse ytelse5 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon1).setAntall(1).setBelop(10.0).setSats(1.0).createUnderytelse();
 
-        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1, ytelse2, ytelse3, ytelse4, ytelse5), TITTEL);
+        List<Underytelse> underytelser = merge(new ArrayList<Mergeable>(asList(ytelse1, ytelse2, ytelse3, ytelse4, ytelse5)),
+                MERGEABLE_TITTEL,
+                MERGEABLE_TITTEL);
 
         assertThat(underytelser.size(), is(3));
         assertThat(underytelser.get(0).getTittel(), is("Blå"));
@@ -224,7 +227,9 @@ public class UtbetalingTransformerTest {
         String spesifikasjon = "Ekstra opplysning";
         Underytelse ytelse1 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
 
-        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1), TITTEL_ANTALL_SATS);
+        List<Underytelse> underytelser = merge(new ArrayList<Mergeable>(asList(ytelse1)),
+                MERGEABLE_TITTEL_ANTALL_SATS,
+                MERGEABLE_TITTEL);
 
         assertThat(underytelser.size(), is(1));
         assertThat(underytelser.get(0).getTittel(), is("Rød"));
@@ -238,7 +243,9 @@ public class UtbetalingTransformerTest {
         Underytelse ytelse1 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
         Underytelse ytelse2 = new UnderytelseBuilder().setTittel("Grønn").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
 
-        List<Underytelse> underytelser = leggSammenUnderYtelser(asList(ytelse1, ytelse2), TITTEL_ANTALL_SATS);
+        List<Underytelse> underytelser = merge(new ArrayList<Mergeable>(asList(ytelse1, ytelse2)),
+                MERGEABLE_TITTEL_ANTALL_SATS,
+                MERGEABLE_TITTEL);
 
         assertThat(underytelser.size(), is(2));
         assertThat(underytelser.get(0).getTittel(), is("Grønn"));

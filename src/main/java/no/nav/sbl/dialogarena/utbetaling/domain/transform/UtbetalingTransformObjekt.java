@@ -1,15 +1,30 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.apache.commons.collections15.Transformer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_TITTEL;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_TITTEL_ANTALL_SATS;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.MergeUtil.merge;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.getBrutto;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UnderYtelseUtil.getTrekk;
+import static org.apache.commons.lang3.StringUtils.join;
 
 
-final class UtbetalingTransformObjekt {
+final class UtbetalingTransformObjekt implements Mergeable {
     private DateTime utbetalingsdato;
 
     private String mottaker;
@@ -44,6 +59,13 @@ final class UtbetalingTransformObjekt {
         @Override
         public String transform(UtbetalingTransformObjekt utbetalingTransformObjekt) {
             return utbetalingTransformObjekt.getMelding();
+        }
+    };
+
+    public static final Transformer<Mergeable, UtbetalingTransformObjekt> MERGEABLE_TRANSFORMER = new Transformer<Mergeable, UtbetalingTransformObjekt>() {
+        @Override
+        public UtbetalingTransformObjekt transform(Mergeable objekt) {
+            return (UtbetalingTransformObjekt) objekt;
         }
     };
 
@@ -87,6 +109,32 @@ final class UtbetalingTransformObjekt {
         return result;
     }
 
+    @Override
+    public Utbetaling doMerge(List<Mergeable> merges) {
+        List<UtbetalingTransformObjekt> skalMerges = on(merges).map(MERGEABLE_TRANSFORMER).collectIn(new ArrayList<UtbetalingTransformObjekt>());
+        if(skalMerges.isEmpty()) { return null; }
+
+        Utbetaling.UtbetalingBuilder utbetalingBuilder = lagUtbetalingBuilder(skalMerges.get(0));
+
+        Set<String> meldinger = on(skalMerges).map(UtbetalingTransformObjekt.MELDING).collectIn(new HashSet<String>());
+        String melding = join(meldinger, ". ");
+
+        // hent underytelser
+        List<Underytelse> underytelser = new ArrayList<>();
+        for (UtbetalingTransformObjekt objekt : skalMerges) {
+            underytelser.add(new Underytelse(objekt.getUnderYtelse(), objekt.getSpesifikasjon(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
+        }
+
+        LinkedList<Underytelse> list = new LinkedList<>(underytelser);
+        leggSammenBelop(utbetalingBuilder, underytelser);
+
+        List<Underytelse> sammenlagteUnderytelser = merge(new ArrayList<Mergeable>(list),
+                                                                              MERGEABLE_TITTEL_ANTALL_SATS,
+                                                                              MERGEABLE_TITTEL);
+
+        return utbetalingBuilder.withUnderytelser(sammenlagteUnderytelser).withMelding(melding).createUtbetaling();
+    }
+
     public static final class TransformComparator {
 
         public static final Comparator<UtbetalingTransformObjekt> DATO = new Comparator<UtbetalingTransformObjekt>() {
@@ -95,18 +143,44 @@ final class UtbetalingTransformObjekt {
                 return -o1.getUtbetalingsdato().toLocalDate().compareTo(o2.getUtbetalingsdato().toLocalDate());
             }
         };
+
+
+
+        public static final Comparator<UtbetalingTransformObjekt> TRANSFORMOBJEKT_ALLE_FELTER = new Comparator<UtbetalingTransformObjekt>() {
+            @Override
+            public int compare(UtbetalingTransformObjekt o1, UtbetalingTransformObjekt o2) {
+                if(o1.equals(o2)) {
+                    return 0;
+                }
+                return -1;
+            }
+        };
+
+        public static final Comparator<Mergeable> MERGEABLE_ALLE_FELTER = new Comparator<Mergeable>() {
+            @Override
+            public int compare(Mergeable o1, Mergeable o2) {
+                return TRANSFORMOBJEKT_ALLE_FELTER.compare((UtbetalingTransformObjekt)o1, (UtbetalingTransformObjekt)o2);
+            }
+        };
+
+        public static final Comparator<Mergeable> MERGEABLE_DATO= new Comparator<Mergeable>() {
+            @Override
+            public int compare(Mergeable o1, Mergeable o2) {
+                return DATO.compare((UtbetalingTransformObjekt)o1, (UtbetalingTransformObjekt)o2);
+            }
+        };
+
     }
+
     public int getAntall() {
         return antall;
     }
     public Double getBelop() {
         return belop;
     }
-
     public String getSpesifikasjon() {
         return spesifikasjon;
     }
-
     public Interval getPeriode() {
         return periode;
     }
@@ -160,7 +234,9 @@ final class UtbetalingTransformObjekt {
     }
 
     static final class UtbetalingTransformObjektBuilder {
+
         private int antall;
+
         private Double belop;
         private String hovedYtelse;
         private String kontonummer;
@@ -173,9 +249,7 @@ final class UtbetalingTransformObjekt {
         private DateTime utbetalingsDato;
         private Interval periode;
         private String valuta;
-
         private String spesifikasjon;
-
         public UtbetalingTransformObjektBuilder withSpesifikasjon(String spesifikasjon) {
             this.spesifikasjon = spesifikasjon;
             return this;
@@ -264,5 +338,28 @@ final class UtbetalingTransformObjekt {
             transformObjekt.spesifikasjon = this.spesifikasjon;
             return transformObjekt;
         }
+
+    }
+
+    private static Utbetaling.UtbetalingBuilder lagUtbetalingBuilder(UtbetalingTransformObjekt objekt) {
+        return Utbetaling.getBuilder()
+                .withHovedytelse(objekt.getHovedYtelse())
+                .withKontonr(objekt.getKontonummer())
+                .withMelding(objekt.getMelding())
+                .withStatus(objekt.getStatus())
+                .withPeriode(objekt.getPeriode())
+                .withValuta(objekt.getValuta())
+                .withMottakernavn(objekt.getMottaker())
+                .withMottakerId(objekt.getMottakerId())
+                .withMottakerkode(objekt.getMottakerKode())
+                .withUtbetalingsDato(objekt.getUtbetalingsdato());
+    }
+
+    private static void leggSammenBelop(Utbetaling.UtbetalingBuilder utbetalingBuilder, List<Underytelse> underytelser) {
+        Double brutto = getBrutto(underytelser);
+        Double trekk = getTrekk(underytelser);
+        utbetalingBuilder.withBrutto(brutto);
+        utbetalingBuilder.withTrekk(trekk);
+        utbetalingBuilder.withUtbetalt(brutto + trekk);
     }
 }
