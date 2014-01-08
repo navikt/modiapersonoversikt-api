@@ -1,27 +1,29 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
 
-    <div class="element">
-        <label>
-            <wicket:message key="mottatt.label"/>
-        </label>
-        <span wicket:id="mottakernavn">[]</span>
-    </div>
-    <div class="element">
-        <label>
-            <wicket:message key="konto.label"/>
-        </label>
-        <span wicket:id="konto">[]</span>
-    </div>
-    <div class="element">
-        <label>
-            <wicket:message key="ytelsesinfo.label"/>
-        </label>
-        <span wicket:id="ytelsesinfo">[]</span>
+    <div class="skillestrek-topp">
+        <div class="element">
+            <label>
+                <wicket:message key="mottatt.label"/>
+            </label>
+            <span wicket:id="mottakernavn">[]</span>
+        </div>
+        <div class="element">
+            <label>
+                <wicket:message key="konto.label"/>
+            </label>
+            <span wicket:id="konto">[]</span>
+        </div>
+        <div class="element">
+            <label>
+                <wicket:message key="ytelsesinfo.label"/>
+            </label>
+            <span wicket:id="ytelsesinfo">[]</span>
+        </div>
     </div>
 
     <!-- Detaljpanel -->
-    <table>
+    <table class="skillestrek-topp">
         <thead>
         <tr>
             <th><wicket:message key="utbetaling.ytelse"/></th>
@@ -35,7 +37,6 @@
             <td>
                 <span class="underytelse" wicket:id="underytelse">[]</span>
             </td>
-            <td></td>
             <td>
                 <span class="sats" wicket:id="sats">[]</span>
             </td>
@@ -51,7 +52,7 @@
     </table>
 
     <!-- bilagsmelding -->
-    <div class="element">
+    <div class="element skillestrek-topp">
         <label>
             <wicket:message key="bilagsmelding.header"/>
         </label>
