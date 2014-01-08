@@ -2,7 +2,9 @@ package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMottaker;
+import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
@@ -74,15 +76,26 @@ public class UtbetalingTransformerTest {
         WSUtbetaling wsUtbetaling = createUtbetaling1();
 
         transformerSkatt(asList(wsUtbetaling));
-        List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(asList(wsUtbetaling), FNR);
 
-        for (UtbetalingTransformObjekt transformObjekt : transformObjekter) {
-            assertThat(transformObjekt.getHovedYtelse().equalsIgnoreCase("Dagpenger"), is(true));
+        List<String> underytelser = asList(GRUNNBELOP, FORSKUDDSTREKK_SKATT, GRUNNBELOP, FORSKUDDSTREKK_SKATT);
+        final String dagpenger = "Dagpenger";
+        int index = 0;
+        for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
+            for (WSPosteringsdetaljer posteringsdetaljer : wsBilag.getPosteringsdetaljerListe()) {
+                assertThat(posteringsdetaljer.getKontoBeskrHoved().equalsIgnoreCase(dagpenger), is(true));
+                assertThat(posteringsdetaljer.getKontoBeskrUnder().equalsIgnoreCase(underytelser.get(index)), is(true));
+                index++;
+            }
+            index = 0;
         }
-        assertThat(transformObjekter.get(0).getUnderYtelse().equalsIgnoreCase(GRUNNBELOP), is(true));
-        assertThat(transformObjekter.get(1).getUnderYtelse().equalsIgnoreCase(FORSKUDDSTREKK_SKATT), is(true));
-        assertThat(transformObjekter.get(2).getUnderYtelse().equalsIgnoreCase(GRUNNBELOP), is(true));
-        assertThat(transformObjekter.get(3).getUnderYtelse().equalsIgnoreCase(FORSKUDDSTREKK_SKATT), is(true));
+
+        List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(asList(wsUtbetaling), FNR);
+        index = 0;
+        for (UtbetalingTransformObjekt transformObjekt : transformObjekter) {
+            assertThat(transformObjekt.getHovedYtelse().equalsIgnoreCase(dagpenger), is(true));
+            assertThat(transformObjekt.getUnderYtelse().equalsIgnoreCase(underytelser.get(index)), is(true));
+            index++;
+        }
     }
 
     @Test
