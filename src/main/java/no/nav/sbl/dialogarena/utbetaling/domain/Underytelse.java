@@ -50,6 +50,14 @@ public class Underytelse implements Serializable, Mergeable {
         }
     };
 
+    public static Double getBrutto(List<Underytelse> underytelser) {
+        return on(underytelser).map(UTBETALT_BELOP).reduce(sumDouble);
+    }
+
+    public static Double getTrekk(List<Underytelse> underytelser) {
+        return on(underytelser).map(TREKK_BELOP).reduce(sumDouble);
+    }
+
     private String tittel;
     private String spesifikasjon;
     private int antall;
