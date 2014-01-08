@@ -107,18 +107,12 @@ public final class UtbetalingTransformer {
                 }
             }
             mergeLikeObjekter(skalMerges, utbetalingBuilder, underytelser);
-            fjernForsteObjektILista(nyListe, forst);
+            nyListe.removeAll(skalMerges);
 
             nyeUtbetalinger.add(utbetalingBuilder.createUtbetaling());
         }
 
         return nyeUtbetalinger;
-    }
-
-    private static void fjernForsteObjektILista(List<UtbetalingTransformObjekt> nyListe, UtbetalingTransformObjekt forst) {
-        List<UtbetalingTransformObjekt> skalFjernes = new ArrayList<>();
-        skalFjernes.add(forst);
-        nyListe.removeAll(skalFjernes);
     }
 
     /**
