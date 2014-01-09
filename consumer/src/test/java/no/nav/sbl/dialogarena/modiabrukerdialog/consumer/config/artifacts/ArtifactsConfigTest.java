@@ -29,6 +29,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static java.lang.System.setProperty;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 import static org.hamcrest.Matchers.is;
@@ -96,10 +97,9 @@ public class ArtifactsConfigTest {
 
     @BeforeClass
     public static void setupStatic() {
-        setFrom("environment-local.properties");
-        //        setFrom("start_test.properties");
+        setFrom("test.properties");
         setupKeyAndTrustStore();
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+        setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }
 
     @Test

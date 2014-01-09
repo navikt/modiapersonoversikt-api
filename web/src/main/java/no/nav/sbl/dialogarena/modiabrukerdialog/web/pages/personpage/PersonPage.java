@@ -22,6 +22,7 @@ import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
@@ -62,6 +63,7 @@ public class PersonPage extends BasePage {
     private HentPersonPanel hentPersonPanel;
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
+    private Label fnrContainer;
 
     public PersonPage(PageParameters pageParameters) {
         String fnr = pageParameters.get("fnr").toString(null);
@@ -72,6 +74,7 @@ public class PersonPage extends BasePage {
             nullstillLink,
             lamellContainer,
             redirectPopup,
+            fnrContainer,
             new PersonsokPanel("personsokPanel").setVisible(true),
 		    new VisittkortPanel("visittkort", fnr).setVisible(true),
 		    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
@@ -86,6 +89,7 @@ public class PersonPage extends BasePage {
         hentPersonPanel = (HentPersonPanel) new HentPersonPanel("searchPanel").setOutputMarkupPlaceholderTag(true);
         searchToggleButton = (Button) new Button("toggle-sok").setOutputMarkupPlaceholderTag(true);
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
+        fnrContainer = new Label("fnr", fnr);
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET)
