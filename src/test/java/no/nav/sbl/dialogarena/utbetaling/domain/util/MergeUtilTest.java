@@ -25,11 +25,11 @@ public class MergeUtilTest {
     public void kanMerge_EnMergeable() throws Exception {
         Farge rod = new Farge(1, "Rød");
 
-        List<Farge> blandede_farger = merge(new ArrayList<Mergeable<Farge>>(asList(rod)), Farge.MERGEABLE_NAVN, Farge.MERGEABLE_NAVN);
+        List<Farge> blandedeFarger = merge(new ArrayList<Mergeable<Farge>>(asList(rod)), Farge.MERGEABLE_NAVN, Farge.MERGEABLE_NAVN);
 
-        assertThat(blandede_farger.size(), is(1));
-        assertThat(blandede_farger.get(0).navn, is("Rød"));
-        assertThat(blandede_farger.get(0).hue, is(1));
+        assertThat(blandedeFarger.size(), is(1));
+        assertThat(blandedeFarger.get(0).navn, is("Rød"));
+        assertThat(blandedeFarger.get(0).hue, is(1));
     }
 
     @Test
@@ -38,11 +38,11 @@ public class MergeUtilTest {
         Farge gronn2 = new Farge(100, "Grønn");
         Farge gronn3 = new Farge(115, "Grønn");
 
-        List<Farge> blandede_farger = merge(new ArrayList<Mergeable<Farge>>(asList(gronn2, gronn1, gronn2, gronn3)), Farge.MERGEABLE_NAVN, Farge.MERGEABLE_NAVN);
+        List<Farge> blandedeFarger = merge(new ArrayList<Mergeable<Farge>>(asList(gronn2, gronn1, gronn2, gronn3)), Farge.MERGEABLE_NAVN, Farge.MERGEABLE_NAVN);
 
-        assertThat(blandede_farger.size(), is(1));
-        assertThat(blandede_farger.get(0).navn, is("Grønn"));
-        assertThat(blandede_farger.get(0).hue, is(106));
+        assertThat(blandedeFarger.size(), is(1));
+        assertThat(blandedeFarger.get(0).navn, is("Grønn"));
+        assertThat(blandedeFarger.get(0).hue, is(106));
     }
 
     @Test
