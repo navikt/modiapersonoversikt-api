@@ -49,13 +49,6 @@ final class UtbetalingTransformObjekt implements Mergeable<Utbetaling> {
         return new UtbetalingTransformObjektBuilder();
     }
 
-    public static final Transformer<UtbetalingTransformObjekt, Double> BELOP = new Transformer<UtbetalingTransformObjekt, Double>() {
-        @Override
-        public Double transform(UtbetalingTransformObjekt utbetalingTransformObjekt) {
-            return utbetalingTransformObjekt.getBelop();
-        }
-    };
-
     public static final Transformer<UtbetalingTransformObjekt, String> MELDING = new Transformer<UtbetalingTransformObjekt, String>() {
         @Override
         public String transform(UtbetalingTransformObjekt utbetalingTransformObjekt) {
@@ -115,7 +108,7 @@ final class UtbetalingTransformObjekt implements Mergeable<Utbetaling> {
         List<UtbetalingTransformObjekt> skalMerges = on(merges).map(MERGEABLE_TRANSFORMER).collectIn(new ArrayList<UtbetalingTransformObjekt>());
         if(skalMerges.isEmpty()) { return null; }
 
-        Set<String> meldinger = on(skalMerges).map(UtbetalingTransformObjekt.MELDING).collectIn(new HashSet<String>());
+        Set<String> meldinger = on(skalMerges).map(MELDING).collectIn(new HashSet<String>());
         String meldingString = join(meldinger, ". ");
 
         // hent underytelser

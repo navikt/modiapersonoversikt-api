@@ -25,9 +25,7 @@ public final class UtbetalingTransformer {
 
     public static List<Utbetaling> createUtbetalinger(List<WSUtbetaling> wsUtbetalinger, String fnr) {
         transformerSkatt(wsUtbetalinger);
-        List<UtbetalingTransformObjekt> transformObjekter = createTransformObjekter(wsUtbetalinger, fnr);
-
-        return transformerTilUtbetalinger(transformObjekter, MERGEABLE_ALLE_FELTER);
+        return transformerTilUtbetalinger(createTransformObjekter(wsUtbetalinger, fnr), MERGEABLE_ALLE_FELTER);
     }
 
     static List<UtbetalingTransformObjekt> createTransformObjekter(List<WSUtbetaling> wsUtbetalinger, String fnr) {
@@ -79,7 +77,6 @@ public final class UtbetalingTransformer {
         return merge(new ArrayList<Mergeable<Utbetaling>>(transformObjekter), comparator, MERGEABLE_DATO);
     }
 
-
     static String transformMottakerKode(WSMottaker wsMottaker, String fnr) {
         if (wsMottaker != null && !fnr.equals(wsMottaker.getMottakerId())) {
             return ARBEIDSGIVER;
@@ -109,13 +106,11 @@ public final class UtbetalingTransformer {
         if (skatteDetaljer.isEmpty() || detaljer.isEmpty()) {
             return;
         }
-        WSPosteringsdetaljer detalj = detaljer.get(0);
-        String beskrivelse = detalj.getKontoBeskrHoved();
+        String beskrivelse = detaljer.get(0).getKontoBeskrHoved();
         for (WSPosteringsdetaljer skatt : skatteDetaljer) {
             skatt.setKontoBeskrHoved(beskrivelse);
         }
     }
-
 
     private static String transformerUnderbeskrivelse(String kontoBeskrUnder, String kontoBeskrHoved) {
         return (kontoBeskrUnder != null && !kontoBeskrUnder.isEmpty() ? kontoBeskrUnder : kontoBeskrHoved);

@@ -22,7 +22,7 @@ public class MergeUtil {
             skalMerges.add(first);
 
             for (Mergeable other : ytelser.subList(1, ytelser.size())) {
-                if (comparator.compare(first,other) == 0) {
+                if (comparator.compare(first, other) == 0) {
                     skalMerges.add(other);
                 }
             }
