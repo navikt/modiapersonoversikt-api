@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
 import java.util.List;
 
-public interface Mergeable {
+public interface Mergeable<T> {
 
-    Object doMerge(List<Mergeable> skalMerges);
+    T doMerge(List<Mergeable> skalMerges);
 }

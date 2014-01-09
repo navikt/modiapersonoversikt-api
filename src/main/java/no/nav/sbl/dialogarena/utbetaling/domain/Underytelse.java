@@ -11,11 +11,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.Double.doubleToLongBits;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static org.apache.commons.lang3.StringUtils.join;
 
-public class Underytelse implements Serializable, Mergeable {
+public class Underytelse implements Serializable, Mergeable<Underytelse> {
     public static final Transformer<Underytelse, Double> UTBETALT_BELOP = new Transformer<Underytelse, Double>() {
         @Override
         public Double transform(Underytelse underytelse) {
@@ -118,9 +119,9 @@ public class Underytelse implements Serializable, Mergeable {
         result = tittel != null ? tittel.hashCode() : 0;
         result = 31 * result + (spesifikasjon != null ? spesifikasjon.hashCode() : 0);
         result = 31 * result + antall;
-        temp = belop != +0.0d ? Double.doubleToLongBits(belop) : 0L;
+        temp = belop != +0.0d ? doubleToLongBits(belop) : 0L;
         result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = sats != +0.0d ? Double.doubleToLongBits(sats) : 0L;
+        temp = sats != +0.0d ? doubleToLongBits(sats) : 0L;
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         return result;
     }
@@ -165,16 +166,16 @@ public class Underytelse implements Serializable, Mergeable {
             }
         };
 
-        public static final Comparator<Mergeable> MERGEABLE_TITTEL = new Comparator<Mergeable>() {
+        public static final Comparator<Mergeable<Underytelse>> MERGEABLE_TITTEL = new Comparator<Mergeable<Underytelse>>() {
             @Override
             public int compare(Mergeable o1, Mergeable o2) {
                 return TITTEL.compare((Underytelse) o1, (Underytelse) o2);
             }
         };
 
-        public static final Comparator<Mergeable> MERGEABLE_TITTEL_ANTALL_SATS = new Comparator<Mergeable>() {
+        public static final Comparator<Mergeable<Underytelse>> MERGEABLE_TITTEL_ANTALL_SATS = new Comparator<Mergeable<Underytelse>>() {
             @Override
-            public int compare(Mergeable o1, Mergeable o2) {
+            public int compare(Mergeable<Underytelse> o1, Mergeable<Underytelse> o2) {
                 return TITTEL_ANTALL_SATS.compare((Underytelse) o1, (Underytelse) o2);
             }
         };

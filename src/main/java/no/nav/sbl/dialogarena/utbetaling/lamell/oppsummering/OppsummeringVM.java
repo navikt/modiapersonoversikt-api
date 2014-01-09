@@ -84,7 +84,7 @@ public class OppsummeringVM implements Serializable {
 
         List<HovedYtelseVM> hovedYtelseVMs  = new ArrayList<>();
         for (Map.Entry<String, List<Utbetaling>> entry : map.entrySet()) {
-            List<Mergeable> underytelser = on(entry.getValue()).flatmap(UNDERYTELSER).collectIn(new ArrayList<Mergeable>());
+            List<Mergeable<Underytelse>> underytelser = on(entry.getValue()).flatmap(UNDERYTELSER).collectIn(new ArrayList<Mergeable<Underytelse>>());
             List<Underytelse> sammenlagteUnderytelser = merge(underytelser, MERGEABLE_TITTEL, MERGEABLE_TITTEL);
             hovedYtelseVMs.add(new HovedYtelseVM(entry.getKey(), sammenlagteUnderytelser));
         }

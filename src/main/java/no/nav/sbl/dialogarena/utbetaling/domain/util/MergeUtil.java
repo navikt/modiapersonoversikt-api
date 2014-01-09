@@ -11,12 +11,12 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class MergeUtil {
 
-    public static <U> List<U> merge(List<Mergeable> inputListe, Comparator<Mergeable> comparator, Comparator<Mergeable> sorter){
-        List<Mergeable> ytelser = on(inputListe).collect(sorter);
+    public static <U> List<U> merge(List<Mergeable<U>> inputListe, Comparator<Mergeable<U>> comparator, Comparator<Mergeable<U>> sorter){
+        List<Mergeable<U>> ytelser = on(inputListe).collect(sorter);
 
         List<U> resultat = new ArrayList<>();
         while (ytelser.size() >= 1) {
-            Mergeable first = ytelser.get(0);
+            Mergeable<U> first = ytelser.get(0);
 
             List<Mergeable> skalMerges = new ArrayList<>();
             skalMerges.add(first);
@@ -26,7 +26,7 @@ public class MergeUtil {
                     skalMerges.add(other);
                 }
             }
-            resultat.add((U)first.doMerge(skalMerges));
+            resultat.add(first.doMerge(skalMerges));
             ytelser.removeAll(skalMerges);
         }
 

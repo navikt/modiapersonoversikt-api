@@ -75,8 +75,8 @@ public final class UtbetalingTransformer {
     /**
      * Tar inn en collection av lister av transformobjekter. I hver liste har objektene samme dato.
      */
-    private static List<Utbetaling> transformerTilUtbetalinger(List<UtbetalingTransformObjekt> transformObjekter, Comparator<Mergeable> comparator) {
-        return merge(new ArrayList<Mergeable>(transformObjekter), comparator, MERGEABLE_DATO);
+    private static List<Utbetaling> transformerTilUtbetalinger(List<UtbetalingTransformObjekt> transformObjekter, Comparator<Mergeable<Utbetaling>> comparator) {
+        return merge(new ArrayList<Mergeable<Utbetaling>>(transformObjekter), comparator, MERGEABLE_DATO);
     }
 
 
