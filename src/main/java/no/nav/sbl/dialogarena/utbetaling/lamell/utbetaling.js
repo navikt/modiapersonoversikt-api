@@ -3,6 +3,7 @@ var utbetalingslinjeSelector = '.utbetaling-ramme .utbetalingslinje';
 $(document).on('click', utbetalingslinjeSelector, function () {
     $(this).children('.detaljpanel').animate({height: 'toggle'}, 300);
     $(this).find('.ekspander-pil').toggleClass('ekspandert');
+    $(this).toggleClass('ekspandert-bakgrunn');
 });
 
 $(document).on('click', utbetalingslinjeSelector + ' .skriv-ut', function(event) {
