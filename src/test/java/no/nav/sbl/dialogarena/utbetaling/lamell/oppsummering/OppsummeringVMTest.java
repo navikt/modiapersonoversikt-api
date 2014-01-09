@@ -20,12 +20,12 @@ import static org.junit.Assert.assertThat;
 
 
 public class OppsummeringVMTest {
-    static final String langDatoFormat = "MMMM yyyy";
+    static final String LANG_DATO_FORMAT = "MMMM yyyy";
 
     @Test
     public void testOppsummertPeriode_AlleUtbetalingsdatoerISammeMaaned_DatoFormateringErMaaned() throws Exception {
         DateTime dato = new DateTime(2014, 1, 1, 1, 1);
-        String formatertDato = dato.toString(langDatoFormat);
+        String formatertDato = dato.toString(LANG_DATO_FORMAT);
         List<Utbetaling> utbetalinger = asList(getUtbetaling(dato));
 
         OppsummeringVM vm = new OppsummeringVM(utbetalinger, dato.toLocalDate(), dato.toLocalDate());
