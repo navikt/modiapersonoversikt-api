@@ -136,8 +136,10 @@
       display: inline-block;
     }
   }
-  .detaljpanel.skjult {
-    display: none;
+  &:not(.ekspandert) {
+    .detaljpanel {
+      display: none;
+    }
   }
 }
 
@@ -236,9 +238,19 @@
     .detaljpanel {
       display: none;
     }
+    &.ekspandert {
+      background-color: #f1f1f1;
+    }
   }
-  .ekspandert-bakgrunn {
-    background-color: #f1f1f1;
+}
+
+.utbetalingslinje, .oppsummering-total {
+  &.ekspandert {
+    .ekspander-pil {
+      transform:none;
+      -ms-transform:none;
+      -webkit-transform:none;
+    }
   }
 }
 
@@ -266,10 +278,5 @@
   -webkit-transform:rotate(180deg);
   &:hover {
     background-image: url('../img/pil_hover.svg');
-  }
-  &.ekspandert {
-    transform:none;
-    -ms-transform:none;
-    -webkit-transform:none;
   }
 }
