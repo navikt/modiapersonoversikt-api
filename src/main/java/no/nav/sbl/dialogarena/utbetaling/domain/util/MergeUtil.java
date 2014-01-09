@@ -4,18 +4,15 @@ import no.nav.sbl.dialogarena.utbetaling.domain.transform.Mergeable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 
-import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 
 
 public class MergeUtil {
 
     public static <U> List<U> merge(List<Mergeable> inputListe, Comparator<Mergeable> comparator, Comparator<Mergeable> sorter){
-        LinkedList<Mergeable> ytelser = on(inputListe).collectIn(new LinkedList<Mergeable>());
-        sort(ytelser, sorter);
+        List<Mergeable> ytelser = on(inputListe).collect(sorter);
 
         List<U> resultat = new ArrayList<>();
         while (ytelser.size() >= 1) {
@@ -29,7 +26,7 @@ public class MergeUtil {
                     skalMerges.add(other);
                 }
             }
-            resultat.add((U) first.doMerge(skalMerges));
+            resultat.add((U)first.doMerge(skalMerges));
             ytelser.removeAll(skalMerges);
         }
 
