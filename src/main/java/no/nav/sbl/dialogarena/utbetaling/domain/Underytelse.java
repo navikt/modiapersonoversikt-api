@@ -130,12 +130,12 @@ public class Underytelse implements Serializable, Mergeable {
         List<Underytelse> ytelser = on(skalMerges).map(MERGEABLE_UNDERYTELSE).collectIn(new ArrayList<Underytelse>());
         if(ytelser.isEmpty()) { return null; }
 
-        Double belop = on(ytelser).map(BELOP).reduce(sumDouble);
+        Double sum = on(ytelser).map(BELOP).reduce(sumDouble);
         Set<String> spesifikasjoner = on(ytelser).map(SPESIFIKASJON).collectIn(new HashSet<String>());
-        String spesifikasjon = join(spesifikasjoner, ". ");
+        String spesifikasjonsMelding = join(spesifikasjoner, ". ");
         Underytelse ytelse = ytelser.get(0);
-        return new UnderytelseBuilder().setSpesifikasjon(spesifikasjon)
-                .setBelop(belop)
+        return new UnderytelseBuilder().setSpesifikasjon(spesifikasjonsMelding)
+                .setBelop(sum)
                 .setTittel(ytelse.getTittel())
                 .setAntall(ytelse.getAntall())
                 .setSats(ytelse.getSats()).createUnderytelse();
