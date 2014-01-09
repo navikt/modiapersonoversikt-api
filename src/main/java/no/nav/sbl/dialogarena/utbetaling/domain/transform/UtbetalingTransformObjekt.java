@@ -20,6 +20,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseCo
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_TITTEL_ANTALL_SATS;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.getBrutto;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.getTrekk;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.MergeUtil.merge;
 import static org.apache.commons.lang3.StringUtils.join;
 
@@ -114,8 +115,6 @@ final class UtbetalingTransformObjekt implements Mergeable {
         List<UtbetalingTransformObjekt> skalMerges = on(merges).map(MERGEABLE_TRANSFORMER).collectIn(new ArrayList<UtbetalingTransformObjekt>());
         if(skalMerges.isEmpty()) { return null; }
 
-        Utbetaling.UtbetalingBuilder utbetalingBuilder = lagUtbetalingBuilder(skalMerges.get(0));
-
         Set<String> meldinger = on(skalMerges).map(UtbetalingTransformObjekt.MELDING).collectIn(new HashSet<String>());
         String meldingString = join(meldinger, ". ");
 
@@ -125,6 +124,7 @@ final class UtbetalingTransformObjekt implements Mergeable {
             underytelser.add(new Underytelse(objekt.getUnderYtelse(), objekt.getSpesifikasjon(), objekt.getAntall(), objekt.getBelop(), objekt.getSats()));
         }
 
+        UtbetalingBuilder utbetalingBuilder = lagUtbetalingBuilder(skalMerges.get(0));
         LinkedList<Underytelse> list = new LinkedList<>(underytelser);
         leggSammenBelop(utbetalingBuilder, underytelser);
 
@@ -341,7 +341,7 @@ final class UtbetalingTransformObjekt implements Mergeable {
 
     }
 
-    private static Utbetaling.UtbetalingBuilder lagUtbetalingBuilder(UtbetalingTransformObjekt objekt) {
+    private static UtbetalingBuilder lagUtbetalingBuilder(UtbetalingTransformObjekt objekt) {
         return Utbetaling.getBuilder()
                 .withHovedytelse(objekt.getHovedYtelse())
                 .withKontonr(objekt.getKontonummer())
@@ -355,7 +355,7 @@ final class UtbetalingTransformObjekt implements Mergeable {
                 .withUtbetalingsDato(objekt.getUtbetalingsdato());
     }
 
-    private static void leggSammenBelop(Utbetaling.UtbetalingBuilder utbetalingBuilder, List<Underytelse> underytelser) {
+    private static void leggSammenBelop(UtbetalingBuilder utbetalingBuilder, List<Underytelse> underytelser) {
         Double brutto = getBrutto(underytelser);
         Double trekk = getTrekk(underytelser);
         utbetalingBuilder.withBrutto(brutto);
