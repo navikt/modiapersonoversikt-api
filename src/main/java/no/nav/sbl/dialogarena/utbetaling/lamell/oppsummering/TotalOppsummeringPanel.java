@@ -15,11 +15,10 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class TotalOppsummeringPanel extends Panel {
 
-    private IModel<Boolean> skjult = Model.of(true);
+    private IModel<Boolean> ekspandert = Model.of(false);
 
     public TotalOppsummeringPanel(String id, OppsummeringVM oppsummeringVM) {
         super(id, new CompoundPropertyModel<>(oppsummeringVM));
@@ -27,16 +26,17 @@ public class TotalOppsummeringPanel extends Panel {
 
         add(createShowHideBehavior());
         add(createTopplinje(), createYtelsesOppsummering());
+        add(hasCssClassIf("ekspandert", ekspandert));
     }
 
     private AjaxEventBehavior createShowHideBehavior() {
         return new AjaxEventBehavior("click") {
             @Override
             protected void onEvent(AjaxRequestTarget target) {
-                skjult.setObject(!skjult.getObject());
+                ekspandert.setObject(!ekspandert.getObject());
                 target.appendJavaScript(
                         "$('#" + getMarkupId() + " .detaljpanel').animate({height: 'toggle'}, 300);" +
-                        "$('#" + getMarkupId() + " .ekspander-pil').toggleClass('ekspandert');");
+                        "$('#" + getMarkupId() + "').toggleClass('ekspandert');");
                 target.add();
             }
         };
@@ -49,8 +49,7 @@ public class TotalOppsummeringPanel extends Panel {
                         new Label("utbetalt"),
                         new Label("trekk"),
                         new Label("brutto"),
-                        createSkrivUtLink(),
-                        createPil()
+                        createSkrivUtLink()
                 );
     }
 
@@ -61,12 +60,6 @@ public class TotalOppsummeringPanel extends Panel {
                 target.appendJavaScript("Utbetalinger.skrivUt($('#" + TotalOppsummeringPanel.this.getMarkupId() + "'));");
             }
         };
-    }
-
-    private Component createPil() {
-        Component pil = new WebMarkupContainer("ekspander-pil");
-        pil.add(hasCssClassIf("ekspandert", not(skjult)));
-        return pil;
     }
 
     private MarkupContainer createYtelsesOppsummering() {
@@ -96,7 +89,6 @@ public class TotalOppsummeringPanel extends Panel {
             }
         };
         MarkupContainer oppsummeringDetalj = new WebMarkupContainer("oppsummeringDetalj").add(listView);
-        oppsummeringDetalj.add(hasCssClassIf("skjult", skjult));
         return oppsummeringDetalj;
     }
 
