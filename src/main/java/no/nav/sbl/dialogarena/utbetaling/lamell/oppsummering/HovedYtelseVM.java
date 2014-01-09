@@ -12,8 +12,12 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopS
 
 public class HovedYtelseVM implements Serializable {
 
-    private String hovedYtelsesBeskrivelse;
-    private List<UnderYtelseVM> underYtelsesBeskrivelser;
+    private final String hovedYtelsesBeskrivelse;
+    private final Double brutto;
+    private final Double trekk;
+    private final Double utbetalt;
+    private final List<UnderYtelseVM> underYtelsesBeskrivelser;
+
 
     public static final Transformer<HovedYtelseVM, String> NAVN = new Transformer<HovedYtelseVM, String>() {
         @Override
@@ -22,8 +26,11 @@ public class HovedYtelseVM implements Serializable {
         }
     };
 
-    public HovedYtelseVM(String beskrivelse, List<Underytelse> underytelser) {
+    public HovedYtelseVM(String beskrivelse, List<Underytelse> underytelser, Double brutto, Double trekk, Double utbetalt) {
         hovedYtelsesBeskrivelse = beskrivelse;
+        this.brutto = brutto;
+        this.trekk = trekk;
+        this.utbetalt = utbetalt;
         underYtelsesBeskrivelser = new ArrayList<>();
         for (Underytelse underytelse : underytelser) {
             underYtelsesBeskrivelser.add(new UnderYtelseVM(underytelse.getTittel(), underytelse.getBelop()));
@@ -40,34 +47,17 @@ public class HovedYtelseVM implements Serializable {
     }
 
     public String getBruttoUnderytelser(){
-        return getBelopString(lagBrutto());
+        return getBelopString(brutto);
     }
 
     public String getTrekkUnderytelser(){
-        return getBelopString(lagTrekk());
+        return getBelopString(trekk);
     }
 
     public String getNettoUnderytelser(){
-        return getBelopString(lagBrutto() + lagTrekk());
+        return getBelopString(utbetalt);
     }
 
-    private Double lagBrutto() {
-        Double sum = 0.0;
-        for (UnderYtelseVM ytelse : underYtelsesBeskrivelser) {
-            if(ytelse.isTrekk()) { continue; }
-            sum += ytelse.getBelop();
-        }
-        return sum;
-    }
-
-    private Double lagTrekk() {
-        Double sum = 0.0;
-        for (UnderYtelseVM ytelse : underYtelsesBeskrivelser) {
-            if(!ytelse.isTrekk()) { continue; }
-            sum += ytelse.getBelop();
-        }
-        return sum;
-    }
 
     public static class HovedYtelseComparator {
         public static final Comparator<HovedYtelseVM> HOVEDYTELSE_NAVN = new Comparator<HovedYtelseVM>() {

@@ -8,17 +8,14 @@ import org.joda.time.LocalTime;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.Locale;
 
 import static java.util.Arrays.asList;
-import static java.util.Locale.forLanguageTag;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 import static org.hamcrest.Matchers.is;
-import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 
 
@@ -27,7 +24,7 @@ public class OppsummeringVMTest {
 
     @Test
     public void testOppsummertPeriode_AlleUtbetalingsdatoerISammeMaaned_DatoFormateringErMaaned() throws Exception {
-        DateTime dato = new DateTime(2014, 1, 1, 1 ,1);
+        DateTime dato = new DateTime(2014, 1, 1, 1, 1);
         String formatertDato = dato.toString(langDatoFormat);
         List<Utbetaling> utbetalinger = asList(getUtbetaling(dato));
 
@@ -42,7 +39,7 @@ public class OppsummeringVMTest {
         DateTime dato = DateTime.now().minusDays(1);
         LocalDate startDato = defaultStartDato();
         LocalDate sluttDato = defaultSluttDato();
-        String formatertDato = KORT.transform(startDato.toDateTimeAtStartOfDay()) + " - " + KORT.transform(sluttDato.toDateTime(new LocalTime(23,59)));
+        String formatertDato = KORT.transform(startDato.toDateTimeAtStartOfDay()) + " - " + KORT.transform(sluttDato.toDateTime(new LocalTime(23, 59)));
         List<Utbetaling> utbetalinger = asList(getUtbetaling(dato));
 
         OppsummeringVM vm = new OppsummeringVM(utbetalinger, startDato, sluttDato);
@@ -64,13 +61,22 @@ public class OppsummeringVMTest {
 
         OppsummeringVM vm = new OppsummeringVM(utbetalinger, defaultStartDato(), defaultSluttDato());
 
+        List<String> navn = asList("Grunnbeløp", "Skatt", "Tillegg");
+        List<Double> belop = asList(1000.0, -400.0, 500.0);
         assertThat(vm.hovedytelser.size(), is(2));
         assertThat(vm.hovedytelser.get(0).getHovedYtelsesBeskrivelse(), is("Dagpenger"));
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().size(), is(3));
+        assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getBelop(), is(belop.get(0)));
+        assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getUnderYtelsesBeskrivelse(), is(navn.get(0)));
+        assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(1).getBelop(), is(belop.get(1)));
+        assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(1).getUnderYtelsesBeskrivelse(), is(navn.get(1)));
+        assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(2).getBelop(), is(belop.get(2)));
+        assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(2).getUnderYtelsesBeskrivelse(), is(navn.get(2)));
         assertThat(vm.hovedytelser.get(1).getHovedYtelsesBeskrivelse(), is("Helseprodukter"));
         assertThat(vm.hovedytelser.get(1).getUnderYtelsesBeskrivelser().size(), is(1));
+        assertThat(vm.hovedytelser.get(1).getUnderYtelsesBeskrivelser().get(0).getUnderYtelsesBeskrivelse(), is(navn.get(2)));
+        assertThat(vm.hovedytelser.get(1).getUnderYtelsesBeskrivelser().get(0).getBelop(), is(belop.get(2)));
     }
-
 
     @Test
     public void testTransformer_LikeTitlerOgForskjelligeAntall_BlirSlaattSammen() throws Exception {
@@ -89,7 +95,6 @@ public class OppsummeringVMTest {
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getUnderYtelsesBeskrivelse(), is("Grønn"));
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getBelop(), is(600.0));
     }
-
 
     private Utbetaling getUtbetaling(DateTime dato) {
         return new UtbetalingBuilder().withHovedytelse("Kjeks")
