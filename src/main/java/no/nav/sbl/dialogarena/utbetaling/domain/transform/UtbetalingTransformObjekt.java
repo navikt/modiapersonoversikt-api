@@ -117,7 +117,7 @@ final class UtbetalingTransformObjekt implements Mergeable {
         Utbetaling.UtbetalingBuilder utbetalingBuilder = lagUtbetalingBuilder(skalMerges.get(0));
 
         Set<String> meldinger = on(skalMerges).map(UtbetalingTransformObjekt.MELDING).collectIn(new HashSet<String>());
-        String melding = join(meldinger, ". ");
+        String meldingString = join(meldinger, ". ");
 
         // hent underytelser
         List<Underytelse> underytelser = new ArrayList<>();
@@ -128,11 +128,11 @@ final class UtbetalingTransformObjekt implements Mergeable {
         LinkedList<Underytelse> list = new LinkedList<>(underytelser);
         leggSammenBelop(utbetalingBuilder, underytelser);
 
-        List<Underytelse> sammenlagteUnderytelser = merge(new ArrayList<Mergeable>(list),
-                                                                              MERGEABLE_TITTEL_ANTALL_SATS,
-                                                                              MERGEABLE_TITTEL);
+        List<Underytelse> sammenlagteUnderytelser = merge(new ArrayList<Mergeable>(list), MERGEABLE_TITTEL_ANTALL_SATS, MERGEABLE_TITTEL);
 
-        return utbetalingBuilder.withUnderytelser(sammenlagteUnderytelser).withMelding(melding).createUtbetaling();
+        return utbetalingBuilder.withUnderytelser(sammenlagteUnderytelser)
+                                .withMelding(meldingString)
+                                .createUtbetaling();
     }
 
     public static final class TransformComparator {
