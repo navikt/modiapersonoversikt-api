@@ -30,6 +30,12 @@ var Utbetalinger = (function () {
 
     function kopierOgSkrivUt(html) {
         $('body > .print .content').html(html);
+        var date = new Date();
+        var day = date.getDate();
+        var month = date.getMonth() + 1;
+        var year = date.getFullYear();
+        var ddmmyyyy = ((day < 10 ? '0' : '') + day) + '.' + ((month < 10 ? '0' : '') + month) + '.' + year;
+        $('body > .print .dato-utskrift #dato').text(ddmmyyyy);
         window.print();
     }
 
