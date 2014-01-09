@@ -79,7 +79,7 @@ public class OppsummeringVM implements Serializable {
      * Slå sammen alle ytelsene i utbetalinger når de har samme hovedytelse og underytelse-tittel
      *
      */
-    private List<HovedYtelseVM> transformer(List<Utbetaling> utbetalinger) {
+    private static List<HovedYtelseVM> transformer(List<Utbetaling> utbetalinger) {
         Map<String, List<Utbetaling>> map = on(utbetalinger).reduce(indexBy(HOVEDYTELSE));
 
         List<HovedYtelseVM> hovedYtelseVMs  = new ArrayList<>();

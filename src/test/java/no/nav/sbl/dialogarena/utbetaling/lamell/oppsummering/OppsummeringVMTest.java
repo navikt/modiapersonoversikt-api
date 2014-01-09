@@ -52,6 +52,7 @@ public class OppsummeringVMTest {
         assertThat(vm.hovedytelser.size(), is(1));
         assertThat(vm.hovedytelser.get(0).getHovedYtelsesBeskrivelse(), is("Våren"));
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().size(), is(1));
+        assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getUnderYtelsesBeskrivelse(), is("Grønn"));
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getBelop(), is(600.0));
     }
 
