@@ -25,9 +25,7 @@ public class JettyNormal implements JettyRunner {
     }
 
     private void setup() {
-        setFrom("start.properties");
-        setFrom("jetty-environment.properties");
-        setFrom("environment-local.properties");
+        setFrom("test.properties");
         setupKeyAndTrustStore();
 
         jetty = usingWar(WEBAPP_SOURCE)

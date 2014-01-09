@@ -22,9 +22,10 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {ServicesConfig.class, EndpointsConfig.class})
 public class ServicesConfigTest {
+
     @BeforeClass
     public static void setupStatic() {
-        setFrom("environment-local.properties");
+        setFrom("test.properties");
         setupKeyAndTrustStore();
     }
 

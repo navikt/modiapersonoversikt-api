@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import static java.lang.System.setProperty;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockSetupSingleton.mockSetup;
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
@@ -29,6 +30,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {EndpointsConfig.class, TestBeans.class})
 public class EndpointsConfigTest {
+
     @Inject
     private AktoerPortType aktoerPortType;
     @Inject
@@ -46,11 +48,9 @@ public class EndpointsConfigTest {
     @BeforeClass
     public static void setupStatic() {
         mockSetup().clear();
-        setFrom("environment-local.properties");
-        setFrom("start_test.properties");
-
         setupKeyAndTrustStore();
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+        setFrom("test.properties");
+        setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
     }
 
     @Test
