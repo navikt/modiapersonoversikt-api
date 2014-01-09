@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.transform.Mergeable;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,6 +29,26 @@ import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.HovedYtelseV
 
 public class OppsummeringVM implements Serializable {
 
+    private static final Transformer<Utbetaling, Double> BRUTTO = new Transformer<Utbetaling, Double>() {
+        @Override
+        public Double transform(Utbetaling utbetaling) {
+            return utbetaling.getBrutto();
+        }
+    };
+    private static final Transformer<Utbetaling, Double> NETTO = new Transformer<Utbetaling, Double>() {
+        @Override
+        public Double transform(Utbetaling utbetaling) {
+            return utbetaling.getUtbetalt();
+        }
+    };
+    private static final Transformer<Utbetaling, Double> BEREGNET_TREKK = new Transformer<Utbetaling, Double>() {
+        @Override
+        public Double transform(Utbetaling utbetaling) {
+            return utbetaling.getTrekk() == 0.0 ?
+                    utbetaling.getBrutto() - utbetaling.getUtbetalt() :
+                    utbetaling.getTrekk();
+        }
+    };
     public List<Utbetaling> utbetalinger;
     public LocalDate sluttDato;
     public LocalDate startDato;
@@ -44,45 +65,13 @@ public class OppsummeringVM implements Serializable {
         this.hovedytelser = transformer(utbetalinger);
     }
 
-    public String getOppsummertPeriode() {
-        if (startDato.getMonthOfYear() == sluttDato.getMonthOfYear()
-                && startDato.getYear() == sluttDato.getYear()) {
-            return startDato.toString("MMMM yyyy", Locale.getDefault());
-        }
-        return KORT.transform(startDato.toDateTimeAtStartOfDay()) + " - " + KORT.transform(sluttDato.toDateMidnight().toDateTime());
-    }
-
-    private static final Transformer<Utbetaling, Double> BRUTTO = new Transformer<Utbetaling, Double>() {
-        @Override
-        public Double transform(Utbetaling utbetaling) {
-            return utbetaling.getBrutto();
-        }
-    };
-
-    private static final Transformer<Utbetaling, Double> NETTO = new Transformer<Utbetaling, Double>() {
-        @Override
-        public Double transform(Utbetaling utbetaling) {
-            return utbetaling.getUtbetalt();
-        }
-    };
-
-    private static final Transformer<Utbetaling, Double> BEREGNET_TREKK = new Transformer<Utbetaling, Double>() {
-        @Override
-        public Double transform(Utbetaling utbetaling) {
-            return utbetaling.getTrekk() == 0.0 ?
-                    utbetaling.getBrutto() - utbetaling.getUtbetalt() :
-                    utbetaling.getTrekk();
-        }
-    };
-
     /**
      * Slå sammen alle ytelsene i utbetalinger når de har samme hovedytelse og underytelse-tittel
-     *
      */
     private static List<HovedYtelseVM> transformer(List<Utbetaling> utbetalinger) {
         Map<String, List<Utbetaling>> map = on(utbetalinger).reduce(indexBy(HOVEDYTELSE));
 
-        List<HovedYtelseVM> hovedYtelseVMs  = new ArrayList<>();
+        List<HovedYtelseVM> hovedYtelseVMs = new ArrayList<>();
         for (Map.Entry<String, List<Utbetaling>> entry : map.entrySet()) {
             List<Mergeable<Underytelse>> underytelser = on(entry.getValue()).flatmap(UNDERYTELSER).collectIn(new ArrayList<Mergeable<Underytelse>>());
             List<Underytelse> sammenlagteUnderytelser = merge(underytelser, MERGEABLE_TITTEL, MERGEABLE_TITTEL);
@@ -90,5 +79,13 @@ public class OppsummeringVM implements Serializable {
         }
         sort(hovedYtelseVMs, HOVEDYTELSE_NAVN);
         return hovedYtelseVMs;
+    }
+
+    public String getOppsummertPeriode() {
+        if (startDato.getMonthOfYear() == sluttDato.getMonthOfYear()
+                && startDato.getYear() == sluttDato.getYear()) {
+            return startDato.toString("MMMM yyyy", Locale.getDefault());
+        }
+        return KORT.transform(startDato.toDateTimeAtStartOfDay()) + " - " + KORT.transform(sluttDato.toDateTime(new LocalTime(23, 59)));
     }
 }

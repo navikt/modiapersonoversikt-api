@@ -2,20 +2,54 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Locale;
 
 import static java.util.Arrays.asList;
+import static java.util.Locale.forLanguageTag;
+import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 import static org.hamcrest.Matchers.is;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 
 
 public class OppsummeringVMTest {
+    static final String langDatoFormat = "MMMM yyyy";
+
+    @Test
+    public void testOppsummertPeriode_AlleUtbetalingsdatoerISammeMaaned_DatoFormateringErMaaned() throws Exception {
+        DateTime dato = new DateTime(2014, 1, 1, 1 ,1);
+        String formatertDato = dato.toString(langDatoFormat);
+        List<Utbetaling> utbetalinger = asList(getUtbetaling(dato));
+
+        OppsummeringVM vm = new OppsummeringVM(utbetalinger, dato.toLocalDate(), dato.toLocalDate());
+        String oppsummertPeriode = vm.getOppsummertPeriode();
+
+        assertThat(oppsummertPeriode, is(formatertDato));
+    }
+
+    @Test
+    public void testOppsummertPeriode_UtbetalingsdatoerIForskjelligeMaaneder_DatoFormateringErIntervall() throws Exception {
+        DateTime dato = DateTime.now().minusDays(1);
+        LocalDate startDato = defaultStartDato();
+        LocalDate sluttDato = defaultSluttDato();
+        String formatertDato = KORT.transform(startDato.toDateTimeAtStartOfDay()) + " - " + KORT.transform(sluttDato.toDateTime(new LocalTime(23,59)));
+        List<Utbetaling> utbetalinger = asList(getUtbetaling(dato));
+
+        OppsummeringVM vm = new OppsummeringVM(utbetalinger, startDato, sluttDato);
+        String oppsummertPeriode = vm.getOppsummertPeriode();
+
+        assertThat(oppsummertPeriode, is(formatertDato));
+    }
 
     @Test
     public void testTransformer_LikeYtelser_BlirSlaattSammen() throws Exception {
@@ -54,6 +88,14 @@ public class OppsummeringVMTest {
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().size(), is(1));
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getUnderYtelsesBeskrivelse(), is("Grønn"));
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getBelop(), is(600.0));
+    }
+
+
+    private Utbetaling getUtbetaling(DateTime dato) {
+        return new UtbetalingBuilder().withHovedytelse("Kjeks")
+                .withUnderytelser(asList(new UnderytelseBuilder().createUnderytelse()))
+                .withUtbetalingsDato(dato)
+                .createUtbetaling();
     }
 
 }
