@@ -25,6 +25,7 @@ public class JettyNormal implements JettyRunner {
     }
 
     private void setup() {
+        setFrom("start.properties");
         setFrom("test.properties");
         setupKeyAndTrustStore();
 
