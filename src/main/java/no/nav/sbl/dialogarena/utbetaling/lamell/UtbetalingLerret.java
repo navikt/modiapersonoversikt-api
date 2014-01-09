@@ -48,6 +48,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
+import static org.joda.time.LocalDate.now;
 
 public class UtbetalingLerret extends Lerret {
 
@@ -83,16 +84,14 @@ public class UtbetalingLerret extends Lerret {
     }
 
     private void instansierFelter(String fnr) {
-        ingenutbetalinger = new UtbetalingerMessagePanel("ingenutbetalinger", "ingen.utbetalinger", "-ikon-stjerne");
-        ingenutbetalinger.setOutputMarkupPlaceholderTag(true);
+        ingenutbetalinger = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("ingenutbetalinger", "ingen.utbetalinger", "-ikon-stjerne")
+                .setOutputMarkupPlaceholderTag(true);
 
-        feilmelding = new FeilmeldingPanel("feilmelding", "feil.utbetalinger", "-ikon-feil");
-        feilmelding.setOutputMarkupPlaceholderTag(true);
+        feilmelding = (FeilmeldingPanel) new FeilmeldingPanel("feilmelding", "feil.utbetalinger", "-ikon-feil")
+                .setOutputMarkupPlaceholderTag(true);
 
-        LocalDate startDato = defaultStartDato();
-        LocalDate sluttDato = defaultSluttDato();
-        resultatCache = hentUtbetalingsResultat(fnr, startDato, sluttDato);
-        filterParametere = new FilterParametere(startDato, sluttDato, mottakere(), hentYtelser(resultatCache.utbetalinger));
+        resultatCache = hentUtbetalingsResultat(fnr, defaultStartDato(), defaultSluttDato());
+        filterParametere = new FilterParametere(defaultStartDato(), defaultSluttDato(), mottakere(), hentYtelser(resultatCache.utbetalinger));
 
         List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
@@ -129,7 +128,7 @@ public class UtbetalingLerret extends Lerret {
         } catch (ApplicationException ae) {
             LOG.warn("Noe feilet ved henting av utbetalinger for fnr {}", fnr, ae);
             feilmelding.setVisibilityAllowed(true);
-            LocalDate now = LocalDate.now();
+            LocalDate now = now();
             return resultatCache != null ? resultatCache : new UtbetalingsResultat(fnr, now, now, new ArrayList<Utbetaling>());
         }
     }

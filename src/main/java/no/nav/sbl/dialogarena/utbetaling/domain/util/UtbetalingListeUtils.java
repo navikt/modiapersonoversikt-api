@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingComparator.UTBETALING_DAG_YTELSE;
@@ -22,19 +21,27 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingComp
  */
 public class UtbetalingListeUtils {
 
-    public static Set<String> hentYtelser(Utbetaling... utbetalinger) {
-        return hentYtelser(asList(utbetalinger));
-    }
-    public static Set<String> hentYtelser(List<Utbetaling> utbetalinger) {
-        return on(utbetalinger).map(HOVEDYTELSE).collectIn(new HashSet<String>());
-    }
-
     private static final Transformer<Utbetaling, String> HOVEDYTELSE = new Transformer<Utbetaling, String>() {
         @Override
         public String transform(Utbetaling utbetaling) {
             return utbetaling.getHovedytelse();
         }
     };
+
+    public static Set<String> hentYtelser(List<Utbetaling> utbetalinger) {
+        return on(utbetalinger).map(HOVEDYTELSE).collectIn(new HashSet<String>());
+    }
+
+    public static List<Utbetaling> hentUtbetalingerFraPeriode(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
+        Interval intervall = new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime().plusDays(1));
+        ArrayList<Utbetaling> resultat = new ArrayList<>();
+        for (Utbetaling utbetaling : utbetalinger) {
+            if (intervall.contains(utbetaling.getUtbetalingsdato())) {
+                resultat.add(utbetaling);
+            }
+        }
+        return resultat;
+    }
 
     public static List<List<Utbetaling>> splittUtbetalingerPerMaaned(List<Utbetaling> utbetalinger) {
         sort(utbetalinger, UTBETALING_DAG_YTELSE);
@@ -71,14 +78,4 @@ public class UtbetalingListeUtils {
         return utbetalingerSplittetPaaMaaned;
     }
 
-    public static List<Utbetaling> hentUtbetalingerFraPeriode(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
-        Interval intervall = new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateMidnight().toDateTime().plusDays(1));
-        ArrayList<Utbetaling> resultat = new ArrayList<>();
-        for (Utbetaling utbetaling : utbetalinger) {
-            if (intervall.contains(utbetaling.getUtbetalingsdato())) {
-                resultat.add(utbetaling);
-            }
-        }
-        return resultat;
-    }
 }

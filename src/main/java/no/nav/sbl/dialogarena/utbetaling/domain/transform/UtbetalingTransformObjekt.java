@@ -25,7 +25,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.MergeUtil.merge;
 import static org.apache.commons.lang3.StringUtils.join;
 
 
-final class UtbetalingTransformObjekt implements Mergeable {
+final class UtbetalingTransformObjekt implements Mergeable<Utbetaling> {
     private DateTime utbetalingsdato;
 
     private String mottaker;
@@ -128,7 +128,7 @@ final class UtbetalingTransformObjekt implements Mergeable {
         LinkedList<Underytelse> list = new LinkedList<>(underytelser);
         leggSammenBelop(utbetalingBuilder, underytelser);
 
-        List<Underytelse> sammenlagteUnderytelser = merge(new ArrayList<Mergeable>(list), MERGEABLE_TITTEL_ANTALL_SATS, MERGEABLE_TITTEL);
+        List<Underytelse> sammenlagteUnderytelser = merge(new ArrayList<Mergeable<Underytelse>>(list), MERGEABLE_TITTEL_ANTALL_SATS, MERGEABLE_TITTEL);
 
         return utbetalingBuilder.withUnderytelser(sammenlagteUnderytelser)
                                 .withMelding(meldingString)
@@ -156,16 +156,16 @@ final class UtbetalingTransformObjekt implements Mergeable {
             }
         };
 
-        public static final Comparator<Mergeable> MERGEABLE_ALLE_FELTER = new Comparator<Mergeable>() {
+        public static final Comparator<Mergeable<Utbetaling>> MERGEABLE_ALLE_FELTER = new Comparator<Mergeable<Utbetaling>>() {
             @Override
-            public int compare(Mergeable o1, Mergeable o2) {
+            public int compare(Mergeable<Utbetaling> o1, Mergeable<Utbetaling> o2) {
                 return TRANSFORMOBJEKT_ALLE_FELTER.compare((UtbetalingTransformObjekt)o1, (UtbetalingTransformObjekt)o2);
             }
         };
 
-        public static final Comparator<Mergeable> MERGEABLE_DATO= new Comparator<Mergeable>() {
+        public static final Comparator<Mergeable<Utbetaling>> MERGEABLE_DATO= new Comparator<Mergeable<Utbetaling>>() {
             @Override
-            public int compare(Mergeable o1, Mergeable o2) {
+            public int compare(Mergeable<Utbetaling> o1, Mergeable<Utbetaling> o2) {
                 return DATO.compare((UtbetalingTransformObjekt)o1, (UtbetalingTransformObjekt)o2);
             }
         };

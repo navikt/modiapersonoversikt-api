@@ -4,7 +4,6 @@ import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -29,6 +28,8 @@ import java.util.List;
 import static java.util.Collections.sort;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 import static org.joda.time.LocalDate.now;
@@ -56,8 +57,8 @@ public class FilterFormPanel extends Panel {
         valideringsfeil = new FeedbackPanel("feedbackpanel");
         return (Form) filterForm.add(
                 valideringsfeil.setOutputMarkupId(true),
-                createMottakerButton("visBruker", Utbetaling.BRUKER),
-                createMottakerButton("visArbeidsgiver", Utbetaling.ARBEIDSGIVER),
+                createMottakerButton("visBruker", BRUKER),
+                createMottakerButton("visArbeidsgiver", ARBEIDSGIVER),
                 ytelsesContainer,
                 createDateRangePicker())
                 .add(createDateRangePickerChangeBehaviour())
