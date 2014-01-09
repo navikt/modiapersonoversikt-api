@@ -42,7 +42,7 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
                 setDefaultModel(new ListModel<>(transformUtbetalingToVM(utbetalinger)));
             }
         } catch (ApplicationException ae) {
-            LOG.error("Feilet ved henting av utbetalingsinformasjon for fnr {}", fnr, ae);
+            LOG.warn("Feilet ved henting av utbetalingsinformasjon for fnr {}", fnr, ae);
             setDefaultModel(new ListModel<>(asList(new ErrorListing(getString("utbetaling.feilet")))));
         }
     }
