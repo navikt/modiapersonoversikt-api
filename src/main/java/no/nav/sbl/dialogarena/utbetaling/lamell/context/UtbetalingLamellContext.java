@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class UbetalingLamellContext {
+public class UtbetalingLamellContext {
 
     @Value("${server.arena.url}")
     private String arenaServerUrl;
