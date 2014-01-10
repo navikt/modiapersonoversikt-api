@@ -85,11 +85,11 @@ public final class UtbetalingTransformer {
      * Tar inn en liste av transformobjekter. Slår dem sammen og lager en liste av Utbetalinger.
      *
      * Forutsetninger for at transformasjonen skal bli riktig:
-     * - Alle utbetalinger har en utbetalingsdato
-     * - Alle posteringsdetaljer:
-     *     - Har en kontoBeskrHoved som tilsvarer hovedytelsen
-     *     - i et bilag har samme hovedytelse (utenom Skatt)
-     *     - har et beløp.
+     * <p>- Alle utbetalinger har en utbetalingsdato</p>
+     * <p>- Alle posteringsdetaljer:</p>
+     *    <p> - Har en kontoBeskrHoved som tilsvarer hovedytelsen</p>
+     *    <p> - i et bilag har samme hovedytelse (utenom Skatt)</p>
+     *    <p> - har et beløp.</p>
      */
     private static List<Utbetaling> transformerTilUtbetalinger(List<UtbetalingTransformObjekt> transformObjekter, Comparator<Mergeable<Utbetaling>> comparator) {
         return merge(new ArrayList<Mergeable<Utbetaling>>(transformObjekter), comparator, MERGEABLE_DATO);
