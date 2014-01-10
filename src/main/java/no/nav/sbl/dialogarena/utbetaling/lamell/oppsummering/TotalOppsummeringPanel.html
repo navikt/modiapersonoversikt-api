@@ -1,48 +1,56 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
 
-    <div wicket:id="oppsummeringsLinje">
-        <div class="main">
-            <div class="element oppsummeringsperiode">
+    <div class="main" wicket:id="oppsummeringsLinje">
+        <div class="element oppsummeringsperiode">
+            <label>
+                <wicket:message key="utbetaling.lamell.oppsummering.periode"/>
+            </label>
+            <span wicket:id="oppsummertPeriode"></span>
+        </div>
+        <div class="oppsummeringssummer">
+            <div class="element">
                 <label>
-                    <wicket:message key="utbetaling.lamell.oppsummering.periode"/>
+                    <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
                 </label>
-                <span wicket:id="oppsummertPeriode"></span>
+                <span wicket:id="brutto"></span>
             </div>
-            <div class="oppsummeringssummer">
-                <div class="element">
-                    <label>
-                        <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
-                    </label>
-                    <span wicket:id="brutto"></span>
-                </div>
-                <div class="element">
-                    <label>
-                        <wicket:message key="utbetaling.lamell.oppsummering.trekk"/>
-                    </label>
-                    <span wicket:id="trekk"></span>
-                </div>
-                <div class="element">
-                    <label>
-                        <wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/>
-                    </label>
-                    <span wicket:id="utbetalt"></span>
-                </div>
-                <div wicket:id="skriv-ut" class="skriv-ut ikke-print"></div>
-                <div class="ekspander-pil ikke-print"></div>
+            <div class="element">
+                <label>
+                    <wicket:message key="utbetaling.lamell.oppsummering.trekk"/>
+                </label>
+                <span wicket:id="trekk"></span>
+            </div>
+            <div class="element">
+                <label>
+                    <wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/>
+                </label>
+                <span wicket:id="utbetalt"></span>
             </div>
         </div>
+        <div class="ekspander-pil ikke-print"></div>
+        <div wicket:id="skriv-ut" class="skriv-ut ikke-print"></div>
     </div>
 
     <div wicket:id="oppsummeringDetalj" class="detaljpanel">
         <table>
             <thead>
             <tr>
-                <th><wicket:message key="utbetaling.lamell.oppsummering.ytelse"/></th>
-                <th><wicket:message key="utbetaling.lamell.oppsummering.delbelop"/></th>
-                <th><wicket:message key="utbetaling.lamell.oppsummering.brutto"/></th>
-                <th><wicket:message key="utbetaling.lamell.oppsummering.trekk"/></th>
-                <th><wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/></th>
+                <th>
+                    <wicket:message key="utbetaling.lamell.oppsummering.ytelse"/>
+                </th>
+                <th>
+                    <wicket:message key="utbetaling.lamell.oppsummering.delbelop"/>
+                </th>
+                <th>
+                    <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
+                </th>
+                <th>
+                    <wicket:message key="utbetaling.lamell.oppsummering.trekk"/>
+                </th>
+                <th>
+                    <wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/>
+                </th>
             </tr>
             </thead>
             <tbody wicket:id="hovedytelser">
