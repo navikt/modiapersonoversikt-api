@@ -103,6 +103,16 @@ final class UtbetalingTransformObjekt implements Mergeable<Utbetaling> {
         return result;
     }
 
+    /**
+     * Slår sammen en liste av like UtbetalingTransformObjekter(av typen Mergeable) til en Utbetaling.
+     *
+     * Transformobjekter er like hvis de har samme:
+     * Utbetalingsdag, Hovedytelse, Mottaker, Status, Konto, Valuta
+     *
+     * I transformasjonen blir også like underytelser slått sammen. De er like hvis de har samme tittel, antall og sats.
+     * De andre feltene slås sammen.
+     *
+     */
     @Override
     public Utbetaling doMerge(List<Mergeable> merges) {
         List<UtbetalingTransformObjekt> skalMerges = on(merges).map(MERGEABLE_TRANSFORMER).collectIn(new ArrayList<UtbetalingTransformObjekt>());

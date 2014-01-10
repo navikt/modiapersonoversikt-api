@@ -23,11 +23,22 @@ import static org.apache.commons.lang3.StringUtils.join;
 
 public final class UtbetalingTransformer {
 
+    /**
+     * Transformasjonen gjøres i tre steg:
+     * - Trekk ut skatt
+     * - Transformer til transformobjekter
+     * - Slå sammen til Utbetalinger
+     */
     public static List<Utbetaling> createUtbetalinger(List<WSUtbetaling> wsUtbetalinger, String fnr) {
         transformerSkatt(wsUtbetalinger);
         return transformerTilUtbetalinger(createTransformObjekter(wsUtbetalinger, fnr), MERGEABLE_ALLE_FELTER);
     }
 
+    /**
+     * Gjør om en liste av WSUtbetalinger til en liste av UtbetalingTransformObjekt.
+     * Et UtbetalingTransformObjekt tilsvarer en WSPosteringsDetalj i utbetalingene, lagt til informasjon fra WSUtbetalingen og WSBilaget
+     * detaljen kom fra.
+     */
     static List<UtbetalingTransformObjekt> createTransformObjekter(List<WSUtbetaling> wsUtbetalinger, String fnr) {
 
         List<UtbetalingTransformObjekt> list = new ArrayList<>();
@@ -71,7 +82,14 @@ public final class UtbetalingTransformer {
     }
 
     /**
-     * Tar inn en collection av lister av transformobjekter. I hver liste har objektene samme dato.
+     * Tar inn en liste av transformobjekter. Slår dem sammen og lager en liste av Utbetalinger.
+     *
+     * Forutsetninger for at transformasjonen skal bli riktig:
+     * - Alle utbetalinger har en utbetalingsdato
+     * - Alle posteringsdetaljer:
+     *     - Har en kontoBeskrHoved som tilsvarer hovedytelsen
+     *     - i et bilag har samme hovedytelse (utenom Skatt)
+     *     - har et beløp.
      */
     private static List<Utbetaling> transformerTilUtbetalinger(List<UtbetalingTransformObjekt> transformObjekter, Comparator<Mergeable<Utbetaling>> comparator) {
         return merge(new ArrayList<Mergeable<Utbetaling>>(transformObjekter), comparator, MERGEABLE_DATO);
@@ -95,6 +113,10 @@ public final class UtbetalingTransformer {
     /**
      * Kobler skattetrekket til ytelsen i bilaget.
      * Forutsetter at alle posteringsdetaljer i et bilag har samme hovedytelse.
+     *
+     * En WSPosteringDetalj inneholder skatteopplysning hvis kontoBeskrHoved er "Skatt". Den har også en
+     * underbeskrivelse, f.eks "Forskuddstrekk skatt". Endre kontoBeskrHoved til det samme som de andre
+     * posteringsdetaljene i samme WSBilag. (Alle posteringdetaljer i samme bilag har samme kontoBeskrHoved).
      */
     private static void trekkUtSkatteOpplysninger(List<WSPosteringsdetaljer> detaljer) {
         List<WSPosteringsdetaljer> skatteDetaljer = new ArrayList<>();
@@ -112,6 +134,9 @@ public final class UtbetalingTransformer {
         }
     }
 
+    /**
+     * Hvis det er en underytelsebeskrivelse(kontoBeskrUnder), bruk den, ellers bruk beskrivelsen av hovedytelsen (kontoBeskrHoved).
+     */
     private static String transformerUnderbeskrivelse(String kontoBeskrUnder, String kontoBeskrHoved) {
         return (kontoBeskrUnder != null && !kontoBeskrUnder.isEmpty() ? kontoBeskrUnder : kontoBeskrHoved);
     }
