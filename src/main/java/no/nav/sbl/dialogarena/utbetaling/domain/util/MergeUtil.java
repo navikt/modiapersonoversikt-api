@@ -21,7 +21,7 @@ public class MergeUtil {
             List<Mergeable> skalMerges = new ArrayList<>();
             skalMerges.add(first);
 
-            for (Mergeable other : ytelser.subList(1, ytelser.size())) {
+            for (Mergeable<U> other : ytelser.subList(1, ytelser.size())) {
                 if (comparator.compare(first, other) == 0) {
                     skalMerges.add(other);
                 }
