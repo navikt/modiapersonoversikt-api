@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal;
 
 import no.nav.modig.wicket.test.internal.Parameters;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
@@ -29,7 +28,6 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @ContextConfiguration(classes = {KjerneinfoPepMockContext.class,
         HentPersonPanelMockContext.class,
         SykepengerWidgetMockContext.class,
-        AktorPortTypeMock.class,
         UtbetalingLamellContext.class,
         UtbetalingPortTypeMock.class})
 public class SjekkForlateSideTest extends WicketPageTest {

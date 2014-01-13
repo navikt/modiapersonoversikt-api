@@ -37,7 +37,6 @@
 
         <!-- Slutt kjerneinfo -->
         <!-- App-->
-        <webservice alias="Aktoer_v1" mapToProperty="aktor"/>
 
         <applicationCertificate alias="srvModiabrukerdialog" />
     </resources>

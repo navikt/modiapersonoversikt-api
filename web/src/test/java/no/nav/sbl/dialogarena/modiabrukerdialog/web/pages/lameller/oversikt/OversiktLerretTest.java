@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 
 import no.nav.modig.modia.widget.LenkeWidget;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
@@ -20,7 +19,6 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 @ContextConfiguration(classes = {
         KjerneinfoPepMockContext.class,
         SykepengerWidgetMockContext.class,
-        AktorPortTypeMock.class,
         UtbetalingLamellContext.class,
         UtbetalingPortTypeMock.class
 })

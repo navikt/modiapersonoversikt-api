@@ -57,13 +57,6 @@
         <dependencies>
 
             <dependency>
-                <groupId>no.nav.tjenester.fim</groupId>
-                <artifactId>nav-fim-aktoer-v1-tjenestespesifikasjon</artifactId>
-                <classifier>jaxws</classifier>
-                <version>1.0.0</version>
-            </dependency>
-
-            <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
                 <version>2.0.0</version>
@@ -760,7 +753,7 @@
                 <plugin>
                     <groupId>no.nav.maven.plugins</groupId>
                     <artifactId>modig-scm-plugin</artifactId>
-                    <version>1.1.11</version>
+                    <version>1.1.13</version>
                 </plugin>
                 <plugin>
                     <groupId>no.nav.maven.plugins</groupId>
