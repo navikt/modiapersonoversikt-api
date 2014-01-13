@@ -18,8 +18,6 @@
            diskPersistent="false"
            memoryStoreEvictionPolicy="LRU"/>
 
-    <cache name="aktoridCache" maxElementsInMemory="100000" overflowToDisk="true" eternal="true" />
-
     <cache name="kontaktinformasjonOgPreferanserCache" maxElementsInMemory="100"
            eternal="false"
            timeToIdleSeconds="60"

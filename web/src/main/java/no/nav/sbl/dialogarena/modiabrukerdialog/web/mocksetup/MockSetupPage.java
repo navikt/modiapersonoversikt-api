@@ -20,7 +20,6 @@ import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.AktorEndpointConfig.AKTOR_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.KodeverkV2EndpointConfig.KODEVERK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.UtbetalingEndpointConfig.UTBETALING_KEY;
 
@@ -81,10 +80,9 @@ public class MockSetupPage extends BasePage {
 
     private List<MockSetupModel> lagModeller() {
         return asList(
-                new MockSetupModel("1", "AktørID", AKTOR_KEY),
-                new MockSetupModel("2", "Utbetaling", UTBETALING_KEY),
-                new MockSetupModel("3", "Kodeverk", KODEVERK_KEY),
-                new MockSetupModel("4", "Kjerneinfo", KJERNEINFO_KEY)
+                new MockSetupModel("1", "Utbetaling", UTBETALING_KEY),
+                new MockSetupModel("2", "Kodeverk", KODEVERK_KEY),
+                new MockSetupModel("3", "Kjerneinfo", KJERNEINFO_KEY)
         );
     }
 

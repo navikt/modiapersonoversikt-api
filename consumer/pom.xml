@@ -14,12 +14,6 @@
     <dependencies>
 
         <dependency>
-            <groupId>no.nav.tjenester.fim</groupId>
-            <artifactId>nav-fim-aktoer-v1-tjenestespesifikasjon</artifactId>
-            <classifier>jaxws</classifier>
-        </dependency>
-
-        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>modiabrukerdialog-mock</artifactId>
             <version>${project.version}</version>

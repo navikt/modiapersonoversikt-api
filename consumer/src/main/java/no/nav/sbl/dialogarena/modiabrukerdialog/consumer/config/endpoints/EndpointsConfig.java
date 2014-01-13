@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Import;
  */
 @Configuration
 @Import({
-        AktorEndpointConfig.class,
         UtbetalingEndpointConfig.class,
         KodeverkV2EndpointConfig.class
 })

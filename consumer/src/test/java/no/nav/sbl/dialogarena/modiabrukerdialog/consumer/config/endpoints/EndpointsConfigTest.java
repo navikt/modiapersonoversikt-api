@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.TestBeans;
-import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.junit.BeforeClass;
@@ -32,14 +31,9 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 public class EndpointsConfigTest {
 
     @Inject
-    private AktoerPortType aktoerPortType;
-    @Inject
     private UtbetalingPortType utbetalingPortType;
     @Inject
     private KodeverkPortType kodeverkPortType;
-    @Inject
-    @Named("aktorIdPing")
-    private Pingable aktorIdPing;
     @Inject
     @Named("utbetalingPing")
     private Pingable utbetalingPing;
@@ -55,14 +49,12 @@ public class EndpointsConfigTest {
 
     @Test
     public void shouldHavePortTypes() {
-        assertThat(aktoerPortType, is(notNullValue()));
         assertThat(utbetalingPortType, is(notNullValue()));
         assertThat(kodeverkPortType, is(notNullValue()));
     }
 
     @Test
     public void shouldHavePingPortTypes() {
-        assertThat(aktorIdPing.ping().size(), is(equalTo(1)));
         assertThat(utbetalingPing.ping().size(), is(equalTo(1)));
     }
 

@@ -57,12 +57,6 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.tjenester.fim</groupId>
-            <artifactId>nav-fim-aktoer-v1-tjenestespesifikasjon</artifactId>
-            <classifier>jaxws</classifier>
-        </dependency>
-
-        <dependency>
             <groupId>no.nav</groupId>
             <artifactId>brukerprofil-consumer</artifactId>
         </dependency>

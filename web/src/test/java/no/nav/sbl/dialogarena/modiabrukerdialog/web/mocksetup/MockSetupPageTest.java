@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktorPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
@@ -22,7 +21,6 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @ContextConfiguration(classes = {KjerneinfoPepMockContext.class,
         HentPersonPanelMockContext.class,
         SykepengerWidgetMockContext.class,
-        AktorPortTypeMock.class,
         UbetalingLamellContext.class,
         UtbetalingPortTypeMock.class})
 @RunWith(SpringJUnit4ClassRunner.class)
