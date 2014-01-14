@@ -3,101 +3,112 @@
 @hoydePadding: 10px;
 @borderColor: #d1d1d1;
 .widget-navigasjon.widget-utbetaling {
-	.float_right {
-		float: right;
-	}
-	.label {
-		padding-right: 3px;
-		text-transform: uppercase;
-	}
 
-	& > ul > li {
-		&:hover {
-			a .melding-metadata {
-				border-right-color: #999;
-			}
-		}
-	}
-	& > ul > li > a {
-		&:focus {
-			background-color: #dadada !important;
-			color: #3e3832 !important;
-			.melding-metadata {
-				border-right-color: #999;
-			}
-		}
-		padding: 0;
-		.utbetaling-metadata {
-			height: @utbetalingHoyde;
-			padding: @hoydePadding 30px;
-			overflow: hidden;
-			width: 85%;
-			border-right: 1px solid #d1d1d1;
-			span {
-				margin: 0;
-				color: #3e3832;
-				font-size: 0.85rem;
-			}
-			h2 {
-				font-family: 'Modus', arial, sans-serif;
-				margin-top: 0;
-				margin-bottom: 0.5em;
-				font-size: 1.2rem;
-				font-weight: bold;
-				text-overflow: ellipsis;
-				white-space: nowrap;
-				overflow: hidden;
-			}
-			footer {
-				margin: 0;
-				font-size: 0.85rem;
-			}
-		}
-		.status-container {
-			position: relative;
-			height: @utbetalingHoyde;
-			padding: @hoydePadding;
-			overflow: hidden;
-			text-align: center;
-			.status {
-				position: relative;
-				top: 0;
-				height: 1em;
-				width: 1em;
-				border-radius: 50%;
-				margin: 0 auto;
-				&.ikke-besvart {
-					background-color: #eebe00;
-				}
-				&.ikke-lest-av-bruker {
-					background-color: #0ca9e1;
-				}
-				&.lest-av-bruker {
-					background-color: transparent;
-					border: 1px solid #0ca9e1;
-				}
-				&.ikke-besvart-innen-frist {
-					background-color: #ec288d;
-				}
-			}
-			div {
-				position: absolute;
-				bottom: @hoydePadding;
-				width: 100%;
-				left: 0;
-				span {
-					padding: 0 15px;
-					width: 100%;
-					font-size: 0.85rem;
-					text-transform: none;
-					margin: 0;
-					color: #3e3832;
-					line-height: 1em;
-					&.lest-dato {
-						font-weight: 600;
-					}
-				}
-			}
-		}
-	}
+  .hent-utbetalinger {
+    text-align: center;
+
+    a {
+      margin: 0;
+      padding: 0;
+      color: #0067cf;
+    }
+  }
+
+  .float_right {
+    float: right;
+  }
+  .label {
+    padding-right: 3px;
+    text-transform: uppercase;
+  }
+
+  & > ul > li {
+    &:hover {
+      a .melding-metadata {
+        border-right-color: #999;
+      }
+    }
+  }
+  & > ul > li > a {
+    &:focus {
+      background-color: #dadada !important;
+      color: #3e3832 !important;
+      .melding-metadata {
+        border-right-color: #999;
+      }
+    }
+    padding: 0;
+    .utbetaling-metadata {
+      height: @utbetalingHoyde;
+      padding: @hoydePadding 30px;
+      overflow: hidden;
+      width: 85%;
+      border-right: 1px solid #d1d1d1;
+      span {
+        margin: 0;
+        color: #3e3832;
+        font-size: 0.85rem;
+      }
+      h2 {
+        font-family: 'Modus', arial, sans-serif;
+        margin-top: 0;
+        margin-bottom: 0.5em;
+        font-size: 1.2rem;
+        font-weight: bold;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
+      footer {
+        margin: 0;
+        font-size: 0.85rem;
+      }
+    }
+    .status-container {
+      position: relative;
+      height: @utbetalingHoyde;
+      padding: @hoydePadding;
+      overflow: hidden;
+      text-align: center;
+      .status {
+        position: relative;
+        top: 0;
+        height: 1em;
+        width: 1em;
+        border-radius: 50%;
+        margin: 0 auto;
+        &.ikke-besvart {
+          background-color: #eebe00;
+        }
+        &.ikke-lest-av-bruker {
+          background-color: #0ca9e1;
+        }
+        &.lest-av-bruker {
+          background-color: transparent;
+          border: 1px solid #0ca9e1;
+        }
+        &.ikke-besvart-innen-frist {
+          background-color: #ec288d;
+        }
+      }
+      div {
+        position: absolute;
+        bottom: @hoydePadding;
+        width: 100%;
+        left: 0;
+        span {
+          padding: 0 15px;
+          width: 100%;
+          font-size: 0.85rem;
+          text-transform: none;
+          margin: 0;
+          color: #3e3832;
+          line-height: 1em;
+          &.lest-dato {
+            font-weight: 600;
+          }
+        }
+      }
+    }
+  }
 }

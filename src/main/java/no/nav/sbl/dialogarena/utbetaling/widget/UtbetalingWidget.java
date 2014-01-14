@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.widget.FeedWidget;
-import no.nav.modig.modia.widget.panels.EmptyListing;
 import no.nav.modig.modia.widget.panels.ErrorListing;
+import no.nav.modig.modia.widget.panels.GenericListing;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import org.apache.wicket.model.IModel;
@@ -31,13 +31,26 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
     @Inject
     private UtbetalingService utbetalingService;
 
+    private String fnr;
+
     public UtbetalingWidget(String id, String initial, String fnr) {
         super(id, initial);
 
+        this.fnr = fnr;
+
+        setDefaultModel(new ListModel<>(asList(new GenericListing(new HentUtbetalingerPanel(this)))));
+    }
+
+    private List<UtbetalingVM> transformUtbetalingToVM(List<Utbetaling> utbetalinger) {
+        List<UtbetalingVM> utbetalingVMs = on(utbetalinger).map(TIL_UTBETALINGVM).collect(new UtbetalingVMComparator());
+        return on(utbetalingVMs).take(MAX_NUMBER_OF_UTBETALINGER).collect();
+    }
+
+    public void hentUtbetalinger() {
         try {
             List<Utbetaling> utbetalinger = utbetalingService.hentUtbetalinger(fnr, defaultStartDato(), defaultSluttDato());
             if (utbetalinger.isEmpty()) {
-                setDefaultModel(new ListModel<>(asList(new EmptyListing(getString("ingen.utbetalinger")))));
+                setDefaultModel(new ListModel<>(asList(new GenericListing(getString("ingen.utbetalinger")))));
             } else {
                 setDefaultModel(new ListModel<>(transformUtbetalingToVM(utbetalinger)));
             }
@@ -45,15 +58,6 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
             LOG.warn("Feilet ved henting av utbetalingsinformasjon for fnr {}", fnr, ae);
             setDefaultModel(new ListModel<>(asList(new ErrorListing(getString("utbetaling.feilet")))));
         }
-    }
-
-    private List<UtbetalingVM> transformUtbetalingToVM(List<Utbetaling> utbetalinger) {
-        List<UtbetalingVM> utbetalingVMs = transformToVMs(utbetalinger);
-        return on(utbetalingVMs).take(MAX_NUMBER_OF_UTBETALINGER).collect();
-    }
-
-    private List<UtbetalingVM> transformToVMs(List<Utbetaling> utbetalinger) {
-        return on(utbetalinger).map(TIL_UTBETALINGVM).collect(new UtbetalingVMComparator());
     }
 
     @Override
