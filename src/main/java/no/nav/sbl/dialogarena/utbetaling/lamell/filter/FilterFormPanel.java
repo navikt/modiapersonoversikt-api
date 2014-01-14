@@ -53,7 +53,7 @@ public class FilterFormPanel extends Panel {
     }
 
     private Form createFilterForm() {
-        Form filterForm = new Form<>("filterForm");
+        Form filterForm = new IndicatingFilterForm("filterForm");
         valideringsfeil = new FeedbackPanel("feedbackpanel");
         return (Form) filterForm.add(
                 valideringsfeil.setOutputMarkupId(true),
@@ -78,7 +78,7 @@ public class FilterFormPanel extends Panel {
         ListView<String> listView = new ListView<String>("ytelseFilter", alleYtelserModel) {
             @Override
             protected void populateItem(final ListItem<String> item) {
-                final IndicatingFilterAjaxButton knapp = new IndicatingFilterAjaxButton("ytelseKnapp", item.getModel()) {
+                final AjaxButton knapp = new AjaxButton("ytelseKnapp", item.getModel()) {
 
                     @Override
                     protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -106,8 +106,8 @@ public class FilterFormPanel extends Panel {
         return (MarkupContainer) new WebMarkupContainer("ytelseContainer").add(listView).setOutputMarkupId(true);
     }
 
-    private IndicatingFilterAjaxButton createMottakerButton(final String id, final String mottaker) {
-        IndicatingFilterAjaxButton mottakerButton = new IndicatingFilterAjaxButton(id) {
+    private AjaxButton createMottakerButton(final String id, final String mottaker) {
+        AjaxButton mottakerButton = new AjaxButton(id) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 filterParametere.toggleMottaker(mottaker);
@@ -146,7 +146,7 @@ public class FilterFormPanel extends Panel {
     }
 
     private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour() {
-        return new IndicatingFilterAjaxFormSubmitBehavior("onchange") {
+        return new AjaxFormSubmitBehavior("onchange") {
             @Override
             protected void onSubmit(AjaxRequestTarget target) {
                 sendFilterEndretEvent();
@@ -169,24 +169,9 @@ public class FilterFormPanel extends Panel {
         target.add(ytelsesContainer);
     }
 
-    protected abstract class IndicatingFilterAjaxButton extends AjaxButton implements IAjaxIndicatorAware {
-        protected IndicatingFilterAjaxButton(String id) {
+    private class IndicatingFilterForm<T> extends Form<T> implements IAjaxIndicatorAware {
+        public IndicatingFilterForm(String id) {
             super(id);
-        }
-
-        public IndicatingFilterAjaxButton(String id, IModel<String> model) {
-            super(id, model);
-        }
-
-        @Override
-        public String getAjaxIndicatorMarkupId() {
-            return "ajax-indikator";
-        }
-    }
-
-    protected abstract class IndicatingFilterAjaxFormSubmitBehavior extends AjaxFormSubmitBehavior implements IAjaxIndicatorAware {
-        public IndicatingFilterAjaxFormSubmitBehavior(String event) {
-            super(event);
         }
 
         @Override
