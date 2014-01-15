@@ -164,7 +164,7 @@ public class FilterFormPanel extends Panel {
         send(getPage(), Broadcast.DEPTH, FILTER_ENDRET);
     }
 
-    @SuppressWarnings("Called on event")
+    @SuppressWarnings("unused")
     @RunOnEvents(HOVEDYTELSER_ENDRET)
     private void oppdaterYtelsesKnapper(AjaxRequestTarget target) {
         target.add(ytelsesContainer);

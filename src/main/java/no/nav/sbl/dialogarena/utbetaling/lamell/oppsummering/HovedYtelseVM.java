@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
+import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
-import org.apache.commons.collections15.Transformer;
 
 import static java.util.Collections.sort;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
@@ -17,14 +17,6 @@ public class HovedYtelseVM implements Serializable {
     private final Double trekk;
     private final Double utbetalt;
     private final List<UnderYtelseVM> underYtelsesBeskrivelser;
-
-
-    public static final Transformer<HovedYtelseVM, String> NAVN = new Transformer<HovedYtelseVM, String>() {
-        @Override
-        public String transform(HovedYtelseVM hovedytelseVM) {
-            return hovedytelseVM.hovedYtelsesBeskrivelse;
-        }
-    };
 
     public HovedYtelseVM(String beskrivelse, List<Underytelse> underytelser, Double brutto, Double trekk, Double utbetalt) {
         hovedYtelsesBeskrivelse = beskrivelse;
