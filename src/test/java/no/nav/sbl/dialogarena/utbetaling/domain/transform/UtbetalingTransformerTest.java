@@ -14,7 +14,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_TITTEL;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_TITTEL_ANTALL_SATS;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
@@ -204,11 +203,11 @@ public class UtbetalingTransformerTest {
     public void testLeggSammenUnderYtelser_MangeUnderYtelser_BlirSlaattSammen() throws Exception {
         String spesifikasjon = "Ekstra opplysning";
         String spesifikasjon1 = "Mer info";
-        Underytelse ytelse1 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
-        Underytelse ytelse2 = new UnderytelseBuilder().setTittel("Grønn").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
-        Underytelse ytelse3 = new UnderytelseBuilder().setTittel("Blå").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(100.0).setSats(1.0).createUnderytelse();
-        Underytelse ytelse4 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon1).setAntall(2).setBelop(10.0).setSats(1.0).createUnderytelse();
-        Underytelse ytelse5 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon1).setAntall(1).setBelop(10.0).setSats(1.0).createUnderytelse();
+        Underytelse ytelse1 = new Underytelse("Rød", spesifikasjon, 1, 1000.0, 1.0);
+        Underytelse ytelse2 = new Underytelse("Grønn", spesifikasjon, 1, 1000.0, 1.0);
+        Underytelse ytelse3 = new Underytelse("Blå", spesifikasjon, 1, 100.0, 1.0);
+        Underytelse ytelse4 = new Underytelse("Rød", spesifikasjon1, 2, 10.0, 1.0);
+        Underytelse ytelse5 = new Underytelse("Rød", spesifikasjon1, 1, 10.0, 1.0);
 
         List<Underytelse> underytelser = merge(new ArrayList<Mergeable<Underytelse>>(asList(ytelse1, ytelse2, ytelse3, ytelse4, ytelse5)),
                 MERGEABLE_TITTEL,
@@ -225,7 +224,7 @@ public class UtbetalingTransformerTest {
     @Test
     public void testLeggSammenUnderYtelser_BareEnUnderytelse_BlirMedIResultat() throws Exception {
         String spesifikasjon = "Ekstra opplysning";
-        Underytelse ytelse1 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
+        Underytelse ytelse1 = new Underytelse("Rød", spesifikasjon, 1, 1000.0, 1.0);
 
         List<Underytelse> underytelser = merge(new ArrayList<Mergeable<Underytelse>>(asList(ytelse1)),
                 MERGEABLE_TITTEL_ANTALL_SATS,
@@ -240,8 +239,8 @@ public class UtbetalingTransformerTest {
     @Test
     public void testLeggSammenUnderYtelser_ToUnderYtelserMedForskjelligTittel_BlirIkkeSlaattSammen() throws Exception {
         String spesifikasjon = "Ekstra opplysning";
-        Underytelse ytelse1 = new UnderytelseBuilder().setTittel("Rød").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
-        Underytelse ytelse2 = new UnderytelseBuilder().setTittel("Grønn").setSpesifikasjon(spesifikasjon).setAntall(1).setBelop(1000.0).setSats(1.0).createUnderytelse();
+        Underytelse ytelse1 = new Underytelse("Rød", spesifikasjon, 1, 1000.0, 1.0);
+        Underytelse ytelse2 = new Underytelse("Grønn", spesifikasjon, 1, 1000.0, 1.0);
 
         List<Underytelse> underytelser = merge(new ArrayList<Mergeable<Underytelse>>(asList(ytelse1, ytelse2)),
                 MERGEABLE_TITTEL_ANTALL_SATS,
