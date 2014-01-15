@@ -39,14 +39,15 @@ public class FilterFormPanel extends Panel {
     private static final int AAR_TILBAKE = 3;
 
     private FilterParametere filterParametere;
+    private FeedbackPanel feedbackPanel;
 
     private MarkupContainer ytelsesContainer;
-    private FeedbackPanel valideringsfeil;
 
-    public FilterFormPanel(String id, FilterParametere filterParametere) {
+    public FilterFormPanel(String id, FilterParametere filterParametere, FeedbackPanel feedbackPanel) {
         super(id);
 
         this.filterParametere = filterParametere;
+        this.feedbackPanel = feedbackPanel;
         this.ytelsesContainer = createYtelser();
 
         add(createFilterForm());
@@ -54,15 +55,28 @@ public class FilterFormPanel extends Panel {
 
     private Form createFilterForm() {
         Form filterForm = new IndicatingFilterForm("filterForm");
-        valideringsfeil = new FeedbackPanel("feedbackpanel");
         return (Form) filterForm.add(
-                valideringsfeil.setOutputMarkupId(true),
                 createMottakerButton("visBruker", BRUKER),
                 createMottakerButton("visArbeidsgiver", ARBEIDSGIVER),
                 ytelsesContainer,
                 createDateRangePicker())
                 .add(createDateRangePickerChangeBehaviour())
                 .setOutputMarkupId(true);
+    }
+
+    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour() {
+        return new AjaxFormSubmitBehavior("onchange") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target) {
+                sendFilterEndretEvent();
+                target.add(feedbackPanel);
+            }
+
+            @Override
+            protected void onError(AjaxRequestTarget target) {
+                target.add(feedbackPanel);
+            }
+        };
     }
 
     private MarkupContainer createYtelser() {
@@ -145,23 +159,9 @@ public class FilterFormPanel extends Panel {
         return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }
 
-    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour() {
-        return new AjaxFormSubmitBehavior("onchange") {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target) {
-                sendFilterEndretEvent();
-                target.add(ytelsesContainer, valideringsfeil);
-            }
-
-            @Override
-            protected void onError(AjaxRequestTarget target) {
-                target.add(valideringsfeil);
-            }
-        };
-    }
 
     private void sendFilterEndretEvent() {
-        send(getPage(), Broadcast.DEPTH, FILTER_ENDRET);
+        send(getPage().getParent(), Broadcast.DEPTH, FILTER_ENDRET);
     }
 
     @SuppressWarnings("unused")
