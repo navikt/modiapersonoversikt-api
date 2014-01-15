@@ -135,11 +135,8 @@ public class Underytelse implements Serializable, Mergeable<Underytelse> {
         Set<String> spesifikasjoner = on(ytelser).map(SPESIFIKASJON).collectIn(new HashSet<String>());
         String spesifikasjonsMelding = join(spesifikasjoner, ". ");
         Underytelse ytelse = ytelser.get(0);
-        return new UnderytelseBuilder().setSpesifikasjon(spesifikasjonsMelding)
-                .setBelop(sum)
-                .setTittel(ytelse.getTittel())
-                .setAntall(ytelse.getAntall())
-                .setSats(ytelse.getSats()).createUnderytelse();
+
+        return new Underytelse(ytelse.getTittel(), spesifikasjonsMelding, ytelse.getAntall(), sum, ytelse.getSats());
     }
 
     public static final class UnderytelseComparator {
@@ -180,42 +177,4 @@ public class Underytelse implements Serializable, Mergeable<Underytelse> {
             }
         };
     }
-
-    public static final class UnderytelseBuilder {
-        private String tittel;
-        private String spesifikasjon;
-        private int antall;
-        private double belop;
-        private double sats;
-
-        public UnderytelseBuilder setTittel(String tittel) {
-            this.tittel = tittel;
-            return this;
-        }
-
-        public UnderytelseBuilder setSpesifikasjon(String spesifikasjon) {
-            this.spesifikasjon = spesifikasjon;
-            return this;
-        }
-
-        public UnderytelseBuilder setAntall(int antall) {
-            this.antall = antall;
-            return this;
-        }
-
-        public UnderytelseBuilder setBelop(double belop) {
-            this.belop = belop;
-            return this;
-        }
-
-        public UnderytelseBuilder setSats(double sats) {
-            this.sats = sats;
-            return this;
-        }
-
-        public Underytelse createUnderytelse() {
-            return new Underytelse(tittel, spesifikasjon, antall, belop, sats);
-        }
-    }
-
 }
