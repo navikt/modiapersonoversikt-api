@@ -14,7 +14,7 @@ public class FeilmeldingPanel extends UtbetalingerMessagePanel {
         add(new IndicatingAjaxEventLink("prov-igjen", FilterParametere.FILTER_ENDRET));
     }
 
-    private class IndicatingAjaxEventLink extends AjaxEventLink implements IAjaxIndicatorAware {
+    private static class IndicatingAjaxEventLink extends AjaxEventLink implements IAjaxIndicatorAware {
         public IndicatingAjaxEventLink(String id, String eventName) {
             super(id, eventName);
         }

@@ -169,7 +169,7 @@ public class FilterFormPanel extends Panel {
         target.add(ytelsesContainer);
     }
 
-    private class IndicatingFilterForm<T> extends Form<T> implements IAjaxIndicatorAware {
+    private static class IndicatingFilterForm<T> extends Form<T> implements IAjaxIndicatorAware {
         public IndicatingFilterForm(String id) {
             super(id);
         }
