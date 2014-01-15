@@ -152,7 +152,7 @@ public class UtbetalingLerret extends Lerret {
         };
     }
 
-    @SuppressWarnings("Called on event")
+    @SuppressWarnings("unused")
     @RunOnEvents(FILTER_ENDRET)
     private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
         oppdaterCacheOmNodvendig();
@@ -168,7 +168,7 @@ public class UtbetalingLerret extends Lerret {
         target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);
     }
 
-    @SuppressWarnings("Called on event")
+    @SuppressWarnings("unused")
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
         String detaljPanelID = "detaljpanel-" + payload.getItemId();
