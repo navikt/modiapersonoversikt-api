@@ -104,7 +104,7 @@
 	border: 1px solid @borderColor;
 
 	.utbetaling-ramme-header {
-		padding: 1rem 0;
+		padding: 1.5rem 0;
 		font-weight: 600;
 		font-size: 1.3rem;
 		text-align: center;
@@ -191,7 +191,7 @@
 	.oppsummeringslinje {
 		background-color: #333333;
 		color: #b7b1a9;
-		padding: @toppBunnPadding @sidePadding;
+		padding: 1rem 2rem;
 		.oppsummeringssummer {
 			float: right;
 		}
@@ -221,6 +221,7 @@
 		.main {
 			position: relative;
 			.statusindikator {
+              margin-bottom: 10px;
 				* {
 					display: inline-block;
 					vertical-align: middle;
@@ -228,11 +229,19 @@
 				.dot {
 					height: 1rem;
 					width: 1rem;
-					background-color: #0ca9e1;
 					border-radius: 50%;
+                    &.utbetalt {
+                      background-color: #0fba47;
+                    }
 				}
 			}
 		}
+        .summer {
+            float: right;
+        }
+        .belop {
+          text-align: right;
+        }
 		.detaljpanel {
 			display: none;
 		}
