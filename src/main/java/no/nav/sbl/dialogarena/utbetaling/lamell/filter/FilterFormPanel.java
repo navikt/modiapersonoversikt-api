@@ -4,10 +4,10 @@ import no.nav.modig.wicket.component.datepicker.DatePickerConfigurator;
 import no.nav.modig.wicket.component.daterangepicker.DateRangeModel;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.utbetaling.util.AjaxIndicator;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.IAjaxIndicatorAware;
 import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -53,7 +53,7 @@ public class FilterFormPanel extends Panel {
     }
 
     private Form createFilterForm() {
-        Form filterForm = new IndicatingFilterForm("filterForm");
+        Form filterForm = new AjaxIndicator.SnurrepippFilterForm("filterForm");
         valideringsfeil = new FeedbackPanel("feedbackpanel");
         return (Form) filterForm.add(
                 valideringsfeil.setOutputMarkupId(true),
@@ -168,16 +168,5 @@ public class FilterFormPanel extends Panel {
     @RunOnEvents(HOVEDYTELSER_ENDRET)
     private void oppdaterYtelsesKnapper(AjaxRequestTarget target) {
         target.add(ytelsesContainer);
-    }
-
-    private static class IndicatingFilterForm<T> extends Form<T> implements IAjaxIndicatorAware {
-        public IndicatingFilterForm(String id) {
-            super(id);
-        }
-
-        @Override
-        public String getAjaxIndicatorMarkupId() {
-            return "ajax-indikator";
-        }
     }
 }

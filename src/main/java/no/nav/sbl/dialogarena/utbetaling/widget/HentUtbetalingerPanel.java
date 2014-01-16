@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.widget.panels.GenericListingPanel;
+import no.nav.sbl.dialogarena.utbetaling.util.AjaxIndicator;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 
 public class HentUtbetalingerPanel extends GenericListingPanel {
     public HentUtbetalingerPanel(final UtbetalingWidget widget) {
-        add(new AjaxLink("hentUtbetalingerLink") {
+        add(new AjaxIndicator.SnurrepippAjaxLink("hentUtbetalingerLink") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 widget.hentUtbetalinger();
