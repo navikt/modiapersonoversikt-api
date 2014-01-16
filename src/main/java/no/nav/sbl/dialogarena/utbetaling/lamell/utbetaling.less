@@ -123,6 +123,11 @@
 			padding-bottom: 15px;
 		}
 	}
+  .element {
+    label {
+      color: #3e3832;
+    }
+  }
 }
 
 .oppsummering-total {
@@ -163,6 +168,10 @@
 		}
 		td {
 			padding-right: 10px;
+            width: 15%;
+            &:first-of-type {
+              width: 55%;
+            }
 		}
 		tbody:not(:first-of-type) tr:first-child td {
 			padding-top: 0.5rem;
@@ -194,6 +203,14 @@
 		padding: 1rem 2rem;
 		.oppsummeringssummer {
 			float: right;
+            .element {
+                width: 80px;
+                text-align:right;
+                label {
+                  color: #b7b1a9;
+                  text-align: left;
+                }
+            }
 		}
 		.element {
             text-transform: uppercase;
@@ -201,6 +218,7 @@
 				cursor: default;
 			}
 			&.oppsummeringsperiode {
+                max-width: 230px;
 				label {
 					display: none;
 				}
@@ -236,6 +254,14 @@
                     }
 				}
 			}
+            .element {
+              &.beskrivelse {
+                min-height: 60px;
+                label {
+                  max-width: 230px;
+                }
+              }
+            }
 		}
         .summer {
             float: right;
@@ -259,9 +285,6 @@
         span {
           font-weight: bold;
         }
-      }
-      label {
-        color: #3e3832;
       }
     }
 	.skriv-ut {
@@ -294,4 +317,3 @@
 		-webkit-transform: none;
 	}
 }
-
