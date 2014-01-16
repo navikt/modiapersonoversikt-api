@@ -130,10 +130,10 @@
   }
   .summeringsvisning {
     float: right;
-    width: 55%;
+    width: 49%;
     .element {
-      width: 27%;
-      margin-left: 5%;
+      width: 29%;
+      margin-right: 3%;
       span {
         float: right;
       }
@@ -168,6 +168,7 @@
 		border-spacing: 0;
 		margin-top: 1rem;
 		padding-top: 1rem;
+        padding-right: 1rem;
 		text-align: left;
 		width: 100%;
 		tbody {
@@ -181,10 +182,16 @@
 			font-size: 0.857rem;
 		}
 		td {
-			padding-right: 10px;
-            width: 15%;
+			padding-right: 30px;
+            vertical-align: bottom;
+            width: 17%;
+            text-align: right;
             &:first-of-type {
-              width: 55%;
+              width: 49%;
+              text-align: left;
+            }
+            &:last-of-type {
+              padding-right: 10px;
             }
 		}
 		tbody:not(:first-of-type) tr:first-child td {
