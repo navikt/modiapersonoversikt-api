@@ -2,13 +2,18 @@
 <wicket:panel>
 
     <div class="main" wicket:id="oppsummeringsLinje">
+        <div class="clearfix">
+            <div class="ekspander-pil ikke-print"></div>
+            <div wicket:id="skriv-ut" class="skriv-ut ikke-print"></div>
+        </div>
+
         <div class="element oppsummeringsperiode">
             <label>
                 <wicket:message key="utbetaling.lamell.oppsummering.periode"/>
             </label>
             <span wicket:id="oppsummertPeriode"></span>
         </div>
-        <div class="oppsummeringssummer">
+        <div class="oppsummeringssummer summeringsvisning">
             <div class="element">
                 <label>
                     <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
@@ -28,8 +33,6 @@
                 <span wicket:id="utbetalt"></span>
             </div>
         </div>
-        <div class="ekspander-pil ikke-print"></div>
-        <div wicket:id="skriv-ut" class="skriv-ut ikke-print"></div>
     </div>
 
     <div wicket:id="oppsummeringDetalj" class="detaljpanel">
