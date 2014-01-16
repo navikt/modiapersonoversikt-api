@@ -15,7 +15,6 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned.MaanedsPanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsResultat;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.ExternalLink;
@@ -70,42 +69,20 @@ public class UtbetalingLerret extends Lerret {
     private WebMarkupContainer utbetalingslisteContainer;
     private UtbetalingerMessagePanel ingenutbetalinger;
     private FeilmeldingPanel feilmelding;
-    private FeedbackPanel feedbackPanel;
 
+        FeedbackPanel valideringsfeil = new FeedbackPanel("feedbackpanel");
     public UtbetalingLerret(String id, String fnr) {
         super(id);
         instansierFelter(fnr);
-        feedbackPanel = new FeedbackPanel("feedbackpanel");
+
         add(
                 new ExternalLink("arenalink", arenaUtbetalingUrl + fnr),
-                feedbackPanel.setOutputMarkupId(true),
                 createFilterFormPanel(),
                 totalOppsummeringPanel,
                 utbetalingslisteContainer,
                 ingenutbetalinger,
                 feilmelding
         );
-    }
-
-
-    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour() {
-        return new AjaxFormSubmitBehavior("onchange") {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target) {
-                sendFilterEndretEvent();
-                target.add(feedbackPanel);
-            }
-
-            @Override
-            protected void onError(AjaxRequestTarget target) {
-                target.add(feedbackPanel);
-            }
-        };
-    }
-
-
-    private void sendFilterEndretEvent() {
-        send(getPage(), Broadcast.DEPTH, FILTER_ENDRET);
     }
 
     private void instansierFelter(String fnr) {
@@ -159,7 +136,7 @@ public class UtbetalingLerret extends Lerret {
     }
 
     private FilterFormPanel createFilterFormPanel() {
-        return (FilterFormPanel) new FilterFormPanel("filterFormPanel", filterParametere, feedbackPanel).setOutputMarkupId(true);
+        return (FilterFormPanel) new FilterFormPanel("filterFormPanel", filterParametere).setOutputMarkupId(true);
     }
 
     private TotalOppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
