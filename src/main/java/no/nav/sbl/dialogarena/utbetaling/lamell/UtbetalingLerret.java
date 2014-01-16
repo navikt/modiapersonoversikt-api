@@ -129,7 +129,7 @@ public class UtbetalingLerret extends Lerret {
 
     private Map<String, Boolean> mottakere() {
         HashMap<String, Boolean> mottakere = new HashMap<>();
-        mottakere.put(ARBEIDSGIVER, true);
+        mottakere.put(ARBEIDSGIVER, false);
         mottakere.put(BRUKER, true);
         return mottakere;
     }
