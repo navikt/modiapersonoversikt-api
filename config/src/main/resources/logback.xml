@@ -17,7 +17,7 @@
     </appender>
 
     <appender name="infolog" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-info.log</File>
+        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-debug.log</File>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <FileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}-info-%d{yyyy-MM-dd}.gz</FileNamePattern>
             <maxHistory>90</maxHistory>
