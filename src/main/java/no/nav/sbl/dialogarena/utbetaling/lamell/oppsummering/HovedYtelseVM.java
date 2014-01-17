@@ -27,7 +27,8 @@ public class HovedYtelseVM implements Serializable {
         for (Underytelse underytelse : underytelser) {
             underYtelsesBeskrivelser.add(new UnderYtelseVM(underytelse.getTittel(), underytelse.getBelop()));
         }
-        sort(underYtelsesBeskrivelser, UnderYtelseVM.UnderYtelseComparator.NAVN);
+        sort(underYtelsesBeskrivelser, UnderYtelseVM.UnderYtelseComparator.BELOP_SORT);
+        sort(underYtelsesBeskrivelser, UnderYtelseVM.UnderYtelseComparator.SKATT_NEDERST_SORT);
     }
 
     public String getHovedYtelsesBeskrivelse() {

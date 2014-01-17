@@ -14,6 +14,31 @@ public class UnderYtelseVM implements Serializable {
                 return o1.getUnderYtelsesBeskrivelse().compareTo(o2.getUnderYtelsesBeskrivelse());
             }
         };
+        /**
+         * Sorterer basert på beløpet, slik at negative tall havner nedenfor de positive
+         */
+        public static final Comparator<UnderYtelseVM> BELOP_SORT = new Comparator<UnderYtelseVM>() {
+            @Override
+            public int compare(UnderYtelseVM o1, UnderYtelseVM o2) {
+                return Double.compare(o2.getBelop(), o1.getBelop());
+            }
+        };
+
+        /**
+         * Sorterer underytelser med tittel som inneholder "skatt", og er negativt, nederst.
+         */
+        public static final Comparator<UnderYtelseVM> SKATT_NEDERST_SORT = new Comparator<UnderYtelseVM>(){
+
+            @Override
+            public int compare(UnderYtelseVM o1, UnderYtelseVM o2) {
+                if(o1.getUnderYtelsesBeskrivelse().toLowerCase().contains("skatt") && o1.getBelop() <= 0) {
+                    return 1;
+                } else if(o2.getUnderYtelsesBeskrivelse().toLowerCase().contains("skatt") && o2.getBelop() <= 0) {
+                    return -1;
+                }
+                return 0;
+            }
+        };
     }
 
     private String underYtelsesBeskrivelse;

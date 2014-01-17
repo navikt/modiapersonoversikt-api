@@ -195,7 +195,7 @@ public class Underytelse implements Serializable, Mergeable<Underytelse> {
             public int compare(Underytelse o1, Underytelse o2) {
                 if(o1.getTittel().toLowerCase().contains("skatt") && o1.getBelop() <= 0) {
                     return 1;
-                } else if(o1.getTittel().toLowerCase().contains("skatt") && o1.getBelop() <= 0) {
+                } else if(o2.getTittel().toLowerCase().contains("skatt") && o2.getBelop() <= 0) {
                     return -1;
                 }
                 return 0;
