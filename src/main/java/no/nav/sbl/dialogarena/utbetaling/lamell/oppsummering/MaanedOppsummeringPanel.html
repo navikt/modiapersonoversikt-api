@@ -1,33 +1,26 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-
     <div>
-        <div class="element oppsummeringsperiode">
-            <label>
-                <wicket:message key="utbetaling.lamell.oppsummering.periode"/>
-            </label>
-            <span wicket:id="oppsummertPeriode"></span>
-        </div>
-        <div class="oppsummeringssummer summeringsvisning">
-            <div class="element">
-                <label>
-                    <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
-                </label>
-                <span wicket:id="brutto"></span>
-            </div>
-            <div class="element">
-                <label>
-                    <wicket:message key="utbetaling.lamell.oppsummering.trekk"/>
-                </label>
-                <span wicket:id="trekk"></span>
-            </div>
-            <div class="element">
-                <label>
-                    <wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/>
-                </label>
-                <span wicket:id="utbetalt"></span>
-            </div>
-        </div>
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th></th>
+            <th><wicket:message key="utbetaling.lamell.oppsummering.brutto"/></th>
+            <th><wicket:message key="utbetaling.lamell.oppsummering.trekk"/></th>
+            <th><wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="uthevet">
+            <td><span wicket:id="oppsummertPeriode"></span></td>
+            <td></td>
+            <td><span wicket:id="brutto"></span></td>
+            <td><span wicket:id="trekk"></span></td>
+            <td><span wicket:id="utbetalt"></span></td>
+        </tr>
+        </tbody>
+    </table>
     </div>
 
 </wicket:panel>

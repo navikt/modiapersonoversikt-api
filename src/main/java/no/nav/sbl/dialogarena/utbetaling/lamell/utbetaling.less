@@ -154,21 +154,31 @@
       font-weight: normal;
       color: #3e3832;
       font-size: 0.857rem;
+      width: 15%;
       &:first-of-type {
-        width: 49%;
+        width: 230px;
         text-align: left;
       }
     }
     td {
       padding-right: 30px;
       vertical-align: bottom;
-      width: 17%;
       text-align: right;
       &:first-of-type {
         text-align: left;
       }
       &:last-of-type {
         padding-right: 0;
+      }
+      .th {
+        text-transform: uppercase;
+        font-weight: normal;
+        color: #3e3832;
+        font-size: 0.857rem;
+        &:first-of-type {
+          width: 49%;
+          text-align: left;
+        }
       }
     }
     tbody:not(:first-of-type) tr:first-child td {
@@ -227,35 +237,11 @@
 		background-color: #333333;
 		color: #b7b1a9;
 		padding: 1rem 2rem;
-		.oppsummeringssummer {
-			float: right;
-            .element {
-                label {
-                  color: #b7b1a9;
-                  text-align: left;
-                }
-            }
-		}
-		.element {
-            text-transform: uppercase;
-			label {
-				cursor: default;
-			}
-            span {
-              font-weight: bold;
-            }
-			&.oppsummeringsperiode {
-                max-width: 230px;
-				label {
-					display: none;
-				}
-				span {
-					font-size: 1.2rem;
-					display: block;
-					margin-top: 10px;
-				}
-			}
-		}
+      table {
+        th {
+          color: #b7b1a9;
+        }
+      }
 	}
 	.utbetalingslinje {
 		padding: @toppBunnPadding @sidePadding;
@@ -282,14 +268,6 @@
                     }
 				}
 			}
-            .utbetaling-summering {
-              position: absolute;
-              bottom: 0;
-              right: 0;
-              .belop {
-                right: 14px;
-              }
-            }
             .element {
               span {
                 position: absolute;
