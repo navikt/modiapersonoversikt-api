@@ -60,8 +60,8 @@ public class OppsummeringVMTest {
 
         OppsummeringVM vm = new OppsummeringVM(utbetalinger, defaultStartDato(), defaultSluttDato());
 
-        List<String> navn = asList("Grunnbeløp", "Skatt", "Tillegg");
-        List<Double> belop = asList(1000.0, -400.0, 500.0);
+        List<String> navn = asList("Grunnbeløp", "Tillegg", "Skatt");
+        List<Double> belop = asList(1000.0, 500.0, -400.0);
         assertThat(vm.hovedytelser.size(), is(2));
         assertThat(vm.hovedytelser.get(0).getHovedYtelsesBeskrivelse(), is("Dagpenger"));
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().size(), is(3));
@@ -73,8 +73,8 @@ public class OppsummeringVMTest {
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(2).getUnderYtelsesBeskrivelse(), is(navn.get(2)));
         assertThat(vm.hovedytelser.get(1).getHovedYtelsesBeskrivelse(), is("Helseprodukter"));
         assertThat(vm.hovedytelser.get(1).getUnderYtelsesBeskrivelser().size(), is(1));
-        assertThat(vm.hovedytelser.get(1).getUnderYtelsesBeskrivelser().get(0).getUnderYtelsesBeskrivelse(), is(navn.get(2)));
-        assertThat(vm.hovedytelser.get(1).getUnderYtelsesBeskrivelser().get(0).getBelop(), is(belop.get(2)));
+        assertThat(vm.hovedytelser.get(1).getUnderYtelsesBeskrivelser().get(0).getUnderYtelsesBeskrivelse(), is(navn.get(1)));
+        assertThat(vm.hovedytelser.get(1).getUnderYtelsesBeskrivelser().get(0).getBelop(), is(belop.get(1)));
     }
 
     @Test
