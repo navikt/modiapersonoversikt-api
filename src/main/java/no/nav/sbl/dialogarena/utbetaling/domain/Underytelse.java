@@ -176,5 +176,30 @@ public class Underytelse implements Serializable, Mergeable<Underytelse> {
                 return TITTEL_ANTALL_SATS.compare((Underytelse) o1, (Underytelse) o2);
             }
         };
+        /**
+         * Sorterer basert på beløpet, slik at negative tall havner nedenfor de positive
+         */
+        public static final Comparator<Underytelse> BELOP_SORT = new Comparator<Underytelse>() {
+            @Override
+            public int compare(Underytelse o1, Underytelse o2) {
+                return Double.compare(o2.getBelop(), o1.getBelop());
+            }
+        };
+
+        /**
+         * Sorterer underytelser med tittel som inneholder "skatt", og er negativt, nederst.
+         */
+        public static final Comparator<Underytelse> SKATT_NEDERST_SORT = new Comparator<Underytelse>(){
+
+            @Override
+            public int compare(Underytelse o1, Underytelse o2) {
+                if(o1.getTittel().toLowerCase().contains("skatt") && o1.getBelop() <= 0) {
+                    return 1;
+                } else if(o1.getTittel().toLowerCase().contains("skatt") && o1.getBelop() <= 0) {
+                    return -1;
+                }
+                return 0;
+            }
+        };
     }
 }
