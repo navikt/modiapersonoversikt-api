@@ -145,6 +145,7 @@
     margin-top: 1rem;
     text-align: left;
     width: 100%;
+    position: relative;
     tbody {
       page-break-inside: avoid;
       page-break-after: auto;
@@ -170,15 +171,11 @@
       &:last-of-type {
         padding-right: 0;
       }
-      .th {
-        text-transform: uppercase;
-        font-weight: normal;
-        color: #3e3832;
-        font-size: 0.857rem;
-        &:first-of-type {
-          width: 49%;
-          text-align: left;
-        }
+      .oppsummert-periode {
+        position: absolute;
+        left: 0;
+        top: 8%;
+        font-size: 1.2rem;
       }
     }
     tbody:not(:first-of-type) tr:first-child td {
