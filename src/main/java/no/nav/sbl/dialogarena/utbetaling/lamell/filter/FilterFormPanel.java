@@ -135,7 +135,7 @@ public class FilterFormPanel extends Panel {
                 .withMinDate("-" + AAR_TILBAKE + "y")
                 .withMaxDate("0d")
                 .withYearRange("-" + AAR_TILBAKE + "y:c")
-                .withParameter("showOn", "button")
+                .withParameter("showOn", "both")
                 .build();
 
         DateRangeModel dateRangeModel = new DateRangeModel(
