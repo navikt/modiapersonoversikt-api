@@ -2,12 +2,15 @@ package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
+import org.joda.time.DateTime;
 
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
+import java.io.Serializable;
+
+import static no.nav.sbl.dialogarena.time.Datoformat.kort;
 
 public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
 
@@ -25,25 +28,30 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
         );
     }
 
-    private Label createPeriodeLabel(UtbetalingVM utbetalingVM) {
-        return new Label(
-                "periode",
-                getStartDato(utbetalingVM) + " - " + getSluttDato(utbetalingVM));
-    }
-
-    private String getSluttDato(UtbetalingVM utbetalingVM) {
-        StringResourceModel stringResourceModel = new StringResourceModel("sluttdato.mangler", this, new Model<>());
-        return optional(utbetalingVM.getSluttDato()).map(KORT).getOrElse(stringResourceModel.getString());
-    }
-
-    private String getStartDato(UtbetalingVM utbetalingVM) {
-        StringResourceModel stringResourceModel = new StringResourceModel("startdato.mangler", this, new Model<>());
-        return optional(utbetalingVM.getStartDato()).map(KORT).getOrElse(stringResourceModel.getString());
-    }
-
     private Label createUtbetalingsDatoLabel(UtbetalingVM utbetalingVM) {
-        StringResourceModel stringResourceModel = new StringResourceModel("utbetalingdato.mangler", this, new Model<>());
-        return new Label("utbetalingsDato", optional(utbetalingVM.getUtbetalingsDato()).map(KORT).getOrElse(stringResourceModel.getString()));
+        return new Label("utbetalingsDato", getDatoModel(utbetalingVM.getUtbetalingsDato(), "utbetalingdato.mangler"));
+    }
+
+    private Label createPeriodeLabel(UtbetalingVM utbetalingVM) {
+        IModel<String> periodeModel = getPeriodeModel(
+                getDatoModel(utbetalingVM.getStartDato(), "startdato.mangler"),
+                getDatoModel(utbetalingVM.getSluttDato(), "sluttdato.mangler"));
+        return new Label("periode", periodeModel);
+    }
+
+    private IModel<? extends Serializable> getDatoModel(DateTime dato, String resourceKey) {
+        return dato != null ?
+                Model.of(kort(dato)) :
+                new StringResourceModel(resourceKey, this, null);
+    }
+
+    private IModel<String> getPeriodeModel(final IModel startDatoModel, final IModel sluttDatoModel) {
+        return new AbstractReadOnlyModel<String>() {
+            @Override
+            public String getObject() {
+                return startDatoModel.getObject()  + " - " + sluttDatoModel.getObject();
+            }
+        };
     }
 
 }
