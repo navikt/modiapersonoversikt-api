@@ -7,6 +7,10 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 
+import java.util.List;
+
+import static java.util.Collections.sort;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class DetaljPanel extends Panel {
@@ -15,17 +19,21 @@ public class DetaljPanel extends Panel {
         super(id);
         setMarkupId("detaljpanel-" + utbetalingVM.getUtbetalingId());
 
+        List<Underytelse> underytelser = utbetalingVM.getUnderytelser();
+        sort(underytelser, UnderytelseComparator.BELOP_SORT);
+        sort(underytelser, UnderytelseComparator.SKATT_NEDERST_SORT);
+
         add(
                 new Label("mottakernavn", utbetalingVM.getMottakerNavn()),
                 new Label("konto", utbetalingVM.getKontonr()),
                 new Label("ytelsesinfo", utbetalingVM.getBeskrivelse()),
-                createUnderytelsesrader(utbetalingVM),
+                createUnderytelsesrader(underytelser),
                 new Label("bilagsmelding", utbetalingVM.getMelding())
         );
     }
 
-    private ListView createUnderytelsesrader(final UtbetalingVM utbetalingVM) {
-        return new ListView<Underytelse>("underytelser", utbetalingVM.getUnderytelser()) {
+    private ListView createUnderytelsesrader(List<Underytelse> underytelser) {
+        return new ListView<Underytelse>("underytelser", underytelser) {
             @Override
             protected void populateItem(ListItem<Underytelse> item) {
                 item.add(
