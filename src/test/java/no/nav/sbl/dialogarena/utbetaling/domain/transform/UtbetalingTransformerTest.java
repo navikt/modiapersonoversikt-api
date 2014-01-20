@@ -113,8 +113,8 @@ public class UtbetalingTransformerTest {
         assertThat(utbetalinger.size(), is(1));
         assertThat(utbetalinger.get(0).getHovedytelse(), is("Dagpenger"));
         assertThat(utbetalinger.get(0).getUnderytelser().size(), is(2));
-        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getTittel(), is(FORSKUDDSTREKK_SKATT));
-        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getTittel(), is(GRUNNBELOP));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getTittel(), is(GRUNNBELOP));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getTittel(), is(FORSKUDDSTREKK_SKATT));
     }
 
     @Test
@@ -156,18 +156,18 @@ public class UtbetalingTransformerTest {
         assertThat(utbetalinger.get(0).getHovedytelse(), is("Dagpenger"));
         assertThat(utbetalinger.get(0).getUnderytelser().size(), is(2));
 
-        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getTittel(), is(FORSKUDDSTREKK_SKATT));
-        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getSpesifikasjon(), is(""));
-        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getAntall(), is(1));
-        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getSats(), is(1.0));
-        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getBelop(), is(-700.0));
 
-        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getTittel(), is(GRUNNBELOP));
-        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getSpesifikasjon(), is(info));
-        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getAntall(), is(12));
-        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getSats(), is(123.0));
-        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getBelop(), is(2000.0));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getTittel(), is(GRUNNBELOP));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getSpesifikasjon(), is(info));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getAntall(), is(12));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getSats(), is(123.0));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(0).getBelop(), is(2000.0));
 
+        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getTittel(), is(FORSKUDDSTREKK_SKATT));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getSpesifikasjon(), is(""));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getAntall(), is(1));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getSats(), is(1.0));
+        assertThat(utbetalinger.get(0).getUnderytelser().get(1).getBelop(), is(-700.0));
     }
 
     @Test
