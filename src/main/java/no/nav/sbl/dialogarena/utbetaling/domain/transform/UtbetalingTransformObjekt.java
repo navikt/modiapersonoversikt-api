@@ -16,7 +16,8 @@ import java.util.List;
 import java.util.Set;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_TITTEL;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_BELOP;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_SKATT_NEDERST;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_TITTEL_ANTALL_SATS;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.getBrutto;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.getTrekk;
@@ -131,7 +132,7 @@ final class UtbetalingTransformObjekt implements Mergeable<Utbetaling> {
         LinkedList<Underytelse> list = new LinkedList<>(underytelser);
         leggSammenBelop(utbetalingBuilder, underytelser);
 
-        List<Underytelse> sammenlagteUnderytelser = merge(new ArrayList<Mergeable<Underytelse>>(list), MERGEABLE_TITTEL_ANTALL_SATS, MERGEABLE_TITTEL);
+        List<Underytelse> sammenlagteUnderytelser = merge(new ArrayList<Mergeable<Underytelse>>(list), MERGEABLE_TITTEL_ANTALL_SATS, MERGEABLE_BELOP, MERGEABLE_SKATT_NEDERST);
 
         return utbetalingBuilder.withUnderytelser(sammenlagteUnderytelser)
                                 .withMelding(meldingString)

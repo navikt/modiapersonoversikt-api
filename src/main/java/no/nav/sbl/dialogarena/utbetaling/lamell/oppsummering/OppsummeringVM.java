@@ -21,6 +21,8 @@ import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.TREKK_BELOP;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UTBETALT_BELOP;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_BELOP;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_SKATT_NEDERST;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_TITTEL;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.HOVEDYTELSE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UNDERYTELSER;
@@ -76,10 +78,12 @@ public class OppsummeringVM implements Serializable {
         List<HovedYtelseVM> hovedYtelseVMs = new ArrayList<>();
         for (Map.Entry<String, List<Utbetaling>> entry : map.entrySet()) {
             List<Mergeable<Underytelse>> underytelser = on(entry.getValue()).flatmap(UNDERYTELSER).collectIn(new ArrayList<Mergeable<Underytelse>>());
-            List<Underytelse> sammenlagteUnderytelser = merge(underytelser, MERGEABLE_TITTEL, MERGEABLE_TITTEL);
+            List<Underytelse> sammenlagteUnderytelser = merge(underytelser, MERGEABLE_TITTEL, MERGEABLE_BELOP, MERGEABLE_SKATT_NEDERST);
+
             Double brutto = on(sammenlagteUnderytelser).map(UTBETALT_BELOP).reduce(sumDouble);
             Double trekk = on(sammenlagteUnderytelser).map(TREKK_BELOP).reduce(sumDouble);
             Double utbetalt = brutto + trekk;
+
             hovedYtelseVMs.add(new HovedYtelseVM(entry.getKey(), sammenlagteUnderytelser, brutto, trekk, utbetalt));
         }
         sort(hovedYtelseVMs, HOVEDYTELSE_NAVN);

@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static java.util.Collections.sort;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class HovedYtelseVM implements Serializable {
@@ -27,8 +26,6 @@ public class HovedYtelseVM implements Serializable {
         for (Underytelse underytelse : underytelser) {
             underYtelsesBeskrivelser.add(new UnderYtelseVM(underytelse.getTittel(), underytelse.getBelop()));
         }
-        sort(underYtelsesBeskrivelser, UnderYtelseVM.UnderYtelseComparator.BELOP_SORT);
-        sort(underYtelsesBeskrivelser, UnderYtelseVM.UnderYtelseComparator.SKATT_NEDERST_SORT);
     }
 
     public String getHovedYtelsesBeskrivelse() {

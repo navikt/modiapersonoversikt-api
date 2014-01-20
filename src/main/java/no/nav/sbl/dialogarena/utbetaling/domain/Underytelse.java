@@ -140,9 +140,6 @@ public class Underytelse implements Serializable, Mergeable<Underytelse> {
     }
 
     public static final class UnderytelseComparator {
-
-        private static final String SKATT = "skatt";
-
         public static final Comparator<Underytelse> TITTEL = new Comparator<Underytelse>() {
             @Override
             public int compare(Underytelse o1, Underytelse o2) {
@@ -179,24 +176,27 @@ public class Underytelse implements Serializable, Mergeable<Underytelse> {
                 return TITTEL_ANTALL_SATS.compare((Underytelse) o1, (Underytelse) o2);
             }
         };
-
         /**
          * Sorterer basert på beløpet, slik at negative tall havner nedenfor de positive
          */
-        public static final Comparator<Underytelse> BELOP_SORT = new Comparator<Underytelse>() {
+        public static final Comparator<Mergeable<Underytelse>> MERGEABLE_BELOP = new Comparator<Mergeable<Underytelse>>() {
             @Override
-            public int compare(Underytelse o1, Underytelse o2) {
-                return Double.compare(o2.getBelop(), o1.getBelop());
+            public int compare(Mergeable<Underytelse> o1, Mergeable<Underytelse> o2) {
+                return Double.compare(((Underytelse)o2).getBelop(), ((Underytelse)o1).getBelop());
             }
         };
 
-        public static final Comparator<Underytelse> SKATT_NEDERST_SORT = new Comparator<Underytelse>(){
+        private static final String SKATT = "skatt";
+        /**
+         * Sorterer underytelser med tittel som inneholder "skatt", og er negativt, nederst.
+         */
+        public static final Comparator<Mergeable<Underytelse>> MERGEABLE_SKATT_NEDERST = new Comparator<Mergeable<Underytelse>>(){
 
             @Override
-            public int compare(Underytelse o1, Underytelse o2) {
-                if (o1.getTittel().toLowerCase().contains(SKATT) && o1.getBelop() <= 0) {
+            public int compare(Mergeable<Underytelse> o1, Mergeable<Underytelse> o2) {
+                if (((Underytelse)o1).getTittel().toLowerCase().contains(SKATT) && ((Underytelse)o1).getBelop() <= 0) {
                     return 1;
-                } else if (o2.getTittel().toLowerCase().contains(SKATT) && o2.getBelop() <= 0) {
+                } else if (((Underytelse)o2).getTittel().toLowerCase().contains(SKATT) && ((Underytelse)o2).getBelop() <= 0) {
                     return -1;
                 }
                 return 0;
