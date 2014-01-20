@@ -10,7 +10,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import java.util.List;
 
 import static java.util.Collections.sort;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.BELOP_SORT;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.SKATT_NEDERST_SORT;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class DetaljPanel extends Panel {
@@ -20,8 +21,8 @@ public class DetaljPanel extends Panel {
         setMarkupId("detaljpanel-" + utbetalingVM.getUtbetalingId());
 
         List<Underytelse> underytelser = utbetalingVM.getUnderytelser();
-        sort(underytelser, UnderytelseComparator.BELOP_SORT);
-        sort(underytelser, UnderytelseComparator.SKATT_NEDERST_SORT);
+        sort(underytelser, BELOP_SORT);
+        sort(underytelser, SKATT_NEDERST_SORT);
 
         add(
                 new Label("mottakernavn", utbetalingVM.getMottakerNavn()),
