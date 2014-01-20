@@ -20,7 +20,8 @@ public class UtbetalingPortTypeMock {
     public UtbetalingPortType utbetalingPortType() {
         return new UtbetalingPortType() {
             @Override
-            public WSHentUtbetalingListeResponse hentUtbetalingListe(WSHentUtbetalingListeRequest request) throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
+            public WSHentUtbetalingListeResponse hentUtbetalingListe(WSHentUtbetalingListeRequest request)throws
+                    HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
                 List<WSUtbetaling> utbetalinger = WSUtbetalingTestData.getWsUtbetalinger(request.getMottaker(), request.getPeriode().getFom(), request.getPeriode().getTom());
                 return new WSHentUtbetalingListeResponse().withUtbetalingListe(utbetalinger);
             }
