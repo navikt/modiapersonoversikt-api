@@ -140,6 +140,9 @@ public class Underytelse implements Serializable, Mergeable<Underytelse> {
     }
 
     public static final class UnderytelseComparator {
+
+        private static final String SKATT = "skatt";
+
         public static final Comparator<Underytelse> TITTEL = new Comparator<Underytelse>() {
             @Override
             public int compare(Underytelse o1, Underytelse o2) {
@@ -176,6 +179,7 @@ public class Underytelse implements Serializable, Mergeable<Underytelse> {
                 return TITTEL_ANTALL_SATS.compare((Underytelse) o1, (Underytelse) o2);
             }
         };
+
         /**
          * Sorterer basert på beløpet, slik at negative tall havner nedenfor de positive
          */
@@ -186,16 +190,13 @@ public class Underytelse implements Serializable, Mergeable<Underytelse> {
             }
         };
 
-        /**
-         * Sorterer underytelser med tittel som inneholder "skatt", og er negativt, nederst.
-         */
         public static final Comparator<Underytelse> SKATT_NEDERST_SORT = new Comparator<Underytelse>(){
 
             @Override
             public int compare(Underytelse o1, Underytelse o2) {
-                if(o1.getTittel().toLowerCase().contains("skatt") && o1.getBelop() <= 0) {
+                if (o1.getTittel().toLowerCase().contains(SKATT) && o1.getBelop() <= 0) {
                     return 1;
-                } else if(o2.getTittel().toLowerCase().contains("skatt") && o2.getBelop() <= 0) {
+                } else if (o2.getTittel().toLowerCase().contains(SKATT) && o2.getBelop() <= 0) {
                     return -1;
                 }
                 return 0;
