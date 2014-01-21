@@ -70,7 +70,6 @@ public class UtbetalingLerret extends Lerret {
     private UtbetalingerMessagePanel ingenutbetalinger;
     private FeilmeldingPanel feilmelding;
 
-        FeedbackPanel valideringsfeil = new FeedbackPanel("feedbackpanel");
     public UtbetalingLerret(String id, String fnr) {
         super(id);
         instansierFelter(fnr);
