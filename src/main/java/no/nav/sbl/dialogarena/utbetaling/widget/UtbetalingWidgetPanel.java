@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
+import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -9,8 +10,6 @@ import org.apache.wicket.model.StringResourceModel;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
-
-import static no.nav.sbl.dialogarena.time.Datoformat.kort;
 
 public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
 
@@ -41,7 +40,7 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
 
     private IModel<? extends Serializable> getDatoModel(DateTime dato, String resourceKey) {
         return dato != null ?
-                Model.of(kort(dato)) :
+                Model.of(Datoformat.kortUtenLiteral(dato)) :
                 new StringResourceModel(resourceKey, this, null);
     }
 

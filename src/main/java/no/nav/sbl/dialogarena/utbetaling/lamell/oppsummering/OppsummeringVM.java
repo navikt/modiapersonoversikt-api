@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 
+import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.transform.Mergeable;
@@ -18,7 +19,6 @@ import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
-import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.TREKK_BELOP;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UTBETALT_BELOP;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UnderytelseComparator.MERGEABLE_BELOP;
@@ -95,6 +95,7 @@ public class OppsummeringVM implements Serializable {
                 && startDato.getYear() == sluttDato.getYear()) {
             return startDato.toString("MMMM yyyy", Locale.getDefault());
         }
-        return KORT.transform(startDato.toDateTimeAtStartOfDay()) + " - " + KORT.transform(sluttDato.toDateTime(new LocalTime(23, 59)));
+        return Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
+               Datoformat.kortUtenLiteral(sluttDato.toDateTime(new LocalTime(23, 59)));
     }
 }

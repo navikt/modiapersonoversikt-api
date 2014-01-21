@@ -6,7 +6,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import java.util.List;
 
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
+import static no.nav.sbl.dialogarena.time.Datoformat.KORT_UTEN_LITERAL;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class UtbetalingVM {
@@ -46,12 +46,12 @@ public class UtbetalingVM {
     }
 
     public String getKortUtbetalingsDato() {
-        return optional(utbetaling.getUtbetalingsdato()).map(KORT).getOrElse("Ingen utbetalingsdato");
+        return optional(utbetaling.getUtbetalingsdato()).map(KORT_UTEN_LITERAL).getOrElse("Ingen utbetalingsdato");
     }
 
     public String getPeriodeMedKortDato() {
-        return optional(utbetaling.getPeriode().getStart()).map(KORT).getOrElse("") + " - "
-                + optional(utbetaling.getPeriode().getEnd()).map(KORT).getOrElse("");
+        return optional(utbetaling.getPeriode().getStart()).map(KORT_UTEN_LITERAL).getOrElse("") + " - "
+                + optional(utbetaling.getPeriode().getEnd()).map(KORT_UTEN_LITERAL).getOrElse("");
     }
 
     public String getBruttoBelopMedValuta() {
