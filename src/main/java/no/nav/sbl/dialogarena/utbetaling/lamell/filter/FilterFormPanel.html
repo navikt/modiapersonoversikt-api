@@ -4,7 +4,12 @@
         <div wicket:id="feedbackpanel"></div>
         <div class="filter-block">
             <label><wicket:message key="utbetaling.lamell.filter.datofilter-overskrift"/></label>
-            <div wicket:id="datoFilter" class="dato-plukker-filter"></div>
+            <div class="dato-plukker-filter">
+                <wicket:container wicket:id="datoFilter" />
+                <a href="#" wicket:id="sok" class="knapp-hoved-liten" >
+                    <wicket:message key="utbetaling.lamell.filter.sok"/>
+                </a>
+            </div>
         </div>
         <div class="filter-block">
             <label><wicket:message key="utbetaling.lamell.filter.mottaker-overskrift"/></label>
