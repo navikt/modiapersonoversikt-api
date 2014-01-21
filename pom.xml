@@ -17,7 +17,7 @@
 		<spring.version>3.2.3.RELEASE</spring.version>
 		<modig.wicket.version>2.0.1</modig.wicket.version>
 		<wicket.version>6.11.0</wicket.version>
-		<modig.frontend.version>1.1.9-SNAPSHOT</modig.frontend.version>
+		<modig.frontend.version>1.1.11-SNAPSHOT</modig.frontend.version>
 		<utbetaling.tjenestespesifikasjon.version>1.0.2</utbetaling.tjenestespesifikasjon.version>
 	</properties>
 
@@ -124,7 +124,7 @@
 		<dependency>
 			<groupId>no.nav.sbl.dialogarena</groupId>
 			<artifactId>common-time</artifactId>
-			<version>2.4</version>
+			<version>2.3</version>
 		</dependency>
 
 		<dependency>
