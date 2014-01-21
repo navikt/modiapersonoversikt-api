@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.utbetaling.util.AjaxIndicator;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 
 public class HentUtbetalingerPanel extends GenericListingPanel {
+
     public HentUtbetalingerPanel(final UtbetalingWidget widget) {
         add(new AjaxIndicator.SnurrepippAjaxLink("hentUtbetalingerLink") {
             @Override
