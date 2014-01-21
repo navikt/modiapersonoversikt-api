@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.widget.FeedWidget;
-import no.nav.modig.modia.widget.panels.ErrorListing;
 import no.nav.modig.modia.widget.panels.GenericListing;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
@@ -56,7 +55,7 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
             }
         } catch (ApplicationException ae) {
             LOG.warn("Feilet ved henting av utbetalingsinformasjon for fnr {}", fnr, ae);
-            setDefaultModel(new ListModel<>(asList(new ErrorListing(getString("utbetaling.feilet")))));
+            setDefaultModel(new ListModel<>(asList(new GenericListing(new HentUtbetalingerFeilmeldingPanel(this)))));
         }
     }
 
