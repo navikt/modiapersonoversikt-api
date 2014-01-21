@@ -5,335 +5,335 @@
 @toppBunnPadding: 1.5rem;
 
 .kolonne-venstre {
-	float: left;
-	padding-right: @sidePadding;
-	width: @kolonneVenstreWidth;
+    float: left;
+    padding-right: @sidePadding;
+    width: @kolonneVenstreWidth;
 
-	.arena-lenke {
-		font-family: "Modus", Helvetica, Arial, sans-serif;
-		font-size: 1.3rem;
-		font-weight: bold;
-		display: block;
-		color: @blue;
-	}
+    .arena-lenke {
+        font-family: "Modus", Helvetica, Arial, sans-serif;
+        font-size: 1.3rem;
+        font-weight: bold;
+        display: block;
+        color: @blue;
+    }
 
-	.filter-form {
-		.filter-block {
-			margin-top: 3rem;
-			label {
-				cursor: default;
-				font-size: 0.875rem !important;
-			}
-			div {
-				text-align: center;
-				border: 1px solid @borderColor;
-				background-color: @grayLighter;
-				padding: @toppBunnPadding @sidePadding;
-				margin-top: 0.4rem;
-			}
-		}
+    .filter-form {
+        .filter-block {
+            margin-top: 3rem;
+            label {
+                cursor: default;
+                font-size: 0.875rem !important;
+            }
+            div {
+                text-align: center;
+                border: 1px solid @borderColor;
+                background-color: @grayLighter;
+                padding: @toppBunnPadding @sidePadding;
+                margin-top: 0.4rem;
+            }
+        }
 
-		.knapp-filter {
-			width: 100%;
-			padding-top: 5px;
-			padding-bottom: 5px;
-			margin-bottom: 0.5rem;
-			text-align: left;
-			&.valgt {
-				color: white;
-				background-color: #8c8c8c;
-				background-image: none;
-				box-shadow: inset 0 0 10px #7b7b7b;
-			}
-			&:last-of-type {
-				margin: 0;
-			}
-		}
+        .knapp-filter {
+            width: 100%;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            margin-bottom: 0.5rem;
+            text-align: left;
+            &.valgt {
+                color: white;
+                background-color: #8c8c8c;
+                background-image: none;
+                box-shadow: inset 0 0 10px #7b7b7b;
+            }
+            &:last-of-type {
+                margin: 0;
+            }
+        }
 
-		.dato-plukker-filter {
-			display: inline-block;
-			label {
-				display: inline-block;
-				margin: 0;
-				width: 49%;
-				text-align: left;
-				&:nth-child(1) {
-					float: left;
-				}
-				&:nth-child(2) {
-					float: right;
-				}
-				input {
-					width: 100%;
-				}
-			}
-		}
-	}
+        .dato-plukker-filter {
+            display: inline-block;
+            label {
+                display: inline-block;
+                margin: 0;
+                width: 49%;
+                text-align: left;
+                &:nth-child(1) {
+                    float: left;
+                }
+                &:nth-child(2) {
+                    float: right;
+                }
+                input {
+                    width: 100%;
+                }
+            }
+        }
+    }
 }
 
 .kolonne-hoyre {
-	position: relative;
-	width: @kolonneHoyreWidth;
-	float: right;
-	font-family: 'Modus', Helvetica, Arial, sans-serif;
+    position: relative;
+    width: @kolonneHoyreWidth;
+    float: right;
+    font-family: 'Modus', Helvetica, Arial, sans-serif;
 
-	#ajax-indikator {
-		background-image: url('../img/ajaxloader/graa/loader_graa_32.gif');
-		position: absolute;
-		width: 32px;
-		height: 32px;
-		left: 32px;
-		top: 16px;
-	}
+    #ajax-indikator {
+        background-image: url('../img/ajaxloader/graa/loader_graa_32.gif');
+        position: absolute;
+        width: 32px;
+        height: 32px;
+        left: 32px;
+        top: 16px;
+    }
 }
 
 .element {
-	display: inline-block;
-	padding-right: 1rem;
-	font-weight: 600;
-	label {
-	    text-transform: uppercase;
-		width: auto;
-		display: block;
-		margin: 0;
-	}
+    display: inline-block;
+    padding-right: 1rem;
+    font-weight: 600;
+    label {
+        text-transform: uppercase;
+        width: auto;
+        display: block;
+        margin: 0;
+    }
 }
 
 .utbetaling-ramme {
-	margin-bottom: 2rem;
-	border: 1px solid @borderColor;
+    margin-bottom: 2rem;
+    border: 1px solid @borderColor;
 
-	.utbetaling-ramme-header {
-		padding: 1.5rem 0;
-		font-weight: 600;
-		font-size: 1.3rem;
-		text-align: center;
-		background-color: @grayLighter;
-		border-bottom: 1px solid @borderColor;
-		text-transform: uppercase;
-	}
-	.utbetaling-ramme-innhold {
-		background-color: white;
-		font-size: 0.9rem;
-	}
-	.feilmelding {
-		text-align: center;
-		a {
-			display: inline-block;
-			padding-bottom: 15px;
-		}
-	}
-  .element {
-    label {
-      color: #3e3832;
+    .utbetaling-ramme-header {
+        padding: 1.5rem 0;
+        font-weight: 600;
+        font-size: 1.3rem;
+        text-align: center;
+        background-color: @grayLighter;
+        border-bottom: 1px solid @borderColor;
+        text-transform: uppercase;
     }
-  }
-  .summeringsvisning {
-    float: right;
-    width: 49%;
+    .utbetaling-ramme-innhold {
+        background-color: white;
+        font-size: 0.9rem;
+    }
+    .feilmelding {
+        text-align: center;
+        a {
+            display: inline-block;
+            padding-bottom: 15px;
+        }
+    }
     .element {
-      width: 29%;
-      margin-right: 3%;
-      span {
+        label {
+            color: #3e3832;
+        }
+    }
+    .summeringsvisning {
         float: right;
-      }
+        width: 49%;
+        .element {
+            width: 29%;
+            margin-right: 3%;
+            span {
+                float: right;
+            }
+        }
     }
-  }
-  table {
-    page-break-inside: auto;
-    border-spacing: 0;
-    margin-top: 1rem;
-    text-align: left;
-    width: 100%;
-    position: relative;
-    tbody {
-      page-break-inside: avoid;
-      page-break-after: auto;
-    }
-    th {
-      text-transform: uppercase;
-      font-weight: normal;
-      color: #3e3832;
-      font-size: 0.857rem;
-      width: 14%;
-      max-width: 14%;
-      min-width: 14%;
-      &:first-of-type {
-        width: 31%;
+    table {
+        page-break-inside: auto;
+        border-spacing: 0;
+        margin-top: 1rem;
         text-align: left;
-      }
+        width: 100%;
+        position: relative;
+        tbody {
+            page-break-inside: avoid;
+            page-break-after: auto;
+        }
+        th {
+            text-transform: uppercase;
+            font-weight: normal;
+            color: #3e3832;
+            font-size: 0.857rem;
+            width: 14%;
+            max-width: 14%;
+            min-width: 14%;
+            &:first-of-type {
+                width: 31%;
+                text-align: left;
+            }
+        }
+        td {
+            padding-right: 30px;
+            vertical-align: bottom;
+            text-align: right;
+            &:first-of-type {
+                text-align: left;
+                width: 32%;
+            }
+            &:last-of-type {
+                padding-right: 0;
+            }
+            .oppsummert-periode {
+                position: absolute;
+                left: 0;
+                top: 8%;
+                font-size: 1.2rem;
+            }
+        }
+        tbody:not(:first-of-type) tr:first-child td {
+            padding-top: 0.5rem;
+        }
+        tbody:not(:last-of-type) tr:last-child td {
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid @borderColor;
+        }
+        .uthevet {
+            font-weight: bold;
+            text-transform: uppercase;
+        }
     }
-    td {
-      padding-right: 30px;
-      vertical-align: bottom;
-      text-align: right;
-      &:first-of-type {
-        text-align: left;
-        width: 31%;
-      }
-      &:last-of-type {
-        padding-right: 0;
-      }
-      .oppsummert-periode {
-        position: absolute;
-        left: 0;
-        top: 8%;
-        font-size: 1.2rem;
-      }
-    }
-    tbody:not(:first-of-type) tr:first-child td {
-      padding-top: 0.5rem;
-    }
-    tbody:not(:last-of-type) tr:last-child td {
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid @borderColor;
-    }
-    .uthevet {
-      font-weight: bold;
-      text-transform: uppercase;
-    }
-  }
 }
 
 .oppsummering-total {
-	width: 100%;
-	padding: @toppBunnPadding @sidePadding;
-	cursor: pointer;
-	.main {
-		position: relative;
-		.oppsummeringssummer {
-			display: inline-block;
-		}
-        .element {
-          margin-top: 10px;
+    width: 100%;
+    padding: @toppBunnPadding @sidePadding;
+    cursor: pointer;
+    .main {
+        position: relative;
+        .oppsummeringssummer {
+            display: inline-block;
         }
-	}
-	&:not(.ekspandert) {
-		.detaljpanel {
-			display: none;
-		}
-	}
+        .element {
+            margin-top: 10px;
+        }
+    }
+    &:not(.ekspandert) {
+        .detaljpanel {
+            display: none;
+        }
+    }
 }
 
 .detaljpanel {
-	table {
-		border-top: 1px solid @borderColor;
+    table {
+        border-top: 1px solid @borderColor;
         padding-top: 1rem;
-	}
-	.skillestrek-topp {
-		border-top: 1px solid @borderColor;
-		margin-top: 1rem;
-		padding-top: 1rem;
-		width: 100%;
-	}
-	.element {
-		height: 100%;
-		vertical-align: top;
-	}
+    }
+    .skillestrek-topp {
+        border-top: 1px solid @borderColor;
+        margin-top: 1rem;
+        padding-top: 1rem;
+        width: 100%;
+    }
+    .element {
+        height: 100%;
+        vertical-align: top;
+    }
 }
 
 .utbetalinger {
-	.oppsummeringslinje {
-		background-color: #333333;
-		color: #b7b1a9;
-		padding: 1rem 2rem;
-      table {
-        th {
-          color: #b7b1a9;
-        }
-      }
-	}
-	.utbetalingslinje {
-		padding: @toppBunnPadding @sidePadding;
-		border-bottom: 1px solid @borderColor;
-		cursor: pointer;
-		&:last-of-type {
-			border: none;
-		}
-		.main {
-			position: relative;
-			.statusindikator {
-              margin-bottom: 10px;
-              font-weight: bold;
-				* {
-					display: inline-block;
-					vertical-align: middle;
-				}
-				.dot {
-					height: 1rem;
-					width: 1rem;
-					border-radius: 50%;
-                    &.utbetalt {
-                      background-color: #0fba47;
-                    }
-				}
-			}
-            .element {
-              span {
-                position: absolute;
-                bottom: 0;
-              }
-              label {
-                margin-bottom: 15px;
-              }
-              &.beskrivelse {
-                width: 40%;
-                label {
-                  max-width: 100%;
-                  word-wrap: break-word;
-                }
-              }
+    .oppsummeringslinje {
+        background-color: #333333;
+        color: #b7b1a9;
+        padding: 1rem 2rem;
+        table {
+            th {
+                color: #b7b1a9;
             }
-		}
-        .belop {
-          text-align: right;
         }
-		.detaljpanel {
-			display: none;
-		}
-		&.ekspandert {
-			background-color: #f1f1f1;
-		}
-	}
+    }
+    .utbetalingslinje {
+        padding: @toppBunnPadding @sidePadding;
+        border-bottom: 1px solid @borderColor;
+        cursor: pointer;
+        &:last-of-type {
+            border: none;
+        }
+        .main {
+            position: relative;
+            .statusindikator {
+                margin-bottom: 10px;
+                font-weight: bold;
+                * {
+                    display: inline-block;
+                    vertical-align: middle;
+                }
+                .dot {
+                    height: 1rem;
+                    width: 1rem;
+                    border-radius: 50%;
+                    &.utbetalt {
+                        background-color: #0fba47;
+                    }
+                }
+            }
+            .element {
+                span {
+                    position: absolute;
+                    bottom: 0;
+                }
+                label {
+                    margin-bottom: 15px;
+                }
+                &.beskrivelse {
+                    width: 40%;
+                    label {
+                        max-width: 100%;
+                        word-wrap: break-word;
+                    }
+                }
+            }
+        }
+        .belop {
+            text-align: right;
+        }
+        .detaljpanel {
+            display: none;
+        }
+        &.ekspandert {
+            background-color: #f1f1f1;
+        }
+    }
 }
 
 .utbetalingslinje, .oppsummering-total {
     .main {
-      .element {
-        text-transform: uppercase;
-        position: relative;
-        span {
-          font-weight: bold;
+        .element {
+            text-transform: uppercase;
+            position: relative;
+            span {
+                font-weight: bold;
+            }
         }
-      }
     }
-	.skriv-ut {
-		float: right;
-		background: transparent url('../img/print.svg') no-repeat;
-		width: 16px;
-		height: 12px;
-		&:hover {
-			background-image: url('../img/print_hover.svg');
-		}
-	}
+    .skriv-ut {
+        float: right;
+        background: transparent url('../img/print.svg') no-repeat;
+        width: 16px;
+        height: 12px;
+        &:hover {
+            background-image: url('../img/print_hover.svg');
+        }
+    }
 
-	.ekspander-pil {
-		float: right;
-		background: transparent url('../img/pil.svg') no-repeat;
-		width: 17px;
-		height: 12px;
-		margin-left: 16px;
-		transform: rotate(180deg);
-		-ms-transform: rotate(180deg);
-		-webkit-transform: rotate(180deg);
-		&:hover {
-			background-image: url('../img/pil_hover.svg');
-		}
-	}
+    .ekspander-pil {
+        float: right;
+        background: transparent url('../img/pil.svg') no-repeat;
+        width: 17px;
+        height: 12px;
+        margin-left: 16px;
+        transform: rotate(180deg);
+        -ms-transform: rotate(180deg);
+        -webkit-transform: rotate(180deg);
+        &:hover {
+            background-image: url('../img/pil_hover.svg');
+        }
+    }
 
-	&.ekspandert .ekspander-pil {
-		transform: none;
-		-ms-transform: none;
-		-webkit-transform: none;
-	}
+    &.ekspandert .ekspander-pil {
+        transform: none;
+        -ms-transform: none;
+        -webkit-transform: none;
+    }
 }
