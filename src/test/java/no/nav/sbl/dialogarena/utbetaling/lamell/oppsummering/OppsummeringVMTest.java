@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
+import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
@@ -10,7 +11,6 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.time.Datoformat.KORT;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
@@ -38,7 +38,8 @@ public class OppsummeringVMTest {
         DateTime dato = DateTime.now().minusDays(1);
         LocalDate startDato = defaultStartDato();
         LocalDate sluttDato = defaultSluttDato();
-        String formatertDato = KORT.transform(startDato.toDateTimeAtStartOfDay()) + " - " + KORT.transform(sluttDato.toDateTime(new LocalTime(23, 59)));
+        String formatertDato = Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
+                               Datoformat.kortUtenLiteral(sluttDato.toDateTime(new LocalTime(23, 59)));
         List<Utbetaling> utbetalinger = asList(getUtbetaling(dato));
 
         OppsummeringVM vm = new OppsummeringVM(utbetalinger, startDato, sluttDato);
