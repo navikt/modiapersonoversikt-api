@@ -50,7 +50,9 @@ public class WSUtbetalingTestData {
                 createUtbetaling6(),
                 createUtbetaling9(),
                 createUtbetaling8(),
-                createUtbetaling1()
+                createUtbetaling1(),
+                createUtbetaling10(),
+                createUtbetaling11()
         ));
 
         final Interval periode = new Interval(startDato, sluttDato);
@@ -240,6 +242,45 @@ public class WSUtbetalingTestData {
                 .withUtbetalingsPeriode(createPeriode(now().minusMonths(7).toDateTime(), now().minusMonths(6).toDateTime()))
                 .withBilagListe(bilag1);
     }
+
+    public static WSUtbetaling createUtbetaling10() {
+        double utbetalt = BELOP * 0.87;
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 1, 1.0, utbetalt);
+        WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
+
+        WSUtbetaling utbetaling = new WSUtbetaling();
+        utbetaling.withNettobelop(utbetalt)
+                .withTrekk(0.0)
+                .withGironr("44442255555")
+                .withBruttobelop(utbetalt)
+                .withStatusBeskrivelse(UTBETALT)
+                .withStatusKode(STATUS_KODE)
+                .withUtbetalingMottaker(createTrygdetMottaker())
+                .withUtbetalingDato(now())
+                .withUtbetalingsPeriode(createPeriode(now().minusMonths(7).toDateTime(), now().minusMonths(6).toDateTime()));
+        utbetaling.withBilagListe(bilag1);
+        return utbetaling;
+    }
+
+    public static WSUtbetaling createUtbetaling11() {
+        double utbetalt = BELOP * 0.45;
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 2, 1.0, utbetalt);
+        WSBilag bilag1 = createBilag("bilag1", posteringsdetalj1);
+
+        WSUtbetaling utbetaling = new WSUtbetaling();
+        utbetaling.withNettobelop(utbetalt)
+                .withTrekk(0.0)
+                .withGironr("44442255555")
+                .withBruttobelop(utbetalt)
+                .withStatusBeskrivelse(UTBETALT)
+                .withStatusKode(STATUS_KODE)
+                .withUtbetalingMottaker(createArbeidsgiverMottaker())
+                .withUtbetalingDato(now().minusDays(1))
+                .withUtbetalingsPeriode(createPeriode(now().minusMonths(8).toDateTime(), now().minusMonths(6).toDateTime()));
+        utbetaling.withBilagListe(bilag1);
+        return utbetaling;
+    }
+
 
     public static WSPeriode createPeriode(DateTime fomDate, DateTime tomDate) {
         return new WSPeriode().withPeriodeFomDato(fomDate).withPeriodeTomDato(tomDate);
