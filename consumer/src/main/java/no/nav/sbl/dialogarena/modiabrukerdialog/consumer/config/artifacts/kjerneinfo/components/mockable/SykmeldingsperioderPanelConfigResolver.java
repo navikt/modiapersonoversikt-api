@@ -22,9 +22,9 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kje
 public class SykmeldingsperioderPanelConfigResolver {
 
     @Inject
-    SykepengerServiceBi sykepengerServiceBi;
+    private SykepengerServiceBi sykepengerServiceBi;
     @Inject
-    ForeldrepengerServiceBi foreldrepengerServiceBi;
+    private ForeldrepengerServiceBi foreldrepengerServiceBi;
 
     private ForeldrepengerServiceBi foreldrepengerServiceBiMock;
     private SykepengerServiceBi sykepengerServiceBiMock;
