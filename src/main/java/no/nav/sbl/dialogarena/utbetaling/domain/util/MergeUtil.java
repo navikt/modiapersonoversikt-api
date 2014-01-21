@@ -11,6 +11,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class MergeUtil {
 
+    @SafeVarargs
     public static <U> List<U> merge(List<Mergeable<U>> inputListe, Comparator<Mergeable<U>> comparator, Comparator<Mergeable<U>>... sorters){
         List<Mergeable<U>> ytelser = new ArrayList<>(inputListe);
 
