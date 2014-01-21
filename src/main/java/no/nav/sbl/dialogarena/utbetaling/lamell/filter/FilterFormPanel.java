@@ -8,8 +8,8 @@ import no.nav.sbl.dialogarena.utbetaling.util.AjaxIndicator;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormSubmitBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
@@ -57,16 +57,15 @@ public class FilterFormPanel extends Panel {
         valideringsfeil = new FeedbackPanel("feedbackpanel");
         return (Form) filterForm.add(
                 valideringsfeil.setOutputMarkupId(true),
+                createDateRangePicker(),
+                createSokKnapp(),
                 createMottakerButton("visBruker", BRUKER),
                 createMottakerButton("visArbeidsgiver", ARBEIDSGIVER),
-                ytelsesContainer,
-                createDateRangePicker())
-                .add(createDateRangePickerChangeBehaviour())
+                ytelsesContainer)
                 .setOutputMarkupId(true);
     }
 
     private MarkupContainer createYtelser() {
-
         IModel<List<String>> alleYtelserModel = new AbstractReadOnlyModel<List<String>>() {
             @Override
             public List<String> getObject() {
@@ -107,7 +106,7 @@ public class FilterFormPanel extends Panel {
     }
 
     private AjaxButton createMottakerButton(final String id, final String mottaker) {
-        AjaxButton mottakerButton = new AjaxButton(id) {
+        return new AjaxButton(id) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 filterParametere.toggleMottaker(mottaker);
@@ -123,8 +122,6 @@ public class FilterFormPanel extends Panel {
                 add(AttributeModifier.replace("class", newClassname));
             }
         };
-
-        return mottakerButton;
     }
 
     private DateRangePicker createDateRangePicker() {
@@ -145,16 +142,16 @@ public class FilterFormPanel extends Panel {
         return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }
 
-    private AjaxFormSubmitBehavior createDateRangePickerChangeBehaviour() {
-        return new AjaxFormSubmitBehavior("onchange") {
+    private AjaxSubmitLink createSokKnapp() {
+        return new AjaxSubmitLink("sok") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target) {
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 sendFilterEndretEvent();
                 target.add(ytelsesContainer, valideringsfeil);
             }
 
             @Override
-            protected void onError(AjaxRequestTarget target) {
+            protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(valideringsfeil);
             }
         };
