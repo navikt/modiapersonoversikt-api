@@ -271,7 +271,7 @@ public class WSUtbetalingTestData {
 
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling.withNettobelop(utbetalt)
-                .withTrekk(0.3)
+                .withTrekk(0.0)
                 .withGironr("44442255555")
                 .withBruttobelop(utbetalt)
                 .withStatusBeskrivelse(UTBETALT)
