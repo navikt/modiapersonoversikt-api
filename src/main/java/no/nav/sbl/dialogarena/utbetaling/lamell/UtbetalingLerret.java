@@ -194,4 +194,9 @@ public class UtbetalingLerret extends Lerret {
         utbetalingslisteContainer.setVisibilityAllowed(false);
         ingenutbetalinger.setVisibilityAllowed(false);
     }
+
+    @Override
+    public void onOpening(AjaxRequestTarget target) {
+        addOrReplace(createFilterFormPanel());
+    }
 }
