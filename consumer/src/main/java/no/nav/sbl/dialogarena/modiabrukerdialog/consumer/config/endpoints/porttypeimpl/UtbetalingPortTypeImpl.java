@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.portt
 
 
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
+import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeResponse;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeBaksystemIkkeTilgjengelig;
@@ -14,28 +15,27 @@ import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.cache.annotation.Cacheable;
 
+import java.net.URL;
+
 /**
  * Fake endpoint, tjeneste eksisterer ikke pt
  */
 public class UtbetalingPortTypeImpl {
 
-    private static final String UTBETALING_ENDPOINT = "https://modapp-t11.adeo.no/utbetaling";
+    private URL endpoint;
 
-    public UtbetalingPortType utbetalingPortType() {
-        return new UtbetalingPortType() {
-            @Override
-            public WSHentUtbetalingListeResponse hentUtbetalingListe(WSHentUtbetalingListeRequest request) {
-                return new WSHentUtbetalingListeResponse();
-            }
-        };
-//        return createUtbetalingPortType(new UserSAMLOutInterceptor());
+    public UtbetalingPortTypeImpl(URL endpoint) {
+        this.endpoint = endpoint;
     }
 
-    @SuppressWarnings("unused")
+    public UtbetalingPortType utbetalingPortType() {
+        return createUtbetalingPortType(new UserSAMLOutInterceptor());
+    }
+
     private UtbetalingPortType createUtbetalingPortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setWsdlLocation("utbetaling/no/nav/virksomhet/tjenester/utbetaling/utbetaling.wsdl");
-        proxyFactoryBean.setAddress(UTBETALING_ENDPOINT);
+        proxyFactoryBean.setAddress(endpoint.toString());
         proxyFactoryBean.setServiceClass(UtbetalingPortType.class);
         proxyFactoryBean.getOutInterceptors().add(interceptor);
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());

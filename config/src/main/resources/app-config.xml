@@ -34,6 +34,7 @@
         <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>   <!-- mangler i T8 ?-->
         <webservice alias="virksomhet:foreldrepenger_v1" mapToProperty="foreldrepengerendpoint"/>
         <webservice alias="virksomhet:sykepenger_v1" mapToProperty="sykepengerendpoint"/>
+        <webservice alias="virksomhet:utbetaling_v2" mapToProperty="utbetalingendpoint.v2"/>
 
         <!-- Slutt kjerneinfo -->
         <!-- App-->
