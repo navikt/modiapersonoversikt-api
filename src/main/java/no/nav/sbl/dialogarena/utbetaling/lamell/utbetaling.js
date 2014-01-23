@@ -36,6 +36,7 @@ var Utbetalinger = (function () {
         var year = date.getFullYear();
         var ddmmyyyy = ((day < 10 ? '0' : '') + day) + '.' + ((month < 10 ? '0' : '') + month) + '.' + year;
         $('body > .print .dato-utskrift #dato').text(ddmmyyyy);
+        $('body').height('100%'); // hack så det ikke kommer en tom side til slutt
         window.print();
     }
 
