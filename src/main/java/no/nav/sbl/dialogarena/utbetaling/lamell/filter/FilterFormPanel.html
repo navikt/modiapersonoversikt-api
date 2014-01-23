@@ -3,7 +3,7 @@
     <form wicket:id="filterForm" class="filter-form">
         <div wicket:id="feedbackpanel"></div>
         <div class="filter-block">
-            <label><wicket:message key="utbetaling.lamell.filter.datofilter-overskrift"/></label>
+            <p class="filter-header"><wicket:message key="utbetaling.lamell.filter.datofilter-overskrift"/></p>
             <div class="dato-plukker-filter">
                 <wicket:container wicket:id="datoFilter" />
                 <a href="#" wicket:id="sok" class="knapp-hoved-liten" >
@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="filter-block">
-            <label><wicket:message key="utbetaling.lamell.filter.mottaker-overskrift"/></label>
+            <p class="filter-header"><wicket:message key="utbetaling.lamell.filter.mottaker-overskrift"/></p>
             <div>
                 <input type="button" wicket:id="visBruker" value="Bruker" class="knapp-filter"/>
                 <input type="button" wicket:id="visArbeidsgiver" value="Arbeidsgiver" class="knapp-filter"/>
@@ -20,7 +20,7 @@
         </div>
 
         <div class="filter-block" wicket:id="ytelseContainer">
-            <label><wicket:message key="utbetaling.lamell.filter.ytelser"/></label>
+            <p class="filter-header"><wicket:message key="utbetaling.lamell.filter.ytelser"/></p>
             <div>
                 <wicket:container wicket:id="ytelseFilter">
                     <input type="button" wicket:id="ytelseKnapp" class="knapp-filter" />
