@@ -5,6 +5,8 @@ import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.modig.modia.widget.panels.GenericListing;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
+import no.nav.sbl.dialogarena.utbetaling.widget.hentutbetalinger.HentUtbetalingerFeilmeldingPanel;
+import no.nav.sbl.dialogarena.utbetaling.widget.hentutbetalinger.HentUtbetalingerPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
