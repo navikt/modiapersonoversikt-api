@@ -44,8 +44,10 @@ public final class InstanceSwitcher implements InvocationHandler {
                 return method.invoke(alternative, args);
             }
             return method.invoke(defaultInstance, args);
-        } catch (IllegalAccessException | InvocationTargetException exception) {
+        } catch (InvocationTargetException exception) {
             throw new ApplicationException("Problemer med invokering av metode", exception);
+        } catch (IllegalAccessException exception) {
+            throw new ApplicationException("Problemer med tilgang", exception);
         }
     }
 
