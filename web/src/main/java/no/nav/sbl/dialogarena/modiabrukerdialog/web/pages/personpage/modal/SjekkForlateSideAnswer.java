@@ -9,11 +9,13 @@ public class SjekkForlateSideAnswer implements Serializable {
     private AnswerType answerType;
 
     public boolean is(AnswerType type) {
-        return answerType == type;
+        return answerType == null ? false : answerType.equals(type);
     }
 
     public void setAnswerType(AnswerType answerType) {
         this.answerType = answerType;
     }
+
+
 
 }

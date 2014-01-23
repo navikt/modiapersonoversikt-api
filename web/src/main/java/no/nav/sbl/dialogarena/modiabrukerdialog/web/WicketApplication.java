@@ -75,6 +75,42 @@ public class WicketApplication extends WebApplication {
             getResourceSettings().setResourcePollFrequency(ONE_SECOND);
         }
 
+        configureFrontend();
+
+        // Innstillinger vi bør ha
+        getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
+
+        setMarkupSettings();
+
+		CompoundAuthorizationStrategy compoundAuthorizationStrategy = new CompoundAuthorizationStrategy();
+		compoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(kjerneinfoPep));
+		getSecuritySettings().setAuthorizationStrategy(compoundAuthorizationStrategy);
+
+        new ApplicationSettingsConfig().withUtf8Properties(true).configure(this);
+
+        Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
+
+
+        new ModiaApplicationConfigurator()
+                .withExceptionHandler(true)
+                .configure(this);
+
+        mountPages();
+
+        setSpringComponentInjector();
+
+        Datoformat.brukLocaleFra(LocaleFromWicketSession.INSTANCE);
+    }
+
+    private void setMarkupSettings() {
+        IMarkupSettings markupSettings = getMarkupSettings();
+        markupSettings.setStripWicketTags(true);
+        markupSettings.setStripComments(true);
+        markupSettings.setCompressWhitespace(true);
+        markupSettings.setDefaultMarkupEncoding("UTF-8");
+    }
+
+    private void configureFrontend() {
         new FrontendConfigurator()
                 .withModules(MODIA)
                 .addMetas(
@@ -111,33 +147,6 @@ public class WicketApplication extends WebApplication {
                 )
 		        .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
-
-        // Innstillinger vi bør ha
-        getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
-        IMarkupSettings markupSettings = getMarkupSettings();
-        markupSettings.setStripWicketTags(true);
-        markupSettings.setStripComments(true);
-        markupSettings.setCompressWhitespace(true);
-        markupSettings.setDefaultMarkupEncoding("UTF-8");
-
-		CompoundAuthorizationStrategy compoundAuthorizationStrategy = new CompoundAuthorizationStrategy();
-		compoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(kjerneinfoPep));
-		getSecuritySettings().setAuthorizationStrategy(compoundAuthorizationStrategy);
-
-        new ApplicationSettingsConfig().withUtf8Properties(true).configure(this);
-
-        Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
-
-
-        new ModiaApplicationConfigurator()
-                .withExceptionHandler(true)
-                .configure(this);
-
-        mountPages();
-
-        setSpringComponentInjector();
-
-        Datoformat.brukLocaleFra(LocaleFromWicketSession.INSTANCE);
     }
 
     private void mountPages() {
