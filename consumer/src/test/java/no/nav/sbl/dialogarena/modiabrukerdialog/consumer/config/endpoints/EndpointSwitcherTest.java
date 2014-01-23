@@ -7,7 +7,6 @@ import org.junit.Test;
 import static java.lang.System.getProperties;
 import static java.lang.System.setProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.InstanceSwitcher.createSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockSetupSingleton.mockSetup;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 
@@ -21,7 +20,7 @@ public class EndpointSwitcherTest {
     }
 
     @Before
-    public void setupProxyDillDall() {
+    public void setupProxy() {
         Value foo = new Value() {
             public String gimme() {
                 return "foo";
@@ -34,7 +33,6 @@ public class EndpointSwitcherTest {
             }
         };
 
-        mockSetup().clear();
         setProperty("tillatmocksetup.url", "http://ja.no");
         value = createSwitcher(foo, bar, USE_FOO, Value.class);
     }

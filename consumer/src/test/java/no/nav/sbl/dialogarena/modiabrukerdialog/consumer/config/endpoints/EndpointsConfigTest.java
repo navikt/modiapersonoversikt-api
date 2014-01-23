@@ -17,7 +17,6 @@ import javax.inject.Named;
 
 import static java.lang.System.setProperty;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockSetupSingleton.mockSetup;
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -41,7 +40,6 @@ public class EndpointsConfigTest {
 
     @BeforeClass
     public static void setupStatic() {
-        mockSetup().clear();
         setupKeyAndTrustStore();
         setFrom("test.properties");
         setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());

@@ -8,7 +8,8 @@ import java.lang.reflect.Method;
 
 import static java.lang.System.getProperty;
 import static java.lang.reflect.Proxy.newProxyInstance;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockSetupSingleton.mockSetup;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.DEFAULT_MOCK_TILLATT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.mockSetupErTillatt;
 
 public final class InstanceSwitcher implements InvocationHandler {
 
@@ -24,7 +25,7 @@ public final class InstanceSwitcher implements InvocationHandler {
 
     public static <T> T createSwitcher(T defaultInstance, T alternative, String key, Class<T> type) {
 
-        if (!mockSetup().isTillat()) {
+        if (!mockSetupErTillatt(getProperty("tillatmocksetup.url", DEFAULT_MOCK_TILLATT))) {
             return defaultInstance;
         }
 
