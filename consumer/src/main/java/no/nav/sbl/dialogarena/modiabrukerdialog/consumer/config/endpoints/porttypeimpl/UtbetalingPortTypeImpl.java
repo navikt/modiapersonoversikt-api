@@ -17,9 +17,6 @@ import org.springframework.cache.annotation.Cacheable;
 
 import java.net.URL;
 
-/**
- * Fake endpoint, tjeneste eksisterer ikke pt
- */
 public class UtbetalingPortTypeImpl {
 
     private URL endpoint;

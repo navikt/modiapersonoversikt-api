@@ -18,11 +18,11 @@ import java.util.HashMap;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.EndpointsConfig.MODIA_CONNECTION_TIMEOUT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.EndpointsConfig.MODIA_RECEIVE_TIMEOUT;
 
-public class KodeverkV2EndpointConfigImpl {
+public class KodeverkV2PortTypeImpl {
 
     private URL kodeverkEndpoint;
 
-    public KodeverkV2EndpointConfigImpl(URL kodeverkEndpoint) {
+    public KodeverkV2PortTypeImpl(URL kodeverkEndpoint) {
         this.kodeverkEndpoint = kodeverkEndpoint;
     }
 

@@ -16,11 +16,10 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 @Configuration
 public class UtbetalingEndpointConfig {
 
-    @Value("${utbetalingendpoint.v2.url}")
-    private URL endpoint;
-
     public static final String UTBETALING_KEY = "start.utbetaling.withmock";
 
+    @Value("${utbetalingendpoint.v2.url}")
+    private URL endpoint;
 
     @Bean
     public UtbetalingPortType utbetalingPortType() {
