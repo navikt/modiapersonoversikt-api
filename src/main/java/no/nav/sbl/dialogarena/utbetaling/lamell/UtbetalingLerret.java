@@ -111,9 +111,9 @@ public class UtbetalingLerret extends Lerret {
 
     private void oppdaterCacheOmNodvendig() {
         DateTime cacheStartDato = resultatCache.startDato.toDateTimeAtStartOfDay();
-        DateTime cacheSluttDato = resultatCache.sluttDato.toDateTime(new LocalTime(23, 59));
+        DateTime cacheSluttDato = resultatCache.sluttDato.toDateTimeAtStartOfDay();
         DateTime filterStartDato = filterParametere.getStartDato().toDateTimeAtStartOfDay();
-        DateTime filterSluttDato = filterParametere.getSluttDato().toDateTime(new LocalTime(23,59));
+        DateTime filterSluttDato = filterParametere.getSluttDato().toDateTimeAtStartOfDay();
 
         if (!new Interval(cacheStartDato, cacheSluttDato).contains(new Interval(filterStartDato, filterSluttDato))) {
             resultatCache = hentUtbetalingsResultat(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
