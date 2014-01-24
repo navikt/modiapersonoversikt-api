@@ -8,13 +8,12 @@ import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSPeriode;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkkeFunnet;
 import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.createUtbetalinger;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -31,11 +30,11 @@ public class UtbetalingService {
 
     private List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
         try {
-            logger.info("---- Spør etter utebetalinger. Fnr: " + fnr + ". ----");
+            logger.info("---- Spør etter utebetalinger. Fnr: {}. ----", fnr);
             return utbetalingPortType.hentUtbetalingListe(createRequest(fnr, startDato, sluttDato)).getUtbetalingListe();
         } catch (HentUtbetalingListeMottakerIkkeFunnet hulmif) {
             logger.debug("Mottaker med fnr {} ble ikke funnet i utbetalingstjenesten. Returnerer tom liste.", fnr);
-            return new ArrayList<>();
+            return emptyList();
         } catch (Exception e) {
             throw new ApplicationException("Henting av utbetalinger for bruker med fnr " + fnr + " mellom " + startDato + " og " + sluttDato + " feilet.", e);
         }
@@ -44,7 +43,7 @@ public class UtbetalingService {
     private WSHentUtbetalingListeRequest createRequest(String fnr, LocalDate startDato, LocalDate sluttDato) {
         return new WSHentUtbetalingListeRequest()
                 .withMottaker(fnr)
-                .withPeriode(new WSPeriode().withFom(startDato.toDateTimeAtStartOfDay()).withTom(sluttDato.toDateTime(new LocalTime(23, 59))));
+                .withPeriode(new WSPeriode().withFom(startDato.toDateTimeAtStartOfDay()).withTom(sluttDato.toDateTimeAtStartOfDay()));
     }
 
 }

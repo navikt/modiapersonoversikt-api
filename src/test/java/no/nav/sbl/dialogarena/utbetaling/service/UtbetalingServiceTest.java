@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeBaksystemIkkeTilgjengelig;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeForMangeForekomster;
@@ -14,6 +15,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.List;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 
@@ -26,10 +31,10 @@ public class UtbetalingServiceTest {
     @Mock
     private UtbetalingPortType utbetalingPortType;
 
-    @Test(expected = ApplicationException.class)
-    public void testExceptions_hentUtbetalingListeMottakerIkkeFunnet() throws Exception {
+    public void skalReturnereTomListeMedUtbetalingerHvisPersonIkkeFinnes() throws Exception {
         when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeMottakerIkkeFunnet());
-        service.hentUtbetalinger(FNR, new LocalDate(), new LocalDate());
+        List<Utbetaling> utbetalinger = service.hentUtbetalinger(FNR, new LocalDate(), new LocalDate());
+        assertThat(utbetalinger.isEmpty(), is(true));
     }
 
     @Test(expected = ApplicationException.class)

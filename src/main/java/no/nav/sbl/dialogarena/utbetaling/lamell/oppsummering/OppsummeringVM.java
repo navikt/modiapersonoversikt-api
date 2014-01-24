@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.transform.Mergeable;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -96,6 +95,6 @@ public class OppsummeringVM implements Serializable {
             return startDato.toString("MMMM yyyy", Locale.getDefault());
         }
         return Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
-               Datoformat.kortUtenLiteral(sluttDato.toDateTime(new LocalTime(23, 59)));
+               Datoformat.kortUtenLiteral(sluttDato.toDateTimeAtCurrentTime());
     }
 }
