@@ -8,6 +8,8 @@ import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSPeriode;
 import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -15,6 +17,8 @@ import java.util.List;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.createUtbetalinger;
 
 public class UtbetalingService {
+
+    private static final Logger LOG = LoggerFactory.getLogger(UtbetalingService.class);
 
     @Inject
     private UtbetalingPortType utbetalingPortType;
@@ -25,6 +29,7 @@ public class UtbetalingService {
 
     private List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
         try {
+            LOG.info("---- Spør etter utebetalinger. Fnr: " + fnr + ". ----");
             return utbetalingPortType.hentUtbetalingListe(createRequest(fnr, startDato, sluttDato)).getUtbetalingListe();
         } catch (Exception e) {
             throw new ApplicationException("Henting av utbetalinger for bruker med fnr " + fnr + " mellom " + startDato + " og " + sluttDato + " feilet.", e);
