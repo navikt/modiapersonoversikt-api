@@ -21,7 +21,6 @@ public class MaanedsPanelTest extends AbstractWicketTest {
 
     @Override
     protected void setup() {
-        wicketTester.tester.getSession().replaceSession();
     }
 
     @Test
