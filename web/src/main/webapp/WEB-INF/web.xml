@@ -86,6 +86,16 @@
     </filter-mapping>
 
     <filter>
+        <filter-name>staticResourcesCacheFilter</filter-name>
+        <filter-class>no.nav.modig.frontend.filter.StaticResourcesCacheFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>staticResourcesCacheFilter</filter-name>
+        <url-pattern>/img/*</url-pattern>
+        <url-pattern>/font/*</url-pattern>
+    </filter-mapping>
+
+    <filter>
         <filter-name>MDCFilter</filter-name>
         <filter-class>no.nav.modig.presentation.logging.session.MDCFilter</filter-class>
     </filter>
