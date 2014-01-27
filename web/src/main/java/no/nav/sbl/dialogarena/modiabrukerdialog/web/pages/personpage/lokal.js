@@ -14,10 +14,6 @@ jQuery(document).ready(function ($) {
         }
 	});
 
-	$(window).on('scroll', function() {
-		$('body').height(window.innerHeight + window.pageYOffset);
-	});
-
 	// Lagt til midlertidig for å skjule overskrift ved kun en lamell
 	$('.sidebar > *').on('click', function (e) {
 		e.stopPropagation();
