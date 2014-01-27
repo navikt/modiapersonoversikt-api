@@ -19,7 +19,8 @@ import static org.mockito.Mockito.when;
 
 public class PersonKjerneinfoServiceBiMock {
 
-    public static final String FODSELSNUMMER = "23067911223";
+//    public static final String FODSELSNUMMER = "23067911223";
+    public static final String FODSELSNUMMER = "***REMOVED***";
 
     public static PersonKjerneinfoServiceBi getPersonKjerneinfoServiceBiMock() {
         PersonKjerneinfoServiceBi serviceMock = mock(PersonKjerneinfoServiceBi.class);

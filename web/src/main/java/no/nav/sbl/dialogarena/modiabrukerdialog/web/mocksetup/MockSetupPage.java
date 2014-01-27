@@ -55,7 +55,8 @@ public class MockSetupPage extends BasePage {
 
             private void redirect() {
                 if (brukTestPerson) {
-                    getRequestCycle().setResponsePage(PersonPage.class, new PageParameters().add("fnr", "23067911223"));
+//                    getRequestCycle().setResponsePage(PersonPage.class, new PageParameters().add("fnr", "23067911223"));
+                    getRequestCycle().setResponsePage(PersonPage.class, new PageParameters().add("fnr", "***REMOVED***"));
                     return;
                 }
                 getRequestCycle().setResponsePage(HentPersonPage.class);
