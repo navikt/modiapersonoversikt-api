@@ -7,12 +7,15 @@ import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMottaker;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.slf4j.Logger;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.TransformComparator.MERGEABLE_ALLE_FELTER;
@@ -20,8 +23,18 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTrans
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.getBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.MergeUtil.merge;
 import static org.apache.commons.lang3.StringUtils.join;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public final class UtbetalingTransformer {
+
+    private static Logger logger = getLogger(UtbetalingTransformer.class);
+
+
+    private static final Integer DEFAULT_INT_VALUE = 1337;
+    private static final Double DEFAULT_DOUBLE_VALUE = 13.37;
+    private static final String DEFAULT_STRING_VALUE = "TRETTENTRETTISJU";
+    private static final DateTime DEFAULT_DATETIME_VALUE = new DateTime().minusDays(1337);
+    private static final Interval DEFAULT_INTERVAL_VALUE = new Interval(DEFAULT_DATETIME_VALUE, new DateTime());
 
     /**
      * Transformasjonen gjøres i tre steg:
@@ -40,7 +53,7 @@ public final class UtbetalingTransformer {
      * detaljen kom fra.
      */
     static List<UtbetalingTransformObjekt> createTransformObjekter(List<WSUtbetaling> wsUtbetalinger, String fnr) {
-
+        logger.info("---- Transformasjon av utbetalinger ----");
         List<UtbetalingTransformObjekt> list = new ArrayList<>();
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
             WSMottaker wsMottaker = wsUtbetaling.getUtbetalingMottaker();
@@ -56,23 +69,24 @@ public final class UtbetalingTransformer {
             for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
                 String melding = transformMelding(wsBilag, delimiter);
 
+                logger.info("---- Transformasjon fra WSPosteringsdetaljer => transformObjekt ----");
                 for (WSPosteringsdetaljer detalj : wsBilag.getPosteringsdetaljerListe()) {
                     UtbetalingTransformObjekt transformObjekt = getBuilder()
-                            .withAntall(detalj.getAntall())
-                            .withBelop(detalj.getBelop())
-                            .withHovedYtelse(detalj.getKontoBeskrHoved())
-                            .withKontonummer(wsUtbetaling.getGironr())
-                            .withMottaker(mottaker)
-                            .withMottakerId(mottakerId)
-                            .withMottakerKode(mottakerKode)
-                            .withSats(detalj.getSats())
-                            .withStatus(wsUtbetaling.getStatusBeskrivelse())
-                            .withSpesifikasjon(detalj.getSpesifikasjon())
-                            .withUnderYtelse(transformerUnderbeskrivelse(detalj.getKontoBeskrUnder(), detalj.getKontoBeskrHoved()))
-                            .withUtbetalingsDato(wsUtbetaling.getUtbetalingDato())
-                            .withPeriode(periode)
-                            .withValuta(wsUtbetaling.getValuta())
-                            .build();
+                            .withAntall(optional(detalj.getAntall()).getOrElse(DEFAULT_INT_VALUE))
+                            .withBelop(optional(detalj.getBelop()).getOrElse(DEFAULT_DOUBLE_VALUE))
+                                    .withHovedYtelse(optional(detalj.getKontoBeskrHoved()).getOrElse(DEFAULT_STRING_VALUE))
+                                            .withKontonummer(optional(wsUtbetaling.getGironr()).getOrElse(DEFAULT_STRING_VALUE))
+                                            .withMottaker(optional(mottaker).getOrElse(DEFAULT_STRING_VALUE))
+                                            .withMottakerId(optional(mottakerId).getOrElse(DEFAULT_STRING_VALUE))
+                                            .withMottakerKode(optional(mottakerKode).getOrElse(DEFAULT_STRING_VALUE))
+                                            .withSats(optional(detalj.getSats()).getOrElse(DEFAULT_DOUBLE_VALUE))
+                                            .withStatus(optional(wsUtbetaling.getStatusBeskrivelse()).getOrElse(DEFAULT_STRING_VALUE))
+                                            .withSpesifikasjon(optional(detalj.getSpesifikasjon()).getOrElse(DEFAULT_STRING_VALUE))
+                                            .withUnderYtelse(transformerUnderbeskrivelse(detalj.getKontoBeskrUnder(), detalj.getKontoBeskrHoved()))
+                                            .withUtbetalingsDato(optional(wsUtbetaling.getUtbetalingDato()).getOrElse(DEFAULT_DATETIME_VALUE))
+                                            .withPeriode(optional(periode).getOrElse(DEFAULT_INTERVAL_VALUE))
+                                            .withValuta(optional(wsUtbetaling.getValuta()).getOrElse(DEFAULT_STRING_VALUE))
+                                            .build();
                     transformObjekt.setMelding(melding);
                     list.add(transformObjekt);
                 }
