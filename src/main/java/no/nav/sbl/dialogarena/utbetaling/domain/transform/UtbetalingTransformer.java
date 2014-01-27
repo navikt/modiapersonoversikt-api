@@ -7,7 +7,6 @@ import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMottaker;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
-import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.slf4j.Logger;
 
@@ -30,11 +29,9 @@ public final class UtbetalingTransformer {
     private static Logger logger = getLogger(UtbetalingTransformer.class);
 
 
-    private static final Integer DEFAULT_INT_VALUE = 1337;
-    private static final Double DEFAULT_DOUBLE_VALUE = 13.37;
-    private static final String DEFAULT_STRING_VALUE = "TRETTENTRETTISJU";
-    private static final DateTime DEFAULT_DATETIME_VALUE = new DateTime().minusDays(1337);
-    private static final Interval DEFAULT_INTERVAL_VALUE = new Interval(DEFAULT_DATETIME_VALUE, new DateTime());
+    private static final int DEFAULT_ANTALL = 1;
+    private static final double DEFAULT_SATS = 1.0;
+    private static final String DEFAULT_SPESIFIKASJON = "";
 
     /**
      * Transformasjonen gjøres i tre steg:
@@ -72,21 +69,21 @@ public final class UtbetalingTransformer {
                 logger.info("---- Transformasjon fra WSPosteringsdetaljer => transformObjekt ----");
                 for (WSPosteringsdetaljer detalj : wsBilag.getPosteringsdetaljerListe()) {
                     UtbetalingTransformObjekt transformObjekt = getBuilder()
-                            .withAntall(optional(detalj.getAntall()).getOrElse(DEFAULT_INT_VALUE))
-                            .withBelop(optional(detalj.getBelop()).getOrElse(DEFAULT_DOUBLE_VALUE))
-                                    .withHovedYtelse(optional(detalj.getKontoBeskrHoved()).getOrElse(DEFAULT_STRING_VALUE))
-                                            .withKontonummer(optional(wsUtbetaling.getGironr()).getOrElse(DEFAULT_STRING_VALUE))
-                                            .withMottaker(optional(mottaker).getOrElse(DEFAULT_STRING_VALUE))
-                                            .withMottakerId(optional(mottakerId).getOrElse(DEFAULT_STRING_VALUE))
-                                            .withMottakerKode(optional(mottakerKode).getOrElse(DEFAULT_STRING_VALUE))
-                                            .withSats(optional(detalj.getSats()).getOrElse(DEFAULT_DOUBLE_VALUE))
-                                            .withStatus(optional(wsUtbetaling.getStatusBeskrivelse()).getOrElse(DEFAULT_STRING_VALUE))
-                                            .withSpesifikasjon(optional(detalj.getSpesifikasjon()).getOrElse(DEFAULT_STRING_VALUE))
-                                            .withUnderYtelse(transformerUnderbeskrivelse(detalj.getKontoBeskrUnder(), detalj.getKontoBeskrHoved()))
-                                            .withUtbetalingsDato(optional(wsUtbetaling.getUtbetalingDato()).getOrElse(DEFAULT_DATETIME_VALUE))
-                                            .withPeriode(optional(periode).getOrElse(DEFAULT_INTERVAL_VALUE))
-                                            .withValuta(optional(wsUtbetaling.getValuta()).getOrElse(DEFAULT_STRING_VALUE))
-                                            .build();
+                            .withAntall(optional(detalj.getAntall()).getOrElse(DEFAULT_ANTALL))
+                            .withBelop(detalj.getBelop())
+                            .withHovedYtelse(detalj.getKontoBeskrHoved())
+                            .withKontonummer(wsUtbetaling.getGironr())
+                            .withMottaker(mottaker)
+                            .withMottakerId(mottakerId)
+                            .withMottakerKode(mottakerKode)
+                            .withSats(optional(detalj.getSats()).getOrElse(DEFAULT_SATS))
+                            .withStatus(wsUtbetaling.getStatusBeskrivelse())
+                            .withSpesifikasjon(optional(detalj.getSpesifikasjon()).getOrElse(DEFAULT_SPESIFIKASJON))
+                            .withUnderYtelse(transformerUnderbeskrivelse(detalj.getKontoBeskrUnder(), detalj.getKontoBeskrHoved()))
+                            .withUtbetalingsDato(wsUtbetaling.getUtbetalingDato())
+                            .withPeriode(periode)
+                            .withValuta(wsUtbetaling.getValuta())
+                            .build();
                     transformObjekt.setMelding(melding);
                     list.add(transformObjekt);
                 }
@@ -118,8 +115,16 @@ public final class UtbetalingTransformer {
 
     static void transformerSkatt(List<WSUtbetaling> wsUtbetalinger) {
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
+
+            String beskrivelse;
+            if(wsUtbetaling.getKildeNavn() != null && wsUtbetaling.getKildeNavn().equalsIgnoreCase("abetal")) {
+                beskrivelse = wsUtbetaling.getTekstmelding();
+            } else {
+                beskrivelse = wsUtbetaling.getBilagListe().get(0).getYtelseBeskrivelse();
+            }
+
             for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
-                trekkUtSkatteOpplysninger(wsBilag.getPosteringsdetaljerListe());
+                trekkUtSkatteOpplysninger(wsBilag.getPosteringsdetaljerListe(), beskrivelse);
             }
         }
     }
@@ -132,19 +137,20 @@ public final class UtbetalingTransformer {
      * underbeskrivelse, f.eks "Forskuddstrekk skatt". Endre kontoBeskrHoved til det samme som de andre
      * posteringsdetaljene i samme WSBilag. (Alle posteringdetaljer i samme bilag har samme kontoBeskrHoved).
      */
-    private static void trekkUtSkatteOpplysninger(List<WSPosteringsdetaljer> detaljer) {
-        List<WSPosteringsdetaljer> skatteDetaljer = new ArrayList<>();
+    private static void trekkUtSkatteOpplysninger(List<WSPosteringsdetaljer> detaljer, String ytelseBeskrivelse) {
         for (WSPosteringsdetaljer detalj : detaljer) {
-            if ("SKATT".equalsIgnoreCase(detalj.getKontoBeskrHoved())) {
-                skatteDetaljer.add(detalj);
+            if (detalj.getKontoBeskrHoved().toLowerCase().contains("trekk")) {
+
+                if(detalj.getKontoBeskrUnder() == null || detalj.getKontoBeskrUnder().isEmpty()) {
+                    detalj.setKontoBeskrUnder(detalj.getKontoBeskrHoved());
+                }
+
+                if (detalj.getBelop() > 0) {
+                    detalj.setBelop(-detalj.getBelop());
+                }
+
+                detalj.setKontoBeskrHoved(ytelseBeskrivelse);
             }
-        }
-        if (skatteDetaljer.isEmpty() || detaljer.isEmpty()) {
-            return;
-        }
-        String beskrivelse = detaljer.get(0).getKontoBeskrHoved();
-        for (WSPosteringsdetaljer skatt : skatteDetaljer) {
-            skatt.setKontoBeskrHoved(beskrivelse);
         }
     }
 
