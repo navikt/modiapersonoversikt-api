@@ -1,7 +1,7 @@
 var utbetalingslinjeSelector = '.utbetaling-ramme .utbetalingslinje';
 
 $(document).on('click', utbetalingslinjeSelector, function () {
-    $(this).children('.detaljpanel').animate({height: 'toggle'}, 300);
+    $(this).children('.detaljpanel').animate({height: 'toggle'}, 200);
     $(this).toggleClass('ekspandert');
 });
 
