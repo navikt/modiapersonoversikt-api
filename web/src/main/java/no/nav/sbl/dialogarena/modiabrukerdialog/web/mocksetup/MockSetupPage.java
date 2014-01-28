@@ -22,6 +22,7 @@ import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.KodeverkV2EndpointConfig.KODEVERK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.UtbetalingEndpointConfig.UTBETALING_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.PersonKjerneinfoServiceBiMock.FODSELSNUMMER;
 
 public class MockSetupPage extends BasePage {
 
@@ -55,8 +56,7 @@ public class MockSetupPage extends BasePage {
 
             private void redirect() {
                 if (brukTestPerson) {
-//                    getRequestCycle().setResponsePage(PersonPage.class, new PageParameters().add("fnr", "23067911223"));
-                    getRequestCycle().setResponsePage(PersonPage.class, new PageParameters().add("fnr", "***REMOVED***"));
+                    getRequestCycle().setResponsePage(PersonPage.class, new PageParameters().add("fnr", FODSELSNUMMER));
                     return;
                 }
                 getRequestCycle().setResponsePage(HentPersonPage.class);
