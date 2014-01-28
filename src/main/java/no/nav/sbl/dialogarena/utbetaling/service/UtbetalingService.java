@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.sbl.dialogarena.utbetaling.domain.transform.TransformV2;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSPeriode;
@@ -15,7 +14,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
-import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.createUtbetalinger;
+import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.lagUtbetalinger;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class UtbetalingService {
@@ -26,8 +25,7 @@ public class UtbetalingService {
     private UtbetalingPortType utbetalingPortType;
 
     public List<Utbetaling> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-//        return createUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato), fnr);
-        return TransformV2.lagUtbetalingerFraTjenesten(getWSUtbetalinger(fnr, startDato, sluttDato));
+        return lagUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato), fnr);
     }
 
     private List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
