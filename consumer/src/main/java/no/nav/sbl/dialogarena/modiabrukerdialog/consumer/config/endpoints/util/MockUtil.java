@@ -10,6 +10,9 @@ import static java.lang.System.getProperty;
 public class MockUtil {
 
     public static final String DEFAULT_MOCK_TILLATT = "nei";
+    private static final String TILLATMOCKSETUP_URL = "tillatmocksetup.url";
+    private static final String DEFAULT_MOCK_ALLOWANCE = "no";
+    private static final String ALLOW_MOCK = "yes";
 
     public static boolean mockSetupErTillatt(String url) {
         if (url == null) { return false; }
@@ -21,11 +24,11 @@ public class MockUtil {
     }
 
     public static boolean mockSetupErTillatt() {
-        return mockSetupErTillatt(getProperty("tillatmocksetup.url"));
+        return mockSetupErTillatt(getProperty(TILLATMOCKSETUP_URL));
     }
 
     public static boolean mockErSlaattPaaForKey(String key) {
-        return getProperty(key, "no").equalsIgnoreCase("yes");
+        return getProperty(key, DEFAULT_MOCK_ALLOWANCE).equalsIgnoreCase(ALLOW_MOCK);
     }
 
 }

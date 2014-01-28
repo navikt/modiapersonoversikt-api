@@ -6,9 +6,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import static java.lang.System.getProperty;
 import static java.lang.reflect.Proxy.newProxyInstance;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.DEFAULT_MOCK_TILLATT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.mockErSlaattPaaForKey;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.mockSetupErTillatt;
 
 public final class InstanceSwitcher implements InvocationHandler {
@@ -25,7 +24,7 @@ public final class InstanceSwitcher implements InvocationHandler {
 
     public static <T> T createSwitcher(T defaultInstance, T alternative, String key, Class<T> type) {
 
-        if (!mockSetupErTillatt(getProperty("tillatmocksetup.url", DEFAULT_MOCK_TILLATT))) {
+        if (!mockSetupErTillatt()) {
             return defaultInstance;
         }
 
@@ -40,7 +39,7 @@ public final class InstanceSwitcher implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) {
         method.setAccessible(true);
         try {
-            if (getProperty(key, "no").equalsIgnoreCase("yes")) {
+            if (mockErSlaattPaaForKey(key)) {
                 return method.invoke(alternative, args);
             }
             return method.invoke(defaultInstance, args);
