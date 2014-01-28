@@ -64,7 +64,6 @@
         <role-name>0000-GA-BD06_EndreKontonummer</role-name>
     </security-role>
 
-
     <filter>
         <filter-name>staticResourcesCacheFilter</filter-name>
         <filter-class>no.nav.modig.frontend.filter.StaticResourcesCacheFilter</filter-class>
