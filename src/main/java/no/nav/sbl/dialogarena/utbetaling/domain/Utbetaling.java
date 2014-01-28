@@ -175,7 +175,12 @@ public final class Utbetaling implements Serializable {
         }
 
         public UtbetalingBuilder withUnderytelser(List<Underytelse> underytelser) {
-            this.underytelser = underytelser;
+            this.underytelser.addAll(underytelser);
+            return this;
+        }
+
+        public UtbetalingBuilder withUnderytelse(Underytelse underytelse) {
+            this.underytelser.add(underytelse);
             return this;
         }
 

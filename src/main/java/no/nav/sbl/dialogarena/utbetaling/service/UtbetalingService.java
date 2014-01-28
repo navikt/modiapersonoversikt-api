@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.utbetaling.domain.transform.TransformV2;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSPeriode;
@@ -25,7 +26,8 @@ public class UtbetalingService {
     private UtbetalingPortType utbetalingPortType;
 
     public List<Utbetaling> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-        return createUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato), fnr);
+//        return createUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato), fnr);
+        return TransformV2.lagUtbetalingerFraTjenesten(getWSUtbetalinger(fnr, startDato, sluttDato));
     }
 
     private List<WSUtbetaling> getWSUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
