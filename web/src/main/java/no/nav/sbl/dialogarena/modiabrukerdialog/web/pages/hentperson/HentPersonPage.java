@@ -18,8 +18,10 @@ import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGANG;
+import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_CLEAR_MESSAGES;
 import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
 import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_SEARCH_PERFORMED;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.apache.wicket.markup.head.OnLoadHeaderItem.forScript;
@@ -71,6 +73,11 @@ public class HentPersonPage extends BasePage {
     @RunOnEvents(HENTPERSON_FODSELSNUMMER_IKKE_TILGANG)
     public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
         send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
+    }
+
+    @RunOnEvents(PERSONSOK_SEARCH_PERFORMED)
+    public void personsokUtfort(AjaxRequestTarget target, String query) {
+        send(getPage(), DEPTH, new NamedEventPayload(HENTPERSON_CLEAR_MESSAGES, query));
     }
 
 }
