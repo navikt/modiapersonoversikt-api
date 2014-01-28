@@ -16,6 +16,7 @@ public final class Utbetaling implements Serializable {
 
     public static final String BRUKER = "bruker";
     public static final String ARBEIDSGIVER = "arbeidsgiver";
+
     private DateTime utbetalingsdato;
     private Interval periode;
     private String status;

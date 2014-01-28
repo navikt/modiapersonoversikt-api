@@ -19,23 +19,26 @@ import static org.joda.time.DateTime.now;
 
 public class WSUtbetalingTestData {
 
-    private static final String KONTO_NR = "***REMOVED***";
-    private static final String NAVN = "Kjell Olsen";
-    private static final String UTBETALT = "UTBETALT";
-    private static final String MOTTATT_KONTOFORER = "MOTTATT KONTOFØRER";
-    private static final String STATUS_KODE = "0018";
-    private static final Double BELOP = 1000.0;
-    private static final Double SKATTE_PROSENT = -0.35;
-    private static final String GRUNNBELOP = "Grunnbeløp";
-    private static final String FORSKUDDSTREKK_SKATT = "Forskuddstrekk skatt";
-    private static final String FORSKUDDSTREKK = "Forskuddstrekk";
-    private static final String SKATT = "Skatt";
-    private static final String DAGPENGER = "Dagpenger";
-    private static final String FORELDREPENGER = "Foreldrepenger";
-    private static final String VALUTA = "NOK";
-    private static DateTime forsteDesember = new DateTime(2013, 12, 1, 12, 0);
-    private static final String SPESIFIKASJON = "";
-    private static final String SPESIFIKASJON_1 = "Ekstra detaljinfo";
+    public static final String KONTO_NR = "***REMOVED***";
+    public static final String NAVN = "Kjell Olsen";
+    public static final String UTBETALT = "UTBETALT";
+    public static final String MOTTATT_KONTOFORER = "MOTTATT KONTOFØRER";
+    public static final String STATUS_KODE = "0018";
+    public static final Double BELOP = 1000.0;
+    public static final Double SKATTE_PROSENT = -0.35;
+    public static final String GRUNNBELOP = "Grunnbeløp";
+    public static final String FORSKUDDSTREKK_SKATT = "Forskuddstrekk skatt";
+    public static final String FORSKUDDSTREKK = "Forskuddstrekk";
+    public static final String SKATT = "Skatt";
+    public static final String DAGPENGER = "Dagpenger";
+    public static final String FORELDREPENGER = "Foreldrepenger";
+    public static final String VALUTA = "NOK";
+    public static final DateTime forsteDesember = new DateTime(2013, 12, 1, 12, 0);
+    public static final String SPESIFIKASJON = "";
+    public static final String SPESIFIKASJON_1 = "Ekstra detaljinfo";
+    public static final String UFORE = "Uføre";
+    public static final String TILLEGGSYTELSE = "Tilleggsytelse";
+    public static final String TILLEGGSYTELSE_TILBAKEBETALT = "Tilleggsytelse tilbakebetalt";
     private static String fnr;
 
     public static List<WSUtbetaling> getWsUtbetalinger(String fNr, DateTime startDato, DateTime sluttDato) {
@@ -91,9 +94,9 @@ public class WSUtbetalingTestData {
         Double belop1 = BELOP;
         Double belop4 = -BELOP;
         Double belop2 = BELOP;
-        WSPosteringsdetaljer uforeDetalj1 = createPosteringsDetalj("Uføre", KONTO_NR, "Tilleggsytelse", 1, 1.0, belop0, SPESIFIKASJON);
-        WSPosteringsdetaljer uforeDetalj2 = createPosteringsDetalj("Uføre", KONTO_NR, "Tilleggsytelse", 1, 1.0, belop1, SPESIFIKASJON);
-        WSPosteringsdetaljer uforeDetalj3 = createPosteringsDetalj("Uføre", KONTO_NR, "Tilleggsytelse tilbakebetalt", 1, 1.0, belop4, SPESIFIKASJON);
+        WSPosteringsdetaljer uforeDetalj1 = createPosteringsDetalj(UFORE, KONTO_NR, TILLEGGSYTELSE, 1, 1.0, belop0, SPESIFIKASJON);
+        WSPosteringsdetaljer uforeDetalj2 = createPosteringsDetalj(UFORE, KONTO_NR, TILLEGGSYTELSE, 1, 1.0, belop1, SPESIFIKASJON);
+        WSPosteringsdetaljer uforeDetalj3 = createPosteringsDetalj(UFORE, KONTO_NR, TILLEGGSYTELSE_TILBAKEBETALT, 1, 1.0, belop4, SPESIFIKASJON);
         WSPosteringsdetaljer foreldrePengerDetalj = createPosteringsDetalj(FORELDREPENGER, KONTO_NR, "", 1, 1.0, belop2, SPESIFIKASJON);
         WSPosteringsdetaljer skatt = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1, 1.0, trekk, SPESIFIKASJON);
         WSBilag bilag2 = createBilag("bilag2", uforeDetalj1, uforeDetalj2, foreldrePengerDetalj, skatt, uforeDetalj3);
@@ -133,7 +136,7 @@ public class WSUtbetalingTestData {
     }
 
     public static WSUtbetaling createUtbetaling4() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, "Tilleggsytelse", 13, 1.45, BELOP, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, TILLEGGSYTELSE, 13, 1.45, BELOP, SPESIFIKASJON);
         WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj(DAGPENGER, KONTO_NR, "Feilretting", 13, 1.45, -BELOP, SPESIFIKASJON);
         WSBilag bilag2 = createBilag("bilag2", posteringsdetalj1, posteringsdetalj2);
 
