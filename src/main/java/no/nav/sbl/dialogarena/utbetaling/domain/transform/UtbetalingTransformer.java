@@ -10,7 +10,7 @@ import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.joda.time.Interval;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -58,7 +58,7 @@ public class UtbetalingTransformer {
                 utbetalingBuilder.withHovedytelse(wsUtbetaling.getBilagListe().get(0).getYtelseBeskrivelse());
             }
 
-            Set<String> meldinger = new HashSet<>();
+            Set<String> meldinger = new LinkedHashSet<>();
             List<Underytelse> underytelser = new ArrayList<>();
             for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
 
