@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
-
+import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
@@ -8,165 +8,113 @@ import no.nav.virksomhet.okonomi.utbetaling.v2.WSMottaker;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import org.joda.time.Interval;
-import org.slf4j.Logger;
 
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import static java.util.Collections.sort;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_COMPARE_BELOP;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_SKATT_NEDERST;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.TransformComparator.MERGEABLE_ALLE_FELTER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.TransformComparator.MERGEABLE_DATO;
-import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformObjekt.getBuilder;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.MergeUtil.merge;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static org.apache.commons.lang3.StringUtils.join;
-import static org.slf4j.LoggerFactory.getLogger;
 
-public final class UtbetalingTransformer {
+public class UtbetalingTransformer {
 
-    private static Logger logger = getLogger(UtbetalingTransformer.class);
+    public static final int DEFAULT_ANTALL = 1;
+    public static final double DEFAULT_SATS = 1.0;
+    public static final String DEFAULT_SPESIFIKASJON = "";
 
+    public static List<Utbetaling> lagUtbetalinger(List<WSUtbetaling> wsUtbetalinger, String fnr) {
 
-    private static final int DEFAULT_ANTALL = 1;
-    private static final double DEFAULT_SATS = 1.0;
-    private static final String DEFAULT_SPESIFIKASJON = "";
+        List<Utbetaling> utbetalinger = new ArrayList<>();
 
-    /**
-     * Transformasjonen gjøres i tre steg:
-     * - Trekk ut skatt
-     * - Transformer til transformobjekter
-     * - Slå sammen til Utbetalinger
-     */
-    public static List<Utbetaling> createUtbetalinger(List<WSUtbetaling> wsUtbetalinger, String fnr) {
-        transformerSkatt(wsUtbetalinger);
-        return transformerTilUtbetalinger(createTransformObjekter(wsUtbetalinger, fnr), MERGEABLE_ALLE_FELTER);
-    }
-
-    /**
-     * Gjør om en liste av WSUtbetalinger til en liste av UtbetalingTransformObjekt.
-     * Et UtbetalingTransformObjekt tilsvarer en WSPosteringsDetalj i utbetalingene, lagt til informasjon fra WSUtbetalingen og WSBilaget
-     * detaljen kom fra.
-     */
-    static List<UtbetalingTransformObjekt> createTransformObjekter(List<WSUtbetaling> wsUtbetalinger, String fnr) {
-        logger.info("---- Transformasjon av utbetalinger ----");
-        List<UtbetalingTransformObjekt> list = new ArrayList<>();
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
-            WSMottaker wsMottaker = wsUtbetaling.getUtbetalingMottaker();
-            String mottakerId = wsMottaker != null ? wsMottaker.getMottakerId() : "";
-            String mottaker = wsMottaker != null ? wsMottaker.getNavn() : "";
-            String mottakerKode = transformMottakerKode(wsMottaker, fnr);
 
+            //TODO: Fornuftig håndtering av manglende periode
             Interval periode = wsUtbetaling.getUtbetalingsPeriode() != null ?
                     new Interval(wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato(), wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato())
-                    : new Interval(0, 0);
-            String delimiter = ", ";
+                    : new Interval(0,0);
 
+            UtbetalingBuilder utbetalingBuilder = new UtbetalingBuilder()
+                    .withMottakerId(wsUtbetaling.getUtbetalingMottaker().getMottakerId())
+                    .withMottakernavn(wsUtbetaling.getUtbetalingMottaker().getNavn())
+                    .withMottakerkode(transformerMottakerKode(wsUtbetaling.getUtbetalingMottaker(), fnr))
+                    .withPeriode(periode)
+                    .withValuta(wsUtbetaling.getValuta())
+                    .withStatus(wsUtbetaling.getStatusKode())
+                    .withUtbetalingsDato(wsUtbetaling.getUtbetalingDato())
+                    .withKontonr(wsUtbetaling.getGironr());
+
+            if(wsUtbetaling.getKildeNavn() != null && wsUtbetaling.getKildeNavn().equalsIgnoreCase("abetal")) {
+                utbetalingBuilder.withHovedytelse(wsUtbetaling.getTekstmelding());
+            } else {
+                utbetalingBuilder.withHovedytelse(wsUtbetaling.getBilagListe().get(0).getYtelseBeskrivelse());
+            }
+
+            Set<String> meldinger = new HashSet<>();
+            List<Underytelse> underytelser = new ArrayList<>();
             for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
-                String melding = transformMelding(wsBilag, delimiter);
 
-                logger.info("---- Transformasjon fra WSPosteringsdetaljer => transformObjekt ----");
-                for (WSPosteringsdetaljer detalj : wsBilag.getPosteringsdetaljerListe()) {
-                    UtbetalingTransformObjekt transformObjekt = getBuilder()
-                            .withAntall(optional(detalj.getAntall()).getOrElse(DEFAULT_ANTALL))
-                            .withBelop(detalj.getBelop())
-                            .withHovedYtelse(detalj.getKontoBeskrHoved())
-                            .withKontonummer(wsUtbetaling.getGironr())
-                            .withMottaker(mottaker)
-                            .withMottakerId(mottakerId)
-                            .withMottakerKode(mottakerKode)
-                            .withSats(optional(detalj.getSats()).getOrElse(DEFAULT_SATS))
-                            .withStatus(wsUtbetaling.getStatusBeskrivelse())
-                            .withSpesifikasjon(optional(detalj.getSpesifikasjon()).getOrElse(DEFAULT_SPESIFIKASJON))
-                            .withUnderYtelse(transformerUnderbeskrivelse(detalj.getKontoBeskrUnder(), detalj.getKontoBeskrHoved()))
-                            .withUtbetalingsDato(wsUtbetaling.getUtbetalingDato())
-                            .withPeriode(periode)
-                            .withValuta(wsUtbetaling.getValuta())
-                            .build();
-                    transformObjekt.setMelding(melding);
-                    list.add(transformObjekt);
+                meldinger.add(transformerMelding(wsBilag));
+
+                for (WSPosteringsdetaljer wsPosteringsdetalj : wsBilag.getPosteringsdetaljerListe()) {
+
+                    Double belop = wsPosteringsdetalj.getBelop();
+                    String hovedBeskrivelse = wsPosteringsdetalj.getKontoBeskrHoved().toLowerCase();
+                    if (hovedBeskrivelse.contains("trekk") || hovedBeskrivelse.contains("skatt")) {
+                        belop = belop > 0 ? -belop : belop;
+                    }
+
+                    underytelser.add(new Underytelse(
+                            transformerUnderbeskrivelse(wsPosteringsdetalj.getKontoBeskrUnder(), wsPosteringsdetalj.getKontoBeskrHoved()),
+                            optional(wsPosteringsdetalj.getSpesifikasjon()).getOrElse(DEFAULT_SPESIFIKASJON),
+                            optional(wsPosteringsdetalj.getAntall()).getOrElse(DEFAULT_ANTALL),
+                            belop,
+                            optional(wsPosteringsdetalj.getSats()).getOrElse(DEFAULT_SATS)));
                 }
             }
+
+            double brutto = on(underytelser).map(Underytelse.UTBETALT_BELOP).reduce(sumDouble);
+            double trekk = on(underytelser).map(Underytelse.TREKK_BELOP).reduce(sumDouble);
+            utbetalingBuilder.withBrutto(brutto);
+            utbetalingBuilder.withTrekk(trekk);
+            utbetalingBuilder.withUtbetalt(brutto + trekk);
+
+            utbetalingBuilder.withMelding(join(meldinger, ". "));
+
+            sort(underytelser, UNDERYTELSE_COMPARE_BELOP);
+            sort(underytelser, UNDERYTELSE_SKATT_NEDERST);
+            utbetalingBuilder.withUnderytelser(underytelser);
+
+            utbetalinger.add(utbetalingBuilder.createUtbetaling());
         }
-        return list;
+        return utbetalinger;
     }
 
-    /**
-     * Tar inn en liste av transformobjekter. Slår dem sammen og lager en liste av Utbetalinger.
-     *
-     * Forutsetninger for at transformasjonen skal bli riktig:
-     * <p>- Alle utbetalinger har en utbetalingsdato</p>
-     * <p>- Alle posteringsdetaljer:</p>
-     *    <p> - Har en kontoBeskrHoved som tilsvarer hovedytelsen</p>
-     *    <p> - i et bilag har samme hovedytelse (utenom Skatt)</p>
-     *    <p> - har et beløp.</p>
-     */
-    private static List<Utbetaling> transformerTilUtbetalinger(List<UtbetalingTransformObjekt> transformObjekter, Comparator<Mergeable<Utbetaling>> comparator) {
-        return merge(new ArrayList<Mergeable<Utbetaling>>(transformObjekter), comparator, MERGEABLE_DATO);
-    }
-
-    static String transformMottakerKode(WSMottaker wsMottaker, String fnr) {
-        if (wsMottaker != null && !fnr.equals(wsMottaker.getMottakerId())) {
+    private static String transformerMottakerKode(WSMottaker wsMottaker, String fnr) {
+        if (!fnr.equals(wsMottaker.getMottakerId())) {
             return ARBEIDSGIVER;
         }
         return BRUKER;
     }
 
-    static void transformerSkatt(List<WSUtbetaling> wsUtbetalinger) {
-        for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
-
-            String beskrivelse;
-            if(wsUtbetaling.getKildeNavn() != null && wsUtbetaling.getKildeNavn().equalsIgnoreCase("abetal")) {
-                beskrivelse = wsUtbetaling.getTekstmelding();
-            } else {
-                beskrivelse = wsUtbetaling.getBilagListe().get(0).getYtelseBeskrivelse();
-            }
-
-            for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
-                trekkUtSkatteOpplysninger(wsBilag.getPosteringsdetaljerListe(), beskrivelse);
-            }
-        }
-    }
-
-    /**
-     * Kobler skattetrekket til ytelsen i bilaget.
-     * Forutsetter at alle posteringsdetaljer i et bilag har samme hovedytelse.
-     *
-     * En WSPosteringDetalj inneholder skatteopplysning hvis kontoBeskrHoved er "Skatt". Den har også en
-     * underbeskrivelse, f.eks "Forskuddstrekk skatt". Endre kontoBeskrHoved til det samme som de andre
-     * posteringsdetaljene i samme WSBilag. (Alle posteringdetaljer i samme bilag har samme kontoBeskrHoved).
-     */
-    private static void trekkUtSkatteOpplysninger(List<WSPosteringsdetaljer> detaljer, String ytelseBeskrivelse) {
-        for (WSPosteringsdetaljer detalj : detaljer) {
-            if (detalj.getKontoBeskrHoved().toLowerCase().contains("trekk")) {
-
-                if(detalj.getKontoBeskrUnder() == null || detalj.getKontoBeskrUnder().isEmpty()) {
-                    detalj.setKontoBeskrUnder(detalj.getKontoBeskrHoved());
-                }
-
-                if (detalj.getBelop() > 0) {
-                    detalj.setBelop(-detalj.getBelop());
-                }
-
-                detalj.setKontoBeskrHoved(ytelseBeskrivelse);
-            }
-        }
-    }
-
-    /**
-     * Hvis det er en underytelsebeskrivelse(kontoBeskrUnder), bruk den, ellers bruk beskrivelsen av hovedytelsen (kontoBeskrHoved).
-     */
-    private static String transformerUnderbeskrivelse(String kontoBeskrUnder, String kontoBeskrHoved) {
-        return (kontoBeskrUnder != null && !kontoBeskrUnder.isEmpty() ? kontoBeskrUnder : kontoBeskrHoved);
-    }
-
-    private static String transformMelding(WSBilag wsBilag, String delimiter) {
+    private static String transformerMelding(WSBilag wsBilag) {
         List<WSMelding> meldingListe = wsBilag.getMeldingListe();
         List<String> strings = new ArrayList<>();
         for (WSMelding wsMelding : meldingListe) {
             strings.add(wsMelding.getMeldingtekst());
         }
-        return join(strings, delimiter);
+        return join(strings, ", ");
+    }
+
+    private static String transformerUnderbeskrivelse(String kontoBeskrUnder, String kontoBeskrHoved) {
+        return (kontoBeskrUnder != null && !kontoBeskrUnder.isEmpty() ? kontoBeskrUnder : kontoBeskrHoved);
     }
 }

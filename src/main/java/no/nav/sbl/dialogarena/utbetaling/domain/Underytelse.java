@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.transform.Mergeable;
+import no.nav.modig.lang.collections.iter.ReduceFunction;
 import org.apache.commons.collections15.Transformer;
-import org.apache.commons.lang3.builder.EqualsBuilder;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -11,53 +10,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static java.lang.Double.doubleToLongBits;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static org.apache.commons.lang3.StringUtils.join;
 
-public class Underytelse implements Serializable, Mergeable<Underytelse> {
-    public static final Transformer<Underytelse, Double> UTBETALT_BELOP = new Transformer<Underytelse, Double>() {
-        @Override
-        public Double transform(Underytelse underytelse) {
-            double underytelseBelop = underytelse.getBelop();
-            return (underytelseBelop >= 0.0 ? underytelseBelop : 0.0);
-        }
-    };
-    public static final Transformer<Underytelse, Double> TREKK_BELOP = new Transformer<Underytelse, Double>() {
-        @Override
-        public Double transform(Underytelse underytelse) {
-            double underytelseBelop = underytelse.getBelop();
-            return (underytelseBelop < 0.0 ? underytelseBelop : 0.0);
-        }
-    };
-    public static final Transformer<Underytelse, Double> BELOP = new Transformer<Underytelse, Double>() {
-        @Override
-        public Double transform(Underytelse underytelse) {
-            return underytelse.getBelop();
-        }
-    };
-    public static final Transformer<Underytelse, String> SPESIFIKASJON = new Transformer<Underytelse, String>() {
-        @Override
-        public String transform(Underytelse underytelse) {
-            return underytelse.getSpesifikasjon();
-        }
-    };
-
-    public static final Transformer<Mergeable, Underytelse> MERGEABLE_UNDERYTELSE = new Transformer<Mergeable, Underytelse>() {
-        @Override
-        public Underytelse transform(Mergeable underytelse) {
-            return (Underytelse) underytelse;
-        }
-    };
-
-    public static Double getBrutto(List<Underytelse> underytelser) {
-        return on(underytelser).map(UTBETALT_BELOP).reduce(sumDouble);
-    }
-
-    public static Double getTrekk(List<Underytelse> underytelser) {
-        return on(underytelser).map(TREKK_BELOP).reduce(sumDouble);
-    }
+public class Underytelse implements Serializable {
 
     private String tittel;
     private String spesifikasjon;
@@ -93,114 +50,85 @@ public class Underytelse implements Serializable, Mergeable<Underytelse> {
         return sats;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
+    public static final Transformer<Underytelse, Double> UTBETALT_BELOP = new Transformer<Underytelse, Double>() {
+        @Override
+        public Double transform(Underytelse underytelse) {
+            double underytelseBelop = underytelse.getBelop();
+            return underytelseBelop >= 0 ? underytelseBelop : 0;
         }
-        if (!(o instanceof Underytelse)) {
-            return false;
+    };
+    public static final Transformer<Underytelse, Double> TREKK_BELOP = new Transformer<Underytelse, Double>() {
+        @Override
+        public Double transform(Underytelse underytelse) {
+            double underytelseBelop = underytelse.getBelop();
+            return underytelseBelop < 0 ? underytelseBelop : 0;
         }
+    };
+    public static final Transformer<Underytelse, String> UNDERYTELSE_TITTEL = new Transformer<Underytelse, String>() {
+        @Override
+        public String transform(Underytelse underytelse) {
+            return underytelse.getTittel();
+        }
+    };
+    public static final Transformer<Underytelse, Double> UNDERYTELSE_BELOP = new Transformer<Underytelse, Double>() {
+        @Override
+        public Double transform(Underytelse underytelse) {
+            return underytelse.getBelop();
+        }
+    };
+    public static final Transformer<Underytelse, String> UNDERYTELSE_SPESIFIKASJON = new Transformer<Underytelse, String>() {
+        @Override
+        public String transform(Underytelse underytelse) {
+            return underytelse.getSpesifikasjon();
+        }
+    };
 
-        Underytelse that = (Underytelse) o;
-        return new EqualsBuilder()
-                .append(antall, that.antall)
-                .append(sats, that.sats)
-                .append(tittel, that.tittel)
-                .append(belop, that.belop)
-                .append(spesifikasjon, that.spesifikasjon)
-                .isEquals();
-    }
+    /**
+     * Sorterer basert på beløpet, slik at negative tall havner nedenfor de positive
+     */
+    public static final Comparator<Underytelse> UNDERYTELSE_COMPARE_BELOP = new Comparator<Underytelse>() {
+        @Override
+        public int compare(Underytelse o1, Underytelse o2) {
+            return Double.compare(o2.getBelop(), o1.getBelop());
+        }
+    };
 
-    @Override
-    public int hashCode() {
-        int result;
-        long temp;
-        result = tittel != null ? tittel.hashCode() : 0;
-        result = 31 * result + (spesifikasjon != null ? spesifikasjon.hashCode() : 0);
-        result = 31 * result + antall;
-        temp = belop != +0.0d ? doubleToLongBits(belop) : 0L;
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        temp = sats != +0.0d ? doubleToLongBits(sats) : 0L;
-        result = 31 * result + (int) (temp ^ (temp >>> 32));
-        return result;
-    }
-
-    @Override
-    public Underytelse doMerge(List<Mergeable> skalMerges) {
-        List<Underytelse> ytelser = on(skalMerges).map(MERGEABLE_UNDERYTELSE).collectIn(new ArrayList<Underytelse>());
-        if(ytelser.isEmpty()) { return null; }
-
-        Double sum = on(ytelser).map(BELOP).reduce(sumDouble);
-        Set<String> spesifikasjoner = on(ytelser).map(SPESIFIKASJON).collectIn(new HashSet<String>());
-        String spesifikasjonsMelding = join(spesifikasjoner, ". ");
-        Underytelse ytelse = ytelser.get(0);
-
-        return new Underytelse(ytelse.getTittel(), spesifikasjonsMelding, ytelse.getAntall(), sum, ytelse.getSats());
-    }
-
-    public static final class UnderytelseComparator {
-        public static final Comparator<Underytelse> TITTEL = new Comparator<Underytelse>() {
-            @Override
-            public int compare(Underytelse o1, Underytelse o2) {
-                return o1.getTittel().compareTo(o2.getTittel());
-            }
-        };
-
-        public static final Comparator<Underytelse> TITTEL_ANTALL_SATS = new Comparator<Underytelse>() {
-            @Override
-            public int compare(Underytelse o1, Underytelse o2) {
-                int compareTittel = o1.getTittel().compareTo(o2.getTittel());
-                if(compareTittel == 0) {
-                    int compareAntall = Integer.valueOf(o1.getAntall()).compareTo(o2.getAntall());
-                    int compareSats = Double.valueOf(o1.getSats()).compareTo(o2.getSats());
-                    if(compareAntall != 0) {
-                        return compareAntall;
-                    }
-                    return compareSats;
-                }
-                return compareTittel;
-            }
-        };
-
-        public static final Comparator<Mergeable<Underytelse>> MERGEABLE_TITTEL = new Comparator<Mergeable<Underytelse>>() {
-            @Override
-            public int compare(Mergeable o1, Mergeable o2) {
-                return TITTEL.compare((Underytelse) o1, (Underytelse) o2);
-            }
-        };
-
-        public static final Comparator<Mergeable<Underytelse>> MERGEABLE_TITTEL_ANTALL_SATS = new Comparator<Mergeable<Underytelse>>() {
-            @Override
-            public int compare(Mergeable<Underytelse> o1, Mergeable<Underytelse> o2) {
-                return TITTEL_ANTALL_SATS.compare((Underytelse) o1, (Underytelse) o2);
-            }
-        };
-        /**
-         * Sorterer basert på beløpet, slik at negative tall havner nedenfor de positive
-         */
-        public static final Comparator<Mergeable<Underytelse>> MERGEABLE_BELOP = new Comparator<Mergeable<Underytelse>>() {
-            @Override
-            public int compare(Mergeable<Underytelse> o1, Mergeable<Underytelse> o2) {
-                return Double.compare(((Underytelse)o2).getBelop(), ((Underytelse)o1).getBelop());
-            }
-        };
-
+    /**
+     * Sorterer underytelser med tittel som inneholder "skatt", og er negativt, nederst.
+     */
+    public static final Comparator<Underytelse> UNDERYTELSE_SKATT_NEDERST = new Comparator<Underytelse>(){
         private static final String SKATT = "skatt";
-        /**
-         * Sorterer underytelser med tittel som inneholder "skatt", og er negativt, nederst.
-         */
-        public static final Comparator<Mergeable<Underytelse>> MERGEABLE_SKATT_NEDERST = new Comparator<Mergeable<Underytelse>>(){
 
-            @Override
-            public int compare(Mergeable<Underytelse> o1, Mergeable<Underytelse> o2) {
-                if (((Underytelse)o1).getTittel().toLowerCase().contains(SKATT) && ((Underytelse)o1).getBelop() <= 0) {
-                    return 1;
-                } else if (((Underytelse)o2).getTittel().toLowerCase().contains(SKATT) && ((Underytelse)o2).getBelop() <= 0) {
-                    return -1;
-                }
-                return 0;
+        @Override
+        public int compare(Underytelse o1, Underytelse o2) {
+            if (o1.getTittel().toLowerCase().contains(SKATT) && o1.getBelop() <= 0) {
+                return 1;
+            } else if (o2.getTittel().toLowerCase().contains(SKATT) && o2.getBelop() <= 0) {
+                return -1;
             }
-        };
-    }
+            return 0;
+        }
+    };
+
+    public static final ReduceFunction<List<Underytelse>, List<Underytelse>> SUM_UNDERYTELSER = new ReduceFunction<List<Underytelse>, List<Underytelse>>() {
+        @Override
+        public List<Underytelse> reduce(List<Underytelse> accumulator, List<Underytelse> ytelser) {
+            if (ytelser.size() == 0) {
+                return accumulator;
+            }
+            Double sum = on(ytelser).map(UNDERYTELSE_BELOP).reduce(sumDouble);
+
+            Set<String> spesifikasjoner = on(ytelser).map(Underytelse.UNDERYTELSE_SPESIFIKASJON).collectIn(new HashSet<String>());
+            String spesifikasjonsMelding = join(spesifikasjoner, ". ");
+
+            Underytelse ytelse = ytelser.get(0);
+            accumulator.add(new Underytelse(ytelse.getTittel(), spesifikasjonsMelding, ytelse.getAntall(), sum, ytelse.getSats()));
+            return accumulator;
+        }
+
+        @Override
+        public List<Underytelse> identity() {
+            return new ArrayList<>();
+        }
+    };
 }
