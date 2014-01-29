@@ -56,7 +56,6 @@ public class BehandleBrukerprofilConsumerConfigResolver {
                 return defaultBi.ping();
             }
         };
-//        return createSwitcher(defaultBi, alternateBi, KJERNEINFO_KEY, BehandleBrukerprofilServiceBi.class);
     }
 
 }

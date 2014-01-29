@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.porttypeimpl.UtbetalingPortTypeImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.MockPingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
@@ -19,6 +18,9 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.jws.WebParam;
 import java.net.URL;
+
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.mockErSlaattPaaForKey;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.mockSetupErTillatt;
 
 @Configuration
 public class UtbetalingEndpointConfig {
@@ -37,7 +39,7 @@ public class UtbetalingEndpointConfig {
             @Cacheable("endpointCache")
             @Override
             public WSHentUtbetalingListeResponse hentUtbetalingListe(@WebParam(name = "request", targetNamespace = "") WSHentUtbetalingListeRequest request) throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
-                if (MockUtil.mockSetupErTillatt() && MockUtil.mockErSlaattPaaForKey(UTBETALING_KEY)) {
+                if (mockSetupErTillatt() && mockErSlaattPaaForKey(UTBETALING_KEY)) {
                     return portTypeMock.hentUtbetalingListe(request);
                 }
                 return portType.hentUtbetalingListe(request);
