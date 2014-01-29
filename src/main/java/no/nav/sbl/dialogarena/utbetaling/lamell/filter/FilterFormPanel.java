@@ -8,10 +8,11 @@ import no.nav.sbl.dialogarena.utbetaling.util.AjaxIndicator;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
@@ -19,6 +20,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.joda.time.LocalDate;
 
@@ -27,7 +29,6 @@ import java.util.List;
 
 import static java.util.Collections.sort;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
@@ -77,10 +78,10 @@ public class FilterFormPanel extends Panel {
         ListView<String> listView = new ListView<String>("ytelseFilter", alleYtelserModel) {
             @Override
             protected void populateItem(final ListItem<String> item) {
-                final AjaxButton knapp = new AjaxButton("ytelseKnapp", item.getModel()) {
-
+                boolean erValgt = !filterParametere.uonskedeYtelser.contains(item.getModelObject());
+                final AjaxCheckBox checkbox = new AjaxCheckBox("visYtelse", new Model<>(erValgt)) {
                     @Override
-                    protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                    protected void onUpdate(AjaxRequestTarget target) {
                         String ytelse = item.getModelObject();
                         if (filterParametere.uonskedeYtelser.contains(ytelse)) {
                             filterParametere.uonskedeYtelser.remove(ytelse);
@@ -92,23 +93,17 @@ public class FilterFormPanel extends Panel {
                         target.add(this);
                     }
                 };
-                knapp.add(new AttributeModifier("value", item.getModelObject()));
-                knapp.add(hasCssClassIf("valgt", new AbstractReadOnlyModel<Boolean>() {
-                    @Override
-                    public Boolean getObject() {
-                        return !filterParametere.uonskedeYtelser.contains(knapp.getModelObject());
-                    }
-                }));
-                item.add(knapp);
+                item.add(checkbox);
+                item.add(new Label("ytelseLabel", item.getModel()).add(new AttributeModifier("for", checkbox.getMarkupId())));
             }
         };
         return (MarkupContainer) new WebMarkupContainer("ytelseContainer").add(listView).setOutputMarkupId(true);
     }
 
-    private AjaxButton createMottakerButton(final String id, final String mottaker) {
-        return new AjaxButton(id) {
+    private AjaxCheckBox createMottakerButton(final String id, final String mottaker) {
+        return new AjaxCheckBox(id, new Model<Boolean>()) {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            protected void onUpdate(AjaxRequestTarget target) {
                 filterParametere.toggleMottaker(mottaker);
                 sendFilterEndretEvent();
                 target.add(this);
@@ -117,9 +112,7 @@ public class FilterFormPanel extends Panel {
             @Override
             protected void onBeforeRender() {
                 super.onBeforeRender();
-                Boolean erMottakerValgt = filterParametere.viseMottaker(mottaker);
-                String newClassname = getMarkupAttributes().get("class") + (erMottakerValgt ? " valgt" : "");
-                add(AttributeModifier.replace("class", newClassname));
+                this.setModelObject(filterParametere.viseMottaker(mottaker));
             }
         };
     }

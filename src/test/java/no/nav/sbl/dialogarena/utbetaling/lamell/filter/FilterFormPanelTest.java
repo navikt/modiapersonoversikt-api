@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.sbl.dialogarena.utbetaling.wickettest.AbstractWicketTest;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.junit.Test;
 
@@ -37,10 +37,10 @@ public class FilterFormPanelTest extends AbstractWicketTest{
 
         wicketTester.should().containComponent(ofType(FilterFormPanel.class))
                 .should().inComponent(FilterFormPanel.class).containComponent(ofType(Form.class))
-                .should().inComponent(Form.class).containComponents(3, ofType(AjaxButton.class))
+                .should().inComponent(Form.class).containComponents(3, ofType(AjaxCheckBox.class))
                 .should().inComponent(Form.class).containComponent(withId("visBruker"))
                 .should().inComponent(Form.class).containComponent(withId("visArbeidsgiver"))
-                .should().inComponent(Form.class).containComponent(withId("ytelseKnapp"))
+                .should().inComponent(Form.class).containComponent(withId("visYtelse"))
                 .should().inComponent(Form.class).containComponent(ofType(DateRangePicker.class));
     }
 }
