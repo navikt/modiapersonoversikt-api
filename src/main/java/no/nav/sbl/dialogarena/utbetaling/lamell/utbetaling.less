@@ -4,6 +4,24 @@
 @sidePadding: 2rem;
 @toppBunnPadding: 1.5rem;
 
+input[type=checkbox].bryter {
+  heigth: 0;
+  width: 0;
+  &+label {
+    background: url(../img/bryter.svg) 0 0 no-repeat;
+    height: 32px;
+    color: #333333;
+    margin: 0 0 0.75em;
+    padding: 7px 0 0 65px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+  &:checked + label {
+    background: url(../img/bryter_valgt.svg) 0 0 no-repeat;
+  }
+}
+
 .kolonne-venstre {
   float: left;
   padding-right: @sidePadding;
@@ -141,59 +159,59 @@
 }
 
 table.utbetaling-tabell {
-    page-break-inside: auto;
-    border-spacing: 0;
-    margin-top: 1rem;
-    text-align: left;
-    width: 100%;
-    position: relative;
-    tbody {
-      page-break-inside: avoid;
-      page-break-after: auto;
+  page-break-inside: auto;
+  border-spacing: 0;
+  margin-top: 1rem;
+  text-align: left;
+  width: 100%;
+  position: relative;
+  tbody {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  th {
+    text-transform: uppercase;
+    font-weight: normal;
+    color: #3e3832;
+    font-size: 0.857rem;
+    width: 18%;
+    max-width: 18%;
+    min-width: 18%;
+    &:first-of-type {
+      width: 34%;
+      text-align: left;
     }
-    th {
-      text-transform: uppercase;
-      font-weight: normal;
-      color: #3e3832;
-      font-size: 0.857rem;
-      width: 18%;
-      max-width: 18%;
-      min-width: 18%;
-      &:first-of-type {
-        width: 34%;
-        text-align: left;
-      }
+  }
+  td {
+    padding-right: 30px;
+    vertical-align: bottom;
+    text-align: right;
+    &:first-of-type {
+      text-align: left;
+      width: 33%;
+      padding-right: 15px;
     }
-    td {
-      padding-right: 30px;
-      vertical-align: bottom;
-      text-align: right;
-      &:first-of-type {
-        text-align: left;
-        width: 33%;
-        padding-right: 15px;
-      }
-      &:last-of-type {
-        padding-right: 0;
-      }
-      .oppsummert-periode {
-        position: absolute;
-        left: 0;
-        top: 8%;
-        font-size: 1.2rem;
-      }
+    &:last-of-type {
+      padding-right: 0;
     }
-    tbody:not(:first-of-type) tr:first-child td {
-      padding-top: 0.5rem;
+    .oppsummert-periode {
+      position: absolute;
+      left: 0;
+      top: 8%;
+      font-size: 1.2rem;
     }
-    tbody:not(:last-of-type) tr:last-child td {
-      padding-bottom: 0.5rem;
-      border-bottom: 1px solid @borderColor;
-    }
-    .uthevet {
-      font-weight: bold;
-      text-transform: uppercase;
-    }
+  }
+  tbody:not(:first-of-type) tr:first-child td {
+    padding-top: 0.5rem;
+  }
+  tbody:not(:last-of-type) tr:last-child td {
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid @borderColor;
+  }
+  .uthevet {
+    font-weight: bold;
+    text-transform: uppercase;
+  }
 }
 
 .oppsummering-total {
@@ -340,11 +358,11 @@ table.utbetaling-tabell {
 }
 
 .filter-header {
-    text-transform: uppercase;
-    position: relative;
-    margin-top: 1em;
-    color: @grayLight;
-    font-size: 0.875rem;
-    margin-bottom: 8px;
-    cursor: default;
+  text-transform: uppercase;
+  position: relative;
+  margin-top: 1em;
+  color: @grayLight;
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+  cursor: default;
 }

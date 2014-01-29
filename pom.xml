@@ -145,12 +145,6 @@
 			<version>${wicket.version}</version>
 		</dependency>
 
-        <dependency>
-			<groupId>org.apache.wicket</groupId>
-			<artifactId>wicket-util</artifactId>
-			<version>${wicket.version}</version>
-		</dependency>
-
 		<dependency>
 			<groupId>org.apache.wicket</groupId>
 			<artifactId>wicket-spring</artifactId>

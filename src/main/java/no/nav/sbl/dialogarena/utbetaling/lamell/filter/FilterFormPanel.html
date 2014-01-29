@@ -14,8 +14,10 @@
         <div class="filter-block">
             <p class="filter-header"><wicket:message key="utbetaling.lamell.filter.mottaker-overskrift"/></p>
             <div>
-                <input type="button" wicket:id="visBruker" value="Bruker" class="knapp-filter"/>
-                <input type="button" wicket:id="visArbeidsgiver" value="Arbeidsgiver" class="knapp-filter"/>
+                <input type="checkbox" wicket:id="visBruker" value="Bruker" class="bryter"/>
+                <label wicket:for="visBruker"><wicket:message key="utbetaling.lamell.filter.vis_bruker"/></label>
+                <input type="checkbox" wicket:id="visArbeidsgiver" value="Arbeidsgiver" class="bryter"/>
+                <label wicket:for="visArbeidsgiver"><wicket:message key="utbetaling.lamell.filter.vis_arbeidsgiver"/></label>
             </div>
         </div>
 
@@ -23,7 +25,8 @@
             <p class="filter-header"><wicket:message key="utbetaling.lamell.filter.ytelser"/></p>
             <div>
                 <wicket:container wicket:id="ytelseFilter">
-                    <input type="button" wicket:id="ytelseKnapp" class="knapp-filter" />
+                    <input type="checkbox" wicket:id="visYtelse" class="bryter" />
+                    <label wicket:id="ytelseLabel"></label>
                 </wicket:container>
             </div>
         </div>
