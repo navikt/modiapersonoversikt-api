@@ -37,26 +37,16 @@ public class UtbetalingTransformer {
 
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
 
-            //TODO: Fornuftig håndtering av manglende periode
-            Interval periode = wsUtbetaling.getUtbetalingsPeriode() != null ?
-                    new Interval(wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato(), wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato())
-                    : new Interval(0,0);
-
             UtbetalingBuilder utbetalingBuilder = new UtbetalingBuilder()
                     .withMottakerId(wsUtbetaling.getUtbetalingMottaker().getMottakerId())
                     .withMottakernavn(wsUtbetaling.getUtbetalingMottaker().getNavn())
                     .withMottakerkode(transformerMottakerKode(wsUtbetaling.getUtbetalingMottaker(), fnr))
-                    .withPeriode(periode)
+                    .withPeriode(getPeriode(wsUtbetaling))
                     .withValuta(wsUtbetaling.getValuta())
                     .withStatus(wsUtbetaling.getStatusKode())
                     .withUtbetalingsDato(wsUtbetaling.getUtbetalingDato())
-                    .withKontonr(wsUtbetaling.getGironr());
-
-            if(wsUtbetaling.getKildeNavn() != null && wsUtbetaling.getKildeNavn().equalsIgnoreCase("abetal")) {
-                utbetalingBuilder.withHovedytelse(wsUtbetaling.getTekstmelding());
-            } else {
-                utbetalingBuilder.withHovedytelse(wsUtbetaling.getBilagListe().get(0).getYtelseBeskrivelse());
-            }
+                    .withKontonr(wsUtbetaling.getGironr())
+                    .withHovedytelse(getHovedytelseBeskrivelse(wsUtbetaling));
 
             Set<String> meldinger = new LinkedHashSet<>();
             List<Underytelse> underytelser = new ArrayList<>();
@@ -66,28 +56,22 @@ public class UtbetalingTransformer {
 
                 for (WSPosteringsdetaljer wsPosteringsdetalj : wsBilag.getPosteringsdetaljerListe()) {
 
-                    Double belop = wsPosteringsdetalj.getBelop();
-                    String hovedBeskrivelse = wsPosteringsdetalj.getKontoBeskrHoved().toLowerCase();
-                    if (hovedBeskrivelse.contains("trekk") || hovedBeskrivelse.contains("skatt")) {
-                        belop = belop > 0 ? -belop : belop;
-                    }
-
                     underytelser.add(new Underytelse(
                             transformerUnderbeskrivelse(wsPosteringsdetalj.getKontoBeskrUnder(), wsPosteringsdetalj.getKontoBeskrHoved()),
                             optional(wsPosteringsdetalj.getSpesifikasjon()).getOrElse(DEFAULT_SPESIFIKASJON),
                             optional(wsPosteringsdetalj.getAntall()).getOrElse(DEFAULT_ANTALL),
-                            belop,
+                            getBelopNegativtHvisTrekk(wsPosteringsdetalj),
                             optional(wsPosteringsdetalj.getSats()).getOrElse(DEFAULT_SATS)));
                 }
             }
+
+            utbetalingBuilder.withMelding(join(meldinger, ". "));
 
             double brutto = on(underytelser).map(Underytelse.UTBETALT_BELOP).reduce(sumDouble);
             double trekk = on(underytelser).map(Underytelse.TREKK_BELOP).reduce(sumDouble);
             utbetalingBuilder.withBrutto(brutto);
             utbetalingBuilder.withTrekk(trekk);
             utbetalingBuilder.withUtbetalt(brutto + trekk);
-
-            utbetalingBuilder.withMelding(join(meldinger, ". "));
 
             sort(underytelser, UNDERYTELSE_COMPARE_BELOP);
             sort(underytelser, UNDERYTELSE_SKATT_NEDERST);
@@ -96,6 +80,25 @@ public class UtbetalingTransformer {
             utbetalinger.add(utbetalingBuilder.createUtbetaling());
         }
         return utbetalinger;
+    }
+
+    private static Interval getPeriode(WSUtbetaling wsUtbetaling) {
+        return wsUtbetaling.getUtbetalingsPeriode() != null ?
+                new Interval(wsUtbetaling.getUtbetalingsPeriode().getPeriodeFomDato(), wsUtbetaling.getUtbetalingsPeriode().getPeriodeTomDato())
+                : new Interval(0,0);
+    }
+
+    /**
+     * Henter hovedytelsebeskrivelsen basert på hvilket baksystem utbetalingen kommer fra
+     * @param wsUtbetaling wsutbetalingen
+     * @return hovedytelsebeskrivelsen
+     */
+    private static String getHovedytelseBeskrivelse(WSUtbetaling wsUtbetaling) {
+        if(wsUtbetaling.getKildeNavn() != null && wsUtbetaling.getKildeNavn().equalsIgnoreCase("abetal")) {
+            return wsUtbetaling.getTekstmelding();
+        } else {
+            return wsUtbetaling.getBilagListe().get(0).getYtelseBeskrivelse();
+        }
     }
 
     private static String transformerMottakerKode(WSMottaker wsMottaker, String fnr) {
@@ -112,6 +115,15 @@ public class UtbetalingTransformer {
             strings.add(wsMelding.getMeldingtekst());
         }
         return join(strings, ", ");
+    }
+
+    private static double getBelopNegativtHvisTrekk(WSPosteringsdetaljer wsPosteringsdetalj) {
+        double belop = wsPosteringsdetalj.getBelop();
+        String hovedBeskrivelse = wsPosteringsdetalj.getKontoBeskrHoved().toLowerCase();
+        if (hovedBeskrivelse.contains("trekk") || hovedBeskrivelse.contains("skatt")) {
+            return belop > 0 ? -belop : belop;
+        }
+        return belop;
     }
 
     private static String transformerUnderbeskrivelse(String kontoBeskrUnder, String kontoBeskrHoved) {
