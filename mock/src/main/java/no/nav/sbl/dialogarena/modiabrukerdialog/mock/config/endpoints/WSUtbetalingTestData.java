@@ -48,7 +48,9 @@ public class WSUtbetalingTestData {
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
         utbetalinger.addAll(asList(
                 createUtbetaling1(),
-                createUtbetaling2()
+                createUtbetaling2(),
+                createUtbetaling3(),
+                createUtbetaling4()
         ));
 
         final Interval periode = new Interval(startDato, sluttDato);
@@ -93,6 +95,42 @@ public class WSUtbetalingTestData {
                 .withUtbetalingMottaker(createTrygdetMottaker())
                 .withUtbetalingDato(new DateTime(2013, 12, 11, 0, 0))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(1970, 1, 1, 0, 0), new DateTime(1970, 1, 1, 0, 0)))
+                .withBilagListe(bilag1);
+    }
+
+    public static WSUtbetaling createUtbetaling3() {
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(ORDINAER, KONTO_NR2, ORDINAER, 1, 1.0, 3303.00).withSpesifikasjon("Bar");
+        WSBilag bilag1 = createBilag("", KONTANT, posteringsdetalj1);
+
+        return new WSUtbetaling()
+                .withNettobelop(3303.00)
+                .withGironr(KONTO_NR2)
+                .withBruttobelop(3303.00)
+                .withTrekk(0.00)
+                .withStatusBeskrivelse(MOTTATT_KONTOFORER)
+                .withStatusKode(STATUS_KODE)
+                .withUtbetalingMottaker(createTrygdetMottaker())
+                .withUtbetalingDato(new DateTime(2013, 11, 21, 0, 0))
+                .withUtbetalingsPeriode(createPeriode(new DateTime(1970, 1, 1, 0, 0), new DateTime(1970, 1, 1, 0, 0)))
+                .withBilagListe(bilag1);
+    }
+
+    public static WSUtbetaling createUtbetaling4() {
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(AAP, KONTO_NR, AAP, 10, 1406.0, 14060.00).withSpesifikasjon("Bar");
+        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj(ANDRE, KONTO_NR, ANDRE, 10, 47993.0, -479.93).withSpesifikasjon("Foo");
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, SKATT, 10, 1.0, -3685.00);
+        WSBilag bilag1 = createBilag("", AAP, posteringsdetalj1, posteringsdetalj2, posteringsdetalj3);
+
+        return new WSUtbetaling()
+                .withNettobelop(9895.07)
+                .withGironr(KONTO_NR)
+                .withBruttobelop(14060.00)
+                .withTrekk(-4164.93)
+                .withStatusBeskrivelse(MOTTATT_KONTOFORER)
+                .withStatusKode(STATUS_KODE)
+                .withUtbetalingMottaker(createTrygdetMottaker())
+                .withUtbetalingDato(new DateTime(2013, 11, 18, 0, 0))
+                .withUtbetalingsPeriode(createPeriode(new DateTime(2013, 11, 4, 0, 0), new DateTime(2013, 11, 17, 0, 0)))
                 .withBilagListe(bilag1);
     }
 
