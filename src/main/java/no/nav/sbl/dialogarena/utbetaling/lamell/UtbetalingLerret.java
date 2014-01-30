@@ -90,7 +90,7 @@ public class UtbetalingLerret extends Lerret {
                 .setOutputMarkupPlaceholderTag(true);
 
         resultatCache = hentUtbetalingsResultat(fnr, defaultStartDato(), defaultSluttDato());
-        filterParametere = new FilterParametere(defaultStartDato(), defaultSluttDato(), mottakere(), hentYtelser(resultatCache.utbetalinger));
+        filterParametere = new FilterParametere(hentYtelser(resultatCache.utbetalinger));
 
         List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
@@ -99,13 +99,6 @@ public class UtbetalingLerret extends Lerret {
                 .setOutputMarkupPlaceholderTag(true);
 
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
-    }
-
-    private Map<String, Boolean> mottakere() {
-        HashMap<String, Boolean> mottakere = new HashMap<>();
-        mottakere.put(ARBEIDSGIVER, false);
-        mottakere.put(BRUKER, true);
-        return mottakere;
     }
 
     private void oppdaterCacheOmNodvendig() {

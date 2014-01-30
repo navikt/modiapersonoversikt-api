@@ -15,8 +15,6 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 
 
 public class FilterFormPanelTest extends AbstractWicketTest{
@@ -31,7 +29,7 @@ public class FilterFormPanelTest extends AbstractWicketTest{
         Map<String, Boolean> mottakere = new HashMap<>();
         mottakere.put(BRUKER, true);
         Set<String> hovedYtelser = new HashSet<>(asList("Mat"));
-        FilterParametere filterParametre = new FilterParametere(defaultStartDato(), defaultSluttDato(), mottakere, hovedYtelser);
+        FilterParametere filterParametre = new FilterParametere(hovedYtelser);
         FilterFormPanel filterFormPanel = new FilterFormPanel("filterFormPanel", filterParametre);
         wicketTester.goToPageWith(filterFormPanel);
 

@@ -5,9 +5,15 @@ import org.apache.commons.collections15.Predicate;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 
 
 public class FilterParametere implements Serializable, Predicate<Utbetaling> {
@@ -23,11 +29,13 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     public Set<String> alleYtelser;
     public Set<String> uonskedeYtelser;
 
-    public FilterParametere(LocalDate startDato, LocalDate sluttDato, Map<String, Boolean> mottakere, Set<String> hovedYtelser) {
-        this.startDato = startDato;
-        this.sluttDato = sluttDato;
+    public FilterParametere(Set<String> hovedYtelser) {
+        this.startDato = defaultStartDato();
+        this.sluttDato = defaultSluttDato();
 
-        this.mottakere = mottakere;
+        this.mottakere = new HashMap<>();
+        this.mottakere.put(ARBEIDSGIVER, true);
+        this.mottakere.put(BRUKER, true);
 
         this.alleYtelser = hovedYtelser;
         this.uonskedeYtelser = new HashSet<>();
