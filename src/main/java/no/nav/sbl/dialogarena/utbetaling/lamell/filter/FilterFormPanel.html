@@ -3,17 +3,21 @@
     <form wicket:id="filterForm" class="filter-form">
         <div wicket:id="feedbackpanel"></div>
         <div class="filter-block">
-            <p class="filter-header"><wicket:message key="utbetaling.lamell.filter.datofilter-overskrift"/></p>
+            <div class="ramme-header"><wicket:message key="utbetaling.lamell.filter.sok.overskrift"/></div>
             <div class="filter-block-content dato-plukker-filter">
+                <p class="filter-header"><wicket:message key="utbetaling.lamell.filter.datofilter"/></p>
                 <wicket:container wicket:id="datoFilter" />
                 <a href="#" wicket:id="sok" class="knapp-hoved-liten" >
                     <wicket:message key="utbetaling.lamell.filter.sok"/>
                 </a>
             </div>
         </div>
+
         <div class="filter-block">
-            <p class="filter-header"><wicket:message key="utbetaling.lamell.filter.mottaker-overskrift"/></p>
+            <div class="ramme-header"><wicket:message key="utbetaling.lamell.filter.filtrering.overskrift"/></div>
+
             <div class="filter-block-content">
+                <p class="filter-header"><wicket:message key="utbetaling.lamell.filter.mottaker"/></p>
                 <input type="checkbox" wicket:id="visBruker" value="Bruker" class="bryter"/>
                 <label wicket:for="visBruker">
                     <div class="mottaker-indikator BRUKER"></div>
@@ -25,11 +29,9 @@
                     <wicket:message key="utbetaling.lamell.filter.vis_annen_mottaker"/>
                 </label>
             </div>
-        </div>
 
-        <div class="filter-block" wicket:id="ytelseContainer">
-            <p class="filter-header"><wicket:message key="utbetaling.lamell.filter.ytelser"/></p>
-            <div class="filter-block-content">
+            <div class="filter-block-content" wicket:id="ytelseContainer">
+                <p class="filter-header"><wicket:message key="utbetaling.lamell.filter.ytelser"/></p>
                 <input type="checkbox" wicket:id="visAlleYtelser" class="bryter" />
                 <label wicket:for="visAlleYtelser"><wicket:message key="utbetaling.lamell.filter.vis_alle"/></label>
                 <wicket:container wicket:id="ytelseFilter">
