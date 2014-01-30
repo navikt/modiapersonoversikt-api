@@ -159,6 +159,8 @@ public class UtbetalingLerret extends Lerret {
     @SuppressWarnings("unused")
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
+        filterParametere = new FilterParametere(hentYtelser(resultatCache.utbetalinger));
+        addOrReplace(createFilterFormPanel());
         String detaljPanelID = "detaljpanel-" + payload.getItemId();
         target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('"+detaljPanelID + "');");
     }
@@ -181,10 +183,5 @@ public class UtbetalingLerret extends Lerret {
         totalOppsummeringPanel.setVisibilityAllowed(false);
         utbetalingslisteContainer.setVisibilityAllowed(false);
         ingenutbetalinger.setVisibilityAllowed(false);
-    }
-
-    @Override
-    public void onOpening(AjaxRequestTarget target) {
-        addOrReplace(createFilterFormPanel());
     }
 }

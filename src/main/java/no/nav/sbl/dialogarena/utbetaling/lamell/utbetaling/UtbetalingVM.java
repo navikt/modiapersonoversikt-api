@@ -37,6 +37,10 @@ public class UtbetalingVM {
         return utbetaling.getMottakernavn();
     }
 
+    public String getMottakerkode() {
+        return utbetaling.getMottakerkode();
+    }
+
     public String getKontonr() {
         return utbetaling.getKontonr();
     }
