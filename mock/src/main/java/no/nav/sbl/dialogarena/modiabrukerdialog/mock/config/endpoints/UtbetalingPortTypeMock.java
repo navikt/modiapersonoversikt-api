@@ -13,6 +13,8 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.WSUtbetalingTestData.getWsUtbetalinger;
+
 @Configuration
 public class UtbetalingPortTypeMock {
 
@@ -22,7 +24,7 @@ public class UtbetalingPortTypeMock {
             @Override
             public WSHentUtbetalingListeResponse hentUtbetalingListe(WSHentUtbetalingListeRequest request)throws
                     HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
-                List<WSUtbetaling> utbetalinger = WSUtbetalingTestData.getWsUtbetalinger(request.getMottaker(), request.getPeriode().getFom(), request.getPeriode().getTom());
+                List<WSUtbetaling> utbetalinger = getWsUtbetalinger(request.getMottaker(), request.getPeriode().getFom(), request.getPeriode().getTom());
                 return new WSHentUtbetalingListeResponse().withUtbetalingListe(utbetalinger);
             }
         };

@@ -43,6 +43,7 @@ public class WSUtbetalingTestData {
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
         utbetalinger.addAll(asList(
                 createUtbetaling4(),
+                createUtbetaling4(),
                 createUtbetaling2(),
                 createUtbetaling5(),
                 createUtbetaling3(),
@@ -300,7 +301,9 @@ public class WSUtbetalingTestData {
         return new WSBilag()
                 .withMeldingListe(new WSMelding().withMeldingtekst(melding))
                 .withPosteringsdetaljerListe(posteringsdetaljer)
+                .withYtelseBeskrivelse("Ytelse")
                 .withBilagPeriode(new WSPeriode().withPeriodeFomDato(now().minusDays(7)).withPeriodeTomDato(now().minusDays(1)));
+
     }
 
     private static WSMottaker createTrygdetMottaker() {
