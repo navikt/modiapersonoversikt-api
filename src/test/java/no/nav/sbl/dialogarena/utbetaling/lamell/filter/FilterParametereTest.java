@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,11 +31,7 @@ public class FilterParametereTest {
         mottakere.put(ARBEIDSGIVER, true);
         mottakere.put(BRUKER, true);
 
-        filterparams = new FilterParametere(
-                LocalDate.now().minusYears(1),
-                LocalDate.now(),
-                mottakere,
-                new HashSet<>(asList(DAGPENGER, BARNETRYGD)));
+        filterparams = new FilterParametere(new HashSet<>(asList(DAGPENGER, BARNETRYGD)));
     }
 
     @Test

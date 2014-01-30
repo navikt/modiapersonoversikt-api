@@ -24,6 +24,8 @@
         <div class="filter-block" wicket:id="ytelseContainer">
             <p class="filter-header"><wicket:message key="utbetaling.lamell.filter.ytelser"/></p>
             <div>
+                <input type="checkbox" wicket:id="visAlleYtelser" class="bryter" />
+                <label wicket:for="visAlleYtelser"><wicket:message key="utbetaling.lamell.filter.vis_alle"/></label>
                 <wicket:container wicket:id="ytelseFilter">
                     <input type="checkbox" wicket:id="visYtelse" class="bryter" />
                     <label wicket:id="ytelseLabel"></label>

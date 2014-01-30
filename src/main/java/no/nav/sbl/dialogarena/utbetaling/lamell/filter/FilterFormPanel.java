@@ -44,8 +44,12 @@ public class FilterFormPanel extends Panel {
     private MarkupContainer ytelsesContainer;
     private FeedbackPanel valideringsfeil;
 
+    private Model<Boolean> visAlleYtelser;
+
     public FilterFormPanel(String id, FilterParametere filterParametere) {
         super(id);
+
+        this.visAlleYtelser = Model.of(true);
 
         this.filterParametere = filterParametere;
         this.ytelsesContainer = createYtelser();
@@ -66,6 +70,21 @@ public class FilterFormPanel extends Panel {
                 .setOutputMarkupId(true);
     }
 
+    private AjaxCheckBox createAlleYtelserCheckbox() {
+        return new AjaxCheckBox("visAlleYtelser", visAlleYtelser) {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                if (this.getModelObject()) {
+                    filterParametere.uonskedeYtelser.clear();
+                } else {
+                    filterParametere.uonskedeYtelser.addAll(filterParametere.alleYtelser);
+                }
+                target.add(ytelsesContainer);
+                sendFilterEndretEvent();
+            }
+        };
+    }
+
     private MarkupContainer createYtelser() {
         IModel<List<String>> alleYtelserModel = new AbstractReadOnlyModel<List<String>>() {
             @Override
@@ -78,17 +97,22 @@ public class FilterFormPanel extends Panel {
         ListView<String> listView = new ListView<String>("ytelseFilter", alleYtelserModel) {
             @Override
             protected void populateItem(final ListItem<String> item) {
-                boolean erValgt = !filterParametere.uonskedeYtelser.contains(item.getModelObject());
-                final AjaxCheckBox checkbox = new AjaxCheckBox("visYtelse", new Model<>(erValgt)) {
+                boolean erValgt = !filterParametere.uonskedeYtelser.contains(item.getModelObject()) && !visAlleYtelser.getObject();
+                AjaxCheckBox checkbox = new AjaxCheckBox("visYtelse", new Model<>(erValgt)) {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
                         String ytelse = item.getModelObject();
-                        if (filterParametere.uonskedeYtelser.contains(ytelse)) {
+                        if (visAlleYtelser.getObject()) {
+                            visAlleYtelser.setObject(false);
+                            filterParametere.uonskedeYtelser.addAll(filterParametere.alleYtelser);
                             filterParametere.uonskedeYtelser.remove(ytelse);
                         } else {
-                            filterParametere.uonskedeYtelser.add(ytelse);
+                            if (filterParametere.uonskedeYtelser.contains(ytelse)) {
+                                filterParametere.uonskedeYtelser.remove(ytelse);
+                            } else {
+                                filterParametere.uonskedeYtelser.add(ytelse);
+                            }
                         }
-
                         sendFilterEndretEvent();
                         target.add(this);
                     }
@@ -97,22 +121,19 @@ public class FilterFormPanel extends Panel {
                 item.add(new Label("ytelseLabel", item.getModel()).add(new AttributeModifier("for", checkbox.getMarkupId())));
             }
         };
-        return (MarkupContainer) new WebMarkupContainer("ytelseContainer").add(listView).setOutputMarkupId(true);
+        return (MarkupContainer) new WebMarkupContainer("ytelseContainer")
+                .add(createAlleYtelserCheckbox())
+                .add(listView)
+                .setOutputMarkupId(true);
     }
 
     private AjaxCheckBox createMottakerButton(final String id, final String mottaker) {
-        return new AjaxCheckBox(id, new Model<Boolean>()) {
+        return new AjaxCheckBox(id, new Model<>(filterParametere.viseMottaker(mottaker))) {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 filterParametere.toggleMottaker(mottaker);
                 sendFilterEndretEvent();
                 target.add(this);
-            }
-
-            @Override
-            protected void onBeforeRender() {
-                super.onBeforeRender();
-                this.setModelObject(filterParametere.viseMottaker(mottaker));
             }
         };
     }
