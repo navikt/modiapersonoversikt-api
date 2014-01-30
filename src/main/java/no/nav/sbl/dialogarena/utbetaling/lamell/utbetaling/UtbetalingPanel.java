@@ -11,7 +11,6 @@ public class UtbetalingPanel extends Panel {
 
         add(
                 new DetaljPanel("detaljpanel", utbetalingVM),
-                new Label("statusBeskrivelse", utbetalingVM.getStatus()),
                 new Label("kortUtbetalingsDato", utbetalingVM.getKortUtbetalingsDato()),
                 new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
                 new Label("periodeMedKortDato", utbetalingVM.getPeriodeMedKortDato()),
