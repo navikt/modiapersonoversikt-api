@@ -43,7 +43,6 @@ public class WSUtbetalingTestData {
         List<WSUtbetaling> utbetalinger = new ArrayList<>();
         utbetalinger.addAll(asList(
                 createUtbetaling4(),
-                createUtbetaling4(),
                 createUtbetaling2(),
                 createUtbetaling5(),
                 createUtbetaling3(),
