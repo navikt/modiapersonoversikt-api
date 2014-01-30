@@ -7,7 +7,10 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static java.lang.System.getProperties;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.DEFAULT_MOCK_TILLATT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
@@ -19,6 +22,7 @@ public class ApplicationContextTest {
     @BeforeClass
     public static void setupStatic() {
         setFrom("test.properties");
+        getProperties().setProperty(TILLATMOCKSETUP_PROPERTY, DEFAULT_MOCK_TILLATT);
         setupKeyAndTrustStore();
     }
 
