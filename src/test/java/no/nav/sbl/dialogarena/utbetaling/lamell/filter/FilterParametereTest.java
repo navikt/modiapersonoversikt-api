@@ -66,7 +66,7 @@ public class FilterParametereTest {
                 .withHovedytelse(DAGPENGER)
                 .createUtbetaling();
 
-        filterparams.uonskedeYtelser.add(BARNETRYGD);
+        filterparams.leggTilOnsketYtelse(BARNETRYGD);
 
         assertTrue(filterparams.evaluate(utbetaling));
     }
@@ -79,8 +79,7 @@ public class FilterParametereTest {
                 .withHovedytelse(DAGPENGER)
                 .createUtbetaling();
 
-        filterparams.uonskedeYtelser.add(DAGPENGER);
-        filterparams.uonskedeYtelser.add(BARNETRYGD);
+        filterparams.velgEnYtelse(BARNETRYGD);
 
         assertFalse(filterparams.evaluate(utbetaling));
     }
