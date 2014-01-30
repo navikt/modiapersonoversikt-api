@@ -58,6 +58,10 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
         return utbetaling.getUtbetalingId();
     }
 
+    public String getMottakerkode() {
+        return utbetaling.getMottakerkode();
+    }
+
     @Override
     public String getType() {
         return "utbetaling";

@@ -22,6 +22,20 @@ input[type=checkbox].bryter {
   }
 }
 
+.mottaker-indikator {
+  display: inline-block;
+  margin: 0;
+  padding: 0;
+  height: 1rem;
+  width: 1rem;
+  border-radius: 50%;
+  border: 1px solid #333333;
+  vertical-align: middle;
+  &.bruker {
+    background-color: #333333;
+  }
+}
+
 .kolonne-venstre {
   float: left;
   padding-right: @sidePadding;
@@ -38,7 +52,7 @@ input[type=checkbox].bryter {
   .filter-form {
     .filter-block {
       margin-top: 3rem;
-      div {
+      .filter-block-content {
         border: 1px solid @borderColor;
         background-color: @grayLighter;
         padding: @toppBunnPadding @sidePadding;
@@ -46,6 +60,9 @@ input[type=checkbox].bryter {
         a {
           color: #ffffff;
           margin-top: 0.75em;
+        }
+        .mottaker-indikator {
+          margin-bottom: 2px;
         }
       }
     }

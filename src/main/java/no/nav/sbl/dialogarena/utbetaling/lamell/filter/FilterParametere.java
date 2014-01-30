@@ -26,6 +26,8 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
 
     private Map<String, Boolean> mottakere;
 
+    private boolean alleYtelserValgt;
+
     private Set<String> alleYtelser;
     private Set<String> onskedeYtelser;
 
@@ -37,6 +39,7 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         this.mottakere.put(ANNEN_MOTTAKER, true);
         this.mottakere.put(BRUKER, true);
 
+        this.alleYtelserValgt = true;
         this.alleYtelser = hovedYtelser;
         this.onskedeYtelser = new HashSet<>(this.alleYtelser);
     }
@@ -59,6 +62,10 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         if (startDato != null) {
             this.startDato = startDato;
         }
+    }
+
+    public boolean isAlleYtelserValgt() {
+        return alleYtelserValgt;
     }
 
     public Set<String> getAlleYtelser() {

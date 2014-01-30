@@ -1,20 +1,18 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div class="utbetaling-metadata">
-        <span class="label">
-            <wicket:message key="utbetaling.label.dato"/>
-            <wicket:container wicket:id="utbetalingsDato"/>
-        </span>
+        <span wicket:id="utbetalingsDato"></span>
         <h2 wicket:id="beskrivelse"></h2>
-
         <footer>
-            <span class="label" wicket:id="periode"></span>
-
-            <span class="float_right">
+            <span class="periode" wicket:id="periode"></span> |
+            <span class="belop-med-valuta">
                 <wicket:container wicket:id="belop"/>
-                <wicket:container wicket:id="valuta"/>
-            </span>
+                <wicket:container wicket:id="valuta"/></span>
         </footer>
+    </div>
+    <div class="utbetalingstatus">
+        <div wicket:id="mottakerIndikator" class="mottaker-indikator"></div>
+        <div wicket:id="statusTekst" class="utbetalingstatus-tekst"></div>
     </div>
 </wicket:panel>
 </html>

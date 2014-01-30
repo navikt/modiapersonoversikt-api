@@ -44,14 +44,13 @@ public class FilterFormPanel extends Panel {
     private MarkupContainer ytelsesContainer;
     private FeedbackPanel valideringsfeil;
 
-    private Model<Boolean> visAlleYtelser;
+    private IModel<Boolean> visAlleYtelser;
 
     public FilterFormPanel(String id, FilterParametere filterParametere) {
         super(id);
 
-        this.visAlleYtelser = Model.of(true);
-
         this.filterParametere = filterParametere;
+        this.visAlleYtelser = new PropertyModel<>(this.filterParametere, "alleYtelserValgt");
         this.ytelsesContainer = createYtelser();
 
         add(createFilterForm());

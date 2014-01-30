@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
-import no.nav.sbl.dialogarena.time.Datoformat;
+import org.apache.wicket.behavior.AttributeAppender;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -9,7 +10,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 import org.joda.time.DateTime;
 
-import java.io.Serializable;
+import static no.nav.sbl.dialogarena.time.Datoformat.kortUtenLiteral;
 
 public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
 
@@ -20,10 +21,13 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
 
         add(
                 createUtbetalingsDatoLabel(utbetalingVM),
+                new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
+                createPeriodeLabel(utbetalingVM),
                 new Label("belop", utbetalingVM.getBelop()),
                 new Label("valuta", utbetalingVM.getValuta()),
-                new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
-                createPeriodeLabel(utbetalingVM)
+                new WebMarkupContainer("mottakerIndikator")
+                        .add(new AttributeAppender("class", utbetalingVM.getMottakerkode()).setSeparator(" ")),
+                new Label("statusTekst", utbetalingVM.getStatus())
         );
     }
 
@@ -38,9 +42,9 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
         return new Label("periode", periodeModel);
     }
 
-    private IModel<? extends Serializable> getDatoModel(DateTime dato, String resourceKey) {
+    private IModel<String> getDatoModel(DateTime dato, String resourceKey) {
         return dato != null ?
-                Model.of(Datoformat.kortUtenLiteral(dato)) :
+                Model.of(kortUtenLiteral(dato)) :
                 new StringResourceModel(resourceKey, this, null);
     }
 

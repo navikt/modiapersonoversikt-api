@@ -43,7 +43,7 @@ public class UtbetalingTransformer {
                     .withMottakerkode(transformerMottakerKode(wsUtbetaling.getUtbetalingMottaker(), fnr))
                     .withPeriode(getPeriode(wsUtbetaling))
                     .withValuta(wsUtbetaling.getValuta())
-                    .withStatus(wsUtbetaling.getStatusKode())
+                    .withStatus(wsUtbetaling.getStatusBeskrivelse().toLowerCase())
                     .withUtbetalingsDato(wsUtbetaling.getUtbetalingDato())
                     .withKontonr(wsUtbetaling.getGironr())
                     .withHovedytelse(getHovedytelseBeskrivelse(wsUtbetaling));
