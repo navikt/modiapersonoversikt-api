@@ -15,7 +15,7 @@ import static org.joda.time.LocalDate.now;
 public final class Utbetaling implements Serializable {
 
     public static final String BRUKER = "bruker";
-    public static final String ARBEIDSGIVER = "arbeidsgiver";
+    public static final String ANNEN_MOTTAKER = "annenmottaker";
 
     private DateTime utbetalingsdato;
     private Interval periode;

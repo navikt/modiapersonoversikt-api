@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ANNEN_MOTTAKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.getBuilder;
 import static org.hamcrest.Matchers.is;
@@ -27,10 +27,6 @@ public class FilterParametereTest {
 
     @Before
     public void settOppFilter() {
-        HashMap<String, Boolean> mottakere = new HashMap<>();
-        mottakere.put(ARBEIDSGIVER, true);
-        mottakere.put(BRUKER, true);
-
         filterparams = new FilterParametere(new HashSet<>(asList(DAGPENGER, BARNETRYGD)));
     }
 
@@ -49,11 +45,11 @@ public class FilterParametereTest {
     public void filtrererBortUtbetalingForAnnenMottakertype() {
         Utbetaling utbetaling = getBuilder()
                 .withUtbetalingsDato(now())
-                .withMottakerkode(ARBEIDSGIVER)
+                .withMottakerkode(ANNEN_MOTTAKER)
                 .withHovedytelse(DAGPENGER)
                 .createUtbetaling();
 
-        filterparams.toggleMottaker(ARBEIDSGIVER);
+        filterparams.toggleMottaker(ANNEN_MOTTAKER);
 
         assertFalse(filterparams.evaluate(utbetaling));
     }

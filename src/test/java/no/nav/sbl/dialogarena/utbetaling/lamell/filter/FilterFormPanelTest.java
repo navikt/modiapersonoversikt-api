@@ -26,8 +26,6 @@ public class FilterFormPanelTest extends AbstractWicketTest{
 
     @Test
     public void testFilterPanel() throws Exception {
-        Map<String, Boolean> mottakere = new HashMap<>();
-        mottakere.put(BRUKER, true);
         Set<String> hovedYtelser = new HashSet<>(asList("Mat"));
         FilterParametere filterParametre = new FilterParametere(hovedYtelser);
         FilterFormPanel filterFormPanel = new FilterFormPanel("filterFormPanel", filterParametre);
@@ -35,9 +33,10 @@ public class FilterFormPanelTest extends AbstractWicketTest{
 
         wicketTester.should().containComponent(ofType(FilterFormPanel.class))
                 .should().inComponent(FilterFormPanel.class).containComponent(ofType(Form.class))
-                .should().inComponent(Form.class).containComponents(3, ofType(AjaxCheckBox.class))
+                .should().inComponent(Form.class).containComponents(4, ofType(AjaxCheckBox.class))
                 .should().inComponent(Form.class).containComponent(withId("visBruker"))
-                .should().inComponent(Form.class).containComponent(withId("visArbeidsgiver"))
+                .should().inComponent(Form.class).containComponent(withId("visAnnenMottaker"))
+                .should().inComponent(Form.class).containComponent(withId("visAlleYtelser"))
                 .should().inComponent(Form.class).containComponent(withId("visYtelse"))
                 .should().inComponent(Form.class).containComponent(ofType(DateRangePicker.class));
     }

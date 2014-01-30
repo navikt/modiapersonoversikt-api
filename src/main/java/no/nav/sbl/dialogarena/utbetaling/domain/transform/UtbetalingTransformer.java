@@ -20,7 +20,7 @@ import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_COMPARE_BELOP;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_SKATT_NEDERST;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ANNEN_MOTTAKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static org.apache.commons.lang3.StringUtils.join;
@@ -103,7 +103,7 @@ public class UtbetalingTransformer {
 
     private static String transformerMottakerKode(WSMottaker wsMottaker, String fnr) {
         if (!fnr.equals(wsMottaker.getMottakerId())) {
-            return ARBEIDSGIVER;
+            return ANNEN_MOTTAKER;
         }
         return BRUKER;
     }
