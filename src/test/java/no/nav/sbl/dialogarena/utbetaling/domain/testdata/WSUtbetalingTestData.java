@@ -127,7 +127,7 @@ public class WSUtbetalingTestData {
                 .withTrekk(trekk)
                 .withValuta(VALUTA)
                 .withStatusBeskrivelse(UTBETALT)
-                .withUtbetalingMottaker(createArbeidsgiverMottaker())
+                .withUtbetalingMottaker(createAnnenMottaker())
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingDato(forsteDesember)
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 3, 23, 0, 0), new DateTime(2011, 3, 24, 0, 0)));
@@ -146,7 +146,7 @@ public class WSUtbetalingTestData {
                 .withTrekk(0.0)
                 .withValuta(VALUTA)
                 .withStatusBeskrivelse(UTBETALT)
-                .withUtbetalingMottaker(createArbeidsgiverMottaker())
+                .withUtbetalingMottaker(createAnnenMottaker())
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingDato(now().minusDays(40))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 4, 23, 0, 0), new DateTime(2011, 4, 24, 0, 0)));
@@ -166,7 +166,7 @@ public class WSUtbetalingTestData {
                 .withTrekk(trekk)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createArbeidsgiverMottaker())
+                .withUtbetalingMottaker(createAnnenMottaker())
                 .withUtbetalingDato(now().minusDays(84))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 5, 23, 0, 0), new DateTime(2011, 5, 24, 0, 0)));
         utbetaling.withBilagListe(bilag1);
@@ -186,7 +186,7 @@ public class WSUtbetalingTestData {
                 .withTrekk(trekk)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createArbeidsgiverMottaker())
+                .withUtbetalingMottaker(createAnnenMottaker())
                 .withUtbetalingDato(now().minusMonths(5))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
         utbetaling.withBilagListe(bilag1);
@@ -205,7 +205,7 @@ public class WSUtbetalingTestData {
                 .withTrekk(trekk)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createArbeidsgiverMottaker())
+                .withUtbetalingMottaker(createAnnenMottaker())
                 .withUtbetalingDato(now().minusMonths(5))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
         utbetaling.withBilagListe(bilag1);
@@ -222,7 +222,7 @@ public class WSUtbetalingTestData {
                 .withBruttobelop(utbetalt)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createArbeidsgiverMottaker())
+                .withUtbetalingMottaker(createAnnenMottaker())
                 .withUtbetalingDato(now().minusMonths(5))
                 .withUtbetalingsPeriode(createPeriode(new DateTime(2010, 6, 23, 0, 0), new DateTime(2011, 6, 24, 0, 0)));
         utbetaling.withBilagListe(bilag1);
@@ -241,7 +241,7 @@ public class WSUtbetalingTestData {
                 .withBruttobelop(utbetalt)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createArbeidsgiverMottaker())
+                .withUtbetalingMottaker(createAnnenMottaker())
                 .withUtbetalingDato(now().minusMonths(24))
                 .withUtbetalingsPeriode(createPeriode(now().minusMonths(7).toDateTime(), now().minusMonths(6).toDateTime()));
         utbetaling.withBilagListe(bilag1);
@@ -279,7 +279,7 @@ public class WSUtbetalingTestData {
                 .withBruttobelop(utbetalt)
                 .withStatusBeskrivelse(UTBETALT)
                 .withStatusKode(STATUS_KODE)
-                .withUtbetalingMottaker(createArbeidsgiverMottaker())
+                .withUtbetalingMottaker(createAnnenMottaker())
                 .withUtbetalingDato(now().minusDays(1))
                 .withUtbetalingsPeriode(createPeriode(now().minusMonths(8).toDateTime(), now().minusMonths(6).toDateTime()));
         utbetaling.withBilagListe(bilag1);
@@ -315,7 +315,7 @@ public class WSUtbetalingTestData {
         return wsMottaker;
     }
 
-    private static WSMottaker createArbeidsgiverMottaker() {
+    private static WSMottaker createAnnenMottaker() {
         WSMottaker wsMottaker = new WSMottaker();
         wsMottaker.withMottakerId("51321")
                 .withMottakertypeKode("")

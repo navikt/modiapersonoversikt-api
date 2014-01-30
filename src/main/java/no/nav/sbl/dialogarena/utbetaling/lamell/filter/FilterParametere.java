@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ANNEN_MOTTAKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
@@ -34,7 +34,7 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         this.sluttDato = defaultSluttDato();
 
         this.mottakere = new HashMap<>();
-        this.mottakere.put(ARBEIDSGIVER, true);
+        this.mottakere.put(ANNEN_MOTTAKER, true);
         this.mottakere.put(BRUKER, true);
 
         this.alleYtelser = hovedYtelser;

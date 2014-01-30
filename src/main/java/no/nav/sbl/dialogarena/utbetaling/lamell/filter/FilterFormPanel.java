@@ -29,7 +29,7 @@ import java.util.List;
 
 import static java.util.Collections.sort;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ARBEIDSGIVER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ANNEN_MOTTAKER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
@@ -65,7 +65,7 @@ public class FilterFormPanel extends Panel {
                 createDateRangePicker(),
                 createSokKnapp(),
                 createMottakerButton("visBruker", BRUKER),
-                createMottakerButton("visArbeidsgiver", ARBEIDSGIVER),
+                createMottakerButton("visAnnenMottaker", ANNEN_MOTTAKER),
                 ytelsesContainer)
                 .setOutputMarkupId(true);
     }
