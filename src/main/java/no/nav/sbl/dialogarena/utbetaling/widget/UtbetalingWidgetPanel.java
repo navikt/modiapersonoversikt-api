@@ -26,7 +26,7 @@ public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
                 new Label("belop", utbetalingVM.getBelop()),
                 new Label("valuta", utbetalingVM.getValuta()),
                 new WebMarkupContainer("mottakerIndikator")
-                        .add(new AttributeAppender("class", utbetalingVM.getMottakerkode()).setSeparator(" ")),
+                        .add(new AttributeAppender("class", utbetalingVM.getMottakertype()).setSeparator(" ")),
                 new Label("statusTekst", utbetalingVM.getStatus())
         );
     }

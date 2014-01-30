@@ -9,6 +9,8 @@ import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.Locale;
 
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
+
 
 public class UtbetalingVM implements FeedItemVM, Serializable {
 
@@ -58,8 +60,8 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
         return utbetaling.getUtbetalingId();
     }
 
-    public String getMottakerkode() {
-        return utbetaling.getMottakerkode();
+    public Mottaktertype getMottakertype() {
+        return utbetaling.getMottaktertype();
     }
 
     @Override

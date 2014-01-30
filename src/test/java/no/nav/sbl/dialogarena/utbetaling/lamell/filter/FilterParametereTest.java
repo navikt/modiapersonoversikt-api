@@ -5,12 +5,10 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ANNEN_MOTTAKER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.getBuilder;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -34,7 +32,7 @@ public class FilterParametereTest {
     public void filtrererBortUtbetalingUtenforDatointervall() {
         Utbetaling utbetaling = getBuilder()
                 .withUtbetalingsDato(now().minusYears(2))
-                .withMottakerkode(BRUKER)
+                .withMottakertype(Mottaktertype.BRUKER)
                 .withHovedytelse(DAGPENGER)
                 .createUtbetaling();
 
@@ -45,11 +43,11 @@ public class FilterParametereTest {
     public void filtrererBortUtbetalingForAnnenMottakertype() {
         Utbetaling utbetaling = getBuilder()
                 .withUtbetalingsDato(now())
-                .withMottakerkode(ANNEN_MOTTAKER)
+                .withMottakertype(Mottaktertype.ANNEN_MOTTAKER)
                 .withHovedytelse(DAGPENGER)
                 .createUtbetaling();
 
-        filterparams.toggleMottaker(ANNEN_MOTTAKER);
+        filterparams.toggleMottaker(Mottaktertype.ANNEN_MOTTAKER);
 
         assertFalse(filterparams.evaluate(utbetaling));
     }
@@ -58,7 +56,7 @@ public class FilterParametereTest {
     public void skalBeholdeYtelsenHvisUtbetalingenInneholderEnYtelseManVilHa() {
         Utbetaling utbetaling = getBuilder()
                 .withUtbetalingsDato(now())
-                .withMottakerkode(BRUKER)
+                .withMottakertype(Mottaktertype.BRUKER)
                 .withHovedytelse(DAGPENGER)
                 .createUtbetaling();
 
@@ -71,7 +69,7 @@ public class FilterParametereTest {
     public void skalIkkeBeholdeYtelsenHvisAlleUtbetalingerErUonskede() {
         Utbetaling utbetaling = getBuilder()
                 .withUtbetalingsDato(now())
-                .withMottakerkode(BRUKER)
+                .withMottakertype(Mottaktertype.BRUKER)
                 .withHovedytelse(DAGPENGER)
                 .createUtbetaling();
 
@@ -82,15 +80,10 @@ public class FilterParametereTest {
 
     @Test
     public void skalToggleVerdiBasertPaaMottaker() {
-        assertThat(filterparams.viseMottaker(BRUKER), is(true));
-        filterparams.toggleMottaker(BRUKER);
-        assertThat(filterparams.viseMottaker(BRUKER), is(false));
-        filterparams.toggleMottaker(BRUKER);
-        assertThat(filterparams.viseMottaker(BRUKER), is(true));
-    }
-
-    @Test
-    public void skalIkkeViseMottakereSomIkkeFinnes() {
-        assertThat(filterparams.viseMottaker("someRandomMottaker"), is(false));
+        assertThat(filterparams.viseMottaker(Mottaktertype.BRUKER), is(true));
+        filterparams.toggleMottaker(Mottaktertype.BRUKER);
+        assertThat(filterparams.viseMottaker(Mottaktertype.BRUKER), is(false));
+        filterparams.toggleMottaker(Mottaktertype.BRUKER);
+        assertThat(filterparams.viseMottaker(Mottaktertype.BRUKER), is(true));
     }
 }
