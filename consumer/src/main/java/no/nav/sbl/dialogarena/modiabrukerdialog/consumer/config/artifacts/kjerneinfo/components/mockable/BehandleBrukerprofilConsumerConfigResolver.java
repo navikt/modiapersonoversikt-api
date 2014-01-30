@@ -40,7 +40,8 @@ public class BehandleBrukerprofilConsumerConfigResolver {
         return new BehandleBrukerprofilServiceBi() {
 
             @Override
-            public void oppdaterKontaktinformasjonOgPreferanser(BehandleBrukerprofilRequest request) throws OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning, OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet, OppdaterKontaktinformasjonOgPreferanserUgyldigInput {
+            public void oppdaterKontaktinformasjonOgPreferanser(BehandleBrukerprofilRequest request)
+                    throws OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning, OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet, OppdaterKontaktinformasjonOgPreferanserUgyldigInput {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
                     alternateBi.oppdaterKontaktinformasjonOgPreferanser(request);
                 } else {

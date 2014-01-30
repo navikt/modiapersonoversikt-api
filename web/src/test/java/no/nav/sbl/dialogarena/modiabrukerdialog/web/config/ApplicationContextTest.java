@@ -13,7 +13,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @DirtiesContext(classMode = AFTER_CLASS)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {ApplicationContextBeans.class, WicketApplicationBeans.class})
+@ContextConfiguration(classes = {ModiaApplicationContext.class})
 public class ApplicationContextTest {
 
     @BeforeClass

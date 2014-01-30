@@ -34,7 +34,8 @@ public class KodeverkV2EndpointConfig {
         final KodeverkPortType portTypeMock = new KodeverkV2PortTypeMock().kodeverkPortType();
         return new KodeverkPortType() {
             @Override
-            public XMLHentKodeverkResponse hentKodeverk(@WebParam(name = "request", targetNamespace = "") XMLHentKodeverkRequest xmlHentKodeverkRequest) throws HentKodeverkHentKodeverkKodeverkIkkeFunnet {
+            public XMLHentKodeverkResponse hentKodeverk(@WebParam(name = "request", targetNamespace = "") XMLHentKodeverkRequest xmlHentKodeverkRequest)
+                    throws HentKodeverkHentKodeverkKodeverkIkkeFunnet {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
                     return portTypeMock.hentKodeverk(xmlHentKodeverkRequest);
                 }

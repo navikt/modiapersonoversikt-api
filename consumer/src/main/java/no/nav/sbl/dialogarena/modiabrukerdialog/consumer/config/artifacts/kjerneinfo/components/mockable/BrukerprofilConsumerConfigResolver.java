@@ -36,7 +36,8 @@ public class BrukerprofilConsumerConfigResolver {
         final BrukerprofilServiceBi alternateBi = getBrukerprofilServiceBiMock();
         return new BrukerprofilServiceBi() {
             @Override
-            public BrukerprofilResponse hentKontaktinformasjonOgPreferanser(BrukerprofilRequest request) throws HentKontaktinformasjonOgPreferanserPersonIkkeFunnet, HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning {
+            public BrukerprofilResponse hentKontaktinformasjonOgPreferanser(BrukerprofilRequest request)
+                    throws HentKontaktinformasjonOgPreferanserPersonIkkeFunnet, HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return alternateBi.hentKontaktinformasjonOgPreferanser(request);
                 }
