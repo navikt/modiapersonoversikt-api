@@ -303,7 +303,9 @@ public class WSUtbetalingTestData {
     }
 
     public static WSBilag createBilag(String melding, WSPosteringsdetaljer... posteringsdetaljer) {
-        return new WSBilag().withMeldingListe(new WSMelding().withMeldingtekst(melding)).withPosteringsdetaljerListe(posteringsdetaljer)
+        return new WSBilag()
+                .withYtelseBeskrivelse("Ytelse")
+                .withMeldingListe(new WSMelding().withMeldingtekst(melding)).withPosteringsdetaljerListe(posteringsdetaljer)
                 .withBilagPeriode(new WSPeriode().withPeriodeFomDato(now().minusDays(7)).withPeriodeTomDato(now().minusDays(1)));
     }
 
