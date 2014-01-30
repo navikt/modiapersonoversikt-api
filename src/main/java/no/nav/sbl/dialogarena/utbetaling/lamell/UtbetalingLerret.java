@@ -161,6 +161,7 @@ public class UtbetalingLerret extends Lerret {
     private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
         filterParametere = new FilterParametere(hentYtelser(resultatCache.utbetalinger));
         addOrReplace(createFilterFormPanel());
+        oppdaterUtbetalingsListe(target);
         String detaljPanelID = "detaljpanel-" + payload.getItemId();
         target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('"+detaljPanelID + "');");
     }
