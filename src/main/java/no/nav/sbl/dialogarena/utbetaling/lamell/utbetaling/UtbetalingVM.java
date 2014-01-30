@@ -7,6 +7,7 @@ import java.util.List;
 
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT_UTEN_LITERAL;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class UtbetalingVM {
@@ -37,8 +38,8 @@ public class UtbetalingVM {
         return utbetaling.getMottakernavn();
     }
 
-    public String getMottakerkode() {
-        return utbetaling.getMottakerkode();
+    public Mottaktertype getMottakertype() {
+        return utbetaling.getMottaktertype();
     }
 
     public String getKontonr() {

@@ -20,8 +20,7 @@ import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_COMPARE_BELOP;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_SKATT_NEDERST;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ANNEN_MOTTAKER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static org.apache.commons.lang3.StringUtils.join;
 
@@ -40,7 +39,7 @@ public class UtbetalingTransformer {
             UtbetalingBuilder utbetalingBuilder = new UtbetalingBuilder()
                     .withMottakerId(wsUtbetaling.getUtbetalingMottaker().getMottakerId())
                     .withMottakernavn(wsUtbetaling.getUtbetalingMottaker().getNavn())
-                    .withMottakerkode(transformerMottakerKode(wsUtbetaling.getUtbetalingMottaker(), fnr))
+                    .withMottakertype(transformerMottakertype(wsUtbetaling.getUtbetalingMottaker(), fnr))
                     .withPeriode(getPeriode(wsUtbetaling))
                     .withValuta(wsUtbetaling.getValuta())
                     .withStatus(wsUtbetaling.getStatusBeskrivelse().toLowerCase())
@@ -101,11 +100,11 @@ public class UtbetalingTransformer {
         }
     }
 
-    private static String transformerMottakerKode(WSMottaker wsMottaker, String fnr) {
+    private static Mottaktertype transformerMottakertype(WSMottaker wsMottaker, String fnr) {
         if (!fnr.equals(wsMottaker.getMottakerId())) {
-            return ANNEN_MOTTAKER;
+            return Mottaktertype.ANNEN_MOTTAKER;
         }
-        return BRUKER;
+        return Mottaktertype.BRUKER;
     }
 
     private static String transformerMelding(WSBilag wsBilag) {

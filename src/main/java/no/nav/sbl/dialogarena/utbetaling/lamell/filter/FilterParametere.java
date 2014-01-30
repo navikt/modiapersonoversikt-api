@@ -10,8 +10,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ANNEN_MOTTAKER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 
@@ -24,7 +23,7 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     private LocalDate startDato;
     private LocalDate sluttDato;
 
-    private Map<String, Boolean> mottakere;
+    private Map<Mottaktertype, Boolean> mottakere;
 
     private boolean alleYtelserValgt;
 
@@ -36,8 +35,8 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         this.sluttDato = defaultSluttDato();
 
         this.mottakere = new HashMap<>();
-        this.mottakere.put(ANNEN_MOTTAKER, true);
-        this.mottakere.put(BRUKER, true);
+        this.mottakere.put(Mottaktertype.ANNEN_MOTTAKER, true);
+        this.mottakere.put(Mottaktertype.BRUKER, true);
 
         this.alleYtelserValgt = true;
         this.alleYtelser = hovedYtelser;
@@ -76,11 +75,11 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         alleYtelser = hovedYtelser;
     }
 
-    public void toggleMottaker(String mottaker) {
+    public void toggleMottaker(Mottaktertype mottaker) {
         mottakere.put(mottaker, !viseMottaker(mottaker));
     }
 
-    public boolean viseMottaker(String mottakerkode) {
+    public boolean viseMottaker(Mottaktertype mottakerkode) {
         if (mottakere.containsKey(mottakerkode)) {
             return mottakere.get(mottakerkode);
         }
@@ -115,7 +114,7 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     @Override
     public boolean evaluate(Utbetaling utbetaling) {
         boolean innenforDatoer = filtrerPaaDatoer(utbetaling.getUtbetalingsdato().toLocalDate());
-        boolean mottakerSkalVises = viseMottaker(utbetaling.getMottakerkode());
+        boolean mottakerSkalVises = viseMottaker(utbetaling.getMottaktertype());
         boolean harYtelse = filtrerPaaYtelser(utbetaling);
         return innenforDatoer
                 && mottakerSkalVises

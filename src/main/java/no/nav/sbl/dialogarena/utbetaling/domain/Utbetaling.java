@@ -14,15 +14,16 @@ import static org.joda.time.LocalDate.now;
 
 public final class Utbetaling implements Serializable {
 
-    public static final String BRUKER = "bruker";
-    public static final String ANNEN_MOTTAKER = "annenmottaker";
+    public static enum Mottaktertype {
+        BRUKER, ANNEN_MOTTAKER;
+    }
 
     private DateTime utbetalingsdato;
     private Interval periode;
     private String status;
     private String mottakerId;
     private String mottakernavn;
-    private String mottakerkode;
+    private Mottaktertype mottaktertype;
     private String melding;
     private String hovedytelse;
     private String kontonr;
@@ -73,8 +74,8 @@ public final class Utbetaling implements Serializable {
         return mottakernavn;
     }
 
-    public String getMottakerkode() {
-        return mottakerkode;
+    public Mottaktertype getMottaktertype() {
+        return mottaktertype;
     }
 
     public String getMelding() {
@@ -115,7 +116,7 @@ public final class Utbetaling implements Serializable {
         private String status;
         private String mottakerId;
         private String mottakernavn;
-        private String mottakerkode;
+        private Mottaktertype mottakertype;
         private String melding;
         private String hovedytelse;
         private String kontonr;
@@ -150,8 +151,8 @@ public final class Utbetaling implements Serializable {
             return this;
         }
 
-        public UtbetalingBuilder withMottakerkode(String mottakerkode) {
-            this.mottakerkode = mottakerkode;
+        public UtbetalingBuilder withMottakertype(Mottaktertype mottakertype) {
+            this.mottakertype = mottakertype;
             return this;
         }
 
@@ -207,7 +208,7 @@ public final class Utbetaling implements Serializable {
             utbetaling.status = this.status;
             utbetaling.mottakerId = this.mottakerId;
             utbetaling.mottakernavn = this.mottakernavn;
-            utbetaling.mottakerkode = this.mottakerkode;
+            utbetaling.mottaktertype = this.mottakertype;
             utbetaling.melding = this.melding;
             utbetaling.hovedytelse = this.hovedytelse;
             utbetaling.kontonr = this.kontonr;

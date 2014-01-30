@@ -8,7 +8,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ANNEN_MOTTAKER;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.junit.Assert.assertThat;
 
@@ -52,7 +51,7 @@ public class UtbetalingVMComparatorTest {
         return new UtbetalingVM(
                 Utbetaling.getBuilder()
                         .withValuta("kr")
-                        .withMottakerId(ANNEN_MOTTAKER)
+                        .withMottakerId("***REMOVED***")
                         .withKontonr("123")
                         .withUtbetalingsDato(utbetalingsDato)
                         .createUtbetaling()

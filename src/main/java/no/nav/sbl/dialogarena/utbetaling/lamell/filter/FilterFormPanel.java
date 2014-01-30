@@ -29,8 +29,7 @@ import java.util.List;
 
 import static java.util.Collections.sort;
 import static no.nav.modig.wicket.component.datepicker.DatePickerConfigurator.DatePickerConfiguratorBuilder.datePickerConfigurator;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.ANNEN_MOTTAKER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.BRUKER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 import static org.joda.time.LocalDate.now;
@@ -63,8 +62,8 @@ public class FilterFormPanel extends Panel {
                 valideringsfeil.setOutputMarkupId(true),
                 createDateRangePicker(),
                 createSokKnapp(),
-                createMottakerButton("visBruker", BRUKER),
-                createMottakerButton("visAnnenMottaker", ANNEN_MOTTAKER),
+                createMottakerButton("visBruker", Mottaktertype.BRUKER),
+                createMottakerButton("visAnnenMottaker", Mottaktertype.ANNEN_MOTTAKER),
                 ytelsesContainer)
                 .setOutputMarkupId(true);
     }
@@ -121,7 +120,7 @@ public class FilterFormPanel extends Panel {
                 .setOutputMarkupId(true);
     }
 
-    private AjaxCheckBox createMottakerButton(final String id, final String mottaker) {
+    private AjaxCheckBox createMottakerButton(final String id, final Mottaktertype mottaker) {
         return new AjaxCheckBox(id, new Model<>(filterParametere.viseMottaker(mottaker))) {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {

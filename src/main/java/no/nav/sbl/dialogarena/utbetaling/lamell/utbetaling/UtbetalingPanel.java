@@ -14,7 +14,7 @@ public class UtbetalingPanel extends Panel {
         add(
                 new DetaljPanel("detaljpanel", utbetalingVM),
                 new WebMarkupContainer("mottakerIndikator")
-                        .add(new AttributeAppender("class", utbetalingVM.getMottakerkode()).setSeparator(" ")),
+                        .add(new AttributeAppender("class", utbetalingVM.getMottakertype()).setSeparator(" ")),
                 new Label("kortUtbetalingsDato", utbetalingVM.getKortUtbetalingsDato()),
                 new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
                 new Label("periodeMedKortDato", utbetalingVM.getPeriodeMedKortDato()),
