@@ -26,8 +26,8 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
 
     private Map<String, Boolean> mottakere;
 
-    public Set<String> alleYtelser;
-    public Set<String> uonskedeYtelser;
+    private Set<String> alleYtelser;
+    private Set<String> onskedeYtelser;
 
     public FilterParametere(Set<String> hovedYtelser) {
         this.startDato = defaultStartDato();
@@ -38,7 +38,7 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         this.mottakere.put(BRUKER, true);
 
         this.alleYtelser = hovedYtelser;
-        this.uonskedeYtelser = new HashSet<>();
+        this.onskedeYtelser = new HashSet<>(this.alleYtelser);
     }
 
     public LocalDate getSluttDato() {
@@ -61,6 +61,10 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         }
     }
 
+    public Set<String> getAlleYtelser() {
+        return alleYtelser;
+    }
+
     public void setYtelser(Set<String> hovedYtelser) {
         alleYtelser = hovedYtelser;
     }
@@ -74,6 +78,31 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
             return mottakere.get(mottakerkode);
         }
         return false;
+    }
+
+    public void toggleAlleYtelser(boolean visAlle) {
+        if (visAlle) {
+            this.onskedeYtelser.addAll(this.alleYtelser);
+        } else {
+            this.onskedeYtelser.clear();
+        }
+    }
+
+    public boolean erYtelseOnsket(String ytelse) {
+        return this.onskedeYtelser.contains(ytelse);
+    }
+
+    public void velgEnYtelse(String ytelse) {
+        this.onskedeYtelser.clear();
+        this.onskedeYtelser.add(ytelse);
+    }
+
+    public void leggTilOnsketYtelse(String ytelse) {
+        this.onskedeYtelser.add(ytelse);
+    }
+
+    public void fjernOnsketYtelse(String ytelse) {
+        this.onskedeYtelser.remove(ytelse);
     }
 
     @Override
@@ -91,7 +120,7 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     }
 
     private boolean filtrerPaaYtelser(Utbetaling utbetaling) {
-        return !uonskedeYtelser.contains(utbetaling.getHovedytelse());
+        return onskedeYtelser.contains(utbetaling.getHovedytelse());
     }
 
 }

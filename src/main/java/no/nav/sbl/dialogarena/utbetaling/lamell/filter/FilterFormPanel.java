@@ -74,11 +74,7 @@ public class FilterFormPanel extends Panel {
         return new AjaxCheckBox("visAlleYtelser", visAlleYtelser) {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                if (this.getModelObject()) {
-                    filterParametere.uonskedeYtelser.clear();
-                } else {
-                    filterParametere.uonskedeYtelser.addAll(filterParametere.alleYtelser);
-                }
+                filterParametere.toggleAlleYtelser(this.getModelObject());
                 target.add(ytelsesContainer);
                 sendFilterEndretEvent();
             }
@@ -89,7 +85,7 @@ public class FilterFormPanel extends Panel {
         IModel<List<String>> alleYtelserModel = new AbstractReadOnlyModel<List<String>>() {
             @Override
             public List<String> getObject() {
-                ArrayList<String> ytelser = new ArrayList<>(filterParametere.alleYtelser);
+                ArrayList<String> ytelser = new ArrayList<>(filterParametere.getAlleYtelser());
                 sort(ytelser);
                 return ytelser;
             }
@@ -97,20 +93,19 @@ public class FilterFormPanel extends Panel {
         ListView<String> listView = new ListView<String>("ytelseFilter", alleYtelserModel) {
             @Override
             protected void populateItem(final ListItem<String> item) {
-                boolean erValgt = !filterParametere.uonskedeYtelser.contains(item.getModelObject()) && !visAlleYtelser.getObject();
+                boolean erValgt = filterParametere.erYtelseOnsket(item.getModelObject()) && !visAlleYtelser.getObject();
                 AjaxCheckBox checkbox = new AjaxCheckBox("visYtelse", new Model<>(erValgt)) {
                     @Override
                     protected void onUpdate(AjaxRequestTarget target) {
                         String ytelse = item.getModelObject();
                         if (visAlleYtelser.getObject()) {
                             visAlleYtelser.setObject(false);
-                            filterParametere.uonskedeYtelser.addAll(filterParametere.alleYtelser);
-                            filterParametere.uonskedeYtelser.remove(ytelse);
+                            filterParametere.velgEnYtelse(ytelse);
                         } else {
-                            if (filterParametere.uonskedeYtelser.contains(ytelse)) {
-                                filterParametere.uonskedeYtelser.remove(ytelse);
+                            if (this.getModelObject()) {
+                                filterParametere.leggTilOnsketYtelse(ytelse);
                             } else {
-                                filterParametere.uonskedeYtelser.add(ytelse);
+                                filterParametere.fjernOnsketYtelse(ytelse);
                             }
                         }
                         sendFilterEndretEvent();
