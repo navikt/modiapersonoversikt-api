@@ -28,11 +28,11 @@ public class UtbetalingEndpointConfig {
 
     @Inject
     @Qualifier("utbetalingPortTypeWrapperMock")
-    private UtbetalingPortTypeWrapper portTypeMock;
+    private UtbetalingPortTypeWrapper mockedPortTypeWrapper;
 
     @Inject
     @Qualifier("utbetalingPortTypeWrapper")
-    private UtbetalingPortTypeWrapper portType;
+    private UtbetalingPortTypeWrapper portTypeWrapper;
 
     @Bean(name = "utbetalingPortType")
     public UtbetalingPortType utbetalingPortType() {
@@ -43,9 +43,9 @@ public class UtbetalingEndpointConfig {
             public WSHentUtbetalingListeResponse hentUtbetalingListe(@WebParam(name = "request", targetNamespace = "") WSHentUtbetalingListeRequest request)
                     throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(UTBETALING_KEY)) {
-                    return portTypeMock.getPortType().hentUtbetalingListe(request);
+                    return mockedPortTypeWrapper.getPortType().hentUtbetalingListe(request);
                 }
-                return portType.getPortType().hentUtbetalingListe(request);
+                return portTypeWrapper.getPortType().hentUtbetalingListe(request);
             }
         };
     }
