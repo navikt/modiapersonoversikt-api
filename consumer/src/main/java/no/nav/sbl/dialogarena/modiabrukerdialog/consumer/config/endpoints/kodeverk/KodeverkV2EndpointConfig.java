@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeverk;
 
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.porttypeimpl.KodeverkV2PortTypeImpl;
@@ -28,10 +28,13 @@ public class KodeverkV2EndpointConfig {
     @Value("${kodeverkendpoint.v2.url}")
     private URL endpoint;
 
+    private KodeverkV2PortTypeImpl impl = new KodeverkV2PortTypeImpl(endpoint);
+    private KodeverkV2PortTypeMock mock = new KodeverkV2PortTypeMock();
+
     @Bean(name = "kodeverkPortTypeV2")
     public KodeverkPortType kodeverkPortType() {
-        final KodeverkPortType portType = new KodeverkV2PortTypeImpl(endpoint).kodeverkPortType();
-        final KodeverkPortType portTypeMock = new KodeverkV2PortTypeMock().kodeverkPortType();
+        final KodeverkPortType portType = impl.kodeverkPortType();
+        final KodeverkPortType portTypeMock = mock.kodeverkPortType();
         return new KodeverkPortType() {
             @Override
             public XMLHentKodeverkResponse hentKodeverk(@WebParam(name = "request", targetNamespace = "") XMLHentKodeverkRequest xmlHentKodeverkRequest)
@@ -62,8 +65,8 @@ public class KodeverkV2EndpointConfig {
 
     @Bean
     public KodeverkClient kodeverkClient() {
-        final KodeverkClient kodeverkKlient = new KodeverkV2PortTypeImpl(endpoint).kodeverkClient();
-        final KodeverkClient kodeverkKlientMock = new KodeverkV2PortTypeMock().kodeverkClient();
+        final KodeverkClient kodeverkKlient = impl.kodeverkClient();
+        final KodeverkClient kodeverkKlientMock = mock.kodeverkClient();
         return new KodeverkClient() {
             @Override
             public XMLKodeverk hentKodeverk(String s) {
