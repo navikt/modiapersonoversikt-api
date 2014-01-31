@@ -48,8 +48,8 @@
         <mockito.version>1.9.5</mockito.version>
         <jodatime.version>2.2</jodatime.version>
         <!-- Modia-komponenter-->
-        <personsok.version>2.0.0-SPRINGFIX</personsok.version>
-        <kjerneinfo.versjon>2.0.3-SPRINGFIX</kjerneinfo.versjon>
+        <personsok.version>0.0.96</personsok.version>
+        <kjerneinfo.versjon>1.0.44</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <sporsmalogsvar.version>1.18</sporsmalogsvar.version>
         <utbetaling.version>2.0.16-SNAPSHOT</utbetaling.version>
