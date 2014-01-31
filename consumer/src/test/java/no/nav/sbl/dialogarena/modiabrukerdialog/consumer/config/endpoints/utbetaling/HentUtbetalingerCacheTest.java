@@ -1,9 +1,6 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.CacheConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingWrapperTestConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.UtbetalingPortTypeWrapper;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSPeriode;
@@ -17,21 +14,20 @@ import org.joda.time.DateTime;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
+import static java.lang.System.setProperty;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingEndpointConfig.UTBETALING_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
+import static org.mockito.Mockito.verify;
 
-
-@DirtiesContext(classMode = AFTER_CLASS)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {CacheConfig.class, UtbetalingWrapperTestConfig.class, UtbetalingEndpointConfig.class})
 public class HentUtbetalingerCacheTest {
@@ -49,13 +45,14 @@ public class HentUtbetalingerCacheTest {
 
     @BeforeClass
     public static void setUp() {
-        System.setProperty("utbetalingendpoint.v2.url", "https://service-gw-t11.test.local/");
-        System.setProperty(MockUtil.TILLATMOCKSETUP_PROPERTY, "http://ja.no");
-        System.setProperty(UtbetalingEndpointConfig.UTBETALING_KEY, "yes");
+        setProperty("utbetalingendpoint.v2.url", "https://service-gw-t11.test.local/");
+        setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.no");
+        setProperty(UTBETALING_KEY, "yes");
     }
 
     @Test
-    public void identicalRequestsOnlySentOnce() throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeUgyldigDato, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig {
+    public void identicalRequestsOnlySentOnce()
+            throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeUgyldigDato, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig {
 
         DateTime fom = now().minusDays(10);
         DateTime tom = now();
@@ -66,8 +63,8 @@ public class HentUtbetalingerCacheTest {
         utbetalingPortType.hentUtbetalingListe(request);
         utbetalingPortType.hentUtbetalingListe(request2);
 
-        Mockito.verify(realPortWrapper.getPortType(), times(0)).hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class));
-        Mockito.verify(mockPortWrapper.getPortType(), times(1)).hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class));
+        verify(realPortWrapper.getPortType(), times(0)).hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class));
+        verify(mockPortWrapper.getPortType(), times(1)).hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class));
     }
 
     private WSHentUtbetalingListeRequest createRequest(DateTime fom, DateTime tom) {
@@ -76,7 +73,6 @@ public class HentUtbetalingerCacheTest {
                 .withYtelsesfilter(new WSYtelsesfilter())
                 .withPeriode(new WSPeriode()
                         .withFom(fom)
-                        .withTom(tom)
-                );
+                        .withTom(tom));
     }
 }
