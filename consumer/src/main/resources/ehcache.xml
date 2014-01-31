@@ -38,17 +38,7 @@
            diskExpiryThreadIntervalSeconds="120"
            memoryStoreEvictionPolicy="LRU"/>
 
-    <cache name="kodeverkversjonCache" maxElementsInMemory="100"
-           eternal="false"
-           timeToIdleSeconds="3600"
-           timeToLiveSeconds="3600"
-           overflowToDisk="true"
-           maxElementsOnDisk="10000000"
-           diskPersistent="false"
-           diskExpiryThreadIntervalSeconds="120"
-           memoryStoreEvictionPolicy="LRU"/>
-
-    <cache name="kodeverkCache" maxElementsInMemory="100"
+    <cache name="kodeverk_consumer.kodeverkCache" maxElementsInMemory="100"
            eternal="false"
            timeToIdleSeconds="3600"
            timeToLiveSeconds="3600"
@@ -83,6 +73,19 @@
            timeToLiveSeconds="300"
            overflowToDisk="true"
            maxElementsOnDisk="1000"
+           diskPersistent="false"
+           diskExpiryThreadIntervalSeconds="120"
+           memoryStoreEvictionPolicy="LRU"/>
+    <cache name="pip.role" maxElementsInMemory="100" overflowToDisk="false" eternal="true" />
+    <cache name="pip.localenhet" maxElementsInMemory="100" overflowToDisk="false" eternal="true" />
+    <cache name="pip.fylkesenhet" maxElementsInMemory="100" overflowToDisk="false" eternal="true" />
+    <cache name="pdp.decision" maxElementsInMemory="100" overflowToDisk="false" eternal="true" />
+    <cache name="kodeverkCache" maxElementsInMemory="100"
+           eternal="false"
+           timeToIdleSeconds="3600"
+           timeToLiveSeconds="3600"
+           overflowToDisk="true"
+           maxElementsOnDisk="10000000"
            diskPersistent="false"
            diskExpiryThreadIntervalSeconds="120"
            memoryStoreEvictionPolicy="LRU"/>
