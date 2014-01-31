@@ -11,6 +11,7 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLFinnKodeverkListeResp
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -36,6 +37,8 @@ public class KodeverkV2EndpointConfig {
         final KodeverkPortType portType = impl.kodeverkPortType();
         final KodeverkPortType portTypeMock = mock.kodeverkPortType();
         return new KodeverkPortType() {
+
+            @Cacheable("kodeverkCache")
             @Override
             public XMLHentKodeverkResponse hentKodeverk(@WebParam(name = "request", targetNamespace = "") XMLHentKodeverkRequest xmlHentKodeverkRequest)
                     throws HentKodeverkHentKodeverkKodeverkIkkeFunnet {
@@ -45,6 +48,7 @@ public class KodeverkV2EndpointConfig {
                 return portType.hentKodeverk(xmlHentKodeverkRequest);
             }
 
+            @Cacheable("kodeverkCache")
             @Override
             public XMLFinnKodeverkListeResponse finnKodeverkListe(@WebParam(name = "request", targetNamespace = "") XMLFinnKodeverkListeRequest xmlFinnKodeverkListeRequest) {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
@@ -68,6 +72,8 @@ public class KodeverkV2EndpointConfig {
         final KodeverkClient kodeverkKlient = impl.kodeverkClient();
         final KodeverkClient kodeverkKlientMock = mock.kodeverkClient();
         return new KodeverkClient() {
+
+            @Cacheable("kodeverkCache")
             @Override
             public XMLKodeverk hentKodeverk(String s) {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
@@ -76,6 +82,7 @@ public class KodeverkV2EndpointConfig {
                 return kodeverkKlient.hentKodeverk(s);
             }
 
+            @Cacheable("kodeverkCache")
             @Override
             public String hentFoersteTermnavnForKode(String s, String s2) {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
