@@ -34,7 +34,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @DirtiesContext(classMode = AFTER_CLASS)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {CacheConfig.class, UtbetalingWrapperTestConfig.class, UtbetalingEndpointConfig.class})
-public class CacheUtbetalingrequestsTest {
+public class HentUtbetalingerCacheTest {
 
     @Inject
     private UtbetalingPortType utbetalingPortType;
