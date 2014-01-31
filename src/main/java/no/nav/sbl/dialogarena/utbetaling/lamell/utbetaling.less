@@ -269,9 +269,14 @@ table.utbetaling-tabell {
       .statusindikator {
         margin-bottom: 10px;
         font-weight: bold;
+        display: inline-block;
         * {
+          margin-right: 0.5em;
           display: inline-block;
           vertical-align: middle;
+          &:last-child {
+            margin: 0;
+          }
         }
         .dot {
           height: 1rem;
@@ -280,6 +285,9 @@ table.utbetaling-tabell {
           &.utbetalt {
             background-color: #0fba47;
           }
+        }
+        .statustekst {
+          text-transform: uppercase;
         }
       }
       .element {
@@ -320,6 +328,10 @@ table.utbetaling-tabell {
         font-weight: bold;
       }
     }
+  }
+  .skriv-ut-container {
+    display: inline-block;
+    float: right;
   }
   .skriv-ut {
     float: right;
