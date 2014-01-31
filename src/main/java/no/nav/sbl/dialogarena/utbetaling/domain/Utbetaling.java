@@ -51,7 +51,13 @@ public final class Utbetaling implements Serializable {
      * dato, mottaker og hovedytelse.
      */
     public String getUtbetalingId() {
-        return ("" + utbetalingsdato.getDayOfMonth() + utbetalingsdato.getMonthOfYear() + utbetalingsdato.getYear() + mottakerId + hovedytelse);
+        return ("" +
+                utbetalingsdato.getDayOfMonth() +
+                utbetalingsdato.getMonthOfYear() +
+                utbetalingsdato.getYear() +
+                mottakerId +
+                hovedytelse)
+                .replace(" ", "");
     }
 
     public DateTime getUtbetalingsdato() {
