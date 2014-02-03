@@ -35,7 +35,6 @@
         <webservice alias="virksomhet:foreldrepenger_v1" mapToProperty="foreldrepengerendpoint"/>
         <webservice alias="virksomhet:sykepenger_v1" mapToProperty="sykepengerendpoint"/>
         <webservice alias="virksomhet:utbetaling_v2" mapToProperty="utbetalingendpoint.v2"/>
-        <webservice alias="servicegateway" mapToProperty="servicegateway"/>
         <!-- Slutt kjerneinfo -->
         <!-- App-->
 
