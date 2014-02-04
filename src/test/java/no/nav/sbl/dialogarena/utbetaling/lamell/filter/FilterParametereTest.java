@@ -79,6 +79,19 @@ public class FilterParametereTest {
     }
 
     @Test
+    public void skalViseAlleUtbetalingerHvisAlleYtelserErValgtOgNyeYtelserBlirSatt() {
+        filterparams = new FilterParametere(new HashSet<String>());
+        Utbetaling utbetaling = getBuilder()
+                .withUtbetalingsDato(now())
+                .withMottakertype(Mottaktertype.BRUKER)
+                .withHovedytelse(DAGPENGER)
+                .createUtbetaling();
+        filterparams.setYtelser(new HashSet<>(asList(utbetaling.getHovedytelse())));
+
+        assertThat(filterparams.evaluate(utbetaling), is(true));
+    }
+
+    @Test
     public void skalToggleVerdiBasertPaaMottaker() {
         assertThat(filterparams.viseMottaker(Mottaktertype.BRUKER), is(true));
         filterparams.toggleMottaker(Mottaktertype.BRUKER);
