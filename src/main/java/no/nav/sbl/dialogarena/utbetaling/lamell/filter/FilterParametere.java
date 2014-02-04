@@ -72,6 +72,9 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     }
 
     public void setYtelser(Set<String> hovedYtelser) {
+        if (alleYtelserValgt) {
+            onskedeYtelser.addAll(hovedYtelser);
+        }
         alleYtelser = hovedYtelser;
     }
 
