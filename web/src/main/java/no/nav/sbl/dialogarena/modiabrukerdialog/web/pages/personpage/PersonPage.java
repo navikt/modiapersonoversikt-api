@@ -7,6 +7,7 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
@@ -38,6 +39,7 @@ import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGAN
 import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
 import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
 import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
@@ -114,6 +116,16 @@ public class PersonPage extends BasePage {
             lamellContainer.handleFeedItemEvent(event, feedItemPayload);
         } catch (ApplicationException e) {
             logger.warn("Burde ikke skje, klarte ikke håndtere feeditemevent: {}", e.getMessage(), e);
+            target.appendJavaScript("alert('" + e.getMessage() + "');");
+        }
+    }
+
+    @RunOnEvents(WIDGET_HEADER_CLICKED)
+    public void widgetHeaderClicked(AjaxRequestTarget target, IEvent<?> event, WidgetHeaderPayload widgetHeaderPayload) {
+        try {
+            lamellContainer.handleWidgetHeaderEvent(event, widgetHeaderPayload);
+        } catch (ApplicationException e) {
+            logger.warn("Burde ikke skje, klarte ikke håndtere widgetheaderevent: {}", e.getMessage(), e);
             target.appendJavaScript("alert('" + e.getMessage() + "');");
         }
     }

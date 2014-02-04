@@ -4,6 +4,7 @@ import no.nav.brukerprofil.BrukerprofilPanel;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.LamellFactory;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.lamell.LerretFactory;
@@ -36,7 +37,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     private Logger logger = LoggerFactory.getLogger(LamellContainer.class);
 
     public static final String LAMELL_KONTRAKTER = "kontrakter";
-    public static final String LAMELL_UTBETALINGER = "utbetaling";
+    public static final String LAMELL_UTBETALINGER = "utbetalinger";
     public static final String LAMELL_FORELDREPENGER = "foreldrepenger";
     public static final String LAMELL_SYKEPENGER = "sykepenger";
     public static final String LAMELL_OVERSIKT = "oversikt";
@@ -52,7 +53,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
         String type = feedItemPayload.getType().toLowerCase();
-        String lamellId = feedItemPayload.getType().toLowerCase();
+        String lamellId = feedItemPayload.getWidgetId().toLowerCase();
 
         if (canHaveMoreThanOneLamell(type)) {
             lamellId = createLamellIfMissing(type, feedItemPayload.getItemId());
@@ -64,6 +65,19 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         } else {
             ApplicationException exc = new ApplicationException("Feedlenke med ukjent type <" + lamellId + "> klikket");
             logger.warn("ukjent lamellId: {}", lamellId, exc);
+            throw exc;
+        }
+    }
+
+    public void handleWidgetHeaderEvent(IEvent<?> event, WidgetHeaderPayload widgetHeaderPayload) {
+        String type = widgetHeaderPayload.getType().toLowerCase();
+
+        if (hasFactory(type)) {
+            goToLamell(type);
+            sendToLamell(type, event.getPayload());
+        } else {
+            ApplicationException exc = new ApplicationException("Widget med ukjent type <" + type + "> klikket");
+            logger.warn("ukjent lamellId: {}", type, exc);
             throw exc;
         }
     }
