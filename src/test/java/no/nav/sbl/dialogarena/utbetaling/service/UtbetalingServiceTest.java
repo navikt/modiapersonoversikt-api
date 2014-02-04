@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
-import no.nav.modig.core.exception.ApplicationException;
+import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeBaksystemIkkeTilgjengelig;
@@ -37,25 +37,25 @@ public class UtbetalingServiceTest {
         assertThat(utbetalinger.isEmpty(), is(true));
     }
 
-    @Test(expected = ApplicationException.class)
+    @Test(expected = SystemException.class)
     public void testExceptions_HentUtbetalingListeForMangeForekomster() throws Exception {
         when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeForMangeForekomster());
         service.hentUtbetalinger(FNR, new LocalDate(), new LocalDate());
     }
 
-    @Test(expected = ApplicationException.class)
+    @Test(expected = SystemException.class)
     public void testExceptions_HentUtbetalingListeBaksystemIkkeTilgjengelig() throws Exception {
         when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeBaksystemIkkeTilgjengelig());
         service.hentUtbetalinger(FNR, new LocalDate(), new LocalDate());
     }
 
-    @Test(expected = ApplicationException.class)
+    @Test(expected = SystemException.class)
     public void testExceptions_HentUtbetalingListeUgyldigDato() throws Exception {
         when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeUgyldigDato());
         service.hentUtbetalinger(FNR, new LocalDate(), new LocalDate());
     }
 
-    @Test(expected = ApplicationException.class)
+    @Test(expected = SystemException.class)
     public void testExceptions_UkjentFeil() throws Exception {
         when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new RuntimeException());
         service.hentUtbetalinger(FNR, new LocalDate(), new LocalDate());

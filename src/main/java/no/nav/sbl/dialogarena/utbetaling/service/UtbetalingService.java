@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
-import no.nav.modig.core.exception.ApplicationException;
+import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
@@ -41,7 +41,7 @@ public class UtbetalingService {
                     "Henting av utbetalinger for bruker med fnr " + fnr + " mellom " + startDato + " og " + sluttDato + " feilet pga. for mange forekomster i perioden.", hulfmf,
                     "feil.utbetalinger.for-mange");
         } catch (Exception e) {
-            throw new ApplicationException("Henting av utbetalinger for bruker med fnr " + fnr + " mellom " + startDato + " og " + sluttDato + " feilet.", e);
+            throw new SystemException("Henting av utbetalinger for bruker med fnr " + fnr + " mellom " + startDato + " og " + sluttDato + " feilet.", e);
         }
     }
 
