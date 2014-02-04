@@ -35,7 +35,7 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
     private String fnr;
 
     public UtbetalingWidget(String id, String initial, String fnr) {
-        super(id, initial);
+        super(id, initial, true);
 
         this.fnr = fnr;
 
