@@ -13,6 +13,7 @@ import no.nav.sykmeldingsperioder.foreldrepenger.loader.ForeldrepengerLoader;
 import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
 import no.nav.sykmeldingsperioder.ping.SykmeldingsperioderPing;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetService;
+import no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -49,7 +50,7 @@ public class SykmeldingsperioderPanelConfigResolver {
 
     @Bean
     public SykepengerWidgetService sykepengerWidgetService() {
-        final SykepengerWidgetService defaultWidgetService = new SykmeldingsperioderPanelConfigImpl().sykepengerWidgetService();
+        final SykepengerWidgetService defaultWidgetService = new SykepengerWidgetServiceImpl(sykepengerServiceBi, foreldrepengerServiceBi);
         final SykepengerWidgetService mockWidgetService = getSykepengerWidgetServiceMock();
         return new SykepengerWidgetService() {
             @Override

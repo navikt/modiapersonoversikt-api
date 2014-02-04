@@ -3,8 +3,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjern
 import no.nav.behandlebrukerprofil.config.spring.BehandleBrukerprofilConsumerConfig;
 import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi;
 import no.nav.behandlebrukerprofil.consumer.messages.BehandleBrukerprofilRequest;
+import no.nav.behandlebrukerprofil.consumer.support.DefaultBehandleBrukerprofilService;
+import no.nav.behandlebrukerprofil.consumer.support.mapping.BehandleBrukerprofilMapper;
 import no.nav.modig.modia.ping.PingResult;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.mockableimpl.BehandleBrukerProfilPortTypeImpl;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.BehandleBrukerprofilPortType;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
@@ -34,7 +35,7 @@ public class BehandleBrukerprofilConsumerConfigResolver {
 
     @Bean
     public BehandleBrukerprofilServiceBi behandleBrukerprofilServiceBi() {
-        final BehandleBrukerprofilServiceBi defaultBi = new BehandleBrukerProfilPortTypeImpl(behandleBrukerprofilPortType, selfTestBehandleBrukerprofilPortType).behandleBrukerprofilServiceBi();
+        final BehandleBrukerprofilServiceBi defaultBi = new DefaultBehandleBrukerprofilService(behandleBrukerprofilPortType, selfTestBehandleBrukerprofilPortType, new BehandleBrukerprofilMapper());
         final BehandleBrukerprofilServiceBi alternateBi = getBehandleBrukerprofilServiceBiMock();
 
         return new BehandleBrukerprofilServiceBi() {

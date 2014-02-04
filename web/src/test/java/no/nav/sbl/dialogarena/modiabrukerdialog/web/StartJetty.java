@@ -33,7 +33,8 @@ public class StartJetty {
     private static void setupProperties() {
         setProperty("wicket.configuration", "development");
         setFrom("start.properties");
-        setFrom("test.properties");
+//        setFrom("test.properties");
+        setFrom("t11.properties");
         setupKeyAndTrustStore();
     }
 

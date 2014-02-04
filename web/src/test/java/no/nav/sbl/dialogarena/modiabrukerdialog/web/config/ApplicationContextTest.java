@@ -21,7 +21,7 @@ public class ApplicationContextTest {
 
     @BeforeClass
     public static void setupStatic() {
-        setFrom("test.properties");
+        setFrom("t11.properties");
         getProperties().setProperty(TILLATMOCKSETUP_PROPERTY, DEFAULT_MOCK_TILLATT);
         setupKeyAndTrustStore();
     }
