@@ -8,8 +8,8 @@ import no.nav.sbl.dialogarena.utbetaling.util.AjaxIndicator;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -22,6 +22,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -149,8 +150,8 @@ public class FilterFormPanel extends Panel {
         return new DateRangePicker("datoFilter", dateRangeModel, datePickerConfigurator, minDato, maksDato);
     }
 
-    private AjaxSubmitLink createSokKnapp() {
-        return new AjaxSubmitLink("sok") {
+    private AjaxButton createSokKnapp() {
+        return new AjaxButton("sok", new StringResourceModel("utbetaling.lamell.filter.sok", this, null)) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 sendFilterEndretEvent();
