@@ -65,7 +65,7 @@
         <kjerneinfo.versjon>1.0.44</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <sporsmalogsvar.version>1.18</sporsmalogsvar.version>
-        <utbetaling.version>2.0.16-SNAPSHOT</utbetaling.version>
+        <utbetaling.version>2.0.16</utbetaling.version>
     </properties>
 
     <dependencyManagement>
