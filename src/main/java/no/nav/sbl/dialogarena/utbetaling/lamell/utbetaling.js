@@ -20,15 +20,15 @@ var Utbetalinger = (function () {
         $detaljPanel.focus();
     };
 
+    var toggleDetaljPanel = function ($element) {
+        $element.children('.detaljpanel').animate({height: 'toggle'}, 200);
+        $element.toggleClass('ekspandert');
+    };
+
     var skrivUt = function ($element) {
         var $printCopy = $element.clone();
         $printCopy.children('.detaljpanel').css('display', 'block');
         kopierOgSkrivUt($printCopy.html());
-    };
-
-    var toggleDetaljPanel = function ($element) {
-        $element.children('.detaljpanel').animate({height: 'toggle'}, 200);
-        $element.toggleClass('ekspandert');
     };
 
     function kopierOgSkrivUt(html) {
