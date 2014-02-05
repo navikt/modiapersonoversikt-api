@@ -1,18 +1,16 @@
-var utbetalingslinjeSelector = '.utbetaling-ramme .utbetalingslinje';
+$(function () {
+    $('.utbetaling-ramme').addKeyNavigation({itemsSelector: '.utbetalingslinje'});
 
-$(document).on('click', utbetalingslinjeSelector, function () {
-    $(this).children('.detaljpanel').animate({height: 'toggle'}, 200);
-    $(this).toggleClass('ekspandert');
+    Modig.shortcutListener.on({keyCode: 13}, function () {
+        var $activeElement = $(document.activeElement);
+        if ($activeElement.parent('.utbetaling-ramme-innhold')) {
+            Utbetalinger.toggleDetaljPanel($activeElement);
+        }
+    });
 });
-
-$(document).on('click', utbetalingslinjeSelector + ' .skriv-ut', function(event) {
-    var $utbetalingslinje = $(this).closest(utbetalingslinjeSelector);
-    Utbetalinger.skrivUt($utbetalingslinje);
-    event.stopPropagation();
-});
-
 
 var Utbetalinger = (function () {
+    var utbetalingslinjeSelector = '.utbetaling-ramme .utbetalingslinje';
 
     var haandterDetaljPanelVisning = function (detaljPanelID) {
         var $detaljPanel = $("#" + detaljPanelID);
@@ -28,6 +26,11 @@ var Utbetalinger = (function () {
         kopierOgSkrivUt($printCopy.html());
     };
 
+    var toggleDetaljPanel = function ($element) {
+        $element.children('.detaljpanel').animate({height: 'toggle'}, 200);
+        $element.toggleClass('ekspandert');
+    };
+
     function kopierOgSkrivUt(html) {
         $('body > .print .content').html(html);
         var date = new Date();
@@ -41,6 +44,20 @@ var Utbetalinger = (function () {
 
     return {
         haandterDetaljPanelVisning: haandterDetaljPanelVisning,
-        skrivUt: skrivUt
+        toggleDetaljPanel: toggleDetaljPanel,
+        skrivUt: skrivUt,
+        utbetalingslinjeSelector: utbetalingslinjeSelector
     }
 })();
+
+// Event listeners
+$(document).on('click', Utbetalinger.utbetalingslinjeSelector, function () {
+    Utbetalinger.toggleDetaljPanel($(this));
+});
+
+$(document).on('click', Utbetalinger.utbetalingslinjeSelector + ' .skriv-ut', function (event) {
+    var $utbetalingslinje = $(this).closest(Utbetalinger.utbetalingslinjeSelector);
+    Utbetalinger.skrivUt($utbetalingslinje);
+    event.stopPropagation();
+});
+

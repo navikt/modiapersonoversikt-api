@@ -154,6 +154,7 @@ public class UtbetalingLerret extends Lerret {
 
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
         target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);
+        target.appendJavaScript("$('.utbetaling-ramme').addKeyNavigation({itemsSelector:'.utbetalingslinje'});");
     }
 
     @SuppressWarnings("unused")
