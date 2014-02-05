@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -22,11 +23,23 @@
     </modules>
 
     <properties>
+
+        <!-- Sonaroppsett for å få med integrasjonstester på testdekning -->
+        <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+        <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
+        <!-- The destination file for the code coverage report has to be set to the same value
+        in the parent pom and in each module pom. Then JaCoCo will add up information in the
+        same report, so that, it will give the cross-module code coverage. -->
+        <sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
+        <sonar.language>java</sonar.language>
+
+
+        <!-- versjoner -->
         <wicket.version>6.11.0</wicket.version>
         <spring.version>3.2.4.RELEASE</spring.version>
         <modig.frontend.version>1.1.13</modig.frontend.version>
         <modig.security.version>1.0.19</modig.security.version>
-	    <modig.log.version>1.1.2</modig.log.version>
+        <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
         <modig.wicket.version>2.0.3</modig.wicket.version>
@@ -168,11 +181,11 @@
             </dependency>
 
             <dependency>
-				<groupId>javax.servlet</groupId>
-				<artifactId>javax.servlet-api</artifactId>
-				<version>3.1.0</version>
-				<scope>provided</scope>
-			</dependency>
+                <groupId>javax.servlet</groupId>
+                <artifactId>javax.servlet-api</artifactId>
+                <version>3.1.0</version>
+                <scope>provided</scope>
+            </dependency>
 
             <dependency>
                 <groupId>javax.annotation</groupId>
@@ -211,7 +224,7 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-integrasjonsutils</artifactId>
                 <version>0.0.7</version>
-			</dependency>
+            </dependency>
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -519,7 +532,7 @@
             </dependency>
 
             <!-- Spring -->
-			<dependency>
+            <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-aop</artifactId>
                 <version>${spring.version}</version>
@@ -835,7 +848,8 @@
                 </property>
             </activation>
             <properties>
-                <sonar.jacoco.excludes>*SelfTestPage.*:*/example/*:no/nav/sbl/dialogarena/modiabrukerdialog/mock/**</sonar.jacoco.excludes>
+                <sonar.jacoco.excludes>*SelfTestPage.*:*/example/*:no/nav/sbl/dialogarena/modiabrukerdialog/mock/**
+                </sonar.jacoco.excludes>
             </properties>
         </profile>
     </profiles>
