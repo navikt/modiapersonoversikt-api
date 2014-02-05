@@ -383,14 +383,6 @@
                 <configuration>
                     <destFile>${sonar.jacoco.itReportPath}</destFile>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>post-test</id>
-                        <configuration>
-                            <skip>true</skip>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
         <resources>
