@@ -88,8 +88,7 @@ public class TotalOppsummeringPanel extends Panel {
                 };
             }
         };
-        MarkupContainer oppsummeringDetalj = new WebMarkupContainer("oppsummeringDetalj").add(listView);
-        return oppsummeringDetalj;
+        return new WebMarkupContainer("oppsummeringDetalj").add(listView);
     }
 
 }

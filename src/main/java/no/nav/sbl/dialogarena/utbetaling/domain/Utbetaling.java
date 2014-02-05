@@ -187,11 +187,6 @@ public final class Utbetaling implements Serializable {
             return this;
         }
 
-        public UtbetalingBuilder withUnderytelse(Underytelse underytelse) {
-            this.underytelser.add(underytelse);
-            return this;
-        }
-
         public UtbetalingBuilder withBrutto(double brutto) {
             this.brutto = brutto;
             return this;

@@ -23,7 +23,7 @@ public class Underytelse implements Serializable {
     private double sats;
 
     public Underytelse(String tittel, String spesifikasjon, int antall, double belop, double sats) {
-        this.tittel = tittel != null? tittel.trim(): "";
+        this.tittel = tittel != null ? tittel.trim() : "";
         this.spesifikasjon = spesifikasjon;
         this.antall = antall;
         this.belop = belop;
@@ -113,9 +113,10 @@ public class Underytelse implements Serializable {
     public static final ReduceFunction<List<Underytelse>, List<Underytelse>> SUM_UNDERYTELSER = new ReduceFunction<List<Underytelse>, List<Underytelse>>() {
         @Override
         public List<Underytelse> reduce(List<Underytelse> accumulator, List<Underytelse> ytelser) {
-            if (ytelser.size() == 0) {
+            if (ytelser.isEmpty()) {
                 return accumulator;
             }
+
             Double sum = on(ytelser).map(UNDERYTELSE_BELOP).reduce(sumDouble);
 
             Set<String> spesifikasjoner = on(ytelser).map(Underytelse.UNDERYTELSE_SPESIFIKASJON).collectIn(new HashSet<String>());
