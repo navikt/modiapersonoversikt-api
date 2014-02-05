@@ -44,13 +44,13 @@ public class OppsummeringVM implements Serializable {
         this.utbetalt = getBelopString(on(utbetalinger).map(NETTO).reduce(sumDouble));
         this.trekk = getBelopString(on(utbetalinger).map(BEREGNET_TREKK).reduce(sumDouble));
         this.brutto = getBelopString(on(utbetalinger).map(BRUTTO).reduce(sumDouble));
-        this.hovedytelser = transformer(utbetalinger);
+        this.hovedytelser = lagHovetytelseVMer(utbetalinger);
     }
 
     /**
      * Slå sammen alle ytelsene i utbetalinger når de har samme hovedytelse og underytelse-tittel
      */
-    private static List<HovedYtelseVM> transformer(List<Utbetaling> utbetalinger) {
+    private static List<HovedYtelseVM> lagHovetytelseVMer(List<Utbetaling> utbetalinger) {
         Map<String, List<Utbetaling>> indekserteHovedytelser = on(utbetalinger).reduce(indexBy(HOVEDYTELSE));
 
         List<HovedYtelseVM> hovedYtelseVMs = new ArrayList<>();
@@ -77,7 +77,7 @@ public class OppsummeringVM implements Serializable {
             return startDato.toString("MMMM yyyy", Locale.getDefault());
         }
         return Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
-               Datoformat.kortUtenLiteral(sluttDato.toDateTimeAtCurrentTime());
+                Datoformat.kortUtenLiteral(sluttDato.toDateTimeAtCurrentTime());
     }
 
     private static final Transformer<Utbetaling, Double> BRUTTO = new Transformer<Utbetaling, Double>() {
