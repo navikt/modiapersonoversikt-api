@@ -155,7 +155,7 @@ public class WicketApplication extends WebApplication {
         mountPage("/person/${fnr}", PersonPage.class);
         mountPage("internal/selftest", SelfTestPage.class);
         if(mockSetupErTillatt(getProperty("tillatmocksetup.url", DEFAULT_MOCK_TILLATT))) {
-            mountPage("/mocksetup", MockSetupPage.class);
+            mountPage("internal/mocksetup", MockSetupPage.class);
         }
     }
 
