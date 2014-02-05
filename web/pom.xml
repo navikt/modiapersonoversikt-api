@@ -13,10 +13,7 @@
     <packaging>war</packaging>
 
     <properties>
-        <!-- The destination file for the code coverage report has to be set to the same value
-        in the parent pom and in each module pom. Then JaCoCo will add up information in the
-        same report, so that, it will give the cross-module code coverage. -->
-        <sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
+        <!-- Lagrer IT-info til enhetstestfil -->
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
         <fitnesse.port>9977</fitnesse.port>
     </properties>
@@ -382,7 +379,6 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <configuration>
-                    <destFile>${sonar.jacoco.itReportPath}</destFile>
                     <destFile>${sonar.jacoco.reportPath}</destFile>
                 </configuration>
             </plugin>
