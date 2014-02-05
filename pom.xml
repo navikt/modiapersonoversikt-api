@@ -30,6 +30,7 @@
         in the parent pom and in each module pom. Then JaCoCo will add up information in the
         same report, so that, it will give the cross-module code coverage. -->
         <sonar.jacoco.itReportPath>${project.basedir}/../target/jacoco-it.exec</sonar.jacoco.itReportPath>
+        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
         <sonar.language>java</sonar.language>
 
 
@@ -815,13 +816,6 @@
                             <propertyName>jacoco.agent.argLine</propertyName>
                         </configuration>
                     </execution>
-                    <!--<execution>-->
-                        <!--<id>jacoco-report</id>-->
-                        <!--<phase>prepare-package</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>report</goal>-->
-                        <!--</goals>-->
-                    <!--</execution>-->
                     <execution>
                         <id>pre-test</id>
                         <goals>
