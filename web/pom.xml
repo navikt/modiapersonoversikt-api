@@ -385,6 +385,18 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <destFile>${sonar.jacoco.itReportPath}</destFile>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>post-test</id>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
         <resources>
             <resource>
