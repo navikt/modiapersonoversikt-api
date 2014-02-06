@@ -80,7 +80,7 @@ public class UtbetalingLerret extends Lerret {
     }
 
     private void instansierFelter(String fnr) {
-        ingenutbetalinger = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("ingenutbetalinger", "feil.feil.ingen.utbetalinger", "-ikon-stjerne")
+        ingenutbetalinger = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("ingenutbetalinger", "feil.utbetalinger.ingen-utbetalinger", "-ikon-stjerne")
                 .setOutputMarkupPlaceholderTag(true);
 
         feilmelding = (FeilmeldingPanel) new FeilmeldingPanel("feilmelding", FEILMELDING_DEFAULT_KEY, "-ikon-feil")
