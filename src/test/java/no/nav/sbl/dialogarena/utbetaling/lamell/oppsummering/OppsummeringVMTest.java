@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
@@ -50,9 +51,9 @@ public class OppsummeringVMTest {
 
     @Test
     public void testTransformer_LikeYtelser_BlirSlaattSammen() throws Exception {
-        Underytelse ytelse1 = new Underytelse("Grunnbeløp", "", 0, 1000.0, 0);
-        Underytelse ytelse2 = new Underytelse("Tillegg", "", 0, 500.0, 0);
-        Underytelse ytelse3 = new Underytelse("Skatt", "", 0, -200.0, 0);
+        Underytelse ytelse1 = new Underytelse("Grunnbeløp", "", optional(0), 1000.0, optional(0D));
+        Underytelse ytelse2 = new Underytelse("Tillegg", "", optional(0), 500.0, optional(0D));
+        Underytelse ytelse3 = new Underytelse("Skatt", "", optional(0), -200.0, optional(0D));
         Utbetaling dagpenger = new UtbetalingBuilder().withHovedytelse("Dagpenger").withUnderytelser(asList(ytelse1, ytelse3)).createUtbetaling();
         Utbetaling dagpenger1 = new UtbetalingBuilder().withHovedytelse("Dagpenger").withUnderytelser(asList(ytelse2, ytelse3)).createUtbetaling();
         Utbetaling dagpenger2 = new UtbetalingBuilder().withHovedytelse("Helseprodukter").withUnderytelser(asList(ytelse2)).createUtbetaling();
@@ -81,9 +82,9 @@ public class OppsummeringVMTest {
     @Test
     public void testTransformer_LikeTitlerOgForskjelligeAntall_BlirSlaattSammen() throws Exception {
 
-        Underytelse ytelse1 = new Underytelse("Grønn", "", 1, 100.0, 0);
-        Underytelse ytelse2 = new Underytelse("Grønn", "", 2, 200.0, 0);
-        Underytelse ytelse3 = new Underytelse("Grønn", "", 3, 300.0, 0);
+        Underytelse ytelse1 = new Underytelse("Grønn", "", optional(1), 100.0, optional(0D));
+        Underytelse ytelse2 = new Underytelse("Grønn", "", optional(2), 200.0, optional(0D));
+        Underytelse ytelse3 = new Underytelse("Grønn", "", optional(3), 300.0, optional(0D));
         List<Underytelse> underytelser = asList(ytelse1, ytelse2, ytelse3);
         Utbetaling utbetaling = new UtbetalingBuilder().withHovedytelse("Våren").withUnderytelser(underytelser).createUtbetaling();
         List<Utbetaling> utbetalinger = asList(utbetaling);
@@ -99,7 +100,7 @@ public class OppsummeringVMTest {
 
     private Utbetaling getUtbetaling(DateTime dato) {
         return new UtbetalingBuilder().withHovedytelse("Kjeks")
-                .withUnderytelser(asList(new Underytelse("", "", 0, 0, 0)))
+                .withUnderytelser(asList(new Underytelse("", "", optional(0), 0, optional(0D))))
                 .withUtbetalingsDato(dato)
                 .createUtbetaling();
     }

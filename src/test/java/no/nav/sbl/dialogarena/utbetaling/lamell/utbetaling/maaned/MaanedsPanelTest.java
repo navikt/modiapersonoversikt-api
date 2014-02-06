@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static org.joda.time.DateTime.now;
@@ -29,11 +30,11 @@ public class MaanedsPanelTest extends AbstractWicketTest {
         List<Utbetaling> utbetalinger = asList(
                 utbetalingBuilder.withUtbetalingsDato(now())
                         .withPeriode(new Interval(now().minusDays(5), now()))
-                        .withUnderytelser(asList(new Underytelse("Tittel", "Spesifikasjon", 3, 200.0, 1.0)))
+                        .withUnderytelser(asList(new Underytelse("Tittel", "Spesifikasjon", optional(3), 200.0, optional(1.0))))
                         .createUtbetaling(),
                 utbetalingBuilder.withUtbetalingsDato(now().minusDays(4))
                         .withPeriode(new Interval(now().minusDays(10), now()))
-                        .withUnderytelser(asList(new Underytelse("Tittel2", "Spesifikasjon2", 5, 700.0, 2.0)))
+                        .withUnderytelser(asList(new Underytelse("Tittel2", "Spesifikasjon2", optional(5), 700.0, optional(2.0))))
                         .createUtbetaling());
 
         MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", utbetalinger);

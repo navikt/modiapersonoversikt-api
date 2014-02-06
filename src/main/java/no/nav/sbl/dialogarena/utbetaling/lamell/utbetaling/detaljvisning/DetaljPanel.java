@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import org.apache.wicket.markup.html.basic.Label;
@@ -30,14 +31,15 @@ public class DetaljPanel extends Panel {
         return new ListView<Underytelse>("underytelser", underytelser) {
             @Override
             protected void populateItem(ListItem<Underytelse> item) {
+                Optional<Double> sats = item.getModelObject().getSats();
+                Optional<Integer> antall = item.getModelObject().getAntall();
                 item.add(
                     new Label("underytelse", item.getModelObject().getTittel()),
-                    new Label("sats", item.getModelObject().getSats()),
-                    new Label("antall", item.getModelObject().getAntall()),
+                    new Label("sats", sats.isSome() ? sats.get() : ""),
+                    new Label("antall", antall.isSome() ? antall.get() : ""),
                     new Label("belop", getBelopString(item.getModelObject().getBelop()))
                 );
             }
         };
     }
-
 }

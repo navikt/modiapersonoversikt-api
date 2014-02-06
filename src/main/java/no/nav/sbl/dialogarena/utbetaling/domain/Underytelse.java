@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
 import no.nav.modig.lang.collections.iter.ReduceFunction;
+import no.nav.modig.lang.option.Optional;
 import org.apache.commons.collections15.Transformer;
 
 import java.io.Serializable;
@@ -17,17 +18,17 @@ import static org.apache.commons.lang3.StringUtils.join;
 public class Underytelse implements Serializable {
 
     private String tittel;
-    private String spesifikasjon;
-    private int antall;
     private double belop;
-    private double sats;
+    private Optional<Integer> antall;
+    private Optional<Double> sats;
+    private String spesifikasjon;
 
-    public Underytelse(String tittel, String spesifikasjon, int antall, double belop, double sats) {
-        this.tittel = tittel != null ? tittel.trim() : "";
-        this.spesifikasjon = spesifikasjon;
-        this.antall = antall;
+    public Underytelse(String tittel, String spesifikasjon, Optional<Integer> antall, double belop, Optional<Double> sats) {
+        this.tittel = tittel;
         this.belop = belop;
+        this.antall = antall;
         this.sats = sats;
+        this.spesifikasjon = spesifikasjon;
     }
 
     public String getTittel() {
@@ -38,7 +39,7 @@ public class Underytelse implements Serializable {
         return spesifikasjon;
     }
 
-    public int getAntall() {
+    public Optional<Integer> getAntall() {
         return antall;
     }
 
@@ -46,7 +47,7 @@ public class Underytelse implements Serializable {
         return belop;
     }
 
-    public double getSats() {
+    public Optional<Double> getSats() {
         return sats;
     }
 

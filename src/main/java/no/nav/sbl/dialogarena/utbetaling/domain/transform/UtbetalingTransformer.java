@@ -26,8 +26,6 @@ import static org.apache.commons.lang3.StringUtils.join;
 
 public class UtbetalingTransformer {
 
-    public static final int DEFAULT_ANTALL = 1;
-    public static final double DEFAULT_SATS = 1.0;
     public static final String DEFAULT_SPESIFIKASJON = "";
 
     public static List<Utbetaling> lagUtbetalinger(List<WSUtbetaling> wsUtbetalinger, String fnr) {
@@ -58,9 +56,9 @@ public class UtbetalingTransformer {
                     underytelser.add(new Underytelse(
                             transformerUnderbeskrivelse(wsPosteringsdetalj.getKontoBeskrUnder(), wsPosteringsdetalj.getKontoBeskrHoved()),
                             optional(wsPosteringsdetalj.getSpesifikasjon()).getOrElse(DEFAULT_SPESIFIKASJON),
-                            optional(wsPosteringsdetalj.getAntall()).getOrElse(DEFAULT_ANTALL),
+                            optional(wsPosteringsdetalj.getAntall()),
                             getBelopNegativtHvisTrekk(wsPosteringsdetalj),
-                            optional(wsPosteringsdetalj.getSats()).getOrElse(DEFAULT_SATS)));
+                            optional(wsPosteringsdetalj.getSats())));
                 }
             }
 
