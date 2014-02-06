@@ -51,6 +51,7 @@ public class UtbetalingLerret extends Lerret {
 
     public static final PackageResourceReference UTBETALING_LAMELL_LESS = new PackageResourceReference(UtbetalingLerret.class, "utbetaling.less");
     public static final JavaScriptResourceReference UTBETALING_LAMELL_JS = new JavaScriptResourceReference(UtbetalingLerret.class, "utbetaling.js");
+    private static final String FEILMELDING_DEFAULT_KEY = "feil.utbetalinger.default";
 
     @Inject
     private String arenaUtbetalingUrl;
@@ -79,10 +80,10 @@ public class UtbetalingLerret extends Lerret {
     }
 
     private void instansierFelter(String fnr) {
-        ingenutbetalinger = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("ingenutbetalinger", "ingen.utbetalinger", "-ikon-stjerne")
+        ingenutbetalinger = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("ingenutbetalinger", "feil.feil.ingen.utbetalinger", "-ikon-stjerne")
                 .setOutputMarkupPlaceholderTag(true);
 
-        feilmelding = (FeilmeldingPanel) new FeilmeldingPanel("feilmelding", "feil.utbetalinger", "-ikon-feil")
+        feilmelding = (FeilmeldingPanel) new FeilmeldingPanel("feilmelding", FEILMELDING_DEFAULT_KEY, "-ikon-feil")
                 .setOutputMarkupPlaceholderTag(true);
 
         resultatCache = hentUtbetalingsResultat(fnr, defaultStartDato(), defaultSluttDato());
@@ -115,9 +116,17 @@ public class UtbetalingLerret extends Lerret {
             return new UtbetalingsResultat(fnr, startDato, sluttDato, utbetalinger);
         } catch (ApplicationException ae) {
             LOG.warn("Noe feilet ved henting av utbetalinger for fnr {}", fnr, ae);
+
+            if (ae.getId() != null) {
+                feilmelding.endreMessageKey(ae.getId());
+                feilmelding.endreLenkeSynlighet(false);
+            } else {
+                feilmelding.endreMessageKey(FEILMELDING_DEFAULT_KEY);
+                feilmelding.endreLenkeSynlighet(true);
+            }
+
             feilmelding.setVisibilityAllowed(true);
-            LocalDate now = now();
-            return resultatCache != null ? resultatCache : new UtbetalingsResultat(fnr, now, now, new ArrayList<Utbetaling>());
+            return resultatCache != null ? resultatCache : new UtbetalingsResultat(fnr, now(), now(), new ArrayList<Utbetaling>());
         }
     }
 
