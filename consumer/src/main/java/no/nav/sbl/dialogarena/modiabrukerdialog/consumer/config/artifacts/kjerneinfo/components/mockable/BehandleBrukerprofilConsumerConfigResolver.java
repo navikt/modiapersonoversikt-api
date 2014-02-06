@@ -10,6 +10,7 @@ import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.BehandleBrukerprofilPo
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserUgyldigInput;
+import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -33,9 +34,12 @@ public class BehandleBrukerprofilConsumerConfigResolver {
     @Inject
     private BehandleBrukerprofilPortType selfTestBehandleBrukerprofilPortType;
 
+    @Inject
+    private CacheManager cacheManager;
+
     @Bean
     public BehandleBrukerprofilServiceBi behandleBrukerprofilServiceBi() {
-        final BehandleBrukerprofilServiceBi defaultBi = new DefaultBehandleBrukerprofilService(behandleBrukerprofilPortType, selfTestBehandleBrukerprofilPortType, new BehandleBrukerprofilMapper());
+        final BehandleBrukerprofilServiceBi defaultBi = new DefaultBehandleBrukerprofilService(behandleBrukerprofilPortType, selfTestBehandleBrukerprofilPortType, new BehandleBrukerprofilMapper(), cacheManager);
         final BehandleBrukerprofilServiceBi alternateBi = getBehandleBrukerprofilServiceBiMock();
 
         return new BehandleBrukerprofilServiceBi() {
