@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSPeriode;
+import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeForMangeForekomster;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkkeFunnet;
 import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.joda.time.LocalDate;
@@ -35,6 +36,10 @@ public class UtbetalingService {
         } catch (HentUtbetalingListeMottakerIkkeFunnet hulmif) {
             logger.debug("Mottaker med fnr {} ble ikke funnet i utbetalingstjenesten. Returnerer tom liste.", fnr);
             return emptyList();
+        } catch (HentUtbetalingListeForMangeForekomster hulfmf) {
+            throw new ApplicationException(
+                    "Henting av utbetalinger for bruker med fnr " + fnr + " mellom " + startDato + " og " + sluttDato + " feilet pga. for mange forekomster i perioden.", hulfmf,
+                    "feil.utbetalinger.for-mange");
         } catch (Exception e) {
             throw new ApplicationException("Henting av utbetalinger for bruker med fnr " + fnr + " mellom " + startDato + " og " + sluttDato + " feilet.", e);
         }
