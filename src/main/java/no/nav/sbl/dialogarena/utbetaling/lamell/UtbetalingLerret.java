@@ -49,7 +49,7 @@ public class UtbetalingLerret extends Lerret {
 
     private static final Logger LOG = LoggerFactory.getLogger(UtbetalingLerret.class);
 
-    public static final PackageResourceReference UTBETALING_LAMELL_LESS = new PackageResourceReference(UtbetalingLerret.class, "utbetaling.less");
+    public static final PackageResourceReference UTBETALING_LESS = new PackageResourceReference(UtbetalingLerret.class, "utbetaling.less");
     public static final JavaScriptResourceReference UTBETALING_LAMELL_JS = new JavaScriptResourceReference(UtbetalingLerret.class, "utbetaling.js");
     private static final String FEILMELDING_DEFAULT_KEY = "feil.utbetalinger.default";
 

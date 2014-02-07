@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.utbetaling.widget.hentutbetalinger.HentUtbetalinge
 import no.nav.sbl.dialogarena.utbetaling.widget.hentutbetalinger.HentUtbetalingerPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
-import org.apache.wicket.request.resource.PackageResourceReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,8 +22,6 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDa
 import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingVM.TIL_UTBETALINGVM;
 
 public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
-
-    public static final PackageResourceReference UTBETALING_WIDGET_LESS = new PackageResourceReference(UtbetalingWidget.class, "utbetaling.less");
 
     private static final Logger LOG = LoggerFactory.getLogger(UtbetalingWidget.class);
     private static final int MAX_NUMBER_OF_UTBETALINGER = 6;
