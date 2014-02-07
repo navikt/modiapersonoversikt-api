@@ -8,7 +8,6 @@ import no.nav.modig.modia.widget.Widget;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
-import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
 import org.apache.commons.collections15.Factory;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
@@ -57,7 +56,7 @@ public class UtbetalingApplication extends WebApplication {
                                 .attribute("content", "IE=edge,chrome=1")
                                 .done())
                 .withResourcePacking(this.usesDeploymentConfig())
-                .addLess(UtbetalingLerret.UTBETALING_LAMELL_LESS, UtbetalingWidget.UTBETALING_WIDGET_LESS)
+                .addLess(UtbetalingLerret.UTBETALING_LESS)
                 .addScripts(UtbetalingLerret.UTBETALING_LAMELL_JS, Widget.JS_RESOURCE, ShortcutListenerResourceReference.get())
                 .configure(this);
 
