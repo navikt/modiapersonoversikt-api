@@ -7,9 +7,13 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 
 import java.util.List;
 
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class DetaljPanel extends Panel {
@@ -23,8 +27,19 @@ public class DetaljPanel extends Panel {
                 new Label("konto", utbetalingVM.getKontonr()),
                 new Label("ytelsesinfo", utbetalingVM.getBeskrivelse()),
                 createUnderytelsesrader(underytelser),
+                createSpesifikasjoner(underytelser),
                 new Label("bilagsmelding", utbetalingVM.getMelding())
         );
+    }
+
+    private ListView createSpesifikasjoner(List<Underytelse> underytelser) {
+        return new ListView<Underytelse>("spesifikasjoner", underytelser) {
+            @Override
+            protected void populateItem(ListItem<Underytelse> item) {
+                Model<String> spesifikasjon = Model.of(item.getModelObject().getSpesifikasjon());
+                item.add(new Label("spesifikasjon", spesifikasjon).add(visibleIf(not(isEmptyString(spesifikasjon)))));
+            }
+        };
     }
 
     private ListView createUnderytelsesrader(List<Underytelse> underytelser) {

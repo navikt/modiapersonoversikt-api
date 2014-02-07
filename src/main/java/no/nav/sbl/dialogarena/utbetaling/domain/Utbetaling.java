@@ -15,7 +15,7 @@ import static org.joda.time.LocalDate.now;
 public final class Utbetaling implements Serializable {
 
     public static enum Mottaktertype {
-        BRUKER, ANNEN_MOTTAKER;
+        BRUKER, ANNEN_MOTTAKER
     }
 
     private DateTime utbetalingsdato;
