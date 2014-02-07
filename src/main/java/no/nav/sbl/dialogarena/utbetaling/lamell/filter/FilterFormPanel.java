@@ -74,7 +74,6 @@ public class FilterFormPanel extends Panel {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 filterParametere.toggleAlleYtelser(this.getModelObject());
-                target.add(ytelsesContainer);
                 sendFilterEndretEvent();
             }
         };
@@ -108,7 +107,6 @@ public class FilterFormPanel extends Panel {
                             }
                         }
                         sendFilterEndretEvent();
-                        target.add(this);
                     }
                 };
                 item.add(checkbox);
@@ -127,7 +125,6 @@ public class FilterFormPanel extends Panel {
             protected void onUpdate(AjaxRequestTarget target) {
                 filterParametere.toggleMottaker(mottaker);
                 sendFilterEndretEvent();
-                target.add(this);
             }
         };
     }

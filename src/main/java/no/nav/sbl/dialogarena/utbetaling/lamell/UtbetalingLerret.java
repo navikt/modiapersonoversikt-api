@@ -79,6 +79,12 @@ public class UtbetalingLerret extends Lerret {
         );
     }
 
+    @Override
+    public void onOpening(AjaxRequestTarget target) {
+        target.appendJavaScript("Utbetalinger.init();");
+        super.onOpening(target);
+    }
+
     private void instansierFelter(String fnr) {
         ingenutbetalinger = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("ingenutbetalinger", "feil.utbetalinger.ingen-utbetalinger", "-ikon-stjerne")
                 .setOutputMarkupPlaceholderTag(true);
@@ -163,7 +169,7 @@ public class UtbetalingLerret extends Lerret {
 
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
         target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);
-        target.appendJavaScript("$('.utbetaling-ramme').addKeyNavigation({itemsSelector:'.utbetalingslinje'});");
+        target.appendJavaScript("Utbetalinger.addKeyNavigation();");
     }
 
     @SuppressWarnings("unused")
