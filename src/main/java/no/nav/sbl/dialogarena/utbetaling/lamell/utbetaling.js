@@ -1,16 +1,31 @@
-$(function () {
-    $('.utbetaling-ramme').addKeyNavigation({itemsSelector: '.utbetalingslinje'});
-
-    Modig.shortcutListener.on({keyCode: 13}, function () {
-        var $activeElement = $(document.activeElement);
-        if ($activeElement.parent('.utbetaling-ramme-innhold')) {
-            Utbetalinger.toggleDetaljPanel($activeElement);
-        }
-    });
-});
-
 var Utbetalinger = (function () {
     var utbetalingslinjeSelector = '.utbetaling-ramme .utbetalingslinje';
+
+    var init = function() {
+        addKeyNavigation();
+        Modig.shortcutListener.on({keyCode: 13}, function () {
+            var $activeElement = $(document.activeElement);
+            if ($activeElement.parent('.utbetaling-ramme-innhold')) {
+                Utbetalinger.toggleDetaljPanel($activeElement);
+            }
+        });
+
+        // Event listeners
+        $(document).on('click', utbetalingslinjeSelector, function () {
+            Utbetalinger.toggleDetaljPanel($(this));
+        });
+
+        $(document).on('click', utbetalingslinjeSelector + ' .skriv-ut', function (event) {
+            var $utbetalingslinje = $(this).closest(utbetalingslinjeSelector);
+            Utbetalinger.skrivUt($utbetalingslinje);
+            event.stopPropagation();
+        });
+
+    };
+
+    var addKeyNavigation = function() {
+        $('.utbetaling-ramme').addKeyNavigation({itemsSelector:'.utbetalingslinje'});
+    };
 
     var haandterDetaljPanelVisning = function (detaljPanelID) {
         var $detaljPanel = $("#" + detaljPanelID);
@@ -43,21 +58,10 @@ var Utbetalinger = (function () {
     }
 
     return {
+        init: init,
+        addKeyNavigation: addKeyNavigation,
         haandterDetaljPanelVisning: haandterDetaljPanelVisning,
         toggleDetaljPanel: toggleDetaljPanel,
-        skrivUt: skrivUt,
-        utbetalingslinjeSelector: utbetalingslinjeSelector
+        skrivUt: skrivUt
     }
 })();
-
-// Event listeners
-$(document).on('click', Utbetalinger.utbetalingslinjeSelector, function () {
-    Utbetalinger.toggleDetaljPanel($(this));
-});
-
-$(document).on('click', Utbetalinger.utbetalingslinjeSelector + ' .skriv-ut', function (event) {
-    var $utbetalingslinje = $(this).closest(Utbetalinger.utbetalingslinjeSelector);
-    Utbetalinger.skrivUt($utbetalingslinje);
-    event.stopPropagation();
-});
-
