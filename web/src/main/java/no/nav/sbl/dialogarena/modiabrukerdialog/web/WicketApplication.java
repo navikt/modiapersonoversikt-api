@@ -26,7 +26,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
-import no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingWidget;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
@@ -124,8 +123,7 @@ public class WicketApplication extends WebApplication {
                 .addConditionalJavascript(PersonPage.RESPOND_JS)
 		        .addLess(
                         BasePage.PERSONINFO_LESS,
-                        UtbetalingLerret.UTBETALING_LAMELL_LESS,
-                        UtbetalingWidget.UTBETALING_WIDGET_LESS)
+                        UtbetalingLerret.UTBETALING_LESS)
                 .addCss(
                         BasePage.PERSONSOKRESULT,
                         BasePage.PERSONSOKSEARCH
