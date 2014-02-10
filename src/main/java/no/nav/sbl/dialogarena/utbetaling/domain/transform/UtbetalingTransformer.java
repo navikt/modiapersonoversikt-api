@@ -35,7 +35,7 @@ public class UtbetalingTransformer {
         List<Utbetaling> utbetalinger = new ArrayList<>();
 
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
-            int statusKode =  parseInt(wsUtbetaling.getStatusKode());
+            int statusKode = parseInt(optional(wsUtbetaling.getStatusKode()).getOrElse("3"));
             if (!TILLATTE_STATUSER.contains(statusKode)) { break; }
 
             UtbetalingBuilder utbetalingBuilder = new UtbetalingBuilder()
