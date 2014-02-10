@@ -39,7 +39,8 @@ public class BehandleBrukerprofilConsumerConfigResolver {
 
     @Bean
     public BehandleBrukerprofilServiceBi behandleBrukerprofilServiceBi() {
-        final BehandleBrukerprofilServiceBi defaultBi = new DefaultBehandleBrukerprofilService(behandleBrukerprofilPortType, selfTestBehandleBrukerprofilPortType, new BehandleBrukerprofilMapper(), cacheManager);
+        final BehandleBrukerprofilServiceBi defaultBi =
+                new DefaultBehandleBrukerprofilService(behandleBrukerprofilPortType, selfTestBehandleBrukerprofilPortType, new BehandleBrukerprofilMapper(), cacheManager);
         final BehandleBrukerprofilServiceBi alternateBi = getBehandleBrukerprofilServiceBiMock();
 
         return new BehandleBrukerprofilServiceBi() {
