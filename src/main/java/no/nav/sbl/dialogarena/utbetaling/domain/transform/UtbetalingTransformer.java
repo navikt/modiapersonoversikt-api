@@ -14,6 +14,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.Integer.parseInt;
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -27,15 +28,15 @@ import static org.apache.commons.lang3.StringUtils.join;
 
 public class UtbetalingTransformer {
 
-    private static final List<String> TILLATTE_STATUSER = asList("3", "11", "18");
+    private static final List<Integer> TILLATTE_STATUSER = asList(3, 11, 18);
 
     public static List<Utbetaling> lagUtbetalinger(List<WSUtbetaling> wsUtbetalinger, String fnr) {
 
         List<Utbetaling> utbetalinger = new ArrayList<>();
 
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
-
-            if (!TILLATTE_STATUSER.contains(wsUtbetaling.getStatusKode())) { break; }
+            int statusKode =  parseInt(wsUtbetaling.getStatusKode());
+            if (!TILLATTE_STATUSER.contains(statusKode)) { break; }
 
             UtbetalingBuilder utbetalingBuilder = new UtbetalingBuilder()
                     .withMottakerId(wsUtbetaling.getUtbetalingMottaker().getMottakerId())
