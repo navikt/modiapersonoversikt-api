@@ -41,7 +41,7 @@ public class UtbetalingTransformerTest {
         assertThat(utbetalinger.size(), is(2));
 
 
-        assertThat(utbetalinger.get(0).getMelding(), is("Dette er bilagsmelding 1. Dette er bilagsmelding 2"));
+        assertThat(utbetalinger.get(0).getMelding(), is("Dette er bilagsmelding 1\nDette er bilagsmelding 2"));
 
         List<Underytelse> underytelser1 = utbetalinger.get(0).getUnderytelser();
         assertThat(underytelser1.size(), is(4));
