@@ -79,12 +79,6 @@ public class UtbetalingLerret extends Lerret {
         );
     }
 
-//    @Override
-//    public void onOpening(AjaxRequestTarget target) {
-//        target.appendJavaScript("Utbetalinger.init();");
-//        super.onOpening(target);
-//    }
-
     private void instansierFelter(String fnr) {
         ingenutbetalinger = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("ingenutbetalinger", "feil.utbetalinger.ingen-utbetalinger", "-ikon-stjerne")
                 .setOutputMarkupPlaceholderTag(true);
