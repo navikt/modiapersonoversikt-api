@@ -4,6 +4,7 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -28,7 +29,7 @@ public class DetaljPanel extends Panel {
                 new Label("ytelsesinfo", utbetalingVM.getBeskrivelse()),
                 createUnderytelsesrader(underytelser),
                 createSpesifikasjoner(underytelser),
-                new Label("bilagsmelding", utbetalingVM.getMelding())
+                new MultiLineLabel("bilagsmelding", utbetalingVM.getMelding())
         );
     }
 
