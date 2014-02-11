@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.behandlebrukerprofil;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.behandlebrukerprofil;
 
 import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi;
 import org.springframework.beans.factory.annotation.Qualifier;
