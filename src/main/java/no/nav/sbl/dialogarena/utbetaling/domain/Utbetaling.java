@@ -249,4 +249,11 @@ public final class Utbetaling implements Serializable {
         }
     };
 
+    public static final Transformer<Utbetaling, Interval> PERIODE = new Transformer<Utbetaling, Interval>() {
+        @Override
+        public Interval transform(Utbetaling utbetaling) {
+            return utbetaling.getPeriode();
+        }
+    };
+
 }
