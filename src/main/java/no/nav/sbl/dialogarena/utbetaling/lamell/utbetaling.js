@@ -32,7 +32,7 @@ var Utbetalinger = (function () {
         $detaljPanel.animate({height: 'toggle'}, 900);
         $detaljPanel.parent().toggleClass('ekspandert');
         $('html,body').animate({scrollTop: $($detaljPanel).parent().offset().top - 76}, 'slow');
-        $detaljPanel.focus();
+        $detaljPanel.parent().focus();
     };
 
     var toggleDetaljPanel = function ($element) {
@@ -65,3 +65,7 @@ var Utbetalinger = (function () {
         skrivUt: skrivUt
     }
 })();
+
+$(document).ready(function() {
+    Utbetalinger.init();
+});
