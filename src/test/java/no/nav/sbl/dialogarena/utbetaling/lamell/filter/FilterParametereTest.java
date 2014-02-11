@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -9,6 +10,9 @@ import java.util.HashSet;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.getBuilder;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -98,5 +102,49 @@ public class FilterParametereTest {
         assertThat(filterparams.viseMottaker(Mottaktertype.BRUKER), is(false));
         filterparams.toggleMottaker(Mottaktertype.BRUKER);
         assertThat(filterparams.viseMottaker(Mottaktertype.BRUKER), is(true));
+    }
+
+    @Test
+    public void skalIkkeSetteDatoerHvisParameterErNull() {
+        filterparams.setStartDato(null);
+        assertThat(filterparams.getStartDato(), is(defaultStartDato()));
+
+        filterparams.setSluttDato(null);
+        assertThat(filterparams.getSluttDato(), is(defaultSluttDato()));
+    }
+
+    @Test
+    public void skalSetteDatoer() {
+        LocalDate startDato = now().toLocalDate();
+        filterparams.setStartDato(startDato);
+        assertThat(filterparams.getStartDato(), is(startDato));
+
+        LocalDate sluttDato = now().plusDays(1).toLocalDate();
+        filterparams.setSluttDato(sluttDato);
+        assertThat(filterparams.getSluttDato(), is(sluttDato));
+    }
+
+    @Test
+    public void skalToggleAlleYtelserSomOnsket() {
+        UtbetalingBuilder utbetalingBuilder = getBuilder()
+                .withUtbetalingsDato(now())
+                .withMottakertype(Mottaktertype.BRUKER);
+
+        filterparams.toggleAlleYtelser(true);
+
+        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(DAGPENGER).createUtbetaling()), is(true));
+        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(BARNETRYGD).createUtbetaling()), is(true));
+    }
+
+    @Test
+    public void skalToggleAlleYtelserSomUonsket() {
+        UtbetalingBuilder utbetalingBuilder = getBuilder()
+                .withUtbetalingsDato(now())
+                .withMottakertype(Mottaktertype.BRUKER);
+
+
+        filterparams.toggleAlleYtelser(false);
+        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(DAGPENGER).createUtbetaling()), is(false));
+        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(BARNETRYGD).createUtbetaling()), is(false));
     }
 }
