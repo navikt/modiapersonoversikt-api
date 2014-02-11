@@ -14,9 +14,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-import java.util.Properties;
 
-import static java.lang.System.setProperties;
+import static java.lang.System.setProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.ALLOW_MOCK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
@@ -40,19 +39,15 @@ public class BehandleBrukerprofilConsumerConfigResolverTest {
 
     @Test
     public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() throws OppdaterKontaktinformasjonOgPreferanserUgyldigInput, OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning, OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet {
-        Properties props = new Properties();
-        props.setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.nav.no");
-        props.setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
-        setProperties(props);
+        setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.nav.no");
+        setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.behandleBrukerprofilServiceBi().oppdaterKontaktinformasjonOgPreferanser(new BehandleBrukerprofilRequest(new Bruker()));
         verifyZeroInteractions(defaultService);
     }
 
     @Test
     public void perDefaultSkalProdkodeEksekveres() throws OppdaterKontaktinformasjonOgPreferanserUgyldigInput, OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning, OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet {
-        Properties props = new Properties();
-        props.setProperty(TILLATMOCKSETUP_PROPERTY, "nei");
-        setProperties(props);
+        setProperty(TILLATMOCKSETUP_PROPERTY, "nei");
         resolver.behandleBrukerprofilServiceBi().oppdaterKontaktinformasjonOgPreferanser(new BehandleBrukerprofilRequest(new Bruker()));
         verify(defaultService, times(1)).oppdaterKontaktinformasjonOgPreferanser(any(BehandleBrukerprofilRequest.class));
     }

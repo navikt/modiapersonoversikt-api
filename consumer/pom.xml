@@ -209,6 +209,12 @@
 
         <!--TEST-->
         <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-domain</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
