@@ -16,9 +16,7 @@ import javax.inject.Inject;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.BehandleBrukerprofilServiceBiMock.getBehandleBrukerprofilServiceBiMock;
 
 @Configuration
-@Import({
-        BehandleBrukerprofilConsumerConfig.class
-})
+@Import({BehandleBrukerprofilConsumerConfig.class})
 public class BehandleBrukerprofilWrapper {
 
     @Inject

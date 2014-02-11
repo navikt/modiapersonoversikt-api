@@ -4,7 +4,6 @@ import no.nav.brukerprofil.config.spring.brukerprofil.BrukerprofilConsumerConfig
 import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.mockableimpl.BrukerprofilConsumerConfigImpl;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.BrukerprofilPortType;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -24,15 +23,12 @@ public class BrukerprofilWrapper {
     private BrukerprofilPortType selfTestBrukerprofilPortType;
 
     @Bean
-    @Qualifier("brukerprofilService")
-    public BrukerprofilServiceBi defaultService() {
+    public BrukerprofilServiceBi brukerprofilService() {
         return new BrukerprofilConsumerConfigImpl(brukerprofilPortType, selfTestBrukerprofilPortType).brukerprofilServiceBi();
     }
 
     @Bean
-    @Qualifier("brukerprofilMock")
-    public BrukerprofilServiceBi mockService() {
+    public BrukerprofilServiceBi brukerprofilMock() {
         return getBrukerprofilServiceBiMock();
     }
-
 }
