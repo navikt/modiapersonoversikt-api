@@ -11,7 +11,7 @@ public class MockUtil {
 
     public static final String TILLATMOCKSETUP_PROPERTY = "tillatmocksetup.url";
     public static final String DEFAULT_MOCK_TILLATT = "no";
-    private static final String ALLOW_MOCK = "yes";
+    public static final String ALLOW_MOCK = "yes";
 
     public static boolean mockSetupErTillatt(String url) {
         if (url == null) { return false; }

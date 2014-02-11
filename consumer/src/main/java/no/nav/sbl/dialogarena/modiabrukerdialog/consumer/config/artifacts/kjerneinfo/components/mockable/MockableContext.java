@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers.BehandleBrukerprofilWrapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -7,6 +8,7 @@ import org.springframework.context.annotation.Import;
 @Import({
         BrukerprofilConsumerConfigResolver.class,
         BehandleBrukerprofilConsumerConfigResolver.class,
+        BehandleBrukerprofilWrapper.class,
         PersonKjerneinfoConsumerConfigResolver.class,
         PersonKjerneinfoMapperConfigResolver.class,
         SykmeldingsperioderPanelConfigResolver.class,
