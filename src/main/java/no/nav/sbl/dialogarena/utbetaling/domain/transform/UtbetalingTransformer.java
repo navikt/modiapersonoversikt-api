@@ -66,7 +66,7 @@ public class UtbetalingTransformer {
                 }
             }
 
-            utbetalingBuilder.withMelding(join(meldinger, ". "));
+            utbetalingBuilder.withMelding(join(meldinger, "\n"));
 
             double brutto = on(underytelser).map(Underytelse.UTBETALT_BELOP).reduce(sumDouble);
             double trekk = on(underytelser).map(Underytelse.TREKK_BELOP).reduce(sumDouble);
@@ -110,12 +110,11 @@ public class UtbetalingTransformer {
     }
 
     private static String transformerMelding(WSBilag wsBilag) {
-        List<WSMelding> meldingListe = wsBilag.getMeldingListe();
         List<String> strings = new ArrayList<>();
-        for (WSMelding wsMelding : meldingListe) {
+        for (WSMelding wsMelding : wsBilag.getMeldingListe()) {
             strings.add(wsMelding.getMeldingtekst());
         }
-        return join(strings, ", ");
+        return join(strings, " ");
     }
 
     private static double getBelopNegativtHvisTrekk(WSPosteringsdetaljer wsPosteringsdetalj) {
