@@ -23,8 +23,8 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_C
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_SKATT_NEDERST;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_TITTEL;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UTBETALT_BELOP;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.HOVEDYTELSE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UNDERYTELSER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.samleSammenLikeYtelserISammePeriode;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.HovedYtelseVM.HovedYtelseComparator.HOVEDYTELSE_NAVN;
 
@@ -51,11 +51,9 @@ public class OppsummeringVM implements Serializable {
      * Slå sammen alle ytelsene i utbetalinger når de har samme hovedytelse og underytelse-tittel
      */
     private static List<HovedYtelseVM> lagHovetytelseVMer(List<Utbetaling> utbetalinger) {
-        Map<String, List<Utbetaling>> indekserteHovedytelser = on(utbetalinger).reduce(indexBy(HOVEDYTELSE));
-
         List<HovedYtelseVM> hovedYtelseVMs = new ArrayList<>();
-        for (Map.Entry<String, List<Utbetaling>> indekserteUtbetalinger : indekserteHovedytelser.entrySet()) {
-            Map<String, List<Underytelse>> indekserteUnderytelser = on(indekserteUtbetalinger.getValue()).flatmap(UNDERYTELSER).reduce(indexBy(UNDERYTELSE_TITTEL));
+        for (List<Utbetaling> sammeHovedytelse : samleSammenLikeYtelserISammePeriode(utbetalinger)) {
+            Map<String, List<Underytelse>> indekserteUnderytelser = on(sammeHovedytelse).flatmap(UNDERYTELSER).reduce(indexBy(UNDERYTELSE_TITTEL));
 
             List<Underytelse> sammenlagteUnderytelser = on(indekserteUnderytelser.values()).reduce(SUM_UNDERYTELSER);
             sort(sammenlagteUnderytelser, UNDERYTELSE_COMPARE_BELOP);
@@ -65,7 +63,7 @@ public class OppsummeringVM implements Serializable {
             Double trekk = on(sammenlagteUnderytelser).map(TREKK_BELOP).reduce(sumDouble);
             Double utbetalt = brutto + trekk;
 
-            hovedYtelseVMs.add(new HovedYtelseVM(indekserteUtbetalinger.getKey(), sammenlagteUnderytelser, brutto, trekk, utbetalt));
+            hovedYtelseVMs.add(new HovedYtelseVM(sammeHovedytelse.get(0).getHovedytelse(), sammenlagteUnderytelser, brutto, trekk, utbetalt));
         }
         sort(hovedYtelseVMs, HOVEDYTELSE_NAVN);
         return hovedYtelseVMs;

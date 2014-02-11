@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalTime;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuil
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 import static org.hamcrest.Matchers.is;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 
 
@@ -36,7 +38,7 @@ public class OppsummeringVMTest {
 
     @Test
     public void testOppsummertPeriode_UtbetalingsdatoerIForskjelligeMaaneder_DatoFormateringErIntervall() throws Exception {
-        DateTime dato = DateTime.now().minusDays(1);
+        DateTime dato = now().minusDays(1);
         LocalDate startDato = defaultStartDato();
         LocalDate sluttDato = defaultSluttDato();
         String formatertDato = Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
@@ -54,9 +56,9 @@ public class OppsummeringVMTest {
         Underytelse ytelse1 = new Underytelse("Grunnbeløp", "", optional(0), 1000.0, optional(0D));
         Underytelse ytelse2 = new Underytelse("Tillegg", "", optional(0), 500.0, optional(0D));
         Underytelse ytelse3 = new Underytelse("Skatt", "", optional(0), -200.0, optional(0D));
-        Utbetaling dagpenger = new UtbetalingBuilder().withHovedytelse("Dagpenger").withUnderytelser(asList(ytelse1, ytelse3)).createUtbetaling();
-        Utbetaling dagpenger1 = new UtbetalingBuilder().withHovedytelse("Dagpenger").withUnderytelser(asList(ytelse2, ytelse3)).createUtbetaling();
-        Utbetaling dagpenger2 = new UtbetalingBuilder().withHovedytelse("Helseprodukter").withUnderytelser(asList(ytelse2)).createUtbetaling();
+        Utbetaling dagpenger = new UtbetalingBuilder().withHovedytelse("Dagpenger").withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse1, ytelse3)).createUtbetaling();
+        Utbetaling dagpenger1 = new UtbetalingBuilder().withHovedytelse("Dagpenger").withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse2, ytelse3)).createUtbetaling();
+        Utbetaling dagpenger2 = new UtbetalingBuilder().withHovedytelse("Helseprodukter").withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse2)).createUtbetaling();
 
         List<Utbetaling> utbetalinger = asList(dagpenger, dagpenger1, dagpenger2);
 

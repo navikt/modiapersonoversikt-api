@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,10 +16,12 @@ import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.getBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.samleSammenLikeYtelserISammePeriode;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
@@ -106,6 +110,47 @@ public class UtbetalingListeUtilsTest {
         for (Utbetaling utbetaling : utbetalingsperiode) {
             assertTrue(intervall.contains(utbetaling.getUtbetalingsdato()));
         }
+    }
+
+    @Test
+    public void skalSkillePaaUtbetalingerMedForskjelligHovedytelse() {
+        List<Utbetaling> utbetalinger = asList(lagUtbetaling("ytelse1"), lagUtbetaling("ytelse2"));
+        List<List<Utbetaling>> resultat = samleSammenLikeYtelserISammePeriode(utbetalinger);
+        assertEquals(2, resultat.size());
+    }
+
+    @Test
+    public void skalSamleYtelserISammePeriode() {
+        String ytelse = "Ytelse";
+        List<Utbetaling> utbetalinger = asList(
+                lagUtbetaling(ytelse, "01.01.2012", "01.02.2012"),
+                lagUtbetaling(ytelse, "01.03.2012", "01.04.2012"),
+                lagUtbetaling(ytelse, "15.01.2012", "15.03.2012"));
+        List<List<Utbetaling>> resultat = samleSammenLikeYtelserISammePeriode(utbetalinger);
+        assertEquals(1, resultat.size());
+    }
+
+    @Test
+    public void skalSkilleMellomYtelserIUlikePerioder() {
+        String ytelse = "Ytelse";
+        List<Utbetaling> utbetalinger = asList(
+                lagUtbetaling(ytelse, "01.01.2012", "01.02.2012"),
+                lagUtbetaling(ytelse, "01.01.2013", "01.02.2013"));
+        List<List<Utbetaling>> resultat = samleSammenLikeYtelserISammePeriode(utbetalinger);
+        assertEquals(2, resultat.size());
+    }
+
+    private Utbetaling lagUtbetaling(String hovedytelse) {
+        return lagUtbetaling(hovedytelse, DateTime.now(), DateTime.now());
+    }
+
+    private Utbetaling lagUtbetaling(String hovedytelse, String fom, String tom) {
+        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
+        return lagUtbetaling(hovedytelse, formatter.parseDateTime(fom), formatter.parseDateTime(tom));
+    }
+
+    private Utbetaling lagUtbetaling(String hovedytelse, DateTime fom, DateTime tom) {
+        return getBuilder().withHovedytelse(hovedytelse).withPeriode(new Interval(fom, tom)).createUtbetaling();
     }
 
 }
