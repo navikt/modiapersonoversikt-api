@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjern
 
 import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi;
 import no.nav.behandlebrukerprofil.consumer.messages.BehandleBrukerprofilRequest;
-import no.nav.behandlebrukerprofil.consumer.support.DefaultBehandleBrukerprofilService;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers.Wrapper;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet;
