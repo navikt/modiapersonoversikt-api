@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerne
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers.BrukerprofilWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers.KjerneinfoMapperWrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers.KontrakterWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers.SykmeldingsperioderWrapper;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -22,7 +23,9 @@ import org.springframework.context.annotation.Import;
         KjerneinfoMapperWrapper.class,
 
         PersonKjerneinfoConsumerConfigResolver.class,
-        SykmeldingsperioderPanelConfigResolver.class
+
+        SykmeldingsperioderPanelConfigResolver.class,
+        SykmeldingsperioderWrapper.class
 })
 public class MockableContext {
 

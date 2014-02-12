@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjern
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.widget.panels.InfoPanelVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.mockableimpl.SykmeldingsperioderPanelConfigImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeRequest;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.mapping.to.ForeldrepengerListeResponse;
@@ -14,6 +15,7 @@ import no.nav.sykmeldingsperioder.loader.SykmeldingsperiodeLoader;
 import no.nav.sykmeldingsperioder.ping.SykmeldingsperioderPing;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetService;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,34 +33,43 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kje
 public class SykmeldingsperioderPanelConfigResolver {
 
     @Inject
-    private SykepengerServiceBi sykepengerServiceBi;
+    @Qualifier("sykepengerServiceDefault")
+    private Wrapper<SykepengerServiceBi> sykepengerServiceDefault;
+
     @Inject
-    private ForeldrepengerServiceBi foreldrepengerServiceBi;
+    @Qualifier("sykepengerServiceMock")
+    private Wrapper<SykepengerServiceBi> sykepengerServiceMock;
 
-    private ForeldrepengerServiceBi foreldrepengerServiceBiMock;
-    private SykepengerServiceBi sykepengerServiceBiMock;
+    @Inject
+    @Qualifier("foreldrepengerServiceDefault")
+    private Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceDefault;
 
-    public SykmeldingsperioderPanelConfigResolver() {
-        foreldrepengerServiceBiMock = getForeldrepengerServiceBiMock();
-        sykepengerServiceBiMock = getSykepengerServiceBiMock();
-    }
+    @Inject
+    @Qualifier("foreldrepengerServiceMock")
+    private Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceMock;
+
+    @Inject
+    @Qualifier("sykepengerWidgetDefault")
+    private Wrapper<SykepengerWidgetService> sykepengerWidgetDefault;
+
+    @Inject
+    @Qualifier("sykepengerWidgetMock")
+    private Wrapper<SykepengerWidgetService> sykepengerWidgetMock;
 
     @Bean
-    SykmeldingsperioderPing sykmeldingsperioderPing() {
+    public SykmeldingsperioderPing sykmeldingsperioderPing() {
         return new SykmeldingsperioderPanelConfigImpl().sykmeldingsperioderPing(getForeldrepengerServiceBi(), getSykepengerServiceBi());
     }
 
     @Bean
     public SykepengerWidgetService sykepengerWidgetService() {
-        final SykepengerWidgetService defaultWidgetService = new SykepengerWidgetServiceImpl(sykepengerServiceBi, foreldrepengerServiceBi);
-        final SykepengerWidgetService mockWidgetService = getSykepengerWidgetServiceMock();
         return new SykepengerWidgetService() {
             @Override
             public List<InfoPanelVM> getWidgetContent(String fnr) {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return mockWidgetService.getWidgetContent(fnr);
+                    return sykepengerWidgetMock.wrappedObject.getWidgetContent(fnr);
                 }
-                return defaultWidgetService.getWidgetContent(fnr);
+                return sykepengerWidgetDefault.wrappedObject.getWidgetContent(fnr);
             }
         };
     }
@@ -82,17 +93,17 @@ public class SykmeldingsperioderPanelConfigResolver {
             @Override
             public ForeldrepengerListeResponse hentForeldrepengerListe(ForeldrepengerListeRequest request) {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return foreldrepengerServiceBiMock.hentForeldrepengerListe(request);
+                    return foreldrepengerServiceMock.wrappedObject.hentForeldrepengerListe(request);
                 }
-                return foreldrepengerServiceBi.hentForeldrepengerListe(request);
+                return foreldrepengerServiceDefault.wrappedObject.hentForeldrepengerListe(request);
             }
 
             @Override
             public PingResult ping() {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return foreldrepengerServiceBiMock.ping();
+                    return foreldrepengerServiceMock.wrappedObject.ping();
                 }
-                return foreldrepengerServiceBi.ping();
+                return foreldrepengerServiceDefault.wrappedObject.ping();
             }
         };
     }
@@ -102,17 +113,17 @@ public class SykmeldingsperioderPanelConfigResolver {
             @Override
             public SykepengerResponse hentSykmeldingsperioder(SykepengerRequest request) {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return sykepengerServiceBiMock.hentSykmeldingsperioder(request);
+                    return sykepengerServiceMock.wrappedObject.hentSykmeldingsperioder(request);
                 }
-                return sykepengerServiceBi.hentSykmeldingsperioder(request);
+                return sykepengerServiceDefault.wrappedObject.hentSykmeldingsperioder(request);
             }
 
             @Override
             public PingResult ping() {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return sykepengerServiceBiMock.ping();
+                    return sykepengerServiceMock.wrappedObject.ping();
                 }
-                return sykepengerServiceBi.ping();
+                return sykepengerServiceDefault.wrappedObject.ping();
             }
         };
     }
