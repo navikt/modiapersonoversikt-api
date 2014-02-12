@@ -50,5 +50,4 @@ public class BrukerprofilConsumerConfigResolverTest {
         verify(brukerprofilService.wrappedObject, times(1)).hentKontaktinformasjonOgPreferanser(any(BrukerprofilRequest.class));
     }
 
-
 }
