@@ -16,6 +16,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -34,7 +37,7 @@ public class UtbetalingLerretTest extends AbstractWicketTest{
     }
 
     @Test
-    public void shouldContainCorrectComponents() {
+    public void skalInneholdeKorrekteKomponenter() {
         wicketTester.should().containComponent(withId("arenalink"));
         wicketTester.should().containComponent(ofType(FilterFormPanel.class));
         wicketTester.should().containComponent(ofType(TotalOppsummeringPanel.class));
@@ -44,12 +47,19 @@ public class UtbetalingLerretTest extends AbstractWicketTest{
     }
 
     @Test
-    public void shouldShowFeilmeldingpanelWhenServiceFails() {
+    public void skalViseFeilmeldingpanelNaarTjenestenFeiler() {
         when(service.hentUtbetalinger(any(String.class), any(LocalDate.class), any(LocalDate.class))).thenThrow(new ApplicationException("OMG"));
 
         UtbetalingLerret utbetalingLerretMedException = new UtbetalingLerret("lerret", "");
         wicketTester.goToPageWith(utbetalingLerretMedException);
 
         wicketTester.tester.assertVisible("lerret:feilmelding");
+    }
+
+    @Test
+    public void skalIkkeKalleServiceOmFilterintervallErInnenforCacheintervall() {
+        verify(service, times(1)).hentUtbetalinger(any(String.class), any(LocalDate.class), any(LocalDate.class));
+        utbetalingLerret.oppdaterCacheOmNodvendig();
+        verifyNoMoreInteractions(service);
     }
 }
