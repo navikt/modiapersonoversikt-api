@@ -30,14 +30,14 @@ public class BehandleBrukerprofilWrapper {
 
     @Bean
     @Qualifier("behandleBrukerprofilService")
-    public BehandleBrukerprofilServiceBi defaultService() {
-        return new DefaultBehandleBrukerprofilService(behandleBrukerprofilPortType, selfTestBehandleBrukerprofilPortType, new BehandleBrukerprofilMapper(), cacheManager);
+    public Wrapper<DefaultBehandleBrukerprofilService> defaultService() {
+        return new Wrapper<>(new DefaultBehandleBrukerprofilService(behandleBrukerprofilPortType, selfTestBehandleBrukerprofilPortType, new BehandleBrukerprofilMapper(), cacheManager));
     }
 
     @Bean
     @Qualifier("behandleBrukerprofilMock")
-    public BehandleBrukerprofilServiceBi mockService() {
-        return getBehandleBrukerprofilServiceBiMock();
+    public Wrapper<BehandleBrukerprofilServiceBi> mockService() {
+        return new Wrapper<>(getBehandleBrukerprofilServiceBiMock());
     }
 
 }

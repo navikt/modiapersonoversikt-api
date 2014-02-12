@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjern
 import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.BrukerprofilConsumerConfigResolver;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers.Wrapper;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 import org.junit.Test;
@@ -29,7 +30,7 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 public class BrukerprofilConsumerConfigResolverTest {
 
     @Inject
-    private BrukerprofilServiceBi brukerprofilService;
+    private Wrapper<BrukerprofilServiceBi> brukerprofilService;
 
     @Inject
     private BrukerprofilConsumerConfigResolver resolver;
@@ -39,14 +40,14 @@ public class BrukerprofilConsumerConfigResolverTest {
         setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.nav.no");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.brukerprofilServiceBi().hentKontaktinformasjonOgPreferanser(new BrukerprofilRequest("ident"));
-        verifyZeroInteractions(brukerprofilService);
+        verifyZeroInteractions(brukerprofilService.wrappedObject);
     }
 
     @Test
     public void perDefaultSkalProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
         setProperty(TILLATMOCKSETUP_PROPERTY, "nei");
         resolver.brukerprofilServiceBi().hentKontaktinformasjonOgPreferanser(new BrukerprofilRequest("ident"));
-        verify(brukerprofilService, times(1)).hentKontaktinformasjonOgPreferanser(any(BrukerprofilRequest.class));
+        verify(brukerprofilService.wrappedObject, times(1)).hentKontaktinformasjonOgPreferanser(any(BrukerprofilRequest.class));
     }
 
 

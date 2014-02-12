@@ -1,9 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.behandlebrukerprofil;
 
-import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi;
 import no.nav.behandlebrukerprofil.consumer.messages.BehandleBrukerprofilRequest;
+import no.nav.behandlebrukerprofil.consumer.support.DefaultBehandleBrukerprofilService;
 import no.nav.brukerprofil.domain.Bruker;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.BehandleBrukerprofilConsumerConfigResolver;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers.Wrapper;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserUgyldigInput;
@@ -32,7 +33,7 @@ public class BehandleBrukerprofilConsumerConfigResolverTest {
 
     @Inject
     @Qualifier("behandleBrukerprofilService")
-    private BehandleBrukerprofilServiceBi defaultService;
+    private Wrapper<DefaultBehandleBrukerprofilService> defaultService;
 
     @Inject
     private BehandleBrukerprofilConsumerConfigResolver resolver;
@@ -42,14 +43,14 @@ public class BehandleBrukerprofilConsumerConfigResolverTest {
         setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.nav.no");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.behandleBrukerprofilServiceBi().oppdaterKontaktinformasjonOgPreferanser(new BehandleBrukerprofilRequest(new Bruker()));
-        verifyZeroInteractions(defaultService);
+        verifyZeroInteractions(defaultService.wrappedObject);
     }
 
     @Test
     public void perDefaultSkalProdkodeEksekveres() throws OppdaterKontaktinformasjonOgPreferanserUgyldigInput, OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning, OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet {
         setProperty(TILLATMOCKSETUP_PROPERTY, "nei");
         resolver.behandleBrukerprofilServiceBi().oppdaterKontaktinformasjonOgPreferanser(new BehandleBrukerprofilRequest(new Bruker()));
-        verify(defaultService, times(1)).oppdaterKontaktinformasjonOgPreferanser(any(BehandleBrukerprofilRequest.class));
+        verify(defaultService.wrappedObject, times(1)).oppdaterKontaktinformasjonOgPreferanser(any(BehandleBrukerprofilRequest.class));
     }
 
 }

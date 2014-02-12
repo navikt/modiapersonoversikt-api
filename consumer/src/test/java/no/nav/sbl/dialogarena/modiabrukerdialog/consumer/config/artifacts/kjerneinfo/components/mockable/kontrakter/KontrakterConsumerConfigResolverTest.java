@@ -5,6 +5,7 @@ import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.to.Oppfolgingskontrakt
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.KontrakterConsumerConfigResolver;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers.Wrapper;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 import org.junit.Test;
@@ -31,10 +32,10 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 public class KontrakterConsumerConfigResolverTest {
 
     @Inject
-    private YtelseskontraktServiceBi ytelseskontraktService;
+    private Wrapper<YtelseskontraktServiceBi> ytelseskontraktService;
 
     @Inject
-    private OppfolgingskontraktServiceBi oppfolgingskontraktService;
+    private Wrapper<OppfolgingskontraktServiceBi> oppfolgingskontraktService;
 
     @Inject
     private KontrakterConsumerConfigResolver resolver;
@@ -44,14 +45,14 @@ public class KontrakterConsumerConfigResolverTest {
         setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.nav.no");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.oppfolgingskontraktServiceBi().hentOppfolgingskontrakter(new OppfolgingskontraktRequest());
-        verifyZeroInteractions(oppfolgingskontraktService);
+        verifyZeroInteractions(oppfolgingskontraktService.wrappedObject);
     }
 
     @Test
     public void perDefaultSkalProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
         setProperty(TILLATMOCKSETUP_PROPERTY, "nei");
         resolver.ytelseskontraktServiceBi().hentYtelseskontrakter(new YtelseskontraktRequest());
-        verify(ytelseskontraktService, times(1)).hentYtelseskontrakter(any(YtelseskontraktRequest.class));
+        verify(ytelseskontraktService.wrappedObject, times(1)).hentYtelseskontrakter(any(YtelseskontraktRequest.class));
     }
 
 }

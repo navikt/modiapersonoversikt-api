@@ -5,6 +5,7 @@ import no.nav.brukerprofil.consumer.messages.BrukerprofilRequest;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilResponse;
 import no.nav.brukerprofil.consumer.support.mapping.BrukerprofilMapper;
 import no.nav.modig.modia.ping.PingResult;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers.Wrapper;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -22,11 +23,11 @@ public class BrukerprofilConsumerConfigResolver {
 
     @Inject
     @Qualifier("brukerprofilService")
-    private BrukerprofilServiceBi defaultService;
+    private Wrapper<BrukerprofilServiceBi> defaultService;
 
     @Inject
     @Qualifier("brukerprofilMock")
-    private BrukerprofilServiceBi mockService;
+    private Wrapper<BrukerprofilServiceBi> mockService;
 
     @Bean
     public BrukerprofilServiceBi brukerprofilServiceBi() {
@@ -35,26 +36,26 @@ public class BrukerprofilConsumerConfigResolver {
             public BrukerprofilResponse hentKontaktinformasjonOgPreferanser(BrukerprofilRequest request)
                     throws HentKontaktinformasjonOgPreferanserPersonIkkeFunnet, HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return mockService.hentKontaktinformasjonOgPreferanser(request);
+                    return mockService.wrappedObject.hentKontaktinformasjonOgPreferanser(request);
                 }
-                return defaultService.hentKontaktinformasjonOgPreferanser(request);
+                return defaultService.wrappedObject.hentKontaktinformasjonOgPreferanser(request);
             }
 
             @Override
             public void setMapper(BrukerprofilMapper mapper) {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    mockService.setMapper(mapper);
+                    mockService.wrappedObject.setMapper(mapper);
                 } else {
-                    defaultService.setMapper(mapper);
+                    defaultService.wrappedObject.setMapper(mapper);
                 }
             }
 
             @Override
             public PingResult ping() {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return mockService.ping();
+                    return mockService.wrappedObject.ping();
                 }
-                return defaultService.ping();
+                return defaultService.wrappedObject.ping();
             }
         };
 

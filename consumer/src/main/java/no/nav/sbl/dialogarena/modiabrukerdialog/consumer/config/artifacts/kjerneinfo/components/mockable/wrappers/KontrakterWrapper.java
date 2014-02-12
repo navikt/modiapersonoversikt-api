@@ -4,9 +4,12 @@ import no.nav.kjerneinfo.kontrakter.config.KontrakterPanelConfig;
 import no.nav.kontrakter.consumer.fim.config.OppfolgingskontraktConsumerConfig;
 import no.nav.kontrakter.consumer.fim.config.YtelseskontraktConsumerConfig;
 import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.OppfolgingskontraktServiceBi;
+import no.nav.kontrakter.consumer.fim.oppfolgingskontrakt.support.DefaultOppfolgingskontraktService;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
+import no.nav.kontrakter.consumer.fim.ytelseskontrakt.support.DefaultYtelseskontraktService;
 import no.nav.tjeneste.virksomhet.oppfoelging.v1.OppfoelgingPortType;
 import no.nav.tjeneste.virksomhet.ytelseskontrakt.v1.YtelseskontraktPortType;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -43,23 +46,27 @@ public class KontrakterWrapper {
     private OppfoelgingPortType selftestOppfoelgingPortType;
 
     @Bean
-    public YtelseskontraktServiceBi ytelseskontraktService() {
-        return createYtelseskontraktService(ytelseskontraktPortType, selftestYtelseskontraktPortType);
+    @Qualifier("ytelseskontraktService")
+    public Wrapper<DefaultYtelseskontraktService> ytelseskontraktService() {
+        return new Wrapper<>(createYtelseskontraktService(ytelseskontraktPortType, selftestYtelseskontraktPortType));
     }
 
     @Bean
-    public YtelseskontraktServiceBi ytelseskontraktMock() {
-        return getYtelseskontraktServiceBiMock();
+    @Qualifier("ytelseskontraktMock")
+    public Wrapper<YtelseskontraktServiceBi> ytelseskontraktMock() {
+        return new Wrapper<>(getYtelseskontraktServiceBiMock());
     }
 
     @Bean
-    public OppfolgingskontraktServiceBi oppfolgingskontraktService() {
-        return createOppfolgingskontraktService(oppfoelgingPortType, selftestOppfoelgingPortType);
+    @Qualifier("oppfolgingskontraktService")
+    public Wrapper<DefaultOppfolgingskontraktService> oppfolgingskontraktService() {
+        return new Wrapper<>(createOppfolgingskontraktService(oppfoelgingPortType, selftestOppfoelgingPortType));
     }
 
     @Bean
-    public OppfolgingskontraktServiceBi oppfolgingskontraktMock() {
-        return getOppfolgingskontraktServiceBiMock();
+    @Qualifier("oppfolgingskontraktMock")
+    public Wrapper<OppfolgingskontraktServiceBi> oppfolgingskontraktMock() {
+        return new Wrapper<>(getOppfolgingskontraktServiceBiMock());
     }
 
 }

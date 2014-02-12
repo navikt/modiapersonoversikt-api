@@ -7,6 +7,8 @@ import no.nav.kontrakter.consumer.fim.ytelseskontrakt.YtelseskontraktServiceBi;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktRequest;
 import no.nav.kontrakter.consumer.fim.ytelseskontrakt.to.YtelseskontraktResponse;
 import no.nav.modig.modia.ping.PingResult;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers.Wrapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,16 +22,20 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 public class KontrakterConsumerConfigResolver {
 
     @Inject
-    private YtelseskontraktServiceBi ytelseskontraktService;
+    @Qualifier("ytelseskontraktService")
+    private Wrapper<YtelseskontraktServiceBi> ytelseskontraktService;
 
     @Inject
-    private YtelseskontraktServiceBi ytelseskontraktMock;
+    @Qualifier("ytelseskontraktMock")
+    private Wrapper<YtelseskontraktServiceBi> ytelseskontraktMock;
 
     @Inject
-    private OppfolgingskontraktServiceBi oppfolgingskontraktService;
+    @Qualifier("oppfolgingskontraktService")
+    private Wrapper<OppfolgingskontraktServiceBi> oppfolgingskontraktService;
 
     @Inject
-    private OppfolgingskontraktServiceBi oppfolgingskontraktMock;
+    @Qualifier("oppfolgingskontraktMock")
+    private Wrapper<OppfolgingskontraktServiceBi> oppfolgingskontraktMock;
 
     @Bean
     public YtelseskontraktServiceBi ytelseskontraktServiceBi() {
@@ -37,17 +43,17 @@ public class KontrakterConsumerConfigResolver {
             @Override
             public YtelseskontraktResponse hentYtelseskontrakter(YtelseskontraktRequest request) {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return ytelseskontraktMock.hentYtelseskontrakter(request);
+                    return ytelseskontraktMock.wrappedObject.hentYtelseskontrakter(request);
                 }
-                return ytelseskontraktService.hentYtelseskontrakter(request);
+                return ytelseskontraktService.wrappedObject.hentYtelseskontrakter(request);
             }
 
             @Override
             public PingResult ping() {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return ytelseskontraktMock.ping();
+                    return ytelseskontraktMock.wrappedObject.ping();
                 }
-                return ytelseskontraktService.ping();
+                return ytelseskontraktService.wrappedObject.ping();
             }
         };
     }
@@ -58,17 +64,17 @@ public class KontrakterConsumerConfigResolver {
             @Override
             public OppfolgingskontraktResponse hentOppfolgingskontrakter(OppfolgingskontraktRequest request) {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return oppfolgingskontraktMock.hentOppfolgingskontrakter(request);
+                    return oppfolgingskontraktMock.wrappedObject.hentOppfolgingskontrakter(request);
                 }
-                return oppfolgingskontraktService.hentOppfolgingskontrakter(request);
+                return oppfolgingskontraktService.wrappedObject.hentOppfolgingskontrakter(request);
             }
 
             @Override
             public PingResult ping() {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return oppfolgingskontraktMock.ping();
+                    return oppfolgingskontraktMock.wrappedObject.ping();
                 }
-                return oppfolgingskontraktService.ping();
+                return oppfolgingskontraktService.wrappedObject.ping();
             }
         };
     }

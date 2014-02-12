@@ -2,7 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjern
 
 import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi;
 import no.nav.behandlebrukerprofil.consumer.messages.BehandleBrukerprofilRequest;
+import no.nav.behandlebrukerprofil.consumer.support.DefaultBehandleBrukerprofilService;
 import no.nav.modig.modia.ping.PingResult;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers.Wrapper;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.OppdaterKontaktinformasjonOgPreferanserUgyldigInput;
@@ -21,11 +23,11 @@ public class BehandleBrukerprofilConsumerConfigResolver {
 
     @Inject
     @Qualifier("behandleBrukerprofilService")
-    private BehandleBrukerprofilServiceBi defaultService;
+    private Wrapper<BehandleBrukerprofilServiceBi> defaultService;
 
     @Inject
     @Qualifier("behandleBrukerprofilMock")
-    private BehandleBrukerprofilServiceBi mockService;
+    private Wrapper<BehandleBrukerprofilServiceBi> mockService;
 
     @Bean
     public BehandleBrukerprofilServiceBi behandleBrukerprofilServiceBi() {
@@ -35,18 +37,18 @@ public class BehandleBrukerprofilConsumerConfigResolver {
             public void oppdaterKontaktinformasjonOgPreferanser(BehandleBrukerprofilRequest request)
                     throws OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning, OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet, OppdaterKontaktinformasjonOgPreferanserUgyldigInput {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    mockService.oppdaterKontaktinformasjonOgPreferanser(request);
+                    mockService.wrappedObject.oppdaterKontaktinformasjonOgPreferanser(request);
                 } else {
-                    defaultService.oppdaterKontaktinformasjonOgPreferanser(request);
+                    defaultService.wrappedObject.oppdaterKontaktinformasjonOgPreferanser(request);
                 }
             }
 
             @Override
             public PingResult ping() {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return mockService.ping();
+                    return mockService.wrappedObject.ping();
                 }
-                return defaultService.ping();
+                return defaultService.wrappedObject.ping();
             }
         };
     }
