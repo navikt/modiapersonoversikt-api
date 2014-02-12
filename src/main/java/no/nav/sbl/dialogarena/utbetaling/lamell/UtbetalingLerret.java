@@ -23,7 +23,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -45,7 +44,7 @@ import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.F
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 import static org.joda.time.LocalDate.now;
 
-public class UtbetalingLerret extends Lerret {
+public final class UtbetalingLerret extends Lerret {
 
     private static final Logger LOG = LoggerFactory.getLogger(UtbetalingLerret.class);
 
@@ -98,17 +97,6 @@ public class UtbetalingLerret extends Lerret {
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
     }
 
-    private void oppdaterCacheOmNodvendig() {
-        DateTime cacheStartDato = resultatCache.startDato.toDateTimeAtStartOfDay();
-        DateTime cacheSluttDato = resultatCache.sluttDato.toDateTimeAtStartOfDay();
-        DateTime filterStartDato = filterParametere.getStartDato().toDateTimeAtStartOfDay();
-        DateTime filterSluttDato = filterParametere.getSluttDato().toDateTimeAtStartOfDay();
-
-        if (!new Interval(cacheStartDato, cacheSluttDato).contains(new Interval(filterStartDato, filterSluttDato))) {
-            resultatCache = hentUtbetalingsResultat(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
-        }
-    }
-
     private UtbetalingsResultat hentUtbetalingsResultat(String fnr, LocalDate startDato, LocalDate sluttDato) {
         try {
             List<Utbetaling> utbetalinger = service.hentUtbetalinger(fnr, startDato, sluttDato);
@@ -151,17 +139,14 @@ public class UtbetalingLerret extends Lerret {
 
     @SuppressWarnings("unused")
     @RunOnEvents(FILTER_ENDRET)
-    private void oppdaterUtbetalingsListe(AjaxRequestTarget target) {
+    private void oppdaterUtbetalingsliste(AjaxRequestTarget target) {
         oppdaterCacheOmNodvendig();
-
-        filterParametere.setYtelser(hentYtelser(hentUtbetalingerFraPeriode(resultatCache.utbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato())));
-        sendYtelserEndretEvent();
+        oppdaterYtelser();
 
         List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
-        totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(synligeUtbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato()));
-        utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe());
-
+        oppdaterUtbetalingsvisning(synligeUtbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
+
         target.add(totalOppsummeringPanel, ingenutbetalinger, feilmelding, utbetalingslisteContainer);
         target.appendJavaScript("Utbetalinger.addKeyNavigation();");
     }
@@ -171,28 +156,39 @@ public class UtbetalingLerret extends Lerret {
     private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
         filterParametere = new FilterParametere(hentYtelser(resultatCache.utbetalinger));
         addOrReplace(createFilterFormPanel());
-        oppdaterUtbetalingsListe(target);
+        oppdaterUtbetalingsliste(target);
         String detaljPanelID = "detaljpanel-" + payload.getItemId();
         target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('"+detaljPanelID + "');");
     }
 
-    private void sendYtelserEndretEvent() {
+    protected void oppdaterCacheOmNodvendig() {
+        Interval cacheInterval = new Interval(resultatCache.startDato.toDateTimeAtStartOfDay(), resultatCache.sluttDato.toDateTimeAtStartOfDay());
+        Interval filterInterval = new Interval(filterParametere.getStartDato().toDateTimeAtStartOfDay(), filterParametere.getSluttDato().toDateTimeAtStartOfDay());
+
+        if (!cacheInterval.contains(filterInterval)) {
+            resultatCache = hentUtbetalingsResultat(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
+        }
+    }
+
+    protected void oppdaterYtelser() {
+        filterParametere.setYtelser(hentYtelser(hentUtbetalingerFraPeriode(resultatCache.utbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato())));
         send(getPage(), Broadcast.DEPTH, HOVEDYTELSER_ENDRET);
+    }
+
+    protected void oppdaterUtbetalingsvisning(List<Utbetaling> synligeUtbetalinger) {
+        totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(synligeUtbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato()));
+        utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe());
     }
 
     private void endreSynligeKomponenter(boolean synligeUtbetalinger) {
         if (feilmelding.isVisibilityAllowed()) {
-            skjulAllUtbetalingsinfo();
+            totalOppsummeringPanel.setVisibilityAllowed(false);
+            utbetalingslisteContainer.setVisibilityAllowed(false);
+            ingenutbetalinger.setVisibilityAllowed(false);
         } else {
             totalOppsummeringPanel.setVisibilityAllowed(synligeUtbetalinger);
             utbetalingslisteContainer.setVisibilityAllowed(synligeUtbetalinger);
             ingenutbetalinger.setVisibilityAllowed(!synligeUtbetalinger);
         }
-    }
-
-    private void skjulAllUtbetalingsinfo() {
-        totalOppsummeringPanel.setVisibilityAllowed(false);
-        utbetalingslisteContainer.setVisibilityAllowed(false);
-        ingenutbetalinger.setVisibilityAllowed(false);
     }
 }
