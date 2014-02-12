@@ -68,8 +68,8 @@ public class WSUtbetalingTestData {
     public static WSUtbetaling createUtbetaling1() {
         double trekk = BELOP * SKATTE_PROSENT;
         Double belop = BELOP;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, GRUNNBELOP, 12, 123.0, belop, SPESIFIKASJON_1);
-        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1, 1.0, trekk, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, GRUNNBELOP, 12d, 123.0, belop, SPESIFIKASJON_1);
+        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1d, 1.0, trekk, SPESIFIKASJON);
         WSBilag bilag1 = createBilag("Dette er bilagsmelding 1", "Sykepenger", posteringsdetalj1, posteringsdetalj2);
         WSBilag bilag2 = createBilag("Dette er bilagsmelding 2", "Ytelse", posteringsdetalj1, posteringsdetalj2);
 
@@ -94,11 +94,11 @@ public class WSUtbetalingTestData {
         Double belop1 = BELOP;
         Double belop4 = -BELOP;
         Double belop2 = BELOP;
-        WSPosteringsdetaljer uforeDetalj1 = createPosteringsDetalj(UFORE, KONTO_NR, TILLEGGSYTELSE, 1, 1.0, belop0, SPESIFIKASJON);
-        WSPosteringsdetaljer uforeDetalj2 = createPosteringsDetalj(UFORE, KONTO_NR, TILLEGGSYTELSE, 1, 1.0, belop1, SPESIFIKASJON);
-        WSPosteringsdetaljer uforeDetalj3 = createPosteringsDetalj(UFORE, KONTO_NR, TILLEGGSYTELSE_TILBAKEBETALT, 1, 1.0, belop4, SPESIFIKASJON);
-        WSPosteringsdetaljer foreldrePengerDetalj = createPosteringsDetalj(FORELDREPENGER, KONTO_NR, "", 1, 1.0, belop2, SPESIFIKASJON);
-        WSPosteringsdetaljer skatt = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1, 1.0, trekk, SPESIFIKASJON);
+        WSPosteringsdetaljer uforeDetalj1 = createPosteringsDetalj(UFORE, KONTO_NR, TILLEGGSYTELSE, 1d, 1.0, belop0, SPESIFIKASJON);
+        WSPosteringsdetaljer uforeDetalj2 = createPosteringsDetalj(UFORE, KONTO_NR, TILLEGGSYTELSE, 1d, 1.0, belop1, SPESIFIKASJON);
+        WSPosteringsdetaljer uforeDetalj3 = createPosteringsDetalj(UFORE, KONTO_NR, TILLEGGSYTELSE_TILBAKEBETALT, 1d, 1.0, belop4, SPESIFIKASJON);
+        WSPosteringsdetaljer foreldrePengerDetalj = createPosteringsDetalj(FORELDREPENGER, KONTO_NR, "", 1d, 1.0, belop2, SPESIFIKASJON);
+        WSPosteringsdetaljer skatt = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1d, 1.0, trekk, SPESIFIKASJON);
         WSBilag bilag2 = createBilag("bilag2", "Ytelse", uforeDetalj1, uforeDetalj2, foreldrePengerDetalj, skatt, uforeDetalj3);
 
         double brutto = belop0 + belop1 + belop2 + belop4;
@@ -117,8 +117,8 @@ public class WSUtbetalingTestData {
 
     public static WSUtbetaling createUtbetaling3() {
         double trekk = SKATTE_PROSENT * BELOP;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(FORELDREPENGER, KONTO_NR, "", 1, 1.0, BELOP, SPESIFIKASJON);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1, 1.0, trekk, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(FORELDREPENGER, KONTO_NR, "", 1d, 1.0, BELOP, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1d, 1.0, trekk, SPESIFIKASJON);
         WSBilag bilag1 = createBilag("bilag1", "Ytelse", posteringsdetalj1, posteringsdetalj3);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
@@ -136,8 +136,8 @@ public class WSUtbetalingTestData {
     }
 
     public static WSUtbetaling createUtbetaling4() {
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, TILLEGGSYTELSE, 13, 1.45, BELOP, "97 uker igjen av stønadsperioden");
-        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj(DAGPENGER, KONTO_NR, "Feilretting", 13, 1.45, -BELOP, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, TILLEGGSYTELSE, 13d, 1.45, BELOP, "97 uker igjen av stønadsperioden");
+        WSPosteringsdetaljer posteringsdetalj2 = createPosteringsDetalj(DAGPENGER, KONTO_NR, "Feilretting", 13d, 1.45, -BELOP, SPESIFIKASJON);
         WSBilag bilag2 = createBilag("bilag2", DAGPENGER, posteringsdetalj1, posteringsdetalj2);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
@@ -156,8 +156,8 @@ public class WSUtbetalingTestData {
 
     public static WSUtbetaling createUtbetaling5() {
         double trekk = SKATTE_PROSENT * BELOP;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, GRUNNBELOP, 1, 1.0, BELOP, SPESIFIKASJON);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1, 1.0, trekk, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, GRUNNBELOP, 1d, 1.0, BELOP, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1d, 1.0, trekk, SPESIFIKASJON);
         WSBilag bilag1 = createBilag("bilag1", "Ytelse", posteringsdetalj1, posteringsdetalj3);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
@@ -176,8 +176,8 @@ public class WSUtbetalingTestData {
     public static WSUtbetaling createUtbetaling6() {
         double trekk = SKATTE_PROSENT * BELOP;
         Double belop = BELOP * 3;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, "Løpende", 1, 1.0, belop, SPESIFIKASJON);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1, 1.0, trekk, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, "Løpende", 1d, 1.0, belop, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK_SKATT, 1d, 1.0, trekk, SPESIFIKASJON);
         WSBilag bilag1 = createBilag("bilag1", "Ytelse", posteringsdetalj1, posteringsdetalj3);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
@@ -195,8 +195,8 @@ public class WSUtbetalingTestData {
     public static WSUtbetaling createUtbetaling7() {
         double trekk = SKATTE_PROSENT * BELOP;
         Double belop = BELOP;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, "Løpende", 1, 1.0, belop, SPESIFIKASJON);
-        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK, 1, 1.0, trekk, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj(DAGPENGER, KONTO_NR, "Løpende", 1d, 1.0, belop, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj3 = createPosteringsDetalj(SKATT, KONTO_NR, FORSKUDDSTREKK, 1d, 1.0, trekk, SPESIFIKASJON);
         WSBilag bilag1 = createBilag("bilag1", "Ytelse", posteringsdetalj1, posteringsdetalj3);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
@@ -213,7 +213,7 @@ public class WSUtbetalingTestData {
     }
     public static WSUtbetaling createUtbetaling8() {
         double utbetalt = BELOP * 0.7;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 1, 1.0, utbetalt, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 1d, 1.0, utbetalt, SPESIFIKASJON);
         WSBilag bilag1 = createBilag("bilag1", "Ytelse", posteringsdetalj1);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
@@ -231,7 +231,7 @@ public class WSUtbetalingTestData {
 
     public static WSUtbetaling createUtbetaling9() {
         double utbetalt = BELOP * 0.7;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 1, 1.0, utbetalt, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 1d, 1.0, utbetalt, SPESIFIKASJON);
         WSBilag bilag1 = createBilag("bilag1", "Ytelse", posteringsdetalj1);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
@@ -250,7 +250,7 @@ public class WSUtbetalingTestData {
 
     public static WSUtbetaling createUtbetaling10() {
         double utbetalt = BELOP * 0.87;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 1, 1.0, utbetalt, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 1d, 1.0, utbetalt, SPESIFIKASJON);
         WSBilag bilag1 = createBilag("bilag1", "Ytelse", posteringsdetalj1);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
@@ -269,7 +269,7 @@ public class WSUtbetalingTestData {
 
     public static WSUtbetaling createUtbetaling11() {
         double utbetalt = BELOP * 0.45;
-        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 2, 1.0, utbetalt, SPESIFIKASJON);
+        WSPosteringsdetaljer posteringsdetalj1 = createPosteringsDetalj("Høreapparater", KONTO_NR, "Høreapparat", 2d, 1.0, utbetalt, SPESIFIKASJON);
         WSBilag bilag1 = createBilag("bilag1", "Ytelse", posteringsdetalj1);
 
         WSUtbetaling utbetaling = new WSUtbetaling();
@@ -291,7 +291,7 @@ public class WSUtbetalingTestData {
         return new WSPeriode().withPeriodeFomDato(fomDate).withPeriodeTomDato(tomDate);
     }
 
-    public static WSPosteringsdetaljer createPosteringsDetalj(String hovedBeskrivelse, String kontoNr, String underbeskrivelse, Integer antall, Double sats, Double belop, String spesifikasjon) {
+    public static WSPosteringsdetaljer createPosteringsDetalj(String hovedBeskrivelse, String kontoNr, String underbeskrivelse, Double antall, Double sats, Double belop, String spesifikasjon) {
         return new WSPosteringsdetaljer()
                         .withKontoBeskrHoved(hovedBeskrivelse)
                         .withKontoBeskrUnder(underbeskrivelse)

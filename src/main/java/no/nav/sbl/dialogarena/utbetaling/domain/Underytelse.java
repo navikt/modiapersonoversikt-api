@@ -19,11 +19,11 @@ public class Underytelse implements Serializable {
 
     private String tittel;
     private double belop;
-    private Optional<Integer> antall;
+    private Optional<Double> antall;
     private Optional<Double> sats;
     private String spesifikasjon;
 
-    public Underytelse(String tittel, String spesifikasjon, Optional<Integer> antall, double belop, Optional<Double> sats) {
+    public Underytelse(String tittel, String spesifikasjon, Optional<Double> antall, double belop, Optional<Double> sats) {
         this.tittel = tittel;
         this.belop = belop;
         this.antall = antall;
@@ -39,7 +39,7 @@ public class Underytelse implements Serializable {
         return spesifikasjon;
     }
 
-    public Optional<Integer> getAntall() {
+    public Optional<Double> getAntall() {
         return antall;
     }
 

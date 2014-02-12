@@ -48,7 +48,7 @@ public class DetaljPanel extends Panel {
             @Override
             protected void populateItem(ListItem<Underytelse> item) {
                 Optional<Double> sats = item.getModelObject().getSats();
-                Optional<Integer> antall = item.getModelObject().getAntall();
+                Optional<Double> antall = item.getModelObject().getAntall();
                 item.add(
                     new Label("underytelse", item.getModelObject().getTittel()),
                     new Label("sats", sats.isSome() ? sats.get() : ""),
