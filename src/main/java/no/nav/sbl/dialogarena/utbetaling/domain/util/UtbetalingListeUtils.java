@@ -4,8 +4,6 @@ import no.nav.modig.lang.collections.iter.ReduceFunction;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.apache.commons.collections15.Predicate;
-import org.apache.commons.collections15.Transformer;
-import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
@@ -20,12 +18,18 @@ import java.util.Set;
 import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.either;
+import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.TransformerUtils.first;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.HOVEDYTELSE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.PERIODE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingComparator.UTBETALING_DAG_YTELSE;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.END;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.START;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.TO_LOCAL_DATE;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.isAfter;
 
 /**
  * Hjelpefunksjoner for å jobbe med lister av Utbetaling.
@@ -54,7 +58,7 @@ public class UtbetalingListeUtils {
         return trekkUtUtbetalingerPerMaaned(aarsMap);
     }
 
-    public static List<List<Utbetaling>> samleSammenLikeYtelserISammePeriode(Iterable<Utbetaling> utbetalinger) {
+    public static List<List<Utbetaling>> grupperPaaHovedytelseOgPeriode(Iterable<Utbetaling> utbetalinger) {
         List<List<Utbetaling>> resultat = new ArrayList<>();
 
         Collection<List<Utbetaling>> gruppertEtterHovedytelse = on(utbetalinger).reduce(indexBy(HOVEDYTELSE)).values();
@@ -87,6 +91,18 @@ public class UtbetalingListeUtils {
         }
     };
 
+    private static Predicate<Collection<Utbetaling>> erISammePeriode(final Utbetaling utbetaling) {
+        return new Predicate<Collection<Utbetaling>>() {
+            @Override
+            public boolean evaluate(Collection<Utbetaling> utbetalinger) {
+                LocalDate start = utbetaling.getPeriode().getStart().toLocalDate().minusDays(1);
+                return !on(utbetalinger)
+                        .filter(where(first(PERIODE).then(END).then(TO_LOCAL_DATE),
+                                either(equalTo(start)).or(isAfter(start)))).isEmpty();
+            }
+        };
+    }
+
     private static void leggTilUtbetalingerIAarsMap(List<Utbetaling> sorterteUtbetalinger, Map<Integer, Map<Integer, List<Utbetaling>>> aarsMap) {
         for (Utbetaling utbetaling : sorterteUtbetalinger) {
             int aar = utbetaling.getUtbetalingsdato().getYear();
@@ -115,35 +131,4 @@ public class UtbetalingListeUtils {
         return utbetalingerSplittetPaaMaaned;
     }
 
-    private static Predicate<Collection<Utbetaling>> erISammePeriode(final Utbetaling utbetaling) {
-        return new Predicate<Collection<Utbetaling>>() {
-            @Override
-            public boolean evaluate(Collection<Utbetaling> utbetalinger) {
-                return !on(utbetalinger).filter(where(first(PERIODE).then(END), isAfter(utbetaling.getPeriode().getStart().minusDays(2)))).isEmpty();
-            }
-        };
-    }
-
-    private static final Transformer<Interval, DateTime> START = new Transformer<Interval, DateTime>() {
-        @Override
-        public DateTime transform(Interval interval) {
-            return interval.getStart();
-        }
-    };
-
-    private static final Transformer<Interval, DateTime> END = new Transformer<Interval, DateTime>() {
-        @Override
-        public DateTime transform(Interval interval) {
-            return interval.getEnd();
-        }
-    };
-
-    private static Predicate<DateTime> isAfter(final DateTime compare) {
-        return new Predicate<DateTime>() {
-            @Override
-            public boolean evaluate(DateTime dateTime) {
-                return dateTime.isAfter(compare);
-            }
-        };
-    }
 }
