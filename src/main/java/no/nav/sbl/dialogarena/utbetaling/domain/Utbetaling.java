@@ -256,4 +256,10 @@ public final class Utbetaling implements Serializable {
         }
     };
 
+    public static final Transformer<Utbetaling, DateTime> UTBETALINGSDATO = new Transformer<Utbetaling, DateTime>() {
+        @Override
+        public DateTime transform(Utbetaling utbetaling) {
+            return utbetaling.getUtbetalingsdato();
+        }
+    };
 }

@@ -68,6 +68,7 @@ public class TotalOppsummeringPanel extends Panel {
             protected void populateItem(ListItem<HovedYtelseVM> item) {
                 item.add(
                         new Label("hovedYtelsesBeskrivelse", item.getModelObject().getHovedYtelsesBeskrivelse()),
+                        new Label("hovedYtelsesPeriode", item.getModelObject().getHovedYtelsePeriode()),
                         new Label("bruttoUnderytelser", item.getModelObject().getBruttoUnderytelser()),
                         new Label("trekkUnderytelser", item.getModelObject().getTrekkUnderytelser()),
                         new Label("nettoUnderytelser", item.getModelObject().getNettoUnderytelser()),

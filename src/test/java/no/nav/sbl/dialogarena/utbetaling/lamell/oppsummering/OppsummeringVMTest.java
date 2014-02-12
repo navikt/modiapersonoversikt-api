@@ -56,9 +56,9 @@ public class OppsummeringVMTest {
         Underytelse ytelse1 = new Underytelse("Grunnbeløp", "", optional(0), 1000.0, optional(0D));
         Underytelse ytelse2 = new Underytelse("Tillegg", "", optional(0), 500.0, optional(0D));
         Underytelse ytelse3 = new Underytelse("Skatt", "", optional(0), -200.0, optional(0D));
-        Utbetaling dagpenger = new UtbetalingBuilder().withHovedytelse("Dagpenger").withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse1, ytelse3)).createUtbetaling();
-        Utbetaling dagpenger1 = new UtbetalingBuilder().withHovedytelse("Dagpenger").withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse2, ytelse3)).createUtbetaling();
-        Utbetaling dagpenger2 = new UtbetalingBuilder().withHovedytelse("Helseprodukter").withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse2)).createUtbetaling();
+        Utbetaling dagpenger = new UtbetalingBuilder().withHovedytelse("Dagpenger").withUtbetalingsDato(now()).withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse1, ytelse3)).createUtbetaling();
+        Utbetaling dagpenger1 = new UtbetalingBuilder().withHovedytelse("Dagpenger").withUtbetalingsDato(now()).withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse2, ytelse3)).createUtbetaling();
+        Utbetaling dagpenger2 = new UtbetalingBuilder().withHovedytelse("Helseprodukter").withUtbetalingsDato(now()).withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse2)).createUtbetaling();
 
         List<Utbetaling> utbetalinger = asList(dagpenger, dagpenger1, dagpenger2);
 
@@ -88,7 +88,7 @@ public class OppsummeringVMTest {
         Underytelse ytelse2 = new Underytelse("Grønn", "", optional(2), 200.0, optional(0D));
         Underytelse ytelse3 = new Underytelse("Grønn", "", optional(3), 300.0, optional(0D));
         List<Underytelse> underytelser = asList(ytelse1, ytelse2, ytelse3);
-        Utbetaling utbetaling = new UtbetalingBuilder().withHovedytelse("Våren").withUnderytelser(underytelser).createUtbetaling();
+        Utbetaling utbetaling = new UtbetalingBuilder().withHovedytelse("Våren").withUnderytelser(underytelser).withUtbetalingsDato(now()).createUtbetaling();
         List<Utbetaling> utbetalinger = asList(utbetaling);
 
         OppsummeringVM vm = new OppsummeringVM(utbetalinger, defaultStartDato(), defaultSluttDato());

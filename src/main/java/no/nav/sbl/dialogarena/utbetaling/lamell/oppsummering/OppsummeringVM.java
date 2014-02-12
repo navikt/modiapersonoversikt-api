@@ -13,7 +13,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import static java.util.Collections.reverseOrder;
 import static java.util.Collections.sort;
+import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
@@ -24,7 +26,8 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_S
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_TITTEL;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UTBETALT_BELOP;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UNDERYTELSER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.samleSammenLikeYtelserISammePeriode;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UTBETALINGSDATO;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.grupperPaaHovedytelseOgPeriode;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.HovedYtelseVM.HovedYtelseComparator.HOVEDYTELSE_NAVN;
 
@@ -52,8 +55,8 @@ public class OppsummeringVM implements Serializable {
      */
     private static List<HovedYtelseVM> lagHovetytelseVMer(List<Utbetaling> utbetalinger) {
         List<HovedYtelseVM> hovedYtelseVMs = new ArrayList<>();
-        for (List<Utbetaling> sammeHovedytelse : samleSammenLikeYtelserISammePeriode(utbetalinger)) {
-            Map<String, List<Underytelse>> indekserteUnderytelser = on(sammeHovedytelse).flatmap(UNDERYTELSER).reduce(indexBy(UNDERYTELSE_TITTEL));
+        for (List<Utbetaling> sammen : grupperPaaHovedytelseOgPeriode(utbetalinger)) {
+            Map<String, List<Underytelse>> indekserteUnderytelser = on(sammen).flatmap(UNDERYTELSER).reduce(indexBy(UNDERYTELSE_TITTEL));
 
             List<Underytelse> sammenlagteUnderytelser = on(indekserteUnderytelser.values()).reduce(SUM_UNDERYTELSER);
             sort(sammenlagteUnderytelser, UNDERYTELSE_COMPARE_BELOP);
@@ -63,7 +66,10 @@ public class OppsummeringVM implements Serializable {
             Double trekk = on(sammenlagteUnderytelser).map(TREKK_BELOP).reduce(sumDouble);
             Double utbetalt = brutto + trekk;
 
-            hovedYtelseVMs.add(new HovedYtelseVM(sammeHovedytelse.get(0).getHovedytelse(), sammenlagteUnderytelser, brutto, trekk, utbetalt));
+            LocalDate min = on(sammen).collect(compareWith(UTBETALINGSDATO)).get(0).getUtbetalingsdato().toLocalDate();
+            LocalDate max = on(sammen).collect(reverseOrder(compareWith(UTBETALINGSDATO))).get(0).getUtbetalingsdato().toLocalDate();
+
+            hovedYtelseVMs.add(new HovedYtelseVM(sammen.get(0).getHovedytelse(), sammenlagteUnderytelser, brutto, trekk, utbetalt, min, max));
         }
         sort(hovedYtelseVMs, HOVEDYTELSE_NAVN);
         return hovedYtelseVMs;

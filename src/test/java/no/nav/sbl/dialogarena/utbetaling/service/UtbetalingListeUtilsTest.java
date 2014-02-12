@@ -16,7 +16,7 @@ import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.getBuilder;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentYtelser;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.samleSammenLikeYtelserISammePeriode;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.grupperPaaHovedytelseOgPeriode;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.is;
@@ -115,7 +115,7 @@ public class UtbetalingListeUtilsTest {
     @Test
     public void skalSkillePaaUtbetalingerMedForskjelligHovedytelse() {
         List<Utbetaling> utbetalinger = asList(lagUtbetaling("ytelse1"), lagUtbetaling("ytelse2"));
-        List<List<Utbetaling>> resultat = samleSammenLikeYtelserISammePeriode(utbetalinger);
+        List<List<Utbetaling>> resultat = grupperPaaHovedytelseOgPeriode(utbetalinger);
         assertEquals(2, resultat.size());
     }
 
@@ -126,7 +126,7 @@ public class UtbetalingListeUtilsTest {
                 lagUtbetaling(ytelse, "01.01.2012", "01.02.2012"),
                 lagUtbetaling(ytelse, "01.03.2012", "01.04.2012"),
                 lagUtbetaling(ytelse, "15.01.2012", "15.03.2012"));
-        List<List<Utbetaling>> resultat = samleSammenLikeYtelserISammePeriode(utbetalinger);
+        List<List<Utbetaling>> resultat = grupperPaaHovedytelseOgPeriode(utbetalinger);
         assertEquals(1, resultat.size());
     }
 
@@ -136,7 +136,27 @@ public class UtbetalingListeUtilsTest {
         List<Utbetaling> utbetalinger = asList(
                 lagUtbetaling(ytelse, "01.01.2012", "01.02.2012"),
                 lagUtbetaling(ytelse, "01.01.2013", "01.02.2013"));
-        List<List<Utbetaling>> resultat = samleSammenLikeYtelserISammePeriode(utbetalinger);
+        List<List<Utbetaling>> resultat = grupperPaaHovedytelseOgPeriode(utbetalinger);
+        assertEquals(2, resultat.size());
+    }
+
+    @Test
+    public void dagenEtterTellerSomSammePeriode() {
+        String ytelse = "ytelse";
+        List<Utbetaling> utbetalinger = asList(
+                lagUtbetaling(ytelse, "01.01.2012", "31.01.2012"),
+                lagUtbetaling(ytelse, "01.02.2012", "28.02.2012"));
+        List<List<Utbetaling>> resultat = grupperPaaHovedytelseOgPeriode(utbetalinger);
+        assertEquals(1, resultat.size());
+    }
+
+    @Test
+    public void toDagerEtterErForMye() {
+        String ytelse = "ytelse";
+        List<Utbetaling> utbetalinger = asList(
+                lagUtbetaling(ytelse, "01.01.2012", "14.01.2012"),
+                lagUtbetaling(ytelse, "16.01.2012", "31.01.2012"));
+        List<List<Utbetaling>> resultat = grupperPaaHovedytelseOgPeriode(utbetalinger);
         assertEquals(2, resultat.size());
     }
 
