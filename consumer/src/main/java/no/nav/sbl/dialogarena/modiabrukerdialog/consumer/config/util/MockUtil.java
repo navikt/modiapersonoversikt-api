@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util;
 
 
 import java.net.MalformedURLException;

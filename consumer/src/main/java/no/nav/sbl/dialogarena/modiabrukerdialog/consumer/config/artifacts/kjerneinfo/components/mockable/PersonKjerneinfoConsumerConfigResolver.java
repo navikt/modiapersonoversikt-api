@@ -19,14 +19,14 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.mockErSlaattPaaForKey;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.mockSetupErTillatt;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErSlaattPaaForKey;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.PersonKjerneinfoServiceBiMock.getPersonKjerneinfoServiceBiMock;
 
 @Configuration
 @Import({
         PersonKjerneinfoConsumerConfig.class,
-        PersonKjerneinfoMapperConfigResolver.class,
+        KjerneinfoMapperConfigResolver.class,
         KjerneinfoSecurityPolicyConfig.class
 })
 public class PersonKjerneinfoConsumerConfigResolver {

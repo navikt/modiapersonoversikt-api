@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util;
 
 public class Wrapper<WRAPPED> {
 

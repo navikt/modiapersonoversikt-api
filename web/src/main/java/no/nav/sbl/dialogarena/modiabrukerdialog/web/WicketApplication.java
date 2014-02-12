@@ -43,8 +43,8 @@ import java.util.Locale;
 
 import static java.lang.System.getProperty;
 import static no.nav.modig.frontend.FrontendModules.MODIA;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.DEFAULT_MOCK_TILLATT;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.util.MockUtil.mockSetupErTillatt;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.DEFAULT_MOCK_TILLATT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
 import static org.apache.wicket.util.time.Duration.ONE_SECOND;
 
 public class WicketApplication extends WebApplication {

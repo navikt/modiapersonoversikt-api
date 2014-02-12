@@ -4,6 +4,7 @@ import no.nav.behandlebrukerprofil.config.spring.BehandleBrukerprofilConsumerCon
 import no.nav.behandlebrukerprofil.consumer.BehandleBrukerprofilServiceBi;
 import no.nav.behandlebrukerprofil.consumer.support.DefaultBehandleBrukerprofilService;
 import no.nav.behandlebrukerprofil.consumer.support.mapping.BehandleBrukerprofilMapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Wrapper;
 import no.nav.tjeneste.virksomhet.behandlebrukerprofil.v1.BehandleBrukerprofilPortType;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.CacheManager;
