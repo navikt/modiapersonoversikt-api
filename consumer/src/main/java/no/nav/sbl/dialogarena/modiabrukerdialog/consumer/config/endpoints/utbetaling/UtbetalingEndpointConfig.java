@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling;
 
 import no.nav.modig.modia.ping.Pingable;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.UtbetalingPortTypeWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Wrapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.MockPingable;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeResponse;
@@ -28,11 +28,11 @@ public class UtbetalingEndpointConfig {
 
     @Inject
     @Qualifier("utbetalingPortTypeWrapperMock")
-    private UtbetalingPortTypeWrapper mockedPortTypeWrapper;
+    private Wrapper<UtbetalingPortType> mockedPortTypeWrapper;
 
     @Inject
     @Qualifier("utbetalingPortTypeWrapper")
-    private UtbetalingPortTypeWrapper portTypeWrapper;
+    private Wrapper<UtbetalingPortType> portTypeWrapper;
 
     @Bean(name = "utbetalingPortType")
     public UtbetalingPortType utbetalingPortType() {
@@ -43,9 +43,9 @@ public class UtbetalingEndpointConfig {
             public WSHentUtbetalingListeResponse hentUtbetalingListe(@WebParam(name = "request", targetNamespace = "") WSHentUtbetalingListeRequest request)
                     throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(UTBETALING_KEY)) {
-                    return mockedPortTypeWrapper.getPortType().hentUtbetalingListe(request);
+                    return mockedPortTypeWrapper.wrappedObject.hentUtbetalingListe(request);
                 }
-                return portTypeWrapper.getPortType().hentUtbetalingListe(request);
+                return portTypeWrapper.wrappedObject.hentUtbetalingListe(request);
             }
         };
     }

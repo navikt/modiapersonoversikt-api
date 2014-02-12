@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.CacheConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.UtbetalingPortTypeWrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Wrapper;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSPeriode;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSYtelsesfilter;
@@ -37,11 +37,11 @@ public class HentUtbetalingerCacheTest {
 
     @Inject
     @Qualifier("utbetalingPortTypeWrapperMock")
-    private UtbetalingPortTypeWrapper mockPortWrapper;
+    private Wrapper<UtbetalingPortType> mockPortWrapper;
 
     @Inject
     @Qualifier("utbetalingPortTypeWrapper")
-    private UtbetalingPortTypeWrapper realPortWrapper;
+    private Wrapper<UtbetalingPortType> realPortWrapper;
 
     @BeforeClass
     public static void setUp() {
@@ -63,8 +63,8 @@ public class HentUtbetalingerCacheTest {
         utbetalingPortType.hentUtbetalingListe(request);
         utbetalingPortType.hentUtbetalingListe(request2);
 
-        verify(realPortWrapper.getPortType(), times(0)).hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class));
-        verify(mockPortWrapper.getPortType(), times(1)).hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class));
+        verify(realPortWrapper.wrappedObject, times(0)).hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class));
+        verify(mockPortWrapper.wrappedObject, times(1)).hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class));
     }
 
     private WSHentUtbetalingListeRequest createRequest(DateTime fom, DateTime tom) {
