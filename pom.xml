@@ -54,7 +54,6 @@
         <slf4j.version>1.7.5</slf4j.version>
         <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
-        <utbetaling.tjenestespesifikasjon.version>1.0.4</utbetaling.tjenestespesifikasjon.version>
         <mockito.version>1.9.5</mockito.version>
         <jodatime.version>2.2</jodatime.version>
         <!-- Modia-komponenter-->
@@ -62,7 +61,8 @@
         <kjerneinfo.versjon>1.0.46</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <sporsmalogsvar.version>1.18</sporsmalogsvar.version>
-        <utbetaling.version>2.0.22</utbetaling.version>
+        <utbetaling.version>2.0.24</utbetaling.version>
+        <utbetaling.tjenestespesifikasjon.version>1.0.6</utbetaling.tjenestespesifikasjon.version>
     </properties>
 
     <dependencyManagement>
