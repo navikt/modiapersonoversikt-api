@@ -61,8 +61,10 @@ public class KodeverkV2EndpointConfig {
             public void ping() {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
                     kodeverkMock.wrappedObject.kodeverkPortType().ping();
+                    return;
                 }
                 kodeverkPort.wrappedObject.kodeverkPortType().ping();
+                return;
             }
         };
     }
