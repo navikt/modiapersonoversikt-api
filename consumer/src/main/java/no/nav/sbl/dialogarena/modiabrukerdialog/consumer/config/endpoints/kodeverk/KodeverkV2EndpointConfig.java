@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodev
 
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.porttypeimpl.KodeverkV2PortTypeImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.KodeverkV2PortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Wrapper;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.informasjon.XMLKodeverk;
@@ -10,13 +10,13 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLFinnKodeverkListeRequ
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLFinnKodeverkListeResponse;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkResponse;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.inject.Inject;
 import javax.jws.WebParam;
-import java.net.URL;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErSlaattPaaForKey;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
@@ -26,16 +26,16 @@ public class KodeverkV2EndpointConfig {
 
     public static final String KODEVERK_KEY = "start.kodeverk.withmock";
 
-    @Value("${kodeverkendpoint.v2.url}")
-    private URL endpoint;
+    @Inject
+    @Qualifier("kodeverkPort")
+    private Wrapper<KodeverkV2PortTypeImpl> kodeverkPort;
 
-    private KodeverkV2PortTypeImpl impl = new KodeverkV2PortTypeImpl(endpoint);
-    private KodeverkV2PortTypeMock mock = new KodeverkV2PortTypeMock();
+    @Inject
+    @Qualifier("kodeverkMock")
+    private Wrapper<KodeverkV2PortTypeImpl> kodeverkMock;
 
     @Bean(name = "kodeverkPortTypeV2")
     public KodeverkPortType kodeverkPortType() {
-        final KodeverkPortType portType = impl.kodeverkPortType();
-        final KodeverkPortType portTypeMock = mock.kodeverkPortType();
         return new KodeverkPortType() {
 
             @Cacheable("kodeverkCache")
@@ -43,52 +43,50 @@ public class KodeverkV2EndpointConfig {
             public XMLHentKodeverkResponse hentKodeverk(@WebParam(name = "request", targetNamespace = "") XMLHentKodeverkRequest xmlHentKodeverkRequest)
                     throws HentKodeverkHentKodeverkKodeverkIkkeFunnet {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
-                    return portTypeMock.hentKodeverk(xmlHentKodeverkRequest);
+                    return kodeverkMock.wrappedObject.kodeverkPortType().hentKodeverk(xmlHentKodeverkRequest);
                 }
-                return portType.hentKodeverk(xmlHentKodeverkRequest);
+                return kodeverkPort.wrappedObject.kodeverkPortType().hentKodeverk(xmlHentKodeverkRequest);
             }
 
             @Cacheable("kodeverkCache")
             @Override
             public XMLFinnKodeverkListeResponse finnKodeverkListe(@WebParam(name = "request", targetNamespace = "") XMLFinnKodeverkListeRequest xmlFinnKodeverkListeRequest) {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
-                    return portTypeMock.finnKodeverkListe(xmlFinnKodeverkListeRequest);
+                    return kodeverkMock.wrappedObject.kodeverkPortType().finnKodeverkListe(xmlFinnKodeverkListeRequest);
                 }
-                return portType.finnKodeverkListe(xmlFinnKodeverkListeRequest);
+                return kodeverkPort.wrappedObject.kodeverkPortType().finnKodeverkListe(xmlFinnKodeverkListeRequest);
             }
 
             @Override
             public void ping() {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
-                    portTypeMock.ping();
+                    kodeverkMock.wrappedObject.kodeverkPortType().ping();
                 }
-                portType.ping();
+                kodeverkPort.wrappedObject.kodeverkPortType().ping();
             }
         };
     }
 
     @Bean
     public KodeverkClient kodeverkClient() {
-        final KodeverkClient kodeverkKlient = impl.kodeverkClient();
-        final KodeverkClient kodeverkKlientMock = mock.kodeverkClient();
         return new KodeverkClient() {
 
             @Cacheable("kodeverkCache")
             @Override
             public XMLKodeverk hentKodeverk(String s) {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
-                    return kodeverkKlientMock.hentKodeverk(s);
+                    return kodeverkMock.wrappedObject.kodeverkClient().hentKodeverk(s);
                 }
-                return kodeverkKlient.hentKodeverk(s);
+                return kodeverkPort.wrappedObject.kodeverkClient().hentKodeverk(s);
             }
 
             @Cacheable("kodeverkCache")
             @Override
             public String hentFoersteTermnavnForKode(String s, String s2) {
                 if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
-                    return kodeverkKlientMock.hentFoersteTermnavnForKode(s, s2);
+                    return kodeverkMock.wrappedObject.kodeverkClient().hentFoersteTermnavnForKode(s, s2);
                 }
-                return kodeverkKlient.hentFoersteTermnavnForKode(s, s2);
+                return kodeverkPort.wrappedObject.kodeverkClient().hentFoersteTermnavnForKode(s, s2);
             }
         };
     }
