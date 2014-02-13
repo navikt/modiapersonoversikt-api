@@ -41,10 +41,6 @@
             <groupId>no.nav</groupId>
             <artifactId>kodeverk-consumer</artifactId>
         </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-kodeverk</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
