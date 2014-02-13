@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable;
 
 import no.nav.modig.modia.ping.PingResult;
-import no.nav.modig.modia.widget.panels.InfoPanelVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.mockableimpl.SykmeldingsperioderPanelConfigImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Wrapper;
 import no.nav.sykmeldingsperioder.consumer.foreldrepenger.ForeldrepengerServiceBi;
@@ -20,14 +19,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
-import java.util.List;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErSlaattPaaForKey;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getForeldrepengerServiceBiMock;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getSykepengerServiceBiMock;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.SykepengerWidgetServiceMock.getSykepengerWidgetServiceMock;
 
 @Configuration
 public class SykmeldingsperioderPanelConfigResolver {
@@ -48,47 +43,31 @@ public class SykmeldingsperioderPanelConfigResolver {
     @Qualifier("foreldrepengerServiceMock")
     private Wrapper<ForeldrepengerServiceBi> foreldrepengerServiceMock;
 
-    @Inject
-    @Qualifier("sykepengerWidgetDefault")
-    private Wrapper<SykepengerWidgetService> sykepengerWidgetDefault;
-
-    @Inject
-    @Qualifier("sykepengerWidgetMock")
-    private Wrapper<SykepengerWidgetService> sykepengerWidgetMock;
-
     @Bean
     public SykmeldingsperioderPing sykmeldingsperioderPing() {
-        return new SykmeldingsperioderPanelConfigImpl().sykmeldingsperioderPing(getForeldrepengerServiceBi(), getSykepengerServiceBi());
+        return new SykmeldingsperioderPanelConfigImpl().sykmeldingsperioderPing(getForeldrepengerService(), getSykepengerService());
     }
 
     @Bean
     public SykepengerWidgetService sykepengerWidgetService() {
-        return new SykepengerWidgetService() {
-            @Override
-            public List<InfoPanelVM> getWidgetContent(String fnr) {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
-                    return sykepengerWidgetMock.wrappedObject.getWidgetContent(fnr);
-                }
-                return sykepengerWidgetDefault.wrappedObject.getWidgetContent(fnr);
-            }
-        };
+        return new SykepengerWidgetServiceImpl(getSykepengerService(), getForeldrepengerService());
     }
 
     @Bean
     public SykmeldingsperiodeLoader sykmeldingsperiodeLoader() {
         SykmeldingsperiodeLoader periodeLoader = new SykmeldingsperioderPanelConfigImpl().sykmeldingsperiodeLoader();
-        periodeLoader.setSykepengerService(getSykepengerServiceBi());
+        periodeLoader.setSykepengerService(getSykepengerService());
         return periodeLoader;
     }
 
     @Bean
     public ForeldrepengerLoader foreldrepengerLoader() {
         ForeldrepengerLoader foreldrepengerLoader = new SykmeldingsperioderPanelConfigImpl().foreldrepengerLoader();
-        foreldrepengerLoader.setForeldrepengerService(getForeldrepengerServiceBi());
+        foreldrepengerLoader.setForeldrepengerService(getForeldrepengerService());
         return foreldrepengerLoader;
     }
 
-    private ForeldrepengerServiceBi getForeldrepengerServiceBi() {
+    private ForeldrepengerServiceBi getForeldrepengerService() {
         return new ForeldrepengerServiceBi() {
             @Override
             public ForeldrepengerListeResponse hentForeldrepengerListe(ForeldrepengerListeRequest request) {
@@ -108,7 +87,7 @@ public class SykmeldingsperioderPanelConfigResolver {
         };
     }
 
-    private SykepengerServiceBi getSykepengerServiceBi() {
+    private SykepengerServiceBi getSykepengerService() {
         return new SykepengerServiceBi() {
             @Override
             public SykepengerResponse hentSykmeldingsperioder(SykepengerRequest request) {
