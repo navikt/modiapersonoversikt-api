@@ -21,14 +21,12 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,6 +37,7 @@ import java.util.List;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.sbl.dialogarena.time.Datoformat.kort;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
@@ -69,14 +68,9 @@ public final class UtbetalingLerret extends Lerret {
     private FeilmeldingPanel feilmelding;
     private Label periodeLabel;
 
-    private IModel<String> periode = new Model<>(formatertPeriode(defaultStartDato(), defaultSluttDato()));
-
     public UtbetalingLerret(String id, String fnr) {
         super(id);
         instansierFelter(fnr);
-
-        periodeLabel = new Label("periode", periode);
-        periodeLabel.setOutputMarkupId(true);
 
         add(
                 new ExternalLink("arenalink", arenaUtbetalingUrl + fnr),
@@ -104,6 +98,8 @@ public final class UtbetalingLerret extends Lerret {
         utbetalingslisteContainer = (WebMarkupContainer) new WebMarkupContainer("utbetalingslisteContainer")
                 .add(createMaanedsPanelListe())
                 .setOutputMarkupPlaceholderTag(true);
+
+        periodeLabel = (Label) new Label("periode", getFormatertPeriode()).setOutputMarkupId(true);
 
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
     }
@@ -154,8 +150,6 @@ public final class UtbetalingLerret extends Lerret {
         oppdaterCacheOmNodvendig();
         oppdaterYtelser();
 
-        periode.setObject(formatertPeriode(filterParametere.getStartDato(), filterParametere.getSluttDato()));
-
         List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
         oppdaterUtbetalingsvisning(synligeUtbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
@@ -205,8 +199,13 @@ public final class UtbetalingLerret extends Lerret {
         }
     }
 
-    private static String formatertPeriode(LocalDate start, LocalDate slutt) {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
-        return formatter.print(start) + " - " + formatter.print(slutt);
+    private AbstractReadOnlyModel<String> getFormatertPeriode() {
+        return new AbstractReadOnlyModel<String>() {
+            @Override
+            public String getObject() {
+                return kort(filterParametere.getStartDato().toDateTimeAtStartOfDay()) + " - "
+                        + kort(filterParametere.getSluttDato().toDateTimeAtStartOfDay());
+            }
+        };
     }
 }

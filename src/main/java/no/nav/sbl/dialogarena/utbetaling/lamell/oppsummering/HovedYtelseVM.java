@@ -1,15 +1,14 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
-import org.joda.time.LocalDate;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+import static no.nav.sbl.dialogarena.time.Datoformat.kort;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class HovedYtelseVM implements Serializable {
@@ -19,10 +18,10 @@ public class HovedYtelseVM implements Serializable {
     private final Double trekk;
     private final Double utbetalt;
     private final List<UnderYtelseVM> underYtelsesBeskrivelser;
-    private final LocalDate minUtbetalingsdato;
-    private final LocalDate maxUtbetalingsdato;
+    private final DateTime minUtbetalingsdato;
+    private final DateTime maxUtbetalingsdato;
 
-    public HovedYtelseVM(String beskrivelse, List<Underytelse> underytelser, Double brutto, Double trekk, Double utbetalt, LocalDate minUtbetalingsdato, LocalDate maxUtbetalingsdato) {
+    public HovedYtelseVM(String beskrivelse, List<Underytelse> underytelser, Double brutto, Double trekk, Double utbetalt, DateTime minUtbetalingsdato, DateTime maxUtbetalingsdato) {
         hovedYtelsesBeskrivelse = beskrivelse;
         this.brutto = brutto;
         this.trekk = trekk;
@@ -56,10 +55,9 @@ public class HovedYtelseVM implements Serializable {
     }
 
     public String getHovedYtelsePeriode() {
-        DateTimeFormatter formatter = DateTimeFormat.forPattern("dd.MM.yyyy");
         return minUtbetalingsdato.equals(maxUtbetalingsdato) ?
-                formatter.print(minUtbetalingsdato) :
-                formatter.print(minUtbetalingsdato) + " - " + formatter.print(maxUtbetalingsdato);
+                kort(minUtbetalingsdato) :
+                kort(minUtbetalingsdato) + " - " + kort(maxUtbetalingsdato);
     }
 
     public static class HovedYtelseComparator {
