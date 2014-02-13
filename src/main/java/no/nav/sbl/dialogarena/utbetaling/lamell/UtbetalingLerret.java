@@ -37,7 +37,7 @@ import java.util.List;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.time.Datoformat.kort;
+import static no.nav.sbl.dialogarena.time.Datoformat.kortUtenLiteral;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.hentUtbetalingerFraPeriode;
@@ -203,8 +203,8 @@ public final class UtbetalingLerret extends Lerret {
         return new AbstractReadOnlyModel<String>() {
             @Override
             public String getObject() {
-                return kort(filterParametere.getStartDato().toDateTimeAtStartOfDay()) + " - "
-                        + kort(filterParametere.getSluttDato().toDateTimeAtStartOfDay());
+                return kortUtenLiteral(filterParametere.getStartDato().toDateTimeAtStartOfDay()) + " - "
+                        + kortUtenLiteral(filterParametere.getSluttDato().toDateTimeAtStartOfDay());
             }
         };
     }

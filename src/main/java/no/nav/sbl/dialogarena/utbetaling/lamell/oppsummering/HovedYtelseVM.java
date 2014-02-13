@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.time.Datoformat.kort;
+import static no.nav.sbl.dialogarena.time.Datoformat.kortUtenLiteral;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class HovedYtelseVM implements Serializable {
@@ -56,8 +56,8 @@ public class HovedYtelseVM implements Serializable {
 
     public String getHovedYtelsePeriode() {
         return minUtbetalingsdato.equals(maxUtbetalingsdato) ?
-                kort(minUtbetalingsdato) :
-                kort(minUtbetalingsdato) + " - " + kort(maxUtbetalingsdato);
+                kortUtenLiteral(minUtbetalingsdato) :
+                kortUtenLiteral(minUtbetalingsdato) + " - " + kortUtenLiteral(maxUtbetalingsdato);
     }
 
     public static class HovedYtelseComparator {
