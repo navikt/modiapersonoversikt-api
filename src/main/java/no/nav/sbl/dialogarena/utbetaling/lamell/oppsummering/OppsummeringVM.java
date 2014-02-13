@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.apache.commons.collections15.Transformer;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
@@ -66,8 +67,8 @@ public class OppsummeringVM implements Serializable {
             Double trekk = on(sammenlagteUnderytelser).map(TREKK_BELOP).reduce(sumDouble);
             Double utbetalt = brutto + trekk;
 
-            LocalDate min = on(sammen).collect(compareWith(UTBETALINGSDATO)).get(0).getUtbetalingsdato().toLocalDate();
-            LocalDate max = on(sammen).collect(reverseOrder(compareWith(UTBETALINGSDATO))).get(0).getUtbetalingsdato().toLocalDate();
+            DateTime min = on(sammen).collect(compareWith(UTBETALINGSDATO)).get(0).getUtbetalingsdato();
+            DateTime max = on(sammen).collect(reverseOrder(compareWith(UTBETALINGSDATO))).get(0).getUtbetalingsdato();
 
             hovedYtelseVMs.add(new HovedYtelseVM(sammen.get(0).getHovedytelse(), sammenlagteUnderytelser, brutto, trekk, utbetalt, min, max));
         }
