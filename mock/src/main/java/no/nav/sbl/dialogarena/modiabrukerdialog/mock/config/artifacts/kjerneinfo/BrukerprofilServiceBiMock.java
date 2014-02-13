@@ -1,5 +1,4 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo;
-//no/nav/sbl/dialogarena/modiabrukerdialog/mock/config/artifacts/kjerneinfo/BrukerprofilServiceBiMock
 
 import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilRequest;

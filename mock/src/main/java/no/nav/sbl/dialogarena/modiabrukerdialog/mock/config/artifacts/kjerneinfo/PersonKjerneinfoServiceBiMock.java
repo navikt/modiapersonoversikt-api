@@ -9,10 +9,10 @@ import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.Personnavn;
 import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon;
-import no.nav.kjerneinfo.domain.person.fakta.Familierelasjonstype;
 
 import java.util.Arrays;
 
+import static no.nav.kjerneinfo.domain.person.fakta.Familierelasjonstype.BARN;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -55,7 +55,7 @@ public class PersonKjerneinfoServiceBiMock {
 
         Familierelasjon familierelasjon = new Familierelasjon();
         familierelasjon.setHarSammeBosted(true);
-        familierelasjon.setTilRolle(Familierelasjonstype.BARN.toString().toUpperCase());
+        familierelasjon.setTilRolle(BARN.toString().toUpperCase());
         familierelasjon.setTilPerson(barn);
 
         return new Person.With()
