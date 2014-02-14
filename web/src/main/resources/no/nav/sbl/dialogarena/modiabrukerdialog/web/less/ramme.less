@@ -1,0 +1,823 @@
+/* Stiler for den generelle layouten og oppsettet i MODIA */
+.main-content {
+	position: relative;
+	float: left;
+	margin-left: @sidebarWidth;
+	width: @mainContentWidth;
+	height: 100%;
+	display: table-cell;
+}
+
+.navbar {
+	margin-bottom: 0;
+	height: 140px;
+	padding: 40px 30px 40px 30px;
+	z-index: 1030;
+	background-color: @modiaBackground;
+	white-space: no-wrap;
+    position: relative;
+	FORM {
+		margin: 0;
+	}
+	H1 {
+		display: none;
+	}
+}
+
+.menu-intern .sokeboks {
+	float: left;
+	min-width: 37rem;
+}
+
+.oppgave-panel {
+	float: right;
+	.oppgave-header {
+		height: auto; //101px;
+	}
+	.hent-oppgave, .oppgavevalg {
+		float: left;
+	}
+}
+
+.personsok-button {
+	margin: 0 0 0 20px;
+	width: 66px;
+	height: 66px;
+	border-radius: 66px;
+	text-align: center;
+	background-color: @grayLight;
+	background-image: none;
+	border: none;
+	font-size: 1.8rem;
+	&:hover {
+		background-color: @blue;
+		background-image: none;
+		border: none;
+	}
+	&:active {
+		background-color: @grayLight;
+		background-image: none;
+		border: none;
+		box-shadow: none;
+		&:after {
+			bottom: 14px;
+			border-top: none;
+			border-left: 7px solid transparent;
+			border-right: 7px solid transparent;
+			border-bottom: 7px solid @modiaBackground;
+		}
+	}
+	&:after {
+		content: "";
+		position: absolute;
+		margin: 28px 0 0 -16px;
+		border-left: 7px solid transparent;
+		border-right: 7px solid transparent;
+		border-top: 7px solid @modiaBackground;
+	}
+}
+
+.nullstill-button {
+	margin: 0 0 0 10px;
+	width: 66px;
+	height: 66px;
+	border: none;
+	background: transparent url(../img/nullstill_bruker.svg) no-repeat right center;
+	background-size: 66px;
+	color: transparent;
+	&:hover {
+		background: transparent url(../img/nullstill_bruker_hover.svg) no-repeat right center;
+		background-size: 66px;
+	}
+}
+
+.search-intern {
+	width: 24rem;
+	display: block;
+	position: relative;
+	float: left;
+	INPUT[type=text] {
+		float: left;
+		height: 64px;
+		width: 100%;
+		padding: 0 40px 0 20px;
+		font-size: 2.14rem;
+	}
+	INPUT[type=image] {
+		float: left;
+		margin: -55px 0 0 260px;
+	}
+	#submitFodselsnummer {
+		margin: 0;
+		height: 46px;
+		padding: 4px;
+		position: absolute;
+		right: 5px;
+		top: 9px;
+		text-align: center;
+	}
+	INPUT[type=button]:hover, INPUT[type=button].hover, INPUT[type=button]:active, SUBMIT:hover, SUBMIT:active {
+		right: 1rem;
+		position: absolute;
+	}
+	SPAN.feedbackPanelERROR, UL.feedbackPanel, LI:before {
+		color: @errorTextLight;
+		font-size: @fontSizeMini;
+		background: transparent;
+		white-space: nowrap;
+		content: "" !important;
+		position: absolute;
+		left: 0;
+		bottom: -0.6em;
+	}
+	INPUT.errorJS {
+		background-color: @errorBackgroundLight;
+		border: 1px solid @errorTextLight;
+		color: @black;
+	}
+	UL.feedbackPanel {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+	}
+}
+
+/* =personsokPanel */
+#personsok {
+	display: none;
+	position: absolute;
+	width: 100%;
+	padding: 0 30px 10px 30px;
+	left: 0;
+	right: 0;
+	min-width: 100%;
+	background-color: @modiaBackground;
+	color: @white;
+	line-height: 1.2em;
+	z-index: 3000;
+	border-top: 1px solid @black;
+	border-right: 1px solid @black;
+	box-shadow: 0px 8px 6px -6px #555;
+	-webkit-box-shadow: -0px 8px 6px -6px #555;
+	-moz-box-shadow: 0px 8px 6px -6px #555;
+	H1, H2, H3 {
+		color: @grayLight;
+	}
+	#personsokPanel {
+		LABEL {
+			float: left;
+			margin: 0 2% 1.5rem 0;
+			width: auto;
+			INPUT, SELECT {
+				width: 100%;
+			}
+		}
+		.navnogadresse {
+			width: 48%;
+			margin-right: 2%;
+			float: left;
+			LABEL.fornavn {
+				width: 48%;
+			}
+			LABEL.etternavn {
+				width: 48%;
+			}
+			LABEL.gatenavn {
+				width: 48%;
+			}
+			LABEL.husnummer {
+				width: 14.5%;
+			}
+			LABEL.husbokstav {
+				width: 14.5%;
+			}
+			LABEL.postnummer {
+				width: 15%;
+			}
+			LABEL.kontonummer {
+				width: 48%;
+				margin-bottom: 40px;
+			}
+		}
+		.begrenssoket {
+			width: 26%;
+			min-width: 260px;
+			margin-left: 10%;
+			float: left;
+			LABEL {
+				width: 47%;
+				min-width: 120px;
+				margin: 0 3% 1.5rem 0;
+			}
+			LABEL.navenhet {
+				float: none;
+				display: block;
+			}
+			LABEL.fodselsdatoFra, LABEL.alderFra, LABEL.kjonn {
+				clear: left;
+			}
+		}
+		.controls {
+			clear: left;
+		}
+	}
+	#searchErrorMessage {
+		padding: 1.43rem 0;
+		color: @grayLight;
+		font: 1.43rem Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+		text-transform: uppercase;
+		border-top: 1px solid @grayLight;
+	}
+	#personsokResult {
+		padding-top: 30px;
+		clear: both;
+		#resultDataTable {
+			width: 100%;
+			border-collapse: collapse;
+			table-layout: fixed;
+			color: @grayLight;
+			margin-bottom: 30px;
+			THEAD, TR {
+				border-bottom: 1px solid @black;
+				TH, TD {
+					padding: 0.8rem 0 0.8rem 1rem;
+					overflow: hidden;
+					white-space: nowrap;
+					color: @white;
+					position: relative;
+				}
+				&.ikkeTilgang TD {
+					color: @grayLight;
+				}
+			}
+			TR.headers TH {
+				text-transform: uppercase;
+				font-weight: normal;
+				color: @grayDarker;
+				background-color: @grayLight;
+				text-align: left;
+			}
+			TR.header TH A, TR.header TH A:visited,
+			A.wicket_orderNone, A.wicket_orderNone:visited {
+				text-decoration: none;
+				color: @grayDarker;
+				margin-right: 1rem;
+				&:after {
+					width: 0;
+					height: 0;
+					position: relative;
+					top: 0.8rem;
+					left: 0.2rem;
+				}
+			}
+			A.wicket_orderDown, A.wicket_orderDown:visited {
+				text-decoration: none;
+				color: @grayDarker;
+				margin-right: 1rem;
+				/* Trekantpil laget i CSS*/
+				&:after {
+					width: 0;
+					height: 0;
+					position: relative;
+					top: 0.8rem;
+					left: 0.2rem;
+					border-left: 5px solid transparent;
+					border-right: 5px solid transparent;
+					content: "";
+					border-top: 5px solid @modiaBackground;
+				}
+			}
+			A.wicket_orderUp, A.wicket_orderUp:visited {
+				text-decoration: none;
+				color: @grayDarker;
+				margin-right: 1rem;
+				/* Trekantpil laget i CSS*/
+				&:after {
+					width: 0;
+					height: 0;
+					position: relative;
+					top: -0.8rem;
+					left: 0.2rem;
+					border-left: 5px solid transparent;
+					border-right: 5px solid transparent;
+					content: "";
+					border-bottom: 5px solid @modiaBackground;
+				}
+			}
+			A.wicket_orderDown, A.wicket_orderUp {
+				font-weight: bold;
+			}
+			TR.header TH A:hover, A.wicket_orderUp:hover {
+				text-decoration: none;
+				font-weight: bold;
+			}
+			TBODY {
+				A {
+					font-weight: bold;
+					color: @white;
+					text-decoration: none;
+				}
+				TR:hover:not(.ikkeTilgang), TR:focus:not(.ikkeTilgang) {
+					background-color: @blue;
+					color: @modiaBackground;
+					outline: 0;
+					cursor: pointer;
+					TD, SPAN {
+						color: @modiaBackground;
+					}
+					TD.addressColumn, TD.navnColumn {
+						> *:after {
+							background: -moz-linear-gradient(left, rgba(0, 169, 224, 0) 0%, rgba(0, 169, 224, 1) 56%, rgba(0, 169, 224, 1) 100%);
+							background: -webkit-linear-gradient(left, rgba(0, 169, 224, 0) 0%, rgba(0, 169, 224, 1) 56%, rgba(0, 169, 224, 1) 100%);
+							background: -ms-linear-gradient(left, rgba(0, 169, 224, 0) 0%, rgba(0, 169, 224, 1) 56%, rgba(0, 169, 224, 1) 100%);
+							background: linear-gradient(left, rgba(0, 169, 224, 0) 0%, rgba(0, 169, 224, 1) 56%, rgba(0, 169, 224, 1) 100%);
+							filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='#00333333 ', endColorstr='#333333 ',GradientType=1 )";
+							content: "";
+						}
+					}
+				}
+				TR.ikkeTilgang:focus {
+					TD.addressColumn, TD.navnColumn {
+						> *:after {
+							background: -moz-linear-gradient(left, rgba(224, 222, 216, 0) 0%, rgba(224, 222, 216, 1) 56%, rgba(224, 222, 216, 1) 100%);
+							background: -webkit-linear-gradient(left, rgba(224, 222, 216, 0) 0%, rgba(224, 222, 216, 1) 56%, rgba(224, 222, 216, 1) 100%);
+							background: -ms-linear-gradient(left, rgba(224, 222, 216, 0) 0%, rgba(224, 222, 216, 1) 56%, rgba(224, 222, 216, 1) 100%);
+							background: linear-gradient(left, rgba(224, 222, 216, 0) 0%, rgba(224, 222, 216, 1) 56%, rgba(224, 222, 216, 1) 100%);
+							filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorstr='#00e0ded8 ', endColorstr='#e0ded8 ',GradientType=1 )";
+							content: "";
+						}
+					}
+				}
+
+				TD.addressColumn, TD.navnColumn {
+					position: relative;
+					> * {
+						position: relative;
+						margin: 0;
+						padding-top: 0.4rem;
+						&:first-of-type {
+							padding-top: 0;
+						}
+						&:after {
+							display: block;
+							position: absolute;
+							right: 0;
+							top: 0;
+							bottom: 0;
+							width: 50px;
+							background: -moz-linear-gradient(left, rgba(51, 51, 51, 0) 0%, rgba(51, 51, 51, 1) 56%, rgba(51, 51, 51, 1) 100%);
+							background: -webkit-linear-gradient(left, rgba(51, 51, 51, 0) 0%, rgba(51, 51, 51, 1) 56%, rgba(51, 51, 51, 1) 100%);
+							background: -ms-linear-gradient(left, rgba(51, 51, 51, 0) 0%, rgba(51, 51, 51, 1) 56%, rgba(51, 51, 51, 1) 100%);
+							background: linear-gradient(left, rgba(51, 51, 51, 0) 0%, rgba(51, 51, 51, 1) 56%, rgba(51, 51, 51, 1) 100%);
+							filter: ~"progid:DXImageTransform.Microsoft.gradient(startColorStr='#00333333 ', endColorStr='#FF333333 ',GradientType=1)";
+							content: "";
+							height: 100%;
+						}
+					}
+				}
+			}
+			TD A, TD A:visited {
+				color: @grayLighter;
+				font-weight: bold;
+			}
+			SPAN.personstatus {
+				color: @orange;
+			}
+			DL.adresseList {
+				width: auto;
+				padding-top: 0;
+				margin: 0;
+				position: relative;
+				clear: both;
+				DT {
+					margin-right: 0.5rem;
+					display: inline-block;
+					width: auto;
+					float: none;
+				}
+				DD {
+					max-width: 0;
+					min-width: 0;
+					display: inline-block;
+					width: auto;
+					float: none;
+				}
+			}
+			.navnColumn, .navnColumn div, .addressColumn {
+				width: auto;
+			}
+			.fodselsnummerColumn {
+				width: 11rem;
+			}
+			.navenhetColumn {
+				width: 8rem;
+			}
+		}
+	}
+}
+
+/* Generell styling til lamell-stacken (ej innholdet i en lerret) */
+.lameller {
+	min-height: 100%;
+	margin-bottom: 128px;
+	position: relative;
+	background-color: @white;
+	.lamell {
+		position: relative;
+		&.bunn {
+			position: fixed;
+            width: @mainContentWidth;
+			> HEADER {
+				height: 64px;
+				background-image: -webkit-linear-gradient(bottom, #e5e5e3 1px, #F1F1EF 14px);
+				background-image: linear-gradient(bottom, #e5e5e3 1px, #F1F1EF 14px);
+				background-image: -moz-linear-gradient(top, #e5e5e3 1px, #F1F1EF 14px);
+				-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#e5e5e3', endColorstr='#F1F1EF')"; /* IE8+ */
+				H1 {
+					line-height: 59px;
+					font-size: 1.8rem;
+				}
+			}
+		}
+		.person {
+			margin-left: 0;
+		}
+		.close {
+			display: block;
+			position: absolute;
+			right: 30px;
+			top: 15px;
+			padding: 2px;
+			width: 26px;
+			height: 25px;
+			overflow: hidden;
+			text-align: center;
+			color: transparent;
+			background: transparent url(../img/kryss_blaa.png) no-repeat center center;
+			border: 1px solid #ccc;
+		}
+		.close:focus, .close:hover {
+			border-color: @blue;
+			background: @blue url(../img/kryss_hvit.png) no-repeat center center;
+			color: transparent;
+			outline: none;
+		}
+		.error-panel {
+			padding: 30px 30px 40px 30px;
+			background-color: @white;
+			border: 1px solid @borderColorLight;
+			padding-bottom: 0;
+			H1 {
+				font-size: 1.14rem;
+			}
+		}
+		> HEADER {
+			display: block;
+			height: 64px;
+			background-image: -webkit-linear-gradient(bottom, #e5e5e3 1px, #F1F1EF 14px);
+			background-image: linear-gradient(bottom, #e5e5e3 1px, #F1F1EF 14px);
+			background-image: -moz-linear-gradient(bottom, #e5e5e3 1px, #F1F1EF 14px);
+			-ms-filter: "progid:DXImageTransform.Microsoft.gradient(startColorstr='#F1F1EF', endColorstr='#e5e5e3')"; /* IE8+ */
+			background-color: @bodyBackground;
+			H1 {
+				margin: 0 auto auto 30px;
+
+				line-height: 59px;
+				font-size: 1.8rem;
+			}
+			A H1, A:visited H1 {
+				color: @modiaBackground;
+			}
+			A, A:hover {
+				text-decoration: none;
+				color: #111;
+			}
+			&:hover {
+				background-image: none;
+				background-color: #DADADA;
+				-ms-filter: "";
+				A H1, A:visited H1 {
+					color: @blueDark;
+				}
+			}
+			> A:focus {
+				outline: none;
+				H1 {
+					color: @blueDark;
+				}
+			}
+		}
+		&.selected > HEADER {
+			height: 84px;
+			background: none;
+			cursor: default;
+			border-bottom: none;
+			-ms-filter: "";
+			H1 {
+				font-size: 2.5rem;
+				line-height: 79px;
+			}
+		}
+		.lerret {
+			padding: 2rem 30px 30px 30px;
+			width: 100%;
+			min-height: 30px;
+			.dobbeldato-container {
+				width: 100%;
+				margin-bottom: 1rem;
+				.dobbeldato {
+					width: auto;
+					LABEL {
+						min-width: 120px;
+					}
+				}
+			}
+		}
+	}
+}
+
+/* Generelle klasser */
+
+.flytflate {
+	line-height: 14px;
+	DIV {
+		width: 50%;
+		margin-bottom: 20px;
+	}
+	H3, H1 {
+		._H3;
+		text-transform: uppercase;
+		color: @grayLight;
+		margin: 0;
+	}
+	P {
+		font-weight: bold;
+		margin: 0;
+	}
+}
+
+.default-error {
+	padding-top: 10px;
+	SVG {
+		height: 30px;
+		width: 30px;
+		margin: auto;
+		display: block;
+		PATH {
+			fill: @orange;
+		}
+	}
+	P {
+		padding-top: 20px;
+		margin: 0;
+		font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+		text-align: center;
+		font-size: 1.2rem;
+		text-transform: uppercase;
+		font-weight: 600;
+	}
+	HR {
+		margin: 25px auto;
+		border-top: 1px solid @grayLight;
+		width: 30px;
+	}
+}
+
+.default-modal {
+	.default-error;
+	width: 400px;
+}
+
+.error-panel {
+	background-color: @bodyBackground;
+	padding: 10px 0px;
+	P {
+		padding-top: 10px;
+	}
+}
+
+.feil-lamell {
+	H1 {
+		color: @grayLight !important;
+	}
+	background-color: @bodyBackground;
+	min-height: 400px;
+}
+
+.default-cursor {
+	cursor: default !important;
+}
+
+/* MEDIA QUERIES */
+
+@media (max-width: 1500px) {
+	.hentperson #personsok #personsokPanel {
+		margin: 0 10%;
+	}
+
+	.intern #personsok #personsokPanel {
+		.navnogadresse {
+			width: 57%;
+		}
+		.begrenssoket {
+			margin-left: 5%;
+		}
+	}
+}
+
+@media (max-width: 1300px) {
+	.hentperson #personsok #personsokPanel {
+		margin: 0 5%;
+	}
+
+	#personsok #personsokPanel {
+		.description {
+			display: none;
+		}
+	}
+}
+
+@media (max-width: 1220px) {
+	.intern #personsok #personsokPanel {
+		margin: 0 30px;
+		.navnogadresse {
+			float: none;
+			display: block;
+			width: 100%;
+		}
+		.begrenssoket {
+			float: none;
+			width: 100%;
+			margin: 2rem 0;
+			display: block;
+			overflow: auto;
+		}
+	}
+}
+
+@media (min-width: 1200px) {
+	BODY {
+		width: 100%;
+	}
+}
+
+@media (min-width: 1100px) and (max-width: 1199px) {
+	.sidebar {
+		width: 32.1%;
+		.visittkort {
+			padding-left: 25px;
+			background-image: none;
+			&.mann, &.kvinne {
+				padding-left: 25px;
+				background-image: none;
+			}
+		}
+	}
+}
+
+@media (max-width: 1099px) {
+	BODY {
+		padding: 0;
+		overflow-x: hidden;
+		position: relative;
+		display: block;
+		overflow-y: auto;
+	}
+
+	.navbar {
+		position: relative;
+		height: 100px;
+		FORM {
+			.taskbox, NAV.menu {
+				width: 26.7%;
+				height: 32px;
+			}
+
+			.errorJS {
+				bottom: -1.5rem;
+			}
+		}
+	}
+
+	.bunn {
+		width: 100%;
+	}
+
+	.sidebar {
+		right: -385px;
+		width: 400px;
+		display: block;
+		position: absolute;
+		background: transparent url(../img/tapp_liten.png) no-repeat 0px 108px;
+		box-shadow: none;
+		height: auto;
+		top: 100px;
+		overflow-x: hidden;
+		z-index: 2500;
+		.visittkort, .visittkort.active {
+			margin: 0 0 0 15px;
+			padding: 15px 15px 15px 65px;
+			border-left: 1px solid #252421;
+			border-bottom: none;
+			border-top: none;
+			border-right: none;
+			background-color: @modiaBackground;
+			background-position: 15px 15px;
+		}
+		&.expanded {
+			.visittkort {
+				box-shadow: -8px 0px 10px -7px @grayDarker;
+			}
+		}
+	}
+
+	.intern #personsok #personsokPanel {
+		margin: 0 36.8% 0 30px;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 1099px) {
+	.lameller .lamell .lerret {
+		padding-right: 60px;
+	}
+}
+
+@media (max-width: 1024px) {
+	.hentperson #personsok #personsokPanel {
+		margin: 0 2%;
+		.navnogadresse {
+			width: 57%;
+		}
+		.begrenssoket {
+			margin-left: 5%;
+		}
+	}
+}
+
+@media (max-width: 900px) {
+	.hentperson #personsok #personsokPanel {
+		margin: 0 15%;
+		.navnogadresse {
+			float: none;
+			display: block;
+			width: 100%;
+		}
+		.begrenssoket {
+			float: none;
+			width: 100%;
+			margin: 2rem 0;
+			display: block;
+			overflow: auto;
+		}
+	}
+}
+
+@media (max-width: 767px) {
+	.lameller .lamell .lerret .kolonne {
+		width: 100%;
+		float: none;
+		display: block;
+	}
+
+	.lameller .lamell .lerret .kolonne:last-child {
+		margin-left: 0;
+	}
+
+	.hentperson #personsok #personsokPanel {
+		margin: 0 10%;
+	}
+
+	.intern #personsok #personsokPanel {
+		margin: 0 30px;
+	}
+
+	#personsok {
+		#personsokPanel {
+			.begrenssoket LABEL, LABEL {
+				float: none;
+				width: 100% !important;
+				margin: 0 0 1.5rem;
+				INPUT, SELECT {
+					margin-top: 5px;
+				}
+			}
+			LABEL, LABEL SPAN {
+				font-size: 1.14rem !important;
+			}
+			LABEL.husnummer, LABEL.husbokstav {
+				margin: 0 2% 1.5rem 0;
+			}
+			LABEL.postnummer {
+				margin: 0 0 1.5rem;
+			}
+			LABEL.husnummer, LABEL.husbokstav, LABEL.postnummer {
+				width: 31.6% !important;
+			}
+		}
+		#personsokResult #resultDataTable {
+			TH, TD {
+				padding: 0.5rem 0 0.5rem 0.5rem;
+			}
+		}
+	}
+}

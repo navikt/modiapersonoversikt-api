@@ -52,8 +52,8 @@ public class WicketApplication extends WebApplication {
     @Inject
     private ApplicationContext applicationContext;
 
-	@Resource(name = "kjerneinfoPep")
-	private EnforcementPoint kjerneinfoPep;
+    @Resource(name = "kjerneinfoPep")
+    private EnforcementPoint kjerneinfoPep;
 
     public static WicketApplication get() {
         return (WicketApplication) Application.get();
@@ -83,9 +83,9 @@ public class WicketApplication extends WebApplication {
 
         setMarkupSettings();
 
-		CompoundAuthorizationStrategy compoundAuthorizationStrategy = new CompoundAuthorizationStrategy();
-		compoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(kjerneinfoPep));
-		getSecuritySettings().setAuthorizationStrategy(compoundAuthorizationStrategy);
+        CompoundAuthorizationStrategy compoundAuthorizationStrategy = new CompoundAuthorizationStrategy();
+        compoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(kjerneinfoPep));
+        getSecuritySettings().setAuthorizationStrategy(compoundAuthorizationStrategy);
 
         new ApplicationSettingsConfig().withUtf8Properties(true).configure(this);
 
@@ -119,9 +119,12 @@ public class WicketApplication extends WebApplication {
                         MetaTag.CHARSET_UTF8,
                         MetaTag.VIEWPORT_SCALE_1
                 )
-		        .addConditionalCss(PersonPage.INTERN_IE)
+                .addConditionalCss(PersonPage.INTERN_IE)
                 .addConditionalJavascript(PersonPage.RESPOND_JS)
-		        .addLess(
+                .addLess(
+                        BasePage.MODIA_COMMON_LESS,
+                        BasePage.MODIA_KOMPONENTER_LESS,
+                        BasePage.MODIA_RAMME_LESS,
                         BasePage.PERSONINFO_LESS,
                         UtbetalingLerret.UTBETALING_LESS)
                 .addCss(
@@ -129,7 +132,7 @@ public class WicketApplication extends WebApplication {
                         BasePage.PERSONSOKSEARCH
                 )
                 .addScripts(SPIResources.getScripts())
-		        .addScripts(
+                .addScripts(
                         BasePage.JS_RESOURCE,
                         ShortcutListenerResourceReference.get(),
                         KeyNavigationResourceReference.get(),
@@ -145,7 +148,7 @@ public class WicketApplication extends WebApplication {
                         ModalErrorPanel.JS_RESOURCE,
                         UtbetalingLerret.UTBETALING_LAMELL_JS
                 )
-		        .withResourcePacking(this.usesDeploymentConfig())
+                .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
     }
 
@@ -160,7 +163,7 @@ public class WicketApplication extends WebApplication {
     @Override
     public Session newSession(Request request, Response response) {
         Session session = super.newSession(request, response);
-	    session.setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, false);
+        session.setAttribute(ModiaConstants.HENT_PERSON_BEGRUNNET, false);
         return session;
     }
 
