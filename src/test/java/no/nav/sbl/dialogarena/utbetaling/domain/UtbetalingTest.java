@@ -17,8 +17,8 @@ public class UtbetalingTest {
     @Test
     public void testSortering_SammeDato_SorterPaaNavn() throws Exception {
         DateTime idag = new DateTime();
-        Utbetaling utbetaling = new UtbetalingBuilder().withHovedytelse("Uføre").withUtbetalingsDato(idag).createUtbetaling();
-        Utbetaling utbetaling1 = new UtbetalingBuilder().withHovedytelse("Foreldrepenger").withUtbetalingsDato(idag).createUtbetaling();
+        Utbetaling utbetaling = new UtbetalingBuilder().withHovedytelse("Uføre").withUtbetalingsDato(idag).build();
+        Utbetaling utbetaling1 = new UtbetalingBuilder().withHovedytelse("Foreldrepenger").withUtbetalingsDato(idag).build();
         List<Utbetaling> utbetalinger = asList(utbetaling, utbetaling1);
 
         sort(utbetalinger, UTBETALING_DAG_YTELSE);
@@ -31,8 +31,8 @@ public class UtbetalingTest {
     public void testSortering_ForskjelligDato_SorterNyestForst() throws Exception {
         DateTime idag = new DateTime();
         DateTime igaar = idag.minusDays(1);
-        Utbetaling utbetaling = new UtbetalingBuilder().withHovedytelse("Uføre").withUtbetalingsDato(idag).createUtbetaling();
-        Utbetaling utbetaling1 = new UtbetalingBuilder().withHovedytelse("Foreldrepenger").withUtbetalingsDato(igaar).createUtbetaling();
+        Utbetaling utbetaling = new UtbetalingBuilder().withHovedytelse("Uføre").withUtbetalingsDato(idag).build();
+        Utbetaling utbetaling1 = new UtbetalingBuilder().withHovedytelse("Foreldrepenger").withUtbetalingsDato(igaar).build();
         List<Utbetaling> utbetalinger = asList(utbetaling, utbetaling1);
 
         sort(utbetalinger, UTBETALING_DAG_YTELSE);

@@ -78,7 +78,7 @@ public class UtbetalingTransformer {
             sort(underytelser, UNDERYTELSE_SKATT_NEDERST);
             utbetalingBuilder.withUnderytelser(underytelser);
 
-            utbetalinger.add(utbetalingBuilder.createUtbetaling());
+            utbetalinger.add(utbetalingBuilder.build());
         }
         return utbetalinger;
     }

@@ -42,7 +42,7 @@ public class OppsummeringVMTest {
         LocalDate startDato = defaultStartDato();
         LocalDate sluttDato = defaultSluttDato();
         String formatertDato = Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
-                               Datoformat.kortUtenLiteral(sluttDato.toDateTime(new LocalTime(23, 59)));
+                Datoformat.kortUtenLiteral(sluttDato.toDateTime(new LocalTime(23, 59)));
         List<Utbetaling> utbetalinger = asList(getUtbetaling(dato));
 
         OppsummeringVM vm = new OppsummeringVM(utbetalinger, startDato, sluttDato);
@@ -56,9 +56,9 @@ public class OppsummeringVMTest {
         Underytelse ytelse1 = new Underytelse("Grunnbeløp", "", optional(0d), 1000.0, optional(0D));
         Underytelse ytelse2 = new Underytelse("Tillegg", "", optional(0d), 500.0, optional(0D));
         Underytelse ytelse3 = new Underytelse("Skatt", "", optional(0d), -200.0, optional(0D));
-        Utbetaling dagpenger = new UtbetalingBuilder().withHovedytelse("Dagpenger").withUtbetalingsDato(now()).withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse1, ytelse3)).createUtbetaling();
-        Utbetaling dagpenger1 = new UtbetalingBuilder().withHovedytelse("Dagpenger").withUtbetalingsDato(now()).withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse2, ytelse3)).createUtbetaling();
-        Utbetaling dagpenger2 = new UtbetalingBuilder().withHovedytelse("Helseprodukter").withUtbetalingsDato(now()).withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse2)).createUtbetaling();
+        Utbetaling dagpenger = new UtbetalingBuilder().withHovedytelse("Dagpenger").withUtbetalingsDato(now()).withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse1, ytelse3)).build();
+        Utbetaling dagpenger1 = new UtbetalingBuilder().withHovedytelse("Dagpenger").withUtbetalingsDato(now()).withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse2, ytelse3)).build();
+        Utbetaling dagpenger2 = new UtbetalingBuilder().withHovedytelse("Helseprodukter").withUtbetalingsDato(now()).withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse2)).build();
 
         List<Utbetaling> utbetalinger = asList(dagpenger, dagpenger1, dagpenger2);
 
@@ -88,7 +88,7 @@ public class OppsummeringVMTest {
         Underytelse ytelse2 = new Underytelse("Grønn", "", optional(2d), 200.0, optional(0D));
         Underytelse ytelse3 = new Underytelse("Grønn", "", optional(3d), 300.0, optional(0D));
         List<Underytelse> underytelser = asList(ytelse1, ytelse2, ytelse3);
-        Utbetaling utbetaling = new UtbetalingBuilder().withHovedytelse("Våren").withUnderytelser(underytelser).withUtbetalingsDato(now()).createUtbetaling();
+        Utbetaling utbetaling = new UtbetalingBuilder().withHovedytelse("Våren").withUnderytelser(underytelser).withUtbetalingsDato(now()).withPeriode(new Interval(now().minusDays(14), now())).build();
         List<Utbetaling> utbetalinger = asList(utbetaling);
 
         OppsummeringVM vm = new OppsummeringVM(utbetalinger, defaultStartDato(), defaultSluttDato());
@@ -104,7 +104,8 @@ public class OppsummeringVMTest {
         return new UtbetalingBuilder().withHovedytelse("Kjeks")
                 .withUnderytelser(asList(new Underytelse("", "", optional(0d), 0, optional(0D))))
                 .withUtbetalingsDato(dato)
-                .createUtbetaling();
+                .withPeriode(new Interval(dato.minusDays(14), dato))
+                .build();
     }
 
 }

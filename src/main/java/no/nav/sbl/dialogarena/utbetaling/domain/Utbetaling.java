@@ -202,7 +202,7 @@ public final class Utbetaling implements Serializable {
             return this;
         }
 
-        public Utbetaling createUtbetaling() {
+        public Utbetaling build() {
             Utbetaling utbetaling = new Utbetaling();
             utbetaling.utbetalingsdato = this.utbetalingsDato;
             utbetaling.periode = this.periode;
@@ -256,10 +256,4 @@ public final class Utbetaling implements Serializable {
         }
     };
 
-    public static final Transformer<Utbetaling, DateTime> UTBETALINGSDATO = new Transformer<Utbetaling, DateTime>() {
-        @Override
-        public DateTime transform(Utbetaling utbetaling) {
-            return utbetaling.getUtbetalingsdato();
-        }
-    };
 }

@@ -54,7 +54,7 @@ public class UtbetalingVMComparatorTest {
                         .withMottakerId("12345678910")
                         .withKontonr("123")
                         .withUtbetalingsDato(utbetalingsDato)
-                        .createUtbetaling()
+                        .build()
         );
     }
 }
