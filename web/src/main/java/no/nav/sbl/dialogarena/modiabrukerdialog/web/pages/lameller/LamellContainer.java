@@ -4,6 +4,7 @@ import no.nav.brukerprofil.BrukerprofilPanel;
 import no.nav.kjerneinfo.kontrakter.KontrakterPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.LamellFactory;
 import no.nav.modig.modia.lamell.Lerret;
@@ -49,6 +50,18 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public LamellContainer(String id, String fnrFromRequest) {
         super(id, createLamellFactories(fnrFromRequest));
         this.fnrFromRequest = fnrFromRequest;
+    }
+
+    public void handleLamellLinkClicked(LamellPayload lamellPayload) {
+        String lamellId = lamellPayload.lamellId.toLowerCase();
+        if (hasFactory(lamellId)) {
+            goToLamell(lamellId);
+            sendToLamell(lamellId, lamellPayload);
+        } else {
+            ApplicationException exc = new ApplicationException("Feedlenke med ukjent type <" + lamellId + "> klikket");
+            logger.warn("ukjent lamellId: {}", lamellId, exc);
+            throw exc;
+        }
     }
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
