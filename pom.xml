@@ -226,7 +226,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-jetty</artifactId>
-                <version>1.0.20</version>
+                <version>1.0.23</version>
                 <scope>test</scope>
             </dependency>
 
