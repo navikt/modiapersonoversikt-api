@@ -58,7 +58,7 @@
         <jodatime.version>2.2</jodatime.version>
         <!-- Modia-komponenter-->
         <personsok.version>0.0.97</personsok.version>
-        <kjerneinfo.versjon>1.0.46</kjerneinfo.versjon>
+        <kjerneinfo.versjon>1.0.47</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <sporsmalogsvar.version>1.18</sporsmalogsvar.version>
         <utbetaling.version>2.0.27</utbetaling.version>
@@ -770,7 +770,7 @@
                 <plugin>
                     <groupId>no.nav.maven.plugins</groupId>
                     <artifactId>jboss-maven-plugin</artifactId>
-                    <version>3.3.4</version>
+                    <version>3.4.0</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
