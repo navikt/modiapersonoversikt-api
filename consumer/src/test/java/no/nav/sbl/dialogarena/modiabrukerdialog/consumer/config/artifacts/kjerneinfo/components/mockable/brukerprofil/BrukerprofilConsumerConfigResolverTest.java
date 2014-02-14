@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjern
 
 import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.brukerprofil.consumer.messages.BrukerprofilRequest;
+import no.nav.brukerprofil.consumer.support.mapping.BrukerprofilMapper;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.BrukerprofilConsumerConfigResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Wrapper;
 import no.nav.tjeneste.virksomhet.brukerprofil.v1.HentKontaktinformasjonOgPreferanserPersonIkkeFunnet;
@@ -40,6 +41,8 @@ public class BrukerprofilConsumerConfigResolverTest {
         setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.nav.no");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.brukerprofilServiceBi().hentKontaktinformasjonOgPreferanser(new BrukerprofilRequest("ident"));
+        resolver.brukerprofilServiceBi().setMapper(new BrukerprofilMapper());
+        resolver.brukerprofilServiceBi().ping();
         verifyZeroInteractions(brukerprofilService.wrappedObject);
     }
 
@@ -47,7 +50,11 @@ public class BrukerprofilConsumerConfigResolverTest {
     public void perDefaultSkalProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
         setProperty(TILLATMOCKSETUP_PROPERTY, "nei");
         resolver.brukerprofilServiceBi().hentKontaktinformasjonOgPreferanser(new BrukerprofilRequest("ident"));
+        resolver.brukerprofilServiceBi().setMapper(new BrukerprofilMapper());
+        resolver.brukerprofilServiceBi().ping();
         verify(brukerprofilService.wrappedObject, times(1)).hentKontaktinformasjonOgPreferanser(any(BrukerprofilRequest.class));
+        verify(brukerprofilService.wrappedObject, times(1)).setMapper(any(BrukerprofilMapper.class));
+        verify(brukerprofilService.wrappedObject, times(1)).ping();
     }
 
 }
