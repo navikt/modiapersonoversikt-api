@@ -56,9 +56,13 @@ public class KontrakterConsumerConfigResolverTest {
     public void perDefaultSkalProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
         setProperty(TILLATMOCKSETUP_PROPERTY, "nei");
         resolver.ytelseskontraktServiceBi().hentYtelseskontrakter(new YtelseskontraktRequest());
+        resolver.ytelseskontraktServiceBi().ping();
         resolver.oppfolgingskontraktServiceBi().hentOppfolgingskontrakter(new OppfolgingskontraktRequest());
+        resolver.oppfolgingskontraktServiceBi().ping();
         verify(ytelseskontraktService.wrappedObject, times(1)).hentYtelseskontrakter(any(YtelseskontraktRequest.class));
+        verify(ytelseskontraktService.wrappedObject, times(1)).ping();
         verify(oppfolgingskontraktService.wrappedObject, times(1)).hentOppfolgingskontrakter(any(OppfolgingskontraktRequest.class));
+        verify(oppfolgingskontraktService.wrappedObject, times(1)).ping();
     }
 
 }
