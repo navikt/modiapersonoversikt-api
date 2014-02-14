@@ -19,7 +19,6 @@ import javax.inject.Inject;
 import javax.jws.WebParam;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErTillattOgSlaattPaaForKey;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
 
 @Configuration
 public class KodeverkV2EndpointConfig {
