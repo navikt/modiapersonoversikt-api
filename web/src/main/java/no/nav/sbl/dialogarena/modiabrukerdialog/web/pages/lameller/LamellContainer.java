@@ -53,15 +53,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     public void handleLamellLinkClicked(LamellPayload lamellPayload) {
-        String lamellId = lamellPayload.lamellId.toLowerCase();
-        if (hasFactory(lamellId)) {
-            goToLamell(lamellId);
-            sendToLamell(lamellId, lamellPayload);
-        } else {
-            ApplicationException exc = new ApplicationException("Feedlenke med ukjent type <" + lamellId + "> klikket");
-            logger.warn("ukjent lamellId: {}", lamellId, exc);
-            throw exc;
-        }
+        gotoAndSendToLamell(lamellPayload.lamellId.toLowerCase(), lamellPayload);
     }
 
     public void handleFeedItemEvent(IEvent<?> event, FeedItemPayload feedItemPayload) {
@@ -72,27 +64,11 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             lamellId = createLamellIfMissing(type, feedItemPayload.getItemId());
         }
 
-        if (hasFactory(lamellId)) {
-            goToLamell(lamellId);
-            sendToLamell(lamellId, event.getPayload());
-        } else {
-            ApplicationException exc = new ApplicationException("Feedlenke med ukjent type <" + lamellId + "> klikket");
-            logger.warn("ukjent lamellId: {}", lamellId, exc);
-            throw exc;
-        }
+        gotoAndSendToLamell(lamellId, event.getPayload());
     }
 
     public void handleWidgetHeaderEvent(IEvent<?> event, WidgetHeaderPayload widgetHeaderPayload) {
-        String type = widgetHeaderPayload.getType().toLowerCase();
-
-        if (hasFactory(type)) {
-            goToLamell(type);
-            sendToLamell(type, event.getPayload());
-        } else {
-            ApplicationException exc = new ApplicationException("Widget med ukjent type <" + type + "> klikket");
-            logger.warn("ukjent lamellId: {}", type, exc);
-            throw exc;
-        }
+        gotoAndSendToLamell(widgetHeaderPayload.getType().toLowerCase(), event.getPayload());
     }
 
     public void handleWidgetItemEvent(String linkId) {
@@ -192,5 +168,16 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             return lamell.isModified();
         }
     };
+
+    private void gotoAndSendToLamell(String lamellId, Object payload) {
+        if (hasFactory(lamellId)) {
+            goToLamell(lamellId);
+            sendToLamell(lamellId, payload);
+        } else {
+            ApplicationException exc = new ApplicationException("Ukjent lamellId <" + lamellId + "> klikket");
+            logger.warn("ukjent lamellId: {}", lamellId, exc);
+            throw exc;
+        }
+    }
 
 }
