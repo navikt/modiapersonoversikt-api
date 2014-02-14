@@ -5,13 +5,14 @@ import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertFalse;
-import static junit.framework.Assert.assertTrue;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.END;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.START;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.TO_LOCAL_DATE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.isAfter;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class DateUtilsTest {
 
@@ -29,13 +30,13 @@ public class DateUtilsTest {
         DateTime start = DateTime.now();
         DateTime end = DateTime.now().plusHours(1);
         Interval interval = new Interval(start, end);
-        assertEquals(start, START.transform(interval));
-        assertEquals(end, END.transform(interval));
+        assertThat(start, equalTo(START.transform(interval)));
+        assertThat(end, equalTo(END.transform(interval)));
     }
 
     @Test
     public void toLocalDateTransformerTest() {
         DateTime dateTime = DateTime.now();
-        assertEquals(dateTime.toLocalDate(), TO_LOCAL_DATE.transform(dateTime));
+        assertThat(dateTime.toLocalDate(), equalTo(TO_LOCAL_DATE.transform(dateTime)));
     }
 }
