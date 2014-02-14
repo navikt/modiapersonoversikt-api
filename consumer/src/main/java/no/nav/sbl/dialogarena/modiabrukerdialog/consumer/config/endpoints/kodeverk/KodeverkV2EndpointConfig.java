@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.inject.Inject;
 import javax.jws.WebParam;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErSlaattPaaForKey;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErTillattOgSlaattPaaForKey;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
 
 @Configuration
@@ -42,7 +42,7 @@ public class KodeverkV2EndpointConfig {
             @Override
             public XMLHentKodeverkResponse hentKodeverk(@WebParam(name = "request", targetNamespace = "") XMLHentKodeverkRequest xmlHentKodeverkRequest)
                     throws HentKodeverkHentKodeverkKodeverkIkkeFunnet {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KODEVERK_KEY)) {
                     return kodeverkMock.wrappedObject.kodeverkPortType().hentKodeverk(xmlHentKodeverkRequest);
                 }
                 return kodeverkPort.wrappedObject.kodeverkPortType().hentKodeverk(xmlHentKodeverkRequest);
@@ -51,7 +51,7 @@ public class KodeverkV2EndpointConfig {
             @Cacheable("kodeverkCache")
             @Override
             public XMLFinnKodeverkListeResponse finnKodeverkListe(@WebParam(name = "request", targetNamespace = "") XMLFinnKodeverkListeRequest xmlFinnKodeverkListeRequest) {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KODEVERK_KEY)) {
                     return kodeverkMock.wrappedObject.kodeverkPortType().finnKodeverkListe(xmlFinnKodeverkListeRequest);
                 }
                 return kodeverkPort.wrappedObject.kodeverkPortType().finnKodeverkListe(xmlFinnKodeverkListeRequest);
@@ -59,7 +59,7 @@ public class KodeverkV2EndpointConfig {
 
             @Override
             public void ping() {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KODEVERK_KEY)) {
                     kodeverkMock.wrappedObject.kodeverkPortType().ping();
                     return;
                 }
@@ -76,7 +76,7 @@ public class KodeverkV2EndpointConfig {
             @Cacheable("kodeverkCache")
             @Override
             public XMLKodeverk hentKodeverk(String s) {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KODEVERK_KEY)) {
                     return kodeverkMock.wrappedObject.kodeverkClient().hentKodeverk(s);
                 }
                 return kodeverkPort.wrappedObject.kodeverkClient().hentKodeverk(s);
@@ -85,7 +85,7 @@ public class KodeverkV2EndpointConfig {
             @Cacheable("kodeverkCache")
             @Override
             public String hentFoersteTermnavnForKode(String s, String s2) {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KODEVERK_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KODEVERK_KEY)) {
                     return kodeverkMock.wrappedObject.kodeverkClient().hentFoersteTermnavnForKode(s, s2);
                 }
                 return kodeverkPort.wrappedObject.kodeverkClient().hentFoersteTermnavnForKode(s, s2);

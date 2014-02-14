@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.inject.Inject;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErSlaattPaaForKey;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErTillattOgSlaattPaaForKey;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
 
 @Configuration
@@ -42,7 +42,7 @@ public class KontrakterConsumerConfigResolver {
         return new YtelseskontraktServiceBi() {
             @Override
             public YtelseskontraktResponse hentYtelseskontrakter(YtelseskontraktRequest request) {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return ytelseskontraktMock.wrappedObject.hentYtelseskontrakter(request);
                 }
                 return ytelseskontraktService.wrappedObject.hentYtelseskontrakter(request);
@@ -50,7 +50,7 @@ public class KontrakterConsumerConfigResolver {
 
             @Override
             public PingResult ping() {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return ytelseskontraktMock.wrappedObject.ping();
                 }
                 return ytelseskontraktService.wrappedObject.ping();
@@ -63,7 +63,7 @@ public class KontrakterConsumerConfigResolver {
         return new OppfolgingskontraktServiceBi() {
             @Override
             public OppfolgingskontraktResponse hentOppfolgingskontrakter(OppfolgingskontraktRequest request) {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return oppfolgingskontraktMock.wrappedObject.hentOppfolgingskontrakter(request);
                 }
                 return oppfolgingskontraktService.wrappedObject.hentOppfolgingskontrakter(request);
@@ -71,7 +71,7 @@ public class KontrakterConsumerConfigResolver {
 
             @Override
             public PingResult ping() {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return oppfolgingskontraktMock.wrappedObject.ping();
                 }
                 return oppfolgingskontraktService.wrappedObject.ping();

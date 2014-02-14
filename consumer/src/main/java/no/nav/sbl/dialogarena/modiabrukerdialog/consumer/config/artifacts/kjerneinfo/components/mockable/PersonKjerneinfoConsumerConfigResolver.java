@@ -12,7 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.inject.Inject;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErSlaattPaaForKey;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErTillattOgSlaattPaaForKey;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
 
 @Configuration
@@ -32,7 +32,7 @@ public class PersonKjerneinfoConsumerConfigResolver {
         return new PersonKjerneinfoServiceBi() {
             @Override
             public HentKjerneinformasjonResponse hentKjerneinformasjon(HentKjerneinformasjonRequest hentKjerneinformasjonRequest) {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return personKjerneinfoServiceMock.wrappedObject.hentKjerneinformasjon(hentKjerneinformasjonRequest);
                 }
                 return personKjerneinfoServiceDefault.wrappedObject.hentKjerneinformasjon(hentKjerneinformasjonRequest);
@@ -40,7 +40,7 @@ public class PersonKjerneinfoConsumerConfigResolver {
 
             @Override
             public PingResult ping() {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return personKjerneinfoServiceMock.wrappedObject.ping();
                 }
                 return personKjerneinfoServiceDefault.wrappedObject.ping();

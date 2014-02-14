@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.inject.Inject;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErSlaattPaaForKey;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErTillattOgSlaattPaaForKey;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
 
 @Configuration
@@ -71,7 +71,7 @@ public class SykmeldingsperioderPanelConfigResolver {
         return new ForeldrepengerServiceBi() {
             @Override
             public ForeldrepengerListeResponse hentForeldrepengerListe(ForeldrepengerListeRequest request) {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return foreldrepengerServiceMock.wrappedObject.hentForeldrepengerListe(request);
                 }
                 return foreldrepengerServiceDefault.wrappedObject.hentForeldrepengerListe(request);
@@ -79,7 +79,7 @@ public class SykmeldingsperioderPanelConfigResolver {
 
             @Override
             public PingResult ping() {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return foreldrepengerServiceMock.wrappedObject.ping();
                 }
                 return foreldrepengerServiceDefault.wrappedObject.ping();
@@ -91,7 +91,7 @@ public class SykmeldingsperioderPanelConfigResolver {
         return new SykepengerServiceBi() {
             @Override
             public SykepengerResponse hentSykmeldingsperioder(SykepengerRequest request) {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return sykepengerServiceMock.wrappedObject.hentSykmeldingsperioder(request);
                 }
                 return sykepengerServiceDefault.wrappedObject.hentSykmeldingsperioder(request);
@@ -99,7 +99,7 @@ public class SykmeldingsperioderPanelConfigResolver {
 
             @Override
             public PingResult ping() {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return sykepengerServiceMock.wrappedObject.ping();
                 }
                 return sykepengerServiceDefault.wrappedObject.ping();

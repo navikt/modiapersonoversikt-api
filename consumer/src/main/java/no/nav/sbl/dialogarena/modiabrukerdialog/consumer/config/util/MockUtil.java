@@ -26,8 +26,8 @@ public class MockUtil {
         return mockSetupErTillatt(getProperty(TILLATMOCKSETUP_PROPERTY));
     }
 
-    public static boolean mockErSlaattPaaForKey(String key) {
-        return getProperty(key, DEFAULT_MOCK_TILLATT).equalsIgnoreCase(ALLOW_MOCK);
+    public static boolean mockErTillattOgSlaattPaaForKey(String key) {
+        return mockSetupErTillatt() && getProperty(key, DEFAULT_MOCK_TILLATT).equalsIgnoreCase(ALLOW_MOCK);
     }
 
 }

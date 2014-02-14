@@ -18,7 +18,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.inject.Inject;
 import javax.jws.WebParam;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErSlaattPaaForKey;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErTillattOgSlaattPaaForKey;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
 
 @Configuration
@@ -42,7 +42,7 @@ public class UtbetalingEndpointConfig {
             @Override
             public WSHentUtbetalingListeResponse hentUtbetalingListe(@WebParam(name = "request", targetNamespace = "") WSHentUtbetalingListeRequest request)
                     throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(UTBETALING_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(UTBETALING_KEY)) {
                     return mockedPortTypeWrapper.wrappedObject.hentUtbetalingListe(request);
                 }
                 return portTypeWrapper.wrappedObject.hentUtbetalingListe(request);

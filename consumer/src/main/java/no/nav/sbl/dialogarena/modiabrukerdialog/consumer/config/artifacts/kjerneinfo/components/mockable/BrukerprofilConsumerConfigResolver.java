@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.inject.Inject;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErSlaattPaaForKey;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErTillattOgSlaattPaaForKey;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
 
 @Configuration
@@ -35,7 +35,7 @@ public class BrukerprofilConsumerConfigResolver {
             @Override
             public BrukerprofilResponse hentKontaktinformasjonOgPreferanser(BrukerprofilRequest request)
                     throws HentKontaktinformasjonOgPreferanserPersonIkkeFunnet, HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return mockService.wrappedObject.hentKontaktinformasjonOgPreferanser(request);
                 }
                 return defaultService.wrappedObject.hentKontaktinformasjonOgPreferanser(request);
@@ -43,7 +43,7 @@ public class BrukerprofilConsumerConfigResolver {
 
             @Override
             public void setMapper(BrukerprofilMapper mapper) {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     mockService.wrappedObject.setMapper(mapper);
                 } else {
                     defaultService.wrappedObject.setMapper(mapper);
@@ -52,7 +52,7 @@ public class BrukerprofilConsumerConfigResolver {
 
             @Override
             public PingResult ping() {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return mockService.wrappedObject.ping();
                 }
                 return defaultService.wrappedObject.ping();

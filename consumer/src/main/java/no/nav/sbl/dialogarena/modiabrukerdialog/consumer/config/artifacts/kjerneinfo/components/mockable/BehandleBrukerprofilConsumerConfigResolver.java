@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import javax.inject.Inject;
 
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErSlaattPaaForKey;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErTillattOgSlaattPaaForKey;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
 
 @Configuration
@@ -35,7 +35,7 @@ public class BehandleBrukerprofilConsumerConfigResolver {
             @Override
             public void oppdaterKontaktinformasjonOgPreferanser(BehandleBrukerprofilRequest request)
                     throws OppdaterKontaktinformasjonOgPreferanserSikkerhetsbegrensning, OppdaterKontaktinformasjonOgPreferanserPersonIkkeFunnet, OppdaterKontaktinformasjonOgPreferanserUgyldigInput {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     mockService.wrappedObject.oppdaterKontaktinformasjonOgPreferanser(request);
                 } else {
                     defaultService.wrappedObject.oppdaterKontaktinformasjonOgPreferanser(request);
@@ -44,7 +44,7 @@ public class BehandleBrukerprofilConsumerConfigResolver {
 
             @Override
             public PingResult ping() {
-                if (mockSetupErTillatt() && mockErSlaattPaaForKey(KJERNEINFO_KEY)) {
+                if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return mockService.wrappedObject.ping();
                 }
                 return defaultService.wrappedObject.ping();
