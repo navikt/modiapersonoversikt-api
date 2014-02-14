@@ -201,11 +201,6 @@
             <artifactId>common-integrasjonsutils</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava-collections</artifactId>
-        </dependency>
-
         <!--TEST-->
         <dependency>
             <groupId>no.nav</groupId>

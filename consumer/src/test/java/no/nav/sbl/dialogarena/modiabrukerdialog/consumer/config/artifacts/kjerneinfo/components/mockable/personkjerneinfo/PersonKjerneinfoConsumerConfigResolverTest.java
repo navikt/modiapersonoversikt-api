@@ -38,7 +38,7 @@ public class PersonKjerneinfoConsumerConfigResolverTest {
 
         @Test
     public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.nav.no");
+        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.personKjerneinfoServiceBi().hentKjerneinformasjon(new HentKjerneinformasjonRequest(""));
         resolver.personKjerneinfoServiceBi().ping();
@@ -47,7 +47,7 @@ public class PersonKjerneinfoConsumerConfigResolverTest {
 
     @Test
     public void perDefaultSkalProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "nei");
+        setProperty(TILLATMOCKSETUP_PROPERTY, "false");
         resolver.personKjerneinfoServiceBi().hentKjerneinformasjon(new HentKjerneinformasjonRequest(""));
         resolver.personKjerneinfoServiceBi().ping();
         verify(personKjerneinfoServiceDefault.wrappedObject, times(1)).hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class));

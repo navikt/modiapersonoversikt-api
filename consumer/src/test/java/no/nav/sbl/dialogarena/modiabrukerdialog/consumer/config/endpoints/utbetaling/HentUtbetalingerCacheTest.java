@@ -46,8 +46,8 @@ public class HentUtbetalingerCacheTest {
     @BeforeClass
     public static void setUp() {
         setProperty("utbetalingendpoint.v2.url", "https://service-gw-t11.test.local/");
-        setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.no");
-        setProperty(UTBETALING_KEY, "yes");
+        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
+        setProperty(UTBETALING_KEY, "true");
     }
 
     @Test

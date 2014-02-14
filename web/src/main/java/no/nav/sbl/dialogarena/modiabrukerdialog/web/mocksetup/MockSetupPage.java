@@ -64,7 +64,7 @@ public class MockSetupPage extends BasePage {
         }.add(
                 listView,
                 new CheckBox("brukTestPerson", new PropertyModel<Boolean>(this, "brukTestPerson")
-        ));
+                ));
     }
 
     private ListView<MockSetupModel> leggTilMockCheckBoxer() {
@@ -81,9 +81,9 @@ public class MockSetupPage extends BasePage {
 
     private List<MockSetupModel> lagModeller() {
         return asList(
-                new MockSetupModel("1", "Utbetaling", UTBETALING_KEY),
-                new MockSetupModel("2", "Kodeverk", KODEVERK_KEY),
-                new MockSetupModel("3", "Kjerneinfo", KJERNEINFO_KEY)
+                new MockSetupModel("Utbetaling", UTBETALING_KEY),
+                new MockSetupModel("Kodeverk", KODEVERK_KEY),
+                new MockSetupModel("Kjerneinfo", KJERNEINFO_KEY)
         );
     }
 

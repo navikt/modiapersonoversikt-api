@@ -34,7 +34,7 @@ public class KjerneinfoMapperConfigResolverTest {
 
     @Test
     public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.nav.no");
+        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.kjerneinfoMapperBean().map(new Object(), new Object());
         verifyZeroInteractions(kodeverkManagerService.wrappedObject);

@@ -37,7 +37,7 @@ public class KodeverkConfigTest {
 
     @Test
     public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() throws HentKodeverkHentKodeverkKodeverkIkkeFunnet {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.nav.no");
+        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setProperty(KODEVERK_KEY, ALLOW_MOCK);
         portType.finnKodeverkListe(new XMLFinnKodeverkListeRequest());
         portType.hentKodeverk(new XMLHentKodeverkRequest());

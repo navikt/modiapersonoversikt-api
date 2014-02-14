@@ -38,7 +38,7 @@ public class BrukerprofilConsumerConfigResolverTest {
 
     @Test
     public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.nav.no");
+        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.brukerprofilServiceBi().hentKontaktinformasjonOgPreferanser(new BrukerprofilRequest("ident"));
         resolver.brukerprofilServiceBi().setMapper(new BrukerprofilMapper());
@@ -48,7 +48,7 @@ public class BrukerprofilConsumerConfigResolverTest {
 
     @Test
     public void perDefaultSkalProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "nei");
+        setProperty(TILLATMOCKSETUP_PROPERTY, "false");
         resolver.brukerprofilServiceBi().hentKontaktinformasjonOgPreferanser(new BrukerprofilRequest("ident"));
         resolver.brukerprofilServiceBi().setMapper(new BrukerprofilMapper());
         resolver.brukerprofilServiceBi().ping();

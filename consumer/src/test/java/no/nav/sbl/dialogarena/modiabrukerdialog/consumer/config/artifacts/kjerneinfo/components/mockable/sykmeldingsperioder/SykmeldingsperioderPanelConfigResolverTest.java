@@ -46,7 +46,7 @@ public class SykmeldingsperioderPanelConfigResolverTest {
 
     @Test
     public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "http://ja.nav.no");
+        setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.sykepengerWidgetService().getWidgetContent("");
         verifyZeroInteractions(sykepengerServiceDefault.wrappedObject);
@@ -55,7 +55,7 @@ public class SykmeldingsperioderPanelConfigResolverTest {
     @Ignore //trenger endring på SykepengerWidgetServiceImpl som må fjerne @Inject
     @Test
     public void perDefaultSkalProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
-        setProperty(TILLATMOCKSETUP_PROPERTY, "nei");
+        setProperty(TILLATMOCKSETUP_PROPERTY, "false");
         resolver.sykepengerWidgetService().getWidgetContent("");
         verify(sykepengerServiceDefault.wrappedObject, times(1)).hentSykmeldingsperioder(any(SykepengerRequest.class));
     }

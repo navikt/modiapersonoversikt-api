@@ -41,9 +41,7 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.util.Locale;
 
-import static java.lang.System.getProperty;
 import static no.nav.modig.frontend.FrontendModules.MODIA;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.DEFAULT_MOCK_TILLATT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
 import static org.apache.wicket.util.time.Duration.ONE_SECOND;
 
@@ -155,7 +153,7 @@ public class WicketApplication extends WebApplication {
     private void mountPages() {
         mountPage("/person/${fnr}", PersonPage.class);
         mountPage("internal/selftest", SelfTestPage.class);
-        if(mockSetupErTillatt(getProperty("tillatmocksetup.url", DEFAULT_MOCK_TILLATT))) {
+        if(mockSetupErTillatt()) {
             mountPage("internal/mocksetup", MockSetupPage.class);
         }
     }

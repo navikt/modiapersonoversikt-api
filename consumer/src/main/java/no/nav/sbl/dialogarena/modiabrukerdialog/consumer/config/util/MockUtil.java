@@ -1,29 +1,17 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util;
 
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
-import static com.google.common.collect.Sets.newHashSet;
+import static java.lang.Boolean.valueOf;
 import static java.lang.System.getProperty;
 
 public class MockUtil {
 
-    public static final String TILLATMOCKSETUP_PROPERTY = "tillatmocksetup.url";
-    public static final String DEFAULT_MOCK_TILLATT = "no";
-    public static final String ALLOW_MOCK = "yes";
-
-    public static boolean mockSetupErTillatt(String url) {
-        if (url == null) { return false; }
-        try {
-            return newHashSet(new URL(url.toLowerCase()).getHost().split("\\.")).contains("ja");
-        } catch (MalformedURLException e) {
-            return false;
-        }
-    }
+    public static final String TILLATMOCKSETUP_PROPERTY = "tillatmocksetup";
+    public static final String DEFAULT_MOCK_TILLATT = "false";
+    public static final String ALLOW_MOCK = "true";
 
     public static boolean mockSetupErTillatt() {
-        return mockSetupErTillatt(getProperty(TILLATMOCKSETUP_PROPERTY));
+        return valueOf(getProperty(TILLATMOCKSETUP_PROPERTY, DEFAULT_MOCK_TILLATT));
     }
 
     public static boolean mockErTillattOgSlaattPaaForKey(String key) {
