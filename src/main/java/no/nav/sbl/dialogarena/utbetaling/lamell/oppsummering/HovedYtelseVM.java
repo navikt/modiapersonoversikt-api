@@ -18,16 +18,16 @@ public class HovedYtelseVM implements Serializable {
     private final Double trekk;
     private final Double utbetalt;
     private final List<UnderYtelseVM> underYtelsesBeskrivelser;
-    private final DateTime minUtbetalingsdato;
-    private final DateTime maxUtbetalingsdato;
+    private final DateTime startPeriode;
+    private final DateTime sluttPeriode;
 
-    public HovedYtelseVM(String beskrivelse, List<Underytelse> underytelser, Double brutto, Double trekk, Double utbetalt, DateTime minUtbetalingsdato, DateTime maxUtbetalingsdato) {
+    public HovedYtelseVM(String beskrivelse, List<Underytelse> underytelser, Double brutto, Double trekk, Double utbetalt, DateTime startPeriode, DateTime sluttPeriode) {
         hovedYtelsesBeskrivelse = beskrivelse;
         this.brutto = brutto;
         this.trekk = trekk;
         this.utbetalt = utbetalt;
-        this.minUtbetalingsdato = minUtbetalingsdato;
-        this.maxUtbetalingsdato = maxUtbetalingsdato;
+        this.startPeriode = startPeriode;
+        this.sluttPeriode = sluttPeriode;
         underYtelsesBeskrivelser = new ArrayList<>();
         for (Underytelse underytelse : underytelser) {
             underYtelsesBeskrivelser.add(new UnderYtelseVM(underytelse.getTittel(), underytelse.getBelop()));
@@ -55,9 +55,7 @@ public class HovedYtelseVM implements Serializable {
     }
 
     public String getHovedYtelsePeriode() {
-        return minUtbetalingsdato.equals(maxUtbetalingsdato) ?
-                kortUtenLiteral(minUtbetalingsdato) :
-                kortUtenLiteral(minUtbetalingsdato) + " - " + kortUtenLiteral(maxUtbetalingsdato);
+        return kortUtenLiteral(startPeriode) + " - " + kortUtenLiteral(sluttPeriode);
     }
 
     public static class HovedYtelseComparator {

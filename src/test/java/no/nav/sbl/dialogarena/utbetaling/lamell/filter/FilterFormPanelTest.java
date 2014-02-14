@@ -53,7 +53,7 @@ public class FilterFormPanelTest extends AbstractWicketTest{
                 .withHovedytelse(DAGPENGER)
                 .withMottakertype(Utbetaling.Mottaktertype.BRUKER)
                 .withUtbetalingsDato(now())
-                .createUtbetaling();
+                .build();
 
         assertTrue(filterParametre.evaluate(utbetaling));
 

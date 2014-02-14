@@ -38,7 +38,7 @@ public class FilterParametereTest {
                 .withUtbetalingsDato(now().minusYears(2))
                 .withMottakertype(Mottaktertype.BRUKER)
                 .withHovedytelse(DAGPENGER)
-                .createUtbetaling();
+                .build();
 
         assertFalse(filterparams.evaluate(utbetaling));
     }
@@ -49,7 +49,7 @@ public class FilterParametereTest {
                 .withUtbetalingsDato(now())
                 .withMottakertype(Mottaktertype.ANNEN_MOTTAKER)
                 .withHovedytelse(DAGPENGER)
-                .createUtbetaling();
+                .build();
 
         filterparams.toggleMottaker(Mottaktertype.ANNEN_MOTTAKER);
 
@@ -62,7 +62,7 @@ public class FilterParametereTest {
                 .withUtbetalingsDato(now())
                 .withMottakertype(Mottaktertype.BRUKER)
                 .withHovedytelse(DAGPENGER)
-                .createUtbetaling();
+                .build();
 
         filterparams.leggTilOnsketYtelse(BARNETRYGD);
 
@@ -75,7 +75,7 @@ public class FilterParametereTest {
                 .withUtbetalingsDato(now())
                 .withMottakertype(Mottaktertype.BRUKER)
                 .withHovedytelse(DAGPENGER)
-                .createUtbetaling();
+                .build();
 
         filterparams.velgEnYtelse(BARNETRYGD);
 
@@ -89,7 +89,7 @@ public class FilterParametereTest {
                 .withUtbetalingsDato(now())
                 .withMottakertype(Mottaktertype.BRUKER)
                 .withHovedytelse(DAGPENGER)
-                .createUtbetaling();
+                .build();
         filterparams.setYtelser(new HashSet<>(asList(utbetaling.getHovedytelse())));
 
         assertThat(filterparams.evaluate(utbetaling), is(true));
@@ -132,8 +132,8 @@ public class FilterParametereTest {
 
         filterparams.toggleAlleYtelser(true);
 
-        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(DAGPENGER).createUtbetaling()), is(true));
-        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(BARNETRYGD).createUtbetaling()), is(true));
+        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(DAGPENGER).build()), is(true));
+        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(BARNETRYGD).build()), is(true));
     }
 
     @Test
@@ -144,7 +144,7 @@ public class FilterParametereTest {
 
 
         filterparams.toggleAlleYtelser(false);
-        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(DAGPENGER).createUtbetaling()), is(false));
-        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(BARNETRYGD).createUtbetaling()), is(false));
+        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(DAGPENGER).build()), is(false));
+        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(BARNETRYGD).build()), is(false));
     }
 }

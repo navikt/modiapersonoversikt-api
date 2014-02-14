@@ -23,7 +23,7 @@ public class UtbetalingVMTest {
     @Test
     public void belopFormateres_medGruppering_medKomma_medToDesimaler() throws Exception {
         double belop = 67856565.6;
-        Utbetaling utbetaling = getBuilder().withUtbetalt(belop).createUtbetaling();
+        Utbetaling utbetaling = getBuilder().withUtbetalt(belop).build();
         UtbetalingVM vm = new UtbetalingVM(utbetaling);
 
         String belop1 = vm.getBelop();
@@ -35,7 +35,7 @@ public class UtbetalingVMTest {
 
     @Test
     public void transformerWorksCorrectly(){
-        Utbetaling utbetaling = getBuilder().withPeriode(new Interval(now().minusDays(7), now())).createUtbetaling();
+        Utbetaling utbetaling = getBuilder().withPeriode(new Interval(now().minusDays(7), now())).build();
         UtbetalingVM utbetalingVM = UtbetalingVM.TIL_UTBETALINGVM.transform(utbetaling);
         assertThat(utbetaling.getPeriode().getStart(), is(equalTo(utbetalingVM.getStartDato())));
     }

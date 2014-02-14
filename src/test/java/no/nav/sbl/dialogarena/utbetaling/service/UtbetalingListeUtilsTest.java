@@ -42,10 +42,10 @@ public class UtbetalingListeUtilsTest {
 
     @Before
     public void settOppUtbetalingsliste() {
-        Utbetaling utbetaling1 = getBuilder().withUtbetalingsDato(JAN_2012_DATE).withMelding(JAN_2012_NR1).withHovedytelse(DAGPENGER).createUtbetaling();
-        Utbetaling utbetaling2 = getBuilder().withUtbetalingsDato(JAN_2012_DATE).withMelding(JAN_2012_NR2).withHovedytelse(SYKEPENGER).createUtbetaling();
-        Utbetaling utbetaling3 = getBuilder().withUtbetalingsDato(MAR_2012_DATE).withMelding(MAR_2012_NR1).withHovedytelse(SYKEPENGER).createUtbetaling();
-        Utbetaling utbetaling4 = getBuilder().withUtbetalingsDato(SEPT_2012_DATE).withMelding(SEP_2012_NR1).withHovedytelse(BARNETRYGD).createUtbetaling();
+        Utbetaling utbetaling1 = getBuilder().withUtbetalingsDato(JAN_2012_DATE).withMelding(JAN_2012_NR1).withHovedytelse(DAGPENGER).build();
+        Utbetaling utbetaling2 = getBuilder().withUtbetalingsDato(JAN_2012_DATE).withMelding(JAN_2012_NR2).withHovedytelse(SYKEPENGER).build();
+        Utbetaling utbetaling3 = getBuilder().withUtbetalingsDato(MAR_2012_DATE).withMelding(MAR_2012_NR1).withHovedytelse(SYKEPENGER).build();
+        Utbetaling utbetaling4 = getBuilder().withUtbetalingsDato(SEPT_2012_DATE).withMelding(SEP_2012_NR1).withHovedytelse(BARNETRYGD).build();
 
         utbetalingsliste = asList(utbetaling1, utbetaling2, utbetaling3, utbetaling4);
     }
@@ -61,7 +61,7 @@ public class UtbetalingListeUtilsTest {
     @Test
     public void splittUtbetalingerPerMaaned_splittetIRiktigAntallMaanederOverToAar() {
         ArrayList<Utbetaling> utbetalinger = new ArrayList<>(utbetalingsliste);
-        Utbetaling utbetaling = getBuilder().withUtbetalingsDato(new DateTime(2014, 1, 1, 0, 0)).withMelding("1. jan 2014 nr1").createUtbetaling();
+        Utbetaling utbetaling = getBuilder().withUtbetalingsDato(new DateTime(2014, 1, 1, 0, 0)).withMelding("1. jan 2014 nr1").build();
         utbetalinger.add(utbetaling);
 
         assertThat(splittUtbetalingerPerMaaned(utbetalinger).size(), is(4));
@@ -170,7 +170,7 @@ public class UtbetalingListeUtilsTest {
     }
 
     private Utbetaling lagUtbetaling(String hovedytelse, DateTime fom, DateTime tom) {
-        return getBuilder().withHovedytelse(hovedytelse).withPeriode(new Interval(fom, tom)).createUtbetaling();
+        return getBuilder().withHovedytelse(hovedytelse).withPeriode(new Interval(fom, tom)).build();
     }
 
 }

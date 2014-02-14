@@ -31,11 +31,11 @@ public class MaanedsPanelTest extends AbstractWicketTest {
                 utbetalingBuilder.withUtbetalingsDato(now())
                         .withPeriode(new Interval(now().minusDays(5), now()))
                         .withUnderytelser(asList(new Underytelse("Tittel", "Spesifikasjon", optional(3d), 200.0, optional(1.0))))
-                        .createUtbetaling(),
+                        .build(),
                 utbetalingBuilder.withUtbetalingsDato(now().minusDays(4))
                         .withPeriode(new Interval(now().minusDays(10), now()))
                         .withUnderytelser(asList(new Underytelse("Tittel2", "Spesifikasjon2", optional(5d), 700.0, optional(2.0))))
-                        .createUtbetaling());
+                        .build());
 
         MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", utbetalinger);
         wicketTester.goToPageWith(maanedsPanel);

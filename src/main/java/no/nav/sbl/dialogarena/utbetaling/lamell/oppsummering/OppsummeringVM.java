@@ -20,14 +20,17 @@ import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
+import static no.nav.modig.lang.collections.TransformerUtils.first;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.SUM_UNDERYTELSER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.TREKK_BELOP;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_COMPARE_BELOP;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_SKATT_NEDERST;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_TITTEL;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UTBETALT_BELOP;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.PERIODE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UNDERYTELSER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UTBETALINGSDATO;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.END;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.START;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.grupperPaaHovedytelseOgPeriode;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.HovedYtelseVM.HovedYtelseComparator.HOVEDYTELSE_NAVN;
@@ -67,10 +70,10 @@ public class OppsummeringVM implements Serializable {
             Double trekk = on(sammenlagteUnderytelser).map(TREKK_BELOP).reduce(sumDouble);
             Double utbetalt = brutto + trekk;
 
-            DateTime min = on(sammen).collect(compareWith(UTBETALINGSDATO)).get(0).getUtbetalingsdato();
-            DateTime max = on(sammen).collect(reverseOrder(compareWith(UTBETALINGSDATO))).get(0).getUtbetalingsdato();
+            DateTime startPeriode = on(sammen).collect(compareWith(first(PERIODE).then(START))).get(0).getPeriode().getStart();
+            DateTime sluttPeriode = on(sammen).collect(reverseOrder(compareWith(first(PERIODE).then(END)))).get(0).getPeriode().getEnd();
 
-            hovedYtelseVMs.add(new HovedYtelseVM(sammen.get(0).getHovedytelse(), sammenlagteUnderytelser, brutto, trekk, utbetalt, min, max));
+            hovedYtelseVMs.add(new HovedYtelseVM(sammen.get(0).getHovedytelse(), sammenlagteUnderytelser, brutto, trekk, utbetalt, startPeriode, sluttPeriode));
         }
         sort(hovedYtelseVMs, HOVEDYTELSE_NAVN);
         return hovedYtelseVMs;
@@ -84,6 +87,7 @@ public class OppsummeringVM implements Serializable {
         return Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
                 Datoformat.kortUtenLiteral(sluttDato.toDateTimeAtCurrentTime());
     }
+
 
     private static final Transformer<Utbetaling, Double> BRUTTO = new Transformer<Utbetaling, Double>() {
         @Override
