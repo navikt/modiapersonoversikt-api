@@ -769,7 +769,7 @@
                 </plugin>
                 <plugin>
                     <groupId>no.nav.maven.plugins</groupId>
-                    <artifactId>jboss-maven-plugin</artifactId>
+                    <artifactId>aura-maven-plugin</artifactId>
                     <version>3.4.0</version>
                 </plugin>
                 <plugin>
