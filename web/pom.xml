@@ -368,6 +368,7 @@
                             <goal>analyze-only</goal>
                         </goals>
                         <configuration>
+                            <failOnWarning>true</failOnWarning>
                             <usedDependencies>
                                 <usedDependency>org.mockito:mockito-core</usedDependency>
                             </usedDependencies>
