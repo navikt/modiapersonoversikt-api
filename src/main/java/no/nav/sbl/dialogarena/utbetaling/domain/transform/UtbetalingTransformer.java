@@ -35,6 +35,7 @@ public class UtbetalingTransformer {
         List<Utbetaling> utbetalinger = new ArrayList<>();
 
         for (WSUtbetaling wsUtbetaling : wsUtbetalinger) {
+            //TODO: Statuskoder skal ikke være null fra tjenesten. Håndterer med optional midlertidig.
             int statusKode = parseInt(optional(wsUtbetaling.getStatusKode()).getOrElse("3"));
             if (!TILLATTE_STATUSER.contains(statusKode)) { break; }
 
