@@ -268,13 +268,14 @@ table.utbetaling-tabell {
     page-break-after: auto;
   }
   th {
+	text-align: right; // IE8+ fiks siden ikke th arver text-align
     text-transform: uppercase;
     font-weight: normal;
     color: #3e3832;
     font-size: 0.857rem;
-    width: 16.25%;
+    width: 16.5%;
     &:first-of-type {
-      width: 35%;
+      width: 34%;
       text-align: left;
     }
   }
@@ -282,7 +283,7 @@ table.utbetaling-tabell {
     vertical-align: bottom;
     &:first-of-type {
       text-align: left;
-      width: 35%;
+      width: 34%;
     }
     .oppsummert-periode {
       position: absolute;
