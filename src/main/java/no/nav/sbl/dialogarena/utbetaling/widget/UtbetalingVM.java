@@ -7,6 +7,7 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
+import java.util.Comparator;
 import java.util.Locale;
 
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
@@ -79,5 +80,24 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
         nf.setGroupingUsed(true);
         nf.setMinimumFractionDigits(2);
         return nf.format(nettoBelop);
+    }
+
+    /**
+     * Sorterer i omvendt kronologisk rekkefølge på utbetalingsdato
+     */
+    public static class UtbetalingVMComparator implements Comparator<UtbetalingVM> {
+        @Override
+        public int compare(UtbetalingVM utbetalingVM1, UtbetalingVM utbetalingVM2) {
+            if (utbetalingVM1.getUtbetalingsDato() == null && utbetalingVM2.getUtbetalingsDato() == null) {
+                return 0;
+            }
+            if (utbetalingVM1.getUtbetalingsDato() == null) {
+                return -1;
+            }
+            if (utbetalingVM2.getUtbetalingsDato() == null) {
+                return 1;
+            }
+            return utbetalingVM2.getUtbetalingsDato().compareTo(utbetalingVM1.getUtbetalingsDato());
+        }
     }
 }
