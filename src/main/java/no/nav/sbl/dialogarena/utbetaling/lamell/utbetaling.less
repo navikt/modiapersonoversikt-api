@@ -119,7 +119,7 @@
   background-color: @grayLighter;
   border-bottom: 1px solid @borderColor;
   text-transform: uppercase;
-  font-family: 'Modus', Helvetica, Arial, sans-serif;
+  font-family: @headingsFontFamily;
 }
 
 .kolonne-venstre {
@@ -128,7 +128,7 @@
   width: @kolonneVenstreWidth;
 
   .arena-lenke {
-    font-family: "Modus", Helvetica, Arial, sans-serif;
+    font-family: @headingsFontFamily;
     font-size: 1.3rem;
     font-weight: bold;
     display: block;
@@ -143,11 +143,9 @@
         border: 0;
       }
       .filter-header {
+		display: block;
         margin-top: 0;
-        text-transform: uppercase;
-        position: relative;
         color: @grayDark;
-        font-size: 0.875rem;
       }
       .filter-block-content {
         background-color: @grayLighter;
@@ -180,7 +178,7 @@
 
     .dato-plukker-filter {
       display: inline-block;
-      label {
+      label:not(.filter-header) {
         display: inline-block;
         margin: 0;
         width: 49%;
@@ -215,18 +213,6 @@
   }
 }
 
-.element {
-  display: inline-block;
-  padding-right: 1rem;
-  font-weight: 600;
-  label {
-    text-transform: uppercase;
-    width: auto;
-    display: block;
-    margin: 0;
-  }
-}
-
 .utbetaling-ramme {
   margin-bottom: 2rem;
   border: 1px solid @borderColor;
@@ -237,22 +223,6 @@
   }
   .feilmelding {
 	margin: 0 2rem;
-  }
-  .element {
-    label {
-      color: #3e3832;
-    }
-  }
-  .summeringsvisning {
-    float: right;
-    width: 49%;
-    .element {
-      width: 29%;
-      margin-right: 3%;
-      span {
-        float: right;
-      }
-    }
   }
 }
 
@@ -314,12 +284,6 @@ table.utbetaling-tabell {
   cursor: pointer;
   .main {
     position: relative;
-    .oppsummeringssummer {
-      display: inline-block;
-    }
-    .element {
-      margin-top: 10px;
-    }
   }
   &:not(.ekspandert) {
     .detaljpanel {
@@ -340,8 +304,15 @@ table.utbetaling-tabell {
     width: 100%;
   }
   .element {
-    height: 100%;
     vertical-align: top;
+	display: inline-block;
+	padding-right: 1rem;
+	font-weight: 600;
+	label {
+	  color: #3e3832;
+	  display: block;
+	  margin: 0;
+	}
   }
 }
 
@@ -390,25 +361,6 @@ table.utbetaling-tabell {
           text-transform: uppercase;
         }
       }
-      .element {
-        span {
-          position: absolute;
-          bottom: 0;
-        }
-        label {
-          margin-bottom: 15px;
-        }
-        &.beskrivelse {
-          width: 40%;
-          label {
-            max-width: 100%;
-            word-wrap: break-word;
-          }
-        }
-      }
-    }
-    .belop {
-      text-align: right;
     }
     .detaljpanel {
       display: none;
@@ -420,15 +372,6 @@ table.utbetaling-tabell {
 }
 
 .utbetalingslinje, .oppsummering-total {
-  .main {
-    .element {
-      text-transform: uppercase;
-      position: relative;
-      span {
-        font-weight: bold;
-      }
-    }
-  }
   .skriv-ut-container {
     display: inline-block;
     float: right;
