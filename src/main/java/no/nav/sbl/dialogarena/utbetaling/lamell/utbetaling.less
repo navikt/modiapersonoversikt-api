@@ -8,6 +8,17 @@
 @sidePadding: 2rem;
 @toppBunnPadding: 1.5rem;
 
+// felles
+.cap-1st {
+	text-transform: lowercase;
+	&:first-letter {
+		text-transform: capitalize;
+	}
+}
+.ib {
+	display: inline-block;
+}
+
 // Widget
 .widget-navigasjon.widget-utbetaling {
 
@@ -52,12 +63,8 @@
 			width: 85%;
 			border-right: 1px solid #d1d1d1;
 			h2 {
-				font-family: 'Modus', arial, sans-serif;
 				margin-top: 0.25em;
 				margin-bottom: 0.5em;
-				font-size: 1.1rem;
-				font-weight: bold;
-				text-transform: uppercase;
 			}
 			.periode {
 				margin-right:0.5rem;
@@ -80,7 +87,6 @@
 			.utbetalingstatus-tekst {
                 overflow: hidden;
                 text-overflow: ellipsis;
-				text-transform: capitalize;
 				margin: 0 auto;
 				font-size: 0.85rem;
 			}
@@ -156,6 +162,9 @@
 				margin-bottom: 0;
 			}
 		}
+	    &.ytelser input[type=checkbox].bryter + label {
+			text-transform: lowercase;
+		}
       }
 	  input[type=checkbox].bryter {
 		&+label {
@@ -194,7 +203,6 @@
   position: relative;
   width: @kolonneHoyreWidth;
   float: right;
-  font-family: 'Modus', Helvetica, Arial, sans-serif;
 
   #ajax-indikator {
     background-image: url('../img/ajaxloader/graa/loader_graa_32.gif');
@@ -255,7 +263,7 @@ table.utbetaling-tabell {
   page-break-inside: auto;
   border-spacing: 0;
   margin-top: 1rem;
-  text-align: left;
+  text-align: right;
   width: 100%;
   position: relative;
   tbody {
@@ -267,43 +275,38 @@ table.utbetaling-tabell {
     font-weight: normal;
     color: #3e3832;
     font-size: 0.857rem;
-    width: 18%;
-    max-width: 18%;
-    min-width: 18%;
+    width: 16.25%;
     &:first-of-type {
-      width: 34%;
+      width: 35%;
       text-align: left;
     }
   }
   td {
-    padding-right: 30px;
     vertical-align: bottom;
-    text-align: right;
     &:first-of-type {
       text-align: left;
-      width: 33%;
-      padding-right: 15px;
-    }
-    &:last-of-type {
-      padding-right: 0;
+      width: 35%;
     }
     .oppsummert-periode {
       position: absolute;
       left: 0;
       top: 8%;
-      font-size: 1.2rem;
+	  text-transform: uppercase;
+	  font-weight: bold;
     }
   }
   tbody:not(:first-of-type) tr:first-child td {
-    padding-top: 0.5rem;
+    padding-top: 1rem;
   }
   tbody:not(:last-of-type) tr:last-child td {
-    padding-bottom: 0.5rem;
+    padding-bottom: 1rem;
     border-bottom: 1px solid @borderColor;
   }
   .uthevet {
     font-weight: bold;
-    text-transform: uppercase;
+  }
+  .medium {
+	  margin: 0;
   }
 }
 
