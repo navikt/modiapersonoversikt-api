@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.utbetaling.lamell;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.TotalOppsummeringPanel;
-import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.FeilmeldingPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.UtbetalingerMessagePanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.wickettest.AbstractWicketTest;
@@ -43,7 +42,6 @@ public class UtbetalingLerretTest extends AbstractWicketTest{
         wicketTester.should().containComponent(ofType(TotalOppsummeringPanel.class));
         wicketTester.should().containComponent(withId("utbetalingslisteContainer"));
         wicketTester.should().containComponent(ofType(UtbetalingerMessagePanel.class));
-        wicketTester.should().containComponent(ofType(FeilmeldingPanel.class));
     }
 
     @Test
