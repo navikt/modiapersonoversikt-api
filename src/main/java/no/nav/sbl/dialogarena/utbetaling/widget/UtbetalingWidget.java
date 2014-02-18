@@ -20,6 +20,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingVM.TIL_UTBETALINGVM;
+import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingVM.UtbetalingVMComparator;
 
 public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
 
