@@ -34,26 +34,16 @@
         <table class="utbetaling-tabell" wicket:message="summary:utbetaling.lamell.oppsummerig.langoppsummering.tabellbeskrivelse">
             <thead>
             <tr>
-                <th>
-                    <wicket:message key="utbetaling.lamell.oppsummering.ytelse"/>
-                </th>
-                <th>
-                    <wicket:message key="utbetaling.lamell.oppsummering.delbelop"/>
-                </th>
-                <th>
-                    <wicket:message key="utbetaling.lamell.oppsummering.brutto"/>
-                </th>
-                <th>
-                    <wicket:message key="utbetaling.lamell.oppsummering.trekk"/>
-                </th>
-                <th>
-                    <wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/>
-                </th>
+                <th><wicket:message key="utbetaling.lamell.oppsummering.ytelse"/></th>
+                <th><wicket:message key="utbetaling.lamell.oppsummering.delbelop"/></th>
+                <th><wicket:message key="utbetaling.lamell.oppsummering.brutto"/></th>
+                <th><wicket:message key="utbetaling.lamell.oppsummering.trekk"/></th>
+                <th><wicket:message key="utbetaling.lamell.oppsummering.utbetalt"/></th>
             </tr>
             </thead>
             <tbody wicket:id="hovedytelser">
             <tr class="uthevet">
-                <td wicket:id="hovedYtelsesBeskrivelse">[]</td>
+                <td class="medium cap-1st" wicket:id="hovedYtelsesBeskrivelse">[]</td>
                 <td></td>
                 <td wicket:id="bruttoUnderytelser">[]</td>
                 <td wicket:id="trekkUnderytelser">[]</td>
@@ -67,7 +57,7 @@
                 <td></td>
             </tr>
             <tr wicket:id="underYtelsesBeskrivelser">
-                <td wicket:id="underYtelsesBeskrivelse">[]</td>
+                <td class="cap-1st" wicket:id="underYtelsesBeskrivelse">[]</td>
                 <td wicket:id="ytelsesBelop">[]</td>
                 <td></td>
                 <td wicket:id="trekkBelop">[]</td>
