@@ -8,7 +8,6 @@
         <version>2.9-SNAPSHOT</version>
     </parent>
 
-    <groupId>no.nav.sbl.dialogarena</groupId>
     <artifactId>modiabrukerdialog-config</artifactId>
     <packaging>jar</packaging>
     <name>${project.artifactId} metadata artifact</name>
