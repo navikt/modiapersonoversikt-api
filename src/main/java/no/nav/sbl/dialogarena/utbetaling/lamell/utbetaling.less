@@ -61,7 +61,7 @@
 			margin: 0;
 			padding: @hoydePadding 30px;
 			width: 85%;
-			border-right: 1px solid #d1d1d1;
+			border-right: 1px solid @borderColorLight;
 			h2 {
 				margin-top: 0.25em;
 				margin-bottom: 0.5em;
@@ -72,6 +72,9 @@
 			.belop-med-valuta {
 				margin-left: 0.5rem;
 				font-weight: bold;
+			}
+			&:hover {
+				border-color: @grayLight;
 			}
 		}
 		.utbetalingstatus {
@@ -155,6 +158,7 @@
         }
         .mottaker-indikator {
           margin-bottom: 2px;
+          margin-right: 5px;
         }
 		div {
 			margin-bottom: 0.75rem;
@@ -167,12 +171,9 @@
 		}
       }
 	  input[type=checkbox].bryter {
-		&+label {
-		  width: auto;
-	      padding-right: 7px;
-		}
 		&:focus + label {
-		  border: 1px dotted #555;
+		  color: #0067c5;
+		  text-decoration: underline;
 		}
 	  }
 	}
@@ -290,7 +291,7 @@ table.utbetaling-tabell {
     .oppsummert-periode {
       position: absolute;
       left: 0;
-      top: 8%;
+      top: 28%;
 	  text-transform: uppercase;
 	  font-weight: bold;
     }
@@ -352,7 +353,8 @@ table.utbetaling-tabell {
     background-color: #333333;
     color: #b7b1a9;
     padding: 1rem 2rem;
-    table {
+    .utbetaling-tabell {
+	  margin-top: 0;
       th {
         color: #b7b1a9;
       }
