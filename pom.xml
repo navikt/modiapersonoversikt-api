@@ -415,6 +415,18 @@
 
             <dependency>
                 <groupId>no.nav</groupId>
+                <artifactId>sykmeldingsperioder-domain</artifactId>
+                <version>${kjerneinfo.versjon}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>xml-apis</groupId>
+                        <artifactId>xml-apis</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav</groupId>
                 <artifactId>sykmeldingsperioder-consumer</artifactId>
                 <version>${kjerneinfo.versjon}</version>
                 <exclusions>

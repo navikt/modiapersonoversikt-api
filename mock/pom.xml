@@ -24,6 +24,11 @@
 
         <dependency>
             <groupId>no.nav</groupId>
+            <artifactId>sykmeldingsperioder-domain</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav</groupId>
             <artifactId>kontrakter-consumer</artifactId>
         </dependency>
 
