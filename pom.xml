@@ -61,7 +61,7 @@
         <kjerneinfo.versjon>1.0.48</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <sporsmalogsvar.version>1.18</sporsmalogsvar.version>
-        <utbetaling.version>2.0.28</utbetaling.version>
+        <utbetaling.version>2.0.29</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
     </properties>
 
