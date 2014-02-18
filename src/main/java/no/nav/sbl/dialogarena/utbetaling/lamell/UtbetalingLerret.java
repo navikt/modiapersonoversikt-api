@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.TotalOppsummeringPanel;
-import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.FeilmeldingPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.UtbetalingerMessagePanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned.MaanedsPanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
@@ -62,7 +61,7 @@ public final class UtbetalingLerret extends Lerret {
     private TotalOppsummeringPanel totalOppsummeringPanel;
     private WebMarkupContainer utbetalingslisteContainer;
     private UtbetalingerMessagePanel ingenutbetalinger;
-    private FeilmeldingPanel feilmelding;
+    private UtbetalingerMessagePanel feilmelding;
 
     public UtbetalingLerret(String id, String fnr) {
         super(id);
@@ -82,7 +81,7 @@ public final class UtbetalingLerret extends Lerret {
         ingenutbetalinger = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("ingenutbetalinger", "feil.utbetalinger.ingen-utbetalinger", "-ikon-stjerne")
                 .setOutputMarkupPlaceholderTag(true);
 
-        feilmelding = (FeilmeldingPanel) new FeilmeldingPanel("feilmelding", FEILMELDING_DEFAULT_KEY, "-ikon-feil")
+        feilmelding = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("feilmelding", FEILMELDING_DEFAULT_KEY, "-ikon-feil")
                 .setOutputMarkupPlaceholderTag(true);
 
         resultatCache = hentUtbetalingsResultat(fnr, defaultStartDato(), defaultSluttDato());
@@ -107,10 +106,8 @@ public final class UtbetalingLerret extends Lerret {
 
             if (ae.getId() != null) {
                 feilmelding.endreMessageKey(ae.getId());
-                feilmelding.endreLenkeSynlighet(false);
             } else {
                 feilmelding.endreMessageKey(FEILMELDING_DEFAULT_KEY);
-                feilmelding.endreLenkeSynlighet(true);
             }
 
             feilmelding.setVisibilityAllowed(true);
