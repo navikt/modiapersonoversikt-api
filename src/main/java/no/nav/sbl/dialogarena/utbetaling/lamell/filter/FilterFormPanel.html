@@ -7,9 +7,9 @@
                 <wicket:message key="utbetaling.lamell.filter.sok.overskrift"/>
             </div>
             <div class="filter-block-content dato-plukker-filter">
-                <p class="filter-header">
+                <label class="filter-header">
                     <wicket:message key="utbetaling.lamell.filter.datofilter"/>
-                </p>
+                </label>
                 <wicket:container wicket:id="datoFilter"/>
                 <input type="submit" wicket:id="sok" class="knapp-hoved-liten"/>
             </div>
@@ -21,9 +21,9 @@
             </div>
 
             <div class="filter-block-content">
-                <p class="filter-header">
+                <label class="filter-header">
                     <wicket:message key="utbetaling.lamell.filter.mottaker"/>
-                </p>
+                </label>
                 <div>
                     <input type="checkbox" wicket:id="visBruker" value="Bruker" class="bryter"/>
                     <label wicket:for="visBruker">
@@ -39,9 +39,9 @@
             </div>
 
             <div class="filter-block-content ytelser" wicket:id="ytelseContainer">
-                <p class="filter-header">
+                <label class="filter-header">
                     <wicket:message key="utbetaling.lamell.filter.ytelser"/>
-                </p>
+                </label>
                 <div>
                     <input type="checkbox" wicket:id="visAlleYtelser" class="bryter"/>
                     <label class="cap-1st" wicket:for="visAlleYtelser">
