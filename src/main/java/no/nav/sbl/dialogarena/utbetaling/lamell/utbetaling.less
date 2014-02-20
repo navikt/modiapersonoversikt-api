@@ -8,25 +8,26 @@
 @sidePadding: 2rem;
 @toppBunnPadding: 1.5rem;
 
-// felles
-.cap-1st {
-	text-transform: lowercase;
-	&:first-letter {
-		text-transform: capitalize;
-	}
-}
-.ib {
-	display: inline-block;
-}
+.utbetalinger {
+  // felles
+  .cap-1st {
+    text-transform: lowercase;
+    &:first-letter {
+      text-transform: capitalize;
+    }
+  }
+  .ib {
+    display: inline-block;
+  }
 
-// Widget
-.widget-navigasjon.widget-utbetaling {
+  // Widget
+  &.widget-navigasjon {
 
-	.klikkbar-header {
-		cursor: pointer;
-	}
+    .klikkbar-header {
+      cursor: pointer;
+    }
 
-	.hent-utbetalinger {
+    .hent-utbetalinger {
       text-align: center;
       a {
         margin: 0;
@@ -37,293 +38,292 @@
         display: block;
         margin: 0.5em 0;
       }
-	}
+    }
 
-	#ajax-indikator {
-		display: inline-block;
-		background-image: url('../img/ajaxloader/hvit/loader_hvit_64.gif');
-		margin-top: 1em;
-		width: 64px;
-		height: 64px;
-	}
-
-	& > ul > li > a {
-		padding: 0;
-		&:focus {
-			background-color: #dadada !important;
-			color: #3e3832 !important;
-			.melding-metadata {
-				border-right-color: #999;
-			}
-		}
-		.utbetaling-metadata {
-			display: inline-block;
-			margin: 0;
-			padding: @hoydePadding 30px;
-			width: 85%;
-			border-right: 1px solid @borderColorLight;
-			h2 {
-				margin-top: 0.25em;
-				margin-bottom: 0.5em;
-			}
-			.periode {
-				margin-right:0.5rem;
-			}
-			.belop-med-valuta {
-				margin-left: 0.5rem;
-				font-weight: bold;
-			}
-			&:hover {
-				border-color: @grayLight;
-			}
-		}
-		.utbetalingstatus {
-			display: inline-block;
-			width: 14%;
-			padding-right: 5px;
-			margin-bottom: 5px;
-			overflow: hidden;
-			text-align: center;
-			.mottaker-indikator {
-				margin-bottom: 10px;
-			}
-			.utbetalingstatus-tekst {
-                overflow: hidden;
-                text-overflow: ellipsis;
-				margin: 0 auto;
-				font-size: 0.85rem;
-			}
-		}
-	}
-}
-
-.mottaker-indikator {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  height: 1rem;
-  width: 1rem;
-  border-radius: 50%;
-  border: 1px solid #333333;
-  vertical-align: middle;
-  &.BRUKER {
-    background-color: #333333;
-  }
-}
-
-.ramme-header {
-  padding: 1.5rem 0;
-  font-weight: 600;
-  font-size: 1.3rem;
-  text-align: center;
-  background-color: @grayLighter;
-  border-bottom: 1px solid @borderColor;
-  text-transform: uppercase;
-  font-family: @headingsFontFamily;
-}
-
-.kolonne-venstre {
-  float: left;
-  padding-right: @sidePadding;
-  width: @kolonneVenstreWidth;
-
-  .arena-lenke {
-    font-family: @headingsFontFamily;
-    font-size: 1.3rem;
-    font-weight: bold;
-    display: block;
-    color: @blueDark;
-  }
-
-  .filter-form {
-    .filter-block {
-      margin-top: 3rem;
-      border: 1px solid @borderColor;
-      .ramme-header {
-        border: 0;
-      }
-      .filter-header {
-		display: block;
-        margin-top: 0;
-        color: @grayDark;
-      }
-      .filter-block-content {
-        background-color: @grayLighter;
-        padding: @toppBunnPadding @sidePadding;
-        border-top: 1px solid @borderColor;
-        input[type="submit"] {
-          margin-top: 0.75em;
-        }
-        .mottaker-indikator {
-          margin-bottom: 2px;
-          margin-right: 5px;
-        }
-		div {
-			margin-bottom: 0.75rem;
-			&:last-child {
-				margin-bottom: 0;
-			}
-		}
-	    &.ytelser input[type=checkbox].bryter + label {
-			text-transform: lowercase;
-		}
-      }
-	  input[type=checkbox].bryter {
-		&:focus + label {
-		  color: #0067c5;
-		  text-decoration: underline;
-		}
-	  }
-	}
-
-    .dato-plukker-filter {
+    #ajax-indikator {
       display: inline-block;
-      label:not(.filter-header) {
+      background-image: url('../img/ajaxloader/hvit/loader_hvit_64.gif');
+      margin-top: 1em;
+      width: 64px;
+      height: 64px;
+    }
+
+    & > ul > li > a {
+      padding: 0;
+      &:focus {
+        background-color: #dadada !important;
+        color: #3e3832 !important;
+        .melding-metadata {
+          border-right-color: #999;
+        }
+      }
+      .utbetaling-metadata {
         display: inline-block;
         margin: 0;
-        width: 49%;
-        text-align: left;
-        color: @grayDark;
-        &:nth-child(0) {
-          float: left;
+        padding: @hoydePadding 30px;
+        width: 85%;
+        border-right: 1px solid @borderColorLight;
+        h2 {
+          margin-top: 0.25em;
+          margin-bottom: 0.5em;
         }
-        &:nth-child(1) {
-          float: right;
+        .periode {
+          margin-right: 0.5rem;
         }
-        input {
-          width: 100%;
+        .belop-med-valuta {
+          margin-left: 0.5rem;
+          font-weight: bold;
+        }
+        &:hover {
+          border-color: @grayLight;
+        }
+      }
+      .utbetalingstatus {
+        display: inline-block;
+        width: 14%;
+        padding-right: 5px;
+        margin-bottom: 5px;
+        overflow: hidden;
+        text-align: center;
+        .mottaker-indikator {
+          margin-bottom: 10px;
+        }
+        .utbetalingstatus-tekst {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin: 0 auto;
+          font-size: 0.85rem;
         }
       }
     }
   }
-}
 
-.kolonne-hoyre {
-  position: relative;
-  width: @kolonneHoyreWidth;
-  float: right;
-
-  #ajax-indikator {
-    background-image: url('../img/ajaxloader/graa/loader_graa_32.gif');
-    position: absolute;
-    width: 32px;
-    height: 32px;
-    left: 32px;
-    top: 16px;
-  }
-}
-
-.utbetaling-ramme {
-  margin-bottom: 2rem;
-  border: 1px solid @borderColor;
-
-  .utbetaling-ramme-innhold {
-    background-color: white;
-    font-size: 0.9rem;
-  }
-  .feilmelding {
-	margin: 0 2rem;
-  }
-}
-
-table.utbetaling-tabell {
-  page-break-inside: auto;
-  border-spacing: 0;
-  margin-top: 1rem;
-  text-align: right;
-  width: 100%;
-  position: relative;
-  tbody {
-    page-break-inside: avoid;
-    page-break-after: auto;
-  }
-  th {
-	text-align: right; // IE8+ fiks siden ikke th arver text-align
-    text-transform: uppercase;
-    font-weight: normal;
-    color: #3e3832;
-    font-size: 0.857rem;
-    width: 16.5%;
-    &:first-of-type {
-      width: 34%;
-      text-align: left;
+  .mottaker-indikator {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    height: 1rem;
+    width: 1rem;
+    border-radius: 50%;
+    border: 1px solid #333333;
+    vertical-align: middle;
+    &.BRUKER {
+      background-color: #333333;
     }
   }
-  td {
-    vertical-align: bottom;
-    &:first-of-type {
-      text-align: left;
-      width: 34%;
-    }
-    .oppsummert-periode {
-      position: absolute;
-      left: 0;
-      top: 28%;
-	  text-transform: uppercase;
-	  font-weight: bold;
-    }
-  }
-  tbody:not(:first-of-type) tr:first-child td {
-    padding-top: 1rem;
-  }
-  tbody:not(:last-of-type) tr:last-child td {
-    padding-bottom: 1rem;
+
+  .ramme-header {
+    padding: 1.5rem 0;
+    font-weight: 600;
+    font-size: 1.3rem;
+    text-align: center;
+    background-color: @grayLighter;
     border-bottom: 1px solid @borderColor;
+    text-transform: uppercase;
+    font-family: @headingsFontFamily;
   }
-  .uthevet {
-    font-weight: bold;
-  }
-  .medium {
-	  margin: 0;
-  }
-}
 
-.oppsummering-total {
-  width: 100%;
-  padding: @toppBunnPadding @sidePadding;
-  cursor: pointer;
-  .main {
-    position: relative;
-  }
-  &:not(.ekspandert) {
-    .detaljpanel {
-      display: none;
+  .kolonne-venstre {
+    float: left;
+    padding-right: @sidePadding;
+    width: @kolonneVenstreWidth;
+
+    .arena-lenke {
+      font-family: @headingsFontFamily;
+      font-size: 1.3rem;
+      font-weight: bold;
+      display: block;
+      color: @blueDark;
+    }
+
+    .filter-form {
+      .filter-block {
+        margin-top: 3rem;
+        border: 1px solid @borderColor;
+        .ramme-header {
+          border: 0;
+        }
+        .filter-header {
+          display: block;
+          margin-top: 0;
+          color: @grayDark;
+        }
+        .filter-block-content {
+          background-color: @grayLighter;
+          padding: @toppBunnPadding @sidePadding;
+          border-top: 1px solid @borderColor;
+          input[type="submit"] {
+            margin-top: 0.75em;
+          }
+          .mottaker-indikator {
+            margin-bottom: 2px;
+            margin-right: 5px;
+          }
+          div {
+            margin-bottom: 0.75rem;
+            &:last-child {
+              margin-bottom: 0;
+            }
+          }
+          &.ytelser input[type=checkbox].bryter + label {
+            text-transform: lowercase;
+          }
+        }
+        input[type=checkbox].bryter {
+          &:focus + label {
+            color: #0067c5;
+            text-decoration: underline;
+          }
+        }
+      }
+
+      .dato-plukker-filter {
+        display: inline-block;
+        label:not(.filter-header) {
+          display: inline-block;
+          margin: 0;
+          width: 49%;
+          text-align: left;
+          color: @grayDark;
+          &:nth-child(0) {
+            float: left;
+          }
+          &:nth-child(1) {
+            float: right;
+          }
+          input {
+            width: 100%;
+          }
+        }
+      }
     }
   }
-}
 
-.detaljpanel {
-  table {
-    border-top: 1px solid @borderColor;
-    padding-top: 1rem;
+  .kolonne-hoyre {
+    position: relative;
+    width: @kolonneHoyreWidth;
+    float: right;
+
+    #ajax-indikator {
+      background-image: url('../img/ajaxloader/graa/loader_graa_32.gif');
+      position: absolute;
+      width: 32px;
+      height: 32px;
+      left: 32px;
+      top: 16px;
+    }
   }
-  .skillestrek-topp {
-    border-top: 1px solid @borderColor;
+
+  .utbetaling-ramme {
+    margin-bottom: 2rem;
+    border: 1px solid @borderColor;
+
+    .utbetaling-ramme-innhold {
+      background-color: white;
+      font-size: 0.9rem;
+    }
+    .feilmelding {
+      margin: 0 2rem;
+    }
+  }
+
+  table.utbetaling-tabell {
+    page-break-inside: auto;
+    border-spacing: 0;
     margin-top: 1rem;
-    padding-top: 1rem;
+    text-align: right;
     width: 100%;
+    position: relative;
+    tbody {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+    th {
+      text-align: right; // IE8+ fiks siden ikke th arver text-align
+      text-transform: uppercase;
+      font-weight: normal;
+      color: #3e3832;
+      font-size: 0.857rem;
+      width: 16.5%;
+      &:first-of-type {
+        width: 34%;
+        text-align: left;
+      }
+    }
+    td {
+      vertical-align: bottom;
+      &:first-of-type {
+        text-align: left;
+        width: 34%;
+      }
+      .oppsummert-periode {
+        position: absolute;
+        left: 0;
+        top: 28%;
+        text-transform: uppercase;
+        font-weight: bold;
+      }
+    }
+    tbody:not(:first-of-type) tr:first-child td {
+      padding-top: 1rem;
+    }
+    tbody:not(:last-of-type) tr:last-child td {
+      padding-bottom: 1rem;
+      border-bottom: 1px solid @borderColor;
+    }
+    .uthevet {
+      font-weight: bold;
+    }
+    .medium {
+      margin: 0;
+    }
   }
-  .element {
-    vertical-align: top;
-	display: inline-block;
-	padding-right: 1rem;
-	font-weight: bold;
-	label {
-	  color: #3e3832;
-	  display: block;
-	  margin: 0;
-	  width: inherit;
-	}
-  }
-}
 
-.utbetalinger {
+  .oppsummering-total {
+    width: 100%;
+    padding: @toppBunnPadding @sidePadding;
+    cursor: pointer;
+    .main {
+      position: relative;
+    }
+    &:not(.ekspandert) {
+      .detaljpanel {
+        display: none;
+      }
+    }
+  }
+
+  .detaljpanel {
+    table {
+      border-top: 1px solid @borderColor;
+      padding-top: 1rem;
+    }
+    .skillestrek-topp {
+      border-top: 1px solid @borderColor;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      width: 100%;
+    }
+    .element {
+      vertical-align: top;
+      display: inline-block;
+      padding-right: 1rem;
+      font-weight: bold;
+      label {
+        color: #3e3832;
+        display: block;
+        margin: 0;
+        width: inherit;
+      }
+    }
+  }
+
   .oppsummeringslinje {
     background-color: #333333;
     color: #b7b1a9;
     padding: 1rem 2rem;
     .utbetaling-tabell {
-	  margin-top: 0;
+      margin-top: 0;
       th {
         color: #b7b1a9;
       }
@@ -370,40 +370,40 @@ table.utbetaling-tabell {
       background-color: #f1f1f1;
     }
   }
-}
 
-.utbetalingslinje, .oppsummering-total {
-  .skriv-ut-container {
-    display: inline-block;
-    float: right;
-  }
-  .skriv-ut {
-    float: right;
-    background: transparent url('../img/print.svg') no-repeat;
-    width: 16px;
-    height: 12px;
-    &:hover {
-      background-image: url('../img/print_hover.svg');
+  .utbetalingslinje, .oppsummering-total {
+    .skriv-ut-container {
+      display: inline-block;
+      float: right;
     }
-  }
-
-  .ekspander-pil {
-    float: right;
-    background: transparent url('../img/pil.svg') no-repeat;
-    width: 17px;
-    height: 12px;
-    margin-left: 16px;
-    transform: rotate(180deg);
-    -ms-transform: rotate(180deg);
-    -webkit-transform: rotate(180deg);
-    &:hover {
-      background-image: url('../img/pil_hover.svg');
+    .skriv-ut {
+      float: right;
+      background: transparent url('../img/print.svg') no-repeat;
+      width: 16px;
+      height: 12px;
+      &:hover {
+        background-image: url('../img/print_hover.svg');
+      }
     }
-  }
 
-  &.ekspandert .ekspander-pil {
-    transform: none;
-    -ms-transform: none;
-    -webkit-transform: none;
+    .ekspander-pil {
+      float: right;
+      background: transparent url('../img/pil.svg') no-repeat;
+      width: 17px;
+      height: 12px;
+      margin-left: 16px;
+      transform: rotate(180deg);
+      -ms-transform: rotate(180deg);
+      -webkit-transform: rotate(180deg);
+      &:hover {
+        background-image: url('../img/pil_hover.svg');
+      }
+    }
+
+    &.ekspandert .ekspander-pil {
+      transform: none;
+      -ms-transform: none;
+      -webkit-transform: none;
+    }
   }
 }
