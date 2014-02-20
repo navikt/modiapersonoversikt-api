@@ -82,7 +82,7 @@ public final class UtbetalingLerret extends Lerret {
                 .setOutputMarkupPlaceholderTag(true);
 
         feilmelding = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("feilmelding", FEILMELDING_DEFAULT_KEY, "-ikon-feil")
-                .setOutputMarkupPlaceholderTag(true);
+                .setOutputMarkupPlaceholderTag(true).setVisibilityAllowed(false);
 
         resultatCache = hentUtbetalingsResultat(fnr, defaultStartDato(), defaultSluttDato());
         filterParametere = new FilterParametere(hentYtelser(resultatCache.utbetalinger));
@@ -99,7 +99,6 @@ public final class UtbetalingLerret extends Lerret {
     private UtbetalingsResultat hentUtbetalingsResultat(String fnr, LocalDate startDato, LocalDate sluttDato) {
         try {
             List<Utbetaling> utbetalinger = service.hentUtbetalinger(fnr, startDato, sluttDato);
-            feilmelding.setVisibilityAllowed(false);
             return new UtbetalingsResultat(fnr, startDato, sluttDato, utbetalinger);
         } catch (ApplicationException ae) {
             LOG.warn("Noe feilet ved henting av utbetalinger for fnr {}", fnr, ae);
@@ -137,6 +136,7 @@ public final class UtbetalingLerret extends Lerret {
     @SuppressWarnings("unused")
     @RunOnEvents(FILTER_ENDRET)
     private void oppdaterUtbetalingsliste(AjaxRequestTarget target) {
+        feilmelding.setVisibilityAllowed(false);
         oppdaterCacheOmNodvendig();
         oppdaterYtelser();
 

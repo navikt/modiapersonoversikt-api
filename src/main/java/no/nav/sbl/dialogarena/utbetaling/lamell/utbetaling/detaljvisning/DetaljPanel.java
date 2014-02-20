@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.basic.MultiLineLabel;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
 import java.util.List;
@@ -23,13 +24,14 @@ public class DetaljPanel extends Panel {
         super(id);
         setMarkupId("detaljpanel-" + utbetalingVM.getUtbetalingId());
         List<Underytelse> underytelser = utbetalingVM.getUnderytelser();
+        IModel<String> melding = Model.of(utbetalingVM.getMelding());
         add(
                 new Label("mottakernavn", utbetalingVM.getMottakerNavn()),
                 new Label("konto", utbetalingVM.getKontonr()),
                 new Label("ytelsesinfo", utbetalingVM.getBeskrivelse()),
                 createUnderytelsesrader(underytelser),
                 createSpesifikasjoner(underytelser),
-                new MultiLineLabel("bilagsmelding", utbetalingVM.getMelding())
+                new MultiLineLabel("bilagsmelding", melding).add(visibleIf(not(isEmptyString(melding))))
         );
     }
 
