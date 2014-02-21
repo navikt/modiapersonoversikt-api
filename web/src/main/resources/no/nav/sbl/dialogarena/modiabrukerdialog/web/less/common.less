@@ -585,7 +585,7 @@ UL.feedbackPanel {
 [class*=sidebar-venstre] {
 	overflow: visible;
 	color: #b7b1a9;
-	background: @modiaBackground url(../img/tabs-stripe.png) repeat-y;
+	background: @modiaBackground;
 	padding-bottom: 20px;
 	left: 0;
 	box-shadow: rgba(100, 100, 100, 0.4) 16px 0px 26px -4px;
@@ -717,7 +717,6 @@ UL.feedbackPanel {
 				padding-top: 71px;
 				width: 90px;
 				height: 102px;
-				border-bottom: 1px solid #000;
 				font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
 				font-size: 0.7rem;
 				text-transform: uppercase;
@@ -729,7 +728,8 @@ UL.feedbackPanel {
 				&.familie {
 					background-image: url(../img/familie_ikon.svg);
 					background-repeat: no-repeat;
-					background-position: center 18px;
+					background-position: 35px 18px;
+					padding-left: 26px;
 				}
 				div {
 					display: inline-block;
@@ -762,7 +762,7 @@ UL.feedbackPanel {
 		}
 		.tab-info {
 			float: left;
-			margin: 29px 0 0 18px;
+			margin: 10px 0 0 18px;
 			.info {
 				.barn {
 					display: table;
