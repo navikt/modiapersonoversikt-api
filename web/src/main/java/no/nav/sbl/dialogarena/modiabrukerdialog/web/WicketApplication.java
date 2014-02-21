@@ -19,6 +19,7 @@ import no.nav.modig.wicket.component.datepicker.DatePicker;
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
 import no.nav.modig.wicket.component.modal.ModigModalWindow;
 import no.nav.modig.wicket.configuration.ApplicationSettingsConfig;
+import no.nav.modig.wicket.selftest.JsonResourceReference;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.LocaleFromWicketSession;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
@@ -153,10 +154,12 @@ public class WicketApplication extends WebApplication {
     private void mountPages() {
         mountPage("/person/${fnr}", PersonPage.class);
         mountPage("internal/selftest", SelfTestPage.class);
+        mountResource("internal/selftest.json", new JsonResourceReference(SelfTestPage.class));
         if(mockSetupErTillatt()) {
             mountPage("internal/mocksetup", MockSetupPage.class);
         }
     }
+
 
     @Override
     public Session newSession(Request request, Response response) {
