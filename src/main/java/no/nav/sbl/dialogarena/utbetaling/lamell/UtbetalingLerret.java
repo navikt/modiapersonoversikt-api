@@ -15,6 +15,7 @@ import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsResultat;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.ComponentTag;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -68,13 +69,23 @@ public final class UtbetalingLerret extends Lerret {
         instansierFelter(fnr);
 
         add(
-                new ExternalLink("arenalink", arenaUtbetalingUrl + fnr),
+                createArenaLenke(fnr),
                 createFilterFormPanel(),
                 totalOppsummeringPanel,
                 utbetalingslisteContainer,
                 ingenutbetalinger,
                 feilmelding
         );
+    }
+
+    private ExternalLink createArenaLenke(String fnr) {
+        return new ExternalLink("arenalink", arenaUtbetalingUrl + fnr) {
+            @Override
+            public void onComponentTag(ComponentTag tag) {
+                super.onComponentTag(tag);
+                tag.put("target", "_blank");
+            }
+        };
     }
 
     private void instansierFelter(String fnr) {
