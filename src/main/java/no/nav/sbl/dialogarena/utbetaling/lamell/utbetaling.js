@@ -47,7 +47,7 @@ var Utbetalinger = (function () {
     };
 
     function kopierOgSkrivUt(html) {
-        $('body > .print .content').html(html);
+        $('body > .print .content').html('<div class="utbetalinger">' + html + '</div>');
         var date = new Date();
         var day = date.getDate();
         var month = date.getMonth() + 1;
