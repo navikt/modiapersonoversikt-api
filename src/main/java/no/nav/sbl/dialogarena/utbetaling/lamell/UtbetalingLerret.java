@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -13,6 +14,7 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.UtbetalingerMessagePanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned.MaanedsPanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsResultat;
+import no.nav.sbl.dialogarena.utbetaling.util.IntervalUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.ComponentTag;
@@ -23,6 +25,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
@@ -30,7 +33,9 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
@@ -42,7 +47,6 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
-import static org.joda.time.LocalDate.now;
 
 public final class UtbetalingLerret extends Lerret {
 
@@ -95,7 +99,8 @@ public final class UtbetalingLerret extends Lerret {
         feilmelding = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("feilmelding", FEILMELDING_DEFAULT_KEY, "-ikon-feil")
                 .setOutputMarkupPlaceholderTag(true).setVisibilityAllowed(false);
 
-        resultatCache = hentUtbetalingsResultat(fnr, defaultStartDato(), defaultSluttDato());
+        List<Utbetaling> utbetalinger = hentUtbetalingsListe(fnr, defaultStartDato(), defaultSluttDato());
+        resultatCache = new UtbetalingsResultat(fnr, defaultStartDato(), defaultSluttDato(), utbetalinger);
         filterParametere = new FilterParametere(hentYtelser(resultatCache.utbetalinger));
 
         List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
@@ -107,10 +112,9 @@ public final class UtbetalingLerret extends Lerret {
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
     }
 
-    private UtbetalingsResultat hentUtbetalingsResultat(String fnr, LocalDate startDato, LocalDate sluttDato) {
+    private List<Utbetaling> hentUtbetalingsListe(String fnr, LocalDate startDato, LocalDate sluttDato) {
         try {
-            List<Utbetaling> utbetalinger = service.hentUtbetalinger(fnr, startDato, sluttDato);
-            return new UtbetalingsResultat(fnr, startDato, sluttDato, utbetalinger);
+            return service.hentUtbetalinger(fnr, startDato, sluttDato);
         } catch (ApplicationException ae) {
             LOG.warn("Noe feilet ved henting av utbetalinger for fnr {}", fnr, ae);
 
@@ -121,7 +125,7 @@ public final class UtbetalingLerret extends Lerret {
             }
 
             feilmelding.setVisibilityAllowed(true);
-            return resultatCache != null ? resultatCache : new UtbetalingsResultat(fnr, now(), now(), new ArrayList<Utbetaling>());
+            return new ArrayList<>();
         }
     }
 
@@ -170,11 +174,19 @@ public final class UtbetalingLerret extends Lerret {
     }
 
     protected void oppdaterCacheOmNodvendig() {
-        Interval cacheInterval = new Interval(resultatCache.startDato.toDateTimeAtStartOfDay(), resultatCache.sluttDato.toDateTimeAtStartOfDay());
-        Interval filterInterval = new Interval(filterParametere.getStartDato().toDateTimeAtStartOfDay(), filterParametere.getSluttDato().toDateTimeAtStartOfDay());
+        DateTime filterStart = filterParametere.getStartDato().toDateTimeAtStartOfDay();
+        DateTime filterSlutt = filterParametere.getSluttDato().toDateTimeAtStartOfDay();
 
-        if (!cacheInterval.contains(filterInterval)) {
-            resultatCache = hentUtbetalingsResultat(resultatCache.fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
+        Optional<Interval> interval = IntervalUtils.getUncachedInterval(new Interval(filterStart, filterSlutt), resultatCache.intervaller);
+
+        if (interval.isSome()) {
+            Set<Utbetaling> unikeUtbetalinger = new HashSet<>(resultatCache.utbetalinger);
+            unikeUtbetalinger.addAll(hentUtbetalingsListe(resultatCache.fnr, interval.get().getStart().toLocalDate(), interval.get().getEnd().toLocalDate()));
+
+            resultatCache.intervaller.add(interval.get());
+
+            resultatCache.utbetalinger.clear();
+            resultatCache.utbetalinger.addAll(unikeUtbetalinger);
         }
     }
 
