@@ -43,7 +43,8 @@ var Utbetalinger = (function () {
     var skrivUt = function ($element) {
         var $printCopy = $element.clone();
         $printCopy.children('.detaljpanel').css('display', 'block');
-        kopierOgSkrivUt($printCopy.html());
+        $printCopy.css('padding', '0');
+        kopierOgSkrivUt($('<div>').append($printCopy).html());
     };
 
     function kopierOgSkrivUt(html) {
