@@ -28,7 +28,7 @@ import static org.apache.commons.lang3.StringUtils.join;
 
 public class UtbetalingTransformer {
 
-    private static final List<Integer> TILLATTE_STATUSER = asList(3, 11, 18);
+    private static final List<Integer> TILLATTE_STATUSER = asList(3, 6, 10, 11, 18);
 
     public static List<Utbetaling> lagUtbetalinger(List<WSUtbetaling> wsUtbetalinger, String fnr) {
 
