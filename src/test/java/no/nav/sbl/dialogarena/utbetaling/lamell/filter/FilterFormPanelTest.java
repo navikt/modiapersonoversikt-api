@@ -22,6 +22,7 @@ import static org.junit.Assert.assertTrue;
 public class FilterFormPanelTest extends AbstractWicketTest{
 
     private static final String DAGPENGER = "Dagpenger";
+    private static final String ID = "id";
 
     private FilterParametere filterParametre;
 
@@ -49,7 +50,7 @@ public class FilterFormPanelTest extends AbstractWicketTest{
 
     @Test
     public void testYtelseFilterBryter() {
-        Utbetaling utbetaling = new UtbetalingBuilder()
+        Utbetaling utbetaling = new UtbetalingBuilder(ID)
                 .withHovedytelse(DAGPENGER)
                 .withMottakertype(Utbetaling.Mottaktertype.BRUKER)
                 .withUtbetalingsDato(now())

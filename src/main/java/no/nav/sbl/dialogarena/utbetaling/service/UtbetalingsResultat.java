@@ -15,12 +15,11 @@ public class UtbetalingsResultat implements Serializable {
 
     public final String fnr;
     public final Set<Interval> intervaller;
-    public final List<Utbetaling> utbetalinger;
+    public List<Utbetaling> utbetalinger;
 
     public UtbetalingsResultat(String fnr, LocalDate startDato, LocalDate sluttDato, List<Utbetaling> utbetalinger) {
         this.fnr = fnr;
         this.intervaller = new HashSet<>(asList(new Interval(startDato.toDateTimeAtStartOfDay(), sluttDato.toDateTimeAtStartOfDay())));
         this.utbetalinger = utbetalinger;
     }
-
 }

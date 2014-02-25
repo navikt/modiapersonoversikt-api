@@ -18,12 +18,13 @@ public final class Utbetaling implements Serializable {
         BRUKER, ANNEN_MOTTAKER
     }
 
+    private String id;
     private DateTime utbetalingsdato;
     private Interval periode;
     private String status;
     private String mottakerId;
     private String mottakernavn;
-    private Mottaktertype mottaktertype;
+    private Mottaktertype mottakertype;
     private String melding;
     private String hovedytelse;
     private String kontonr;
@@ -42,22 +43,12 @@ public final class Utbetaling implements Serializable {
         return now();
     }
 
-    public static UtbetalingBuilder getBuilder() {
-        return new UtbetalingBuilder();
+    public static UtbetalingBuilder getBuilder(String id) {
+        return new UtbetalingBuilder(id);
     }
 
-    /**
-     * Minste felles multiplum for å unikt identifisere en betaling er
-     * dato, mottaker og hovedytelse.
-     */
     public String getUtbetalingId() {
-        return ("" +
-                utbetalingsdato.getDayOfMonth() +
-                utbetalingsdato.getMonthOfYear() +
-                utbetalingsdato.getYear() +
-                mottakerId +
-                hovedytelse)
-                .replace(" ", "");
+        return id;
     }
 
     public DateTime getUtbetalingsdato() {
@@ -80,8 +71,8 @@ public final class Utbetaling implements Serializable {
         return mottakernavn;
     }
 
-    public Mottaktertype getMottaktertype() {
-        return mottaktertype;
+    public Mottaktertype getMottakertype() {
+        return mottakertype;
     }
 
     public String getMelding() {
@@ -116,108 +107,97 @@ public final class Utbetaling implements Serializable {
         return underytelser;
     }
 
-    public static class UtbetalingBuilder {
-        private DateTime utbetalingsDato;
-        private Interval periode;
-        private String status;
-        private String mottakerId;
-        private String mottakernavn;
-        private Mottaktertype mottakertype;
-        private String melding;
-        private String hovedytelse;
-        private String kontonr;
-        private String valuta;
-        private double brutto;
-        private double trekk;
-        private double utbetalt;
-        private List<Underytelse> underytelser = new ArrayList<>();
+    @Override
+    public int hashCode() {
+        return id == null ? 0 : id.hashCode();
+    }
 
-        public UtbetalingBuilder withUtbetalingsDato(DateTime utbetalingsDato) {
-            this.utbetalingsDato = utbetalingsDato;
+    @Override
+    public boolean equals(Object obj) {
+        return obj != null && obj instanceof Utbetaling && this.id.equals(((Utbetaling) obj).id);
+    }
+
+    public static class UtbetalingBuilder {
+
+        private Utbetaling utbetaling;
+
+        public UtbetalingBuilder(String id) {
+            this.utbetaling = new Utbetaling();
+            this.utbetaling.id = id;
+            this.utbetaling.underytelser = new ArrayList<>();
+        }
+
+        public UtbetalingBuilder withUtbetalingsDato(DateTime utbetalingsdato) {
+            this.utbetaling.utbetalingsdato = utbetalingsdato;
             return this;
         }
 
         public UtbetalingBuilder withPeriode(Interval periode) {
-            this.periode = periode;
+            this.utbetaling.periode = periode;
             return this;
         }
 
         public UtbetalingBuilder withStatus(String status) {
-            this.status = status;
+            this.utbetaling.status = status;
             return this;
         }
 
         public UtbetalingBuilder withMottakerId(String mottakerId) {
-            this.mottakerId = mottakerId;
+            this.utbetaling.mottakerId = mottakerId;
             return this;
         }
 
         public UtbetalingBuilder withMottakernavn(String mottakernavn) {
-            this.mottakernavn = mottakernavn;
+            this.utbetaling.mottakernavn = mottakernavn;
             return this;
         }
 
         public UtbetalingBuilder withMottakertype(Mottaktertype mottakertype) {
-            this.mottakertype = mottakertype;
+            this.utbetaling.mottakertype = mottakertype;
             return this;
         }
 
         public UtbetalingBuilder withMelding(String melding) {
-            this.melding = melding;
+            this.utbetaling.melding = melding;
             return this;
         }
 
         public UtbetalingBuilder withHovedytelse(String hovedytelse) {
-            this.hovedytelse = hovedytelse;
+            this.utbetaling.hovedytelse = hovedytelse;
             return this;
         }
 
         public UtbetalingBuilder withKontonr(String kontonr) {
-            this.kontonr = kontonr;
+            this.utbetaling.kontonr = kontonr;
             return this;
         }
 
         public UtbetalingBuilder withValuta(String valuta) {
-            this.valuta = valuta;
+            this.utbetaling.valuta = valuta;
             return this;
         }
 
         public UtbetalingBuilder withUnderytelser(List<Underytelse> underytelser) {
-            this.underytelser.addAll(underytelser);
+            this.utbetaling.underytelser.addAll(underytelser);
             return this;
         }
 
         public UtbetalingBuilder withBrutto(double brutto) {
-            this.brutto = brutto;
+            this.utbetaling.brutto = brutto;
             return this;
         }
 
         public UtbetalingBuilder withTrekk(double trekk) {
-            this.trekk = trekk;
+            this.utbetaling.trekk = trekk;
             return this;
         }
 
         public UtbetalingBuilder withUtbetalt(double utbetalt) {
-            this.utbetalt = utbetalt;
+            this.utbetaling.utbetalt = utbetalt;
             return this;
         }
 
         public Utbetaling build() {
-            Utbetaling utbetaling = new Utbetaling();
-            utbetaling.utbetalingsdato = this.utbetalingsDato;
-            utbetaling.periode = this.periode;
-            utbetaling.status = this.status;
-            utbetaling.mottakerId = this.mottakerId;
-            utbetaling.mottakernavn = this.mottakernavn;
-            utbetaling.mottaktertype = this.mottakertype;
-            utbetaling.melding = this.melding;
-            utbetaling.hovedytelse = this.hovedytelse;
-            utbetaling.kontonr = this.kontonr;
-            utbetaling.valuta = this.valuta;
-            utbetaling.brutto = this.brutto;
-            utbetaling.trekk = this.trekk;
-            utbetaling.utbetalt = this.utbetalt;
-            utbetaling.underytelser = this.underytelser;
             return utbetaling;
         }
     }

@@ -24,6 +24,7 @@ public class FilterParametereTest {
 
     private static final String DAGPENGER = "Dagpenger";
     private static final String BARNETRYGD = "Barnetrygd";
+    private static final String ID = "id";
 
     private FilterParametere filterparams;
 
@@ -34,7 +35,7 @@ public class FilterParametereTest {
 
     @Test
     public void filtrererBortUtbetalingUtenforDatointervall() {
-        Utbetaling utbetaling = getBuilder()
+        Utbetaling utbetaling = getBuilder(ID)
                 .withUtbetalingsDato(now().minusYears(2))
                 .withMottakertype(Mottaktertype.BRUKER)
                 .withHovedytelse(DAGPENGER)
@@ -45,7 +46,7 @@ public class FilterParametereTest {
 
     @Test
     public void filtrererBortUtbetalingForAnnenMottakertype() {
-        Utbetaling utbetaling = getBuilder()
+        Utbetaling utbetaling = getBuilder(ID)
                 .withUtbetalingsDato(now())
                 .withMottakertype(Mottaktertype.ANNEN_MOTTAKER)
                 .withHovedytelse(DAGPENGER)
@@ -58,7 +59,7 @@ public class FilterParametereTest {
 
     @Test
     public void skalBeholdeYtelsenHvisUtbetalingenInneholderEnYtelseManVilHa() {
-        Utbetaling utbetaling = getBuilder()
+        Utbetaling utbetaling = getBuilder(ID)
                 .withUtbetalingsDato(now())
                 .withMottakertype(Mottaktertype.BRUKER)
                 .withHovedytelse(DAGPENGER)
@@ -71,7 +72,7 @@ public class FilterParametereTest {
 
     @Test
     public void skalIkkeBeholdeYtelsenHvisAlleUtbetalingerErUonskede() {
-        Utbetaling utbetaling = getBuilder()
+        Utbetaling utbetaling = getBuilder(ID)
                 .withUtbetalingsDato(now())
                 .withMottakertype(Mottaktertype.BRUKER)
                 .withHovedytelse(DAGPENGER)
@@ -85,7 +86,7 @@ public class FilterParametereTest {
     @Test
     public void skalViseAlleUtbetalingerHvisAlleYtelserErValgtOgNyeYtelserBlirSatt() {
         filterparams = new FilterParametere(new HashSet<String>());
-        Utbetaling utbetaling = getBuilder()
+        Utbetaling utbetaling = getBuilder(ID)
                 .withUtbetalingsDato(now())
                 .withMottakertype(Mottaktertype.BRUKER)
                 .withHovedytelse(DAGPENGER)
@@ -126,7 +127,7 @@ public class FilterParametereTest {
 
     @Test
     public void skalToggleAlleYtelserSomOnsket() {
-        UtbetalingBuilder utbetalingBuilder = getBuilder()
+        UtbetalingBuilder utbetalingBuilder = getBuilder(ID)
                 .withUtbetalingsDato(now())
                 .withMottakertype(Mottaktertype.BRUKER);
 
@@ -138,7 +139,7 @@ public class FilterParametereTest {
 
     @Test
     public void skalToggleAlleYtelserSomUonsket() {
-        UtbetalingBuilder utbetalingBuilder = getBuilder()
+        UtbetalingBuilder utbetalingBuilder = getBuilder(ID)
                 .withUtbetalingsDato(now())
                 .withMottakertype(Mottaktertype.BRUKER);
 
