@@ -39,7 +39,7 @@ public class UtbetalingVM {
     }
 
     public Mottaktertype getMottakertype() {
-        return utbetaling.getMottaktertype();
+        return utbetaling.getMottakertype();
     }
 
     public String getKontonr() {

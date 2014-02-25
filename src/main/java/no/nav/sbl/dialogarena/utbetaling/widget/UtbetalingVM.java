@@ -62,7 +62,7 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
     }
 
     public Mottaktertype getMottakertype() {
-        return utbetaling.getMottaktertype();
+        return utbetaling.getMottakertype();
     }
 
     @Override

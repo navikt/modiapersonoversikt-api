@@ -20,13 +20,15 @@ import static org.joda.time.DateTime.now;
 
 public class MaanedsPanelTest extends AbstractWicketTest {
 
+    private static final String ID = "id";
+
     @Override
     protected void setup() {
     }
 
     @Test
     public void testMaanedsPanelMedUtbetalinger() {
-        UtbetalingBuilder utbetalingBuilder = new UtbetalingBuilder();
+        UtbetalingBuilder utbetalingBuilder = new UtbetalingBuilder(ID);
         List<Utbetaling> utbetalinger = asList(
                 utbetalingBuilder.withUtbetalingsDato(now())
                         .withPeriode(new Interval(now().minusDays(5), now()))

@@ -39,7 +39,8 @@ public class UtbetalingTransformer {
             int statusKode = parseInt(optional(wsUtbetaling.getStatusKode()).getOrElse("3"));
             if (!TILLATTE_STATUSER.contains(statusKode)) { break; }
 
-            UtbetalingBuilder utbetalingBuilder = new UtbetalingBuilder()
+            UtbetalingBuilder utbetalingBuilder = new UtbetalingBuilder(wsUtbetaling.getUtbetalingId())
+
                     .withMottakerId(wsUtbetaling.getUtbetalingMottaker().getMottakerId())
                     .withMottakernavn(wsUtbetaling.getUtbetalingMottaker().getNavn())
                     .withMottakertype(transformerMottakertype(wsUtbetaling.getUtbetalingMottaker(), fnr))

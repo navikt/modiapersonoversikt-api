@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.utbetaling.util;
 import no.nav.modig.lang.option.Optional;
 import org.joda.time.Interval;
 
+import java.util.HashSet;
 import java.util.Set;
 
 import static no.nav.modig.lang.option.Optional.none;
@@ -15,12 +16,13 @@ public class IntervalUtils {
     }
 
     public static Optional<Interval> getUncachedInterval(Optional<Interval> filter, Set<Interval> remainingCached) {
-        if (remainingCached.isEmpty()) {
+        Set<Interval> copiedCached = new HashSet<>(remainingCached);
+        if (copiedCached.isEmpty()) {
             return filter;
         } else {
-            Interval cached = remainingCached.iterator().next();
-            remainingCached.remove(cached);
-            return getUncachedInterval(notOverlap(filter, cached), remainingCached);
+            Interval cached = copiedCached.iterator().next();
+            copiedCached.remove(cached);
+            return getUncachedInterval(notOverlap(filter, cached), copiedCached);
         }
     }
 

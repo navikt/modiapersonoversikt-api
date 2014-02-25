@@ -1,19 +1,28 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.TotalOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.UtbetalingerMessagePanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
+import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsResultat;
 import no.nav.sbl.dialogarena.utbetaling.wickettest.AbstractWicketTest;
+import org.joda.time.DateTime;
+import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.getBuilder;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -60,4 +69,23 @@ public class UtbetalingLerretTest extends AbstractWicketTest{
         utbetalingLerret.oppdaterCacheOmNodvendig();
         verifyNoMoreInteractions(service);
     }
+
+    @Test
+    public void beholderIkkeDuplikater() {
+        Utbetaling idag = getBuilder("1").withUtbetalingsDato(DateTime.now()).build();
+        Utbetaling igaar = getBuilder("2").withUtbetalingsDato(DateTime.now().minusDays(1)).build();
+        Utbetaling forrigeUke = getBuilder("3").withUtbetalingsDato(DateTime.now().minusWeeks(1)).build();
+        Utbetaling forrigeMaaned = getBuilder("4").withUtbetalingsDato(DateTime.now().minusMonths(1)).build();
+        String fnr = "fnr";
+
+        UtbetalingsResultat resultat = new UtbetalingsResultat(fnr, forrigeUke.getUtbetalingsdato().toLocalDate(), igaar.getUtbetalingsdato().toLocalDate(), asList(forrigeUke, igaar));
+        when(service.hentUtbetalinger(fnr, forrigeMaaned.getUtbetalingsdato().toLocalDate(), idag.getUtbetalingsdato().toLocalDate()))
+                .thenReturn(asList(forrigeMaaned, forrigeUke, igaar, idag));
+
+        UtbetalingsResultat nyttResultat = utbetalingLerret.oppdaterCache(resultat, new Interval(forrigeMaaned.getUtbetalingsdato(), idag.getUtbetalingsdato()));
+
+        assertEquals(2, nyttResultat.intervaller.size());
+        assertThat(nyttResultat.utbetalinger, containsInAnyOrder(forrigeMaaned, forrigeUke, igaar, idag));
+    }
+
 }

@@ -14,7 +14,6 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.UtbetalingerMessagePanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned.MaanedsPanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsResultat;
-import no.nav.sbl.dialogarena.utbetaling.util.IntervalUtils;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.ComponentTag;
@@ -47,6 +46,7 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.splittUtbetalingerPerMaaned;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
+import static no.nav.sbl.dialogarena.utbetaling.util.IntervalUtils.getUncachedInterval;
 
 public final class UtbetalingLerret extends Lerret {
 
@@ -177,17 +177,21 @@ public final class UtbetalingLerret extends Lerret {
         DateTime filterStart = filterParametere.getStartDato().toDateTimeAtStartOfDay();
         DateTime filterSlutt = filterParametere.getSluttDato().toDateTimeAtStartOfDay();
 
-        Optional<Interval> interval = IntervalUtils.getUncachedInterval(new Interval(filterStart, filterSlutt), resultatCache.intervaller);
+        Optional<Interval> interval = getUncachedInterval(new Interval(filterStart, filterSlutt), resultatCache.intervaller);
 
         if (interval.isSome()) {
-            Set<Utbetaling> unikeUtbetalinger = new HashSet<>(resultatCache.utbetalinger);
-            unikeUtbetalinger.addAll(hentUtbetalingsListe(resultatCache.fnr, interval.get().getStart().toLocalDate(), interval.get().getEnd().toLocalDate()));
-
-            resultatCache.intervaller.add(interval.get());
-
-            resultatCache.utbetalinger.clear();
-            resultatCache.utbetalinger.addAll(unikeUtbetalinger);
+            resultatCache = oppdaterCache(resultatCache, interval.get());
         }
+    }
+
+    protected UtbetalingsResultat oppdaterCache(UtbetalingsResultat resultatCache, Interval interval) {
+        Set<Utbetaling> unikeUtbetalinger = new HashSet<>(resultatCache.utbetalinger);
+        unikeUtbetalinger.addAll(hentUtbetalingsListe(resultatCache.fnr, interval.getStart().toLocalDate(), interval.getEnd().toLocalDate()));
+        resultatCache.utbetalinger = new ArrayList<>(unikeUtbetalinger);
+
+        resultatCache.intervaller.add(interval);
+
+        return resultatCache;
     }
 
     protected void oppdaterYtelser() {
