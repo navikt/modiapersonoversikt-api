@@ -148,6 +148,12 @@ public final class UtbetalingLerret extends Lerret {
         };
     }
 
+    @Override
+    public void onOpening(AjaxRequestTarget target) {
+        super.onOpening(target);
+        target.appendJavaScript("Utbetalinger.addKeyNavigation();");
+    }
+
     @SuppressWarnings("unused")
     @RunOnEvents(FILTER_ENDRET)
     private void oppdaterUtbetalingsliste(AjaxRequestTarget target) {
