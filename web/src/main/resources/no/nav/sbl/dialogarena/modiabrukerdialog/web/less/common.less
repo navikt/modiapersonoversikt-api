@@ -1,6 +1,7 @@
 /* Generelle mixins, variabler, typografi og stiler som bruker av andre stilregler */
 @sidebarWidth: 24%;
 @mainContentWidth: 100% - (@sidebarWidth * 2);
+@sidebarYtrePadding: 15px;
 
 /* Mixins */
 .kolonne {
@@ -573,6 +574,7 @@ UL.feedbackPanel {
 	}
 }
 
+/* Sidebars */
 [class*=sidebar-] {
 	position: absolute;
 	top: 0;
@@ -609,36 +611,28 @@ UL.feedbackPanel {
 	}
 	.visittkort {
 		margin: 0;
-		padding: 15px 15px 0 0;
+		padding: 15px @sidebarYtrePadding 0 0;
 		min-height: 266px;
 		background-repeat: no-repeat;
 		background-position: 27px 30px;
 		background-color: inherit;
 		background-size: 64px;
 		color: @grayLight;
-		border-top: 1px solid #626262;
-		border-bottom: 1px solid #000;
-		float: left;
+		border-top: 1px solid #000;
 		width: 100%;
 		A {
 			color: @blue;
 		}
 		&.mann {
 			background-image: url(../img/mann.svg);
-			.left {
+			.left > * {
 				color: #0fba47;
-				.label {
-					color: #0fba47;
-				}
 			}
 		}
 		&.kvinne {
 			background-image: url(../img/kvinne.svg);
-			.left {
+			.left > * {
 				color: #ec288d;
-				.label {
-					color: #ec288d;
-				}
 			}
 		;
 		}
@@ -708,11 +702,12 @@ UL.feedbackPanel {
 		}
 	}
 	.kjerneinfo {
-		height: 100%;
 		margin: 0;
-		.tabs {
-			float: left;
-			div {
+        padding-right: @sidebarYtrePadding;
+        border-top: 1px solid #000;
+      .tabs {
+            float: left;
+            div {
 				color: #fff;
 				padding-top: 71px;
 				width: 90px;
@@ -722,52 +717,23 @@ UL.feedbackPanel {
 				text-transform: uppercase;
 				letter-spacing: 1px;
 				text-align: center;
+                background-repeat: no-repeat;
+                background-position: 35px 18px;
+                padding-left: 26px;
 				&.valgt {
 					background-color: #333;
 				}
 				&.familie {
 					background-image: url(../img/familie_ikon.svg);
-					background-repeat: no-repeat;
-					background-position: 35px 18px;
-					padding-left: 26px;
-				}
-				div {
-					display: inline-block;
-					width: 50px;
-					height: 50px;
-					border-radius: 50px;
-					margin: 10px 0;
-				}
-				&.boforhold {
-					div {
-						background: #9a72ff;
-					}
-				}
-				&.status {
-					div {
-						background: #0fba47;
-					}
-				}
-				&.familie {
-					div {
-						background: #ec288d;
-					}
-				}
-				&.lovverk {
-					div {
-						background: #eebe00;
-					}
-				}
+                }
 			}
 		}
 		.tab-info {
-			float: left;
-			margin: 10px 0 0 18px;
+            padding-left: 110px;
 			.info {
 				.barn {
 					display: table;
 					margin-top: 2rem;
-					clear: both;
 					.barnAlder {
 						float: left;
 						text-align: center;
@@ -811,10 +777,6 @@ UL.feedbackPanel {
 				}
 			}
 		}
-	}
-	.fyll-ut {
-		margin-left: 0;
-		margin-right: 0;
 	}
 }
 
