@@ -58,6 +58,7 @@ public class WSUtbetalingTestData {
         WSBilag bilag1 = createBilag("", AAP, posteringsdetalj1, posteringsdetalj2, posteringsdetalj3);
 
         return new WSUtbetaling()
+                .withUtbetalingId("1")
                 .withNettobelop(9895.07)
                 .withGironr(KONTO_NR)
                 .withBruttobelop(14060.00)
@@ -75,6 +76,7 @@ public class WSUtbetalingTestData {
         WSBilag bilag1 = createBilag("", KONTANT, posteringsdetalj1);
 
         return new WSUtbetaling()
+                .withUtbetalingId("2")
                 .withNettobelop(3303.00)
                 .withGironr(KONTO_NR2)
                 .withBruttobelop(3303.00)
@@ -92,6 +94,7 @@ public class WSUtbetalingTestData {
         WSBilag bilag1 = createBilag("", KONTANT, posteringsdetalj1);
 
         return new WSUtbetaling()
+                .withUtbetalingId("3")
                 .withNettobelop(3303.00)
                 .withGironr(KONTO_NR2)
                 .withBruttobelop(3303.00)
@@ -111,6 +114,7 @@ public class WSUtbetalingTestData {
         WSBilag bilag1 = createBilag("", AAP, posteringsdetalj1, posteringsdetalj2, posteringsdetalj3);
 
         return new WSUtbetaling()
+                .withUtbetalingId("4")
                 .withNettobelop(9895.07)
                 .withGironr(KONTO_NR)
                 .withBruttobelop(14060.00)
