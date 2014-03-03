@@ -37,7 +37,7 @@ public class UtbetalingEndpointConfig {
     public UtbetalingPortType utbetalingPortType() {
         return new UtbetalingPortType() {
 
-            @Cacheable("endpointCache")
+            @Cacheable("utbetalingCache")
             @Override
             public WSHentUtbetalingListeResponse hentUtbetalingListe(@WebParam(name = "request", targetNamespace = "") WSHentUtbetalingListeRequest request)
                     throws HentUtbetalingListeMottakerIkkeFunnet, HentUtbetalingListeForMangeForekomster, HentUtbetalingListeBaksystemIkkeTilgjengelig, HentUtbetalingListeUgyldigDato {
