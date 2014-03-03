@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.service;
 
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
@@ -37,7 +38,7 @@ public class UtbetalingServiceTest {
         assertThat(utbetalinger.isEmpty(), is(true));
     }
 
-    @Test(expected = SystemException.class)
+    @Test(expected = ApplicationException.class)
     public void testExceptions_HentUtbetalingListeForMangeForekomster() throws Exception {
         when(utbetalingPortType.hentUtbetalingListe(any(WSHentUtbetalingListeRequest.class))).thenThrow(new HentUtbetalingListeForMangeForekomster());
         service.hentUtbetalinger(FNR, new LocalDate(), new LocalDate());
