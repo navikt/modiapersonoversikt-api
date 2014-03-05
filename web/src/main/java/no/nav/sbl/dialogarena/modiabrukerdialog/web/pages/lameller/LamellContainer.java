@@ -22,11 +22,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.lamell.DefaultLamellFactory.newLamellFactory;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.PropertyUtils.visUtbetalinger;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.FORELDREPENGER;
 import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
 
@@ -118,12 +119,16 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     }
 
     private static List<LamellFactory> createLamellFactories(final String fnrFromRequest) {
-        return asList(
-                createOversiktLamell(fnrFromRequest),
-                createKontrakterLamell(fnrFromRequest),
-                createBrukerprofilLamell(fnrFromRequest),
-                createUtbetalingLamell(fnrFromRequest)
-        );
+        List<LamellFactory> lamellFactories = new ArrayList<>();
+        lamellFactories.add(createOversiktLamell(fnrFromRequest));
+        lamellFactories.add(createKontrakterLamell(fnrFromRequest));
+        lamellFactories.add(createBrukerprofilLamell(fnrFromRequest));
+
+        if (visUtbetalinger()) {
+            lamellFactories.add(createUtbetalingLamell(fnrFromRequest));
+        }
+
+        return lamellFactories;
     }
 
     private static LamellFactory createBrukerprofilLamell(final String fnrFromRequest) {

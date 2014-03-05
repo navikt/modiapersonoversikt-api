@@ -8,6 +8,8 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.model.util.ListModel;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.PropertyUtils.visUtbetalinger;
 
 public class OversiktLerret extends Lerret {
 
@@ -17,7 +19,7 @@ public class OversiktLerret extends Lerret {
                 new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
                 new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
                 new UtbetalingWidget("utbetalinger", "U", fnr)
+                        .add(visibleIf(Model.of(visUtbetalinger())))
         );
     }
-
 }
