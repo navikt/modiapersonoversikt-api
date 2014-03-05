@@ -59,22 +59,21 @@
 		background-image: none;
 		border: none;
 		box-shadow: none;
-		&:after {
-			bottom: 14px;
+		.personsok-pil {
 			border-top: none;
 			border-left: 7px solid transparent;
 			border-right: 7px solid transparent;
 			border-bottom: 7px solid @modiaBackground;
 		}
 	}
-	&:after {
-		content: "";
-		position: absolute;
-		margin: 28px 0 0 -16px;
-		border-left: 7px solid transparent;
-		border-right: 7px solid transparent;
-		border-top: 7px solid @modiaBackground;
-	}
+    .personsok-pil {
+      display: block;
+      width: 0;
+      margin: 0 auto;
+      border-left: 7px solid transparent;
+      border-right: 7px solid transparent;
+      border-top: 7px solid @modiaBackground;
+    }
 }
 
 .nullstill-button {
