@@ -63,7 +63,7 @@ public class UtbetalingTransformer {
                             transformerUnderbeskrivelse(wsPosteringsdetalj.getKontoBeskrUnder(), wsPosteringsdetalj.getKontoBeskrHoved()),
                             optional(wsPosteringsdetalj.getSpesifikasjon()).getOrElse(""),
                             optional(wsPosteringsdetalj.getAntall()),
-                            getBelopNegativtHvisTrekk(wsPosteringsdetalj),
+                            wsPosteringsdetalj.getBelop(),
                             optional(wsPosteringsdetalj.getSats())));
                 }
             }
@@ -117,15 +117,6 @@ public class UtbetalingTransformer {
             strings.add(wsMelding.getMeldingtekst());
         }
         return join(strings, " ");
-    }
-
-    private static double getBelopNegativtHvisTrekk(WSPosteringsdetaljer wsPosteringsdetalj) {
-        double belop = wsPosteringsdetalj.getBelop();
-        String hovedBeskrivelse = wsPosteringsdetalj.getKontoBeskrHoved().toLowerCase();
-        if (hovedBeskrivelse.contains("trekk") || hovedBeskrivelse.contains("skatt")) {
-            return belop > 0 ? -belop : belop;
-        }
-        return belop;
     }
 
     private static String transformerUnderbeskrivelse(String kontoBeskrUnder, String kontoBeskrHoved) {
