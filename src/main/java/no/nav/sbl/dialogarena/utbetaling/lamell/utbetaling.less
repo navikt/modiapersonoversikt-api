@@ -62,7 +62,7 @@
       .utbetaling-metadata {
         display: inline-block;
         margin: 0;
-        padding: @hoydePadding 30px;
+        padding: @hoydePadding 10px @hoydePadding 22px;
         width: 85%;
         border-right: 1px solid @borderColorLight;
         h2 {
@@ -75,6 +75,7 @@
         .belop-med-valuta {
           margin-left: 0.5rem;
           font-weight: bold;
+          display: inline-block;
         }
         &:hover {
           border-color: @grayLight;
@@ -82,8 +83,7 @@
       }
       .utbetalingstatus {
         display: inline-block;
-        width: 14%;
-        padding-right: 5px;
+        width: 13%;
         margin-bottom: 5px;
         overflow: hidden;
         text-align: center;
@@ -181,10 +181,13 @@
 
       .dato-plukker-filter {
         display: inline-block;
+        label {
+          width: inherit;
+        }
         label:not(.filter-header) {
           display: inline-block;
           margin: 0;
-          width: 49%;
+          width: 115px;
           text-align: left;
           color: @grayDark;
           &:nth-child(0) {
