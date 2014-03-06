@@ -148,7 +148,7 @@ public class FilterFormPanel extends Panel {
     }
 
     private AjaxButton createSokKnapp() {
-        return new AjaxButton("sok", new StringResourceModel("utbetaling.lamell.filter.sok", this, null)) {
+        AjaxButton button = new AjaxButton("sok", new StringResourceModel("utbetaling.lamell.filter.sok", this, null)) {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 sendFilterEndretEvent();
@@ -160,6 +160,10 @@ public class FilterFormPanel extends Panel {
                 target.add(valideringsfeil);
             }
         };
+
+        button.add(new AttributeModifier("alt", new StringResourceModel("utbetaling.lamell.filter.sok.alt", this, null)));
+
+        return button;
     }
 
     private void sendFilterEndretEvent() {
