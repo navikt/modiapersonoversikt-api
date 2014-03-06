@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import org.joda.time.DateTime;
 
 import java.util.List;
 
@@ -71,4 +72,11 @@ public class UtbetalingVM {
         return getBelopString(utbetaling.getUtbetalt());
     }
 
+    public DateTime getStartDato() {
+        return utbetaling.getPeriode().getStart();
+    }
+
+    public DateTime getSluttDato() {
+        return utbetaling.getPeriode().getEnd();
+    }
 }

@@ -5,6 +5,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -13,8 +14,10 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.sbl.dialogarena.utbetaling.util.VMUtils.erDefinertPeriode;
 
 public class TotalOppsummeringPanel extends Panel {
 
@@ -36,7 +39,7 @@ public class TotalOppsummeringPanel extends Panel {
                 ekspandert.setObject(!ekspandert.getObject());
                 target.appendJavaScript(
                         "$('#" + getMarkupId() + " .detaljpanel').animate({height: 'toggle'}, 300);" +
-                        "$('#" + getMarkupId() + "').toggleClass('ekspandert');");
+                                "$('#" + getMarkupId() + "').toggleClass('ekspandert');");
                 target.add();
             }
         };
@@ -65,13 +68,15 @@ public class TotalOppsummeringPanel extends Panel {
     private MarkupContainer createYtelsesOppsummering() {
         ListView<HovedYtelseVM> listView = new ListView<HovedYtelseVM>("hovedytelser") {
             @Override
-            protected void populateItem(ListItem<HovedYtelseVM> item) {
+            protected void populateItem(final ListItem<HovedYtelseVM> item) {
+
+                HovedYtelseVM hovedYtelseVM = item.getModelObject();
                 item.add(
-                        new Label("hovedYtelsesBeskrivelse", item.getModelObject().getHovedYtelsesBeskrivelse()),
-                        new Label("hovedYtelsesPeriode", item.getModelObject().getHovedYtelsePeriode()),
-                        new Label("bruttoUnderytelser", item.getModelObject().getBruttoUnderytelser()),
-                        new Label("trekkUnderytelser", item.getModelObject().getTrekkUnderytelser()),
-                        new Label("nettoUnderytelser", item.getModelObject().getNettoUnderytelser()),
+                        new Label("hovedYtelsesBeskrivelse", hovedYtelseVM.getHovedYtelsesBeskrivelse()),
+                        getHovedYtelsesPeriodeLabel(hovedYtelseVM),
+                        new Label("bruttoUnderytelser", hovedYtelseVM.getBruttoUnderytelser()),
+                        new Label("trekkUnderytelser", hovedYtelseVM.getTrekkUnderytelser()),
+                        new Label("nettoUnderytelser", hovedYtelseVM.getNettoUnderytelser()),
                         lagUnderBeskrivelseListView(item)
                 );
             }
@@ -92,4 +97,12 @@ public class TotalOppsummeringPanel extends Panel {
         return new WebMarkupContainer("oppsummeringDetalj").add(listView);
     }
 
+    private Label getHovedYtelsesPeriodeLabel(HovedYtelseVM hovedYtelseVM) {
+        if (erDefinertPeriode(hovedYtelseVM.getStartPeriode(), hovedYtelseVM.getSluttPeriode())) {
+            return new Label("hovedYtelsesPeriode", hovedYtelseVM.getHovedYtelsePeriode());
+        }
+        return (Label) new Label("hovedYtelsesPeriode",
+                new StringResourceModel("utbetaling.lamell.total.oppsummering.udefinertperiode", TotalOppsummeringPanel.this, null).getString())
+                .add(new AttributeAppender("class", "kursiv").setSeparator(" "));
+    }
 }
