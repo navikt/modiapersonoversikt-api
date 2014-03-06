@@ -54,8 +54,16 @@ public class HovedYtelseVM implements Serializable {
         return getBelopString(utbetalt);
     }
 
+    public DateTime getStartPeriode() {
+        return startPeriode;
+    }
+
+    public DateTime getSluttPeriode() {
+        return sluttPeriode;
+    }
+
     public String getHovedYtelsePeriode() {
-        return kortUtenLiteral(startPeriode) + " - " + kortUtenLiteral(sluttPeriode);
+       return kortUtenLiteral(startPeriode) + " - " + kortUtenLiteral(sluttPeriode);
     }
 
     public static class HovedYtelseComparator {
