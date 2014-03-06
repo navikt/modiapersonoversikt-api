@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell;
 
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
@@ -115,11 +116,11 @@ public final class UtbetalingLerret extends Lerret {
     private List<Utbetaling> hentUtbetalingsListe(String fnr, LocalDate startDato, LocalDate sluttDato) {
         try {
             return service.hentUtbetalinger(fnr, startDato, sluttDato);
-        } catch (ApplicationException ae) {
-            LOG.warn("Noe feilet ved henting av utbetalinger for fnr {}", fnr, ae);
+        } catch (ApplicationException | SystemException e) {
+            LOG.warn("Noe feilet ved henting av utbetalinger for fnr {}", fnr, e);
 
-            if (ae.getId() != null) {
-                feilmelding.endreMessageKey(ae.getId());
+            if (e.getId() != null) {
+                feilmelding.endreMessageKey(e.getId());
             } else {
                 feilmelding.endreMessageKey(FEILMELDING_DEFAULT_KEY);
             }
