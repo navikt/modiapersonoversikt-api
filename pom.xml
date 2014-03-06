@@ -838,12 +838,6 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <tagNameFormat>${project.version}-${project.artifactId}</tagNameFormat>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
     <scm>
