@@ -85,7 +85,6 @@ public class WSUtbetalingTestData {
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createTrygdetMottaker())
                 .withUtbetalingDato(new DateTime(2013, 12, 11, 0, 0))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(1970, 1, 1, 0, 0), new DateTime(1970, 1, 1, 0, 0)))
                 .withBilagListe(bilag1);
     }
 
@@ -103,7 +102,6 @@ public class WSUtbetalingTestData {
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createTrygdetMottaker())
                 .withUtbetalingDato(new DateTime(2013, 11, 21, 0, 0))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(1970, 1, 1, 0, 0), new DateTime(1970, 1, 1, 0, 0)))
                 .withBilagListe(bilag1);
     }
 
