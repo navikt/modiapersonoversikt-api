@@ -630,8 +630,13 @@ UL.feedbackPanel {
 		}
 		&.kvinne {
 			background-image: url(../img/kvinne.svg);
-			.left > * {
-				color: #ec288d;
+			.left {
+              .label {
+                color: #ff61b3;
+              }
+              .year {
+                color: #ec288d;
+              }
 			}
 		;
 		}
@@ -772,7 +777,12 @@ UL.feedbackPanel {
 					}
 					&.girl {
 						.barnAlder {
-							color: #ec288d;
+                          .alderEnhet {
+                            color: #ff61b3;
+                          }
+                          .alder {
+                            color: #ec288d;
+                          }
 						}
 					}
 				}
