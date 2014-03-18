@@ -3,14 +3,14 @@ var Utbetalinger = (function () {
 
     var init = function() {
         addKeyNavigation();
-        Modig.shortcutListener.on({keyCode: 13}, function () {
-            var $activeElement = $(document.activeElement);
-            if ($activeElement.parent('.utbetaling-ramme-innhold')) {
-                Utbetalinger.toggleDetaljPanel($activeElement);
+
+        // Event listeners
+        $(document).on('keypress', '.utbetaling-ramme-innhold .utbetalingslinje', function(event){
+            if (event.which === 13) {
+                Utbetalinger.toggleDetaljPanel($(this));
             }
         });
 
-        // Event listeners
         $(document).on('click', utbetalingslinjeSelector, function () {
             Utbetalinger.toggleDetaljPanel($(this));
         });
