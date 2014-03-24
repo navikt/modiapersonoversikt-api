@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling;
 
-import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Wrapper;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.MockPingable;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeResponse;
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeBaksystemIkkeTilgjengelig;
@@ -47,11 +45,6 @@ public class UtbetalingEndpointConfig {
                 return portTypeWrapper.wrappedObject.hentUtbetalingListe(request);
             }
         };
-    }
-
-    @Bean
-    public Pingable utbetalingPing() {
-        return new MockPingable("UtbetalingEndpoint");
     }
 
 }
