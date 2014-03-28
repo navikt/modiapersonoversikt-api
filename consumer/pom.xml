@@ -3,11 +3,11 @@
     <modelVersion>4.0.0</modelVersion>
      <parent>
         <groupId>no.nav.sbl.dialogarena</groupId>
-        <artifactId>soknader-modia</artifactId>
-        <version>2.0.13-SNAPSHOT</version>
+         <artifactId>modia-saksoversikt</artifactId>
+         <version>1.0-SNAPSHOT</version>
     </parent>
-    <artifactId>soknader-consumer</artifactId>
-    <name>Soknader-Modia :: Consumer</name>
+    <artifactId>modia-saksoversikt-consumer</artifactId>
+    <name>Sak-Modia :: Consumer</name>
 
    
     <dependencies>
