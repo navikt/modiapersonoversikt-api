@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.soknader.liste;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.liste.Liste;
-import no.nav.modig.modia.widget.panels.FeedItemErrorMessagePanel;
-import no.nav.sbl.dialogarena.aktorid.service.AktorService;
+import no.nav.modig.modia.widget.panels.FeedItemMessagePanel;
+import no.nav.sbl.dialogarena.service.AktorService;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.sbl.dialogarena.soknader.service.SoknaderService;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -23,8 +23,10 @@ public class SoknadListe extends Liste<Soknad> {
     public static final PackageResourceReference SOKNADSLISTE_LESS = new PackageResourceReference(SoknadListe.class, "soknadliste.less");
     private static final IModel<List<Soknad>> MODEL = new ListModel<>(new ArrayList<Soknad>());
     private boolean serviceCallOk;
+
     @Inject
     private SoknaderService soknaderService;
+
     @Inject
     private AktorService aktorService;
 
@@ -59,7 +61,7 @@ public class SoknadListe extends Liste<Soknad> {
         if (serviceCallOk) {
             return new SoknadItem(id, model);
         } else {
-            return new FeedItemErrorMessagePanel(id, new StringResourceModel("sakogbehandling.feil", new Model()));
+            return new FeedItemMessagePanel("id", new StringResourceModel("sakogbehandling.feil", new Model()), "-ikon-feil");
         }
     }
 

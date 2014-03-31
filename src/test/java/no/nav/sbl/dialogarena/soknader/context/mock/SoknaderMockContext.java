@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.soknader.context.mock;
 
-import no.nav.sbl.dialogarena.aktorid.service.AktorService;
+import no.nav.sbl.dialogarena.service.AktorService;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.soknader.domain.Soknad;
 import no.nav.sbl.dialogarena.soknader.domain.SoknadComparator;

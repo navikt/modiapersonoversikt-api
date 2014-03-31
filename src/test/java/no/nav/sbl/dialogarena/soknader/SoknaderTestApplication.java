@@ -35,6 +35,7 @@ public class SoknaderTestApplication extends WebApplication {
         setupSpringInjector();
         getMarkupSettings().setStripWicketTags(true);
 
+
         brukLocaleFra(INSTANCE);
 
         new ApplicationSettingsConfig().withUtf8Properties(true).configure(this);

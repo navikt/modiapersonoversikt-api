@@ -1,6 +1,7 @@
-package no.nav.sbl.dialogarena.aktorid.service;
+package no.nav.sbl.dialogarena.service;
 
 import no.nav.modig.core.exception.SystemException;
+import no.nav.sbl.dialogarena.service.AktorService;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
