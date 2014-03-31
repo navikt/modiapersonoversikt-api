@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.soknader;
+package no.nav.sbl.dialogarena.sak;
 
 import java.io.File;
 
@@ -9,7 +9,7 @@ public final class StartJettyNoIntegration {
 
     public static void main(String ... args) {
         usingWar(new File(TEST_RESOURCES, "webapp"))
-                .at("soknader")
+                .at("sak")
                 .port(8383)
                 .buildJetty()
                 .start();

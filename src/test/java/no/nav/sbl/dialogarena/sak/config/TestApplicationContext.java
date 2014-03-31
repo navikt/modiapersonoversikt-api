@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.soknader.config;
+package no.nav.sbl.dialogarena.sak.config;
 
 import org.springframework.context.annotation.Configuration;
 

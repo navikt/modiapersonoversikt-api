@@ -26,7 +26,7 @@
 
     <context-param>
         <param-name>contextConfigLocation</param-name>
-        <param-value>no.nav.sbl.dialogarena.soknader.config.TestApplicationContext</param-value>
+        <param-value>no.nav.sbl.dialogarena.sak.config.TestApplicationContext</param-value>
     </context-param>
 
     <filter>
