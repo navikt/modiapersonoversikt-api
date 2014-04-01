@@ -1,11 +1,12 @@
 package no.nav.sbl.dialogarena.sak.widget;
 
 import no.nav.modig.modia.widget.FeedWidget;
-import no.nav.modig.modia.widget.panels.GenericListing;
 import no.nav.sbl.dialogarena.sak.domain.TemaVM;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.util.ListModel;
+
+import java.util.List;
 
 import static java.util.Arrays.asList;
 
@@ -14,11 +15,16 @@ public class SaksWidget extends FeedWidget<TemaVM> {
     public SaksWidget(String id, String initial, String fnr) {
         super(id, initial, true);
 
-        setDefaultModel(new ListModel<>(asList(new GenericListing(new HentSakerPanel(this)))));
+
+        setDefaultModel(new ListModel<>(transformToTemaVM()));
     }
 
-    public void hentSaker() {
-
+    private List<TemaVM> transformToTemaVM() {
+        return asList(
+                new TemaVM(),
+                new TemaVM(),
+                new TemaVM()
+        );
     }
 
     @Override
