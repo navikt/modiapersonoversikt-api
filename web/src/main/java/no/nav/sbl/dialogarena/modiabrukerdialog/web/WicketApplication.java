@@ -25,6 +25,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
+import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import org.apache.wicket.Application;
@@ -125,7 +126,8 @@ public class WicketApplication extends WebApplication {
                         BasePage.MODIA_KOMPONENTER_LESS,
                         BasePage.MODIA_RAMME_LESS,
                         BasePage.PERSONINFO_LESS,
-                        UtbetalingLerret.UTBETALING_LESS)
+                        UtbetalingLerret.UTBETALING_LESS,
+                        SaksoversiktLerret.SAKSOVERSIKT_LESS)
                 .addCss(
                         BasePage.PERSONSOKRESULT,
                         BasePage.PERSONSOKSEARCH

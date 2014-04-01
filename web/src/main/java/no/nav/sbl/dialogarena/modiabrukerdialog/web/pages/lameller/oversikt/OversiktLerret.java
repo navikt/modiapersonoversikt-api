@@ -19,7 +19,7 @@ public class OversiktLerret extends Lerret {
         add(
                 new LenkeWidget("lenker", "E", new ListModel<>(asList("kontrakter"))),
                 new SykepengerWidget("sykepenger", "Y", new Model<>(fnr)),
-                new SaksWidget("sakstemaer", "S", fnr),
+                new SaksWidget("saksoversikt", "S", fnr),
                 new UtbetalingWidget("utbetalinger", "U", fnr)
                         .add(visibleIf(Model.of(visUtbetalinger())))
         );
