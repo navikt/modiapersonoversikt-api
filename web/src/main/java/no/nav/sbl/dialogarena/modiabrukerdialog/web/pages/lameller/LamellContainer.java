@@ -11,6 +11,7 @@ import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.lamell.LerretFactory;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
+import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
@@ -124,7 +125,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         lamellFactories.add(createOversiktLamell(fnrFromRequest));
         lamellFactories.add(createKontrakterLamell(fnrFromRequest));
         lamellFactories.add(createBrukerprofilLamell(fnrFromRequest));
-        lamellFactories.add(createSaksoversiktLamell());
+        lamellFactories.add(createSaksoversiktLamell(fnrFromRequest));
 
         if (visUtbetalinger()) {
             lamellFactories.add(createUtbetalingLamell(fnrFromRequest));
@@ -169,11 +170,11 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         });
     }
 
-    private static LamellFactory createSaksoversiktLamell() {
+    private static LamellFactory createSaksoversiktLamell(final String fnrFromRequest) {
         return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, new LerretFactory() {
             @Override
             public Lerret createLerret(String id) {
-                return null;
+                return new SaksoversiktLerret(id, fnrFromRequest);
             }
         });
     }
