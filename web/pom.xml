@@ -102,6 +102,11 @@
             <artifactId>modia-utbetalinger</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modia-saksoversikt</artifactId>
+        </dependency>
+
         <!-- End modia komponenter -->
 
         <!-- Modig avhengigheter -->

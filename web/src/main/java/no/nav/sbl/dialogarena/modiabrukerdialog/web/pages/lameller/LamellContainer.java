@@ -44,6 +44,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public static final String LAMELL_SYKEPENGER = "sykepenger";
     public static final String LAMELL_OVERSIKT = "oversikt";
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
+    public static final String LAMELL_SAKSOVERSIKT = "saksoversikt";
     public static final String PANEL = "panel";
 
     private String fnrFromRequest;
@@ -123,6 +124,7 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         lamellFactories.add(createOversiktLamell(fnrFromRequest));
         lamellFactories.add(createKontrakterLamell(fnrFromRequest));
         lamellFactories.add(createBrukerprofilLamell(fnrFromRequest));
+        lamellFactories.add(createSaksoversiktLamell(fnrFromRequest));
 
         if (visUtbetalinger()) {
             lamellFactories.add(createUtbetalingLamell(fnrFromRequest));
@@ -163,6 +165,15 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             @Override
             public Lerret createLerret(String id) {
                 return new UtbetalingLerret(id, fnrFromRequest);
+            }
+        });
+    }
+
+    private static LamellFactory createSaksoversiktLamell(final String fnrFromRequest) {
+        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, new LerretFactory() {
+            @Override
+            public Lerret createLerret(String id) {
+                return null;
             }
         });
     }

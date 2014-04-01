@@ -62,6 +62,7 @@
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>2.0.39</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
+        <saksoversikt.version>1.0-SNAPSHOT</saksoversikt.version>
     </properties>
 
     <dependencyManagement>
@@ -83,6 +84,12 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>modia-utbetalinger</artifactId>
                 <version>${utbetaling.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>modia-saksoversikt</artifactId>
+                <version>${saksoversikt.version}</version>
             </dependency>
 
             <dependency>
