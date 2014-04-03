@@ -60,7 +60,7 @@
         <personsok.version>1.0.80</personsok.version>
         <kjerneinfo.versjon>1.0.80</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>2.0.39</utbetaling.version>
+        <utbetaling.version>2.0.40</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
     </properties>
 
