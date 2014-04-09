@@ -62,7 +62,9 @@
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>2.0.40</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
+        <henvendelse.meldinger.tjenestespec.version>0.0.7</henvendelse.meldinger.tjenestespec.version>
         <saksoversikt.version>1.0-SNAPSHOT</saksoversikt.version>
+        <sporsmalogsvar.version>1.20</sporsmalogsvar.version>
     </properties>
 
     <dependencyManagement>
@@ -90,6 +92,12 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>modia-saksoversikt</artifactId>
                 <version>${saksoversikt.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>sporsmal-og-svar-widget</artifactId>
+                <version>${sporsmalogsvar.version}</version>
             </dependency>
 
             <dependency>
@@ -181,6 +189,12 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
                 <version>${utbetaling.tjenestespesifikasjon.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>henvendelse-meldinger-tjenestespesifikasjon</artifactId>
+                <version>${henvendelse.meldinger.tjenestespec.version}</version>
             </dependency>
 
             <dependency>

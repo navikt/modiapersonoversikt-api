@@ -32,6 +32,12 @@
         </dependency>
 
         <!-- Modia-komponenter -->
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sporsmal-og-svar-widget</artifactId>
+        </dependency>
+
          <dependency>
              <groupId>no.nav</groupId>
              <artifactId>personsok-panel</artifactId>
