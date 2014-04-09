@@ -10,7 +10,7 @@
 
     <name>Dialogarena - modiabrukerdialog</name>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>2.29</version>
+    <version>2.30</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -60,7 +60,7 @@
         <personsok.version>1.0.80</personsok.version>
         <kjerneinfo.versjon>1.0.80</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
-        <utbetaling.version>2.0.39</utbetaling.version>
+        <utbetaling.version>2.0.40</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
     </properties>
 
@@ -843,7 +843,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-2.29</tag>
+        <tag>modiabrukerdialog-2.30</tag>
     </scm>
 
     <profiles>
