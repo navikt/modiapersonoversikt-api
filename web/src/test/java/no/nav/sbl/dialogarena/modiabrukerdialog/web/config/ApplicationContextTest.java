@@ -21,7 +21,7 @@ public class ApplicationContextTest {
 
     @BeforeClass
     public static void setupStatic() {
-        setFrom("t11.properties");
+        setFrom("jetty-environment.properties");
         getProperties().setProperty(TILLATMOCKSETUP_PROPERTY, DEFAULT_MOCK_TILLATT);
         setupKeyAndTrustStore();
     }

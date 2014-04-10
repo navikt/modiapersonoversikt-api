@@ -46,8 +46,11 @@ public class MeldingerPortTypeMock {
             " in futurum.";
 
     @Bean
-    public HenvendelseMeldingerPortType henvendelseMeldingerPortType() {
+    public  HenvendelseMeldingerPortType henvendelseMeldingerPortType() {
+        return createHenvendelseMeldingerPortTypeMock();
+    }
 
+    public static HenvendelseMeldingerPortType createHenvendelseMeldingerPortTypeMock() {
         return new HenvendelseMeldingerPortType() {
 
             @Override

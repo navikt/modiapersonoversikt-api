@@ -12,11 +12,20 @@ import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.MeldingerPortTypeMock.createHenvendelseMeldingerPortTypeMock;
+
 @Configuration
 public class MeldingerEndpointConfig {
 
+    public static final String MELDINGER_KEY = "start.meldinger.withmock";
+
     @Bean
     public HenvendelseMeldingerPortType henvendelseMeldingerPortType() {
+        return createSwitcher(createHenvendelseMeldingerPortType(), createHenvendelseMeldingerPortTypeMock(), MELDINGER_KEY, HenvendelseMeldingerPortType.class);
+    }
+
+    private static HenvendelseMeldingerPortType createHenvendelseMeldingerPortType() {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setWsdlLocation("classpath:no/nav/tjeneste/domene/brukerdialog/henvendelsemeldinger/v1/Meldinger.wsdl");
         proxyFactoryBean.setAddress("https://localhost:8443/henvendelse/services/domene.Brukerdialog/HenvendelseMeldingerService_v1");

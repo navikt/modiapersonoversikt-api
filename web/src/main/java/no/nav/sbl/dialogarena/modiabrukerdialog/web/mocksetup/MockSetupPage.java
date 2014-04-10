@@ -21,6 +21,7 @@ import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeverk.KodeverkV2EndpointConfig.KODEVERK_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.meldinger.MeldingerEndpointConfig.MELDINGER_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingEndpointConfig.UTBETALING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.PersonKjerneinfoServiceBiMock.FODSELSNUMMER;
 
@@ -83,7 +84,8 @@ public class MockSetupPage extends BasePage {
         return asList(
                 new MockSetupModel("Utbetaling", UTBETALING_KEY),
                 new MockSetupModel("Kodeverk", KODEVERK_KEY),
-                new MockSetupModel("Kjerneinfo", KJERNEINFO_KEY)
+                new MockSetupModel("Kjerneinfo", KJERNEINFO_KEY),
+                new MockSetupModel("Meldinger", MELDINGER_KEY)
         );
     }
 
