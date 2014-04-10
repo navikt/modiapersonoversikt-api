@@ -128,7 +128,8 @@ public class WicketApplication extends WebApplication {
                         BasePage.PERSONINFO_LESS,
                         UtbetalingLerret.UTBETALING_LESS,
                         SaksoversiktLerret.SAKSOVERSIKT_LESS,
-                        BasePage.MELDINGERWIDGET)
+                        BasePage.MELDINGERWIDGET,
+                        BasePage.MELDINGERLAMELL)
                 .addCss(
                         BasePage.PERSONSOKRESULT,
                         BasePage.PERSONSOKSEARCH
