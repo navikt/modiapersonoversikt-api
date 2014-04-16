@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common;
 
-import no.nav.modig.lang.option.Optional;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
@@ -14,7 +13,6 @@ import static no.nav.modig.lang.collections.PredicateUtils.containedIn;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Meldingstype.UTGAENDE;
-import static no.nav.sbl.dialogarena.time.Datoformat.kort;
 
 /**
  * En tråd med eksisterende dialog ({@link Melding}er), samt mulighet
@@ -22,25 +20,12 @@ import static no.nav.sbl.dialogarena.time.Datoformat.kort;
  */
 public class Traad implements Serializable {
 
-    public static class Journalforingkvittering implements Serializable {
-        public final String dato;
-        public final String saksId;
-        public final String tema;
-
-        public Journalforingkvittering(DateTime dato, String saksId, String tema) {
-            this.saksId = saksId;
-            this.tema = tema;
-            this.dato = kort(dato);
-        }
-    }
-
     public boolean erSensitiv;
 
     private String tema;
 
     private Svar svar = new Svar();
     private List<Melding> dialog = emptyList();
-    private Journalforingkvittering journalforingkvittering;
     public Traad(String tema, String svarBehandlingId) {
         this.tema = tema;
         this.svar = new Svar();
@@ -98,12 +83,6 @@ public class Traad implements Serializable {
     }
 
 
-
-    /**
-     * Mutable dataobjekt som brukes ved innlegging av svar fra saksbehandler.
-     * Når svaret er ferdig kan {@link #getFerdigSvar()} kalles for å få et
-     * immutable {@link Melding}-objekt for inkludering i dialogen i tråden.
-     */
     public static class Svar implements Serializable {
         public String behandlingId,
                       tema,
@@ -116,15 +95,6 @@ public class Traad implements Serializable {
         leggTil(nyMelding);
         svar = new Svar();
         svar.tema = tema;
-    }
-
-
-    public boolean erJournalfort() {
-        return journalforingkvittering != null;
-    }
-
-    public void setJournalforingkvittering(Optional<Journalforingkvittering> kvittering) {
-        this.journalforingkvittering = kvittering.orNull();
     }
 
 

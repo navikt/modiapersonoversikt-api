@@ -41,8 +41,6 @@ public class InnboksVM implements Serializable {
         for (MeldingVM meldingVm : getValgtTraad()) {
             no.nav.sbl.dialogarena.sporsmalogsvar.common.Melding melding = new no.nav.sbl.dialogarena.sporsmalogsvar.common.Melding(meldingVm.getId(), meldingVm.getType(), meldingVm.opprettetDato, meldingVm.getFritekst());
             traad.leggTil(melding);
-            traad.setJournalforingkvittering(Optional.optional(meldingVm.getJournalfortDato() == null ? null :
-                    new Traad.Journalforingkvittering(meldingVm.getJournalfortDato(), meldingVm.getJournalfortSakdId(), meldingVm.getJournalfortTema())));
         }
     }
 
@@ -62,14 +60,6 @@ public class InnboksVM implements Serializable {
         return valgtMelding.isSome() ? traader.get(valgtMelding.get().getTraadId()) : new ArrayList<MeldingVM>();
     }
 
-    /**
-     * @deprecated hack for å få opp journalføringknapp i innbokslamell for demo. Innboks må skrives om til å bruke
-     *             {@link Traad}-domeneobjekt.
-     */
-    @Deprecated
-    public Traad getValgtTraadForJournalforing() {
-        return traad;
-    }
 
     public final String getValgtTraadTema() {
         return valgtMelding.isSome() ? valgtMelding.get().getTema() : null;
@@ -103,8 +93,6 @@ public class InnboksVM implements Serializable {
         for (MeldingVM meldingVm : getValgtTraad()) {
             no.nav.sbl.dialogarena.sporsmalogsvar.common.Melding melding = new no.nav.sbl.dialogarena.sporsmalogsvar.common.Melding(meldingVm.getId(), meldingVm.getType(), meldingVm.opprettetDato, meldingVm.getFritekst());
             traad.leggTil(melding);
-            traad.setJournalforingkvittering(Optional.optional(meldingVm.getJournalfortDato() == null ? null :
-                    new Traad.Journalforingkvittering(meldingVm.getJournalfortDato(), meldingVm.getJournalfortSakdId(), meldingVm.getJournalfortTema())));
         }
     }
 

@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.Traad;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.journalfor.panel.JournalforPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -18,7 +16,6 @@ public class TraaddetaljerPanel extends Panel {
         super(id);
         setOutputMarkupId(true);
 
-        add(new JournalforPanel("journalfor-panel", innboks.<Traad>bind("valgtTraadForJournalforing"), fnr));
         add(new Label("tema", new StringResourceModel("${valgtTraadTema}", innboks)));
         add(new NyesteMeldingPanel("nyeste-melding"));
         add(new TidligereMeldingerPanel("tidligere-meldinger"));
