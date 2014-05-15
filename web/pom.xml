@@ -35,12 +35,7 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar-widget</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar-innboks</artifactId>
+            <artifactId>sporsmal-og-svar</artifactId>
         </dependency>
 
          <dependency>

@@ -64,7 +64,7 @@
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
         <henvendelse.meldinger.tjenestespec.version>0.0.7</henvendelse.meldinger.tjenestespec.version>
         <saksoversikt.version>1.0-SNAPSHOT</saksoversikt.version>
-        <sporsmalogsvar.version>1.20</sporsmalogsvar.version>
+        <sporsmalogsvar.version>1.21-SNAPSHOT</sporsmalogsvar.version>
     </properties>
 
     <dependencyManagement>
@@ -96,13 +96,7 @@
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-widget</artifactId>
-                <version>${sporsmalogsvar.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>sporsmal-og-svar-innboks</artifactId>
+                <artifactId>sporsmal-og-svar</artifactId>
                 <version>${sporsmalogsvar.version}</version>
             </dependency>
 
