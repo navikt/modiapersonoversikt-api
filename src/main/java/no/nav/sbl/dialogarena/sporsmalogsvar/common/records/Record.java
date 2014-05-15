@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.common.common.records;
+package no.nav.sbl.dialogarena.sporsmalogsvar.common.records;
 
 import java.util.ArrayList;
 import java.util.HashMap;

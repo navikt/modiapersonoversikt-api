@@ -7,7 +7,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.events.Events.VALGT_MELDING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.VALGT_MELDING;
 
 
 public class TraaddetaljerPanel extends Panel {

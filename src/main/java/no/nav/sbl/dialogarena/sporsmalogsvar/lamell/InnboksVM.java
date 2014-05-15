@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.lang.collections.TransformerUtils;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.Traad;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.records.Record;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.records.Record;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -20,9 +20,9 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.utils.MeldingUtils.NYESTE_FORST;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.utils.MeldingUtils.TIL_MELDING;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.utils.WSMeldingUtils.skillUtTraader;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.NYESTE_FORST;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.WSMeldingUtils.skillUtTraader;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.NYESTE_OVERST;
 
 public class InnboksVM implements Serializable {

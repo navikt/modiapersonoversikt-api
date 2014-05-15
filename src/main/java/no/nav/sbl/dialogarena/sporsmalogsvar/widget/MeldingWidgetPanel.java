@@ -9,7 +9,7 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Status.LEST_AV_BRUKER;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status.LEST_AV_BRUKER;
 
 public class MeldingWidgetPanel extends GenericPanel<MeldingVM> {
 

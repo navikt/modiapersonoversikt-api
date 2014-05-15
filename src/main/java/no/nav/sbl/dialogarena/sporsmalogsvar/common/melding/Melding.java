@@ -1,9 +1,9 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding;
+package no.nav.sbl.dialogarena.sporsmalogsvar.common.melding;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.records.Key;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.records.Key;
 import org.joda.time.DateTime;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.records.Key.key;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.records.Key.key;
 
 // CHECKSTYLE:OFF
 public interface Melding {

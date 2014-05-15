@@ -12,7 +12,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.containedIn;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Meldingstype.UTGAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
 
 /**
  * En tråd med eksisterende dialog ({@link Melding}er), samt mulighet

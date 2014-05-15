@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Meldingstype;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Status;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.records.Record;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.records.Record;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -14,8 +14,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Meldingstype.INNGAENDE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.utils.MeldingUtils.ELDSTE_FORST;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.ELDSTE_FORST;
 
 
 public class MeldingVM implements Serializable {

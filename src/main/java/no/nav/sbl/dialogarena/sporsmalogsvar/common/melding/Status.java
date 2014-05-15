@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding;
+package no.nav.sbl.dialogarena.sporsmalogsvar.common.melding;
 
 public enum Status {
     IKKE_BESVART,

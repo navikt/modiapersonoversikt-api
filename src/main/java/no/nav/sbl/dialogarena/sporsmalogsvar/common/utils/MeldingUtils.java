@@ -1,10 +1,10 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.common.common.utils;
+package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Meldingstype;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Status;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.records.Record;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.records.Record;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype;
 import org.apache.commons.collections15.Transformer;
@@ -12,10 +12,10 @@ import org.joda.time.DateTime;
 
 import java.util.Comparator;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Status.IKKE_BESVART;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Status.IKKE_BESVART_INNEN_FRIST;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Status.IKKE_LEST_AV_BRUKER;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Status.LEST_AV_BRUKER;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status.IKKE_BESVART;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status.IKKE_BESVART_INNEN_FRIST;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status.IKKE_LEST_AV_BRUKER;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status.LEST_AV_BRUKER;
 
 public class MeldingUtils {
 

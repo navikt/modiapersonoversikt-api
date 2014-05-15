@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.common.common.records;
+package no.nav.sbl.dialogarena.sporsmalogsvar.common.records;
 
 import no.nav.modig.lang.collections.PredicateUtils;
 import org.apache.commons.collections15.Predicate;

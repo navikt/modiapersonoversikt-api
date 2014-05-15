@@ -15,9 +15,9 @@ import java.util.Comparator;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.events.Events.KVITTERING;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.utils.MeldingUtils.TIL_MELDING;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.utils.WSMeldingUtils.skillUtTraader;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.WSMeldingUtils.skillUtTraader;
 
 public class MeldingerWidget extends FeedWidget<MeldingVM> {
 
@@ -27,7 +27,7 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
     private String fnr;
 
     public MeldingerWidget(String id, String initial, String fnr) {
-        super(id, initial);
+        super(id, initial, true);
         setOutputMarkupId(true);
 
         this.fnr = fnr;

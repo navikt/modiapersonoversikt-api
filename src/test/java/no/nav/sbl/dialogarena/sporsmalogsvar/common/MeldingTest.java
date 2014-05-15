@@ -8,8 +8,8 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Meldingstype.INNGAENDE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Meldingstype.UTGAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.everyItem;
 import static org.hamcrest.Matchers.not;

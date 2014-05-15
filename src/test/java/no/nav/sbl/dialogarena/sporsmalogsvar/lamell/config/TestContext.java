@@ -27,7 +27,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.containedIn;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.utils.WSMeldingUtils.BEHANDLINGSID;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.WSMeldingUtils.BEHANDLINGSID;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype.INNGAENDE;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype.UTGAENDE;
 import static org.apache.commons.lang3.StringUtils.abbreviate;

@@ -13,7 +13,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import javax.inject.Inject;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.events.Events.KVITTERING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;
 
 public class Innboks extends Lerret {
 

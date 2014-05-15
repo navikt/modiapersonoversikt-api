@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Meldingstype;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Objects;
 
 import static java.util.Objects.hash;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.common.melding.Meldingstype.INNGAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
 import static org.apache.commons.lang3.StringUtils.abbreviate;
 
 /**
@@ -69,7 +69,7 @@ public class Melding implements Serializable {
                 && Objects.equals(this.sendtDato, other.sendtDato);
         }
         return false;
-    };
+    }
 
     @Override
     public final int hashCode() {

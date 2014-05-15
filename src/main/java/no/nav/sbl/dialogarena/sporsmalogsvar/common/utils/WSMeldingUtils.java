@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.common.common.utils;
+package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
 import org.apache.commons.collections15.Transformer;
