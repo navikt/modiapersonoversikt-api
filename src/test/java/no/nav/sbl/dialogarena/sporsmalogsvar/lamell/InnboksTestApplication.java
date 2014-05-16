@@ -9,7 +9,6 @@ import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
-import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.context.ApplicationContext;
@@ -44,7 +43,6 @@ public class InnboksTestApplication extends WebApplication {
                                 .done())
                 .addScripts(Innboks.JS_REFERENCE)
                 .addLess(new PackageResourceReference(Innboks.class, "innboks.less"))
-                .addCss(new CssResourceReference(InnboksTestApplication.class, "white-background.css"))
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
     }
