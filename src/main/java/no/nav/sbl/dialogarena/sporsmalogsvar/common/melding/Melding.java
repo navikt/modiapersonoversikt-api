@@ -1,14 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.melding;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.records.Key;
+import no.nav.sbl.dialogarena.common.records.Key;
 import org.joda.time.DateTime;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.records.Key.key;
+import static no.nav.sbl.dialogarena.common.records.Key.key;
 
 // CHECKSTYLE:OFF
 public interface Melding {
 
-    Key<String>         id              = key("id"),
+    Key<String> id                      = key("id"),
                         traadId         = key("traadId"),
                         tema            = key("tema"),
                         fritekst        = key("fritekst"),

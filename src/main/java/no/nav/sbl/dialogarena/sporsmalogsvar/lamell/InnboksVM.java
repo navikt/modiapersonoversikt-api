@@ -2,9 +2,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.collections.TransformerUtils;
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.Traad;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.records.Record;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
