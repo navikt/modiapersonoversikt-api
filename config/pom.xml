@@ -10,7 +10,7 @@
 
     <artifactId>modiabrukerdialog-config</artifactId>
     <packaging>jar</packaging>
-    <name>${project.artifactId} metadata artifact</name>
+    <name>${project.artifactId}</name>
 
     <build>
         <plugins>
