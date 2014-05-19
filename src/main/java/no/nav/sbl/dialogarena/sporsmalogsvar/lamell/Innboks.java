@@ -20,10 +20,10 @@ public class Innboks extends Lerret {
     public static final JavaScriptResourceReference JS_REFERENCE = new JavaScriptResourceReference(Innboks.class, "innboks.js");
 
     @Inject
-    HenvendelseMeldingerPortType service;
+    HenvendelseMeldingerPortType henvendelseMeldingerPortType;
 
 
-    private CompoundPropertyModel<no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM> innboksVM;
+    private CompoundPropertyModel<InnboksVM> innboksVM;
     private String fnr;
 
     public Innboks(String id, String fnr) {
@@ -31,7 +31,7 @@ public class Innboks extends Lerret {
         setOutputMarkupId(true);
 
         this.fnr = fnr;
-        innboksVM = new CompoundPropertyModel<>(new no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM(service.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding()));
+        innboksVM = new CompoundPropertyModel<>(new InnboksVM(henvendelseMeldingerPortType.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding()));
         setDefaultModel(innboksVM);
         setOutputMarkupId(true);
 
@@ -40,7 +40,7 @@ public class Innboks extends Lerret {
 
     @RunOnEvents(KVITTERING)
     public void meldingerOppdatert(AjaxRequestTarget target) {
-        innboksVM.getObject().oppdaterMeldinger(service.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding());
+        innboksVM.getObject().oppdaterMeldinger(henvendelseMeldingerPortType.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding());
         target.add(this);
     }
 

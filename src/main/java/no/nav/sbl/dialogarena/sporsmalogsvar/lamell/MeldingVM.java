@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.MeldingRecord;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status;
 import no.nav.sbl.dialogarena.time.Datoformat;
@@ -34,23 +34,23 @@ public class MeldingVM implements Serializable {
     private int antallMeldingerITraad;
     private Status status;
 
-    public MeldingVM(List<Record<Melding>> tilhorendeTraad, String id) {
-        Record<Melding> melding = on(tilhorendeTraad).filter(Melding.id.is(id)).head().get();
-        this.id = melding.get(Melding.id);
-        traadId = melding.get(Melding.traadId);
-        tema = melding.get(Melding.tema);
-        type = melding.get(Melding.type);
+    public MeldingVM(List<Record<MeldingRecord>> tilhorendeTraad, String id) {
+        Record<MeldingRecord> melding = on(tilhorendeTraad).filter(MeldingRecord.id.is(id)).head().get();
+        this.id = melding.get(MeldingRecord.id);
+        traadId = melding.get(MeldingRecord.traadId);
+        tema = melding.get(MeldingRecord.tema);
+        type = melding.get(MeldingRecord.type);
         avsender = (melding.equals(on(tilhorendeTraad).collect(ELDSTE_FORST).get(0)) ? "Melding" : "Svar") + " fra " +
                 (type == INNGAENDE ? "Bruker" : "NAV");
-        fritekst = melding.get(Melding.fritekst);
-        opprettetDato = melding.get(Melding.opprettetDato);
-        lestDato = melding.get(Melding.lestDato);
+        fritekst = melding.get(MeldingRecord.fritekst);
+        opprettetDato = melding.get(MeldingRecord.opprettetDato);
+        lestDato = melding.get(MeldingRecord.lestDato);
         lest = lestDato != null;
         antallMeldingerITraad = tilhorendeTraad.size();
-        status = melding.get(Melding.status);
-        journalfortDato = melding.get(Melding.journalfortDato);
-        journalfortSakdId = melding.get(Melding.journalfortSaksid);
-        journalfortTema = melding.get(Melding.journalfortTema);
+        status = melding.get(MeldingRecord.status);
+        journalfortDato = melding.get(MeldingRecord.journalfortDato);
+        journalfortSakdId = melding.get(MeldingRecord.journalfortSaksid);
+        journalfortTema = melding.get(MeldingRecord.journalfortTema);
     }
 
     public String getId() {

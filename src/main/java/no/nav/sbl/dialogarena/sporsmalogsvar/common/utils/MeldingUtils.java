@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.MeldingRecord;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
@@ -21,35 +21,35 @@ public class MeldingUtils {
 
     private static final int BESVARINGSFRIST_TIMER = 48;
 
-    public static final Transformer<WSMelding, Record<Melding>> TIL_MELDING = new Transformer<WSMelding, Record<Melding>>() {
+    public static final Transformer<WSMelding, Record<MeldingRecord>> TIL_MELDING = new Transformer<WSMelding, Record<MeldingRecord>>() {
         @Override
-        public Record<Melding> transform(WSMelding wsMelding) {
-            return new Record<Melding>()
-                    .with(Melding.id, wsMelding.getBehandlingsId())
-                    .with(Melding.traadId, wsMelding.getTraad())
-                    .with(Melding.tema, wsMelding.getTemastruktur())
-                    .with(Melding.fritekst, wsMelding.getTekst())
-                    .with(Melding.opprettetDato, wsMelding.getOpprettetDato())
-                    .with(Melding.lestDato, wsMelding.getLestDato())
-                    .with(Melding.status, STATUS.transform(wsMelding))
-                    .with(Melding.type, MELDINGSTYPE.transform(wsMelding))
-                    .with(Melding.journalfortDato, wsMelding.getJournalfortDato())
-                    .with(Melding.journalfortSaksid, wsMelding.getJournalfortSaksId())
-                    .with(Melding.journalfortTema, wsMelding.getJournalfortTema());
+        public Record<MeldingRecord> transform(WSMelding wsMelding) {
+            return new Record<MeldingRecord>()
+                    .with(MeldingRecord.id, wsMelding.getBehandlingsId())
+                    .with(MeldingRecord.traadId, wsMelding.getTraad())
+                    .with(MeldingRecord.tema, wsMelding.getTemastruktur())
+                    .with(MeldingRecord.fritekst, wsMelding.getTekst())
+                    .with(MeldingRecord.opprettetDato, wsMelding.getOpprettetDato())
+                    .with(MeldingRecord.lestDato, wsMelding.getLestDato())
+                    .with(MeldingRecord.status, STATUS.transform(wsMelding))
+                    .with(MeldingRecord.type, MELDINGSTYPE.transform(wsMelding))
+                    .with(MeldingRecord.journalfortDato, wsMelding.getJournalfortDato())
+                    .with(MeldingRecord.journalfortSaksid, wsMelding.getJournalfortSaksId())
+                    .with(MeldingRecord.journalfortTema, wsMelding.getJournalfortTema());
         }
     };
 
-    public static final Comparator<Record<Melding>> NYESTE_FORST = new Comparator<Record<Melding>>() {
+    public static final Comparator<Record<MeldingRecord>> NYESTE_FORST = new Comparator<Record<MeldingRecord>>() {
         @Override
-        public int compare(Record<Melding> o1, Record<Melding> o2) {
-            return o2.get(Melding.opprettetDato).compareTo(o1.get(Melding.opprettetDato));
+        public int compare(Record<MeldingRecord> o1, Record<MeldingRecord> o2) {
+            return o2.get(MeldingRecord.opprettetDato).compareTo(o1.get(MeldingRecord.opprettetDato));
         }
     };
 
-    public static final Comparator<Record<Melding>> ELDSTE_FORST = new Comparator<Record<Melding>>() {
+    public static final Comparator<Record<MeldingRecord>> ELDSTE_FORST = new Comparator<Record<MeldingRecord>>() {
         @Override
-        public int compare(Record<Melding> o1, Record<Melding> o2) {
-            return o1.get(Melding.opprettetDato).compareTo(o2.get(Melding.opprettetDato));
+        public int compare(Record<MeldingRecord> o1, Record<MeldingRecord> o2) {
+            return o1.get(MeldingRecord.opprettetDato).compareTo(o2.get(MeldingRecord.opprettetDato));
         }
     };
 

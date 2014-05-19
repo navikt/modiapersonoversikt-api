@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 import static no.nav.sbl.dialogarena.common.records.Key.key;
 
 // CHECKSTYLE:OFF
-public interface Melding {
+public interface MeldingRecord {
 
     Key<String> id                      = key("id"),
                         traadId         = key("traadId"),

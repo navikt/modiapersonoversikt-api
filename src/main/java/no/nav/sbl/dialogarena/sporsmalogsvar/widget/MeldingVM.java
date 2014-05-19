@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.MeldingRecord;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -23,16 +23,16 @@ public class MeldingVM implements FeedItemVM, Serializable {
     private DateTime opprettetDato, lestDato;
     private Status status;
 
-    public MeldingVM(Iterable<Record<Melding>> traad) {
-        List<Record<Melding>> sortertTraad = on(traad).collect(NYESTE_FORST);
-        Record<Melding> nyesteMelding = sortertTraad.get(0);
-        id = nyesteMelding.get(Melding.traadId);
+    public MeldingVM(Iterable<Record<MeldingRecord>> traad) {
+        List<Record<MeldingRecord>> sortertTraad = on(traad).collect(NYESTE_FORST);
+        Record<MeldingRecord> nyesteMelding = sortertTraad.get(0);
+        id = nyesteMelding.get(MeldingRecord.traadId);
         avsender = (sortertTraad.size() == 1 ? "Melding" : "Svar") + " fra " +
-                (nyesteMelding.get(Melding.type) == INNGAENDE ? "Bruker" : "NAV");
-        tema = nyesteMelding.get(Melding.tema);
-        opprettetDato = nyesteMelding.get(Melding.opprettetDato);
-        lestDato = nyesteMelding.get(Melding.lestDato);
-        status = nyesteMelding.get(Melding.status);
+                (nyesteMelding.get(MeldingRecord.type) == INNGAENDE ? "Bruker" : "NAV");
+        tema = nyesteMelding.get(MeldingRecord.tema);
+        opprettetDato = nyesteMelding.get(MeldingRecord.opprettetDato);
+        lestDato = nyesteMelding.get(MeldingRecord.lestDato);
+        status = nyesteMelding.get(MeldingRecord.status);
     }
 
 

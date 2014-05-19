@@ -3,8 +3,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.lang.collections.TransformerUtils;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.Traad;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.MeldingRecord;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
@@ -39,7 +40,7 @@ public class InnboksVM implements Serializable {
         valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
         traad = new Traad(getValgtTraadTema(), null);
         for (MeldingVM meldingVm : getValgtTraad()) {
-            no.nav.sbl.dialogarena.sporsmalogsvar.common.Melding melding = new no.nav.sbl.dialogarena.sporsmalogsvar.common.Melding(meldingVm.getId(), meldingVm.getType(), meldingVm.opprettetDato, meldingVm.getFritekst());
+            Melding melding = new Melding(meldingVm.getId(), meldingVm.getType(), meldingVm.opprettetDato, meldingVm.getFritekst());
             traad.leggTil(melding);
         }
     }
@@ -91,7 +92,7 @@ public class InnboksVM implements Serializable {
         valgtMelding = optional(meldingVM);
         traad = new Traad(getValgtTraadTema(), null);
         for (MeldingVM meldingVm : getValgtTraad()) {
-            no.nav.sbl.dialogarena.sporsmalogsvar.common.Melding melding = new no.nav.sbl.dialogarena.sporsmalogsvar.common.Melding(meldingVm.getId(), meldingVm.getType(), meldingVm.opprettetDato, meldingVm.getFritekst());
+            Melding melding = new Melding(meldingVm.getId(), meldingVm.getType(), meldingVm.opprettetDato, meldingVm.getFritekst());
             traad.leggTil(melding);
         }
     }
@@ -115,10 +116,10 @@ public class InnboksVM implements Serializable {
     private static final Transformer<List<WSMelding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = new Transformer<List<WSMelding>, List<MeldingVM>>() {
         @Override
         public List<MeldingVM> transform(List<WSMelding> wsMeldinger) {
-            List<Record<Melding>> meldingerITraad = on(wsMeldinger).map(TIL_MELDING).collect(NYESTE_FORST);
+            List<Record<MeldingRecord>> meldingerITraad = on(wsMeldinger).map(TIL_MELDING).collect(NYESTE_FORST);
             List<MeldingVM> meldingVMTraad = new ArrayList<>();
-            for (Record<Melding> melding : meldingerITraad) {
-                meldingVMTraad.add(new MeldingVM(meldingerITraad, melding.get(Melding.id)));
+            for (Record<MeldingRecord> melding : meldingerITraad) {
+                meldingVMTraad.add(new MeldingVM(meldingerITraad, melding.get(MeldingRecord.id)));
             }
             return meldingVMTraad;
         }
