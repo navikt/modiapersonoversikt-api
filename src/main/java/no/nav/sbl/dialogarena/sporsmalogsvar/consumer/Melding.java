@@ -25,13 +25,6 @@ public class Melding implements Serializable {
         this.fritekst = fritekst;
     }
 
-    public static final Transformer<Melding, DateTime> OPPRETTET_DATO = new Transformer<Melding, DateTime>() {
-        @Override
-        public DateTime transform(Melding melding) {
-            return melding.opprettetDato;
-        }
-    };
-
     public static final Transformer<Melding, String> TRAAD_ID = new Transformer<Melding, String>() {
         @Override
         public String transform(Melding melding) {

@@ -24,7 +24,6 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.NYESTE_OVER
 
 public class InnboksVM implements Serializable {
 
-    private TraadVM traadVM;
     private Map<String, List<MeldingVM>> traader = new HashMap<>();
 
     private List<MeldingVM> nyesteMeldingerITraad = new ArrayList<>();
@@ -34,11 +33,6 @@ public class InnboksVM implements Serializable {
     public InnboksVM(List<Melding> meldinger) {
         oppdaterMeldinger(meldinger);
         valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
-        traadVM = new TraadVM(getValgtTraadTema(), null);
-        for (MeldingVM meldingVm : getValgtTraad()) {
-            Melding melding = new Melding(meldingVm.getId(), meldingVm.getTraadId(), meldingVm.getType(), meldingVm.opprettetDato, meldingVm.getFritekst());
-            traadVM.leggTil(melding);
-        }
     }
 
     public final void oppdaterMeldinger(List<Melding> meldinger) {
@@ -86,11 +80,6 @@ public class InnboksVM implements Serializable {
 
     public void setValgtMelding(MeldingVM meldingVM) {
         valgtMelding = optional(meldingVM);
-        traadVM = new TraadVM(getValgtTraadTema(), null);
-        for (MeldingVM valgtMeldingVM : getValgtTraad()) {
-            Melding melding = new Melding(valgtMeldingVM.getId(), valgtMeldingVM.getTraadId(), valgtMeldingVM.getType(), valgtMeldingVM.opprettetDato, valgtMeldingVM.getFritekst());
-            traadVM.leggTil(melding);
-        }
     }
 
     public final IModel<Boolean> erValgtMelding(final MeldingVM meldingVM) {

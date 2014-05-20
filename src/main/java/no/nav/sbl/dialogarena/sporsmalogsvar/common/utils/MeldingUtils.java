@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype;
 import org.apache.commons.collections15.Transformer;
-import org.joda.time.DateTime;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -70,15 +69,8 @@ public class MeldingUtils {
                         return IKKE_LEST_AV_BRUKER;
                     }
                 default:
-                    throw new UkjentMeldingstypeException(wsMelding.getMeldingsType());
+                    throw new ApplicationException("Ukjent henvendelsestype: " + wsMelding.getMeldingsType().name());
             }
         }
     };
-
-    private static class UkjentMeldingstypeException extends ApplicationException {
-
-        public UkjentMeldingstypeException(WSMeldingstype type) {
-            super("Ukjent henvendelsestype: " + type);
-        }
-    }
 }
