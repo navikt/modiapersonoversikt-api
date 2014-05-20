@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMoc
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
+import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
 import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.junit.Test;
@@ -31,6 +32,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         SykepengerWidgetMockContext.class,
         UtbetalingLamellContext.class,
         UtbetalingPortTypeMock.class,
+        SporsmalOgSvarContext.class,
         MeldingerPortTypeMock.class})
 public class SjekkForlateSideTest extends WicketPageTest {
 
