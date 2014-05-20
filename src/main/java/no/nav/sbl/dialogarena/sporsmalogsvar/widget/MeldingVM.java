@@ -1,9 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
-import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.MeldingRecord;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -13,8 +12,8 @@ import java.io.Serializable;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.NYESTE_FORST;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.NYESTE_FORST;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.INNGAENDE;
 
 public class MeldingVM implements FeedItemVM, Serializable {
 
@@ -23,16 +22,16 @@ public class MeldingVM implements FeedItemVM, Serializable {
     private DateTime opprettetDato, lestDato;
     private Status status;
 
-    public MeldingVM(Iterable<Record<MeldingRecord>> traad) {
-        List<Record<MeldingRecord>> sortertTraad = on(traad).collect(NYESTE_FORST);
-        Record<MeldingRecord> nyesteMelding = sortertTraad.get(0);
-        id = nyesteMelding.get(MeldingRecord.traadId);
+    public MeldingVM(List<Melding> traad) {
+        List<Melding> sortertTraad = on(traad).collect(NYESTE_FORST);
+        Melding nyesteMelding = sortertTraad.get(0);
+        id = nyesteMelding.id;
         avsender = (sortertTraad.size() == 1 ? "Melding" : "Svar") + " fra " +
-                (nyesteMelding.get(MeldingRecord.type) == INNGAENDE ? "Bruker" : "NAV");
-        tema = nyesteMelding.get(MeldingRecord.tema);
-        opprettetDato = nyesteMelding.get(MeldingRecord.opprettetDato);
-        lestDato = nyesteMelding.get(MeldingRecord.lestDato);
-        status = nyesteMelding.get(MeldingRecord.status);
+                (nyesteMelding.meldingstype == INNGAENDE ? "Bruker" : "NAV");
+        tema = nyesteMelding.tema;
+        opprettetDato = nyesteMelding.opprettetDato;
+        lestDato = nyesteMelding.lestDato;
+        status = nyesteMelding.status;
     }
 
 

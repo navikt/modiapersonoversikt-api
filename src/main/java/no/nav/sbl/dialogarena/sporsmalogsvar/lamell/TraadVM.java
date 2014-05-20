@@ -1,6 +1,6 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.common;
+package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import org.joda.time.DateTime;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,13 +12,13 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.containedIn;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.UTGAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.OPPRETTET_DATO;
 
 /**
  * En tråd med eksisterende dialog ({@link Melding}er), samt mulighet
  * for å legge inn nye svar ({@link Svar}).
  */
-public class Traad implements Serializable {
+public class TraadVM implements Serializable {
 
     public boolean erSensitiv;
 
@@ -26,13 +26,12 @@ public class Traad implements Serializable {
 
     private Svar svar = new Svar();
     private List<Melding> dialog = emptyList();
-    public Traad(String tema, String svarBehandlingId) {
+    public TraadVM(String tema, String svarBehandlingId) {
         this.tema = tema;
         this.svar = new Svar();
         this.svar.behandlingId = svarBehandlingId;
         this.svar.tema = tema;
     }
-
 
     public String getTema() {
         return tema;
@@ -62,15 +61,13 @@ public class Traad implements Serializable {
         return svar;
     }
 
-
-
     public void leggTil(Melding melding) {
         leggTil(optional(melding));
     }
 
     public void leggTil(Iterable<Melding> meldinger) {
         Iterable<Melding> nyeMeldinger = on(meldinger).filter(not(containedIn(dialog)));
-        dialog = on(dialog).append(nyeMeldinger).collect(by(Melding.SENDT_DATO).descending());
+        dialog = on(dialog).append(nyeMeldinger).collect(by(OPPRETTET_DATO).descending());
     }
 
     @Override
@@ -82,20 +79,9 @@ public class Traad implements Serializable {
                (tomDialog ? "" : ". " + dialog);
     }
 
-
     public static class Svar implements Serializable {
         public String behandlingId,
                       tema,
                       fritekst;
     }
-
-    public void ferdigSvar() {
-        tema = svar.tema;
-        Melding nyMelding = new Melding(svar.behandlingId, UTGAENDE, DateTime.now(), svar.fritekst);
-        leggTil(nyMelding);
-        svar = new Svar();
-        svar.tema = tema;
-    }
-
-
 }

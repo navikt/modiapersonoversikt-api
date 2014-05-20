@@ -3,8 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.HenvendelseMeldingerPortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.meldinger.HentMeldingListe;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -20,8 +19,7 @@ public class Innboks extends Lerret {
     public static final JavaScriptResourceReference JS_REFERENCE = new JavaScriptResourceReference(Innboks.class, "innboks.js");
 
     @Inject
-    HenvendelseMeldingerPortType henvendelseMeldingerPortType;
-
+    MeldingService meldingService;
 
     private CompoundPropertyModel<InnboksVM> innboksVM;
     private String fnr;
@@ -31,7 +29,7 @@ public class Innboks extends Lerret {
         setOutputMarkupId(true);
 
         this.fnr = fnr;
-        innboksVM = new CompoundPropertyModel<>(new InnboksVM(henvendelseMeldingerPortType.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding()));
+        innboksVM = new CompoundPropertyModel<>(new InnboksVM(meldingService.hentMeldinger(fnr)));
         setDefaultModel(innboksVM);
         setOutputMarkupId(true);
 
@@ -40,7 +38,7 @@ public class Innboks extends Lerret {
 
     @RunOnEvents(KVITTERING)
     public void meldingerOppdatert(AjaxRequestTarget target) {
-        innboksVM.getObject().oppdaterMeldinger(henvendelseMeldingerPortType.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding());
+        innboksVM.getObject().oppdaterMeldinger(meldingService.hentMeldinger(fnr));
         target.add(this);
     }
 

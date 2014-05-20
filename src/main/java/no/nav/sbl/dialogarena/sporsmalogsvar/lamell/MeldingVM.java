@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.MeldingRecord;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status;
 import no.nav.sbl.dialogarena.time.Datoformat;
+import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.joda.time.DateTime;
@@ -14,8 +14,8 @@ import java.util.Comparator;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype.INNGAENDE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.ELDSTE_FORST;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.ELDSTE_FORST;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.INNGAENDE;
 
 
 public class MeldingVM implements Serializable {
@@ -26,31 +26,25 @@ public class MeldingVM implements Serializable {
     private String avsender;
     private String fritekst;
 
-    private String journalfortTema;
-    private String journalfortSakdId;
     private Meldingstype type;
-    public final DateTime opprettetDato, lestDato, journalfortDato;
+    public final DateTime opprettetDato, lestDato;
     private boolean lest;
     private int antallMeldingerITraad;
     private Status status;
 
-    public MeldingVM(List<Record<MeldingRecord>> tilhorendeTraad, String id) {
-        Record<MeldingRecord> melding = on(tilhorendeTraad).filter(MeldingRecord.id.is(id)).head().get();
-        this.id = melding.get(MeldingRecord.id);
-        traadId = melding.get(MeldingRecord.traadId);
-        tema = melding.get(MeldingRecord.tema);
-        type = melding.get(MeldingRecord.type);
+    public MeldingVM(List<Melding> tilhorendeTraad, Melding melding) {
+        this.id = melding.id;
+        traadId = melding.traadId;
+        tema = melding.tema;
+        type = melding.meldingstype;
         avsender = (melding.equals(on(tilhorendeTraad).collect(ELDSTE_FORST).get(0)) ? "Melding" : "Svar") + " fra " +
                 (type == INNGAENDE ? "Bruker" : "NAV");
-        fritekst = melding.get(MeldingRecord.fritekst);
-        opprettetDato = melding.get(MeldingRecord.opprettetDato);
-        lestDato = melding.get(MeldingRecord.lestDato);
+        fritekst = melding.fritekst;
+        opprettetDato = melding.opprettetDato;
+        lestDato = melding.lestDato;
         lest = lestDato != null;
         antallMeldingerITraad = tilhorendeTraad.size();
-        status = melding.get(MeldingRecord.status);
-        journalfortDato = melding.get(MeldingRecord.journalfortDato);
-        journalfortSakdId = melding.get(MeldingRecord.journalfortSaksid);
-        journalfortTema = melding.get(MeldingRecord.journalfortTema);
+        status = melding.status;
     }
 
     public String getId() {
@@ -89,26 +83,6 @@ public class MeldingVM implements Serializable {
         return type;
     }
 
-    public String getJournalfortTema() {
-        return journalfortTema;
-    }
-
-    public void setJournalfortTema(String journalfortTema) {
-        this.journalfortTema = journalfortTema;
-    }
-
-    public String getJournalfortSakdId() {
-        return journalfortSakdId;
-    }
-
-    public void setJournalfortSakdId(String journalfortSakdId) {
-        this.journalfortSakdId = journalfortSakdId;
-    }
-
-    public DateTime getJournalfortDato() {
-        return journalfortDato;
-    }
-
     public IModel<Boolean> erLest() {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
@@ -130,6 +104,13 @@ public class MeldingVM implements Serializable {
         @Override
         public int compare(MeldingVM o1, MeldingVM o2) {
             return o2.opprettetDato.compareTo(o1.opprettetDato);
+        }
+    };
+
+    public static final Transformer<MeldingVM, String> ID = new Transformer<MeldingVM, String>() {
+        @Override
+        public String transform(MeldingVM meldingVM) {
+            return meldingVM.getId();
         }
     };
 }

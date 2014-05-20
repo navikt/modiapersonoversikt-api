@@ -27,7 +27,6 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.containedIn;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.WSMeldingUtils.BEHANDLINGSID;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype.INNGAENDE;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype.UTGAENDE;
 import static org.apache.commons.lang3.StringUtils.abbreviate;
@@ -112,6 +111,13 @@ public class TestContext {
             public void besvarSporsmal(WSSvar svar) {
                 LOG.info("BesvareHenvendelsePortType besvarer spørsmål (svar behandlingId {} \"{}\")", svar.getBehandlingsId(), abbreviate(svar.getFritekst(), 30));
             }
+
+            public final Transformer<WSMelding, String> BEHANDLINGSID = new Transformer<WSMelding, String>() {
+                @Override
+                public String transform(WSMelding wsMelding) {
+                    return wsMelding.getBehandlingsId();
+                }
+            };
         };
     }
 

@@ -2,9 +2,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.HenvendelseMeldingerPortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.meldinger.HentMeldingListe;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -16,13 +15,12 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.WSMeldingUtils.skillUtTraader;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
 
 public class MeldingerWidget extends FeedWidget<MeldingVM> {
 
     @Inject
-    HenvendelseMeldingerPortType henvendelseMeldingerPortType;
+    MeldingService meldingService;
 
     private String fnr;
 
@@ -47,7 +45,7 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
     }
 
     private List<MeldingVM> getMeldingerListe() {
-        List<WSMelding> meldinger = henvendelseMeldingerPortType.hentMeldingListe(new HentMeldingListe().withFodselsnummer(fnr)).getMelding();
+        List<Melding> meldinger = meldingService.hentMeldinger(fnr);
         return on(skillUtTraader(meldinger).values()).map(TIL_MELDINGVM).collect(NYESTE_OVERST);
     }
 
@@ -58,10 +56,10 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
         }
     };
 
-    private static final Transformer<List<WSMelding>, MeldingVM> TIL_MELDINGVM = new Transformer<List<WSMelding>, MeldingVM>() {
+    private static final Transformer<List<Melding>, MeldingVM> TIL_MELDINGVM = new Transformer<List<Melding>, MeldingVM>() {
         @Override
-        public MeldingVM transform(List<WSMelding> traad) {
-            return new MeldingVM(on(traad).map(TIL_MELDING).collect());
+        public MeldingVM transform(List<Melding> traad) {
+            return new MeldingVM(traad);
         }
     };
 }

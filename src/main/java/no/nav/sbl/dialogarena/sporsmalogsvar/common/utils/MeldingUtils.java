@@ -1,64 +1,64 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.MeldingRecord;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Meldingstype;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMelding;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsemeldinger.v1.informasjon.WSMeldingstype;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
-import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status.IKKE_BESVART;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status.IKKE_BESVART_INNEN_FRIST;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status.IKKE_LEST_AV_BRUKER;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.melding.Status.LEST_AV_BRUKER;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
+import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.TRAAD_ID;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART_INNEN_FRIST;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_LEST_AV_BRUKER;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.LEST_AV_BRUKER;
+import static org.joda.time.DateTime.now;
 
 public class MeldingUtils {
 
-    private static final int BESVARINGSFRIST_TIMER = 48;
+    public static final int BESVARINGSFRIST_TIMER = 48;
 
-    public static final Transformer<WSMelding, Record<MeldingRecord>> TIL_MELDING = new Transformer<WSMelding, Record<MeldingRecord>>() {
+    /**
+     * Deler inn en liste henvendelser i tråder
+     * @param meldinger liste med henvendelser
+     * @return map med key: trådid og value: alle henvendelser som tilhører tråden
+     */
+    public static Map<String, List<Melding>> skillUtTraader(List<Melding> meldinger) {
+        Map<String, List<Melding>> traaderMap = new HashMap<>();
+        for (String traadId : on(meldinger).map(TRAAD_ID).collectIn(new HashSet<String>())) {
+            traaderMap.put(traadId, on(meldinger).filter(where(TRAAD_ID, equalTo(traadId))).collect());
+        }
+        return traaderMap;
+    }
+
+    public static final Transformer<WSMelding, Melding> TIL_MELDING = new Transformer<WSMelding, Melding>() {
         @Override
-        public Record<MeldingRecord> transform(WSMelding wsMelding) {
-            return new Record<MeldingRecord>()
-                    .with(MeldingRecord.id, wsMelding.getBehandlingsId())
-                    .with(MeldingRecord.traadId, wsMelding.getTraad())
-                    .with(MeldingRecord.tema, wsMelding.getTemastruktur())
-                    .with(MeldingRecord.fritekst, wsMelding.getTekst())
-                    .with(MeldingRecord.opprettetDato, wsMelding.getOpprettetDato())
-                    .with(MeldingRecord.lestDato, wsMelding.getLestDato())
-                    .with(MeldingRecord.status, STATUS.transform(wsMelding))
-                    .with(MeldingRecord.type, MELDINGSTYPE.transform(wsMelding))
-                    .with(MeldingRecord.journalfortDato, wsMelding.getJournalfortDato())
-                    .with(MeldingRecord.journalfortSaksid, wsMelding.getJournalfortSaksId())
-                    .with(MeldingRecord.journalfortTema, wsMelding.getJournalfortTema());
+        public Melding transform(WSMelding wsMelding) {
+            Meldingstype meldingstype = wsMelding.getMeldingsType() == WSMeldingstype.INNGAENDE ? Meldingstype.INNGAENDE : Meldingstype.UTGAENDE;
+            Melding melding = new Melding(wsMelding.getBehandlingsId(), wsMelding.getTraad(), meldingstype, wsMelding.getOpprettetDato(), wsMelding.getTekst());
+            melding.tema = wsMelding.getTemastruktur();
+            melding.lestDato = wsMelding.getLestDato();
+            melding.status = STATUS.transform(wsMelding);
+            return melding;
         }
     };
 
-    public static final Comparator<Record<MeldingRecord>> NYESTE_FORST = new Comparator<Record<MeldingRecord>>() {
-        @Override
-        public int compare(Record<MeldingRecord> o1, Record<MeldingRecord> o2) {
-            return o2.get(MeldingRecord.opprettetDato).compareTo(o1.get(MeldingRecord.opprettetDato));
-        }
-    };
-
-    public static final Comparator<Record<MeldingRecord>> ELDSTE_FORST = new Comparator<Record<MeldingRecord>>() {
-        @Override
-        public int compare(Record<MeldingRecord> o1, Record<MeldingRecord> o2) {
-            return o1.get(MeldingRecord.opprettetDato).compareTo(o2.get(MeldingRecord.opprettetDato));
-        }
-    };
-
-    private static final Transformer<WSMelding, Status> STATUS = new Transformer<WSMelding, Status>() {
+    public static final Transformer<WSMelding, Status> STATUS = new Transformer<WSMelding, Status>() {
         @Override
         public Status transform(WSMelding wsMelding) {
             switch (wsMelding.getMeldingsType()) {
                 case INNGAENDE:
-                    if (DateTime.now().isAfter(wsMelding.getOpprettetDato().plusHours(BESVARINGSFRIST_TIMER))) {
+                    if (now().isAfter(wsMelding.getOpprettetDato().plusHours(BESVARINGSFRIST_TIMER))) {
                         return IKKE_BESVART_INNEN_FRIST;
                     } else {
                         return IKKE_BESVART;
@@ -72,13 +72,6 @@ public class MeldingUtils {
                 default:
                     throw new UkjentMeldingstypeException(wsMelding.getMeldingsType());
             }
-        }
-    };
-
-    private static final Transformer<WSMelding, Meldingstype> MELDINGSTYPE = new Transformer<WSMelding, Meldingstype>() {
-        @Override
-        public Meldingstype transform(WSMelding wsMelding) {
-            return Meldingstype.valueOf(wsMelding.getMeldingsType().toString());
         }
     };
 
