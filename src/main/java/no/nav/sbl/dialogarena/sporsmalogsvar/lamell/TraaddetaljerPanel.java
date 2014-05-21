@@ -7,7 +7,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.VALGT_MELDING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 
 
 public class TraaddetaljerPanel extends Panel {
@@ -21,7 +21,7 @@ public class TraaddetaljerPanel extends Panel {
         add(new TidligereMeldingerPanel("tidligere-meldinger"));
     }
 
-    @RunOnEvents(VALGT_MELDING)
+    @RunOnEvents(VALGT_MELDING_EVENT)
     public void meldingerOppdatert(AjaxRequestTarget target) {
         target.add(this);
     }

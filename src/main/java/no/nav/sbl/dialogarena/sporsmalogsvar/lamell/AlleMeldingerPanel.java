@@ -13,8 +13,8 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.VALGT_MELDING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.getStatusKlasse;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 
 public class AlleMeldingerPanel extends Panel {
 
@@ -48,7 +48,7 @@ public class AlleMeldingerPanel extends Panel {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
                         innboksVM.setValgtMelding(item.getModelObject());
-                        send(getPage(), Broadcast.DEPTH, VALGT_MELDING);
+                        send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
                         target.add(item, current);
                         current = item;
                     }
