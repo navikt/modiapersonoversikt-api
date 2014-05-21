@@ -15,10 +15,8 @@ public class TidligereMeldingerPanel extends Panel {
             protected void populateItem(final ListItem<MeldingVM> item) {
                 item.add(new Label("opprettetDato"));
                 item.add(new Label("avsender"));
-                item.add(new MultiLineLabel("fritekst"));
+                item.add(new MultiLineLabel("melding.fritekst"));
             }
         });
     }
-
-
 }

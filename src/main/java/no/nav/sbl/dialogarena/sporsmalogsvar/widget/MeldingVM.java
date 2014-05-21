@@ -2,8 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status;
-import org.joda.time.DateTime;
+import no.nav.sbl.dialogarena.time.Datoformat;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -15,27 +14,29 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.NYESTE_FORS
 
 public class MeldingVM implements FeedItemVM, Serializable {
 
-    public final String id;
-    public final String avsender, tema;
-    public final DateTime opprettetDato, lestDato;
-    public final Status status;
+    public final Melding melding;
+
+    public final String avsender;
 
     public MeldingVM(List<Melding> traad) {
-        Melding melding = on(traad).collect(NYESTE_FORST).get(0);
-        this.id = melding.id;
+        this.melding = on(traad).collect(NYESTE_FORST).get(0);
         this.avsender = lagMeldingOverskrift(traad, melding);
-        this.tema = melding.tema;
-        this.opprettetDato = melding.opprettetDato;
-        this.lestDato = melding.lestDato;
-        this.status = melding.status;
     }
 
     public static final Comparator<MeldingVM> NYESTE_OVERST = new Comparator<MeldingVM>() {
         @Override
         public int compare(MeldingVM o1, MeldingVM o2) {
-            return o2.opprettetDato.compareTo(o1.opprettetDato);
+            return o2.melding.opprettetDato.compareTo(o1.melding.opprettetDato);
         }
     };
+
+    public String getOpprettetDato() {
+        return Datoformat.langMedTid(melding.opprettetDato);
+    }
+
+    public String getLestDato() {
+        return Datoformat.ultrakort(melding.lestDato);
+    }
 
     @Override
     public String getType() {
@@ -44,6 +45,6 @@ public class MeldingVM implements FeedItemVM, Serializable {
 
     @Override
     public String getId() {
-        return id;
+        return melding.id;
     }
 }

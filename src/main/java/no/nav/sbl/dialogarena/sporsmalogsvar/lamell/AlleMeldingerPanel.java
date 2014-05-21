@@ -20,7 +20,7 @@ public class AlleMeldingerPanel extends Panel {
 
     ListItem<MeldingVM> current;
 
-    public AlleMeldingerPanel(String id, final IModel<InnboksVM> modell) {
+    public AlleMeldingerPanel(String id, final IModel<InnboksVM> model) {
         super(id);
         setOutputMarkupId(true);
 
@@ -28,26 +28,26 @@ public class AlleMeldingerPanel extends Panel {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {
 
-                item.add(new Label("antallMeldingerITraad"));
+                item.add(new Label("traadLengde"));
 
-                item.add(new WebMarkupContainer("indikator-dot").add(new AttributeModifier("class", getStatusKlasse(item.getModelObject().getStatus()))));
-                item.add(new Label("indikator-tekst", new StringResourceModel("lamell.${status}", item.getModel())));
+                item.add(new WebMarkupContainer("indikator-dot").add(new AttributeModifier("class", getStatusKlasse(item.getModelObject().melding.status))));
+                item.add(new Label("indikator-tekst", new StringResourceModel("lamell.${melding.status}", item.getModel())));
 
                 item.add(new Label("opprettetDato"));
                 item.add(new Label("avsender"));
-                item.add(new Label("tema", new StringResourceModel("${tema}", item.getModel())));
+                item.add(new Label("melding.tema", new StringResourceModel("${melding.tema}", item.getModel())));
 
-                item.add(new Label("fritekst"));
+                item.add(new Label("melding.fritekst"));
 
-                item.add(hasCssClassIf("valgt", modell.getObject().erValgtMelding(item.getModelObject())));
-                if (modell.getObject().erValgtMelding(item.getModelObject()).getObject()) {
+                final InnboksVM innboksVM = model.getObject();
+                item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(item.getModelObject())));
+                if (innboksVM.erValgtMelding(item.getModelObject()).getObject()) {
                     current = item;
                 }
-                item.add(hasCssClassIf("lest", item.getModelObject().erLest()));
                 item.add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
-                        modell.getObject().setValgtMelding(item.getModelObject());
+                        innboksVM.setValgtMelding(item.getModelObject());
                         send(getPage(), Broadcast.DEPTH, VALGT_MELDING);
                         target.add(item, current);
                         current = item;

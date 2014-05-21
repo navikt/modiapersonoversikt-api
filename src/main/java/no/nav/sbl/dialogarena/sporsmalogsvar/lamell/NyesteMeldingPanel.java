@@ -10,6 +10,6 @@ public class NyesteMeldingPanel extends Panel {
         super(id);
         add(new Label("nyesteMelding.opprettetDato"));
         add(new Label("nyesteMelding.avsender"));
-        add(new MultiLineLabel("nyesteMelding.fritekst"));
+        add(new MultiLineLabel("nyesteMelding.melding.fritekst"));
     }
 }

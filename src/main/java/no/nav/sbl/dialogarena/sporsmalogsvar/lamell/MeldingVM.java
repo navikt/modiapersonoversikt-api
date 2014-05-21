@@ -1,13 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.commons.collections15.Transformer;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
-import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -18,92 +13,37 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.la
 
 public class MeldingVM implements Serializable {
 
-    private String id;
-    private String traadId;
-    private String tema;
-    private String avsender;
-    private String fritekst;
+    public final Melding melding;
 
-    private Meldingstype type;
-    public final DateTime opprettetDato, lestDato;
-    private boolean lest;
-    private int antallMeldingerITraad;
-    private Status status;
+    public final String avsender;
+    public final int traadLengde;
 
     public MeldingVM(List<Melding> tilhorendeTraad, Melding melding) {
-        this.id = melding.id;
-        traadId = melding.traadId;
-        tema = melding.tema;
-        type = melding.meldingstype;
+        this.melding = melding;
+
         avsender = lagMeldingOverskrift(tilhorendeTraad, melding);
-        fritekst = melding.fritekst;
-        opprettetDato = melding.opprettetDato;
-        lestDato = melding.lestDato;
-        lest = lestDato != null;
-        antallMeldingerITraad = tilhorendeTraad.size();
-        status = melding.status;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public int getAntallMeldingerITraad() {
-        return antallMeldingerITraad;
+        traadLengde = tilhorendeTraad.size();
     }
 
     public String getOpprettetDato() {
-        return Datoformat.langMedTid(opprettetDato);
+        return Datoformat.langMedTid(melding.opprettetDato);
     }
 
     public String getLestDato() {
-        return Datoformat.kortMedTid(lestDato);
+        return Datoformat.kortMedTid(melding.lestDato);
     }
 
-    public String getTraadId() {
-        return traadId;
-    }
-
-    public String getTema() {
-        return tema;
-    }
-
-    public String getAvsender() {
-        return avsender;
-    }
-
-    public String getFritekst() {
-        return fritekst;
-    }
-
-    public Meldingstype getType() {
-        return type;
-    }
-
-    public IModel<Boolean> erLest() {
-        return new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return lest;
-            }
-        };
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public static final Comparator<MeldingVM> NYESTE_OVERST = new Comparator<MeldingVM>() {
+    public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {
         @Override
         public int compare(MeldingVM o1, MeldingVM o2) {
-            return o2.opprettetDato.compareTo(o1.opprettetDato);
+            return o2.melding.opprettetDato.compareTo(o1.melding.opprettetDato);
         }
     };
 
     public static final Transformer<MeldingVM, String> ID = new Transformer<MeldingVM, String>() {
         @Override
         public String transform(MeldingVM meldingVM) {
-            return meldingVM.getId();
+            return meldingVM.melding.id;
         }
     };
 }

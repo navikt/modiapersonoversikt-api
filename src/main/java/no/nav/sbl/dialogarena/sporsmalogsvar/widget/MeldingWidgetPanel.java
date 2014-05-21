@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
-import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -25,20 +24,20 @@ public class MeldingWidgetPanel extends GenericPanel<MeldingVM> {
         WebMarkupContainer statusContainer = new WebMarkupContainer("status-container");
 
         WebMarkupContainer status = new WebMarkupContainer("statusIndikator");
-        status.add(new AttributeModifier("class", getStatusKlasse(meldingVM.status)));
+        status.add(new AttributeModifier("class", getStatusKlasse(meldingVM.melding.status)));
 
-        Label lestDato = new Label("lestDato", meldingVM.lestDato != null ? Datoformat.ultrakort(meldingVM.lestDato) : "");
-        lestDato.add(visibleIf(Model.of(meldingVM.status == LEST_AV_BRUKER)));
+        Label lestDato = new Label("lestDato");
+        lestDato.add(visibleIf(Model.of(meldingVM.melding.status == LEST_AV_BRUKER)));
 
         statusContainer.add(
                 status,
                 lestDato,
-                new Label("status",  new StringResourceModel("widget.${status}", getModel())));
+                new Label("melding.status",  new StringResourceModel("widget.${melding.status}", getModel())));
 
         add(
-                new Label("opprettetDato", Datoformat.langMedTid(meldingVM.opprettetDato)),
+                new Label("opprettetDato"),
                 new Label("avsender"),
-                new Label("tema", new StringResourceModel("${tema}", getModel())),
+                new Label("melding.tema", new StringResourceModel("${melding.tema}", getModel())),
                 statusContainer);
     }
 }
