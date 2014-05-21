@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.lagMeldingOverskrift;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingOverskrift;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.NYESTE_FORST;
 
 public class MeldingVM implements FeedItemVM, Serializable {
@@ -37,6 +37,7 @@ public class MeldingVM implements FeedItemVM, Serializable {
     public String getLestDato() {
         return Datoformat.ultrakort(melding.lestDato);
     }
+
 
     @Override
     public String getType() {

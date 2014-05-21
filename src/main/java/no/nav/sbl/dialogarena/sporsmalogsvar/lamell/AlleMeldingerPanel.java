@@ -14,7 +14,7 @@ import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.VALGT_MELDING;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.getStatusKlasse;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.getStatusKlasse;
 
 public class AlleMeldingerPanel extends Panel {
 

@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.lagMeldingOverskrift;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingOverskrift;
 
 
 public class MeldingVM implements Serializable {

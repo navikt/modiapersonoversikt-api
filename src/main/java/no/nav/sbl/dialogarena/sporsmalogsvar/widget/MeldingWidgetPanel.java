@@ -6,11 +6,9 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.StringResourceModel;
 
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.getStatusKlasse;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.getStatusKlasse;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.LEST_AV_BRUKER;
 
 public class MeldingWidgetPanel extends GenericPanel<MeldingVM> {
@@ -27,7 +25,7 @@ public class MeldingWidgetPanel extends GenericPanel<MeldingVM> {
         status.add(new AttributeModifier("class", getStatusKlasse(meldingVM.melding.status)));
 
         Label lestDato = new Label("lestDato");
-        lestDato.add(visibleIf(Model.of(meldingVM.melding.status == LEST_AV_BRUKER)));
+        lestDato.setVisibilityAllowed(meldingVM.melding.status == LEST_AV_BRUKER);
 
         statusContainer.add(
                 status,
