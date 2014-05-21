@@ -14,6 +14,7 @@ import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.VALGT_MELDING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.getStatusKlasse;
 
 public class AlleMeldingerPanel extends Panel {
 
@@ -29,7 +30,7 @@ public class AlleMeldingerPanel extends Panel {
 
                 item.add(new Label("antallMeldingerITraad"));
 
-                item.add(new WebMarkupContainer("indikator-dot").add(new AttributeModifier("class", item.getModelObject().getStatusKlasse())));
+                item.add(new WebMarkupContainer("indikator-dot").add(new AttributeModifier("class", getStatusKlasse(item.getModelObject().getStatus()))));
                 item.add(new Label("indikator-tekst", new StringResourceModel("lamell.${status}", item.getModel())));
 
                 item.add(new Label("opprettetDato"));

@@ -3,91 +3,39 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status;
-import no.nav.sbl.dialogarena.time.Datoformat;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.lagMeldingOverskrift;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.NYESTE_FORST;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.INNGAENDE;
 
 public class MeldingVM implements FeedItemVM, Serializable {
 
-    private String id;
-    private String avsender, tema;
-    private DateTime opprettetDato, lestDato;
-    private Status status;
+    public final String id;
+    public final String avsender, tema;
+    public final DateTime opprettetDato, lestDato;
+    public final Status status;
 
     public MeldingVM(List<Melding> traad) {
-        List<Melding> sortertTraad = on(traad).collect(NYESTE_FORST);
-        Melding nyesteMelding = sortertTraad.get(0);
-        id = nyesteMelding.id;
-        avsender = (sortertTraad.size() == 1 ? "Melding" : "Svar") + " fra " +
-                (nyesteMelding.meldingstype == INNGAENDE ? "Bruker" : "NAV");
-        tema = nyesteMelding.tema;
-        opprettetDato = nyesteMelding.opprettetDato;
-        lestDato = nyesteMelding.lestDato;
-        status = nyesteMelding.status;
+        Melding melding = on(traad).collect(NYESTE_FORST).get(0);
+        this.id = melding.id;
+        this.avsender = lagMeldingOverskrift(traad, melding);
+        this.tema = melding.tema;
+        this.opprettetDato = melding.opprettetDato;
+        this.lestDato = melding.lestDato;
+        this.status = melding.status;
     }
 
-
-    public String getLestDato() {
-        return Datoformat.ultrakort(lestDato);
-    }
-
-    public IModel<Boolean> harStatus(final Status status) {
-        return new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return MeldingVM.this.status == status;
-            }
-        };
-    }
-
-    public String getStatusKlasse() {
-        return "status " + status.toString().toLowerCase().replace("_", "-");
-    }
-
-    public String getOpprettetDatoAsString() {
-        return Datoformat.langMedTid(opprettetDato);
-    }
-
-    public DateTime getOpprettetDato() {
-        return opprettetDato;
-    }
-
-    public void setOpprettetDato(DateTime opprettetDato) {
-        this.opprettetDato = opprettetDato;
-    }
-
-    public String getAvsender() {
-        return avsender;
-    }
-
-    public void setAvsender(String avsender) {
-        this.avsender = avsender;
-    }
-
-    public String getTema() {
-        return tema;
-    }
-
-
-    public void setTema(String tema) {
-        this.tema = tema;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
+    public static final Comparator<MeldingVM> NYESTE_OVERST = new Comparator<MeldingVM>() {
+        @Override
+        public int compare(MeldingVM o1, MeldingVM o2) {
+            return o2.opprettetDato.compareTo(o1.opprettetDato);
+        }
+    };
 
     @Override
     public String getType() {

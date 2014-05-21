@@ -16,7 +16,9 @@ import java.util.Map;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.ELDSTE_FORST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.TRAAD_ID;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.INNGAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART_INNEN_FRIST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_LEST_AV_BRUKER;
@@ -73,4 +75,13 @@ public class MeldingUtils {
             }
         }
     };
+
+    public static String getStatusKlasse(Status status) {
+        return "status " + status.name().toLowerCase().replace("_", "-");
+    }
+
+    public static String lagMeldingOverskrift(List<Melding> traad, Melding melding) {
+        return (melding.equals(on(traad).collect(ELDSTE_FORST).get(0)) ? "Melding" : "Svar") + " fra " +
+                (melding.meldingstype == INNGAENDE ? "Bruker" : "NAV");
+    }
 }

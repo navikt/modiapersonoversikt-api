@@ -10,12 +10,12 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 
 import javax.inject.Inject;
-import java.util.Comparator;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.events.Events.KVITTERING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingVM.NYESTE_OVERST;
 
 public class MeldingerWidget extends FeedWidget<MeldingVM> {
 
@@ -48,13 +48,6 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
         List<Melding> meldinger = meldingService.hentMeldinger(fnr);
         return on(skillUtTraader(meldinger).values()).map(TIL_MELDINGVM).collect(NYESTE_OVERST);
     }
-
-    private static final Comparator<MeldingVM> NYESTE_OVERST = new Comparator<MeldingVM>() {
-        @Override
-        public int compare(MeldingVM o1, MeldingVM o2) {
-            return o2.getOpprettetDato().compareTo(o1.getOpprettetDato());
-        }
-    };
 
     private static final Transformer<List<Melding>, MeldingVM> TIL_MELDINGVM = new Transformer<List<Melding>, MeldingVM>() {
         @Override

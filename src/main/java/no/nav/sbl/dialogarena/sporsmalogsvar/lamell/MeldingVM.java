@@ -13,9 +13,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.ELDSTE_FORST;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.INNGAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.lagMeldingOverskrift;
 
 
 public class MeldingVM implements Serializable {
@@ -37,8 +35,7 @@ public class MeldingVM implements Serializable {
         traadId = melding.traadId;
         tema = melding.tema;
         type = melding.meldingstype;
-        avsender = (melding.equals(on(tilhorendeTraad).collect(ELDSTE_FORST).get(0)) ? "Melding" : "Svar") + " fra " +
-                (type == INNGAENDE ? "Bruker" : "NAV");
+        avsender = lagMeldingOverskrift(tilhorendeTraad, melding);
         fritekst = melding.fritekst;
         opprettetDato = melding.opprettetDato;
         lestDato = melding.lestDato;
@@ -94,10 +91,6 @@ public class MeldingVM implements Serializable {
 
     public Status getStatus() {
         return status;
-    }
-
-    public String getStatusKlasse() {
-        return "indikator-dot " + status.toString().toLowerCase().replace("_", "-");
     }
 
     public static final Comparator<MeldingVM> NYESTE_OVERST = new Comparator<MeldingVM>() {
