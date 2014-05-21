@@ -12,7 +12,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING
 
 public class TraaddetaljerPanel extends Panel {
 
-    public TraaddetaljerPanel(String id, String fnr, CompoundPropertyModel<InnboksVM> innboks) {
+    public TraaddetaljerPanel(String id, CompoundPropertyModel<InnboksVM> innboks) {
         super(id);
         setOutputMarkupId(true);
 

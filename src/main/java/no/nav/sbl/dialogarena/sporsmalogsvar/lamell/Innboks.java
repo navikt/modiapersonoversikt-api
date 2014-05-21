@@ -32,7 +32,7 @@ public class Innboks extends Lerret {
         setDefaultModel(innboksVM);
         setOutputMarkupId(true);
 
-        add(new AlleMeldingerPanel("meldinger", innboksVM), new TraaddetaljerPanel("detaljpanel", fnr, innboksVM));
+        add(new AlleMeldingerPanel("meldinger", innboksVM), new TraaddetaljerPanel("detaljpanel", innboksVM));
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
