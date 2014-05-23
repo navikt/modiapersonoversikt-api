@@ -39,7 +39,7 @@
         <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
-        <modig.wicket.version>2.0.9</modig.wicket.version>
+        <modig.wicket.version>2.0.11-SNAPSHOT</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>2.0.0-alpha.2</modig.lang.version>
         <modig.frontend.wicket.version>1.0.33</modig.frontend.wicket.version>
@@ -63,12 +63,26 @@
         <utbetaling.version>2.0.40</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
         <henvendelse.meldinger.tjenestespec.version>0.0.7</henvendelse.meldinger.tjenestespec.version>
+        <henvendelse.aktivitet.v2.version>0.1</henvendelse.aktivitet.v2.version>
+        <dialogarena.behandlingsinformasjon.v2.version>0.1</dialogarena.behandlingsinformasjon.v2.version>
         <saksoversikt.version>1.0-SNAPSHOT</saksoversikt.version>
         <sporsmalogsvar.version>1.21-SNAPSHOT</sporsmalogsvar.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>henvendelse-aktivitet-v2</artifactId>
+                <version>${henvendelse.aktivitet.v2.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>dialogarena-behandlingsinformasjon-v2</artifactId>
+                <version>${dialogarena.behandlingsinformasjon.v2.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>

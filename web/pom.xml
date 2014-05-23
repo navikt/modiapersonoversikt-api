@@ -22,6 +22,16 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>henvendelse-aktivitet-v2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>dialogarena-behandlingsinformasjon-v2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-consumer</artifactId>
         </dependency>
 

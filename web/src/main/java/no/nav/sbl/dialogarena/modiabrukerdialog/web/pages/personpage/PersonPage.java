@@ -15,6 +15,7 @@ import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.Dialogpanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer;
@@ -59,11 +60,11 @@ public class PersonPage extends BasePage {
     private Logger logger = getLogger(PersonPage.class);
 
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
-	public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
+    public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
 
-	private SjekkForlateSideAnswer answer;
+    private SjekkForlateSideAnswer answer;
     private RedirectModalWindow redirectPopup;
-	private LamellContainer lamellContainer;
+    private LamellContainer lamellContainer;
     private HentPersonPanel hentPersonPanel;
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
@@ -73,16 +74,17 @@ public class PersonPage extends BasePage {
         String fnr = pageParameters.get("fnr").toString(null);
         instansierFelter(fnr);
         add(
-            hentPersonPanel,
-            searchToggleButton,
-            nullstillLink,
-            lamellContainer,
-            redirectPopup,
-            fnrContainer,
-            new PersonsokPanel("personsokPanel").setVisible(true),
-		    new VisittkortPanel("visittkort", fnr).setVisible(true),
-		    new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
-            new TimeoutBoks("timeoutBoks", fnr)
+                hentPersonPanel,
+                searchToggleButton,
+                nullstillLink,
+                lamellContainer,
+                redirectPopup,
+                fnrContainer,
+                new PersonsokPanel("personsokPanel").setVisible(true),
+                new VisittkortPanel("visittkort", fnr).setVisible(true),
+                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
+                new Dialogpanel("dialogpanel", fnr),
+                new TimeoutBoks("timeoutBoks", fnr)
         );
     }
 
@@ -152,15 +154,15 @@ public class PersonPage extends BasePage {
         }
     }
 
-	@RunOnEvents(PERSONSOK_FNR_CLICKED)
-	public void personsokresultatClicked(AjaxRequestTarget target, String query) {
-		send(getPage(), DEPTH, new NamedEventPayload(FNR_CHANGED, query));
-	}
+    @RunOnEvents(PERSONSOK_FNR_CLICKED)
+    public void personsokresultatClicked(AjaxRequestTarget target, String query) {
+        send(getPage(), DEPTH, new NamedEventPayload(FNR_CHANGED, query));
+    }
 
-	@RunOnEvents(HENTPERSON_FODSELSNUMMER_IKKE_TILGANG)
-	public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
-		send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
-	}
+    @RunOnEvents(HENTPERSON_FODSELSNUMMER_IKKE_TILGANG)
+    public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
+        send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
+    }
 
     @Override
     public boolean isVersioned() {

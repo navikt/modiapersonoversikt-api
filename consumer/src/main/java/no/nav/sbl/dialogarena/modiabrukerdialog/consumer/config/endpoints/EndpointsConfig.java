@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeve
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.meldinger.MeldingerEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingWrapperConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelseaktivitet.HenvendelseAktivitetV2EndpointConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -18,7 +19,8 @@ import org.springframework.context.annotation.Import;
         UtbetalingEndpointConfig.class,
         MeldingerEndpointConfig.class,
         KodeverkV2EndpointConfig.class,
-        KodeverkV2WrapperConfig.class
+        KodeverkV2WrapperConfig.class,
+        HenvendelseAktivitetV2EndpointConfig.class
 })
 public class EndpointsConfig {
 
