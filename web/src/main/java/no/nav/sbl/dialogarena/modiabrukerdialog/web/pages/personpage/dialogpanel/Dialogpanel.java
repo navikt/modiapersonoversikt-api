@@ -22,6 +22,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
@@ -30,13 +31,15 @@ import static java.util.Arrays.asList;
 
 public class Dialogpanel extends Panel {
 
+    public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(Dialogpanel.class, "dialogpanel.less");
+
     @Inject
     HenvendelseAktivitetV2PortType ws;
 
     public Dialogpanel(String id, final String fnr) {
         super(id);
 
-        final Form<DialogVM> form = new Form<>("dialog-form", new CompoundPropertyModel<>(new DialogVM()));
+        final Form<DialogVM> form = new Form<>("dialogform", new CompoundPropertyModel<>(new DialogVM()));
         form.setOutputMarkupId(true);
 
         form.add(new EnhancedTextArea("tekstfelt", form.getModel()));

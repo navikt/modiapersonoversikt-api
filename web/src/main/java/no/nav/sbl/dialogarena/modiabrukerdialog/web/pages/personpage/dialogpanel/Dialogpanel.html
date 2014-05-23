@@ -1,16 +1,18 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-    <form wicket:id="dialog-form">
-        <select wicket:id="tema"></select>
-        <section wicket:id="kanal">
-            <wicket:container wicket:id="kanaler">
-                <input wicket:id="kanalvalg" type="radio" />
-                <label wicket:for="kanalvalg"><wicket:container wicket:id="kanalnavn" /></label>
+    <form wicket:id="dialogform" class="dialogform">
+        <select wicket:id="tema" class="temavelger" ></select>
+        <section class="kanalvelger">
+            <wicket:container wicket:id="kanal">
+                <wicket:container wicket:id="kanaler">
+                    <input wicket:id="kanalvalg" type="radio" />
+                    <label wicket:for="kanalvalg"><wicket:container wicket:id="kanalnavn" /></label>
+                </wicket:container>
             </wicket:container>
         </section>
-        <wicket:container wicket:id="tekstfelt" />
+        <section wicket:id="tekstfelt" class="tekstfelt"></section>
         <div wicket:id="feedback"></div>
-        <a wicket:id="send" class="knapp-link-stor" href="#">Send</a>
+        <a wicket:id="send" class="send knapp-link-stor" href="#">Send</a>
     </form>
 </wicket:panel>
 </html>
