@@ -2,12 +2,12 @@
 <wicket:panel>
     <form wicket:id="dialogform" class="dialogform">
         <select wicket:id="tema" class="temavelger" ></select>
-        <section class="kanalvelger">
+        <section class="kanalvelger clearfix">
             <wicket:container wicket:id="kanal">
-                <wicket:container wicket:id="kanaler">
-                    <input wicket:id="kanalvalg" type="radio" />
-                    <label wicket:for="kanalvalg"><wicket:container wicket:id="kanalnavn" /></label>
-                </wicket:container>
+                <div wicket:id="kanalvalg" class="kanalvalg">
+                    <input wicket:id="kanalknapp" type="radio" />
+                    <label wicket:for="kanalknapp"><wicket:container wicket:id="kanalnavn" /></label>
+                </div>
             </wicket:container>
         </section>
         <section wicket:id="tekstfelt" class="tekstfelt"></section>

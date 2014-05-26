@@ -776,7 +776,6 @@
                 <groupId>no.nav.modig</groupId>
                 <artifactId>modig-security-core</artifactId>
                 <version>${modig.security.version}</version>
-                <scope>runtime</scope>
             </dependency>
 
             <dependency>

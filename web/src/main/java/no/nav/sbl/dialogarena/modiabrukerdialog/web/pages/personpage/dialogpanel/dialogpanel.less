@@ -1,16 +1,23 @@
-@sideMargin: 2em;
+@sideMargin: 1.5em;
 
 .dialogform {
   .temavelger {
     width: 100%;
   }
   .kanalvelger {
-    margin: 0 @sideMargin;
+    margin: 1em @sideMargin;
+    .kanalvalg {
+      float: left;
+      label {
+        width: auto;
+        color: @modiasvart;
+      }
+    }
   }
   .tekstfelt {
     margin: 0 @sideMargin;
   }
   .send {
-    margin: 2em @sideMargin;
+    margin: 1em @sideMargin;
   }
 }

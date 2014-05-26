@@ -5,6 +5,7 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLBehandlin
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLMetadataListe;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLReferat;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
+import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.aktivitet.v2.HenvendelseAktivitetV2PortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.aktivitet.v2.meldinger.WSSendHenvendelseRequest;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -23,11 +24,12 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static org.joda.time.DateTime.now;
 
 public class Dialogpanel extends Panel {
 
@@ -42,23 +44,25 @@ public class Dialogpanel extends Panel {
         final Form<DialogVM> form = new Form<>("dialogform", new CompoundPropertyModel<>(new DialogVM()));
         form.setOutputMarkupId(true);
 
-        form.add(new EnhancedTextArea("tekstfelt", form.getModel()));
-
         form.add(new DropDownChoice<>("tema", asList(Tema.values()), new ChoiceRenderer<Tema>() {
             @Override
             public Object getDisplayValue(Tema object) {
                 return new StringResourceModel(object.name(), Dialogpanel.this, getDefaultModel()).getObject();
             }
-        }));
+        }).setRequired(true));
 
-        form.add(new RadioGroup<Kanal>("kanal").add(
-                new ListView<Kanal>("kanaler", asList(Kanal.values())) {
-                    @Override
-                    protected void populateItem(ListItem<Kanal> item) {
-                        item.add(new Radio<>("kanalvalg", item.getModel()));
-                        item.add(new Label("kanalnavn", new ResourceModel(item.getModelObject().toString())));
-                    }
-                }));
+        form.add(new RadioGroup<Kanal>("kanal")
+                .setRequired(true)
+                .add(
+                        new ListView<Kanal>("kanalvalg", asList(Kanal.values())) {
+                            @Override
+                            protected void populateItem(ListItem<Kanal> item) {
+                                item.add(new Radio<>("kanalknapp", item.getModel()));
+                                item.add(new Label("kanalnavn", new ResourceModel(item.getModelObject().toString())));
+                            }
+                        }));
+
+        form.add(new EnhancedTextArea("tekstfelt", form.getModel(), new EnhancedTextAreaConfigurator().withMaxCharCount(5000).withMinTextAreaHeight(500)));
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);
@@ -67,17 +71,7 @@ public class Dialogpanel extends Panel {
         form.add(new AjaxSubmitLink("send") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-                DialogVM formInput = form.getModelObject();
-                XMLBehandlingsinformasjonV2 info =
-                        new XMLBehandlingsinformasjonV2()
-                                .withHenvendelseType("referat")
-                                .withAktor(new XMLAktor().withFodselsnummer(fnr))
-                                .withOpprettetDato(DateTime.now())
-                                .withAvsluttetDato(DateTime.now())
-                                .withMetadataListe(new XMLMetadataListe().withMetadata(
-                                        new XMLReferat().withTemagruppe(formInput.tema).withKanal(formInput.kanal).withFritekst(formInput.getFritekst())));
-
-                ws.sendHenvendelse(new WSSendHenvendelseRequest().withType("referat").withFodselsnummer(fnr).withAny(info));
+                sendHenvendelse(form.getModelObject(), fnr);
                 form.setModelObject(new DialogVM());
                 target.add(form);
             }
@@ -89,5 +83,18 @@ public class Dialogpanel extends Panel {
         });
 
         add(form);
+    }
+
+    private void sendHenvendelse(DialogVM formInput, String fnr) {
+        XMLBehandlingsinformasjonV2 info =
+                new XMLBehandlingsinformasjonV2()
+                        .withHenvendelseType("referat")
+                        .withAktor(new XMLAktor().withFodselsnummer(fnr).withNavIdent(getSubjectHandler().getUid()))
+                        .withOpprettetDato(now())
+                        .withAvsluttetDato(now())
+                        .withMetadataListe(new XMLMetadataListe().withMetadata(
+                                new XMLReferat().withTemagruppe(formInput.tema).withKanal(formInput.kanal).withFritekst(formInput.getFritekst())));
+
+        ws.sendHenvendelse(new WSSendHenvendelseRequest().withType("referat").withFodselsnummer(fnr).withAny(info));
     }
 }
