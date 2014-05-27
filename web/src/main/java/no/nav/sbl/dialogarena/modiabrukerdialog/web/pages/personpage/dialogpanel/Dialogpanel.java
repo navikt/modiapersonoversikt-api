@@ -36,7 +36,7 @@ public class Dialogpanel extends Panel {
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(Dialogpanel.class, "dialogpanel.less");
 
     @Inject
-    HenvendelseAktivitetV2PortType ws;
+    private HenvendelseAktivitetV2PortType ws;
 
     public Dialogpanel(String id, final String fnr) {
         super(id);
