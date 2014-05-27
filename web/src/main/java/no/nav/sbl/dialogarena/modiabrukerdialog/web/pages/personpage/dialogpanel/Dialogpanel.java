@@ -24,6 +24,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.util.time.Duration;
 
 import javax.inject.Inject;
 
@@ -41,8 +42,10 @@ public class Dialogpanel extends Panel {
     public Dialogpanel(String id, final String fnr) {
         super(id);
 
+        final Kvitteringspanel kvittering = new Kvitteringspanel("kvittering");
+
         final Form<DialogVM> form = new Form<>("dialogform", new CompoundPropertyModel<>(new DialogVM()));
-        form.setOutputMarkupId(true);
+        form.setOutputMarkupPlaceholderTag(true);
 
         form.add(new DropDownChoice<>("tema", asList(Tema.values()), new ChoiceRenderer<Tema>() {
             @Override
@@ -72,7 +75,12 @@ public class Dialogpanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
                 sendHenvendelse(form.getModelObject(), fnr);
+
                 form.setModelObject(new DialogVM());
+                form.setVisibilityAllowed(false);
+
+                kvittering.visISekunder(Duration.seconds(3), target, form);
+
                 target.add(form);
             }
 
@@ -82,7 +90,7 @@ public class Dialogpanel extends Panel {
             }
         });
 
-        add(form);
+        add(form, kvittering);
     }
 
     private void sendHenvendelse(DialogVM formInput, String fnr) {
