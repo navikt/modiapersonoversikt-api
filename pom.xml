@@ -62,7 +62,6 @@
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>2.0.40</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
-        <henvendelse.meldinger.tjenestespec.version>0.0.7</henvendelse.meldinger.tjenestespec.version>
         <henvendelse.aktivitet.v2.version>0.1</henvendelse.aktivitet.v2.version>
         <henvendelse.informasjon.v2.version>0.1</henvendelse.informasjon.v2.version>
         <dialogarena.behandlingsinformasjon.v2.version>0.1</dialogarena.behandlingsinformasjon.v2.version>
@@ -210,12 +209,6 @@
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
                 <version>${utbetaling.tjenestespesifikasjon.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>no.nav.sbl.dialogarena</groupId>
-                <artifactId>henvendelse-meldinger-tjenestespesifikasjon</artifactId>
-                <version>${henvendelse.meldinger.tjenestespec.version}</version>
             </dependency>
 
             <dependency>
