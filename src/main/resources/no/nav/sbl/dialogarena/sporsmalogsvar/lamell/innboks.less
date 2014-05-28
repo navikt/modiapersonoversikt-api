@@ -12,15 +12,12 @@
   overflow: auto;
   background-color: white;
   margin: 0;
-  border-top: 1px solid @rammeborder;
-  border-left: 1px solid @rammeborder;
-  border-bottom: 1px solid @rammeborder;
+  border: 1px solid @rammeborder;
   .melding {
-    padding: 1em @meldingslistemargin 1em @meldingslistemargin;
-    padding-left: @meldingslistemargin;
     position: relative;
-    border-bottom: solid 1px @rammeborder;
     min-height: 100px;
+    padding: 1em @meldingslistemargin 1em @meldingslistemargin;
+    border-bottom: solid 1px @rammeborder;
     header {
       .antall-meldinger {
         background-image: url("../img/snakkeboble.svg");
@@ -66,7 +63,7 @@
         text-transform: uppercase;
         font-size: 0.85rem;
         font-weight: normal;
-        margin: 0;
+        margin: 0.2em 0;
       }
       h1 {
         max-width: 700px;
@@ -81,7 +78,6 @@
       }
     }
     p {
-      font-family: arial, sans-serif;
       max-width : 500px;
       text-overflow: ellipsis;
       -o-text-overflow: ellipsis;
@@ -98,10 +94,7 @@
 }
 
 .meldingsdetaljer {
-  height: 100%;
   overflow: auto;
-  margin: 0;
-  background-color: white;
   border: 1px solid @rammeborder;
   padding-bottom: 3em;
   .tema-header {
