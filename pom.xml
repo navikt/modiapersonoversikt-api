@@ -21,7 +21,6 @@
         <modig.scm.plugin.version>1.1.11</modig.scm.plugin.version>
         <modig.frontend.version>1.1.4</modig.frontend.version>
         <modig-core.version>1.0.0</modig-core.version>
-        <henvendelse-meldinger-tjenestespesifikasjon.version>0.0.7</henvendelse-meldinger-tjenestespesifikasjon.version>
         <besvare-henvendelse-tjenestespesifikasjon.version>0.2</besvare-henvendelse-tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.1</henvendelse.informasjon.v2.version>
         <dialogarena.behandlingsinformasjon.v2.version>0.1</dialogarena.behandlingsinformasjon.v2.version>
@@ -67,12 +66,6 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>besvare-henvendelse-tjenestespesifikasjon</artifactId>
             <version>${besvare-henvendelse-tjenestespesifikasjon.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>henvendelse-meldinger-tjenestespesifikasjon</artifactId>
-            <version>${henvendelse-meldinger-tjenestespesifikasjon.version}</version>
         </dependency>
 
         <dependency>
