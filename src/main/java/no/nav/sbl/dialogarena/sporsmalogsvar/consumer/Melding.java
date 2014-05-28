@@ -11,18 +11,16 @@ public class Melding implements Serializable {
     public final String id, traadId;
     public final Meldingstype meldingstype;
     public final DateTime opprettetDato;
-    public final String fritekst;
-    public String tema;
+    public String fritekst, tema, kanal;
     public DateTime lestDato;
     public boolean lest;
     public Status status;
 
-    public Melding(String id, String traadId, Meldingstype meldingstype, DateTime opprettetDato, String fritekst) {
+    public Melding(String id, String traadId, Meldingstype meldingstype, DateTime opprettetDato) {
         this.id = id;
         this.traadId = traadId;
         this.meldingstype = meldingstype;
         this.opprettetDato = opprettetDato;
-        this.fritekst = fritekst;
     }
 
     public static final Transformer<Melding, String> TRAAD_ID = new Transformer<Melding, String>() {

@@ -18,7 +18,6 @@ public class Innboks extends Lerret {
     public static final JavaScriptResourceReference JS_REFERENCE = new JavaScriptResourceReference(Innboks.class, "innboks.js");
     public static final String VALGT_MELDING_EVENT = "sos.innboks.valgt_melding";
 
-
     @Inject
     MeldingService meldingService;
 
