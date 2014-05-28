@@ -8,7 +8,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.aktivitet.v2.meldinger.WS
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.aktivitet.v2.meldinger.WSStartHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.aktivitet.v2.meldinger.WSStartHenvendelseResponse;
 
-public class HenvendelseAktivitetV2PortTypeImpl implements HenvendelseAktivitetV2PortType {
+public class HenvendelseAktivitetV2PortTypeStub implements HenvendelseAktivitetV2PortType {
     @Override
     public WSStartHenvendelseResponse startHenvendelse(WSStartHenvendelseRequest request) {
         return new WSStartHenvendelseResponse();

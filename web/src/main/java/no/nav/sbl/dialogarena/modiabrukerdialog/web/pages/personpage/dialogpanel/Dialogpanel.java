@@ -29,6 +29,7 @@ import org.apache.wicket.util.time.Duration;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLHenvendelseType.REFERAT;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static org.joda.time.DateTime.now;
 
@@ -96,13 +97,13 @@ public class Dialogpanel extends Panel {
     private void sendHenvendelse(DialogVM formInput, String fnr) {
         XMLBehandlingsinformasjonV2 info =
                 new XMLBehandlingsinformasjonV2()
-                        .withHenvendelseType("referat")
+                        .withHenvendelseType(REFERAT.name())
                         .withAktor(new XMLAktor().withFodselsnummer(fnr).withNavIdent(getSubjectHandler().getUid()))
                         .withOpprettetDato(now())
                         .withAvsluttetDato(now())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLReferat().withTemagruppe(formInput.tema).withKanal(formInput.kanal).withFritekst(formInput.getFritekst())));
 
-        ws.sendHenvendelse(new WSSendHenvendelseRequest().withType("referat").withFodselsnummer(fnr).withAny(info));
+        ws.sendHenvendelse(new WSSendHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(fnr).withAny(info));
     }
 }

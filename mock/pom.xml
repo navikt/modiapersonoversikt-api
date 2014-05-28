@@ -13,6 +13,16 @@
 
     <dependencies>
         <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>henvendelse-informasjon-v2</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>dialogarena-behandlingsinformasjon-v2</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-consumer</artifactId>
         </dependency>

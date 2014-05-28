@@ -8,6 +8,6 @@ import org.springframework.context.annotation.Configuration;
 public class HenvendelseAktivitetV2EndpointConfig {
     @Bean
     public HenvendelseAktivitetV2PortType henvendelseAktivitetV2PortType() {
-        return new HenvendelseAktivitetV2PortTypeImpl();
+        return new HenvendelseAktivitetV2PortTypeStub();
     }
 }
