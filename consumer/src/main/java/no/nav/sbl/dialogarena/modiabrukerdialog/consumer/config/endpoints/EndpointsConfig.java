@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeverk.KodeverkV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeverk.KodeverkV2WrapperConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.meldinger.MeldingerEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingWrapperConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelseaktivitet.HenvendelseAktivitetV2EndpointConfig;
@@ -18,7 +17,6 @@ import org.springframework.context.annotation.Import;
 @Import({
         UtbetalingWrapperConfig.class,
         UtbetalingEndpointConfig.class,
-        MeldingerEndpointConfig.class,
         KodeverkV2EndpointConfig.class,
         KodeverkV2WrapperConfig.class,
         HenvendelseAktivitetV2EndpointConfig.class,

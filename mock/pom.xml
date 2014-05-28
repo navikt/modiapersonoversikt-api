@@ -68,11 +68,6 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>henvendelse-meldinger-tjenestespesifikasjon</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>no.nav</groupId>
             <artifactId>brukerprofil-consumer</artifactId>
         </dependency>
