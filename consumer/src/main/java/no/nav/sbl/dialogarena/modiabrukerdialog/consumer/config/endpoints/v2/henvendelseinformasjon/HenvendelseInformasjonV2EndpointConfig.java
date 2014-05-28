@@ -11,11 +11,11 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Hen
 @Configuration
 public class HenvendelseInformasjonV2EndpointConfig {
 
-    public static final String HENVENDELSEINFORMASJONV2_KEY = "start.henvendelseinformasjonv2.withmock";
+    public static final String HENVENDELSE_INFORMASJON_V2_KEY = "start.henvendelseinformasjonv2.withmock";
 
     @Bean
     public HenvendelseInformasjonV2PortType henvendelseInformasjonV2PortType() {
-        return createSwitcher(createHenvendelseInformasjonV2PortType(), createHenvendelseInformasjonV2PortTypeMock(), HENVENDELSEINFORMASJONV2_KEY, HenvendelseInformasjonV2PortType.class);
+        return createSwitcher(createHenvendelseInformasjonV2PortType(), createHenvendelseInformasjonV2PortTypeMock(), HENVENDELSE_INFORMASJON_V2_KEY, HenvendelseInformasjonV2PortType.class);
     }
 
     private static HenvendelseInformasjonV2PortType createHenvendelseInformasjonV2PortType() {
