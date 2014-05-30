@@ -29,7 +29,6 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_LEST_AV
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.LEST_AV_BRUKER;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.nullValue;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 
@@ -122,7 +121,7 @@ public class MeldingUtilsTest {
         Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjonV2(behandlingsId, opprettet, REFERAT.name(), xmlReferat));
 
         assertThat(melding.id, is(equalTo(behandlingsId)));
-        assertThat(melding.traadId, is(nullValue()));
+        assertThat(melding.traadId, is(equalTo(behandlingsId)));
         assertThat(melding.opprettetDato, is(equalTo(opprettet)));
         assertThat(melding.meldingstype, is(equalTo(UTGAENDE)));
         assertThat(melding.fritekst, is(equalTo(fritekst)));
