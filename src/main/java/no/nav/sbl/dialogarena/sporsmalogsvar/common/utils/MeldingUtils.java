@@ -55,11 +55,11 @@ public class MeldingUtils {
             Meldingstype meldingstype = info.getHenvendelseType().equals(SPORSMAL.name()) ? Meldingstype.INNGAENDE : Meldingstype.UTGAENDE;
 
             Melding melding = new Melding(info.getBehandlingsId(), meldingstype, info.getOpprettetDato());
+            melding.traadId = info.getBehandlingsId();
             melding.status = STATUS.transform(info);
 
             XMLMetadata xmlMetadata = info.getMetadataListe().getMetadata().get(0);
             if (xmlMetadata instanceof XMLSporsmal) {
-                melding.traadId = info.getBehandlingsId();
                 melding.tema = ((XMLSporsmal) xmlMetadata).getTemagruppe();
                 melding.fritekst = ((XMLSporsmal) xmlMetadata).getFritekst();
             } else if (xmlMetadata instanceof XMLSvar) {

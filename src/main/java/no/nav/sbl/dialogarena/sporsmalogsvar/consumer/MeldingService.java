@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLBehandlingsinformasjonV2;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.informasjon.v2.HenvendelseInformasjonV2PortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.informasjon.v2.meldinger.WSHentHenvendelseListeRequest;
 
@@ -21,6 +20,6 @@ public class MeldingService {
 
     public List<Melding> hentMeldinger(String fnr) {
         List<String> typer = Arrays.asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());
-        return on((List<XMLBehandlingsinformasjonV2>) henvendelseInformasjonV2PortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny().get(0)).map(TIL_MELDING).collect();
+        return on(henvendelseInformasjonV2PortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny()).map(TIL_MELDING).collect();
     }
 }
