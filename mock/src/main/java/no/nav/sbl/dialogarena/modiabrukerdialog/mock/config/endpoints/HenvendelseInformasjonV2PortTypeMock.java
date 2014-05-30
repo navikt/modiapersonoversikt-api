@@ -16,10 +16,8 @@ import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.List;
 import java.util.Random;
 
-import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLHenvendelseType.REFERAT;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLHenvendelseType.SPORSMAL;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLHenvendelseType.SVAR;
@@ -47,7 +45,7 @@ public class HenvendelseInformasjonV2PortTypeMock {
             "minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure " +
             "dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
 
-    public static final List<XMLBehandlingsinformasjonV2> HENVENDELSER = asList(
+    public static final XMLBehandlingsinformasjonV2[] HENVENDELSER = {
             createXmlBehandlingsinformasjonV2(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusWeeks(2), createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST)),
             createXmlBehandlingsinformasjonV2(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusWeeks(1), createXMLSporsmal("INTERNASJONALT", LANG_TEKST)),
             createXmlBehandlingsinformasjonV2(behandlingsid, SVAR, now().minusDays(5), createXMLSvar("INTERNASJONALT", String.valueOf(behandlingsid), now().minusDays(4), KORT_TEKST)),
@@ -58,7 +56,7 @@ public class HenvendelseInformasjonV2PortTypeMock {
             createXmlBehandlingsinformasjonV2(behandlingsid, SVAR, now().minusDays(7), createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsid), null, KORT_TEKST)),
             createXmlBehandlingsinformasjonV2(behandlingsid = idGenerator.nextInt(), REFERAT, now(), createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST)),
             createXmlBehandlingsinformasjonV2(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusDays(1), createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST))
-    );
+    };
 
     private static XMLBehandlingsinformasjonV2 createXmlBehandlingsinformasjonV2(int behandlingsId, XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata) {
         return new XMLBehandlingsinformasjonV2()
