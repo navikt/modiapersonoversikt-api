@@ -7,12 +7,12 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 
 public class Innboks extends Lerret {
 
@@ -23,7 +23,7 @@ public class Innboks extends Lerret {
     private MeldingService meldingService;
 
     private String fnr;
-    private CompoundPropertyModel<InnboksVM> innboksVM;
+    private IModel<InnboksVM> innboksVM;
 
     public Innboks(String id, String fnr) {
         super(id);
@@ -38,16 +38,15 @@ public class Innboks extends Lerret {
         add(new AlleMeldingerPanel("meldinger", innboksVM), new TraaddetaljerPanel("detaljpanel", innboksVM));
     }
 
-    @RunOnEvents(FEED_ITEM_CLICKED)
-    public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
+    @Override
+    public void onOpening(AjaxRequestTarget target) {
         innboksVM.getObject().oppdaterMeldinger(meldingService.hentMeldinger(fnr));
-        innboksVM.getObject().setValgtMelding(feedItemPayload.getItemId());
-        target.add(this);
+        super.onOpening(target);
     }
 
-    @RunOnEvents(WIDGET_HEADER_CLICKED)
-    public void widgetHeaderClicked(AjaxRequestTarget target) {
-        innboksVM.getObject().oppdaterMeldinger(meldingService.hentMeldinger(fnr));
+    @RunOnEvents(FEED_ITEM_CLICKED)
+    public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
+        innboksVM.getObject().setValgtMelding(feedItemPayload.getItemId());
         target.add(this);
     }
 

@@ -4,7 +4,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
@@ -12,7 +12,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING
 
 public class TraaddetaljerPanel extends Panel {
 
-    public TraaddetaljerPanel(String id, CompoundPropertyModel<InnboksVM> innboks) {
+    public TraaddetaljerPanel(String id, IModel<InnboksVM> innboks) {
         super(id);
         setOutputMarkupId(true);
 
