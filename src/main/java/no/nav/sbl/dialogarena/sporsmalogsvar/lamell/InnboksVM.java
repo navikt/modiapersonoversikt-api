@@ -71,7 +71,7 @@ public class InnboksVM implements Serializable {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return valgtMelding.isSome() && valgtMelding.get() == meldingVM;
+                return valgtMelding.isSome() && valgtMelding.get().equals(meldingVM);
             }
         };
     }

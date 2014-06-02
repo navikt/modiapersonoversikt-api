@@ -18,7 +18,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING
 
 public class AlleMeldingerPanel extends Panel {
 
-    ListItem<MeldingVM> current;
+    ListItem<MeldingVM> valgtMelding;
 
     public AlleMeldingerPanel(String id, final IModel<InnboksVM> model) {
         super(id);
@@ -42,15 +42,15 @@ public class AlleMeldingerPanel extends Panel {
                 final InnboksVM innboksVM = model.getObject();
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(item.getModelObject())));
                 if (innboksVM.erValgtMelding(item.getModelObject()).getObject()) {
-                    current = item;
+                    valgtMelding = item;
                 }
                 item.add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
                         innboksVM.setValgtMelding(item.getModelObject());
                         send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
-                        target.add(item, current);
-                        current = item;
+                        target.add(item, valgtMelding);
+                        valgtMelding = item;
                     }
                 });
             }
