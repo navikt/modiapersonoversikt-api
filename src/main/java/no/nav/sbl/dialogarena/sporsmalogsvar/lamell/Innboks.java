@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.model.MeldingBuffer;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
@@ -21,16 +20,18 @@ public class Innboks extends Lerret {
     public static final String VALGT_MELDING_EVENT = "sos.innboks.valgt_melding";
 
     @Inject
-    MeldingService meldingService;
+    private MeldingService meldingService;
 
+    private String fnr;
     private CompoundPropertyModel<InnboksVM> innboksVM;
 
     public Innboks(String id, String fnr) {
         super(id);
         setOutputMarkupId(true);
 
-        MeldingBuffer.oppdaterMeldinger(meldingService.hentMeldinger(fnr));
-        innboksVM = new CompoundPropertyModel<>(new InnboksVM(MeldingBuffer.getMeldinger()));
+        this.fnr = fnr;
+
+        innboksVM = new CompoundPropertyModel<>(new InnboksVM(meldingService.hentMeldinger(fnr)));
         setDefaultModel(innboksVM);
         setOutputMarkupId(true);
 
@@ -39,14 +40,14 @@ public class Innboks extends Lerret {
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
-        innboksVM.getObject().oppdaterMeldinger(MeldingBuffer.getMeldinger());
+        innboksVM.getObject().oppdaterMeldinger(meldingService.hentMeldinger(fnr));
         innboksVM.getObject().setValgtMelding(feedItemPayload.getItemId());
         target.add(this);
     }
 
     @RunOnEvents(WIDGET_HEADER_CLICKED)
     public void widgetHeaderClicked(AjaxRequestTarget target) {
-        innboksVM.getObject().oppdaterMeldinger(MeldingBuffer.getMeldinger());
+        innboksVM.getObject().oppdaterMeldinger(meldingService.hentMeldinger(fnr));
         target.add(this);
     }
 
