@@ -66,8 +66,8 @@ public class WSUtbetalingTestData {
                 .withStatusBeskrivelse(MOTTATT_KONTOFORER)
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createTrygdetMottaker())
-                .withUtbetalingDato(new DateTime(2013, 12, 30, 0, 0))
-                .withUtbetalingsPeriode(createPeriode(new DateTime(2013, 12, 16, 0, 0), new DateTime(2013, 12, 29, 0, 0)))
+                .withUtbetalingDato(new DateTime(2014, 04, 04, 0, 0))
+                .withUtbetalingsPeriode(createPeriode(new DateTime(2013, 12, 16, 0, 0), new DateTime(2014, 04, 04, 0, 0)))
                 .withBilagListe(bilag1);
     }
 
@@ -84,7 +84,7 @@ public class WSUtbetalingTestData {
                 .withStatusBeskrivelse(MOTTATT_KONTOFORER)
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createTrygdetMottaker())
-                .withUtbetalingDato(new DateTime(2013, 12, 11, 0, 0))
+                .withUtbetalingDato(new DateTime(2014, 04, 11, 0, 0))
                 .withBilagListe(bilag1);
     }
 
@@ -101,7 +101,7 @@ public class WSUtbetalingTestData {
                 .withStatusBeskrivelse(MOTTATT_KONTOFORER)
                 .withStatusKode(STATUS_KODE)
                 .withUtbetalingMottaker(createTrygdetMottaker())
-                .withUtbetalingDato(new DateTime(2013, 11, 21, 0, 0))
+                .withUtbetalingDato(new DateTime(2014, 04, 21, 0, 0))
                 .withBilagListe(bilag1);
     }
 
