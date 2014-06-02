@@ -51,4 +51,12 @@ public class MeldingVM implements Serializable {
     public boolean equals(Object obj) {
         return obj instanceof MeldingVM && this.melding.id.equals(((MeldingVM) obj).melding.id);
     }
+
+    @Override
+    public int hashCode() {
+        int result = melding.hashCode();
+        result = 31 * result + avsender.hashCode();
+        result = 31 * result + traadLengde;
+        return result;
+    }
 }
