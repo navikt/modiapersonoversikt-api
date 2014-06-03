@@ -23,6 +23,7 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
     public MeldingerWidget(String id, String initial, final String fnr) {
         super(id, initial, true);
         setOutputMarkupId(true);
+        setMaxNumberOfFeedItems(5);
 
         setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<List<MeldingVM>>() {
             @Override
