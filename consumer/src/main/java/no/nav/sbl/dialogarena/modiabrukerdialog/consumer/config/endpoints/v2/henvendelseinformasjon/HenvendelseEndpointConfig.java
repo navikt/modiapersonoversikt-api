@@ -10,7 +10,7 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.informasjon.v2.HenvendelseInformasjonV2PortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.feature.LoggingFeature;
@@ -28,31 +28,31 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.InstanceSwitcher.createSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseInformasjonV2PortTypeMock.createHenvendelseInformasjonV2PortTypeMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.createHenvendelsePortTypeMock;
 
 @Configuration
-public class HenvendelseInformasjonV2EndpointConfig {
+public class HenvendelseEndpointConfig {
 
-    public static final String HENVENDELSE_INFORMASJON_V2_KEY = "start.henvendelseinformasjonv2.withmock";
+    public static final String HENVENDELSE_INFORMASJON_V2_KEY = "start.henvendelse.withmock";
 
     @Bean
-    public HenvendelseInformasjonV2PortType henvendelseInformasjonV2PortType() {
+    public HenvendelsePortType henvendelsePortType() {
         return createSwitcher(
-                createHenvendelseInformasjonV2PortType(new UserSAMLOutInterceptor()),
-                createHenvendelseInformasjonV2PortTypeMock(),
+                createHenvendelePortType(new UserSAMLOutInterceptor()),
+                createHenvendelsePortTypeMock(),
                 HENVENDELSE_INFORMASJON_V2_KEY,
-                HenvendelseInformasjonV2PortType.class
+                HenvendelsePortType.class
         );
     }
 
     @Bean
-    public Pingable henvendelseInformasjonPing() {
-        final HenvendelseInformasjonV2PortType ws = createHenvendelseInformasjonV2PortType(new SystemSAMLOutInterceptor());
+    public Pingable henvendelsePing() {
+        final HenvendelsePortType ws = createHenvendelePortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
-                String name = "HENVENDELSE_INFORMASJON_V2";
+                String name = "HENVENDELSE_V2";
                 try {
                     ws.ping();
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
@@ -63,11 +63,11 @@ public class HenvendelseInformasjonV2EndpointConfig {
         };
     }
 
-    private static HenvendelseInformasjonV2PortType createHenvendelseInformasjonV2PortType(AbstractSAMLOutInterceptor interceptor) {
+    private static HenvendelsePortType createHenvendelePortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setWsdlLocation("classpath:HenvendelseInformasjonV2.wsdl");
-        proxyFactoryBean.setAddress(System.getProperty("henvendelse.informasjon.v2.url"));
-        proxyFactoryBean.setServiceClass(HenvendelseInformasjonV2PortType.class);
+        proxyFactoryBean.setWsdlLocation("classpath:Henvendelse.wsdl");
+        proxyFactoryBean.setAddress(System.getProperty("henvendelse.v2.url"));
+        proxyFactoryBean.setServiceClass(HenvendelsePortType.class);
         proxyFactoryBean.getOutInterceptors().add(interceptor);
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
@@ -78,7 +78,7 @@ public class HenvendelseInformasjonV2EndpointConfig {
                 XMLSporsmal.class,
                 XMLSvar.class,
                 XMLReferat.class});
-        HenvendelseInformasjonV2PortType portType = proxyFactoryBean.create(HenvendelseInformasjonV2PortType.class);
+        HenvendelsePortType portType = proxyFactoryBean.create(HenvendelsePortType.class);
         Client client = ClientProxy.getClient(portType);
         HTTPConduit httpConduit = (HTTPConduit) client.getConduit();
         TLSClientParameters clientParameters = new TLSClientParameters();

@@ -7,11 +7,11 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLMetadataL
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLReferat;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLSporsmal;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLSvar;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.informasjon.v2.HenvendelseInformasjonV2PortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.informasjon.v2.meldinger.WSHentHenvendelseListeRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.informasjon.v2.meldinger.WSHentHenvendelseListeResponse;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.informasjon.v2.meldinger.WSHentHenvendelseRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.informasjon.v2.meldinger.WSHentHenvendelseResponse;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +24,7 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLHe
 import static org.joda.time.DateTime.now;
 
 @Configuration
-public class HenvendelseInformasjonV2PortTypeMock {
+public class HenvendelsePortTypeMock {
 
     private static Random idGenerator = new Random();
     private static int behandlingsId = idGenerator.nextInt();
@@ -102,14 +102,20 @@ public class HenvendelseInformasjonV2PortTypeMock {
     }
 
     @Bean
-    public HenvendelseInformasjonV2PortType henvendelseInformasjonV2PortType() {
-        return createHenvendelseInformasjonV2PortTypeMock();
+    public HenvendelsePortType henvendelsePortType() {
+        return createHenvendelsePortTypeMock();
     }
 
-    public static HenvendelseInformasjonV2PortType createHenvendelseInformasjonV2PortTypeMock() {
-        return new HenvendelseInformasjonV2PortType() {
+    public static HenvendelsePortType createHenvendelsePortTypeMock() {
+        return new HenvendelsePortType() {
+
             @Override
-            public WSHentHenvendelseListeResponse hentHenvendelseListe(WSHentHenvendelseListeRequest parameters) {
+            public WSHentHenvendelseResponse hentHenvendelse(WSHentHenvendelseRequest wsHentHenvendelseRequest) {
+                return new WSHentHenvendelseResponse();
+            }
+
+            @Override
+            public WSHentHenvendelseListeResponse hentHenvendelseListe(WSHentHenvendelseListeRequest wsHentHenvendelseListeRequest) {
                 return new WSHentHenvendelseListeResponse().withAny(HENVENDELSER);
             }
 
@@ -117,10 +123,6 @@ public class HenvendelseInformasjonV2PortTypeMock {
             public void ping() {
             }
 
-            @Override
-            public WSHentHenvendelseResponse hentHenvendelse(WSHentHenvendelseRequest parameters) {
-                return new WSHentHenvendelseResponse();
-            }
         };
     }
 }

@@ -6,8 +6,8 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLMetadataL
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLReferat;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.aktivitet.v2.HenvendelseAktivitetV2PortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.aktivitet.v2.meldinger.WSSendHenvendelseRequest;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -38,7 +38,7 @@ public class Dialogpanel extends Panel {
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(Dialogpanel.class, "dialogpanel.less");
 
     @Inject
-    private HenvendelseAktivitetV2PortType ws;
+    private SendHenvendelsePortType ws;
 
     public Dialogpanel(String id, final String fnr) {
         super(id);
