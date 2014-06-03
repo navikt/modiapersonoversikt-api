@@ -37,7 +37,12 @@ public class HenvendelseAktivitetV2EndpointConfig {
 
     @Bean
     public HenvendelseAktivitetV2PortType henvendelseAktivitetV2PortType() {
-        return createSwitcher(createHenvendelseAktivitetV2PortType(new UserSAMLOutInterceptor()), createHenvendelseAktivitetV2PortTypeMock(), HENVENDELSE_AKTIVITET_V2_KEY, HenvendelseAktivitetV2PortType.class);
+        return createSwitcher(
+                createHenvendelseAktivitetV2PortType(new UserSAMLOutInterceptor()),
+                createHenvendelseAktivitetV2PortTypeMock(),
+                HENVENDELSE_AKTIVITET_V2_KEY,
+                HenvendelseAktivitetV2PortType.class
+        );
     }
 
     @Bean

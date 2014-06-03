@@ -37,7 +37,12 @@ public class HenvendelseInformasjonV2EndpointConfig {
 
     @Bean
     public HenvendelseInformasjonV2PortType henvendelseInformasjonV2PortType() {
-        return createSwitcher(createHenvendelseInformasjonV2PortType(new UserSAMLOutInterceptor()), createHenvendelseInformasjonV2PortTypeMock(), HENVENDELSE_INFORMASJON_V2_KEY, HenvendelseInformasjonV2PortType.class);
+        return createSwitcher(
+                createHenvendelseInformasjonV2PortType(new UserSAMLOutInterceptor()),
+                createHenvendelseInformasjonV2PortTypeMock(),
+                HENVENDELSE_INFORMASJON_V2_KEY,
+                HenvendelseInformasjonV2PortType.class
+        );
     }
 
     @Bean

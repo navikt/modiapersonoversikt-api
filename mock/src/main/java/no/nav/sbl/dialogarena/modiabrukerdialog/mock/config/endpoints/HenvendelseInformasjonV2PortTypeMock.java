@@ -27,7 +27,7 @@ import static org.joda.time.DateTime.now;
 public class HenvendelseInformasjonV2PortTypeMock {
 
     private static Random idGenerator = new Random();
-    private static int behandlingsid;
+    private static int behandlingsId = idGenerator.nextInt();
 
     private static final String LANG_TEKST = "Lorem ipsum dolor sit amet, " +
             "consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad " +
@@ -46,38 +46,41 @@ public class HenvendelseInformasjonV2PortTypeMock {
             "dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
 
     public static final XMLBehandlingsinformasjonV2[] HENVENDELSER = {
-            createXmlBehandlingsinformasjonV2(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusWeeks(2),
+            createXmlBehandlingsinformasjonV2(SPORSMAL, now().minusWeeks(2),
                     createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST)),
 
-            createXmlBehandlingsinformasjonV2(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusWeeks(1),
+            createXmlBehandlingsinformasjonV2(SPORSMAL, now().minusWeeks(1),
                     createXMLSporsmal("INTERNASJONALT", LANG_TEKST)),
 
-            createXmlBehandlingsinformasjonV2(behandlingsid, SVAR, now().minusDays(5),
-                    createXMLSvar("INTERNASJONALT", String.valueOf(behandlingsid), now().minusDays(4), KORT_TEKST)),
+            createXmlBehandlingsinformasjonV2(SVAR, now().minusDays(5),
+                    createXMLSvar("INTERNASJONALT", String.valueOf(behandlingsId), now().minusDays(4), KORT_TEKST)),
 
-            createXmlBehandlingsinformasjonV2(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusDays(3),
+            createXmlBehandlingsinformasjonV2(SPORSMAL, now().minusDays(3),
                     createXMLSporsmal("HJELPEMIDLER", LANG_TEKST)),
 
-            createXmlBehandlingsinformasjonV2(behandlingsid, SVAR, now().minusHours(5),
-                    createXMLSvar("HJELPEMIDLER", String.valueOf(behandlingsid), null, KORT_TEKST)),
+            createXmlBehandlingsinformasjonV2(SVAR, now().minusHours(5),
+                    createXMLSvar("HJELPEMIDLER", String.valueOf(behandlingsId), null, KORT_TEKST)),
 
-            createXmlBehandlingsinformasjonV2(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusMonths(4),
+            createXmlBehandlingsinformasjonV2(SPORSMAL, now().minusMonths(4),
                     createXMLSporsmal("SOSIALE_TJENESTER", LANG_TEKST)),
 
-            createXmlBehandlingsinformasjonV2(behandlingsid, SVAR, now().minusMonths(4).plusDays(1),
-                    createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsid), now().minusMonths(4).plusDays(3), LANG_TEKST)),
+            createXmlBehandlingsinformasjonV2(SVAR, now().minusMonths(4).plusDays(1),
+                    createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST)),
 
-            createXmlBehandlingsinformasjonV2(behandlingsid, SVAR, now().minusDays(7),
-                    createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsid), null, KORT_TEKST)),
+            createXmlBehandlingsinformasjonV2(SVAR, now().minusDays(7),
+                    createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsId), null, KORT_TEKST)),
 
-            createXmlBehandlingsinformasjonV2(behandlingsid = idGenerator.nextInt(), REFERAT, now(),
+            createXmlBehandlingsinformasjonV2(REFERAT, now(),
                     createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST)),
 
-            createXmlBehandlingsinformasjonV2(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusDays(1),
+            createXmlBehandlingsinformasjonV2(SPORSMAL, now().minusDays(1),
                     createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST))
     };
 
-    private static XMLBehandlingsinformasjonV2 createXmlBehandlingsinformasjonV2(int behandlingsId, XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata) {
+    private static XMLBehandlingsinformasjonV2 createXmlBehandlingsinformasjonV2(XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata) {
+        if (type == SPORSMAL || type == REFERAT) {
+            behandlingsId = idGenerator.nextInt();
+        }
         return new XMLBehandlingsinformasjonV2()
                 .withHenvendelseType(type.name())
                 .withOpprettetDato(opprettet)
