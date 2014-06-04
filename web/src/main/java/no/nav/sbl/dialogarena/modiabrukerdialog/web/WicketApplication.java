@@ -152,8 +152,7 @@ public class WicketApplication extends WebApplication {
                         Liste.JS_RESOURCE,
                         DatePicker.JQUERY_PLACEHOLDER,
                         ModalErrorPanel.JS_RESOURCE,
-                        UtbetalingLerret.UTBETALING_LAMELL_JS,
-                        Innboks.JS_REFERENCE
+                        UtbetalingLerret.UTBETALING_LAMELL_JS
                 )
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
