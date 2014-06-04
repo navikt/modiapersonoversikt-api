@@ -3,16 +3,6 @@ jQuery(document).ready(function ($) {
 
     createTabHandler("modiabrukerdialog");
 
-    resizeSidebar();
-
-    function resizeSidebar(){
-        var $venstre = $('.sidebar-venstre');
-        var $hoyre = $('.sidebar-hoyre');
-        var height = $venstre.outerHeight() > $hoyre.outerHeight() ? $venstre.outerHeight() : $hoyre.outerHeight();
-        $venstre.outerHeight(height);
-        $hoyre.outerHeight(height);
-    }
-
     if ($('.main-content .lamell').length === 1) {
         $('.main-content .lamell').first().find('.lamellhode').hide();
     }
