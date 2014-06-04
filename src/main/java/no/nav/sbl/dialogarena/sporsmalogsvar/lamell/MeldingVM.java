@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.commons.collections15.Transformer;
@@ -16,21 +17,25 @@ public class MeldingVM implements Serializable {
     public final Melding melding;
 
     public final String avsender;
-    public final int traadLengde;
+    public final int traadlengde;
 
     public MeldingVM(List<Melding> tilhorendeTraad, Melding melding) {
         this.melding = melding;
 
         avsender = lagMeldingOverskrift(tilhorendeTraad, melding);
-        traadLengde = tilhorendeTraad.size();
+        traadlengde = tilhorendeTraad.size();
     }
 
     public String getOpprettetDato() {
-        return Datoformat.langMedTid(melding.opprettetDato);
+        return Datoformat.kortMedTid(melding.opprettetDato);
     }
 
     public String getLestDato() {
         return Datoformat.kortMedTid(melding.lestDato);
+    }
+
+    public String getStatusKlasse() {
+        return VisningUtils.getStatusKlasse(melding.status);
     }
 
     public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {
@@ -56,7 +61,7 @@ public class MeldingVM implements Serializable {
     public int hashCode() {
         int result = melding.hashCode();
         result = 31 * result + avsender.hashCode();
-        result = 31 * result + traadLengde;
+        result = 31 * result + traadlengde;
         return result;
     }
 }

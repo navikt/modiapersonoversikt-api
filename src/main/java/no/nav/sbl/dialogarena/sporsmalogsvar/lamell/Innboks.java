@@ -8,7 +8,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
 
@@ -16,7 +15,6 @@ import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 
 public class Innboks extends Lerret {
 
-    public static final JavaScriptResourceReference JS_REFERENCE = new JavaScriptResourceReference(Innboks.class, "innboks.js");
     public static final String VALGT_MELDING_EVENT = "sos.innboks.valgt_melding";
 
     @Inject

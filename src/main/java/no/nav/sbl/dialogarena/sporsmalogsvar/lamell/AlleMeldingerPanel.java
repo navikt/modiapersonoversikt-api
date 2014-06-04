@@ -28,7 +28,7 @@ public class AlleMeldingerPanel extends Panel {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {
 
-                item.add(new Label("traadLengde"));
+                item.add(new Label("traadlengde"));
 
                 item.add(new WebMarkupContainer("indikator-dot").add(new AttributeModifier("class", getStatusKlasse(item.getModelObject().melding.status))));
                 item.add(new Label("indikator-tekst", new StringResourceModel("lamell.${melding.status}", item.getModel())));

@@ -41,7 +41,6 @@ public class InnboksTestApplication extends WebApplication {
                                 .attribute("http-equiv", "X-UA-Compatible")
                                 .attribute("content", "IE=edge,chrome=1")
                                 .done())
-                .addScripts(Innboks.JS_REFERENCE)
                 .addLess(new PackageResourceReference(Innboks.class, "innboks.less"))
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);

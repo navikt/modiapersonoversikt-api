@@ -4,19 +4,22 @@
 <head></head>
 <body>
 <wicket:panel>
-    <section wicket:id="tidligereMeldinger" class="tidligere-melding">
-        <header>
-            <span wicket:id="opprettetDato"></span>
-        </header>
-        <article>
-            <h2 wicket:id="avsender" class="robust"></h2>
-            <div class="utvide-tekst-pil"></div>
-            <hr class="robust-strek" />
-            <section class="fritekst">
+    <article wicket:id="tidligereMeldinger" class="tidligere-melding">
+        <div class="clearfix">
+            <div class="venstre-kolonne">
+                <div class="avsenderbilde-ramme lite">
+                    <img wicket:id="avsenderbilde" />
+                </div>
+            </div>
+            <div class="hoyre-kolonne">
+                <div class="header">
+                    <h4 wicket:id="opprettetDato" class="dato"></h4>
+                    <h2 wicket:id="tema" class="medium tema"></h2>
+                </div>
                 <wicket:container wicket:id="melding.fritekst" />
-            </section>
-        </article>
-    </section>
+            </div>
+        </div>
+    </article>
 </wicket:panel>
 </body>
 </html>

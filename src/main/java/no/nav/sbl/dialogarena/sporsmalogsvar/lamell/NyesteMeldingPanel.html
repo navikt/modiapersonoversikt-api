@@ -4,16 +4,24 @@
 <head></head>
 <body>
 <wicket:panel>
-    <section class="nyeste-melding">
-        <header>
-            <span wicket:id="nyesteMelding.opprettetDato"></span>
-        </header>
-        <article>
-            <h2 wicket:id="nyesteMelding.avsender" class="robust"></h2>
-            <hr class="robust-strek" />
-            <p wicket:id="nyesteMelding.melding.fritekst"></p>
-        </article>
-    </section>
+    <article class="nyeste-melding clearfix">
+        <div class="venstre-kolonne">
+            <div class="avsenderbilde-ramme">
+                <img wicket:id="avsenderbilde" />
+            </div>
+        </div>
+        <div class="hoyre-kolonne">
+            <div class="header">
+                <div wicket:id="nyesteMelding.traadlengde" class="traadlengde"></div>
+                <h4 wicket:id="nyesteMelding.opprettetDato" class="dato"></h4>
+                <div>
+                    <div wicket:id="indikator-dot" class="status"></div>
+                    <h2 wicket:id="tema" class="medium tema"></h2>
+                </div>
+            </div>
+            <wicket:container wicket:id="nyesteMelding.melding.fritekst" />
+        </div>
+    </article>
 </wicket:panel>
 </body>
 </html>

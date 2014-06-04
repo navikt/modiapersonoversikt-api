@@ -1,191 +1,232 @@
 @modiasvart: #333;
 @graabakgrunn: #f1f1f1;
-@rammeborder: #ddd;
+@rammeborder: #e4e3e3;
 @dodgerblue: #0067c5;
 @maxwidth: 1080px;
 @meldingslistemargin: 30px;
+@toppmargin: 1em;
 
-.meldingsliste {
-  width: 40%;
-  height: 100%;
-  float: left;
-  overflow: auto;
-  background-color: white;
-  margin: 0;
-  border: 1px solid @rammeborder;
-  .melding {
-    position: relative;
-    min-height: 100px;
-    padding: 1em @meldingslistemargin 1em @meldingslistemargin;
-    border-bottom: solid 1px @rammeborder;
-    header {
-      .antall-meldinger {
-        background-image: url("../img/snakkeboble.svg");
-        background-repeat: no-repeat;
-        float: right;
-        width: 26px;
-        height: 22px;
-        padding-top: 1px;
-        color: white;
-        text-align: center;
-      }
-      .indikator {
-        margin-bottom: 1em;
-        .status {
-          display: inline-block;
-          vertical-align: middle;
-          margin-right: 0.25em;
-          height: 1em;
-          width: 1em;
-          border-radius: 2em;
-          -moz-border-radius: 2em;
-          -webkit-border-radius: 2em;
-          &.ikke-besvart {
-            background-color: #eebe00;
-          }
-          &.ikke-besvart-innen-frist {
-            background-color: #ec288d;
-          }
-          &.ikke-lest-av-bruker{
-            background-color: #0ca9e1;
-          }
-          &.lest-av-bruker {
-            background-color: transparent;
-            border: 1px solid #0ca9e1;
+.meldinglamell {
+  border-top: 1px solid @rammeborder;
+  .meldingsliste {
+    width: 40%;
+    height: 100%;
+    float: left;
+    overflow: auto;
+    background-color: @graabakgrunn;
+    margin: 0;
+    border-right: 1px solid @rammeborder;
+    border-left: 1px solid @rammeborder;
+    .melding {
+      position: relative;
+      min-height: 100px;
+      padding: @toppmargin @meldingslistemargin @toppmargin @meldingslistemargin;
+      border-bottom: solid 1px @rammeborder;
+      header {
+        .indikator {
+          margin-bottom: 1em;
+          .indikator-tekst {
+            vertical-align: middle;
           }
         }
-        .indikator-tekst {
-          vertical-align: middle;
+        .opprettet {
+          font-family: arial, sans-serif;
+          text-transform: uppercase;
+          font-size: 0.85rem;
+          font-weight: normal;
+          margin: 0.2em 0;
+        }
+        h1 {
+          max-width: 700px;
+          font-weight: bold;
+          margin: 0;
+          font-size: 1.2em;
+          text-overflow: ellipsis;
+          -o-text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          text-align: left;
         }
       }
-      .opprettet {
-        font-family: arial, sans-serif;
-        text-transform: uppercase;
-        font-size: 0.85rem;
-        font-weight: normal;
-        margin: 0.2em 0;
-      }
-      h1 {
-        max-width: 700px;
-        font-weight: bold;
-        margin: 0;
-        font-size: 1.2em;
+      p {
+        max-width : 500px;
         text-overflow: ellipsis;
         -o-text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
-        text-align: left;
+      }
+      &.valgt {
+        background-color: #fff;
+      }
+      &:not(.valgt) {
+        cursor: pointer;
       }
     }
-    p {
-      max-width : 500px;
-      text-overflow: ellipsis;
-      -o-text-overflow: ellipsis;
-      overflow: hidden;
-      white-space: nowrap;
-    }
-    &.valgt {
-      background-color: @graabakgrunn;
-    }
-    &:not(.valgt) {
-      cursor: pointer;
-    }
   }
-}
 
-.meldingsdetaljer {
-  overflow: auto;
-  border: 1px solid @rammeborder;
-  padding-bottom: 3em;
-  .tema-header {
-    font-family: Modus, Helvetica, Arial, sans-serif;
-    border-bottom: 1px solid @rammeborder;
-    font-weight: bold;
-    padding: 0.5em 2.5em 0.5em 2.5em;
-  }
-  section.tidligere-melding, section.nyeste-melding {
-    line-height: 1.5em;
-    padding: 2.5em;
-    padding-bottom: 0;
-    header {
-      margin-bottom: 0.5em;
-      text-transform: uppercase;
-      text-align: center;
+  .meldingsdetaljer {
+    background-color: #fff;
+    float: right;
+    width: 57%;
+    padding-top: @toppmargin;
+
+    .traadcontainer {
+      max-width: @maxwidth;
+      margin: 0 auto;
     }
-    article {
+
+    .avsenderbilde-ramme {
       position: relative;
-      background: white;
-      padding: 1.5em;
+      width: 70px;
+      height: 70px;
       border: 1px solid @rammeborder;
-      background-color: white;
-      // CSS magi for å tegne pil
+      background-color: #fff;
+      &.lite {
+        width: 55px;
+        height: 55px;
+      }
+      img {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 90%;
+        height: 90%;
+        margin: auto;
+      }
+    }
+
+    .header {
+      line-height: 1.2em;
+      margin-bottom: 1em;
+    }
+
+    .dato {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      font-size: 0.85rem;
+      font-weight: normal;
+      text-transform: uppercase;
+    }
+
+    .tema {
+      margin: 0;
+      text-transform: capitalize;
+    }
+
+    .venstre-kolonne {
+      float: left;
+      width: 10%;
+    }
+
+    .hoyre-kolonne {
+      float: right;
+      width: 82%;
+    }
+
+    &.lest {
+      background-color: @graabakgrunn;
+      &:not(.closed) {
+        background-color: #fff;
+      }
+      .nyeste-melding {
+        .header {
+          .status-indikator {
+            border: 1px solid @dodgerblue;
+            background-color: transparent;
+          }
+        }
+      }
+    }
+
+    p {
+      line-height: 1.25rem;
+    }
+    a {
+      font-size: 1em;
+    }
+
+    .nyeste-melding {
+      .header {
+        .tema {
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+    }
+
+    .tidligere-melding {
+      position: relative;
+      background-color: @graabakgrunn;
+      border: 1px solid @rammeborder;
+      padding: 20px;
+      margin-top: 40px;
+
+      p:last-child {
+        margin-bottom: 0;
+      }
       &:before, &:after {
         position: absolute;
-        top: 100%;
+        bottom: 100%;
+        left: 5%;
         border: solid transparent;
         content: " ";
         height: 0;
         width: 0;
       }
       &:after {
-        border-top-color: white;
-        border-width: 20px;
-        left: 50%;
-        margin-left: -20px;
+        border-bottom-color: @graabakgrunn;
+        border-width: 15px;
+        margin-left: -15px;
       }
       &:before {
-        border-top-color: @rammeborder;
-        border-width: 21px;
-        left: 50%;
-        margin-left: -21px;
+        border-bottom-color: @rammeborder;
+        border-width: 16px;
+        margin-left: -16px;
       }
-      // Ferdig med CSS magi
-      h2 {
-        text-align: center;
-        margin: 0;
+      .venstre-kolonne {
+        width: 15%;
       }
-      hr {
-        border-style: none;
-      }
-      .fritekst {
-        overflow: hidden;
-        padding: 0 2em;
-        p {
-          margin-top: 0;
-        }
-      }
-    }
-    &:last-child {
-      article {
-        &:after {
-          border: none;
-        }
-        &:before {
-          border: none;
-        }
+      .hoyre-kolonne {
+        width: 85%;
       }
     }
   }
-  section.tidligere-melding {
-    article {
-      cursor: pointer;
+
+  .traadlengde {
+    float: right;
+    height: 22px;
+    width: 26px;
+    padding: 2px 1px 0 0;
+    font-size: 0.85em;
+    background-image: url("../img/snakkeboble.svg");
+    background-repeat: no-repeat;
+    color: white;
+    text-align: center;
+  }
+
+  .status {
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.25em;
+    height: 1em;
+    width: 1em;
+    border-radius: 2em;
+    -moz-border-radius: 2em;
+    -webkit-border-radius: 2em;
+    &.ikke-besvart {
+      background-color: #eebe00;
     }
-    .utvide-tekst-pil {
-      position: absolute;
-      height: 0;
-      width: 0;
-      top: 2em;
-      right: 2em;
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
-      border-top: 8px solid @dodgerblue;
-      &.rotert {
-        -webkit-transform: rotate(-180deg);
-        -moz-transform: rotate(-180deg);
-        -ms-transform: rotate(-180deg);
-        -o-transform: rotate(-180deg);
-        transform: rotate(-180deg);
-      }
+    &.ikke-besvart-innen-frist {
+      background-color: #ec288d;
+    }
+    &.ikke-lest-av-bruker{
+      background-color: #0067c5;
+    }
+    &.lest-av-bruker {
+      background-color: transparent;
+      border: 1px solid #0067c5;
     }
   }
 }

@@ -19,7 +19,7 @@
         <slf4j.version>1.7.5</slf4j.version>
         <logback.version>1.0.13</logback.version>
         <modig.scm.plugin.version>1.1.11</modig.scm.plugin.version>
-        <modig.frontend.version>1.1.4</modig.frontend.version>
+        <modig.frontend.version>1.1.36</modig.frontend.version>
         <modig-core.version>1.0.0</modig-core.version>
         <henvendelse.informasjon.v2.version>0.2</henvendelse.informasjon.v2.version>
         <dialogarena.behandlingsinformasjon.v2.version>0.1</dialogarena.behandlingsinformasjon.v2.version>
