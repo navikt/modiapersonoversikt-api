@@ -63,7 +63,7 @@
         <utbetaling.version>2.0.40</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
         <henvendelse.aktivitet.v2.version>0.3</henvendelse.aktivitet.v2.version>
-        <henvendelse.informasjon.v2.version>0.2</henvendelse.informasjon.v2.version>
+        <henvendelse.informasjon.v2.version>0.3</henvendelse.informasjon.v2.version>
         <dialogarena.behandlingsinformasjon.v2.version>0.1</dialogarena.behandlingsinformasjon.v2.version>
         <saksoversikt.version>1.0-SNAPSHOT</saksoversikt.version>
         <sporsmalogsvar.version>1.21-SNAPSHOT</sporsmalogsvar.version>
