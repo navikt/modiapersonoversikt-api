@@ -15,7 +15,7 @@ public class AvsenderBilde extends Image {
         settBildeRessurs(meldingVM);
     }
 
-    public void settBildeRessurs(MeldingVM meldingVM) {
+    public final void settBildeRessurs(MeldingVM meldingVM) {
         String avsender = "", bilde = "";
         if (meldingVM.melding.meldingstype == UTGAENDE) {
             avsender = "nav";
