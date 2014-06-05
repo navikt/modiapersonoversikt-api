@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.request.resource.ContextRelativeResource;
+import org.apache.wicket.protocol.http.WebApplication;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.INNGAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.UTGAENDE;
@@ -24,7 +24,7 @@ public class AvsenderBilde extends Image {
             avsender = "bruker";
             bilde = "siluett.svg";
         }
-        setImageResource(new ContextRelativeResource("img/" + bilde));
+        add(new AttributeModifier("src", WebApplication.get().getServletContext().getContextPath() + "/img/" + bilde));
         add(new AttributeModifier("alt", new StringResourceModel("innboks.avsender." + avsender, this, null)));
     }
 }
