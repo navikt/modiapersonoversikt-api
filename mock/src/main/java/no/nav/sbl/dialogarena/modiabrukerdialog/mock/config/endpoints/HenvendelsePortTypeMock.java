@@ -50,10 +50,10 @@ public class HenvendelsePortTypeMock {
                     createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST)),
 
             createXmlBehandlingsinformasjonV2(SPORSMAL, now().minusWeeks(1),
-                    createXMLSporsmal("INTERNASJONALT", LANG_TEKST)),
+                    createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST)),
 
             createXmlBehandlingsinformasjonV2(SVAR, now().minusDays(5),
-                    createXMLSvar("INTERNASJONALT", String.valueOf(behandlingsId), now().minusDays(4), KORT_TEKST)),
+                    createXMLSvar("FAMILIE_OG_BARN", String.valueOf(behandlingsId), now().minusDays(4), KORT_TEKST)),
 
             createXmlBehandlingsinformasjonV2(SPORSMAL, now().minusDays(3),
                     createXMLSporsmal("HJELPEMIDLER", LANG_TEKST)),
@@ -62,13 +62,13 @@ public class HenvendelsePortTypeMock {
                     createXMLSvar("HJELPEMIDLER", String.valueOf(behandlingsId), null, KORT_TEKST)),
 
             createXmlBehandlingsinformasjonV2(SPORSMAL, now().minusMonths(4),
-                    createXMLSporsmal("SOSIALE_TJENESTER", LANG_TEKST)),
+                    createXMLSporsmal("OVRIGE_HENVENDELSER", LANG_TEKST)),
 
             createXmlBehandlingsinformasjonV2(SVAR, now().minusMonths(4).plusDays(1),
-                    createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST)),
+                    createXMLSvar("OVRIGE_HENVENDELSER", String.valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST)),
 
             createXmlBehandlingsinformasjonV2(SVAR, now().minusDays(7),
-                    createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsId), null, KORT_TEKST)),
+                    createXMLSvar("OVRIGE_HENVENDELSER", String.valueOf(behandlingsId), null, KORT_TEKST)),
 
             createXmlBehandlingsinformasjonV2(REFERAT, now(),
                     createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST)),
