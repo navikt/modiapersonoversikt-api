@@ -1,14 +1,16 @@
 @sideMargin: 1.5em;
 
 .dialogform {
-  margin: @sideMargin;
+  text-align: center;
   .temavelger {
     width: 100%;
-    background-color: #fff;
+    background-color: #f7f7f7;
     font-weight: bold;
+    padding: 0.5em @sideMargin;
   }
   .kanalvelger {
-    margin: 1em 0;
+    width: 50%;
+    margin: 1em auto;
     .kanalvalg {
       float: left;
       label {
@@ -17,8 +19,18 @@
       }
     }
   }
+  .overskrift {
+    text-align: left;
+    margin-left: @sideMargin;
+  }
+  .tekstfelt {
+    margin: 0 @sideMargin;
+  }
   .send {
     margin: 1em 0;
+  }
+  .feedback {
+    margin: 0 @sideMargin;
   }
 }
 

@@ -57,16 +57,18 @@ public class Dialogpanel extends Panel {
 
         form.add(new RadioGroup<Kanal>("kanal")
                 .setRequired(true)
-                .add(
-                        new ListView<Kanal>("kanalvalg", asList(Kanal.values())) {
-                            @Override
-                            protected void populateItem(ListItem<Kanal> item) {
-                                item.add(new Radio<>("kanalknapp", item.getModel()));
-                                item.add(new Label("kanalnavn", new ResourceModel(item.getModelObject().toString())));
-                            }
-                        }));
+                .add(new ListView<Kanal>("kanalvalg", asList(Kanal.values())) {
+                    @Override
+                    protected void populateItem(ListItem<Kanal> item) {
+                        item.add(new Radio<>("kanalknapp", item.getModel()));
+                        item.add(new Label("kanalnavn", new ResourceModel(item.getModelObject().toString())));
+                    }}));
 
-        form.add(new EnhancedTextArea("tekstfelt", form.getModel(), new EnhancedTextAreaConfigurator().withMaxCharCount(5000).withMinTextAreaHeight(500)));
+        form.add(new EnhancedTextArea("tekstfelt", form.getModel(),
+                new EnhancedTextAreaConfigurator()
+                        .withMaxCharCount(5000)
+                        .withMinTextAreaHeight(250)
+                        .withPlaceholderText(new StringResourceModel("dialogform.tekstfelt.placeholder", this, getDefaultModel()).getString())));
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);
@@ -102,7 +104,7 @@ public class Dialogpanel extends Panel {
                         .withOpprettetDato(now())
                         .withAvsluttetDato(now())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
-                                new XMLReferat().withTemagruppe(formInput.tema).withKanal(formInput.kanal).withFritekst(formInput.getFritekst())));
+                                new XMLReferat().withTemagruppe(formInput.tema).withKanal(formInput.kanal.name()).withFritekst(formInput.getFritekst())));
 
         ws.sendHenvendelse(new WSSendHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(fnr).withAny(info));
     }
