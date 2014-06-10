@@ -19,6 +19,8 @@ import static org.mockito.Mockito.when;
 
 public class PersonKjerneinfoServiceBiMock {
 
+    private int ubruktTall = 0;
+
     public static final String FODSELSNUMMER = "***REMOVED***";
 
     public static PersonKjerneinfoServiceBi getPersonKjerneinfoServiceBiMock() {
