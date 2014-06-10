@@ -10,7 +10,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
-import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -31,6 +30,7 @@ import javax.inject.Inject;
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static org.joda.time.DateTime.now;
 
 public class Dialogpanel extends Panel {
@@ -61,14 +61,14 @@ public class Dialogpanel extends Panel {
                     @Override
                     protected void populateItem(ListItem<Kanal> item) {
                         item.add(new Radio<>("kanalknapp", item.getModel()));
-                        item.add(new WebMarkupContainer("kanalikon").add(new AttributeAppender("class", " " + item.getModelObject().name().toLowerCase())));
+                        item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
                     }}));
 
         form.add(new EnhancedTextArea("tekstfelt", form.getModel(),
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(250)
-                        .withPlaceholderText(new StringResourceModel("dialogform.tekstfelt.placeholder", this, getDefaultModel()).getString())));
+                        .withPlaceholderText(getString("dialogform.tekstfelt.placeholder"))));
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);
