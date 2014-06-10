@@ -889,7 +889,7 @@
                 </property>
             </activation>
             <properties>
-                <sonar.jacoco.excludes>*SelfTestPage.*:*/example/*:*no/nav/sbl/dialogarena/modiabrukerdialog/mock/**
+                <sonar.jacoco.excludes>*SelfTestPage.*:*/example/*:no/nav/sbl/dialogarena/modiabrukerdialog/mock/**
                 </sonar.jacoco.excludes>
             </properties>
         </profile>
