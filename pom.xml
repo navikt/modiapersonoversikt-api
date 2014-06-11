@@ -34,7 +34,7 @@
         <!-- versjoner -->
         <wicket.version>6.11.0</wicket.version>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <modig.frontend.version>1.1.38-SNAPSHOT</modig.frontend.version>
+        <modig.frontend.version>1.1.38</modig.frontend.version>
         <modig.security.version>1.0.19</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
@@ -54,6 +54,7 @@
         <slf4j.version>1.7.5</slf4j.version>
         <jetty.version>9.0.5.v20130815</jetty.version>
         <cxf.version>2.7.6</cxf.version>
+        <ws.security.version>1.6.10</ws.security.version>
         <mockito.version>1.9.5</mockito.version>
         <jodatime.version>2.2</jodatime.version>
         <!-- Modia-komponenter-->
@@ -62,6 +63,7 @@
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>2.0.40</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
+        <gsak.oppgave.tjenestespesifikasjon.version>0.0.3</gsak.oppgave.tjenestespesifikasjon.version>
         <henvendelse.aktivitet.v2.version>0.3</henvendelse.aktivitet.v2.version>
         <henvendelse.informasjon.v2.version>0.3</henvendelse.informasjon.v2.version>
         <dialogarena.behandlingsinformasjon.version>0.0.10</dialogarena.behandlingsinformasjon.version>
@@ -71,6 +73,12 @@
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
+                <version>${gsak.oppgave.tjenestespesifikasjon.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -685,6 +693,30 @@
                 <groupId>org.apache.cxf</groupId>
                 <artifactId>cxf-api</artifactId>
                 <version>${cxf.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.cxf</groupId>
+                <artifactId>cxf-rt-ws-security</artifactId>
+                <version>${cxf.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+
+            <dependency>
+                <groupId>org.apache.ws.security</groupId>
+                <artifactId>wss4j</artifactId>
+                <version>${ws.security.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
 
             <dependency>

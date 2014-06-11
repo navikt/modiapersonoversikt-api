@@ -22,6 +22,8 @@ import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeverk.KodeverkV2EndpointConfig.KODEVERK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingEndpointConfig.UTBETALING_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakOppgaveV2EndpointConfig.GSAK_OPPGAVE_V2_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakOppgavebehandlingV2EndpointConfig.GSAK_OPPGAVEBEHANDLING_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelseaktivitet.HenvendelseAktivitetV2EndpointConfig.HENVENDELSE_AKTIVITET_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelseinformasjon.HenvendelseEndpointConfig.HENVENDELSE_INFORMASJON_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.PersonKjerneinfoServiceBiMock.FODSELSNUMMER;
@@ -87,7 +89,9 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("Kodeverk", KODEVERK_KEY),
                 new MockSetupModel("Kjerneinfo", KJERNEINFO_KEY),
                 new MockSetupModel("Meldinger - Mottak", HENVENDELSE_INFORMASJON_V2_KEY),
-                new MockSetupModel("Meldinger - Sending", HENVENDELSE_AKTIVITET_V2_KEY)
+                new MockSetupModel("Meldinger - Sending", HENVENDELSE_AKTIVITET_V2_KEY),
+                new MockSetupModel("Gsak Oppgave", GSAK_OPPGAVE_V2_KEY),
+                new MockSetupModel("Gsak Oppgavebehandling", GSAK_OPPGAVEBEHANDLING_V2_KEY)
         );
     }
 
