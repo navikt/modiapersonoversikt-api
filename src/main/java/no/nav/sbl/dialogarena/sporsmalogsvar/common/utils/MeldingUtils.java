@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLBehandlingsinformasjonV2;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLMetadata;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLReferat;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLSporsmal;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLSvar;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
@@ -17,9 +17,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLHenvendelseType.REFERAT;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLHenvendelseType.SPORSMAL;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLHenvendelseType.SVAR;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
@@ -50,7 +50,7 @@ public class MeldingUtils {
     public static final Transformer<Object, Melding> TIL_MELDING = new Transformer<Object, Melding>() {
         @Override
         public Melding transform(Object o) {
-            XMLBehandlingsinformasjonV2 info = (XMLBehandlingsinformasjonV2) o;
+            XMLBehandlingsinformasjon info = (XMLBehandlingsinformasjon) o;
 
             Meldingstype meldingstype = info.getHenvendelseType().equals(SPORSMAL.name()) ? Meldingstype.INNGAENDE : Meldingstype.UTGAENDE;
 
@@ -79,9 +79,9 @@ public class MeldingUtils {
         }
     };
 
-    public static final Transformer<XMLBehandlingsinformasjonV2, Status> STATUS = new Transformer<XMLBehandlingsinformasjonV2, Status>() {
+    public static final Transformer<XMLBehandlingsinformasjon, Status> STATUS = new Transformer<XMLBehandlingsinformasjon, Status>() {
         @Override
-        public Status transform(XMLBehandlingsinformasjonV2 info) {
+        public Status transform(XMLBehandlingsinformasjon info) {
             String henvendelseType = info.getHenvendelseType();
             if (henvendelseType.equals(SPORSMAL.name())) {
                 if (now().isAfter(info.getOpprettetDato().plusHours(BESVARINGSFRIST_TIMER))) {

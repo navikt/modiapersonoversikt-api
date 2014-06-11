@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLBehandlingsinformasjonV2;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLMetadata;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLMetadataListe;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLReferat;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLSporsmal;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLSvar;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -14,9 +14,9 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLHenvendelseType.REFERAT;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLHenvendelseType.SPORSMAL;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLHenvendelseType.SVAR;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.BESVARINGSFRIST_TIMER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.STATUS;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
@@ -51,7 +51,7 @@ public class MeldingUtilsTest {
 
     @Test
     public void testStatusTransformer() {
-        XMLBehandlingsinformasjonV2 behandlingsinformasjonV2 = new XMLBehandlingsinformasjonV2();
+        XMLBehandlingsinformasjon behandlingsinformasjonV2 = new XMLBehandlingsinformasjon();
         behandlingsinformasjonV2.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSporsmal()));
 
         behandlingsinformasjonV2.withHenvendelseType(SPORSMAL.name());
@@ -77,7 +77,7 @@ public class MeldingUtilsTest {
         String tema = "tema";
         XMLSporsmal xmlSporsmal = new XMLSporsmal().withFritekst(fritekst).withTemagruppe(tema);
 
-        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjonV2(behandlingsId, opprettet, SPORSMAL.name(), xmlSporsmal));
+        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(behandlingsId, opprettet, SPORSMAL.name(), xmlSporsmal));
 
         assertThat(melding.id, is(equalTo(behandlingsId)));
         assertThat(melding.traadId, is(equalTo(behandlingsId)));
@@ -97,7 +97,7 @@ public class MeldingUtilsTest {
         String tema = "tema";
         XMLSvar xmlSvar = new XMLSvar().withSporsmalsId(sporsmalsId).withTemagruppe(tema).withLestDato(lest).withFritekst(fritekst);
 
-        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjonV2(behandlingsId, opprettet, SVAR.name(), xmlSvar));
+        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(behandlingsId, opprettet, SVAR.name(), xmlSvar));
 
         assertThat(melding.id, is(equalTo(behandlingsId)));
         assertThat(melding.traadId, is(equalTo(sporsmalsId)));
@@ -118,7 +118,7 @@ public class MeldingUtilsTest {
         String kanal = "TELEFON";
         XMLReferat xmlReferat = new XMLReferat().withFritekst(fritekst).withTemagruppe(tema).withLestDato(lest).withKanal(kanal);
 
-        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjonV2(behandlingsId, opprettet, REFERAT.name(), xmlReferat));
+        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(behandlingsId, opprettet, REFERAT.name(), xmlReferat));
 
         assertThat(melding.id, is(equalTo(behandlingsId)));
         assertThat(melding.traadId, is(equalTo(behandlingsId)));
@@ -135,8 +135,8 @@ public class MeldingUtilsTest {
         TIL_MELDING.transform(new XMLSporsmal());
     }
 
-    private static XMLBehandlingsinformasjonV2 lagXMLBehandlingsInformasjonV2(String behandlingsId, DateTime opprettetDato, String henvendelseType, XMLMetadata xmlMetadata) {
-        return new XMLBehandlingsinformasjonV2()
+    private static XMLBehandlingsinformasjon lagXMLBehandlingsInformasjon(String behandlingsId, DateTime opprettetDato, String henvendelseType, XMLMetadata xmlMetadata) {
+        return new XMLBehandlingsinformasjon()
                 .withBehandlingsId(behandlingsId)
                 .withOpprettetDato(opprettetDato)
                 .withHenvendelseType(henvendelseType)
