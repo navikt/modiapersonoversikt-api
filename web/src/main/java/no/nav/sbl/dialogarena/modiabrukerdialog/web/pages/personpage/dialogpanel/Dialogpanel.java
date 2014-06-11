@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLAktor;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLBehandlingsinformasjonV2;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLMetadataListe;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLReferat;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
@@ -32,7 +32,7 @@ import org.apache.wicket.util.time.Duration;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v2.XMLHenvendelseType.REFERAT;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static org.joda.time.DateTime.now;
 
@@ -106,8 +106,8 @@ public class Dialogpanel extends Panel {
     }
 
     private void sendHenvendelse(DialogVM formInput, String fnr) {
-        XMLBehandlingsinformasjonV2 info =
-                new XMLBehandlingsinformasjonV2()
+        XMLBehandlingsinformasjon info =
+                new XMLBehandlingsinformasjon()
                         .withHenvendelseType(REFERAT.name())
                         .withAktor(new XMLAktor().withFodselsnummer(fnr).withNavIdent(getSubjectHandler().getUid()))
                         .withOpprettetDato(now())

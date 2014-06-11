@@ -32,7 +32,7 @@
 
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>dialogarena-behandlingsinformasjon-v2</artifactId>
+            <artifactId>dialogarena-behandlingsinformasjon</artifactId>
         </dependency>
 
         <dependency>
