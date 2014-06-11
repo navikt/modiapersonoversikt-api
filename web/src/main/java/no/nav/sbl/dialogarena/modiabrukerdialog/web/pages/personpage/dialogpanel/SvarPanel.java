@@ -33,7 +33,8 @@ public class SvarPanel extends DialogPanel {
         );
 
 
-        form.add(new RadioGroup<SvarKanal>("kanal")
+        RadioGroup<SvarKanal> radioGroup = new RadioGroup<>("kanal");
+        form.add(radioGroup
                 .setRequired(true)
                 .add(new ListView<SvarKanal>("kanalvalg", asList(SvarKanal.values())) {
                     @Override
@@ -42,6 +43,7 @@ public class SvarPanel extends DialogPanel {
                         item.add(cssClass(item.getModelObject().name().toLowerCase()));
                     }
                 }));
+        radioGroup.setDefaultModelObject(SvarKanal.TEKST);
 
     }
 
