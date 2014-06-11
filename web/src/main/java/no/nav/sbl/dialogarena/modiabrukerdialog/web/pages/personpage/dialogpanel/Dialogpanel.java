@@ -18,17 +18,18 @@ import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 
-public abstract class Dialogpanel extends Panel {
+public abstract class DialogPanel extends Panel {
 
-    public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(Dialogpanel.class, "dialogpanel.less");
+    public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(DialogPanel.class, "dialogpanel.less");
 
     @Inject
     protected SendHenvendelsePortType ws;
 
     protected Form<DialogVM> form;
 
-    public Dialogpanel(String id, final String fnr) {
+    public DialogPanel(String id, final String fnr) {
         super(id);
+        setOutputMarkupId(true);
 
         form = new Form<>("dialogform", new CompoundPropertyModel<>(new DialogVM()));
         form.setOutputMarkupPlaceholderTag(true);
