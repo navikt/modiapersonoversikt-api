@@ -14,6 +14,7 @@ public class TraaddetaljerPanel extends Panel {
         super(id);
         setOutputMarkupId(true);
 
+        add(new HaandterMeldingPanel("haandter-melding", innboksVM));
         add(new NyesteMeldingPanel("nyeste-melding", innboksVM));
         add(new TidligereMeldingerPanel("tidligere-meldinger"));
     }
