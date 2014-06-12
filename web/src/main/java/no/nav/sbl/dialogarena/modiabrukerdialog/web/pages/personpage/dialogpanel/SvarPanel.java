@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
@@ -23,10 +23,13 @@ import static org.joda.time.DateTime.now;
 
 public class SvarPanel extends DialogPanel {
 
+    final String meldingsId;
+
     public SvarPanel(String id, String fnr, String meldingsId) {
         super(id, fnr);
 
-        Melding melding = getMelding(meldingsId);
+        this.meldingsId = meldingsId;
+        Melding melding = getMelding();
 
         form.add(
                 new Label("dato", melding.opprettetDato),
@@ -48,7 +51,7 @@ public class SvarPanel extends DialogPanel {
 
     }
 
-    private Melding getMelding(String meldingsId) {
+    private Melding getMelding() {
         Melding melding = new Melding("id", Meldingstype.SPORSMAL, DateTime.now());
         melding.fritekst = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
         return melding;
@@ -64,7 +67,10 @@ public class SvarPanel extends DialogPanel {
                         .withOpprettetDato(now())
                         .withAvsluttetDato(now())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
-                                new XMLReferat().withTemagruppe(formInput.tema).withKanal(formInput.kanal.name()).withFritekst(formInput.getFritekst())));
+                                new XMLSvar()
+                                        .withSporsmalsId(meldingsId)
+                                        .withTemagruppe(formInput.tema)
+                                        .withFritekst(formInput.getFritekst())));
 
         ws.sendHenvendelse(new WSSendHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(fnr).withAny(info));
 

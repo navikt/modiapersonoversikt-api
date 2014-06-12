@@ -20,7 +20,7 @@ import static java.util.Arrays.asList;
 
 public abstract class DialogPanel extends Panel {
 
-    public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(DialogPanel.class, "dialogpanel.less");
+    public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(DialogPanel.class, "DialogPanel.less");
 
     @Inject
     protected SendHenvendelsePortType ws;
