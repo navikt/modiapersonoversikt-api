@@ -73,7 +73,10 @@ public abstract class DialogPanel extends Panel {
             }
         });
 
-        add(form, kvittering);
+        add(
+                form,
+                kvittering
+        );
     }
 
     protected abstract void sendHenvendelse(DialogVM formInput, String fnr);
