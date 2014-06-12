@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
@@ -15,14 +16,13 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.BESVARINGSFRIST_TIMER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.STATUS;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.INNGAENDE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.UTGAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SAMTALEREFERAT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SPORSMAL;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART_INNEN_FRIST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_LEST_AV_BRUKER;
@@ -35,11 +35,11 @@ import static org.junit.Assert.assertThat;
 public class MeldingUtilsTest {
     @Test
     public void testSkillUtTraader() {
-        Melding melding1 = new Melding("1", INNGAENDE, now());
+        Melding melding1 = new Melding("1", SPORSMAL, now());
         melding1.traadId = "1";
-        Melding melding2 = new Melding("2", UTGAENDE, now());
+        Melding melding2 = new Melding("2", SVAR, now());
         melding2.traadId = "1";
-        Melding melding3 = new Melding("3", INNGAENDE, now());
+        Melding melding3 = new Melding("3", SPORSMAL, now());
         melding3.traadId = "2";
         Map<String, List<Melding>> traader = skillUtTraader(asList(melding1, melding2, melding3));
 
@@ -54,14 +54,14 @@ public class MeldingUtilsTest {
         XMLBehandlingsinformasjon behandlingsinformasjonV2 = new XMLBehandlingsinformasjon();
         behandlingsinformasjonV2.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSporsmal()));
 
-        behandlingsinformasjonV2.withHenvendelseType(SPORSMAL.name());
+        behandlingsinformasjonV2.withHenvendelseType(XMLHenvendelseType.SPORSMAL.name());
         behandlingsinformasjonV2.withOpprettetDato(now());
         assertThat(STATUS.transform(behandlingsinformasjonV2), is(equalTo(IKKE_BESVART)));
 
         behandlingsinformasjonV2.withOpprettetDato(now().minusHours(BESVARINGSFRIST_TIMER + 1));
         assertThat(STATUS.transform(behandlingsinformasjonV2), is(equalTo(IKKE_BESVART_INNEN_FRIST)));
 
-        behandlingsinformasjonV2.withHenvendelseType(SVAR.name());
+        behandlingsinformasjonV2.withHenvendelseType(XMLHenvendelseType.SVAR.name());
         behandlingsinformasjonV2.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar()));
         assertThat(STATUS.transform(behandlingsinformasjonV2), is(equalTo(IKKE_LEST_AV_BRUKER)));
 
@@ -77,12 +77,12 @@ public class MeldingUtilsTest {
         String tema = "tema";
         XMLSporsmal xmlSporsmal = new XMLSporsmal().withFritekst(fritekst).withTemagruppe(tema);
 
-        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(behandlingsId, opprettet, SPORSMAL.name(), xmlSporsmal));
+        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(behandlingsId, opprettet, XMLHenvendelseType.SPORSMAL.name(), xmlSporsmal));
 
         assertThat(melding.id, is(equalTo(behandlingsId)));
         assertThat(melding.traadId, is(equalTo(behandlingsId)));
         assertThat(melding.opprettetDato, is(equalTo(opprettet)));
-        assertThat(melding.meldingstype, is(equalTo(INNGAENDE)));
+        assertThat(melding.meldingstype, is(equalTo(SPORSMAL)));
         assertThat(melding.fritekst, is(equalTo(fritekst)));
         assertThat(melding.tema, is(equalTo(tema)));
     }
@@ -97,12 +97,12 @@ public class MeldingUtilsTest {
         String tema = "tema";
         XMLSvar xmlSvar = new XMLSvar().withSporsmalsId(sporsmalsId).withTemagruppe(tema).withLestDato(lest).withFritekst(fritekst);
 
-        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(behandlingsId, opprettet, SVAR.name(), xmlSvar));
+        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(behandlingsId, opprettet, XMLHenvendelseType.SVAR.name(), xmlSvar));
 
         assertThat(melding.id, is(equalTo(behandlingsId)));
         assertThat(melding.traadId, is(equalTo(sporsmalsId)));
         assertThat(melding.opprettetDato, is(equalTo(opprettet)));
-        assertThat(melding.meldingstype, is(equalTo(UTGAENDE)));
+        assertThat(melding.meldingstype, is(equalTo(SVAR)));
         assertThat(melding.fritekst, is(equalTo(fritekst)));
         assertThat(melding.tema, is(equalTo(tema)));
         assertThat(melding.lestDato, is(equalTo(lest)));
@@ -123,7 +123,7 @@ public class MeldingUtilsTest {
         assertThat(melding.id, is(equalTo(behandlingsId)));
         assertThat(melding.traadId, is(equalTo(behandlingsId)));
         assertThat(melding.opprettetDato, is(equalTo(opprettet)));
-        assertThat(melding.meldingstype, is(equalTo(UTGAENDE)));
+        assertThat(melding.meldingstype, is(equalTo(SAMTALEREFERAT)));
         assertThat(melding.fritekst, is(equalTo(fritekst)));
         assertThat(melding.tema, is(equalTo(tema)));
         assertThat(melding.lestDato, is(equalTo(lest)));

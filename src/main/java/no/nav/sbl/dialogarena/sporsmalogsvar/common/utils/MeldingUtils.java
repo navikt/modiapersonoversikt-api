@@ -52,7 +52,10 @@ public class MeldingUtils {
         public Melding transform(Object o) {
             XMLBehandlingsinformasjon info = (XMLBehandlingsinformasjon) o;
 
-            Meldingstype meldingstype = info.getHenvendelseType().equals(SPORSMAL.name()) ? Meldingstype.INNGAENDE : Meldingstype.UTGAENDE;
+            Meldingstype meldingstype = info.getHenvendelseType().equals(SPORSMAL.name()) ?
+                    Meldingstype.SPORSMAL : info.getHenvendelseType().equals(SVAR.name()) ?
+                    Meldingstype.SVAR :
+                    Meldingstype.SAMTALEREFERAT;
 
             Melding melding = new Melding(info.getBehandlingsId(), meldingstype, info.getOpprettetDato());
             melding.traadId = info.getBehandlingsId();

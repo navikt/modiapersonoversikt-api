@@ -9,7 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingOverskrift;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingOverskriftKey;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.NYESTE_FORST;
 
 public class MeldingVM implements FeedItemVM, Serializable {
@@ -20,7 +20,7 @@ public class MeldingVM implements FeedItemVM, Serializable {
 
     public MeldingVM(List<Melding> traad) {
         this.melding = on(traad).collect(NYESTE_FORST).get(0);
-        this.avsender = lagMeldingOverskrift(traad, melding);
+        this.avsender = lagMeldingOverskriftKey(melding);
     }
 
     public static final Comparator<MeldingVM> NYESTE_OVERST = new Comparator<MeldingVM>() {

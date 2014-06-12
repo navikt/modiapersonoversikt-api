@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingOverskrift;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingOverskriftKey;
 
 
 public class MeldingVM implements Serializable {
@@ -22,7 +22,7 @@ public class MeldingVM implements Serializable {
     public MeldingVM(List<Melding> tilhorendeTraad, Melding melding) {
         this.melding = melding;
 
-        avsender = lagMeldingOverskrift(tilhorendeTraad, melding);
+        avsender = lagMeldingOverskriftKey(melding);
         traadlengde = tilhorendeTraad.size();
     }
 

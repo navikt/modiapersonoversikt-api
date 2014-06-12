@@ -5,8 +5,9 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.protocol.http.WebApplication;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.INNGAENDE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.UTGAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SAMTALEREFERAT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SPORSMAL;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SVAR;
 
 public class AvsenderBilde extends Image {
 
@@ -17,10 +18,10 @@ public class AvsenderBilde extends Image {
 
     public final void settBildeRessurs(MeldingVM meldingVM) {
         String avsender = "", bilde = "";
-        if (meldingVM.melding.meldingstype == UTGAENDE) {
+        if (meldingVM.melding.meldingstype == SVAR || meldingVM.melding.meldingstype == SAMTALEREFERAT) {
             avsender = "nav";
             bilde = "nav-logo.svg";
-        } else if (meldingVM.melding.meldingstype == INNGAENDE) {
+        } else if (meldingVM.melding.meldingstype == SPORSMAL) {
             avsender = "bruker";
             bilde = "siluett.svg";
         }
