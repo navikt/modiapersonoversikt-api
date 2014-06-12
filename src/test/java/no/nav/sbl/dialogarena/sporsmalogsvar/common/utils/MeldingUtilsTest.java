@@ -7,6 +7,7 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataL
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -67,6 +68,11 @@ public class MeldingUtilsTest {
 
         behandlingsinformasjonV2.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar().withLestDato(now())));
         assertThat(STATUS.transform(behandlingsinformasjonV2), is(equalTo(LEST_AV_BRUKER)));
+    }
+
+    @Test(expected = ApplicationException.class)
+    public void testStatusTransformerUkjentType() {
+        STATUS.transform(new XMLBehandlingsinformasjon().withHenvendelseType(""));
     }
 
     @Test
