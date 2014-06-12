@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -12,105 +13,110 @@
     <name>${project.artifactId}</name>
 
     <dependencies>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
-        </dependency>
 
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>henvendelse-informasjon-v2</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>henvendelse-aktivitet-v2</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>dialogarena-behandlingsinformasjon</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>kjerneinfo-consumer</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>sykmeldingsperioder-panel</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>sykmeldingsperioder-domain</artifactId>
-        </dependency>
-
+        <!--Kontrakter-->
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kontrakter-consumer</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kontrakter-domain</artifactId>
         </dependency>
 
+        <!--Kjerneinfo-->
         <dependency>
             <groupId>no.nav</groupId>
-            <artifactId>sykmeldingsperioder-consumer</artifactId>
+            <artifactId>kjerneinfo-common</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.nav</groupId>
-            <artifactId>kodeverk-consumer</artifactId>
+            <artifactId>kjerneinfo-consumer</artifactId>
         </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>brukerprofil-consumer</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>behandlebrukerprofil-consumer</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-wicket</artifactId>
-        </dependency>
-
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-domain</artifactId>
         </dependency>
 
+        <!--Sykmeldingsperioder-->
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>sykmeldingsperioder-panel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>sykmeldingsperioder-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>sykmeldingsperioder-consumer</artifactId>
+        </dependency>
+
+        <!--Brukerprofil-->
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-consumer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>behandlebrukerprofil-consumer</artifactId>
+        </dependency>
+
+        <!--Kodeverk-->
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kodeverk-consumer</artifactId>
+        </dependency>
+
+        <!--Dialogarena tjenestespesifikasjon-->
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
+        </dependency>
+
+        <!--Dialogarena-->
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>henvendelse-informasjon-v2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>henvendelse-aktivitet-v2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>dialogarena-behandlingsinformasjon</artifactId>
+        </dependency>
+
+        <!--Modig-->
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-wicket</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-lang</artifactId>
+        </dependency>
+
+        <!--Spring-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>brukerprofil-domain</artifactId>
-        </dependency>
+        <!--Diverse-->
 
         <dependency>
             <groupId>joda-time</groupId>
@@ -118,18 +124,15 @@
         </dependency>
 
         <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>kjerneinfo-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.modig</groupId>
-            <artifactId>modig-lang</artifactId>
-        </dependency>
-        <dependency>
             <groupId>net.sourceforge.collections</groupId>
             <artifactId>collections-generic</artifactId>
         </dependency>
 
+        <!--Testing-->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+        </dependency>
 
     </dependencies>
 
