@@ -28,7 +28,7 @@ public class ReferatPanel extends DialogPanel {
                     @Override
                     protected void populateItem(ListItem<ReferatKanal> item) {
                         item.add(new Radio<>("kanalknapp", item.getModel()));
-                        item.add(new WebMarkupContainer("kanalikon")).add(cssClass(item.getModelObject().name().toLowerCase()));
+                        item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
                     }
                 }));
     }

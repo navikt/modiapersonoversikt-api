@@ -41,7 +41,7 @@ public class SvarPanel extends DialogPanel {
                     @Override
                     protected void populateItem(ListItem<SvarKanal> item) {
                         item.add(new Radio<>("kanalknapp", item.getModel()));
-                        item.add(new WebMarkupContainer("kanalikon")).add(cssClass(item.getModelObject().name().toLowerCase()));
+                        item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
                     }
                 }));
         radioGroup.setDefaultModelObject(SvarKanal.TEKST);
@@ -49,7 +49,7 @@ public class SvarPanel extends DialogPanel {
     }
 
     private Melding getMelding(String meldingsId) {
-        Melding melding = new Melding("id", Meldingstype.INNGAENDE, DateTime.now());
+        Melding melding = new Melding("id", Meldingstype.SPORSMAL, DateTime.now());
         melding.fritekst = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
         return melding;
     }
