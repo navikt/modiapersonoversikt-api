@@ -31,7 +31,7 @@ public class MeldingVM implements FeedItemVM, Serializable {
     };
 
     public String getOpprettetDato() {
-        return Datoformat.langMedTid(melding.opprettetDato);
+        return Datoformat.kortMedTid(melding.opprettetDato);
     }
 
     public String getLestDato() {
