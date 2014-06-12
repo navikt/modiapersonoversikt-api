@@ -7,6 +7,7 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
@@ -40,7 +41,7 @@ public class SvarPanel extends DialogPanel {
                     @Override
                     protected void populateItem(ListItem<SvarKanal> item) {
                         item.add(new Radio<>("kanalknapp", item.getModel()));
-                        item.add(cssClass(item.getModelObject().name().toLowerCase()));
+                        item.add(new WebMarkupContainer("kanalikon")).add(cssClass(item.getModelObject().name().toLowerCase()));
                     }
                 }));
         radioGroup.setDefaultModelObject(SvarKanal.TEKST);
