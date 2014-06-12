@@ -7,12 +7,15 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.StringResourceModel;
 import org.joda.time.DateTime;
 
 import static java.util.Arrays.asList;
@@ -37,7 +40,7 @@ public class SvarPanel extends DialogPanel {
         );
 
 
-        RadioGroup<SvarKanal> radioGroup = new RadioGroup<>("kanal");
+        final RadioGroup<SvarKanal> radioGroup = new RadioGroup<>("kanal");
         form.add(radioGroup
                 .setRequired(true)
                 .add(new ListView<SvarKanal>("kanalvalg", asList(SvarKanal.values())) {
@@ -49,6 +52,16 @@ public class SvarPanel extends DialogPanel {
                 }));
         radioGroup.setDefaultModelObject(SvarKanal.TEKST);
 
+        final Label kanalbeskrivelse = new Label("kanalbeskrivelse", new StringResourceModel("${name}.beskrivelse", radioGroup.getModel()));
+        kanalbeskrivelse.setOutputMarkupId(true);
+        form.add(kanalbeskrivelse);
+
+        radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.add(kanalbeskrivelse);
+            }
+        });
     }
 
     private Melding getMelding() {

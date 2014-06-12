@@ -15,13 +15,14 @@
 
         <!--TODO: Trekk ut kanalvelgeren til en egen klasse?-->
         <section class="kanalvelger clearfix">
-            <wicket:container wicket:id="kanal">
+            <div wicket:id="kanal">
                 <div wicket:id="kanalvalg" class="kanalvalg">
                     <input wicket:id="kanalknapp" type="radio"/>
                     <label wicket:for="kanalknapp"><div wicket:id="kanalikon"></div></label>
                 </div>
-            </wicket:container>
+            </div>
         </section>
+        <div wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</div>
     </wicket:extend>
 
 </wicket:panel>
