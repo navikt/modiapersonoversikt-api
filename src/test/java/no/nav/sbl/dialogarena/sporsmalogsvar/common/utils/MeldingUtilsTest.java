@@ -17,7 +17,6 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.BESVARINGSFRIST_TIMER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.STATUS;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
@@ -25,7 +24,6 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SAMTAL
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SPORSMAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART_INNEN_FRIST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_LEST_AV_BRUKER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.LEST_AV_BRUKER;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -58,9 +56,6 @@ public class MeldingUtilsTest {
         behandlingsinformasjonV2.withHenvendelseType(XMLHenvendelseType.SPORSMAL.name());
         behandlingsinformasjonV2.withOpprettetDato(now());
         assertThat(STATUS.transform(behandlingsinformasjonV2), is(equalTo(IKKE_BESVART)));
-
-        behandlingsinformasjonV2.withOpprettetDato(now().minusHours(BESVARINGSFRIST_TIMER + 1));
-        assertThat(STATUS.transform(behandlingsinformasjonV2), is(equalTo(IKKE_BESVART_INNEN_FRIST)));
 
         behandlingsinformasjonV2.withHenvendelseType(XMLHenvendelseType.SVAR.name());
         behandlingsinformasjonV2.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar()));

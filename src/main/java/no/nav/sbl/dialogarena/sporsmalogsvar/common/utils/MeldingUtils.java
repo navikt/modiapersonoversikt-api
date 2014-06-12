@@ -25,14 +25,10 @@ import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.TRAAD_ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART_INNEN_FRIST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_LEST_AV_BRUKER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.LEST_AV_BRUKER;
-import static org.joda.time.DateTime.now;
 
 public class MeldingUtils {
-
-    public static final int BESVARINGSFRIST_TIMER = 48;
 
     /**
      * Deler inn en liste henvendelser i tråder
@@ -87,11 +83,7 @@ public class MeldingUtils {
         public Status transform(XMLBehandlingsinformasjon info) {
             String henvendelseType = info.getHenvendelseType();
             if (henvendelseType.equals(SPORSMAL.name())) {
-                if (now().isAfter(info.getOpprettetDato().plusHours(BESVARINGSFRIST_TIMER))) {
-                    return IKKE_BESVART_INNEN_FRIST;
-                } else {
-                    return IKKE_BESVART;
-                }
+                return IKKE_BESVART;
             } else if (henvendelseType.equals(SVAR.name()) || henvendelseType.equals(REFERAT.name())) {
                 XMLMetadata xmlMetadata = info.getMetadataListe().getMetadata().get(0);
                 DateTime lestDato = null;

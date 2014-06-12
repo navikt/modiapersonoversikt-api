@@ -19,7 +19,6 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART_INNEN_FRIST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
 
 public class InnboksVM implements Serializable {
@@ -58,8 +57,7 @@ public class InnboksVM implements Serializable {
 
     public Boolean valgtMeldingErEtUbesvartSporsmaal() {
         MeldingVM nyesteMelding = getNyesteMelding();
-        return nyesteMelding != null &&
-                (nyesteMelding.melding.status == IKKE_BESVART || nyesteMelding.melding.status == IKKE_BESVART_INNEN_FRIST);
+        return nyesteMelding != null && nyesteMelding.melding.status == IKKE_BESVART;
     }
 
     public List<MeldingVM> getTidligereMeldinger() {

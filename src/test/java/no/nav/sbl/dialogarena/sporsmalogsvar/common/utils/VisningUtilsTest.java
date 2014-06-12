@@ -9,7 +9,6 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SAMTAL
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SPORSMAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART_INNEN_FRIST;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_LEST_AV_BRUKER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.LEST_AV_BRUKER;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -21,7 +20,6 @@ public class VisningUtilsTest {
     @Test
     public void testGetStatusKlasse() throws Exception {
         assertThat(getStatusKlasse(IKKE_BESVART),               is(equalTo("status ikke-besvart")));
-        assertThat(getStatusKlasse(IKKE_BESVART_INNEN_FRIST),   is(equalTo("status ikke-besvart-innen-frist")));
         assertThat(getStatusKlasse(LEST_AV_BRUKER),             is(equalTo("status lest-av-bruker")));
         assertThat(getStatusKlasse(IKKE_LEST_AV_BRUKER),        is(equalTo("status ikke-lest-av-bruker")));
     }
