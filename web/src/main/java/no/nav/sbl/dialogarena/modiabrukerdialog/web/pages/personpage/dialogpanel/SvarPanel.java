@@ -33,12 +33,12 @@ public class SvarPanel extends DialogPanel {
 
         this.meldingsId = meldingsId;
         Melding melding = getMelding();
+        form.getModelObject().tema = melding.tema;
 
         form.add(
                 new Label("dato", melding.opprettetDato),
                 new Label("sporsmal", melding.fritekst)
         );
-
 
         final RadioGroup<SvarKanal> radioGroup = new RadioGroup<>("kanal");
         form.add(radioGroup
@@ -67,6 +67,7 @@ public class SvarPanel extends DialogPanel {
     private Melding getMelding() {
         Melding melding = new Melding("id", Meldingstype.SPORSMAL, DateTime.now());
         melding.fritekst = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
+        melding.tema = Tema.HJELPEMIDLER.toString();
         return melding;
     }
 
@@ -83,7 +84,8 @@ public class SvarPanel extends DialogPanel {
                                 new XMLSvar()
                                         .withSporsmalsId(meldingsId)
                                         .withTemagruppe(dialogVM.tema)
-                                        .withFritekst(dialogVM.getFritekst())));
+                                        .withFritekst(dialogVM.getFritekst())
+                        ));
 
         ws.sendHenvendelse(new WSSendHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(fnr).withAny(info));
 
