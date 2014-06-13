@@ -44,6 +44,7 @@ import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGAN
 import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
 import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
 import static no.nav.modig.modia.events.InternalEvents.LAMELL_LINK_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
@@ -179,7 +180,7 @@ public class PersonPage extends BasePage {
         target.add(dialogpanel);
     }
 
-    @RunOnEvents(InternalEvents.MELDING_SENDT_TIL_BRUKER)
+    @RunOnEvents(MELDING_SENDT_TIL_BRUKER)
     public void meldingSendtTilBruker(AjaxRequestTarget target){
         dialogpanel = dialogpanel.replaceWith(new ReferatPanel(DIALOGPANEL_ID, fnr));
         target.add(dialogpanel);

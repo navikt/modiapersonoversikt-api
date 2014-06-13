@@ -40,7 +40,7 @@ public class Kvitteringspanel extends Panel {
                     target.add(getComponent());
                     target.add(form);
                     stop(target);
-                    send(getPage(), Broadcast.BUBBLE, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
+                    send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
                 }
             };
             add(timeout);
