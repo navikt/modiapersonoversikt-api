@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.lang.collections.TransformerUtils;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -23,18 +24,25 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
 
 public class InnboksVM implements Serializable {
 
+    private MeldingService meldingService;
+
     private Map<String, List<MeldingVM>> traader = new HashMap<>();
 
     private List<MeldingVM> nyesteMeldingerITraad = new ArrayList<>();
 
     private Optional<MeldingVM> valgtMelding;
 
-    public InnboksVM(List<Melding> meldinger) {
-        oppdaterMeldinger(meldinger);
+    private String fnr;
+
+    public InnboksVM(MeldingService meldingService, String fnr) {
+        this.meldingService = meldingService;
+        this.fnr = fnr;
+        oppdaterMeldinger();
         valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
     }
 
-    public final void oppdaterMeldinger(List<Melding> meldinger) {
+    public final void oppdaterMeldinger() {
+        List<Melding> meldinger = meldingService.hentMeldinger(fnr);
         Map<String, List<Melding>> meldingTraader = skillUtTraader(meldinger);
         for (Map.Entry<String, List<Melding>> meldingTraad : meldingTraader.entrySet()) {
             traader.put(meldingTraad.getKey(), TIL_MELDINGVM_TRAAD.transform(meldingTraad.getValue()));
