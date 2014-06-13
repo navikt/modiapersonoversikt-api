@@ -7,8 +7,8 @@ jQuery(document).ready(function ($) {
         $('.main-content .lamell').first().find('.lamellhode').hide();
     }
 
-    $('#toggle-personsok').on('click', checkIfToggleAvansertSok);
-    Modig.shortcutListener.on({key: 'A'}, checkIfToggleAvansertSok);
+    $('#toggle-personsok').on('click', toggleAvansertSok);
+    Modig.shortcutListener.on({key: 'A'}, toggleAvansertSok);
 
     Modig.shortcutListener.on({alt: true, keyCode: 114}, focusSearchField); // F3
     Modig.shortcutListener.on({alt: true, keyCode: 116}, closeResetPerson); // F5
@@ -73,44 +73,6 @@ function closeLamellHead() {
 
 function closeResetPerson() {
     $('.nullstill-button').click();
-}
-
-function movePersonsok() {
-    var navbar = $('.navbar');
-    var logo = $('.modia-logo');
-    var nullstill = $('INPUT[name=nullstillSok]');
-    var error = $('.feedbackPanelERROR');
-    error.remove();
-
-    if (navbar[0].style.marginTop == '1%') {
-        toggleAvansertSok();
-        navbar.animate({marginTop: '8%'}, 300, 'linear');
-        navbar.css('marginBottom', '0');
-        logo.css('display', 'block');
-        // Nullstiller søket
-        nullstill.click();
-    } else {
-        if ($('.main').hasClass('hentperson')) {
-            navbar.animate({marginTop: '1%'}, 400, 'linear', toggleAvansertSok);
-            navbar.css('marginBottom', '1.1%');
-        } else {
-            if ($('#personsokPanel').is(':visible')) {
-                toggleAvansertSok();
-            } else {
-                $('#personsok').slideDown(400);
-
-            }
-        }
-        logo.css('display', 'none');
-    }
-}
-
-function checkIfToggleAvansertSok() {
-    if (!$('#toggle-personsok').hasClass('personsok-movable')) {
-        toggleAvansertSok();
-    } else {
-        movePersonsok();
-    }
 }
 
 function toggleAvansertSok() {

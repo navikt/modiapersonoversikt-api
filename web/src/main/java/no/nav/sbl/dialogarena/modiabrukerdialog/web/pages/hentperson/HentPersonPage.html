@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
-	<wicket:head>
-		<title>Modia</title>
-	</wicket:head>
-	<wicket:extend>
-		<body class="main hentperson">
-			<section class="navbar menu-intern active">
-				<img class="modia-logo" wicket:id="modia-logo"/>
-				<div id="hentPerson">
-                    <label class="ledetekst" for="foedselsnummerInput"><wicket:message key="personsok.ledetekst">[]</wicket:message></label>
-					<wicket:container wicket:id="searchPanel"/>
-                    <button class="personsok-button personsok-movable" id="toggle-personsok"
-                            wicket:message="aria-label:personsok.apnetekst,
+<wicket:head>
+    <title>Modia</title>
+</wicket:head>
+<wicket:extend>
+    <body class="main hentperson">
+    <section class="navbar menu-intern active">
+        <div id="hentPerson">
+            <wicket:container wicket:id="searchPanel"/>
+            <button class="personsok-button" id="toggle-personsok"
+                    wicket:message="aria-label:personsok.apnetekst,
                             title:personsok.apnetekst,
                             data-apne:personsok.apnetekst,
                             data-lukke:personsok.lukketekst">
-                        A
-                        <span class="personsok-pil"></span>
-                    </button>
-				</div>
-			</section>
-			<wicket:container wicket:id="personsokPanel"/>
-		</body>
-	</wicket:extend>
+                A
+                <span class="personsok-pil"></span>
+            </button>
+        </div>
+    </section>
+    <wicket:container wicket:id="personsokPanel"/>
+    <img class="modia-logo" wicket:id="modia-logo"/>
+    <span class="starttekst"><wicket:message key="hentperson.starttekst"/></span>
+    </body>
+</wicket:extend>
 </html>

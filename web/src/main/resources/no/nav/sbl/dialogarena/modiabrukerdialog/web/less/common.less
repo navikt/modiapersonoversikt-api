@@ -104,91 +104,25 @@ UL.feedbackPanel {
 /* Spesifikke sider */
 
 .hentperson.main {
-	background-color: @modiaBackground;
-	position: absolute;
-	width: 100%;
-	.modia-logo {
-		width: 170px;
-		display: block;
-		margin: 0 auto 220px auto;
-	}
-	#hentPerson {
-		position: relative;
-		margin-left: 40px;
-	}
-	.hent-oppgave {
-		display: block;
-		margin-left: -8rem;
-	}
-	.search-intern {
-		position: relative;
-		padding-right: 80px;
-		margin: 0 auto 0 auto;
-		float: none;
-		clear: both;
-		overflow: visible;
-		width: auto;
-		INPUT[type=text] {
-			height: auto;
-			padding: 16px 70px 16px 20px;
-			font-size: 2.14rem;
-		}
-		INPUT[type=button], SUBMIT, INPUT[type=image], #submitFodselsnummer {
-			height: 48px;
-			right: 90px;
-			top: 14px;
-			@media (max-width: 959px) {
-				margin-top: 0;
-			}
-		}
-		LABEL.errorJS, SPAN.errorJS {
-			position: absolute;
-			font-size: 15.04px !important;
-			bottom: -20px;
-			left: 0;
-			width: auto;
-		}
-		SPAN.feedbackPanelERROR {
-			color: @errorTextLight;
-			background: transparent;
-			font-size: 15.04px !important;
-			white-space: nowrap;
-			content: "" !important;
-			position: absolute;
-			left: 0;
-			bottom: 0.5em;
-		}
-	}
-	.navbar {
-		height: auto;
-		position: relative;
-		display: block;
-		padding: 0;
-		width: 400px;
-		margin: 5% auto 0 auto;
-		z-index: 5000;
-		background-color: @modiaBackground;
-	}
-    .personsok-button {
-      position: absolute;
-      margin-bottom: 3px;
-      right: 0;
-      left: auto;
-      bottom: 0;
-      z-index: 5001;
-    }
-	.personsok {
-		margin: 0 15%;
-	}
-	#personsok {
-		padding-top: 80px;
-		box-shadow: none;
-		-webkit-box-shadow: none;
-	}
-	#personsokResult {
-		margin-left: 15%;
-		margin-right: 15%;
-	}
+  background-color: @modiasvart;
+  color: @grayLight;
+  .navbar {
+    border: 1px solid #000;
+  }
+  .modia-logo {
+    width: 15rem;
+    display: block;
+    margin: 5rem auto;
+  }
+  .starttekst {
+    display: block;
+    font-size: 2rem;
+    text-align: center;
+  }
+  #personsok {
+    box-shadow: none;
+    border: none;
+  }
 }
 
 /* Individuelle lameller */
