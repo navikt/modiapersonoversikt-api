@@ -3,20 +3,16 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.mapper.parameter.PageParameters;
 
 import java.util.List;
 
-import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
@@ -26,58 +22,33 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakOppgavebehandlingV2EndpointConfig.GSAK_OPPGAVEBEHANDLING_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelseaktivitet.HenvendelseAktivitetV2EndpointConfig.HENVENDELSE_AKTIVITET_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelseinformasjon.HenvendelseEndpointConfig.HENVENDELSE_INFORMASJON_V2_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.PersonKjerneinfoServiceBiMock.FODSELSNUMMER;
 
 public class MockSetupPage extends BasePage {
 
-    private ListView<MockSetupModel> listView;
-    private Boolean brukTestPerson = false;
+    private List<MockSetupModel> mockSetupModeller;
 
     public MockSetupPage() {
-        add(
-                new ContextImage("modia-logo", "img/modiaLogo.svg"),
-                new FeedbackPanel("feedback"),
-                createVelgMockForm()
-        );
-    }
+        mockSetupModeller = lagModeller();
 
-    @SuppressWarnings("unchecked")
-    private Form<Void> createVelgMockForm() {
-        listView = leggTilMockCheckBoxer();
-        return (Form<Void>) new Form<Void>("velgMockForm") {
-
+        add(new ContextImage("modia-logo", "img/modiaLogo.svg"));
+        add(new Form("velgMockForm") {
             @Override
             protected void onSubmit() {
-                List<MockSetupModel> models = listView.getModelObject();
-                StringBuilder mocks = new StringBuilder();
-                for (MockSetupModel model : models) {
+                for (MockSetupModel model : mockSetupModeller) {
                     setProperty(model.getKey(), model.getMockProperty());
-                    mocks.append(model.getServiceName()).append(": ").append(getProperty(model.getKey())).append(", ");
                 }
-                info(mocks.toString());
-                redirect();
+                setResponsePage(HentPersonPage.class);
             }
-
-            private void redirect() {
-                if (brukTestPerson) {
-                    getRequestCycle().setResponsePage(PersonPage.class, new PageParameters().add("fnr", FODSELSNUMMER));
-                    return;
-                }
-                getRequestCycle().setResponsePage(HentPersonPage.class);
-            }
-        }.add(
-                listView,
-                new CheckBox("brukTestPerson", new PropertyModel<Boolean>(this, "brukTestPerson")
-                ));
+        }.add(createMockCheckBoxer()));
     }
 
-    private ListView<MockSetupModel> leggTilMockCheckBoxer() {
-        return new ListView<MockSetupModel>("radioliste", lagModeller()) {
+    private ListView<MockSetupModel> createMockCheckBoxer() {
+        return new ListView<MockSetupModel>("radioliste", mockSetupModeller) {
             @Override
-            protected void populateItem(ListItem item) {
+            protected void populateItem(ListItem<MockSetupModel> item) {
                 item.add(
-                        new Label("radiolabel", ((MockSetupModel) item.getModelObject()).getServiceName()),
-                        new CheckBox("mockvalg", new PropertyModel<Boolean>(item.getModelObject(), "useMock"))
+                        new Label("radiolabel", item.getModelObject().getServiceName()),
+                        new CheckBox("mockvalg", new PropertyModel<Boolean>(item.getModelObject(), "useMock")).setOutputMarkupId(true)
                 );
             }
         };

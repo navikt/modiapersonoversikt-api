@@ -2,75 +2,36 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:head>
     <title>Modia Mock Setup</title>
-
     <style>
         .mockform {
-            padding: 10px;
-            background-color: #cccccc;
+            width: 50%;
+            margin: 0 auto;
+            padding: 2em;
+            text-align: center;
         }
-
-        .float_left {
-            float: left;
+        .mockform h2 {
+            color: #b7b1a9
         }
-
-        ul {
-            list-style: circle outside none;
+        .mockform input[type="checkbox"] + label {
+            text-align: left;
         }
-
-        li {
-            display: inline-block;
+        .mockform input[type="submit"] {
+            margin-top: 1em;
         }
-
-        div {
-            background-color: #cccccc;
-        }
-
-         form input[type="checkbox"] {
-            height: 14px;
-            width: 20px;
-            opacity: 1;
-            position: relative;
-        }
-
-        form input[type="submit"] {
-            margin-top: 20px;
-        }
-
-
-
     </style>
 </wicket:head>
 <wicket:extend>
     <body class="main hentperson">
-    <div wicket:id="feedback"></div>
-    <section class="navbar menu-intern active">
+    <section>
         <img class="modia-logo" wicket:id="modia-logo"/>
-
         <form wicket:id="velgMockForm" class="mockform">
-            <div>
-                Følgende tjenester benytter mock:
+            <h2>Følgende tjenester benytter mock:</h2>
+            <div wicket:id="radioliste">
+                <input type="checkbox" wicket:id="mockvalg"/>
+                <label wicket:for="mockvalg"><span wicket:id="radiolabel"></span></label>
             </div>
-            <div>
-                <ul wicket:id="radioliste">
-                    <li >
-                        <div class="float_left">
-                            <input type="checkbox" wicket:id="mockvalg"/>
-                            <span wicket:id="radiolabel"/>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-            <hr>
-            <div>
-                Bruk testperson:
-                <input type="checkbox" wicket:id="brukTestPerson"/>
-            </div>
-            <hr>
-            <div>
-                <input type="submit" value="Fullfør"/>
-            </div>
+            <input type="submit" value="Fullfør" class="knapp-link-stor"/>
         </form>
-
     </section>
     </body>
 </wicket:extend>
