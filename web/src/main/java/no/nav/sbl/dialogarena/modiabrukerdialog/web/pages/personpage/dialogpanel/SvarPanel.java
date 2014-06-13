@@ -72,7 +72,7 @@ public class SvarPanel extends DialogPanel {
 
 
     @Override
-    protected void sendHenvendelse(DialogVM formInput, String fnr) {
+    protected void sendHenvendelse(DialogVM dialogVM, String fnr) {
         XMLBehandlingsinformasjon info =
                 new XMLBehandlingsinformasjon()
                         .withHenvendelseType(SVAR.name())
@@ -82,8 +82,8 @@ public class SvarPanel extends DialogPanel {
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLSvar()
                                         .withSporsmalsId(meldingsId)
-                                        .withTemagruppe(formInput.tema)
-                                        .withFritekst(formInput.getFritekst())));
+                                        .withTemagruppe(dialogVM.tema)
+                                        .withFritekst(dialogVM.getFritekst())));
 
         ws.sendHenvendelse(new WSSendHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(fnr).withAny(info));
 

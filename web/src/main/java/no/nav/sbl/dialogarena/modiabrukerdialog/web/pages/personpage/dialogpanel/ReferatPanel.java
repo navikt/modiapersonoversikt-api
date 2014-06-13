@@ -33,7 +33,7 @@ public class ReferatPanel extends DialogPanel {
                 }));
     }
 
-    protected void sendHenvendelse(DialogVM formInput, String fnr) {
+    protected void sendHenvendelse(DialogVM dialogVM, String fnr) {
         XMLBehandlingsinformasjon info =
                 new XMLBehandlingsinformasjon()
                         .withHenvendelseType(REFERAT.name())
@@ -41,7 +41,7 @@ public class ReferatPanel extends DialogPanel {
                         .withOpprettetDato(now())
                         .withAvsluttetDato(now())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
-                                new XMLReferat().withTemagruppe(formInput.tema).withKanal(formInput.kanal.name()).withFritekst(formInput.getFritekst())));
+                                new XMLReferat().withTemagruppe(dialogVM.tema).withKanal(dialogVM.kanal.name()).withFritekst(dialogVM.getFritekst())));
 
         ws.sendHenvendelse(new WSSendHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(fnr).withAny(info));
     }

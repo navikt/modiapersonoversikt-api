@@ -3,5 +3,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 public enum SvarKanal implements Kanal {
     TEKST,
     TELEFON,
-    OPPMOTE
+    OPPMOTE;
+
+    @Override
+    public String getKvitteringKey() {
+        return "svarpanel.kvittering.bekreftelse";
+    }
 }

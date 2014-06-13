@@ -57,12 +57,13 @@ public abstract class DialogPanel extends Panel {
         form.add(new AjaxSubmitLink("send") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-                sendHenvendelse(form.getModelObject(), fnr);
+                DialogVM dialogVM = form.getModelObject();
+                sendHenvendelse(dialogVM, fnr);
+
+                form.setVisibilityAllowed(false);
+                kvittering.visISekunder(Duration.seconds(3), target, form);
 
                 form.setModelObject(new DialogVM());
-                form.setVisibilityAllowed(false);
-
-                kvittering.visISekunder(Duration.seconds(3), target, form);
 
                 target.add(form);
             }
@@ -79,5 +80,5 @@ public abstract class DialogPanel extends Panel {
         );
     }
 
-    protected abstract void sendHenvendelse(DialogVM formInput, String fnr);
+    protected abstract void sendHenvendelse(DialogVM dialogVM, String fnr);
 }
