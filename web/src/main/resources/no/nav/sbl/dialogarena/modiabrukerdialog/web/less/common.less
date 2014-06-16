@@ -511,41 +511,58 @@ UL.feedbackPanel {
   position: relative;
   width: 23rem;
   > a {
-    background-color: #b7b1a9;
     display: inline-block;
-    float: left;
     height: 64px;
     line-height: 64px;
     padding: 0 32px;
-
+    float: left;
+    background-color: #b7b1a9;
+    border: 1px solid black;
     text-transform: uppercase;
     color: black;
     font-size: 1.3rem;
     text-align: center;
-    border: 1px solid black;
-
-    &:not(:last-of-type) {
-      margin-right: 1rem;
-    }
     &.velg-temagruppe {
-      border-radius: 50%;
+      position: relative;
+      margin-right: 1rem;
       background-image: url(../img/radio_ikon.svg);
       background-repeat: no-repeat;
       background-position: center;
-      background-size: 40px;
+      background-size: 35px;
+      &:before, &:after {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+      }
+      &:after {
+        border-top-color: #b7b1a9;
+        border-width: 10px;
+        margin-left: -10px;
+      }
+      &:before {
+        border-top-color: black;
+        border-width: 11px;
+        margin-left: -11px;
+      }
     }
     &.plukk-oppgave {
       width: 75%;
     }
     &:hover {
+      cursor: pointer;
       text-decoration: none;
     }
   }
-
   .temagruppe-liste {
+    display: none;
     position: absolute;
-    background: #b7b1a9;
     top: 78px;
+    background: #b7b1a9;
+    border: 1px solid black;
     padding: 1rem 2rem;
     width: 100%;
     color: black;
