@@ -509,6 +509,7 @@ UL.feedbackPanel {
 .oppgavepanel {
   float: right;
   position: relative;
+  width: 23rem;
   > a {
     background-color: #b7b1a9;
     display: inline-block;
@@ -520,6 +521,7 @@ UL.feedbackPanel {
     text-transform: uppercase;
     color: black;
     font-size: 1.3rem;
+    text-align: center;
     border: 1px solid black;
 
     &:not(:last-of-type) {
@@ -532,6 +534,9 @@ UL.feedbackPanel {
       background-position: center;
       background-size: 40px;
     }
+    &.plukk-oppgave {
+      width: 75%;
+    }
     &:hover {
       text-decoration: none;
     }
@@ -543,9 +548,14 @@ UL.feedbackPanel {
     top: 78px;
     padding: 1rem 2rem;
     width: 100%;
-    ul {
-      list-style: none;
-      padding: 0;
+    color: black;
+    label {
+      overflow: hidden;
+      width: 100%;
+      span {
+        color: black;
+        font-size: 1rem !important;
+      }
     }
   }
 }
