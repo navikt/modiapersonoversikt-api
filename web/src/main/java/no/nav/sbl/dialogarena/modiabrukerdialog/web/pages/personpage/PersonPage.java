@@ -20,6 +20,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.Redir
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout.TimeoutBoks;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.PlukkOppgavePanel;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -80,6 +81,7 @@ public class PersonPage extends BasePage {
                 lamellContainer,
                 redirectPopup,
                 fnrContainer,
+                new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
                 new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
