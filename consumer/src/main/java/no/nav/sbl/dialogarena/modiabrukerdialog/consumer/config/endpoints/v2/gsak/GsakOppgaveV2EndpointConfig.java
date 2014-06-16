@@ -25,11 +25,11 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Gsa
 @Configuration
 public class GsakOppgaveV2EndpointConfig {
 
-    public static final String GSAK_OPPGAVE_V2_KEY = "start.gsak.oppgave.withmock";
+    public static final String GSAK_V2_KEY = "start.gsak.oppgave.withmock";
 
     @Bean
     public Oppgave gsakOppgavePortType() {
-        return createSwitcher(createOppgavePortType(), createOppgavePortTypeMock(), GSAK_OPPGAVE_V2_KEY, Oppgave.class);
+        return createSwitcher(createOppgavePortType(), createOppgavePortTypeMock(), GSAK_V2_KEY, Oppgave.class);
     }
 
     @Bean

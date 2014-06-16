@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakOppgaveV2EndpointConfig.GSAK_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakTjenesteSikkerhet.STANDARD_BRUKERNAVN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakTjenesteSikkerhet.STANDARD_PASSORD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakTjenesteSikkerhet.leggPaaAutentisering;
@@ -17,11 +18,9 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Gsa
 @Configuration
 public class GsakOppgavebehandlingV2EndpointConfig {
 
-    public static final String GSAK_OPPGAVEBEHANDLING_V2_KEY = "start.gsak.oppgavebehandling.withmock";
-
     @Bean
     public Oppgavebehandling gsakOppgavebehandlingPortType() {
-        return createSwitcher(createOppgavebehandlingPortType(), createOppgavebehandlingPortTypeMock(), GSAK_OPPGAVEBEHANDLING_V2_KEY, Oppgavebehandling.class);
+        return createSwitcher(createOppgavebehandlingPortType(), createOppgavebehandlingPortTypeMock(), GSAK_V2_KEY, Oppgavebehandling.class);
     }
 
     private static Oppgavebehandling createOppgavebehandlingPortType() {

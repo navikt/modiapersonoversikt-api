@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelseaktivitet;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
@@ -10,7 +10,7 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.feature.LoggingFeature;
@@ -28,31 +28,31 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.InstanceSwitcher.createSwitcher;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SendHenvendelsePortTypeMock.createSendHenvendelsePortTypeMock;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.createHenvendelsePortTypeMock;
 
 @Configuration
-public class HenvendelseAktivitetV2EndpointConfig {
+public class HenvendelseEndpointConfig {
 
-    public static final String HENVENDELSE_AKTIVITET_V2_KEY = "start.sendhenvendelse.withmock";
+    public static final String HENVENDELSE_V2_KEY = "start.henvendelse.withmock";
 
     @Bean
-    public SendHenvendelsePortType sendHenvendelsePortType() {
+    public HenvendelsePortType henvendelsePortType() {
         return createSwitcher(
-                createSendHenvendelsePortType(new UserSAMLOutInterceptor()),
-                createSendHenvendelsePortTypeMock(),
-                HENVENDELSE_AKTIVITET_V2_KEY,
-                SendHenvendelsePortType.class
+                createHenvendelePortType(new UserSAMLOutInterceptor()),
+                createHenvendelsePortTypeMock(),
+                HENVENDELSE_V2_KEY,
+                HenvendelsePortType.class
         );
     }
 
     @Bean
-    public Pingable sendHenvendelsePing() {
-        final SendHenvendelsePortType ws = createSendHenvendelsePortType(new SystemSAMLOutInterceptor());
+    public Pingable henvendelsePing() {
+        final HenvendelsePortType ws = createHenvendelePortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
-                String name = "SEND_HENVENDELSE_V2";
+                String name = "HENVENDELSE_V2";
                 try {
                     ws.ping();
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
@@ -63,11 +63,11 @@ public class HenvendelseAktivitetV2EndpointConfig {
         };
     }
 
-    private static SendHenvendelsePortType createSendHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {
+    private static HenvendelsePortType createHenvendelePortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setWsdlLocation("classpath:SendHenvendelse.wsdl");
-        proxyFactoryBean.setAddress(System.getProperty("send.henvendelse.v2.url"));
-        proxyFactoryBean.setServiceClass(SendHenvendelsePortType.class);
+        proxyFactoryBean.setWsdlLocation("classpath:Henvendelse.wsdl");
+        proxyFactoryBean.setAddress(System.getProperty("henvendelse.v2.url"));
+        proxyFactoryBean.setServiceClass(HenvendelsePortType.class);
         proxyFactoryBean.getOutInterceptors().add(interceptor);
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
@@ -78,7 +78,7 @@ public class HenvendelseAktivitetV2EndpointConfig {
                 XMLSporsmal.class,
                 XMLSvar.class,
                 XMLReferat.class});
-        SendHenvendelsePortType portType = proxyFactoryBean.create(SendHenvendelsePortType.class);
+        HenvendelsePortType portType = proxyFactoryBean.create(HenvendelsePortType.class);
         Client client = ClientProxy.getClient(portType);
         HTTPConduit httpConduit = (HTTPConduit) client.getConduit();
         TLSClientParameters clientParameters = new TLSClientParameters();
@@ -86,5 +86,4 @@ public class HenvendelseAktivitetV2EndpointConfig {
         httpConduit.setTlsClientParameters(clientParameters);
         return portType;
     }
-
 }
