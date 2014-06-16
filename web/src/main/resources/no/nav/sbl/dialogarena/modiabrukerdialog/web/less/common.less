@@ -506,6 +506,50 @@ UL.feedbackPanel {
 	}
 }
 
+.oppgavepanel {
+  float: right;
+  position: relative;
+  > a {
+    background-color: #b7b1a9;
+    display: inline-block;
+    float: left;
+    height: 64px;
+    line-height: 64px;
+    padding: 0 32px;
+
+    text-transform: uppercase;
+    color: black;
+    font-size: 1.3rem;
+    border: 1px solid black;
+
+    &:not(:last-of-type) {
+      margin-right: 1rem;
+    }
+    &.velg-temagruppe {
+      border-radius: 50%;
+      background-image: url(../img/radio_ikon.svg);
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: 40px;
+    }
+    &:hover {
+      text-decoration: none;
+    }
+  }
+
+  .temagruppe-liste {
+    position: absolute;
+    background: #b7b1a9;
+    top: 78px;
+    padding: 1rem 2rem;
+    width: 100%;
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+  }
+}
+
 /* Sidebars */
 [class*=sidebar-] {
 	position: absolute;
