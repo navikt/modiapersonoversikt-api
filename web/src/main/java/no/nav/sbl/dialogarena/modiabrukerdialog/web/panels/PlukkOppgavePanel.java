@@ -23,15 +23,15 @@ public class PlukkOppgavePanel extends Panel {
     public PlukkOppgavePanel(String id) {
         super(id);
 
-        final IModel<Tema> valgtTema = new Model<>();
+        IModel<Tema> valgtTema = new Model<>();
         Form<Tema> form = new Form<>("plukk-oppgave-form", valgtTema);
         AjaxSubmitLink plukkOppgave = new AjaxSubmitLink("plukk-oppgave") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
             }
         };
-        RadioGroup radioGroup = new RadioGroup<>("radio-group", valgtTema);
-        radioGroup.add(new ListView<Tema>("liste", asList(Tema.values())) {
+        RadioGroup radioGroup = new RadioGroup<>("tema", valgtTema);
+        radioGroup.add(new ListView<Tema>("temaer", asList(Tema.values())) {
             @Override
             protected void populateItem(ListItem<Tema> item) {
                 item.add(new Radio<>("temavalg", item.getModel()));
