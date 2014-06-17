@@ -15,12 +15,14 @@ import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.Dialogpanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.ReferatPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.SvarPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout.TimeoutBoks;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.PlukkOppgavePanel;
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -42,7 +44,9 @@ import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGAN
 import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
 import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
 import static no.nav.modig.modia.events.InternalEvents.LAMELL_LINK_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
@@ -60,6 +64,8 @@ public class PersonPage extends BasePage {
 
     private Logger logger = getLogger(PersonPage.class);
 
+    private static final String DIALOGPANEL_ID = "dialogpanel";
+
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
 
@@ -70,10 +76,13 @@ public class PersonPage extends BasePage {
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
     private Label fnrContainer;
+    private Component dialogpanel;
+    private final String fnr;
 
     public PersonPage(PageParameters pageParameters) {
-        String fnr = pageParameters.get("fnr").toString(null);
-        instansierFelter(fnr);
+        fnr = pageParameters.get("fnr").toString(null);
+        instansierFelter();
+        dialogpanel = new ReferatPanel(DIALOGPANEL_ID, fnr);
         add(
                 hentPersonPanel,
                 searchToggleButton,
@@ -85,12 +94,12 @@ public class PersonPage extends BasePage {
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
                 new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
-                new Dialogpanel("dialogpanel", fnr),
+                dialogpanel,
                 new TimeoutBoks("timeoutBoks", fnr)
         );
     }
 
-    private void instansierFelter(String fnr) {
+    private void instansierFelter() {
         answer = new SjekkForlateSideAnswer();
         redirectPopup = createModalWindow("modal");
         lamellContainer = new LamellContainer("lameller", fnr);
@@ -164,6 +173,18 @@ public class PersonPage extends BasePage {
     @RunOnEvents(HENTPERSON_FODSELSNUMMER_IKKE_TILGANG)
     public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
         send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
+    }
+
+    @RunOnEvents(SVAR_PAA_MELDING)
+    public void svarPaaMelding(AjaxRequestTarget target, String meldingsId){
+        dialogpanel = dialogpanel.replaceWith(new SvarPanel(DIALOGPANEL_ID, fnr, meldingsId));
+        target.add(dialogpanel);
+    }
+
+    @RunOnEvents(MELDING_SENDT_TIL_BRUKER)
+    public void meldingSendtTilBruker(AjaxRequestTarget target){
+        dialogpanel = dialogpanel.replaceWith(new ReferatPanel(DIALOGPANEL_ID, fnr));
+        target.add(dialogpanel);
     }
 
     @Override

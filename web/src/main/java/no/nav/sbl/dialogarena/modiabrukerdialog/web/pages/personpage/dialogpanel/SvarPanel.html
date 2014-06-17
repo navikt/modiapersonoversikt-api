@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+
+    <wicket:extend>
+
+        <p>
+            <span><wicket:message key="svarpanel.sporsmal.overskrift"/></span> <span wicket:id="dato">Dato her</span>
+        <div wicket:id="sporsmal">
+            Faktisk tekst!
+        </div>
+        </p>
+
+
+        <!--TODO: Trekk ut kanalvelgeren til en egen klasse?-->
+        <section class="kanalvelger clearfix">
+            <div wicket:id="kanal">
+                <div wicket:id="kanalvalg" class="kanalvalg">
+                    <input wicket:id="kanalknapp" type="radio"/>
+                    <label wicket:for="kanalknapp">
+                        <div wicket:id="kanalikon"></div>
+                    </label>
+                </div>
+            </div>
+        </section>
+        <div wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</div>
+    </wicket:extend>
+
+</wicket:panel>
+</body>
+</html>
