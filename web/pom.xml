@@ -23,6 +23,10 @@
 
         <!--Interne-->
         <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modiabrukerdialog-consumer</artifactId>
+        </dependency>
+        <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>modiabrukerdialog-mock</artifactId>
             <version>${project.version}</version>
@@ -106,10 +110,6 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>modiabrukerdialog-consumer</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>

@@ -176,8 +176,8 @@ public class PersonPage extends BasePage {
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
-    public void svarPaaMelding(AjaxRequestTarget target, String meldingsId){
-        dialogpanel = dialogpanel.replaceWith(new SvarPanel(DIALOGPANEL_ID, fnr, meldingsId));
+    public void svarPaaMelding(AjaxRequestTarget target, String sporsmalId){
+        dialogpanel = dialogpanel.replaceWith(new SvarPanel(DIALOGPANEL_ID, fnr, sporsmalId));
         target.add(dialogpanel);
     }
 
