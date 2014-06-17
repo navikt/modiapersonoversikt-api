@@ -36,7 +36,7 @@ public class SvarPanel extends DialogPanel {
         super(id, fnr);
 
         sporsmalsMelding = sakService.getSakFromHenvendelse(sporsmalsId);
-        sakService.plukkSakIGsak(sporsmalsId);
+        sakService.hentOppgaveFraGsak(sporsmalsId);
 
         form.getModelObject().tema = sporsmalsMelding.tema;
 
@@ -87,6 +87,6 @@ public class SvarPanel extends DialogPanel {
 
         ws.sendHenvendelse(new WSSendHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(fnr).withAny(info));
 
-        sakService.ferdigstillSakIGsak(sporsmalsMelding);
+        sakService.ferdigstillOppgaveFraGsak(sporsmalsMelding.id);
     }
 }
