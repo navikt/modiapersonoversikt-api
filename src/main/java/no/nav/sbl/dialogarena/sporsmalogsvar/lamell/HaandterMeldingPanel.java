@@ -9,7 +9,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 
 public class HaandterMeldingPanel extends Panel {
 
@@ -23,10 +23,10 @@ public class HaandterMeldingPanel extends Panel {
             }
         };
 
-        besvar.add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
+        besvar.add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return innboksVM.getObject().valgtMeldingErEtUbesvartSporsmaal();
+                return innboksVM.getObject().valgtTraadBleInitiertAvBruker();
             }
         }));
 

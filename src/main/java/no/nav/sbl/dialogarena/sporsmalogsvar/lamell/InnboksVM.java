@@ -4,6 +4,7 @@ import no.nav.modig.lang.collections.TransformerUtils;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -19,7 +20,6 @@ import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
 
 public class InnboksVM implements Serializable {
@@ -63,9 +63,14 @@ public class InnboksVM implements Serializable {
         return valgtTraad.isEmpty() ? null : valgtTraad.get(0);
     }
 
-    public Boolean valgtMeldingErEtUbesvartSporsmaal() {
-        MeldingVM nyesteMelding = getNyesteMelding();
-        return nyesteMelding != null && nyesteMelding.melding.status == IKKE_BESVART;
+    public Boolean valgtTraadBleInitiertAvBruker() {
+        MeldingVM eldsteMelding = getEldsteMelding();
+        return eldsteMelding != null && eldsteMelding.melding.meldingstype == Meldingstype.SPORSMAL;
+    }
+
+    public MeldingVM getEldsteMelding() {
+        List<MeldingVM> valgtTraad = getValgtTraad();
+        return valgtTraad.isEmpty() ? null : valgtTraad.get(valgtTraad.size() - 1);
     }
 
     public List<MeldingVM> getTidligereMeldinger() {
