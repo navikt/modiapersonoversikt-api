@@ -24,10 +24,11 @@ public class Kvitteringspanel extends Panel {
         add(new Label("kvitteringsmelding", new PropertyModel(this, "kvitteringsmelding")));
     }
 
-    public void visISekunder(Duration tid, AjaxRequestTarget target, final Form<DialogVM> form) {
-        setVisibilityAllowed(true);
+    public void visISekunder(Duration tid, AjaxRequestTarget target, final Form<DialogVM> form, String kvitteringsmelding) {
+        this.kvitteringsmelding = kvitteringsmelding;
+        form.setVisibilityAllowed(false);
+        this.setVisibilityAllowed(true);
         target.add(this);
-        kvitteringsmelding = getString(form.getModelObject().kanal.getKvitteringKey());
 
         if (timeout == null) {
             timeout = new AbstractAjaxTimerBehavior(tid) {
