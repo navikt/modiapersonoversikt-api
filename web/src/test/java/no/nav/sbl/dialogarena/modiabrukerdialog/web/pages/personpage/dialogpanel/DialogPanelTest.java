@@ -49,7 +49,7 @@ public class DialogPanelTest extends WicketPageTest {
                 .should().containComponent(withId("tekstfelt").and(ofType(EnhancedTextArea.class)))
                 .should().containComponent(withId("send").and(ofType(AjaxButton.class)))
                 .should().containComponent(withId("feedback").and(ofType(FeedbackPanel.class)))
-                .should().containComponent(withId("kvittering").and(ofType(Kvitteringspanel.class).thatIsInvisible()));
+                .should().containComponent(withId("kvittering").and(ofType(HesteKvitteringspanelFjes.class).thatIsInvisible()));
     }
 
     @Test
@@ -75,7 +75,7 @@ public class DialogPanelTest extends WicketPageTest {
                 .select("tema", 0)
                 .submitWithAjaxButton(withId("send"))
                 .should().containComponent(thatIsInvisible().withId("dialogform"))
-                .should().containComponent(thatIsVisible().ofType(Kvitteringspanel.class));
+                .should().containComponent(thatIsVisible().ofType(HesteKvitteringspanelFjes.class));
     }
 
     protected TestDialogPanel lagDialogPanelMedKanalSatt() {

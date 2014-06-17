@@ -1,0 +1,65 @@
+@sideMargin: 1.5em;
+
+.dialogform {
+  text-align: center;
+  .temavelger {
+    width: 100%;
+    background-color: #f7f7f7;
+    font-weight: bold;
+    padding: 0.5em @sideMargin;
+  }
+  .kanalvelger {
+    width: 50%;
+    margin: 1em auto;
+    .kanalvalg {
+      float: left;
+      width: 7em;
+      input[type="radio"] + label {
+        width: auto;
+        margin: 1rem 0;
+        border: 1px solid transparent;
+        background-position: 0;
+        > * {
+          width: 32px;
+          height: 32px;
+          background-repeat: no-repeat;
+        }
+        > .telefon {
+          background-image: url(../img/telefon.svg);
+        }
+        > .oppmote {
+          background-image: url(../img/hus.svg);
+        }
+      }
+      input[type="radio"]:checked + label {
+        > .telefon {
+          background-image: url(../img/telefon_valgt.svg);
+        }
+        > .oppmote {
+          background-image: url(../img/hus_valgt.svg);
+        }
+      }
+      input[type="radio"]:focus + label {
+        border: 1px dashed #0067c5;
+      }
+    }
+  }
+  .overskrift {
+    text-align: left;
+    margin-left: @sideMargin;
+  }
+  .tekstfelt {
+    margin: 0 @sideMargin;
+  }
+  .send {
+    margin: 1em 0;
+  }
+  .feedback {
+    margin: 0 @sideMargin;
+  }
+}
+
+.kvittering {
+  margin-top: 200px;
+  text-align: center;
+}
