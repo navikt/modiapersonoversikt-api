@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
+import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.Oppgavebehandling;
 import org.joda.time.DateTime;
 
@@ -12,6 +13,9 @@ public class SakService {
 
     @Inject
     private Oppgavebehandling oppgavebehandling;
+
+    @Inject
+    private Oppgave oppgave;
 
     @Inject
     protected SendHenvendelsePortType ws;

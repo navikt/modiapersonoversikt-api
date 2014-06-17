@@ -89,6 +89,10 @@
         <!--Dialogarena-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sporsmal-og-svar</artifactId>
         </dependency>
         <dependency>
