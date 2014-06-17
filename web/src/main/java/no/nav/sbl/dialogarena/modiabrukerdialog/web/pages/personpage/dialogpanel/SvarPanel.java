@@ -25,7 +25,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static org.joda.time.DateTime.now;
 
-public class SvarPanel extends HesteFjes {
+public class SvarPanel extends DialogPanel {
 
     @Inject
     private SakService sakService;
