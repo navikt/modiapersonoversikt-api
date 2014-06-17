@@ -7,7 +7,6 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.events.FeedItemPayload;
-import no.nav.modig.modia.events.InternalEvents;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
@@ -175,8 +174,8 @@ public class PersonPage extends BasePage {
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
-    public void svarPaaMelding(AjaxRequestTarget target, String meldingsId){
-        dialogpanel = dialogpanel.replaceWith(new SvarPanel(DIALOGPANEL_ID, fnr, meldingsId));
+    public void svarPaaMelding(AjaxRequestTarget target, String sporsmalId){
+        dialogpanel = dialogpanel.replaceWith(new SvarPanel(DIALOGPANEL_ID, fnr, sporsmalId));
         target.add(dialogpanel);
     }
 
