@@ -18,16 +18,16 @@ import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 
-public abstract class DialogPanel extends Panel {
+public abstract class Dialogpanel extends Panel {
 
-    public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(DialogPanel.class, "DialogPanel.less");
+    public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(Dialogpanel.class, "dialogpanel.less");
 
     @Inject
     protected SendHenvendelsePortType ws;
 
     protected Form<DialogVM> form;
 
-    public DialogPanel(String id, final String fnr) {
+    public Dialogpanel(String id, final String fnr) {
         super(id);
         setOutputMarkupId(true);
 

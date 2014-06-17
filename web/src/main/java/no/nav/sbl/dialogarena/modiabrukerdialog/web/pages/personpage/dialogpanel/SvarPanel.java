@@ -24,7 +24,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static org.joda.time.DateTime.now;
 
-public class SvarPanel extends DialogPanel {
+public class SvarPanel extends Dialogpanel {
 
     final String meldingsId;
 

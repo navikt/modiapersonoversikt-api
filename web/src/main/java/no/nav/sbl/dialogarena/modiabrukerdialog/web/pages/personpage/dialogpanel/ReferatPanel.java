@@ -17,7 +17,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static org.joda.time.DateTime.now;
 
-public class ReferatPanel extends DialogPanel {
+public class ReferatPanel extends Dialogpanel {
 
     public ReferatPanel(String id, String fnr) {
         super(id, fnr);
