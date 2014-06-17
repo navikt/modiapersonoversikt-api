@@ -31,7 +31,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {KjerneinfoPepMockContext.class, HenvendelseMockContext.class})
-public class DialogPanelTest extends WicketPageTest {
+public class HesteFjesTest extends WicketPageTest {
 
     @Inject
     protected SendHenvendelsePortType ws;
@@ -43,7 +43,7 @@ public class DialogPanelTest extends WicketPageTest {
 
     @Test
     public void inneholderGenerelleKomponenter() {
-        wicket.goToPageWith(new TestDialogPanel("id", "fnr"))
+        wicket.goToPageWith(new TestHesteFjes("id", "fnr"))
                 .should().containComponent(withId("dialogform").and(ofType(Form.class)))
                 .should().containComponent(withId("tema").and(ofType(DropDownChoice.class)))
                 .should().containComponent(withId("tekstfelt").and(ofType(EnhancedTextArea.class)))
@@ -54,7 +54,7 @@ public class DialogPanelTest extends WicketPageTest {
 
     @Test
     public void girFeedbackOmPaakrevdeKomponenter() {
-        TestDialogPanel dialogPanel = new TestDialogPanel("id", "fnr");
+        TestHesteFjes dialogPanel = new TestHesteFjes("id", "fnr");
         wicket.goToPageWith(dialogPanel)
                 .inForm(withId("dialogform"))
                 .submitWithAjaxButton(withId("send"));
@@ -68,7 +68,7 @@ public class DialogPanelTest extends WicketPageTest {
 
     @Test
     public void viserKvitteringNaarManSenderInn() {
-        TestDialogPanel dialogPanel = lagDialogPanelMedKanalSatt();
+        TestHesteFjes dialogPanel = lagDialogPanelMedKanalSatt();
         wicket.goToPageWith(dialogPanel)
                 .inForm(withId("dialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")
@@ -78,16 +78,16 @@ public class DialogPanelTest extends WicketPageTest {
                 .should().containComponent(thatIsVisible().ofType(Kvitteringspanel.class));
     }
 
-    protected TestDialogPanel lagDialogPanelMedKanalSatt() {
-        TestDialogPanel dialogPanel = new TestDialogPanel("id", "fnr");
+    protected TestHesteFjes lagDialogPanelMedKanalSatt() {
+        TestHesteFjes dialogPanel = new TestHesteFjes("id", "fnr");
         Object dialogformModel = dialogPanel.get("dialogform").getDefaultModelObject();
         DialogVM dialogVM = (DialogVM) dialogformModel;
         dialogVM.kanal = TestKanal.TEST;
         return dialogPanel;
     }
 
-    private static class TestDialogPanel extends DialogPanel {
-        public TestDialogPanel(String id, String fnr) {
+    private static class TestHesteFjes extends HesteFjes {
+        public TestHesteFjes(String id, String fnr) {
             super(id, fnr);
         }
 

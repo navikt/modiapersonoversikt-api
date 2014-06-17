@@ -35,7 +35,7 @@ public class KvitteringspanelTest extends WicketPageTest {
         Kvitteringspanel kvitteringspanel = new Kvitteringspanel("id");
         wicket.goToPageWith(kvitteringspanel);
         DialogVM dialogVM = new DialogVM();
-        dialogVM.kanal = DialogPanelTest.TestKanal.TEST;
+        dialogVM.kanal = HesteFjesTest.TestKanal.TEST;
         kvitteringspanel.visISekunder(
                 Duration.seconds(1),
                 new AjaxRequestHandler(wicket.tester.getLastRenderedPage()),
