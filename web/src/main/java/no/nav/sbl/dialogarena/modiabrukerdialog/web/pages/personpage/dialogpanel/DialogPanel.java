@@ -20,7 +20,7 @@ import static java.util.Arrays.asList;
 
 public abstract class DialogPanel extends Panel {
 
-    public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(DialogPanel.class, "HestedialogpanelFjes.less");
+    public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(DialogPanel.class, "DialogPanel.less");
 
     @Inject
     protected SendHenvendelsePortType ws;
@@ -52,7 +52,7 @@ public abstract class DialogPanel extends Panel {
         feedbackPanel.setOutputMarkupId(true);
         form.add(feedbackPanel);
 
-        final HesteKvitteringspanelFjes kvittering = new HesteKvitteringspanelFjes("kvittering");
+        final KvitteringsPanel kvittering = new KvitteringsPanel("kvittering");
 
         form.add(new AjaxButton("send") {
             @Override

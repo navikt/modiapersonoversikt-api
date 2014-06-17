@@ -12,12 +12,12 @@ import org.apache.wicket.util.time.Duration;
 
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 
-public class HesteKvitteringspanelFjes extends Panel {
+public class KvitteringsPanel extends Panel {
 
     private String kvitteringsmelding;
     private AbstractAjaxTimerBehavior timeout;
 
-    public HesteKvitteringspanelFjes(String id) {
+    public KvitteringsPanel(String id) {
         super(id);
         setVisibilityAllowed(false);
         setOutputMarkupPlaceholderTag(true);
@@ -34,7 +34,7 @@ public class HesteKvitteringspanelFjes extends Panel {
             timeout = new AbstractAjaxTimerBehavior(tid) {
                 @Override
                 protected void onTimer(AjaxRequestTarget target) {
-                    HesteKvitteringspanelFjes.this.setVisibilityAllowed(false);
+                    KvitteringsPanel.this.setVisibilityAllowed(false);
 
                     form.setVisibilityAllowed(true);
 

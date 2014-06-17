@@ -21,33 +21,33 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {KjerneinfoPepMockContext.class})
-public class HesteKvitteringspanelFjesTest extends WicketPageTest {
+public class KvitteringsPanelTest extends WicketPageTest {
 
     @Test
     public void inneholderMeldingOgErUsynlig() {
-        wicket.goToPageWith(new HesteKvitteringspanelFjes("id"))
+        wicket.goToPageWith(new KvitteringsPanel("id"))
                 .should().containComponent(withId("kvitteringsmelding"))
-                .should().containComponent(ofType(HesteKvitteringspanelFjes.class).thatIsInvisible());
+                .should().containComponent(ofType(KvitteringsPanel.class).thatIsInvisible());
     }
 
     @Test
     public void viserOgSkjulerSegSelv() {
-        HesteKvitteringspanelFjes hesteKvitteringspanelFjes = new HesteKvitteringspanelFjes("id");
-        wicket.goToPageWith(hesteKvitteringspanelFjes);
+        KvitteringsPanel kvitteringsPanel = new KvitteringsPanel("id");
+        wicket.goToPageWith(kvitteringsPanel);
         DialogVM dialogVM = new DialogVM();
         dialogVM.kanal = DialogPanelTest.TestKanal.TEST;
-        hesteKvitteringspanelFjes.visISekunder(
+        kvitteringsPanel.visISekunder(
                 Duration.seconds(1),
                 new AjaxRequestHandler(wicket.tester.getLastRenderedPage()),
                 new Form<>("formId", Model.of(dialogVM)),
                 "kvitteringsmelding"
         );
 
-        wicket.should().containComponent(ofType(HesteKvitteringspanelFjes.class).thatIsVisible());
+        wicket.should().containComponent(ofType(KvitteringsPanel.class).thatIsVisible());
 
         wicket.executeAjaxBehaviors(BehaviorMatchers.ofType(AbstractAjaxTimerBehavior.class));
 
-        wicket.should().containComponent(ofType(HesteKvitteringspanelFjes.class).thatIsInvisible())
-                .should().inAjaxResponse().haveComponents(ofType(HesteKvitteringspanelFjes.class));
+        wicket.should().containComponent(ofType(KvitteringsPanel.class).thatIsInvisible())
+                .should().inAjaxResponse().haveComponents(ofType(KvitteringsPanel.class));
     }
 }
