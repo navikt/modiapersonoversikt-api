@@ -24,8 +24,7 @@ import java.util.Set;
 
 public class GsakTjenesteSikkerhet {
 
-    public static final String STANDARD_BRUKERNAVN = "Z999172",
-                                STANDARD_PASSORD = "***REMOVED***";
+    public static final String STANDARD_BRUKERNAVN = "Z900001", STANDARD_PASSORD = "***REMOVED***";
 
     public static void leggPaaAutentisering(JaxWsProxyFactoryBean jaxwsClient, final String brukernavn, final String passord) {
         jaxwsClient.getHandlers().add(new StelvioHeaderHandler());
