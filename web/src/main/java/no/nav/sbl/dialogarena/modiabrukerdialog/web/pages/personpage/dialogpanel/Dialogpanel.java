@@ -4,7 +4,7 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -54,14 +54,13 @@ public abstract class DialogPanel extends Panel {
 
         final Kvitteringspanel kvittering = new Kvitteringspanel("kvittering");
 
-        form.add(new AjaxSubmitLink("send") {
+        form.add(new AjaxButton("send") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
                 DialogVM dialogVM = form.getModelObject();
                 sendHenvendelse(dialogVM, fnr);
 
-                form.setVisibilityAllowed(false);
-                kvittering.visISekunder(Duration.seconds(3), target, form);
+                kvittering.visISekunder(Duration.seconds(3), target, form, getString(dialogVM.kanal.getKvitteringKey()));
 
                 form.setModelObject(new DialogVM());
 
