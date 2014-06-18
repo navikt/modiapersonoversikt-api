@@ -48,7 +48,7 @@ public class GsakOppgaveV2PortTypeMock {
                 wsOppgavetype.setKode("wsOppgavetype");
                 wsOppgave.setOppgavetype(wsOppgavetype);
                 Bruker wsBruker = new Bruker();
-                wsBruker.setBrukerId("11111111111");
+                wsBruker.setBrukerId("***REMOVED***");
                 wsOppgave.setGjelder(wsBruker);
                 Status wsStatus = new Status();
                 wsStatus.setKode("statuskode");
