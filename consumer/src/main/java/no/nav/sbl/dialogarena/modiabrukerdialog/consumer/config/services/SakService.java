@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmaal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
@@ -8,9 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Henvendelse
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
-import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeFilter;
@@ -25,14 +23,12 @@ import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSLagreOppgave
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.Oppgavebehandling;
 import org.apache.commons.collections15.Transformer;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
-
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
@@ -65,6 +61,16 @@ public class SakService {
         return HenvendelseUtils.createSporsmaalFromHenvendelse(henvendelsesObjekt);
     }
 
+    public void sendSvar(Svar svar) {
+        XMLBehandlingsinformasjon info = HenvendelseUtils.createXMLBehandlingsinformasjon(svar);
+        sendHenvendelsePortType.sendHenvendelse(new WSSendHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(svar.fnr).withAny(info));
+    }
+
+    public void sendReferat(Referat referat) {
+        XMLBehandlingsinformasjon info = HenvendelseUtils.createXMLBehandlingsinformasjon(referat);
+        sendHenvendelsePortType.sendHenvendelse(new WSSendHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(referat.fnr).withAny(info));
+    }
+
     public Oppgave hentOppgaveFraGsak(String oppgaveId) {
         WSHentOppgaveResponse wsHentOppgaveResponse;
         try {
@@ -86,28 +92,9 @@ public class SakService {
         }
     }
 
-    public void sendSvar(Svar svar) {
-        XMLBehandlingsinformasjon info = HenvendelseUtils.createXMLBehandlingsinformasjon(svar);
-        sendHenvendelsePortType.sendHenvendelse(new WSSendHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(svar.fnr).withAny(info));
     public void ferdigstillOppgaveFraGsak(String oppgaveId) {
         oppgavebehandlingWS.ferdigstillOppgaveBolk(
                 new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId).withFerdigstiltAvEnhetId(FERDIGSTILT_AV_ENHET));
-    }
-
-    private Melding getMelding() {
-        Melding melding = new Melding("id", Meldingstype.SPORSMAL, DateTime.now());
-        melding.fritekst = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, " +
-                "sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. " +
-                "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl " +
-                "ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate " +
-                "velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
-        melding.tema = "HJELPEMIDLER";
-        return melding;
-    }
-
-    public void sendReferat(Referat referat) {
-        XMLBehandlingsinformasjon info = HenvendelseUtils.createXMLBehandlingsinformasjon(referat);
-        sendHenvendelsePortType.sendHenvendelse(new WSSendHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(referat.fnr).withAny(info));
     }
 
 
