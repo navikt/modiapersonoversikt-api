@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.Tema;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -15,22 +16,29 @@ import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
+import javax.inject.Inject;
+
 import static java.util.Arrays.asList;
 import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
 public class PlukkOppgavePanel extends Panel {
 
+    @Inject
+    private SakService sakService;
+
     public PlukkOppgavePanel(String id) {
         super(id);
 
-        IModel<Tema> valgtTema = new Model<>();
+        final IModel<Tema> valgtTema = new Model<>();
         Form<Tema> form = new Form<>("plukk-oppgave-form", valgtTema);
         AjaxSubmitLink plukkOppgave = new AjaxSubmitLink("plukk-oppgave") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                sakService.plukkOppgaveFraGsak(valgtTema.getObject().name());
             }
         };
         RadioGroup radioGroup = new RadioGroup<>("tema", valgtTema);
+        radioGroup.setRequired(true);
         radioGroup.add(new ListView<Tema>("temaer", asList(Tema.values())) {
             @Override
             protected void populateItem(ListItem<Tema> item) {

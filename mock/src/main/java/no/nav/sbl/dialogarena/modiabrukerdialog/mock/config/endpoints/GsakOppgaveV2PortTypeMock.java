@@ -1,50 +1,53 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
-import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgavetype;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnFeilregistrertOppgaveListeRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnFeilregistrertOppgaveListeResponse;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnFerdigstiltOppgaveListeRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnFerdigstiltOppgaveListeResponse;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnMappeListeRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnMappeListeResponse;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeResponse;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveResponse;
-import no.nav.virksomhet.tjenester.oppgave.v2.HentOppgaveOppgaveIkkeFunnet;
-import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgavetype;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnFeilregistrertOppgaveListeRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnFeilregistrertOppgaveListeResponse;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnFerdigstiltOppgaveListeRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnFerdigstiltOppgaveListeResponse;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnMappeListeRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnMappeListeResponse;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeResponse;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.HentOppgaveRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.HentOppgaveResponse;
+import no.nav.virksomhet.tjenester.oppgave.v2.binding.HentOppgaveOppgaveIkkeFunnet;
+import no.nav.virksomhet.tjenester.oppgave.v2.binding.Oppgave;
 
 public class GsakOppgaveV2PortTypeMock {
 
     public static Oppgave createOppgavePortTypeMock() {
         return new Oppgave() {
             @Override
-            public WSFinnFeilregistrertOppgaveListeResponse finnFeilregistrertOppgaveListe(WSFinnFeilregistrertOppgaveListeRequest request) {
-                return new WSFinnFeilregistrertOppgaveListeResponse();
+            public HentOppgaveResponse hentOppgave(HentOppgaveRequest hentOppgaveRequest) throws HentOppgaveOppgaveIkkeFunnet {
+                HentOppgaveResponse hentOppgaveResponse = new HentOppgaveResponse();
+                no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave wsOppgave = new no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave();
+                wsOppgave.setOppgaveId("1");
+                Oppgavetype oppgavetype = new Oppgavetype();
+                oppgavetype.setKode("kode");
+                wsOppgave.setOppgavetype(oppgavetype);
+                hentOppgaveResponse.setOppgave(wsOppgave);
+                return hentOppgaveResponse;
             }
 
             @Override
-            public WSHentOppgaveResponse hentOppgave(WSHentOppgaveRequest request) throws HentOppgaveOppgaveIkkeFunnet {
-                return new WSHentOppgaveResponse()
-                        .withOppgave(new WSOppgave()
-                                .withOppgaveId("1")
-                                .withOppgavetype(new WSOppgavetype().withKode("kode")));
+            public FinnOppgaveListeResponse finnOppgaveListe(FinnOppgaveListeRequest finnOppgaveListeRequest) {
+                return null;
             }
 
             @Override
-            public WSFinnMappeListeResponse finnMappeListe(WSFinnMappeListeRequest request) {
-                return new WSFinnMappeListeResponse();
+            public FinnFerdigstiltOppgaveListeResponse finnFerdigstiltOppgaveListe(FinnFerdigstiltOppgaveListeRequest finnFerdigstiltOppgaveListeRequest) {
+                return null;
             }
 
             @Override
-            public WSFinnOppgaveListeResponse finnOppgaveListe(WSFinnOppgaveListeRequest request) {
-                return new WSFinnOppgaveListeResponse();
+            public FinnFeilregistrertOppgaveListeResponse finnFeilregistrertOppgaveListe(FinnFeilregistrertOppgaveListeRequest finnFeilregistrertOppgaveListeRequest) {
+                return null;
             }
 
             @Override
-            public WSFinnFerdigstiltOppgaveListeResponse finnFerdigstiltOppgaveListe(WSFinnFerdigstiltOppgaveListeRequest request) {
-                return new WSFinnFerdigstiltOppgaveListeResponse();
+            public FinnMappeListeResponse finnMappeListe(FinnMappeListeRequest finnMappeListeRequest) {
+                return null;
             }
         };
     }

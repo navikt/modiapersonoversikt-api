@@ -2,10 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gs
 
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeFilter;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeSok;
-import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeFilter;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeSok;
+import no.nav.virksomhet.tjenester.oppgave.v2.binding.Oppgave;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -41,9 +41,14 @@ public class GsakOppgaveV2EndpointConfig {
                 long start = System.currentTimeMillis();
                 String name = "GSAK_V2";
                 try {
-                    ws.finnOppgaveListe(new WSFinnOppgaveListeRequest()
-                            .withSok(new WSFinnOppgaveListeSok().withBrukerId("10108000398"))
-                            .withFilter(new WSFinnOppgaveListeFilter().withMaxAntallSvar(0)));
+                    FinnOppgaveListeRequest finnOppgaveListeRequest = new FinnOppgaveListeRequest();
+                    FinnOppgaveListeSok finnOppgaveListeSok = new FinnOppgaveListeSok();
+                    finnOppgaveListeSok.setBrukerId("10108000398");
+                    FinnOppgaveListeFilter finnOppgaveListeFilter = new FinnOppgaveListeFilter();
+                    finnOppgaveListeFilter.setMaxAntallSvar(0);
+                    finnOppgaveListeRequest.setSok(finnOppgaveListeSok);
+                    finnOppgaveListeRequest.setFilter(finnOppgaveListeFilter);
+                    ws.finnOppgaveListe(finnOppgaveListeRequest);
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
@@ -54,7 +59,7 @@ public class GsakOppgaveV2EndpointConfig {
 
     private static Oppgave createOppgavePortType() {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setWsdlLocation("classpath:oppgave/no/nav/virksomhet/tjenester/oppgave/oppgave.wsdl");
+        proxyFactoryBean.setWsdlLocation("classpath:wsdl/no/nav/virksomhet/tjenester/oppgave/oppgave.wsdl");
         proxyFactoryBean.setAddress(System.getProperty("gsak.oppgave.v2.url"));
         proxyFactoryBean.setServiceClass(Oppgave.class);
         proxyFactoryBean.getFeatures().add(new LoggingFeature());

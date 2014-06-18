@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak;
 
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.Oppgavebehandling;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.Oppgavebehandling;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +25,7 @@ public class GsakOppgavebehandlingV2EndpointConfig {
 
     private static Oppgavebehandling createOppgavebehandlingPortType() {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setWsdlLocation("classpath:oppgavebehandling/no/nav/virksomhet/tjenester/oppgavebehandling/oppgavebehandling.wsdl");
+        proxyFactoryBean.setWsdlLocation("classpath:wsdl/no/nav/virksomhet/tjenester/oppgavebehandling/oppgavebehandling.wsdl");
         proxyFactoryBean.setAddress(System.getProperty("gsak.oppgavebehandling.v2.url"));
         proxyFactoryBean.setServiceClass(Oppgavebehandling.class);
         proxyFactoryBean.getFeatures().add(new LoggingFeature());

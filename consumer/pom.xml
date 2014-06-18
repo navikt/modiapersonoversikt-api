@@ -110,8 +110,14 @@
             <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
         </dependency>
         <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
+            <groupId>no.nav.tjenester</groupId>
+            <artifactId>nav-oppgave-tjenestespesifikasjon</artifactId>
+            <classifier>jaxws</classifier>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.tjenester</groupId>
+            <artifactId>nav-oppgavebehandling-tjenestespesifikasjon</artifactId>
+            <classifier>jaxws</classifier>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
