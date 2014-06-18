@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
@@ -66,17 +67,21 @@ public class MeldingUtils {
                 melding.tema = ((XMLSvar) xmlMetadata).getTemagruppe();
                 melding.fritekst = ((XMLSvar) xmlMetadata).getFritekst();
                 melding.lestDato = ((XMLSvar) xmlMetadata).getLestDato();
+                melding.navIdent = getNavIdentFraAktor(info.getAktor());
             } else if (xmlMetadata instanceof XMLReferat) {
                 melding.tema = ((XMLReferat) xmlMetadata).getTemagruppe();
                 melding.fritekst = ((XMLReferat) xmlMetadata).getFritekst();
                 melding.kanal = ((XMLReferat) xmlMetadata).getKanal();
                 melding.lestDato = ((XMLReferat) xmlMetadata).getLestDato();
+                melding.navIdent = getNavIdentFraAktor(info.getAktor());
             }
-
-
             return melding;
         }
     };
+
+    private static String getNavIdentFraAktor(XMLAktor aktor){
+        return aktor != null ? aktor.getNavIdent() : null;
+    }
 
     public static final Transformer<XMLBehandlingsinformasjon, Status> STATUS = new Transformer<XMLBehandlingsinformasjon, Status>() {
         @Override
@@ -103,4 +108,5 @@ public class MeldingUtils {
             }
         }
     };
+
 }

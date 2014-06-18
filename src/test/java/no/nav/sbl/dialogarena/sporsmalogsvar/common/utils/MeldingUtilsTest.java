@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
@@ -32,20 +33,31 @@ import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 
 public class MeldingUtilsTest {
+
+    public static final String ID_1 = "1";
+    public static final String ID_2 = "2";
+    public static final String ID_3 = "3";
+    public static final String NAVIDENT = "navident";
+    public static final String FRITEKST = "fritekst";
+    public static final String TEMA = "tema";
+    public static final String KANAL = "kanal";
+    public static final DateTime OPPRETTET_DATO = DateTime.now().minusDays(1);
+    public static final DateTime LEST_DATO = DateTime.now();
+
+
     @Test
     public void testSkillUtTraader() {
-        Melding melding1 = new Melding("1", SPORSMAL, now());
-        melding1.traadId = "1";
-        Melding melding2 = new Melding("2", SVAR, now());
-        melding2.traadId = "1";
-        Melding melding3 = new Melding("3", SPORSMAL, now());
-        melding3.traadId = "2";
+        Melding melding1 = new Melding(ID_1, SPORSMAL, now());
+        melding1.traadId = ID_1;
+        Melding melding2 = new Melding(ID_2, SVAR, now());
+        melding2.traadId = ID_1;
+        Melding melding3 = new Melding(ID_3, SPORSMAL, now());
+        melding3.traadId = ID_2;
         Map<String, List<Melding>> traader = skillUtTraader(asList(melding1, melding2, melding3));
 
         assertThat(traader.size(), is(equalTo(2)));
-        assertThat(traader.get("1").size(), is(equalTo(2)));
-        assertThat(traader.get("2").size(), is(equalTo(1)));
-
+        assertThat(traader.get(ID_1).size(), is(equalTo(2)));
+        assertThat(traader.get(ID_2).size(), is(equalTo(1)));
     }
 
     @Test
@@ -72,63 +84,49 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medSporsmal() {
-        DateTime opprettet = DateTime.now();
-        String behandlingsId = "1";
-        String fritekst = "fritekst";
-        String tema = "tema";
-        XMLSporsmal xmlSporsmal = new XMLSporsmal().withFritekst(fritekst).withTemagruppe(tema);
+        XMLSporsmal xmlSporsmal = new XMLSporsmal().withFritekst(FRITEKST).withTemagruppe(TEMA);
 
-        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(behandlingsId, opprettet, XMLHenvendelseType.SPORSMAL.name(), xmlSporsmal));
+        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SPORSMAL.name(), xmlSporsmal));
 
-        assertThat(melding.id, is(equalTo(behandlingsId)));
-        assertThat(melding.traadId, is(equalTo(behandlingsId)));
-        assertThat(melding.opprettetDato, is(equalTo(opprettet)));
+        assertThat(melding.id, is(equalTo(ID_1)));
+        assertThat(melding.traadId, is(equalTo(ID_1)));
+        assertThat(melding.opprettetDato, is(equalTo(OPPRETTET_DATO)));
         assertThat(melding.meldingstype, is(equalTo(SPORSMAL)));
-        assertThat(melding.fritekst, is(equalTo(fritekst)));
-        assertThat(melding.tema, is(equalTo(tema)));
+        assertThat(melding.fritekst, is(equalTo(FRITEKST)));
+        assertThat(melding.tema, is(equalTo(TEMA)));
     }
 
     @Test
     public void testTilMeldingTransformer_medSvar() {
-        DateTime opprettet = DateTime.now().minusDays(1);
-        DateTime lest = DateTime.now();
-        String behandlingsId = "1";
-        String sporsmalsId = "2";
-        String fritekst = "fritekst";
-        String tema = "tema";
-        XMLSvar xmlSvar = new XMLSvar().withSporsmalsId(sporsmalsId).withTemagruppe(tema).withLestDato(lest).withFritekst(fritekst);
+        XMLSvar xmlSvar = new XMLSvar().withSporsmalsId(ID_2).withTemagruppe(TEMA).withLestDato(LEST_DATO).withFritekst(FRITEKST);
 
-        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(behandlingsId, opprettet, XMLHenvendelseType.SVAR.name(), xmlSvar));
+        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SVAR.name(), xmlSvar));
 
-        assertThat(melding.id, is(equalTo(behandlingsId)));
-        assertThat(melding.traadId, is(equalTo(sporsmalsId)));
-        assertThat(melding.opprettetDato, is(equalTo(opprettet)));
+        assertThat(melding.id, is(equalTo(ID_1)));
+        assertThat(melding.traadId, is(equalTo(ID_2)));
+        assertThat(melding.opprettetDato, is(equalTo(OPPRETTET_DATO)));
         assertThat(melding.meldingstype, is(equalTo(SVAR)));
-        assertThat(melding.fritekst, is(equalTo(fritekst)));
-        assertThat(melding.tema, is(equalTo(tema)));
-        assertThat(melding.lestDato, is(equalTo(lest)));
+        assertThat(melding.fritekst, is(equalTo(FRITEKST)));
+        assertThat(melding.tema, is(equalTo(TEMA)));
+        assertThat(melding.lestDato, is(equalTo(LEST_DATO)));
+        assertThat(melding.navIdent, is(NAVIDENT));
     }
 
     @Test
     public void testTilMeldingTransformer_medReferat() {
-        DateTime opprettet = DateTime.now().minusDays(1);
-        DateTime lest = DateTime.now();
-        String behandlingsId = "1";
-        String fritekst = "fritekst";
-        String tema = "tema";
-        String kanal = "TELEFON";
-        XMLReferat xmlReferat = new XMLReferat().withFritekst(fritekst).withTemagruppe(tema).withLestDato(lest).withKanal(kanal);
+        XMLReferat xmlReferat = new XMLReferat().withFritekst(FRITEKST).withTemagruppe(TEMA).withLestDato(LEST_DATO).withKanal(KANAL);
 
-        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(behandlingsId, opprettet, REFERAT.name(), xmlReferat));
+        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(ID_1, OPPRETTET_DATO, REFERAT.name(), xmlReferat));
 
-        assertThat(melding.id, is(equalTo(behandlingsId)));
-        assertThat(melding.traadId, is(equalTo(behandlingsId)));
-        assertThat(melding.opprettetDato, is(equalTo(opprettet)));
+        assertThat(melding.id, is(equalTo(ID_1)));
+        assertThat(melding.traadId, is(equalTo(ID_1)));
+        assertThat(melding.opprettetDato, is(equalTo(OPPRETTET_DATO)));
         assertThat(melding.meldingstype, is(equalTo(SAMTALEREFERAT)));
-        assertThat(melding.fritekst, is(equalTo(fritekst)));
-        assertThat(melding.tema, is(equalTo(tema)));
-        assertThat(melding.lestDato, is(equalTo(lest)));
-        assertThat(melding.kanal, is(equalTo(kanal)));
+        assertThat(melding.fritekst, is(equalTo(FRITEKST)));
+        assertThat(melding.tema, is(equalTo(TEMA)));
+        assertThat(melding.lestDato, is(equalTo(LEST_DATO)));
+        assertThat(melding.kanal, is(equalTo(KANAL)));
+        assertThat(melding.navIdent, is(NAVIDENT));
     }
 
     @Test(expected = ClassCastException.class)
@@ -138,9 +136,11 @@ public class MeldingUtilsTest {
 
     private static XMLBehandlingsinformasjon lagXMLBehandlingsInformasjon(String behandlingsId, DateTime opprettetDato, String henvendelseType, XMLMetadata xmlMetadata) {
         return new XMLBehandlingsinformasjon()
+                .withAktor(new XMLAktor().withNavIdent(NAVIDENT))
                 .withBehandlingsId(behandlingsId)
                 .withOpprettetDato(opprettetDato)
                 .withHenvendelseType(henvendelseType)
                 .withMetadataListe(new XMLMetadataListe().withMetadata(xmlMetadata));
     }
+
 }
