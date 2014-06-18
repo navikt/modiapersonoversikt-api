@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain;
 
 import no.nav.modig.lang.option.Optional;
 import org.joda.time.LocalDate;
