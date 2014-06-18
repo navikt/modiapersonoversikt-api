@@ -24,7 +24,7 @@ public class SvarPanel extends DialogPanel {
         super(id, fnr);
 
         sporsmaal = sakService.getSporsmaal(sporsmalsId);
-        sakService.plukkSakIGsak(sporsmalsId);
+        sakService.hentOppgaveFraGsak(sporsmalsId);
 
         form.getModelObject().tema = sporsmaal.tema;
 
@@ -67,7 +67,7 @@ public class SvarPanel extends DialogPanel {
                 .withFritekst(dialogVM.getFritekst());
 
         sakService.sendSvar(svar);
-        sakService.ferdigstillSakIGsak(sporsmaal);
+        sakService.ferdigstillOppgaveFraGsak(sporsmaal.id);
     }
 
 }
