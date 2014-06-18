@@ -1,0 +1,28 @@
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
+
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import static org.mockito.Mockito.mock;
+
+@Configuration
+public class HenvendelseTestConfig {
+
+    @Bean
+    public HenvendelsePortType henvendelsePortType() {
+        return mock(HenvendelsePortType.class);
+    }
+
+    @Bean
+    public SendHenvendelsePortType sendHenvendelsePortType() {
+        return mock(SendHenvendelsePortType.class);
+    }
+
+    @Bean
+    public SakService sakService() {
+        return new SakService();
+    }
+
+}
