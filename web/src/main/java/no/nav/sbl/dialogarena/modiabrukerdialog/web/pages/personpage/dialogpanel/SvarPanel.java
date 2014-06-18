@@ -26,7 +26,7 @@ public class SvarPanel extends DialogPanel {
         sporsmaal = sakService.getSporsmaal(sporsmalsId);
         sakService.hentOppgaveFraGsak(sporsmalsId);
 
-        form.getModelObject().tema = sporsmaal.tema;
+        settTemaFraSpormaaletSomDefaultValgt();
 
         form.add(
                 new Label("dato", sporsmaal.opprettetDato),
@@ -57,17 +57,31 @@ public class SvarPanel extends DialogPanel {
         });
     }
 
+    protected void settTemaFraSpormaaletSomDefaultValgt() {
+        form.getModelObject().tema = getTemaFromSporsmal(sporsmaal.tema);
+    }
+
     @Override
     protected void sendHenvendelse(DialogVM dialogVM, String fnr) {
         Svar svar = new Svar()
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
                 .withSporsmalsId(sporsmaal.id)
-                .withTema(dialogVM.tema)
+                .withTema(dialogVM.tema.name())
                 .withFritekst(dialogVM.getFritekst());
 
         sakService.sendSvar(svar);
         sakService.ferdigstillOppgaveFraGsak(sporsmaal.id);
+    }
+
+    //Denne er midlertidig mens vi venter på full integrasjon med kodeverk
+    private Tema getTemaFromSporsmal(String temaFraSporsmaal) {
+        for (Tema tema : Tema.values()) {
+            if (tema.name().equals(temaFraSporsmaal)) {
+                return tema;
+            }
+        }
+        return Tema.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT; //Bruker denne som default
     }
 
 }

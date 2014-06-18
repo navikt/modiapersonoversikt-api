@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmaal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
@@ -22,8 +23,11 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withModelObject;
 import static org.hamcrest.Matchers.is;
+import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -65,4 +69,13 @@ public class SvarPanelTest extends WicketPageTest {
                 .should().containComponent(withId("kanal").and(withModelObject(is(SvarKanal.TEKST))));
     }
 
+    @Test
+    public void setterTemaFraSporsmaalSomDefaultValgtIDropDown() {
+        Sporsmaal sporsmaal = new Sporsmaal("id", now());
+        sporsmaal.tema = Tema.FAMILIE_OG_BARN.name();
+        when(sakService.getSporsmaal(anyString())).thenReturn(sporsmaal);
+
+        wicket.goToPageWith(new SvarPanel("id", "fnr", "meldingsId"))
+                .should().containComponent(withId("tema").and(withModelObject(is(Tema.FAMILIE_OG_BARN))));
+    }
 }

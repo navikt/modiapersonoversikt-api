@@ -31,7 +31,7 @@ public class ReferatPanel extends DialogPanel {
         Referat referat = new Referat()
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
-                .withTema(dialogVM.tema)
+                .withTema(dialogVM.tema.name())
                 .withKanal(dialogVM.kanal.name())
                 .withFritekst(dialogVM.getFritekst());
         sakService.sendReferat(referat);
