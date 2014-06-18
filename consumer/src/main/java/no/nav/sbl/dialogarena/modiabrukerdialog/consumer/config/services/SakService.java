@@ -1,39 +1,51 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmaal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.HenvendelseUtils;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
 import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.Oppgavebehandling;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
-public class SakService {
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 
-    @Inject
-    private Oppgavebehandling oppgavebehandling;
+public class SakService {
 
     @Inject
     private Oppgave oppgave;
 
     @Inject
-    protected SendHenvendelsePortType ws;
+    private HenvendelsePortType henvendelsePortType;
 
-    public Melding getSakFromHenvendelse(String sporsmalsId) {
-        return getMelding();
+    @Inject
+    protected SendHenvendelsePortType sendHenvendelsePortType;
+
+    public Sporsmaal getSporsmaal(String sporsmalsId) {
+        Object henvendelsesObjekt = henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalsId)).getAny();
+        return HenvendelseUtils.createSporsmaalFromHenvendelse(henvendelsesObjekt);
     }
 
-    public void plukkSakIGsak(String meldingsId) {
+    public void plukkSakIGsak(String sporsmalsId) {
     }
 
-    public void ferdigstillSakIGsak(Melding melding) {
+    public void ferdigstillSakIGsak(Sporsmaal sporsmaal) {
     }
 
-    private Melding getMelding() {
-        Melding melding = new Melding("id", Meldingstype.SPORSMAL, DateTime.now());
-        melding.fritekst = "Lorem ipsum dolor sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
-        melding.tema = "HJELPEMIDLER";
-        return melding;
+    public void sendSvar(Svar svar) {
+        XMLBehandlingsinformasjon info = HenvendelseUtils.createXMLBehandlingsinformasjon(svar);
+        sendHenvendelsePortType.sendHenvendelse(new WSSendHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(svar.fnr).withAny(info));
     }
+
+    public void sendReferat(Referat referat) {
+        XMLBehandlingsinformasjon info = HenvendelseUtils.createXMLBehandlingsinformasjon(referat);
+        sendHenvendelsePortType.sendHenvendelse(new WSSendHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(referat.fnr).withAny(info));
+    }
+
 }

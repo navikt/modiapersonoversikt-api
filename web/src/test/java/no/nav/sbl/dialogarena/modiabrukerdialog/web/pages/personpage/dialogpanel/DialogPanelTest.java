@@ -2,10 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HenvendelseMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -30,11 +30,11 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {KjerneinfoPepMockContext.class, HenvendelseMockContext.class})
+@ContextConfiguration(classes = {KjerneinfoPepMockContext.class, SakServiceMockContext.class})
 public class DialogPanelTest extends WicketPageTest {
 
     @Inject
-    protected SendHenvendelsePortType ws;
+    protected SakService sakService;
 
     @Before
     public void setUp() {
@@ -105,4 +105,5 @@ public class DialogPanelTest extends WicketPageTest {
             return "svarpanel.kvittering.bekreftelse";
         }
     }
+
 }

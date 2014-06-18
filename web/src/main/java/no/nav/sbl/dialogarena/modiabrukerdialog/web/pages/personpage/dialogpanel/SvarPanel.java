@@ -1,12 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmaal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -17,32 +12,25 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.model.StringResourceModel;
 
-import javax.inject.Inject;
-
 import static java.util.Arrays.asList;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static org.joda.time.DateTime.now;
 
 public class SvarPanel extends DialogPanel {
 
-    @Inject
-    private SakService sakService;
-
-    private Melding sporsmalsMelding;
+    private Sporsmaal sporsmaal;
 
     public SvarPanel(String id, String fnr, String sporsmalsId) {
         super(id, fnr);
 
-        sporsmalsMelding = sakService.getSakFromHenvendelse(sporsmalsId);
+        sporsmaal = sakService.getSporsmaal(sporsmalsId);
         sakService.plukkSakIGsak(sporsmalsId);
 
-        form.getModelObject().tema = sporsmalsMelding.tema;
+        form.getModelObject().tema = sporsmaal.tema;
 
         form.add(
-                new Label("dato", sporsmalsMelding.opprettetDato),
-                new Label("sporsmal", sporsmalsMelding.fritekst)
+                new Label("dato", sporsmaal.opprettetDato),
+                new Label("sporsmal", sporsmaal.fritekst)
         );
 
         final RadioGroup<SvarKanal> radioGroup = new RadioGroup<>("kanal");
@@ -69,24 +57,17 @@ public class SvarPanel extends DialogPanel {
         });
     }
 
-
     @Override
     protected void sendHenvendelse(DialogVM dialogVM, String fnr) {
-        XMLBehandlingsinformasjon info =
-                new XMLBehandlingsinformasjon()
-                        .withHenvendelseType(SVAR.name())
-                        .withAktor(new XMLAktor().withFodselsnummer(fnr).withNavIdent(getSubjectHandler().getUid()))
-                        .withOpprettetDato(now())
-                        .withAvsluttetDato(now())
-                        .withMetadataListe(new XMLMetadataListe().withMetadata(
-                                new XMLSvar()
-                                        .withSporsmalsId(sporsmalsMelding.id)
-                                        .withTemagruppe(dialogVM.tema)
-                                        .withFritekst(dialogVM.getFritekst())
-                        ));
+        Svar svar = new Svar()
+                .withFnr(fnr)
+                .withNavIdent(getSubjectHandler().getUid())
+                .withSporsmalsId(sporsmaal.id)
+                .withTema(dialogVM.tema)
+                .withFritekst(dialogVM.getFritekst());
 
-        ws.sendHenvendelse(new WSSendHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(fnr).withAny(info));
-
-        sakService.ferdigstillSakIGsak(sporsmalsMelding);
+        sakService.sendSvar(svar);
+        sakService.ferdigstillSakIGsak(sporsmaal);
     }
+
 }

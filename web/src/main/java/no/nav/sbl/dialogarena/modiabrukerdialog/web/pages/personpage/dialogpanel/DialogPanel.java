@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
@@ -23,7 +23,7 @@ public abstract class DialogPanel extends Panel {
     public static final PackageResourceReference DIALOGPANEL_LESS = new PackageResourceReference(DialogPanel.class, "DialogPanel.less");
 
     @Inject
-    protected SendHenvendelsePortType ws;
+    protected SakService sakService;
 
     protected Form<DialogVM> form;
 

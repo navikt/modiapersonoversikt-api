@@ -1,10 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
@@ -12,10 +8,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 
 import static java.util.Arrays.asList;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static org.joda.time.DateTime.now;
 
 public class ReferatPanel extends DialogPanel {
 
@@ -34,16 +28,13 @@ public class ReferatPanel extends DialogPanel {
     }
 
     protected void sendHenvendelse(DialogVM dialogVM, String fnr) {
-        XMLBehandlingsinformasjon info =
-                new XMLBehandlingsinformasjon()
-                        .withHenvendelseType(REFERAT.name())
-                        .withAktor(new XMLAktor().withFodselsnummer(fnr).withNavIdent(getSubjectHandler().getUid()))
-                        .withOpprettetDato(now())
-                        .withAvsluttetDato(now())
-                        .withMetadataListe(new XMLMetadataListe().withMetadata(
-                                new XMLReferat().withTemagruppe(dialogVM.tema).withKanal(dialogVM.kanal.name()).withFritekst(dialogVM.getFritekst())));
-
-        ws.sendHenvendelse(new WSSendHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(fnr).withAny(info));
+        Referat referat = new Referat()
+                .withFnr(fnr)
+                .withNavIdent(getSubjectHandler().getUid())
+                .withTema(dialogVM.tema)
+                .withKanal(dialogVM.kanal.name())
+                .withFritekst(dialogVM.getFritekst());
+        sakService.sendReferat(referat);
     }
 
 }
