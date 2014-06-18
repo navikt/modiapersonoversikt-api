@@ -116,12 +116,10 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-aktivitet-v2</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-informasjon-v2</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
