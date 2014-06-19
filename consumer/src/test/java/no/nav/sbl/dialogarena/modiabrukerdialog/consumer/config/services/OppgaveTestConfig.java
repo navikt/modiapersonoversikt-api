@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
+import no.nav.virksomhet.tjenester.oppgave.v2.binding.Oppgave;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.Oppgavebehandling;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -11,7 +12,7 @@ public class OppgaveTestConfig {
 
     @Bean
     public no.nav.virksomhet.tjenester.oppgave.v2.binding.Oppgave oppgave(){
-        return mock(no.nav.virksomhet.tjenester.oppgave.v2.binding.Oppgave.class);
+        return mock(Oppgave.class);
     }
 
     @Bean

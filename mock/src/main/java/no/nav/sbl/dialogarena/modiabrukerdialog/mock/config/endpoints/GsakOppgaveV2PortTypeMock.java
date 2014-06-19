@@ -30,41 +30,14 @@ public class GsakOppgaveV2PortTypeMock {
             @Override
             public HentOppgaveResponse hentOppgave(HentOppgaveRequest hentOppgaveRequest) throws HentOppgaveOppgaveIkkeFunnet {
                 HentOppgaveResponse hentOppgaveResponse = new HentOppgaveResponse();
-                no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave wsOppgave = new no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave();
-                wsOppgave.setOppgaveId("1");
-                Oppgavetype oppgavetype = new Oppgavetype();
-                oppgavetype.setKode("oppgavetype");
-                wsOppgave.setOppgavetype(oppgavetype);
-                hentOppgaveResponse.setOppgave(wsOppgave);
+                hentOppgaveResponse.setOppgave(lagWSOppgave(hentOppgaveRequest.getOppgaveId()));
                 return hentOppgaveResponse;
             }
 
             @Override
             public FinnOppgaveListeResponse finnOppgaveListe(FinnOppgaveListeRequest finnOppgaveListeRequest) {
                 FinnOppgaveListeResponse finnOppgaveListeResponse = new FinnOppgaveListeResponse();
-                no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave wsOppgave = new no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave();
-                wsOppgave.setOppgaveId("1");
-                Oppgavetype wsOppgavetype = new Oppgavetype();
-                wsOppgavetype.setKode("wsOppgavetype");
-                wsOppgave.setOppgavetype(wsOppgavetype);
-                Bruker wsBruker = new Bruker();
-                wsBruker.setBrukerId("***REMOVED***");
-                wsOppgave.setGjelder(wsBruker);
-                Status wsStatus = new Status();
-                wsStatus.setKode("statuskode");
-                wsOppgave.setStatus(wsStatus);
-                Fagomrade wsFagomrade = new Fagomrade();
-                wsFagomrade.setKode("fagomrade");
-                wsOppgave.setFagomrade(wsFagomrade);
-                GregorianCalendar gregorianCalendar = new GregorianCalendar();
-                gregorianCalendar.setTime(now().toDate());
-                try {
-                    wsOppgave.setAktivFra(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar));
-                } catch (DatatypeConfigurationException e) {
-                    e.printStackTrace();
-                }
-                wsOppgave.setVersjon(1);
-                finnOppgaveListeResponse.getOppgaveListe().add(wsOppgave);
+                finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
                 return finnOppgaveListeResponse;
             }
 
@@ -83,5 +56,35 @@ public class GsakOppgaveV2PortTypeMock {
                 return new FinnMappeListeResponse();
             }
         };
+    }
+
+    public static no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave lagWSOppgave() {
+        return lagWSOppgave("1");
+    }
+
+    public static no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave lagWSOppgave(String oppgaveId) {
+        no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave wsOppgave = new no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave();
+        wsOppgave.setOppgaveId(oppgaveId);
+        Oppgavetype wsOppgavetype = new Oppgavetype();
+        wsOppgavetype.setKode("wsOppgavetype");
+        wsOppgave.setOppgavetype(wsOppgavetype);
+        Bruker wsBruker = new Bruker();
+        wsBruker.setBrukerId("***REMOVED***");
+        wsOppgave.setGjelder(wsBruker);
+        Status wsStatus = new Status();
+        wsStatus.setKode("statuskode");
+        wsOppgave.setStatus(wsStatus);
+        Fagomrade wsFagomrade = new Fagomrade();
+        wsFagomrade.setKode("fagomrade");
+        wsOppgave.setFagomrade(wsFagomrade);
+        GregorianCalendar gregorianCalendar = new GregorianCalendar();
+        gregorianCalendar.setTime(now().toDate());
+        try {
+            wsOppgave.setAktivFra(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar));
+        } catch (DatatypeConfigurationException e) {
+            e.printStackTrace();
+        }
+        wsOppgave.setVersjon(1);
+        return wsOppgave;
     }
 }
