@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.Tema;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
@@ -49,8 +49,8 @@ public class PlukkOppgavePanel extends Panel {
                 if (oppgave.isSome()) {
                     setResponsePage(PersonPage.class,
                             new PageParameters()
-                                    .set("fnr", oppgave.get().getFodselsnummer())
-                                    .set(OPPGAVEID, oppgave.get().getId()));
+                                    .set("fnr", oppgave.get().getGjelder().getBrukerId())
+                                    .set(OPPGAVEID, oppgave.get().getOppgaveId()));
                 }
             }
             @Override

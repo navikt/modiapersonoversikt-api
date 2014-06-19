@@ -3,9 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmaal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.HenvendelseUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -13,6 +12,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeFilter;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeRequest;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeSok;
@@ -25,13 +25,8 @@ import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.FerdigstillOpp
 import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.LagreOppgaveRequest;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.Oppgavebehandling;
-import org.apache.commons.collections15.Transformer;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
@@ -50,7 +45,6 @@ public class SakService {
     public static final int ENDRET_AV_ENHET = 2820;
     public static final int FERDIGSTILT_AV_ENHET = 2820;
     public static final String OPPGAVETYPEKODE = "KONT_BRUK_GEN"; // Brukergenerert. Denne brukes lite og er dermed ganske safe
-    public static final String PRIORITETKODE = "NORM_GEN"; // Normal prioritet - Generell
 
 
     @Inject
@@ -65,20 +59,6 @@ public class SakService {
     @Inject
     protected SendHenvendelsePortType sendHenvendelsePortType;
 
-    public Sporsmaal getSporsmaalOgTilordneIGSAK(String sporsmalsId) {
-        XMLBehandlingsinformasjon behandlingsinformasjon =
-                (XMLBehandlingsinformasjon) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalsId)).getAny();
-        XMLSporsmal xmlSporsmal = (XMLSporsmal) behandlingsinformasjon.getMetadataListe().getMetadata().get(0);
-        tilordneOppgave(optional(hentOppgaveFraGsak(xmlSporsmal.getOppgaveIdGsak())));
-        return createSporsmaalFromHenvendelse(behandlingsinformasjon);
-    }
-
-    private Oppgave tilordneOppgave(Optional<Oppgave> oppgave) {
-        Oppgave tilordnet = oppgave.get().withSaksbehandlerid(optional(getSubjectHandler().getUid()));
-        oppdaterOppgave(tilordnet);
-        return tilordnet;
-    }
-
     public void sendSvar(Svar svar) {
         XMLBehandlingsinformasjon info = HenvendelseUtils.createXMLBehandlingsinformasjon(svar);
         sendHenvendelsePortType.sendHenvendelse(new WSSendHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(svar.fnr).withAny(info));
@@ -89,16 +69,26 @@ public class SakService {
         sendHenvendelsePortType.sendHenvendelse(new WSSendHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(referat.fnr).withAny(info));
     }
 
-    public Oppgave hentOppgaveFraGsak(String oppgaveId) {
-        HentOppgaveResponse hentOppgaveResponse;
-        try {
-            HentOppgaveRequest hentOppgaveRequest = new HentOppgaveRequest();
-            hentOppgaveRequest.setOppgaveId(oppgaveId);
-            hentOppgaveResponse = oppgaveWS.hentOppgave(hentOppgaveRequest);
-        } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
-            throw new RuntimeException(hentOppgaveOppgaveIkkeFunnet);
+    public Sporsmal getSporsmalFromOppgaveId(String fnr, String oppgaveid) {
+        List<Object> henvendelseListe =
+                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(SPORSMAL.toString())).getAny();
+
+        for (Object o : henvendelseListe) {
+            XMLBehandlingsinformasjon henvendelse = (XMLBehandlingsinformasjon) o;
+            XMLSporsmal xmlSporsmal = (XMLSporsmal) henvendelse.getMetadataListe().getMetadata().get(0);
+            if (oppgaveid.equals(xmlSporsmal.getOppgaveIdGsak())) {
+                return createSporsmaalFromHenvendelse(henvendelse);
+            }
         }
-        return tilOppgave(hentOppgaveResponse.getOppgave());
+        return null;
+    }
+
+    public Sporsmal getSporsmalOgTilordneIGsak(String sporsmalsId) {
+        XMLBehandlingsinformasjon behandlingsinformasjon =
+                (XMLBehandlingsinformasjon) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalsId)).getAny();
+        XMLSporsmal xmlSporsmal = (XMLSporsmal) behandlingsinformasjon.getMetadataListe().getMetadata().get(0);
+        tilordneOppgave(optional(hentOppgaveFraGsak(xmlSporsmal.getOppgaveIdGsak())));
+        return createSporsmaalFromHenvendelse(behandlingsinformasjon);
     }
 
     public Optional<Oppgave> plukkOppgaveFraGsak(String tema) {
@@ -111,11 +101,30 @@ public class SakService {
         }
     }
 
+    public Oppgave hentOppgaveFraGsak(String oppgaveId) {
+        HentOppgaveResponse hentOppgaveResponse;
+        try {
+            HentOppgaveRequest hentOppgaveRequest = new HentOppgaveRequest();
+            hentOppgaveRequest.setOppgaveId(oppgaveId);
+            hentOppgaveResponse = oppgaveWS.hentOppgave(hentOppgaveRequest);
+        } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
+            throw new RuntimeException(hentOppgaveOppgaveIkkeFunnet);
+        }
+        return hentOppgaveResponse.getOppgave();
+    }
+
     public void ferdigstillOppgaveFraGsak(String oppgaveId) {
         FerdigstillOppgaveBolkRequest ferdigstillOppgaveBolkRequest = new FerdigstillOppgaveBolkRequest();
         ferdigstillOppgaveBolkRequest.getOppgaveIdListe().add(oppgaveId);
         ferdigstillOppgaveBolkRequest.setFerdigstiltAvEnhetId(FERDIGSTILT_AV_ENHET);
         oppgavebehandlingWS.ferdigstillOppgaveBolk(ferdigstillOppgaveBolkRequest);
+    }
+
+    private Oppgave tilordneOppgave(Optional<Oppgave> oppgave) {
+        Oppgave wsOppgave = oppgave.get();
+        wsOppgave.setAnsvarligId(getSubjectHandler().getUid());
+        oppdaterOppgave(wsOppgave);
+        return wsOppgave;
     }
 
 
@@ -135,10 +144,10 @@ public class SakService {
         FinnOppgaveListeSortering finnOppgaveListeSortering = new FinnOppgaveListeSortering();
         finnOppgaveListeSortering.setSorteringKode("FRIST_DATO_STIG");
 
-        List<no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave> oppgaveListe =
+        List<Oppgave> oppgaveListe =
                 oppgaveWS.finnOppgaveListe(finnOppgaveListeRequest).getOppgaveListe();
 
-        return on(oppgaveListe).map(TIL_OPPGAVE).head();
+        return on(oppgaveListe).head();
     }
 
 
@@ -153,35 +162,26 @@ public class SakService {
         }
     }
 
-    private static Oppgave tilOppgave(no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave wsOppgave) {
-        return new Oppgave()
-                .withId(wsOppgave.getOppgaveId())
-                .withBehandlingsid(wsOppgave.getHenvendelseId())
-                .withFodselsnummer(wsOppgave.getGjelder().getBrukerId())
-                .withSaksbehandlerid(optional(wsOppgave.getAnsvarligId()))
-                .withBeskrivelse(optional(wsOppgave.getBeskrivelse()))
-                .withFerdigstilt(wsOppgave.getStatus().getKode().equals("F"))
-                .withTema(wsOppgave.getFagomrade().getKode())
-                .withAktivFra(new DateTime(wsOppgave.getAktivFra().toGregorianCalendar().getTime()).toLocalDate())
-                .withVersjon(wsOppgave.getVersjon());
-    }
-
     private static EndreOppgave tilEndreOppgave(Oppgave oppgave) {
         EndreOppgave endreOppgave = new EndreOppgave();
-        GregorianCalendar gregorianCalendar = new GregorianCalendar();
-        gregorianCalendar.setTime(oppgave.getAktivFra().toDate());
-        try {
-            endreOppgave.setAktivFra(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar));
-        } catch (DatatypeConfigurationException e) {
-            throw new RuntimeException(e);
-        }
-        endreOppgave.setBeskrivelse(oppgave.getBeskrivelse().getOrElse(""));
-        endreOppgave.setFagomradeKode(oppgave.getTema());
-        endreOppgave.setOppgaveId(oppgave.getId());
-        endreOppgave.setOppgavetypeKode(OPPGAVETYPEKODE);
-        endreOppgave.setPrioritetKode(PRIORITETKODE);
-        endreOppgave.setAnsvarligId(oppgave.getSaksbehandlerid().getOrElse(""));
+
+        endreOppgave.setOppgaveId(oppgave.getOppgaveId());
+        endreOppgave.setBrukerId(oppgave.getGjelder().getBrukerId());
+        endreOppgave.setAnsvarligId(oppgave.getAnsvarligId());
+        endreOppgave.setAnsvarligEnhetId(oppgave.getAnsvarligEnhetId());
+
+        endreOppgave.setFagomradeKode(oppgave.getFagomrade().getKode());
+        endreOppgave.setOppgavetypeKode(oppgave.getOppgavetype().getKode());
+        endreOppgave.setPrioritetKode(oppgave.getPrioritet().getKode());
+        endreOppgave.setBrukertypeKode(oppgave.getGjelder().getBrukertypeKode());
+        endreOppgave.setUnderkategoriKode(oppgave.getUnderkategori().getKode());
+
+        endreOppgave.setAktivFra(oppgave.getAktivFra());
+        endreOppgave.setBeskrivelse(oppgave.getBeskrivelse());
         endreOppgave.setVersjon(oppgave.getVersjon());
+        endreOppgave.setSaksnummer(oppgave.getSaksnummer());
+        endreOppgave.setLest(oppgave.isLest());
+
         return endreOppgave;
     }
 
@@ -192,25 +192,4 @@ public class SakService {
         return finnOppgaveListeFilter;
     }
 
-    private static final Transformer<no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave, Oppgave> TIL_OPPGAVE = new Transformer<no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave, Oppgave>() {
-        @Override
-        public Oppgave transform(no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave wsOppgave) {
-            return tilOppgave(wsOppgave);
-        }
-    };
-
-    public Sporsmaal getSporsmaalFromOppgaveId(String fnr, String oppgaveid) {
-
-        List<Object> henvendelseListe =
-                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(SPORSMAL.toString())).getAny();
-
-        for (Object o : henvendelseListe) {
-            XMLBehandlingsinformasjon henvendelse = (XMLBehandlingsinformasjon) o;
-            XMLSporsmal xmlSporsmal = (XMLSporsmal) henvendelse.getMetadataListe().getMetadata().get(0);
-            if (oppgaveid.equals(xmlSporsmal.getOppgaveIdGsak())) {
-                return createSporsmaalFromHenvendelse(henvendelse);
-            }
-        }
-        return null;
-    }
 }

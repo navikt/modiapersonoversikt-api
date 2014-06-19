@@ -3,7 +3,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Bruker;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Fagomrade;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgavetype;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.Prioritet;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Status;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.Underkategori;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnFeilregistrertOppgaveListeRequest;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnFeilregistrertOppgaveListeResponse;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnFerdigstiltOppgaveListeRequest;
@@ -84,6 +86,13 @@ public class GsakOppgaveV2PortTypeMock {
         } catch (DatatypeConfigurationException e) {
             e.printStackTrace();
         }
+        Prioritet prioritet = new Prioritet();
+        prioritet.setKode("NORM_GEN");
+        Underkategori underkategori = new Underkategori();
+        underkategori.setKode("ARBEID_HJE");
+        wsOppgave.setUnderkategori(underkategori);
+        wsOppgave.setPrioritet(prioritet);
+        wsOppgave.setLest(false);
         wsOppgave.setVersjon(1);
         return wsOppgave;
     }

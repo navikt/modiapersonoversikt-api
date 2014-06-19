@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmaal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
@@ -43,7 +43,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void inneholderSporsmaalsspefikkeKomponenter() {
-        wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmaal("id", now())))
+        wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmal("id", now())))
                 .should().containComponent(withId("sporsmal").and(ofType(Label.class)))
                 .should().containComponent(withId("dato").and(ofType(Label.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
@@ -52,7 +52,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void skalSendeSporsmaalstypeTilHenvendelse() {
-        wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmaal("id", now())))
+        wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmal("id", now())))
                 .inForm(withId("dialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .select("tema", 0)
@@ -63,16 +63,16 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void tekstligSvarErValgtSomDefault() {
-        wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmaal("id", now())))
+        wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmal("id", now())))
                 .should().containComponent(withId("kanal").and(withModelObject(is(SvarKanal.TEKST))));
     }
 
     @Test
     public void setterTemaFraSporsmaalSomDefaultValgtIDropDown() {
-        Sporsmaal sporsmaal = new Sporsmaal("id", now());
-        sporsmaal.tema = Tema.FAMILIE_OG_BARN.name();
+        Sporsmal sporsmal = new Sporsmal("id", now());
+        sporsmal.tema = Tema.FAMILIE_OG_BARN.name();
 
-        wicket.goToPageWith(new SvarPanel("id", "fnr", sporsmaal))
+        wicket.goToPageWith(new SvarPanel("id", "fnr", sporsmal))
                 .should().containComponent(withId("tema").and(withModelObject(is(Tema.FAMILIE_OG_BARN))));
     }
 }

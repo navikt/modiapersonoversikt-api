@@ -7,7 +7,7 @@ import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmaal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
@@ -88,19 +88,19 @@ public class SakServiceTest {
     }
 
     @Test
-    public void skalHenteSporsmaalOgTilordneIGSAK() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOppgaveIkkeFunnet {
+    public void skalHenteSporsmaalOgTilordneIGsak() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOppgaveIkkeFunnet {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
         when(oppgaveWS.hentOppgave(any(HentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
 
-        Sporsmaal sporsmaal = sakService.getSporsmaalOgTilordneIGSAK(SPORSMAL_ID);
+        Sporsmal sporsmal = sakService.getSporsmalOgTilordneIGsak(SPORSMAL_ID);
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         assertThat(lagreOppgaveRequestCaptor.getValue().getEndreOppgave().getAnsvarligId(), is(SubjectHandler.getSubjectHandler().getUid()));
 
-        assertThat(sporsmaal.id, is(SPORSMAL_ID));
-        assertThat(sporsmaal.fritekst, is(FRITEKST));
-        assertThat(sporsmaal.tema, is(TEMAGRUPPE));
+        assertThat(sporsmal.id, is(SPORSMAL_ID));
+        assertThat(sporsmal.fritekst, is(FRITEKST));
+        assertThat(sporsmal.tema, is(TEMAGRUPPE));
     }
 
     @Test
@@ -160,9 +160,9 @@ public class SakServiceTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        Sporsmaal sporsmaal = sakService.getSporsmaalFromOppgaveId("fnr", "id2");
+        Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId("fnr", "id2");
 
-        assertThat(sporsmaal.fritekst, is("fritekst2"));
+        assertThat(sporsmal.fritekst, is("fritekst2"));
     }
 
     private WSHentHenvendelseResponse mockWSHentHenvendelseResponse() {

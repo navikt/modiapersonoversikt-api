@@ -9,7 +9,7 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmaal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
@@ -18,18 +18,18 @@ import static org.joda.time.DateTime.now;
 
 public class HenvendelseUtils {
 
-    public static Sporsmaal createSporsmaalFromHenvendelse(Object henvendelsesObjekt) {
+    public static Sporsmal createSporsmaalFromHenvendelse(Object henvendelsesObjekt) {
         XMLBehandlingsinformasjon info = (XMLBehandlingsinformasjon) henvendelsesObjekt;
 
-        Sporsmaal sporsmaal = new Sporsmaal(info.getBehandlingsId(), info.getOpprettetDato());
+        Sporsmal sporsmal = new Sporsmal(info.getBehandlingsId(), info.getOpprettetDato());
 
         XMLMetadata xmlMetadata = info.getMetadataListe().getMetadata().get(0);
         if(xmlMetadata instanceof XMLSporsmal){
             XMLSporsmal xmlSporsmal = (XMLSporsmal) xmlMetadata;
-            sporsmaal.tema = xmlSporsmal.getTemagruppe();
-            sporsmaal.fritekst = xmlSporsmal.getFritekst();
-            sporsmaal.oppgaveId = xmlSporsmal.getOppgaveIdGsak();
-            return sporsmaal;
+            sporsmal.tema = xmlSporsmal.getTemagruppe();
+            sporsmal.fritekst = xmlSporsmal.getFritekst();
+            sporsmal.oppgaveId = xmlSporsmal.getOppgaveIdGsak();
+            return sporsmal;
         } else {
             throw new ApplicationException("Henvendelsen er ikke av typen XMLSporsmal : " + xmlMetadata);
         }

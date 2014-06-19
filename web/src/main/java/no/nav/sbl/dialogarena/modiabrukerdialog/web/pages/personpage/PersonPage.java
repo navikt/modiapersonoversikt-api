@@ -12,7 +12,7 @@ import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmaal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
@@ -120,8 +120,8 @@ public class PersonPage extends BasePage {
     private void instansierDialogpanel(PageParameters pageParameters) {
         String oppgaveid = pageParameters.get(OPPGAVEID).toString();
         if (oppgaveid != null) {
-            Sporsmaal sporsmaal = sakService.getSporsmaalFromOppgaveId(fnr, oppgaveid);
-            dialogpanel = new SvarPanel(DIALOGPANEL_ID, fnr, sporsmaal);
+            Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId(fnr, oppgaveid);
+            dialogpanel = new SvarPanel(DIALOGPANEL_ID, fnr, sporsmal);
         } else {
             dialogpanel = new ReferatPanel(DIALOGPANEL_ID, fnr);
         }
@@ -195,8 +195,8 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void svarPaaMelding(AjaxRequestTarget target, String sporsmalId){
-        Sporsmaal sporsmaal = sakService.getSporsmaalOgTilordneIGSAK(sporsmalId);
-        dialogpanel = dialogpanel.replaceWith(new SvarPanel(DIALOGPANEL_ID, fnr, sporsmaal));
+        Sporsmal sporsmal = sakService.getSporsmalOgTilordneIGsak(sporsmalId);
+        dialogpanel = dialogpanel.replaceWith(new SvarPanel(DIALOGPANEL_ID, fnr, sporsmal));
         target.add(dialogpanel);
     }
 

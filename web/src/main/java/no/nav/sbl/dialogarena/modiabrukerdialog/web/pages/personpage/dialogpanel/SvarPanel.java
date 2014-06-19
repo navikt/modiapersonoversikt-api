@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmaal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -18,17 +18,17 @@ import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 
 public class SvarPanel extends DialogPanel {
 
-    private Sporsmaal sporsmaal;
+    private Sporsmal sporsmal;
 
-    public SvarPanel(String id, String fnr, Sporsmaal sporsmaal) {
+    public SvarPanel(String id, String fnr, Sporsmal sporsmal) {
         super(id, fnr);
-        this.sporsmaal = sporsmaal;
+        this.sporsmal = sporsmal;
 
         settTemaFraSpormaaletSomDefaultValgt();
 
         form.add(
-                new Label("dato", sporsmaal.opprettetDato),
-                new Label("sporsmal", sporsmaal.fritekst)
+                new Label("dato", sporsmal.opprettetDato),
+                new Label("sporsmal", sporsmal.fritekst)
         );
 
         final RadioGroup<SvarKanal> radioGroup = new RadioGroup<>("kanal");
@@ -64,18 +64,18 @@ public class SvarPanel extends DialogPanel {
         Svar svar = new Svar()
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
-                .withSporsmalsId(sporsmaal.id)
+                .withSporsmalsId(sporsmal.id)
                 .withTema(dialogVM.tema.name())
                 .withFritekst(dialogVM.getFritekst());
 
         sakService.sendSvar(svar);
-        sakService.ferdigstillOppgaveFraGsak(sporsmaal.oppgaveId);
+        sakService.ferdigstillOppgaveFraGsak(sporsmal.oppgaveId);
     }
 
     //Denne er midlertidig mens vi venter på full integrasjon med kodeverk
     private Tema getTemaFromSporsmal() {
         for (Tema tema : Tema.values()) {
-            if (tema.name().equals(sporsmaal.tema)) {
+            if (tema.name().equals(sporsmal.tema)) {
                 return tema;
             }
         }
