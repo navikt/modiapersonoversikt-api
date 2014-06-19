@@ -24,9 +24,11 @@ public class HenvendelseUtils {
         Sporsmaal sporsmaal = new Sporsmaal(info.getBehandlingsId(), info.getOpprettetDato());
 
         XMLMetadata xmlMetadata = info.getMetadataListe().getMetadata().get(0);
-        if (xmlMetadata instanceof XMLSporsmal) {
-            sporsmaal.tema = ((XMLSporsmal) xmlMetadata).getTemagruppe();
-            sporsmaal.fritekst = ((XMLSporsmal) xmlMetadata).getFritekst();
+        if(xmlMetadata instanceof XMLSporsmal){
+            XMLSporsmal xmlSporsmal = (XMLSporsmal) xmlMetadata;
+            sporsmaal.tema = xmlSporsmal.getTemagruppe();
+            sporsmaal.fritekst = xmlSporsmal.getFritekst();
+            sporsmaal.oppgaveId = xmlSporsmal.getOppgaveIdGsak();
             return sporsmaal;
         } else {
             throw new ApplicationException("Henvendelsen er ikke av typen XMLSporsmal : " + xmlMetadata);

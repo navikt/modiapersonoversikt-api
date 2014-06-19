@@ -69,7 +69,7 @@ public class SvarPanel extends DialogPanel {
                 .withFritekst(dialogVM.getFritekst());
 
         sakService.sendSvar(svar);
-        sakService.ferdigstillOppgaveFraGsak(sporsmaal.id);
+        sakService.ferdigstillOppgaveFraGsak(sporsmaal.oppgaveId);
     }
 
     //Denne er midlertidig mens vi venter på full integrasjon med kodeverk
