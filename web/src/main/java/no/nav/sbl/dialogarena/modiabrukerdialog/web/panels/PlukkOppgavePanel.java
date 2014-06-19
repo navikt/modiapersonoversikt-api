@@ -25,6 +25,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.OPPGAVEID;
 import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
 public class PlukkOppgavePanel extends Panel {
@@ -49,7 +50,7 @@ public class PlukkOppgavePanel extends Panel {
                     setResponsePage(PersonPage.class,
                             new PageParameters()
                                     .set("fnr", oppgave.get().getFodselsnummer())
-                                    .set("oppgaveid", oppgave.get().getId()));
+                                    .set(OPPGAVEID, oppgave.get().getId()));
                 }
             }
             @Override

@@ -12,6 +12,8 @@ import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmaal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
@@ -34,6 +36,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.slf4j.Logger;
+
+import javax.inject.Inject;
 
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
@@ -62,12 +66,16 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class PersonPage extends BasePage {
 
+    public static final String OPPGAVEID = "oppgaveid";
     private Logger logger = getLogger(PersonPage.class);
 
     private static final String DIALOGPANEL_ID = "dialogpanel";
 
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
+
+    @Inject
+    protected SakService sakService;
 
     private SjekkForlateSideAnswer answer;
     private RedirectModalWindow redirectPopup;
@@ -82,7 +90,7 @@ public class PersonPage extends BasePage {
     public PersonPage(PageParameters pageParameters) {
         fnr = pageParameters.get("fnr").toString(null);
         instansierFelter();
-        dialogpanel = new ReferatPanel(DIALOGPANEL_ID, fnr);
+        instansierDialogpanel(pageParameters);
         add(
                 hentPersonPanel,
                 searchToggleButton,
@@ -107,6 +115,16 @@ public class PersonPage extends BasePage {
         searchToggleButton = (Button) new Button("toggle-sok").setOutputMarkupPlaceholderTag(true);
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
         fnrContainer = new Label("fnr", fnr);
+    }
+
+    private void instansierDialogpanel(PageParameters pageParameters) {
+        String oppgaveid = pageParameters.get(OPPGAVEID).toString();
+        if (oppgaveid != null) {
+            Sporsmaal sporsmaal = sakService.getSporsmaalFromOppgaveId(fnr, oppgaveid);
+            dialogpanel = new SvarPanel(DIALOGPANEL_ID, fnr, sporsmaal);
+        } else {
+            dialogpanel = new ReferatPanel(DIALOGPANEL_ID, fnr);
+        }
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET)
@@ -177,7 +195,8 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void svarPaaMelding(AjaxRequestTarget target, String sporsmalId){
-        dialogpanel = dialogpanel.replaceWith(new SvarPanel(DIALOGPANEL_ID, fnr, sporsmalId));
+        Sporsmaal sporsmaal = sakService.getSporsmaalOgTilordneIGSAK(sporsmalId);
+        dialogpanel = dialogpanel.replaceWith(new SvarPanel(DIALOGPANEL_ID, fnr, sporsmaal));
         target.add(dialogpanel);
     }
 

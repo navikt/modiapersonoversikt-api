@@ -25,9 +25,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withModelObject
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -45,7 +43,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void inneholderSporsmaalsspefikkeKomponenter() {
-        wicket.goToPageWith(new SvarPanel("id", "fnr", "meldingsId"))
+        wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmaal("id", now())))
                 .should().containComponent(withId("sporsmal").and(ofType(Label.class)))
                 .should().containComponent(withId("dato").and(ofType(Label.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
@@ -54,7 +52,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void skalSendeSporsmaalstypeTilHenvendelse() {
-        wicket.goToPageWith(new SvarPanel("id", "fnr", "meldingsId"))
+        wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmaal("id", now())))
                 .inForm(withId("dialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .select("tema", 0)
@@ -65,7 +63,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void tekstligSvarErValgtSomDefault() {
-        wicket.goToPageWith(new SvarPanel("id", "fnr", "meldingsId"))
+        wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmaal("id", now())))
                 .should().containComponent(withId("kanal").and(withModelObject(is(SvarKanal.TEKST))));
     }
 
@@ -73,9 +71,8 @@ public class SvarPanelTest extends WicketPageTest {
     public void setterTemaFraSporsmaalSomDefaultValgtIDropDown() {
         Sporsmaal sporsmaal = new Sporsmaal("id", now());
         sporsmaal.tema = Tema.FAMILIE_OG_BARN.name();
-        when(sakService.getSporsmaal(anyString())).thenReturn(sporsmaal);
 
-        wicket.goToPageWith(new SvarPanel("id", "fnr", "meldingsId"))
+        wicket.goToPageWith(new SvarPanel("id", "fnr", sporsmaal))
                 .should().containComponent(withId("tema").and(withModelObject(is(Tema.FAMILIE_OG_BARN))));
     }
 }

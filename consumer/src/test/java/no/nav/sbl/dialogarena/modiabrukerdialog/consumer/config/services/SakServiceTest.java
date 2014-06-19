@@ -3,11 +3,15 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
+import no.nav.modig.core.context.StaticSubjectHandler;
+import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmaal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
@@ -19,6 +23,8 @@ import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.HentOppgaveResponse;
 import no.nav.virksomhet.tjenester.oppgave.v2.binding.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.virksomhet.tjenester.oppgave.v2.binding.Oppgave;
 import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.FerdigstillOppgaveBolkRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.LagreOppgaveRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.Oppgavebehandling;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -73,6 +79,8 @@ public class SakServiceTest {
     ArgumentCaptor<FinnOppgaveListeRequest> finnOppgaveListeRequestCaptor;
     @Captor
     ArgumentCaptor<FerdigstillOppgaveBolkRequest> ferdigstillOppgaveBolkRequestCaptor;
+    @Captor
+    ArgumentCaptor<LagreOppgaveRequest> lagreOppgaveRequestCaptor;
 
     @Before
     public void init() {
@@ -80,10 +88,15 @@ public class SakServiceTest {
     }
 
     @Test
-    public void skalHenteSporsmaal() {
+    public void skalHenteSporsmaalOgTilordneIGSAK() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOppgaveIkkeFunnet {
+        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
+        when(oppgaveWS.hentOppgave(any(HentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
 
-        Sporsmaal sporsmaal = sakService.getSporsmaal(SPORSMAL_ID);
+        Sporsmaal sporsmaal = sakService.getSporsmaalOgTilordneIGSAK(SPORSMAL_ID);
+
+        verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
+        assertThat(lagreOppgaveRequestCaptor.getValue().getEndreOppgave().getAnsvarligId(), is(SubjectHandler.getSubjectHandler().getUid()));
 
         assertThat(sporsmaal.id, is(SPORSMAL_ID));
         assertThat(sporsmaal.fritekst, is(FRITEKST));
@@ -108,9 +121,7 @@ public class SakServiceTest {
 
     @Test
     public void skalHenteOppgavefraGsak() throws HentOppgaveOppgaveIkkeFunnet {
-        HentOppgaveResponse hentOppgaveResponse = new HentOppgaveResponse();
-        hentOppgaveResponse.setOppgave(lagWSOppgave());
-        when(oppgaveWS.hentOppgave(any(HentOppgaveRequest.class))).thenReturn(hentOppgaveResponse);
+        when(oppgaveWS.hentOppgave(any(HentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
 
         sakService.hentOppgaveFraGsak("1");
         verify(oppgaveWS).hentOppgave(hentOppgaveRequestCaptor.capture());
@@ -138,6 +149,22 @@ public class SakServiceTest {
         assertThat(ferdigstillOppgaveBolkRequestCaptor.getValue().getOppgaveIdListe().get(0), is("1"));
     }
 
+    @Test
+    public void skalHenteSporsmaalFraOppgaveId() {
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
+                new WSHentHenvendelseListeResponse().withAny(
+                        createXmlSporsmaal("id1", "fritekst1"),
+                        createXmlSporsmaal("id2", "fritekst2"),
+                        createXmlSporsmaal("id3", "fritekst3")
+                );
+
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
+
+        Sporsmaal sporsmaal = sakService.getSporsmaalFromOppgaveId("fnr", "id2");
+
+        assertThat(sporsmaal.fritekst, is("fritekst2"));
+    }
+
     private WSHentHenvendelseResponse mockWSHentHenvendelseResponse() {
         return new WSHentHenvendelseResponse().withAny(
                 new XMLBehandlingsinformasjon()
@@ -145,7 +172,19 @@ public class SakServiceTest {
                         .withOpprettetDato(DateTime.now())
                         .withHenvendelseType(SPORSMAL.name())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
-                                new XMLSporsmal().withFritekst(FRITEKST).withTemagruppe(TEMAGRUPPE))));
+                                new XMLSporsmal().withFritekst(FRITEKST).withTemagruppe(TEMAGRUPPE)))
+        );
     }
 
+    private HentOppgaveResponse mockHentOppgaveResponse() {
+        HentOppgaveResponse hentOppgaveResponse = new HentOppgaveResponse();
+        hentOppgaveResponse.setOppgave(lagWSOppgave());
+        return hentOppgaveResponse;
+    }
+
+    private XMLBehandlingsinformasjon createXmlSporsmaal(String oppgaveId, String fritekst) {
+        XMLBehandlingsinformasjon xmlBehandlingsinformasjon = new XMLBehandlingsinformasjon();
+        xmlBehandlingsinformasjon.setMetadataListe(new XMLMetadataListe().withMetadata(new XMLSporsmal().withOppgaveIdGsak(oppgaveId).withFritekst(fritekst)));
+        return xmlBehandlingsinformasjon;
+    }
 }

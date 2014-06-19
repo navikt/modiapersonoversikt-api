@@ -20,11 +20,9 @@ public class SvarPanel extends DialogPanel {
 
     private Sporsmaal sporsmaal;
 
-    public SvarPanel(String id, String fnr, String sporsmalsId) {
+    public SvarPanel(String id, String fnr, Sporsmaal sporsmaal) {
         super(id, fnr);
-
-        sporsmaal = sakService.getSporsmaal(sporsmalsId);
-        sakService.hentOppgaveFraGsak(sporsmalsId);
+        this.sporsmaal = sporsmaal;
 
         settTemaFraSpormaaletSomDefaultValgt();
 
@@ -58,7 +56,7 @@ public class SvarPanel extends DialogPanel {
     }
 
     protected void settTemaFraSpormaaletSomDefaultValgt() {
-        form.getModelObject().tema = getTemaFromSporsmal(sporsmaal.tema);
+        form.getModelObject().tema = getTemaFromSporsmal();
     }
 
     @Override
@@ -75,9 +73,9 @@ public class SvarPanel extends DialogPanel {
     }
 
     //Denne er midlertidig mens vi venter på full integrasjon med kodeverk
-    private Tema getTemaFromSporsmal(String temaFraSporsmaal) {
+    private Tema getTemaFromSporsmal() {
         for (Tema tema : Tema.values()) {
-            if (tema.name().equals(temaFraSporsmaal)) {
+            if (tema.name().equals(sporsmaal.tema)) {
                 return tema;
             }
         }

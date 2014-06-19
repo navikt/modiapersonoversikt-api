@@ -64,7 +64,7 @@
         <gsak.oppgavebehandling.tjenestespesifikasjon.version>2.1.0</gsak.oppgavebehandling.tjenestespesifikasjon.version>
         <henvendelse.aktivitet.v2.version>0.3</henvendelse.aktivitet.v2.version>
         <henvendelse.informasjon.v2.version>0.3</henvendelse.informasjon.v2.version>
-        <dialogarena.behandlingsinformasjon.version>0.0.10</dialogarena.behandlingsinformasjon.version>
+        <dialogarena.behandlingsinformasjon.version>0.0.12</dialogarena.behandlingsinformasjon.version>
         <saksoversikt.version>1.0</saksoversikt.version>
         <sporsmalogsvar.version>1.22-SNAPSHOT</sporsmalogsvar.version>
     </properties>
