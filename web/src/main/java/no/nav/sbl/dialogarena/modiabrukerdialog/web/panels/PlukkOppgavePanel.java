@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.Tema;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -14,6 +15,7 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -35,6 +37,10 @@ public class PlukkOppgavePanel extends Panel {
 
         final IModel<Tema> valgtTema = new Model<>();
         Form<Tema> form = new Form<>("plukk-oppgave-form", valgtTema);
+
+        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
+        feedbackPanel.setOutputMarkupPlaceholderTag(true);
+
         AjaxSubmitLink plukkOppgave = new AjaxSubmitLink("plukk-oppgave") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -46,6 +52,10 @@ public class PlukkOppgavePanel extends Panel {
                                     .set("oppgaveid", oppgave.get().getId()));
                 }
             }
+            @Override
+            protected void onError(AjaxRequestTarget target, Form<?> form) {
+                target.add(feedbackPanel);
+            }
         };
         RadioGroup radioGroup = new RadioGroup<>("tema", valgtTema);
         radioGroup.setRequired(true);
@@ -56,8 +66,7 @@ public class PlukkOppgavePanel extends Panel {
                 item.add(new Label("temanavn", getString(item.getModelObject().name())));
             }
         });
-
-        form.add(plukkOppgave, radioGroup);
+        form.add(plukkOppgave, radioGroup, feedbackPanel);
 
         add(form);
     }
