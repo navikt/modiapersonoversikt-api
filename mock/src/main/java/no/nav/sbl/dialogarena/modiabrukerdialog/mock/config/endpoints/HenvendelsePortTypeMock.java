@@ -111,7 +111,13 @@ public class HenvendelsePortTypeMock {
 
             @Override
             public WSHentHenvendelseResponse hentHenvendelse(WSHentHenvendelseRequest wsHentHenvendelseRequest) {
-                return new WSHentHenvendelseResponse();
+                XMLBehandlingsinformasjon henvendelse = new XMLBehandlingsinformasjon();
+                for (XMLBehandlingsinformasjon xmlBehandlingsinformasjon : HENVENDELSER) {
+                    if (xmlBehandlingsinformasjon.getBehandlingsId().equals(wsHentHenvendelseRequest.getBehandlingsId())) {
+                        henvendelse = xmlBehandlingsinformasjon;
+                    }
+                }
+                return new WSHentHenvendelseResponse().withAny(henvendelse);
             }
 
             @Override
