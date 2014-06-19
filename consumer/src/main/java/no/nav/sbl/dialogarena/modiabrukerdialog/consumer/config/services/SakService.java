@@ -45,10 +45,10 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Henv
 
 public class SakService {
 
-    public static final int ANSVARLIG_ENHET = 4112;
-    public static final int OPPRETTET_AV_ENHET = 4112;
-    public static final int ENDRET_AV_ENHET = 4112;
-    public static final int FERDIGSTILT_AV_ENHET = 4112;
+    public static final int ANSVARLIG_ENHET = 2820;
+    public static final int OPPRETTET_AV_ENHET = 2820;
+    public static final int ENDRET_AV_ENHET = 2820;
+    public static final int FERDIGSTILT_AV_ENHET = 2820;
     public static final String OPPGAVETYPEKODE = "KONT_BRUK_GEN"; // Brukergenerert. Denne brukes lite og er dermed ganske safe
     public static final String PRIORITETKODE = "NORM_GEN"; // Normal prioritet - Generell
 
