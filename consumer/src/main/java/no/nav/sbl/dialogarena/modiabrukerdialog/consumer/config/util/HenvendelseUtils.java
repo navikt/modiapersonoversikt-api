@@ -24,7 +24,7 @@ public class HenvendelseUtils {
         Sporsmaal sporsmaal = new Sporsmaal(info.getBehandlingsId(), info.getOpprettetDato());
 
         XMLMetadata xmlMetadata = info.getMetadataListe().getMetadata().get(0);
-        if(xmlMetadata instanceof XMLSporsmal){
+        if (xmlMetadata instanceof XMLSporsmal) {
             sporsmaal.tema = ((XMLSporsmal) xmlMetadata).getTemagruppe();
             sporsmaal.fritekst = ((XMLSporsmal) xmlMetadata).getFritekst();
             return sporsmaal;
@@ -33,7 +33,7 @@ public class HenvendelseUtils {
         }
     }
 
-    public static XMLBehandlingsinformasjon createXMLBehandlingsinformasjon(Svar svar){
+    public static XMLBehandlingsinformasjon createXMLBehandlingsinformasjon(Svar svar) {
         return new XMLBehandlingsinformasjon()
                 .withHenvendelseType(SVAR.name())
                 .withAktor(new XMLAktor().withFodselsnummer(svar.fnr).withNavIdent(svar.navIdent))
@@ -49,11 +49,11 @@ public class HenvendelseUtils {
 
     public static XMLBehandlingsinformasjon createXMLBehandlingsinformasjon(Referat referat) {
         return new XMLBehandlingsinformasjon()
-                        .withHenvendelseType(REFERAT.name())
-                        .withAktor(new XMLAktor().withFodselsnummer(referat.fnr).withNavIdent(referat.navIdent))
-                        .withOpprettetDato(now())
-                        .withAvsluttetDato(now())
-                        .withMetadataListe(new XMLMetadataListe().withMetadata(
-                                new XMLReferat().withTemagruppe(referat.tema).withKanal(referat.kanal).withFritekst(referat.fritekst)));
+                .withHenvendelseType(REFERAT.name())
+                .withAktor(new XMLAktor().withFodselsnummer(referat.fnr).withNavIdent(referat.navIdent))
+                .withOpprettetDato(now())
+                .withAvsluttetDato(now())
+                .withMetadataListe(new XMLMetadataListe().withMetadata(
+                        new XMLReferat().withTemagruppe(referat.tema).withKanal(referat.kanal).withFritekst(referat.fritekst)));
     }
 }
