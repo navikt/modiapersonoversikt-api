@@ -95,7 +95,7 @@ public class InnboksVM implements Serializable {
         };
     }
 
-    private List<MeldingVM> getValgtTraad() {
+    public List<MeldingVM> getValgtTraad() {
         return valgtMelding.isSome() ? traader.get(valgtMelding.get().melding.traadId) : new ArrayList<MeldingVM>();
     }
 

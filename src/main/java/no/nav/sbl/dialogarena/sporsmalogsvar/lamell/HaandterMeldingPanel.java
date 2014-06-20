@@ -30,6 +30,18 @@ public class HaandterMeldingPanel extends Panel {
             }
         }));
 
-        add(besvar);
+        final JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforingsPanel", innboksVM);
+        journalforingsPanel.setVisibilityAllowed(false);
+
+        final AjaxLink<InnboksVM> journalfor = new AjaxLink<InnboksVM>("journalfor") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                journalforingsPanel.setVisibilityAllowed(true);
+                target.add(journalforingsPanel);
+            }
+        };
+
+        add(besvar, journalfor, journalforingsPanel);
     }
+
 }
