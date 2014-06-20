@@ -175,7 +175,6 @@ public class SakService {
 
         endreOppgave.setDokumentId(oppgave.getDokumentId());
         endreOppgave.setKravId(oppgave.getKravId());
-        endreOppgave.setMappeId(oppgave.getMappe().getMappeId());
         endreOppgave.setOppgaveId(oppgave.getOppgaveId());
         endreOppgave.setBrukerId(oppgave.getGjelder().getBrukerId());
         endreOppgave.setAnsvarligId(oppgave.getAnsvarligId());
