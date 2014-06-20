@@ -23,6 +23,8 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.OPPGAVEID;
@@ -30,13 +32,15 @@ import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
 public class PlukkOppgavePanel extends Panel {
 
+    private static final String TEMAGRUPPE_ATTR = "sos-temagruppe";
+
     @Inject
     private SakService sakService;
 
     public PlukkOppgavePanel(String id) {
         super(id);
 
-        final IModel<Tema> valgtTema = new Model<>();
+        final IModel<Tema> valgtTema = new Model<>((Tema) getHttpSession().getAttribute(TEMAGRUPPE_ATTR));
         Form<Tema> form = new Form<>("plukk-oppgave-form", valgtTema);
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
@@ -51,6 +55,8 @@ public class PlukkOppgavePanel extends Panel {
                             new PageParameters()
                                     .set("fnr", oppgave.get().getGjelder().getBrukerId())
                                     .set(OPPGAVEID, oppgave.get().getOppgaveId()));
+
+                    getHttpSession().setAttribute(TEMAGRUPPE_ATTR, valgtTema.getObject());
                 }
             }
             @Override
@@ -70,6 +76,10 @@ public class PlukkOppgavePanel extends Panel {
         form.add(plukkOppgave, radioGroup, feedbackPanel);
 
         add(form);
+    }
+
+    private HttpSession getHttpSession() {
+        return ((HttpServletRequest) getRequestCycle().getRequest().getContainerRequest()).getSession();
     }
 
     @Override
