@@ -22,26 +22,26 @@ public class NyesteMeldingPanel extends Panel {
         super(id);
 
         this.innboksVM = innboksVM;
-        final MeldingVM meldingVM = innboksVM.getObject().getNyesteMelding();
+        final MeldingVM meldingVM = innboksVM.getObject().getNyesteMeldingIValgtTraad();
         this.avsenderbilde = new AvsenderBilde("avsenderbilde", meldingVM);
 
         add(avsenderbilde);
-        add(new Label("nyesteMelding.opprettetDato"));
-        add(new WebMarkupContainer("indikator-dot").add(new AttributeModifier("class", new PropertyModel<>(innboksVM, "nyesteMelding.statusKlasse"))));
-        add(new Label("tema", new StringResourceModel("${nyesteMelding.melding.tema}", innboksVM)));
-        add(new Label("nyesteMelding.traadlengde"));
-        add(new Label("nyesteMelding.melding.navIdent").add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
+        add(new Label("nyesteMeldingIValgtTraad.opprettetDato"));
+        add(new WebMarkupContainer("indikator-dot").add(new AttributeModifier("class", new PropertyModel<>(innboksVM, "nyesteMeldingIValgtTraad.statusKlasse"))));
+        add(new Label("tema", new StringResourceModel("${nyesteMeldingIValgtTraad.melding.tema}", innboksVM)));
+        add(new Label("nyesteMeldingIValgtTraad.traadlengde"));
+        add(new Label("nyesteMeldingIValgtTraad.melding.navIdent").add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
                 return meldingVM.melding.navIdent!= null && !meldingVM.melding.navIdent.isEmpty();
             }
         })));
-        add(new URLParsingMultiLineLabel("nyesteMelding.melding.fritekst"));
+        add(new URLParsingMultiLineLabel("nyesteMeldingIValgtTraad.melding.fritekst"));
     }
 
     @Override
     protected void onBeforeRender() {
-        avsenderbilde.settBildeRessurs(innboksVM.getObject().getNyesteMelding());
+        avsenderbilde.settBildeRessurs(innboksVM.getObject().getNyesteMeldingIValgtTraad());
         super.onBeforeRender();
     }
 

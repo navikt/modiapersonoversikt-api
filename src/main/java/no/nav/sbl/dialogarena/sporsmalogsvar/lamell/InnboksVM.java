@@ -58,17 +58,17 @@ public class InnboksVM implements Serializable {
         return traader.get(id).size();
     }
 
-    public MeldingVM getNyesteMelding() {
+    public MeldingVM getNyesteMeldingIValgtTraad() {
         List<MeldingVM> valgtTraad = getValgtTraad();
         return valgtTraad.isEmpty() ? null : valgtTraad.get(0);
     }
 
     public Boolean valgtTraadBleInitiertAvBruker() {
-        MeldingVM eldsteMelding = getEldsteMelding();
+        MeldingVM eldsteMelding = getEldsteMeldingIValgtTraad();
         return eldsteMelding != null && eldsteMelding.melding.meldingstype == Meldingstype.SPORSMAL;
     }
 
-    public MeldingVM getEldsteMelding() {
+    public MeldingVM getEldsteMeldingIValgtTraad() {
         List<MeldingVM> valgtTraad = getValgtTraad();
         return valgtTraad.isEmpty() ? null : valgtTraad.get(valgtTraad.size() - 1);
     }
@@ -110,4 +110,8 @@ public class InnboksVM implements Serializable {
             return meldingVMTraad;
         }
     };
+
+    public MeldingVM getNyesteMeldingINyesteTraad() {
+        return nyesteMeldingerITraad.get(0);
+    }
 }
