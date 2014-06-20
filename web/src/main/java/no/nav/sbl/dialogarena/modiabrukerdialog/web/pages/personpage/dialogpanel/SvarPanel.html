@@ -2,17 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-
     <wicket:extend>
-
-        <p>
-            <span><wicket:message key="svarpanel.sporsmal.overskrift"/></span> <span wicket:id="dato">Dato her</span>
-        <div wicket:id="sporsmal">
-            Faktisk tekst!
-        </div>
+        <p class="sporsmal overskrift">
+            <span><wicket:message key="svarpanel.sporsmal.overskrift"/></span>
+            <span wicket:id="dato">Dato her</span>
         </p>
-
-
+        <div wicket:id="sporsmal" class="sporsmal fritekst">Faktisk tekst!</div>
         <section class="kanalvelger clearfix">
             <div wicket:id="kanal">
                 <div wicket:id="kanalvalg" class="kanalvalg">
@@ -27,7 +22,6 @@
             <div wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</div>
         </h2>
     </wicket:extend>
-
 </wicket:panel>
 </body>
 </html>

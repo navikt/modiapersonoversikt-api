@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.modig.wicket.component.urlparsinglabel.URLParsingMultiLineLabel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
+import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -27,8 +29,8 @@ public class SvarPanel extends DialogPanel {
         settTemaFraSpormaaletSomDefaultValgt();
 
         form.add(
-                new Label("dato", sporsmal.opprettetDato),
-                new Label("sporsmal", sporsmal.fritekst)
+                new Label("dato", Datoformat.kortMedTid(sporsmal.opprettetDato)),
+                new URLParsingMultiLineLabel("sporsmal", sporsmal.fritekst)
         );
 
         final RadioGroup<SvarKanal> radioGroup = new RadioGroup<>("kanal");
