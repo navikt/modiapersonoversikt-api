@@ -27,8 +27,11 @@ import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.LagreOppgaveOppg
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.Oppgavebehandling;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import static java.util.Collections.unmodifiableMap;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
@@ -46,6 +49,15 @@ public class SakService {
     public static final int FERDIGSTILT_AV_ENHET = 2820;
     public static final String OPPGAVETYPEKODE = "KONT_BRUK_GEN"; // Brukergenerert. Denne brukes lite og er dermed ganske safe
 
+    private static final Map<String, String> FAGOMRADE;
+    static {
+        Map<String, String> tmp = new HashMap<>();
+        tmp.put("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", "BAR");
+        tmp.put("FAMILIE_OG_BARN", "BID");
+        tmp.put("HJELPEMIDLER", "HJE");
+        tmp.put("OVRIGE_HENVENDELSER","GRA");
+        FAGOMRADE = unmodifiableMap(tmp);
+    }
 
     @Inject
     private Oppgavebehandling oppgavebehandlingWS;
@@ -92,7 +104,7 @@ public class SakService {
     }
 
     public Optional<Oppgave> plukkOppgaveFraGsak(String tema) {
-        Optional<Oppgave> oppgave = finnIkkeTilordnedeOppgaver(tema);
+        Optional<Oppgave> oppgave = finnIkkeTilordnedeOppgaver(FAGOMRADE.get(tema));
         if (oppgave.isSome()) {
             Oppgave tilordnet = tilordneOppgave(oppgave);
             return optional(tilordnet);
@@ -123,7 +135,15 @@ public class SakService {
     private Oppgave tilordneOppgave(Optional<Oppgave> oppgave) {
         Oppgave wsOppgave = oppgave.get();
         wsOppgave.setAnsvarligId(getSubjectHandler().getUid());
-        oppdaterOppgave(wsOppgave);
+
+        LagreOppgaveRequest lagreOppgaveRequest = new LagreOppgaveRequest();
+        lagreOppgaveRequest.setEndreOppgave(tilEndreOppgave(wsOppgave));
+        lagreOppgaveRequest.setEndretAvEnhetId(ENDRET_AV_ENHET);
+        try {
+            oppgavebehandlingWS.lagreOppgave(lagreOppgaveRequest);
+        } catch (LagreOppgaveOppgaveIkkeFunnet e) {
+            throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e);
+        }
         return wsOppgave;
     }
 
@@ -150,21 +170,12 @@ public class SakService {
         return on(oppgaveListe).head();
     }
 
-
-    private void oppdaterOppgave(Oppgave oppgave) {
-        LagreOppgaveRequest lagreOppgaveRequest = new LagreOppgaveRequest();
-        lagreOppgaveRequest.setEndreOppgave(tilEndreOppgave(oppgave));
-        lagreOppgaveRequest.setEndretAvEnhetId(ENDRET_AV_ENHET);
-        try {
-            oppgavebehandlingWS.lagreOppgave(lagreOppgaveRequest);
-        } catch (LagreOppgaveOppgaveIkkeFunnet e) {
-            throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e);
-        }
-    }
-
     private static EndreOppgave tilEndreOppgave(Oppgave oppgave) {
         EndreOppgave endreOppgave = new EndreOppgave();
 
+        endreOppgave.setDokumentId(oppgave.getDokumentId());
+        endreOppgave.setKravId(oppgave.getKravId());
+        endreOppgave.setMappeId(oppgave.getMappe().getMappeId());
         endreOppgave.setOppgaveId(oppgave.getOppgaveId());
         endreOppgave.setBrukerId(oppgave.getGjelder().getBrukerId());
         endreOppgave.setAnsvarligId(oppgave.getAnsvarligId());

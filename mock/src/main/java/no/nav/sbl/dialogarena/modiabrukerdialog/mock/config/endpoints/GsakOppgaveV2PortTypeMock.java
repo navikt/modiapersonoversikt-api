@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Bruker;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Fagomrade;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.Mappe;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgavetype;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Prioritet;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Status;
@@ -77,7 +78,7 @@ public class GsakOppgaveV2PortTypeMock {
         wsStatus.setKode("statuskode");
         wsOppgave.setStatus(wsStatus);
         Fagomrade wsFagomrade = new Fagomrade();
-        wsFagomrade.setKode("fagomrade");
+        wsFagomrade.setKode("HJE");
         wsOppgave.setFagomrade(wsFagomrade);
         GregorianCalendar gregorianCalendar = new GregorianCalendar();
         gregorianCalendar.setTime(now().toDate());
@@ -94,6 +95,9 @@ public class GsakOppgaveV2PortTypeMock {
         wsOppgave.setPrioritet(prioritet);
         wsOppgave.setLest(false);
         wsOppgave.setVersjon(1);
+        Mappe mappe = new Mappe();
+        mappe.setMappeId("1");
+        wsOppgave.setMappe(mappe);
         return wsOppgave;
     }
 }

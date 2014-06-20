@@ -135,9 +135,9 @@ public class SakServiceTest {
         finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
         when(oppgaveWS.finnOppgaveListe(any(FinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
 
-        sakService.plukkOppgaveFraGsak("tema");
+        sakService.plukkOppgaveFraGsak("HJELPEMIDLER");
         verify(oppgaveWS).finnOppgaveListe(finnOppgaveListeRequestCaptor.capture());
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("tema"));
+        assertThat(finnOppgaveListeRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("HJE"));
         assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().getMaxAntallSvar(), is(1));
         assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().isUfordelte(), is(true));
     }
