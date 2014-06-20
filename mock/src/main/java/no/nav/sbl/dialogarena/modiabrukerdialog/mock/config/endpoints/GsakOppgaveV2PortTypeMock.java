@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Bruker;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Fagomrade;
-import no.nav.virksomhet.gjennomforing.oppgave.v2.Mappe;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgavetype;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Prioritet;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.Status;
@@ -95,9 +94,6 @@ public class GsakOppgaveV2PortTypeMock {
         wsOppgave.setPrioritet(prioritet);
         wsOppgave.setLest(false);
         wsOppgave.setVersjon(1);
-        Mappe mappe = new Mappe();
-        mappe.setMappeId("1");
-        wsOppgave.setMappe(mappe);
         return wsOppgave;
     }
 }

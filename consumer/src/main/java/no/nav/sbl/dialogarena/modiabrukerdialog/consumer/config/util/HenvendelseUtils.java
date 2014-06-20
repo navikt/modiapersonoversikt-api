@@ -18,7 +18,7 @@ import static org.joda.time.DateTime.now;
 
 public class HenvendelseUtils {
 
-    public static Sporsmal createSporsmaalFromHenvendelse(Object henvendelsesObjekt) {
+    public static Sporsmal createSporsmalFromHenvendelse(Object henvendelsesObjekt) {
         XMLBehandlingsinformasjon info = (XMLBehandlingsinformasjon) henvendelsesObjekt;
 
         Sporsmal sporsmal = new Sporsmal(info.getBehandlingsId(), info.getOpprettetDato());

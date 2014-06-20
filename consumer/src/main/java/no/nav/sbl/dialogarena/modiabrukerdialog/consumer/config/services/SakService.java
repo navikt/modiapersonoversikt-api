@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
@@ -39,7 +40,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.HenvendelseUtils.createSporsmaalFromHenvendelse;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.HenvendelseUtils.createSporsmalFromHenvendelse;
 
 public class SakService {
 
@@ -85,11 +86,12 @@ public class SakService {
         List<Object> henvendelseListe =
                 henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(SPORSMAL.toString())).getAny();
 
+        XMLBehandlingsinformasjon henvendelse;
         for (Object o : henvendelseListe) {
-            XMLBehandlingsinformasjon henvendelse = (XMLBehandlingsinformasjon) o;
-            XMLSporsmal xmlSporsmal = (XMLSporsmal) henvendelse.getMetadataListe().getMetadata().get(0);
-            if (oppgaveid.equals(xmlSporsmal.getOppgaveIdGsak())) {
-                return createSporsmaalFromHenvendelse(henvendelse);
+            henvendelse = (XMLBehandlingsinformasjon) o;
+            XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
+            if (xmlMetadata instanceof XMLSporsmal && oppgaveid.equals(((XMLSporsmal) xmlMetadata).getOppgaveIdGsak())) {
+                return createSporsmalFromHenvendelse(henvendelse);
             }
         }
         return null;
@@ -100,7 +102,7 @@ public class SakService {
                 (XMLBehandlingsinformasjon) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalsId)).getAny();
         XMLSporsmal xmlSporsmal = (XMLSporsmal) behandlingsinformasjon.getMetadataListe().getMetadata().get(0);
         tilordneOppgave(optional(hentOppgaveFraGsak(xmlSporsmal.getOppgaveIdGsak())));
-        return createSporsmaalFromHenvendelse(behandlingsinformasjon);
+        return createSporsmalFromHenvendelse(behandlingsinformasjon);
     }
 
     public Optional<Oppgave> plukkOppgaveFraGsak(String tema) {

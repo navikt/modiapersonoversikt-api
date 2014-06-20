@@ -18,6 +18,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.Random;
 
+import static java.lang.String.valueOf;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
@@ -28,6 +29,7 @@ public class HenvendelsePortTypeMock {
 
     private static Random idGenerator = new Random();
     private static int behandlingsId = idGenerator.nextInt();
+    private static int oppgaveId = 0;
 
     private static final String LANG_TEKST = "Lorem ipsum dolor sit amet, " +
             "consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad " +
@@ -47,34 +49,34 @@ public class HenvendelsePortTypeMock {
 
     public static final XMLBehandlingsinformasjon[] HENVENDELSER = {
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusWeeks(2),
-                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST)),
+                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++))),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusWeeks(1),
-                    createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST)),
+                    createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST, valueOf(oppgaveId++))),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", String.valueOf(behandlingsId), now().minusDays(4), KORT_TEKST)),
+                    createXMLSvar("FAMILIE_OG_BARN", valueOf(behandlingsId), now().minusDays(4), KORT_TEKST)),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(3),
-                    createXMLSporsmal("HJELPEMIDLER", LANG_TEKST)),
+                    createXMLSporsmal("HJELPEMIDLER", LANG_TEKST, valueOf(oppgaveId++))),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusHours(5),
-                    createXMLSvar("HJELPEMIDLER", String.valueOf(behandlingsId), null, KORT_TEKST)),
+                    createXMLSvar("HJELPEMIDLER", valueOf(behandlingsId), null, KORT_TEKST)),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusMonths(4),
-                    createXMLSporsmal("OVRIGE_HENVENDELSER", LANG_TEKST)),
+                    createXMLSporsmal("OVRIGE_HENVENDELSER", LANG_TEKST, valueOf(oppgaveId++))),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusMonths(4).plusDays(1),
-                    createXMLSvar("OVRIGE_HENVENDELSER", String.valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST)),
+                    createXMLSvar("OVRIGE_HENVENDELSER", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST)),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(7),
-                    createXMLSvar("OVRIGE_HENVENDELSER", String.valueOf(behandlingsId), null, KORT_TEKST)),
+                    createXMLSvar("OVRIGE_HENVENDELSER", valueOf(behandlingsId), null, KORT_TEKST)),
 
             createXmlBehandlingsinformasjon(REFERAT, now(),
                     createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST)),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(1),
-                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST))
+                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)))
     };
 
     private static XMLBehandlingsinformasjon createXmlBehandlingsinformasjon(XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata) {
@@ -84,13 +86,13 @@ public class HenvendelsePortTypeMock {
         return new XMLBehandlingsinformasjon()
                 .withHenvendelseType(type.name())
                 .withOpprettetDato(opprettet)
-                .withBehandlingsId(String.valueOf(behandlingsId))
+                .withBehandlingsId(valueOf(behandlingsId))
                 .withMetadataListe(
                         new XMLMetadataListe().withMetadata(metadata));
     }
 
-    private static XMLSporsmal createXMLSporsmal(String tema, String tekst) {
-        return new XMLSporsmal().withTemagruppe(tema).withFritekst(tekst);
+    private static XMLSporsmal createXMLSporsmal(String tema, String tekst, String oppgaveId) {
+        return new XMLSporsmal().withTemagruppe(tema).withFritekst(tekst).withOppgaveIdGsak(oppgaveId);
     }
 
     private static XMLSvar createXMLSvar(String tema, String sporsmalsId, DateTime lestDato, String fritekst) {

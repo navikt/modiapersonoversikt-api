@@ -57,6 +57,9 @@ public class PlukkOppgavePanel extends Panel {
                                     .set(OPPGAVEID, oppgave.get().getOppgaveId()));
 
                     getHttpSession().setAttribute(TEMAGRUPPE_ATTR, valgtTema.getObject());
+                } else {
+                    error(getString("plukkoppgave.ingenoppgaverpaatema"));
+                    target.add(feedbackPanel);
                 }
             }
             @Override
