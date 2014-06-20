@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.modig.wicket.component.urlparsinglabel.URLParsingMultiLineLabel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
@@ -44,7 +45,7 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     public void inneholderSporsmaalsspefikkeKomponenter() {
         wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmal("id", now())))
-                .should().containComponent(withId("sporsmal").and(ofType(Label.class)))
+                .should().containComponent(withId("sporsmal").and(ofType(URLParsingMultiLineLabel.class)))
                 .should().containComponent(withId("dato").and(ofType(Label.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
                 .should().containComponent(withId("kanalbeskrivelse").and(ofType(Label.class)));
