@@ -641,12 +641,6 @@
                 <version>${jetty.version}</version>
                 <scope>test</scope>
             </dependency>
-            <dependency>
-                <groupId>org.eclipse.jetty.orbit</groupId>
-                <artifactId>javax.servlet</artifactId>
-                <version>3.0.0.v201112011016</version>
-                <scope>test</scope>
-            </dependency>
 
             <!--Logging-->
             <dependency>
