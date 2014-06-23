@@ -1,81 +1,80 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.BestillOppgaveRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.BestillOppgaveResponse;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.FeilregistrerOppgaveRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.FerdigstillOppgaveBolkRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.FerdigstillOppgaveBolkResponse;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.LagreMappeRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.LagreOppgaveBolkRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.LagreOppgaveBolkResponse;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.LagreOppgaveRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.OpprettMappeRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.OpprettMappeResponse;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.OpprettOppgaveBolkRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.OpprettOppgaveBolkResponse;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.OpprettOppgaveRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.OpprettOppgaveResponse;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.SlettMappeRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.BestillOppgaveIkkeEntydigSaksopprettelse;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.BestillOppgavePersonIkkeFunnet;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.BestillOppgavePersonInaktiv;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.BestillOppgaveUkjentArbeidsgiver;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.FeilregistrerOppgaveOppgaveIkkeFunnet;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.FeilregistrerOppgaveUlovligStatusOvergang;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.LagreMappeMappeIkkeFunnet;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.LagreOppgaveOppgaveIkkeFunnet;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.Oppgavebehandling;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.SlettMappeMappeIkkeFunnet;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.SlettMappeMappeIkkeTom;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSBestillOppgaveRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSBestillOppgaveResponse;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSFeilregistrerOppgaveRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSFerdigstillOppgaveBolkRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSFerdigstillOppgaveBolkResponse;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSLagreMappeRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSLagreOppgaveBolkRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSLagreOppgaveBolkResponse;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSLagreOppgaveRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSOpprettMappeRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSOpprettMappeResponse;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSOpprettOppgaveBolkRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSOpprettOppgaveBolkResponse;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSOpprettOppgaveRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSOpprettOppgaveResponse;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSSlettMappeRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.BestillOppgaveIkkeEntydigSaksopprettelse;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.BestillOppgavePersonIkkeFunnet;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.BestillOppgavePersonInaktiv;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.BestillOppgaveUkjentArbeidsgiver;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.FeilregistrerOppgaveOppgaveIkkeFunnet;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.FeilregistrerOppgaveUlovligStatusOvergang;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.LagreMappeMappeIkkeFunnet;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.LagreOppgaveOppgaveIkkeFunnet;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.Oppgavebehandling;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.SlettMappeMappeIkkeFunnet;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.SlettMappeMappeIkkeTom;
 
 public class GsakOppgavebehandlingV2PortTypeMock {
     public static Oppgavebehandling createOppgavebehandlingPortTypeMock() {
         return new Oppgavebehandling() {
             @Override
-            public void feilregistrerOppgave(FeilregistrerOppgaveRequest feilregistrerOppgaveRequest) throws FeilregistrerOppgaveOppgaveIkkeFunnet, FeilregistrerOppgaveUlovligStatusOvergang {
+            public WSFerdigstillOppgaveBolkResponse ferdigstillOppgaveBolk(WSFerdigstillOppgaveBolkRequest request) {
+                return new WSFerdigstillOppgaveBolkResponse();
             }
 
             @Override
-            public void lagreOppgave(LagreOppgaveRequest lagreOppgaveRequest) throws LagreOppgaveOppgaveIkkeFunnet {
+            public WSOpprettMappeResponse opprettMappe(WSOpprettMappeRequest request) {
+                return new WSOpprettMappeResponse();
             }
 
             @Override
-            public OpprettOppgaveResponse opprettOppgave(OpprettOppgaveRequest opprettOppgaveRequest) {
-                return new OpprettOppgaveResponse();
+            public WSOpprettOppgaveBolkResponse opprettOppgaveBolk(WSOpprettOppgaveBolkRequest request) {
+                return new WSOpprettOppgaveBolkResponse();
             }
 
             @Override
-            public OpprettOppgaveBolkResponse opprettOppgaveBolk(OpprettOppgaveBolkRequest opprettOppgaveBolkRequest) {
-                return new OpprettOppgaveBolkResponse();
+            public void slettMappe(WSSlettMappeRequest request) throws SlettMappeMappeIkkeTom, SlettMappeMappeIkkeFunnet {
             }
 
             @Override
-            public FerdigstillOppgaveBolkResponse ferdigstillOppgaveBolk(FerdigstillOppgaveBolkRequest ferdigstillOppgaveBolkRequest) {
-                return new FerdigstillOppgaveBolkResponse();
+            public void feilregistrerOppgave(WSFeilregistrerOppgaveRequest request) throws FeilregistrerOppgaveOppgaveIkkeFunnet, FeilregistrerOppgaveUlovligStatusOvergang {
             }
 
             @Override
-            public OpprettMappeResponse opprettMappe(OpprettMappeRequest opprettMappeRequest) {
-                return new OpprettMappeResponse();
+            public WSLagreOppgaveBolkResponse lagreOppgaveBolk(WSLagreOppgaveBolkRequest request) {
+                return new WSLagreOppgaveBolkResponse();
             }
 
             @Override
-            public void lagreMappe(LagreMappeRequest lagreMappeRequest) throws LagreMappeMappeIkkeFunnet {
+            public WSOpprettOppgaveResponse opprettOppgave(WSOpprettOppgaveRequest request) {
+                return new WSOpprettOppgaveResponse();
             }
 
             @Override
-            public void slettMappe(SlettMappeRequest slettMappeRequest) throws SlettMappeMappeIkkeFunnet, SlettMappeMappeIkkeTom {
+            public void lagreOppgave(WSLagreOppgaveRequest request) throws LagreOppgaveOppgaveIkkeFunnet {
             }
 
             @Override
-            public LagreOppgaveBolkResponse lagreOppgaveBolk(LagreOppgaveBolkRequest lagreOppgaveBolkRequest) {
-                return new LagreOppgaveBolkResponse();
+            public WSBestillOppgaveResponse bestillOppgave(WSBestillOppgaveRequest request) throws BestillOppgavePersonIkkeFunnet, BestillOppgaveIkkeEntydigSaksopprettelse, BestillOppgavePersonInaktiv, BestillOppgaveUkjentArbeidsgiver {
+                return new WSBestillOppgaveResponse();
             }
 
             @Override
-            public BestillOppgaveResponse bestillOppgave(BestillOppgaveRequest bestillOppgaveRequest)
-                    throws BestillOppgaveIkkeEntydigSaksopprettelse, BestillOppgavePersonIkkeFunnet, BestillOppgavePersonInaktiv, BestillOppgaveUkjentArbeidsgiver {
-                return new BestillOppgaveResponse();
+            public void lagreMappe(WSLagreMappeRequest request) throws LagreMappeMappeIkkeFunnet {
             }
         };
     }

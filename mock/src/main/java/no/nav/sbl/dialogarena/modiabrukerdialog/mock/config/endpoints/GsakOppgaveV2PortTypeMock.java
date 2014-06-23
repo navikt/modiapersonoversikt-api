@@ -1,27 +1,24 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.virksomhet.gjennomforing.oppgave.v2.Bruker;
-import no.nav.virksomhet.gjennomforing.oppgave.v2.Fagomrade;
-import no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgavetype;
-import no.nav.virksomhet.gjennomforing.oppgave.v2.Prioritet;
-import no.nav.virksomhet.gjennomforing.oppgave.v2.Status;
-import no.nav.virksomhet.gjennomforing.oppgave.v2.Underkategori;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnFeilregistrertOppgaveListeRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnFeilregistrertOppgaveListeResponse;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnFerdigstiltOppgaveListeRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnFerdigstiltOppgaveListeResponse;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnMappeListeRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnMappeListeResponse;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeResponse;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.HentOppgaveRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.HentOppgaveResponse;
-import no.nav.virksomhet.tjenester.oppgave.v2.binding.HentOppgaveOppgaveIkkeFunnet;
-import no.nav.virksomhet.tjenester.oppgave.v2.binding.Oppgave;
-
-import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.datatype.DatatypeFactory;
-import java.util.GregorianCalendar;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.WSBruker;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.WSFagomrade;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgavetype;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.WSPrioritet;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.WSStatus;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.WSUnderkategori;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnFeilregistrertOppgaveListeRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnFeilregistrertOppgaveListeResponse;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnFerdigstiltOppgaveListeRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnFerdigstiltOppgaveListeResponse;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnMappeListeRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnMappeListeResponse;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeResponse;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveResponse;
+import no.nav.virksomhet.tjenester.oppgave.v2.HentOppgaveOppgaveIkkeFunnet;
+import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
 
 import static org.joda.time.DateTime.now;
 
@@ -30,70 +27,47 @@ public class GsakOppgaveV2PortTypeMock {
     public static Oppgave createOppgavePortTypeMock() {
         return new Oppgave() {
             @Override
-            public HentOppgaveResponse hentOppgave(HentOppgaveRequest hentOppgaveRequest) throws HentOppgaveOppgaveIkkeFunnet {
-                HentOppgaveResponse hentOppgaveResponse = new HentOppgaveResponse();
-                hentOppgaveResponse.setOppgave(lagWSOppgave(hentOppgaveRequest.getOppgaveId()));
-                return hentOppgaveResponse;
+            public WSFinnFeilregistrertOppgaveListeResponse finnFeilregistrertOppgaveListe(WSFinnFeilregistrertOppgaveListeRequest request) {
+                return new WSFinnFeilregistrertOppgaveListeResponse();
             }
 
             @Override
-            public FinnOppgaveListeResponse finnOppgaveListe(FinnOppgaveListeRequest finnOppgaveListeRequest) {
-                FinnOppgaveListeResponse finnOppgaveListeResponse = new FinnOppgaveListeResponse();
-                finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
-                return finnOppgaveListeResponse;
+            public WSHentOppgaveResponse hentOppgave(WSHentOppgaveRequest request) throws HentOppgaveOppgaveIkkeFunnet {
+                return new WSHentOppgaveResponse().withOppgave(lagWSOppgave(request.getOppgaveId()));
             }
 
             @Override
-            public FinnFerdigstiltOppgaveListeResponse finnFerdigstiltOppgaveListe(FinnFerdigstiltOppgaveListeRequest finnFerdigstiltOppgaveListeRequest) {
-                return new FinnFerdigstiltOppgaveListeResponse();
+            public WSFinnMappeListeResponse finnMappeListe(WSFinnMappeListeRequest request) {
+                return new WSFinnMappeListeResponse();
             }
 
             @Override
-            public FinnFeilregistrertOppgaveListeResponse finnFeilregistrertOppgaveListe(FinnFeilregistrertOppgaveListeRequest finnFeilregistrertOppgaveListeRequest) {
-                return new FinnFeilregistrertOppgaveListeResponse();
+            public WSFinnOppgaveListeResponse finnOppgaveListe(WSFinnOppgaveListeRequest request) {
+                return new WSFinnOppgaveListeResponse().withOppgaveListe(lagWSOppgave());
             }
 
             @Override
-            public FinnMappeListeResponse finnMappeListe(FinnMappeListeRequest finnMappeListeRequest) {
-                return new FinnMappeListeResponse();
+            public WSFinnFerdigstiltOppgaveListeResponse finnFerdigstiltOppgaveListe(WSFinnFerdigstiltOppgaveListeRequest request) {
+                return new WSFinnFerdigstiltOppgaveListeResponse();
             }
         };
     }
 
-    public static no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave lagWSOppgave() {
+    public static WSOppgave lagWSOppgave() {
         return lagWSOppgave("1");
     }
 
-    public static no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave lagWSOppgave(String oppgaveId) {
-        no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave wsOppgave = new no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave();
-        wsOppgave.setOppgaveId(oppgaveId);
-        Oppgavetype wsOppgavetype = new Oppgavetype();
-        wsOppgavetype.setKode("wsOppgavetype");
-        wsOppgave.setOppgavetype(wsOppgavetype);
-        Bruker wsBruker = new Bruker();
-        wsBruker.setBrukerId("***REMOVED***");
-        wsOppgave.setGjelder(wsBruker);
-        Status wsStatus = new Status();
-        wsStatus.setKode("statuskode");
-        wsOppgave.setStatus(wsStatus);
-        Fagomrade wsFagomrade = new Fagomrade();
-        wsFagomrade.setKode("HJE");
-        wsOppgave.setFagomrade(wsFagomrade);
-        GregorianCalendar gregorianCalendar = new GregorianCalendar();
-        gregorianCalendar.setTime(now().toDate());
-        try {
-            wsOppgave.setAktivFra(DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar));
-        } catch (DatatypeConfigurationException e) {
-            e.printStackTrace();
-        }
-        Prioritet prioritet = new Prioritet();
-        prioritet.setKode("NORM_GEN");
-        Underkategori underkategori = new Underkategori();
-        underkategori.setKode("ARBEID_HJE");
-        wsOppgave.setUnderkategori(underkategori);
-        wsOppgave.setPrioritet(prioritet);
-        wsOppgave.setLest(false);
-        wsOppgave.setVersjon(1);
-        return wsOppgave;
+    public static WSOppgave lagWSOppgave(String oppgaveId) {
+        return new WSOppgave()
+                .withOppgaveId(oppgaveId)
+                .withOppgavetype(new WSOppgavetype().withKode("wsOppgavetype"))
+                .withGjelder(new WSBruker().withBrukerId("***REMOVED***"))
+                .withStatus(new WSStatus().withKode("statuskode"))
+                .withFagomrade(new WSFagomrade().withKode("HJE"))
+                .withAktivFra(now().toLocalDate())
+                .withPrioritet(new WSPrioritet().withKode("NORM_GEN"))
+                .withUnderkategori(new WSUnderkategori().withKode("ARBEID_HJE"))
+                .withLest(false)
+                .withVersjon(1);
     }
 }

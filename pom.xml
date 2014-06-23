@@ -60,8 +60,6 @@
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>2.0.40</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
-        <gsak.oppgave.tjenestespesifikasjon.version>2.2.0</gsak.oppgave.tjenestespesifikasjon.version>
-        <gsak.oppgavebehandling.tjenestespesifikasjon.version>2.1.0</gsak.oppgavebehandling.tjenestespesifikasjon.version>
         <henvendelse.aktivitet.v2.version>0.3</henvendelse.aktivitet.v2.version>
         <henvendelse.informasjon.v2.version>0.3</henvendelse.informasjon.v2.version>
         <dialogarena.behandlingsinformasjon.version>0.0.12</dialogarena.behandlingsinformasjon.version>
@@ -289,16 +287,9 @@
 
             <!--Dialogarena tjenestespesifikasjon-->
             <dependency>
-                <groupId>no.nav.tjenester</groupId>
-                <artifactId>nav-oppgave-tjenestespesifikasjon</artifactId>
-                <version>${gsak.oppgave.tjenestespesifikasjon.version}</version>
-                <classifier>jaxws</classifier>
-            </dependency>
-            <dependency>
-                <groupId>no.nav.tjenester</groupId>
-                <artifactId>nav-oppgavebehandling-tjenestespesifikasjon</artifactId>
-                <version>${gsak.oppgavebehandling.tjenestespesifikasjon.version}</version>
-                <classifier>jaxws</classifier>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
+                <version>0.0.4</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -838,12 +829,12 @@
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution><execution>
-                        <id>post-test</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>report</goal>
-                        </goals>
-                    </execution>
+                    <id>post-test</id>
+                    <phase>test</phase>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                </execution>
                 </executions>
             </plugin>
         </plugins>

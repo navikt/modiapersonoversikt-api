@@ -13,25 +13,26 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
-import no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeFilter;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeSok;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeSortering;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.HentOppgaveRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.HentOppgaveResponse;
-import no.nav.virksomhet.tjenester.oppgave.v2.binding.HentOppgaveOppgaveIkkeFunnet;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.EndreOppgave;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.FerdigstillOppgaveBolkRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.LagreOppgaveRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.LagreOppgaveOppgaveIkkeFunnet;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.Oppgavebehandling;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeFilter;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeSok;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeSortering;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveRequest;
+import no.nav.virksomhet.tjenester.oppgave.v2.HentOppgaveOppgaveIkkeFunnet;
+import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSEndreOppgave;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSFerdigstillOppgaveBolkRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSLagreOppgaveRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.LagreOppgaveOppgaveIkkeFunnet;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.Oppgavebehandling;
 
 import javax.inject.Inject;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.lang.String.valueOf;
 import static java.util.Collections.unmodifiableMap;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
@@ -64,7 +65,7 @@ public class SakService {
     private Oppgavebehandling oppgavebehandlingWS;
 
     @Inject
-    private no.nav.virksomhet.tjenester.oppgave.v2.binding.Oppgave oppgaveWS;
+    private Oppgave oppgaveWS;
 
     @Inject
     private HenvendelsePortType henvendelsePortType;
@@ -101,107 +102,79 @@ public class SakService {
         XMLBehandlingsinformasjon behandlingsinformasjon =
                 (XMLBehandlingsinformasjon) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalsId)).getAny();
         XMLSporsmal xmlSporsmal = (XMLSporsmal) behandlingsinformasjon.getMetadataListe().getMetadata().get(0);
-        tilordneOppgave(optional(hentOppgaveFraGsak(xmlSporsmal.getOppgaveIdGsak())));
+        tilordneOppgave(hentOppgaveFraGsak(xmlSporsmal.getOppgaveIdGsak()));
         return createSporsmalFromHenvendelse(behandlingsinformasjon);
     }
 
-    public Optional<Oppgave> plukkOppgaveFraGsak(String tema) {
-        Optional<Oppgave> oppgave = finnIkkeTilordnedeOppgaver(FAGOMRADE.get(tema));
+    public Optional<WSOppgave> plukkOppgaveFraGsak(String tema) {
+        Optional<WSOppgave> oppgave = finnIkkeTilordnedeOppgaver(FAGOMRADE.get(tema));
         if (oppgave.isSome()) {
-            Oppgave tilordnet = tilordneOppgave(oppgave);
+            WSOppgave tilordnet = tilordneOppgave(oppgave.get());
             return optional(tilordnet);
         } else {
             return none();
         }
     }
 
-    public Oppgave hentOppgaveFraGsak(String oppgaveId) {
-        HentOppgaveResponse hentOppgaveResponse;
+    public WSOppgave hentOppgaveFraGsak(String oppgaveId) {
         try {
-            HentOppgaveRequest hentOppgaveRequest = new HentOppgaveRequest();
-            hentOppgaveRequest.setOppgaveId(oppgaveId);
-            hentOppgaveResponse = oppgaveWS.hentOppgave(hentOppgaveRequest);
+            return oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
         } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
             throw new RuntimeException(hentOppgaveOppgaveIkkeFunnet);
         }
-        return hentOppgaveResponse.getOppgave();
     }
 
     public void ferdigstillOppgaveFraGsak(String oppgaveId) {
-        FerdigstillOppgaveBolkRequest ferdigstillOppgaveBolkRequest = new FerdigstillOppgaveBolkRequest();
-        ferdigstillOppgaveBolkRequest.getOppgaveIdListe().add(oppgaveId);
-        ferdigstillOppgaveBolkRequest.setFerdigstiltAvEnhetId(FERDIGSTILT_AV_ENHET);
-        oppgavebehandlingWS.ferdigstillOppgaveBolk(ferdigstillOppgaveBolkRequest);
+        oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId).withFerdigstiltAvEnhetId(FERDIGSTILT_AV_ENHET));
     }
 
-    private Oppgave tilordneOppgave(Optional<Oppgave> oppgave) {
-        Oppgave wsOppgave = oppgave.get();
-        wsOppgave.setAnsvarligId(getSubjectHandler().getUid());
+    private WSOppgave tilordneOppgave(WSOppgave oppgave) {
+        WSOppgave wsOppgave = oppgave.withAnsvarligId(getSubjectHandler().getUid());
 
-        LagreOppgaveRequest lagreOppgaveRequest = new LagreOppgaveRequest();
-        lagreOppgaveRequest.setEndreOppgave(tilEndreOppgave(wsOppgave));
-        lagreOppgaveRequest.setEndretAvEnhetId(ENDRET_AV_ENHET);
         try {
-            oppgavebehandlingWS.lagreOppgave(lagreOppgaveRequest);
-        } catch (LagreOppgaveOppgaveIkkeFunnet e) {
-            throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", e);
+            oppgavebehandlingWS.lagreOppgave(
+                    new WSLagreOppgaveRequest()
+                            .withEndreOppgave(new WSEndreOppgave()
+                                    .withDokumentId(wsOppgave.getDokumentId())
+                                    .withKravId(wsOppgave.getKravId())
+                                    .withOppgaveId(wsOppgave.getOppgaveId())
+                                    .withBrukerId(wsOppgave.getGjelder().getBrukerId())
+                                    .withAnsvarligId(wsOppgave.getAnsvarligId())
+                                    .withAnsvarligEnhetId(wsOppgave.getAnsvarligEnhetId())
+
+                                    .withFagomradeKode(wsOppgave.getFagomrade().getKode())
+                                    .withOppgavetypeKode(wsOppgave.getOppgavetype().getKode())
+                                    .withPrioritetKode(wsOppgave.getPrioritet().getKode())
+                                    .withBrukertypeKode(wsOppgave.getGjelder().getBrukertypeKode())
+                                    .withUnderkategoriKode(wsOppgave.getUnderkategori().getKode())
+
+                                    .withAktivFra(wsOppgave.getAktivFra())
+                                    .withBeskrivelse(wsOppgave.getBeskrivelse())
+                                    .withVersjon(wsOppgave.getVersjon())
+                                    .withSaksnummer(wsOppgave.getSaksnummer())
+                                    .withLest(wsOppgave.isLest()))
+                            .withEndretAvEnhetId(ENDRET_AV_ENHET));
+        } catch (LagreOppgaveOppgaveIkkeFunnet lagreOppgaveOppgaveIkkeFunnet) {
+            throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);
         }
+
         return wsOppgave;
     }
 
-
-    private Optional<Oppgave> finnIkkeTilordnedeOppgaver(String tema) {
-        FinnOppgaveListeRequest finnOppgaveListeRequest = new FinnOppgaveListeRequest();
-
-        FinnOppgaveListeFilter finnOppgaveListeFilter = fellesFilter();
-        finnOppgaveListeFilter.setMaxAntallSvar(1);
-        finnOppgaveListeFilter.setUfordelte(true);
-        finnOppgaveListeRequest.setFilter(finnOppgaveListeFilter);
-
-        FinnOppgaveListeSok finnOppgaveListeSok = new FinnOppgaveListeSok();
-        finnOppgaveListeSok.setAnsvarligEnhetId(String.valueOf(ANSVARLIG_ENHET));
-        finnOppgaveListeSok.getFagomradeKodeListe().add(tema);
-        finnOppgaveListeRequest.setSok(finnOppgaveListeSok);
-
-        FinnOppgaveListeSortering finnOppgaveListeSortering = new FinnOppgaveListeSortering();
-        finnOppgaveListeSortering.setSorteringKode("FRIST_DATO_STIG");
-
-        List<Oppgave> oppgaveListe =
-                oppgaveWS.finnOppgaveListe(finnOppgaveListeRequest).getOppgaveListe();
-
-        return on(oppgaveListe).head();
-    }
-
-    private static EndreOppgave tilEndreOppgave(Oppgave oppgave) {
-        EndreOppgave endreOppgave = new EndreOppgave();
-
-        endreOppgave.setDokumentId(oppgave.getDokumentId());
-        endreOppgave.setKravId(oppgave.getKravId());
-        endreOppgave.setOppgaveId(oppgave.getOppgaveId());
-        endreOppgave.setBrukerId(oppgave.getGjelder().getBrukerId());
-        endreOppgave.setAnsvarligId(oppgave.getAnsvarligId());
-        endreOppgave.setAnsvarligEnhetId(oppgave.getAnsvarligEnhetId());
-
-        endreOppgave.setFagomradeKode(oppgave.getFagomrade().getKode());
-        endreOppgave.setOppgavetypeKode(oppgave.getOppgavetype().getKode());
-        endreOppgave.setPrioritetKode(oppgave.getPrioritet().getKode());
-        endreOppgave.setBrukertypeKode(oppgave.getGjelder().getBrukertypeKode());
-        endreOppgave.setUnderkategoriKode(oppgave.getUnderkategori().getKode());
-
-        endreOppgave.setAktivFra(oppgave.getAktivFra());
-        endreOppgave.setBeskrivelse(oppgave.getBeskrivelse());
-        endreOppgave.setVersjon(oppgave.getVersjon());
-        endreOppgave.setSaksnummer(oppgave.getSaksnummer());
-        endreOppgave.setLest(oppgave.isLest());
-
-        return endreOppgave;
-    }
-
-    private FinnOppgaveListeFilter fellesFilter() {
-        FinnOppgaveListeFilter finnOppgaveListeFilter = new FinnOppgaveListeFilter();
-        finnOppgaveListeFilter.setOpprettetEnhetId(String.valueOf(OPPRETTET_AV_ENHET));
-        finnOppgaveListeFilter.getOppgavetypeKodeListe().add(OPPGAVETYPEKODE);
-        return finnOppgaveListeFilter;
+    private Optional<WSOppgave> finnIkkeTilordnedeOppgaver(String tema) {
+        return on(oppgaveWS.finnOppgaveListe(
+                new WSFinnOppgaveListeRequest()
+                        .withFilter(new WSFinnOppgaveListeFilter()
+                                .withOpprettetEnhetId(valueOf(OPPRETTET_AV_ENHET))
+                                .withOppgavetypeKodeListe(OPPGAVETYPEKODE)
+                                .withMaxAntallSvar(1)
+                                .withUfordelte(true))
+                        .withSok(new WSFinnOppgaveListeSok()
+                                .withAnsvarligEnhetId(valueOf(ANSVARLIG_ENHET))
+                                .withFagomradeKodeListe(tema))
+                        .withSorteringKode(new WSFinnOppgaveListeSortering().withSorteringKode("FRIST_DATO_STIG")))
+                .getOppgaveListe())
+                .head();
     }
 
 }

@@ -16,16 +16,16 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.FinnOppgaveListeResponse;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.HentOppgaveRequest;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.HentOppgaveResponse;
-import no.nav.virksomhet.tjenester.oppgave.v2.binding.HentOppgaveOppgaveIkkeFunnet;
-import no.nav.virksomhet.tjenester.oppgave.v2.binding.Oppgave;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.FerdigstillOppgaveBolkRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.LagreOppgaveRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.LagreOppgaveOppgaveIkkeFunnet;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.binding.Oppgavebehandling;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeResponse;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveRequest;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveResponse;
+import no.nav.virksomhet.tjenester.oppgave.v2.HentOppgaveOppgaveIkkeFunnet;
+import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSFerdigstillOppgaveBolkRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSLagreOppgaveRequest;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.LagreOppgaveOppgaveIkkeFunnet;
+import no.nav.virksomhet.tjenester.oppgavebehandling.v2.Oppgavebehandling;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -74,13 +74,13 @@ public class SakServiceTest {
     @Captor
     ArgumentCaptor<WSSendHenvendelseRequest> wsSendHenvendelseRequestCaptor;
     @Captor
-    ArgumentCaptor<HentOppgaveRequest> hentOppgaveRequestCaptor;
+    ArgumentCaptor<WSHentOppgaveRequest> hentOppgaveRequestCaptor;
     @Captor
-    ArgumentCaptor<FinnOppgaveListeRequest> finnOppgaveListeRequestCaptor;
+    ArgumentCaptor<WSFinnOppgaveListeRequest> finnOppgaveListeRequestCaptor;
     @Captor
-    ArgumentCaptor<FerdigstillOppgaveBolkRequest> ferdigstillOppgaveBolkRequestCaptor;
+    ArgumentCaptor<WSFerdigstillOppgaveBolkRequest> ferdigstillOppgaveBolkRequestCaptor;
     @Captor
-    ArgumentCaptor<LagreOppgaveRequest> lagreOppgaveRequestCaptor;
+    ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor;
 
     @Before
     public void init() {
@@ -91,7 +91,7 @@ public class SakServiceTest {
     public void skalHenteSporsmaalOgTilordneIGsak() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOppgaveIkkeFunnet {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
-        when(oppgaveWS.hentOppgave(any(HentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
 
         Sporsmal sporsmal = sakService.getSporsmalOgTilordneIGsak(SPORSMAL_ID);
 
@@ -121,7 +121,7 @@ public class SakServiceTest {
 
     @Test
     public void skalHenteOppgavefraGsak() throws HentOppgaveOppgaveIkkeFunnet {
-        when(oppgaveWS.hentOppgave(any(HentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
 
         sakService.hentOppgaveFraGsak("1");
         verify(oppgaveWS).hentOppgave(hentOppgaveRequestCaptor.capture());
@@ -131,9 +131,9 @@ public class SakServiceTest {
     @Test
     public void skalPlukkeOppgaveFraGsak() {
         System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
-        FinnOppgaveListeResponse finnOppgaveListeResponse = new FinnOppgaveListeResponse();
+        WSFinnOppgaveListeResponse finnOppgaveListeResponse = new WSFinnOppgaveListeResponse();
         finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
-        when(oppgaveWS.finnOppgaveListe(any(FinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
+        when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
 
         sakService.plukkOppgaveFraGsak("HJELPEMIDLER");
         verify(oppgaveWS).finnOppgaveListe(finnOppgaveListeRequestCaptor.capture());
@@ -176,10 +176,8 @@ public class SakServiceTest {
         );
     }
 
-    private HentOppgaveResponse mockHentOppgaveResponse() {
-        HentOppgaveResponse hentOppgaveResponse = new HentOppgaveResponse();
-        hentOppgaveResponse.setOppgave(lagWSOppgave());
-        return hentOppgaveResponse;
+    private WSHentOppgaveResponse mockHentOppgaveResponse() {
+        return new WSHentOppgaveResponse().withOppgave(lagWSOppgave());
     }
 
     private XMLBehandlingsinformasjon createXmlSporsmaal(String oppgaveId, String fritekst) {

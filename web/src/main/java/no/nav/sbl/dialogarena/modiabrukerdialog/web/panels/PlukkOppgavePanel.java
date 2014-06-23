@@ -4,7 +4,7 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.Tema;
-import no.nav.virksomhet.gjennomforing.oppgave.v2.Oppgave;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
@@ -47,7 +47,7 @@ public class PlukkOppgavePanel extends Panel {
         AjaxSubmitLink plukkOppgave = new AjaxSubmitLink("plukk-oppgave") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                Optional<Oppgave> oppgave = sakService.plukkOppgaveFraGsak(valgtTema.getObject().name());
+                Optional<WSOppgave> oppgave = sakService.plukkOppgaveFraGsak(valgtTema.getObject().name());
                 if (oppgave.isSome()) {
                     setResponsePage(PersonPage.class,
                             new PageParameters()
