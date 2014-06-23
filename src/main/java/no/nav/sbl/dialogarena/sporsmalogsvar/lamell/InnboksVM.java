@@ -41,6 +41,10 @@ public class InnboksVM implements Serializable {
         valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));
     }
 
+    public String getFnr() {
+        return fnr;
+    }
+
     public final void oppdaterMeldinger() {
         List<Melding> meldinger = meldingService.hentMeldinger(fnr);
         Map<String, List<Melding>> meldingTraader = skillUtTraader(meldinger);

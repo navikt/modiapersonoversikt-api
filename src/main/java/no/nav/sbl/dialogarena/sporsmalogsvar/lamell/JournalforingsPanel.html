@@ -4,14 +4,31 @@
 <head></head>
 <body>
 <wicket:panel>
-    <div>
-        Journalfør saker.
-        sak 1 <br/>
-        sak 2 <br/>
-        sak 3 <br/>
-        sak 4 <br/>
-    </div>
-    <a href="#" wicket:id="journalforTraad">Journalfør</a>
+    <form wicket:id="plukkSakForm">
+        <div>
+            <wicket:container wicket:id="sakRadiogruppe">
+                <wicket:container wicket:id="saker">
+                    <div>
+                        <div>
+                            <label wicket:for="sak">
+                                <span wicket:id="saksTema"></span>
+                            </label>
+                        </div>
+                        <input wicket:id="sak" type="radio">
+                        <label wicket:for="sak">
+                            <div><wicket:message key="journalfor.sak.saksIdTekst"/></div>
+                            <div wicket:id="saksId"/>
+                        </label>
+                         <label wicket:for="sak">
+                             <div><wicket:message key ="journalfor.sak.opprettetDatoTekst"/></div>
+                             <div wicket:id="opprettetDato"/>
+                         </label>
+                    </div>
+                </wicket:container>
+            </wicket:container>
+        </div>
+        <a href="#" wicket:id="journalforTraad">Journalfør</a>
+    </form>
     <a href="#" wicket:id="avbrytJournalforing">Avbryt</a>
 </wicket:panel>
 </body>
