@@ -14,7 +14,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 public class TidligereMeldingerPanel extends Panel {
     public TidligereMeldingerPanel(String id) {
         super(id);
-        add(new PropertyListView<MeldingVM>("tidligereMeldinger") {
+        add(new PropertyListView<MeldingVM>("valgtTraad.tidligereMeldinger") {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {
                 final MeldingVM meldingVM = item.getModelObject();

@@ -22,26 +22,26 @@ public class NyesteMeldingPanel extends Panel {
         super(id);
 
         this.innboksVM = innboksVM;
-        final MeldingVM meldingVM = innboksVM.getObject().getNyesteMeldingIValgtTraad();
+        final MeldingVM meldingVM = innboksVM.getObject().getValgtTraad().getNyesteMelding();
         this.avsenderbilde = new AvsenderBilde("avsenderbilde", meldingVM);
 
         add(avsenderbilde);
-        add(new Label("nyesteMeldingIValgtTraad.opprettetDato"));
-        add(new WebMarkupContainer("indikator-dot").add(new AttributeModifier("class", new PropertyModel<>(innboksVM, "nyesteMeldingIValgtTraad.statusKlasse"))));
-        add(new Label("tema", new StringResourceModel("${nyesteMeldingIValgtTraad.melding.tema}", innboksVM)));
-        add(new Label("nyesteMeldingIValgtTraad.traadlengde"));
-        add(new Label("nyesteMeldingIValgtTraad.melding.navIdent").add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
+        add(new Label("valgtTraad.nyesteMelding.opprettetDato"));
+        add(new WebMarkupContainer("indikator-dot").add(new AttributeModifier("class", new PropertyModel<>(innboksVM, "valgtTraad.nyesteMelding.statusKlasse"))));
+        add(new Label("tema", new StringResourceModel("${valgtTraad.nyesteMelding.melding.tema}", innboksVM)));
+        add(new Label("valgtTraad.nyesteMelding.traadlengde"));
+        add(new Label("valgtTraad.nyesteMelding.melding.navIdent").add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
                 return meldingVM.melding.navIdent!= null && !meldingVM.melding.navIdent.isEmpty();
             }
         })));
-        add(new URLParsingMultiLineLabel("nyesteMeldingIValgtTraad.melding.fritekst"));
+        add(new URLParsingMultiLineLabel("valgtTraad.nyesteMelding.melding.fritekst"));
     }
 
     @Override
     protected void onBeforeRender() {
-        avsenderbilde.settBildeRessurs(innboksVM.getObject().getNyesteMeldingIValgtTraad());
+        avsenderbilde.settBildeRessurs(innboksVM.getObject().getValgtTraad().getNyesteMelding());
         super.onBeforeRender();
     }
 

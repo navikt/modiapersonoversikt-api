@@ -1,10 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.modig.lang.collections.TransformerUtils;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -26,7 +24,7 @@ public class InnboksVM implements Serializable {
 
     private MeldingService meldingService;
 
-    private Map<String, List<MeldingVM>> traader = new HashMap<>();
+    private Map<String, TraadVM> traader = new HashMap<>();
 
     private List<MeldingVM> nyesteMeldingerITraad = new ArrayList<>();
 
@@ -49,37 +47,18 @@ public class InnboksVM implements Serializable {
         List<Melding> meldinger = meldingService.hentMeldinger(fnr);
         Map<String, List<Melding>> meldingTraader = skillUtTraader(meldinger);
         for (Map.Entry<String, List<Melding>> meldingTraad : meldingTraader.entrySet()) {
-            traader.put(meldingTraad.getKey(), TIL_MELDINGVM_TRAAD.transform(meldingTraad.getValue()));
+            traader.put(meldingTraad.getKey(), new TraadVM(TIL_MELDINGVM_TRAAD.transform(meldingTraad.getValue())));
         }
-        nyesteMeldingerITraad = on(traader.values()).map(TransformerUtils.<MeldingVM>elementAt(0)).collect(MeldingVM.NYESTE_FORST);
-    }
-
-    public final String getValgtTraadTema() {
-        return valgtMelding.isSome() ? valgtMelding.get().melding.tema : null;
+        nyesteMeldingerITraad = on(traader.values()).map(new Transformer<TraadVM, MeldingVM>() {
+            @Override
+            public MeldingVM transform(TraadVM traadVM) {
+                return traadVM.getNyesteMelding();
+            }
+        }).collect(MeldingVM.NYESTE_FORST);
     }
 
     public int getTraadLengde(String id) {
-        return traader.get(id).size();
-    }
-
-    public MeldingVM getNyesteMeldingIValgtTraad() {
-        List<MeldingVM> valgtTraad = getValgtTraad();
-        return valgtTraad.isEmpty() ? null : valgtTraad.get(0);
-    }
-
-    public Boolean valgtTraadBleInitiertAvBruker() {
-        MeldingVM eldsteMelding = getEldsteMeldingIValgtTraad();
-        return eldsteMelding != null && eldsteMelding.melding.meldingstype == Meldingstype.SPORSMAL;
-    }
-
-    public MeldingVM getEldsteMeldingIValgtTraad() {
-        List<MeldingVM> valgtTraad = getValgtTraad();
-        return valgtTraad.isEmpty() ? null : valgtTraad.get(valgtTraad.size() - 1);
-    }
-
-    public List<MeldingVM> getTidligereMeldinger() {
-        List<MeldingVM> valgtTraad = getValgtTraad();
-        return valgtTraad.isEmpty() ? new ArrayList<MeldingVM>() : valgtTraad.subList(1, valgtTraad.size());
+        return traader.get(id).getTraadLengde();
     }
 
     public void setValgtMelding(String id) {
@@ -99,8 +78,8 @@ public class InnboksVM implements Serializable {
         };
     }
 
-    public List<MeldingVM> getValgtTraad() {
-        return valgtMelding.isSome() ? traader.get(valgtMelding.get().melding.traadId) : new ArrayList<MeldingVM>();
+    public TraadVM getValgtTraad() {
+        return valgtMelding.isSome() ? traader.get(valgtMelding.get().melding.traadId) : new TraadVM(new ArrayList<MeldingVM>());
     }
 
     private static final Transformer<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = new Transformer<List<Melding>, List<MeldingVM>>() {
@@ -118,4 +97,5 @@ public class InnboksVM implements Serializable {
     public MeldingVM getNyesteMeldingINyesteTraad() {
         return nyesteMeldingerITraad.get(0);
     }
+
 }

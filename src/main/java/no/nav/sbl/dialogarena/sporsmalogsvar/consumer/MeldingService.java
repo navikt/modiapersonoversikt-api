@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import org.joda.time.DateTime;
@@ -26,7 +26,7 @@ public class MeldingService {
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny()).map(TIL_MELDING).collect();
     }
 
-    public void journalforTraad(List<MeldingVM> valgtTraad, Sak sak) {
+    public void journalforTraad(TraadVM valgtTraad, Sak sak) {
         //TODO: implementer gsakintergrasjon
     }
 

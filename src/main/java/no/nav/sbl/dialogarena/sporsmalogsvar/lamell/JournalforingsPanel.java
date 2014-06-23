@@ -15,7 +15,6 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -25,22 +24,15 @@ public class JournalforingsPanel extends Panel {
     @Inject
     private MeldingService meldingService;
 
-    final IModel<Sak> valgtSak;
-
     public JournalforingsPanel(String id, final IModel<InnboksVM> innboksVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
         List<Sak> saker = meldingService.hentSakerForBruker(innboksVM.getObject().getFnr());
 
-        valgtSak = new Model<>();
+        Form<Sak> form = new Form<>("plukkSakForm", innboksVM.getObject().getValgtTraad().valgtSak);
 
-        Form<Sak> form = new Form<>("plukkSakForm", valgtSak);
-
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
-        feedbackPanel.setOutputMarkupPlaceholderTag(true);
-
-        RadioGroup radioGroup = new RadioGroup<>("sakRadiogruppe", valgtSak);
+        RadioGroup radioGroup = new RadioGroup<>("sakRadiogruppe", form.getModel());
         radioGroup.setRequired(true);
         radioGroup.add(new ListView<Sak>("saker", saker) {
             @Override
@@ -53,11 +45,14 @@ public class JournalforingsPanel extends Panel {
             }
         });
 
+        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
+        feedbackPanel.setOutputMarkupPlaceholderTag(true);
+
         AjaxSubmitLink journalforTraad = new AjaxSubmitLink("journalforTraad") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-               Sak sak = valgtSak.getObject();
-               meldingService.journalforTraad(innboksVM.getObject().getValgtTraad(), sak);
+                Sak sak = innboksVM.getObject().getValgtTraad().valgtSak.getObject();
+                meldingService.journalforTraad(innboksVM.getObject().getValgtTraad(), sak);
                lukkJournalforingsPanel(target);
             }
 
@@ -65,7 +60,6 @@ public class JournalforingsPanel extends Panel {
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
             }
-
         };
 
         form.add(feedbackPanel, radioGroup, journalforTraad);

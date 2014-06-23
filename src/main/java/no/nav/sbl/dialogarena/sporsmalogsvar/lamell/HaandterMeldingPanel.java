@@ -19,14 +19,14 @@ public class HaandterMeldingPanel extends Panel {
         AjaxLink<InnboksVM> besvar = new AjaxLink<InnboksVM>("besvar", innboksVM) {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                send(getPage(), Broadcast.BUBBLE, new NamedEventPayload(SVAR_PAA_MELDING, getModelObject().getEldsteMeldingIValgtTraad().melding.id));
+                send(getPage(), Broadcast.BUBBLE, new NamedEventPayload(SVAR_PAA_MELDING, getModelObject().getValgtTraad().getEldsteMelding().melding.id));
             }
         };
 
         besvar.add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return innboksVM.getObject().valgtTraadBleInitiertAvBruker();
+                return innboksVM.getObject().getValgtTraad().bleInitiertAvBruker();
             }
         }));
 
