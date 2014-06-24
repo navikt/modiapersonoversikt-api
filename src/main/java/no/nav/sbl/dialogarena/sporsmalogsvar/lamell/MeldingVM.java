@@ -7,7 +7,6 @@ import org.apache.commons.collections15.Transformer;
 
 import java.io.Serializable;
 import java.util.Comparator;
-import java.util.List;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingOverskriftKey;
 
@@ -19,11 +18,11 @@ public class MeldingVM implements Serializable {
     public final String avsender;
     public final int traadlengde;
 
-    public MeldingVM(List<Melding> tilhorendeTraad, Melding melding) {
+    public MeldingVM(Melding melding, int traadLengde) {
         this.melding = melding;
 
         avsender = lagMeldingOverskriftKey(melding);
-        traadlengde = tilhorendeTraad.size();
+        this.traadlengde = traadLengde;
     }
 
     public String getOpprettetDato() {

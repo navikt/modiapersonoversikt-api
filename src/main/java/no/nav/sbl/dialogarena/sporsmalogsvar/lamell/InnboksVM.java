@@ -88,7 +88,7 @@ public class InnboksVM implements Serializable {
             List<Melding> meldingerITraad = on(meldinger).collect(Melding.NYESTE_FORST);
             List<MeldingVM> meldingVMTraad = new ArrayList<>();
             for (Melding melding : meldingerITraad) {
-                meldingVMTraad.add(new MeldingVM(meldingerITraad, melding));
+                meldingVMTraad.add(new MeldingVM(melding, meldingerITraad.size()));
             }
             return meldingVMTraad;
         }

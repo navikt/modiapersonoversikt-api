@@ -43,7 +43,7 @@ public class TraadVM implements Serializable {
     }
 
     public boolean bleInitiertAvBruker() {
-        return getEldsteMelding() != null && getEldsteMelding().melding.meldingstype == SPORSMAL;
+        return getEldsteMelding().melding.meldingstype == SPORSMAL;
     }
 
 }
