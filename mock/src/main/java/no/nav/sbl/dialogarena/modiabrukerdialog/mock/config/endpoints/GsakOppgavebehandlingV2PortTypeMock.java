@@ -69,7 +69,8 @@ public class GsakOppgavebehandlingV2PortTypeMock {
             }
 
             @Override
-            public WSBestillOppgaveResponse bestillOppgave(WSBestillOppgaveRequest request) throws BestillOppgavePersonIkkeFunnet, BestillOppgaveIkkeEntydigSaksopprettelse, BestillOppgavePersonInaktiv, BestillOppgaveUkjentArbeidsgiver {
+            public WSBestillOppgaveResponse bestillOppgave(WSBestillOppgaveRequest request)
+                    throws BestillOppgavePersonIkkeFunnet, BestillOppgaveIkkeEntydigSaksopprettelse, BestillOppgavePersonInaktiv, BestillOppgaveUkjentArbeidsgiver {
                 return new WSBestillOppgaveResponse();
             }
 
