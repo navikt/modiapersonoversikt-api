@@ -4,6 +4,7 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Sak;
+import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -46,7 +47,8 @@ public class JournalforingsPanel extends Panel {
                 Sak sak = item.getModelObject();
                 item.add(new Label("saksTema", sak.tema));
                 item.add(new Label("saksId", sak.saksId));
-                item.add(new Label("opprettetDato", sak.opprettetDato));
+                item.add(new Label("opprettetDato", Datoformat.kort(sak.opprettetDato)));
+                item.add(new Label("fagsak", sak.fagsak));
             }
         });
 

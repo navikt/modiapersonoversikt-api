@@ -6,6 +6,6 @@ import java.io.Serializable;
 
 public class Sak implements Serializable {
 
-    public String saksId, tema;
+    public String saksId, tema, fagsak;
     public DateTime opprettetDato;
 }

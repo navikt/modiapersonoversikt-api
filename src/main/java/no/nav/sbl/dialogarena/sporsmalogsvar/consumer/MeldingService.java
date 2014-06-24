@@ -36,16 +36,19 @@ public class MeldingService {
         sak1.opprettetDato = DateTime.now().minusDays(1);
         sak1.saksId = "71972389639";
         sak1.tema = "Dagpenger";
+        sak1.fagsak = "Arena";
 
         Sak sak2 = new Sak();
         sak2.opprettetDato = DateTime.now().minusDays(4);
         sak2.saksId = "71972359639";
         sak2.tema = "Arbeidsavklaring";
+        sak2.tema = "V2";
 
         Sak sak3 = new Sak();
         sak3.opprettetDato = DateTime.now().minusDays(4);
         sak3.saksId = "71972356639";
         sak3.tema = "Individstønad";
+        sak3.fagsak = "Infotrygd";
 
         return new ArrayList<>(Arrays.asList(sak1, sak2, sak3));
     }
