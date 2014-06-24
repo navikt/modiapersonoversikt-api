@@ -1,10 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Sak;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.event.IEvent;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -18,6 +21,8 @@ import org.apache.wicket.model.IModel;
 
 import javax.inject.Inject;
 import java.util.List;
+
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 
 public class JournalforingsPanel extends Panel {
 
@@ -73,6 +78,11 @@ public class JournalforingsPanel extends Panel {
         };
 
         add(form, avbryt);
+    }
+
+    @RunOnEvents(VALGT_MELDING_EVENT)
+    public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
+        lukkJournalforingsPanel(target);
     }
 
     private void lukkJournalforingsPanel(AjaxRequestTarget target) {
