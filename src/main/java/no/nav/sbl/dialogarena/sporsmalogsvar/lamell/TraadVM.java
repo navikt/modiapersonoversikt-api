@@ -1,8 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Sak;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -14,11 +12,10 @@ public class TraadVM implements Serializable {
 
     private List<MeldingVM> meldinger;
 
-    public final IModel<Sak> valgtSak;
+    public Sak journalfortSak;
 
     public TraadVM(List<MeldingVM> meldinger) {
         this.meldinger = meldinger;
-        valgtSak = new Model<>();
     }
 
     public List<MeldingVM> getMeldinger() {

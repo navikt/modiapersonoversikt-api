@@ -35,9 +35,9 @@ public class JournalforingsPanel extends Panel {
 
         List<Sak> saker = meldingService.hentSakerForBruker(innboksVM.getObject().getFnr());
 
-        Form<Sak> form = new Form<>("plukkSakForm", innboksVM.getObject().getValgtTraad().valgtSak);
+        Form<InnboksVM> form = new Form<>("plukkSakForm", innboksVM);
 
-        RadioGroup radioGroup = new RadioGroup<>("sakRadiogruppe", form.getModel());
+        RadioGroup radioGroup = new RadioGroup<>("valgtTraad.journalfortSak");
         radioGroup.setRequired(true);
         radioGroup.add(new ListView<Sak>("saker", saker) {
             @Override
@@ -56,9 +56,9 @@ public class JournalforingsPanel extends Panel {
         AjaxSubmitLink journalforTraad = new AjaxSubmitLink("journalforTraad") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                Sak sak = innboksVM.getObject().getValgtTraad().valgtSak.getObject();
-                meldingService.journalforTraad(innboksVM.getObject().getValgtTraad(), sak);
-               lukkJournalforingsPanel(target);
+                TraadVM valgtTraadVM = innboksVM.getObject().getValgtTraad();
+                meldingService.journalforTraad(valgtTraadVM,valgtTraadVM.journalfortSak);
+                lukkJournalforingsPanel(target);
             }
 
             @Override
