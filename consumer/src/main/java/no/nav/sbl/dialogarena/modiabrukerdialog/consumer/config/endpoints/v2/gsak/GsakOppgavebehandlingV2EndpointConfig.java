@@ -12,8 +12,6 @@ import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
-
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakOppgaveV2EndpointConfig.GSAK_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgavebehandlingV2PortTypeMock.createOppgavebehandlingPortTypeMock;
@@ -30,11 +28,9 @@ public class GsakOppgavebehandlingV2EndpointConfig {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setWsdlLocation("classpath:oppgavebehandling/no/nav/virksomhet/tjenester/oppgavebehandling/oppgavebehandling.wsdl");
         proxyFactoryBean.setAddress(System.getProperty("gsak.oppgavebehandling.v2.url"));
-        proxyFactoryBean.setServiceClass(Oppgavebehandling.class);
         proxyFactoryBean.getOutInterceptors().add(new UserSAMLOutInterceptor());
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
-        proxyFactoryBean.setProperties(new HashMap<String, Object>());
         Oppgavebehandling portType = proxyFactoryBean.create(Oppgavebehandling.class);
         Client client = ClientProxy.getClient(portType);
         HTTPConduit httpConduit = (HTTPConduit) client.getConduit();

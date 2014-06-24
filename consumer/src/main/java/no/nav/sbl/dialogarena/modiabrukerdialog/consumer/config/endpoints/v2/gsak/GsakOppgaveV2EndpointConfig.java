@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gs
 
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
+import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
+import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeFilter;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeRequest;
@@ -17,7 +19,6 @@ import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.HashMap;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -33,12 +34,12 @@ public class GsakOppgaveV2EndpointConfig {
 
     @Bean
     public Oppgave gsakOppgavePortType() {
-        return createSwitcher(createOppgavePortType(), createOppgavePortTypeMock(), GSAK_V2_KEY, Oppgave.class);
+        return createSwitcher(createOppgavePortType(new UserSAMLOutInterceptor()), createOppgavePortTypeMock(), GSAK_V2_KEY, Oppgave.class);
     }
 
     @Bean
     public Pingable gsakPing() {
-        final Oppgave ws = createOppgavePortType();
+        final Oppgave ws = createOppgavePortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
@@ -57,15 +58,13 @@ public class GsakOppgaveV2EndpointConfig {
         };
     }
 
-    private static Oppgave createOppgavePortType() {
+    private static Oppgave createOppgavePortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setWsdlLocation("classpath:oppgave/no/nav/virksomhet/tjenester/oppgave/oppgave.wsdl");
         proxyFactoryBean.setAddress(System.getProperty("gsak.oppgave.v2.url"));
-        proxyFactoryBean.setServiceClass(Oppgave.class);
-        proxyFactoryBean.getOutInterceptors().add(new UserSAMLOutInterceptor());
+        proxyFactoryBean.getOutInterceptors().add(interceptor);
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
-        proxyFactoryBean.setProperties(new HashMap<String, Object>());
         Oppgave portType = proxyFactoryBean.create(Oppgave.class);
         Client client = ClientProxy.getClient(portType);
         HTTPConduit httpConduit = (HTTPConduit) client.getConduit();
