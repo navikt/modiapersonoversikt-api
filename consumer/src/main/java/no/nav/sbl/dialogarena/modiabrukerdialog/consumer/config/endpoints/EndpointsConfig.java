@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsa
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakOppgavebehandlingV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.HenvendelseAktivitetV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.HenvendelseEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.journalforing.BehandleJournalV2EndpointConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -24,7 +25,8 @@ import org.springframework.context.annotation.Import;
         HenvendelseAktivitetV2EndpointConfig.class,
         HenvendelseEndpointConfig.class,
         GsakOppgaveV2EndpointConfig.class,
-        GsakOppgavebehandlingV2EndpointConfig.class
+        GsakOppgavebehandlingV2EndpointConfig.class,
+        BehandleJournalV2EndpointConfig.class
 })
 public class EndpointsConfig {
 
