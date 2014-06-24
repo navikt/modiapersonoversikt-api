@@ -23,6 +23,7 @@ import javax.inject.Inject;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withModelObject;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withTextSaying;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.any;
@@ -45,6 +46,7 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     public void inneholderSporsmaalsspefikkeKomponenter() {
         wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmal("id", now())))
+                .should().containComponent(withId("tema").and(ofType(Label.class)))
                 .should().containComponent(withId("sporsmal").and(ofType(URLParsingMultiLineLabel.class)))
                 .should().containComponent(withId("dato").and(ofType(Label.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
@@ -53,10 +55,11 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void skalSendeSporsmaalstypeTilHenvendelse() {
-        wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmal("id", now())))
+        Sporsmal sporsmal = new Sporsmal("id", now());
+        sporsmal.tema = Tema.OVRIGE_HENVENDELSER.name();
+        wicket.goToPageWith(new SvarPanel("id", "fnr", sporsmal))
                 .inForm(withId("dialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")
-                .select("tema", 0)
                 .submitWithAjaxButton(withId("send"));
 
         verify(sakService).sendSvar(any(Svar.class));
@@ -69,11 +72,12 @@ public class SvarPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void setterTemaFraSporsmaalSomDefaultValgtIDropDown() {
+    public void viserTemaetFraSporsmalet() {
         Sporsmal sporsmal = new Sporsmal("id", now());
         sporsmal.tema = Tema.FAMILIE_OG_BARN.name();
 
-        wicket.goToPageWith(new SvarPanel("id", "fnr", sporsmal))
-                .should().containComponent(withId("tema").and(withModelObject(is(Tema.FAMILIE_OG_BARN))));
+        SvarPanel svarPanel = new SvarPanel("id", "fnr", sporsmal);
+        wicket.goToPageWith(svarPanel)
+                .should().containComponent(withId("tema").and(withTextSaying(svarPanel.getString(Tema.FAMILIE_OG_BARN.name()))));
     }
 }

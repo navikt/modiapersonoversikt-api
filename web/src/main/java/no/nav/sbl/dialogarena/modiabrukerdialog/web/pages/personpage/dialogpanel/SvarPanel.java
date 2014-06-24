@@ -12,6 +12,7 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static java.util.Arrays.asList;
@@ -26,9 +27,10 @@ public class SvarPanel extends DialogPanel {
         super(id, fnr);
         this.sporsmal = sporsmal;
 
-        settTemaFraSpormaaletSomDefaultValgt();
+        hentTemaFraSporsmalet();
 
         form.add(
+                new Label("tema", new ResourceModel(sporsmal.tema)),
                 new Label("dato", Datoformat.kortMedTid(sporsmal.opprettetDato)),
                 new URLParsingMultiLineLabel("sporsmal", sporsmal.fritekst)
         );
@@ -57,7 +59,7 @@ public class SvarPanel extends DialogPanel {
         });
     }
 
-    protected void settTemaFraSpormaaletSomDefaultValgt() {
+    protected void hentTemaFraSporsmalet() {
         form.getModelObject().tema = getTemaFromSporsmal();
     }
 

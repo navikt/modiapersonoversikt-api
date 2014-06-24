@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMoc
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.junit.Before;
@@ -24,7 +23,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
@@ -45,7 +44,6 @@ public class DialogPanelTest extends WicketPageTest {
     public void inneholderGenerelleKomponenter() {
         wicket.goToPageWith(new TestDialogPanel("id", "fnr"))
                 .should().containComponent(withId("dialogform").and(ofType(Form.class)))
-                .should().containComponent(withId("tema").and(ofType(DropDownChoice.class)))
                 .should().containComponent(withId("tekstfelt").and(ofType(EnhancedTextArea.class)))
                 .should().containComponent(withId("send").and(ofType(AjaxButton.class)))
                 .should().containComponent(withId("feedback").and(ofType(FeedbackPanel.class)))
@@ -60,10 +58,7 @@ public class DialogPanelTest extends WicketPageTest {
                 .submitWithAjaxButton(withId("send"));
 
         List<String> errorMessages = wicket.get().errorMessages();
-        assertThat(errorMessages, containsInAnyOrder(
-                dialogPanel.get("dialogform:tekstfelt").getString("text.Required"),
-                dialogPanel.getString("dialogform.tema.Required")
-        ));
+        assertThat(errorMessages, contains(dialogPanel.get("dialogform:tekstfelt").getString("text.Required")));
     }
 
     @Test
@@ -72,7 +67,6 @@ public class DialogPanelTest extends WicketPageTest {
         wicket.goToPageWith(dialogPanel)
                 .inForm(withId("dialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")
-                .select("tema", 0)
                 .submitWithAjaxButton(withId("send"))
                 .should().containComponent(thatIsInvisible().withId("dialogform"))
                 .should().containComponent(thatIsVisible().ofType(KvitteringsPanel.class));

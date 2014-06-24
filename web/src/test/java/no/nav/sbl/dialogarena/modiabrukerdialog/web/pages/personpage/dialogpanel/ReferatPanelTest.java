@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakServ
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,9 +16,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import java.util.List;
 
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static org.hamcrest.Matchers.hasItem;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
@@ -36,9 +40,21 @@ public class ReferatPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void inneholderSporsmaalsspefikkeKomponenter() {
+    public void inneholderReferatspesifikkeKomponenter() {
         wicket.goToPageWith(new ReferatPanel("id", "fnr"))
+                .should().containComponent(withId("tema").and(ofType(DropDownChoice.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)));
+    }
+
+    @Test
+    public void girFeedbackOmPaakrevdeKomponenter() {
+        ReferatPanel referatPanel = new ReferatPanel("id", "fnr");
+        wicket.goToPageWith(referatPanel)
+                .inForm(withId("dialogform"))
+                .submitWithAjaxButton(withId("send"));
+
+        List<String> errorMessages = wicket.get().errorMessages();
+        assertThat(errorMessages, hasItem(referatPanel.getString("dialogform.tema.Required")));
     }
 
     @Test

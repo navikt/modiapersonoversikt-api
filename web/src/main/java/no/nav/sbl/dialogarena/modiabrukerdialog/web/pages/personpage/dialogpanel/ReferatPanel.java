@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.form.ChoiceRenderer;
+import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -15,6 +17,13 @@ public class ReferatPanel extends DialogPanel {
 
     public ReferatPanel(String id, String fnr) {
         super(id, fnr);
+
+        form.add(new DropDownChoice<>("tema", asList(Tema.values()), new ChoiceRenderer<Tema>() {
+            @Override
+            public Object getDisplayValue(Tema object) {
+                return getString(object.name());
+            }
+        }).setRequired(true));
 
         form.add(new RadioGroup<ReferatKanal>("kanal")
                 .setRequired(true)

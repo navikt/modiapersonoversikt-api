@@ -5,8 +5,6 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurat
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -15,8 +13,6 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.time.Duration;
 
 import javax.inject.Inject;
-
-import static java.util.Arrays.asList;
 
 public abstract class DialogPanel extends Panel {
 
@@ -33,13 +29,6 @@ public abstract class DialogPanel extends Panel {
 
         form = new Form<>("dialogform", new CompoundPropertyModel<>(new DialogVM()));
         form.setOutputMarkupPlaceholderTag(true);
-
-        form.add(new DropDownChoice<>("tema", asList(Tema.values()), new ChoiceRenderer<Tema>() {
-            @Override
-            public Object getDisplayValue(Tema object) {
-                return getString(object.name());
-            }
-        }).setRequired(true));
 
         form.add(new EnhancedTextArea("tekstfelt", form.getModel(),
                 new EnhancedTextAreaConfigurator()
