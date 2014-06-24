@@ -80,9 +80,7 @@ public class HenvendelsePortTypeMock {
     };
 
     private static XMLBehandlingsinformasjon createXmlBehandlingsinformasjon(XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata) {
-        if (type == SPORSMAL || type == REFERAT) {
-            behandlingsId = idGenerator.nextInt();
-        }
+        behandlingsId = idGenerator.nextInt();
         return new XMLBehandlingsinformasjon()
                 .withHenvendelseType(type.name())
                 .withOpprettetDato(opprettet)
