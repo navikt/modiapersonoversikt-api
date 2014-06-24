@@ -4,37 +4,40 @@
 <head></head>
 <body>
 <wicket:panel>
-    <form wicket:id="plukkSakForm">
+    <form wicket:id="plukkSakForm" class="journalforing">
+        <h3 class="midtstilt-innhold">
+            <wicket:message key="journalfor.overskrift"/>
+        </h3>
         <div wicket:id="feedback" class="feedback"></div>
         <div>
             <wicket:container wicket:id="valgtTraad.journalfortSak">
                 <wicket:container wicket:id="saker">
                     <div>
                         <div>
-                            <label wicket:for="sak">
-                                <span wicket:id="saksTema"></span>
-                            </label>
+                            <span wicket:id="saksTema"></span>
                         </div>
                         <input wicket:id="sak" type="radio">
                         <label wicket:for="sak">
-                            <div><wicket:message key="journalfor.sak.saksIdTekst"/></div>
+                            <div class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></div>
                             <div wicket:id="saksId"/>
                         </label>
                         <label wicket:for="sak">
-                            <div><wicket:message key ="journalfor.sak.opprettetDatoTekst"/></div>
-                            <div wicket:id="opprettetDato"/>
-                        </label>
+                             <div class="saksTekst"><wicket:message key ="journalfor.sak.opprettetDatoTekst"/></div>
+                             <div wicket:id="opprettetDato"/>
+                         </label>
                         <label wicket:for="sak">
-                            <div><wicket:message key ="journalfor.sak.fagsakTekst"/></div>
+                            <div class="saksTekst"><wicket:message key ="journalfor.sak.fagsakTekst"/></div>
                             <div wicket:id="fagsak"/>
                         </label>
                     </div>
                 </wicket:container>
             </wicket:container>
         </div>
-        <a href="#" wicket:id="journalforTraad">Journalfør</a>
+        <div class="midtstilt-innhold">
+            <a href="#" wicket:id="journalforTraad" class="send knapp-link-liten">Journalfør</a>
+            <a href="#" wicket:id="avbrytJournalforing" class="avbryt-knapp">Avbryt</a>
+        </div>
     </form>
-    <a href="#" wicket:id="avbrytJournalforing">Avbryt</a>
 </wicket:panel>
 </body>
 </html>

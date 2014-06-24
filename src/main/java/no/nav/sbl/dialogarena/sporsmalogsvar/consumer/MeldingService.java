@@ -42,7 +42,7 @@ public class MeldingService {
         sak2.opprettetDato = DateTime.now().minusDays(4);
         sak2.saksId = "71972359639";
         sak2.tema = "Arbeidsavklaring";
-        sak2.tema = "V2";
+        sak2.fagsak = "V2";
 
         Sak sak3 = new Sak();
         sak3.opprettetDato = DateTime.now().minusDays(4);

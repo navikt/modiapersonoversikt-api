@@ -69,8 +69,6 @@ public class JournalforingsPanel extends Panel {
             }
         };
 
-        form.add(feedbackPanel, radioGroup, journalforTraad);
-
         final AjaxLink<InnboksVM> avbryt = new AjaxLink<InnboksVM>("avbrytJournalforing")
         {
             @Override
@@ -79,7 +77,9 @@ public class JournalforingsPanel extends Panel {
             }
         };
 
-        add(form, avbryt);
+        form.add(feedbackPanel, radioGroup, journalforTraad, avbryt);
+
+        add(form);
     }
 
     @RunOnEvents(VALGT_MELDING_EVENT)

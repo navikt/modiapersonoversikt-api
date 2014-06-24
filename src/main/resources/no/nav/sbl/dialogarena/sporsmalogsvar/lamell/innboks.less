@@ -2,6 +2,7 @@
 @graabakgrunn: #f1f1f1;
 @rammeborder: #e4e3e3;
 @dodgerblue: #0067c5;
+@modiagraaskrift: #b7b1a9;
 @maxwidth: 1080px;
 @meldingslistemargin: 30px;
 @toppmargin: 1em;
@@ -145,6 +146,7 @@
     }
     a {
       font-size: 1em;
+      color:#FFFFFF;
     }
 
     .nyeste-melding {
@@ -228,4 +230,39 @@
       border: 1px solid #0067c5;
     }
   }
+
+  .hoyrestilt-innhold {
+    text-align: right;
+  }
+
+  .midtstilt-innhold {
+    text-align: center;
+  }
+
+  .haandter-meldinger {
+    margin-bottom: 20px;
+  }
+
+  .journalforing {
+    margin-bottom: 20px;
+    background-color: @modiasvart;
+    color: @modiagraaskrift;
+    padding: 20px;
+    h3 {
+      color:@modiagraaskrift;
+    }
+    .saksTekst {
+      text-transform: uppercase;
+    }
+    label {
+      width:auto;
+    }
+    a {
+      margin-top:10px;
+    }
+    .avbryt-knapp {
+      display:block;
+    }
+  }
+
 }
