@@ -22,9 +22,9 @@ public class GsakHentSakslisteMock {
             @Override
             public WSFinnGenerellSakListeResponse finnGenerellSakListe(WSFinnGenerellSakListeRequest wsFinnGenerellSakListeRequest) {
                 return new WSFinnGenerellSakListeResponse().withSakListe(
-                        createGenerellSak("71972389639", "Dagpenger", "Arena", DateTime.now().minusDays(1)),
-                        createGenerellSak("71972312343", "Arbeidsavklaring", "V2", DateTime.now().minusDays(4)),
-                        createGenerellSak("71972338389", "Individstønad", "Infotrygd", DateTime.now().minusDays(4)));
+                        createGenerellSak("111111111", "Tema 1", "Fagsystem 1", DateTime.now().minusDays(1)),
+                        createGenerellSak("222222222", "Tema 2", "Fagsystem 2", DateTime.now().minusDays(4)),
+                        createGenerellSak("333333333", "Tema 3", "Fagsystem 1", DateTime.now().minusDays(4)));
             }
         };
     }

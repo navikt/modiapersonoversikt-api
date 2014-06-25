@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
@@ -30,11 +31,12 @@ public class HenvendelsePortTypeMock {
     private static Random idGenerator = new Random();
     private static int behandlingsId = idGenerator.nextInt();
     private static int oppgaveId = 0;
+    private static String navIdent = "Z999999";
 
     private static final String LANG_TEKST = "Lorem ipsum dolor sit amet, " +
             "consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad " +
             "minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure " +
-            "dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto" +
+            "dolor in hendrerit in http://www.nav.no vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto" +
             " odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Nam liber tempor cum soluta nobis" +
             " eleifend option congue nihil imperdiet doming id quod mazim placerat facer possim assum. Typi non habent claritatem insitam; est usus legentis" +
             " in iis qui facit eorum claritatem. Investigationes demonstraverunt lectores legere me lius quod ii legunt saepius. Claritas est etiam processus" +
@@ -85,6 +87,7 @@ public class HenvendelsePortTypeMock {
                 .withHenvendelseType(type.name())
                 .withOpprettetDato(opprettet)
                 .withBehandlingsId(valueOf(behandlingsId))
+                .withAktor(new XMLAktor().withNavIdent(navIdent))
                 .withMetadataListe(
                         new XMLMetadataListe().withMetadata(metadata));
     }
