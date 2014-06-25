@@ -4,13 +4,18 @@
 @rammeborder: #e4e3e3;
 @dodgerblue: #0067c5;
 @modiagraaskrift: #b7b1a9;
+@modiaaquablaa: #008fc4;
 
 .dialogform {
   text-align: center;
   .temavelger {
+    text-align: center;
+    font-size: 1.21rem;
     width: 100%;
     background-color: #f7f7f7;
+    color: @dodgerblue;
     font-weight: bold;
+    border: 0px;
     padding: 0.5em @sideMargin;
   }
   .sporsmal {
@@ -27,10 +32,10 @@
     margin: 1em auto;
     .kanalvalg {
       float: left;
-      width: 7em;
+      width: 40%;
       input[type="radio"] + label {
         width: auto;
-        margin: 1rem 0;
+        margin: 0.5rem 0;
         border: 1px solid transparent;
         background-position: 0;
         > * {
@@ -76,6 +81,10 @@
   }
   .feedback {
     margin: 0 @sideMargin;
+  }
+  h1 {
+    font-size: 2.2rem;
+    font-weight: normal;
   }
   h2 {
     font-weight: normal;
