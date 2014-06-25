@@ -3,10 +3,12 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
-import org.joda.time.DateTime;
+import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
+import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
+import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
+import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -20,6 +22,8 @@ public class MeldingService {
 
     @Inject
     private HenvendelsePortType henvendelsePortType;
+    @Inject
+    private no.nav.virksomhet.tjenester.sak.v1.Sak sakWs;
 
     public List<Melding> hentMeldinger(String fnr) {
         List<String> typer = Arrays.asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());
@@ -30,27 +34,21 @@ public class MeldingService {
         //TODO: implementer gsakintergrasjon
     }
 
-    public List<Sak> hentSakerForBruker(String fnr){
-        //TODO: implementer gsakintergrasjon
-        Sak sak1 = new Sak();
-        sak1.opprettetDato = DateTime.now().minusDays(1);
-        sak1.saksId = "71972389639";
-        sak1.tema = "Dagpenger";
-        sak1.fagsak = "Arena";
-
-        Sak sak2 = new Sak();
-        sak2.opprettetDato = DateTime.now().minusDays(4);
-        sak2.saksId = "71972359639";
-        sak2.tema = "Arbeidsavklaring";
-        sak2.fagsak = "V2";
-
-        Sak sak3 = new Sak();
-        sak3.opprettetDato = DateTime.now().minusDays(4);
-        sak3.saksId = "71972356639";
-        sak3.tema = "Individstønad";
-        sak3.fagsak = "Infotrygd";
-
-        return new ArrayList<>(Arrays.asList(sak1, sak2, sak3));
+    public List<Sak> hentSakerForBruker(String fnr) {
+        WSFinnGenerellSakListeResponse response = sakWs.finnGenerellSakListe(new WSFinnGenerellSakListeRequest().withBrukerId(fnr));
+        return on(response.getSakListe()).map(tilSak).collect();
     }
+
+    private static Transformer<WSGenerellSak, Sak> tilSak = new Transformer<WSGenerellSak, Sak>() {
+        @Override
+        public Sak transform(WSGenerellSak wsGenerellSak) {
+            Sak sak = new Sak();
+            sak.opprettetDato = wsGenerellSak.getEndringsinfo().getOpprettetDato();
+            sak.saksId = wsGenerellSak.getSakId();
+            sak.tema = wsGenerellSak.getFagomradeKode();
+            sak.fagsak = wsGenerellSak.getFagsystemKode();
+            return sak;
+        }
+    };
 
 }
