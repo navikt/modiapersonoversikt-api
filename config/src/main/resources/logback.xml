@@ -50,6 +50,21 @@
         </encoder>
     </appender>
 
+    <appender name="journalforingmock" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-journalforingmock.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}-journalforingmock-%d{yyyy-MM-dd}.gz</FileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] - [%file:%line], %X{callId} - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <logger name="no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleJournalV2PortTypeMock" level="INFO">
+        <appender-ref ref="journalforingmock"/>
+    </logger>
+
     <logger name="no.nav.modig.common.SporingsLogger" level="INFO">
         <appender-ref ref="sporinglog"/>
     </logger>
