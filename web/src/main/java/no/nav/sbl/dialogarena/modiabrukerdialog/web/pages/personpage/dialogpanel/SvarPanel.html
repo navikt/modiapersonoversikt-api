@@ -3,13 +3,22 @@
 <body>
 <wicket:panel>
     <wicket:extend>
-        <div wicket:id="tema">Temaet fra sporsmalet</div>
-        <p class="sporsmal overskrift">
-            <span><wicket:message key="svarpanel.sporsmal.overskrift"/></span>
+        <h1>
+            <wicket:message key="svarpanel.overskrift.sporsmal"/>
+        </h1>
+        <h4 wicket:id="tema">Temaet fra sporsmalet</h4>
+        <p>
             <span wicket:id="dato">Dato her</span>
         </p>
         <div wicket:id="sporsmal" class="sporsmal fritekst">Faktisk tekst!</div>
-        <section class="kanalvelger clearfix">
+
+        <h1>
+            <wicket:message key="svarpanel.overskrift.svar"/>
+        </h1>
+        <p>
+            <span wicket:id="navIdent">NavIdent her</span>
+        </p>
+        <div class="kanalvelger clearfix">
             <div wicket:id="kanal">
                 <div wicket:id="kanalvalg" class="kanalvalg">
                     <input wicket:id="kanalknapp" type="radio"/>
@@ -18,7 +27,7 @@
                     </label>
                 </div>
             </div>
-        </section>
+        </div>
         <h2 class="mediumoverskrift">
             <div wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</div>
         </h2>

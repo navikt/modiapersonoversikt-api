@@ -32,6 +32,7 @@ public class SvarPanel extends DialogPanel {
         form.add(
                 new Label("tema", new ResourceModel(sporsmal.tema)),
                 new Label("dato", Datoformat.kortMedTid(sporsmal.opprettetDato)),
+                new Label("navIdent", getSubjectHandler().getUid()),
                 new URLParsingMultiLineLabel("sporsmal", sporsmal.fritekst)
         );
 
