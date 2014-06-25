@@ -92,6 +92,10 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>utbetaling-tjenestespesifikasjon</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>dial-nav-tjeneste-sak</artifactId>
+        </dependency>
 
         <!--Dialogarena-->
         <dependency>

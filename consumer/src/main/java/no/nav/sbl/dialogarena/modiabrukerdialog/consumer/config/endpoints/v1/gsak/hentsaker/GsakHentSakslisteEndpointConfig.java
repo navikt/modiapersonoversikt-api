@@ -15,9 +15,15 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslisteMock.createGsakHentSakslisteMock;
 
 @Configuration
 public class GsakHentSakslisteEndpointConfig {
+
+    @Bean
+    public Sak sakEndpoint() {
+        return createGsakHentSakslisteMock();
+    }
 
     @Bean
     public Pingable gsakSakslistePing() {

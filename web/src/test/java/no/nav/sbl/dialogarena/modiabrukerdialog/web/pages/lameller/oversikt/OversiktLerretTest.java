@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 
 import no.nav.modig.modia.widget.LenkeWidget;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslisteMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
@@ -24,7 +25,8 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
         UtbetalingLamellContext.class,
         UtbetalingPortTypeMock.class,
         SporsmalOgSvarContext.class,
-        HenvendelsePortTypeMock.class
+        HenvendelsePortTypeMock.class,
+        GsakHentSakslisteMock.class
 })
 public class OversiktLerretTest extends WicketPageTest {
 

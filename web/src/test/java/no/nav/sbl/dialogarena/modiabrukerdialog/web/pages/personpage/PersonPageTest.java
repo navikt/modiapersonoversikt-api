@@ -4,6 +4,7 @@ import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.personsok.PersonsokPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslisteMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
@@ -39,7 +40,8 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         UtbetalingLamellContext.class,
         SporsmalOgSvarContext.class,
         UtbetalingPortTypeMock.class,
-        HenvendelsePortTypeMock.class
+        HenvendelsePortTypeMock.class,
+        GsakHentSakslisteMock.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PersonPageTest extends WicketPageTest {
