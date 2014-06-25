@@ -33,19 +33,25 @@
           height: 32px;
           background-repeat: no-repeat;
         }
+        > .tekst {
+          background-image: url(../img/skriftlig.svg);
+        }
         > .telefon {
           background-image: url(../img/telefon.svg);
         }
         > .oppmote {
-          background-image: url(../img/hus.svg);
+          background-image: url(../img/personligoppmote.svg);
         }
       }
       input[type="radio"]:checked + label {
+        > .tekst {
+          background-image: url(../img/skriftlig_valgt.svg);
+        }
         > .telefon {
           background-image: url(../img/telefon_valgt.svg);
         }
         > .oppmote {
-          background-image: url(../img/hus_valgt.svg);
+          background-image: url(../img/personligoppmote_valgt.svg);
         }
       }
       input[type="radio"]:focus + label {
