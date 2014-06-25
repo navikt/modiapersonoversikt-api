@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.component.urlparsinglabel.URLParsingMultiLineLabel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -33,7 +34,7 @@ public class NyesteMeldingPanel extends Panel {
         add(new Label("valgtTraad.nyesteMelding.melding.navIdent").add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return meldingVM.melding.navIdent!= null && !meldingVM.melding.navIdent.isEmpty();
+                return !meldingVM.melding.meldingstype.equals(Meldingstype.SPORSMAL) && meldingVM.melding.navIdent!= null && !meldingVM.melding.navIdent.isEmpty();
             }
         })));
         add(new URLParsingMultiLineLabel("valgtTraad.nyesteMelding.melding.fritekst"));
