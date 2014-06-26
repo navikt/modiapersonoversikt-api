@@ -1,27 +1,21 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
+package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Sak;
-import no.nav.sbl.dialogarena.time.Datoformat;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
 import javax.inject.Inject;
-import java.util.List;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 
@@ -34,28 +28,25 @@ public class JournalforingsPanel extends Panel {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        List<Sak> saker = meldingService.hentSakerForBruker(innboksVM.getObject().getFnr());
-
+        final FeedbackPanel feedbackPanel = getFeedbackPanel();
+        SakerVM sakerVM = new SakerVM(innboksVM.getObject(), meldingService);
         Form<InnboksVM> form = new Form<>("plukkSakForm", innboksVM);
+        form.add(
+                feedbackPanel,
+                new SakerRadioGroup("valgtTraad.journalfortSak", sakerVM),
+                getSubmitLenke(innboksVM, feedbackPanel),
+                getAvbrytLenke());
+        add(form);
+    }
 
-        RadioGroup radioGroup = new RadioGroup<>("valgtTraad.journalfortSak");
-        radioGroup.setRequired(true);
-        radioGroup.add(new ListView<Sak>("saker", saker) {
-            @Override
-            protected void populateItem(ListItem<Sak> item) {
-                item.add(new Radio<>("sak", item.getModel()));
-                Sak sak = item.getModelObject();
-                item.add(new Label("saksTema", sak.tema));
-                item.add(new Label("saksId", sak.saksId));
-                item.add(new Label("opprettetDato", Datoformat.kort(sak.opprettetDato)));
-                item.add(new Label("fagsak", sak.fagsak));
-            }
-        });
-
+    private FeedbackPanel getFeedbackPanel() {
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
+        return feedbackPanel;
+    }
 
-        AjaxSubmitLink journalforTraad = new AjaxSubmitLink("journalforTraad") {
+    private AjaxSubmitLink getSubmitLenke(final IModel<InnboksVM> innboksVM, final FeedbackPanel feedbackPanel) {
+        return new AjaxSubmitLink("journalforTraad") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 TraadVM valgtTraadVM = innboksVM.getObject().getValgtTraad();
@@ -68,18 +59,16 @@ public class JournalforingsPanel extends Panel {
                 target.add(feedbackPanel);
             }
         };
+    }
 
-        final AjaxLink<InnboksVM> avbryt = new AjaxLink<InnboksVM>("avbrytJournalforing")
-        {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                lukkJournalforingsPanel(target);
-            }
-        };
-
-        form.add(feedbackPanel, radioGroup, journalforTraad, avbryt);
-
-        add(form);
+    private AjaxLink<InnboksVM> getAvbrytLenke() {
+        return new AjaxLink<InnboksVM>("avbrytJournalforing")
+            {
+                @Override
+                public void onClick(AjaxRequestTarget target) {
+                    lukkJournalforingsPanel(target);
+                }
+            };
     }
 
     @RunOnEvents(VALGT_MELDING_EVENT)
