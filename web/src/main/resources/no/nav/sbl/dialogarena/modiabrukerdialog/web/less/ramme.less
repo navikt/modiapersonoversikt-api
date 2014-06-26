@@ -411,22 +411,20 @@
 .oppgavepanel {
   float: right;
   position: relative;
-  width: 23rem;
+  width: 25rem;
   > a {
-    display: inline-block;
     height: 64px;
     line-height: 64px;
-    padding: 0 32px;
-    float: left;
+    float: right;
     background-color: #b7b1a9;
     border: 1px solid black;
     text-transform: uppercase;
-    color: black;
+    color: #333333;
     font-size: 1.3rem;
     text-align: center;
     &.velg-temagruppe {
+      width: 20%;
       position: relative;
-      margin-right: 1rem;
       background-image: url(../img/radio_ikon.svg);
       background-repeat: no-repeat;
       background-position: center;
@@ -452,7 +450,7 @@
       }
     }
     &.plukk-oppgave {
-      width: 75%;
+      width: 80%;
     }
     &:hover {
       cursor: pointer;
@@ -467,7 +465,6 @@
     border: 1px solid black;
     padding: 1rem 2rem;
     width: 100%;
-    color: black;
     label {
       overflow: hidden;
       width: 100%;
