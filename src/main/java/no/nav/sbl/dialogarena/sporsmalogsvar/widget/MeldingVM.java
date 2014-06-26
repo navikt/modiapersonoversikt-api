@@ -34,11 +34,6 @@ public class MeldingVM implements FeedItemVM, Serializable {
         return Datoformat.kortMedTid(melding.opprettetDato);
     }
 
-    public String getLestDato() {
-        return Datoformat.ultrakort(melding.lestDato);
-    }
-
-
     @Override
     public String getType() {
         return "meldinger";
