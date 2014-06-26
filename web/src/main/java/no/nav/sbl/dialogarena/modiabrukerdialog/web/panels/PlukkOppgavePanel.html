@@ -1,16 +1,18 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-    <form wicket:id="plukk-oppgave-form" class="oppgavepanel">
-        <a wicket:id="plukk-oppgave" class="plukk-oppgave">Hent oppgave</a>
-        <a class="velg-temagruppe"></a>
+    <form wicket:id="plukk-oppgave-form" class="oppgaveform">
         <span wicket:id="feedback" class="feedback"></span>
-        <div class="temagruppe-liste">
-            <wicket:container wicket:id="tema">
-                <wicket:container wicket:id="temaer">
-                    <input wicket:id="temavalg" type="radio">
-                    <label wicket:for="temavalg"><span wicket:id="temanavn"></span></label>
+        <div class="oppgavepanel">
+            <a wicket:id="plukk-oppgave" class="plukk-oppgave">Hent oppgave</a>
+            <a class="velg-temagruppe"></a>
+            <div class="temagruppe-liste">
+                <wicket:container wicket:id="tema">
+                    <wicket:container wicket:id="temaer">
+                        <input wicket:id="temavalg" type="radio">
+                        <label wicket:for="temavalg"><span wicket:id="temanavn"></span></label>
+                    </wicket:container>
                 </wicket:container>
-            </wicket:container>
+            </div>
         </div>
     </form>
 </wicket:panel>
