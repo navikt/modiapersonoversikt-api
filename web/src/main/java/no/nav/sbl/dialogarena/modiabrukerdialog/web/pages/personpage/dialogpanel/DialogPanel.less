@@ -1,4 +1,4 @@
-@sideMargin: 1.5rem;
+@sideMargin: 30px;
 @modiasvart: #333;
 @graabakgrunn: #f1f1f1;
 @rammeborder: #e4e3e3;
@@ -8,6 +8,19 @@
 
 .dialogform {
   text-align: center;
+  .typeoverskrift {
+    margin: 30px 0;
+    &.svarpaneloverskrift {
+      margin-bottom: 0;
+    }
+  }
+  .temaoverskrift {
+    margin: 0.8em 0 0;
+  }
+  .robust-strek {
+    padding-bottom: 25px;
+    margin-bottom: 25px !important;
+  }
   .temavelger {
     text-align: center;
     font-size: 1.21rem;
@@ -18,20 +31,18 @@
     border: 0px;
     padding: 0.5em @sideMargin;
   }
-  .sporsmal {
+  .fritekst {
     text-align: left;
-    &.overskrift {
-      font-weight: bold;
-    }
-    &.fritekst {
-      margin: 0 @sideMargin;
+    margin: 0 @sideMargin;
+    line-height: 1.4em;
+    a {
+      text-decoration: underline;
     }
   }
   .kanalvelger {
     margin: 1em auto;
     text-align: center;
     .kanalvalg {
-//      float: left;
       display: inline;
       width: 40%;
       margin-right: 1.5rem;
@@ -67,36 +78,29 @@
         }
       }
       input[type="radio"]:focus + label {
-        border: 1px dashed #0067c5;
+        border: 1px dashed #00a9e0;
       }
     }
   }
-  .overskrift {
-    text-align: left;
-    margin-left: @sideMargin;
+  .navident {
+    font-weight: bold;
   }
   .tekstfelt {
     margin: 0 @sideMargin;
   }
   .send {
-    margin: 1em 0;
+    margin: 2em 0;
   }
   .feedback {
     margin: 0 @sideMargin;
   }
-  h1 {
-    font-size: 2.2rem;
-    font-weight: normal;
-  }
-  h2 {
-    font-weight: normal;
+  .kanaloverskrift {
+    font-weight: 600;
     background-color: @modiasvart;
     color: @modiagraaskrift;
-    padding-bottom: 3px;
-    padding-top: 3px;
+    padding: 7px 0;
     margin: 0 @sideMargin;
   }
-
 }
 
 .kvittering {

@@ -76,28 +76,8 @@ public class DialogPanelTest extends WicketPageTest {
         TestDialogPanel dialogPanel = new TestDialogPanel("id", "fnr");
         Object dialogformModel = dialogPanel.get("dialogform").getDefaultModelObject();
         DialogVM dialogVM = (DialogVM) dialogformModel;
-        dialogVM.kanal = TestKanal.TEST;
+        dialogVM.kanal = TestDialogPanel.TestKanal.TEST;
         return dialogPanel;
-    }
-
-    private static class TestDialogPanel extends DialogPanel {
-        public TestDialogPanel(String id, String fnr) {
-            super(id, fnr);
-        }
-
-        @Override
-        protected void sendHenvendelse(DialogVM dialogVM, String fnr) {
-
-        }
-    }
-
-    static enum TestKanal implements Kanal {
-        TEST;
-
-        @Override
-        public String getKvitteringKey() {
-            return "svarpanel.kvittering.bekreftelse";
-        }
     }
 
 }

@@ -3,10 +3,9 @@
 <body>
 <wicket:panel>
     <wicket:extend>
-        <h1>
-            <wicket:message key="referatpanel.overskrift"/>
-        </h1>
-        <select wicket:id="tema" class="temavelger"></select>
+        <h2 class="typeoverskrift"><wicket:message key="referatpanel.overskrift"/></h2>
+        <h2 class="medium kanaloverskrift"><wicket:message key="referatpanel.tekstfelt.overskrift"/></h2>
+        <section wicket:id="tekstfelt" class="tekstfelt"></section>
         <section class="kanalvelger clearfix">
             <wicket:container wicket:id="kanal">
                 <div wicket:id="kanalvalg" class="kanalvalg">
@@ -17,11 +16,8 @@
                 </div>
             </wicket:container>
         </section>
-        <h2 class="mediumoverskrift">
-            <wicket:message key="referatpanel.tekstfelt.overskrift"/>
-        </h2>
+        <select wicket:id="tema" class="temavelger"></select>
     </wicket:extend>
-
 </wicket:panel>
 </body>
 </html>
