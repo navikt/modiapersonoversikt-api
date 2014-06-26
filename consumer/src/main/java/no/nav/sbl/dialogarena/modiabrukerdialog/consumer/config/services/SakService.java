@@ -17,7 +17,6 @@ import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeFilter;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeRequest;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeSok;
-import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeSortering;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveRequest;
 import no.nav.virksomhet.tjenester.oppgave.v2.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
@@ -45,10 +44,10 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Henv
 
 public class SakService {
 
-    public static final int ANSVARLIG_ENHET = 2820;
-    public static final int OPPRETTET_AV_ENHET = 2820;
-    public static final int ENDRET_AV_ENHET = 2820;
-    public static final int FERDIGSTILT_AV_ENHET = 2820;
+    public static final int ANSVARLIG_ENHET = 4112;
+    public static final int OPPRETTET_AV_ENHET = 4112;
+    public static final int ENDRET_AV_ENHET = 4112;
+    public static final int FERDIGSTILT_AV_ENHET = 4112;
     public static final String OPPGAVETYPEKODE = "KONT_BRUK_GEN"; // Brukergenerert. Denne brukes lite og er dermed ganske safe
 
     private static final Map<String, String> FAGOMRADE;
@@ -171,8 +170,7 @@ public class SakService {
                                 .withUfordelte(true))
                         .withSok(new WSFinnOppgaveListeSok()
                                 .withAnsvarligEnhetId(valueOf(ANSVARLIG_ENHET))
-                                .withFagomradeKodeListe(tema))
-                        .withSorteringKode(new WSFinnOppgaveListeSortering().withSorteringKode("FRIST_DATO_STIG")))
+                                .withFagomradeKodeListe(tema)))
                 .getOppgaveListe())
                 .head();
     }
