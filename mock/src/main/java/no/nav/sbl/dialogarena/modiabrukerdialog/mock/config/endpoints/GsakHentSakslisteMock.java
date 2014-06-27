@@ -22,17 +22,17 @@ public class GsakHentSakslisteMock {
             @Override
             public WSFinnGenerellSakListeResponse finnGenerellSakListe(WSFinnGenerellSakListeRequest wsFinnGenerellSakListeRequest) {
                 return new WSFinnGenerellSakListeResponse().withSakListe(
-                        createGenerellSak("111111111", "Tema 1", "Fagsystem 1", DateTime.now().minusDays(1)),
-                        createGenerellSak("222222222", "Tema 2", "Fagsystem 2", DateTime.now().minusDays(4)),
-                        createGenerellSak("333333333", "Tema 1", "Fagsystem 1", DateTime.now().minusDays(4)));
+                        createGenerellSak("111111111", "Fagområde 1", "Fagsystem 1", DateTime.now().minusDays(1)),
+                        createGenerellSak("222222222", "Fagområde 2", "Fagsystem 2", DateTime.now().minusDays(4)),
+                        createGenerellSak("333333333", "Fagområde 1", "Fagsystem 1", DateTime.now().minusDays(4)));
             }
         };
     }
 
-    private static WSGenerellSak createGenerellSak(String saksId, String tema, String fagsystem, DateTime opprettet) {
+    private static WSGenerellSak createGenerellSak(String saksId, String fagomrade, String fagsystem, DateTime opprettet) {
         return new WSGenerellSak()
                 .withSakId(saksId)
-                .withFagomradeKode(tema)
+                .withFagomradeKode(fagomrade)
                 .withEndringsinfo(new WSEndringsinfo().withOpprettetDato(opprettet))
                 .withFagsystemKode(fagsystem);
     }
