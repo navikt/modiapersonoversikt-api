@@ -47,7 +47,7 @@ public class MeldingService {
             Sak sak = new Sak();
             sak.opprettetDato = wsGenerellSak.getEndringsinfo().getOpprettetDato();
             sak.saksId = wsGenerellSak.getSakId();
-            sak.tema = wsGenerellSak.getFagomradeKode();
+            sak.fagomrade = wsGenerellSak.getFagomradeKode();
             sak.fagsak = wsGenerellSak.getFagsystemKode();
             return sak;
         }

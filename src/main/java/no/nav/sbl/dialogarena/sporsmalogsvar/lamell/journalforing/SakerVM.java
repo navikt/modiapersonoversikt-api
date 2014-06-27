@@ -9,9 +9,11 @@ import org.apache.commons.collections15.Transformer;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.FAGOMRADE;
 
 public class SakerVM implements Serializable {
 
@@ -31,8 +33,8 @@ public class SakerVM implements Serializable {
         saksgrupper = grupperSakerPaaTema(meldingService.hentSakerForBruker(innboksVM.getFnr()));
     }
 
-    private static Map<String, List<Sak>> grupperSakerPaaTema(List<Sak> saker) {
-        return on(saker).reduce(indexBy(Sak.TEMA));
+    private Map<String, List<Sak>> grupperSakerPaaTema(List<Sak> saker) {
+        return on(saker).reduce(indexBy(FAGOMRADE, new TreeMap<String, List<Sak>>()));
     }
 
     public List<Saksgruppe> getSaksgruppeliste() {
