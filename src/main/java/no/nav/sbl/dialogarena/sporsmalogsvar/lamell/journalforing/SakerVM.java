@@ -2,18 +2,22 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sakstema;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Saksgruppe;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import org.apache.commons.collections15.Transformer;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 
 public class SakerVM implements Serializable {
 
     private InnboksVM innboksVM;
 
-    private List<Sakstema> sakstemaliste;
+    private Map<String, List<Sak>> saksgrupper;
 
     private MeldingService meldingService;
 
@@ -24,33 +28,20 @@ public class SakerVM implements Serializable {
     }
 
     public void oppdater() {
-        sakstemaliste = mapSakerTilSakstema(meldingService.hentSakerForBruker(innboksVM.getFnr()));
+        saksgrupper = grupperSakerPaaTema(meldingService.hentSakerForBruker(innboksVM.getFnr()));
     }
 
-    private List<Sakstema> mapSakerTilSakstema(List<Sak> saksListe) {
-        List<Sakstema> sakstemaListe = new ArrayList<>();
-        boolean eksisterendeSaksTema = false;
-        for (Sak sak : saksListe) {
-            String tema = sak.tema;
-            for (Sakstema sakstema : sakstemaListe) {
-                if (sakstema.tema.equals(tema)) {
-                    sakstema.saksliste.add(sak);
-                    eksisterendeSaksTema = true;
-                }
-            }
-            if (!eksisterendeSaksTema) {
-                Sakstema sakstema = new Sakstema(sak.tema);
-                sakstema.saksliste.add(sak);
-                sakstemaListe.add(sakstema);
-            }
-        }
-
-        return sakstemaListe;
+    private static Map<String, List<Sak>> grupperSakerPaaTema(List<Sak> saker) {
+        return on(saker).reduce(indexBy(Sak.TEMA));
     }
 
-
-    public List<Sakstema> getSakstemaliste() {
-        return sakstemaliste;
+    public List<Saksgruppe> getSaksgruppeliste() {
+        return on(saksgrupper.keySet()).map(new Transformer<String, Saksgruppe>() {
+            @Override
+            public Saksgruppe transform(String tema) {
+                return new Saksgruppe(tema, saksgrupper.get(tema));
+            }
+        }).collect();
     }
 
 }

@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sakstema;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Saksgruppe;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -39,7 +39,7 @@ public class SakerVMTest {
     public void gittHverSakHarUniktTemaReturnerKorrektSakstemaliste() {
         SakerVM sakerVM = new SakerVM(mock(InnboksVM.class), meldingService);
 
-        List<Sakstema> sakstemaliste = sakerVM.getSakstemaliste();
+        List<Saksgruppe> sakstemaliste = sakerVM.getSaksgruppeliste();
 
         assertThat(sakstemaliste.size(), is(3));
         assertThat(sakstemaliste.get(0).saksliste.size(), is(1));
@@ -53,11 +53,11 @@ public class SakerVMTest {
         mockSaksliste.add(sak4);
         SakerVM sakerVM = new SakerVM(mock(InnboksVM.class), meldingService);
 
-        List<Sakstema> sakstemaliste = sakerVM.getSakstemaliste();
+        List<Saksgruppe> sakstemaliste = sakerVM.getSaksgruppeliste();
 
         assertThat(sakstemaliste.size(), is(3));
-        assertThat(sakstemaliste.get(0).saksliste.size(), is(2));
-        assertThat(sakstemaliste.get(1).saksliste.size(), is(1));
+        assertThat(sakstemaliste.get(1).saksliste.size(), is(2));
+        assertThat(sakstemaliste.get(0).saksliste.size(), is(1));
         assertThat(sakstemaliste.get(2).saksliste.size(), is(1));
     }
 
@@ -71,11 +71,10 @@ public class SakerVMTest {
     }
 
     private ArrayList<Sak> createMockSaksliste(){
-        ArrayList<Sak> mockSaksliste = new ArrayList<>(Arrays.asList(
+        return new ArrayList<>(Arrays.asList(
                 createSak("111111111", TEMA_1, "Fagsak 1", DateTime.now().minusDays(1)),
                 createSak("222222222", TEMA_2, "Fagsak 2", DateTime.now().minusDays(4)),
                 createSak("333333333", TEMA_3, "Fagsak 1", DateTime.now().minusDays(4))));
-        return mockSaksliste;
     }
 
 }

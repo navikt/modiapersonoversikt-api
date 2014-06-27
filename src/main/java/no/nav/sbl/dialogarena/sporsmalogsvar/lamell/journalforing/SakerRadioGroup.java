@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sakstema;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Saksgruppe;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Radio;
@@ -19,12 +19,12 @@ public class SakerRadioGroup extends RadioGroup<Sak> {
         setRequired(true);
 
 
-        add(new PropertyListView<Sakstema>("sakstemaliste", new PropertyModel<List<Sakstema>>(sakerVM, "sakstemaliste")) {
+        add(new PropertyListView<Saksgruppe>("saksgruppeliste", new PropertyModel<List<Saksgruppe>>(sakerVM, "saksgruppeliste")) {
             @Override
-            protected void populateItem(ListItem<Sakstema> item) {
-                Sakstema sakstema = item.getModelObject();
+            protected void populateItem(ListItem<Saksgruppe> item) {
+                Saksgruppe saksgruppe = item.getModelObject();
                 item.add(new Label("tema"));
-                item.add(new PropertyListView<Sak>("saker", new PropertyModel<List<Sak>>(sakstema, "saksliste")) {
+                item.add(new PropertyListView<Sak>("saker", new PropertyModel<List<Sak>>(saksgruppe, "saksliste")) {
                     @Override
                     protected void populateItem(ListItem<Sak> item) {
                         item.add(new Radio<>("sak", item.getModel()));
