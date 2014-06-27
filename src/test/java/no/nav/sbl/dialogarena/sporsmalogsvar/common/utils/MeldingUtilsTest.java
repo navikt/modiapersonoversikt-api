@@ -98,7 +98,7 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medSvar() {
-        XMLSvar xmlSvar = new XMLSvar().withSporsmalsId(ID_2).withTemagruppe(TEMA).withLestDato(LEST_DATO).withFritekst(FRITEKST);
+        XMLSvar xmlSvar = new XMLSvar().withSporsmalsId(ID_2).withTemagruppe(TEMA).withLestDato(LEST_DATO).withFritekst(FRITEKST).withKanal(KANAL);
 
         Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SVAR.name(), xmlSvar));
 
@@ -109,6 +109,7 @@ public class MeldingUtilsTest {
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
         assertThat(melding.tema, is(equalTo(TEMA)));
         assertThat(melding.lestDato, is(equalTo(LEST_DATO)));
+        assertThat(melding.kanal, is(equalTo(KANAL)));
         assertThat(melding.navIdent, is(NAVIDENT));
     }
 
