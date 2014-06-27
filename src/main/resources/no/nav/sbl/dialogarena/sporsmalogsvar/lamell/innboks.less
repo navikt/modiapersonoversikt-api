@@ -143,9 +143,9 @@
     }
     p {
       line-height: 1.4em;
-    }
-    a {
-      text-decoration: underline;
+      a {
+        text-decoration: underline;
+      }
     }
     .nyeste-melding {
       overflow: hidden;
@@ -241,19 +241,17 @@
     position:absolute;
     top: -34px;
     right: 0;
-    font-size: 1.21rem;
-    background-color: transparent;
-    border-color: transparent;
-    a {
-      color: @dodgerblue;
+    .meldingsvalg:not(:last-child) {
       margin-right: 1em;
+    }
+    a:hover {
+      text-decoration: underline;
     }
     span {
-      margin-right: 1em;
       color: darkgray;
-    }
-    em {
-      font-style: normal;
+      em {
+        font-style: normal;
+      }
     }
   }
 
@@ -274,12 +272,12 @@
     a {
       margin-top:10px;
     }
+    .send {
+      color: #fff;
+    }
     .avbryt-knapp {
+      color: #20a9e1;
       display:block;
     }
   }
-
-
-
-
 }
