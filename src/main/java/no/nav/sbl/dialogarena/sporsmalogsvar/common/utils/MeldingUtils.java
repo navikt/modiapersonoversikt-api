@@ -66,6 +66,7 @@ public class MeldingUtils {
                 melding.traadId = ((XMLSvar) xmlMetadata).getSporsmalsId();
                 melding.tema = ((XMLSvar) xmlMetadata).getTemagruppe();
                 melding.fritekst = ((XMLSvar) xmlMetadata).getFritekst();
+                melding.kanal = ((XMLSvar) xmlMetadata).getKanal();
                 melding.lestDato = ((XMLSvar) xmlMetadata).getLestDato();
                 melding.navIdent = getNavIdentFraAktor(info.getAktor());
             } else if (xmlMetadata instanceof XMLReferat) {
