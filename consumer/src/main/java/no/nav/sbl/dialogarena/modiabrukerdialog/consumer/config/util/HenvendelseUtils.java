@@ -45,6 +45,7 @@ public class HenvendelseUtils {
                         new XMLSvar()
                                 .withSporsmalsId(svar.sporsmalsId)
                                 .withTemagruppe(svar.tema)
+                                .withKanal(svar.kanal)
                                 .withFritekst(svar.fritekst)
                 ));
     }

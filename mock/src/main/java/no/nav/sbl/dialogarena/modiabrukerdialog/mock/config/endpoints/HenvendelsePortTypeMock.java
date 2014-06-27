@@ -57,22 +57,22 @@ public class HenvendelsePortTypeMock {
                     createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST, valueOf(oppgaveId++))),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", valueOf(behandlingsId), now().minusDays(4), KORT_TEKST)),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(behandlingsId), now().minusDays(4), KORT_TEKST)),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(3),
                     createXMLSporsmal("HJELPEMIDLER", LANG_TEKST, valueOf(oppgaveId++))),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusHours(5),
-                    createXMLSvar("HJELPEMIDLER", valueOf(behandlingsId), null, KORT_TEKST)),
+                    createXMLSvar("HJELPEMIDLER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST)),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusMonths(4),
                     createXMLSporsmal("OVRIGE_HENVENDELSER", LANG_TEKST, valueOf(oppgaveId++))),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusMonths(4).plusDays(1),
-                    createXMLSvar("OVRIGE_HENVENDELSER", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST)),
+                    createXMLSvar("OVRIGE_HENVENDELSER", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST)),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(7),
-                    createXMLSvar("OVRIGE_HENVENDELSER", valueOf(behandlingsId), null, KORT_TEKST)),
+                    createXMLSvar("OVRIGE_HENVENDELSER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST)),
 
             createXmlBehandlingsinformasjon(REFERAT, now(),
                     createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST)),
@@ -96,8 +96,8 @@ public class HenvendelsePortTypeMock {
         return new XMLSporsmal().withTemagruppe(tema).withFritekst(tekst).withOppgaveIdGsak(oppgaveId);
     }
 
-    private static XMLSvar createXMLSvar(String tema, String sporsmalsId, DateTime lestDato, String fritekst) {
-        return new XMLSvar().withTemagruppe(tema).withSporsmalsId(sporsmalsId).withLestDato(lestDato).withFritekst(fritekst);
+    private static XMLSvar createXMLSvar(String tema, String kanal, String sporsmalsId, DateTime lestDato, String fritekst) {
+        return new XMLSvar().withTemagruppe(tema).withKanal(kanal).withSporsmalsId(sporsmalsId).withLestDato(lestDato).withFritekst(fritekst);
     }
 
     private static XMLReferat createXMLReferat(String tema, String kanal, DateTime lestDato, String tekst) {

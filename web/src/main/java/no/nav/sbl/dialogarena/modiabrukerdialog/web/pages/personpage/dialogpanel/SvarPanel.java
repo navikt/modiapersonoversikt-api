@@ -71,6 +71,7 @@ public class SvarPanel extends DialogPanel {
                 .withNavIdent(getSubjectHandler().getUid())
                 .withSporsmalsId(sporsmal.id)
                 .withTema(dialogVM.tema.name())
+                .withKanal(dialogVM.kanal.name())
                 .withFritekst(dialogVM.getFritekst());
 
         sakService.sendSvar(svar);

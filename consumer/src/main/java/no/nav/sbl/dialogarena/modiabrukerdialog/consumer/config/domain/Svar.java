@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain;
 
 public class Svar {
 
-    public String sporsmalsId, fnr, navIdent, tema, fritekst;
+    public String sporsmalsId, fnr, navIdent, tema, kanal, fritekst;
 
     public Svar withSporsmalsId(String sporsmalsId) {
         this.sporsmalsId = sporsmalsId;
@@ -21,6 +21,11 @@ public class Svar {
 
     public Svar withTema(String tema){
         this.tema = tema;
+        return this;
+    }
+
+    public Svar withKanal(String kanal){
+        this.kanal = kanal;
         return this;
     }
 
