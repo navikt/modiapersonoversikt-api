@@ -11,24 +11,26 @@
         <div wicket:id="feedback" class="feedback"></div>
         <div>
             <wicket:container wicket:id="valgtTraad.journalfortSak">
-                <wicket:container wicket:id="saker">
+                <wicket:container wicket:id="sakstemaliste">
                     <div>
                         <div>
                             <span wicket:id="tema"></span>
                         </div>
-                        <input wicket:id="sak" type="radio">
-                        <label wicket:for="sak">
-                            <div class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></div>
-                            <div wicket:id="saksId"/>
-                        </label>
-                        <label wicket:for="sak">
-                             <div class="saksTekst"><wicket:message key ="journalfor.sak.opprettetDatoTekst"/></div>
-                             <div wicket:id="opprettetDato"/>
-                         </label>
-                        <label wicket:for="sak">
-                            <div class="saksTekst"><wicket:message key ="journalfor.sak.fagsakTekst"/></div>
-                            <div wicket:id="fagsak"/>
-                        </label>
+                        <wicket:container wicket:id="saker">
+                            <input wicket:id="sak" type="radio">
+                            <label wicket:for="sak">
+                                <div class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></div>
+                                <div wicket:id="saksId"/>
+                            </label>
+                            <label wicket:for="sak">
+                                 <div class="saksTekst"><wicket:message key ="journalfor.sak.opprettetDatoTekst"/></div>
+                                 <div wicket:id="opprettetDato"/>
+                             </label>
+                            <label wicket:for="sak">
+                                <div class="saksTekst"><wicket:message key ="journalfor.sak.fagsakTekst"/></div>
+                                <div wicket:id="fagsak"/>
+                            </label>
+                        </wicket:container>
                     </div>
                 </wicket:container>
             </wicket:container>

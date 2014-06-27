@@ -5,9 +5,9 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.protocol.http.WebApplication;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SAMTALEREFERAT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SPORSMAL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SVAR;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR;
 
 public class AvsenderBilde extends Image {
 

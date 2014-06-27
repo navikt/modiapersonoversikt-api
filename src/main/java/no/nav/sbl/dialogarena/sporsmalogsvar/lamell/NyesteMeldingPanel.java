@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.component.urlparsinglabel.URLParsingMultiLineLabel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;

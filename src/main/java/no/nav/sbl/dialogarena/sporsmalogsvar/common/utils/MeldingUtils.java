@@ -7,9 +7,9 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -24,10 +24,10 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding.TRAAD_ID;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_BESVART;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.IKKE_LEST_AV_BRUKER;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Status.LEST_AV_BRUKER;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding.TRAAD_ID;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.IKKE_BESVART;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.IKKE_LEST_AV_BRUKER;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.LEST_AV_BRUKER;
 
 public class MeldingUtils {
 

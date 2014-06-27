@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;

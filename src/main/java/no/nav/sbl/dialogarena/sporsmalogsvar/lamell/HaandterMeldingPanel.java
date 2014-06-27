@@ -38,11 +38,13 @@ public class HaandterMeldingPanel extends Panel {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 journalforingsPanel.setVisibilityAllowed(true);
+                journalforingsPanel.oppdatereJournalforingssaker();
                 target.add(journalforingsPanel);
             }
         };
 
         add(besvar, journalfor, journalforingsPanel);
     }
+
 
 }

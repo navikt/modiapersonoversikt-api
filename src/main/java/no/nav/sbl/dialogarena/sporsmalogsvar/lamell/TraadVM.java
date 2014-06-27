@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Sak;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Meldingstype.SPORSMAL;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL;
 
 public class TraadVM implements Serializable {
 

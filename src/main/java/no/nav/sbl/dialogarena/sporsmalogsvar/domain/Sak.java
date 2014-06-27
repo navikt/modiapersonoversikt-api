@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
+package no.nav.sbl.dialogarena.sporsmalogsvar.domain;
 
 import org.joda.time.DateTime;
 

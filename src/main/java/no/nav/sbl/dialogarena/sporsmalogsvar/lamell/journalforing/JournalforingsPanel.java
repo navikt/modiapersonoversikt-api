@@ -24,12 +24,14 @@ public class JournalforingsPanel extends Panel {
     @Inject
     private MeldingService meldingService;
 
+    private SakerVM sakerVM;
+
     public JournalforingsPanel(String id, final IModel<InnboksVM> innboksVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
         final FeedbackPanel feedbackPanel = getFeedbackPanel();
-        SakerVM sakerVM = new SakerVM(innboksVM.getObject(), meldingService);
+        sakerVM = new SakerVM(innboksVM.getObject(), meldingService);
         Form<InnboksVM> form = new Form<>("plukkSakForm", innboksVM);
         form.add(
                 feedbackPanel,
@@ -69,6 +71,10 @@ public class JournalforingsPanel extends Panel {
                     lukkJournalforingsPanel(target);
                 }
             };
+    }
+
+    public void oppdatereJournalforingssaker(){
+        sakerVM.oppdater();
     }
 
     @RunOnEvents(VALGT_MELDING_EVENT)

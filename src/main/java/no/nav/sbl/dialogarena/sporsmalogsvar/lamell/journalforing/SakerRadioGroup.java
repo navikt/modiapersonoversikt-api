@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.Sak;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sakstema;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Radio;
@@ -17,14 +18,21 @@ public class SakerRadioGroup extends RadioGroup<Sak> {
         super(id);
         setRequired(true);
 
-        add(new PropertyListView<Sak>("saker", new PropertyModel<List<Sak>>(sakerVM, "saksliste")) {
+
+        add(new PropertyListView<Sakstema>("sakstemaliste", new PropertyModel<List<Sakstema>>(sakerVM, "sakstemaliste")) {
             @Override
-            protected void populateItem(ListItem<Sak> item) {
-                item.add(new Radio<>("sak", item.getModel()));
+            protected void populateItem(ListItem<Sakstema> item) {
+                Sakstema sakstema = item.getModelObject();
                 item.add(new Label("tema"));
-                item.add(new Label("saksId"));
-                item.add(new Label("opprettetDato", Datoformat.kort(item.getModelObject().opprettetDato)));
-                item.add(new Label("fagsak"));
+                item.add(new PropertyListView<Sak>("saker", new PropertyModel<List<Sak>>(sakstema, "saksliste")) {
+                    @Override
+                    protected void populateItem(ListItem<Sak> item) {
+                        item.add(new Radio<>("sak", item.getModel()));
+                        item.add(new Label("saksId"));
+                        item.add(new Label("opprettetDato", Datoformat.kort(item.getModelObject().opprettetDato)));
+                        item.add(new Label("fagsak"));
+                    }
+                });
             }
         });
     }
