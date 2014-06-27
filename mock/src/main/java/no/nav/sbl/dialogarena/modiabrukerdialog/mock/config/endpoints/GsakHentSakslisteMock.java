@@ -24,7 +24,7 @@ public class GsakHentSakslisteMock {
                 return new WSFinnGenerellSakListeResponse().withSakListe(
                         createGenerellSak("111111111", "Tema 1", "Fagsystem 1", DateTime.now().minusDays(1)),
                         createGenerellSak("222222222", "Tema 2", "Fagsystem 2", DateTime.now().minusDays(4)),
-                        createGenerellSak("333333333", "Tema 3", "Fagsystem 1", DateTime.now().minusDays(4)));
+                        createGenerellSak("333333333", "Tema 1", "Fagsystem 1", DateTime.now().minusDays(4)));
             }
         };
     }
