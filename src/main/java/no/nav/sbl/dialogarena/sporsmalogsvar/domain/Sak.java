@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class Sak implements Serializable {
 
-    public String saksId, tema, fagsak;
+    public String saksId, tema, fagsystem;
     public DateTime opprettetDato;
 
     public static final Transformer<Sak, String> TEMA = new Transformer<Sak, String>() {
