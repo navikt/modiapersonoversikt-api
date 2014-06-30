@@ -1,6 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -8,6 +11,7 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -34,6 +38,14 @@ public class ReferatPanel extends DialogPanel {
                         item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
                     }
                 }));
+    }
+
+
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(ReferatPanel.class, "jquery.customSelect.js")));
+        response.render(OnDomReadyHeaderItem.forScript("$('.temavelger').customSelect();"));
     }
 
     protected void sendHenvendelse(DialogVM dialogVM, String fnr) {
