@@ -15,7 +15,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <spring.version>3.2.3.RELEASE</spring.version>
+        <spring.version>3.2.4.RELEASE</spring.version>
         <modig.wicket.version>2.0.9</modig.wicket.version>
         <modig.core.version>1.0.1</modig.core.version>
         <wicket.version>6.11.0</wicket.version>
@@ -39,6 +39,18 @@
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
             <version>${wicket.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
