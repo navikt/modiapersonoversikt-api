@@ -30,7 +30,7 @@ public class MeldingWidgetPanel extends GenericPanel<MeldingVM> {
         add(
                 new Label("opprettetDato"),
                 new Label("avsender", getString(meldingVM.avsender)),
-                new Label("melding.tema", new StringResourceModel("${melding.tema}", getModel())),
+                new Label("melding.temagruppe", new StringResourceModel("${melding.temagruppe}", getModel())),
                 statusContainer);
     }
 }

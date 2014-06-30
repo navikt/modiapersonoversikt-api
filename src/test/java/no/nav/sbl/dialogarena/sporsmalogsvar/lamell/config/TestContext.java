@@ -69,16 +69,16 @@ public class TestContext {
                         new XMLMetadataListe().withMetadata(metadata));
     }
 
-    private static XMLSporsmal createXMLSporsmal(String tema, String tekst) {
-        return new XMLSporsmal().withTemagruppe(tema).withFritekst(tekst);
+    private static XMLSporsmal createXMLSporsmal(String temagruppe, String tekst) {
+        return new XMLSporsmal().withTemagruppe(temagruppe).withFritekst(tekst);
     }
 
-    private static XMLSvar createXMLSvar(String tema, String sporsmalsId, DateTime lestDato, String fritekst) {
-        return new XMLSvar().withTemagruppe(tema).withSporsmalsId(sporsmalsId).withLestDato(lestDato).withFritekst(fritekst);
+    private static XMLSvar createXMLSvar(String temagruppe, String sporsmalsId, DateTime lestDato, String fritekst) {
+        return new XMLSvar().withTemagruppe(temagruppe).withSporsmalsId(sporsmalsId).withLestDato(lestDato).withFritekst(fritekst);
     }
 
-    private static XMLReferat createXMLReferat(String tema, String kanal, DateTime lestDato, String tekst) {
-        return new XMLReferat().withTemagruppe(tema).withKanal(kanal).withLestDato(lestDato).withFritekst(tekst);
+    private static XMLReferat createXMLReferat(String temagruppe, String kanal, DateTime lestDato, String tekst) {
+        return new XMLReferat().withTemagruppe(temagruppe).withKanal(kanal).withLestDato(lestDato).withFritekst(tekst);
     }
 
     @Bean

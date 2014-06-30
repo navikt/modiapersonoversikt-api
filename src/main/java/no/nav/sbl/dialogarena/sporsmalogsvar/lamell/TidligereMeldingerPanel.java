@@ -20,7 +20,7 @@ public class TidligereMeldingerPanel extends Panel {
                 final MeldingVM meldingVM = item.getModelObject();
                 item.add(new AvsenderBilde("avsenderbilde", meldingVM));
                 item.add(new Label("opprettetDato"));
-                item.add(new Label("tema", new StringResourceModel("${melding.tema}", item.getModel())));
+                item.add(new Label("temagruppe", new StringResourceModel("${melding.temagruppe}", item.getModel())));
                 item.add(new Label("melding.navIdent").add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
                     @Override
                     public Boolean getObject() {

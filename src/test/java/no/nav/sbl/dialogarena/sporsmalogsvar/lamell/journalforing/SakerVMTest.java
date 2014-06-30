@@ -21,9 +21,9 @@ import static org.mockito.Mockito.when;
 
 public class SakerVMTest {
 
-    private final static String FAGOMRADE_1 = "Pensjon";
-    private final static String FAGOMRADE_2 = "Hjelpemidler";
-    private final static String FAGOMRADE_3 = "Familie og barn";
+    private final static String TEMA_1 = "Pensjon";
+    private final static String TEMA_2 = "Dagpenger";
+    private final static String TEMA_3 = "Barnebidrag";
 
     private ArrayList<Sak> mockSaksliste;
     private MeldingService meldingService;
@@ -49,7 +49,7 @@ public class SakerVMTest {
 
     @Test
     public void gittToSakerMedLiktTemaReturnerKorrektSakstemaliste() {
-        Sak sak4 = createSak("44444444", FAGOMRADE_1, "Fagsak 4", DateTime.now().minusDays(5));
+        Sak sak4 = createSak("44444444", TEMA_1, "Fagsak 4", DateTime.now().minusDays(5));
         mockSaksliste.add(sak4);
         SakerVM sakerVM = new SakerVM(mock(InnboksVM.class), meldingService);
 
@@ -61,20 +61,20 @@ public class SakerVMTest {
         assertThat(sakstemaliste.get(0).saksliste.size(), is(1));
     }
 
-    private static Sak createSak(String saksId, String fagomrade, String fagsak, DateTime opprettet) {
+    private static Sak createSak(String saksId, String tema, String fagsak, DateTime opprettet) {
         Sak sak = new Sak();
         sak.saksId = saksId;
         sak.fagsak = fagsak;
         sak.opprettetDato = opprettet;
-        sak.fagomrade = fagomrade;
+        sak.tema = tema;
         return sak;
     }
 
     private ArrayList<Sak> createMockSaksliste(){
         return new ArrayList<>(Arrays.asList(
-                createSak("111111111", FAGOMRADE_1, "Fagsak 1", DateTime.now().minusDays(1)),
-                createSak("222222222", FAGOMRADE_2, "Fagsak 2", DateTime.now().minusDays(4)),
-                createSak("333333333", FAGOMRADE_3, "Fagsak 1", DateTime.now().minusDays(4))));
+                createSak("111111111", TEMA_1, "Fagsak 1", DateTime.now().minusDays(1)),
+                createSak("222222222", TEMA_2, "Fagsak 2", DateTime.now().minusDays(4)),
+                createSak("333333333", TEMA_3, "Fagsak 1", DateTime.now().minusDays(4))));
     }
 
 }

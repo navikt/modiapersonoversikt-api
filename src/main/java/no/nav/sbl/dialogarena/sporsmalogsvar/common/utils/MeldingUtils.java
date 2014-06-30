@@ -60,17 +60,17 @@ public class MeldingUtils {
 
             XMLMetadata xmlMetadata = info.getMetadataListe().getMetadata().get(0);
             if (xmlMetadata instanceof XMLSporsmal) {
-                melding.tema = ((XMLSporsmal) xmlMetadata).getTemagruppe();
+                melding.temagruppe = ((XMLSporsmal) xmlMetadata).getTemagruppe();
                 melding.fritekst = ((XMLSporsmal) xmlMetadata).getFritekst();
             } else if (xmlMetadata instanceof XMLSvar) {
                 melding.traadId = ((XMLSvar) xmlMetadata).getSporsmalsId();
-                melding.tema = ((XMLSvar) xmlMetadata).getTemagruppe();
+                melding.temagruppe = ((XMLSvar) xmlMetadata).getTemagruppe();
                 melding.fritekst = ((XMLSvar) xmlMetadata).getFritekst();
                 melding.kanal = ((XMLSvar) xmlMetadata).getKanal();
                 melding.lestDato = ((XMLSvar) xmlMetadata).getLestDato();
                 melding.navIdent = getNavIdentFraAktor(info.getAktor());
             } else if (xmlMetadata instanceof XMLReferat) {
-                melding.tema = ((XMLReferat) xmlMetadata).getTemagruppe();
+                melding.temagruppe = ((XMLReferat) xmlMetadata).getTemagruppe();
                 melding.fritekst = ((XMLReferat) xmlMetadata).getFritekst();
                 melding.kanal = ((XMLReferat) xmlMetadata).getKanal();
                 melding.lestDato = ((XMLReferat) xmlMetadata).getLestDato();

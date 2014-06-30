@@ -4,12 +4,12 @@ import java.io.Serializable;
 import java.util.List;
 
 public class Saksgruppe implements Serializable {
-    public String fagomrade;
+    public String tema;
 
     public List<Sak> saksliste;
 
-    public Saksgruppe(String fagomrade, List<Sak> saksliste) {
-        this.fagomrade = fagomrade;
+    public Saksgruppe(String tema, List<Sak> saksliste) {
+        this.tema = tema;
         this.saksliste = saksliste;
     }
 

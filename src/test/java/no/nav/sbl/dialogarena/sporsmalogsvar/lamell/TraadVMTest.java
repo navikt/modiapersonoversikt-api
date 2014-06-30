@@ -25,9 +25,9 @@ public class TraadVMTest {
     private final static DateTime DATE_3 = new DateTime(2014, 04, 21, 0, 0);
     private final static DateTime DATE_4 = new DateTime(2014, 03, 21, 0, 0);
 
-    private final static String TEMA_1 = "Dagpenger";
-    private final static String TEMA_2 = "Barnebidrag";
-    private final static String TEMA_3 = "Familie og barn";
+    private final static String TEMAGRUPPE_1 = "Arbeidssøker";
+    private final static String TEMAGRUPPE_2 = "Barnebidrag";
+    private final static String TEMAGRUPPE_3 = "Familie og barn";
 
     private final static int TRAAD_LENGDE = 3;
 
@@ -73,11 +73,11 @@ public class TraadVMTest {
     }
 
     @Test
-    public void gittSortertListeFinnNyesteMeldingTema () {
+    public void gittSortertListeFinnNyesteMeldingTemagruppe() {
         MeldingVM nyesteMeldingVM = meldinger.get(0);
-        String nyesteMeldingTema = nyesteMeldingVM.melding.tema;
+        String nyesteMeldingTema = nyesteMeldingVM.melding.temagruppe;
 
-        assertSame(traadVM.getNyesteMeldingsTema(), nyesteMeldingTema);
+        assertSame(traadVM.getNyesteMeldingsTemagruppe(), nyesteMeldingTema);
     }
 
     @Test
@@ -98,11 +98,11 @@ public class TraadVMTest {
 
     private List<MeldingVM> createMeldingEksempler() {
         MeldingVM melding3VM = new MeldingVM(new Melding(ID_3, Meldingstype.SAMTALEREFERAT, DATE_3), TRAAD_LENGDE);
-        melding3VM.melding.tema = TEMA_3;
+        melding3VM.melding.temagruppe = TEMAGRUPPE_3;
         MeldingVM melding2VM = new MeldingVM(new Melding(ID_2, Meldingstype.SAMTALEREFERAT, DATE_2), TRAAD_LENGDE);
-        melding2VM.melding.tema = TEMA_2;
+        melding2VM.melding.temagruppe = TEMAGRUPPE_2;
         MeldingVM melding1VM = new MeldingVM(new Melding(ID_1, Meldingstype.SPORSMAL, DATE_1), TRAAD_LENGDE);
-        melding1VM.melding.tema = TEMA_1;
+        melding1VM.melding.temagruppe = TEMAGRUPPE_1;
         return new ArrayList<>(Arrays.asList(melding1VM, melding2VM, melding3VM));
     }
 

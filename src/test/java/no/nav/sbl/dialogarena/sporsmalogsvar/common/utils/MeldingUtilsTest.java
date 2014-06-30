@@ -39,7 +39,7 @@ public class MeldingUtilsTest {
     public static final String ID_3 = "3";
     public static final String NAVIDENT = "navident";
     public static final String FRITEKST = "fritekst";
-    public static final String TEMA = "tema";
+    public static final String TEMAGRUPPE = "temagruppe";
     public static final String KANAL = "kanal";
     public static final DateTime OPPRETTET_DATO = DateTime.now().minusDays(1);
     public static final DateTime LEST_DATO = DateTime.now();
@@ -84,7 +84,7 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medSporsmal() {
-        XMLSporsmal xmlSporsmal = new XMLSporsmal().withFritekst(FRITEKST).withTemagruppe(TEMA);
+        XMLSporsmal xmlSporsmal = new XMLSporsmal().withFritekst(FRITEKST).withTemagruppe(TEMAGRUPPE);
 
         Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SPORSMAL.name(), xmlSporsmal));
 
@@ -93,12 +93,12 @@ public class MeldingUtilsTest {
         assertThat(melding.opprettetDato, is(equalTo(OPPRETTET_DATO)));
         assertThat(melding.meldingstype, is(equalTo(SPORSMAL)));
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
-        assertThat(melding.tema, is(equalTo(TEMA)));
+        assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
     }
 
     @Test
     public void testTilMeldingTransformer_medSvar() {
-        XMLSvar xmlSvar = new XMLSvar().withSporsmalsId(ID_2).withTemagruppe(TEMA).withLestDato(LEST_DATO).withFritekst(FRITEKST).withKanal(KANAL);
+        XMLSvar xmlSvar = new XMLSvar().withSporsmalsId(ID_2).withTemagruppe(TEMAGRUPPE).withLestDato(LEST_DATO).withFritekst(FRITEKST).withKanal(KANAL);
 
         Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SVAR.name(), xmlSvar));
 
@@ -107,7 +107,7 @@ public class MeldingUtilsTest {
         assertThat(melding.opprettetDato, is(equalTo(OPPRETTET_DATO)));
         assertThat(melding.meldingstype, is(equalTo(SVAR)));
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
-        assertThat(melding.tema, is(equalTo(TEMA)));
+        assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.lestDato, is(equalTo(LEST_DATO)));
         assertThat(melding.kanal, is(equalTo(KANAL)));
         assertThat(melding.navIdent, is(NAVIDENT));
@@ -115,7 +115,7 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medReferat() {
-        XMLReferat xmlReferat = new XMLReferat().withFritekst(FRITEKST).withTemagruppe(TEMA).withLestDato(LEST_DATO).withKanal(KANAL);
+        XMLReferat xmlReferat = new XMLReferat().withFritekst(FRITEKST).withTemagruppe(TEMAGRUPPE).withLestDato(LEST_DATO).withKanal(KANAL);
 
         Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(ID_1, OPPRETTET_DATO, REFERAT.name(), xmlReferat));
 
@@ -124,7 +124,7 @@ public class MeldingUtilsTest {
         assertThat(melding.opprettetDato, is(equalTo(OPPRETTET_DATO)));
         assertThat(melding.meldingstype, is(equalTo(SAMTALEREFERAT)));
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
-        assertThat(melding.tema, is(equalTo(TEMA)));
+        assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.lestDato, is(equalTo(LEST_DATO)));
         assertThat(melding.kanal, is(equalTo(KANAL)));
         assertThat(melding.navIdent, is(NAVIDENT));

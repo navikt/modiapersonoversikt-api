@@ -23,7 +23,7 @@ public class SakerRadioGroup extends RadioGroup<Sak> {
             @Override
             protected void populateItem(ListItem<Saksgruppe> item) {
                 Saksgruppe saksgruppe = item.getModelObject();
-                item.add(new Label("fagomrade"));
+                item.add(new Label("tema"));
                 item.add(new PropertyListView<Sak>("saker", new PropertyModel<List<Sak>>(saksgruppe, "saksliste")) {
                     @Override
                     protected void populateItem(ListItem<Sak> item) {

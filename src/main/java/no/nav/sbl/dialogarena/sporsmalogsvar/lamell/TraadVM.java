@@ -34,8 +34,8 @@ public class TraadVM implements Serializable {
         return meldinger.isEmpty() ? new ArrayList<MeldingVM>() : meldinger.subList(1, meldinger.size());
     }
 
-    public String getNyesteMeldingsTema() {
-        return getNyesteMelding().melding.tema;
+    public String getNyesteMeldingsTemagruppe() {
+        return getNyesteMelding().melding.temagruppe;
     }
 
     public int getTraadLengde() {

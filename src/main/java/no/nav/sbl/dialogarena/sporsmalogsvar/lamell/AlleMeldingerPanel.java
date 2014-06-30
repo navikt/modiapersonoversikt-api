@@ -39,7 +39,7 @@ public class AlleMeldingerPanel extends Panel {
 
                 item.add(new Label("opprettetDato"));
                 item.add(new Label("avsender", getString(item.getModelObject().avsender)));
-                item.add(new Label("melding.tema", new StringResourceModel("${melding.tema}", item.getModel())));
+                item.add(new Label("melding.temagruppe", new StringResourceModel("${melding.temagruppe}", item.getModel())));
 
                 item.add(new Label("melding.fritekst"));
 

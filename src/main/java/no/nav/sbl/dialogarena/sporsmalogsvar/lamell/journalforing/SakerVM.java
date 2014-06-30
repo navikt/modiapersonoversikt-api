@@ -13,7 +13,7 @@ import java.util.TreeMap;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.FAGOMRADE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.TEMA;
 
 public class SakerVM implements Serializable {
 
@@ -34,7 +34,7 @@ public class SakerVM implements Serializable {
     }
 
     private Map<String, List<Sak>> grupperSakerPaaTema(List<Sak> saker) {
-        return on(saker).reduce(indexBy(FAGOMRADE, new TreeMap<String, List<Sak>>()));
+        return on(saker).reduce(indexBy(TEMA, new TreeMap<String, List<Sak>>()));
     }
 
     public List<Saksgruppe> getSaksgruppeliste() {

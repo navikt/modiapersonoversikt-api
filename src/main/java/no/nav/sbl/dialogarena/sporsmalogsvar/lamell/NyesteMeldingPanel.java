@@ -29,7 +29,7 @@ public class NyesteMeldingPanel extends Panel {
         add(avsenderbilde);
         add(new Label("valgtTraad.nyesteMelding.opprettetDato"));
         add(new WebMarkupContainer("indikator-dot").add(new AttributeModifier("class", new PropertyModel<>(innboksVM, "valgtTraad.nyesteMelding.statusKlasse"))));
-        add(new Label("tema", new StringResourceModel("${valgtTraad.nyesteMelding.melding.tema}", innboksVM)));
+        add(new Label("temagruppe", new StringResourceModel("${valgtTraad.nyesteMelding.melding.temagruppe}", innboksVM)));
         add(new Label("valgtTraad.nyesteMelding.traadlengde"));
         add(new Label("valgtTraad.nyesteMelding.melding.navIdent").add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
             @Override
