@@ -12,9 +12,10 @@ import static java.util.Arrays.asList;
 
 public class SaksWidget extends FeedWidget<TemaVM> {
 
+
+
     public SaksWidget(String id, String initial, String fnr) {
         super(id, initial, true);
-
 
         setDefaultModel(new ListModel<>(transformToTemaVM()));
     }
