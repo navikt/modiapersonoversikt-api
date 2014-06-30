@@ -30,7 +30,8 @@ public class JournalforingsPanel extends Panel {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        final FeedbackPanel feedbackPanel = getFeedbackPanel();
+        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
+        feedbackPanel.setOutputMarkupPlaceholderTag(true);
         sakerVM = new SakerVM(innboksVM.getObject(), meldingService);
         Form<InnboksVM> form = new Form<>("plukkSakForm", innboksVM);
         form.add(
@@ -41,18 +42,12 @@ public class JournalforingsPanel extends Panel {
         add(form);
     }
 
-    private FeedbackPanel getFeedbackPanel() {
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
-        feedbackPanel.setOutputMarkupPlaceholderTag(true);
-        return feedbackPanel;
-    }
-
     private AjaxSubmitLink getSubmitLenke(final IModel<InnboksVM> innboksVM, final FeedbackPanel feedbackPanel) {
         return new AjaxSubmitLink("journalforTraad") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 TraadVM valgtTraadVM = innboksVM.getObject().getValgtTraad();
-                meldingService.journalforTraad(valgtTraadVM,valgtTraadVM.journalfortSak);
+                meldingService.journalforTraad(valgtTraadVM, valgtTraadVM.journalfortSak);
                 lukkJournalforingsPanel(target);
             }
 
@@ -64,16 +59,15 @@ public class JournalforingsPanel extends Panel {
     }
 
     private AjaxLink<InnboksVM> getAvbrytLenke() {
-        return new AjaxLink<InnboksVM>("avbrytJournalforing")
-            {
-                @Override
-                public void onClick(AjaxRequestTarget target) {
-                    lukkJournalforingsPanel(target);
-                }
-            };
+        return new AjaxLink<InnboksVM>("avbrytJournalforing") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                lukkJournalforingsPanel(target);
+            }
+        };
     }
 
-    public void oppdatereJournalforingssaker(){
+    public void oppdatereJournalforingssaker() {
         sakerVM.oppdater();
     }
 
