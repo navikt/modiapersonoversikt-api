@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.Tema;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.Temagruppe;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -38,8 +38,8 @@ public class PlukkOppgavePanel extends Panel {
     public PlukkOppgavePanel(String id) {
         super(id);
 
-        final IModel<Tema> valgtTema = new Model<>((Tema) getSession().getAttribute(TEMAGRUPPE_ATTR));
-        Form<Tema> form = new Form<>("plukk-oppgave-form", valgtTema);
+        final IModel<Temagruppe> valgtTemagruppe = new Model<>((Temagruppe) getSession().getAttribute(TEMAGRUPPE_ATTR));
+        Form<Temagruppe> form = new Form<>("plukk-oppgave-form", valgtTemagruppe);
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
@@ -47,16 +47,16 @@ public class PlukkOppgavePanel extends Panel {
         AjaxSubmitLink plukkOppgave = new AjaxSubmitLink("plukk-oppgave") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                Optional<WSOppgave> oppgave = sakService.plukkOppgaveFraGsak(valgtTema.getObject().name());
+                Optional<WSOppgave> oppgave = sakService.plukkOppgaveFraGsak(valgtTemagruppe.getObject().name());
                 if (oppgave.isSome()) {
                     setResponsePage(PersonPage.class,
                             new PageParameters()
                                     .set("fnr", oppgave.get().getGjelder().getBrukerId())
                                     .set(OPPGAVEID, oppgave.get().getOppgaveId()));
 
-                    getSession().setAttribute(TEMAGRUPPE_ATTR, valgtTema.getObject());
+                    getSession().setAttribute(TEMAGRUPPE_ATTR, valgtTemagruppe.getObject());
                 } else {
-                    error(getString("plukkoppgave.ingenoppgaverpaatema"));
+                    error(getString("plukkoppgave.ingenoppgaverpaatemagruppe"));
                     target.add(feedbackPanel);
                 }
             }
@@ -65,13 +65,13 @@ public class PlukkOppgavePanel extends Panel {
                 target.add(feedbackPanel);
             }
         };
-        RadioGroup radioGroup = new RadioGroup<>("tema", valgtTema);
+        RadioGroup radioGroup = new RadioGroup<>("temagruppe", valgtTemagruppe);
         radioGroup.setRequired(true);
-        radioGroup.add(new ListView<Tema>("temaer", asList(Tema.values())) {
+        radioGroup.add(new ListView<Temagruppe>("temagrupper", asList(Temagruppe.values())) {
             @Override
-            protected void populateItem(ListItem<Tema> item) {
-                item.add(new Radio<>("temavalg", item.getModel()));
-                item.add(new Label("temanavn", getString(item.getModelObject().name())));
+            protected void populateItem(ListItem<Temagruppe> item) {
+                item.add(new Radio<>("temagruppevalg", item.getModel()));
+                item.add(new Label("temagruppenavn", getString(item.getModelObject().name())));
             }
         });
         form.add(plukkOppgave, radioGroup, feedbackPanel);

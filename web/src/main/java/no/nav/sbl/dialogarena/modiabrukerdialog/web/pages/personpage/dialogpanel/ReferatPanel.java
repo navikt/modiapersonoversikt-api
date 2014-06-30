@@ -22,9 +22,9 @@ public class ReferatPanel extends DialogPanel {
     public ReferatPanel(String id, String fnr) {
         super(id, fnr);
 
-        form.add(new DropDownChoice<>("tema", asList(Tema.values()), new ChoiceRenderer<Tema>() {
+        form.add(new DropDownChoice<>("temagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
             @Override
-            public Object getDisplayValue(Tema object) {
+            public Object getDisplayValue(Temagruppe object) {
                 return getString(object.name());
             }
         }).setRequired(true));
@@ -52,7 +52,7 @@ public class ReferatPanel extends DialogPanel {
         Referat referat = new Referat()
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
-                .withTema(dialogVM.tema.name())
+                .withTemagruppe(dialogVM.temagruppe.name())
                 .withKanal(dialogVM.kanal.name())
                 .withFritekst(dialogVM.getFritekst());
         sakService.sendReferat(referat);

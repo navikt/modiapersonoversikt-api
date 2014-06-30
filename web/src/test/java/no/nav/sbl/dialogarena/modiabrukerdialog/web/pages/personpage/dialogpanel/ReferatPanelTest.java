@@ -42,7 +42,7 @@ public class ReferatPanelTest extends WicketPageTest {
     @Test
     public void inneholderReferatspesifikkeKomponenter() {
         wicket.goToPageWith(new ReferatPanel("id", "fnr"))
-                .should().containComponent(withId("tema").and(ofType(DropDownChoice.class)))
+                .should().containComponent(withId("temagruppe").and(ofType(DropDownChoice.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)));
     }
 
@@ -54,7 +54,7 @@ public class ReferatPanelTest extends WicketPageTest {
                 .submitWithAjaxButton(withId("send"));
 
         List<String> errorMessages = wicket.get().errorMessages();
-        assertThat(errorMessages, hasItem(referatPanel.getString("dialogform.tema.Required")));
+        assertThat(errorMessages, hasItem(referatPanel.getString("dialogform.temagruppe.Required")));
     }
 
     @Test
@@ -62,7 +62,7 @@ public class ReferatPanelTest extends WicketPageTest {
         wicket.goToPageWith(new ReferatPanel("id", "fnr"))
                 .inForm(withId("dialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")
-                .select("tema", 0)
+                .select("temagruppe", 0)
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 

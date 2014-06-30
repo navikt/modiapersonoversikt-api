@@ -29,10 +29,10 @@ public class GsakHentSakslisteMock {
         };
     }
 
-    private static WSGenerellSak createGenerellSak(String saksId, String fagomrade, String fagsystem, DateTime opprettet) {
+    private static WSGenerellSak createGenerellSak(String saksId, String tema, String fagsystem, DateTime opprettet) {
         return new WSGenerellSak()
                 .withSakId(saksId)
-                .withFagomradeKode(fagomrade)
+                .withFagomradeKode(tema)
                 .withEndringsinfo(new WSEndringsinfo().withOpprettetDato(opprettet))
                 .withFagsystemKode(fagsystem);
     }

@@ -26,7 +26,7 @@ public class HenvendelseUtils {
         XMLMetadata xmlMetadata = info.getMetadataListe().getMetadata().get(0);
         if(xmlMetadata instanceof XMLSporsmal){
             XMLSporsmal xmlSporsmal = (XMLSporsmal) xmlMetadata;
-            sporsmal.tema = xmlSporsmal.getTemagruppe();
+            sporsmal.temagruppe = xmlSporsmal.getTemagruppe();
             sporsmal.fritekst = xmlSporsmal.getFritekst();
             sporsmal.oppgaveId = xmlSporsmal.getOppgaveIdGsak();
             return sporsmal;
@@ -44,7 +44,7 @@ public class HenvendelseUtils {
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
                         new XMLSvar()
                                 .withSporsmalsId(svar.sporsmalsId)
-                                .withTemagruppe(svar.tema)
+                                .withTemagruppe(svar.temagruppe)
                                 .withKanal(svar.kanal)
                                 .withFritekst(svar.fritekst)
                 ));
@@ -57,6 +57,6 @@ public class HenvendelseUtils {
                 .withOpprettetDato(now())
                 .withAvsluttetDato(now())
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
-                        new XMLReferat().withTemagruppe(referat.tema).withKanal(referat.kanal).withFritekst(referat.fritekst)));
+                        new XMLReferat().withTemagruppe(referat.temagruppe).withKanal(referat.kanal).withFritekst(referat.fritekst)));
     }
 }

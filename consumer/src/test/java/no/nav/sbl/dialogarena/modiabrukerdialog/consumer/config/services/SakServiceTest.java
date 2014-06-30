@@ -100,7 +100,7 @@ public class SakServiceTest {
 
         assertThat(sporsmal.id, is(SPORSMAL_ID));
         assertThat(sporsmal.fritekst, is(FRITEKST));
-        assertThat(sporsmal.tema, is(TEMAGRUPPE));
+        assertThat(sporsmal.temagruppe, is(TEMAGRUPPE));
     }
 
     @Test

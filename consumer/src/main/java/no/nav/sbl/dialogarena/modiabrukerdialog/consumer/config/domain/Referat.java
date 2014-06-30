@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain;
 
 public class Referat {
 
-    public String fnr, navIdent, tema, kanal, fritekst;
+    public String fnr, navIdent, temagruppe, kanal, fritekst;
 
     public Referat withFnr(String fnr) {
         this.fnr = fnr;
@@ -14,8 +14,8 @@ public class Referat {
         return this;
     }
 
-    public Referat withTema(String tema){
-        this.tema = tema;
+    public Referat withTemagruppe(String temagruppe){
+        this.temagruppe = temagruppe;
         return this;
     }
 

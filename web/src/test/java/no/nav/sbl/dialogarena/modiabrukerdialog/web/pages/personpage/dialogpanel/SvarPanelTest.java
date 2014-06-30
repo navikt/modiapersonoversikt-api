@@ -46,7 +46,7 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     public void inneholderSporsmaalsspefikkeKomponenter() {
         wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmal("id", now())))
-                .should().containComponent(withId("tema").and(ofType(Label.class)))
+                .should().containComponent(withId("temagruppe").and(ofType(Label.class)))
                 .should().containComponent(withId("sporsmal").and(ofType(URLParsingMultiLineLabel.class)))
                 .should().containComponent(withId("dato").and(ofType(Label.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
@@ -56,7 +56,7 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     public void skalSendeSporsmaalstypeTilHenvendelse() {
         Sporsmal sporsmal = new Sporsmal("id", now());
-        sporsmal.tema = Tema.OVRIGE_HENVENDELSER.name();
+        sporsmal.temagruppe = Temagruppe.OVRIGE_HENVENDELSER.name();
         wicket.goToPageWith(new SvarPanel("id", "fnr", sporsmal))
                 .inForm(withId("dialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")
@@ -72,12 +72,12 @@ public class SvarPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void viserTemaetFraSporsmalet() {
+    public void viserTemagruppenFraSporsmalet() {
         Sporsmal sporsmal = new Sporsmal("id", now());
-        sporsmal.tema = Tema.FAMILIE_OG_BARN.name();
+        sporsmal.temagruppe = Temagruppe.FAMILIE_OG_BARN.name();
 
         SvarPanel svarPanel = new SvarPanel("id", "fnr", sporsmal);
         wicket.goToPageWith(svarPanel)
-                .should().containComponent(withId("tema").and(withTextSaying(svarPanel.getString(Tema.FAMILIE_OG_BARN.name()))));
+                .should().containComponent(withId("temagruppe").and(withTextSaying(svarPanel.getString(Temagruppe.FAMILIE_OG_BARN.name()))));
     }
 }

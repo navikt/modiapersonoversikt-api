@@ -50,14 +50,14 @@ public class SakService {
     public static final int FERDIGSTILT_AV_ENHET = 4112;
     public static final String OPPGAVETYPEKODE = "KONT_BRUK_GEN"; // Brukergenerert. Denne brukes lite og er dermed ganske safe
 
-    private static final Map<String, String> FAGOMRADE;
+    private static final Map<String, String> TEMAGRUPPE;
     static {
         Map<String, String> tmp = new HashMap<>();
         tmp.put("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", "BAR");
         tmp.put("FAMILIE_OG_BARN", "BID");
         tmp.put("HJELPEMIDLER", "HJE");
         tmp.put("OVRIGE_HENVENDELSER","GRA");
-        FAGOMRADE = unmodifiableMap(tmp);
+        TEMAGRUPPE = unmodifiableMap(tmp);
     }
 
     @Inject
@@ -105,8 +105,8 @@ public class SakService {
         return createSporsmalFromHenvendelse(behandlingsinformasjon);
     }
 
-    public Optional<WSOppgave> plukkOppgaveFraGsak(String tema) {
-        Optional<WSOppgave> oppgave = finnIkkeTilordnedeOppgaver(FAGOMRADE.get(tema));
+    public Optional<WSOppgave> plukkOppgaveFraGsak(String temagruppe) {
+        Optional<WSOppgave> oppgave = finnIkkeTilordnedeOppgaver(TEMAGRUPPE.get(temagruppe));
         if (oppgave.isSome()) {
             WSOppgave tilordnet = tilordneOppgave(oppgave.get());
             return optional(tilordnet);
@@ -160,7 +160,7 @@ public class SakService {
         return wsOppgave;
     }
 
-    private Optional<WSOppgave> finnIkkeTilordnedeOppgaver(String tema) {
+    private Optional<WSOppgave> finnIkkeTilordnedeOppgaver(String temagruppe) {
         return on(oppgaveWS.finnOppgaveListe(
                 new WSFinnOppgaveListeRequest()
                         .withFilter(new WSFinnOppgaveListeFilter()
@@ -170,7 +170,7 @@ public class SakService {
                                 .withUfordelte(true))
                         .withSok(new WSFinnOppgaveListeSok()
                                 .withAnsvarligEnhetId(valueOf(ANSVARLIG_ENHET))
-                                .withFagomradeKodeListe(tema)))
+                                .withFagomradeKodeListe(temagruppe)))
                 .getOppgaveListe())
                 .head();
     }

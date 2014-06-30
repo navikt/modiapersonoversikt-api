@@ -27,10 +27,10 @@ public class SvarPanel extends DialogPanel {
         super(id, fnr);
         this.sporsmal = sporsmal;
 
-        hentTemaFraSporsmalet();
+        hentTemagruppeFraSporsmalet();
 
         form.add(
-                new Label("tema", new ResourceModel(sporsmal.tema)),
+                new Label("temagruppe", new ResourceModel(sporsmal.temagruppe)),
                 new Label("dato", Datoformat.kortMedTid(sporsmal.opprettetDato)),
                 new Label("navIdent", getSubjectHandler().getUid()),
                 new URLParsingMultiLineLabel("sporsmal", sporsmal.fritekst)
@@ -60,8 +60,8 @@ public class SvarPanel extends DialogPanel {
         });
     }
 
-    protected void hentTemaFraSporsmalet() {
-        form.getModelObject().tema = getTemaFromSporsmal();
+    protected void hentTemagruppeFraSporsmalet() {
+        form.getModelObject().temagruppe = getTemagruppeFromSporsmal();
     }
 
     @Override
@@ -70,7 +70,7 @@ public class SvarPanel extends DialogPanel {
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
                 .withSporsmalsId(sporsmal.id)
-                .withTema(dialogVM.tema.name())
+                .withTemagruppe(dialogVM.temagruppe.name())
                 .withKanal(dialogVM.kanal.name())
                 .withFritekst(dialogVM.getFritekst());
 
@@ -79,13 +79,13 @@ public class SvarPanel extends DialogPanel {
     }
 
     //Denne er midlertidig mens vi venter på full integrasjon med kodeverk
-    private Tema getTemaFromSporsmal() {
-        for (Tema tema : Tema.values()) {
-            if (tema.name().equals(sporsmal.tema)) {
-                return tema;
+    private Temagruppe getTemagruppeFromSporsmal() {
+        for (Temagruppe temagruppe : Temagruppe.values()) {
+            if (temagruppe.name().equals(sporsmal.temagruppe)) {
+                return temagruppe;
             }
         }
-        return Tema.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT; //Bruker denne som default
+        return Temagruppe.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT; //Bruker denne som default
     }
 
 }

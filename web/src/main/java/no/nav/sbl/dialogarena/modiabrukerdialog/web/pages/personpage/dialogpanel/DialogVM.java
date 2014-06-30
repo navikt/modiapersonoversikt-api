@@ -4,7 +4,7 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaModel;
 
 public class DialogVM extends EnhancedTextAreaModel {
     public Kanal kanal;
-    public Tema tema;
+    public Temagruppe temagruppe;
 
     public String getFritekst() {
         return text;
