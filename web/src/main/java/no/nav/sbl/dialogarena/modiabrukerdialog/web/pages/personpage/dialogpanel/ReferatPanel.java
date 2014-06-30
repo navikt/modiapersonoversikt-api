@@ -40,12 +40,10 @@ public class ReferatPanel extends DialogPanel {
                 }));
     }
 
-
-
     @Override
     public void renderHead(IHeaderResponse response) {
-        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(ReferatPanel.class, "jquery.customSelect.js")));
-        response.render(OnDomReadyHeaderItem.forScript("$('.temavelger').customSelect();"));
+        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(ReferatPanel.class, "jquery-ui-selectmenu.min.js")));
+        response.render(OnDomReadyHeaderItem.forScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});"));
     }
 
     protected void sendHenvendelse(DialogVM dialogVM, String fnr) {

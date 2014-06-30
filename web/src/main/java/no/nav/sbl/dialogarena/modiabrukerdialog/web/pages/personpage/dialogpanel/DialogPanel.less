@@ -7,6 +7,7 @@
 @modiaaquablaa: #008fc4;
 
 .dialogform {
+  padding: 0 @sideMargin;
   text-align: center;
   .typeoverskrift {
     margin: 30px 0;
@@ -21,21 +22,8 @@
     padding-bottom: 25px;
     margin-bottom: 25px !important;
   }
-  .customSelect {
-    font-size: 1.21rem;
-    width: 100%;
-    background-color: #f7f7f7;
-    color: @dodgerblue;
-    font-weight: bold;
-    border: 0px;
-    padding: 0.5em @sideMargin;
-    &.customSelectFocus {
-      border: 1px dashed #00a9e0;
-    }
-  }
   .fritekst {
     text-align: left;
-    margin: 0 @sideMargin;
     line-height: 1.4em;
     a {
       text-decoration: underline;
@@ -87,21 +75,83 @@
   .navident {
     font-weight: bold;
   }
-  .tekstfelt {
-    margin: 0 @sideMargin;
-  }
   .send {
     margin: 2em 0;
-  }
-  .feedback {
-    margin: 0 @sideMargin;
   }
   .kanaloverskrift {
     font-weight: 600;
     background-color: @modiasvart;
     color: @modiagraaskrift;
     padding: 7px 0;
-    margin: 0 @sideMargin;
+    margin: 0;
+  }
+  .temagruppevelger-wrapper {
+    position: relative;
+    .temagruppevelger {
+      width: 100%;
+    }
+    .ui-front {
+      z-index: 100;
+    }
+    .ui-menu {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: block;
+      outline: none;
+      .ui-menu-item {
+        position: relative;
+        margin: 0;
+        padding: 0.5em 1em;
+        cursor: pointer;
+        min-height: 0;
+      }
+      .ui-state-focus, .ui-state-active {
+        background-color: #0067c5;
+        color: #fff;
+      }
+    }
+    .ui-selectmenu-menu {
+      padding: 0;
+      margin: 0;
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: none;
+      background-color: #fff;
+      box-shadow: 0 5px 8px 0 #cccccc;
+    }
+    .ui-selectmenu-open {
+      display: block;
+    }
+    .ui-selectmenu-button {
+      display: inline-block;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      font-weight: bold;
+      background-color: #fff;
+      border: 1px solid #cccccc;
+      span {
+        &.ui-icon {
+          position: absolute;
+          height: 0;
+          width: 0;
+          border: 8px solid transparent;
+          border-top-color: #0067c5;
+          right: 1em;
+          top: 12px;
+        }
+        &.ui-selectmenu-text {
+          padding: 0.5em 1em;
+          display: block;
+          line-height: 1.4;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
   }
 }
 
