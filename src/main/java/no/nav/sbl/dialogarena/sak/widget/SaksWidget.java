@@ -1,31 +1,35 @@
 package no.nav.sbl.dialogarena.sak.widget;
 
 import no.nav.modig.modia.widget.FeedWidget;
+import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.sak.config.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.domain.TemaVM;
+import no.nav.sbl.dialogarena.sak.viewdomain.oversikt.Tema;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.util.ListModel;
+import org.apache.wicket.model.LoadableDetachableModel;
 
+import javax.inject.Inject;
 import java.util.List;
-
-import static java.util.Arrays.asList;
 
 public class SaksWidget extends FeedWidget<TemaVM> {
 
-
+    @Inject
+    private SaksoversiktService saksoversiktService;
 
     public SaksWidget(String id, String initial, String fnr) {
         super(id, initial, true);
 
-        setDefaultModel(new ListModel<>(transformToTemaVM()));
+        setDefaultModel(lagLDMforTema(saksoversiktService.hentTemaer(fnr)));
     }
 
-    private List<TemaVM> transformToTemaVM() {
-        return asList(
-                new TemaVM(),
-                new TemaVM(),
-                new TemaVM()
-        );
+    private LoadableDetachableModel<List<? extends Record<Tema>>> lagLDMforTema(final List<Record<Tema>> temaer) {
+        return new LoadableDetachableModel<List<? extends Record<Tema>>>() {
+            @Override
+            protected List<? extends Record<Tema>> load() {
+                return temaer;
+            }
+        };
     }
 
     @Override
