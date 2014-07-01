@@ -278,6 +278,10 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-log-jaxws</artifactId>
+        </dependency>
 
         <!--Diverse-->
 
