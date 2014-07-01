@@ -1,14 +1,18 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal;
 
 import no.nav.modig.wicket.test.internal.Parameters;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslisteMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
+import no.nav.sbl.dialogarena.sak.config.SaksoversiktService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
 import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -35,7 +39,11 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         UtbetalingPortTypeMock.class,
         SporsmalOgSvarContext.class,
         HenvendelsePortTypeMock.class,
-        GsakHentSakslisteMock.class
+        GsakHentSakslisteMock.class,
+        SaksoversiktService.class,
+        SakOgBehandlingPortTypeMock.class,
+        AktoerPortTypeMock.class,
+        HenvendelseSoknaderPortTypeMock.class
 })
 public class SjekkForlateSideTest extends WicketPageTest {
 

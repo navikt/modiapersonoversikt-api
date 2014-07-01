@@ -111,6 +111,22 @@
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.tjenester.fim</groupId>
+            <artifactId>nav-fim-aktoer-v1-tjenestespesifikasjon</artifactId>
+            <classifier>jaxws</classifier>
+        </dependency>
+
         <!--Modig-->
         <dependency>
             <groupId>no.nav.modig</groupId>

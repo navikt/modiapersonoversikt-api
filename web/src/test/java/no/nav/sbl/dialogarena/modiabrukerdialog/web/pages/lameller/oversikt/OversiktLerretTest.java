@@ -1,12 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 
 import no.nav.modig.modia.widget.LenkeWidget;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslisteMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
+import no.nav.sbl.dialogarena.sak.config.SaksoversiktService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
 import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
 import no.nav.sykmeldingsperioder.widget.SykepengerWidget;
@@ -26,7 +30,11 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
         UtbetalingPortTypeMock.class,
         SporsmalOgSvarContext.class,
         HenvendelsePortTypeMock.class,
-        GsakHentSakslisteMock.class
+        GsakHentSakslisteMock.class,
+        SaksoversiktService.class,
+        SakOgBehandlingPortTypeMock.class,
+        AktoerPortTypeMock.class,
+        HenvendelseSoknaderPortTypeMock.class
 })
 public class OversiktLerretTest extends WicketPageTest {
 

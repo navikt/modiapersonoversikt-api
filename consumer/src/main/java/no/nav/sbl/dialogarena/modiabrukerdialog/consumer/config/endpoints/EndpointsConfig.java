@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeverk.KodeverkV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeverk.KodeverkV2WrapperConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.sakogbehandling.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingWrapperConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.gsak.hentsaker.GsakHentSakslisteEndpointConfig;
@@ -28,8 +29,8 @@ import org.springframework.context.annotation.Import;
         GsakOppgaveV2EndpointConfig.class,
         GsakOppgavebehandlingV2EndpointConfig.class,
         BehandleJournalV2EndpointConfig.class,
-        GsakHentSakslisteEndpointConfig.class
-
+        GsakHentSakslisteEndpointConfig.class,
+        SakOgBehandlingEndpointConfig.class
 })
 public class EndpointsConfig {
 

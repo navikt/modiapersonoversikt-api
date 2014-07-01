@@ -17,6 +17,7 @@ import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeverk.KodeverkV2EndpointConfig.KODEVERK_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.sakogbehandling.SakOgBehandlingEndpointConfig.SAKOGBEHANDLING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingEndpointConfig.UTBETALING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakOppgaveV2EndpointConfig.GSAK_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_V2_KEY;
@@ -60,7 +61,8 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("Kjerneinfo", KJERNEINFO_KEY),
                 new MockSetupModel("Henvendelse", HENVENDELSE_V2_KEY),
                 new MockSetupModel("Gsak", GSAK_V2_KEY),
-                new MockSetupModel("Journalføring", BEHANDLE_JOURNAL_V2_KEY)
+                new MockSetupModel("Journalføring", BEHANDLE_JOURNAL_V2_KEY),
+                new MockSetupModel("SakOgBehandling", SAKOGBEHANDLING_KEY)
         );
     }
 

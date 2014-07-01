@@ -128,6 +128,16 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dial-nav-tjeneste-sak</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.tjenester.fim</groupId>
+            <artifactId>nav-fim-aktoer-v1-tjenestespesifikasjon</artifactId>
+            <classifier>jaxws</classifier>
+        </dependency>
 
         <!--Dialogarena-->
         <dependency>
