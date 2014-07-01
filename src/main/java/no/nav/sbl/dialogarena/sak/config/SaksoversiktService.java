@@ -1,9 +1,8 @@
 package no.nav.sbl.dialogarena.sak.config;
 
 import no.nav.modig.core.exception.SystemException;
-import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.sak.viewdomain.detalj.GenerellBehandling;
-import no.nav.sbl.dialogarena.sak.viewdomain.oversikt.Tema;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
+import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
@@ -21,16 +20,9 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sak.viewdomain.detalj.GenerellBehandling.BEHANDLINGSTEMA;
-import static no.nav.sbl.dialogarena.sak.viewdomain.detalj.GenerellBehandling.BEHANDLING_DATO;
-import static no.nav.sbl.dialogarena.sak.viewdomain.detalj.GenerellBehandling.BEHANDLING_STATUS;
-import static no.nav.sbl.dialogarena.sak.viewdomain.detalj.GenerellBehandling.BEHANDLING_TYPE;
-import static no.nav.sbl.dialogarena.sak.viewdomain.detalj.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
-import static no.nav.sbl.dialogarena.sak.viewdomain.detalj.GenerellBehandling.BehandlingsStatus.OPPRETTET;
-import static no.nav.sbl.dialogarena.sak.viewdomain.detalj.GenerellBehandling.BehandlingsType.BEHANDLING;
-import static no.nav.sbl.dialogarena.sak.viewdomain.detalj.GenerellBehandling.OPPRETTET_DATO;
-import static no.nav.sbl.dialogarena.sak.viewdomain.oversikt.Tema.SISTOPPDATERTEBEHANDLING;
-import static no.nav.sbl.dialogarena.sak.viewdomain.oversikt.Tema.TEMAKODE;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.OPPRETTET;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType.BEHANDLING;
 
 
 public class SaksoversiktService {
@@ -44,7 +36,7 @@ public class SaksoversiktService {
     @Inject
     private HenvendelseSoknaderPortType henvendelseSoknaderPortType;
 
-    public List<Record<Tema>> hentTemaer(String fnr) {
+    public List<TemaVM> hentTemaer(String fnr) {
         HentAktoerIdForIdentRequest request = new HentAktoerIdForIdentRequest();
         request.setIdent(fnr);
         String aktorId;
@@ -53,24 +45,24 @@ public class SaksoversiktService {
         } catch (HentAktoerIdForIdentPersonIkkeFunnet hentAktoerIdForIdentPersonIkkeFunnet) {
             throw new SystemException("Feil ved kall til hentaktoertjeneste", hentAktoerIdForIdentPersonIkkeFunnet);
         }
-        Comparator<Record<Tema>> nyesteOppdatertSammenligner = new Comparator<Record<Tema>>() {
+        Comparator<TemaVM> nyesteOppdatertSammenligner = new Comparator<TemaVM>() {
             @Override
-            public int compare(Record<Tema> o1, Record<Tema> o2) {
-                return o2.get(SISTOPPDATERTEBEHANDLING).get(BEHANDLING_DATO).compareTo(o1.get(SISTOPPDATERTEBEHANDLING).get(BEHANDLING_DATO));
+            public int compare(TemaVM o1, TemaVM o2) {
+                return o2.sistoppdaterteBehandling.behandlingDato.compareTo(o1.sistoppdaterteBehandling.behandlingDato);
             }
         };
         return on(hentSakerForAktor(aktorId)).map(TEMA).collect(nyesteOppdatertSammenligner);
     }
 
-    public static final Transformer<WSSak, Record<Tema>> TEMA = new Transformer<WSSak, Record<Tema>>() {
+    public static final Transformer<WSSak, TemaVM> TEMA = new Transformer<WSSak, TemaVM>() {
         @Override
-        public Record<Tema> transform(WSSak wsSak) {
-            Record<Tema> tema = new Record<Tema>().with(TEMAKODE, wsSak.getSakstema().getValue());
-            return behandlingskjedeFinnes(wsSak) ? tema.with(SISTOPPDATERTEBEHANDLING, hentForsteBehandlingskjede(wsSak)) : tema;
+        public TemaVM transform(WSSak wsSak) {
+            TemaVM tema = new TemaVM().withTemaKode(wsSak.getSakstema().getValue());
+            return behandlingskjedeFinnes(wsSak) ? tema.withSistOppdaterteBehandling(hentForsteBehandlingskjede(wsSak)) : tema;
         }
     };
 
-    private static Record<? extends GenerellBehandling> hentForsteBehandlingskjede(WSSak wsSak) {
+    private static GenerellBehandling hentForsteBehandlingskjede(WSSak wsSak) {
         return on(wsSak.getBehandlingskjede()).map(BEHANDLINGSKJEDE_TIL_BEHANDLING).collect(new OmvendtKronologiskHendelseComparator()).get(0);
     }
 
@@ -86,17 +78,17 @@ public class SaksoversiktService {
         }
     }
 
-    public static final Transformer<WSBehandlingskjede, Record<GenerellBehandling>> BEHANDLINGSKJEDE_TIL_BEHANDLING =
-            new Transformer<WSBehandlingskjede, Record<GenerellBehandling>>() {
+    public static final Transformer<WSBehandlingskjede, GenerellBehandling> BEHANDLINGSKJEDE_TIL_BEHANDLING =
+            new Transformer<WSBehandlingskjede, GenerellBehandling>() {
 
                 @Override
-                public Record<GenerellBehandling> transform(WSBehandlingskjede wsBehandlingskjede) {
-                    return new Record<GenerellBehandling>()
-                            .with(BEHANDLING_TYPE, BEHANDLING)
-                            .with(BEHANDLING_DATO, behandlingsDato(wsBehandlingskjede))
-                            .with(OPPRETTET_DATO, wsBehandlingskjede.getStart())
-                            .with(BEHANDLING_STATUS, behandlingsStatus(wsBehandlingskjede))
-                            .with(BEHANDLINGSTEMA, wsBehandlingskjede.getBehandlingskjedetype().getValue());
+                public GenerellBehandling transform(WSBehandlingskjede wsBehandlingskjede) {
+                    return new GenerellBehandling()
+                            .withBehandlingsType(BEHANDLING)
+                            .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
+                            .withOpprettetDato(wsBehandlingskjede.getStart())
+                            .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede))
+                            .withBehandlingsTema(wsBehandlingskjede.getBehandlingskjedetype().getValue());
                 }
 
                 private GenerellBehandling.BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {

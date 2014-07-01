@@ -1,16 +1,13 @@
 package no.nav.sbl.dialogarena.sak.config;
 
-import no.nav.sbl.dialogarena.common.records.Record;
-import no.nav.sbl.dialogarena.sak.viewdomain.detalj.GenerellBehandling;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 
 import java.util.Comparator;
 
-import static no.nav.sbl.dialogarena.sak.viewdomain.detalj.GenerellBehandling.BEHANDLING_DATO;
-
-public class OmvendtKronologiskHendelseComparator implements Comparator<Record<? extends GenerellBehandling>> {
+public class OmvendtKronologiskHendelseComparator implements Comparator<GenerellBehandling> {
 
     @Override
-    public int compare(Record<? extends GenerellBehandling> o1, Record<? extends GenerellBehandling> o2) {
-        return o2.get(BEHANDLING_DATO).compareTo(o1.get(BEHANDLING_DATO));
+    public int compare(GenerellBehandling o1, GenerellBehandling o2) {
+        return o2.behandlingDato.compareTo(o1.behandlingDato);
     }
 }

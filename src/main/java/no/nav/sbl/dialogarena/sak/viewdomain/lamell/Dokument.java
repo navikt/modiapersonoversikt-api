@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sak.viewdomain.detalj;
+package no.nav.sbl.dialogarena.sak.viewdomain.lamell;
 
 import no.nav.sbl.dialogarena.common.records.Key;
 
