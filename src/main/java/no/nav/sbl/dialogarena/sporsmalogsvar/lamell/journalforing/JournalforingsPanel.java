@@ -7,7 +7,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.Form;
@@ -42,8 +42,8 @@ public class JournalforingsPanel extends Panel {
         add(form);
     }
 
-    private AjaxSubmitLink getSubmitLenke(final IModel<InnboksVM> innboksVM, final FeedbackPanel feedbackPanel) {
-        return new AjaxSubmitLink("journalforTraad") {
+    private AjaxButton getSubmitLenke(final IModel<InnboksVM> innboksVM, final FeedbackPanel feedbackPanel) {
+        return new AjaxButton("journalforTraad") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 TraadVM valgtTraadVM = innboksVM.getObject().getValgtTraad();

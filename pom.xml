@@ -29,6 +29,7 @@
 
     <dependencies>
 
+        <!--Dialogarena-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
@@ -72,6 +73,7 @@
             </exclusions>
         </dependency>
 
+        <!--Modig-->
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>
@@ -127,6 +129,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!--Wicket-->
         <dependency>
             <groupId>org.apache.wicket</groupId>
             <artifactId>wicket-core</artifactId>
@@ -146,6 +149,7 @@
             <scope>provided</scope>
         </dependency>
 
+        <!--Spring-->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -170,7 +174,14 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+            <scope>test</scope>
+        </dependency>
 
+        <!--Logging-->
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
@@ -183,6 +194,8 @@
             <version>${logback.version}</version>
             <scope>test</scope>
         </dependency>
+
+        <!--Diverse-->
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -233,6 +246,7 @@
             <scope>test</scope>
         </dependency>
 
+        <!--Testing-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
