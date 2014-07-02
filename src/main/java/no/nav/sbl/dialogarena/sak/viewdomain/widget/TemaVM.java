@@ -3,7 +3,9 @@ package no.nav.sbl.dialogarena.sak.viewdomain.widget;
 import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 
-public class TemaVM implements FeedItemVM {
+import java.io.Serializable;
+
+public class TemaVM implements FeedItemVM, Serializable {
 
     public String temakode;
     public GenerellBehandling sistoppdaterteBehandling;
