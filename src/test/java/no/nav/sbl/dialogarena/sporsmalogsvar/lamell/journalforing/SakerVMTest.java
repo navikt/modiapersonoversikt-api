@@ -161,6 +161,7 @@ public class SakerVMTest {
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
         List<TemaMedSaker> sakstemaliste = sakerVM.getSaksgruppeliste();
+
         for (TemaMedSaker temaMedSaker : sakstemaliste) {
             assertDatoSortert(temaMedSaker);
         }

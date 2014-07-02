@@ -18,7 +18,7 @@ public class TemaMedSaker implements Serializable, Comparable<TemaMedSaker> {
 
     @Override
     public int compareTo(TemaMedSaker other) {
-        return tema.compareTo(tema);
+        return tema.compareTo(other.tema);
     }
 }
 

@@ -71,6 +71,7 @@ public class SakerVM implements Serializable {
         Collections.sort(alleTemaMedSaker);
         valgteTemaMedSaker.addAll(alleTemaMedSaker);
 
+        //return alleTemaMedSaker;
         return sorterDatoInnenforSammeTema(valgteTemaMedSaker);
     }
 
