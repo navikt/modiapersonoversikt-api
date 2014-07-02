@@ -22,11 +22,11 @@ public class AktoerEndpointConfig {
     public static final String AKTOER_KEY = "start.aktoer.withmock";
 
     @Value("${aktorid.ws.url}")
-    private String aktoer_url;
+    private String aktoerUrl;
 
     private AktoerPortType aktoerPort() {
         return new CXFClient<>(AktoerPortType.class)
-                .address(aktoer_url)
+                .address(aktoerUrl)
                 .wsdl("classpath:wsdl/no/nav/tjeneste/virksomhet/aktoer/v1/Aktoer.wsdl")
                 .withOutInterceptor(new SystemSAMLOutInterceptor())
                 .withHandler(new MDCOutHandler())
@@ -39,7 +39,8 @@ public class AktoerEndpointConfig {
         final AktoerPortType prod = aktoerPort();
         return new AktoerPortType() {
             @Override
-            public HentAktoerIdForIdentResponse hentAktoerIdForIdent(@WebParam(name = "request", targetNamespace = "") HentAktoerIdForIdentRequest hentAktoerIdForIdentRequest) throws HentAktoerIdForIdentPersonIkkeFunnet {
+            public HentAktoerIdForIdentResponse hentAktoerIdForIdent(@WebParam(name = "request", targetNamespace = "") HentAktoerIdForIdentRequest hentAktoerIdForIdentRequest)
+                    throws HentAktoerIdForIdentPersonIkkeFunnet {
                 if (mockErTillattOgSlaattPaaForKey(AKTOER_KEY)) {
                     return mock.hentAktoerIdForIdent(hentAktoerIdForIdentRequest);
                 }

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
@@ -20,7 +21,7 @@ public class AktoerPortTypeMock {
         try {
             when(mock.hentAktoerIdForIdent(any(HentAktoerIdForIdentRequest.class))).thenReturn(new HentAktoerIdForIdentResponse());
         } catch (HentAktoerIdForIdentPersonIkkeFunnet hentAktoerIdForIdentPersonIkkeFunnet) {
-            //care
+            throw new ApplicationException("Mock klarte ikke å returnere aktørid", hentAktoerIdForIdentPersonIkkeFunnet);
         }
         return mock;
     }

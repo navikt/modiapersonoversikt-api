@@ -36,7 +36,8 @@ public class SakOgBehandlingEndpointConfig {
             }
 
             @Override
-            public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest request) throws HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
+            public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest request)
+                    throws HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
                 if (mockErTillattOgSlaattPaaForKey(SAKOGBEHANDLING_KEY)) {
                     return mock.hentBehandlingskjedensBehandlinger(request);
                 }
