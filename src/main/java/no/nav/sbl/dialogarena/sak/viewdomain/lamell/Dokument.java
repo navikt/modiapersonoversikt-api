@@ -1,12 +1,30 @@
 package no.nav.sbl.dialogarena.sak.viewdomain.lamell;
 
-import no.nav.sbl.dialogarena.common.records.Key;
-
 public class Dokument {
 
-    public static final Key<String> KODEVERK_REF = new Key<>("KODEVERK_REF");
-    public static final Key<String> TILLEGGSTITTEL = new Key<>("TILLEGGSTITTEL");
-    public static final Key<Boolean> INNSENDT = new Key<>("INNSENDT");
-    public static final Key<Boolean> HOVEDSKJEMA = new Key<>("HOVEDSKJEMA");
+    public String kodeverkRef;
+    public String tilleggstittel;
+    public boolean innsendt;
+    public boolean hovedskjema;
+
+    public Dokument withKodeverkRef(String ref) {
+        kodeverkRef = ref;
+        return this;
+    }
+
+    public Dokument withTilleggsTittel(String tittel) {
+        tilleggstittel = tittel;
+        return this;
+    }
+
+    public Dokument withInnsendt(boolean erInnsendt) {
+        innsendt = erInnsendt;
+        return this;
+    }
+
+    public Dokument withHovedskjema(boolean erHovedskjema) {
+        hovedskjema = erHovedskjema;
+        return this;
+    }
 
 }

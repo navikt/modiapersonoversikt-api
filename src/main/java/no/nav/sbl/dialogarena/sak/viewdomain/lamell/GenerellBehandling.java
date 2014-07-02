@@ -44,4 +44,5 @@ public class GenerellBehandling implements Serializable{
         behandlingstema = tema;
         return this;
     }
+
 }

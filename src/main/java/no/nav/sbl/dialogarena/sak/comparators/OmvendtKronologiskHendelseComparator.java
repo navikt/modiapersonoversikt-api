@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sak.config;
+package no.nav.sbl.dialogarena.sak.comparators;
 
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 
