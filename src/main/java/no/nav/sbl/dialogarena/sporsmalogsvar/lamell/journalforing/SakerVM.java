@@ -18,7 +18,6 @@ import java.util.TreeMap;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.TEMA;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaMedSaker.SAMMENLIGN_TEMA;
 
 public class SakerVM implements Serializable {
 
@@ -32,18 +31,17 @@ public class SakerVM implements Serializable {
 
     private Map<String, List<Sak>> sakerGruppertPaaTema;
 
-    private List<TemaMedSaker> temaMedSakerListe;
-
+    // Dette er en midlertidig mapping mellom temagruppe og tema, mens vi venter på kodeverk.
     private static Map<String, List<String>> opprettTemaMapping() {
         Map<String, List<String>> temaMapping = new HashMap<>();
         temaMapping.put("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", new ArrayList<>(
-                Arrays.asList("Arbeidsavklaring", "Dagpenger")));
+                Arrays.asList("Dagpenger", "Arbeidsavklaring")));
         temaMapping.put("FAMILIE_OG_BARN", new ArrayList<>(
-                Arrays.asList("Foreldrepenger")));
+                Arrays.asList("Foreldrepenger","Barnebidrag")));
         temaMapping.put("HJELPEMIDLER", new ArrayList<>(
                 Arrays.asList("Hjelpemiddel", "Bilsøknad")));
         temaMapping.put("OVRIGE_HENVENDELSER", new ArrayList<>(
-                Arrays.asList("Øvrige henvendelser")));
+                Arrays.asList("Øvrige henvendelser","Annen øvrig hendelse")));
         return temaMapping;
     }
 
@@ -55,7 +53,6 @@ public class SakerVM implements Serializable {
 
     public void oppdater() {
         sakerGruppertPaaTema = grupperSakerPaaTema(meldingService.hentSakerForBruker(innboksVM.getFnr()));
-        temaMedSakerListe = new ArrayList<>(on(sakerGruppertPaaTema.keySet()).map(TIL_TEMA_MED_SAKER()).collect());
     }
 
     private Map<String, List<Sak>> grupperSakerPaaTema(List<Sak> saker) {
@@ -63,17 +60,25 @@ public class SakerVM implements Serializable {
     }
 
     public List<TemaMedSaker> getSaksgruppeliste() {
-        return sorterTemaMedSakerListe(temaMedSakerListe);
+        return sorterTemaMedSakerListe(new ArrayList<>(on(sakerGruppertPaaTema.keySet()).map(TIL_TEMA_MED_SAKER()).collect()));
     }
 
     private List<TemaMedSaker> sorterTemaMedSakerListe(List<TemaMedSaker> alleTemaMedSaker) {
         String valgtTraadSinTemagruppe = innboksVM.getValgtTraad().getEldsteMelding().melding.temagruppe;
         List<TemaMedSaker> valgteTemaMedSaker = hentUtValgteTemaMedSaker(alleTemaMedSaker, valgtTraadSinTemagruppe);
-        Collections.sort(valgteTemaMedSaker, SAMMENLIGN_TEMA);
-        Collections.sort(alleTemaMedSaker, SAMMENLIGN_TEMA);
+        alleTemaMedSaker.removeAll(valgteTemaMedSaker);
+        Collections.sort(valgteTemaMedSaker);
+        Collections.sort(alleTemaMedSaker);
         valgteTemaMedSaker.addAll(alleTemaMedSaker);
 
-        return valgteTemaMedSaker;
+        return sorterDatoInnenforSammeTema(valgteTemaMedSaker);
+    }
+
+    private List<TemaMedSaker> sorterDatoInnenforSammeTema(List<TemaMedSaker> alleTemaMedSaker) {
+        for (TemaMedSaker temaMedSaker : alleTemaMedSaker ) {
+            Collections.sort(temaMedSaker.saksliste);
+        }
+        return alleTemaMedSaker;
     }
 
     private List<TemaMedSaker> hentUtValgteTemaMedSaker(List<TemaMedSaker> alleTemaMedSaker, String valgtTraadSinTemagruppe) {
@@ -82,9 +87,6 @@ public class SakerVM implements Serializable {
             if(temaMedSaker.temagruppe.equals(valgtTraadSinTemagruppe)){
                 valgteTemaMedSaker.add(temaMedSaker);
             }
-        }
-        for(TemaMedSaker temaMedSaker : valgteTemaMedSaker){
-            alleTemaMedSaker.remove(temaMedSaker);
         }
         return valgteTemaMedSaker;
     }

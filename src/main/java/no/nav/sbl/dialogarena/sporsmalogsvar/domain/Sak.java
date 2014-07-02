@@ -5,7 +5,7 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 
-public class Sak implements Serializable {
+public class Sak implements Serializable, Comparable<Sak> {
 
     public String saksId, tema, fagsystem;
     public DateTime opprettetDato;
@@ -16,5 +16,10 @@ public class Sak implements Serializable {
             return sak.tema;
         }
     };
+
+    @Override
+    public int compareTo(Sak other) {
+        return other.opprettetDato.compareTo(opprettetDato);
+    }
 
 }

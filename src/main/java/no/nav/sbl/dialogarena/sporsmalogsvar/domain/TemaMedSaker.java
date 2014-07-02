@@ -1,10 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.domain;
 
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.List;
 
-public class TemaMedSaker implements Serializable{
+public class TemaMedSaker implements Serializable, Comparable<TemaMedSaker> {
     public String tema;
 
     public String temagruppe;
@@ -17,13 +16,10 @@ public class TemaMedSaker implements Serializable{
         this.saksliste = saksliste;
     }
 
-    public static final Comparator<TemaMedSaker> SAMMENLIGN_TEMA = new Comparator<TemaMedSaker>() {
-        @Override
-        public int compare(TemaMedSaker o1, TemaMedSaker o2) {
-            return o2.tema.compareTo(o1.tema);
-        }
-    };
-
+    @Override
+    public int compareTo(TemaMedSaker other) {
+        return tema.compareTo(tema);
+    }
 }
 
 
