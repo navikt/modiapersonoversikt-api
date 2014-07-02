@@ -17,6 +17,7 @@ import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeFilter;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeRequest;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeSok;
+import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeSortering;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveRequest;
 import no.nav.virksomhet.tjenester.oppgave.v2.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
@@ -170,7 +171,10 @@ public class SakService {
                                 .withUfordelte(true))
                         .withSok(new WSFinnOppgaveListeSok()
                                 .withAnsvarligEnhetId(valueOf(ANSVARLIG_ENHET))
-                                .withFagomradeKodeListe(temagruppe)))
+                                .withFagomradeKodeListe(temagruppe))
+                        .withSorteringKode(new WSFinnOppgaveListeSortering()
+                                .withSorteringKode("STIGENDE")
+                                .withSorteringselementKode("OPPRETTET_DATO")))
                 .getOppgaveListe())
                 .head();
     }
