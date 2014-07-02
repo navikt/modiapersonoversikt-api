@@ -134,6 +134,10 @@
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
+            <artifactId>modig-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>
         </dependency>
 
