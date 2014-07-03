@@ -13,10 +13,10 @@ public class SaksWidgetPanel extends GenericPanel<TemaVM> {
         setOutputMarkupId(true);
         TemaVM temaVM = model.getObject();
 
-        DateTime sistOppda = temaVM.sistoppdaterteBehandling.behandlingDato;
+        DateTime sistOppdatert = temaVM.sistoppdaterteBehandling.behandlingDato;
         add(
                 new Label("temaTittel", temaVM.temakode),
-                new Label("temaDato", "Siste oppdaterte dato: " + sistOppda.getDayOfMonth() + "." + sistOppda.getMonthOfYear() + "." + sistOppda.getYear())
+                new Label("temaDato", "Siste oppdaterte dato: " + sistOppdatert.getDayOfMonth() + "." + sistOppdatert.getMonthOfYear() + "." + sistOppdatert.getYear())
 
         );
     }
