@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
-import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskHendelseComparator;
+import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
@@ -39,7 +39,7 @@ public class SakOgBehandlingTransformers {
     }
 
     private static GenerellBehandling hentForsteBehandlingskjede(WSSak wsSak) {
-        return on(wsSak.getBehandlingskjede()).map(BEHANDLINGSKJEDE_TIL_BEHANDLING).collect(new OmvendtKronologiskHendelseComparator()).get(0);
+        return on(wsSak.getBehandlingskjede()).map(BEHANDLINGSKJEDE_TIL_BEHANDLING).collect(new OmvendtKronologiskBehandlingComparator()).get(0);
     }
 
     public static final Transformer<WSBehandlingskjede, GenerellBehandling> BEHANDLINGSKJEDE_TIL_BEHANDLING =

@@ -4,7 +4,7 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 
 import java.util.Comparator;
 
-public class OmvendtKronologiskHendelseComparator implements Comparator<GenerellBehandling> {
+public class OmvendtKronologiskBehandlingComparator implements Comparator<GenerellBehandling> {
 
     @Override
     public int compare(GenerellBehandling o1, GenerellBehandling o2) {

@@ -8,7 +8,7 @@ public class SistOppdaterteBehandlingComparator implements Comparator<TemaVM> {
 
     @Override
     public int compare(TemaVM o1, TemaVM o2) {
-        return o2.sistoppdaterteBehandling.behandlingDato.compareTo(o1.sistoppdaterteBehandling.behandlingDato);
+        return new OmvendtKronologiskBehandlingComparator().compare(o1.sistoppdaterteBehandling, o2.sistoppdaterteBehandling);
     }
 
 }
