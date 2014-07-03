@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaMedSaker;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.model.PropertyModel;
 
@@ -16,8 +16,8 @@ public class SakerRadioGroup extends RadioGroup<Sak> {
         setRequired(true);
 
         add(
-                new SakerPerSakstypeRadioChoices("sakstypePanelFagsaker", new PropertyModel<List<TemaMedSaker>>(sakerVM, "fagsakerGruppertPaaTema"), FAGSAK_PROPERTY_NAVN),
-                new SakerPerSakstypeRadioChoices("sakstypePanelGenerelle", new PropertyModel<List<TemaMedSaker>>(sakerVM, "generelleSakerGruppertPaaTema"), GENERELL_PROPERTY_NAVN)
+                new SakerPerSakstypeRadioChoices("sakstypePanelFagsaker", new PropertyModel<List<TemaSaker>>(sakerVM, "fagsakerGruppertPaaTema"), FAGSAK_PROPERTY_NAVN),
+                new SakerPerSakstypeRadioChoices("sakstypePanelGenerelle", new PropertyModel<List<TemaSaker>>(sakerVM, "generelleSakerGruppertPaaTema"), GENERELL_PROPERTY_NAVN)
         );
 
     }
