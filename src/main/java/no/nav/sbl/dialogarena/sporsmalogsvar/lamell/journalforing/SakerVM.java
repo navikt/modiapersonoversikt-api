@@ -4,16 +4,9 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaMedSaker;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import org.apache.commons.collections15.Transformer;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
@@ -23,13 +16,17 @@ public class SakerVM implements Serializable {
 
     public final static Map<String, List<String>> temaMapping = opprettTemaMapping();
 
-    public final static String TEMA_UTEN_TEMAGRUPPE = "Generelle";
+    public final static String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
+    public final static String SAKSTYPE_GENERELL = "Generell";
+    public final static String SAKSTYPE_FAG = "Fag";
 
     private InnboksVM innboksVM;
 
     private MeldingService meldingService;
 
-    private Map<String, List<Sak>> sakerGruppertPaaTema;
+    private List<TemaMedSaker> fagsakerGruppertPaaTema;
+
+    private List<TemaMedSaker> generelleSakerGruppertPaaTema;
 
     // Dette er en midlertidig mapping mellom temagruppe og tema, mens vi venter på kodeverk.
     private static Map<String, List<String>> opprettTemaMapping() {
@@ -52,15 +49,52 @@ public class SakerVM implements Serializable {
     }
 
     public void oppdater() {
-        sakerGruppertPaaTema = grupperSakerPaaTema(meldingService.hentSakerForBruker(innboksVM.getFnr()));
+        List<Sak> sakerForBruker = meldingService.hentSakerForBruker(innboksVM.getFnr());
+        Map<String, List<Sak>> sakerGruppertPaaSakstype = hentUtAlleSakerMedRiktigSakstype(sakerForBruker);
+        fagsakerGruppertPaaTema = grupperSakerPaaTema(sakerGruppertPaaSakstype.get(SAKSTYPE_FAG));
+        generelleSakerGruppertPaaTema = grupperSakerPaaTema(sakerGruppertPaaSakstype.get(SAKSTYPE_GENERELL));
     }
 
-    private Map<String, List<Sak>> grupperSakerPaaTema(List<Sak> saker) {
-        return on(saker).reduce(indexBy(TEMA, new TreeMap<String, List<Sak>>()));
+    private Map<String, List<Sak>> hentUtAlleSakerMedRiktigSakstype(List<Sak> saker) {
+        Map<String, List<Sak>> sakerGruppertPaaSakstype = new HashMap<>();
+        ArrayList<Sak> fagsaker = new ArrayList<>();
+        ArrayList<Sak> generelleSaker = new ArrayList<>();
+        for (Sak sak : saker) {
+            if (sak.isSakstypeForVisingGenerell()) {
+                generelleSaker.add(sak);
+            }
+            else
+                fagsaker.add(sak);
+        }
+        sakerGruppertPaaSakstype.put(SAKSTYPE_GENERELL, generelleSaker);
+        sakerGruppertPaaSakstype.put(SAKSTYPE_FAG, fagsaker);
+        return sakerGruppertPaaSakstype;
     }
 
-    public List<TemaMedSaker> getSaksgruppeliste() {
-        return sorterTemaMedSakerListe(new ArrayList<>(on(sakerGruppertPaaTema.keySet()).map(TIL_TEMA_MED_SAKER()).collect()));
+    private List<TemaMedSaker> grupperSakerPaaTema(List<Sak> saker) {
+        List<TemaMedSaker> temaMedSakerListe = new ArrayList<>();
+        Map<String, List<Sak>> sakerGruppertPaaTema = on(saker).reduce(indexBy(TEMA, new TreeMap<String, List<Sak>>()));
+        for(String key : sakerGruppertPaaTema.keySet()){
+            temaMedSakerListe.add(new TemaMedSaker(key, finnTemaetsGruppe(key), sakerGruppertPaaTema.get(key)));
+        }
+        return temaMedSakerListe;
+    }
+
+    private static String finnTemaetsGruppe(String tema){
+        for(String key : temaMapping.keySet()){
+            if(temaMapping.get(key).contains(tema)){
+                return key;
+            }
+        }
+        return TEMA_UTEN_TEMAGRUPPE;
+    }
+
+    public List<TemaMedSaker> getFagsakerGruppertPaaTema() {
+        return sorterTemaMedSakerListe(fagsakerGruppertPaaTema);
+    }
+
+    public List<TemaMedSaker> getGenerelleSakerGruppertPaaTema() {
+        return sorterTemaMedSakerListe(generelleSakerGruppertPaaTema);
     }
 
     private List<TemaMedSaker> sorterTemaMedSakerListe(List<TemaMedSaker> alleTemaMedSaker) {
@@ -71,15 +105,7 @@ public class SakerVM implements Serializable {
         Collections.sort(alleTemaMedSaker);
         valgteTemaMedSaker.addAll(alleTemaMedSaker);
 
-        //return alleTemaMedSaker;
         return sorterDatoInnenforSammeTema(valgteTemaMedSaker);
-    }
-
-    private List<TemaMedSaker> sorterDatoInnenforSammeTema(List<TemaMedSaker> alleTemaMedSaker) {
-        for (TemaMedSaker temaMedSaker : alleTemaMedSaker ) {
-            Collections.sort(temaMedSaker.saksliste);
-        }
-        return alleTemaMedSaker;
     }
 
     private List<TemaMedSaker> hentUtValgteTemaMedSaker(List<TemaMedSaker> alleTemaMedSaker, String valgtTraadSinTemagruppe) {
@@ -92,22 +118,11 @@ public class SakerVM implements Serializable {
         return valgteTemaMedSaker;
     }
 
-    private Transformer<String, TemaMedSaker> TIL_TEMA_MED_SAKER() {
-        return new Transformer<String, TemaMedSaker>() {
-            @Override
-            public TemaMedSaker transform(String tema) {
-                return new TemaMedSaker(tema, finnTemaetsGruppe(tema), sakerGruppertPaaTema.get(tema));
-            }
-        };
-    }
-
-    private static String finnTemaetsGruppe(String tema){
-        for(String key : temaMapping.keySet()){
-            if(temaMapping.get(key).contains(tema)){
-                return key;
-            }
+    private List<TemaMedSaker> sorterDatoInnenforSammeTema(List<TemaMedSaker> alleTemaMedSaker) {
+        for (TemaMedSaker temaMedSaker : alleTemaMedSaker ) {
+            Collections.sort(temaMedSaker.saksliste);
         }
-        return TEMA_UTEN_TEMAGRUPPE;
+        return alleTemaMedSaker;
     }
 
 }

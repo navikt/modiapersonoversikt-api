@@ -2,38 +2,24 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaMedSaker;
-import no.nav.sbl.dialogarena.time.Datoformat;
-import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.List;
 
 public class SakerRadioGroup extends RadioGroup<Sak> {
+    private final static String FAGSAK_PROPERTY_NAVN = "journalfor.sakstype.tekst.fagsak";
+    private final static String GENERELL_PROPERTY_NAVN = "journalfor.sakstype.tekst.generell";
 
     public SakerRadioGroup(String id, SakerVM sakerVM) {
         super(id);
         setRequired(true);
 
-        add(new PropertyListView<TemaMedSaker>("saksgruppeliste", new PropertyModel<List<TemaMedSaker>>(sakerVM, "saksgruppeliste")) {
-            @Override
-            protected void populateItem(ListItem<TemaMedSaker> item) {
-                TemaMedSaker temaMedSaker = item.getModelObject();
-                item.add(new Label("tema"));
-                item.add(new PropertyListView<Sak>("saker", new PropertyModel<List<Sak>>(temaMedSaker, "saksliste")) {
-                    @Override
-                    protected void populateItem(ListItem<Sak> item) {
-                        item.add(new Radio<>("sak", item.getModel()));
-                        item.add(new Label("saksId"));
-                        item.add(new Label("opprettetDato", Datoformat.kort(item.getModelObject().opprettetDato)));
-                        item.add(new Label("fagsystem"));
-                    }
-                });
-            }
-        });
+        add(
+                new SakerPerSakstypeRadioChoices("sakstypePanelFagsaker", new PropertyModel<List<TemaMedSaker>>(sakerVM, "fagsakerGruppertPaaTema"), FAGSAK_PROPERTY_NAVN),
+                new SakerPerSakstypeRadioChoices("sakstypePanelGenerelle", new PropertyModel<List<TemaMedSaker>>(sakerVM, "generelleSakerGruppertPaaTema"), GENERELL_PROPERTY_NAVN)
+        );
+
     }
 
 }

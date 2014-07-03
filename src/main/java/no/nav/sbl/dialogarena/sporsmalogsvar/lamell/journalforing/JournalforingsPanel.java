@@ -40,6 +40,7 @@ public class JournalforingsPanel extends Panel {
                 getSubmitLenke(innboksVM, feedbackPanel),
                 getAvbrytLenke());
         add(form);
+
     }
 
     private AjaxButton getSubmitLenke(final IModel<InnboksVM> innboksVM, final FeedbackPanel feedbackPanel) {

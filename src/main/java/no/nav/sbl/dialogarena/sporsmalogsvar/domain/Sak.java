@@ -7,8 +7,15 @@ import java.io.Serializable;
 
 public class Sak implements Serializable, Comparable<Sak> {
 
-    public String saksId, tema, fagsystem;
+    public String saksId, tema, fagsystem, sakstype;
     public DateTime opprettetDato;
+
+    private final static String SAKSTYPE_GENERELL = "Generell";
+    private final static String SAKSTEMA_OPPFOLGING = "Oppfølging";
+
+    public boolean isSakstypeForVisingGenerell(){
+        return sakstype.equals(SAKSTYPE_GENERELL) && (!tema.equals(SAKSTEMA_OPPFOLGING));
+    }
 
     public static final Transformer<Sak, String> TEMA = new Transformer<Sak, String>() {
         @Override

@@ -17,6 +17,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.*;
 
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.SakerVM.SAKSTYPE_FAG;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.SakerVM.SAKSTYPE_GENERELL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.SakerVM.temaMapping;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.OrderingComparison.greaterThan;
@@ -65,7 +67,7 @@ public class SakerVMTest {
     public void gittHverSakHarUniktTemaReturnerKorrektSakstemaliste() {
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
-        List<TemaMedSaker> sakstemaliste = sakerVM.getSaksgruppeliste();
+        List<TemaMedSaker> sakstemaliste = sakerVM.getGenerelleSakerGruppertPaaTema();
 
         assertThat(sakstemaliste.size(), is(4));
         assertThat(sakstemaliste.get(0).saksliste.size(), is(1));
@@ -76,14 +78,13 @@ public class SakerVMTest {
 
     @Test
     public void gittToSakerMedLiktTemaReturnerKorrektSakstemaliste() {
-        Sak sak4 = createSak("44444444", alleTemaer.get(0), "Fagsak 4", DateTime.now().minusDays(5));
+        Sak sak4 = createSak("44444444", alleTemaer.get(0), "Fagsak 4", SAKSTYPE_GENERELL, DateTime.now().minusDays(5));
         saksliste.add(sak4);
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
-        List<TemaMedSaker> sakstemaliste = sakerVM.getSaksgruppeliste();
+        List<TemaMedSaker> sakstemaliste = sakerVM.getGenerelleSakerGruppertPaaTema();
 
         assertThat(sakstemaliste.size(), is(4));
-
         for (TemaMedSaker temaMedSaker : sakstemaliste) {
             if (temaMedSaker.tema.equals(alleTemaer.get(0))) {
                 assertThat(temaMedSaker.saksliste.size(), is(2));
@@ -95,24 +96,24 @@ public class SakerVMTest {
 
     //Valgt temgruppe øverst
     @Test
-    public void gittTemagruppe0sjekkAtTemaMedSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
+    public void gittValgtTemagruppe0sjekkAtTemaMedSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
         String traadTemagruppe = alleTemagrupper.get(0);
         meldingVM.melding.temagruppe = traadTemagruppe;
 
-        List<TemaMedSaker> sakstemaliste = sakerVM.getSaksgruppeliste();
+        List<TemaMedSaker> sakstemaliste = sakerVM.getGenerelleSakerGruppertPaaTema();
 
         assertThat(sakstemaliste.get(0).temagruppe, is(traadTemagruppe));
         assertThat(sakstemaliste.get(0).saksliste.size(), is(1));
     }
 
     @Test
-    public void gittTemagruppe2sjekkAtTemaMedSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
+    public void gittValgtTemagruppe2sjekkAtTemaMedSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
         String traadTemagruppe = alleTemagrupper.get(2);
         meldingVM.melding.temagruppe = traadTemagruppe;
 
-        List<TemaMedSaker> sakstemaliste = sakerVM.getSaksgruppeliste();
+        List<TemaMedSaker> sakstemaliste = sakerVM.getGenerelleSakerGruppertPaaTema();
 
         assertThat(sakstemaliste.get(0).temagruppe, is(traadTemagruppe));
         assertThat(sakstemaliste.get(0).saksliste.size(), is(1));
@@ -126,11 +127,11 @@ public class SakerVMTest {
         List<String> traadTemagruppeSineTemaer = temaMapping.get(traadTemagruppe);
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
         for (String tema : traadTemagruppeSineTemaer) {
-            saksliste.add(createSak("44444444", tema, "Fagsystem 4", DateTime.now().minusDays(5)));
+            saksliste.add(createSak("44444444", tema, "Fagsystem 4",SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
-        List<TemaMedSaker> temaInnenforValgtTemagruppe = sakerVM.getSaksgruppeliste().subList(0, traadTemagruppeLengde);
+        List<TemaMedSaker> temaInnenforValgtTemagruppe = sakerVM.getGenerelleSakerGruppertPaaTema().subList(0, traadTemagruppeLengde);
 
         assertSortert(temaInnenforValgtTemagruppe);
     }
@@ -144,57 +145,75 @@ public class SakerVMTest {
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
-        List<TemaMedSaker> alleSakstema = sakerVM.getSaksgruppeliste();
+        List<TemaMedSaker> alleSakstema = sakerVM.getGenerelleSakerGruppertPaaTema();
 
         List<TemaMedSaker> temaUtenforValgtTemagruppe = alleSakstema.subList(traadTemagruppeLengde, alleSakstema.size());
         assertSortert(temaUtenforValgtTemagruppe);
     }
 
-    // Sorter etter dato innefor hvert tema?
+    // Sorter etter dato innefor hvert tema
     @Test
     public void sjekkDatoSorteringInnenforSammeTema() {
         ArrayList<Sak> sakslistekloneMedAndreDatoer = new ArrayList<>();
         for (Sak sak : saksliste) {
-            sakslistekloneMedAndreDatoer.add(createSak("101010101", sak.tema, "Fagsystem", DateTime.now().minusDays(5)));
+            sakslistekloneMedAndreDatoer.add(createSak("101010101", sak.tema, "Fagsystem", SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
         saksliste.addAll(sakslistekloneMedAndreDatoer);
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
-        List<TemaMedSaker> sakstemaliste = sakerVM.getSaksgruppeliste();
+        List<TemaMedSaker> sakstemaliste = sakerVM.getGenerelleSakerGruppertPaaTema();
 
         for (TemaMedSaker temaMedSaker : sakstemaliste) {
             assertDatoSortert(temaMedSaker);
         }
     }
 
+    // Sjekk at fagsaker og generelle saker kommer i to ulike lister
     @Test
-    public void gittTraadMedTemagruppe2MedToTilhørendeSakReturnerKorrektSakstemaliste() {
+    public void sjekkAtGenerelleSakerOgFagsakerErPlassertISinKorresponderendeListe(){
+        ArrayList<Sak> sakslistekloneMedAndreSakstyper = new ArrayList<>();
+        for (Sak sak : saksliste) {
+            sakslistekloneMedAndreSakstyper.add(createSak("101010101", sak.tema, "Fagsystem", SAKSTYPE_FAG, sak.opprettetDato));
+        }
+        saksliste.addAll(sakslistekloneMedAndreSakstyper);
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
-        String traadTemagruppe = alleTemagrupper.get(2);
-        meldingVM.melding.temagruppe = traadTemagruppe;
 
-        List<TemaMedSaker> sakstemaliste = sakerVM.getSaksgruppeliste();
+        List<TemaMedSaker> sakstemalisteGenerelle = sakerVM.getGenerelleSakerGruppertPaaTema();
+        List<TemaMedSaker> sakstemalisteFag = sakerVM.getFagsakerGruppertPaaTema();
 
-        assertThat(sakstemaliste.size(), is(4));
-        assertThat(sakstemaliste.get(0).temagruppe, is(traadTemagruppe));
-        assertThat(sakstemaliste.get(0).saksliste.size(), is(1));
+        assertSakstypeGenerell(sakstemalisteGenerelle, true);
+        assertSakstypeGenerell(sakstemalisteFag, false);
     }
 
-    private static Sak createSak(String saksId, String tema, String fagsak, DateTime opprettet) {
+    private void assertSakstypeGenerell(List<TemaMedSaker> sakstemaliste, boolean generell) {
+        for (TemaMedSaker temaMedSaker : sakstemaliste) {
+            for (Sak sak : temaMedSaker.saksliste){
+                assertThat(sak.isSakstypeForVisingGenerell(), is(generell));
+            }
+        }
+    }
+
+    private static Sak createSak(String saksId, String tema, String fagsak, String sakstype, DateTime opprettet) {
         Sak sak = new Sak();
         sak.saksId = saksId;
-        sak.fagsystem = fagsak;
-        sak.opprettetDato = opprettet;
         sak.tema = tema;
+        sak.fagsystem = fagsak;
+        if (sakstype.equals(SAKSTYPE_GENERELL)) {
+            sak.sakstype = sakstype;
+        } else {
+            sak.sakstype = tema;
+        }
+
+        sak.opprettetDato = opprettet;
         return sak;
     }
 
     private ArrayList<Sak> createSakslisteBasertPaTemaMap() {
         return new ArrayList<>(Arrays.asList(
-                        createSak("111111111", alleTemaer.get(0), "Fagsystem1", DateTime.now().minusDays(5)),
-                        createSak("22222222", alleTemaer.get(2), "Fagsystem2", DateTime.now().minusDays(3)),
-                        createSak("33333333", alleTemaer.get(4), "Fagsystem3", DateTime.now().minusDays(9)),
-                        createSak("44444444", alleTemaer.get(6), "Fagsystem2", DateTime.now().minusDays(2))
+                        createSak("111111111", alleTemaer.get(0), "Fagsystem1", SAKSTYPE_GENERELL, DateTime.now().minusDays(5)),
+                        createSak("22222222", alleTemaer.get(2), "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
+                        createSak("33333333", alleTemaer.get(4), "Fagsystem3", SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
+                        createSak("44444444", alleTemaer.get(6), "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(2))
         ));
     }
 
