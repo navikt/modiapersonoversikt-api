@@ -2,41 +2,26 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.DATE_4;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.ID_4;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.TRAAD_LENGDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createMeldingVMer;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class TraadVMTest {
-
-    private final static String ID_1 = "id1";
-    private final static String ID_2 = "id2";
-    private final static String ID_3 = "id3";
-    private final static String ID_4 = "id4";
-
-    private final static DateTime DATE_1 = new DateTime(2014, 06, 21, 0, 0);
-    private final static DateTime DATE_2 = new DateTime(2014, 05, 21, 0, 0);
-    private final static DateTime DATE_3 = new DateTime(2014, 04, 21, 0, 0);
-    private final static DateTime DATE_4 = new DateTime(2014, 03, 21, 0, 0);
-
-    private final static String TEMAGRUPPE_1 = "Arbeidssøker";
-    private final static String TEMAGRUPPE_2 = "Barnebidrag";
-    private final static String TEMAGRUPPE_3 = "Familie og barn";
-
-    private final static int TRAAD_LENGDE = 3;
 
     private List<MeldingVM> meldinger;
     private TraadVM traadVM;
 
     @Before
     public void setUp(){
-        meldinger = createMeldingEksempler();
+        meldinger = createMeldingVMer();
         traadVM = new TraadVM(meldinger);
     }
 
@@ -95,17 +80,5 @@ public class TraadVMTest {
 
         assertTrue(traadVM.bleInitiertAvBruker());
     }
-
-    private List<MeldingVM> createMeldingEksempler() {
-        MeldingVM melding3VM = new MeldingVM(new Melding(ID_3, Meldingstype.SAMTALEREFERAT, DATE_3), TRAAD_LENGDE);
-        melding3VM.melding.temagruppe = TEMAGRUPPE_3;
-        MeldingVM melding2VM = new MeldingVM(new Melding(ID_2, Meldingstype.SAMTALEREFERAT, DATE_2), TRAAD_LENGDE);
-        melding2VM.melding.temagruppe = TEMAGRUPPE_2;
-        MeldingVM melding1VM = new MeldingVM(new Melding(ID_1, Meldingstype.SPORSMAL, DATE_1), TRAAD_LENGDE);
-        melding1VM.melding.temagruppe = TEMAGRUPPE_1;
-        return new ArrayList<>(Arrays.asList(melding1VM, melding2VM, melding3VM));
-    }
-
-
 
 }

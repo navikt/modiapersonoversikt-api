@@ -82,6 +82,14 @@ public class InnboksVM implements Serializable {
         return valgtMelding.isSome() ? traader.get(valgtMelding.get().melding.traadId) : new TraadVM(new ArrayList<MeldingVM>());
     }
 
+    public MeldingVM getNyesteMeldingINyesteTraad() {
+        return nyesteMeldingerITraad.get(0);
+    }
+
+    public Map<String, TraadVM> getTraader() {
+        return traader;
+    }
+
     private static final Transformer<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = new Transformer<List<Melding>, List<MeldingVM>>() {
         @Override
         public List<MeldingVM> transform(List<Melding> meldinger) {
@@ -93,9 +101,5 @@ public class InnboksVM implements Serializable {
             return meldingVMTraad;
         }
     };
-
-    public MeldingVM getNyesteMeldingINyesteTraad() {
-        return nyesteMeldingerITraad.get(0);
-    }
 
 }
