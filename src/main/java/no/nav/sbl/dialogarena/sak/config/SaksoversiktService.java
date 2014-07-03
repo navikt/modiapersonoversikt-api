@@ -26,7 +26,6 @@ import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformer
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.TEMAKODE_FOR_SAK;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.TEMA_VM;
 
-
 public class SaksoversiktService {
 
     @Inject
