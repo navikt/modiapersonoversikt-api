@@ -24,7 +24,7 @@ public class HenvendelseTransformers {
         }
     };
 
-    private static final Transformer<WSDokumentforventning, Dokument> tilDokument(final String hovedskjemaId) {
+    private static Transformer<WSDokumentforventning, Dokument> tilDokument(final String hovedskjemaId) {
         return new Transformer<WSDokumentforventning, Dokument>() {
             @Override
             public Dokument transform(WSDokumentforventning wsDokumentforventning) {
