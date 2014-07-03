@@ -35,6 +35,7 @@ public class SaksoversiktLerret extends Lerret {
                 hendelserContainer);
     }
 
+    @SuppressWarnings("unused")
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void filtrerDetaljerPaaValgtTema(AjaxRequestTarget target, FeedItemPayload payload) {
         hendelserContainer.addOrReplace(new BehandlingerListView("behandlinger", saksoversiktService.hentBehandlingerForTemakode(fnr, payload.getItemId())));
