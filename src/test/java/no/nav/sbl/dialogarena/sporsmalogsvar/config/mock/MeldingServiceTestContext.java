@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createMockSaksliste;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.opprettMockMelding;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.opprettMeldingEksempel;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -22,7 +22,7 @@ public class MeldingServiceTestContext {
     public MeldingService meldingService() {
         MeldingService meldingService = mock(MeldingService.class);
         when(meldingService.hentSakerForBruker(anyString())).thenReturn(createMockSaksliste());
-        when(meldingService.hentMeldinger(anyString())).thenReturn(new ArrayList<>(Arrays.asList(opprettMockMelding())));
+        when(meldingService.hentMeldinger(anyString())).thenReturn(new ArrayList<>(Arrays.asList(opprettMeldingEksempel())));
         return meldingService;
     }
 
