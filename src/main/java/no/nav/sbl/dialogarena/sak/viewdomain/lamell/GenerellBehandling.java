@@ -4,7 +4,7 @@ import org.joda.time.DateTime;
 
 import java.io.Serializable;
 
-public class GenerellBehandling implements Serializable{
+public class GenerellBehandling implements Serializable {
     public enum BehandlingsType {BEHANDLING, KVITTERING};
     public enum BehandlingsStatus {
         OPPRETTET { @Override public String cmsKey() { return "hendelse.sistoppdatert.dato"; }},

@@ -18,14 +18,14 @@ public class SaksWidget extends FeedWidget<TemaVM> {
     public SaksWidget(String id, String initial, String fnr) {
         super(id, initial, true);
 
-        setDefaultModel(lagLDMforTema(saksoversiktService.hentTemaer(fnr)));
+        setDefaultModel(lagLDMforTema(fnr));
     }
 
-    private LoadableDetachableModel<List<TemaVM>> lagLDMforTema(final List<TemaVM> temaer) {
+    private LoadableDetachableModel<List<TemaVM>> lagLDMforTema(final String fnr) {
         return new LoadableDetachableModel<List<TemaVM>>() {
             @Override
             protected List<TemaVM> load() {
-                return temaer;
+                return saksoversiktService.hentTemaer(fnr);
             }
         };
     }
