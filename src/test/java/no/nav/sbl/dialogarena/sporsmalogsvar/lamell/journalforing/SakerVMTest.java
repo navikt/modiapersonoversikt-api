@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.SakerVM.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createSak;
 import static org.hamcrest.core.Is.is;
@@ -34,6 +35,8 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SakerVMTest {
+
+    public final static String SAKSTYPE_FAG = "Fag";
 
     private ArrayList<Sak> saksliste;
     private MeldingVM meldingVM;

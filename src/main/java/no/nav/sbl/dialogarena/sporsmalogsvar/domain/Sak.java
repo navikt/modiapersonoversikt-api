@@ -10,7 +10,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     public String saksId, tema, fagsystem, sakstype;
     public DateTime opprettetDato;
 
-    private final static String SAKSTYPE_GENERELL = "Generell";
+    public final static String SAKSTYPE_GENERELL = "Generell";
     private final static String SAKSTEMA_OPPFOLGING = "Oppfølging";
 
     public boolean isSakstypeForVisingGenerell(){
@@ -21,6 +21,13 @@ public class Sak implements Serializable, Comparable<Sak> {
         @Override
         public String transform(Sak sak) {
             return sak.tema;
+        }
+    };
+
+    public static final Transformer<Sak, Boolean> IS_GENERELL_SAK = new Transformer<Sak, Boolean>() {
+        @Override
+        public Boolean transform(Sak sak) {
+            return sak.isSakstypeForVisingGenerell();
         }
     };
 

@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.SakerVM.SAKSTYPE_GENERELL;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL;
 
 public class TestUtils {
 
