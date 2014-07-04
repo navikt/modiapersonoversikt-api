@@ -61,9 +61,9 @@
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>2.0.40</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
-        <henvendelse.aktivitet.v2.version>0.3</henvendelse.aktivitet.v2.version>
+        <henvendelse.aktivitet.v2.version>0.4-SNAPSHOT</henvendelse.aktivitet.v2.version>
         <henvendelse.informasjon.v2.version>0.3</henvendelse.informasjon.v2.version>
-        <dialogarena.behandlingsinformasjon.version>0.0.13</dialogarena.behandlingsinformasjon.version>
+        <dialogarena.behandlingsinformasjon.version>0.0.14-SNAPSHOT</dialogarena.behandlingsinformasjon.version>
         <saksoversikt.version>1.1-SNAPSHOT</saksoversikt.version>
         <sporsmalogsvar.version>1.22-SNAPSHOT</sporsmalogsvar.version>
     </properties>

@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSOppdaterHenvendelseJournalforingsInformasjonRequest;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSOppdaterHenvendelseJournalforingsInformasjonResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSOppdaterHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSOppdaterHenvendelseResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
@@ -27,6 +29,11 @@ public class SendHenvendelsePortTypeMock {
             @Override
             public WSSendHenvendelseResponse sendHenvendelse(WSSendHenvendelseRequest request) {
                 return new WSSendHenvendelseResponse();
+            }
+
+            @Override
+            public WSOppdaterHenvendelseJournalforingsInformasjonResponse oppdaterHenvendelseJournalforingsInformasjon(WSOppdaterHenvendelseJournalforingsInformasjonRequest parameters) {
+                return null;
             }
 
             @Override
