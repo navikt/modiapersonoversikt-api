@@ -7,12 +7,12 @@ import org.apache.wicket.model.Model;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
-public class SaksWidgetPanelTest extends AbstractWicketTest {
+public class SaksoversiktWidgetPanelTest extends AbstractWicketTest {
 
     @Override
     protected void setup() {
         TemaVM temaVM = new TemaVM().withSistOppdaterteBehandling(new GenerellBehandling().withBehandlingsDato(new DateTime())).withTemaKode("temakode");
-        SaksWidgetPanel widgetPanel = new SaksWidgetPanel("panel", new Model<>(temaVM));
+        SaksoversiktWidgetPanel widgetPanel = new SaksoversiktWidgetPanel("panel", new Model<>(temaVM));
         wicketTester.goToPageWith(widgetPanel);
     }
 
