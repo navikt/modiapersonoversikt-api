@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sak.config;
+package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;

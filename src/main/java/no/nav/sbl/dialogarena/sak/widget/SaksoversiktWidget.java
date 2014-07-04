@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.widget;
 
 import no.nav.modig.modia.widget.FeedWidget;
-import no.nav.sbl.dialogarena.sak.config.SaksoversiktService;
+import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.Component;
 import org.apache.wicket.model.IModel;

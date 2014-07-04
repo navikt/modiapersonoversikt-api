@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
 import no.nav.sbl.dialogarena.sak.AbstractWicketTest;
-import no.nav.sbl.dialogarena.sak.config.SaksoversiktService;
+import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
