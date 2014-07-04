@@ -19,6 +19,7 @@ public class SakOgBehandlingMocks {
         return new WSSak()
                 .withSaksId("saksId-mock")
                 .withSakstema(new WSSakstemaer().withValue("DAG").withKodeverksRef("kodeverk-ref-mock"))
+                .withBehandlingskjede(createWSBehandlingskjede())
                 .withOpprettet(now());
     }
 
