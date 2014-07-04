@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
@@ -57,6 +58,7 @@ public class MeldingUtils {
             Melding melding = new Melding(info.getBehandlingsId(), meldingstype, info.getOpprettetDato());
             melding.traadId = info.getBehandlingsId();
             melding.status = STATUS.transform(info);
+            fyllInnJournalforingsInformasjon(info, melding);
 
             XMLMetadata xmlMetadata = info.getMetadataListe().getMetadata().get(0);
             if (xmlMetadata instanceof XMLSporsmal) {
@@ -79,6 +81,15 @@ public class MeldingUtils {
             return melding;
         }
     };
+
+    private static void fyllInnJournalforingsInformasjon(XMLBehandlingsinformasjon info, Melding melding) {
+        XMLJournalfortInformasjon journalfortInformasjon = info.getJournalfortInformasjon();
+        if(info.getJournalfortInformasjon() != null){
+            melding.journalfortDato = journalfortInformasjon.getJournalfortDato();
+            melding.journalfortTema = journalfortInformasjon.getJournalfortTema();
+            melding.journalfortSaksId = journalfortInformasjon.getJournalfortSaksId();
+        }
+    }
 
     private static String getNavIdentFraAktor(XMLAktor aktor){
         return aktor != null ? aktor.getNavIdent() : null;
