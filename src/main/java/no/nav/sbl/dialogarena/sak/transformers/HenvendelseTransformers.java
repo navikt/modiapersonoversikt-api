@@ -9,6 +9,8 @@ import org.apache.commons.collections15.Transformer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType;
+
 public class HenvendelseTransformers {
 
     public static final Transformer<WSSoknad, Boolean> INNSENDT = new Transformer<WSSoknad, Boolean>() {
@@ -22,12 +24,13 @@ public class HenvendelseTransformers {
 
         @Override
         public Kvittering transform(WSSoknad wsSoknad) {
-            return new Kvittering()
+            return (Kvittering) new Kvittering()
                     .withBehandlingsId(wsSoknad.getBehandlingsId())
                     .withInnsendteDokumenter(hentDokumenter(wsSoknad, true))
                     .withManglendeDokumenter(hentDokumenter(wsSoknad, false))
                     .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
-                    .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId());
+                    .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
+                    .withBehandlingsType(BehandlingsType.KVITTERING);
         }
     };
 

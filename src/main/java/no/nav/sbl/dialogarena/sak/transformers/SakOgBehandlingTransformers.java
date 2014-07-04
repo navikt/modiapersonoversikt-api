@@ -34,14 +34,6 @@ public class SakOgBehandlingTransformers {
         }
     };
 
-    private static boolean behandlingskjedeFinnes(WSSak wsSak) {
-        return optional(wsSak.getBehandlingskjede()).isSome() && !wsSak.getBehandlingskjede().isEmpty();
-    }
-
-    private static GenerellBehandling hentForsteBehandlingskjede(WSSak wsSak) {
-        return on(wsSak.getBehandlingskjede()).map(BEHANDLINGSKJEDE_TIL_BEHANDLING).collect(new OmvendtKronologiskBehandlingComparator()).get(0);
-    }
-
     public static final Transformer<WSBehandlingskjede, GenerellBehandling> BEHANDLINGSKJEDE_TIL_BEHANDLING =
             new Transformer<WSBehandlingskjede, GenerellBehandling>() {
 
@@ -78,5 +70,14 @@ public class SakOgBehandlingTransformers {
             return behandlingsIder;
         }
     };
+
+
+    private static boolean behandlingskjedeFinnes(WSSak wsSak) {
+        return optional(wsSak.getBehandlingskjede()).isSome() && !wsSak.getBehandlingskjede().isEmpty();
+    }
+
+    private static GenerellBehandling hentForsteBehandlingskjede(WSSak wsSak) {
+        return on(wsSak.getBehandlingskjede()).map(BEHANDLINGSKJEDE_TIL_BEHANDLING).collect(new OmvendtKronologiskBehandlingComparator()).get(0);
+    }
 
 }
