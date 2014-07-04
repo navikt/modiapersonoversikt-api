@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
+import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.component.urlparsinglabel.URLParsingMultiLineLabel;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
@@ -95,9 +97,15 @@ public class SvarPanel extends DialogPanel {
         form.add(
                 new Label("navIdent", getSubjectHandler().getUid()),
                 kanalbeskrivelse,
-                lagTekstfelt("tekstfelt", form),
                 feedbackPanel
         );
+
+        form.add(new EnhancedTextArea("tekstfelt", form.getModel(),
+                new EnhancedTextAreaConfigurator()
+                        .withMaxCharCount(5000)
+                        .withMinTextAreaHeight(150)
+                        .withPlaceholderText(getString("dialogform.tekstfelt.placeholder"))));
+
 
         form.add(new AjaxButton("send") {
             @Override

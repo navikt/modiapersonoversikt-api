@@ -1,7 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
-import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
-import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -48,15 +46,6 @@ public abstract class DialogPanel extends Panel {
         form.setModelObject(new DialogVM());
 
         target.add(components);
-    }
-
-    protected EnhancedTextArea lagTekstfelt(String id, Form<DialogVM> form) {
-        return new EnhancedTextArea(id, form.getModel(),
-                new EnhancedTextAreaConfigurator()
-                        .withMaxCharCount(5000)
-                        .withMinTextAreaHeight(250)
-                        .withPlaceholderText(getString("dialogform.tekstfelt.placeholder"))
-        );
     }
 
     @Override

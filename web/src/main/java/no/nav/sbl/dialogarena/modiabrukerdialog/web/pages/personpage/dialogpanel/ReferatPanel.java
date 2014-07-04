@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
+import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -28,7 +30,11 @@ public class ReferatPanel extends DialogPanel {
         final Form<DialogVM> form = new Form<>("dialogform", new CompoundPropertyModel<>(new DialogVM()));
         form.setOutputMarkupPlaceholderTag(true);
 
-        form.add(lagTekstfelt("tekstfelt", form));
+        form.add(new EnhancedTextArea("tekstfelt", form.getModel(),
+                new EnhancedTextAreaConfigurator()
+                        .withMaxCharCount(5000)
+                        .withMinTextAreaHeight(250)
+                        .withPlaceholderText(getString("dialogform.tekstfelt.placeholder"))));
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);
