@@ -67,6 +67,7 @@ public class ReferatPanel extends DialogPanel {
 
     @Override
     public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
         response.render(OnDomReadyHeaderItem.forScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});"));
     }
 
