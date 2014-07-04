@@ -37,6 +37,7 @@ import static org.mockito.Mockito.when;
 public class SakerVMTest {
 
     public final static String SAKSTYPE_FAG = "Fag";
+    private final static String TEMA_OPPFOLGING = "Oppfølging";
 
     private ArrayList<Sak> saksliste;
     private MeldingVM meldingVM;
@@ -49,7 +50,6 @@ public class SakerVMTest {
 
     private List<String> alleTemaer;
     private List<String> alleTemagrupper;
-    private final static String TEMA_OPPFOLGING = "Oppfølging";
 
     @Before
     public void setUp() {
@@ -74,13 +74,13 @@ public class SakerVMTest {
     public void gittHverSakHarUniktTemaReturnerKorrektSakstemaliste() {
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
-        List<TemaSaker> sakstemaliste = sakerVM.getGenerelleSakerGruppertPaaTema();
+        List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
 
-        assertThat(sakstemaliste.size(), is(4));
-        assertThat(sakstemaliste.get(0).saksliste.size(), is(1));
-        assertThat(sakstemaliste.get(1).saksliste.size(), is(1));
-        assertThat(sakstemaliste.get(2).saksliste.size(), is(1));
-        assertThat(sakstemaliste.get(3).saksliste.size(), is(1));
+        assertThat(temaSakerListe.size(), is(4));
+        assertThat(temaSakerListe.get(0).saksliste.size(), is(1));
+        assertThat(temaSakerListe.get(1).saksliste.size(), is(1));
+        assertThat(temaSakerListe.get(2).saksliste.size(), is(1));
+        assertThat(temaSakerListe.get(3).saksliste.size(), is(1));
     }
 
     @Test
@@ -89,10 +89,10 @@ public class SakerVMTest {
         saksliste.add(sak4);
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
-        List<TemaSaker> sakstemaliste = sakerVM.getGenerelleSakerGruppertPaaTema();
+        List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
 
-        assertThat(sakstemaliste.size(), is(4));
-        for (TemaSaker temaSaker : sakstemaliste) {
+        assertThat(temaSakerListe.size(), is(4));
+        for (TemaSaker temaSaker : temaSakerListe) {
             if (temaSaker.tema.equals(alleTemaer.get(0))) {
                 assertThat(temaSaker.saksliste.size(), is(2));
             } else {
@@ -108,10 +108,10 @@ public class SakerVMTest {
         String traadTemagruppe = alleTemagrupper.get(0);
         meldingVM.melding.temagruppe = traadTemagruppe;
 
-        List<TemaSaker> sakstemaliste = sakerVM.getGenerelleSakerGruppertPaaTema();
+        List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
 
-        assertThat(sakstemaliste.get(0).temagruppe, is(traadTemagruppe));
-        assertThat(sakstemaliste.get(0).saksliste.size(), is(1));
+        assertThat(temaSakerListe.get(0).temagruppe, is(traadTemagruppe));
+        assertThat(temaSakerListe.get(0).saksliste.size(), is(1));
     }
 
     @Test
@@ -120,10 +120,10 @@ public class SakerVMTest {
         String traadTemagruppe = alleTemagrupper.get(2);
         meldingVM.melding.temagruppe = traadTemagruppe;
 
-        List<TemaSaker> sakstemaliste = sakerVM.getGenerelleSakerGruppertPaaTema();
+        List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
 
-        assertThat(sakstemaliste.get(0).temagruppe, is(traadTemagruppe));
-        assertThat(sakstemaliste.get(0).saksliste.size(), is(1));
+        assertThat(temaSakerListe.get(0).temagruppe, is(traadTemagruppe));
+        assertThat(temaSakerListe.get(0).saksliste.size(), is(1));
     }
 
     // Sorterer alfabetisk innen valgt temagruppe
@@ -138,9 +138,9 @@ public class SakerVMTest {
         }
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
-        List<TemaSaker> temaInnenforValgtTemagruppe = sakerVM.getGenerelleSakerGruppertPaaTema().subList(0, traadTemagruppeLengde);
+        List<TemaSaker> temaSakerInnenforValgtTemagruppe = sakerVM.getGenerelleSakerGruppertPaaTema().subList(0, traadTemagruppeLengde);
 
-        assertSortert(temaInnenforValgtTemagruppe);
+        assertSortert(temaSakerInnenforValgtTemagruppe);
     }
 
     // Sorter resten av listen alfabetisk
@@ -152,9 +152,9 @@ public class SakerVMTest {
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
-        List<TemaSaker> alleSakstema = sakerVM.getGenerelleSakerGruppertPaaTema();
+        List<TemaSaker> alleTemaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
 
-        List<TemaSaker> temaUtenforValgtTemagruppe = alleSakstema.subList(traadTemagruppeLengde, alleSakstema.size());
+        List<TemaSaker> temaUtenforValgtTemagruppe = alleTemaSakerListe.subList(traadTemagruppeLengde, alleTemaSakerListe.size());
         assertSortert(temaUtenforValgtTemagruppe);
     }
 
@@ -168,9 +168,9 @@ public class SakerVMTest {
         saksliste.addAll(sakslistekloneMedAndreDatoer);
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
-        List<TemaSaker> sakstemaliste = sakerVM.getGenerelleSakerGruppertPaaTema();
+        List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
 
-        for (TemaSaker temaSaker : sakstemaliste) {
+        for (TemaSaker temaSaker : temaSakerListe) {
             assertDatoSortert(temaSaker);
         }
     }
@@ -185,11 +185,11 @@ public class SakerVMTest {
         saksliste.addAll(sakslistekloneMedAndreSakstyper);
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
-        List<TemaSaker> sakstemalisteGenerelle = sakerVM.getGenerelleSakerGruppertPaaTema();
-        List<TemaSaker> sakstemalisteFag = sakerVM.getFagsakerGruppertPaaTema();
+        List<TemaSaker> temaSakerListeGenerell = sakerVM.getGenerelleSakerGruppertPaaTema();
+        List<TemaSaker> temaSakerListeFag = sakerVM.getFagsakerGruppertPaaTema();
 
-        assertSakstypeGenerell(sakstemalisteGenerelle, true);
-        assertSakstypeGenerell(sakstemalisteFag, false);
+        assertSakstypeGenerell(temaSakerListeGenerell, true);
+        assertSakstypeGenerell(temaSakerListeFag, false);
     }
 
     @Test
@@ -200,10 +200,10 @@ public class SakerVMTest {
         saksliste.add(sakMedTemaOppfolging);
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
-        List<TemaSaker> sakstemalisteFag = sakerVM.getFagsakerGruppertPaaTema();
+        List<TemaSaker> temaSakerListeFag = sakerVM.getFagsakerGruppertPaaTema();
 
         boolean containsSakMedTemaOppfolging = false;
-        for (TemaSaker temaSaker : sakstemalisteFag) {
+        for (TemaSaker temaSaker : temaSakerListeFag) {
             containsSakMedTemaOppfolging = temaSaker.saksliste.contains(sakMedTemaOppfolging);
         }
         assertTrue(containsSakMedTemaOppfolging);
@@ -216,9 +216,9 @@ public class SakerVMTest {
         for (int i = 0; i < 4; i++) {
             meldingVM.melding.temagruppe = alleTemagrupper.get(i);
 
-            List<TemaSaker> sakstemaliste = sakerVM.getGenerelleSakerGruppertPaaTema();
+            List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
 
-            assertThat(antallSaker(sakstemaliste), is(4));
+            assertThat(antallSaker(temaSakerListe), is(4));
         }
     }
 
@@ -230,8 +230,8 @@ public class SakerVMTest {
         return lengde;
     }
 
-    private void assertSakstypeGenerell(List<TemaSaker> sakstemaliste, boolean generell) {
-        for (TemaSaker temaSaker : sakstemaliste) {
+    private void assertSakstypeGenerell(List<TemaSaker> temaSakerListe, boolean generell) {
+        for (TemaSaker temaSaker : temaSakerListe) {
             for (Sak sak : temaSaker.saksliste){
                 assertThat(sak.isSakstypeForVisingGenerell(), is(generell));
             }
@@ -260,9 +260,9 @@ public class SakerVMTest {
         return new ArrayList<>(temaMapping.keySet());
     }
 
-    private void assertSortert(List<TemaSaker> sakstemaliste) {
-        for (int i = 0; i<sakstemaliste.size() - 1; i++) {
-            assertThat(sakstemaliste.get(i).compareTo(sakstemaliste.get(i + 1)), lessThan(0));
+    private void assertSortert(List<TemaSaker> temaSakerListe) {
+        for (int i = 0; i<temaSakerListe.size() - 1; i++) {
+            assertThat(temaSakerListe.get(i).compareTo(temaSakerListe.get(i + 1)), lessThan(0));
         }
     }
 
