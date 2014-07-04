@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSSakstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import org.joda.time.DateTime;
@@ -11,6 +12,7 @@ import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSBehan
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSSak;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSIDER_FRA_SAK;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSKJEDE_TIL_BEHANDLING;
+import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.TEMA_VM;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType.BEHANDLING;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -44,6 +46,18 @@ public class SakOgBehandlingTransformersTest {
         assertThat(behandling.behandlingsStatus, equalTo(AVSLUTTET));
         assertThat(behandling.opprettetDato, equalTo(startTid));
         assertThat(behandling.behandlingstema, equalTo(behandlingstema));
+    }
+
+    @Test
+    public void temaVMtransformerKomplettObjektMapping() {
+        String temakode = "temakodeForTest";
+        DateTime behandlingsdato = new DateTime();
+        WSSak sak = createWSSak()
+                .withSakstema(new WSSakstemaer().withValue(temakode))
+                .withBehandlingskjede(createWSBehandlingskjede().withStart(behandlingsdato));
+
+        assertThat(TEMA_VM.transform(sak).temakode, equalTo(temakode));
+        assertThat(TEMA_VM.transform(sak).sistoppdaterteBehandling.behandlingDato, equalTo(behandlingsdato));
     }
 
 }
