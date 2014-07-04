@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <h2>Legg tilbake</h2>
+    <h4 wicket:id="temagruppe"></h4>
+    <form wicket:id="leggtilbakeform">
+        <div wicket:id="valgtAarsak">
+            <input wicket:id="feiltema" type="radio" />
+            <label wicket:for="feiltema"><wicket:message key="leggtilbake.feiltema"/></label>
+            <div wicket:id="temagruppewrapper" class="temagruppevelger-wrapper">
+                <select wicket:id="temagruppe" class="temagruppevelger"></select>
+            </div>
+            <input wicket:id="inhabil" type="radio" />
+            <label wicket:for="inhabil"><wicket:message key="leggtilbake.inhabil"/></label>
+            <input wicket:id="annen" type="radio" />
+            <label wicket:for="annen"><wicket:message key="leggtilbake.annenaarsak"/></label>
+            <textarea wicket:id="annenAarsakTekst"></textarea>
+        </div>
+        <div wicket:id="feedback" class="feedback"></div>
+        <a wicket:id="leggtilbake" class="knapp-hoved">Legg tilbake</a>
+        <br/>
+        <a wicket:id="avbryt">Avbryt</a>
+    </form>
+</wicket:panel>
+</body>
+</html>

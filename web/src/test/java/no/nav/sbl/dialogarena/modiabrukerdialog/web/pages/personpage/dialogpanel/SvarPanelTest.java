@@ -45,7 +45,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void inneholderSporsmaalsspefikkeKomponenter() {
-        wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmal("id", now())))
+        wicket.goToPageWith(new SvarPanel("id", "fnr", lagSporsmal()))
                 .should().containComponent(withId("temagruppe").and(ofType(Label.class)))
                 .should().containComponent(withId("sporsmal").and(ofType(URLParsingMultiLineLabel.class)))
                 .should().containComponent(withId("dato").and(ofType(Label.class)))
@@ -55,9 +55,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void skalSendeSporsmaalstypeTilHenvendelse() {
-        Sporsmal sporsmal = new Sporsmal("id", now());
-        sporsmal.temagruppe = Temagruppe.OVRIGE_HENVENDELSER.name();
-        wicket.goToPageWith(new SvarPanel("id", "fnr", sporsmal))
+        wicket.goToPageWith(new SvarPanel("id", "fnr", lagSporsmal()))
                 .inForm(withId("dialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .submitWithAjaxButton(withId("send"));
@@ -67,17 +65,20 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void tekstligSvarErValgtSomDefault() {
-        wicket.goToPageWith(new SvarPanel("id", "fnr", new Sporsmal("id", now())))
+        wicket.goToPageWith(new SvarPanel("id", "fnr", lagSporsmal()))
                 .should().containComponent(withId("kanal").and(withModelObject(is(SvarKanal.TEKST))));
     }
 
     @Test
     public void viserTemagruppenFraSporsmalet() {
-        Sporsmal sporsmal = new Sporsmal("id", now());
-        sporsmal.temagruppe = Temagruppe.FAMILIE_OG_BARN.name();
-
-        SvarPanel svarPanel = new SvarPanel("id", "fnr", sporsmal);
+        SvarPanel svarPanel = new SvarPanel("id", "fnr", lagSporsmal());
         wicket.goToPageWith(svarPanel)
                 .should().containComponent(withId("temagruppe").and(withTextSaying(svarPanel.getString(Temagruppe.FAMILIE_OG_BARN.name()))));
+    }
+
+    private Sporsmal lagSporsmal() {
+        Sporsmal sporsmal = new Sporsmal("id", now());
+        sporsmal.temagruppe = Temagruppe.FAMILIE_OG_BARN.name();
+        return sporsmal;
     }
 }

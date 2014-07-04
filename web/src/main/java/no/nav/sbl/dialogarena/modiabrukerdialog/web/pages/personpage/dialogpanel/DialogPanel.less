@@ -6,9 +6,12 @@
 @modiagraaskrift: #b7b1a9;
 @modiaaquablaa: #008fc4;
 
-.dialogform {
-  padding: 0 @sideMargin;
+.dialogpanel {
   text-align: center;
+  padding-bottom: 2em;
+  form {
+    text-align: center;
+  }
   .typeoverskrift {
     margin: 30px 0;
     &.svarpaneloverskrift {
@@ -23,6 +26,7 @@
     margin-bottom: 25px !important;
   }
   .fritekst {
+    margin: 0 @sideMargin;
     text-align: left;
     line-height: 1.4em;
     a {
@@ -83,9 +87,13 @@
     background-color: @modiasvart;
     color: @modiagraaskrift;
     padding: 7px 0;
-    margin: 0;
+    margin: 0 @sideMargin;
+  }
+  .tekstfelt {
+    margin: 0 @sideMargin;
   }
   .temagruppevelger-wrapper {
+    margin: 0 @sideMargin;
     position: relative;
     .temagruppevelger {
       width: 100%;
@@ -151,6 +159,48 @@
           white-space: nowrap;
         }
       }
+    }
+  }
+  .feedback {
+    margin: 0 @sideMargin;
+  }
+}
+
+.leggtilbake {
+  position: relative;
+  width: 100%;
+  padding: @sideMargin;
+  border-top: 1px solid black;
+  text-align: center;
+  background-color: #333333;
+  h2, h4 {
+    color: @modiagraaskrift;
+  }
+  a {
+    display: inline-block;
+    margin-top: 1em;
+    color: #00a9e0;
+  }
+  textarea {
+    display: block;
+    width: 100%;
+    height: 10em;
+    resize: none;
+  }
+  label {
+    text-align: left;
+    width: 46%;
+  }
+  .knapp-hoved {
+    color: #fff;
+  }
+  .skjult {
+    display: none;
+  }
+  .temagruppevelger-wrapper {
+    margin: 0;
+    .ui-selectmenu-menu {
+      box-shadow: none;
     }
   }
 }

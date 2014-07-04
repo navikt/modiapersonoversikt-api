@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.util.time.Duration;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,14 +33,10 @@ public class KvitteringsPanelTest extends WicketPageTest {
     public void viserOgSkjulerSegSelv() {
         KvitteringsPanel kvitteringsPanel = new KvitteringsPanel("id");
         wicket.goToPageWith(kvitteringsPanel);
-        DialogVM dialogVM = new DialogVM();
-        dialogVM.kanal = TestDialogPanel.TestKanal.TEST;
         kvitteringsPanel.visISekunder(
                 Duration.seconds(1),
                 new AjaxRequestHandler(wicket.tester.getLastRenderedPage()),
-                new Form<>("formId", Model.of(dialogVM)),
-                "kvitteringsmelding"
-        );
+                "kvitteringsmelding", new Form("id"));
 
         wicket.should().containComponent(ofType(KvitteringsPanel.class).thatIsVisible());
 

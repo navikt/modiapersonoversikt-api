@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.time.Duration;
@@ -24,9 +24,11 @@ public class KvitteringsPanel extends Panel {
         add(new Label("kvitteringsmelding", new PropertyModel(this, "kvitteringsmelding")));
     }
 
-    public void visISekunder(Duration tid, AjaxRequestTarget target, final Form<DialogVM> form, String kvitteringsmelding) {
+    public void visISekunder(Duration tid, AjaxRequestTarget target, String kvitteringsmelding, final Component... components) {
         this.kvitteringsmelding = kvitteringsmelding;
-        form.setVisibilityAllowed(false);
+        for (Component component : components) {
+            component.setVisibilityAllowed(false);
+        }
         this.setVisibilityAllowed(true);
         target.add(this);
 
@@ -35,11 +37,11 @@ public class KvitteringsPanel extends Panel {
                 @Override
                 protected void onTimer(AjaxRequestTarget target) {
                     KvitteringsPanel.this.setVisibilityAllowed(false);
-
-                    form.setVisibilityAllowed(true);
-
+                    for (Component component : components) {
+                        component.setVisibilityAllowed(true);
+                    }
                     target.add(getComponent());
-                    target.add(form);
+                    target.add(components);
                     stop(target);
                     send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
                 }

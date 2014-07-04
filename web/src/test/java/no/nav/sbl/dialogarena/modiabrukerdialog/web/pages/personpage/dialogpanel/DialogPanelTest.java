@@ -23,7 +23,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
@@ -42,7 +42,7 @@ public class DialogPanelTest extends WicketPageTest {
 
     @Test
     public void inneholderGenerelleKomponenter() {
-        wicket.goToPageWith(new TestDialogPanel("id", "fnr"))
+        wicket.goToPageWith(new ReferatPanel("id", "fnr"))
                 .should().containComponent(withId("dialogform").and(ofType(Form.class)))
                 .should().containComponent(withId("tekstfelt").and(ofType(EnhancedTextArea.class)))
                 .should().containComponent(withId("send").and(ofType(AjaxButton.class)))
@@ -52,19 +52,18 @@ public class DialogPanelTest extends WicketPageTest {
 
     @Test
     public void girFeedbackOmPaakrevdeKomponenter() {
-        TestDialogPanel dialogPanel = new TestDialogPanel("id", "fnr");
+        DialogPanel dialogPanel = new ReferatPanel("id", "fnr");
         wicket.goToPageWith(dialogPanel)
                 .inForm(withId("dialogform"))
                 .submitWithAjaxButton(withId("send"));
 
         List<String> errorMessages = wicket.get().errorMessages();
-        assertThat(errorMessages, contains(dialogPanel.get("dialogform:tekstfelt").getString("text.Required")));
+        assertThat(errorMessages.isEmpty(), is(false));
     }
 
     @Test
     public void viserKvitteringNaarManSenderInn() {
-        TestDialogPanel dialogPanel = lagDialogPanelMedKanalSatt();
-        wicket.goToPageWith(dialogPanel)
+        wicket.goToPageWith(lagDialogPanelMedKanalSatt())
                 .inForm(withId("dialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .submitWithAjaxButton(withId("send"))
@@ -72,11 +71,12 @@ public class DialogPanelTest extends WicketPageTest {
                 .should().containComponent(thatIsVisible().ofType(KvitteringsPanel.class));
     }
 
-    protected TestDialogPanel lagDialogPanelMedKanalSatt() {
-        TestDialogPanel dialogPanel = new TestDialogPanel("id", "fnr");
+    protected DialogPanel lagDialogPanelMedKanalSatt() {
+        DialogPanel dialogPanel = new ReferatPanel("id", "fnr");
         Object dialogformModel = dialogPanel.get("dialogform").getDefaultModelObject();
         DialogVM dialogVM = (DialogVM) dialogformModel;
-        dialogVM.kanal = TestDialogPanel.TestKanal.TEST;
+        dialogVM.kanal = ReferatKanal.TELEFON;
+        dialogVM.temagruppe = Temagruppe.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT;
         return dialogPanel;
     }
 

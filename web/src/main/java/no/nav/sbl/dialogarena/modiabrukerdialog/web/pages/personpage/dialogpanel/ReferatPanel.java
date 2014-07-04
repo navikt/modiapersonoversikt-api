@@ -1,17 +1,20 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
+import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.head.JavaScriptHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.CompoundPropertyModel;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -22,6 +25,15 @@ public class ReferatPanel extends DialogPanel {
     public ReferatPanel(String id, String fnr) {
         super(id, fnr);
 
+        final Form<DialogVM> form = new Form<>("dialogform", new CompoundPropertyModel<>(new DialogVM()));
+        form.setOutputMarkupPlaceholderTag(true);
+
+        form.add(lagTekstfelt("tekstfelt", form));
+
+        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+        feedbackPanel.setOutputMarkupId(true);
+        form.add(feedbackPanel);
+
         form.add(new DropDownChoice<>("temagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
             @Override
             public Object getDisplayValue(Temagruppe object) {
@@ -29,7 +41,7 @@ public class ReferatPanel extends DialogPanel {
             }
         }).setRequired(true));
 
-        form.add(new RadioGroup<ReferatKanal>("kanal")
+        form.add(new RadioGroup<>("kanal")
                 .setRequired(true)
                 .add(new ListView<ReferatKanal>("kanalvalg", asList(ReferatKanal.values())) {
                     @Override
@@ -38,11 +50,23 @@ public class ReferatPanel extends DialogPanel {
                         item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
                     }
                 }));
+
+        form.add(new AjaxButton("send") {
+            @Override
+            protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
+                submit(target, form);
+            }
+            @Override
+            protected void onError(AjaxRequestTarget target, Form<?> form) {
+                target.add(feedbackPanel);
+            }
+        });
+
+        add(form);
     }
 
     @Override
     public void renderHead(IHeaderResponse response) {
-        response.render(JavaScriptHeaderItem.forReference(new JavaScriptResourceReference(ReferatPanel.class, "jquery-ui-selectmenu.min.js")));
         response.render(OnDomReadyHeaderItem.forScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});"));
     }
 

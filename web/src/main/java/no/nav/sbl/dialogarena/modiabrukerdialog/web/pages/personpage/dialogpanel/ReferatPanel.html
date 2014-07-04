@@ -3,22 +3,28 @@
 <body>
 <wicket:panel>
     <wicket:extend>
-        <h2 class="typeoverskrift"><wicket:message key="referatpanel.overskrift"/></h2>
-        <h2 class="medium kanaloverskrift"><wicket:message key="referatpanel.tekstfelt.overskrift"/></h2>
-        <section wicket:id="tekstfelt" class="tekstfelt"></section>
-        <section class="kanalvelger clearfix">
-            <wicket:container wicket:id="kanal">
-                <div wicket:id="kanalvalg" class="kanalvalg">
-                    <input wicket:id="kanalknapp" type="radio"/>
-                    <label wicket:for="kanalknapp">
-                        <div wicket:id="kanalikon"></div>
-                    </label>
+        <section class="dialogpanel">
+            <form wicket:id="dialogform">
+                <h2 class="typeoverskrift"><wicket:message key="referatpanel.overskrift"/></h2>
+                <h2 class="medium kanaloverskrift"><wicket:message key="referatpanel.tekstfelt.overskrift"/></h2>
+                <section wicket:id="tekstfelt" class="tekstfelt"></section>
+                <section class="kanalvelger clearfix">
+                    <wicket:container wicket:id="kanal">
+                        <div wicket:id="kanalvalg" class="kanalvalg">
+                            <input wicket:id="kanalknapp" type="radio"/>
+                            <label wicket:for="kanalknapp">
+                                <div wicket:id="kanalikon"></div>
+                            </label>
+                        </div>
+                    </wicket:container>
+                </section>
+                <div class="temagruppevelger-wrapper">
+                    <select wicket:id="temagruppe" class="temagruppevelger"></select>
                 </div>
-            </wicket:container>
+                <div wicket:id="feedback" class="feedback"></div>
+                <a wicket:id="send" class="send knapp-hoved" href="#"><wicket:message key="dialogform.knapp.send"/></a>
+            </form>
         </section>
-        <div class="temagruppevelger-wrapper">
-            <select wicket:id="temagruppe" class="temagruppevelger"></select>
-        </div>
     </wicket:extend>
 </wicket:panel>
 </body>
