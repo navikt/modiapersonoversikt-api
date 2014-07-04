@@ -26,6 +26,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -45,6 +46,7 @@ public class SakerVMTest {
 
     private List<String> alleTemaer;
     private List<String> alleTemagrupper;
+    private final static String TEMA_OPPFOLGING = "Oppfølging";
 
     @Before
     public void setUp() {
@@ -185,6 +187,44 @@ public class SakerVMTest {
 
         assertSakstypeGenerell(sakstemalisteGenerelle, true);
         assertSakstypeGenerell(sakstemalisteFag, false);
+    }
+
+    @Test
+    public void sjekkAtGenrellSakMedTemaOppfolgingErPlassertIFagsakerListen() {
+        Sak sakMedTemaOppfolging = createSak("15472473245", TEMA_OPPFOLGING, "Fagsystem 3", SAKSTYPE_GENERELL, DateTime.now().minusDays(4));
+        Sak sakMedSakstypeFagsak = createSak("15472473245", alleTemaer.get(3), "Fagsystem 3", SAKSTYPE_FAG, DateTime.now().minusDays(4));
+        saksliste.add(sakMedSakstypeFagsak);
+        saksliste.add(sakMedTemaOppfolging);
+        SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+
+        List<TemaSaker> sakstemalisteFag = sakerVM.getFagsakerGruppertPaaTema();
+
+        boolean containsSakMedTemaOppfolging = false;
+        for (TemaSaker temaSaker : sakstemalisteFag) {
+            containsSakMedTemaOppfolging = temaSaker.saksliste.contains(sakMedTemaOppfolging);
+        }
+        assertTrue(containsSakMedTemaOppfolging);
+    }
+
+    @Test
+    public void sjekkAtIngenElementerForsvinnerFraListeMedSakerVedGjentatteKall() {
+        SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+
+        for (int i = 0; i < 4; i++) {
+            meldingVM.melding.temagruppe = alleTemagrupper.get(i);
+
+            List<TemaSaker> sakstemaliste = sakerVM.getGenerelleSakerGruppertPaaTema();
+
+            assertThat(antallSaker(sakstemaliste), is(4));
+        }
+    }
+
+    private int antallSaker(List<TemaSaker> temasakerListe) {
+        int lengde = 0;
+        for (TemaSaker temaSaker :temasakerListe) {
+            lengde += temaSaker.saksliste.size();
+        }
+        return lengde;
     }
 
     private void assertSakstypeGenerell(List<TemaSaker> sakstemaliste, boolean generell) {
