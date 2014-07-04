@@ -8,7 +8,7 @@
 @toppmargin: 1em;
 
 .meldinglamell {
-  position:relative;
+  position: relative;
   border-top: 1px solid @rammeborder;
   .meldingsliste {
     width: 40%;
@@ -51,7 +51,7 @@
         }
       }
       p {
-        max-width : 500px;
+        max-width: 500px;
         text-overflow: ellipsis;
         -o-text-overflow: ellipsis;
         overflow: hidden;
@@ -220,7 +220,7 @@
     &.ikke-besvart {
       background-color: #eebe00;
     }
-    &.ikke-lest-av-bruker{
+    &.ikke-lest-av-bruker {
       background-color: #0067c5;
     }
     &.lest-av-bruker {
@@ -238,7 +238,7 @@
   }
 
   .haandter-meldinger {
-    position:absolute;
+    position: absolute;
     top: -34px;
     right: 0;
     .meldingsvalg:not(:last-child) {
@@ -247,23 +247,36 @@
     a:hover {
       text-decoration: underline;
     }
-    .besvar-ikon {
-      background-repeat: no-repeat;
-      background-image: url(../img/besvar.svg);
-      padding-left: 1.3em;
-    }
-    .journalfor-ikon {
-      background-repeat: no-repeat;
-      background-image: url(../img/journalføre.svg);
-      padding-left: 1.2em;
-    }
     span {
       color: darkgray;
+      &.journalfor-knapp {
+        background-repeat: no-repeat;
+        background-image: url(../img/journalføre_inaktiv.svg);
+        padding-left: 1.2em;
+      }
+      &.besvar-knapp {
+        background-repeat: no-repeat;
+        background-image: url(../img/besvar_inaktiv.svg);
+        padding-left: 1.3em;
+      }
       em {
         font-style: normal;
       }
     }
+    a {
+      &.journalfor-knapp {
+        background-repeat: no-repeat;
+        background-image: url(../img/journalføre.svg);
+        padding-left: 1.2em;
+      }
+      &.besvar-knapp {
+        background-repeat: no-repeat;
+        background-image: url(../img/besvar.svg);
+        padding-left: 1.3em;
+      }
+    }
   }
+
 
   .journalforing {
     margin-bottom: 20px;
