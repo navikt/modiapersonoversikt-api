@@ -31,9 +31,9 @@ public class LeggTilbakePanel extends Panel {
 
     public static final String LEGG_TILBAKE_ABRUTT = "leggtilbake.avbrutt";
 
-    private Aarsak valgtAarsak;
-    private Temagruppe temagruppe;
-    private String annenAarsakTekst;
+    protected Aarsak valgtAarsak;
+    protected Temagruppe temagruppe;
+    protected String annenAarsakTekst;
 
     public LeggTilbakePanel(String id, Sporsmal sporsmal) {
         super(id);
@@ -123,7 +123,7 @@ public class LeggTilbakePanel extends Panel {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return valgtAarsak != aarsak;
+                return !aarsak.equals(valgtAarsak);
             }
         };
     }
