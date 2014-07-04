@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -19,33 +20,40 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
+
+import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.LeggTilbakeVM.Aarsak;
 
 public class LeggTilbakePanel extends Panel {
 
     public static final String LEGG_TILBAKE_ABRUTT = "leggtilbake.avbrutt";
     public static final String LEGG_TILBAKE_UTFORT = "leggtilbake.utfort";
 
-    protected Aarsak valgtAarsak;
-    protected Temagruppe temagruppe;
-    protected String annenAarsakTekst;
+    @Inject
+    private SakService sakService;
 
-    public LeggTilbakePanel(String id, Sporsmal sporsmal) {
+    private LeggTilbakeVM leggTilbakeVM;
+
+    public LeggTilbakePanel(String id, final Sporsmal sporsmal) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
-        feedbackPanel.setOutputMarkupPlaceholderTag(true);
+        this.leggTilbakeVM = new LeggTilbakeVM();
 
         add(new Label("temagruppe", new ResourceModel(sporsmal.temagruppe)));
 
-        Form<LeggTilbakePanel> form = new Form<>("leggtilbakeform", new CompoundPropertyModel<>(this));
+        Form<LeggTilbakeVM> form = new Form<>("leggtilbakeform", new CompoundPropertyModel<>(leggTilbakeVM));
+
+        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+        feedbackPanel.setOutputMarkupPlaceholderTag(true);
+        form.add(feedbackPanel);
 
         WebMarkupContainer temagruppevelgerWrapper = new WebMarkupContainer("temagruppewrapper");
         final DropDownChoice<Temagruppe> temagruppevelger = new DropDownChoice<>("temagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
@@ -54,11 +62,11 @@ public class LeggTilbakePanel extends Panel {
                 return getString(object.name());
             }
         });
-        temagruppevelgerWrapper.add(hasCssClassIf("skjult", erIkkeValgtAarsak(Aarsak.FEIL_TEMAGRUPPE)));
+        temagruppevelgerWrapper.add(hasCssClassIf("skjult", leggTilbakeVM.erIkkeValgtAarsak(Aarsak.FEIL_TEMAGRUPPE)));
         temagruppevelgerWrapper.add(temagruppevelger);
 
         final TextArea annenAarsak = new TextArea("annenAarsakTekst");
-        annenAarsak.add(hasCssClassIf("skjult", erIkkeValgtAarsak(Aarsak.ANNEN)));
+        annenAarsak.add(hasCssClassIf("skjult", leggTilbakeVM.erIkkeValgtAarsak(Aarsak.ANNEN)));
 
         RadioGroup<Aarsak> aarsaker = new RadioGroup<>("valgtAarsak");
         aarsaker.setRequired(true);
@@ -91,12 +99,10 @@ public class LeggTilbakePanel extends Panel {
             }
         });
 
-        form.add(feedbackPanel);
-
         form.add(new AjaxButton("leggtilbake") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                leggTilbakeOppgave();
+                leggTilbakeOppgave(sporsmal.oppgaveId);
                 send(LeggTilbakePanel.this, Broadcast.BUBBLE, LEGG_TILBAKE_UTFORT);
             }
             @Override
@@ -121,22 +127,9 @@ public class LeggTilbakePanel extends Panel {
         }
     }
 
-    private AbstractReadOnlyModel<Boolean> erIkkeValgtAarsak(final Aarsak aarsak) {
-        return new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return !aarsak.equals(valgtAarsak);
-            }
-        };
-    }
-
-    private void leggTilbakeOppgave() {
-    }
-
-    private static enum Aarsak {
-        FEIL_TEMAGRUPPE,
-        INHABIL,
-        ANNEN
+    private void leggTilbakeOppgave(String oppgaveId) {
+        String beskrivelse = leggTilbakeVM.lagBeskrivelse(new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), this, getDefaultModel()).getString());
+        sakService.leggTilbakeOppgaveIGsak(oppgaveId, beskrivelse, leggTilbakeVM.lagTemagruppeTekst());
     }
 
     @Override

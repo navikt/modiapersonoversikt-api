@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslisteMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SendHenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
@@ -27,6 +28,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         SporsmalOgSvarContext.class,
         UtbetalingPortTypeMock.class,
         HenvendelsePortTypeMock.class,
+        SendHenvendelsePortTypeMock.class,
         GsakHentSakslisteMock.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)

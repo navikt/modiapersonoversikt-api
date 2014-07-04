@@ -13,6 +13,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.WSFagomrade;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeFilter;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeRequest;
@@ -128,18 +129,33 @@ public class SakService {
         oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId).withFerdigstiltAvEnhetId(FERDIGSTILT_AV_ENHET));
     }
 
+    public void leggTilbakeOppgaveIGsak(String oppgaveId, String beskrivelse, String temagruppe) {
+        WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId);
+        wsOppgave.withAnsvarligId("");
+        wsOppgave.withBeskrivelse(beskrivelse);
+        if (temagruppe != null) {
+            wsOppgave.withFagomrade(new WSFagomrade().withKode(TEMAGRUPPE.get(temagruppe)));
+        }
+        lagreOppgaveIGsak(wsOppgave);
+    }
+
     private WSOppgave tilordneOppgave(WSOppgave oppgave) {
         WSOppgave wsOppgave = oppgave.withAnsvarligId(getSubjectHandler().getUid());
+        lagreOppgaveIGsak(wsOppgave);
 
+        return wsOppgave;
+    }
+
+    private void lagreOppgaveIGsak(WSOppgave wsOppgave) {
         try {
             oppgavebehandlingWS.lagreOppgave(
                     new WSLagreOppgaveRequest()
                             .withEndreOppgave(new WSEndreOppgave()
+                                    .withOppgaveId(wsOppgave.getOppgaveId())
+                                    .withAnsvarligId(wsOppgave.getAnsvarligId())
+                                    .withBrukerId(wsOppgave.getGjelder().getBrukerId())
                                     .withDokumentId(wsOppgave.getDokumentId())
                                     .withKravId(wsOppgave.getKravId())
-                                    .withOppgaveId(wsOppgave.getOppgaveId())
-                                    .withBrukerId(wsOppgave.getGjelder().getBrukerId())
-                                    .withAnsvarligId(wsOppgave.getAnsvarligId())
                                     .withAnsvarligEnhetId(wsOppgave.getAnsvarligEnhetId())
 
                                     .withFagomradeKode(wsOppgave.getFagomrade().getKode())
@@ -157,8 +173,6 @@ public class SakService {
         } catch (LagreOppgaveOppgaveIkkeFunnet lagreOppgaveOppgaveIkkeFunnet) {
             throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);
         }
-
-        return wsOppgave;
     }
 
     private Optional<WSOppgave> finnIkkeTilordnedeOppgaver(String temagruppe) {

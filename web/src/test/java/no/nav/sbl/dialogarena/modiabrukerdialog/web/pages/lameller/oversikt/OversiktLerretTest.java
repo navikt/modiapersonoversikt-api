@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSa
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SendHenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
@@ -30,6 +31,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
         UtbetalingPortTypeMock.class,
         SporsmalOgSvarContext.class,
         HenvendelsePortTypeMock.class,
+        SendHenvendelsePortTypeMock.class,
         GsakHentSakslisteMock.class,
         SaksoversiktService.class,
         SakOgBehandlingPortTypeMock.class,

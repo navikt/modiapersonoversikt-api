@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -30,12 +31,13 @@ import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {KjerneinfoPepMockContext.class})
+@ContextConfiguration(classes = {KjerneinfoPepMockContext.class, SakServiceMockContext.class})
 public class LeggTilbakePanelTest extends WicketPageTest {
 
     @Before
     public void setUpTest() {
         Sporsmal sporsmal = new Sporsmal("sporsmal", DateTime.now());
+        sporsmal.oppgaveId = "1";
         sporsmal.temagruppe = "temagruppe";
         wicket.goToPageWith(new TestLeggTilbakePanel("id", sporsmal));
     }

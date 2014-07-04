@@ -9,6 +9,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSa
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SendHenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
@@ -45,6 +46,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         SporsmalOgSvarContext.class,
         UtbetalingPortTypeMock.class,
         HenvendelsePortTypeMock.class,
+        SendHenvendelsePortTypeMock.class,
         GsakHentSakslisteMock.class,
         SaksoversiktService.class,
         SakOgBehandlingPortTypeMock.class,

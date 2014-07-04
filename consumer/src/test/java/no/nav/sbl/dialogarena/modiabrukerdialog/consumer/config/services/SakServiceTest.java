@@ -22,6 +22,7 @@ import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveRequest;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveResponse;
 import no.nav.virksomhet.tjenester.oppgave.v2.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSEndreOppgave;
 import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSFerdigstillOppgaveBolkRequest;
 import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSLagreOppgaveRequest;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.LagreOppgaveOppgaveIkkeFunnet;
@@ -165,6 +166,32 @@ public class SakServiceTest {
         assertThat(sporsmal.fritekst, is("fritekst2"));
     }
 
+    @Test
+    public void skalLeggeTilbakeOppgaveIGsakUtenEndretTemagruppe() throws LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet {
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
+
+        sakService.leggTilbakeOppgaveIGsak("1", "beskrivelse", null);
+
+        verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
+        WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
+        assertThat(endreOppgave.getAnsvarligId(), is(""));
+        assertThat(endreOppgave.getBeskrivelse(), is("beskrivelse"));
+        assertThat(endreOppgave.getFagomradeKode(), is("HJE"));
+    }
+
+    @Test
+    public void skalLeggeTilbakeOppgaveIGsakMedEndretTemagruppe() throws LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet {
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
+
+        sakService.leggTilbakeOppgaveIGsak("1", "beskrivelse", "FAMILIE_OG_BARN");
+
+        verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
+        WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
+        assertThat(endreOppgave.getAnsvarligId(), is(""));
+        assertThat(endreOppgave.getBeskrivelse(), is("beskrivelse"));
+        assertThat(endreOppgave.getFagomradeKode(), is("BID"));
+    }
+
     private WSHentHenvendelseResponse mockWSHentHenvendelseResponse() {
         return new WSHentHenvendelseResponse().withAny(
                 new XMLBehandlingsinformasjon()
@@ -178,6 +205,10 @@ public class SakServiceTest {
 
     private WSHentOppgaveResponse mockHentOppgaveResponse() {
         return new WSHentOppgaveResponse().withOppgave(lagWSOppgave());
+    }
+
+    private WSHentOppgaveResponse mockHentOppgaveResponseMedTilordning() {
+        return new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withAnsvarligId("id").withBeskrivelse("opprinnelig beskrivelse"));
     }
 
     private XMLBehandlingsinformasjon createXmlSporsmaal(String oppgaveId, String fritekst) {
