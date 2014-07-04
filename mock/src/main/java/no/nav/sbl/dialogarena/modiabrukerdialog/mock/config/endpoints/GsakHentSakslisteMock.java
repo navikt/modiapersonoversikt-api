@@ -25,6 +25,8 @@ public class GsakHentSakslisteMock {
                         createGenerellSak("111111111", "Arbeidsavklaring", "Fagsystem 1", "Generell", DateTime.now().minusDays(1)),
                         createGenerellSak("222222222", "Foreldrepenger", "Fagsystem 2", "Generell", DateTime.now().minusDays(4)),
                         createGenerellSak("333333333", "Hjelpemiddel", "Fagsystem 3", "Generell", DateTime.now().minusDays(4)),
+                        createGenerellSak("333333333", "Hjelpemiddel", "Fagsystem 3", "Generell", DateTime.now().minusDays(3)),
+                        createGenerellSak("333333333", "Oppfølging", "Fagsystem 3", "Generell", DateTime.now().minusDays(4)),
                         createGenerellSak("444444444", "Bilsøknad", "Fagsystem 2", "Bilsøknad", DateTime.now().minusDays(4)),
                         createGenerellSak("555555555", "Annet", "Fagsystem 2", "Annet", DateTime.now().minusDays(4)),
                         createGenerellSak("666666666", "Dagpenger", "Fagsystem 1", "Dagpenger", DateTime.now().minusDays(4)));
