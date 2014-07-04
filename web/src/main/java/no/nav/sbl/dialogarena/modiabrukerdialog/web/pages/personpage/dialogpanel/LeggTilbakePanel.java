@@ -30,6 +30,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 public class LeggTilbakePanel extends Panel {
 
     public static final String LEGG_TILBAKE_ABRUTT = "leggtilbake.avbrutt";
+    public static final String LEGG_TILBAKE_UTFORT = "leggtilbake.utfort";
 
     protected Aarsak valgtAarsak;
     protected Temagruppe temagruppe;
@@ -96,6 +97,7 @@ public class LeggTilbakePanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 leggTilbakeOppgave();
+                send(LeggTilbakePanel.this, Broadcast.BUBBLE, LEGG_TILBAKE_UTFORT);
             }
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {

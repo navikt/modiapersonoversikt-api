@@ -53,6 +53,7 @@ import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 import static org.apache.wicket.event.Broadcast.BREADTH;
@@ -67,12 +68,11 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class PersonPage extends BasePage {
 
     public static final String OPPGAVEID = "oppgaveid";
-    private Logger logger = getLogger(PersonPage.class);
-
-    private static final String DIALOGPANEL_ID = "dialogpanel";
-
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
+
+    private static final Logger logger = getLogger(PersonPage.class);
+    private static final String DIALOGPANEL_ID = "dialogpanel";
 
     @Inject
     protected SakService sakService;
@@ -194,14 +194,14 @@ public class PersonPage extends BasePage {
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
-    public void svarPaaMelding(AjaxRequestTarget target, String sporsmalId){
+    public void visSvarPanel(AjaxRequestTarget target, String sporsmalId){
         Sporsmal sporsmal = sakService.getSporsmalOgTilordneIGsak(sporsmalId);
         dialogpanel = dialogpanel.replaceWith(new SvarPanel(DIALOGPANEL_ID, fnr, sporsmal));
         target.add(dialogpanel);
     }
 
-    @RunOnEvents(MELDING_SENDT_TIL_BRUKER)
-    public void meldingSendtTilBruker(AjaxRequestTarget target){
+    @RunOnEvents({MELDING_SENDT_TIL_BRUKER, LEGG_TILBAKE_UTFORT})
+    public void visReferatPanel(AjaxRequestTarget target){
         dialogpanel = dialogpanel.replaceWith(new ReferatPanel(DIALOGPANEL_ID, fnr));
         target.add(dialogpanel);
     }
