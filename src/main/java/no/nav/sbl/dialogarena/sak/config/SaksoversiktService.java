@@ -19,8 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.equalToIgnoreCase;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.sbl.dialogarena.sak.transformers.HenvendelseTransformers.INNSENDT;
 import static no.nav.sbl.dialogarena.sak.transformers.HenvendelseTransformers.KVITTERING;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSIDER_FRA_SAK;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.TEMAKODE_FOR_SAK;
@@ -64,12 +66,16 @@ public class SaksoversiktService {
     }
 
     private void leggTilKvitteringHvisEksisterer(String fnr, String behandlingId, List<Kvittering> kvitteringer) {
-        List<WSSoknad> soknader = henvendelseSoknaderPortType.hentSoknadListe(fnr);
+        List<WSSoknad> soknader = hentInnsendteSoknader(fnr);
         for (WSSoknad soknad : soknader) {
             if (soknad.getBehandlingsId().equals(behandlingId)) {
                 kvitteringer.add(KVITTERING.transform(soknad));
             }
         }
+    }
+
+    private List<WSSoknad> hentInnsendteSoknader(String fnr) {
+        return on(henvendelseSoknaderPortType.hentSoknadListe(fnr)).filter(where(INNSENDT, equalTo(true))).collect();
     }
 
     private String hentAktorId(String fnr) {

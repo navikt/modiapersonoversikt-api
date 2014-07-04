@@ -11,6 +11,13 @@ import java.util.List;
 
 public class HenvendelseTransformers {
 
+    public static final Transformer<WSSoknad, Boolean> INNSENDT = new Transformer<WSSoknad, Boolean>() {
+        @Override
+        public Boolean transform(WSSoknad wsSoknad) {
+            return wsSoknad.getInnsendtDato() != null;
+        }
+    };
+
     public static final Transformer<WSSoknad, Kvittering> KVITTERING = new Transformer<WSSoknad, Kvittering>() {
 
         @Override
