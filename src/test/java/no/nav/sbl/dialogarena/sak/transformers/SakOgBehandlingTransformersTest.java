@@ -52,7 +52,7 @@ public class SakOgBehandlingTransformersTest {
     public void temaVMtransformerKomplettObjektMapping() {
         String temakode = "temakodeForTest";
         DateTime behandlingsdato = new DateTime();
-        WSSak sak = createWSSak()
+        WSSak sak = new WSSak()
                 .withSakstema(new WSSakstemaer().withValue(temakode))
                 .withBehandlingskjede(createWSBehandlingskjede().withStart(behandlingsdato));
 
