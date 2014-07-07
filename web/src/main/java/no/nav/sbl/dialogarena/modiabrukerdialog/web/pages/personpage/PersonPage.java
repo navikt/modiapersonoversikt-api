@@ -73,7 +73,7 @@ public class PersonPage extends BasePage {
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
     public static final PackageResourceReference SVAR_OG_REFERATPANEL_LESS = new PackageResourceReference(SvarOgReferatVM.class, "SvarOgReferatPanel.less");
-    public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(ReferatPanel.class, "jquery-ui-selectmenu.min.js");
+    public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(SvarOgReferatVM.class, "jquery-ui-selectmenu.min.js");
 
     private static final Logger logger = getLogger(PersonPage.class);
     private static final String SVAR_OG_REFERAT_PANEL_ID = "svarOgReferatPanel";
