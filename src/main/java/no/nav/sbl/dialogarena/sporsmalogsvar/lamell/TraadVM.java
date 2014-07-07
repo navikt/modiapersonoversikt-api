@@ -1,12 +1,17 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.JOURNALFORT_DATO;
 
 public class TraadVM implements Serializable {
 
@@ -15,6 +20,12 @@ public class TraadVM implements Serializable {
     public Sak journalfortSak;
 
     public TraadVM(List<MeldingVM> meldinger) {
+        Map<DateTime, List<MeldingVM>> mapMeldingVMPaJournalfortDato = on(meldinger).reduce(indexBy(JOURNALFORT_DATO));
+
+        for (DateTime journalfortDato : mapMeldingVMPaJournalfortDato.keySet()) {
+            mapMeldingVMPaJournalfortDato.get(journalfortDato).get(0).nyesteMeldingISinJournalfortgruppe = true;
+        }
+
         this.meldinger = meldinger;
     }
 

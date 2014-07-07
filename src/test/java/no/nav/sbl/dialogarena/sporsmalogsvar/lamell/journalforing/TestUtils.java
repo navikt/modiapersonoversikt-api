@@ -65,6 +65,14 @@ public class TestUtils {
         return melding;
     }
 
+    public static Melding createMeldingMedJournalfortDato(String id, Meldingstype type, DateTime opprettetDato, String tema, String traadId, DateTime journalfortDato){
+        Melding melding = new Melding(id, type, opprettetDato);
+        melding.temagruppe = tema;
+        melding.traadId = traadId;
+        melding.journalfortDato = journalfortDato;
+        return melding;
+    }
+
     public static Melding opprettMeldingEksempel() {
         return createMelding(ID_1, Meldingstype.SPORSMAL, DateTime.now(), TEMA_1, ID_1);
     }

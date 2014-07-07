@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.commons.collections15.Transformer;
+import org.joda.time.DateTime;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -17,6 +18,7 @@ public class MeldingVM implements Serializable {
 
     public final String avsender;
     public final int traadlengde;
+    public boolean nyesteMeldingISinJournalfortgruppe;
 
     public MeldingVM(Melding melding, int traadLengde) {
         this.melding = melding;
@@ -63,4 +65,11 @@ public class MeldingVM implements Serializable {
         result = 31 * result + traadlengde;
         return result;
     }
+
+    public static final Transformer<MeldingVM, DateTime> JOURNALFORT_DATO = new Transformer<MeldingVM, DateTime>() {
+        @Override
+        public DateTime transform(MeldingVM meldingVM) {
+            return meldingVM.melding.journalfortDato;
+        }
+    };
 }
