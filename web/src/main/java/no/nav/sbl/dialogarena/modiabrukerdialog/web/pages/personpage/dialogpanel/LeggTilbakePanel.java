@@ -29,6 +29,7 @@ import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.LeggTilbakeVM.Aarsak;
 
 public class LeggTilbakePanel extends Panel {
@@ -62,13 +63,13 @@ public class LeggTilbakePanel extends Panel {
                 return getString(object.name());
             }
         });
-        temagruppevelgerWrapper.add(hasCssClassIf("skjult", leggTilbakeVM.erIkkeValgtAarsak(Aarsak.FEIL_TEMAGRUPPE)));
+        temagruppevelgerWrapper.add(hasCssClassIf("skjult", not(leggTilbakeVM.erValgtAarsak(Aarsak.FEIL_TEMAGRUPPE))));
         temagruppevelgerWrapper.add(temagruppevelger);
 
         final TextArea annenAarsak = new TextArea("annenAarsakTekst");
-        annenAarsak.add(hasCssClassIf("skjult", leggTilbakeVM.erIkkeValgtAarsak(Aarsak.ANNEN)));
+        annenAarsak.add(hasCssClassIf("skjult", not(leggTilbakeVM.erValgtAarsak(Aarsak.ANNEN))));
 
-        RadioGroup<Aarsak> aarsaker = new RadioGroup<>("valgtAarsak");
+        final RadioGroup<Aarsak> aarsaker = new RadioGroup<>("valgtAarsak");
         aarsaker.setRequired(true);
         aarsaker.add(new Radio<>("feiltema", Model.of(Aarsak.FEIL_TEMAGRUPPE)));
         aarsaker.add(temagruppevelgerWrapper);
@@ -81,18 +82,18 @@ public class LeggTilbakePanel extends Panel {
         aarsaker.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                Aarsak aarsak = (Aarsak) getComponent().getDefaultModelObject();
+                Aarsak aarsak = aarsaker.getModelObject();
                 switch (aarsak) {
                     case FEIL_TEMAGRUPPE:
-                        toggleRequired(true, temagruppevelger);
-                        toggleRequired(false, annenAarsak);
+                        setRequired(true, temagruppevelger);
+                        setRequired(false, annenAarsak);
                         break;
                     case ANNEN:
-                        toggleRequired(true, annenAarsak);
-                        toggleRequired(false, temagruppevelger);
+                        setRequired(true, annenAarsak);
+                        setRequired(false, temagruppevelger);
                         break;
                     default:
-                        toggleRequired(false, temagruppevelger, annenAarsak);
+                        setRequired(false, temagruppevelger, annenAarsak);
                         break;
                 }
                 target.add(LeggTilbakePanel.this);
@@ -121,7 +122,7 @@ public class LeggTilbakePanel extends Panel {
         add(form);
     }
 
-    private static void toggleRequired(boolean required, FormComponent... formComponents) {
+    private static void setRequired(boolean required, FormComponent... formComponents) {
         for (FormComponent formComponent : formComponents) {
             formComponent.setRequired(required);
         }

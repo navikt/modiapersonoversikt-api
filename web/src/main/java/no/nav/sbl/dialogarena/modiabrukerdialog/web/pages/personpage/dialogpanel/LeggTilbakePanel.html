@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-    <h2>Legg tilbake</h2>
+    <h2><wicket:message key="leggtilbake.overskrift"/></h2>
     <h4 wicket:id="temagruppe"></h4>
     <form wicket:id="leggtilbakeform">
         <div wicket:id="valgtAarsak">
@@ -18,9 +18,9 @@
             <textarea wicket:id="annenAarsakTekst"></textarea>
         </div>
         <div wicket:id="feedback" class="feedback"></div>
-        <a wicket:id="leggtilbake" class="knapp-hoved">Legg tilbake</a>
+        <a wicket:id="leggtilbake" class="knapp-hoved"><wicket:message key="leggtilbake.sendknapp"/></a>
         <br/>
-        <a wicket:id="avbryt">Avbryt</a>
+        <a wicket:id="avbryt"><wicket:message key="leggtilbake.avbryt"/></a>
     </form>
 </wicket:panel>
 </body>

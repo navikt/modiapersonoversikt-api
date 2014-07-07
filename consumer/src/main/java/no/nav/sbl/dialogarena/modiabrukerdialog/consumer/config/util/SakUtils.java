@@ -11,12 +11,14 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
+import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
+import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSEndreOppgave;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static org.joda.time.DateTime.now;
 
-public class HenvendelseUtils {
+public class SakUtils {
 
     public static Sporsmal createSporsmalFromHenvendelse(Object henvendelsesObjekt) {
         XMLBehandlingsinformasjon info = (XMLBehandlingsinformasjon) henvendelsesObjekt;
@@ -58,5 +60,27 @@ public class HenvendelseUtils {
                 .withAvsluttetDato(now())
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
                         new XMLReferat().withTemagruppe(referat.temagruppe).withKanal(referat.kanal).withFritekst(referat.fritekst)));
+    }
+
+    public static WSEndreOppgave tilWSEndreOppgave(WSOppgave wsOppgave) {
+        return new WSEndreOppgave()
+                .withOppgaveId(wsOppgave.getOppgaveId())
+                .withAnsvarligId(wsOppgave.getAnsvarligId())
+                .withBrukerId(wsOppgave.getGjelder().getBrukerId())
+                .withDokumentId(wsOppgave.getDokumentId())
+                .withKravId(wsOppgave.getKravId())
+                .withAnsvarligEnhetId(wsOppgave.getAnsvarligEnhetId())
+
+                .withFagomradeKode(wsOppgave.getFagomrade().getKode())
+                .withOppgavetypeKode(wsOppgave.getOppgavetype().getKode())
+                .withPrioritetKode(wsOppgave.getPrioritet().getKode())
+                .withBrukertypeKode(wsOppgave.getGjelder().getBrukertypeKode())
+                .withUnderkategoriKode(wsOppgave.getUnderkategori().getKode())
+
+                .withAktivFra(wsOppgave.getAktivFra())
+                .withBeskrivelse(wsOppgave.getBeskrivelse())
+                .withVersjon(wsOppgave.getVersjon())
+                .withSaksnummer(wsOppgave.getSaksnummer())
+                .withLest(wsOppgave.isLest());
     }
 }

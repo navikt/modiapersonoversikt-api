@@ -7,7 +7,6 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.HenvendelseUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
@@ -22,7 +21,6 @@ import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeSorter
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveRequest;
 import no.nav.virksomhet.tjenester.oppgave.v2.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSEndreOppgave;
 import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSFerdigstillOppgaveBolkRequest;
 import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSLagreOppgaveRequest;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.LagreOppgaveOppgaveIkkeFunnet;
@@ -42,7 +40,9 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.HenvendelseUtils.createSporsmalFromHenvendelse;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createSporsmalFromHenvendelse;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createXMLBehandlingsinformasjon;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.tilWSEndreOppgave;
 
 public class SakService {
 
@@ -75,12 +75,12 @@ public class SakService {
     protected SendHenvendelsePortType sendHenvendelsePortType;
 
     public void sendSvar(Svar svar) {
-        XMLBehandlingsinformasjon info = HenvendelseUtils.createXMLBehandlingsinformasjon(svar);
+        XMLBehandlingsinformasjon info = createXMLBehandlingsinformasjon(svar);
         sendHenvendelsePortType.sendHenvendelse(new WSSendHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(svar.fnr).withAny(info));
     }
 
     public void sendReferat(Referat referat) {
-        XMLBehandlingsinformasjon info = HenvendelseUtils.createXMLBehandlingsinformasjon(referat);
+        XMLBehandlingsinformasjon info = createXMLBehandlingsinformasjon(referat);
         sendHenvendelsePortType.sendHenvendelse(new WSSendHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(referat.fnr).withAny(info));
     }
 
@@ -150,25 +150,7 @@ public class SakService {
         try {
             oppgavebehandlingWS.lagreOppgave(
                     new WSLagreOppgaveRequest()
-                            .withEndreOppgave(new WSEndreOppgave()
-                                    .withOppgaveId(wsOppgave.getOppgaveId())
-                                    .withAnsvarligId(wsOppgave.getAnsvarligId())
-                                    .withBrukerId(wsOppgave.getGjelder().getBrukerId())
-                                    .withDokumentId(wsOppgave.getDokumentId())
-                                    .withKravId(wsOppgave.getKravId())
-                                    .withAnsvarligEnhetId(wsOppgave.getAnsvarligEnhetId())
-
-                                    .withFagomradeKode(wsOppgave.getFagomrade().getKode())
-                                    .withOppgavetypeKode(wsOppgave.getOppgavetype().getKode())
-                                    .withPrioritetKode(wsOppgave.getPrioritet().getKode())
-                                    .withBrukertypeKode(wsOppgave.getGjelder().getBrukertypeKode())
-                                    .withUnderkategoriKode(wsOppgave.getUnderkategori().getKode())
-
-                                    .withAktivFra(wsOppgave.getAktivFra())
-                                    .withBeskrivelse(wsOppgave.getBeskrivelse())
-                                    .withVersjon(wsOppgave.getVersjon())
-                                    .withSaksnummer(wsOppgave.getSaksnummer())
-                                    .withLest(wsOppgave.isLest()))
+                            .withEndreOppgave(tilWSEndreOppgave(wsOppgave))
                             .withEndretAvEnhetId(ENDRET_AV_ENHET));
         } catch (LagreOppgaveOppgaveIkkeFunnet lagreOppgaveOppgaveIkkeFunnet) {
             throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);

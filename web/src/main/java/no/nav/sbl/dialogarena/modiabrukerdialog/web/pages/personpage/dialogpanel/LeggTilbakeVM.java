@@ -37,11 +37,11 @@ public class LeggTilbakeVM implements Serializable {
         return nyTemagruppe == null ? "" : nyTemagruppe.name();
     }
 
-    public AbstractReadOnlyModel<Boolean> erIkkeValgtAarsak(final Aarsak aarsak) {
+    public AbstractReadOnlyModel<Boolean> erValgtAarsak(final Aarsak aarsak) {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return !aarsak.equals(valgtAarsak);
+                return aarsak.equals(valgtAarsak);
             }
         };
     }
