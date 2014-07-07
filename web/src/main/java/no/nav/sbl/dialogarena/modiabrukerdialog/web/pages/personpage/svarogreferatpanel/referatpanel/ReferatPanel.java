@@ -43,14 +43,14 @@ public class ReferatPanel extends Panel {
         this.fnr = fnr;
         setOutputMarkupId(true);
 
-        final Form<SvarOgReferatVM> form = new Form<>("dialogform", new CompoundPropertyModel<>(new SvarOgReferatVM()));
+        final Form<SvarOgReferatVM> form = new Form<>("referatform", new CompoundPropertyModel<>(new SvarOgReferatVM()));
         form.setOutputMarkupPlaceholderTag(true);
 
         form.add(new EnhancedTextArea("tekstfelt", form.getModel(),
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(250)
-                        .withPlaceholderText(getString("dialogform.tekstfelt.placeholder"))));
+                        .withPlaceholderText(getString("referatform.tekstfelt.placeholder"))));
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);

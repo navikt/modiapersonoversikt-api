@@ -83,10 +83,7 @@ public class SvarPanel extends Panel {
     }
 
     private Form lagSvarForm() {
-        final Form<SvarOgReferatVM> form = new Form<>("dialogform", new CompoundPropertyModel<>(lagModelObjectMedDefaultKanal()));
-        form.setOutputMarkupPlaceholderTag(true);
-
-        hentTemagruppeFraSporsmalet(form);
+        final Form<SvarOgReferatVM> form = new Form<>("svarform", new CompoundPropertyModel<>(lagModelObjectMedKanalOgTemagruppe()));
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(form));
         feedbackPanel.setOutputMarkupId(true);
@@ -122,7 +119,7 @@ public class SvarPanel extends Panel {
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(150)
-                        .withPlaceholderText(getString("dialogform.tekstfelt.placeholder"))));
+                        .withPlaceholderText(getString("svarform.tekstfelt.placeholder"))));
 
 
         form.add(new AjaxButton("send") {
@@ -139,31 +136,11 @@ public class SvarPanel extends Panel {
         return form;
     }
 
-    private SvarOgReferatVM lagModelObjectMedDefaultKanal() {
+    private SvarOgReferatVM lagModelObjectMedKanalOgTemagruppe() {
         SvarOgReferatVM svarOgReferatVM = new SvarOgReferatVM();
         svarOgReferatVM.kanal = SvarKanal.TEKST;
+        svarOgReferatVM.temagruppe = getTemagruppeFraSporsmal();
         return svarOgReferatVM;
-    }
-
-    private void hentTemagruppeFraSporsmalet(Form<SvarOgReferatVM> form) {
-        form.getModelObject().temagruppe = getTemagruppeFromSporsmal();
-    }
-
-    //Denne er midlertidig mens vi venter på full integrasjon med kodeverk
-    private Temagruppe getTemagruppeFromSporsmal() {
-        for (Temagruppe temagruppe : Temagruppe.values()) {
-            if (temagruppe.name().equals(sporsmal.temagruppe)) {
-                return temagruppe;
-            }
-        }
-        return Temagruppe.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT; //Bruker denne som default
-    }
-
-    @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_ABRUTT)
-    public void visPanel(AjaxRequestTarget target) {
-        svarContainer.setVisibilityAllowed(true);
-        leggTilbakePanel.setVisibilityAllowed(false);
-        target.add(this);
     }
 
     private void sendOgVisKvittering(AjaxRequestTarget target, Form<SvarOgReferatVM> form, Component... components) {
@@ -188,5 +165,22 @@ public class SvarPanel extends Panel {
 
         sakService.sendSvar(svar);
         sakService.ferdigstillOppgaveFraGsak(sporsmal.oppgaveId);
+    }
+
+    @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_ABRUTT)
+    public void visPanel(AjaxRequestTarget target) {
+        svarContainer.setVisibilityAllowed(true);
+        leggTilbakePanel.setVisibilityAllowed(false);
+        target.add(this);
+    }
+
+    //Denne er midlertidig mens vi venter på full integrasjon med kodeverk
+    private Temagruppe getTemagruppeFraSporsmal() {
+        for (Temagruppe temagruppe : Temagruppe.values()) {
+            if (temagruppe.name().equals(sporsmal.temagruppe)) {
+                return temagruppe;
+            }
+        }
+        return Temagruppe.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT; //Bruker denne som default
     }
 }

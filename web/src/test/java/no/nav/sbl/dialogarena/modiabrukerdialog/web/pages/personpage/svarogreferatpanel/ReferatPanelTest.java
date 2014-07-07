@@ -51,7 +51,7 @@ public class ReferatPanelTest extends WicketPageTest {
         wicket.goToPageWith(new TestReferatPanel("id", "fnr"))
                 .should().containComponent(withId("temagruppe").and(ofType(DropDownChoice.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
-                .should().containComponent(withId("dialogform").and(ofType(Form.class)))
+                .should().containComponent(withId("referatform").and(ofType(Form.class)))
                 .should().containComponent(withId("tekstfelt").and(ofType(EnhancedTextArea.class)))
                 .should().containComponent(withId("send").and(ofType(AjaxButton.class)))
                 .should().containComponent(withId("feedback").and(ofType(FeedbackPanel.class)))
@@ -62,18 +62,18 @@ public class ReferatPanelTest extends WicketPageTest {
     public void girFeedbackOmPaakrevdeKomponenter() {
         TestReferatPanel referatPanel = new TestReferatPanel("id", "fnr");
         wicket.goToPageWith(referatPanel)
-                .inForm(withId("dialogform"))
+                .inForm(withId("referatform"))
                 .submitWithAjaxButton(withId("send"));
 
         List<String> errorMessages = wicket.get().errorMessages();
-        assertThat(errorMessages, hasItem(referatPanel.getString("dialogform.temagruppe.Required")));
-        assertThat(errorMessages, hasItem(referatPanel.getString("dialogform.kanal.Required")));
+        assertThat(errorMessages, hasItem(referatPanel.getString("referatform.temagruppe.Required")));
+        assertThat(errorMessages, hasItem(referatPanel.getString("referatform.kanal.Required")));
     }
 
     @Test
     public void skalSendeReferattypeTilHenvendelse() {
         wicket.goToPageWith(new TestReferatPanel("id", "fnr"))
-                .inForm(withId("dialogform"))
+                .inForm(withId("referatform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .select("temagruppe", 0)
                 .select("kanal", 0)
@@ -85,19 +85,19 @@ public class ReferatPanelTest extends WicketPageTest {
     @Test
     public void viserKvitteringNaarManSenderInn() {
         wicket.goToPageWith(lagReferatPanelMedKanalSatt())
-                .inForm(withId("dialogform"))
+                .inForm(withId("referatform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .select("kanal", 0)
                 .select("temagruppe", 1)
                 .submitWithAjaxButton(withId("send"))
-                .should().containComponent(thatIsInvisible().withId("dialogform"))
+                .should().containComponent(thatIsInvisible().withId("referatform"))
                 .should().containComponent(thatIsVisible().ofType(KvitteringsPanel.class));
     }
 
     protected TestReferatPanel lagReferatPanelMedKanalSatt() {
         TestReferatPanel referatPanel = new TestReferatPanel("id", "fnr");
-        Object dialogformModel = referatPanel.get("dialogform").getDefaultModelObject();
-        SvarOgReferatVM svarOgReferatVM = (SvarOgReferatVM) dialogformModel;
+        Object referatformModel = referatPanel.get("referatform").getDefaultModelObject();
+        SvarOgReferatVM svarOgReferatVM = (SvarOgReferatVM) referatformModel;
         svarOgReferatVM.kanal = ReferatKanal.TELEFON;
         svarOgReferatVM.temagruppe = Temagruppe.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT;
         return referatPanel;

@@ -28,7 +28,6 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withModelObject;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withTextSaying;
-import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -62,7 +61,7 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     public void skalSendeSporsmaalstypeTilHenvendelse() {
         wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
-                .inForm(withId("dialogform"))
+                .inForm(withId("svarform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .submitWithAjaxButton(withId("send"));
 
@@ -73,7 +72,7 @@ public class SvarPanelTest extends WicketPageTest {
     public void girFeedbackOmPaakrevdeKomponenter() {
         TestSvarPanel svarPanel = new TestSvarPanel("id", "fnr", lagSporsmal());
         wicket.goToPageWith(svarPanel)
-                .inForm(withId("dialogform"))
+                .inForm(withId("svarform"))
                 .submitWithAjaxButton(withId("send"));
 
         List<String> errorMessages = wicket.get().errorMessages();
@@ -102,10 +101,10 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     public void viserKvitteringNaarManSenderInn() {
         wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
-                .inForm(withId("dialogform"))
+                .inForm(withId("svarform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .submitWithAjaxButton(withId("send"))
-                .should().containComponent(thatIsInvisible().withId("dialogform"))
+                .should().containComponent(thatIsInvisible().withId("svarform"))
                 .should().containComponent(thatIsVisible().ofType(KvitteringsPanel.class));
     }
 }
