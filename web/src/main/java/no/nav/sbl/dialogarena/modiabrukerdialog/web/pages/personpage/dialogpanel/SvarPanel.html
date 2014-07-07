@@ -2,38 +2,37 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-    <wicket:extend>
-        <article class="dialogpanel">
-            <section wicket:id="leggtilbakepanel" class="leggtilbake"></section>
-            <section wicket:id="sporsmalcontainer">
-                <h2 class="typeoverskrift svarpaneloverskrift"><wicket:message key="svarpanel.overskrift.sporsmal"/></h2>
-                <h4 wicket:id="temagruppe" class="temagruppeoverskrift">Temaet fra sporsmalet</h4>
-                <p wicket:id="dato">Dato her</p>
-                <div wicket:id="sporsmal" class="fritekst">Faktisk tekst!</div>
-            </section>
-            <section wicket:id="svarcontainer">
-                <form wicket:id="dialogform">
-                    <h2 class="typeoverskrift svarpaneloverskrift"><wicket:message key="svarpanel.overskrift.svar"/></h2>
-                    <p class="navident" wicket:id="navIdent">NavIdent her</p>
-                    <h2 class="medium kanaloverskrift" wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</h2>
-                    <section wicket:id="tekstfelt" class="tekstfelt"></section>
-                    <div class="kanalvelger clearfix">
-                        <div wicket:id="kanal">
-                            <div wicket:id="kanalvalg" class="kanalvalg">
-                                <input wicket:id="kanalknapp" type="radio"/>
-                                <label wicket:for="kanalknapp">
-                                    <div wicket:id="kanalikon"></div>
-                                </label>
-                            </div>
+    <article class="dialogpanel">
+        <section wicket:id="leggtilbakepanel" class="leggtilbake"></section>
+        <section wicket:id="sporsmalcontainer">
+            <h2 class="typeoverskrift svarpaneloverskrift"><wicket:message key="svarpanel.overskrift.sporsmal"/></h2>
+            <h4 wicket:id="temagruppe" class="temagruppeoverskrift">Temaet fra sporsmalet</h4>
+            <p wicket:id="dato">Dato her</p>
+            <div wicket:id="sporsmal" class="fritekst">Faktisk tekst!</div>
+        </section>
+        <section wicket:id="svarcontainer">
+            <form wicket:id="dialogform">
+                <h2 class="typeoverskrift svarpaneloverskrift"><wicket:message key="svarpanel.overskrift.svar"/></h2>
+                <p class="navident" wicket:id="navIdent">NavIdent her</p>
+                <h2 class="medium kanaloverskrift" wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</h2>
+                <section wicket:id="tekstfelt" class="tekstfelt"></section>
+                <div class="kanalvelger clearfix">
+                    <div wicket:id="kanal">
+                        <div wicket:id="kanalvalg" class="kanalvalg">
+                            <input wicket:id="kanalknapp" type="radio"/>
+                            <label wicket:for="kanalknapp">
+                                <div wicket:id="kanalikon"></div>
+                            </label>
                         </div>
                     </div>
-                    <div wicket:id="feedback" class="feedback"></div>
-                    <a wicket:id="send" class="send knapp-hoved" href="#"><wicket:message key="dialogform.knapp.send"/></a>
-                </form>
-                <a wicket:id="leggtilbake">Legg tilbake</a>
-            </section>
-        </article>
-    </wicket:extend>
+                </div>
+                <div wicket:id="feedback" class="feedback"></div>
+                <a wicket:id="send" class="send knapp-hoved" href="#"><wicket:message key="dialogform.knapp.send"/></a>
+            </form>
+            <a wicket:id="leggtilbake">Legg tilbake</a>
+        </section>
+    </article>
+    <div wicket:id="kvittering" class="kvittering"></div>
 </wicket:panel>
 </body>
 </html>

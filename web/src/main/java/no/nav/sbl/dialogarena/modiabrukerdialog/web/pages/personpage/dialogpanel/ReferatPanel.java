@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -16,16 +17,28 @@ import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.util.time.Duration;
+
+import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 
-public class ReferatPanel extends DialogPanel {
+public class ReferatPanel extends Panel {
+
+    @Inject
+    private SakService sakService;
+
+    private final String fnr;
+    private final KvitteringsPanel kvittering;
 
     public ReferatPanel(String id, String fnr) {
-        super(id, fnr);
+        super(id);
+        this.fnr = fnr;
+        setOutputMarkupId(true);
 
         final Form<DialogVM> form = new Form<>("dialogform", new CompoundPropertyModel<>(new DialogVM()));
         form.setOutputMarkupPlaceholderTag(true);
@@ -60,15 +73,18 @@ public class ReferatPanel extends DialogPanel {
         form.add(new AjaxButton("send") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-                submit(target, form);
+                sendOgVisKvittering(target, form);
             }
+
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
             }
         });
 
-        add(form);
+        kvittering = new KvitteringsPanel("kvittering");
+
+        add(form, kvittering);
     }
 
     @Override
@@ -77,7 +93,18 @@ public class ReferatPanel extends DialogPanel {
         response.render(OnDomReadyHeaderItem.forScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});"));
     }
 
-    protected void sendHenvendelse(DialogVM dialogVM, String fnr) {
+    private void sendOgVisKvittering(AjaxRequestTarget target, Form<DialogVM> form) {
+        DialogVM dialogVM = form.getModelObject();
+        sendHenvendelse(dialogVM, fnr);
+
+        kvittering.visISekunder(Duration.seconds(3), target, getString(dialogVM.kanal.getKvitteringKey()), form);
+
+        form.setModelObject(new DialogVM());
+
+        target.add(form);
+    }
+
+    private void sendHenvendelse(DialogVM dialogVM, String fnr) {
         Referat referat = new Referat()
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
@@ -86,5 +113,4 @@ public class ReferatPanel extends DialogPanel {
                 .withFritekst(dialogVM.getFritekst());
         sakService.sendReferat(referat);
     }
-
 }

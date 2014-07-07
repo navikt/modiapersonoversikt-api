@@ -19,13 +19,18 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import java.util.List;
 
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withModelObject;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withTextSaying;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
@@ -45,7 +50,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void inneholderSporsmaalsspefikkeKomponenter() {
-        wicket.goToPageWith(new SvarPanel("id", "fnr", lagSporsmal()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
                 .should().containComponent(withId("temagruppe").and(ofType(Label.class)))
                 .should().containComponent(withId("sporsmal").and(ofType(URLParsingMultiLineLabel.class)))
                 .should().containComponent(withId("dato").and(ofType(Label.class)))
@@ -55,7 +60,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void skalSendeSporsmaalstypeTilHenvendelse() {
-        wicket.goToPageWith(new SvarPanel("id", "fnr", lagSporsmal()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
                 .inForm(withId("dialogform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .submitWithAjaxButton(withId("send"));
@@ -64,14 +69,25 @@ public class SvarPanelTest extends WicketPageTest {
     }
 
     @Test
+    public void girFeedbackOmPaakrevdeKomponenter() {
+        TestSvarPanel svarPanel = new TestSvarPanel("id", "fnr", lagSporsmal());
+        wicket.goToPageWith(svarPanel)
+                .inForm(withId("dialogform"))
+                .submitWithAjaxButton(withId("send"));
+
+        List<String> errorMessages = wicket.get().errorMessages();
+        assertThat(errorMessages.isEmpty(), is(false));
+    }
+
+    @Test
     public void tekstligSvarErValgtSomDefault() {
-        wicket.goToPageWith(new SvarPanel("id", "fnr", lagSporsmal()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
                 .should().containComponent(withId("kanal").and(withModelObject(is(SvarKanal.TEKST))));
     }
 
     @Test
     public void viserTemagruppenFraSporsmalet() {
-        SvarPanel svarPanel = new SvarPanel("id", "fnr", lagSporsmal());
+        TestSvarPanel svarPanel = new TestSvarPanel("id", "fnr", lagSporsmal());
         wicket.goToPageWith(svarPanel)
                 .should().containComponent(withId("temagruppe").and(withTextSaying(svarPanel.getString(Temagruppe.FAMILIE_OG_BARN.name()))));
     }
@@ -80,5 +96,15 @@ public class SvarPanelTest extends WicketPageTest {
         Sporsmal sporsmal = new Sporsmal("id", now());
         sporsmal.temagruppe = Temagruppe.FAMILIE_OG_BARN.name();
         return sporsmal;
+    }
+
+    @Test
+    public void viserKvitteringNaarManSenderInn() {
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
+                .inForm(withId("dialogform"))
+                .write("tekstfelt:text", "dette er en fritekst")
+                .submitWithAjaxButton(withId("send"))
+                .should().containComponent(thatIsInvisible().withId("dialogform"))
+                .should().containComponent(thatIsVisible().ofType(KvitteringsPanel.class));
     }
 }

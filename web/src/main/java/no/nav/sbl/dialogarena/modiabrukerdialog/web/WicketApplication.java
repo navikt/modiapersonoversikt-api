@@ -24,7 +24,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.LocaleFromWicke
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.DialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.time.Datoformat;
@@ -131,7 +130,7 @@ public class WicketApplication extends WebApplication {
                         SaksoversiktLerret.SAKSOVERSIKT_LESS,
                         BasePage.MELDINGERWIDGET,
                         BasePage.MELDINGERLAMELL,
-                        DialogPanel.DIALOGPANEL_LESS)
+                        PersonPage.SVAR_OG_REFERATPANEL_LESS)
                 .addCss(
                         BasePage.PERSONSOKRESULT,
                         BasePage.PERSONSOKSEARCH
@@ -151,7 +150,8 @@ public class WicketApplication extends WebApplication {
                         Liste.JS_RESOURCE,
                         DatePicker.JQUERY_PLACEHOLDER,
                         ModalErrorPanel.JS_RESOURCE,
-                        UtbetalingLerret.UTBETALING_LAMELL_JS
+                        UtbetalingLerret.UTBETALING_LAMELL_JS,
+                        PersonPage.SELECTMENU_JS
                 )
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);

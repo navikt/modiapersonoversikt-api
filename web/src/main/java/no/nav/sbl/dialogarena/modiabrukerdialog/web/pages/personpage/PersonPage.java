@@ -34,6 +34,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.slf4j.Logger;
 
@@ -70,9 +71,11 @@ public class PersonPage extends BasePage {
     public static final String OPPGAVEID = "oppgaveid";
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
+    public static final PackageResourceReference SVAR_OG_REFERATPANEL_LESS = new PackageResourceReference(ReferatPanel.class, "SvarOgReferatPanel.less");
+    public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(ReferatPanel.class, "jquery-ui-selectmenu.min.js");
 
     private static final Logger logger = getLogger(PersonPage.class);
-    private static final String DIALOGPANEL_ID = "dialogpanel";
+    private static final String SVAR_OG_REFERAT_PANEL_ID = "svarOgReferatPanel";
 
     @Inject
     protected SakService sakService;
@@ -84,7 +87,7 @@ public class PersonPage extends BasePage {
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
     private Label fnrContainer;
-    private Component dialogpanel;
+    private Component svarOgReferatPanel;
     private final String fnr;
 
     public PersonPage(PageParameters pageParameters) {
@@ -102,7 +105,7 @@ public class PersonPage extends BasePage {
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
                 new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
-                dialogpanel,
+                svarOgReferatPanel,
                 new TimeoutBoks("timeoutBoks", fnr)
         );
     }
@@ -121,9 +124,9 @@ public class PersonPage extends BasePage {
         String oppgaveid = pageParameters.get(OPPGAVEID).toString();
         if (oppgaveid != null) {
             Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId(fnr, oppgaveid);
-            dialogpanel = new SvarPanel(DIALOGPANEL_ID, fnr, sporsmal);
+            svarOgReferatPanel = new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal);
         } else {
-            dialogpanel = new ReferatPanel(DIALOGPANEL_ID, fnr);
+            svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
         }
     }
 
@@ -196,14 +199,14 @@ public class PersonPage extends BasePage {
     @RunOnEvents(SVAR_PAA_MELDING)
     public void visSvarPanel(AjaxRequestTarget target, String sporsmalId){
         Sporsmal sporsmal = sakService.getSporsmalOgTilordneIGsak(sporsmalId);
-        dialogpanel = dialogpanel.replaceWith(new SvarPanel(DIALOGPANEL_ID, fnr, sporsmal));
-        target.add(dialogpanel);
+        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal));
+        target.add(svarOgReferatPanel);
     }
 
     @RunOnEvents({MELDING_SENDT_TIL_BRUKER, LEGG_TILBAKE_UTFORT})
     public void visReferatPanel(AjaxRequestTarget target){
-        dialogpanel = dialogpanel.replaceWith(new ReferatPanel(DIALOGPANEL_ID, fnr));
-        target.add(dialogpanel);
+        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr));
+        target.add(svarOgReferatPanel);
     }
 
     @Override
