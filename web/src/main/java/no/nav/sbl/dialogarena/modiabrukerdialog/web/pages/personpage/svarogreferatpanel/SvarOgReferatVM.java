@@ -1,8 +1,8 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaModel;
 
-public class DialogVM extends EnhancedTextAreaModel {
+public class SvarOgReferatVM extends EnhancedTextAreaModel {
     public Kanal kanal;
     public Temagruppe temagruppe;
 

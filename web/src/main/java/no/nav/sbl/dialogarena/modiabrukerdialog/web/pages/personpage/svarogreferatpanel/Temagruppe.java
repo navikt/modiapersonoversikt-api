@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
 public enum Temagruppe {
     ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT,

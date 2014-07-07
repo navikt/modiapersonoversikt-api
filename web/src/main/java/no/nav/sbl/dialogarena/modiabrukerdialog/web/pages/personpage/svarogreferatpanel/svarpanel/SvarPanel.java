@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel;
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
@@ -7,6 +7,9 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -80,7 +83,7 @@ public class SvarPanel extends Panel {
     }
 
     private Form lagSvarForm() {
-        final Form<DialogVM> form = new Form<>("dialogform", new CompoundPropertyModel<>(lagModelObjectMedDefaultKanal()));
+        final Form<SvarOgReferatVM> form = new Form<>("dialogform", new CompoundPropertyModel<>(lagModelObjectMedDefaultKanal()));
         form.setOutputMarkupPlaceholderTag(true);
 
         hentTemagruppeFraSporsmalet(form);
@@ -136,13 +139,13 @@ public class SvarPanel extends Panel {
         return form;
     }
 
-    private DialogVM lagModelObjectMedDefaultKanal() {
-        DialogVM dialogVM = new DialogVM();
-        dialogVM.kanal = SvarKanal.TEKST;
-        return dialogVM;
+    private SvarOgReferatVM lagModelObjectMedDefaultKanal() {
+        SvarOgReferatVM svarOgReferatVM = new SvarOgReferatVM();
+        svarOgReferatVM.kanal = SvarKanal.TEKST;
+        return svarOgReferatVM;
     }
 
-    private void hentTemagruppeFraSporsmalet(Form<DialogVM> form) {
+    private void hentTemagruppeFraSporsmalet(Form<SvarOgReferatVM> form) {
         form.getModelObject().temagruppe = getTemagruppeFromSporsmal();
     }
 
@@ -163,25 +166,25 @@ public class SvarPanel extends Panel {
         target.add(this);
     }
 
-    private void sendOgVisKvittering(AjaxRequestTarget target, Form<DialogVM> form, Component... components) {
-        DialogVM dialogVM = form.getModelObject();
-        sendHenvendelse(dialogVM, fnr);
+    private void sendOgVisKvittering(AjaxRequestTarget target, Form<SvarOgReferatVM> form, Component... components) {
+        SvarOgReferatVM svarOgReferatVM = form.getModelObject();
+        sendHenvendelse(svarOgReferatVM, fnr);
 
-        kvittering.visISekunder(Duration.seconds(3), target, getString(dialogVM.kanal.getKvitteringKey()), components);
+        kvittering.visISekunder(Duration.seconds(3), target, getString(svarOgReferatVM.kanal.getKvitteringKey()), components);
 
-        form.setModelObject(new DialogVM());
+        form.setModelObject(new SvarOgReferatVM());
 
         target.add(components);
     }
 
-    private void sendHenvendelse(DialogVM dialogVM, String fnr) {
+    private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM, String fnr) {
         Svar svar = new Svar()
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
                 .withSporsmalsId(sporsmal.id)
-                .withTemagruppe(dialogVM.temagruppe.name())
-                .withKanal(dialogVM.kanal.name())
-                .withFritekst(dialogVM.getFritekst());
+                .withTemagruppe(svarOgReferatVM.temagruppe.name())
+                .withKanal(svarOgReferatVM.kanal.name())
+                .withFritekst(svarOgReferatVM.getFritekst());
 
         sakService.sendSvar(svar);
         sakService.ferdigstillOppgaveFraGsak(sporsmal.oppgaveId);

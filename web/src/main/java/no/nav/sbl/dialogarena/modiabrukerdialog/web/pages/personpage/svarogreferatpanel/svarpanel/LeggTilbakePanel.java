@@ -1,7 +1,8 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -30,7 +31,7 @@ import javax.inject.Inject;
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.LeggTilbakeVM.Aarsak;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak;
 
 public class LeggTilbakePanel extends Panel {
 

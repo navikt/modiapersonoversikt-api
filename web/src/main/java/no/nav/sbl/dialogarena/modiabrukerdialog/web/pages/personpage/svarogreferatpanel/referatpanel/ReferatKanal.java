@@ -1,4 +1,6 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel;
+
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Kanal;
 
 public enum ReferatKanal implements Kanal {
     TELEFON("referatpanel.TELEFON.kvittering.bekreftelse"),

@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakServ
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatKanal;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -96,9 +97,9 @@ public class ReferatPanelTest extends WicketPageTest {
     protected TestReferatPanel lagReferatPanelMedKanalSatt() {
         TestReferatPanel referatPanel = new TestReferatPanel("id", "fnr");
         Object dialogformModel = referatPanel.get("dialogform").getDefaultModelObject();
-        DialogVM dialogVM = (DialogVM) dialogformModel;
-        dialogVM.kanal = ReferatKanal.TELEFON;
-        dialogVM.temagruppe = Temagruppe.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT;
+        SvarOgReferatVM svarOgReferatVM = (SvarOgReferatVM) dialogformModel;
+        svarOgReferatVM.kanal = ReferatKanal.TELEFON;
+        svarOgReferatVM.temagruppe = Temagruppe.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT;
         return referatPanel;
     }
 

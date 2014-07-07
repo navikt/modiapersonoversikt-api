@@ -1,9 +1,12 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel;
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -40,7 +43,7 @@ public class ReferatPanel extends Panel {
         this.fnr = fnr;
         setOutputMarkupId(true);
 
-        final Form<DialogVM> form = new Form<>("dialogform", new CompoundPropertyModel<>(new DialogVM()));
+        final Form<SvarOgReferatVM> form = new Form<>("dialogform", new CompoundPropertyModel<>(new SvarOgReferatVM()));
         form.setOutputMarkupPlaceholderTag(true);
 
         form.add(new EnhancedTextArea("tekstfelt", form.getModel(),
@@ -93,24 +96,24 @@ public class ReferatPanel extends Panel {
         response.render(OnDomReadyHeaderItem.forScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});"));
     }
 
-    private void sendOgVisKvittering(AjaxRequestTarget target, Form<DialogVM> form) {
-        DialogVM dialogVM = form.getModelObject();
-        sendHenvendelse(dialogVM, fnr);
+    private void sendOgVisKvittering(AjaxRequestTarget target, Form<SvarOgReferatVM> form) {
+        SvarOgReferatVM svarOgReferatVM = form.getModelObject();
+        sendHenvendelse(svarOgReferatVM, fnr);
 
-        kvittering.visISekunder(Duration.seconds(3), target, getString(dialogVM.kanal.getKvitteringKey()), form);
+        kvittering.visISekunder(Duration.seconds(3), target, getString(svarOgReferatVM.kanal.getKvitteringKey()), form);
 
-        form.setModelObject(new DialogVM());
+        form.setModelObject(new SvarOgReferatVM());
 
         target.add(form);
     }
 
-    private void sendHenvendelse(DialogVM dialogVM, String fnr) {
+    private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM, String fnr) {
         Referat referat = new Referat()
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
-                .withTemagruppe(dialogVM.temagruppe.name())
-                .withKanal(dialogVM.kanal.name())
-                .withFritekst(dialogVM.getFritekst());
+                .withTemagruppe(svarOgReferatVM.temagruppe.name())
+                .withKanal(svarOgReferatVM.kanal.name())
+                .withFritekst(svarOgReferatVM.getFritekst());
         sakService.sendReferat(referat);
     }
 }

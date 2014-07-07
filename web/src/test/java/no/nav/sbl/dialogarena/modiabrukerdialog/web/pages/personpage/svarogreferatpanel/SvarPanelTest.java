@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
 
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
@@ -9,6 +9,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakServ
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarKanal;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.junit.Before;
