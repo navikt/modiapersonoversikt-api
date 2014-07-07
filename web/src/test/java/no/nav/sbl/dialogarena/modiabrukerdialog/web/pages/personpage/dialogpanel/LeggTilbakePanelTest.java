@@ -61,7 +61,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
                 .andReturn()
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class))
                 .inForm(ofType(Form.class))
-                .select("valgtAarsak:temagruppewrapper:temagruppe", 1)
+                .select("valgtAarsak:temagruppewrapper:nyTemagruppe", 1)
                 .submitWithAjaxButton(withId("leggtilbake"));
 
         List<String> errorMessages = wicket.get().errorMessages();
@@ -113,7 +113,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertThat(errorMessages.isEmpty(), is(false));
-        assertThat(errorMessages, contains(wicket.get().component(ofType(DropDownChoice.class)).getString("temagruppe.Required")));
+        assertThat(errorMessages, contains(wicket.get().component(ofType(DropDownChoice.class)).getString("nyTemagruppe.Required")));
     }
 
     @Test

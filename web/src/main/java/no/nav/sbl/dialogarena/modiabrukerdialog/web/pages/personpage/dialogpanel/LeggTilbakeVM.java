@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class LeggTilbakeVM implements Serializable {
 
     public Aarsak valgtAarsak;
-    public Temagruppe temagruppe;
+    public Temagruppe nyTemagruppe;
     public String annenAarsakTekst;
 
     public static enum Aarsak {
@@ -34,7 +34,7 @@ public class LeggTilbakeVM implements Serializable {
     }
 
     public String lagTemagruppeTekst() {
-        return temagruppe == null ? "" : temagruppe.name();
+        return nyTemagruppe == null ? "" : nyTemagruppe.name();
     }
 
     public AbstractReadOnlyModel<Boolean> erIkkeValgtAarsak(final Aarsak aarsak) {

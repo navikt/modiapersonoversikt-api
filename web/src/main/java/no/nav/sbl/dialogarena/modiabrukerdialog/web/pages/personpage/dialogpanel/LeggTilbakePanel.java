@@ -56,7 +56,7 @@ public class LeggTilbakePanel extends Panel {
         form.add(feedbackPanel);
 
         WebMarkupContainer temagruppevelgerWrapper = new WebMarkupContainer("temagruppewrapper");
-        final DropDownChoice<Temagruppe> temagruppevelger = new DropDownChoice<>("temagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
+        final DropDownChoice<Temagruppe> temagruppevelger = new DropDownChoice<>("nyTemagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
             @Override
             public Object getDisplayValue(Temagruppe object) {
                 return getString(object.name());
