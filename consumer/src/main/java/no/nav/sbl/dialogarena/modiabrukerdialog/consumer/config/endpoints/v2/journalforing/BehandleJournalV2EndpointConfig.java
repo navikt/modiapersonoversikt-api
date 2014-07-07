@@ -5,7 +5,7 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
-import no.nav.tjeneste.virksomhet.behandlejournal.binding.BehandleJournalV2;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
 import org.apache.cxf.configuration.jsse.TLSClientParameters;
 import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.feature.LoggingFeature;
