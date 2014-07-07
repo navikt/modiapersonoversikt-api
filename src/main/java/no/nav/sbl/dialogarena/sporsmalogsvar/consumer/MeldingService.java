@@ -6,10 +6,10 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.meldinger.WSOppdaterInformasjonRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSOppdaterHenvendelseJournalforingsInformasjonRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
@@ -32,7 +32,7 @@ public class MeldingService {
     private HenvendelsePortType henvendelsePortType;
 
     @Inject
-    protected SendHenvendelsePortType sendHenvendelsePortType;
+    protected BehandleHenvendelsePortType behandleHenvendelsePortType;
 
     @Inject
     private no.nav.virksomhet.tjenester.sak.v1.Sak sakWs;
@@ -52,8 +52,8 @@ public class MeldingService {
             Melding melding = meldingVM.melding;
             if (melding.journalfortDato == null) {
                 //TODO: Implementer journalforing mot JOARK
-                sendHenvendelsePortType.oppdaterHenvendelseJournalforingsInformasjon(
-                        new WSOppdaterHenvendelseJournalforingsInformasjonRequest().withBehandlingsId(melding.id).withAny(
+                behandleHenvendelsePortType.oppdaterJournalforingInformasjon(
+                        new WSOppdaterInformasjonRequest().withBehandlingsId(melding.id).withAny(
                                 new XMLJournalforingElement().withJournalfortInformasjon(
                                         new XMLJournalfortInformasjon()
                                                 .withJournalfortTema(sak.tema)

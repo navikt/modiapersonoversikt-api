@@ -24,19 +24,14 @@
         <modig.frontend.version>1.1.42-SNAPSHOT</modig.frontend.version>
         <modig-core.version>1.0.0</modig-core.version>
         <henvendelse.informasjon.v2.version>0.3</henvendelse.informasjon.v2.version>
-        <henvendelse.aktivitet.v2.version>0.4-SNAPSHOT</henvendelse.aktivitet.v2.version>
+        <send.ut.henvendelse.version>0.1</send.ut.henvendelse.version>
+        <behandle.henvendelse.version>0.1</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.14-SNAPSHOT</dialogarena.behandlingsinformasjon.version>
     </properties>
 
     <dependencies>
 
-        <!--Dialogarena-->
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>dialogarena-behandlingsinformasjon</artifactId>
-            <version>${dialogarena.behandlingsinformasjon.version}</version>
-            <scope>provided</scope>
-        </dependency>
+        <!--Dialogarena tjenestespesifikasjon-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-informasjon-v2</artifactId>
@@ -45,8 +40,22 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>henvendelse-aktivitet-v2</artifactId>
-            <version>${henvendelse.aktivitet.v2.version}</version>
+            <artifactId>send-ut-henvendelse</artifactId>
+            <version>${send.ut.henvendelse.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>behandle-henvendelse</artifactId>
+            <version>${behandle.henvendelse.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!--Dialogarena-->
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>dialogarena-behandlingsinformasjon</artifactId>
+            <version>${dialogarena.behandlingsinformasjon.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
