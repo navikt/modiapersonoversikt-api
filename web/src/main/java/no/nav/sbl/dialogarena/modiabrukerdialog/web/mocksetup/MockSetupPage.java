@@ -22,7 +22,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.sakogbehandling.SakOgBehandlingEndpointConfig.SAKOGBEHANDLING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingEndpointConfig.UTBETALING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakOppgaveV2EndpointConfig.GSAK_V2_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_V2_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.journalforing.BehandleJournalV2EndpointConfig.BEHANDLE_JOURNAL_V2_KEY;
 
 public class MockSetupPage extends BasePage {
@@ -61,7 +61,7 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("Utbetaling", UTBETALING_KEY),
                 new MockSetupModel("Kodeverk", KODEVERK_KEY),
                 new MockSetupModel("Kjerneinfo", KJERNEINFO_KEY),
-                new MockSetupModel("Henvendelse", HENVENDELSE_V2_KEY),
+                new MockSetupModel("Henvendelse", HENVENDELSE_KEY),
                 new MockSetupModel("Gsak", GSAK_V2_KEY),
                 new MockSetupModel("Journalføring", BEHANDLE_JOURNAL_V2_KEY),
                 new MockSetupModel("SakOgBehandling", SAKOGBEHANDLING_KEY),

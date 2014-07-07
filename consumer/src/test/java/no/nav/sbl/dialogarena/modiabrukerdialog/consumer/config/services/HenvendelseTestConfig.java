@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,8 +16,8 @@ public class HenvendelseTestConfig {
     }
 
     @Bean
-    public SendHenvendelsePortType sendHenvendelsePortType() {
-        return mock(SendHenvendelsePortType.class);
+    public SendUtHenvendelsePortType sendUtHenvendelsePortType() {
+        return mock(SendUtHenvendelsePortType.class);
     }
 
     @Bean

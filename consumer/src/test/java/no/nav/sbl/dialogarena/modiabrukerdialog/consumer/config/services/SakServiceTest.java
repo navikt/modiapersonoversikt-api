@@ -9,13 +9,13 @@ import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeRequest;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeResponse;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveRequest;
@@ -66,14 +66,14 @@ public class SakServiceTest {
     @Inject
     private HenvendelsePortType henvendelsePortType;
     @Inject
-    protected SendHenvendelsePortType sendHenvendelsePortType;
+    protected SendUtHenvendelsePortType sendUtHenvendelsePortType;
     @Inject
     private Oppgave oppgaveWS;
     @Inject
     private Oppgavebehandling oppgavebehandlingWS;
 
     @Captor
-    ArgumentCaptor<WSSendHenvendelseRequest> wsSendHenvendelseRequestCaptor;
+    ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
     @Captor
     ArgumentCaptor<WSHentOppgaveRequest> hentOppgaveRequestCaptor;
     @Captor
@@ -108,7 +108,7 @@ public class SakServiceTest {
     public void skalSendeReferat() {
         sakService.sendReferat(new Referat().withFnr(FNR).withFritekst(FRITEKST));
 
-        verify(sendHenvendelsePortType).sendHenvendelse(wsSendHenvendelseRequestCaptor.capture());
+        verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(REFERAT.name()));
     }
 
@@ -116,7 +116,7 @@ public class SakServiceTest {
     public void skalSendeSvar() {
         sakService.sendSvar(new Svar().withFnr(FNR).withFritekst(FRITEKST));
 
-        verify(sendHenvendelsePortType).sendHenvendelse(wsSendHenvendelseRequestCaptor.capture());
+        verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(SVAR.name()));
     }
 

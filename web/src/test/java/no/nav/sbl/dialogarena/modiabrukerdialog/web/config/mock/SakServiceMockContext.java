@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
 import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.Oppgavebehandling;
 import org.springframework.context.annotation.Bean;
@@ -24,8 +24,8 @@ public class SakServiceMockContext {
     }
 
     @Bean
-    public SendHenvendelsePortType sendHenvendelsePortType(){
-        return mock(SendHenvendelsePortType.class);
+    public SendUtHenvendelsePortType sendUtHenvendelsePortType(){
+        return mock(SendUtHenvendelsePortType.class);
     }
 
     @Bean

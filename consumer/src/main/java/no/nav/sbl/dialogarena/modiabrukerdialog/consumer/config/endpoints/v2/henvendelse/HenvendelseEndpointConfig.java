@@ -33,14 +33,14 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Hen
 @Configuration
 public class HenvendelseEndpointConfig {
 
-    public static final String HENVENDELSE_V2_KEY = "start.henvendelse.withmock";
+    public static final String HENVENDELSE_KEY = "start.henvendelse.withmock";
 
     @Bean
     public HenvendelsePortType henvendelsePortType() {
         return createSwitcher(
                 createHenvendelePortType(new UserSAMLOutInterceptor()),
                 createHenvendelsePortTypeMock(),
-                HENVENDELSE_V2_KEY,
+                HENVENDELSE_KEY,
                 HenvendelsePortType.class
         );
     }

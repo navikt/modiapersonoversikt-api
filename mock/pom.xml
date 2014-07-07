@@ -97,30 +97,35 @@
             <artifactId>dial-nav-tjeneste-sak</artifactId>
         </dependency>
 
-        <!--Dialogarena-->
+        <!--Dialogarena tjenestespesifikasjon-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-informasjon-v2</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>henvendelse-aktivitet-v2</artifactId>
+            <artifactId>send-ut-henvendelse</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>dialogarena-behandlingsinformasjon</artifactId>
+            <artifactId>behandle-henvendelse</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
         </dependency>
-
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
         </dependency>
 
+        <!--Dialogarena-->
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>dialogarena-behandlingsinformasjon</artifactId>
+        </dependency>
+
+        <!--Tjenstespesifikasjon fim-->
         <dependency>
             <groupId>no.nav.tjenester.fim</groupId>
             <artifactId>nav-fim-aktoer-v1-tjenestespesifikasjon</artifactId>

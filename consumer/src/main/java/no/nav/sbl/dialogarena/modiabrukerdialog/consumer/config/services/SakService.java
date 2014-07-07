@@ -7,11 +7,11 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSSendHenvendelseRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.sendhenvendelse.SendHenvendelsePortType;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.WSFagomrade;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSFinnOppgaveListeFilter;
@@ -72,16 +72,16 @@ public class SakService {
     private HenvendelsePortType henvendelsePortType;
 
     @Inject
-    protected SendHenvendelsePortType sendHenvendelsePortType;
+    protected SendUtHenvendelsePortType sendUtHenvendelsePortType;
 
     public void sendSvar(Svar svar) {
         XMLBehandlingsinformasjon info = createXMLBehandlingsinformasjon(svar);
-        sendHenvendelsePortType.sendHenvendelse(new WSSendHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(svar.fnr).withAny(info));
+        sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(svar.fnr).withAny(info));
     }
 
     public void sendReferat(Referat referat) {
         XMLBehandlingsinformasjon info = createXMLBehandlingsinformasjon(referat);
-        sendHenvendelsePortType.sendHenvendelse(new WSSendHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(referat.fnr).withAny(info));
+        sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(referat.fnr).withAny(info));
     }
 
     public Sporsmal getSporsmalFromOppgaveId(String fnr, String oppgaveid) {
