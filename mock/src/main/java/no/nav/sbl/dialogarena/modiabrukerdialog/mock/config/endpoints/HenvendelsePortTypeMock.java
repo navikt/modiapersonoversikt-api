@@ -44,50 +44,50 @@ public class HenvendelsePortTypeMock {
 
     public static final XMLBehandlingsinformasjon[] HENVENDELSER = {
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusWeeks(2),
-                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(2), "Arbeidsavklaring"),
+                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(2), "Arbeidsavklaring",""),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusWeeks(1),
-                    createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST, valueOf(oppgaveId)), now().minusDays(2), "Foreldrepenger"),
+                    createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST, valueOf(oppgaveId)), now().minusDays(2), "Foreldrepenger", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(3),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST), now().minusDays(2), "Foreldrepenger" ),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST), now().minusDays(2), "Foreldrepenger", "25676425267" ),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(5), KORT_TEKST), now().minusDays(3), "Foreldrepenger" ),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(5), KORT_TEKST), now().minusDays(3), "Foreldrepenger", "" ),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6), KORT_TEKST), now().minusDays(3), "Foreldrepenger" ),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6), KORT_TEKST), now().minusDays(3), "Foreldrepenger", "" ),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(3),
-                    createXMLSporsmal("HJELPEMIDLER", LANG_TEKST, valueOf(oppgaveId++)), null, ""),
+                    createXMLSporsmal("HJELPEMIDLER", LANG_TEKST, valueOf(oppgaveId++)), null, "", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusHours(5),
-                    createXMLSvar("HJELPEMIDLER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), null, ""),
+                    createXMLSvar("HJELPEMIDLER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), null, "", ""),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusMonths(4),
-                    createXMLSporsmal("OVRIGE_HENVENDELSER", LANG_TEKST, valueOf(oppgaveId++)), null, ""),
+                    createXMLSporsmal("OVRIGE_HENVENDELSER", LANG_TEKST, valueOf(oppgaveId++)), null, "", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusMonths(4).plusDays(1),
-                    createXMLSvar("OVRIGE_HENVENDELSER", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), null, ""),
+                    createXMLSvar("OVRIGE_HENVENDELSER", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), now().minusDays(3),"Ovrige", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(7),
-                    createXMLSvar("OVRIGE_HENVENDELSER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), null, ""),
+                    createXMLSvar("OVRIGE_HENVENDELSER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), now().minusDays(3), "Ovrige", ""),
 
             createXmlBehandlingsinformasjon(REFERAT, now(),
-                    createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST), null, ""),
+                    createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST), null, "", ""),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(1),
-                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), null, "")
+                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), null, "", "")
     };
 
-    private static XMLBehandlingsinformasjon createXmlBehandlingsinformasjon(XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata, DateTime journalfortDato, String journalfortTema) {
+    private static XMLBehandlingsinformasjon createXmlBehandlingsinformasjon(XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata, DateTime journalfortDato, String journalfortTema, String journalfortSaksId) {
         behandlingsId = idGenerator.nextInt();
         return new XMLBehandlingsinformasjon()
                 .withHenvendelseType(type.name())
                 .withOpprettetDato(opprettet)
                 .withBehandlingsId(valueOf(behandlingsId))
                 .withAktor(new XMLAktor().withNavIdent(navIdent))
-                .withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortDato(journalfortDato).withJournalfortTema(journalfortTema))
+                .withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortDato(journalfortDato).withJournalfortTema(journalfortTema).withJournalfortSaksId(journalfortSaksId))
                 .withMetadataListe(
                         new XMLMetadataListe().withMetadata(metadata));
     }
