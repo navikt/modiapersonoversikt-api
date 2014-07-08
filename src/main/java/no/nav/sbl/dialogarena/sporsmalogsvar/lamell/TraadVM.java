@@ -23,7 +23,9 @@ public class TraadVM implements Serializable {
         Map<DateTime, List<MeldingVM>> mapMeldingVMPaJournalfortDato = on(meldinger).reduce(indexBy(JOURNALFORT_DATO));
 
         for (DateTime journalfortDato : mapMeldingVMPaJournalfortDato.keySet()) {
-            mapMeldingVMPaJournalfortDato.get(journalfortDato).get(0).nyesteMeldingISinJournalfortgruppe = true;
+            if (journalfortDato != null) {
+                mapMeldingVMPaJournalfortDato.get(journalfortDato).get(0).nyesteMeldingISinJournalfortgruppe = true;
+            }
         }
 
         this.meldinger = meldinger;

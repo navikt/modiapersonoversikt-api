@@ -6,10 +6,7 @@ import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.*;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 
@@ -25,12 +22,12 @@ public class NyesteMeldingPanel extends Panel {
         this.innboksVM = innboksVM;
         final MeldingVM meldingVM = innboksVM.getObject().getValgtTraad().getNyesteMelding();
 
-        //WebMarkupContainer journalfortSkiller = new WebMarkupContainer("journalfortSkiller");
-        add(new Label("valgtTraad.nyesteMelding.melding.journalfortDato"));//, Datoformat.kortMedTid(meldingVM.melding.journalfortDato)));
-        //if (!meldingVM.nyesteMeldingISinJournalfortgruppe) {
-          //  journalfortSkiller.setVisible(false);
-       // }
-       // add(journalfortSkiller);
+        add(new JournalfortSkiller("journalfortSkiller", new Model<MeldingVM>(){
+            @Override
+            public MeldingVM getObject() {
+                return innboksVM.getObject().getValgtTraad().getNyesteMelding();
+            }
+        }));
         this.avsenderbilde = new AvsenderBilde("avsenderbilde", meldingVM);
         add(avsenderbilde);
         add(new Label("valgtTraad.nyesteMelding.opprettetDato"));

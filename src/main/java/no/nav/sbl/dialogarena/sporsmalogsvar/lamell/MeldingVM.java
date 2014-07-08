@@ -39,6 +39,15 @@ public class MeldingVM implements Serializable {
         return VisningUtils.getStatusKlasse(melding.status);
     }
 
+    public String getJournalfortDatoFormatert() {
+        if (melding.journalfortDato != null) {
+            return (Datoformat.kortMedTid(melding.journalfortDato));
+        } else {
+            return "";
+        }
+
+    }
+
     public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {
         @Override
         public int compare(MeldingVM o1, MeldingVM o2) {
