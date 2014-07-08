@@ -7,8 +7,8 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.Component;
@@ -32,6 +32,7 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.util.time.Duration;
 
 import javax.inject.Inject;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -43,23 +44,31 @@ public class SvarPanel extends Panel {
     private SakService sakService;
 
     private final String fnr;
-    private Sporsmal sporsmal;
-    private final WebMarkupContainer sporsmalContainer, svarContainer;
+    private final Sporsmal sporsmal;
+    private final WebMarkupContainer traadContainer, svarContainer;
     private final LeggTilbakePanel leggTilbakePanel;
     private final KvitteringsPanel kvittering;
 
-    public SvarPanel(String id, String fnr, Sporsmal sporsmal) {
+    public SvarPanel(String id, String fnr, Sporsmal sporsmal, List<Svar> svar) {
         super(id);
         this.fnr = fnr;
         this.sporsmal = sporsmal;
         setOutputMarkupId(true);
 
-        sporsmalContainer = new WebMarkupContainer("sporsmalcontainer");
-        sporsmalContainer.setOutputMarkupId(true);
-        sporsmalContainer.add(
+        traadContainer = new WebMarkupContainer("traadcontainer");
+        traadContainer.setOutputMarkupId(true);
+        traadContainer.add(
                 new Label("temagruppe", new ResourceModel(sporsmal.temagruppe)),
                 new Label("dato", Datoformat.kortMedTid(sporsmal.opprettetDato)),
                 new URLParsingMultiLineLabel("sporsmal", sporsmal.fritekst));
+        traadContainer.add(new ListView<Svar>("svarliste", svar) {
+            @Override
+            protected void populateItem(ListItem<Svar> item) {
+                item.add(new Label("temagruppe", new ResourceModel(item.getModelObject().temagruppe)));
+                item.add(new Label("dato", Datoformat.kortMedTid(item.getModelObject().opprettetDato)));
+                item.add(new URLParsingMultiLineLabel("fritekst", item.getModelObject().fritekst));
+            }
+        });
 
         svarContainer = new WebMarkupContainer("svarcontainer");
         svarContainer.setOutputMarkupId(true);
@@ -79,7 +88,7 @@ public class SvarPanel extends Panel {
 
         kvittering = new KvitteringsPanel("kvittering");
 
-        add(sporsmalContainer, svarContainer, leggTilbakePanel, kvittering);
+        add(traadContainer, svarContainer, leggTilbakePanel, kvittering);
     }
 
     private Form lagSvarForm() {
@@ -125,7 +134,7 @@ public class SvarPanel extends Panel {
         form.add(new AjaxButton("send") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-                sendOgVisKvittering(target, form, sporsmalContainer, svarContainer, leggTilbakePanel);
+                sendOgVisKvittering(target, form, traadContainer, svarContainer, leggTilbakePanel);
             }
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {

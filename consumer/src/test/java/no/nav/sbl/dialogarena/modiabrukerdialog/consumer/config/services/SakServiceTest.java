@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
@@ -27,7 +29,6 @@ import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSFerdigstillO
 import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSLagreOppgaveRequest;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.Oppgavebehandling;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,12 +40,15 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import java.util.List;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV2PortTypeMock.lagWSOppgave;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -151,12 +155,12 @@ public class SakServiceTest {
     }
 
     @Test
-    public void skalHenteSporsmaalFraOppgaveId() {
+    public void skalHenteSporsmalFraOppgaveId() {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
                 new WSHentHenvendelseListeResponse().withAny(
-                        createXmlSporsmaal("id1", "fritekst1"),
-                        createXmlSporsmaal("id2", "fritekst2"),
-                        createXmlSporsmaal("id3", "fritekst3")
+                        createXMLSporsmal("id1", "fritekst1"),
+                        createXMLSporsmal("id2", "fritekst2"),
+                        createXMLSporsmal("id3", "fritekst3")
                 );
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
@@ -164,6 +168,25 @@ public class SakServiceTest {
         Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId("fnr", "id2");
 
         assertThat(sporsmal.fritekst, is("fritekst2"));
+    }
+
+    @Test
+    public void skalHenteSvarlisteTilhorendeSporsmal() {
+        String sporsmalId = "sporsmalId";
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
+                new WSHentHenvendelseListeResponse().withAny(
+                        createXMLSvar(sporsmalId),
+                        createXMLSvar(sporsmalId),
+                        createXMLSvar("annenId"),
+                        createXMLSvar("endaEnAnnenId")
+                );
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
+
+        List<Svar> svarliste = sakService.getSvarTilSporsmal("fnr", sporsmalId);
+
+        assertThat(svarliste, hasSize(2));
+        assertThat(svarliste.get(0).sporsmalsId, is(sporsmalId));
+        assertThat(svarliste.get(1).sporsmalsId, is(sporsmalId));
     }
 
     @Test
@@ -196,7 +219,7 @@ public class SakServiceTest {
         return new WSHentHenvendelseResponse().withAny(
                 new XMLBehandlingsinformasjon()
                         .withBehandlingsId(SPORSMAL_ID)
-                        .withOpprettetDato(DateTime.now())
+                        .withOpprettetDato(now())
                         .withHenvendelseType(SPORSMAL.name())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLSporsmal().withFritekst(FRITEKST).withTemagruppe(TEMAGRUPPE)))
@@ -211,9 +234,14 @@ public class SakServiceTest {
         return new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withAnsvarligId("id").withBeskrivelse("opprinnelig beskrivelse"));
     }
 
-    private XMLBehandlingsinformasjon createXmlSporsmaal(String oppgaveId, String fritekst) {
-        XMLBehandlingsinformasjon xmlBehandlingsinformasjon = new XMLBehandlingsinformasjon();
-        xmlBehandlingsinformasjon.setMetadataListe(new XMLMetadataListe().withMetadata(new XMLSporsmal().withOppgaveIdGsak(oppgaveId).withFritekst(fritekst)));
-        return xmlBehandlingsinformasjon;
+    private XMLBehandlingsinformasjon createXMLSporsmal(String oppgaveId, String fritekst) {
+        return new XMLBehandlingsinformasjon().withMetadataListe(new XMLMetadataListe()
+                .withMetadata(new XMLSporsmal().withOppgaveIdGsak(oppgaveId).withFritekst(fritekst)));
+    }
+
+    private XMLBehandlingsinformasjon createXMLSvar(String sporsmalId) {
+        return new XMLBehandlingsinformasjon()
+                .withAktor(new XMLAktor().withFodselsnummer("").withNavIdent(""))
+                .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar().withSporsmalsId(sporsmalId)));
     }
 }

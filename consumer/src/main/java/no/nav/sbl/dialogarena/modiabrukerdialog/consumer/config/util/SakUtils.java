@@ -20,12 +20,10 @@ import static org.joda.time.DateTime.now;
 
 public class SakUtils {
 
-    public static Sporsmal createSporsmalFromHenvendelse(Object henvendelsesObjekt) {
-        XMLBehandlingsinformasjon info = (XMLBehandlingsinformasjon) henvendelsesObjekt;
+    public static Sporsmal createSporsmalFromHenvendelse(XMLBehandlingsinformasjon henvendelse) {
+        Sporsmal sporsmal = new Sporsmal(henvendelse.getBehandlingsId(), henvendelse.getOpprettetDato());
 
-        Sporsmal sporsmal = new Sporsmal(info.getBehandlingsId(), info.getOpprettetDato());
-
-        XMLMetadata xmlMetadata = info.getMetadataListe().getMetadata().get(0);
+        XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
         if(xmlMetadata instanceof XMLSporsmal){
             XMLSporsmal xmlSporsmal = (XMLSporsmal) xmlMetadata;
             sporsmal.temagruppe = xmlSporsmal.getTemagruppe();
@@ -33,7 +31,24 @@ public class SakUtils {
             sporsmal.oppgaveId = xmlSporsmal.getOppgaveIdGsak();
             return sporsmal;
         } else {
-            throw new ApplicationException("Henvendelsen er ikke av typen XMLSporsmal : " + xmlMetadata);
+            throw new ApplicationException("Henvendelsen er ikke av typen XMLSporsmal: " + xmlMetadata);
+        }
+    }
+
+    public static Svar createSvarFromHenvendelse(XMLBehandlingsinformasjon henvendelse) {
+        XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
+        if (xmlMetadata instanceof XMLSvar) {
+            XMLSvar xmlSvar = (XMLSvar) xmlMetadata;
+            return new Svar()
+                    .withFnr(henvendelse.getAktor().getFodselsnummer())
+                    .withNavIdent(henvendelse.getAktor().getNavIdent())
+                    .withSporsmalsId(xmlSvar.getSporsmalsId())
+                    .withTemagruppe(xmlSvar.getTemagruppe())
+                    .withKanal(xmlSvar.getKanal())
+                    .withFritekst(xmlSvar.getFritekst())
+                    .withOpprettetDato(henvendelse.getOpprettetDato());
+        } else {
+            throw new ApplicationException("Henvendelsen er ikke av typen XMLSvar: " + xmlMetadata);
         }
     }
 

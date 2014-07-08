@@ -1,8 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain;
 
-public class Svar {
+import org.joda.time.DateTime;
+
+import java.io.Serializable;
+
+public class Svar implements Serializable {
 
     public String sporsmalsId, fnr, navIdent, temagruppe, kanal, fritekst;
+    public DateTime opprettetDato;
 
     public Svar withSporsmalsId(String sporsmalsId) {
         this.sporsmalsId = sporsmalsId;
@@ -31,6 +36,11 @@ public class Svar {
 
     public Svar withFritekst(String fritekst){
         this.fritekst = fritekst;
+        return this;
+    }
+
+    public Svar withOpprettetDato(DateTime opprettetDato) {
+        this.opprettetDato = opprettetDato;
         return this;
     }
 }
