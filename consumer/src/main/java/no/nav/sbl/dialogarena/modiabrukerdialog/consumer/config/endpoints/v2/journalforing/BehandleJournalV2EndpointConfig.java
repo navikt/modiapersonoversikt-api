@@ -58,7 +58,7 @@ public class BehandleJournalV2EndpointConfig {
 
     private static BehandleJournalV2 createBehandleJournalPortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-//        proxyFactoryBean.setWsdlLocation("wsdl/no/nav/tjeneste/virksomhet/behandleJournal/v2/v2.wsdl");
+//        proxyFactoryBean.setWsdlLocation("classpath:wsdl/no/nav/tjeneste/virksomhet/behandleJournal/v2/behandleJournal.wsdl");
         proxyFactoryBean.setAddress(System.getProperty("behandlejournal.v2.url"));
         proxyFactoryBean.getOutInterceptors().add(interceptor);
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
