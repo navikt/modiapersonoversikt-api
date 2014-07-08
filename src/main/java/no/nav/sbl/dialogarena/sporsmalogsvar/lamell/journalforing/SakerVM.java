@@ -7,8 +7,14 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.commons.collections15.Transformer;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
+import static java.util.Arrays.asList;
+import static java.util.Map.Entry;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.IS_GENERELL_SAK;
@@ -25,20 +31,15 @@ public class SakerVM implements Serializable {
     private MeldingService meldingService;
 
     private TemaSakerListe temaSakerListeFagsak;
-
     private TemaSakerListe temaSakerListeGenerelle;
 
     // TODO: Dette er en midlertidig mapping mellom temagruppe og tema, mens vi venter på kodeverk.
     private static Map<String, List<String>> opprettTemaMapping() {
         Map<String, List<String>> temaMapping = new HashMap<>();
-        temaMapping.put("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", new ArrayList<>(
-                Arrays.asList("Dagpenger", "Arbeidsavklaring")));
-        temaMapping.put("FAMILIE_OG_BARN", new ArrayList<>(
-                Arrays.asList("Foreldrepenger","Barnebidrag")));
-        temaMapping.put("HJELPEMIDLER", new ArrayList<>(
-                Arrays.asList("Hjelpemiddel", "Bilsøknad")));
-        temaMapping.put("OVRIGE_HENVENDELSER", new ArrayList<>(
-                Arrays.asList("Øvrige henvendelser","Annen øvrig hendelse")));
+        temaMapping.put("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", asList("Dagpenger", "Arbeidsavklaring"));
+        temaMapping.put("FAMILIE_OG_BARN", asList("Foreldrepenger", "Barnebidrag"));
+        temaMapping.put("HJELPEMIDLER", asList("Hjelpemiddel", "Bilsøknad"));
+        temaMapping.put("OVRIGE_HENVENDELSER", asList("Øvrige henvendelser", "Annen øvrig hendelse"));
         return temaMapping;
     }
 
@@ -72,17 +73,17 @@ public class SakerVM implements Serializable {
         return temaSakerListeGenerelle.sorter(innboksVM.getValgtTraad().getEldsteMelding().melding.temagruppe);
     }
 
-    private static final Transformer<Map.Entry<String, List<Sak>>, TemaSaker> TIL_TEMASAKER = new Transformer<Map.Entry<String, List<Sak>>, TemaSaker>(){
+    private static final Transformer<Entry<String, List<Sak>>, TemaSaker> TIL_TEMASAKER = new Transformer<Entry<String, List<Sak>>, TemaSaker>() {
         @Override
-        public TemaSaker transform(Map.Entry<String, List<Sak>> entry) {
+        public TemaSaker transform(Entry<String, List<Sak>> entry) {
             return new TemaSaker(entry.getKey(), finnTemaetsGruppe(entry.getKey()), entry.getValue());
         }
     };
 
-    private static String finnTemaetsGruppe(String tema){
-        for(String key : temaMapping.keySet()){
-            if(temaMapping.get(key).contains(tema)){
-                return key;
+    private static String finnTemaetsGruppe(String tema) {
+        for (Entry<String, List<String>> temaEntry : temaMapping.entrySet()) {
+            if (temaEntry.getValue().contains(tema)) {
+                return temaEntry.getKey();
             }
         }
         return TEMA_UTEN_TEMAGRUPPE;
