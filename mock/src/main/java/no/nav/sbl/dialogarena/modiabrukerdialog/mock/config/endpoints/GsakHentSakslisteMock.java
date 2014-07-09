@@ -12,6 +12,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GsakHentSakslisteMock {
 
+    private static final String SAKSID_1 = "11111111";
+    private static final String SAKSID_2 = "22222222";
+    private static final String SAKSID_3 = "33333333";
+    private static final String SAKSID_4 = "44444444";
+    private static final String SAKSID_5 = "555555555";
+    private static final String SAKSID_6 = "666666666";
+    private static final String SAKSID_7 = "777777777";
+    private static final String SAKSID_8 = "888888888";
+
     @Bean
     public Sak sakMock() {
         return createGsakHentSakslisteMock();
@@ -22,14 +31,14 @@ public class GsakHentSakslisteMock {
             @Override
             public WSFinnGenerellSakListeResponse finnGenerellSakListe(WSFinnGenerellSakListeRequest wsFinnGenerellSakListeRequest) {
                 return new WSFinnGenerellSakListeResponse().withSakListe(
-                        createGenerellSak("111111111", "Arbeidsavklaring", "Fagsystem 1", "Generell", DateTime.now().minusDays(1)),
-                        createGenerellSak("222222222", "Foreldrepenger", "Fagsystem 2", "Generell", DateTime.now().minusDays(4)),
-                        createGenerellSak("333333333", "Hjelpemiddel", "Fagsystem 3", "Generell", DateTime.now().minusDays(4)),
-                        createGenerellSak("333333333", "Hjelpemiddel", "Fagsystem 3", "Generell", DateTime.now().minusDays(3)),
-                        createGenerellSak("333333333", "Oppfølging", "Fagsystem 3", "Generell", DateTime.now().minusDays(4)),
-                        createGenerellSak("444444444", "Bilsøknad", "Fagsystem 2", "Bilsøknad", DateTime.now().minusDays(4)),
-                        createGenerellSak("555555555", "Annet", "Fagsystem 2", "Annet", DateTime.now().minusDays(4)),
-                        createGenerellSak("666666666", "Dagpenger", "Fagsystem 1", "Dagpenger", DateTime.now().minusDays(4)));
+                        createGenerellSak(SAKSID_1, "Arbeidsavklaring", "Fagsystem 1", "Generell", DateTime.now().minusDays(1)),
+                        createGenerellSak(SAKSID_2, "Foreldrepenger", "Fagsystem 2", "Generell", DateTime.now().minusDays(4)),
+                        createGenerellSak(SAKSID_3, "Hjelpemiddel", "Fagsystem 3", "Generell", DateTime.now().minusDays(4)),
+                        createGenerellSak(SAKSID_4, "Hjelpemiddel", "Fagsystem 3", "Generell", DateTime.now().minusDays(3)),
+                        createGenerellSak(SAKSID_5, "Oppfølging", "Fagsystem 3", "Generell", DateTime.now().minusDays(4)),
+                        createGenerellSak(SAKSID_6, "Bilsøknad", "Fagsystem 2", "Bilsøknad", DateTime.now().minusDays(4)),
+                        createGenerellSak(SAKSID_7, "Annet", "Fagsystem 2", "Annet", DateTime.now().minusDays(4)),
+                        createGenerellSak(SAKSID_8, "Dagpenger", "Fagsystem 1", "Dagpenger", DateTime.now().minusDays(4)));
             }
         };
     }

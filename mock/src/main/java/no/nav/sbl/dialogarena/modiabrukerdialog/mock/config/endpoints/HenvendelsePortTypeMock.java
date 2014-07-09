@@ -33,6 +33,7 @@ public class HenvendelsePortTypeMock {
     private static int behandlingsId = idGenerator.nextInt();
     private static int oppgaveId = 0;
     private static String navIdent = "Z999999";
+    private static final String JOURNALFORT_SAKSID_FORELDREPENGER = "22222222";
 
     private static final String LANG_TEKST = "Lorem ipsum dolor sit amet, " +
             "consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad " +
@@ -57,14 +58,17 @@ public class HenvendelsePortTypeMock {
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusWeeks(1),
                     createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST, valueOf(oppgaveId)), now().minusDays(2), "Foreldrepenger", ""),
 
+            createXmlBehandlingsinformasjon(SVAR, now().minusDays(2),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST), null , "", ""),
+
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(3),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST), now().minusDays(2), "Foreldrepenger", "25676425267" ),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST), now().minusDays(2), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER ),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(5), KORT_TEKST), now().minusDays(3), "Foreldrepenger", "" ),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(5), KORT_TEKST), now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER ),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6), KORT_TEKST), now().minusDays(3), "Foreldrepenger", "" ),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6), KORT_TEKST), now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER ),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(3),
                     createXMLSporsmal("HJELPEMIDLER", LANG_TEKST, valueOf(oppgaveId++)), null, "", ""),
