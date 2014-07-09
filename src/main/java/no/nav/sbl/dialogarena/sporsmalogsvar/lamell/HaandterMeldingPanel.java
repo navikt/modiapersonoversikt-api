@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.JournalforingsPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.JournalforingsPanelEnkeltSak;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -33,17 +34,26 @@ public class HaandterMeldingPanel extends Panel {
 
         final JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforingsPanel", innboksVM);
         journalforingsPanel.setVisibilityAllowed(false);
+        final JournalforingsPanelEnkeltSak journalforingsPanelEnkeltSak = new JournalforingsPanelEnkeltSak("journalforingsPanelEnkeltSak", innboksVM);
+        journalforingsPanelEnkeltSak.setVisibilityAllowed(false);
 
         final AjaxLink<InnboksVM> journalfor = new AjaxLink<InnboksVM>("journalfor") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                journalforingsPanel.setVisibilityAllowed(true);
-                journalforingsPanel.oppdatereJournalforingssaker();
-                target.add(journalforingsPanel);
+                if (innboksVM.getObject().getValgtTraad().getEldsteMelding().melding.journalfortDato == null) {
+                    journalforingsPanelEnkeltSak.setVisibilityAllowed(false);
+                    journalforingsPanel.setVisibilityAllowed(true);
+                    journalforingsPanel.oppdatereJournalforingssaker();
+                    target.add(journalforingsPanel);
+                } else {
+                    journalforingsPanelEnkeltSak.setVisibilityAllowed(true);
+                    journalforingsPanel.setVisibilityAllowed(false);
+                    target.add(journalforingsPanelEnkeltSak);
+                }
             }
         };
 
-        add(besvar, journalfor, journalforingsPanel);
+        add(besvar, journalfor, journalforingsPanel, journalforingsPanelEnkeltSak);
     }
 
 
