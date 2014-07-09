@@ -10,6 +10,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMoc
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarKanal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.TidligereMeldingPanel;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.junit.Before;
@@ -52,7 +53,7 @@ public class SvarPanelTest extends WicketPageTest {
     public void inneholderSporsmaalsspefikkeKomponenter() {
         wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
                 .should().containComponent(withId("temagruppe").and(ofType(Label.class)))
-                .should().containComponent(withId("sporsmal").and(ofType(URLParsingMultiLineLabel.class)))
+                .should().containComponent(withId("sporsmal").and(ofType(TidligereMeldingPanel.class)))
                 .should().containComponent(withId("dato").and(ofType(Label.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
                 .should().containComponent(withId("kanalbeskrivelse").and(ofType(Label.class)));

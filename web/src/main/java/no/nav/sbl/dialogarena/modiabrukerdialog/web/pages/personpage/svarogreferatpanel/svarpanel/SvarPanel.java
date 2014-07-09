@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
-import no.nav.modig.wicket.component.urlparsinglabel.URLParsingMultiLineLabel;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
@@ -10,8 +9,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakServ
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
-import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.Component;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -26,8 +25,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.util.time.Duration;
 
@@ -36,6 +35,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 
 public class SvarPanel extends Panel {
@@ -48,6 +48,7 @@ public class SvarPanel extends Panel {
     private final WebMarkupContainer traadContainer, svarContainer;
     private final LeggTilbakePanel leggTilbakePanel;
     private final KvitteringsPanel kvittering;
+    private final WebMarkupContainer visTraadContainer;
 
     public SvarPanel(String id, String fnr, Sporsmal sporsmal, List<Svar> svar) {
         super(id);
@@ -55,20 +56,34 @@ public class SvarPanel extends Panel {
         this.sporsmal = sporsmal;
         setOutputMarkupId(true);
 
+        visTraadContainer = new WebMarkupContainer("visTraadContainer");
+        visTraadContainer.setVisibilityAllowed(!svar.isEmpty());
+        visTraadContainer
+                .add(new WebMarkupContainer("ekspanderingspil").add(hasCssClassIf("ekspandert", new AbstractReadOnlyModel<Boolean>() {
+                    @Override
+                    public Boolean getObject() {
+                        return traadContainer.isVisibilityAllowed();
+                    }
+                })))
+                .add(new AjaxEventBehavior("click") {
+                    @Override
+                    protected void onEvent(AjaxRequestTarget target) {
+                        traadContainer.setVisibilityAllowed(!traadContainer.isVisibilityAllowed());
+                        target.add(visTraadContainer, traadContainer);
+                    }
+                });
+
+
         traadContainer = new WebMarkupContainer("traadcontainer");
-        traadContainer.setOutputMarkupId(true);
-        traadContainer.add(
-                new Label("temagruppe", new ResourceModel(sporsmal.temagruppe)),
-                new Label("dato", Datoformat.kortMedTid(sporsmal.opprettetDato)),
-                new URLParsingMultiLineLabel("sporsmal", sporsmal.fritekst));
+        traadContainer.add(new TidligereMeldingPanel("sporsmal", sporsmal.temagruppe, sporsmal.opprettetDato, sporsmal.fritekst, !svar.isEmpty()));
         traadContainer.add(new ListView<Svar>("svarliste", svar) {
             @Override
             protected void populateItem(ListItem<Svar> item) {
-                item.add(new Label("temagruppe", new ResourceModel(item.getModelObject().temagruppe)));
-                item.add(new Label("dato", Datoformat.kortMedTid(item.getModelObject().opprettetDato)));
-                item.add(new URLParsingMultiLineLabel("fritekst", item.getModelObject().fritekst));
+                item.add(new TidligereMeldingPanel("svar", item.getModelObject().temagruppe, item.getModelObject().opprettetDato, item.getModelObject().fritekst, true));
             }
         });
+        traadContainer.setVisibilityAllowed(svar.isEmpty());
+        traadContainer.setOutputMarkupPlaceholderTag(true);
 
         svarContainer = new WebMarkupContainer("svarcontainer");
         svarContainer.setOutputMarkupId(true);
@@ -78,6 +93,7 @@ public class SvarPanel extends Panel {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         svarContainer.setVisibilityAllowed(false);
+                        traadContainer.setVisibilityAllowed(true);
                         leggTilbakePanel.setVisibilityAllowed(true);
                         target.add(SvarPanel.this);
                     }
@@ -88,7 +104,7 @@ public class SvarPanel extends Panel {
 
         kvittering = new KvitteringsPanel("kvittering");
 
-        add(traadContainer, svarContainer, leggTilbakePanel, kvittering);
+        add(visTraadContainer, traadContainer, svarContainer, leggTilbakePanel, kvittering);
     }
 
     private Form lagSvarForm() {
@@ -134,7 +150,7 @@ public class SvarPanel extends Panel {
         form.add(new AjaxButton("send") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-                sendOgVisKvittering(target, form, traadContainer, svarContainer, leggTilbakePanel);
+                sendOgVisKvittering(target, form, visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
             }
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {

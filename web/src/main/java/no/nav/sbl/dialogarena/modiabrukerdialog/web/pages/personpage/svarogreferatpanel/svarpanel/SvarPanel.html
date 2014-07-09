@@ -4,17 +4,18 @@
 <wicket:panel>
     <article class="dialogpanel">
         <section wicket:id="leggtilbakepanel" class="leggtilbake"></section>
-        <section wicket:id="traadcontainer">
-            <h2 class="typeoverskrift svarpaneloverskrift"><wicket:message key="svarpanel.overskrift.sporsmal"/></h2>
-            <h4 wicket:id="temagruppe" class="temagruppeoverskrift">Temaet fra sporsmalet</h4>
-            <p wicket:id="dato" class="dato">Dato her</p>
-            <div wicket:id="sporsmal" class="fritekst">Faktisk tekst!</div>
-            <div wicket:id="svarliste">
-                <h2 class="typeoverskrift svarpaneloverskrift"><wicket:message key="svarpanel.overskrift.svar"/></h2>
-                <h4 wicket:id="temagruppe" class="temagruppeoverskrift"></h4>
-                <p wicket:id="dato" class="dato"></p>
-                <div wicket:id="fritekst" class="fritekst"></div>
+        <section class="traadcontainer">
+            <div wicket:id="visTraadContainer" class="ekspanderingcontainer vistraad">
+                <a class="vistraadlink">Vis tidligere meldingsdetaljer</a>
+                <div wicket:id="ekspanderingspil" class="ekspanderingspil"></div>
+                <div class="robust-strek"></div>
             </div>
+            <section wicket:id="traadcontainer">
+                <wicket:container wicket:id="sporsmal"></wicket:container>
+                <wicket:container wicket:id="svarliste">
+                    <wicket:container wicket:id="svar"></wicket:container>
+                </wicket:container>
+            </section>
         </section>
         <section wicket:id="svarcontainer">
             <form wicket:id="svarform">

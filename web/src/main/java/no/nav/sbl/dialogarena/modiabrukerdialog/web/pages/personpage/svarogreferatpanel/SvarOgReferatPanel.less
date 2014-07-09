@@ -9,21 +9,55 @@
 .dialogpanel {
   text-align: center;
   padding-bottom: 2em;
+  .traadcontainer {
+    margin: 30px 0 0;
+  }
+  .vistraad {
+    .ekspanderingspil {
+      top: 4px;
+      &.ekspandert {
+        top: -4px;
+      }
+    }
+  }
+  .traadoverskrift {
+    .ekspanderingspil {
+      border-top-color: #333333;
+      &.ekspandert {
+        border-bottom-color: #333333;
+      }
+    }
+  }
+  .ekspanderingcontainer {
+    position: relative;
+    cursor: pointer;
+  }
+  .ekspanderingspil {
+    display: inline-block;
+    position: absolute;
+    top: 14px;
+    width: 0;
+    height: 0;
+    margin-left: 1em;
+    border: 8px solid transparent;
+    border-top-color: #0067c5;
+    &.ekspandert {
+      top: 6px;
+      border: 8px solid transparent;
+      border-bottom-color: #0067c5;
+    }
+  }
   form {
     text-align: center;
   }
   .typeoverskrift {
-    margin: 30px 0;
+    display: inline-block;
     &.svarpaneloverskrift {
-      margin-bottom: 0;
+      margin: 0;
     }
   }
   .temagruppeoverskrift {
     margin: 0.8em 0 0;
-  }
-  .robust-strek {
-    padding-bottom: 25px;
-    margin-bottom: 25px !important;
   }
   .fritekst {
     margin: 0 @sideMargin;
