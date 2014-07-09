@@ -131,7 +131,7 @@ public class SakerVMTest {
     public void gittEnTemagruppeSjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadErSortertAlfabetisk() {
         String traadTemagruppe = alleTemagrupper.get(0);
         meldingVM.melding.temagruppe = traadTemagruppe;
-        List<String> traadTemagruppeSineTemaer = temaMapping.get(traadTemagruppe);
+        List<String> traadTemagruppeSineTemaer = TEMA_MAPPING.get(traadTemagruppe);
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
         for (String tema : traadTemagruppeSineTemaer) {
             saksliste.add(createSak("44444444", tema, "Fagsystem 4",SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
@@ -148,7 +148,7 @@ public class SakerVMTest {
     public void sjekkAtDeSakeneSomIkkeHarTemagruppenTilTraadenErSortertAlfabetisk() {
         String traadTemagruppe = alleTemagrupper.get(0);
         meldingVM.melding.temagruppe = traadTemagruppe;
-        List<String> traadTemagruppeSineTemaer = temaMapping.get(traadTemagruppe);
+        List<String> traadTemagruppeSineTemaer = TEMA_MAPPING.get(traadTemagruppe);
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
@@ -248,7 +248,7 @@ public class SakerVMTest {
     }
 
     private ArrayList<String> getAlleEksisterendeTemaer() {
-        Collection<List<String>> values = temaMapping.values();
+        Collection<List<String>> values = TEMA_MAPPING.values();
         ArrayList<String> strings = new ArrayList<>();
         for (List<String> value : values) {
             strings.addAll(value);
@@ -257,7 +257,7 @@ public class SakerVMTest {
     }
 
     private ArrayList<String> getAlleEksisterendeTemagrupper() {
-        return new ArrayList<>(temaMapping.keySet());
+        return new ArrayList<>(TEMA_MAPPING.keySet());
     }
 
     private void assertSortert(List<TemaSaker> temaSakerListe) {

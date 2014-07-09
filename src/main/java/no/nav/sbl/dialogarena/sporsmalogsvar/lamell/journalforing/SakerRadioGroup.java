@@ -8,8 +8,8 @@ import org.apache.wicket.model.PropertyModel;
 import java.util.List;
 
 public class SakerRadioGroup extends RadioGroup<Sak> {
-    private final static String FAGSAK_PROPERTY_NAVN = "journalfor.sakstype.tekst.fagsak";
-    private final static String GENERELL_PROPERTY_NAVN = "journalfor.sakstype.tekst.generell";
+    private static final String FAGSAK_PROPERTY_NAVN = "journalfor.sakstype.tekst.fagsak";
+    private static final String GENERELL_PROPERTY_NAVN = "journalfor.sakstype.tekst.generell";
 
     public SakerRadioGroup(String id, SakerVM sakerVM) {
         super(id);

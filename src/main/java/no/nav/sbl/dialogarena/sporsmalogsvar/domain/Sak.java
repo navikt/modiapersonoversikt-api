@@ -10,8 +10,8 @@ public class Sak implements Serializable, Comparable<Sak> {
     public String saksId, tema, fagsystem, sakstype;
     public DateTime opprettetDato;
 
-    public final static String SAKSTYPE_GENERELL = "Generell";
-    private final static String SAKSTEMA_OPPFOLGING = "Oppfølging";
+    public static final String SAKSTYPE_GENERELL = "Generell";
+    public static final String SAKSTEMA_OPPFOLGING = "Oppfølging";
 
     public boolean isSakstypeForVisingGenerell(){
         return sakstype.equals(SAKSTYPE_GENERELL) && (!tema.equals(SAKSTEMA_OPPFOLGING));

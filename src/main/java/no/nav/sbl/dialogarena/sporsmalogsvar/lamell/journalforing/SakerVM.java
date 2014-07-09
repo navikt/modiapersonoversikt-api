@@ -22,9 +22,9 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.TEMA;
 
 public class SakerVM implements Serializable {
 
-    public final static Map<String, List<String>> temaMapping = opprettTemaMapping();
+    public static final Map<String, List<String>> TEMA_MAPPING = opprettTemaMapping();
 
-    public final static String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
+    public static final String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
 
     private InnboksVM innboksVM;
 
@@ -81,7 +81,7 @@ public class SakerVM implements Serializable {
     };
 
     private static String finnTemaetsGruppe(String tema) {
-        for (Entry<String, List<String>> temaEntry : temaMapping.entrySet()) {
+        for (Entry<String, List<String>> temaEntry : TEMA_MAPPING.entrySet()) {
             if (temaEntry.getValue().contains(tema)) {
                 return temaEntry.getKey();
             }

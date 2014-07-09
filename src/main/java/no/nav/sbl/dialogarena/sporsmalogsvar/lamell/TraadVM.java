@@ -22,9 +22,9 @@ public class TraadVM implements Serializable {
     public TraadVM(List<MeldingVM> meldinger) {
         Map<DateTime, List<MeldingVM>> mapMeldingVMPaJournalfortDato = on(meldinger).reduce(indexBy(JOURNALFORT_DATO));
 
-        for (DateTime journalfortDato : mapMeldingVMPaJournalfortDato.keySet()) {
-            if (journalfortDato != null) {
-                mapMeldingVMPaJournalfortDato.get(journalfortDato).get(0).nyesteMeldingISinJournalfortgruppe = true;
+        for (Map.Entry<DateTime, List<MeldingVM>> journalfortDatoEntry : mapMeldingVMPaJournalfortDato.entrySet()) {
+            if (journalfortDatoEntry.getKey() != null) {
+                journalfortDatoEntry.getValue().get(0).nyesteMeldingISinJournalfortgruppe = true;
             }
         }
 
