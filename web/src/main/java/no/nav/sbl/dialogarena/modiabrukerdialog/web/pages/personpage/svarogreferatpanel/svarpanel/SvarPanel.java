@@ -73,7 +73,6 @@ public class SvarPanel extends Panel {
                     }
                 });
 
-
         traadContainer = new WebMarkupContainer("traadcontainer");
         traadContainer.add(new TidligereMeldingPanel("sporsmal", sporsmal.temagruppe, sporsmal.opprettetDato, sporsmal.fritekst, !svar.isEmpty()));
         traadContainer.add(new ListView<Svar>("svarliste", svar) {
@@ -110,9 +109,6 @@ public class SvarPanel extends Panel {
     private Form lagSvarForm() {
         final Form<SvarOgReferatVM> form = new Form<>("svarform", new CompoundPropertyModel<>(lagModelObjectMedKanalOgTemagruppe()));
 
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(form));
-        feedbackPanel.setOutputMarkupId(true);
-
         final RadioGroup<SvarKanal> radioGroup = new RadioGroup<>("kanal");
         radioGroup.setRequired(true);
         radioGroup.add(new ListView<SvarKanal>("kanalvalg", asList(SvarKanal.values())) {
@@ -126,6 +122,7 @@ public class SvarPanel extends Panel {
 
         final Label kanalbeskrivelse = new Label("kanalbeskrivelse", new StringResourceModel("${name}.beskrivelse", radioGroup.getModel()));
         kanalbeskrivelse.setOutputMarkupId(true);
+        form.add(kanalbeskrivelse);
 
         radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
@@ -134,11 +131,7 @@ public class SvarPanel extends Panel {
             }
         });
 
-        form.add(
-                new Label("navIdent", getSubjectHandler().getUid()),
-                kanalbeskrivelse,
-                feedbackPanel
-        );
+        form.add(new Label("navIdent", getSubjectHandler().getUid()));
 
         form.add(new EnhancedTextArea("tekstfelt", form.getModel(),
                 new EnhancedTextAreaConfigurator()
@@ -146,6 +139,9 @@ public class SvarPanel extends Panel {
                         .withMinTextAreaHeight(150)
                         .withPlaceholderText(getString("svarform.tekstfelt.placeholder"))));
 
+        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(form));
+        feedbackPanel.setOutputMarkupId(true);
+        form.add(feedbackPanel);
 
         form.add(new AjaxButton("send") {
             @Override
