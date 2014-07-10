@@ -24,16 +24,17 @@ public class KvitteringsPanel extends Panel {
         add(new Label("kvitteringsmelding", new PropertyModel(this, "kvitteringsmelding")));
     }
 
-    public void visISekunder(Duration tid, AjaxRequestTarget target, String kvitteringsmelding, final Component... components) {
+    public void visISekunder(int sekunder, String kvitteringsmelding, AjaxRequestTarget target, final Component... components) {
         this.kvitteringsmelding = kvitteringsmelding;
         for (Component component : components) {
             component.setVisibilityAllowed(false);
         }
         this.setVisibilityAllowed(true);
         target.add(this);
+        target.add(components);
 
         if (timeout == null) {
-            timeout = new AbstractAjaxTimerBehavior(tid) {
+            timeout = new AbstractAjaxTimerBehavior(Duration.seconds(sekunder)) {
                 @Override
                 protected void onTimer(AjaxRequestTarget target) {
                     KvitteringsPanel.this.setVisibilityAllowed(false);

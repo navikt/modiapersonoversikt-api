@@ -7,7 +7,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.joda.time.DateTime;
 
@@ -18,17 +18,15 @@ public class TidligereMeldingPanel extends Panel {
         super(id);
 
         final URLParsingMultiLineLabel fritekstFelt = new URLParsingMultiLineLabel("fritekst", fritekst);
+        fritekstFelt.setOutputMarkupPlaceholderTag(true);
+        fritekstFelt.setVisibilityAllowed(!minimert);
 
         final WebMarkupContainer overskriftContainer = new WebMarkupContainer("overskriftContainer");
+        overskriftContainer.setOutputMarkupId(true);
         overskriftContainer
                 .add(
                         new Label("overskrift", new ResourceModel("tidligeremelding.overskrift." + id)),
-                        new WebMarkupContainer("ekspanderingspil").add(hasCssClassIf("ekspandert", new AbstractReadOnlyModel<Boolean>() {
-                            @Override
-                            public Boolean getObject() {
-                                return fritekstFelt.isVisibilityAllowed();
-                            }
-                        })))
+                        new WebMarkupContainer("ekspanderingspil").add(hasCssClassIf("ekspandert", new PropertyModel<Boolean>(fritekstFelt, "visibilityAllowed"))))
                 .add(
                         new AjaxEventBehavior("click") {
                             @Override
@@ -38,9 +36,10 @@ public class TidligereMeldingPanel extends Panel {
                             }
                         });
 
-        add(overskriftContainer.setOutputMarkupId(true));
-        add(new Label("temagruppe", new ResourceModel(temagruppe)));
-        add(new Label("dato", Datoformat.kortMedTid(opprettetDato)));
-        add(fritekstFelt.setVisibilityAllowed(!minimert).setOutputMarkupPlaceholderTag(true));
+        add(
+                overskriftContainer,
+                new Label("temagruppe", new ResourceModel(temagruppe)),
+                new Label("dato", Datoformat.kortMedTid(opprettetDato)),
+                fritekstFelt);
     }
 }

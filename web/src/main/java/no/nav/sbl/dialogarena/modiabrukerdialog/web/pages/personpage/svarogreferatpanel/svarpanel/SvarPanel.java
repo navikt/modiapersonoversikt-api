@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakServ
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
-import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -26,11 +25,10 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.apache.wicket.util.time.Duration;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -61,14 +59,15 @@ public class SvarPanel extends Panel {
         setOutputMarkupId(true);
 
         visTraadContainer = new WebMarkupContainer("visTraadContainer");
+        traadContainer = new WebMarkupContainer("traadcontainer");
+        svarContainer = new WebMarkupContainer("svarcontainer");
+        leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal);
+        kvittering = new KvitteringsPanel("kvittering");
+
+        visTraadContainer.setOutputMarkupPlaceholderTag(true);
         visTraadContainer.setVisibilityAllowed(!svar.isEmpty());
         visTraadContainer
-                .add(new WebMarkupContainer("ekspanderingspil").add(hasCssClassIf("ekspandert", new AbstractReadOnlyModel<Boolean>() {
-                    @Override
-                    public Boolean getObject() {
-                        return traadContainer.isVisibilityAllowed();
-                    }
-                })))
+                .add(new WebMarkupContainer("ekspanderingspil").add(hasCssClassIf("ekspandert", new PropertyModel<Boolean>(traadContainer, "visibilityAllowed"))))
                 .add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
@@ -77,21 +76,20 @@ public class SvarPanel extends Panel {
                     }
                 });
 
-        traadContainer = new WebMarkupContainer("traadcontainer");
-        traadContainer.add(new TidligereMeldingPanel("sporsmal", sporsmal.temagruppe, sporsmal.opprettetDato, sporsmal.fritekst, !svar.isEmpty()));
-        traadContainer.add(new ListView<Svar>("svarliste", svar) {
-            @Override
-            protected void populateItem(ListItem<Svar> item) {
-                item.add(new TidligereMeldingPanel("svar", item.getModelObject().temagruppe, item.getModelObject().opprettetDato, item.getModelObject().fritekst, true));
-            }
-        });
-        traadContainer.setVisibilityAllowed(svar.isEmpty());
         traadContainer.setOutputMarkupPlaceholderTag(true);
+        traadContainer.setVisibilityAllowed(svar.isEmpty());
+        traadContainer.add(
+                new TidligereMeldingPanel("sporsmal", sporsmal.temagruppe, sporsmal.opprettetDato, sporsmal.fritekst, !svar.isEmpty()),
+                new ListView<Svar>("svarliste", svar) {
+                    @Override
+                    protected void populateItem(ListItem<Svar> item) {
+                        item.add(new TidligereMeldingPanel("svar", item.getModelObject().temagruppe, item.getModelObject().opprettetDato, item.getModelObject().fritekst, true));
+                    }
+                });
 
-        svarContainer = new WebMarkupContainer("svarcontainer");
         svarContainer.setOutputMarkupId(true);
         svarContainer.add(
-                lagSvarForm(),
+                new SvarForm("svarform", lagModelObjectMedKanalOgTemagruppe()),
                 new AjaxLink<Void>("leggtilbake") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
@@ -106,84 +104,18 @@ public class SvarPanel extends Panel {
                     }
                 }.add(new Label("leggtilbaketekst", new ResourceModel("svarpanel.avbryt." + (svar.isEmpty() ? "leggtilbake" : "avbryt")))));
 
-        leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal);
         leggTilbakePanel.setVisibilityAllowed(false);
-
-        kvittering = new KvitteringsPanel("kvittering");
 
         add(visTraadContainer, traadContainer, svarContainer, leggTilbakePanel, kvittering);
     }
 
-    private Form lagSvarForm() {
-        final Form<SvarOgReferatVM> form = new Form<>("svarform", new CompoundPropertyModel<>(lagModelObjectMedKanalOgTemagruppe()));
-
-        final RadioGroup<SvarKanal> radioGroup = new RadioGroup<>("kanal");
-        radioGroup.setRequired(true);
-        radioGroup.add(new ListView<SvarKanal>("kanalvalg", asList(SvarKanal.values())) {
-            @Override
-            protected void populateItem(ListItem<SvarKanal> item) {
-                item.add(new Radio<>("kanalknapp", item.getModel()));
-                item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
-            }
-        });
-        form.add(radioGroup);
-
-        final Label kanalbeskrivelse = new Label("kanalbeskrivelse", new StringResourceModel("${name}.beskrivelse", radioGroup.getModel()));
-        kanalbeskrivelse.setOutputMarkupId(true);
-        form.add(kanalbeskrivelse);
-
-        radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-                target.add(kanalbeskrivelse);
-            }
-        });
-
-        form.add(new Label("navIdent", getSubjectHandler().getUid()));
-
-        form.add(new EnhancedTextArea("tekstfelt", form.getModel(),
-                new EnhancedTextAreaConfigurator()
-                        .withMaxCharCount(5000)
-                        .withMinTextAreaHeight(150)
-                        .withPlaceholderText(getString("svarform.tekstfelt.placeholder"))));
-
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(form));
-        feedbackPanel.setOutputMarkupId(true);
-        form.add(feedbackPanel);
-
-        form.add(new AjaxButton("send") {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-                sendOgVisKvittering(target, form, visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
-            }
-            @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
-                target.add(feedbackPanel);
-            }
-        });
-
-        return form;
+    private void sendOgVisKvittering(SvarOgReferatVM svarOgReferatVM, AjaxRequestTarget target) {
+        sendHenvendelse(svarOgReferatVM);
+        kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey()), target,
+                visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
     }
 
-    private SvarOgReferatVM lagModelObjectMedKanalOgTemagruppe() {
-        SvarOgReferatVM svarOgReferatVM = new SvarOgReferatVM();
-        svarOgReferatVM.kanal = SvarKanal.TEKST;
-        svarOgReferatVM.temagruppe = getTemagruppeFraSporsmal();
-        return svarOgReferatVM;
-    }
-
-    private void sendOgVisKvittering(AjaxRequestTarget target, Form<SvarOgReferatVM> form, Component... components) {
-        SvarOgReferatVM svarOgReferatVM = form.getModelObject();
-        sendHenvendelse(svarOgReferatVM, fnr);
-
-        kvittering.visISekunder(Duration.seconds(3), target, getString(svarOgReferatVM.kanal.getKvitteringKey()), components);
-
-        form.setModelObject(new SvarOgReferatVM());
-
-        target.add(components);
-    }
-
-    private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM, String fnr) {
+    private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) {
         Svar svar = new Svar()
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
@@ -196,11 +128,11 @@ public class SvarPanel extends Panel {
         sakService.ferdigstillOppgaveIGsakHvisMulig(sporsmal.oppgaveId);
     }
 
-    @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_ABRUTT)
-    public void visPanel(AjaxRequestTarget target) {
-        svarContainer.setVisibilityAllowed(true);
-        leggTilbakePanel.setVisibilityAllowed(false);
-        target.add(this);
+    private SvarOgReferatVM lagModelObjectMedKanalOgTemagruppe() {
+        SvarOgReferatVM svarOgReferatVM = new SvarOgReferatVM();
+        svarOgReferatVM.kanal = SvarKanal.TEKST;
+        svarOgReferatVM.temagruppe = getTemagruppeFraSporsmal();
+        return svarOgReferatVM;
     }
 
     //Denne er midlertidig mens vi venter på full integrasjon med kodeverk
@@ -211,5 +143,65 @@ public class SvarPanel extends Panel {
             }
         }
         return Temagruppe.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT; //Bruker denne som default
+    }
+
+    @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_ABRUTT)
+    public void visPanel(AjaxRequestTarget target) {
+        svarContainer.setVisibilityAllowed(true);
+        leggTilbakePanel.setVisibilityAllowed(false);
+        target.add(this);
+    }
+
+    private class SvarForm extends Form<SvarOgReferatVM> {
+
+        public SvarForm(String id, SvarOgReferatVM svarOgReferatVM) {
+            super(id, new CompoundPropertyModel<>(svarOgReferatVM));
+
+            final RadioGroup<SvarKanal> radioGroup = new RadioGroup<>("kanal");
+            radioGroup.setRequired(true);
+            radioGroup.add(new ListView<SvarKanal>("kanalvalg", asList(SvarKanal.values())) {
+                @Override
+                protected void populateItem(ListItem<SvarKanal> item) {
+                    item.add(new Radio<>("kanalknapp", item.getModel()));
+                    item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
+                }
+            });
+            add(radioGroup);
+
+            final Label kanalbeskrivelse = new Label("kanalbeskrivelse", new StringResourceModel("${name}.beskrivelse", radioGroup.getModel()));
+            kanalbeskrivelse.setOutputMarkupId(true);
+            add(kanalbeskrivelse);
+
+            radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
+                @Override
+                protected void onUpdate(AjaxRequestTarget target) {
+                    target.add(kanalbeskrivelse);
+                }
+            });
+
+            add(new Label("navIdent", getSubjectHandler().getUid()));
+
+            add(new EnhancedTextArea("tekstfelt", getModel(),
+                    new EnhancedTextAreaConfigurator()
+                            .withMaxCharCount(5000)
+                            .withMinTextAreaHeight(150)
+                            .withPlaceholderTextKey("svarform.tekstfelt.placeholder")));
+
+            final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
+            feedbackPanel.setOutputMarkupId(true);
+            add(feedbackPanel);
+
+            add(new AjaxButton("send") {
+                @Override
+                protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
+                    sendOgVisKvittering(SvarForm.this.getModelObject(), target);
+                }
+
+                @Override
+                protected void onError(AjaxRequestTarget target, Form<?> form) {
+                    target.add(feedbackPanel);
+                }
+            });
+        }
     }
 }
