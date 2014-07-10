@@ -43,6 +43,13 @@ public class HaandterMeldingPanel extends Panel {
             }
         };
 
+        journalfor.add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return !innboksVM.getObject().getValgtTraad().getNyesteMelding().nyesteMeldingISinJournalfortgruppe;
+            }
+        }));
+
         add(besvar, journalfor, journalforingsPanel);
     }
 }

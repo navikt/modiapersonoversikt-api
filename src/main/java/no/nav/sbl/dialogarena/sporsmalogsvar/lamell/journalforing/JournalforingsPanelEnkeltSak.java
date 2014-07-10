@@ -51,7 +51,6 @@ public class JournalforingsPanelEnkeltSak extends Panel {
                 meldingService.journalforTraad(valgtTraadVM, journalfortSakVM.getSak());
                 lukkJournalforingsPanel(target);
             }
-
         };
     }
 

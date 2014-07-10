@@ -54,6 +54,11 @@ public class JournalforingsPanel extends Panel {
         };
     }
 
+    private void lukkJournalforingsPanel(AjaxRequestTarget target) {
+        this.setVisibilityAllowed(false);
+        target.add(this);
+    }
+
     public void oppdatereJournalforingssaker() {
         journalforingsPanelVelgSak.oppdater();
         journalforingsPanelEnkeltSak.oppdater();
@@ -62,11 +67,6 @@ public class JournalforingsPanel extends Panel {
     @RunOnEvents(VALGT_MELDING_EVENT)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
         lukkJournalforingsPanel(target);
-    }
-
-    private void lukkJournalforingsPanel(AjaxRequestTarget target) {
-        this.setVisibilityAllowed(false);
-        target.add(this);
     }
 
 
