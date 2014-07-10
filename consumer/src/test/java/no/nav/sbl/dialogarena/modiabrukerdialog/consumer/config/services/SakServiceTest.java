@@ -98,7 +98,8 @@ public class SakServiceTest {
         when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
 
-        Sporsmal sporsmal = sakService.getSporsmalOgTilordneIGsak(SPORSMAL_ID);
+        Sporsmal sporsmal = sakService.getSporsmal(SPORSMAL_ID);
+        sakService.tilordneOppgaveIGsak(sporsmal.oppgaveId);
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         assertThat(lagreOppgaveRequestCaptor.getValue().getEndreOppgave().getAnsvarligId(), is(SubjectHandler.getSubjectHandler().getUid()));

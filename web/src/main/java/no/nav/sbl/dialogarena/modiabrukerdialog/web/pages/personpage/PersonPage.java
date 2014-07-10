@@ -38,6 +38,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -125,11 +126,10 @@ public class PersonPage extends BasePage {
     }
 
     private void instansierSvarOgReferatPanel(PageParameters pageParameters) {
-        String oppgaveid = pageParameters.get(OPPGAVEID).toString();
-        if (oppgaveid != null) {
-            Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId(fnr, oppgaveid);
-            List<Svar> svarliste = sakService.getSvarTilSporsmal(fnr, sporsmal.id);
-            svarOgReferatPanel = new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svarliste);
+        StringValue oppgaveId = pageParameters.get(OPPGAVEID);
+        if (!oppgaveId.isEmpty()) {
+            Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId(fnr, oppgaveId.toString());
+            svarOgReferatPanel = new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, sakService.getSvarTilSporsmal(fnr, sporsmal.id));
         } else {
             svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
         }
@@ -203,9 +203,12 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void visSvarPanel(AjaxRequestTarget target, String sporsmalId) {
-        Sporsmal sporsmal = sakService.getSporsmalOgTilordneIGsak(sporsmalId);
-        List<Svar> svarliste = sakService.getSvarTilSporsmal(fnr, sporsmal.id);
-        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svarliste));
+        Sporsmal sporsmal = sakService.getSporsmal(sporsmalId);
+        List<Svar> svar = sakService.getSvarTilSporsmal(fnr, sporsmalId);
+        if (svar.isEmpty()) {
+            sakService.tilordneOppgaveIGsak(sporsmal.oppgaveId);
+        }
+        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svar));
         target.add(svarOgReferatPanel);
     }
 

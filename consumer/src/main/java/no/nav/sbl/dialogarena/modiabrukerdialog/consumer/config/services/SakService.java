@@ -119,12 +119,14 @@ public class SakService {
         return svarliste;
     }
 
-    public Sporsmal getSporsmalOgTilordneIGsak(String sporsmalsId) {
+    public Sporsmal getSporsmal(String sporsmalId) {
         XMLBehandlingsinformasjon behandlingsinformasjon =
-                (XMLBehandlingsinformasjon) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalsId)).getAny();
-        XMLSporsmal xmlSporsmal = (XMLSporsmal) behandlingsinformasjon.getMetadataListe().getMetadata().get(0);
-        tilordneOppgave(hentOppgaveFraGsak(xmlSporsmal.getOppgaveIdGsak()));
+                (XMLBehandlingsinformasjon) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalId)).getAny();
         return createSporsmalFromHenvendelse(behandlingsinformasjon);
+    }
+
+    public void tilordneOppgaveIGsak(String oppgaveId) {
+        tilordneOppgave(hentOppgaveFraGsak(oppgaveId));
     }
 
     public Optional<WSOppgave> plukkOppgaveFraGsak(String temagruppe) {
@@ -162,7 +164,6 @@ public class SakService {
     private WSOppgave tilordneOppgave(WSOppgave oppgave) {
         WSOppgave wsOppgave = oppgave.withAnsvarligId(getSubjectHandler().getUid());
         lagreOppgaveIGsak(wsOppgave);
-
         return wsOppgave;
     }
 
