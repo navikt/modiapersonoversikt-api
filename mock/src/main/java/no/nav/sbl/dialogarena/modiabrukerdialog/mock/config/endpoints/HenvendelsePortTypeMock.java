@@ -34,6 +34,7 @@ public class HenvendelsePortTypeMock {
     private static int oppgaveId = 0;
     private static String navIdent = "Z999999";
     private static final String JOURNALFORT_SAKSID_FORELDREPENGER = "22222222";
+    private static final String JOURNALFORT_SAKSID_HJELPEMIDLER = "44444444";
 
     private static final String LANG_TEKST = "Lorem ipsum dolor sit amet, " +
             "consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad " +
@@ -71,10 +72,10 @@ public class HenvendelsePortTypeMock {
                     createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6), KORT_TEKST), now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER ),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(3),
-                    createXMLSporsmal("HJELPEMIDLER", LANG_TEKST, valueOf(oppgaveId++)), null, "", ""),
+                    createXMLSporsmal("HJELPEMIDLER", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusHours(5),
-                    createXMLSvar("HJELPEMIDLER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), null, "", ""),
+                    createXMLSvar("HJELPEMIDLER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusMonths(4),
                     createXMLSporsmal("OVRIGE_HENVENDELSER", LANG_TEKST, valueOf(oppgaveId++)), null, "", ""),
