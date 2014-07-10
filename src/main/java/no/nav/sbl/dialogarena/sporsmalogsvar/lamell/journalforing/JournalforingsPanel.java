@@ -2,62 +2,48 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
-import javax.inject.Inject;
-
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 
 public class JournalforingsPanel extends Panel {
 
-    @Inject
-    private MeldingService meldingService;
-
-    private SakerVM sakerVM;
+    private final JournalforingsPanelEnkeltSak journalforingsPanelEnkeltSak;
+    private final JournalforingsPanelVelgSak journalforingsPanelVelgSak;
 
     public JournalforingsPanel(String id, final IModel<InnboksVM> innboksVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
-        feedbackPanel.setOutputMarkupPlaceholderTag(true);
-        sakerVM = new SakerVM(innboksVM.getObject(), meldingService);
-        Form<InnboksVM> form = new Form<>("plukkSakForm", innboksVM);
-        form.add(
-                feedbackPanel,
-                new SakerRadioGroup("valgtTraad.journalfortSak", sakerVM),
-                getSubmitLenke(innboksVM, feedbackPanel),
-                getAvbrytLenke());
-        add(form);
+        journalforingsPanelEnkeltSak = new JournalforingsPanelEnkeltSak("journalforingsPanelEnkeltSak", innboksVM);
+        journalforingsPanelEnkeltSak.add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return erValgtTraadJournalfortTidligere(innboksVM.getObject());
+            }
+        }));
 
+        journalforingsPanelVelgSak = new JournalforingsPanelVelgSak("journalforingsPanelVelgSak", innboksVM);
+        journalforingsPanelVelgSak.add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return !erValgtTraadJournalfortTidligere(innboksVM.getObject());
+            }
+        }));
+
+        add(journalforingsPanelVelgSak, journalforingsPanelEnkeltSak, getAvbrytLenke());
     }
 
-    private AjaxButton getSubmitLenke(final IModel<InnboksVM> innboksVM, final FeedbackPanel feedbackPanel) {
-        return new AjaxButton("journalforTraad") {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                TraadVM valgtTraadVM = innboksVM.getObject().getValgtTraad();
-                meldingService.journalforTraad(valgtTraadVM, valgtTraadVM.journalfortSak);
-                lukkJournalforingsPanel(target);
-            }
-
-            @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
-                target.add(feedbackPanel);
-            }
-        };
-    }
+    private boolean erValgtTraadJournalfortTidligere(InnboksVM innboksVM) {
+        return(innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortDato != null);
+   }
 
     private AjaxLink<InnboksVM> getAvbrytLenke() {
         return new AjaxLink<InnboksVM>("avbrytJournalforing") {
@@ -69,7 +55,8 @@ public class JournalforingsPanel extends Panel {
     }
 
     public void oppdatereJournalforingssaker() {
-        sakerVM.oppdater();
+        journalforingsPanelVelgSak.oppdater();
+        journalforingsPanelEnkeltSak.oppdater();
     }
 
     @RunOnEvents(VALGT_MELDING_EVENT)
@@ -81,5 +68,6 @@ public class JournalforingsPanel extends Panel {
         this.setVisibilityAllowed(false);
         target.add(this);
     }
+
 
 }

@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 
 @ContextConfiguration(classes = {MeldingServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class JournalforingsPanelTest extends WicketPageTest {
+public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
     @Inject
     private MeldingService meldingService;
@@ -38,13 +38,13 @@ public class JournalforingsPanelTest extends WicketPageTest {
 
     @Test
     public void skalStarteJournalforingsPanelUtenFeil() {
-        wicket.goToPageWith(new JournalforingsPanel("panel", innboksVMModel));
+        wicket.goToPageWith(new JournalforingsPanelVelgSak("panel", innboksVMModel));
     }
 
     @Test
     public void skalJournalforeVedSubmit() {
         wicket
-                .goToPageWith(new JournalforingsPanel("panel", innboksVMModel))
+                .goToPageWith(new JournalforingsPanelVelgSak("panel", innboksVMModel))
                 .printComponentsTree()
                 .inForm("panel:plukkSakForm")
                     .select("valgtTraad.journalfortSak", 0)
@@ -55,7 +55,7 @@ public class JournalforingsPanelTest extends WicketPageTest {
 
     @Test
     public void skalKreveAtMinstEnSakErValgt() {
-        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("panel", innboksVMModel);
+        JournalforingsPanelVelgSak journalforingsPanel = new JournalforingsPanelVelgSak("panel", innboksVMModel);
 
         wicket
                 .goToPageWith(journalforingsPanel)

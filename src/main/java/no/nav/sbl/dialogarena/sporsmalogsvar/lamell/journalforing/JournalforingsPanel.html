@@ -4,19 +4,13 @@
 <head></head>
 <body>
 <wicket:panel>
-    <form wicket:id="plukkSakForm" class="journalforing">
-        <div wicket:id="feedback" class="feedback"></div>
-        <div>
-            <wicket:container wicket:id="valgtTraad.journalfortSak">
-                <div wicket:id="sakstypePanelFagsaker"></div>
-                <div wicket:id="sakstypePanelGenerelle"></div>
-            </wicket:container>
-        </div>
+    <div class="journalforing">
+        <div wicket:id="journalforingsPanelVelgSak"></div>
+        <div wicket:id="journalforingsPanelEnkeltSak"></div>
         <div class="midtstilt-innhold">
-            <a href="#" wicket:id="journalforTraad" class="send knapp-hoved-liten">Journalfør</a>
             <a href="#" wicket:id="avbrytJournalforing" class="avbryt-knapp">Avbryt</a>
         </div>
-    </form>
+    </div>
 </wicket:panel>
 </body>
 </html>

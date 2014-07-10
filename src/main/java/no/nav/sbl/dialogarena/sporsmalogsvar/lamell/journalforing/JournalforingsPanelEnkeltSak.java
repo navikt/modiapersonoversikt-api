@@ -40,7 +40,7 @@ public class JournalforingsPanelEnkeltSak extends Panel {
         }));
         enkeltSak.add(new Label("sak.sakstype"));
 
-        add(enkeltSak, getSubmitLenke(innboksVM), getAvbrytLenke());
+        add(enkeltSak, getSubmitLenke(innboksVM));
     }
 
     private AjaxLink getSubmitLenke(final IModel<InnboksVM> innboksVM) {
@@ -55,13 +55,8 @@ public class JournalforingsPanelEnkeltSak extends Panel {
         };
     }
 
-    private AjaxLink<InnboksVM> getAvbrytLenke() {
-        return new AjaxLink<InnboksVM>("avbrytJournalforing") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                lukkJournalforingsPanel(target);
-            }
-        };
+    public void oppdater() {
+        journalfortSakVM.oppdater();
     }
 
     private void lukkJournalforingsPanel(AjaxRequestTarget target) {
