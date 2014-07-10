@@ -96,7 +96,7 @@ public class PersonPage extends BasePage {
     public PersonPage(PageParameters pageParameters) {
         fnr = pageParameters.get("fnr").toString(null);
         instansierFelter();
-        instansierDialogpanel(pageParameters);
+        instansierSvarOgReferatPanel(pageParameters);
         add(
                 hentPersonPanel,
                 searchToggleButton,
@@ -123,7 +123,7 @@ public class PersonPage extends BasePage {
         fnrContainer = new Label("fnr", fnr);
     }
 
-    private void instansierDialogpanel(PageParameters pageParameters) {
+    private void instansierSvarOgReferatPanel(PageParameters pageParameters) {
         String oppgaveid = pageParameters.get(OPPGAVEID).toString();
         if (oppgaveid != null) {
             Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId(fnr, oppgaveid);
@@ -201,7 +201,7 @@ public class PersonPage extends BasePage {
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
-    public void visSvarPanel(AjaxRequestTarget target, String sporsmalId){
+    public void visSvarPanel(AjaxRequestTarget target, String sporsmalId) {
         Sporsmal sporsmal = sakService.getSporsmalOgTilordneIGsak(sporsmalId);
         List<Svar> svarliste = sakService.getSvarTilSporsmal(fnr, sporsmal.id);
         svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svarliste));
