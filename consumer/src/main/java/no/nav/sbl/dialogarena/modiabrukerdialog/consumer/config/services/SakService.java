@@ -144,7 +144,7 @@ public class SakService {
         }
     }
 
-    public void ferdigstillOppgaveFraGsak(String oppgaveId) {
+    public void ferdigstillOppgaveIGsakHvisMulig(String oppgaveId) {
         oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId).withFerdigstiltAvEnhetId(FERDIGSTILT_AV_ENHET));
     }
 

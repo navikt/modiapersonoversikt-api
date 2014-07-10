@@ -15,6 +15,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -27,6 +28,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.util.time.Duration;
 
@@ -40,6 +42,8 @@ import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 
 public class SvarPanel extends Panel {
 
+    public static final String SVAR_AVBRUTT = "svar.avbrutt";
+
     @Inject
     private SakService sakService;
 
@@ -50,7 +54,7 @@ public class SvarPanel extends Panel {
     private final KvitteringsPanel kvittering;
     private final WebMarkupContainer visTraadContainer;
 
-    public SvarPanel(String id, String fnr, Sporsmal sporsmal, List<Svar> svar) {
+    public SvarPanel(String id, String fnr, Sporsmal sporsmal, final List<Svar> svar) {
         super(id);
         this.fnr = fnr;
         this.sporsmal = sporsmal;
@@ -91,12 +95,16 @@ public class SvarPanel extends Panel {
                 new AjaxLink<Void>("leggtilbake") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        svarContainer.setVisibilityAllowed(false);
-                        traadContainer.setVisibilityAllowed(true);
-                        leggTilbakePanel.setVisibilityAllowed(true);
-                        target.add(SvarPanel.this);
+                        if (svar.isEmpty()) {
+                            svarContainer.setVisibilityAllowed(false);
+                            traadContainer.setVisibilityAllowed(true);
+                            leggTilbakePanel.setVisibilityAllowed(true);
+                            target.add(SvarPanel.this);
+                        } else {
+                            send(SvarPanel.this, Broadcast.BUBBLE, SVAR_AVBRUTT);
+                        }
                     }
-                });
+                }.add(new Label("leggtilbaketekst", new ResourceModel("svarpanel.avbryt." + (svar.isEmpty() ? "leggtilbake" : "avbryt")))));
 
         leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal);
         leggTilbakePanel.setVisibilityAllowed(false);
@@ -185,7 +193,7 @@ public class SvarPanel extends Panel {
                 .withFritekst(svarOgReferatVM.getFritekst());
 
         sakService.sendSvar(svar);
-        sakService.ferdigstillOppgaveFraGsak(sporsmal.oppgaveId);
+        sakService.ferdigstillOppgaveIGsakHvisMulig(sporsmal.oppgaveId);
     }
 
     @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_ABRUTT)

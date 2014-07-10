@@ -60,6 +60,7 @@ import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow.CloseButtonCallback;
@@ -208,8 +209,8 @@ public class PersonPage extends BasePage {
         target.add(svarOgReferatPanel);
     }
 
-    @RunOnEvents({MELDING_SENDT_TIL_BRUKER, LEGG_TILBAKE_UTFORT})
-    public void visReferatPanel(AjaxRequestTarget target){
+    @RunOnEvents({MELDING_SENDT_TIL_BRUKER, LEGG_TILBAKE_UTFORT, SVAR_AVBRUTT})
+    public void visReferatPanel(AjaxRequestTarget target) {
         svarOgReferatPanel = svarOgReferatPanel.replaceWith(new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr));
         target.add(svarOgReferatPanel);
     }

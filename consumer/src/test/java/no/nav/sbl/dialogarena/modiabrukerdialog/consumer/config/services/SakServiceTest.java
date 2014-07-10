@@ -149,7 +149,7 @@ public class SakServiceTest {
 
     @Test
     public void skalFerdigstilleOppgaveFraGsak() {
-        sakService.ferdigstillOppgaveFraGsak("1");
+        sakService.ferdigstillOppgaveIGsakHvisMulig("1");
         verify(oppgavebehandlingWS).ferdigstillOppgaveBolk(ferdigstillOppgaveBolkRequestCaptor.capture());
         assertThat(ferdigstillOppgaveBolkRequestCaptor.getValue().getOppgaveIdListe().get(0), is("1"));
     }
