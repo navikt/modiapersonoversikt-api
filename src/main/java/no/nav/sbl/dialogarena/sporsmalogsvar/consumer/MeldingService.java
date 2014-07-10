@@ -1,13 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalforingElement;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.meldinger.WSOppdaterInformasjonRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
@@ -52,15 +50,12 @@ public class MeldingService {
             Melding melding = meldingVM.melding;
             if (melding.journalfortDato == null) {
                 //TODO: Implementer journalforing mot JOARK
-                behandleHenvendelsePortType.oppdaterJournalforingInformasjon(
-                        new WSOppdaterInformasjonRequest().withBehandlingsId(melding.id).withAny(
-                                new XMLJournalforingElement().withJournalfortInformasjon(
-                                        new XMLJournalfortInformasjon()
-                                                .withJournalfortTema(sak.tema)
-                                                .withJournalfortDato(DateTime.now())
-                                                .withJournalpostId("Fra JOARK")
-                                                .withJournalfortSaksId(sak.saksId))
-                        ));
+                behandleHenvendelsePortType.oppdaterJournalfortInformasjon(melding.id,
+                        new XMLJournalfortInformasjon()
+                                .withJournalfortTema(sak.tema)
+                                .withJournalfortDato(DateTime.now())
+                                .withJournalpostId("Fra JOARK")
+                                .withJournalfortSaksId(sak.saksId));
             }
         }
     }
