@@ -1,11 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
-import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
@@ -14,6 +12,8 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 
 public class JournalforingsPanel extends Panel {
+
+    public static final String TRAAD_JOURNALFORT = "sos.journalforingspanel.traadJournalfort";
 
     private final JournalforingsPanelEnkeltSak journalforingsPanelEnkeltSak;
     private final JournalforingsPanelVelgSak journalforingsPanelVelgSak;
@@ -54,6 +54,7 @@ public class JournalforingsPanel extends Panel {
         };
     }
 
+    @RunOnEvents(VALGT_MELDING_EVENT)
     private void lukkJournalforingsPanel(AjaxRequestTarget target) {
         this.setVisibilityAllowed(false);
         target.add(this);
@@ -63,11 +64,4 @@ public class JournalforingsPanel extends Panel {
         journalforingsPanelVelgSak.oppdater();
         journalforingsPanelEnkeltSak.oppdater();
     }
-
-    @RunOnEvents(VALGT_MELDING_EVENT)
-    public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
-        lukkJournalforingsPanel(target);
-    }
-
-
 }

@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -12,6 +13,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
 import javax.inject.Inject;
+
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.JournalforingsPanel.TRAAD_JOURNALFORT;
 
 public class JournalforingsPanelVelgSak extends Panel {
 
@@ -42,6 +45,7 @@ public class JournalforingsPanelVelgSak extends Panel {
                 TraadVM valgtTraadVM = innboksVM.getObject().getValgtTraad();
                 meldingService.journalforTraad(valgtTraadVM, valgtTraadVM.journalfortSak);
                 lukkJournalforingsPanel(target);
+                send(this, Broadcast.BUBBLE, TRAAD_JOURNALFORT);
             }
 
             @Override

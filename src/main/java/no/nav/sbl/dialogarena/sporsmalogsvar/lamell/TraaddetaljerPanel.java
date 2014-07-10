@@ -7,6 +7,7 @@ import org.apache.wicket.model.IModel;
 
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.JournalforingsPanel.TRAAD_JOURNALFORT;
 
 
 public class TraaddetaljerPanel extends Panel {
@@ -29,8 +30,8 @@ public class TraaddetaljerPanel extends Panel {
         target.add(this);
     }
 
-    @RunOnEvents(MELDING_SENDT_TIL_BRUKER)
-    public void meldingSendtTilBruker(AjaxRequestTarget target){
+    @RunOnEvents({MELDING_SENDT_TIL_BRUKER, TRAAD_JOURNALFORT})
+    public void oppdaterMeldingerHvisSynlig(AjaxRequestTarget target){
         if(this.isVisibleInHierarchy()){
             innboksVMModel.getObject().oppdaterMeldinger();
             target.add(this);
