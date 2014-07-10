@@ -36,6 +36,7 @@ import java.util.Map;
 import static java.lang.String.valueOf;
 import static java.util.Collections.unmodifiableMap;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -88,7 +89,7 @@ public class SakService {
 
     public Sporsmal getSporsmalFromOppgaveId(String fnr, String oppgaveId) {
         List<Object> henvendelseliste =
-                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr)).getAny();
+                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withTyper(SPORSMAL.name()).withFodselsnummer(fnr)).getAny();
 
         XMLBehandlingsinformasjon henvendelse;
         for (Object o : henvendelseliste) {
@@ -103,7 +104,7 @@ public class SakService {
 
     public List<Svar> getSvarTilSporsmal(String fnr, String sporsmalId) {
         List<Object> henvendelseliste =
-                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr)).getAny();
+                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withTyper(SVAR.name()).withFodselsnummer(fnr)).getAny();
 
         List<Svar> svarliste = new ArrayList<>();
 

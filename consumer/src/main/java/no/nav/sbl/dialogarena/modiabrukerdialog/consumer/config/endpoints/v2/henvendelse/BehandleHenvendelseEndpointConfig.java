@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalforingElement;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
@@ -67,7 +67,7 @@ public class BehandleHenvendelseEndpointConfig {
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
         proxyFactoryBean.setProperties(new HashMap<String, Object>());
-        proxyFactoryBean.getProperties().put("jaxb.additionalContextClasses", new Class[]{XMLJournalforingElement.class});
+        proxyFactoryBean.getProperties().put("jaxb.additionalContextClasses", new Class[]{XMLJournalfortInformasjon.class});
         BehandleHenvendelsePortType portType = proxyFactoryBean.create(BehandleHenvendelsePortType.class);
         Client client = ClientProxy.getClient(portType);
         HTTPConduit httpConduit = (HTTPConduit) client.getConduit();
