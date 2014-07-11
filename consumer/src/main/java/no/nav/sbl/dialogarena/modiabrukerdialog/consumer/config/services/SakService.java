@@ -147,18 +147,22 @@ public class SakService {
         }
     }
 
-    public void ferdigstillOppgaveIGsakHvisMulig(String oppgaveId) {
-        oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId).withFerdigstiltAvEnhetId(FERDIGSTILT_AV_ENHET));
+    public void ferdigstillOppgaveIGsak(Optional<String> oppgaveId) {
+        if (oppgaveId.isSome()) {
+            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId.get()).withFerdigstiltAvEnhetId(FERDIGSTILT_AV_ENHET));
+        }
     }
 
-    public void leggTilbakeOppgaveIGsak(String oppgaveId, String beskrivelse, String temagruppe) {
-        WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId);
-        wsOppgave.withAnsvarligId("");
-        wsOppgave.withBeskrivelse(beskrivelse);
-        if (temagruppe != null) {
-            wsOppgave.withFagomrade(new WSFagomrade().withKode(TEMAGRUPPE.get(temagruppe)));
+    public void leggTilbakeOppgaveIGsak(Optional<String> oppgaveId, String beskrivelse, String temagruppe) {
+        if (oppgaveId.isSome()) {
+            WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId.get());
+            wsOppgave.withAnsvarligId("");
+            wsOppgave.withBeskrivelse(beskrivelse);
+            if (temagruppe != null) {
+                wsOppgave.withFagomrade(new WSFagomrade().withKode(TEMAGRUPPE.get(temagruppe)));
+            }
+            lagreOppgaveIGsak(wsOppgave);
         }
-        lagreOppgaveIGsak(wsOppgave);
     }
 
     private WSOppgave tilordneOppgave(WSOppgave oppgave) {

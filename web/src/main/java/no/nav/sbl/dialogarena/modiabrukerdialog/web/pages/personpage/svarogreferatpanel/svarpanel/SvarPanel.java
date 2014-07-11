@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -46,22 +47,24 @@ public class SvarPanel extends Panel {
     private SakService sakService;
 
     private final String fnr;
+    private final Optional<String> oppgaveId;
     private final Sporsmal sporsmal;
     private final WebMarkupContainer traadContainer, svarContainer;
     private final LeggTilbakePanel leggTilbakePanel;
     private final KvitteringsPanel kvittering;
     private final WebMarkupContainer visTraadContainer;
 
-    public SvarPanel(String id, String fnr, Sporsmal sporsmal, final List<Svar> svar) {
+    public SvarPanel(String id, String fnr, Sporsmal sporsmal, final List<Svar> svar, Optional<String> oppgaveId) {
         super(id);
         this.fnr = fnr;
+        this.oppgaveId = oppgaveId;
         this.sporsmal = sporsmal;
         setOutputMarkupId(true);
 
         visTraadContainer = new WebMarkupContainer("visTraadContainer");
         traadContainer = new WebMarkupContainer("traadcontainer");
         svarContainer = new WebMarkupContainer("svarcontainer");
-        leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal);
+        leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, oppgaveId);
         kvittering = new KvitteringsPanel("kvittering");
 
         visTraadContainer.setOutputMarkupPlaceholderTag(true);
@@ -107,25 +110,6 @@ public class SvarPanel extends Panel {
         leggTilbakePanel.setVisibilityAllowed(false);
 
         add(visTraadContainer, traadContainer, svarContainer, leggTilbakePanel, kvittering);
-    }
-
-    private void sendOgVisKvittering(SvarOgReferatVM svarOgReferatVM, AjaxRequestTarget target) {
-        sendHenvendelse(svarOgReferatVM);
-        kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey()), target,
-                visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
-    }
-
-    private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) {
-        Svar svar = new Svar()
-                .withFnr(fnr)
-                .withNavIdent(getSubjectHandler().getUid())
-                .withSporsmalsId(sporsmal.id)
-                .withTemagruppe(svarOgReferatVM.temagruppe.name())
-                .withKanal(svarOgReferatVM.kanal.name())
-                .withFritekst(svarOgReferatVM.getFritekst());
-
-        sakService.sendSvar(svar);
-        sakService.ferdigstillOppgaveIGsakHvisMulig(sporsmal.oppgaveId);
     }
 
     private SvarOgReferatVM lagModelObjectMedKanalOgTemagruppe() {
@@ -202,6 +186,25 @@ public class SvarPanel extends Panel {
                     target.add(feedbackPanel);
                 }
             });
+        }
+
+        private void sendOgVisKvittering(SvarOgReferatVM svarOgReferatVM, AjaxRequestTarget target) {
+            sendHenvendelse(svarOgReferatVM);
+            kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey()), target,
+                    visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
+        }
+
+        private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) {
+            Svar svar = new Svar()
+                    .withFnr(fnr)
+                    .withNavIdent(getSubjectHandler().getUid())
+                    .withSporsmalsId(sporsmal.id)
+                    .withTemagruppe(svarOgReferatVM.temagruppe.name())
+                    .withKanal(svarOgReferatVM.kanal.name())
+                    .withFritekst(svarOgReferatVM.getFritekst());
+
+            sakService.sendSvar(svar);
+            sakService.ferdigstillOppgaveIGsak(oppgaveId);
         }
     }
 }

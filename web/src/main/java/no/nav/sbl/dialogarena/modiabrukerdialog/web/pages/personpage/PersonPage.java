@@ -6,6 +6,7 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
@@ -44,6 +45,8 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import java.util.List;
 
+import static no.nav.modig.lang.option.Optional.none;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
@@ -129,7 +132,7 @@ public class PersonPage extends BasePage {
         StringValue oppgaveId = pageParameters.get(OPPGAVEID);
         if (!oppgaveId.isEmpty()) {
             Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId(fnr, oppgaveId.toString());
-            svarOgReferatPanel = new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, sakService.getSvarTilSporsmal(fnr, sporsmal.id));
+            svarOgReferatPanel = new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, sakService.getSvarTilSporsmal(fnr, sporsmal.id), optional(oppgaveId.toString()));
         } else {
             svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
         }
@@ -205,10 +208,12 @@ public class PersonPage extends BasePage {
     public void visSvarPanel(AjaxRequestTarget target, String sporsmalId) {
         Sporsmal sporsmal = sakService.getSporsmal(sporsmalId);
         List<Svar> svar = sakService.getSvarTilSporsmal(fnr, sporsmalId);
+        Optional<String> oppgaveId = none();
         if (svar.isEmpty()) {
             sakService.tilordneOppgaveIGsak(sporsmal.oppgaveId);
+            oppgaveId = optional(sporsmal.oppgaveId);
         }
-        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svar));
+        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svar, oppgaveId));
         target.add(svarOgReferatPanel);
     }
 

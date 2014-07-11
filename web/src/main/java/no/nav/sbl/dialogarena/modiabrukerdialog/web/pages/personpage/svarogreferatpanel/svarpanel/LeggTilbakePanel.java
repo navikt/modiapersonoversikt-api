@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -41,21 +41,15 @@ public class LeggTilbakePanel extends Panel {
     @Inject
     private SakService sakService;
 
-    private LeggTilbakeVM leggTilbakeVM;
-
-    public LeggTilbakePanel(String id, final Sporsmal sporsmal) {
+    public LeggTilbakePanel(String id, String temagruppe, final Optional<String> oppgaveId) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        this.leggTilbakeVM = new LeggTilbakeVM();
+        final LeggTilbakeVM leggTilbakeVM = new LeggTilbakeVM();
 
-        add(new Label("temagruppe", new ResourceModel(sporsmal.temagruppe)));
+        add(new Label("temagruppe", new ResourceModel(temagruppe)));
 
         Form<LeggTilbakeVM> form = new Form<>("leggtilbakeform", new CompoundPropertyModel<>(leggTilbakeVM));
-
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
-        feedbackPanel.setOutputMarkupPlaceholderTag(true);
-        form.add(feedbackPanel);
 
         WebMarkupContainer temagruppevelgerWrapper = new WebMarkupContainer("temagruppewrapper");
         final DropDownChoice<Temagruppe> temagruppevelger = new DropDownChoice<>("nyTemagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
@@ -101,10 +95,17 @@ public class LeggTilbakePanel extends Panel {
             }
         });
 
+        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+        feedbackPanel.setOutputMarkupPlaceholderTag(true);
+        form.add(feedbackPanel);
+
         form.add(new AjaxButton("leggtilbake") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                leggTilbakeOppgave(sporsmal.oppgaveId);
+                sakService.leggTilbakeOppgaveIGsak(
+                        oppgaveId,
+                        leggTilbakeVM.lagBeskrivelse(new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
+                        leggTilbakeVM.lagTemagruppeTekst());
                 send(LeggTilbakePanel.this, Broadcast.BUBBLE, LEGG_TILBAKE_UTFORT);
             }
             @Override
@@ -127,11 +128,6 @@ public class LeggTilbakePanel extends Panel {
         for (FormComponent formComponent : formComponents) {
             formComponent.setRequired(required);
         }
-    }
-
-    private void leggTilbakeOppgave(String oppgaveId) {
-        String beskrivelse = leggTilbakeVM.lagBeskrivelse(new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), this, getDefaultModel()).getString());
-        sakService.leggTilbakeOppgaveIGsak(oppgaveId, beskrivelse, leggTilbakeVM.lagTemagruppeTekst());
     }
 
     @Override
