@@ -9,6 +9,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 
 public class JournalforingsPanel extends Panel {
@@ -23,22 +24,22 @@ public class JournalforingsPanel extends Panel {
         setOutputMarkupPlaceholderTag(true);
 
         journalforingsPanelEnkeltSak = new JournalforingsPanelEnkeltSak("journalforingsPanelEnkeltSak", innboksVM);
-        journalforingsPanelEnkeltSak.add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
+        journalforingsPanelVelgSak = new JournalforingsPanelVelgSak("journalforingsPanelVelgSak", innboksVM);
+
+        AbstractReadOnlyModel<Boolean> valgtTraadErJournalfortTidligere = lagValgtTraadErJournalfortTidligereModel(innboksVM);
+        journalforingsPanelEnkeltSak.add(visibleIf(valgtTraadErJournalfortTidligere));
+        journalforingsPanelVelgSak.add(visibleIf(not(valgtTraadErJournalfortTidligere)));
+
+        add(journalforingsPanelVelgSak, journalforingsPanelEnkeltSak, getAvbrytLenke());
+    }
+
+    private AbstractReadOnlyModel<Boolean> lagValgtTraadErJournalfortTidligereModel(final IModel<InnboksVM> innboksVM) {
+        return new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
                 return erValgtTraadJournalfortTidligere(innboksVM.getObject());
             }
-        }));
-
-        journalforingsPanelVelgSak = new JournalforingsPanelVelgSak("journalforingsPanelVelgSak", innboksVM);
-        journalforingsPanelVelgSak.add(visibleIf(new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return !erValgtTraadJournalfortTidligere(innboksVM.getObject());
-            }
-        }));
-
-        add(journalforingsPanelVelgSak, journalforingsPanelEnkeltSak, getAvbrytLenke());
+        };
     }
 
     private boolean erValgtTraadJournalfortTidligere(InnboksVM innboksVM) {

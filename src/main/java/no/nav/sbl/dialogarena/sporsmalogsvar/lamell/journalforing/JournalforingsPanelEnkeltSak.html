@@ -5,29 +5,30 @@
 <body>
 <wicket:panel>
     <div class="journalforing">
-        <div wicket:id="enkeltSak">
-            <div>
-                <h4 wicket:id="sak.sakstype" class="midtstilt-innhold"></h4>
-            </div>
-            <div>
-                <span wicket:id="sak.tema"></span>
-            </div>
-            <label>
-                <div class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></div>
-                <div wicket:id="sak.saksId"/>
-            </label>
-            <label>
-                <div class="saksTekst"><wicket:message key ="journalfor.sak.opprettetDatoTekst"/></div>
-                <div wicket:id="sak.journalfortDatoFormatert"/>
-            </label>
-            <label>
-                <div class="saksTekst"><wicket:message key ="journalfor.sak.fagsystemTekst"/></div>
-                <div wicket:id="sak.fagsystem"/>
-            </label>
+        <div>
+            <h3> <wicket:message key="journalforingEnkeltSak.overskrift" class="midtstilt-innhold"/></h3>
         </div>
+        <div>
+            <h4 wicket:id="sakstype" class="midtstilt-innhold"></h4>
+        </div>
+        <div>
+            <span wicket:id="tema"></span>
+        </div>
+        <label>
+            <div class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></div>
+            <div wicket:id="saksId"/>
+        </label>
+        <label>
+            <div class="saksTekst"><wicket:message key ="journalfor.sak.opprettetDatoTekst"/></div>
+            <div wicket:id="opprettetDatoFormatert"/>
+        </label>
+        <label>
+            <div class="saksTekst"><wicket:message key ="journalfor.sak.fagsystemTekst"/></div>
+            <div wicket:id="fagsystem"/>
+        </label>
         <div class="midtstilt-innhold">
             <a href="#" wicket:id="journalforTraad" class="send knapp-hoved-liten">Journalfør</a>
-        </div>
+       </div>
     </div>
 </wicket:panel>
 </body>
