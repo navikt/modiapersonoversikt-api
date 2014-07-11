@@ -19,6 +19,7 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
@@ -71,7 +72,7 @@ public class PlukkOppgavePanel extends Panel {
             @Override
             protected void populateItem(ListItem<Temagruppe> item) {
                 item.add(new Radio<>("temagruppevalg", item.getModel()));
-                item.add(new Label("temagruppenavn", getString(item.getModelObject().name())));
+                item.add(new Label("temagruppenavn", new ResourceModel(item.getModelObject().name())));
             }
         });
         form.add(plukkOppgave, radioGroup, feedbackPanel);
