@@ -10,7 +10,6 @@ public class Sak implements Serializable, Comparable<Sak> {
 
     public String saksId, tema, fagsystem, sakstype;
     public DateTime opprettetDato;
-    private String opprettetDatoFormatert;
 
     public static final String SAKSTYPE_GENERELL = "Generell";
     public static final String SAKSTEMA_OPPFOLGING = "Oppfølging";
