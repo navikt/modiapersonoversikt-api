@@ -31,8 +31,8 @@ public class TraaddetaljerPanel extends Panel {
     }
 
     @RunOnEvents({MELDING_SENDT_TIL_BRUKER, TRAAD_JOURNALFORT})
-    public void oppdaterMeldingerHvisSynlig(AjaxRequestTarget target){
-        if(this.isVisibleInHierarchy()){
+    public void oppdaterMeldingerHvisSynlig(AjaxRequestTarget target) {
+        if (this.isVisibleInHierarchy()) {
             innboksVMModel.getObject().oppdaterMeldinger();
             target.add(this);
         }

@@ -59,8 +59,8 @@ public class AlleMeldingerPanel extends Panel {
     }
 
     @RunOnEvents(MELDING_SENDT_TIL_BRUKER)
-    public void meldingSendtTilBruker(AjaxRequestTarget target){
-        if(this.isVisibleInHierarchy()){
+    public void meldingSendtTilBruker(AjaxRequestTarget target) {
+        if (this.isVisibleInHierarchy()) {
             innboksVMModel.getObject().oppdaterMeldinger();
             innboksVMModel.getObject().setValgtMelding(innboksVMModel.getObject().getNyesteMeldingINyesteTraad());
             target.add(this);

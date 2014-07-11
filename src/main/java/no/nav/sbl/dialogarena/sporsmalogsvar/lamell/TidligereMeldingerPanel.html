@@ -5,23 +5,24 @@
 <body>
 <wicket:panel>
     <div wicket:id="valgtTraad.tidligereMeldinger">
-        <div wicket:id="journalfortSkiller" class = "journalfort-skiller"></div>
+        <div wicket:id="journalfortSkiller" class="journalfort-skiller"></div>
         <article class="tidligere-melding">
-                <div class="clearfix">
-                    <div class="venstre-kolonne">
-                        <div class="avsenderbilde-ramme lite">
-                            <img wicket:id="avsenderbilde" />
-                        </div>
-                    </div>
-                    <div class="hoyre-kolonne">
-                        <div class="header">
-                            <h4 wicket:id="opprettetDato" class="dato"></h4>
-                            <h2 wicket:id="temagruppe" class="medium temagruppe"></h2>
-                        </div>
-                        <div wicket:id="melding.navIdent"></div>
-                        <wicket:container wicket:id="melding.fritekst" />
+            <div class="clearfix">
+                <div class="venstre-kolonne">
+                    <div class="avsenderbilde-ramme lite">
+                        <img wicket:id="avsenderbilde"/>
                     </div>
                 </div>
+                <div class="hoyre-kolonne">
+                    <div class="header">
+                        <h4 wicket:id="opprettetDato" class="dato"></h4>
+
+                        <h2 wicket:id="temagruppe" class="medium temagruppe"></h2>
+                    </div>
+                    <div wicket:id="melding.navIdent"></div>
+                    <wicket:container wicket:id="melding.fritekst"/>
+                </div>
+            </div>
         </article>
     </div>
 </wicket:panel>
