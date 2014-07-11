@@ -6,11 +6,12 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class HaandterMeldingPanel extends Panel {
 
@@ -23,13 +24,7 @@ public class HaandterMeldingPanel extends Panel {
                 send(getPage(), Broadcast.BUBBLE, new NamedEventPayload(SVAR_PAA_MELDING, getModelObject().getValgtTraad().getEldsteMelding().melding.id));
             }
         };
-
-        besvar.add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return innboksVM.getObject().getValgtTraad().bleInitiertAvBruker();
-            }
-        }));
+        besvar.add(enabledIf(new PropertyModel<Boolean>(innboksVM, "valgtTraad.bleInitiertAvBruker()")));
 
         final JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforingsPanel", innboksVM);
         journalforingsPanel.setVisibilityAllowed(false);
@@ -42,13 +37,7 @@ public class HaandterMeldingPanel extends Panel {
                 journalforingsPanel.oppdatereJournalforingssaker();
             }
         };
-
-        journalfor.add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return !innboksVM.getObject().getValgtTraad().getNyesteMelding().nyesteMeldingISinJournalfortgruppe;
-            }
-        }));
+        journalfor.add(enabledIf(not(new PropertyModel<Boolean>(innboksVM, "valgtTraad.nyesteMelding.nyesteMeldingISinJournalfortgruppe"))));
 
         add(besvar, journalfor, journalforingsPanel);
     }

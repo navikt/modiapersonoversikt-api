@@ -6,10 +6,12 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 
-import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class TidligereMeldingerPanel extends Panel {
     public TidligereMeldingerPanel(String id) {
@@ -21,13 +23,8 @@ public class TidligereMeldingerPanel extends Panel {
                 item.add(new JournalfortSkiller("journalfortSkiller", item.getModel()));
                 item.add(new AvsenderBilde("avsenderbilde", meldingVM));
                 item.add(new Label("opprettetDato"));
-                item.add(new Label("temagruppe", new StringResourceModel("${melding.temagruppe}", item.getModel())));
-                item.add(new Label("melding.navIdent").add(enabledIf(new AbstractReadOnlyModel<Boolean>() {
-                    @Override
-                    public Boolean getObject() {
-                        return meldingVM.melding.navIdent!= null && !meldingVM.melding.navIdent.isEmpty();
-                    }
-                })));
+                item.add(new Label("temagruppe", new ResourceModel(meldingVM.melding.temagruppe)));
+                item.add(new Label("melding.navIdent").add(visibleIf(not(isEmptyString(new PropertyModel<String>(meldingVM, "melding.navIdent"))))));
                 item.add(new URLParsingMultiLineLabel("melding.fritekst"));
             }
         });
