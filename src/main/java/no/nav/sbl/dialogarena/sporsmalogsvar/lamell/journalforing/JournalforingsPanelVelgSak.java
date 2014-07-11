@@ -60,7 +60,7 @@ public class JournalforingsPanelVelgSak extends Panel {
     }
 
     private void lukkJournalforingsPanel(AjaxRequestTarget target) {
-        this.setVisibilityAllowed(false);
+        getParent().setVisibilityAllowed(false);
         target.add(this);
     }
 }
