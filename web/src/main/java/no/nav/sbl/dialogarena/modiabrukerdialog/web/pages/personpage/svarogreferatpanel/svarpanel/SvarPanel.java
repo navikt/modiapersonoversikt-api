@@ -61,7 +61,7 @@ public class SvarPanel extends Panel {
         this.sporsmal = sporsmal;
         setOutputMarkupId(true);
 
-        visTraadContainer = new WebMarkupContainer("visTraadContainer");
+        visTraadContainer = new WebMarkupContainer("vistraadcontainer");
         traadContainer = new WebMarkupContainer("traadcontainer");
         svarContainer = new WebMarkupContainer("svarcontainer");
         leggTilbakePanel = new LeggTilbakePanel("leggtilbakepanel", sporsmal.temagruppe, oppgaveId);
@@ -130,7 +130,7 @@ public class SvarPanel extends Panel {
     }
 
     @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_ABRUTT)
-    public void visPanel(AjaxRequestTarget target) {
+    public void skjulLeggTilbakePanel(AjaxRequestTarget target) {
         svarContainer.setVisibilityAllowed(true);
         leggTilbakePanel.setVisibilityAllowed(false);
         target.add(this);
