@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 
 import java.util.List;
 
@@ -17,7 +18,7 @@ public class SakerPerSakstypeRadioChoices extends Panel {
         super(id);
 
         add(
-                new Label("sakstype", getString(sakstypePropertyKey)),
+                new Label("sakstype", new ResourceModel(sakstypePropertyKey)),
                 new PropertyListView<TemaSaker>("saksgruppeliste", model) {
                     @Override
                     protected void populateItem(ListItem<TemaSaker> item) {
