@@ -24,12 +24,17 @@ public class JournalfortSakVM implements Serializable {
     public void oppdater() {
         List<Sak> sakerForBruker = meldingService.hentSakerForBruker(innboksVM.getFnr());
         String journalfortSaksId = innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortSaksId;
-        sak = new Sak();
+
+        sak = finnJournalfortSakHvisDenEksisterer(sakerForBruker, journalfortSaksId);
+    }
+
+    private Sak finnJournalfortSakHvisDenEksisterer(List<Sak> sakerForBruker, String journalfortSaksId) {
         for (Sak sak : sakerForBruker) {
             if (sak.saksId.equals(journalfortSaksId)) {
-                this.sak = sak;
+                return sak;
             }
         }
+        return new Sak();
     }
 
     public Sak getSak() {
