@@ -139,14 +139,6 @@ public class SakService {
         }
     }
 
-    public WSOppgave hentOppgaveFraGsak(String oppgaveId) {
-        try {
-            return oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
-        } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
-            throw new RuntimeException(hentOppgaveOppgaveIkkeFunnet);
-        }
-    }
-
     public void ferdigstillOppgaveIGsak(Optional<String> oppgaveId) {
         if (oppgaveId.isSome()) {
             oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId.get()).withFerdigstiltAvEnhetId(FERDIGSTILT_AV_ENHET));
@@ -162,6 +154,14 @@ public class SakService {
                 wsOppgave.withFagomrade(new WSFagomrade().withKode(TEMAGRUPPE.get(temagruppe)));
             }
             lagreOppgaveIGsak(wsOppgave);
+        }
+    }
+
+    private WSOppgave hentOppgaveFraGsak(String oppgaveId) {
+        try {
+            return oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
+        } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
+            throw new RuntimeException(hentOppgaveOppgaveIkkeFunnet);
         }
     }
 

@@ -80,8 +80,6 @@ public class SakServiceTest {
     @Captor
     ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
     @Captor
-    ArgumentCaptor<WSHentOppgaveRequest> hentOppgaveRequestCaptor;
-    @Captor
     ArgumentCaptor<WSFinnOppgaveListeRequest> finnOppgaveListeRequestCaptor;
     @Captor
     ArgumentCaptor<WSFerdigstillOppgaveBolkRequest> ferdigstillOppgaveBolkRequestCaptor;
@@ -124,15 +122,6 @@ public class SakServiceTest {
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(SVAR.name()));
-    }
-
-    @Test
-    public void skalHenteOppgavefraGsak() throws HentOppgaveOppgaveIkkeFunnet {
-        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
-
-        sakService.hentOppgaveFraGsak("1");
-        verify(oppgaveWS).hentOppgave(hentOppgaveRequestCaptor.capture());
-        assertThat(hentOppgaveRequestCaptor.getValue().getOppgaveId(), is("1"));
     }
 
     @Test
