@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.domain;
 
+import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -9,6 +10,7 @@ public class Sak implements Serializable, Comparable<Sak> {
 
     public String saksId, tema, fagsystem, sakstype;
     public DateTime opprettetDato;
+    private String opprettetDatoFormatert;
 
     public static final String SAKSTYPE_GENERELL = "Generell";
     public static final String SAKSTEMA_OPPFOLGING = "Oppfølging";
@@ -30,6 +32,10 @@ public class Sak implements Serializable, Comparable<Sak> {
             return sak.isSakstypeForVisingGenerell();
         }
     };
+
+    public String getOpprettetDatoFormatert(){
+        return Datoformat.kortMedTid(opprettetDato);
+    }
 
     @Override
     public int compareTo(Sak other) {

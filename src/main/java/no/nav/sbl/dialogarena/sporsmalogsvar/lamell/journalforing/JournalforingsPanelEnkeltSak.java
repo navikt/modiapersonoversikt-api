@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
-import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -12,7 +11,6 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
@@ -38,12 +36,7 @@ public class JournalforingsPanelEnkeltSak extends Panel {
         add(new Label("tema"));
         add(new Label("saksId"));
         add(new Label("fagsystem"));
-        add(new Label("opprettetDatoFormatert", new Model<String>() {
-            @Override
-            public String getObject() {
-                return Datoformat.kortMedTid(journalfortSakVM.getSak().opprettetDato);
-            }
-        }));
+        add(new Label("opprettetDatoFormatert"));
         add(getSubmitLenke(innboksVM));
     }
 

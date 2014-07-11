@@ -28,7 +28,7 @@ public class SakerPerSakstypeRadioChoices extends Panel {
                             protected void populateItem(ListItem<Sak> item) {
                                 item.add(new Radio<>("sak", item.getModel()));
                                 item.add(new Label("saksId"));
-                                item.add(new Label("opprettetDato", Datoformat.kort(item.getModelObject().opprettetDato)));
+                                item.add(new Label("opprettetDatoFormatert"));
                                 item.add(new Label("fagsystem"));
                             }
                         });
