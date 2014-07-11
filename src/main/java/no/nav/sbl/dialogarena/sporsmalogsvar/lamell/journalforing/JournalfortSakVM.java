@@ -15,7 +15,7 @@ public class JournalfortSakVM implements Serializable {
 
     private Sak sak;
 
-    public JournalfortSakVM(InnboksVM innboksVM, MeldingService meldingService){
+    public JournalfortSakVM(InnboksVM innboksVM, MeldingService meldingService) {
         this.innboksVM = innboksVM;
         this.meldingService = meldingService;
         oppdater();
@@ -25,11 +25,14 @@ public class JournalfortSakVM implements Serializable {
         List<Sak> sakerForBruker = meldingService.hentSakerForBruker(innboksVM.getFnr());
         String journalfortSaksId = innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortSaksId;
         sak = new Sak();
-        for (Sak sak : sakerForBruker){
-            if (sak.saksId.equals(journalfortSaksId)){
+        for (Sak sak : sakerForBruker) {
+            if (sak.saksId.equals(journalfortSaksId)) {
                 this.sak = sak;
             }
         }
     }
-    public Sak getSak(){ return sak;}
+
+    public Sak getSak() {
+        return sak;
+    }
 }

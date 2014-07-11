@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
-import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -33,7 +32,8 @@ public class SakerPerSakstypeRadioChoices extends Panel {
                             }
                         });
                     }
-                });
+                }
+        );
     }
 
 }
