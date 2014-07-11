@@ -60,9 +60,9 @@ public class JournalfortSakVMTest {
     @Test
     public void sjekkAtGetSakMetodenReturnererKorrektSakBasertPaJournalforingsId() {
         JournalfortSakVM journalfortSakVM = new JournalfortSakVM(innboksVM, meldingService);
+        journalfortSakVM.oppdater();
 
         assertThat(journalfortSakVM.getSak().saksId, is(SAKS_ID_3));
-
     }
 
     private MeldingVM opprettMeldingVMogSetJournalfortSaksId(String journalfortSaksId) {

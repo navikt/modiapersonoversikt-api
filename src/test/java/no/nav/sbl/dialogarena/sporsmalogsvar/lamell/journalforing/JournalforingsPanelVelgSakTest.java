@@ -37,7 +37,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
     }
 
     @Test
-    public void skalStarteJournalforingsPanelUtenFeil() {
+    public void skalStarteJournalforingsPanelVelgSakUtenFeil() {
         wicket.goToPageWith(new JournalforingsPanelVelgSak("panel", innboksVMModel));
     }
 
