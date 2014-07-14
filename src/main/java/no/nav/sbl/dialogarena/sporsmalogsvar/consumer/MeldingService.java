@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
@@ -35,6 +36,9 @@ public class MeldingService {
     @Inject
     private no.nav.virksomhet.tjenester.sak.v1.Sak sakWs;
 
+    @Inject
+    private PdfUtils pdfUtils;
+
     public List<Melding> hentMeldinger(String fnr) {
         List<String> typer = Arrays.asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny()).map(TIL_MELDING).collect();
@@ -50,6 +54,9 @@ public class MeldingService {
             Melding melding = meldingVM.melding;
             if (melding.journalfortDato == null) {
                 //TODO: Implementer journalforing mot JOARK
+
+                byte[] pdfInnhold = pdfUtils.genererPdf(melding);
+
                 behandleHenvendelsePortType.oppdaterJournalfortInformasjon(melding.id,
                         new XMLJournalfortInformasjon()
                                 .withJournalfortTema(sak.tema)
@@ -59,6 +66,9 @@ public class MeldingService {
             }
         }
     }
+
+
+
 
     private static Transformer<WSGenerellSak, Sak> tilSak = new Transformer<WSGenerellSak, Sak>() {
         @Override

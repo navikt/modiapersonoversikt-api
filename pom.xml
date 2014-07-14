@@ -27,6 +27,7 @@
         <send.ut.henvendelse.version>0.2</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.2</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.14</dialogarena.behandlingsinformasjon.version>
+        <handlebars.version>1.1.2</handlebars.version>
     </properties>
 
     <dependencies>
@@ -87,6 +88,11 @@
                     <artifactId>javax.servlet</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-pdf-generering</artifactId>
+            <version>0.1-SNAPSHOT</version>
         </dependency>
 
         <!--Modig-->
@@ -205,6 +211,11 @@
             <scope>runtime</scope>
         </dependency>
         <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.5</version>
+        </dependency>
+        <dependency>
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
             <version>${logback.version}</version>
@@ -212,6 +223,12 @@
         </dependency>
 
         <!--Diverse-->
+
+        <dependency>
+            <groupId>com.github.jknack</groupId>
+            <artifactId>handlebars</artifactId>
+            <version>${handlebars.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>javax.servlet</groupId>
