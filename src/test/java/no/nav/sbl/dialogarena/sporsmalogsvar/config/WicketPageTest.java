@@ -12,15 +12,4 @@ public abstract class WicketPageTest {
     @Inject
     protected FluentWicketTester<?> wicket;
 
-    @Before
-    public void setup() {
-        wicket.tester.getSession().replaceSession();
-        additionalSetup();
-    }
-
-    /**
-     * Override this method to provide @Before functionality
-     */
-    protected void additionalSetup() { }
-
 }
