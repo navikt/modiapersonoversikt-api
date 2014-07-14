@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.MeldingServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -9,8 +10,8 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -20,8 +21,10 @@ import java.util.List;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @ContextConfiguration(classes = {MeldingServiceTestContext.class})
+@DirtiesContext(classMode = AFTER_CLASS)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
@@ -43,7 +46,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
     @Test
     public void skalStarteJournalforingsPanelEnkeltSakUtenFeil() {
-          wicket.goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVMModel));
+        wicket.goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVMModel));
     }
 
     @Test

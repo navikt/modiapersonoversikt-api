@@ -10,6 +10,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -21,8 +22,10 @@ import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @ContextConfiguration(classes = {MeldingServiceTestContext.class})
+@DirtiesContext(classMode = AFTER_CLASS)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
@@ -45,10 +48,9 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
     public void skalJournalforeVedSubmit() {
         wicket
                 .goToPageWith(new JournalforingsPanelVelgSak("panel", innboksVMModel))
-                .printComponentsTree()
                 .inForm("panel:plukkSakForm")
-                    .select("valgtTraad.journalfortSak", 0)
-                    .submitWithAjaxButton(withId("journalforTraad"));
+                .select("valgtTraad.journalfortSak", 0)
+                .submitWithAjaxButton(withId("journalforTraad"));
 
         verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class));
     }
@@ -59,9 +61,8 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
         wicket
                 .goToPageWith(journalforingsPanel)
-                .printComponentsTree()
                 .inForm("panel:plukkSakForm")
-                    .submitWithAjaxButton(withId("journalforTraad"));
+                .submitWithAjaxButton(withId("journalforTraad"));
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertThat(errorMessages, contains(journalforingsPanel.get("plukkSakForm:valgtTraad.journalfortSak").getString("valgtTraad.journalfortSak.Required")));
