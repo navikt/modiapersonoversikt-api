@@ -29,6 +29,27 @@ public class TemaSaker implements Serializable, Comparable<TemaSaker> {
     public int compareTo(TemaSaker other) {
         return tema.compareTo(other.tema);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TemaSaker temaSaker = (TemaSaker) o;
+
+        return !(saksliste != null ? !saksliste.equals(temaSaker.saksliste) : temaSaker.saksliste != null)
+                && !(tema != null ? !tema.equals(temaSaker.tema) : temaSaker.tema != null)
+                && !(temagruppe != null ? !temagruppe.equals(temaSaker.temagruppe) : temaSaker.temagruppe != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = tema != null ? tema.hashCode() : 0;
+        result = 31 * result + (temagruppe != null ? temagruppe.hashCode() : 0);
+        result = 31 * result + (saksliste != null ? saksliste.hashCode() : 0);
+        return result;
+    }
 }
 
 

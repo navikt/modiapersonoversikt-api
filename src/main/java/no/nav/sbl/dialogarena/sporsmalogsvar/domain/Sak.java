@@ -41,4 +41,18 @@ public class Sak implements Serializable, Comparable<Sak> {
         return other.opprettetDato.compareTo(opprettetDato);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Sak sak = (Sak) o;
+
+        return !(saksId != null ? !saksId.equals(sak.saksId) : sak.saksId != null);
+    }
+
+    @Override
+    public int hashCode() {
+        return saksId != null ? saksId.hashCode() : 0;
+    }
 }
