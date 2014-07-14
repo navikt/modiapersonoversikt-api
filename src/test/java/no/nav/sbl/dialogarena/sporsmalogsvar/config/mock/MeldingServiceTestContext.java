@@ -7,14 +7,24 @@ import no.nav.virksomhet.tjenester.sak.v1.Sak;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+
+import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createMockSaksliste;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.opprettMeldingEksempel;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Configuration
 public class MeldingServiceTestContext {
 
     @Bean
     public MeldingService meldingService() {
-        return mock(MeldingService.class);
+        MeldingService meldingService = mock(MeldingService.class);
+        when(meldingService.hentSakerForBruker(anyString())).thenReturn(createMockSaksliste());
+        when(meldingService.hentMeldinger(anyString())).thenReturn(new ArrayList<>(asList(opprettMeldingEksempel())));
+        return meldingService;
     }
 
     @Bean

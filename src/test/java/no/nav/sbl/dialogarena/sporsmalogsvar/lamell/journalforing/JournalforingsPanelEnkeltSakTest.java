@@ -15,18 +15,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createMockSaksliste;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.opprettMeldingEksempel;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {MeldingServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -41,10 +34,6 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
     @Before
     public void setUp(){
-        reset(meldingService);
-        when(meldingService.hentSakerForBruker(anyString())).thenReturn(createMockSaksliste());
-        when(meldingService.hentMeldinger(anyString())).thenReturn(new ArrayList<>(Arrays.asList(opprettMeldingEksempel())));
-
         innboksVMModel = new CompoundPropertyModel<>(new InnboksVM(meldingService, "fnr"));
         List<Sak> sakerForBruker = meldingService.hentSakerForBruker(innboksVMModel.getObject().getFnr());
         sakerForBruker.get(0).opprettetDato = DateTime.now();
