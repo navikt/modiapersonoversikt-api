@@ -47,8 +47,11 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV2PortTypeMock.lagWSOppgave;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -85,6 +88,8 @@ public class SakServiceTest {
     ArgumentCaptor<WSFerdigstillOppgaveBolkRequest> ferdigstillOppgaveBolkRequestCaptor;
     @Captor
     ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor;
+    @Captor
+    ArgumentCaptor<WSHentHenvendelseListeRequest> hentHenvendelseListeRequestCaptor;
 
     @Before
     public void init() {
@@ -162,6 +167,19 @@ public class SakServiceTest {
     }
 
     @Test
+    public void skalHenteSporsmalMedRiktigTypeSpesifisert() {
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLSporsmal("id1", "fritekst1"));
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
+
+        sakService.getSporsmalFromOppgaveId("fnr", "id2");
+
+        verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(SPORSMAL.name()));
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(SVAR.name(), REFERAT.name())));
+    }
+
+    @Test
     public void skalHenteSvarlisteTilhorendeSporsmal() {
         String sporsmalId = "sporsmalId";
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
@@ -178,6 +196,19 @@ public class SakServiceTest {
         assertThat(svarliste, hasSize(2));
         assertThat(svarliste.get(0).sporsmalsId, is(sporsmalId));
         assertThat(svarliste.get(1).sporsmalsId, is(sporsmalId));
+    }
+
+    @Test
+    public void skalHenteSvarlisteMedRiktigTypeSpesifisert() {
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLSvar("sporsmalId"));
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
+
+        sakService.getSvarTilSporsmal("fnr", "sporsmalId");
+
+        verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(SVAR.name()));
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(SPORSMAL.name(), REFERAT.name())));
     }
 
     @Test
