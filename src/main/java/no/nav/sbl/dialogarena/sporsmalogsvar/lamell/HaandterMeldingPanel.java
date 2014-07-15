@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.JournalforingsPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.nyoppgave.NyOppgavePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -18,27 +19,43 @@ public class HaandterMeldingPanel extends Panel {
     public HaandterMeldingPanel(String id, final IModel<InnboksVM> innboksVM) {
         super(id);
 
-        AjaxLink<InnboksVM> besvar = new AjaxLink<InnboksVM>("besvar", innboksVM) {
+        final JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforingsPanel", innboksVM);
+        journalforingsPanel.setVisibilityAllowed(false);
+        final NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyOppgavePanel");
+        nyOppgavePanel.setVisibilityAllowed(false);
+
+        AjaxLink<InnboksVM> besvarLink = new AjaxLink<InnboksVM>("besvar", innboksVM) {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 send(getPage(), Broadcast.BUBBLE, new NamedEventPayload(SVAR_PAA_MELDING, getModelObject().getValgtTraad().getEldsteMelding().melding.id));
             }
         };
-        besvar.add(enabledIf(new PropertyModel<Boolean>(innboksVM, "valgtTraad.bleInitiertAvBruker()")));
+        besvarLink.add(enabledIf(new PropertyModel<Boolean>(innboksVM, "valgtTraad.bleInitiertAvBruker()")));
 
-        final JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforingsPanel", innboksVM);
-        journalforingsPanel.setVisibilityAllowed(false);
-
-        final AjaxLink<InnboksVM> journalfor = new AjaxLink<InnboksVM>("journalfor") {
+        AjaxLink journalforLink = new AjaxLink("journalfor") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 journalforingsPanel.setVisibilityAllowed(true);
-                target.add(journalforingsPanel);
+                nyOppgavePanel.setVisibilityAllowed(false);
+
                 journalforingsPanel.oppdatereJournalforingssaker();
+
+                target.add(journalforingsPanel, nyOppgavePanel);
             }
         };
-        journalfor.add(enabledIf(not(new PropertyModel<Boolean>(innboksVM, "valgtTraad.nyesteMelding.nyesteMeldingISinJournalfortgruppe"))));
+        journalforLink.add(enabledIf(not(new PropertyModel<Boolean>(innboksVM, "valgtTraad.nyesteMelding.nyesteMeldingISinJournalfortgruppe"))));
 
-        add(besvar, journalfor, journalforingsPanel);
+        AjaxLink nyOppgaveLink = new AjaxLink("nyoppgave") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                journalforingsPanel.setVisibilityAllowed(false);
+                nyOppgavePanel.setVisibilityAllowed(true);
+
+                target.add(journalforingsPanel, nyOppgavePanel);
+            }
+        };
+        nyOppgaveLink.add(enabledIf(new PropertyModel<Boolean>(innboksVM, "valgtTraad.erBehandlet()")));
+
+        add(besvarLink, journalforLink, nyOppgaveLink, journalforingsPanel, nyOppgavePanel);
     }
 }
