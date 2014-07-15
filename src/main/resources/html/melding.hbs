@@ -8,69 +8,58 @@
                 body    { font-family: Arial, sans-serif; font-size: 10pt; line-height: 1.4em; margin: 0; color: #3e3832; }
                 h1      { font-family: Modus, Arial, sans-serif; font-size: 24pt; }
                 h2, h3, h4, h5, h6 { font-family: Modus, Arial, sans-serif; font-size: 13pt; }
-                table   { border-collapse: collapse; width: 170mm; margin-bottom: 10mm; }
-                table ul { list-style: none; padding-left: 0; margin-top: 0; margin-bottom: 0; }
-                td      { vertical-align: middle; text-align: left; padding: 0; font-size: 10pt; }
-                td:first-child { width: 3.5mm; vertical-align: top; }
-                td:last-child { width: 166.5mm; padding-bottom: 5px; }
-                h2 { page-break-after: avoid; }
-                li p { margin-left: 2.55mm; margin-top: 0.5mm; padding-top: 0; margin-bottom: 0; padding-bottom: 0; }
-                .header { position: running(header); text-align: center; margin-bottom: 1cm; }
-                .header span { font-family: Modus, Arial, sans-serif; display: inline-block; }
-                .header .header-logo { position: absolute; left: 0; top: 8mm; width: 14mm; }
-                .header .fnr:before { content: "&#8226;"; margin: 0 10px; }
-                .header .headerSider { position: absolute; right: 0; }
-                .header .headerSider:before { content: counter(page); }
-                .header .headerSider:after { content: counter(pages); }
-                .footer { position: running(footer); font-size: 8pt; text-align: center; border-top: .2pt solid #ccc; padding-top: 0.5cm }
-                .footer span { display: inline-block; margin: 0 10px; }
-                .logo      { position: absolute; left: 77mm; top: 0; width: 17mm; }
-                .sjekket   { display: inline-block; background: url(http://localhost:8080/sendsoknad/img/hake_sort.gif) no-repeat center bottom; width: 10px; height: 12px; background-size: 8px; }
-                .usjekket  { display: inline-block; background: url(http://localhost:8080/sendsoknad/img/minus_sort.gif) no-repeat center; width: 10px; height: 10px; }
-                .hode      { text-align: center; margin: 15mm 0 9.5mm; padding-bottom: 9.5mm; border-bottom: .2pt solid #ccc; }
-                .hode hr   { border: none; border-top: .2pt solid #ccc; width: 8mm; margin: 7mm auto 5mm; }
-                .hode span { display: block; }
-                .hode .nvn, .hode .fnr { font-family: Modus, Arial, sans-serif; font-weight: bold; font-size: 13pt; }
-                .hode .adr { margin-top: 2mm; }
-                .kulepunkt:before { content: "•"; font-size: 14pt; position: relative; top: 1pt; }
+
+                .vannmerke{border: 1px solid red; margin: 5px; float: right; padding: 5px;}
+                .vannmerke span, .info span{display:block}
+                .journalheading {padding-bottom:20px;}
+                .bold {font-weight: bold;}
             </style>
 	</head>
 	<body>
 		<div>
-		        <h2>Journalførte spørsmål/svar/samtalereferat</h2>
+            <div class="vannmerke">
+                <span class="bold">Fnr: {{fnrBruker}}</span>
+                <span>{{formaterDato opprettetDato}}</span>
+                <span>Dette er sendt elektronisk i løsning som krever nivå 4 pålogging</span>
+            </div>
 
-		        <div>
-		           <h3>Vannmerke</h3>
+            {{#hvisLik meldingstype "SAMTALEREFERAT"}}
+                <h2 class="journalheading">Journalført samtalereferat</h2>
+            {{/hvisLik}}
 
-		           <span>TODO: fnr</span>
-		           <span>{{formaterDato opprettetDato}}</span>
-		           <span>Dette er sendt elektronisk i løsning som krever nivå 4 pålogging</span>
-		        </div>
+            {{#hvisLik meldingstype "SPORSMAL"}}
+                <h2 class="journalheading">Journalført Spørsmål</h2>
+            {{/hvisLik}}
 
-		        <div>
-		            <h3>Henvendelse registrert av</h3>
+            {{#hvisLik meldingstype "SVAR"}}
+                <h2 class="journalheading">Journalført Svar</h2>
+            {{/hvisLik}}
 
+            <div class="info">
+                <span class="bold">Henvendelse registrert av:</span>
+                {{#hvisLik meldingstype "SAMTALEREFERAT"}}
+                    <span>{{navIdent}}</span>
+                    <br></br>
+                    <span class="bold">Type: N</span>
+                {{/hvisLik}}
 
-                    {{#hvisLik meldingstype "SAMTALEREFERAT"}}
-                        <span>Type: N</span>
-                        <span>{{navIdent}}</span>
-                    {{/hvisLik}}
+                {{#hvisLik meldingstype "SPORSMAL"}}
+                    <span>{{sammensattNavnBruker}}</span>
+                    <br></br>
+                    <span class="bold">Type: I</span>
+                {{/hvisLik}}
 
-                    {{#hvisLik meldingstype "SPORSMAAL"}}
-                        <span>Type: I</span>
-                        <span>TODO: Navn på bruker</span>
-                    {{/hvisLik}}
+                {{#hvisLik meldingstype "SVAR"}}
+                    <span>{{navIdent}}</span>
+                    <br></br>
+                    <span class="bold">Type: U</span>
+                {{/hvisLik}}
+            </div>
 
-                    {{#hvisLik meldingstype "SVAR"}}
-                        <span>Type: U</span>
-                        <span>{{navIdent}}</span>
-                    {{/hvisLik}}
-
-		        </div>
-		        <div>
-		            <h3>Innhold: </h3>
-                    <span>{{fritekst}}</span>
-                </div>
+            <div>
+                <h3>Innhold: </h3>
+                <span>{{fritekst}}</span>
+            </div>
 		</div>
-	</body>
+    </body>
 </html>

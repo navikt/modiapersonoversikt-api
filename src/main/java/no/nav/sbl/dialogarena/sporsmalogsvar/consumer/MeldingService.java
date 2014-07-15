@@ -67,9 +67,6 @@ public class MeldingService {
         }
     }
 
-
-
-
     private static Transformer<WSGenerellSak, Sak> tilSak = new Transformer<WSGenerellSak, Sak>() {
         @Override
         public Sak transform(WSGenerellSak wsGenerellSak) {

@@ -27,21 +27,18 @@ public class PdfUtils {
     private HtmlToPdf pdfGenerator = new PDFFabrikk();
     private Logger logger = LoggerFactory.getLogger(MeldingService.class);
 
-    public PdfUtils() {}
+    public PdfUtils() {
+    }
+
     public PdfUtils(HtmlGenerator pdfTemplate) {
         this.pdfTemplate = pdfTemplate;
     }
 
     public byte[] genererPdf(Melding melding) {
         HashMap<String, Helper<?>> helpers = generateHelpers();
-
         try {
             String html = pdfTemplate.fyllHtmlMalMedInnhold(melding, "html/melding", helpers);
-            System.out.println(html);
-
-            byte[] pdf = pdfGenerator.lagPdfFil(html);
-
-            return pdf;
+            return pdfGenerator.lagPdfFil(html);
         } catch (IOException e) {
             throw new ApplicationException("Kunne ikke lage markup av melding", e);
         }
@@ -58,15 +55,13 @@ public class PdfUtils {
             }
         };
 
-        //TODO kanskje trekk ut i pdf-generering prosjektet.
-      Helper formaterDatoHelper = new Helper<DateTime>() {
-                @Override
-                public CharSequence apply(DateTime dato, Options options) throws IOException {
-                    Locale locale = new Locale("nb", "no");
-                    return dato.toString("d. MMMM yyyy", locale);
-                }
-            };
-
+        Helper formaterDatoHelper = new Helper<DateTime>() {
+            @Override
+            public CharSequence apply(DateTime dato, Options options) throws IOException {
+                Locale locale = new Locale("nb", "no");
+                return dato.toString("d. MMMM yyyy", locale);
+            }
+        };
 
         result.put("hentMeldingHelper", hentMeldingHelper);
         result.put("formaterDato", formaterDatoHelper);
