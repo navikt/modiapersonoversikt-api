@@ -8,11 +8,8 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.pdf.HtmlGenerator;
 import no.nav.sbl.dialogarena.pdf.HtmlToPdf;
 import no.nav.sbl.dialogarena.pdf.PDFFabrikk;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.joda.time.DateTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -25,7 +22,6 @@ public class PdfUtils {
     private HtmlGenerator pdfTemplate;
 
     private HtmlToPdf pdfGenerator = new PDFFabrikk();
-    private Logger logger = LoggerFactory.getLogger(MeldingService.class);
 
     public PdfUtils() {
     }

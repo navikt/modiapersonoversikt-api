@@ -11,7 +11,7 @@
 
                 .vannmerke{border: 1px solid red; margin: 5px; float: right; padding: 5px;}
                 .vannmerke span, .info span{display:block}
-                .journalheading {padding-bottom:20px;}
+                .journalheading {padding-bottom:35px;}
                 .bold {font-weight: bold;}
             </style>
 	</head>
@@ -19,7 +19,7 @@
 		<div>
             <div class="vannmerke">
                 <span class="bold">Fnr: {{fnrBruker}}</span>
-                <span>{{formaterDato opprettetDato}}</span>
+                <span>Mottatt/Sendt: {{formaterDato opprettetDato}}</span>
                 <span>Dette er sendt elektronisk i løsning som krever nivå 4 pålogging</span>
             </div>
 
@@ -40,19 +40,19 @@
                 {{#hvisLik meldingstype "SAMTALEREFERAT"}}
                     <span>{{navIdent}}</span>
                     <br></br>
-                    <span class="bold">Type: N</span>
+                    <span class="bold">Type: samtalereferat (N)</span>
                 {{/hvisLik}}
 
                 {{#hvisLik meldingstype "SPORSMAL"}}
                     <span>{{sammensattNavnBruker}}</span>
                     <br></br>
-                    <span class="bold">Type: I</span>
+                    <span class="bold">Type: innkommende henvendelse (I)</span>
                 {{/hvisLik}}
 
                 {{#hvisLik meldingstype "SVAR"}}
                     <span>{{navIdent}}</span>
                     <br></br>
-                    <span class="bold">Type: U</span>
+                    <span class="bold">Type:  utgående henvendelse (U)</span>
                 {{/hvisLik}}
             </div>
 

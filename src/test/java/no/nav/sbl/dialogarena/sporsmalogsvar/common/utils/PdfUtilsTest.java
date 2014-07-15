@@ -11,10 +11,6 @@ import org.junit.Test;
 import org.springframework.test.context.ContextConfiguration;
 
 import javax.inject.Inject;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
 
 @ContextConfiguration(classes = MeldingServiceTestContext.class)
 public class PdfUtilsTest {
@@ -32,17 +28,6 @@ public class PdfUtilsTest {
         melding.fnrBruker = "10111212345";
         byte[] bytes = pdfUtils.genererPdf(melding);
 
-        OutputStream out;
-        try {
-            out = new FileOutputStream("journalforingNotat.pdf");
-            out.write(bytes);
-            out.flush();
-            out.close();
-        } catch (FileNotFoundException e) {
-
-        } catch (IOException e) {
-
-        }
         Assert.assertTrue(bytes.length > 0);
     }
 
@@ -56,17 +41,6 @@ public class PdfUtilsTest {
         melding.fnrBruker = "10111212345";
         byte[] bytes = pdfUtils.genererPdf(melding);
 
-        OutputStream out;
-        try {
-            out = new FileOutputStream("journalforingUtgaaende.pdf");
-            out.write(bytes);
-            out.flush();
-            out.close();
-        } catch (FileNotFoundException e) {
-
-        } catch (IOException e) {
-
-        }
         Assert.assertTrue(bytes.length > 0);
     }
 
@@ -79,18 +53,6 @@ public class PdfUtilsTest {
         melding.fnrBruker = "10111212345";
         byte[] bytes = pdfUtils.genererPdf(melding);
 
-        OutputStream out;
-        try {
-            out = new FileOutputStream("journalforingInngaaende.pdf");
-            out.write(bytes);
-            out.flush();
-            out.close();
-        } catch (FileNotFoundException e) {
-
-        } catch (IOException e) {
-
-        }
         Assert.assertTrue(bytes.length > 0);
     }
-
 }

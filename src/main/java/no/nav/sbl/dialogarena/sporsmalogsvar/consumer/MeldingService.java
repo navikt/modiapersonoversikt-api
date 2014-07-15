@@ -79,5 +79,4 @@ public class MeldingService {
             return sak;
         }
     };
-
 }
