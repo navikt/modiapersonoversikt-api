@@ -29,6 +29,8 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
     @Inject
     private MeldingService meldingService;
 
+    private final static String FODSELSNR = "52765236723";
+
     private CompoundPropertyModel<InnboksVM> innboksVMModel;
 
     @Before
@@ -49,7 +51,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
                 .select("valgtTraad.journalfortSak", 0)
                 .submitWithAjaxButton(withId("journalforTraad"));
 
-        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class));
+        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class), FODSELSNR);
     }
 
     @Test
