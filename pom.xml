@@ -51,6 +51,14 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- Tjenestespesifikasjon -->
+        <dependency>
+            <groupId>no.nav.tjenester.fim</groupId>
+            <artifactId>nav-fim-behandleJournal-v2-tjenestespesifikasjon</artifactId>
+            <version>2.0.0-alpha008</version>
+            <classifier>jaxws</classifier>
+        </dependency>
+
         <!--Dialogarena-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -143,6 +151,11 @@
             <artifactId>modig-core-test</artifactId>
             <version>${modig-core.version}</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-core</artifactId>
+            <version>1.0.19</version>
         </dependency>
 
         <!--Wicket-->
