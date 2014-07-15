@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.MeldingServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelEnkeltSakTestConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -21,7 +21,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
-@ContextConfiguration(classes = {MeldingServiceTestContext.class})
+@ContextConfiguration(classes = {JournalforingPanelEnkeltSakTestConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
