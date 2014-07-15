@@ -10,6 +10,7 @@ import java.util.Map;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.JOURNALFORT_DATO;
 
@@ -53,6 +54,10 @@ public class TraadVM implements Serializable {
 
     public int getTraadLengde() {
         return meldinger.size();
+    }
+
+    public boolean erBehandlet() {
+        return meldinger.size() > 1 || getEldsteMelding().melding.meldingstype.equals(SAMTALEREFERAT);
     }
 
     public boolean bleInitiertAvBruker() {

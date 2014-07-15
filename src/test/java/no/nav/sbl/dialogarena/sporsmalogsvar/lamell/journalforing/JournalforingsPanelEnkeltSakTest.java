@@ -1,14 +1,15 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.MeldingServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelEnkeltSakTestConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -16,7 +17,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 import java.util.List;
 
-@ContextConfiguration(classes = {MeldingServiceTestContext.class})
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+
+@ContextConfiguration(classes = {JournalforingPanelEnkeltSakTestConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
@@ -38,7 +43,16 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
     @Test
     public void skalStarteJournalforingsPanelEnkeltSakUtenFeil() {
-          wicket.goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVMModel));
+        wicket.goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVMModel));
+    }
+
+    @Test
+    public void skalJournalforeVedSubmit() {
+        wicket
+                .goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVMModel))
+                .click().link(withId("journalforTraad"));
+
+        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class));
     }
 
 }

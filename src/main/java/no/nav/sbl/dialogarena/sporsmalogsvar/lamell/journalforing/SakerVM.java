@@ -49,7 +49,7 @@ public class SakerVM implements Serializable {
         oppdater();
     }
 
-    public void oppdater() {
+    public final void oppdater() {
         List<Sak> sakerForBruker = meldingService.hentSakerForBruker(innboksVM.getFnr());
         Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker = splittIGenerelleSakerOgIkkeGenerelleSaker(sakerForBruker);
         temaSakerListeFagsak = new TemaSakerListe(grupperSakerPaaTema(generelleOgIkkeGenerelleSaker.get(false)));

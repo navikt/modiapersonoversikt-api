@@ -21,7 +21,7 @@ public class JournalfortSakVM implements Serializable {
         oppdater();
     }
 
-    public void oppdater() {
+    public final void oppdater() {
         List<Sak> sakerForBruker = meldingService.hentSakerForBruker(innboksVM.getFnr());
         String journalfortSaksId = innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortSaksId;
 
@@ -29,9 +29,9 @@ public class JournalfortSakVM implements Serializable {
     }
 
     private Sak finnJournalfortSakHvisDenEksisterer(List<Sak> sakerForBruker, String journalfortSaksId) {
-        for (Sak sak : sakerForBruker) {
-            if (sak.saksId.equals(journalfortSaksId)) {
-                return sak;
+        for (Sak sakForBruker : sakerForBruker) {
+            if (sakForBruker.saksId.equals(journalfortSaksId)) {
+                return sakForBruker;
             }
         }
         return new Sak();

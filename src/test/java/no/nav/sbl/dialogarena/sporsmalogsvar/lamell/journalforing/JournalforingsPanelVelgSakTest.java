@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.MeldingServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 
-@ContextConfiguration(classes = {MeldingServiceTestContext.class})
+@ContextConfiguration(classes = {JournalforingPanelVelgSakTestConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
@@ -45,10 +45,9 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
     public void skalJournalforeVedSubmit() {
         wicket
                 .goToPageWith(new JournalforingsPanelVelgSak("panel", innboksVMModel))
-                .printComponentsTree()
                 .inForm("panel:plukkSakForm")
-                    .select("valgtTraad.journalfortSak", 0)
-                    .submitWithAjaxButton(withId("journalforTraad"));
+                .select("valgtTraad.journalfortSak", 0)
+                .submitWithAjaxButton(withId("journalforTraad"));
 
         verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class));
     }
@@ -59,9 +58,8 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
         wicket
                 .goToPageWith(journalforingsPanel)
-                .printComponentsTree()
                 .inForm("panel:plukkSakForm")
-                    .submitWithAjaxButton(withId("journalforTraad"));
+                .submitWithAjaxButton(withId("journalforTraad"));
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertThat(errorMessages, contains(journalforingsPanel.get("plukkSakForm:valgtTraad.journalfortSak").getString("valgtTraad.journalfortSak.Required")));
