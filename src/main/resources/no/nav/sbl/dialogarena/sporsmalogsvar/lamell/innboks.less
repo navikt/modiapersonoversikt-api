@@ -166,8 +166,8 @@
       margin-bottom: 5px;
       text-align: left;
       .medium-skrift {
-          font-size: 1.2em;
-        }
+        font-size: 1.2em;
+      }
       .liten-skrift {
         font-size: 0.8em;
       }
@@ -278,9 +278,10 @@
         background-image: url(../img/journalfore_inaktiv.svg);
       }
       &.besvar-knapp {
-        background-repeat: no-repeat;
         background-image: url(../img/besvar_inaktiv.svg);
-        padding-left: 1.3em;
+      }
+      &.nyoppgave-knapp {
+        background-image: url(../img/ny_oppgave_inaktiv.svg);
       }
       em {
         font-style: normal;
@@ -291,9 +292,10 @@
         background-image: url(../img/journalfore.svg);
       }
       &.besvar-knapp {
-        background-repeat: no-repeat;
         background-image: url(../img/besvar.svg);
-        padding-left: 1.3em;
+      }
+      &.nyoppgave-knapp {
+        background-image: url(../img/ny_oppgave.svg);
       }
     }
   }
@@ -327,6 +329,44 @@
     .avbryt-knapp {
       color: #20a9e1;
       display:block;
+    }
+  }
+
+  .nyoppgave {
+    padding: 2em;
+    margin-bottom: 20px;
+    background-color: @modiasvart;
+    color: @modiagraaskrift;
+    text-align: center;
+    h2, h3 {
+      color: @modiagraaskrift;
+      text-transform: capitalize;
+    }
+    form {
+      text-align: center;
+      label, select, textarea {
+        display: block;
+        width: 100%;
+      }
+      label {
+        text-align: left;
+      }
+      textarea {
+        resize: none;
+        height: 150px;
+      }
+      a {
+        margin: 0 auto;
+        text-align: center;
+        &.knapp-hoved-stor {
+          color: #ffffff;
+        }
+      }
+    }
+    .avbryt {
+      color: #20a9e1;
+      margin-top: 2em;
+      display: block;
     }
   }
 }
