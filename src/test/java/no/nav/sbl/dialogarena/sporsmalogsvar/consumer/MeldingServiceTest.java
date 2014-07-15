@@ -19,9 +19,9 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createSak;
 import static org.hamcrest.Matchers.is;
@@ -34,26 +34,19 @@ import static org.mockito.Mockito.when;
 public class MeldingServiceTest {
 
     @Captor
-    ArgumentCaptor<JournalfoerInngaaendeHenvendelseRequest> journalfoerInngaaendeHenvendelseRequestArgumentCaptor;
-
+    ArgumentCaptor<JournalfoerNotatRequest> journalfoerNotatRequestCaptor;
     @Captor
-    ArgumentCaptor<JournalfoerNotatRequest> journalfoerNotatRequestArgumentCaptor;
-
-    @Captor
-    ArgumentCaptor<JournalfoerUtgaaendeHenvendelseRequest> journalfoerUtgaaendeHenvendelseRequestArgumentCaptor;
+    ArgumentCaptor<JournalfoerUtgaaendeHenvendelseRequest> journalfoerUtgaaendeHenvendelseRequestCaptor;
 
     @Mock
     JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelseResponseMock;
-
     @Mock
     JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelseResponseMock;
-
     @Mock
     JournalfoerNotatResponse journalfoerNotatResponseMock;
 
     @Mock
     BehandleHenvendelsePortType behandleHenvendelsePortType;
-
     @Mock
     BehandleJournalV2 behandleJournalV2;
 
@@ -73,72 +66,73 @@ public class MeldingServiceTest {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         sak = createSak("542747214621", "Dagpenger", "Fagsystem", "Generell", DateTime.now());
 
-        when(behandleJournalV2.journalfoerInngaaendeHenvendelse(any(JournalfoerInngaaendeHenvendelseRequest.class))).thenReturn(journalfoerInngaaendeHenvendelseResponseMock);
         when(journalfoerInngaaendeHenvendelseResponseMock.getJournalpostId()).thenReturn(SPORSMAL_POST_ID);
+        when(behandleJournalV2.journalfoerInngaaendeHenvendelse(any(JournalfoerInngaaendeHenvendelseRequest.class))).thenReturn(journalfoerInngaaendeHenvendelseResponseMock);
 
-        when(behandleJournalV2.journalfoerNotat(any(JournalfoerNotatRequest.class))).thenReturn(journalfoerNotatResponseMock);
         when(journalfoerNotatResponseMock.getJournalpostId()).thenReturn(GENERELL_POST_ID);
+        when(behandleJournalV2.journalfoerNotat(any(JournalfoerNotatRequest.class))).thenReturn(journalfoerNotatResponseMock);
 
-        when(behandleJournalV2.journalfoerUtgaaendeHenvendelse(any(JournalfoerUtgaaendeHenvendelseRequest.class))).thenReturn(journalfoerUtgaaendeHenvendelseResponseMock);
         when(journalfoerUtgaaendeHenvendelseResponseMock.getJournalpostId()).thenReturn(GENERELL_POST_ID);
+        when(behandleJournalV2.journalfoerUtgaaendeHenvendelse(any(JournalfoerUtgaaendeHenvendelseRequest.class))).thenReturn(journalfoerUtgaaendeHenvendelseResponseMock);
     }
 
     @Test
     public void sjekkAtRiktigJounalforHenvendelseKallBlirUtfortGittTraadMedEttSporsmalOgEttSamtaleReferat(){
-        meldinger = new ArrayList<>(Arrays.asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 2),
-                                                  createMeldingVM(Meldingstype.SPORSMAL,2)));
+        meldinger = new ArrayList<>(asList(
+                createMeldingVM(Meldingstype.SAMTALEREFERAT, 2),
+                createMeldingVM(Meldingstype.SPORSMAL, 2)));
         traadVM = new TraadVM(meldinger);
 
         meldingService.journalforTraad(traadVM, sak, FODSELSNUMMER);
 
-        verify(behandleJournalV2).journalfoerInngaaendeHenvendelse(journalfoerInngaaendeHenvendelseRequestArgumentCaptor.capture());
-        verify(behandleJournalV2).journalfoerNotat(journalfoerNotatRequestArgumentCaptor.capture());
+        verify(behandleJournalV2).journalfoerInngaaendeHenvendelse(any(JournalfoerInngaaendeHenvendelseRequest.class));
+        verify(behandleJournalV2).journalfoerNotat(any(JournalfoerNotatRequest.class));
     }
 
     @Test
     public void sjekkAtRiktigJournalforHenvendelseKallBlirUtfortGittTraadMedKunEttReferat(){
-        meldinger = new ArrayList<>(Arrays.asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 1)));
+        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 1)));
         traadVM = new TraadVM(meldinger);
 
         meldingService.journalforTraad(traadVM, sak, FODSELSNUMMER);
 
-        verify(behandleJournalV2).journalfoerNotat(journalfoerNotatRequestArgumentCaptor.capture());
+        verify(behandleJournalV2).journalfoerNotat(any(JournalfoerNotatRequest.class));
     }
 
     @Test
     public void sjekkAtRiktigJournalforHenvendelseKallBlirUtfortGittTraadMedSporsmalOgEttSvar(){
-        meldinger = new ArrayList<>(Arrays.asList(createMeldingVM(Meldingstype.SVAR, 2),
-                                                  createMeldingVM(Meldingstype.SPORSMAL,2)));
+        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SVAR, 2),
+                createMeldingVM(Meldingstype.SPORSMAL, 2)));
         traadVM = new TraadVM(meldinger);
 
         meldingService.journalforTraad(traadVM, sak, FODSELSNUMMER);
 
-        verify(behandleJournalV2).journalfoerInngaaendeHenvendelse(journalfoerInngaaendeHenvendelseRequestArgumentCaptor.capture());
-        verify(behandleJournalV2).journalfoerUtgaaendeHenvendelse(journalfoerUtgaaendeHenvendelseRequestArgumentCaptor.capture());
+        verify(behandleJournalV2).journalfoerInngaaendeHenvendelse(any(JournalfoerInngaaendeHenvendelseRequest.class));
+        verify(behandleJournalV2).journalfoerUtgaaendeHenvendelse(any(JournalfoerUtgaaendeHenvendelseRequest.class));
     }
 
     @Test
     public void sjekkAtRiktigKryssReferanseForSvarSettesTilKorresponderendeSporsmaalVedJournalforingAvHenvendelse(){
-        meldinger = new ArrayList<>(Arrays.asList(createMeldingVM(Meldingstype.SVAR, 2),
-                                                  createMeldingVM(Meldingstype.SPORSMAL,2)));
+        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SVAR, 2),
+                createMeldingVM(Meldingstype.SPORSMAL, 2)));
         traadVM = new TraadVM(meldinger);
 
         meldingService.journalforTraad(traadVM, sak, FODSELSNUMMER);
 
-        verify(behandleJournalV2).journalfoerUtgaaendeHenvendelse(journalfoerUtgaaendeHenvendelseRequestArgumentCaptor.capture());
-        assertThat(journalfoerUtgaaendeHenvendelseRequestArgumentCaptor.getValue().getJournalpost().getKryssreferanseListe().get(0).getReferanseId(),is(SPORSMAL_POST_ID));
+        verify(behandleJournalV2).journalfoerUtgaaendeHenvendelse(journalfoerUtgaaendeHenvendelseRequestCaptor.capture());
+        assertThat(journalfoerUtgaaendeHenvendelseRequestCaptor.getValue().getJournalpost().getKryssreferanseListe().get(0).getReferanseId(),is(SPORSMAL_POST_ID));
     }
 
     @Test
     public void sjekkAtRiktigKryssReferanseForReferatSettesTilKorresponderendeSporsmalVedJournalforingAvHenvendelse(){
-        meldinger = new ArrayList<>(Arrays.asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 2),
-                                                  createMeldingVM(Meldingstype.SPORSMAL,2)));
+        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 2),
+                createMeldingVM(Meldingstype.SPORSMAL, 2)));
         traadVM = new TraadVM(meldinger);
 
         meldingService.journalforTraad(traadVM, sak, FODSELSNUMMER);
 
-        verify(behandleJournalV2).journalfoerNotat(journalfoerNotatRequestArgumentCaptor.capture());
-        assertThat(journalfoerNotatRequestArgumentCaptor.getValue().getJournalpost().getKryssreferanseListe().get(0).getReferanseId(),is(SPORSMAL_POST_ID));
+        verify(behandleJournalV2).journalfoerNotat(journalfoerNotatRequestCaptor.capture());
+        assertThat(journalfoerNotatRequestCaptor.getValue().getJournalpost().getKryssreferanseListe().get(0).getReferanseId(),is(SPORSMAL_POST_ID));
     }
 
     private MeldingVM createMeldingVM(Meldingstype meldingstype, int traadlengde){

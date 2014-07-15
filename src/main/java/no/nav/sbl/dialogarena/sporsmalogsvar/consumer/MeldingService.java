@@ -258,8 +258,7 @@ public class MeldingService {
         try {
             return(DatatypeFactory.newInstance().newXMLGregorianCalendar(dokumentDato));
         } catch (DatatypeConfigurationException e) {
-            e.printStackTrace();
-            return null;
+            throw new  RuntimeException("Noe gikk galt ved instansiering av XMLGregorianCalendar", e);
         }
     }
 
