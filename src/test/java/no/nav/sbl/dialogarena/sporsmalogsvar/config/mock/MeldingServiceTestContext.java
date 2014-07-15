@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.config.mock;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
 import no.nav.virksomhet.tjenester.sak.v1.Sak;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +37,9 @@ public class MeldingServiceTestContext {
     public BehandleHenvendelsePortType behandleHenvendelsePortType(){
         return mock(BehandleHenvendelsePortType.class);
     }
+
+    @Bean
+    public BehandleJournalV2 behandleJournalV2(){return mock(BehandleJournalV2.class);}
 
     @Bean
     public Sak sakWs(){

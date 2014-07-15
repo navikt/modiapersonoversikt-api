@@ -15,6 +15,7 @@ import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.*;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.DokumentinfoRelasjon;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.JournalfoertDokumentInfo;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.Journalpost;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.*;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -51,6 +52,8 @@ public class MeldingService {
     @Inject
     BehandleJournalV2 behandleJournalV2;
 
+    private final static String MODIA_SYSTEM_ID = "BD06";
+
     public List<Melding> hentMeldinger(String fnr) {
         List<String> typer = Arrays.asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny()).map(TIL_MELDING).collect();
@@ -70,7 +73,7 @@ public class MeldingService {
         } else {
             journalpostIdEldsteMelding = eldsteMelding.journalfortSaksId;
         }
-        for (MeldingVM meldingVM : valgtTraad.getMeldinger().subList(1,valgtTraad.getMeldinger().size())) {
+        for (MeldingVM meldingVM : valgtTraad.getMeldinger().subList(0,valgtTraad.getMeldinger().size()-1)) {
             Melding melding = meldingVM.melding;
             if (melding.journalfortDato == null) {
                 String journalpostId = behandleJournalforing(melding, sak, fnr, journalpostIdEldsteMelding);
@@ -108,40 +111,44 @@ public class MeldingService {
         JournalfoerInngaaendeHenvendelseRequest journalfoerInngaaendeHenvendelseRequest = new JournalfoerInngaaendeHenvendelseRequest();
         journalfoerInngaaendeHenvendelseRequest.setPersonEtternavn(SubjectHandler.getSubjectHandler().getUid());
         journalfoerInngaaendeHenvendelseRequest.setPersonFornavn(SubjectHandler.getSubjectHandler().getUid());
-        journalfoerInngaaendeHenvendelseRequest.setApplikasjonsID("TODO BDxx");
+        journalfoerInngaaendeHenvendelseRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
+
+        Journalpost journalpost = new Journalpost();
 
         // Set journalpostfelter
         Kommunikasjonskanaler kommunikasjonskanaler = createAndSetKommunikasjonskanaler();
-        journalfoerInngaaendeHenvendelseRequest.getJournalpost().setKanal(kommunikasjonskanaler);
+        journalpost.setKanal(kommunikasjonskanaler);
 
-        journalfoerInngaaendeHenvendelseRequest.getJournalpost().setMottattDato(konverterDateTimeObjektTilGregXML(melding.opprettetDato));
+        journalpost.setMottattDato(konverterDateTimeObjektTilGregXML(melding.opprettetDato));
 
         Signatur signatur = createAndSetSignatur();
-        journalfoerInngaaendeHenvendelseRequest.getJournalpost().setSignatur(signatur);
+        journalpost.setSignatur(signatur);
 
         Arkivtemaer arkivtemaer = createAndSetArkivtemaer(sak);
-        journalfoerInngaaendeHenvendelseRequest.getJournalpost().setArkivtema(arkivtemaer);
+        journalpost.setArkivtema(arkivtemaer);
 
         // TODO Få tak i kodeverk og sett det inn i createAndSetPerson-metoden
         Person bruker = createAndSetPerson(fnr);
-        journalfoerInngaaendeHenvendelseRequest.getJournalpost().getForBruker().add(bruker);
+        journalpost.getForBruker().add(bruker);
 
-        journalfoerInngaaendeHenvendelseRequest.getJournalpost().setOpprettetAvNavn(SubjectHandler.getSubjectHandler().getUid());
+        journalpost.setOpprettetAvNavn(SubjectHandler.getSubjectHandler().getUid());
 
-        journalfoerInngaaendeHenvendelseRequest.getJournalpost().setInnhold("Elektronisk kommunikasjon med NAV ");
+        journalpost.setInnhold("Elektronisk kommunikasjon med NAV ");
 
         EksternPart eksternPart = createAndSetEksternPart(bruker);
-        journalfoerInngaaendeHenvendelseRequest.getJournalpost().setEksternPart(eksternPart);
+        journalpost.setEksternPart(eksternPart);
 
         DokumentinfoRelasjon dokumentinfoRelasjon = new DokumentinfoRelasjon();
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
         dokumentinfoRelasjon.setJournalfoertDokument(journalfoertDokumentInfo);
-        journalfoerInngaaendeHenvendelseRequest.getJournalpost().getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
+        journalpost.getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
 
-        journalfoerInngaaendeHenvendelseRequest.getJournalpost().setDokumentDato(konverterDateTimeObjektTilGregXML(DateTime.now()));
+        journalpost.setDokumentDato(konverterDateTimeObjektTilGregXML(DateTime.now()));
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Sak journalSak = createJournalSak(sak);
-        journalfoerInngaaendeHenvendelseRequest.getJournalpost().setGjelderSak(journalSak);
+        journalpost.setGjelderSak(journalSak);
+
+        journalfoerInngaaendeHenvendelseRequest.setJournalpost(journalpost);
 
         JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelseResponse = behandleJournalV2.journalfoerInngaaendeHenvendelse(journalfoerInngaaendeHenvendelseRequest);
         return journalfoerInngaaendeHenvendelseResponse.getJournalpostId();
@@ -151,88 +158,98 @@ public class MeldingService {
         JournalfoerUtgaaendeHenvendelseRequest journalfoerUtgaaendeHenvendelseRequest = new JournalfoerUtgaaendeHenvendelseRequest();
         journalfoerUtgaaendeHenvendelseRequest.setPersonEtternavn(getSubjectHandler().getUid());
         journalfoerUtgaaendeHenvendelseRequest.setPersonFornavn(getSubjectHandler().getUid());
+        journalfoerUtgaaendeHenvendelseRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
+
+        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.Journalpost journalpost = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.Journalpost();
 
         // Set journalpostfelter
         Kommunikasjonskanaler kommunikasjonskanaler = createAndSetKommunikasjonskanaler();
-        journalfoerUtgaaendeHenvendelseRequest.getJournalpost().setKanal(kommunikasjonskanaler);
+        journalpost.setKanal(kommunikasjonskanaler);
 
         Signatur signatur = createAndSetSignatur();
-        journalfoerUtgaaendeHenvendelseRequest.getJournalpost().setSignatur(signatur);
+        journalpost.setSignatur(signatur);
 
         Arkivtemaer arkivtemaer = createAndSetArkivtemaer(sak);
-        journalfoerUtgaaendeHenvendelseRequest.getJournalpost().setArkivtema(arkivtemaer);
+        journalpost.setArkivtema(arkivtemaer);
 
         // TODO Få tak i kodeverk og sett det inn i createAndSetPerson-metoden
         Person bruker = createAndSetPerson(fnr);
-        journalfoerUtgaaendeHenvendelseRequest.getJournalpost().getForBruker().add(bruker);
+        journalpost.getForBruker().add(bruker);
 
-        journalfoerUtgaaendeHenvendelseRequest.getJournalpost().setInnhold("Elektronisk kommunikasjon med NAV ");
+        journalpost.setInnhold("Elektronisk kommunikasjon med NAV ");
 
         EksternPart eksternPart = createAndSetEksternPart(bruker);
-        journalfoerUtgaaendeHenvendelseRequest.getJournalpost().setEksternPart(eksternPart);
+        journalpost.setEksternPart(eksternPart);
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Sak journalSak = createJournalSak(sak);
-        journalfoerUtgaaendeHenvendelseRequest.getJournalpost().setGjelderSak(journalSak);
+        journalpost.setGjelderSak(journalSak);
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.DokumentinfoRelasjon dokumentinfoRelasjon = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.DokumentinfoRelasjon();
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.JournalfoertDokumentInfo journalfoertDokumentInfo = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.JournalfoertDokumentInfo();
         dokumentinfoRelasjon.setJournalfoertDokument(journalfoertDokumentInfo);
-        journalfoerUtgaaendeHenvendelseRequest.getJournalpost().getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
+        journalpost.getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
 
-        journalfoerUtgaaendeHenvendelseRequest.getJournalpost().setDokumentDato(konverterDateTimeObjektTilGregXML(DateTime.now()));
+        journalpost.setDokumentDato(konverterDateTimeObjektTilGregXML(DateTime.now()));
 
         Kryssreferanse kryssreferanse = createAndSetKryssreferanse(journalfortPostIdForTilhorendeSporsmal);
-        journalfoerUtgaaendeHenvendelseRequest.getJournalpost().getKryssreferanseListe().add(kryssreferanse);
+        journalpost.getKryssreferanseListe().add(kryssreferanse);
+
+        journalfoerUtgaaendeHenvendelseRequest.setJournalpost(journalpost);
 
         JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelseResponse = behandleJournalV2.journalfoerUtgaaendeHenvendelse(journalfoerUtgaaendeHenvendelseRequest);
         return journalfoerUtgaaendeHenvendelseResponse.getJournalpostId();
-
-    }
-
-    private EksternPart createAndSetEksternPart(Person bruker) {
-        EksternPart eksternPart = new EksternPart();
-        eksternPart.setEksternAktoer(bruker);
-        return eksternPart;
     }
 
     private String behandleJournalSamtalereferat(Sak sak, String fnr, Optional<String> journalfortPostIdForTilhorendeSporsmal){
         JournalfoerNotatRequest journalfoerNotatRequest = new JournalfoerNotatRequest();
         journalfoerNotatRequest.setPersonEtternavn(getSubjectHandler().getUid());
         journalfoerNotatRequest.setPersonFornavn(getSubjectHandler().getUid());
+        journalfoerNotatRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
+
+        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.Journalpost journalpost = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.Journalpost();
 
         // Set journalpostfelter
         Kommunikasjonskanaler kommunikasjonskanaler = createAndSetKommunikasjonskanaler();
-        journalfoerNotatRequest.getJournalpost().setKanal(kommunikasjonskanaler);
+        journalpost.setKanal(kommunikasjonskanaler);
 
         Signatur signatur = createAndSetSignatur();
-        journalfoerNotatRequest.getJournalpost().setSignatur(signatur);
+        journalpost.setSignatur(signatur);
 
         Arkivtemaer arkivtemaer = createAndSetArkivtemaer(sak);
-        journalfoerNotatRequest.getJournalpost().setArkivtema(arkivtemaer);
+        journalpost.setArkivtema(arkivtemaer);
 
         // TODO Få tak i kodeverk og sett det inn i createAndSetPerson-metoden
         Person bruker = createAndSetPerson(fnr);
-        journalfoerNotatRequest.getJournalpost().getForBruker().add(bruker);
+        journalpost.getForBruker().add(bruker);
 
-        journalfoerNotatRequest.getJournalpost().setInnhold("Elektronisk kommunikasjon med NAV ");
+        journalpost.setInnhold("Elektronisk kommunikasjon med NAV ");
 
-        journalfoerNotatRequest.getJournalpost().setDokumentDato(konverterDateTimeObjektTilGregXML(DateTime.now()));
+        journalpost.setDokumentDato(konverterDateTimeObjektTilGregXML(DateTime.now()));
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Sak journalSak = createJournalSak(sak);
-        journalfoerNotatRequest.getJournalpost().setGjelderSak(journalSak);
+        journalpost.setGjelderSak(journalSak);
 
         if (journalfortPostIdForTilhorendeSporsmal.isSome()) {
             Kryssreferanse kryssreferanse = createAndSetKryssreferanse(journalfortPostIdForTilhorendeSporsmal.get());
-            journalfoerNotatRequest.getJournalpost().getKryssreferanseListe().add(kryssreferanse);
+            journalpost.getKryssreferanseListe().add(kryssreferanse);
         }
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon dokumentinfoRelasjon = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon();
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo journalfoertDokumentInfo = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo();
         dokumentinfoRelasjon.setJournalfoertDokument(journalfoertDokumentInfo);
-        journalfoerNotatRequest.getJournalpost().getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
+        journalpost.getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
+
+        journalfoerNotatRequest.setJournalpost(journalpost);
 
         JournalfoerNotatResponse journalfoerNotatResponse = behandleJournalV2.journalfoerNotat(journalfoerNotatRequest);
         return journalfoerNotatResponse.getJournalpostId();
+    }
+
+
+    private EksternPart createAndSetEksternPart(Person bruker) {
+        EksternPart eksternPart = new EksternPart();
+        eksternPart.setEksternAktoer(bruker);
+        return eksternPart;
     }
 
     private XMLGregorianCalendar konverterDateTimeObjektTilGregXML(DateTime dateTime){
