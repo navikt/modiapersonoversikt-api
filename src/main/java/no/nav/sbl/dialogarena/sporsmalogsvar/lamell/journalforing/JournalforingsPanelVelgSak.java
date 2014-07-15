@@ -43,7 +43,8 @@ public class JournalforingsPanelVelgSak extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 TraadVM valgtTraadVM = innboksVM.getObject().getValgtTraad();
-                meldingService.journalforTraad(valgtTraadVM, valgtTraadVM.journalfortSak);
+                String fnr = innboksVM.getObject().getFnr();
+                meldingService.journalforTraad(valgtTraadVM, valgtTraadVM.journalfortSak, fnr);
                 lukkJournalforingsPanel(target);
                 send(this, Broadcast.BUBBLE, TRAAD_JOURNALFORT);
             }

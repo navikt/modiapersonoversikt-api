@@ -28,6 +28,8 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
     @Inject
     private MeldingService meldingService;
 
+    private final static String FODSELSNR = "52765236723";
+
     private final static String JOURNALFORT_SAKSID = "123123123";
 
     private CompoundPropertyModel<InnboksVM> innboksVMModel;
@@ -52,7 +54,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
                 .goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVMModel))
                 .click().link(withId("journalforTraad"));
 
-        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class));
+        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class), FODSELSNR);
     }
 
 }
