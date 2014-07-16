@@ -108,6 +108,7 @@ public class MeldingService {
                         .withJournalfortDato(DateTime.now())
                         .withJournalpostId(journalpostId)
                         .withJournalfortSaksId(sak.saksId)
+                        .withJournalforerNavIdent(getSubjectHandler().getUid())
         );
     }
 
