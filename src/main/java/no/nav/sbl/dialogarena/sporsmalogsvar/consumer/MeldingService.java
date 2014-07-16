@@ -12,14 +12,24 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.Be
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.*;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Arkivtemaer;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Dokumenttyper;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.EksternPart;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Kommunikasjonskanaler;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Kryssreferanse;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.NorskIdent;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Person;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Signatur;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.DokumentinfoRelasjon;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.JournalfoertDokumentInfo;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.Journalpost;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.*;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerInngaaendeHenvendelseRequest;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerInngaaendeHenvendelseResponse;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerNotatRequest;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerNotatResponse;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerUtgaaendeHenvendelseRequest;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerUtgaaendeHenvendelseResponse;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
 import org.apache.commons.collections15.Transformer;
@@ -33,7 +43,10 @@ import java.util.Arrays;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
@@ -52,12 +65,12 @@ public class MeldingService {
     @Inject
     BehandleJournalV2 behandleJournalV2;
 
-    private final static String MODIA_SYSTEM_ID = "BD06";
-    private final static String HOVEDDOKUMENT = "hovedDokument";
-    private final static String SPORSMAL_OG_SVAR = "SPORSMAL_OG_SVAR";
-    private final static String DOKUTYPE_MELDING = "melding";
-    private final static String DOKUTYPE_UTGAENDE = "utgående brev";
-    private final static String KATEGORI_KODE_ES = "ES";
+    private static final String MODIA_SYSTEM_ID = "BD06";
+    private static final String HOVEDDOKUMENT = "hovedDokument";
+    private static final String SPORSMAL_OG_SVAR = "SPORSMAL_OG_SVAR";
+    private static final String DOKUTYPE_MELDING = "melding";
+    private static final String DOKUTYPE_UTGAENDE = "utgående brev";
+    private static final String KATEGORI_KODE_ES = "ES";
 
     public List<Melding> hentMeldinger(String fnr) {
         List<String> typer = Arrays.asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());
