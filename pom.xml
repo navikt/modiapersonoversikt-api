@@ -50,6 +50,11 @@
             <version>${behandle.henvendelse.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
+            <version>0.0.4</version>
+        </dependency>
 
         <!-- Tjenestespesifikasjon -->
         <dependency>

@@ -11,25 +11,26 @@
         <form wicket:id="nyoppgaveform">
             <label>
                 <wicket:message key="nyoppgave.form.label.tema"/>
-                <select></select>
+                <select wicket:id="temagruppe"></select>
             </label>
             <label>
                 <wicket:message key="nyoppgave.form.label.tilenhet"/>
-                <select></select>
+                <select wicket:id="enhet"></select>
             </label>
             <label>
                 <wicket:message key="nyoppgave.form.label.oppgavetype"/>
-                <select></select>
+                <select wicket:id="type"></select>
             </label>
             <label>
                 <wicket:message key="nyoppgave.form.label.prioritet"/>
-                <select></select>
+                <select wicket:id="prioritet"></select>
             </label>
             <label>
                 <wicket:message key="nyoppgave.form.label.beskrivelse"/>
                 <textarea wicket:id="beskrivelse"></textarea>
             </label>
             <div class="robust-strek"></div>
+            <div wicket:id="feedback"></div>
             <a wicket:id="opprettoppgave" class="knapp-hoved-stor"><wicket:message key="nyoppgave.form.opprett"/></a>
         </form>
         <a wicket:id="avbrytlink" class="avbryt"><wicket:message key="nyoppgave.avbryt"/></a>

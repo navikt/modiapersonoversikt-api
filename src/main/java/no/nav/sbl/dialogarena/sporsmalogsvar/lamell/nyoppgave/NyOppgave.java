@@ -4,5 +4,5 @@ import java.io.Serializable;
 
 public class NyOppgave implements Serializable {
 
-    String beskrivelse;
+    public String temagruppe, enhet, type, prioritet, beskrivelse;
 }
