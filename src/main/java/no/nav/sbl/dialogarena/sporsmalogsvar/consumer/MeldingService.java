@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -12,7 +13,9 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.Be
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Arkivfiltyper;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Arkivtemaer;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.DokumentInnhold;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Dokumenttyper;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.EksternPart;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Kommunikasjonskanaler;
@@ -20,6 +23,8 @@ import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.NorskIdent;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Person;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Signatur;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.UstrukturertInnhold;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Variantformater;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.DokumentinfoRelasjon;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.JournalfoertDokumentInfo;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.Journalpost;
@@ -91,17 +96,16 @@ public class MeldingService {
         } else {
             journalpostIdEldsteMelding = eldsteMelding.journalfortSaksId;
         }
-        for (MeldingVM meldingVM : valgtTraad.getMeldinger().subList(0,valgtTraad.getMeldinger().size()-1)) {
+        for (MeldingVM meldingVM : valgtTraad.getMeldinger().subList(0, valgtTraad.getMeldinger().size() - 1)) {
             Melding melding = meldingVM.melding;
             if (melding.journalfortDato == null) {
                 String journalpostId = behandleJournalforing(melding, sak, fnr, journalpostIdEldsteMelding);
                 oppdaterJournalfortInformasjonIHenvendelse(sak, journalpostId, melding);
             }
-
         }
     }
 
-    private void oppdaterJournalfortInformasjonIHenvendelse(Sak sak, String journalpostId, Melding melding){
+    private void oppdaterJournalfortInformasjonIHenvendelse(Sak sak, String journalpostId, Melding melding) {
         behandleHenvendelsePortType.oppdaterJournalfortInformasjon(melding.id,
                 new XMLJournalfortInformasjon()
                         .withJournalfortTema(sak.tema)
@@ -113,20 +117,19 @@ public class MeldingService {
     }
 
     private String behandleJournalforing(Melding melding, Sak sak, String fnr, String journalpostIdEldsteMelding) {
-
         if (melding.meldingstype.equals(Meldingstype.SPORSMAL)) {
             return behandleJournalSporsmal(melding, sak, fnr);
 
-        } else if (melding.meldingstype.equals(Meldingstype.SVAR)){
-            return(behandleJournalSvar(sak, fnr, journalpostIdEldsteMelding));
+        } else if (melding.meldingstype.equals(Meldingstype.SVAR)) {
+            return (behandleJournalSvar(melding, sak, fnr, journalpostIdEldsteMelding));
 
         } else {
-            return(behandleJournalSamtalereferat(sak, fnr, optional(journalpostIdEldsteMelding)));
+            return (behandleJournalSamtalereferat(melding, sak, fnr, optional(journalpostIdEldsteMelding)));
         }
 
     }
 
-    private String behandleJournalSporsmal(Melding melding, Sak sak, String fnr){
+    private String behandleJournalSporsmal(Melding melding, Sak sak, String fnr) {
         JournalfoerInngaaendeHenvendelseRequest journalfoerInngaaendeHenvendelseRequest = new JournalfoerInngaaendeHenvendelseRequest();
 
         // TODO Få tak i etternavn og fornavn, foreløpig har vi bare navident
@@ -159,7 +162,8 @@ public class MeldingService {
         journalpost.setEksternPart(eksternPart);
 
         DokumentinfoRelasjon dokumentinfoRelasjon = new DokumentinfoRelasjon();
-        dokumentinfoRelasjon.setJournalfoertDokument(createAndSetJournalfoertDokumentInfoForInngaaende());
+        byte[] pdfInnhold = PdfUtils.genererPdf(melding);
+        dokumentinfoRelasjon.setJournalfoertDokument(createAndSetJournalfoertDokumentInfoForInngaaende(pdfInnhold));
         dokumentinfoRelasjon.setTillknyttetJournalpostSomKode(HOVEDDOKUMENT);
         journalpost.getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
 
@@ -174,7 +178,7 @@ public class MeldingService {
         return journalfoerInngaaendeHenvendelseResponse.getJournalpostId();
     }
 
-    private String behandleJournalSvar(Sak sak, String fnr, String journalfortPostIdForTilhorendeSporsmal){
+    private String behandleJournalSvar(Melding melding, Sak sak, String fnr, String journalfortPostIdForTilhorendeSporsmal) {
         JournalfoerUtgaaendeHenvendelseRequest journalfoerUtgaaendeHenvendelseRequest = new JournalfoerUtgaaendeHenvendelseRequest();
 
         // TODO Få tak i etternavn og fornavn, foreløpig har vi bare nav ident
@@ -206,7 +210,8 @@ public class MeldingService {
         journalpost.setGjelderSak(journalSak);
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.DokumentinfoRelasjon dokumentinfoRelasjon = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.DokumentinfoRelasjon();
-        dokumentinfoRelasjon.setJournalfoertDokument(createAndSetJournalfoertDokumentInfoForUtgaaende());
+        byte[] pdfInnhold = PdfUtils.genererPdf(melding);
+        dokumentinfoRelasjon.setJournalfoertDokument(createAndSetJournalfoertDokumentInfoForUtgaaende(pdfInnhold));
         dokumentinfoRelasjon.setTillknyttetJournalpostSomKode(HOVEDDOKUMENT);
         journalpost.getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
 
@@ -221,7 +226,7 @@ public class MeldingService {
         return journalfoerUtgaaendeHenvendelseResponse.getJournalpostId();
     }
 
-    private String behandleJournalSamtalereferat(Sak sak, String fnr, Optional<String> journalfortPostIdForTilhorendeSporsmal){
+    private String behandleJournalSamtalereferat(Melding melding, Sak sak, String fnr, Optional<String> journalfortPostIdForTilhorendeSporsmal) {
         JournalfoerNotatRequest journalfoerNotatRequest = new JournalfoerNotatRequest();
 
         // TODO Få tak i etternavn og fornavn, foreløpig har vi bare nav ident
@@ -256,7 +261,8 @@ public class MeldingService {
         }
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon dokumentinfoRelasjon = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon();
-        dokumentinfoRelasjon.setJournalfoertDokument(createAndSetJournalfoertDokumentInfoForNotat());
+        byte[] pdfInnhold = PdfUtils.genererPdf(melding);
+        dokumentinfoRelasjon.setJournalfoertDokument(createAndSetJournalfoertDokumentInfoForNotat(pdfInnhold));
         dokumentinfoRelasjon.setTillknyttetJournalpostSomKode(HOVEDDOKUMENT);
         journalpost.getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
 
@@ -272,13 +278,13 @@ public class MeldingService {
         return eksternPart;
     }
 
-    private XMLGregorianCalendar konverterDateTimeObjektTilGregXML(DateTime dateTime){
+    private XMLGregorianCalendar konverterDateTimeObjektTilGregXML(DateTime dateTime) {
         GregorianCalendar dokumentDato = new GregorianCalendar();
         dokumentDato.setTime(dateTime.toDate());
         try {
-            return(DatatypeFactory.newInstance().newXMLGregorianCalendar(dokumentDato));
+            return (DatatypeFactory.newInstance().newXMLGregorianCalendar(dokumentDato));
         } catch (DatatypeConfigurationException e) {
-            throw new  RuntimeException("Noe gikk galt ved instansiering av XMLGregorianCalendar", e);
+            throw new RuntimeException("Noe gikk galt ved instansiering av XMLGregorianCalendar", e);
         }
     }
 
@@ -327,7 +333,7 @@ public class MeldingService {
         return arkivtemaer;
     }
 
-    private no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.JournalfoertDokumentInfo createAndSetJournalfoertDokumentInfoForUtgaaende() {
+    private no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.JournalfoertDokumentInfo createAndSetJournalfoertDokumentInfoForUtgaaende(byte[] pdf) {
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.JournalfoertDokumentInfo journalfoertDokumentInfo = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.JournalfoertDokumentInfo();
 
         // TODO hent inn kodeverk for feletene setKodevrksRef() og setKodeRef() som tilhører dokumenttyper-objektet
@@ -340,13 +346,16 @@ public class MeldingService {
         journalfoertDokumentInfo.setKategorikode(KATEGORI_KODE_ES);
         journalfoertDokumentInfo.setSensitivitet(false);
 
+        List<DokumentInnhold> beskriverInnhold = journalfoertDokumentInfo.getBeskriverInnhold();
+        beskriverInnhold.add(generateUstrukturertInnhold(pdf));
+
         // TODO få inn den egentlige tittelen her
         journalfoertDokumentInfo.setTittel("Dokumenttittel");
 
         return journalfoertDokumentInfo;
     }
 
-    private  JournalfoertDokumentInfo createAndSetJournalfoertDokumentInfoForInngaaende() {
+    private JournalfoertDokumentInfo createAndSetJournalfoertDokumentInfoForInngaaende(byte[] pdf) {
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
 
         // TODO hent inn kodeverk for feletene setKodevrksRef() og setKodeRef() som tilhører dokumenttyper-objektet
@@ -359,13 +368,16 @@ public class MeldingService {
         journalfoertDokumentInfo.setKategorikode(KATEGORI_KODE_ES);
         journalfoertDokumentInfo.setSensitivitet(false);
 
+        List<DokumentInnhold> beskriverInnhold = journalfoertDokumentInfo.getBeskriverInnhold();
+        beskriverInnhold.add(generateUstrukturertInnhold(pdf));
+
         // TODO få inn den egentlige tittelen her
         journalfoertDokumentInfo.setTittel("Dokumenttittel");
 
         return journalfoertDokumentInfo;
     }
 
-    private no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo createAndSetJournalfoertDokumentInfoForNotat() {
+    private no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo createAndSetJournalfoertDokumentInfoForNotat(byte[] pdf) {
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo journalfoertDokumentInfo = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo();
 
         // TODO hent inn kodeverk for feletene setKodevrksRef() og setKodeRef() som tilhører dokumenttyper-objektet
@@ -379,10 +391,31 @@ public class MeldingService {
         journalfoertDokumentInfo.setKategorikode(KATEGORI_KODE_ES);
         journalfoertDokumentInfo.setSensitivitet(false);
 
+        List<DokumentInnhold> beskriverInnhold = journalfoertDokumentInfo.getBeskriverInnhold();
+        beskriverInnhold.add(generateUstrukturertInnhold(pdf));
+
         // TODO få inn den egentlige tittelen her
         journalfoertDokumentInfo.setTittel("Dokumenttittel");
 
         return journalfoertDokumentInfo;
+    }
+
+    private UstrukturertInnhold generateUstrukturertInnhold(byte[] pdf) {
+        UstrukturertInnhold dokumentInnhold = new UstrukturertInnhold();
+        // TODO få inn den egentlige tittelen her
+        dokumentInnhold.setFilnavn("Dokumenttittel");
+        // TODO Få tak i kodeverk og sett det inn i denne metoden
+        Arkivfiltyper arkivFilTyper = new Arkivfiltyper();
+        arkivFilTyper.setValue("PDF");
+
+        dokumentInnhold.setFiltype(arkivFilTyper);
+        // TODO Få tak i kodeverk og sett det inn i denne metoden
+        Variantformater variansformat = new Variantformater();
+        variansformat.setValue("ARKIV");
+        dokumentInnhold.setVariantformat(variansformat);
+
+        dokumentInnhold.setInnhold(pdf);
+        return dokumentInnhold;
     }
 
     private static Transformer<WSGenerellSak, Sak> tilSak = new Transformer<WSGenerellSak, Sak>() {

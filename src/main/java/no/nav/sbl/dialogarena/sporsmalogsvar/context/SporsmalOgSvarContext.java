@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SporsmalOgSvarContext {
+
     @Bean
     public MeldingService meldingService() {
         return new MeldingService();

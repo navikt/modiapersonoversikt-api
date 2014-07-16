@@ -56,6 +56,7 @@ public class MeldingUtils {
                     Meldingstype.SAMTALEREFERAT;
 
             Melding melding = new Melding(info.getBehandlingsId(), meldingstype, info.getOpprettetDato());
+            melding.fnrBruker = info.getAktor().getFodselsnummer();
             melding.traadId = info.getBehandlingsId();
             melding.status = STATUS.transform(info);
             fyllInnJournalforingsInformasjon(info, melding);
