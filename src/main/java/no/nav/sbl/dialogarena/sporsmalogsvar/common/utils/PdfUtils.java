@@ -13,11 +13,12 @@ import org.joda.time.DateTime;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 public class PdfUtils {
 
     public static byte[] genererPdf(Melding melding) {
-        HashMap<String, Helper<?>> helpers = generateHelpers();
+        Map<String, Helper<?>> helpers = generateHelpers();
         try {
             String html = HandleBarHtmlGenerator.fyllHtmlMalMedInnhold(melding, "html/melding", helpers);
             return PDFFabrikk.lagPdfFil(html);
@@ -26,8 +27,8 @@ public class PdfUtils {
         }
     }
 
-    private static HashMap<String, Helper<?>> generateHelpers() {
-        HashMap<String, Helper<?>> result = new HashMap<String, Helper<?>>();
+    private static Map<String, Helper<?>> generateHelpers() {
+        HashMap<String, Helper<?>> result = new HashMap<>();
 
         Helper hentMeldingHelper = new Helper<Melding>() {
             @Override
