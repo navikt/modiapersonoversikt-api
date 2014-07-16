@@ -10,9 +10,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.*;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM.grupperMeldingerPaaJournalfortdato;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.DATE_1;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.DATE_2;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.DATE_3;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.DATE_4;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.ID_1;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.ID_2;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.ID_3;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.ID_4;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.TEMAGRUPPE_1;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.TRAAD_LENGDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createMeldingMedJournalfortDato;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createMeldingVMer;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class TraadVMTest {
 
@@ -93,9 +108,7 @@ public class TraadVMTest {
                 new MeldingVM(melding3, 4),
                 new MeldingVM(melding4, 4)));
 
-        TraadVM traadVM = new TraadVM(meldinger);
-
-        for (MeldingVM meldingVM : meldinger) {
+        for (MeldingVM meldingVM : grupperMeldingerPaaJournalfortdato(meldinger)) {
             if (meldingVM.melding.id.equals(ID_1) || meldingVM.melding.id.equals(ID_3)) {
                 assertTrue(meldingVM.nyesteMeldingISinJournalfortgruppe);
             } else {

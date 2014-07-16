@@ -4,7 +4,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.commons.collections15.Transformer;
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -70,10 +70,13 @@ public class MeldingVM implements Serializable {
         return result;
     }
 
-    public static final Transformer<MeldingVM, DateTime> JOURNALFORT_DATO = new Transformer<MeldingVM, DateTime>() {
+    public static final Transformer<MeldingVM, LocalDate> JOURNALFORT_DATO = new Transformer<MeldingVM, LocalDate>() {
         @Override
-        public DateTime transform(MeldingVM meldingVM) {
-            return meldingVM.melding.journalfortDato;
+        public LocalDate transform(MeldingVM meldingVM) {
+            if (meldingVM.melding.journalfortDato != null) {
+                return meldingVM.melding.journalfortDato.toLocalDate();
+            }
+            return null;
         }
     };
 }

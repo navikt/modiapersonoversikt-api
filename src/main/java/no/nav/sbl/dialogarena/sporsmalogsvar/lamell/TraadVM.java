@@ -1,13 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Map.Entry;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT;
@@ -21,15 +22,7 @@ public class TraadVM implements Serializable {
     public Sak journalfortSak;
 
     public TraadVM(List<MeldingVM> meldinger) {
-        Map<DateTime, List<MeldingVM>> mapMeldingVMPaJournalfortDato = on(meldinger).reduce(indexBy(JOURNALFORT_DATO));
-
-        for (Map.Entry<DateTime, List<MeldingVM>> journalfortDatoEntry : mapMeldingVMPaJournalfortDato.entrySet()) {
-            if (journalfortDatoEntry.getKey() != null) {
-                journalfortDatoEntry.getValue().get(0).nyesteMeldingISinJournalfortgruppe = true;
-            }
-        }
-
-        this.meldinger = meldinger;
+        this.meldinger = grupperMeldingerPaaJournalfortdato(meldinger);
     }
 
     public List<MeldingVM> getMeldinger() {
@@ -62,6 +55,18 @@ public class TraadVM implements Serializable {
 
     public boolean bleInitiertAvBruker() {
         return getEldsteMelding().melding.meldingstype == SPORSMAL;
+    }
+
+    public static List<MeldingVM> grupperMeldingerPaaJournalfortdato(List<MeldingVM> meldinger) {
+        Map<LocalDate, List<MeldingVM>> mapMeldingVMPaJournalfortDato = on(meldinger).reduce(indexBy(JOURNALFORT_DATO));
+
+        for (Entry<LocalDate, List<MeldingVM>> journalfortDatoEntry : mapMeldingVMPaJournalfortDato.entrySet()) {
+            if (journalfortDatoEntry.getKey() != null) {
+                journalfortDatoEntry.getValue().get(0).nyesteMeldingISinJournalfortgruppe = true;
+            }
+        }
+
+        return meldinger;
     }
 
 }
