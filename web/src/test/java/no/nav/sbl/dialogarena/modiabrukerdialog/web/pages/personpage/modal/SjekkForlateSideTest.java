@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal;
 import no.nav.modig.wicket.test.internal.Parameters;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleHenvendelsePortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleJournalV2PortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslisteMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
@@ -47,7 +48,8 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         SaksoversiktService.class,
         SakOgBehandlingPortTypeMock.class,
         AktoerPortTypeMock.class,
-        HenvendelseSoknaderPortTypeMock.class
+        HenvendelseSoknaderPortTypeMock.class,
+        BehandleJournalV2PortTypeMock.class
 })
 public class SjekkForlateSideTest extends WicketPageTest {
 

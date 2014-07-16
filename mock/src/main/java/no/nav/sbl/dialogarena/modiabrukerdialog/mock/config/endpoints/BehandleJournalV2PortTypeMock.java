@@ -15,6 +15,7 @@ import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerUtgaae
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.LagreVedleggPaaJournalpostRequest;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.LagreVedleggPaaJournalpostResponse;
 import org.slf4j.Logger;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.xml.bind.JAXB;
@@ -28,6 +29,11 @@ public class BehandleJournalV2PortTypeMock {
 
     private static final Logger logger = getLogger(BehandleJournalV2PortTypeMock.class);
     private static int journalpostId = 0;
+
+    @Bean
+    public BehandleJournalV2 behandleJournalV2Mock() {
+        return createBehandleJournalPortTypeMock();
+    }
 
     public static BehandleJournalV2 createBehandleJournalPortTypeMock() {
         return new BehandleJournalV2() {
