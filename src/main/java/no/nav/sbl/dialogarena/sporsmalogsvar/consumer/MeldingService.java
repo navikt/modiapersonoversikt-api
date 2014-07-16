@@ -53,6 +53,11 @@ public class MeldingService {
     BehandleJournalV2 behandleJournalV2;
 
     private final static String MODIA_SYSTEM_ID = "BD06";
+    private final static String HOVEDDOKUMENT = "hovedDokument";
+    private final static String SPORSMAL_OG_SVAR = "SPORSMAL_OG_SVAR";
+    private final static String DOKUTYPE_MELDING = "melding";
+    private final static String DOKUTYPE_UTGAENDE = "utgående brev";
+    private final static String KATEGORI_KODE_ES = "ES";
 
     public List<Melding> hentMeldinger(String fnr) {
         List<String> typer = Arrays.asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());
@@ -109,13 +114,15 @@ public class MeldingService {
 
     private String behandleJournalSporsmal(Melding melding, Sak sak, String fnr){
         JournalfoerInngaaendeHenvendelseRequest journalfoerInngaaendeHenvendelseRequest = new JournalfoerInngaaendeHenvendelseRequest();
+
+        // TODO Få tak i etternavn og fornavn, foreløpig har vi bare navident
         journalfoerInngaaendeHenvendelseRequest.setPersonEtternavn(SubjectHandler.getSubjectHandler().getUid());
         journalfoerInngaaendeHenvendelseRequest.setPersonFornavn(SubjectHandler.getSubjectHandler().getUid());
+
         journalfoerInngaaendeHenvendelseRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
 
         Journalpost journalpost = new Journalpost();
 
-        // Set journalpostfelter
         Kommunikasjonskanaler kommunikasjonskanaler = createAndSetKommunikasjonskanaler();
         journalpost.setKanal(kommunikasjonskanaler);
 
@@ -127,7 +134,6 @@ public class MeldingService {
         Arkivtemaer arkivtemaer = createAndSetArkivtemaer(sak);
         journalpost.setArkivtema(arkivtemaer);
 
-        // TODO Få tak i kodeverk og sett det inn i createAndSetPerson-metoden
         Person bruker = createAndSetPerson(fnr);
         journalpost.getForBruker().add(bruker);
 
@@ -139,8 +145,8 @@ public class MeldingService {
         journalpost.setEksternPart(eksternPart);
 
         DokumentinfoRelasjon dokumentinfoRelasjon = new DokumentinfoRelasjon();
-        JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
-        dokumentinfoRelasjon.setJournalfoertDokument(journalfoertDokumentInfo);
+        dokumentinfoRelasjon.setJournalfoertDokument(createAndSetJournalfoertDokumentInfoForInngaaende());
+        dokumentinfoRelasjon.setTillknyttetJournalpostSomKode(HOVEDDOKUMENT);
         journalpost.getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
 
         journalpost.setDokumentDato(konverterDateTimeObjektTilGregXML(DateTime.now()));
@@ -156,13 +162,15 @@ public class MeldingService {
 
     private String behandleJournalSvar(Sak sak, String fnr, String journalfortPostIdForTilhorendeSporsmal){
         JournalfoerUtgaaendeHenvendelseRequest journalfoerUtgaaendeHenvendelseRequest = new JournalfoerUtgaaendeHenvendelseRequest();
+
+        // TODO Få tak i etternavn og fornavn, foreløpig har vi bare nav ident
         journalfoerUtgaaendeHenvendelseRequest.setPersonEtternavn(getSubjectHandler().getUid());
         journalfoerUtgaaendeHenvendelseRequest.setPersonFornavn(getSubjectHandler().getUid());
+
         journalfoerUtgaaendeHenvendelseRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.Journalpost journalpost = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.Journalpost();
 
-        // Set journalpostfelter
         Kommunikasjonskanaler kommunikasjonskanaler = createAndSetKommunikasjonskanaler();
         journalpost.setKanal(kommunikasjonskanaler);
 
@@ -172,7 +180,6 @@ public class MeldingService {
         Arkivtemaer arkivtemaer = createAndSetArkivtemaer(sak);
         journalpost.setArkivtema(arkivtemaer);
 
-        // TODO Få tak i kodeverk og sett det inn i createAndSetPerson-metoden
         Person bruker = createAndSetPerson(fnr);
         journalpost.getForBruker().add(bruker);
 
@@ -185,8 +192,8 @@ public class MeldingService {
         journalpost.setGjelderSak(journalSak);
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.DokumentinfoRelasjon dokumentinfoRelasjon = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.DokumentinfoRelasjon();
-        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.JournalfoertDokumentInfo journalfoertDokumentInfo = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.JournalfoertDokumentInfo();
-        dokumentinfoRelasjon.setJournalfoertDokument(journalfoertDokumentInfo);
+        dokumentinfoRelasjon.setJournalfoertDokument(createAndSetJournalfoertDokumentInfoForUtgaaende());
+        dokumentinfoRelasjon.setTillknyttetJournalpostSomKode(HOVEDDOKUMENT);
         journalpost.getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
 
         journalpost.setDokumentDato(konverterDateTimeObjektTilGregXML(DateTime.now()));
@@ -202,13 +209,15 @@ public class MeldingService {
 
     private String behandleJournalSamtalereferat(Sak sak, String fnr, Optional<String> journalfortPostIdForTilhorendeSporsmal){
         JournalfoerNotatRequest journalfoerNotatRequest = new JournalfoerNotatRequest();
+
+        // TODO Få tak i etternavn og fornavn, foreløpig har vi bare nav ident
         journalfoerNotatRequest.setPersonEtternavn(getSubjectHandler().getUid());
         journalfoerNotatRequest.setPersonFornavn(getSubjectHandler().getUid());
+
         journalfoerNotatRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.Journalpost journalpost = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.Journalpost();
 
-        // Set journalpostfelter
         Kommunikasjonskanaler kommunikasjonskanaler = createAndSetKommunikasjonskanaler();
         journalpost.setKanal(kommunikasjonskanaler);
 
@@ -218,12 +227,10 @@ public class MeldingService {
         Arkivtemaer arkivtemaer = createAndSetArkivtemaer(sak);
         journalpost.setArkivtema(arkivtemaer);
 
-        // TODO Få tak i kodeverk og sett det inn i createAndSetPerson-metoden
         Person bruker = createAndSetPerson(fnr);
         journalpost.getForBruker().add(bruker);
 
         journalpost.setInnhold("Elektronisk kommunikasjon med NAV ");
-
         journalpost.setDokumentDato(konverterDateTimeObjektTilGregXML(DateTime.now()));
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Sak journalSak = createJournalSak(sak);
@@ -235,8 +242,8 @@ public class MeldingService {
         }
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon dokumentinfoRelasjon = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon();
-        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo journalfoertDokumentInfo = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo();
-        dokumentinfoRelasjon.setJournalfoertDokument(journalfoertDokumentInfo);
+        dokumentinfoRelasjon.setJournalfoertDokument(createAndSetJournalfoertDokumentInfoForNotat());
+        dokumentinfoRelasjon.setTillknyttetJournalpostSomKode(HOVEDDOKUMENT);
         journalpost.getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
 
         journalfoerNotatRequest.setJournalpost(journalpost);
@@ -244,7 +251,6 @@ public class MeldingService {
         JournalfoerNotatResponse journalfoerNotatResponse = behandleJournalV2.journalfoerNotat(journalfoerNotatRequest);
         return journalfoerNotatResponse.getJournalpostId();
     }
-
 
     private EksternPart createAndSetEksternPart(Person bruker) {
         EksternPart eksternPart = new EksternPart();
@@ -276,6 +282,7 @@ public class MeldingService {
     }
 
     private Person createAndSetPerson(String fnr) {
+        // TODO Få tak i kodeverk og sett det inn i denne metoden, norskident har flere felter
         Person bruker = new Person();
         NorskIdent norskIdent = new NorskIdent();
         norskIdent.setIdent(fnr);
@@ -298,11 +305,70 @@ public class MeldingService {
     }
 
     private Arkivtemaer createAndSetArkivtemaer(Sak sak) {
+        // TODO Få tak i kodeverk og sett det inn i denne metoden
         Arkivtemaer arkivtemaer = new Arkivtemaer();
         arkivtemaer.setValue(sak.tema);
         arkivtemaer.setKodeverksRef("");
         arkivtemaer.setKodeRef("");
         return arkivtemaer;
+    }
+
+    private no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.JournalfoertDokumentInfo createAndSetJournalfoertDokumentInfoForUtgaaende() {
+        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.JournalfoertDokumentInfo journalfoertDokumentInfo = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.JournalfoertDokumentInfo();
+
+        // TODO hent inn kodeverk for feletene setKodevrksRef() og setKodeRef() som tilhører dokumenttyper-objektet
+        Dokumenttyper dokumenttyper = new Dokumenttyper();
+        dokumenttyper.setValue(DOKUTYPE_UTGAENDE);
+
+        journalfoertDokumentInfo.setDokumentType(dokumenttyper);
+        journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
+        journalfoertDokumentInfo.setBrevkode(SPORSMAL_OG_SVAR);
+        journalfoertDokumentInfo.setKategorikode(KATEGORI_KODE_ES);
+        journalfoertDokumentInfo.setSensitivitet(false);
+
+        // TODO få inn den egentlige tittelen her
+        journalfoertDokumentInfo.setTittel("Dokumenttittel");
+
+        return journalfoertDokumentInfo;
+    }
+
+    private  JournalfoertDokumentInfo createAndSetJournalfoertDokumentInfoForInngaaende() {
+        JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
+
+        // TODO hent inn kodeverk for feletene setKodevrksRef() og setKodeRef() som tilhører dokumenttyper-objektet
+        Dokumenttyper dokumenttyper = new Dokumenttyper();
+        dokumenttyper.setValue(DOKUTYPE_MELDING);
+
+        journalfoertDokumentInfo.setDokumentType(dokumenttyper);
+        journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
+        journalfoertDokumentInfo.setBrevkode(SPORSMAL_OG_SVAR);
+        journalfoertDokumentInfo.setKategorikode(KATEGORI_KODE_ES);
+        journalfoertDokumentInfo.setSensitivitet(false);
+
+        // TODO få inn den egentlige tittelen her
+        journalfoertDokumentInfo.setTittel("Dokumenttittel");
+
+        return journalfoertDokumentInfo;
+    }
+
+    private no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo createAndSetJournalfoertDokumentInfoForNotat() {
+        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo journalfoertDokumentInfo = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo();
+
+        // TODO hent inn kodeverk for feletene setKodevrksRef() og setKodeRef() som tilhører dokumenttyper-objektet
+        Dokumenttyper dokumenttyper = new Dokumenttyper();
+        dokumenttyper.setValue(DOKUTYPE_UTGAENDE);
+
+        journalfoertDokumentInfo.setDokumentType(dokumenttyper);
+        journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
+        journalfoertDokumentInfo.setBrevkode(SPORSMAL_OG_SVAR);
+        journalfoertDokumentInfo.setErOrganinternt(false);
+        journalfoertDokumentInfo.setKategorikode(KATEGORI_KODE_ES);
+        journalfoertDokumentInfo.setSensitivitet(false);
+
+        // TODO få inn den egentlige tittelen her
+        journalfoertDokumentInfo.setTittel("Dokumenttittel");
+
+        return journalfoertDokumentInfo;
     }
 
     private static Transformer<WSGenerellSak, Sak> tilSak = new Transformer<WSGenerellSak, Sak>() {
