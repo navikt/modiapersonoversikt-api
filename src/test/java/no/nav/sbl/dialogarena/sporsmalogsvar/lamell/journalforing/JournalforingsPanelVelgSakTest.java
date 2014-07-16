@@ -20,6 +20,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 @ContextConfiguration(classes = {JournalforingPanelVelgSakTestConfig.class})
@@ -35,7 +36,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
     @Before
     public void setUp(){
-        innboksVMModel = new CompoundPropertyModel<>(new InnboksVM(meldingService, "fnr"));
+        innboksVMModel = new CompoundPropertyModel<>(new InnboksVM(meldingService, FODSELSNR));
     }
 
     @Test
@@ -51,7 +52,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
                 .select("valgtTraad.journalfortSak", 0)
                 .submitWithAjaxButton(withId("journalforTraad"));
 
-        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class), FODSELSNR);
+        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class), eq(FODSELSNR));
     }
 
     @Test
