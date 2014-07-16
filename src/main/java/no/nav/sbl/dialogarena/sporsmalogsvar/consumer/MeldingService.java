@@ -36,9 +36,6 @@ public class MeldingService {
     @Inject
     private no.nav.virksomhet.tjenester.sak.v1.Sak sakWs;
 
-    @Inject
-    private PdfUtils pdfUtils;
-
     public List<Melding> hentMeldinger(String fnr) {
         List<String> typer = Arrays.asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny()).map(TIL_MELDING).collect();
@@ -55,7 +52,7 @@ public class MeldingService {
             if (melding.journalfortDato == null) {
                 //TODO: Implementer journalforing mot JOARK
 
-                byte[] pdfInnhold = pdfUtils.genererPdf(melding);
+                byte[] pdfInnhold = PdfUtils.genererPdf(melding);
 
                 behandleHenvendelsePortType.oppdaterJournalfortInformasjon(melding.id,
                         new XMLJournalfortInformasjon()

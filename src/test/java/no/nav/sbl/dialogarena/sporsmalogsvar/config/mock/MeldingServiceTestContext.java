@@ -1,8 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config.mock;
 
-import no.nav.sbl.dialogarena.pdf.HandleBarKjoerer;
-import no.nav.sbl.dialogarena.pdf.HtmlGenerator;
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -21,16 +18,6 @@ import static org.mockito.Mockito.when;
 
 @Configuration
 public class MeldingServiceTestContext {
-
-    @Bean
-    public PdfUtils pdfUtils() {
-        return new PdfUtils();
-    }
-
-    @Bean
-    public HtmlGenerator htmlGenerator() {
-        return new HandleBarKjoerer();
-    }
 
     @Bean
     public MeldingService meldingService() {
