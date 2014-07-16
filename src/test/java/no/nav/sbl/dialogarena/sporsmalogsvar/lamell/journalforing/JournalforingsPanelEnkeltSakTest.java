@@ -19,6 +19,7 @@ import java.util.List;
 
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 @ContextConfiguration(classes = {JournalforingPanelEnkeltSakTestConfig.class})
@@ -28,13 +29,15 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
     @Inject
     private MeldingService meldingService;
 
+    private final static String FODSELSNR = "52765236723";
+
     private final static String JOURNALFORT_SAKSID = "123123123";
 
     private CompoundPropertyModel<InnboksVM> innboksVMModel;
 
     @Before
     public void setUp(){
-        innboksVMModel = new CompoundPropertyModel<>(new InnboksVM(meldingService, "fnr"));
+        innboksVMModel = new CompoundPropertyModel<>(new InnboksVM(meldingService, FODSELSNR));
         List<Sak> sakerForBruker = meldingService.hentSakerForBruker(innboksVMModel.getObject().getFnr());
         sakerForBruker.get(0).opprettetDato = DateTime.now();
         sakerForBruker.get(0).saksId = JOURNALFORT_SAKSID;
@@ -52,7 +55,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
                 .goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVMModel))
                 .click().link(withId("journalforTraad"));
 
-        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class));
+        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class), eq(FODSELSNR));
     }
 
 }

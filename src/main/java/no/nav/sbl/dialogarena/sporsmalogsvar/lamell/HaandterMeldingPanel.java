@@ -21,7 +21,7 @@ public class HaandterMeldingPanel extends Panel {
 
         final JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforingsPanel", innboksVM);
         journalforingsPanel.setVisibilityAllowed(false);
-        final NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyOppgavePanel");
+        final NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyOppgavePanel", innboksVM);
         nyOppgavePanel.setVisibilityAllowed(false);
 
         AjaxLink<InnboksVM> besvarLink = new AjaxLink<InnboksVM>("besvar", innboksVM) {
