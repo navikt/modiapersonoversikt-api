@@ -358,7 +358,7 @@ public class MeldingService {
     private JournalfoertDokumentInfo createAndSetJournalfoertDokumentInfoForInngaaende(byte[] pdf) {
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
 
-        // TODO hent inn kodeverk for feletene setKodevrksRef() og setKodeRef() som tilhører dokumenttyper-objektet
+        // TODO hent inn kodeverk for feletene setKodeverksRef() og setKodeRef() som tilhører dokumenttyper-objektet
         Dokumenttyper dokumenttyper = new Dokumenttyper();
         dokumenttyper.setValue(DOKUTYPE_MELDING);
 

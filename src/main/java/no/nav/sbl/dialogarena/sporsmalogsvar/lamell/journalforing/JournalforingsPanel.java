@@ -43,8 +43,8 @@ public class JournalforingsPanel extends Panel {
     }
 
     private boolean erValgtTraadJournalfortTidligere(InnboksVM innboksVM) {
-        return (innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortDato != null);
-    }
+        return(innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortDato != null);
+   }
 
     private AjaxLink<InnboksVM> getAvbrytLenke() {
         return new AjaxLink<InnboksVM>("avbrytJournalforing") {
