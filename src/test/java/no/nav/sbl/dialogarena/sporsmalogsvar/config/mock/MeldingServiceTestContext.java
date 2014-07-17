@@ -8,8 +8,6 @@ import no.nav.virksomhet.tjenester.sak.v1.Sak;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createMockSaksliste;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.opprettMeldingEksempel;
@@ -24,7 +22,7 @@ public class MeldingServiceTestContext {
     public MeldingService meldingService() {
         MeldingService meldingService = mock(MeldingService.class);
         when(meldingService.hentSakerForBruker(anyString())).thenReturn(createMockSaksliste());
-        when(meldingService.hentMeldinger(anyString())).thenReturn(new ArrayList<>(asList(opprettMeldingEksempel())));
+        when(meldingService.hentMeldinger(anyString())).thenReturn(asList(opprettMeldingEksempel()));
         return meldingService;
     }
 

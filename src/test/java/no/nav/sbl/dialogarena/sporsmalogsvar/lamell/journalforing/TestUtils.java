@@ -3,13 +3,14 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import org.joda.time.DateTime;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL;
 
 public class TestUtils {
@@ -35,7 +36,7 @@ public class TestUtils {
     public final static String TEMA_3 = "Barnebidrag";
 
     public static ArrayList<Sak> createMockSaksliste(){
-        return new ArrayList<>(Arrays.asList(
+        return new ArrayList<>(asList(
                 createSak("111111111", TEMA_1, "Fagsystem1", SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
                 createSak("22222222", TEMA_2, "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
                 createSak("33333333", TEMA_3, "Fagsystem3", SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
@@ -62,6 +63,7 @@ public class TestUtils {
         Melding melding = new Melding(id, type, opprettetDato);
         melding.temagruppe = tema;
         melding.traadId = traadId;
+        melding.status = Status.IKKE_BESVART;
         return melding;
     }
 
@@ -81,7 +83,7 @@ public class TestUtils {
         MeldingVM melding1VM = new MeldingVM(createMelding(ID_1, Meldingstype.SPORSMAL, DATE_3, TEMAGRUPPE_1, ID_1), TRAAD_LENGDE);
         MeldingVM melding2VM = new MeldingVM(createMelding(ID_2, Meldingstype.SAMTALEREFERAT, DATE_2, TEMAGRUPPE_2, ID_1), TRAAD_LENGDE);
         MeldingVM melding3VM = new MeldingVM(createMelding(ID_3, Meldingstype.SAMTALEREFERAT, DATE_1, TEMAGRUPPE_3, ID_1), TRAAD_LENGDE);
-        return new ArrayList<>(Arrays.asList(melding1VM, melding2VM, melding3VM));
+        return new ArrayList<>(asList(melding1VM, melding2VM, melding3VM));
     }
 
 }
