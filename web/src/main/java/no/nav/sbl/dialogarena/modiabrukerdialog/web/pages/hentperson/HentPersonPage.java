@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
+import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
@@ -15,14 +16,7 @@ import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGANG;
-import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_CLEAR_MESSAGES;
-import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
-import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_SEARCH_PERFORMED;
+import static no.nav.modig.modia.events.InternalEvents.*;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.apache.wicket.markup.head.OnLoadHeaderItem.forScript;
@@ -33,6 +27,7 @@ public class HentPersonPage extends BasePage {
         HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel");
         setupErrorText(pageParameters, hentPersonPanel);
         add(
+                new org.apache.wicket.markup.html.basic.Label("navIdent", SubjectHandler.getSubjectHandler().getUid()),
                 new ContextImage("modia-logo", "img/modiaLogo.svg"),
                 hentPersonPanel,
                 new PlukkOppgavePanel("plukk-oppgave"),
