@@ -18,6 +18,7 @@ public class JournalfortSkiller extends Panel {
         add(new Label("journalfortDatoFormatert"));
         add(new Label("melding.journalfortTema"));
         add(new Label("melding.navIdent"));
+        //add(new Label("journalfortSaksId"));
         add(visibleIf(new PropertyModel<Boolean>(model, "nyesteMeldingISinJournalfortgruppe")));
     }
 }
