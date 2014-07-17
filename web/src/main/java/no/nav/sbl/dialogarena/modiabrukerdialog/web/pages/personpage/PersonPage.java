@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
+import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
@@ -109,6 +110,7 @@ public class PersonPage extends BasePage {
                 lamellContainer,
                 redirectPopup,
                 fnrContainer,
+                new org.apache.wicket.markup.html.basic.Label("navIdent", SubjectHandler.getSubjectHandler().getUid()),
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),

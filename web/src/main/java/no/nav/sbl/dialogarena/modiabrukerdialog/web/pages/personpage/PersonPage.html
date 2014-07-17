@@ -6,6 +6,16 @@
 <wicket:extend>
     <body>
     <div wicket:id="modal">[]</div>
+    <section class="nav-ident-section">
+        <div class="tekst-anker">
+            <div class="nav-ident-pil"></div>
+            <div class="tekst-container">
+                <div> <wicket:message key="navIdent.tekst"/></div>
+                <div wicket:id = "navIdent"/>
+                <div class = "plusstegn"> <wicket:message key="navIdent.plussSymbol"/></div>
+            </div>
+        </div>
+    </section>
     <section class="navbar menu-intern active">
         <wicket:container wicket:id="plukkOppgave"/>
         <div class="sokeboks clearfix">

@@ -400,6 +400,34 @@
     }
   }
 }
+.nav-ident-section{
+  position: absolute;
+  z-index: 5000;
+  left: 0;
+  right: 0;
+  color: @dodgerblue;
+  text-align: center;
+  .nav-ident-pil {
+    width: 0;
+    height: 0;
+    margin: auto;
+    border: 75px solid transparent;
+    border-top-color: @graabakgrunn;
+  }
+  .tekst-anker {
+    position: relative;
+    .tekst-container {
+      position: absolute;
+      top: 0.5em;
+      left: 0;
+      right: 0;
+    }
+    .plusstegn{
+      font-size: 3em;
+      margin-top: -7px;
+    }
+  }
+}
 .oppgaveform {
   position: relative;
   .oppgavepanel {
