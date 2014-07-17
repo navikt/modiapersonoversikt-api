@@ -41,7 +41,7 @@ public class NyOppgavePanel extends Panel {
         Form<NyOppgave> form = new Form<>("nyoppgaveform", nyOppgaveModel);
         add(form);
 
-        form.add(new DropDownChoice<>("temagruppe", asList("Arbeid", "Uføre")).setRequired(true));
+        form.add(new DropDownChoice<>("tema", asList("Arbeid", "Uføre")).setRequired(true));
         form.add(new DropDownChoice<>("enhet", asList("1111", "2222")).setRequired(true));
         form.add(new DropDownChoice<>("type", asList("Kontakt NAV", "Kontakt Bruker")).setRequired(true));
         form.add(new DropDownChoice<>("prioritet", asList("1", "2")).setRequired(true));
@@ -61,7 +61,7 @@ public class NyOppgavePanel extends Panel {
                                 .withOpprettOppgave(
                                         new WSOpprettOppgave()
                                                 .withHenvendelseId(innboksVM.getObject().getValgtTraad().getEldsteMelding().melding.id)
-                                                .withFagomradeKode(nyOppgave.temagruppe)
+                                                .withFagomradeKode(nyOppgave.tema)
                                                 .withAnsvarligEnhetId(nyOppgave.enhet)
                                                 .withOppgavetypeKode(nyOppgave.type)
                                                 .withPrioritetKode(nyOppgave.prioritet)
