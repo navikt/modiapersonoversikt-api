@@ -89,6 +89,7 @@ public class MeldingUtils {
             melding.journalfortDato = journalfortInformasjon.getJournalfortDato();
             melding.journalfortTema = journalfortInformasjon.getJournalfortTema();
             melding.journalfortSaksId = journalfortInformasjon.getJournalfortSaksId();
+            melding.journalfortAvNavIdent = journalfortInformasjon.getJournalforerNavIdent();
         }
     }
 
