@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
+import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleHenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleJournalV2PortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslisteMock;
@@ -45,6 +46,7 @@ public class MockSetupPageTest extends WicketPageTest {
 
     @Test
     public void shouldGoToHentPersonPageWhenSubmitMockSetup() {
+        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         wicket.goTo(MockSetupPage.class).inForm("velgMockForm").submit().should().beOn(HentPersonPage.class);
     }
 }
