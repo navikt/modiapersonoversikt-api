@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <div class="nav-enhet">
+        <h3>
+            <wicket:message key="kontorvalg.overskrift"/>
+        </h3>
+        <form wicket:id="kontorform" class="centered">
+            <wicket:container wicket:id="kontor" class="kontorradio">
+                <div wicket:id="kontorvalg" class="kanalvalg">
+                    <input wicket:id="kontorknapp" type="radio"/>
+                    <label wicket:for="kontorknapp" class="sort-skrift">
+                        <div wicket:id="kontornavn"></div>
+                    </label>
+                </div>
+            </wicket:container>
+            <!--<a wicket:id="leggtilbake" class="knapp-hoved"><wicket:message key="leggtilbake.sendknapp"/></a>-->
+            <!--<br/>-->
+            <!--<a wicket:id="avbryt"><wicket:message key="leggtilbake.avbryt"/></a>-->
+        </form>
+    </div>
+</wicket:panel>
+</body>
+</html>

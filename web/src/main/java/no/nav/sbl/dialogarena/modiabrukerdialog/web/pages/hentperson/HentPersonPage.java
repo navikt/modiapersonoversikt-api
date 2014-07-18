@@ -7,6 +7,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.NAVEnhetPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.PlukkOppgavePanel;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -35,6 +36,7 @@ public class HentPersonPage extends BasePage {
         setupErrorText(pageParameters, hentPersonPanel);
         add(
                 new org.apache.wicket.markup.html.basic.Label("navIdent", SubjectHandler.getSubjectHandler().getUid()),
+                new NAVEnhetPanel("NAVEnhetPanel"),
                 new ContextImage("modia-logo", "img/modiaLogo.svg"),
                 hentPersonPanel,
                 new PlukkOppgavePanel("plukk-oppgave"),
