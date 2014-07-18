@@ -2,7 +2,21 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-    <div class="nav-enhet">
+    <section class="nav-ident-section">
+        <div class="tekst-anker">
+            <div class="nav-ident-pil"></div>
+            <div class="tekst-container">
+                <div>
+                    <wicket:message key="navIdent.tekst"/>
+                </div>
+                <div wicket:id="navIdent"/>
+                <div class="plusstegn">
+                    <wicket:message key="navIdent.plussSymbol"/>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div wicket:id="valgContainer" class="nav-enhet">
         <h3>
             <wicket:message key="kontorvalg.overskrift"/>
         </h3>
@@ -15,9 +29,10 @@
                     </label>
                 </div>
             </wicket:container>
-            <!--<a wicket:id="leggtilbake" class="knapp-hoved"><wicket:message key="leggtilbake.sendknapp"/></a>-->
-            <!--<br/>-->
-            <!--<a wicket:id="avbryt"><wicket:message key="leggtilbake.avbryt"/></a>-->
+            <div wicket:id="feedback" class="feedback"></div>
+            <div class="midtstilt-innhold">
+                <a wicket:id="velg" class="send knapp-hoved-liten">velg</a>
+            </div>
         </form>
     </div>
 </wicket:panel>

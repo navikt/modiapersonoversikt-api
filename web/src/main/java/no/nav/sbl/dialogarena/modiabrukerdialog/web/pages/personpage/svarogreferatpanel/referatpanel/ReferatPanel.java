@@ -40,7 +40,7 @@ public class ReferatPanel extends Panel {
     public ReferatPanel(String id, String fnr) {
         super(id);
         this.fnr = fnr;
-        setOutputMarkupId(true);
+        setOutputMarkupPlaceholderTag(true);
 
         final Form<SvarOgReferatVM> form = new Form<>("referatform", new CompoundPropertyModel<>(new SvarOgReferatVM()));
         form.setOutputMarkupPlaceholderTag(true);
