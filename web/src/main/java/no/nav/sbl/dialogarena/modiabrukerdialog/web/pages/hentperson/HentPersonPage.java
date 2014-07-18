@@ -7,7 +7,7 @@ import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hestefjes.PlukkOppgavePanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
