@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
@@ -12,17 +11,17 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.Journal
 
 public class TraaddetaljerPanel extends Panel {
 
-    private final IModel<InnboksVM> innboksVMModel;
+    private final InnboksVM innboksVM;
 
-    public TraaddetaljerPanel(String id, IModel<InnboksVM> model) {
+    public TraaddetaljerPanel(String id, InnboksVM innboksVM) {
         super(id);
         setOutputMarkupId(true);
 
-        this.innboksVMModel = model;
+        this.innboksVM = innboksVM;
 
-        add(new HaandterMeldingPanel("haandter-melding", innboksVMModel));
-        add(new NyesteMeldingPanel("nyeste-melding", innboksVMModel));
-        add(new TidligereMeldingerPanel("tidligere-meldinger"));
+        add(new HaandterMeldingPanel("haandter-melding", innboksVM));
+        add(new NyesteMeldingPanel("nyeste-melding", innboksVM));
+        add(new TidligereMeldingerPanel("tidligere-meldinger", innboksVM));
     }
 
     @RunOnEvents(VALGT_MELDING_EVENT)
@@ -33,7 +32,7 @@ public class TraaddetaljerPanel extends Panel {
     @RunOnEvents({MELDING_SENDT_TIL_BRUKER, TRAAD_JOURNALFORT})
     public void oppdaterMeldingerHvisSynlig(AjaxRequestTarget target) {
         if (this.isVisibleInHierarchy()) {
-            innboksVMModel.getObject().oppdaterMeldinger();
+            innboksVM.oppdaterMeldinger();
             target.add(this);
         }
     }

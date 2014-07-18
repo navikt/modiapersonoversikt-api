@@ -9,7 +9,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 
@@ -21,13 +21,13 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING
 
 public class AlleMeldingerPanel extends Panel {
 
-    private final IModel<InnboksVM> innboksVMModel;
+    private final InnboksVM innboksVM;
 
-    public AlleMeldingerPanel(String id, IModel<InnboksVM> model) {
-        super(id);
+    public AlleMeldingerPanel(String id, InnboksVM innboksVM) {
+        super(id, new CompoundPropertyModel<>(innboksVM));
         setOutputMarkupId(true);
 
-        this.innboksVMModel = model;
+        this.innboksVM = innboksVM;
 
         add(new PropertyListView<MeldingVM>("nyesteMeldingerITraad") {
             @Override
@@ -44,12 +44,11 @@ public class AlleMeldingerPanel extends Panel {
 
                 item.add(new Label("melding.fritekst"));
 
-                final InnboksVM innboksVM = innboksVMModel.getObject();
-                item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(item.getModelObject())));
+                item.add(hasCssClassIf("valgt", AlleMeldingerPanel.this.innboksVM.erValgtMelding(item.getModelObject())));
                 item.add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
-                        innboksVM.setValgtMelding(item.getModelObject());
+                        AlleMeldingerPanel.this.innboksVM.setValgtMelding(item.getModelObject());
                         send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
                         target.add(AlleMeldingerPanel.this);
                     }
@@ -61,8 +60,8 @@ public class AlleMeldingerPanel extends Panel {
     @RunOnEvents(MELDING_SENDT_TIL_BRUKER)
     public void meldingSendtTilBruker(AjaxRequestTarget target) {
         if (this.isVisibleInHierarchy()) {
-            innboksVMModel.getObject().oppdaterMeldinger();
-            innboksVMModel.getObject().setValgtMelding(innboksVMModel.getObject().getNyesteMeldingINyesteTraad());
+            innboksVM.oppdaterMeldinger();
+            innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
             target.add(this);
         }
     }

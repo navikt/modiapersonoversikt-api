@@ -6,6 +6,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 
@@ -14,8 +15,8 @@ import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class TidligereMeldingerPanel extends Panel {
-    public TidligereMeldingerPanel(String id) {
-        super(id);
+    public TidligereMeldingerPanel(String id, InnboksVM innboksVM) {
+        super(id, new CompoundPropertyModel<>(innboksVM));
         add(new PropertyListView<MeldingVM>("valgtTraad.tidligereMeldinger") {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {

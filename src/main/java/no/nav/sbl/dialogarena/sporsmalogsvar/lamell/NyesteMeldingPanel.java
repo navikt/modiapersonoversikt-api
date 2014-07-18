@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 
@@ -20,13 +20,13 @@ import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 public class NyesteMeldingPanel extends Panel {
 
     AvsenderBilde avsenderbilde;
-    final IModel<InnboksVM> innboksVM;
+    final InnboksVM innboksVM;
 
-    public NyesteMeldingPanel(String id, final IModel<InnboksVM> innboksVM) {
-        super(id);
+    public NyesteMeldingPanel(String id, final InnboksVM innboksVM) {
+        super(id, new CompoundPropertyModel<>(innboksVM));
 
         this.innboksVM = innboksVM;
-        final MeldingVM meldingVM = innboksVM.getObject().getValgtTraad().getNyesteMelding();
+        final MeldingVM meldingVM = innboksVM.getValgtTraad().getNyesteMelding();
 
         this.avsenderbilde = new AvsenderBilde("avsenderbilde", meldingVM);
         add(avsenderbilde);
@@ -44,7 +44,7 @@ public class NyesteMeldingPanel extends Panel {
 
     @Override
     protected void onBeforeRender() {
-        avsenderbilde.settBildeRessurs(innboksVM.getObject().getValgtTraad().getNyesteMelding());
+        avsenderbilde.settBildeRessurs(innboksVM.getValgtTraad().getNyesteMelding());
         super.onBeforeRender();
     }
 

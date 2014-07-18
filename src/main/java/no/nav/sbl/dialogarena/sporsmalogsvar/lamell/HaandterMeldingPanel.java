@@ -7,7 +7,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
@@ -16,7 +15,7 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class HaandterMeldingPanel extends Panel {
 
-    public HaandterMeldingPanel(String id, final IModel<InnboksVM> innboksVM) {
+    public HaandterMeldingPanel(String id, final InnboksVM innboksVM) {
         super(id);
 
         final JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforingsPanel", innboksVM);
@@ -24,10 +23,10 @@ public class HaandterMeldingPanel extends Panel {
         final NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyOppgavePanel", innboksVM);
         nyOppgavePanel.setVisibilityAllowed(false);
 
-        AjaxLink<InnboksVM> besvarLink = new AjaxLink<InnboksVM>("besvar", innboksVM) {
+        AjaxLink<InnboksVM> besvarLink = new AjaxLink<InnboksVM>("besvar") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                send(getPage(), Broadcast.BUBBLE, new NamedEventPayload(SVAR_PAA_MELDING, getModelObject().getValgtTraad().getEldsteMelding().melding.id));
+                send(getPage(), Broadcast.BUBBLE, new NamedEventPayload(SVAR_PAA_MELDING, innboksVM.getValgtTraad().getEldsteMelding().melding.id));
             }
         };
         besvarLink.add(enabledIf(new PropertyModel<Boolean>(innboksVM, "valgtTraad.bleInitiertAvBruker()")));

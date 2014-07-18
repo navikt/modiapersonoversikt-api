@@ -6,7 +6,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.IModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
@@ -19,7 +18,7 @@ public class JournalforingsPanel extends Panel {
     private final JournalforingsPanelEnkeltSak journalforingsPanelEnkeltSak;
     private final JournalforingsPanelVelgSak journalforingsPanelVelgSak;
 
-    public JournalforingsPanel(String id, final IModel<InnboksVM> innboksVM) {
+    public JournalforingsPanel(String id, final InnboksVM innboksVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
@@ -33,18 +32,14 @@ public class JournalforingsPanel extends Panel {
         add(journalforingsPanelVelgSak, journalforingsPanelEnkeltSak, getAvbrytLenke());
     }
 
-    private AbstractReadOnlyModel<Boolean> lagValgtTraadErJournalfortTidligereModel(final IModel<InnboksVM> innboksVM) {
+    private AbstractReadOnlyModel<Boolean> lagValgtTraadErJournalfortTidligereModel(final InnboksVM innboksVM) {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return erValgtTraadJournalfortTidligere(innboksVM.getObject());
+                return(innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortDato != null);
             }
         };
     }
-
-    private boolean erValgtTraadJournalfortTidligere(InnboksVM innboksVM) {
-        return(innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortDato != null);
-   }
 
     private AjaxLink<InnboksVM> getAvbrytLenke() {
         return new AjaxLink<InnboksVM>("avbrytJournalforing") {

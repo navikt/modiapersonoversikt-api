@@ -15,7 +15,6 @@ import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 
@@ -31,7 +30,7 @@ public class NyOppgavePanel extends Panel {
 
     private final CompoundPropertyModel<NyOppgave> nyOppgaveModel;
 
-    public NyOppgavePanel(String id, final IModel<InnboksVM> innboksVM) {
+    public NyOppgavePanel(String id, final InnboksVM innboksVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
@@ -60,7 +59,7 @@ public class NyOppgavePanel extends Panel {
                                 .withOpprettetAvEnhetId(4112)
                                 .withOpprettOppgave(
                                         new WSOpprettOppgave()
-                                                .withHenvendelseId(innboksVM.getObject().getValgtTraad().getEldsteMelding().melding.id)
+                                                .withHenvendelseId(innboksVM.getValgtTraad().getEldsteMelding().melding.id)
                                                 .withFagomradeKode(nyOppgave.tema)
                                                 .withAnsvarligEnhetId(nyOppgave.enhet)
                                                 .withOppgavetypeKode(nyOppgave.type)

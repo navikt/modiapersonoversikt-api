@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,22 +31,22 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
     private final static String FODSELSNR = "52765236723";
 
-    private CompoundPropertyModel<InnboksVM> innboksVMModel;
+    private InnboksVM innboksVM;
 
     @Before
     public void setUp(){
-        innboksVMModel = new CompoundPropertyModel<>(new InnboksVM(meldingService, FODSELSNR));
+        innboksVM = new InnboksVM(meldingService, FODSELSNR);
     }
 
     @Test
     public void skalStarteJournalforingsPanelVelgSakUtenFeil() {
-        wicket.goToPageWith(new JournalforingsPanelVelgSak("panel", innboksVMModel));
+        wicket.goToPageWith(new JournalforingsPanelVelgSak("panel", innboksVM));
     }
 
     @Test
     public void skalJournalforeVedSubmit() {
         wicket
-                .goToPageWith(new JournalforingsPanelVelgSak("panel", innboksVMModel))
+                .goToPageWith(new JournalforingsPanelVelgSak("panel", innboksVM))
                 .inForm("panel:plukkSakForm")
                 .select("valgtTraad.journalfortSak", 0)
                 .submitWithAjaxButton(withId("journalforTraad"));
@@ -57,7 +56,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
     @Test
     public void skalKreveAtMinstEnSakErValgt() {
-        JournalforingsPanelVelgSak journalforingsPanel = new JournalforingsPanelVelgSak("panel", innboksVMModel);
+        JournalforingsPanelVelgSak journalforingsPanel = new JournalforingsPanelVelgSak("panel", innboksVM);
 
         wicket
                 .goToPageWith(journalforingsPanel)

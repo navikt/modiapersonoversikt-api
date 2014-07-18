@@ -10,7 +10,7 @@ import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.CompoundPropertyModel;
 
 import javax.inject.Inject;
 
@@ -23,14 +23,14 @@ public class JournalforingsPanelVelgSak extends Panel {
 
     private SakerVM sakerVM;
 
-    public JournalforingsPanelVelgSak(String id, final IModel<InnboksVM> innboksVM) {
+    public JournalforingsPanelVelgSak(String id, final InnboksVM innboksVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
-        sakerVM = new SakerVM(innboksVM.getObject(), meldingService);
-        Form<InnboksVM> form = new Form<>("plukkSakForm", innboksVM);
+        sakerVM = new SakerVM(innboksVM, meldingService);
+        Form<InnboksVM> form = new Form<>("plukkSakForm", new CompoundPropertyModel<>(innboksVM));
         form.add(
                 feedbackPanel,
                 new SakerRadioGroup("valgtTraad.journalfortSak", sakerVM),
@@ -38,12 +38,12 @@ public class JournalforingsPanelVelgSak extends Panel {
         add(form);
     }
 
-    private AjaxButton getSubmitLenke(final IModel<InnboksVM> innboksVM, final FeedbackPanel feedbackPanel) {
+    private AjaxButton getSubmitLenke(final InnboksVM innboksVM, final FeedbackPanel feedbackPanel) {
         return new AjaxButton("journalforTraad") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                TraadVM valgtTraadVM = innboksVM.getObject().getValgtTraad();
-                String fnr = innboksVM.getObject().getFnr();
+                TraadVM valgtTraadVM = innboksVM.getValgtTraad();
+                String fnr = innboksVM.getFnr();
                 meldingService.journalforTraad(valgtTraadVM, valgtTraadVM.journalfortSak, fnr);
                 lukkJournalforingsPanel(target);
                 send(this, Broadcast.BUBBLE, TRAAD_JOURNALFORT);

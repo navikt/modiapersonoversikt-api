@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
 
 import javax.inject.Inject;
 
@@ -20,27 +19,27 @@ public class Innboks extends Lerret {
     @Inject
     private MeldingService meldingService;
 
-    private IModel<InnboksVM> innboksVM;
+    private InnboksVM innboksVM;
 
     public Innboks(String id, String fnr) {
         super(id);
         setOutputMarkupId(true);
 
-        innboksVM = new CompoundPropertyModel<>(new InnboksVM(meldingService, fnr));
-        setDefaultModel(innboksVM);
+        this.innboksVM = new InnboksVM(meldingService, fnr);
+        setDefaultModel(new CompoundPropertyModel<Object>(innboksVM));
 
         add(new AlleMeldingerPanel("meldinger", innboksVM), new TraaddetaljerPanel("detaljpanel", innboksVM));
     }
 
     @Override
     public void onOpening(AjaxRequestTarget target) {
-        innboksVM.getObject().oppdaterMeldinger();
+        innboksVM.oppdaterMeldinger();
         super.onOpening(target);
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
-        innboksVM.getObject().setValgtMelding(feedItemPayload.getItemId());
+        innboksVM.setValgtMelding(feedItemPayload.getItemId());
         target.add(this);
     }
 

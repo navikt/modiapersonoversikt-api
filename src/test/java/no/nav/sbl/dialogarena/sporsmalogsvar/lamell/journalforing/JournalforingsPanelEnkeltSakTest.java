@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
-import org.apache.wicket.model.CompoundPropertyModel;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,26 +32,26 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
     private final static String JOURNALFORT_SAKSID = "123123123";
 
-    private CompoundPropertyModel<InnboksVM> innboksVMModel;
+    private InnboksVM innboksVM;
 
     @Before
     public void setUp(){
-        innboksVMModel = new CompoundPropertyModel<>(new InnboksVM(meldingService, FODSELSNR));
-        List<Sak> sakerForBruker = meldingService.hentSakerForBruker(innboksVMModel.getObject().getFnr());
+        innboksVM = new InnboksVM(meldingService, FODSELSNR);
+        List<Sak> sakerForBruker = meldingService.hentSakerForBruker(innboksVM.getFnr());
         sakerForBruker.get(0).opprettetDato = DateTime.now();
         sakerForBruker.get(0).saksId = JOURNALFORT_SAKSID;
-        innboksVMModel.getObject().getValgtTraad().getEldsteMelding().melding.journalfortSaksId = JOURNALFORT_SAKSID;
+        innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortSaksId = JOURNALFORT_SAKSID;
     }
 
     @Test
     public void skalStarteJournalforingsPanelEnkeltSakUtenFeil() {
-        wicket.goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVMModel));
+        wicket.goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVM));
     }
 
     @Test
     public void skalJournalforeVedSubmit() {
         wicket
-                .goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVMModel))
+                .goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVM))
                 .click().link(withId("journalforTraad"));
 
         verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class), eq(FODSELSNR));
