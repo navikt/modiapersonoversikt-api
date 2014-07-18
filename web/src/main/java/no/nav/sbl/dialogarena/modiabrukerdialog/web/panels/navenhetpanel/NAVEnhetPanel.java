@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.navenhetpanel;
 
 import no.nav.modig.core.context.SubjectHandler;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -46,11 +47,12 @@ public class NAVEnhetPanel extends Panel {
 
         final WebMarkupContainer valgContainer = new WebMarkupContainer("valgContainer");
         valgContainer.setOutputMarkupPlaceholderTag(true);
+        valgContainer.setVisibilityAllowed(false);
 
         form.add(new AjaxButton("velg") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                lukkNAVEnhetPanel(target, valgContainer);
+                toggleNAVEnhetPanel(target, valgContainer);
             }
 
             @Override
@@ -61,12 +63,20 @@ public class NAVEnhetPanel extends Panel {
 
         valgContainer.add(form);
 
+        add(new WebMarkupContainer("apneNAVEnhetPanel")
+                .add(new AjaxEventBehavior("click") {
+                    @Override
+                    protected void onEvent(AjaxRequestTarget target) {
+                        toggleNAVEnhetPanel(target, valgContainer);
+                    }
+                }));
+
         add(new Label("navIdent", SubjectHandler.getSubjectHandler().getUid()), valgContainer);
 
     }
 
-    private void lukkNAVEnhetPanel(AjaxRequestTarget target, WebMarkupContainer valgContainer) {
-        valgContainer.setVisibilityAllowed(false);
+    private void toggleNAVEnhetPanel(AjaxRequestTarget target, WebMarkupContainer valgContainer) {
+        valgContainer.setVisibilityAllowed(!valgContainer.isVisibilityAllowed());
         target.add(valgContainer);
     }
 }
