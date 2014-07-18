@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.navenhetpanel;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
 import no.nav.modig.core.context.SubjectHandler;
 import org.apache.wicket.ajax.AjaxEventBehavior;
