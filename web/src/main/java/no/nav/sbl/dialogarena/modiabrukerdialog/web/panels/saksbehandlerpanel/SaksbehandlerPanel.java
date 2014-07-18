@@ -52,6 +52,7 @@ public class SaksbehandlerPanel extends Panel {
         form.add(new AjaxButton("velg") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                sendKontorValg();
                 toggleSaksbehandlerPanel(target, valgContainer);
             }
 
@@ -73,6 +74,10 @@ public class SaksbehandlerPanel extends Panel {
 
         add(new Label("navIdent", SubjectHandler.getSubjectHandler().getUid()), valgContainer);
 
+    }
+
+    private void sendKontorValg() {
+        String navn = valgtKontor.navn;
     }
 
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target, WebMarkupContainer valgContainer) {
