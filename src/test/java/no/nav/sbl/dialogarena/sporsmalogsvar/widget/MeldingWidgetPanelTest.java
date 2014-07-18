@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.MeldingServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -17,7 +16,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createMelding;
 import static org.joda.time.DateTime.now;
 
-@ContextConfiguration(classes = MeldingServiceTestContext.class)
+@ContextConfiguration(classes = MeldingWidgetTestConfig.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MeldingWidgetPanelTest extends WicketPageTest {
 

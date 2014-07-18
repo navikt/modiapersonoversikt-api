@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.MeldingServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -21,7 +20,7 @@ import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = MeldingServiceTestContext.class)
+@ContextConfiguration(classes = MeldingWidgetTestConfig.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MeldingerWidgetTest extends WicketPageTest {
 
