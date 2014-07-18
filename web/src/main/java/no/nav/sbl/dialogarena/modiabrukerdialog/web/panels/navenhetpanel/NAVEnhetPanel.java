@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.navenhetpanel;
 
 import no.nav.modig.core.context.SubjectHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
