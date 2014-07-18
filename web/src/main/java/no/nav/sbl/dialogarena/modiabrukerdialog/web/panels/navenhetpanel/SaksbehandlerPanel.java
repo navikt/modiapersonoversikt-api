@@ -19,11 +19,11 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 
-public class NAVEnhetPanel extends Panel {
+public class SaksbehandlerPanel extends Panel {
 
     private Kontor valgtKontor;
 
-    public NAVEnhetPanel(String id) {
+    public SaksbehandlerPanel(String id) {
         super(id);
 
         List<Kontor> kontorer = asList(new Kontor("Sagene"), new Kontor("Grunerløkka"), new Kontor("Schous Plass"));
@@ -52,7 +52,7 @@ public class NAVEnhetPanel extends Panel {
         form.add(new AjaxButton("velg") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                toggleNAVEnhetPanel(target, valgContainer);
+                toggleSaksbehandlerPanel(target, valgContainer);
             }
 
             @Override
@@ -63,11 +63,11 @@ public class NAVEnhetPanel extends Panel {
 
         valgContainer.add(form);
 
-        add(new WebMarkupContainer("apneNAVEnhetPanel")
+        add(new WebMarkupContainer("apneSaksbehandlerPanel")
                 .add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
-                        toggleNAVEnhetPanel(target, valgContainer);
+                        toggleSaksbehandlerPanel(target, valgContainer);
                     }
                 }));
 
@@ -75,7 +75,7 @@ public class NAVEnhetPanel extends Panel {
 
     }
 
-    private void toggleNAVEnhetPanel(AjaxRequestTarget target, WebMarkupContainer valgContainer) {
+    private void toggleSaksbehandlerPanel(AjaxRequestTarget target, WebMarkupContainer valgContainer) {
         valgContainer.setVisibilityAllowed(!valgContainer.isVisibilityAllowed());
         target.add(valgContainer);
     }
