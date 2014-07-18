@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.hestefjes;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
