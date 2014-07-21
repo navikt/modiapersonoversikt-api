@@ -19,7 +19,6 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 @ContextConfiguration(classes = {JournalforingPanelVelgSakTestConfig.class})
@@ -51,7 +50,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
                 .select("valgtTraad.journalfortSak", 0)
                 .submitWithAjaxButton(withId("journalforTraad"));
 
-        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class), eq(FODSELSNR));
+        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class));
     }
 
     @Test

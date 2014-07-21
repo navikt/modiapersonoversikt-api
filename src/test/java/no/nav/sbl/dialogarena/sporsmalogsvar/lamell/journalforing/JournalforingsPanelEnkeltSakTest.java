@@ -18,7 +18,6 @@ import java.util.List;
 
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 
 @ContextConfiguration(classes = {JournalforingPanelEnkeltSakTestConfig.class})
@@ -54,7 +53,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
                 .goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVM))
                 .click().link(withId("journalforTraad"));
 
-        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class), eq(FODSELSNR));
+        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class));
     }
 
 }
