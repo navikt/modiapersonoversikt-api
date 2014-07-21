@@ -5,18 +5,26 @@
 <body>
 <wicket:panel>
     <div wicket:id="journalfortDatoFormatert" class="liten-skrift"></div>
-    <div class="medium-skrift">
-        <span><wicket:message key="journalfortSkiller.jornalfortTekst"/></span>
-        <span wicket:id="melding.journalfortTema"></span>
+    <div>
+    <div>
+        <div class="medium-skrift">
+            <span><wicket:message key="journalfortSkiller.jornalfortTekst"/></span>
+        </div>
+        <div class = "liten-skrift">
+            <wicket:message key="journalfortSkiller.journalfortAvTekst"/>
+            <span wicket:id="melding.journalfortAvNavIdent"></span>
+        </div>
     </div>
-    <div class="liten-skrift">
-        <wicket:message key="journalfortSkiller.journalfortAvTekst"/>
-        <span wicket:id="melding.journalfortAvNavIdent"></span>
+    <div>
+        <div class="medium-skrift">
+            <span wicket:id="melding.journalfortTema"></span>
+        </div>
+        <div class = "liten-skrift">
+            <wicket:message key="journalfortSkiller.jornalfortSaksIdTekst"/>
+            <span wicket:id="melding.journalfortSaksId"></span>
+        </div>
     </div>
-    <!--<div>-->
-        <!--<wicket:message key="journalfortSkiller.jornalfortSaksIdTekst"/>-->
-        <!--<span wicket:id="melding.journalfortSaksId"></span>-->
-    <!--</div>-->
+    </div>
 </wicket:panel>
 </body>
 </html>
