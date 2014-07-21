@@ -144,7 +144,6 @@ public class MeldingService {
         return journalfoerNotatResponse.getJournalpostId();
     }
 
-
     private static Transformer<WSGenerellSak, Sak> tilSak = new Transformer<WSGenerellSak, Sak>() {
         @Override
         public Sak transform(WSGenerellSak wsGenerellSak) {
