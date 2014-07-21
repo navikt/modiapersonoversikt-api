@@ -33,8 +33,10 @@ public class HenvendelsePortTypeMock {
     private static int behandlingsId = idGenerator.nextInt();
     private static int oppgaveId = 0;
     private static String navIdent = "Z999999";
+
     private static final String JOURNALFORT_SAKSID_FORELDREPENGER = "22222222";
     private static final String JOURNALFORT_SAKSID_HJELPEMIDLER = "44444444";
+    private static final String JOURNALFORER_NAV_IDENT = "567567567";
 
     private static final String LANG_TEKST = "Lorem ipsum dolor sit amet, " +
             "consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad " +
@@ -54,54 +56,59 @@ public class HenvendelsePortTypeMock {
 
     public static final XMLBehandlingsinformasjon[] HENVENDELSER = {
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusWeeks(2),
-                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(2), "Arbeidsavklaring",""),
+                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(2), "Arbeidsavklaring","", ""),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusWeeks(1),
-                    createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST, valueOf(oppgaveId)), now().minusDays(2), "Foreldrepenger", ""),
+                    createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST, valueOf(oppgaveId)), now().minusDays(2), "Foreldrepenger", "", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(2),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST), null , "", ""),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST), null , "", "", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(3),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST), now().minusDays(2), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER ),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST),
+                    now().minusDays(2), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT ),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(5), KORT_TEKST), now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER ),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(5), KORT_TEKST),
+                    now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT ),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6), KORT_TEKST), now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER ),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6), KORT_TEKST),
+                    now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT ),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(3),
-                    createXMLSporsmal("HJELPEMIDLER", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER),
+                    createXMLSporsmal("HJELPEMIDLER", LANG_TEKST, valueOf(oppgaveId++)),
+                    now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusHours(5),
-                    createXMLSvar("HJELPEMIDLER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER),
+                    createXMLSvar("HJELPEMIDLER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST),
+                    now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusMonths(4),
-                    createXMLSporsmal("OVRIGE_HENVENDELSER", LANG_TEKST, valueOf(oppgaveId++)), null, "", ""),
+                    createXMLSporsmal("OVRIGE_HENVENDELSER", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusMonths(4).plusDays(1),
-                    createXMLSvar("OVRIGE_HENVENDELSER", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), now().minusDays(3),"Ovrige", ""),
+                    createXMLSvar("OVRIGE_HENVENDELSER", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), now().minusDays(3),"Ovrige", "", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(7),
-                    createXMLSvar("OVRIGE_HENVENDELSER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), now().minusDays(3), "Ovrige", ""),
+                    createXMLSvar("OVRIGE_HENVENDELSER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), now().minusDays(3), "Ovrige", "", ""),
 
             createXmlBehandlingsinformasjon(REFERAT, now(),
-                    createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST), null, "", ""),
+                    createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST), null, "", "", ""),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(1),
-                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), null, "", "")
+                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", "")
     };
 
     private static XMLBehandlingsinformasjon createXmlBehandlingsinformasjon(XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata,
-                                                                             DateTime journalfortDato, String journalfortTema, String journalfortSaksId) {
+                                                                             DateTime journalfortDato, String journalfortTema, String journalfortSaksId, String journalforerNavIdent) {
         behandlingsId = idGenerator.nextInt();
         return new XMLBehandlingsinformasjon()
                 .withHenvendelseType(type.name())
                 .withOpprettetDato(opprettet)
                 .withBehandlingsId(valueOf(behandlingsId))
                 .withAktor(new XMLAktor().withNavIdent(navIdent))
-                .withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortDato(journalfortDato).withJournalfortTema(journalfortTema).withJournalfortSaksId(journalfortSaksId))
+                .withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortDato(journalfortDato).withJournalfortTema(journalfortTema).withJournalfortSaksId(journalfortSaksId).withJournalforerNavIdent(journalforerNavIdent))
                 .withMetadataListe(
                         new XMLMetadataListe().withMetadata(metadata));
     }
