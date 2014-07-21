@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
-import no.nav.modig.core.context.SubjectHandler;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -14,27 +13,34 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.http.WebRequest;
+import org.apache.wicket.request.http.WebResponse;
 
+import javax.servlet.http.Cookie;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 
 public class SaksbehandlerPanel extends Panel {
 
-    private Kontor valgtKontor;
+    private String valgtKontor;
 
     public SaksbehandlerPanel(String id) {
         super(id);
 
-        List<Kontor> kontorer = asList(new Kontor("Sagene"), new Kontor("Grunerløkka"), new Kontor("Schous Plass"));
+        Cookie cookie = ((WebRequest) getRequestCycle().getRequest()).getCookie(brukerSpesifikCookieId());
+        valgtKontor = cookie != null ? cookie.getValue() : null;
 
-        RadioGroup<Kontor> gruppe = new RadioGroup<>("kontor", new PropertyModel<Kontor>(this, "valgtKontor"));
+        List<String> kontorer = asList("1111", "2222", "3333");
+
+        RadioGroup<String> gruppe = new RadioGroup<>("kontor", new PropertyModel<String>(this, "valgtKontor"));
         gruppe.setRequired(true);
 
-        gruppe.add(new ListView<Kontor>("kontorvalg", kontorer) {
-            protected void populateItem(ListItem<Kontor> item) {
+        gruppe.add(new ListView<String>("kontorvalg", kontorer) {
+            protected void populateItem(ListItem<String> item) {
                 item.add(new Radio<>("kontorknapp", item.getModel()));
-                item.add(new Label("kontornavn", item.getModelObject().navn));
+                item.add(new Label("kontornavn", item.getModelObject()));
             }
         });
 
@@ -52,7 +58,7 @@ public class SaksbehandlerPanel extends Panel {
         form.add(new AjaxButton("velg") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                sendKontorValg();
+                lagreKontorValg();
                 toggleSaksbehandlerPanel(target, valgContainer);
             }
 
@@ -72,12 +78,18 @@ public class SaksbehandlerPanel extends Panel {
                     }
                 }));
 
-        add(new Label("navIdent", SubjectHandler.getSubjectHandler().getUid()), valgContainer);
+        add(new Label("navIdent", getSubjectHandler().getUid()), valgContainer);
 
     }
 
-    private void sendKontorValg() {
-        String navn = valgtKontor.navn;
+    private void lagreKontorValg() {
+        Cookie cookie = new Cookie(brukerSpesifikCookieId(), valgtKontor);
+        cookie.setMaxAge(12 * 60 * 60);
+        ((WebResponse) getRequestCycle().getResponse()).addCookie(cookie);
+    }
+
+    private String brukerSpesifikCookieId() {
+        return "kontor-" + getSubjectHandler().getUid();
     }
 
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target, WebMarkupContainer valgContainer) {
