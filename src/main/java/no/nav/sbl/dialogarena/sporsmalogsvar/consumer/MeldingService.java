@@ -63,11 +63,11 @@ public class MeldingService {
         return on(response.getSakListe()).map(tilSak).collect();
     }
 
-    public void journalforTraad(TraadVM valgtTraad, Sak sak, String fnr) {
+    public void journalforTraad(TraadVM valgtTraad, Sak sak) {
         Melding eldsteMelding = valgtTraad.getEldsteMelding().melding;
         String journalpostIdEldsteMelding;
         if (eldsteMelding.journalfortDato == null) {
-            journalpostIdEldsteMelding = behandleJournalforing(eldsteMelding, sak, fnr, null);
+            journalpostIdEldsteMelding = behandleJournalforing(eldsteMelding, sak, null);
             oppdaterJournalfortInformasjonIHenvendelse(sak, journalpostIdEldsteMelding, eldsteMelding);
         } else {
             journalpostIdEldsteMelding = eldsteMelding.journalfortSaksId;
@@ -75,7 +75,7 @@ public class MeldingService {
         for (MeldingVM meldingVM : valgtTraad.getMeldinger().subList(0, valgtTraad.getMeldinger().size() - 1)) {
             Melding melding = meldingVM.melding;
             if (melding.journalfortDato == null) {
-                String journalpostId = behandleJournalforing(melding, sak, fnr, journalpostIdEldsteMelding);
+                String journalpostId = behandleJournalforing(melding, sak, journalpostIdEldsteMelding);
                 oppdaterJournalfortInformasjonIHenvendelse(sak, journalpostId, melding);
             }
         }
@@ -92,20 +92,20 @@ public class MeldingService {
         );
     }
 
-    private String behandleJournalforing(Melding melding, Sak sak, String fnr, String journalpostIdEldsteMelding) {
+    private String behandleJournalforing(Melding melding, Sak sak, String journalpostIdEldsteMelding) {
         if (melding.meldingstype.equals(Meldingstype.SPORSMAL)) {
-            return behandleJournalSporsmal(melding, sak, fnr);
+            return behandleJournalSporsmal(melding, sak);
 
         } else if (melding.meldingstype.equals(Meldingstype.SVAR)) {
-            return (behandleJournalSvar(melding, sak, fnr, journalpostIdEldsteMelding));
+            return (behandleJournalSvar(melding, sak, journalpostIdEldsteMelding));
 
         } else {
-            return (behandleJournalSamtalereferat(melding, sak, fnr, optional(journalpostIdEldsteMelding)));
+            return (behandleJournalSamtalereferat(melding, sak, optional(journalpostIdEldsteMelding)));
         }
 
     }
 
-    private String behandleJournalSporsmal(Melding melding, Sak sak, String fnr) {
+    private String behandleJournalSporsmal(Melding melding, Sak sak) {
         JournalfoerInngaaendeHenvendelseRequest journalfoerInngaaendeHenvendelseRequest = new JournalfoerInngaaendeHenvendelseRequest();
 
         // TODO Få tak i etternavn og fornavn, foreløpig har vi bare navident
@@ -118,7 +118,7 @@ public class MeldingService {
         return journalfoerInngaaendeHenvendelseResponse.getJournalpostId();
     }
 
-    private String behandleJournalSvar(Melding melding, Sak sak, String fnr, String journalfortPostIdForTilhorendeSporsmal) {
+    private String behandleJournalSvar(Melding melding, Sak sak, String journalfortPostIdForTilhorendeSporsmal) {
         JournalfoerUtgaaendeHenvendelseRequest journalfoerUtgaaendeHenvendelseRequest = new JournalfoerUtgaaendeHenvendelseRequest();
 
         // TODO Få tak i etternavn og fornavn, foreløpig har vi bare nav ident
@@ -131,7 +131,7 @@ public class MeldingService {
         return journalfoerUtgaaendeHenvendelseResponse.getJournalpostId();
     }
 
-    private String behandleJournalSamtalereferat(Melding melding, Sak sak, String fnr, Optional<String> journalfortPostIdForTilhorendeSporsmal) {
+    private String behandleJournalSamtalereferat(Melding melding, Sak sak, Optional<String> journalfortPostIdForTilhorendeSporsmal) {
         JournalfoerNotatRequest journalfoerNotatRequest = new JournalfoerNotatRequest();
 
         // TODO Få tak i etternavn og fornavn, foreløpig har vi bare nav ident

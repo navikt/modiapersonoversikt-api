@@ -57,7 +57,6 @@ public class MeldingServiceTest {
     private TraadVM traadVM;
     private  Sak sak;
 
-    private static final String FODSELSNUMMER = "12341234123";
     private static final String SPORSMAL_POST_ID = "7863478648";
     private static final String GENERELL_POST_ID = "623674836846";
 
@@ -83,7 +82,7 @@ public class MeldingServiceTest {
                 createMeldingVM(Meldingstype.SPORSMAL, 2)));
         traadVM = new TraadVM(meldinger);
 
-        meldingService.journalforTraad(traadVM, sak, FODSELSNUMMER);
+        meldingService.journalforTraad(traadVM, sak);
 
         verify(behandleJournalV2).journalfoerInngaaendeHenvendelse(any(JournalfoerInngaaendeHenvendelseRequest.class));
         verify(behandleJournalV2).journalfoerNotat(any(JournalfoerNotatRequest.class));
@@ -94,7 +93,7 @@ public class MeldingServiceTest {
         meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 1)));
         traadVM = new TraadVM(meldinger);
 
-        meldingService.journalforTraad(traadVM, sak, FODSELSNUMMER);
+        meldingService.journalforTraad(traadVM, sak);
 
         verify(behandleJournalV2).journalfoerNotat(any(JournalfoerNotatRequest.class));
     }
@@ -105,7 +104,7 @@ public class MeldingServiceTest {
                 createMeldingVM(Meldingstype.SPORSMAL, 2)));
         traadVM = new TraadVM(meldinger);
 
-        meldingService.journalforTraad(traadVM, sak, FODSELSNUMMER);
+        meldingService.journalforTraad(traadVM, sak);
 
         verify(behandleJournalV2).journalfoerInngaaendeHenvendelse(any(JournalfoerInngaaendeHenvendelseRequest.class));
         verify(behandleJournalV2).journalfoerUtgaaendeHenvendelse(any(JournalfoerUtgaaendeHenvendelseRequest.class));
@@ -117,7 +116,7 @@ public class MeldingServiceTest {
                 createMeldingVM(Meldingstype.SPORSMAL, 2)));
         traadVM = new TraadVM(meldinger);
 
-        meldingService.journalforTraad(traadVM, sak, FODSELSNUMMER);
+        meldingService.journalforTraad(traadVM, sak);
 
         verify(behandleJournalV2).journalfoerUtgaaendeHenvendelse(journalfoerUtgaaendeHenvendelseRequestCaptor.capture());
         assertThat(journalfoerUtgaaendeHenvendelseRequestCaptor.getValue().getJournalpost().getKryssreferanseListe().get(0).getReferanseId(),is(SPORSMAL_POST_ID));
@@ -129,7 +128,7 @@ public class MeldingServiceTest {
                 createMeldingVM(Meldingstype.SPORSMAL, 2)));
         traadVM = new TraadVM(meldinger);
 
-        meldingService.journalforTraad(traadVM, sak, FODSELSNUMMER);
+        meldingService.journalforTraad(traadVM, sak);
 
         verify(behandleJournalV2).journalfoerNotat(journalfoerNotatRequestCaptor.capture());
         assertThat(journalfoerNotatRequestCaptor.getValue().getJournalpost().getKryssreferanseListe().get(0).getReferanseId(),is(SPORSMAL_POST_ID));

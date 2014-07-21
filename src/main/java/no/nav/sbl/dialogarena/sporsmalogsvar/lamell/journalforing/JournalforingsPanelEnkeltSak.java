@@ -43,8 +43,7 @@ public class JournalforingsPanelEnkeltSak extends Panel {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 TraadVM valgtTraadVM = innboksVM.getValgtTraad();
-                String fnr = innboksVM.getFnr();
-                meldingService.journalforTraad(valgtTraadVM, journalfortSakVM.getSak(), fnr);
+                meldingService.journalforTraad(valgtTraadVM, journalfortSakVM.getSak());
                 lukkJournalforingsPanel(target);
                 send(this, Broadcast.BUBBLE, TRAAD_JOURNALFORT);
             }
