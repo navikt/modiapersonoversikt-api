@@ -4,6 +4,7 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfo
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.helpers.JournalforingNotat;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -70,12 +71,12 @@ public class MeldingService {
     @Inject
     BehandleJournalV2 behandleJournalV2;
 
-    private static final String MODIA_SYSTEM_ID = "BD06";
-    private static final String HOVEDDOKUMENT = "hovedDokument";
-    private static final String SPORSMAL_OG_SVAR = "SPORSMAL_OG_SVAR";
-    private static final String DOKUTYPE_MELDING = "melding";
-    private static final String DOKUTYPE_UTGAENDE = "utgående brev";
-    private static final String KATEGORI_KODE_ES = "ES";
+    public static final String MODIA_SYSTEM_ID = "BD06";
+    public static final String HOVEDDOKUMENT = "hovedDokument";
+    public static final String SPORSMAL_OG_SVAR = "SPORSMAL_OG_SVAR";
+    public static final String DOKUTYPE_MELDING = "melding";
+    public static final String DOKUTYPE_UTGAENDE = "utgående brev";
+    public static final String KATEGORI_KODE_ES = "ES";
 
     public List<Melding> hentMeldinger(String fnr) {
         List<String> typer = Arrays.asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());
@@ -232,41 +233,8 @@ public class MeldingService {
         // TODO Få tak i etternavn og fornavn, foreløpig har vi bare nav ident
         journalfoerNotatRequest.setPersonEtternavn(getSubjectHandler().getUid());
         journalfoerNotatRequest.setPersonFornavn(getSubjectHandler().getUid());
-
         journalfoerNotatRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
-
-        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.Journalpost journalpost = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.Journalpost();
-
-        Kommunikasjonskanaler kommunikasjonskanaler = createAndSetKommunikasjonskanaler();
-        journalpost.setKanal(kommunikasjonskanaler);
-
-        Signatur signatur = createAndSetSignatur();
-        journalpost.setSignatur(signatur);
-
-        Arkivtemaer arkivtemaer = createAndSetArkivtemaer(sak);
-        journalpost.setArkivtema(arkivtemaer);
-
-        Person bruker = createAndSetPerson(fnr);
-        journalpost.getForBruker().add(bruker);
-
-        journalpost.setInnhold("Elektronisk kommunikasjon med NAV ");
-        journalpost.setDokumentDato(konverterDateTimeObjektTilGregXML(DateTime.now()));
-
-        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Sak journalSak = createJournalSak(sak);
-        journalpost.setGjelderSak(journalSak);
-
-        if (journalfortPostIdForTilhorendeSporsmal.isSome()) {
-            Kryssreferanse kryssreferanse = createAndSetKryssreferanse(journalfortPostIdForTilhorendeSporsmal.get());
-            journalpost.getKryssreferanseListe().add(kryssreferanse);
-        }
-
-        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon dokumentinfoRelasjon = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon();
-        byte[] pdfInnhold = PdfUtils.genererPdf(melding);
-        dokumentinfoRelasjon.setJournalfoertDokument(createAndSetJournalfoertDokumentInfoForNotat(pdfInnhold));
-        dokumentinfoRelasjon.setTillknyttetJournalpostSomKode(HOVEDDOKUMENT);
-        journalpost.getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
-
-        journalfoerNotatRequest.setJournalpost(journalpost);
+        journalfoerNotatRequest.setJournalpost(JournalforingNotat.lagJournalforingNotat(fnr, journalfortPostIdForTilhorendeSporsmal, sak, melding));
 
         JournalfoerNotatResponse journalfoerNotatResponse = behandleJournalV2.journalfoerNotat(journalfoerNotatRequest);
         return journalfoerNotatResponse.getJournalpostId();
