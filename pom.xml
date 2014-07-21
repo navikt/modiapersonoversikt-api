@@ -106,6 +106,20 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-pdf-generering</artifactId>
             <version>0.1-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>bouncycastle</groupId>
+                    <artifactId>bcmail-jdk14</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>bouncycastle</groupId>
+                    <artifactId>bcprov-jdk14</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.bouncycastle</groupId>
+                    <artifactId>bctsp-jdk14</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!--Modig-->
