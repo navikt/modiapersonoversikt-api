@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleHenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleJournalV2PortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GosysNavAnsattPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslisteMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SendUtHenvendelsePortTypeMock;
@@ -34,7 +35,8 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         SendUtHenvendelsePortTypeMock.class,
         BehandleHenvendelsePortTypeMock.class,
         GsakHentSakslisteMock.class,
-        BehandleJournalV2PortTypeMock.class
+        BehandleJournalV2PortTypeMock.class,
+        GosysNavAnsattPortTypeMock.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MockSetupPageTest extends WicketPageTest {
