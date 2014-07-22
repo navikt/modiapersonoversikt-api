@@ -47,11 +47,6 @@ public class MeldingService {
     BehandleJournalV2 behandleJournalV2;
 
     public static final String MODIA_SYSTEM_ID = "BD06";
-    public static final String HOVEDDOKUMENT = "hovedDokument";
-    public static final String SPORSMAL_OG_SVAR = "SPORSMAL_OG_SVAR";
-    public static final String DOKUTYPE_INNGAENDE = "melding";
-    public static final String DOKUTYPE_UTGAENDE = "utgående brev";
-    public static final String KATEGORI_KODE_ES = "ES";
 
     public List<Melding> hentMeldinger(String fnr) {
         List<String> typer = Arrays.asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());

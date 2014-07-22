@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.DokumentInnhold;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Dokumenttyper;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Person;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.DokumentinfoRelasjon;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.JournalfoertDokumentInfo;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.Journalpost;
@@ -12,15 +13,15 @@ import org.joda.time.DateTime;
 
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService.*;
-
 public class JournalforingSporsmal extends Journalforing {
     public static Journalpost lagJournalforingSporsmal(Sak sak, Melding melding) {
         Journalpost journalpost = new Journalpost();
         journalpost.setKanal(lagKommunikasjonskanaler());
         journalpost.setSignatur(lagSignatur());
         journalpost.setArkivtema(lagArkivtema(sak));
-        journalpost.getForBruker().add(lagPerson(melding.fnrBruker));
+        Person bruker = lagPerson(melding.fnrBruker);
+        journalpost.getForBruker().add(bruker);
+        journalpost.getEksternPart().setEksternAktoer(bruker);
         journalpost.setInnhold("Elektronisk kommunikasjon med NAV ");
         journalpost.setDokumentDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(DateTime.now()));
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));

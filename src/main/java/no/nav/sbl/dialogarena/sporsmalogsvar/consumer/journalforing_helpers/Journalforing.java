@@ -11,6 +11,13 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import java.util.GregorianCalendar;
 
 public abstract class Journalforing {
+
+    public static final String HOVEDDOKUMENT = "hovedDokument";
+    public static final String SPORSMAL_OG_SVAR = "SPORSMAL_OG_SVAR";
+    public static final String KATEGORI_KODE_ES = "ES";
+    public static final String DOKUTYPE_INNGAENDE = "melding";
+    public static final String DOKUTYPE_UTGAENDE = "utgående brev";
+
     protected static Person lagPerson(String fnr) {
         // TODO Få tak i kodeverk og sett det inn i denne metoden, norskident har flere felter
         Person bruker = new Person();
@@ -19,6 +26,8 @@ public abstract class Journalforing {
         bruker.setIdent(norskIdent);
         return bruker;
     }
+
+
 
     protected static Kryssreferanse lagKryssreferanse(String journalfortPostIdForTilhorendeSporsmal) {
         Kryssreferanse kryssreferanse = new Kryssreferanse();
