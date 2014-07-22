@@ -27,7 +27,11 @@ public abstract class Journalforing {
         return bruker;
     }
 
-
+    protected static EksternPart lagEksternPart(Person bruker) {
+        EksternPart eksternPart = new EksternPart();
+        eksternPart.setEksternAktoer(bruker);
+        return eksternPart;
+    }
 
     protected static Kryssreferanse lagKryssreferanse(String journalfortPostIdForTilhorendeSporsmal) {
         Kryssreferanse kryssreferanse = new Kryssreferanse();

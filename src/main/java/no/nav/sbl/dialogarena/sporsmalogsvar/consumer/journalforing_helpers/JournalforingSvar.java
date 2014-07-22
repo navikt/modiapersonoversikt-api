@@ -21,7 +21,7 @@ public class JournalforingSvar extends Journalforing {
         journalpost.setArkivtema(lagArkivtema(sak));
         Person bruker = lagPerson(melding.fnrBruker);
         journalpost.getForBruker().add(bruker);
-        journalpost.getEksternPart().setEksternAktoer(bruker);
+        journalpost.setEksternPart(lagEksternPart(bruker));
         journalpost.setInnhold("Elektronisk kommunikasjon med NAV ");
         journalpost.setDokumentDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(DateTime.now()));
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));
