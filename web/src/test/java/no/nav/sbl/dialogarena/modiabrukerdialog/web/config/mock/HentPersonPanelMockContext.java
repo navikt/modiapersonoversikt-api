@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Import;
 import static org.mockito.Mockito.mock;
 
 @Configuration
-@Import(KjerneinfoPepMockContext.class)
+@Import({KjerneinfoPepMockContext.class})
 public class HentPersonPanelMockContext {
 
     @Bean
@@ -21,5 +21,4 @@ public class HentPersonPanelMockContext {
     public EnforcementPoint pep() {
         return mock(EnforcementPoint.class);
     }
-
 }

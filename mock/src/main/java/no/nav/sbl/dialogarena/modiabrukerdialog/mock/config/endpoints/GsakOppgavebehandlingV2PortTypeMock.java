@@ -27,8 +27,13 @@ import no.nav.virksomhet.tjenester.oppgavebehandling.v2.LagreOppgaveOppgaveIkkeF
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.Oppgavebehandling;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.SlettMappeMappeIkkeFunnet;
 import no.nav.virksomhet.tjenester.oppgavebehandling.v2.SlettMappeMappeIkkeTom;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
+@Configuration
 public class GsakOppgavebehandlingV2PortTypeMock {
+
+    @Bean
     public static Oppgavebehandling createOppgavebehandlingPortTypeMock() {
         return new Oppgavebehandling() {
             @Override

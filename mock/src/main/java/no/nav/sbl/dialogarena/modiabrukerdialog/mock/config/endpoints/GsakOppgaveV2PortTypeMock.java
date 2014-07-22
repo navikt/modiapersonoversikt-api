@@ -19,11 +19,15 @@ import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveRequest;
 import no.nav.virksomhet.tjenester.oppgave.meldinger.v2.WSHentOppgaveResponse;
 import no.nav.virksomhet.tjenester.oppgave.v2.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.virksomhet.tjenester.oppgave.v2.Oppgave;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 import static org.joda.time.DateTime.now;
 
+@Configuration
 public class GsakOppgaveV2PortTypeMock {
 
+    @Bean
     public static Oppgave createOppgavePortTypeMock() {
         return new Oppgave() {
             @Override

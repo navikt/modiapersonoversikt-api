@@ -19,4 +19,9 @@ public class ServicesConfig {
         return new SakService();
     }
 
+    @Bean
+    public AnsattService ansattService() {
+        return new AnsattService();
+    }
+
 }
