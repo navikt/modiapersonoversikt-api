@@ -108,7 +108,12 @@ public class HenvendelsePortTypeMock {
                 .withOpprettetDato(opprettet)
                 .withBehandlingsId(valueOf(behandlingsId))
                 .withAktor(new XMLAktor().withNavIdent(navIdent))
-                .withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortDato(journalfortDato).withJournalfortTema(journalfortTema).withJournalfortSaksId(journalfortSaksId).withJournalforerNavIdent(journalforerNavIdent))
+                .withJournalfortInformasjon(
+                        new XMLJournalfortInformasjon()
+                                .withJournalfortDato(journalfortDato)
+                                .withJournalfortTema(journalfortTema)
+                                .withJournalfortSaksId(journalfortSaksId)
+                                .withJournalforerNavIdent(journalforerNavIdent))
                 .withMetadataListe(
                         new XMLMetadataListe().withMetadata(metadata));
     }
