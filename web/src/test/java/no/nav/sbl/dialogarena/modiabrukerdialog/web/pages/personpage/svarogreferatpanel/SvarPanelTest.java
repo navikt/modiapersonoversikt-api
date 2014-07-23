@@ -1,13 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
 
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarKanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.TidligereMeldingPanel;
@@ -16,7 +15,6 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListView;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -49,11 +47,6 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Inject
     protected SakService sakService;
-
-    @Before
-    public void init() {
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
-    }
 
     @Test
     public void inneholderSporsmaalsspefikkeKomponenter() {

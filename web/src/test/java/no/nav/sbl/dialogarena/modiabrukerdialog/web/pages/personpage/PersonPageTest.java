@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
-import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -32,11 +31,6 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @ContextConfiguration(classes = {PersonPageMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PersonPageTest extends WicketPageTest {
-
-    @Override
-    protected void additionalSetup() {
-        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
-    }
 
     @Test
     public void shouldLoadPage() {

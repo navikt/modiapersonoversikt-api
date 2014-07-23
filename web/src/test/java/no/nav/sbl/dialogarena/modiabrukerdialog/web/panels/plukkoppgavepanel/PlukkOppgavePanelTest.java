@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
-import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
@@ -40,11 +39,6 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
     @Inject
     private SakService sakService;
-
-    @Override
-    protected void additionalSetup() {
-        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
-    }
 
     @Test
     public void skalPlukkeOppgaveOgSetteSessionAttribute() {

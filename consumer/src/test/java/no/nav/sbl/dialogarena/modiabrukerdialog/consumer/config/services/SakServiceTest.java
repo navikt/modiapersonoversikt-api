@@ -7,7 +7,6 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.core.context.SubjectHandler;
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
@@ -131,7 +130,7 @@ public class SakServiceTest {
 
     @Test
     public void skalPlukkeOppgaveFraGsak() {
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
+        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         WSFinnOppgaveListeResponse finnOppgaveListeResponse = new WSFinnOppgaveListeResponse();
         finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
         when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);

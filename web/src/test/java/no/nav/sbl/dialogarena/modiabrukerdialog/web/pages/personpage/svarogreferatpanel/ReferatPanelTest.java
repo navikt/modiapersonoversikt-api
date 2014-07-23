@@ -1,18 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatKanal;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -39,11 +37,6 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Inject
     protected SakService sakService;
-
-    @Before
-    public void init() {
-        System.setProperty("no.nav.modig.core.context.subjectHandlerImplementationClass", ThreadLocalSubjectHandler.class.getName());
-    }
 
     @Test
     public void inneholderReferatspesifikkeKomponenter() {

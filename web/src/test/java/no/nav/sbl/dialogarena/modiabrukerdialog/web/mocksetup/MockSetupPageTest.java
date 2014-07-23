@@ -1,11 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
-import no.nav.modig.core.context.StaticSubjectHandler;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInstillingerPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
 import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
@@ -37,7 +36,6 @@ public class MockSetupPageTest extends WicketPageTest {
 
     @Test
     public void shouldGoToHentPersonPageWhenSubmitMockSetup() {
-        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         wicket.goTo(MockSetupPage.class).inForm("velgMockForm").submit().should().beOn(HentPersonPage.class);
     }
 }

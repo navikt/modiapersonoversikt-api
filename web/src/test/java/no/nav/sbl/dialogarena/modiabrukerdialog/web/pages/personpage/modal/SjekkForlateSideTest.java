@@ -1,12 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal;
 
-import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.wicket.test.internal.Parameters;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInstillingerPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
 import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
@@ -43,7 +42,6 @@ public class SjekkForlateSideTest extends WicketPageTest {
 
     @Override
     protected void additionalSetup() {
-        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         parameters = new Parameters().param("fnr", "11111111111");
         answer = new SjekkForlateSideAnswer();
         sjekkForlateSide = new SjekkForlateSide("id", new RedirectModalWindow("modigModalWindow"), answer);
