@@ -9,6 +9,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -19,6 +20,7 @@ import javax.inject.Inject;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.TRAAD_ID_PARAMETER_NAME;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createMelding;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -30,8 +32,9 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InnboksTest {
 
-    private static final String NYESTE_MELDING_ID = "nyesteId";
-    private static final String ANDRE_TRAAD_HENVENDELSE_ID = "traad2Id";
+    private static final String ELDSTE_MELDING_ID_TRAAD1 = "eldsteIdTraad1";
+    private static final String NYESTE_MELDING_ID_TRAAD1 = "nyesteIdTraad1";
+    private static final String ENESTE_MELDING_ID_TRAAD2 = "enesteIdTraad2";
 
     @Inject
     private MeldingService meldingService;
@@ -39,33 +42,52 @@ public class InnboksTest {
     @Inject
     private FluentWicketTester wicket;
 
+    @Before
+    public void setUp(){
+        when(meldingService.hentMeldinger(anyString())).thenReturn(asList(
+                createMelding(ELDSTE_MELDING_ID_TRAAD1, Meldingstype.SPORSMAL, now().minusDays(1), "TEMA", ELDSTE_MELDING_ID_TRAAD1),
+                createMelding(NYESTE_MELDING_ID_TRAAD1, Meldingstype.SVAR, now(), "TEMA", ELDSTE_MELDING_ID_TRAAD1),
+                createMelding(ENESTE_MELDING_ID_TRAAD2, Meldingstype.SPORSMAL, now().minusDays(2), "TEMA", ENESTE_MELDING_ID_TRAAD2)));
+    }
+
     @Test
     public void skalInneholdeRiktigeKomponenter() {
-        when(meldingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", Meldingstype.SPORSMAL, now().minusDays(1), "TEMA", "1")));
         wicket.goToPageWith(new TestInnboks("innboks", "fnr"))
                 .should().containComponent(ofType(AlleMeldingerPanel.class))
                 .should().containComponent(ofType(TraaddetaljerPanel.class));
     }
 
     @Test
-    public void skalSetteValgtMeldingVedEvent() {
-        when(meldingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("id1", Meldingstype.SPORSMAL, now().minusDays(1), "TEMA", "1"),
-                createMelding(NYESTE_MELDING_ID, Meldingstype.SVAR, now(), "TEMA", "1"),
-                createMelding(ANDRE_TRAAD_HENVENDELSE_ID, Meldingstype.SPORSMAL, now().minusDays(2), "TEMA", "2")));
-
+    public void skalVelgeTraadMedNyesteMeldingSomDefault() {
         TestInnboks innboks = new TestInnboks("innboks", "fnr");
         wicket.goToPageWith(innboks);
 
-        assertThat(((InnboksVM) innboks.getDefaultModelObject()).getValgtTraad().getNyesteMelding().melding.id, is(NYESTE_MELDING_ID));
+        assertThat(((InnboksVM) innboks.getDefaultModelObject()).getValgtTraad().getNyesteMelding().melding.id, is(NYESTE_MELDING_ID_TRAAD1));
+    }
+
+    @Test
+    public void skalSetteValgtMeldingVedEvent() {
+        TestInnboks innboks = new TestInnboks("innboks", "fnr");
+        wicket.goToPageWith(innboks);
 
         wicket.sendEvent(new EventGenerator() {
             @Override
             public Object createEvent(AjaxRequestTarget target) {
-                return new NamedEventPayload(FEED_ITEM_CLICKED, new FeedItemPayload("", ANDRE_TRAAD_HENVENDELSE_ID, ""));
+                return new NamedEventPayload(FEED_ITEM_CLICKED, new FeedItemPayload("", ENESTE_MELDING_ID_TRAAD2, ""));
             }
         }).should().inAjaxResponse().haveComponents(ofType(Innboks.class));
 
-        assertThat(((InnboksVM) innboks.getDefaultModelObject()).getValgtTraad().getNyesteMelding().melding.id, is(ANDRE_TRAAD_HENVENDELSE_ID));
+        assertThat(((InnboksVM) innboks.getDefaultModelObject()).getValgtTraad().getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
     }
+
+    @Test
+    public void skalSetteTraadSomErReferertITraadIdPageParameterSomValgtTraad() {
+        wicket.tester.getRequest().setParameter(TRAAD_ID_PARAMETER_NAME, ENESTE_MELDING_ID_TRAAD2);
+
+        TestInnboks innboks = new TestInnboks("innboks", "fnr");
+        wicket.goToPageWith(innboks);
+
+        assertThat(((InnboksVM) innboks.getDefaultModelObject()).getValgtTraad().getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
+    }
+
 }

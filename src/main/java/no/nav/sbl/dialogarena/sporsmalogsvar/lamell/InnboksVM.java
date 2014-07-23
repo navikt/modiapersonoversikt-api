@@ -19,6 +19,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.TRAAD_ID;
 
 public class InnboksVM implements Serializable {
 
@@ -63,6 +64,10 @@ public class InnboksVM implements Serializable {
 
     public void setValgtMelding(String id) {
         setValgtMelding(on(nyesteMeldingerITraad).filter(where(ID, equalTo(id))).head().get());
+    }
+
+    public void setValgtTraad(String traadId){
+        setValgtMelding(on(nyesteMeldingerITraad).filter(where(TRAAD_ID, equalTo(traadId))).head().get());
     }
 
     public void setValgtMelding(MeldingVM meldingVM) {

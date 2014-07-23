@@ -94,6 +94,13 @@ public class InnboksVMTest {
     }
 
     @Test
+    public void skalSetteValgtTraadBasertPaaTraadId() {
+        innboksVM.setValgtTraad(ID_2);
+
+        assertThat(innboksVM.getValgtTraad().getNyesteMelding().melding.id, is(ID_4));
+    }
+
+    @Test
     public void skalFinneUtOmGittMeldingVMErIValgtMelding() {
         MeldingVM nyesteMeldingITraad1 = innboksVM.getTraader().get(ID_1).getNyesteMelding();
         MeldingVM nyesteMeldingITraad2 = innboksVM.getTraader().get(ID_2).getNyesteMelding();

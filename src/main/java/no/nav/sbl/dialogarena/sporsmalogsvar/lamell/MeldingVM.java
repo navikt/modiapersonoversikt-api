@@ -57,6 +57,13 @@ public class MeldingVM implements Serializable {
         }
     };
 
+    public static final Transformer<MeldingVM, String> TRAAD_ID = new Transformer<MeldingVM, String>() {
+        @Override
+        public String transform(MeldingVM meldingVM) {
+            return meldingVM.melding.traadId;
+        }
+    };
+
     @Override
     public boolean equals(Object obj) {
         return obj instanceof MeldingVM && this.melding.id.equals(((MeldingVM) obj).melding.id);
@@ -79,4 +86,5 @@ public class MeldingVM implements Serializable {
             return null;
         }
     };
+
 }

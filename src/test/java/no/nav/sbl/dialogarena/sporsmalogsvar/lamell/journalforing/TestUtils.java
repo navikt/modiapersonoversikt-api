@@ -59,17 +59,17 @@ public class TestUtils {
         return sak;
     }
 
-    public static Melding createMelding(String id, Meldingstype type, DateTime opprettetDato, String tema, String traadId){
+    public static Melding createMelding(String id, Meldingstype type, DateTime opprettetDato, String temagruppe, String traadId){
         Melding melding = new Melding(id, type, opprettetDato);
-        melding.temagruppe = tema;
+        melding.temagruppe = temagruppe;
         melding.traadId = traadId;
         melding.status = Status.IKKE_BESVART;
         return melding;
     }
 
-    public static Melding createMeldingMedJournalfortDato(String id, Meldingstype type, DateTime opprettetDato, String tema, String traadId, DateTime journalfortDato){
+    public static Melding createMeldingMedJournalfortDato(String id, Meldingstype type, DateTime opprettetDato, String temagruppe, String traadId, DateTime journalfortDato){
         Melding melding = new Melding(id, type, opprettetDato);
-        melding.temagruppe = tema;
+        melding.temagruppe = temagruppe;
         melding.traadId = traadId;
         melding.journalfortDato = journalfortDato;
         return melding;
