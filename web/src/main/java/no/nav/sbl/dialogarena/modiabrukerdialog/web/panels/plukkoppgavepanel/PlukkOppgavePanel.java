@@ -6,7 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.basic.Label;
@@ -31,7 +31,7 @@ import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
 public class PlukkOppgavePanel extends Panel {
 
-    private static final String TEMAGRUPPE_ATTR = "sos-temagruppe";
+    public static final String TEMAGRUPPE_ATTR = "sos-temagruppe";
 
     @Inject
     private SakService sakService;
@@ -45,7 +45,7 @@ public class PlukkOppgavePanel extends Panel {
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
 
-        AjaxSubmitLink plukkOppgave = new AjaxSubmitLink("plukk-oppgave") {
+        AjaxButton plukkOppgave = new AjaxButton("plukk-oppgave") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 Optional<WSOppgave> oppgave = sakService.plukkOppgaveFraGsak(valgtTemagruppe.getObject().name());
@@ -61,6 +61,7 @@ public class PlukkOppgavePanel extends Panel {
                     target.add(feedbackPanel);
                 }
             }
+
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);

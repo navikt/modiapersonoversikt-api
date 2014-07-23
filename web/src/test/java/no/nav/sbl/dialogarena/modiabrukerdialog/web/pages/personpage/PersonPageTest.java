@@ -5,15 +5,10 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInstillingerPanelMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
-import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
-import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.AbstractLink;
@@ -34,14 +29,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {
-        PersonPageMockContext.class,
-        EndpointMockContext.class,
-        SykepengerWidgetMockContext.class,
-        SaksbehandlerInstillingerPanelMockContext.class,
-        UtbetalingLamellContext.class,
-        SporsmalOgSvarContext.class
-})
+@ContextConfiguration(classes = {PersonPageMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class PersonPageTest extends WicketPageTest {
 
