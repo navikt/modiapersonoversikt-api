@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleHe
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleJournalV2PortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GosysNavAnsattPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslistePortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV2PortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV3PortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgavebehandlingV2PortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
@@ -26,7 +26,7 @@ import org.springframework.context.annotation.Import;
         BehandleHenvendelsePortTypeMock.class,
         GsakHentSakslistePortTypeMock.class,
         BehandleJournalV2PortTypeMock.class,
-        GsakOppgaveV2PortTypeMock.class,
+        GsakOppgaveV3PortTypeMock.class,
         GsakOppgavebehandlingV2PortTypeMock.class,
         GosysNavAnsattPortTypeMock.class,
 })

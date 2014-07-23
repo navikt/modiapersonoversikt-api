@@ -9,12 +9,12 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbeta
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingWrapperConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.gosys.GosysAnsattEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.gsak.hentsaker.GsakHentSakslisteEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakOppgaveV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakOppgavebehandlingV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.BehandleHenvendelseEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.SendUtHenvendelseEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.HenvendelseEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.SendUtHenvendelseEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.journalforing.BehandleJournalV2EndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v3.gsak.GsakOppgaveV3EndpointConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -31,7 +31,7 @@ import org.springframework.context.annotation.Import;
         SendUtHenvendelseEndpointConfig.class,
         BehandleHenvendelseEndpointConfig.class,
         HenvendelseEndpointConfig.class,
-        GsakOppgaveV2EndpointConfig.class,
+        GsakOppgaveV3EndpointConfig.class,
         GsakOppgavebehandlingV2EndpointConfig.class,
         BehandleJournalV2EndpointConfig.class,
         GsakHentSakslisteEndpointConfig.class,

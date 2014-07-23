@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakOppgaveV2EndpointConfig.GSAK_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakTjenesteSikkerhet.STANDARD_BRUKERNAVN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakTjenesteSikkerhet.STANDARD_PASSORD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.gsak.GsakTjenesteSikkerhet.leggPaaAutentisering;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v3.gsak.GsakOppgaveV3EndpointConfig.GSAK_V3_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgavebehandlingV2PortTypeMock.createOppgavebehandlingPortTypeMock;
 
@@ -20,7 +20,7 @@ public class GsakOppgavebehandlingV2EndpointConfig {
 
     @Bean
     public Oppgavebehandling gsakOppgavebehandlingPortType() {
-        return createSwitcher(createOppgavebehandlingPortType(), createOppgavebehandlingPortTypeMock(), GSAK_V2_KEY, Oppgavebehandling.class);
+        return createSwitcher(createOppgavebehandlingPortType(), createOppgavebehandlingPortTypeMock(), GSAK_V3_KEY, Oppgavebehandling.class);
     }
 
     private static Oppgavebehandling createOppgavebehandlingPortType() {

@@ -8,8 +8,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PlukkOppgavePane
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel;
-import no.nav.virksomhet.gjennomforing.oppgave.v2.WSBruker;
-import no.nav.virksomhet.gjennomforing.oppgave.v2.WSOppgave;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSBruker;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
