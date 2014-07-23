@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarKanal;
@@ -42,7 +43,9 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {SakServiceMockContext.class})
+@ContextConfiguration(classes = {
+        SakServiceMockContext.class,
+        EndpointMockContext.class})
 public class SvarPanelTest extends WicketPageTest {
 
     @Inject
@@ -165,4 +168,5 @@ public class SvarPanelTest extends WicketPageTest {
     private List<Svar> lagSvar() {
         return asList(new Svar().withOpprettetDato(now()).withFritekst("fritekst").withTemagruppe(Temagruppe.HJELPEMIDLER.name()));
     }
+
 }

@@ -129,7 +129,7 @@ public class SvarPanel extends Panel {
         return Temagruppe.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT; //Bruker denne som default
     }
 
-    @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_ABRUTT)
+    @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_AVBRUTT)
     public void skjulLeggTilbakePanel(AjaxRequestTarget target) {
         svarContainer.setVisibilityAllowed(true);
         leggTilbakePanel.setVisibilityAllowed(false);

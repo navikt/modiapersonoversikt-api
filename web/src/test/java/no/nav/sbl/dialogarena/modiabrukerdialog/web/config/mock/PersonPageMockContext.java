@@ -16,7 +16,8 @@ import static org.mockito.Mockito.mock;
         SykepengerWidgetMockContext.class,
         SaksbehandlerInstillingerPanelMockContext.class,
         UtbetalingLamellContext.class,
-        SporsmalOgSvarContext.class
+        SporsmalOgSvarContext.class,
+        SakServiceMockContext.class
 })
 public class PersonPageMockContext {
 

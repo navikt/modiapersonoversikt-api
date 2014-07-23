@@ -35,7 +35,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svar
 
 public class LeggTilbakePanel extends Panel {
 
-    public static final String LEGG_TILBAKE_ABRUTT = "leggtilbake.avbrutt";
+    public static final String LEGG_TILBAKE_AVBRUTT = "leggtilbake.avbrutt";
     public static final String LEGG_TILBAKE_UTFORT = "leggtilbake.utfort";
 
     @Inject
@@ -117,7 +117,7 @@ public class LeggTilbakePanel extends Panel {
         form.add(new AjaxLink<Void>("avbryt") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                send(LeggTilbakePanel.this, Broadcast.BUBBLE, LEGG_TILBAKE_ABRUTT);
+                send(LeggTilbakePanel.this, Broadcast.BUBBLE, LEGG_TILBAKE_AVBRUTT);
             }
         });
 

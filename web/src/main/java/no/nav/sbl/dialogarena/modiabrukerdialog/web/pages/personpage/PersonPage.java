@@ -77,14 +77,15 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class PersonPage extends BasePage {
 
+    private static final Logger logger = getLogger(PersonPage.class);
+
+    public static final String SVAR_OG_REFERAT_PANEL_ID = "svarOgReferatPanel";
     public static final String OPPGAVEID = "oppgaveid";
+
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
     public static final PackageResourceReference SVAR_OG_REFERATPANEL_LESS = new PackageResourceReference(SvarOgReferatVM.class, "SvarOgReferatPanel.less");
     public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(SvarOgReferatVM.class, "jquery-ui-selectmenu.min.js");
-
-    private static final Logger logger = getLogger(PersonPage.class);
-    private static final String SVAR_OG_REFERAT_PANEL_ID = "svarOgReferatPanel";
 
     @Inject
     protected SakService sakService;
@@ -102,7 +103,6 @@ public class PersonPage extends BasePage {
     public PersonPage(PageParameters pageParameters) {
         fnr = pageParameters.get("fnr").toString(null);
         instansierFelter();
-        instansierSvarOgReferatPanel(pageParameters);
         add(
                 hentPersonPanel,
                 searchToggleButton,
@@ -118,6 +118,7 @@ public class PersonPage extends BasePage {
                 svarOgReferatPanel,
                 new TimeoutBoks("timeoutBoks", fnr)
         );
+        erstattReferatPanelMedSvarPanelBasertPaaOppgaveIdParameter(pageParameters);
     }
 
     private void instansierFelter() {
@@ -128,15 +129,13 @@ public class PersonPage extends BasePage {
         searchToggleButton = (Button) new Button("toggle-sok").setOutputMarkupPlaceholderTag(true);
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
         fnrContainer = new Label("fnr", fnr);
+        svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
     }
 
-    private void instansierSvarOgReferatPanel(PageParameters pageParameters) {
+    private void erstattReferatPanelMedSvarPanelBasertPaaOppgaveIdParameter(PageParameters pageParameters) {
         StringValue oppgaveId = pageParameters.get(OPPGAVEID);
         if (!oppgaveId.isEmpty()) {
-            Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId(fnr, oppgaveId.toString());
-            svarOgReferatPanel = new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, sakService.getSvarTilSporsmal(fnr, sporsmal.id), optional(oppgaveId.toString()));
-        } else {
-            svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
+            visSvarPanelBasertPaaOppgaveId(oppgaveId.toString());
         }
     }
 
@@ -206,17 +205,30 @@ public class PersonPage extends BasePage {
         send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
     }
 
+    public void visSvarPanelBasertPaaOppgaveId(String oppgaveId){
+        Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId(fnr, oppgaveId);
+        erstattReferatPanelMedSvarPanel(sporsmal, sakService.getSvarTilSporsmal(fnr, sporsmal.id), optional(oppgaveId));
+    }
+
+    private void erstattReferatPanelMedSvarPanel(Sporsmal sporsmal, List<Svar> svarTilSporsmal, Optional<String> oppgaveId) {
+        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svarTilSporsmal, oppgaveId));
+    }
+
     @RunOnEvents(SVAR_PAA_MELDING)
-    public void visSvarPanel(AjaxRequestTarget target, String sporsmalId) {
+    public void visSvarPanelBasertPaaSporsmalId(AjaxRequestTarget target, String sporsmalId) {
         Sporsmal sporsmal = sakService.getSporsmal(sporsmalId);
         List<Svar> svar = sakService.getSvarTilSporsmal(fnr, sporsmalId);
         Optional<String> oppgaveId = none();
-        if (svar.isEmpty()) {
+        if (sporsmaletIkkeErBesvartTidligere(svar)) {
             sakService.tilordneOppgaveIGsak(sporsmal.oppgaveId);
             oppgaveId = optional(sporsmal.oppgaveId);
         }
-        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svar, oppgaveId));
+        erstattReferatPanelMedSvarPanel(sporsmal, svar, oppgaveId);
         target.add(svarOgReferatPanel);
+    }
+
+    private boolean sporsmaletIkkeErBesvartTidligere(List<Svar> svar) {
+        return svar.isEmpty();
     }
 
     @RunOnEvents({MELDING_SENDT_TIL_BRUKER, LEGG_TILBAKE_UTFORT, SVAR_AVBRUTT})

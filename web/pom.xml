@@ -86,16 +86,6 @@
             <artifactId>brukerprofil-panel</artifactId>
         </dependency>
 
-        <!--Dialogarena tjenestespesifikasjon-->
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>henvendelse-informasjon-v2</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>send-ut-henvendelse</artifactId>
-        </dependency>
-
         <!--Dialogarena-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
