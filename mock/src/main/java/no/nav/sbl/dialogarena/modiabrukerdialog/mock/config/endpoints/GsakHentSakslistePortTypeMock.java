@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class GsakHentSakslisteMock {
+public class GsakHentSakslistePortTypeMock {
 
     private static final String SAKSID_1 = "11111111";
     private static final String SAKSID_2 = "22222222";

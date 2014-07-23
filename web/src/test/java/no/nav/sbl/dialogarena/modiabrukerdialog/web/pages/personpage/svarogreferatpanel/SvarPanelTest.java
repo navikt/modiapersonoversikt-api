@@ -6,9 +6,8 @@ import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarKanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.TidligereMeldingPanel;
@@ -45,7 +44,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {KjerneinfoPepMockContext.class, SakServiceMockContext.class})
+@ContextConfiguration(classes = {SakServiceMockContext.class})
 public class SvarPanelTest extends WicketPageTest {
 
     @Inject

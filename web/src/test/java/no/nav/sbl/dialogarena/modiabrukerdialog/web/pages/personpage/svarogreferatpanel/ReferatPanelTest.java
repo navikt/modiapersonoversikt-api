@@ -4,9 +4,8 @@ import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SakServiceMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatKanal;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -35,7 +34,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {KjerneinfoPepMockContext.class, SakServiceMockContext.class})
+@ContextConfiguration(classes = {SakServiceMockContext.class})
 public class ReferatPanelTest extends WicketPageTest {
 
     @Inject

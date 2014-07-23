@@ -4,9 +4,8 @@ import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInstillingerPanelMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.junit.Before;
@@ -19,12 +18,13 @@ import javax.inject.Inject;
 import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {
-        KjerneinfoPepMockContext.class,
-        SaksbehandlerInstillingerPanelMockContext.class})
+@ContextConfiguration(classes = {SaksbehandlerInstillingerPanelMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SaksbehandlerInstillingerPanelTest extends WicketPageTest {
 

@@ -1,11 +1,10 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web;
+package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller;
 
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ForeldrepengerPanelMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.LamellServicesAndLoaders;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykmeldingsperiodePanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
@@ -27,7 +26,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {
-        KjerneinfoPepMockContext.class,
         WicketTesterConfig.class,
         SykmeldingsperiodePanelMockContext.class,
         ForeldrepengerPanelMockContext.class,

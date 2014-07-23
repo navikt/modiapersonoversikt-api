@@ -1,18 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt;
 
 import no.nav.modig.modia.widget.LenkeWidget;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleHenvendelsePortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleJournalV2PortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslisteMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SendUtHenvendelsePortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
 import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
@@ -27,20 +18,11 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
-        KjerneinfoPepMockContext.class,
+        EndpointMockContext.class,
         SykepengerWidgetMockContext.class,
         UtbetalingLamellContext.class,
-        UtbetalingPortTypeMock.class,
         SporsmalOgSvarContext.class,
-        HenvendelsePortTypeMock.class,
-        SendUtHenvendelsePortTypeMock.class,
-        BehandleHenvendelsePortTypeMock.class,
-        GsakHentSakslisteMock.class,
         SaksoversiktService.class,
-        SakOgBehandlingPortTypeMock.class,
-        AktoerPortTypeMock.class,
-        HenvendelseSoknaderPortTypeMock.class,
-        BehandleJournalV2PortTypeMock.class
 })
 public class OversiktLerretTest extends WicketPageTest {
 
