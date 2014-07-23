@@ -110,7 +110,7 @@ public class PersonPage extends BasePage {
                 lamellContainer,
                 redirectPopup,
                 fnrContainer,
-                new SaksbehandlerInstillingerPanel("saksbehandlerPanel"),
+                new SaksbehandlerInstillingerPanel("saksbehandlerInnstillingerPanel"),
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),

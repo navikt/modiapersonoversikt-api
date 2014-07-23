@@ -67,7 +67,7 @@ public class SaksbehandlerInstillingerPanel extends Panel {
 
         valgContainer.add(form);
 
-        add(new WebMarkupContainer("apneSaksbehandlerPanel")
+        add(new WebMarkupContainer("apneSaksbehandlerInnstillingerPanel")
                 .add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {

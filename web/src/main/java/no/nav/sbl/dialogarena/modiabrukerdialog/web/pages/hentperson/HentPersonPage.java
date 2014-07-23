@@ -27,7 +27,7 @@ public class HentPersonPage extends BasePage {
         HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel");
         setupErrorText(pageParameters, hentPersonPanel);
         add(
-                new SaksbehandlerInstillingerPanel("saksbehandlerPanel"),
+                new SaksbehandlerInstillingerPanel("saksbehandlerInnstillingerPanel"),
                 new ContextImage("modia-logo", "img/modiaLogo.svg"),
                 hentPersonPanel,
                 new PlukkOppgavePanel("plukk-oppgave"),
