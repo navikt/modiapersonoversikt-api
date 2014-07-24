@@ -309,7 +309,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
-                <version>0.0.5-SNAPSHOT</version>
+                <version>0.0.5</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>

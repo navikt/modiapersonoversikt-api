@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.Oppgavebehandling;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,8 +16,8 @@ public class OppgaveTestConfig {
     }
 
     @Bean
-    public Oppgavebehandling oppgavebehandling(){
-        return mock(Oppgavebehandling.class);
+    public OppgavebehandlingV3 oppgavebehandling(){
+        return mock(OppgavebehandlingV3.class);
     }
 
 }
