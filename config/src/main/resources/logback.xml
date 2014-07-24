@@ -15,6 +15,16 @@
             <pattern>%date %level [%thread] - [%file:%line], %X{callId} - %m%n</pattern>
         </encoder>
     </appender>
+    <appender name="securitylog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-error.log</File>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${APP_LOG_HOME}/${MAIN_APPLICATION}-security-%d{yyyy-MM-dd}.gz</FileNamePattern>
+            <maxHistory>90</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%date %level [%thread] - [%file:%line], %X{callId} - %m%n</pattern>
+        </encoder>
+    </appender>
 
     <appender name="infolog" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${APP_LOG_HOME}/${MAIN_APPLICATION}-debug.log</File>
@@ -67,6 +77,9 @@
 
     <logger name="no.nav.modig.common.SporingsLogger" level="INFO">
         <appender-ref ref="sporinglog"/>
+    </logger>
+    <logger name="no.nav.modig.security" level="DEBUG">
+        <appender-ref ref="securitylog"/>
     </logger>
 
     <logger name="personaccess" level="warn" additivity="false">
