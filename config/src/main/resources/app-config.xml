@@ -20,8 +20,8 @@
         <credential alias="srv_kjerneinfo_tjenestebuss" mapToProperty="ctjenestebuss" />
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
-        <baseUrl alias="OppgavebehandlingV3" mapToProperty="gsak.oppgavebehandling.v3"/>
-        <baseUrl alias="OppgaveV3" mapToProperty="gsak.oppgave.v3"/>
+        <webservice alias="OppgavebehandlingV3" mapToProperty="gsak.oppgavebehandling.v3"/>
+        <webservice alias="OppgaveV3" mapToProperty="gsak.oppgave.v3"/>
         <webservice alias="virksomhet:BehandleJournal_v2" mapToProperty="behandlejournal.v2"/>
         <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>
         <webservice alias="virksomhet:Sak_v1" mapToProperty="gsak.saksliste.v1"/>
