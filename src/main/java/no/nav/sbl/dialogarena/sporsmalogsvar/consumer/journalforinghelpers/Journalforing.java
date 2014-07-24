@@ -1,16 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforinghelpers;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Arkivfiltyper;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Arkivtemaer;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.EksternPart;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Kommunikasjonskanaler;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Kryssreferanse;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.NorskIdent;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Person;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Signatur;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.UstrukturertInnhold;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Variantformater;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.*;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -21,17 +12,18 @@ import java.util.GregorianCalendar;
 
 public abstract class Journalforing {
 
-    public static final String HOVEDDOKUMENT = "hovedDokument";
+    public static final String HOVEDDOKUMENT = "HOVEDDOKUMENT";
     public static final String SPORSMAL_OG_SVAR = "SPORSMAL_OG_SVAR";
-    public static final String KATEGORI_KODE_ES = "ES";
-    public static final String DOKUTYPE_INNGAENDE = "melding";
-    public static final String DOKUTYPE_UTGAENDE = "utgående brev";
 
     protected static Person lagPerson(String fnr) {
-        // TODO Få tak i kodeverk og sett det inn i denne metoden, norskident har flere felter
         Person bruker = new Person();
         NorskIdent norskIdent = new NorskIdent();
+        Personidenter personidenter = new Personidenter();
+        personidenter.setKodeRef(personidenter.getKodeverksRef());
+        //TODO Her må man skille mellom fnr og dnr når man setter verdien til kodeverket, foreløpig hardkodet til FNR
+        personidenter.setValue("FNR");
         norskIdent.setIdent(fnr);
+        norskIdent.setType(personidenter);
         bruker.setIdent(norskIdent);
         return bruker;
     }
@@ -51,17 +43,15 @@ public abstract class Journalforing {
 
     protected static Kommunikasjonskanaler lagKommunikasjonskanaler() {
         Kommunikasjonskanaler kommunikasjonskanaler = new Kommunikasjonskanaler();
-        kommunikasjonskanaler.setValue("Elektronisk");
-        kommunikasjonskanaler.setKodeverksRef("http://nav.no/kodeverk/Kodeverk/Kommunikasjonskanaler");
+        kommunikasjonskanaler.setValue("NAV_NO");
         return kommunikasjonskanaler;
     }
 
     protected static Arkivtemaer lagArkivtema(Sak sak) {
-        // TODO Få tak i kodeverk og sett det inn i denne metoden
         Arkivtemaer arkivtemaer = new Arkivtemaer();
         arkivtemaer.setValue(sak.tema);
-        arkivtemaer.setKodeverksRef("");
-        arkivtemaer.setKodeRef("");
+        // TODO arkivtema har to felter knyttet til koderef, den ene Kodeverkref settes automatisk(i get-metoden), mens det andre er foreløpig satt til det samme
+        arkivtemaer.setKodeRef(arkivtemaer.getKodeverksRef());
         return arkivtemaer;
     }
 
@@ -91,12 +81,9 @@ public abstract class Journalforing {
             UstrukturertInnhold dokumentInnhold = new UstrukturertInnhold();
             // TODO få inn den egentlige tittelen her
             dokumentInnhold.setFilnavn("Dokumenttittel");
-            // TODO Få tak i kodeverk og sett det inn i denne metoden
             Arkivfiltyper arkivFilTyper = new Arkivfiltyper();
             arkivFilTyper.setValue("PDF");
-
             dokumentInnhold.setFiltype(arkivFilTyper);
-            // TODO Få tak i kodeverk og sett det inn i denne metoden
             Variantformater variansformat = new Variantformater();
             variansformat.setValue("ARKIV");
             dokumentInnhold.setVariantformat(variansformat);
@@ -107,7 +94,7 @@ public abstract class Journalforing {
     }
 
     public static class DateTimeToXmlGregorianCalendarConverter implements Transformer<DateTime, XMLGregorianCalendar> {
-        public static final DateTimeToXmlGregorianCalendarConverter INSTANCE = new DateTimeToXmlGregorianCalendarConverter();
+        public static DateTimeToXmlGregorianCalendarConverter INSTANCE = new DateTimeToXmlGregorianCalendarConverter();
 
         @Override
         public XMLGregorianCalendar transform(DateTime dateTime) {

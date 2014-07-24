@@ -42,22 +42,21 @@ public class JournalforingNotat extends Journalforing {
     private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForNotat(byte[] pdf) {
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
 
-        // TODO hent inn kodeverk for feletene setKodevrksRef() og setKodeRef() som tilhører dokumenttyper-objektet
         Dokumenttyper dokumenttyper = new Dokumenttyper();
-        dokumenttyper.setValue(DOKUTYPE_UTGAENDE);
+        dokumenttyper.setValue("U");
+        dokumenttyper.setKodeRef(dokumenttyper.getKodeverksRef());
 
         journalfoertDokumentInfo.setDokumentType(dokumenttyper);
         journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
         journalfoertDokumentInfo.setBrevkode(SPORSMAL_OG_SVAR);
         journalfoertDokumentInfo.setErOrganinternt(false);
-        journalfoertDokumentInfo.setKategorikode(KATEGORI_KODE_ES);
+        journalfoertDokumentInfo.setKategorikode("N");
         journalfoertDokumentInfo.setSensitivitet(false);
+        // TODO få inn den egentlige tittelen her
+        journalfoertDokumentInfo.setTittel("Dokumenttittel");
 
         List<DokumentInnhold> beskriverInnhold = journalfoertDokumentInfo.getBeskriverInnhold();
         beskriverInnhold.add(PdfDokumentToUstrukturertInnholdConverter.INSTANCE.transform(pdf));
-
-        // TODO få inn den egentlige tittelen her
-        journalfoertDokumentInfo.setTittel("Dokumenttittel");
 
         return journalfoertDokumentInfo;
     }

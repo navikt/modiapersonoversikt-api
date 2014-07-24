@@ -45,19 +45,18 @@ public class JournalforingSvar extends Journalforing {
 
         // TODO hent inn kodeverk for feletene setKodevrksRef() og setKodeRef() som tilhører dokumenttyper-objektet
         Dokumenttyper dokumenttyper = new Dokumenttyper();
-        dokumenttyper.setValue(DOKUTYPE_UTGAENDE);
+        dokumenttyper.setValue("U");
 
         journalfoertDokumentInfo.setDokumentType(dokumenttyper);
         journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
         journalfoertDokumentInfo.setBrevkode(SPORSMAL_OG_SVAR);
-        journalfoertDokumentInfo.setKategorikode(KATEGORI_KODE_ES);
+        journalfoertDokumentInfo.setKategorikode("KU");
         journalfoertDokumentInfo.setSensitivitet(false);
+        // TODO få inn den egentlige tittelen her
+        journalfoertDokumentInfo.setTittel("Dokumenttittel");
 
         List<DokumentInnhold> beskriverInnhold = journalfoertDokumentInfo.getBeskriverInnhold();
         beskriverInnhold.add(PdfDokumentToUstrukturertInnholdConverter.INSTANCE.transform(pdf));
-
-        // TODO få inn den egentlige tittelen her
-        journalfoertDokumentInfo.setTittel("Dokumenttittel");
 
         return journalfoertDokumentInfo;
     }
