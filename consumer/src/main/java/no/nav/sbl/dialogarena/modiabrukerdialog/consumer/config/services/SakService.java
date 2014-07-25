@@ -182,6 +182,7 @@ public class SakService {
             throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
             //TODO: Hva skal skje ved optimistisk låsing. Noen andre har låst filen.
+            throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
         }
     }
 
