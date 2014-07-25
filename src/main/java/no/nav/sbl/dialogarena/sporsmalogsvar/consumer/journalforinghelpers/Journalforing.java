@@ -13,7 +13,8 @@ import java.util.GregorianCalendar;
 public abstract class Journalforing {
 
     public static final String HOVEDDOKUMENT = "HOVEDDOKUMENT";
-    public static final String SPORSMAL_OG_SVAR = "SPORSMAL_OG_SVAR";
+    public static final String BREVKODE_SPORSMAL_OG_SVAR = "SP_OG_SVAR";
+    public static final String KATEGORI_ELEKTRONISK_DIALOG = "ED";
 
     protected static Person lagPerson(String fnr) {
         Person bruker = new Person();
@@ -37,7 +38,7 @@ public abstract class Journalforing {
     protected static Kryssreferanse lagKryssreferanse(String journalfortPostIdForTilhorendeSporsmal) {
         Kryssreferanse kryssreferanse = new Kryssreferanse();
         kryssreferanse.setReferanseId(journalfortPostIdForTilhorendeSporsmal);
-        kryssreferanse.setReferansekode("SPOERSMAAL");
+        kryssreferanse.setReferansekode("DIALOG_REKKE");
         return kryssreferanse;
     }
 

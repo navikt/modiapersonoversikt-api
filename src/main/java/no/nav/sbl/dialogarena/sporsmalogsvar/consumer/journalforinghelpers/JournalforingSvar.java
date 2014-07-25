@@ -49,8 +49,8 @@ public class JournalforingSvar extends Journalforing {
 
         journalfoertDokumentInfo.setDokumentType(dokumenttyper);
         journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
-        journalfoertDokumentInfo.setBrevkode(SPORSMAL_OG_SVAR);
-        journalfoertDokumentInfo.setKategorikode("KU");
+        journalfoertDokumentInfo.setBrevkode(BREVKODE_SPORSMAL_OG_SVAR);
+        journalfoertDokumentInfo.setKategorikode(KATEGORI_ELEKTRONISK_DIALOG);
         journalfoertDokumentInfo.setSensitivitet(false);
         // TODO få inn den egentlige tittelen her
         journalfoertDokumentInfo.setTittel("Dokumenttittel");

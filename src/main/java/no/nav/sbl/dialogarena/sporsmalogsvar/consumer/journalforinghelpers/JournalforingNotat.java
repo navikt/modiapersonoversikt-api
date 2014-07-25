@@ -48,9 +48,9 @@ public class JournalforingNotat extends Journalforing {
 
         journalfoertDokumentInfo.setDokumentType(dokumenttyper);
         journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
-        journalfoertDokumentInfo.setBrevkode(SPORSMAL_OG_SVAR);
+        journalfoertDokumentInfo.setBrevkode("SAMTALEREF");
         journalfoertDokumentInfo.setErOrganinternt(false);
-        journalfoertDokumentInfo.setKategorikode("N");
+        journalfoertDokumentInfo.setKategorikode("REF");
         journalfoertDokumentInfo.setSensitivitet(false);
         // TODO få inn den egentlige tittelen her
         journalfoertDokumentInfo.setTittel("Dokumenttittel");
