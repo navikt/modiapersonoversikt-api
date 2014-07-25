@@ -1,9 +1,9 @@
-function animasjonSkliToggling() {
-    $('.journalforing').slideToggle(2000);
+function animasjonSkliToggling(panelKlasse, fart) {
+    $(panelKlasse).slideToggle(fart);
 }
 
 function animasjonSkliMedVent(){
-    var toggle = animasjonSkliToggling()
+    var toggle = animasjonSkliToggling();
     $.when(toggle()).done()( function () {
         console.log('Animasjon complete');
     });

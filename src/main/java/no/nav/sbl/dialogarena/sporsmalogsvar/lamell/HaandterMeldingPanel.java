@@ -43,7 +43,7 @@ public class HaandterMeldingPanel extends Panel {
                 journalforingsPanel.oppdatereJournalforingssaker();
 
                 target.add(journalforingsPanel, nyOppgavePanel);
-                target.appendJavaScript("animasjonSkliToggling()");
+                target.appendJavaScript("animasjonSkliToggling('.journalforing',1000)");
             }
         };
         journalforLink.add(enabledIf(not(new PropertyModel<Boolean>(innboksVM, "valgtTraad.nyesteMelding.nyesteMeldingISinJournalfortgruppe"))));
@@ -51,7 +51,7 @@ public class HaandterMeldingPanel extends Panel {
         AjaxLink nyOppgaveLink = new AjaxLink("nyoppgave") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                target.prependJavaScript("animasjonSkliToggling()");
+                target.prependJavaScript("animasjonSkliToggling('.journalforing',1000)");
                 journalforingsPanel.setVisibilityAllowed(false);
                 nyOppgavePanel.setVisibilityAllowed(true);
 
