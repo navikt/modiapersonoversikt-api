@@ -1,12 +1,16 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
+import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInstillingerPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -22,12 +26,19 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {SaksbehandlerInstillingerPanelMockContext.class})
+@ContextConfiguration(classes = {
+        KjerneinfoPepMockContext.class,
+        SaksbehandlerInstillingerPanelMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SaksbehandlerInstillingerPanelTest extends WicketPageTest {
 
     @Inject
     private AnsattService ansattService;
+
+    @Before
+    public void setUp() {
+        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
+    }
 
     @Test
     public void skalStarteSaksbehandlerPanelUtenFeil() {
