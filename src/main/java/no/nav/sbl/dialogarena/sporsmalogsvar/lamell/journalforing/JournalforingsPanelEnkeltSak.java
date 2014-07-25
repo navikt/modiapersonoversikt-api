@@ -44,6 +44,7 @@ public class JournalforingsPanelEnkeltSak extends Panel {
             public void onClick(AjaxRequestTarget target) {
                 TraadVM valgtTraadVM = innboksVM.getValgtTraad();
                 meldingService.journalforTraad(valgtTraadVM, journalfortSakVM.getSak());
+                target.appendJavaScript("animasjonSkliToggling()");
                 lukkJournalforingsPanel(target);
                 send(this, Broadcast.BUBBLE, TRAAD_JOURNALFORT);
             }
