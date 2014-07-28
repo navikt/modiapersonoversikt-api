@@ -4,7 +4,7 @@ import no.nav.modig.wicket.test.internal.Parameters;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInstillingerPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
@@ -30,7 +30,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         EndpointMockContext.class,
         HentPersonPanelMockContext.class,
         SykepengerWidgetMockContext.class,
-        SaksbehandlerInstillingerPanelMockContext.class,
+        SaksbehandlerInnstillingerPanelMockContext.class,
         UtbetalingLamellContext.class,
         SporsmalOgSvarContext.class
 })

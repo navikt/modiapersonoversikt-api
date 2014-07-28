@@ -14,7 +14,7 @@ import static org.mockito.Mockito.mock;
 @Import({
         EndpointMockContext.class,
         SykepengerWidgetMockContext.class,
-        SaksbehandlerInstillingerPanelMockContext.class,
+        SaksbehandlerInnstillingerPanelMockContext.class,
         UtbetalingLamellContext.class,
         SporsmalOgSvarContext.class,
         SakServiceMockContext.class
