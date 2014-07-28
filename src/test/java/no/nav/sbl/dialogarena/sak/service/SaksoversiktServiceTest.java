@@ -96,7 +96,7 @@ public class SaksoversiktServiceTest {
 
     private List<WSSoknad> opprettHenvendelseGrunnlag() {
         return asList(
-                new WSSoknad(),
+                new WSSoknad().withBehandlingsId("1"),
                 new WSSoknad(),
                 new WSSoknad()
         );

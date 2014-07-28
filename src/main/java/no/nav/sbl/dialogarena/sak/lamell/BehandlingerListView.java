@@ -20,7 +20,7 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
 
     @Override
     protected void populateItem(ListItem<GenerellBehandling> item) {
-        add(
+        item.add(
                 new Label("hardkodettittel", "Hardkodet tittel"),
                 new Label("behandling-dato-dag", item.getModelObject().behandlingDato.getDayOfMonth()),
                 new Label("behandling-dato-maaned", item.getModelObject().behandlingDato.toString("MMM", new Locale("no")))
