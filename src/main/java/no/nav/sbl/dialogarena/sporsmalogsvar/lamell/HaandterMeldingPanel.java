@@ -37,13 +37,8 @@ public class HaandterMeldingPanel extends Panel {
         AjaxLink journalforLink = new AjaxLink("journalfor") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                journalforingsPanel.setVisibilityAllowed(true);
-                nyOppgavePanel.setVisibilityAllowed(false);
-
-                journalforingsPanel.oppdatereJournalforingssaker();
-
-                target.add(journalforingsPanel, nyOppgavePanel);
-                target.appendJavaScript("animasjonSkliToggling('.journalforing',1000)");
+                journalforingsPanel.apneJournalforingsPanel(target);
+                nyOppgavePanel.apneNyOppgavePanel(target);
             }
         };
         journalforLink.add(enabledIf(not(new PropertyModel<Boolean>(innboksVM, "valgtTraad.nyesteMelding.nyesteMeldingISinJournalfortgruppe"))));
@@ -51,11 +46,8 @@ public class HaandterMeldingPanel extends Panel {
         AjaxLink nyOppgaveLink = new AjaxLink("nyoppgave") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                target.prependJavaScript("animasjonSkliToggling('.journalforing',1000)");
-                journalforingsPanel.setVisibilityAllowed(false);
-                nyOppgavePanel.setVisibilityAllowed(true);
-
-                target.add(journalforingsPanel, nyOppgavePanel);
+                journalforingsPanel.lukkJournalforingsPanel(target);
+                nyOppgavePanel.apneNyOppgavePanel(target);
             }
         };
         nyOppgaveLink.add(enabledIf(new PropertyModel<Boolean>(innboksVM, "valgtTraad.erBehandlet()")));

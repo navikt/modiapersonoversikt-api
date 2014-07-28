@@ -86,10 +86,18 @@ public class NyOppgavePanel extends Panel {
         nyOppgaveModel.setObject(new NyOppgave());
     }
 
+    public void apneNyOppgavePanel(AjaxRequestTarget target) {
+        this.setVisibilityAllowed(true);
+        target.appendJavaScript("animasjonSkliToggling('.nyoppgave',700)");
+        target.add(this);
+    }
+
     @RunOnEvents(VALGT_MELDING_EVENT)
-    private void lukkNyOppgavePanel(AjaxRequestTarget target) {
+    public void lukkNyOppgavePanel(AjaxRequestTarget target) {
+        target.prependJavaScript("animasjonSkliTogglingMedVent('.nyoppgave',700)");
         this.setVisibilityAllowed(false);
         target.add(this);
     }
+
 
 }

@@ -44,8 +44,11 @@ public class JournalforingsPanelEnkeltSak extends Panel {
             public void onClick(AjaxRequestTarget target) {
                 TraadVM valgtTraadVM = innboksVM.getValgtTraad();
                 meldingService.journalforTraad(valgtTraadVM, journalfortSakVM.getSak());
-                target.appendJavaScript("animasjonSkliToggling()");
-                lukkJournalforingsPanel(target);
+//                target.prependJavaScript("animasjonSkliToggling('.journalforing',1000)");
+//                MarkupContainer parent = getParent();
+//                if(parent instanceof JournalforingsPanel){
+//                    ((JournalforingsPanel)parent).lukkJournalforingsPanel(target);
+//                }
                 send(this, Broadcast.BUBBLE, TRAAD_JOURNALFORT);
             }
         };
@@ -55,9 +58,5 @@ public class JournalforingsPanelEnkeltSak extends Panel {
         journalfortSakVM.oppdater();
     }
 
-    private void lukkJournalforingsPanel(AjaxRequestTarget target) {
-        getParent().setVisibilityAllowed(false);
-        target.add(getParent());
-    }
 
 }

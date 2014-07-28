@@ -50,8 +50,16 @@ public class JournalforingsPanel extends Panel {
         };
     }
 
-    @RunOnEvents(VALGT_MELDING_EVENT)
-    private void lukkJournalforingsPanel(AjaxRequestTarget target) {
+    public void apneJournalforingsPanel(AjaxRequestTarget target) {
+        oppdatereJournalforingssaker();
+        this.setVisibilityAllowed(true);
+        target.appendJavaScript("animasjonSkliToggling('.journalforing',700)");
+        target.add(this);
+    }
+
+    @RunOnEvents({VALGT_MELDING_EVENT, TRAAD_JOURNALFORT})
+    public void lukkJournalforingsPanel(AjaxRequestTarget target) {
+        target.appendJavaScript("animasjonSkliTogglingMedVent('.journalforing',700)");
         this.setVisibilityAllowed(false);
         target.add(this);
     }
