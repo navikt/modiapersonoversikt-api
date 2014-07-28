@@ -3,8 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
@@ -33,7 +32,7 @@ import static org.mockito.Mockito.when;
 public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
 
     @Inject
-    private AnsattService ansattService;
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @Before
     public void setUp() {
@@ -42,7 +41,7 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
 
     @Test
     public void skalStarteSaksbehandlerPanelUtenFeil() {
-        wicket.goToPageWith(new SaksbehandlerInnstillingerPanel("saksbehandlerPanel"));
+        wicket.goToPageWith(new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel"));
     }
 
     @Test
@@ -57,7 +56,7 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
     @Test
     public void sjekkAtSaksbehandlerPanelSkjulesVedKlikkPaVelgKnapp() {
         List<AnsattEnhet> ansattEnheter = Arrays.asList(new AnsattEnhet("111", "Grunerløkka"), new AnsattEnhet("222", "Torshov"));
-        when(ansattService.hentEnhetsliste()).thenReturn(ansattEnheter);
+        when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(ansattEnheter);
         wicket
                 .goToPageWith(new SaksbehandlerInnstillingerPanel("saksbehandlerPanel"))
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
