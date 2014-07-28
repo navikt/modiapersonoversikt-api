@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforinghelpers;
+package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.*;

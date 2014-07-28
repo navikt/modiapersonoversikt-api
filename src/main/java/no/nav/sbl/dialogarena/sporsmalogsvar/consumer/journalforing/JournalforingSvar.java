@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforinghelpers;
+package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
