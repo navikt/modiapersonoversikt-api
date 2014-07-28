@@ -42,13 +42,13 @@ public class SaksbehandlerInstillingerPanelTest extends WicketPageTest {
 
     @Test
     public void skalStarteSaksbehandlerPanelUtenFeil() {
-        wicket.goToPageWith(new SaksbehandlerInstillingerPanel("saksbehandlerPanel"));
+        wicket.goToPageWith(new SaksbehandlerInnstillingerPanel("saksbehandlerPanel"));
     }
 
     @Test
     public void sjekkAtSaksbehandlerPanelVisesVedKlikkPaNavIdentKnapp() {
         wicket
-                .goToPageWith(new SaksbehandlerInstillingerPanel("saksbehandlerPanel"))
+                .goToPageWith(new SaksbehandlerInnstillingerPanel("saksbehandlerPanel"))
                 .should().containComponent(thatIsInvisible().and(ofType(WebMarkupContainer.class)).and(withId("valgContainer")))
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsVisible().and(ofType(WebMarkupContainer.class)).and(withId("valgContainer")));
@@ -59,7 +59,7 @@ public class SaksbehandlerInstillingerPanelTest extends WicketPageTest {
         List<AnsattEnhet> ansattEnheter = Arrays.asList(new AnsattEnhet("111", "Grunerløkka"), new AnsattEnhet("222", "Torshov"));
         when(ansattService.hentEnhetsliste()).thenReturn(ansattEnheter);
         wicket
-                .goToPageWith(new SaksbehandlerInstillingerPanel("saksbehandlerPanel"))
+                .goToPageWith(new SaksbehandlerInnstillingerPanel("saksbehandlerPanel"))
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .inForm(withId("enhetsform"))
                 .select("enhet", 1)

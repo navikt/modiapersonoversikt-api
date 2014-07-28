@@ -24,14 +24,14 @@ import javax.inject.Inject;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
-public class SaksbehandlerInstillingerPanel extends Panel {
+public class SaksbehandlerInnstillingerPanel extends Panel {
 
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     public String valgtEnhet;
 
-    public SaksbehandlerInstillingerPanel(String id) {
+    public SaksbehandlerInnstillingerPanel(String id) {
         super(id);
 
         valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
@@ -60,7 +60,6 @@ public class SaksbehandlerInstillingerPanel extends Panel {
         form.add(new AjaxButton("velg") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                // set cookie her
                 saksbehandlerInnstillingerService.setSaksbehandlerValgtEnhetCookie(valgtEnhet);
                 toggleSaksbehandlerPanel(target, valgContainer);
             }
@@ -97,6 +96,6 @@ public class SaksbehandlerInstillingerPanel extends Panel {
 
     @Override
     public void renderHead(IHeaderResponse response) {
-        response.render(forReference(new JavaScriptResourceReference(SaksbehandlerInstillingerPanel.class, "saksbehandlerinnstillinger.js")));
+        response.render(forReference(new JavaScriptResourceReference(SaksbehandlerInnstillingerPanel.class, "saksbehandlerinnstillinger.js")));
     }
 }

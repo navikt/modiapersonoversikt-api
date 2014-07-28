@@ -26,7 +26,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefer
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout.TimeoutBoks;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInstillingerPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
@@ -110,7 +110,7 @@ public class PersonPage extends BasePage {
                 lamellContainer,
                 redirectPopup,
                 fnrContainer,
-                new SaksbehandlerInstillingerPanel("saksbehandlerInnstillingerPanel"),
+                new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel"),
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
