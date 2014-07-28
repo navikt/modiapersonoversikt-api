@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattS
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -16,10 +17,12 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
 public class SaksbehandlerInstillingerPanel extends Panel {
 
@@ -79,7 +82,18 @@ public class SaksbehandlerInstillingerPanel extends Panel {
     }
 
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target, WebMarkupContainer valgContainer) {
-        valgContainer.setVisibilityAllowed(!valgContainer.isVisibilityAllowed());
+        if (valgContainer.isVisibilityAllowed()) {
+            target.appendJavaScript("animasjonSkliTogglingMedVent('.nav-enhet',700)");
+            valgContainer.setVisibilityAllowed(false);
+        } else {
+            valgContainer.setVisibilityAllowed(true);
+            target.appendJavaScript("animasjonSkliToggling('.nav-enhet',700)");
+        }
         target.add(valgContainer);
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        response.render(forReference(new JavaScriptResourceReference(SaksbehandlerInstillingerPanel.class, "saksbehandlerinnstillinger.js")));
     }
 }
