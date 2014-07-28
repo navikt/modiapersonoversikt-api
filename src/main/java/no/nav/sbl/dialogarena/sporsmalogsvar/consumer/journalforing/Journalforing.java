@@ -1,7 +1,17 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.*;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Arkivfiltyper;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Arkivtemaer;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.EksternPart;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Kommunikasjonskanaler;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Kryssreferanse;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.NorskIdent;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Person;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Personidenter;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Signatur;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.UstrukturertInnhold;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Variantformater;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -95,7 +105,7 @@ public abstract class Journalforing {
     }
 
     public static class DateTimeToXmlGregorianCalendarConverter implements Transformer<DateTime, XMLGregorianCalendar> {
-        public static DateTimeToXmlGregorianCalendarConverter INSTANCE = new DateTimeToXmlGregorianCalendarConverter();
+        public static final DateTimeToXmlGregorianCalendarConverter INSTANCE = new DateTimeToXmlGregorianCalendarConverter();
 
         @Override
         public XMLGregorianCalendar transform(DateTime dateTime) {
@@ -108,4 +118,5 @@ public abstract class Journalforing {
             }
         }
     }
+
 }
