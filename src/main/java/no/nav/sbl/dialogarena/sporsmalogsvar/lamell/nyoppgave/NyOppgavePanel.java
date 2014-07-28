@@ -2,9 +2,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.nyoppgave;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSOpprettOppgave;
-import no.nav.virksomhet.tjenester.oppgavebehandling.meldinger.v2.WSOpprettOppgaveRequest;
-import no.nav.virksomhet.tjenester.oppgavebehandling.v2.Oppgavebehandling;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -26,7 +26,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING
 public class NyOppgavePanel extends Panel {
 
     @Inject
-    private Oppgavebehandling oppgavebehandling;
+    private OppgavebehandlingV3 oppgavebehandling;
 
     private final CompoundPropertyModel<NyOppgave> nyOppgaveModel;
 
