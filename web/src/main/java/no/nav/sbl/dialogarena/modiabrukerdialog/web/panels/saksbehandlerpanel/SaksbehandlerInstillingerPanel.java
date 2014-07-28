@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SaksbehandlerInnstillingerService;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -27,17 +27,19 @@ import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 public class SaksbehandlerInstillingerPanel extends Panel {
 
     @Inject
-    private AnsattService ansattService;
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
+    public String valgtEnhet;
 
     public SaksbehandlerInstillingerPanel(String id) {
         super(id);
 
-        final SaksbehandlerInstillinger saksbehandlerInstillinger = new SaksbehandlerInstillinger();
+        valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
-        RadioGroup<String> gruppe = new RadioGroup<>("enhet", new PropertyModel<String>(saksbehandlerInstillinger, "valgtEnhet"));
+        RadioGroup<String> gruppe = new RadioGroup<>("enhet", new PropertyModel<String>(this, "valgtEnhet"));
         gruppe.setRequired(true);
 
-        gruppe.add(new ListView<AnsattEnhet>("enhetsvalg", ansattService.hentEnhetsliste()) {
+        gruppe.add(new ListView<AnsattEnhet>("enhetsvalg", saksbehandlerInnstillingerService.hentEnhetsListe()) {
             protected void populateItem(ListItem<AnsattEnhet> item) {
                 item.add(new Radio<>("enhetId", Model.of(item.getModelObject().enhetId)));
                 item.add(new Label("enhetNavn", item.getModelObject().enhetNavn));
@@ -58,7 +60,8 @@ public class SaksbehandlerInstillingerPanel extends Panel {
         form.add(new AjaxButton("velg") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                saksbehandlerInstillinger.lagreInstillingerCookie();
+                // set cookie her
+                saksbehandlerInnstillingerService.setSaksbehandlerValgtEnhetCookie(valgtEnhet);
                 toggleSaksbehandlerPanel(target, valgContainer);
             }
 
