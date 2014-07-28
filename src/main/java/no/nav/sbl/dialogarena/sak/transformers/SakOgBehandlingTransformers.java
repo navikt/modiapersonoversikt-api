@@ -34,6 +34,18 @@ public class SakOgBehandlingTransformers {
         }
     };
 
+    public static final Transformer<List<WSBehandlingskjede>, List<GenerellBehandling>> BEHANDLINGSKJEDER_TIL_BEHANDLINGER =
+            new Transformer<List<WSBehandlingskjede>, List<GenerellBehandling>>() {
+                @Override
+                public List<GenerellBehandling> transform(List<WSBehandlingskjede> wsBehandlingskjeder) {
+                    List<GenerellBehandling> behandlinger = new ArrayList<>();
+                    for (WSBehandlingskjede wsBehandlingskjede : wsBehandlingskjeder) {
+                        behandlinger.add(BEHANDLINGSKJEDE_TIL_BEHANDLING.transform(wsBehandlingskjede));
+                    }
+                    return behandlinger;
+                }
+            };
+
     public static final Transformer<WSBehandlingskjede, GenerellBehandling> BEHANDLINGSKJEDE_TIL_BEHANDLING =
             new Transformer<WSBehandlingskjede, GenerellBehandling>() {
 
@@ -45,18 +57,6 @@ public class SakOgBehandlingTransformers {
                             .withOpprettetDato(wsBehandlingskjede.getStart())
                             .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede))
                             .withBehandlingsTema(wsBehandlingskjede.getBehandlingskjedetype().getValue());
-                }
-
-                private GenerellBehandling.BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {
-                    return erAvsluttet(wsBehandlingskjede) ? AVSLUTTET : OPPRETTET;
-                }
-
-                private DateTime behandlingsDato(WSBehandlingskjede wsBehandlingskjede) {
-                    return erAvsluttet(wsBehandlingskjede) ? wsBehandlingskjede.getSlutt() : wsBehandlingskjede.getStart();
-                }
-
-                private boolean erAvsluttet(WSBehandlingskjede wsBehandlingskjede) {
-                    return wsBehandlingskjede.getSlutt() != null;
                 }
             };
 
@@ -78,6 +78,18 @@ public class SakOgBehandlingTransformers {
 
     private static GenerellBehandling hentForsteBehandlingskjede(WSSak wsSak) {
         return on(wsSak.getBehandlingskjede()).map(BEHANDLINGSKJEDE_TIL_BEHANDLING).collect(new OmvendtKronologiskBehandlingComparator()).get(0);
+    }
+
+    public static GenerellBehandling.BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {
+        return erAvsluttet(wsBehandlingskjede) ? AVSLUTTET : OPPRETTET;
+    }
+
+    public static DateTime behandlingsDato(WSBehandlingskjede wsBehandlingskjede) {
+        return erAvsluttet(wsBehandlingskjede) ? wsBehandlingskjede.getSlutt() : wsBehandlingskjede.getStart();
+    }
+
+    public static boolean erAvsluttet(WSBehandlingskjede wsBehandlingskjede) {
+        return wsBehandlingskjede.getSlutt() != null;
     }
 
 }
