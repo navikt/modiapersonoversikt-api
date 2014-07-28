@@ -65,6 +65,24 @@
             <classifier>jaxws</classifier>
         </dependency>
 
+        <!-- Kjerneinfo -->
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-consumer</artifactId>
+            <version>1.0.80</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
         <!--Dialogarena-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
