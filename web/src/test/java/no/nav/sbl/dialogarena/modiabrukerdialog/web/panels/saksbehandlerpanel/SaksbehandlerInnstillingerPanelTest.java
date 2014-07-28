@@ -6,7 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnh
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInstillingerPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -28,9 +28,9 @@ import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {
         KjerneinfoPepMockContext.class,
-        SaksbehandlerInstillingerPanelMockContext.class})
+        SaksbehandlerInnstillingerPanelMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class SaksbehandlerInstillingerPanelTest extends WicketPageTest {
+public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
 
     @Inject
     private AnsattService ansattService;

@@ -1,9 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
+import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInstillingerPanelMockContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +19,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 
 @ContextConfiguration(classes = {
         HentPersonPanelMockContext.class,
-        SaksbehandlerInstillingerPanelMockContext.class})
+        SaksbehandlerInnstillingerPanelMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class HentPersonPageTest extends WicketPageTest {
 
