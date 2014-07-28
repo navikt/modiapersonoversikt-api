@@ -58,7 +58,7 @@ public abstract class Journalforing {
 
     protected static Signatur lagSignatur() {
         Signatur signatur = new Signatur();
-        signatur.setSignert(false);
+        signatur.setSignert(true);
         return signatur;
     }
 
