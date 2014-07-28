@@ -38,7 +38,7 @@ public class HaandterMeldingPanel extends Panel {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 journalforingsPanel.apneJournalforingsPanel(target);
-                nyOppgavePanel.apneNyOppgavePanel(target);
+                nyOppgavePanel.lukkNyOppgavePanel(target);
             }
         };
         journalforLink.add(enabledIf(not(new PropertyModel<Boolean>(innboksVM, "valgtTraad.nyesteMelding.nyesteMeldingISinJournalfortgruppe"))));
