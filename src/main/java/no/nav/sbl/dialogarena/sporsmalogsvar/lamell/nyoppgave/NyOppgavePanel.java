@@ -68,6 +68,7 @@ public class NyOppgavePanel extends Panel {
                                 .withOppgavetypeKode(nyOppgave.type)
                                 .withPrioritetKode(nyOppgave.prioritet)
                                 .withLest(false)
+                                // TODO:  Det må opprettes eller benytte et eksisterende felt for å sette en referanse/id til pågående tråd (innboksVM.getValgtTraad().getEldsteMelding().melding.id)
                         ));
                 lukkNyOppgavePanel(target);
                 nullstillSkjema();
