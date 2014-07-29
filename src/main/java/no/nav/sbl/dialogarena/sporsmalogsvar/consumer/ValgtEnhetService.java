@@ -5,12 +5,16 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import org.apache.wicket.util.cookies.CookieUtils;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class ValgtEnhetService {
+
+    private static final Logger logger = getLogger(ValgtEnhetService.class);
 
     @Inject
     private GOSYSNAVansatt ansattWS;
@@ -23,7 +27,7 @@ public class ValgtEnhetService {
         try {
             return (ansattWS.hentNAVAnsattEnhetListe(hentNAVAnsattEnhetListeRequest).getNAVEnheter().get(0).getEnhetsId());
         } catch (HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg hentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg) {
-            hentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg.printStackTrace();
+            logger.warn("GOSYSNAVansatt ikke funnet:" + hentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg.getMessage());
             return null;
         }
     }
