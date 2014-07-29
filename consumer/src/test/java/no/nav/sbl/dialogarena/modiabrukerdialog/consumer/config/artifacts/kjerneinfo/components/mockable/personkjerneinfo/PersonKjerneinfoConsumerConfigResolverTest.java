@@ -36,7 +36,7 @@ public class PersonKjerneinfoConsumerConfigResolverTest {
     @Inject
     private PersonKjerneinfoConsumerConfigResolver resolver;
 
-        @Test
+    @Test
     public void medMockSlaattPaaSkalIkkeProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
         setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);

@@ -5,9 +5,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 public class GenericLerret extends Lerret {
 
-	public GenericLerret(String id, Panel panel) {
-		super(id);
-		add(panel);
-	}
+    public GenericLerret(String id, Panel panel) {
+        super(id);
+        add(panel);
+    }
 
 }

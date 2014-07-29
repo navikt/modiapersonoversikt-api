@@ -34,7 +34,8 @@ public class TidligereMeldingPanel extends Panel {
                                 fritekstFelt.setVisibilityAllowed(!fritekstFelt.isVisibilityAllowed());
                                 target.add(overskriftContainer, fritekstFelt);
                             }
-                        });
+                        }
+                );
 
         add(
                 overskriftContainer,

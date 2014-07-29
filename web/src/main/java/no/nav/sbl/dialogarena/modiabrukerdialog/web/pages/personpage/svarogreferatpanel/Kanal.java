@@ -2,5 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 public interface Kanal {
     String name();
+
     String getKvitteringKey();
 }

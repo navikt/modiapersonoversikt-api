@@ -57,12 +57,13 @@ public class SakService {
     public static final String OPPGAVETYPEKODE = "KONT_BRUK_GEN"; // Brukergenerert. Denne brukes lite og er dermed ganske safe
 
     private static final Map<String, String> TEMAGRUPPE;
+
     static {
         Map<String, String> tmp = new HashMap<>();
         tmp.put("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", "BAR");
         tmp.put("FAMILIE_OG_BARN", "BID");
         tmp.put("HJELPEMIDLER", "HJE");
-        tmp.put("OVRIGE_HENVENDELSER","GRA");
+        tmp.put("OVRIGE_HENVENDELSER", "GRA");
         TEMAGRUPPE = unmodifiableMap(tmp);
     }
 
@@ -177,7 +178,8 @@ public class SakService {
             oppgavebehandlingWS.lagreOppgave(
                     new WSLagreOppgaveRequest()
                             .withEndreOppgave(tilWSEndreOppgave(wsOppgave))
-                            .withEndretAvEnhetId(ENDRET_AV_ENHET));
+                            .withEndretAvEnhetId(ENDRET_AV_ENHET)
+            );
         } catch (LagreOppgaveOppgaveIkkeFunnet lagreOppgaveOppgaveIkkeFunnet) {
             throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
@@ -199,7 +201,8 @@ public class SakService {
                                 .withFagomradeKodeListe(temagruppe))
                         .withSorteringKode(new WSFinnOppgaveListeSortering()
                                 .withSorteringKode("STIGENDE")
-                                .withSorteringselementKode("OPPRETTET_DATO")))
+                                .withSorteringselementKode("OPPRETTET_DATO"))
+        )
                 .getOppgaveListe())
                 .head();
     }

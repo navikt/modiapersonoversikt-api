@@ -14,17 +14,17 @@ public class Referat {
         return this;
     }
 
-    public Referat withTemagruppe(String temagruppe){
+    public Referat withTemagruppe(String temagruppe) {
         this.temagruppe = temagruppe;
         return this;
     }
 
-    public Referat withKanal(String kanal){
+    public Referat withKanal(String kanal) {
         this.kanal = kanal;
         return this;
     }
 
-    public Referat withFritekst(String fritekst){
+    public Referat withFritekst(String fritekst) {
         this.fritekst = fritekst;
         return this;
     }

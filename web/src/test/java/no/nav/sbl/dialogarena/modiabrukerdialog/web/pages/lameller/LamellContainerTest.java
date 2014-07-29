@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ForeldrepengerPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.LamellServicesAndLoaders;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykmeldingsperiodePanelMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
 import org.apache.wicket.event.IEvent;
 import org.junit.Before;
 import org.junit.Test;

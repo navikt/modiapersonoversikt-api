@@ -144,9 +144,9 @@ public class OppfolgingskontraktServiceBiMock {
 
     private static FimOppBruker createBruker() {
         return new FimOppBruker()
-            .withFormidlingsgruppe("50000")
-            .withServicegruppe(createServicegruppe())
-            .withMeldeplikt(createMeldeplikt());
+                .withFormidlingsgruppe("50000")
+                .withServicegruppe(createServicegruppe())
+                .withMeldeplikt(createMeldeplikt());
     }
 
     private static FimOppMeldeplikt createMeldeplikt() {

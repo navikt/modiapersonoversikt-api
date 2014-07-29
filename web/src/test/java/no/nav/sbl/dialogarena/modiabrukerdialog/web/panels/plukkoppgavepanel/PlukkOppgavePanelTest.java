@@ -45,7 +45,8 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
         when(sakService.plukkOppgaveFraGsak(anyString())).thenReturn(optional(
                 new WSOppgave()
                         .withGjelder(new WSBruker().withBrukerId("fnr"))
-                        .withOppgaveId("oppgave")));
+                        .withOppgaveId("oppgave")
+        ));
 
         Sporsmal sporsmal = new Sporsmal("sporsmal", now());
         sporsmal.temagruppe = "HJELPEMIDLER";

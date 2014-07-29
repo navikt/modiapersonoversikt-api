@@ -49,7 +49,8 @@ public class ReferatPanel extends Panel {
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(250)
-                        .withPlaceholderTextKey("referatform.tekstfelt.placeholder")));
+                        .withPlaceholderTextKey("referatform.tekstfelt.placeholder")
+        ));
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);

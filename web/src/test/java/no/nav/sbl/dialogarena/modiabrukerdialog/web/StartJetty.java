@@ -19,7 +19,7 @@ import static no.nav.sbl.dialogarena.test.SystemProperties.setFrom;
 
 /**
  * Starter MODIA Brukerdialog lokalt på Jetty.
- *
+ * <p/>
  * NB!
  * Sett start.properties for å styre integrasjon.
  */

@@ -1,7 +1,7 @@
 <ehcache>
-    <diskStore path="java.io.tmpdir" />
+    <diskStore path="java.io.tmpdir"/>
 
-    <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false" />
+    <defaultCache eternal="true" maxElementsInMemory="100" overflowToDisk="false"/>
 
     <!--timeToIdleSeconds er tiden cachen lever etter at den har blitt brukt
         timeToLiveSeconds er tiden cachen lever uavhengig av hvis den blir brukt
@@ -96,10 +96,10 @@
            diskPersistent="false"
            diskExpiryThreadIntervalSeconds="120"
            memoryStoreEvictionPolicy="LRU"/>
-    <cache name="pip.role" maxElementsInMemory="100" overflowToDisk="false" eternal="true" />
-    <cache name="pip.localenhet" maxElementsInMemory="100" overflowToDisk="false" eternal="true" />
-    <cache name="pip.fylkesenhet" maxElementsInMemory="100" overflowToDisk="false" eternal="true" />
-    <cache name="pdp.decision" maxElementsInMemory="100" overflowToDisk="false" eternal="true" />
+    <cache name="pip.role" maxElementsInMemory="100" overflowToDisk="false" eternal="true"/>
+    <cache name="pip.localenhet" maxElementsInMemory="100" overflowToDisk="false" eternal="true"/>
+    <cache name="pip.fylkesenhet" maxElementsInMemory="100" overflowToDisk="false" eternal="true"/>
+    <cache name="pdp.decision" maxElementsInMemory="100" overflowToDisk="false" eternal="true"/>
     <cache name="kodeverkCache" maxElementsInMemory="100"
            eternal="false"
            timeToIdleSeconds="3600"

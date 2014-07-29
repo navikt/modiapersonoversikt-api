@@ -24,7 +24,7 @@ public class SakUtils {
         Sporsmal sporsmal = new Sporsmal(henvendelse.getBehandlingsId(), henvendelse.getOpprettetDato());
 
         XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
-        if(xmlMetadata instanceof XMLSporsmal){
+        if (xmlMetadata instanceof XMLSporsmal) {
             XMLSporsmal xmlSporsmal = (XMLSporsmal) xmlMetadata;
             sporsmal.temagruppe = xmlSporsmal.getTemagruppe();
             sporsmal.fritekst = xmlSporsmal.getFritekst();

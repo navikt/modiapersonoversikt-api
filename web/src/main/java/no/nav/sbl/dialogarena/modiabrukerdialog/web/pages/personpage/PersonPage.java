@@ -26,8 +26,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefer
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout.TimeoutBoks;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
@@ -205,7 +205,7 @@ public class PersonPage extends BasePage {
         send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
     }
 
-    public void visSvarPanelBasertPaaOppgaveId(String oppgaveId){
+    public void visSvarPanelBasertPaaOppgaveId(String oppgaveId) {
         Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId(fnr, oppgaveId);
         erstattReferatPanelMedSvarPanel(sporsmal, sakService.getSvarTilSporsmal(fnr, sporsmal.id), optional(oppgaveId));
     }

@@ -12,27 +12,27 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.service.CookieHandler
 
 public class SaksbehandlerInnstillingerService {
 
-        @Inject
-        private AnsattService ansattService;
+    @Inject
+    private AnsattService ansattService;
 
-        public List<AnsattEnhet> hentEnhetsListe(){
-            return ansattService.hentEnhetsliste();
-        }
+    public List<AnsattEnhet> hentEnhetsListe() {
+        return ansattService.hentEnhetsliste();
+    }
 
-        public String getSaksbehandlerValgtEnhet() {
-            if (getCookieUtils().load(brukerSpesifikCookieId()) == null){
-                return ansattService.hentEnhetsliste().get(0).enhetId;
-            } else {
-                return getCookieUtils().load(brukerSpesifikCookieId());
-            }
+    public String getSaksbehandlerValgtEnhet() {
+        if (getCookieUtils().load(brukerSpesifikCookieId()) == null) {
+            return ansattService.hentEnhetsliste().get(0).enhetId;
+        } else {
+            return getCookieUtils().load(brukerSpesifikCookieId());
         }
+    }
 
-        public void setSaksbehandlerValgtEnhetCookie(String valgtEnhet) {
-            getCookieUtils().save(brukerSpesifikCookieId(), valgtEnhet);
-        }
+    public void setSaksbehandlerValgtEnhetCookie(String valgtEnhet) {
+        getCookieUtils().save(brukerSpesifikCookieId(), valgtEnhet);
+    }
 
-        private String brukerSpesifikCookieId() {
-            return "saksbehandlerinstillinger-" + getSubjectHandler().getUid();
-        }
+    private String brukerSpesifikCookieId() {
+        return "saksbehandlerinstillinger-" + getSubjectHandler().getUid();
+    }
 }
 

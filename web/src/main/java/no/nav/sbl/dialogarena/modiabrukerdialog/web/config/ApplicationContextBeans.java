@@ -21,6 +21,8 @@ public class ApplicationContextBeans {
     }
 
     @Bean
-    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() { return new SaksbehandlerInnstillingerService();}
+    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
+        return new SaksbehandlerInnstillingerService();
+    }
 
 }

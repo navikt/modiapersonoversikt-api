@@ -124,8 +124,8 @@ public class PersonPageTest extends WicketPageTest {
         when(sakService.getSvarTilSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Svar())));
 
         wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
-            .sendEvent(createEvent(SVAR_PAA_MELDING))
-            .should().inAjaxResponse().haveComponents(ofType(SvarPanel.class));
+                .sendEvent(createEvent(SVAR_PAA_MELDING))
+                .should().inAjaxResponse().haveComponents(ofType(SvarPanel.class));
     }
 
     @Test

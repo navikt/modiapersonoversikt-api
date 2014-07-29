@@ -108,6 +108,7 @@ public class LeggTilbakePanel extends Panel {
                         leggTilbakeVM.lagTemagruppeTekst());
                 send(LeggTilbakePanel.this, Broadcast.BUBBLE, LEGG_TILBAKE_UTFORT);
             }
+
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);

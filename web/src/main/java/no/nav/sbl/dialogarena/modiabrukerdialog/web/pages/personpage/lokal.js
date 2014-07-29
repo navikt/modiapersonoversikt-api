@@ -43,10 +43,10 @@ jQuery(document).ready(function ($) {
     if (submitFodselsnummer.length > 0) {
         var scaling = 0.8;
         var height = submitFodselsnummer.innerHeight();
-        var posDiff = (height*(1-scaling)/2);
+        var posDiff = (height * (1 - scaling) / 2);
         var top = submitFodselsnummer.position().top + posDiff + "px";
         var left = submitFodselsnummer.position().left + posDiff + "px";
-        height = height*scaling;
+        height = height * scaling;
 
         Modig.ajaxLoader.register({
             urlPattern: /searchPanel-hentPersonForm-submitFodselsnummer/,

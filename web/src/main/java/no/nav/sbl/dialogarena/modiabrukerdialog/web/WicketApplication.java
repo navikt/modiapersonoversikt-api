@@ -161,7 +161,7 @@ public class WicketApplication extends WebApplication {
         mountPage("/person/${fnr}", PersonPage.class);
         mountPage("internal/selftest", SelfTestPage.class);
         mountResource("internal/selftest.json", new JsonResourceReference(SelfTestPage.class));
-        if(mockSetupErTillatt()) {
+        if (mockSetupErTillatt()) {
             mountPage("internal/mocksetup", MockSetupPage.class);
         }
     }

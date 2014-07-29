@@ -6,6 +6,7 @@ import org.apache.wicket.util.cookies.CookieUtils;
 public class CookieHandler {
 
     private static CookieUtils cookieUtils;
+
     static {
         CookieDefaults cookieDefaults = new CookieDefaults();
         cookieDefaults.setMaxAge(12 * 60 * 60);

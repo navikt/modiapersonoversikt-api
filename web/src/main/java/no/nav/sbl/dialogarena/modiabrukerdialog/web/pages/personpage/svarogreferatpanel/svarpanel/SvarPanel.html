@@ -7,6 +7,7 @@
         <section class="traadcontainer">
             <div wicket:id="vistraadcontainer" class="ekspanderingcontainer vistraad">
                 <a class="vistraadlink">Vis tidligere meldingsdetaljer</a>
+
                 <div wicket:id="ekspanderingspil" class="ekspanderingspil"></div>
                 <div class="robust-strek"></div>
             </div>
@@ -19,8 +20,11 @@
         </section>
         <section wicket:id="svarcontainer">
             <form wicket:id="svarform">
-                <h2 class="typeoverskrift svarpaneloverskrift"><wicket:message key="svarpanel.overskrift.svar"/></h2>
+                <h2 class="typeoverskrift svarpaneloverskrift">
+                    <wicket:message key="svarpanel.overskrift.svar"/>
+                </h2>
                 <p class="navident" wicket:id="navIdent">NavIdent her</p>
+
                 <h2 class="medium kanaloverskrift" wicket:id="kanalbeskrivelse">Beskrivelse av kanalen som er valgt</h2>
                 <section wicket:id="tekstfelt" class="tekstfelt"></section>
                 <div class="kanalvelger clearfix">
@@ -34,7 +38,9 @@
                     </div>
                 </div>
                 <div wicket:id="feedback" class="feedback"></div>
-                <a wicket:id="send" class="send knapp-hoved" href="#"><wicket:message key="svarform.knapp.send"/></a>
+                <a wicket:id="send" class="send knapp-hoved" href="#">
+                    <wicket:message key="svarform.knapp.send"/>
+                </a>
             </form>
             <a wicket:id="leggtilbake"><span wicket:id="leggtilbaketekst"></span></a>
         </section>

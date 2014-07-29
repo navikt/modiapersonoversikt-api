@@ -11,12 +11,12 @@ import static org.mockito.Mockito.mock;
 public class OppgaveTestConfig {
 
     @Bean
-    public OppgaveV3 oppgave(){
+    public OppgaveV3 oppgave() {
         return mock(OppgaveV3.class);
     }
 
     @Bean
-    public OppgavebehandlingV3 oppgavebehandling(){
+    public OppgavebehandlingV3 oppgavebehandling() {
         return mock(OppgavebehandlingV3.class);
     }
 

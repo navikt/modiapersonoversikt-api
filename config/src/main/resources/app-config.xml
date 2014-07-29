@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <application xmlns="http://appconfig.aura.nav.no" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://appconfig.aura.nav.no http://maven.adeo.no/xsd/appconfig.xsd">
+             xsi:schemaLocation="http://appconfig.aura.nav.no http://maven.adeo.no/xsd/appconfig.xsd">
     <name>modiabrukerdialog</name>
     <selftestPagePath>/modiabrukerdialog/internal/selftest</selftestPagePath>
     <artifacts>
-        <ear groupId="no.nav.sbl.dialogarena" artifactId="modiabrukerdialog-jee" />
+        <ear groupId="no.nav.sbl.dialogarena" artifactId="modiabrukerdialog-jee"/>
     </artifacts>
     <security serviceUserResourceAlias="srvModiabrukerdialog">
         <logins>
-            <spnego />
+            <spnego/>
         </logins>
     </security>
     <resources>
         <!-- Felles -->
-        <webservice alias="virksomhet:Personsok_v1" mapToProperty="personsokendpoint" />
+        <webservice alias="virksomhet:Personsok_v1" mapToProperty="personsokendpoint"/>
         <ldap alias="ldap" mapToProperty="ldap"/>
         <!-- Slutt felles -->
         <baseUrl alias="tjenestebuss" mapToProperty="tjenestebuss"/>
-        <credential alias="srv_kjerneinfo_tjenestebuss" mapToProperty="ctjenestebuss" />
+        <credential alias="srv_kjerneinfo_tjenestebuss" mapToProperty="ctjenestebuss"/>
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
         <webservice alias="OppgavebehandlingV3" mapToProperty="gsak.oppgavebehandling.v3"/>
@@ -30,8 +30,10 @@
         <webservice alias="virksomhet:Kodeverk_v2" mapToProperty="kodeverkendpoint.v2"/>
         <webservice alias="virksomhet:Brukerprofil_v1" mapToProperty="brukerprofilendpoint"/>
         <webservice alias="virksomhet:BehandleBrukerprofil_v1" mapToProperty="behandlebrukerprofilendpoint"/>
-        <webservice alias="virksomhet:Ytelseskontrakt_v1" mapToProperty="ytelseskontraktendpoint"/>     <!-- mangler i T8 ?-->
-        <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>   <!-- mangler i T8 ?-->
+        <webservice alias="virksomhet:Ytelseskontrakt_v1" mapToProperty="ytelseskontraktendpoint"/>
+        <!-- mangler i T8 ?-->
+        <webservice alias="virksomhet:Oppfolging_v1" mapToProperty="oppfolgingendpoint"/>
+        <!-- mangler i T8 ?-->
         <webservice alias="virksomhet:foreldrepenger_v1" mapToProperty="foreldrepengerendpoint"/>
         <webservice alias="virksomhet:sykepenger_v1" mapToProperty="sykepengerendpoint"/>
         <webservice alias="virksomhet:utbetaling_v2" mapToProperty="utbetalingendpoint.v2"/>
@@ -41,6 +43,6 @@
         <applicationProperties alias="modiabrukerdialog.properties"/>
         <!-- App-->
 
-        <applicationCertificate alias="srvModiabrukerdialog" />
+        <applicationCertificate alias="srvModiabrukerdialog"/>
     </resources>
 </application>

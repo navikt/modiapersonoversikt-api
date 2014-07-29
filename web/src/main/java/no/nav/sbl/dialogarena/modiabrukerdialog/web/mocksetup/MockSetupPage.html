@@ -9,12 +9,15 @@
             padding: 2em;
             text-align: center;
         }
+
         .mockform h2 {
             color: #b7b1a9
         }
+
         .mockform input[type="checkbox"] + label {
             text-align: left;
         }
+
         .mockform input[type="submit"] {
             margin-top: 1em;
         }
@@ -24,8 +27,10 @@
     <body class="main hentperson">
     <section>
         <img class="modia-logo" wicket:id="modia-logo"/>
+
         <form wicket:id="velgMockForm" class="mockform">
             <h2>Følgende tjenester benytter mock:</h2>
+
             <div wicket:id="radioliste">
                 <input type="checkbox" wicket:id="mockvalg"/>
                 <label wicket:for="mockvalg"><span wicket:id="radiolabel"></span></label>

@@ -72,6 +72,7 @@ public class GsakOppgavebehandlingV3PortTypeMock {
             @Override
             public void lagreOppgave(WSLagreOppgaveRequest request) throws LagreOppgaveOppgaveIkkeFunnet {
             }
+
             @Override
             public void lagreMappe(WSLagreMappeRequest request) throws LagreMappeMappeIkkeFunnet {
             }

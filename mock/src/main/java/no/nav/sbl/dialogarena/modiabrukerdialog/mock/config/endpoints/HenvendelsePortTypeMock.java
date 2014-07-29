@@ -56,25 +56,25 @@ public class HenvendelsePortTypeMock {
 
     public static final XMLBehandlingsinformasjon[] HENVENDELSER = {
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusWeeks(2),
-                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(2), "Arbeidsavklaring","", ""),
+                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(2), "Arbeidsavklaring", "", ""),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusWeeks(1),
                     createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST, valueOf(oppgaveId)), now().minusDays(2), "Foreldrepenger", "", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(2),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST), null , "", "", ""),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST), null, "", "", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(3),
                     createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST),
-                    now().minusDays(2), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT ),
+                    now().minusDays(2), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
                     createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(5), KORT_TEKST),
-                    now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT ),
+                    now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
                     createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6), KORT_TEKST),
-                    now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT ),
+                    now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(3),
                     createXMLSporsmal("HJELPEMIDLER", LANG_TEKST, valueOf(oppgaveId++)),
@@ -88,7 +88,7 @@ public class HenvendelsePortTypeMock {
                     createXMLSporsmal("OVRIGE_HENVENDELSER", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusMonths(4).plusDays(1),
-                    createXMLSvar("OVRIGE_HENVENDELSER", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), now().minusDays(3),"Ovrige", "", ""),
+                    createXMLSvar("OVRIGE_HENVENDELSER", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), now().minusDays(3), "Ovrige", "", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(7),
                     createXMLSvar("OVRIGE_HENVENDELSER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), now().minusDays(3), "Ovrige", "", ""),
@@ -113,7 +113,8 @@ public class HenvendelsePortTypeMock {
                                 .withJournalfortDato(journalfortDato)
                                 .withJournalfortTema(journalfortTema)
                                 .withJournalfortSaksId(journalfortSaksId)
-                                .withJournalforerNavIdent(journalforerNavIdent))
+                                .withJournalforerNavIdent(journalforerNavIdent)
+                )
                 .withMetadataListe(
                         new XMLMetadataListe().withMetadata(metadata));
     }

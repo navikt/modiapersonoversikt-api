@@ -27,6 +27,7 @@ public class ApplicationContextTest {
     }
 
     @Test
-    public void shouldSetupAppContext() { }
+    public void shouldSetupAppContext() {
+    }
 
 }

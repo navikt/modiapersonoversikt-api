@@ -24,17 +24,17 @@ public class Svar implements Serializable {
         return this;
     }
 
-    public Svar withTemagruppe(String temagruppe){
+    public Svar withTemagruppe(String temagruppe) {
         this.temagruppe = temagruppe;
         return this;
     }
 
-    public Svar withKanal(String kanal){
+    public Svar withKanal(String kanal) {
         this.kanal = kanal;
         return this;
     }
 
-    public Svar withFritekst(String fritekst){
+    public Svar withFritekst(String fritekst) {
         this.fritekst = fritekst;
         return this;
     }

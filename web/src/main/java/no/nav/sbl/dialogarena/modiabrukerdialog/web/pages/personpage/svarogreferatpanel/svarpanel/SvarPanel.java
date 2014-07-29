@@ -88,7 +88,8 @@ public class SvarPanel extends Panel {
                     protected void populateItem(ListItem<Svar> item) {
                         item.add(new TidligereMeldingPanel("svar", item.getModelObject().temagruppe, item.getModelObject().opprettetDato, item.getModelObject().fritekst, true));
                     }
-                });
+                }
+        );
 
         svarContainer.setOutputMarkupId(true);
         svarContainer.add(
@@ -105,7 +106,8 @@ public class SvarPanel extends Panel {
                             send(SvarPanel.this, Broadcast.BUBBLE, SVAR_AVBRUTT);
                         }
                     }
-                }.add(new Label("leggtilbaketekst", new ResourceModel("svarpanel.avbryt." + (svar.isEmpty() ? "leggtilbake" : "avbryt")))));
+                }.add(new Label("leggtilbaketekst", new ResourceModel("svarpanel.avbryt." + (svar.isEmpty() ? "leggtilbake" : "avbryt"))))
+        );
 
         leggTilbakePanel.setVisibilityAllowed(false);
 
@@ -169,7 +171,8 @@ public class SvarPanel extends Panel {
                     new EnhancedTextAreaConfigurator()
                             .withMaxCharCount(5000)
                             .withMinTextAreaHeight(150)
-                            .withPlaceholderTextKey("svarform.tekstfelt.placeholder")));
+                            .withPlaceholderTextKey("svarform.tekstfelt.placeholder")
+            ));
 
             final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
             feedbackPanel.setOutputMarkupId(true);

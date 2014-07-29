@@ -53,7 +53,8 @@ public class PlukkOppgavePanel extends Panel {
                     setResponsePage(PersonPage.class,
                             new PageParameters()
                                     .set("fnr", oppgave.get().getGjelder().getBrukerId())
-                                    .set(OPPGAVEID, oppgave.get().getOppgaveId()));
+                                    .set(OPPGAVEID, oppgave.get().getOppgaveId())
+                    );
 
                     getSession().setAttribute(TEMAGRUPPE_ATTR, valgtTemagruppe.getObject());
                 } else {

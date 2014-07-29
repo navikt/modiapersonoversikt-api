@@ -5,8 +5,8 @@
             <subsystem name="jaxrs"/>
         </exclude-subsystems>
         <exclusions>
-            <module name="org.slf4j" />
-            <module name="org.slf4j.impl" />
+            <module name="org.slf4j"/>
+            <module name="org.slf4j.impl"/>
         </exclusions>
     </deployment>
     <sub-deployment name="modiabrukerdialog-web.war">
@@ -15,7 +15,7 @@
         </dependencies>
         <exclusions>
             <module name="org.slf4j"/>
-            <module name="org.slf4j.impl" />
+            <module name="org.slf4j.impl"/>
         </exclusions>
     </sub-deployment>
 </jboss-deployment-structure>

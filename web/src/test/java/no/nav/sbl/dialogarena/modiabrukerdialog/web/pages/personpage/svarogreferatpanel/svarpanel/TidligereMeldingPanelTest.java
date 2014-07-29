@@ -19,7 +19,7 @@ public class TidligereMeldingPanelTest extends WicketPageTest {
     @Test
     public void skalAapnesMedFritekstUsynlig() {
         wicket.goToPageWith(new TestTidligereMeldingPanel("panel", FAMILIE_OG_BARN.name(), DateTime.now(), "fritekst", true))
-        .should().containComponent(thatIsInvisible().withId("fritekst"));
+                .should().containComponent(thatIsInvisible().withId("fritekst"));
     }
 
     @Test

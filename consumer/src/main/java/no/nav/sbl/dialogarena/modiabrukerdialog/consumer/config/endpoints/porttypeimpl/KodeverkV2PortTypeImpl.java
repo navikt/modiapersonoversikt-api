@@ -29,7 +29,7 @@ public class KodeverkV2PortTypeImpl {
     public KodeverkPortType kodeverkPortType() {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setServiceClass(KodeverkPortType.class);
-        proxyFactoryBean.setAddress(kodeverkEndpoint != null ? kodeverkEndpoint.toString(): "Address not set");
+        proxyFactoryBean.setAddress(kodeverkEndpoint != null ? kodeverkEndpoint.toString() : "Address not set");
         proxyFactoryBean.setWsdlURL("classpath:kodeverk/no/nav/tjeneste/virksomhet/kodeverk/v2/Kodeverk.wsdl");
 
         //setter mustunderstand i header slik at tjenester som ikke forstår sikkerhetsheader ikke skal avvise requester
