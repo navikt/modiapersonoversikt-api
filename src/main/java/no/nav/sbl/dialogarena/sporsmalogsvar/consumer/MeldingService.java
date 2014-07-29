@@ -3,9 +3,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingInngaaende;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingSporsmal;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingSvar;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingUtgaaende;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -117,7 +117,7 @@ public class MeldingService {
         journalfoerInngaaendeHenvendelseRequest.setPersonEtternavn(SubjectHandler.getSubjectHandler().getUid());
         journalfoerInngaaendeHenvendelseRequest.setPersonFornavn(SubjectHandler.getSubjectHandler().getUid());
         journalfoerInngaaendeHenvendelseRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
-        journalfoerInngaaendeHenvendelseRequest.setJournalpost(JournalforingSporsmal.lagJournalforingSporsmal(sak, melding, valgtEnhetService.getEnhetId()));
+        journalfoerInngaaendeHenvendelseRequest.setJournalpost(JournalforingInngaaende.lagJournalforingSporsmal(sak, melding, valgtEnhetService.getEnhetId()));
 
         JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelseResponse = behandleJournalV2.journalfoerInngaaendeHenvendelse(journalfoerInngaaendeHenvendelseRequest);
         return journalfoerInngaaendeHenvendelseResponse.getJournalpostId();
@@ -130,7 +130,7 @@ public class MeldingService {
         journalfoerUtgaaendeHenvendelseRequest.setPersonEtternavn(getSubjectHandler().getUid());
         journalfoerUtgaaendeHenvendelseRequest.setPersonFornavn(getSubjectHandler().getUid());
         journalfoerUtgaaendeHenvendelseRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
-        journalfoerUtgaaendeHenvendelseRequest.setJournalpost(JournalforingSvar.lagJournalforingSvar(journalfortPostIdForTilhorendeSporsmal, sak, melding, valgtEnhetService.getEnhetId()));
+        journalfoerUtgaaendeHenvendelseRequest.setJournalpost(JournalforingUtgaaende.lagJournalforingSvar(journalfortPostIdForTilhorendeSporsmal, sak, melding, valgtEnhetService.getEnhetId()));
 
         JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelseResponse = behandleJournalV2.journalfoerUtgaaendeHenvendelse(journalfoerUtgaaendeHenvendelseRequest);
         return journalfoerUtgaaendeHenvendelseResponse.getJournalpostId();
