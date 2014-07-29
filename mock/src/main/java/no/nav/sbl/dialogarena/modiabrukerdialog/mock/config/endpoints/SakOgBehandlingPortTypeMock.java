@@ -18,6 +18,8 @@ import java.util.List;
 
 import static java.lang.System.getProperty;
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERING1;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERING2;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -26,13 +28,7 @@ import static org.mockito.Mockito.when;
 @Configuration
 public class SakOgBehandlingPortTypeMock {
 
-    public static final String DAGPENGER_SKJEMAKODE_NAV_04_01_03 = "NAV 04-01.03";
-    public static final String AAP_SKJEMAKODE_NAV_11_13_05 = "NAV 11-13.05";
     public static final String GENERISK_BEHANDLINGSID = "behandlingsid123";
-    public static final String DAGPENGER_BEHANDLINGSID = "behandlingsidX";
-    public static final String AAP_BEHANDLINGSID = "xxxx-mockbehandlingid2";
-    public static final String DAGPENGER_ETTERSENDELSE_BEHANDLINGSID = "ettersendingbehandlingsid2";
-    public static final String AAP_ETTERSENDELSE_BEHANDLINGSID = "ettersendingbehandlingsid1";
     public static final String DAGPENGEARKIVTEMA = "DAG";
     public static final String AAPARKIVTEMA = "AAP";
     public static final String DAGPENGER_BEHANDLINGSTEMA = "ab0001";
@@ -83,8 +79,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSakstema(new WSSakstemaer().withValue(DAGPENGEARKIVTEMA))
                 .withBehandlingskjede(
                         createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, DAGPENGER_BEHANDLINGSTEMA),
-                        createBehandlingKobletTilKvittering(DAGPENGER_BEHANDLINGSID, DAGPENGER_BEHANDLINGSTEMA),
-                        createBehandlingKobletTilKvittering(DAGPENGER_ETTERSENDELSE_BEHANDLINGSID, DAGPENGER_BEHANDLINGSTEMA)
+                        createBehandlingKobletTilKvittering(KVITTERING1, DAGPENGER_BEHANDLINGSTEMA)
                 );
     }
 
@@ -93,8 +88,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSaksId("2")
                 .withSakstema(new WSSakstemaer().withValue(AAPARKIVTEMA))
                 .withBehandlingskjede(
-                        createBehandlingKobletTilKvittering(AAP_BEHANDLINGSID, AAP_BEHANDLINGSTEMA),
-                        createBehandlingKobletTilKvittering(AAP_ETTERSENDELSE_BEHANDLINGSID, AAP_BEHANDLINGSTEMA),
+                        createBehandlingKobletTilKvittering(KVITTERING2, AAP_BEHANDLINGSTEMA),
                         createAvsluttetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA)
                 );
     }
