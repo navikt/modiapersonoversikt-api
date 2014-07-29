@@ -15,6 +15,8 @@ import java.util.List;
 
 public class JournalforingNotat extends Journalforing {
 
+    public static final String KANAL_TYPE_TELEFON = "TELEFON";
+
     public static Journalpost lagJournalforingNotat(Optional<String> journalfortPostId, Sak sak, Melding melding, String journalforendeEnhetId) {
         Journalpost journalpost = new Journalpost();
         journalpost.setKanal(lagKommunikasjonskanaler());
@@ -37,12 +39,12 @@ public class JournalforingNotat extends Journalforing {
     private static void lagRelasjon(Melding melding, Journalpost journalpost) {
         DokumentinfoRelasjon dokumentinfoRelasjon = new DokumentinfoRelasjon();
         byte[] pdfInnhold = PdfUtils.genererPdf(melding);
-        dokumentinfoRelasjon.setJournalfoertDokument(lagJournalfoertDokumentInfoForNotat(pdfInnhold));
+        dokumentinfoRelasjon.setJournalfoertDokument(lagJournalfoertDokumentInfoForNotat(pdfInnhold, melding));
         dokumentinfoRelasjon.setTillknyttetJournalpostSomKode(HOVEDDOKUMENT);
         journalpost.getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
     }
 
-    private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForNotat(byte[] pdf) {
+    private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForNotat(byte[] pdf, Melding melding) {
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
 
         Dokumenttyper dokumenttyper = new Dokumenttyper();
@@ -55,8 +57,12 @@ public class JournalforingNotat extends Journalforing {
         journalfoertDokumentInfo.setErOrganinternt(false);
         journalfoertDokumentInfo.setKategorikode("REF");
         journalfoertDokumentInfo.setSensitivitet(false);
-        // TODO få inn den egentlige tittelen her
-        journalfoertDokumentInfo.setTittel("Dokumenttittel");
+        // TODO: Få inn kodeverk slik at vi får rikitg evaluering av hva slags kanal vi har
+        if (melding.kanal.equals(KANAL_TYPE_TELEFON)) {
+            journalfoertDokumentInfo.setTittel("Referat fra samtale på telefon");
+        } else {
+            journalfoertDokumentInfo.setTittel("Referat fra samtale ved oppmøte");
+        }
 
         List<DokumentInnhold> beskriverInnhold = journalfoertDokumentInfo.getBeskriverInnhold();
         beskriverInnhold.add(PdfDokumentToUstrukturertInnholdConverter.INSTANCE.transform(pdf));

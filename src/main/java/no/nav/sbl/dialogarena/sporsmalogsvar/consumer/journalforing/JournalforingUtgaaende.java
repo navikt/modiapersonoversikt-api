@@ -51,8 +51,7 @@ public class JournalforingUtgaaende extends Journalforing {
         journalfoertDokumentInfo.setBrevkode(BREVKODE_SPORSMAL_OG_SVAR);
         journalfoertDokumentInfo.setKategorikode(KATEGORI_ELEKTRONISK_DIALOG);
         journalfoertDokumentInfo.setSensitivitet(false);
-        // TODO få inn den egentlige tittelen her
-        journalfoertDokumentInfo.setTittel("Dokumenttittel");
+        journalfoertDokumentInfo.setTittel("Svar fra Ditt NAV");
 
         List<DokumentInnhold> beskriverInnhold = journalfoertDokumentInfo.getBeskriverInnhold();
         beskriverInnhold.add(PdfDokumentToUstrukturertInnholdConverter.INSTANCE.transform(pdf));
