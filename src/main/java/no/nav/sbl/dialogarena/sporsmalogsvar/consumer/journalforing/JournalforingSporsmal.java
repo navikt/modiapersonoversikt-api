@@ -25,6 +25,7 @@ public class JournalforingSporsmal extends Journalforing {
         journalpost.setInnhold("Elektronisk kommunikasjon med NAV ");
         journalpost.setDokumentDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(DateTime.now()));
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));
+        // TODO sjekk om det er enhetsId som skal inn i journalforendeEnhetREF eller om det er navn
         journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
 
         lagRelasjon(melding, journalpost);
@@ -41,10 +42,8 @@ public class JournalforingSporsmal extends Journalforing {
     }
 
     private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForSporsmal(byte[] pdf) {
-        JournalfoertDokumentInfo
-                journalfoertDokumentInfo = new JournalfoertDokumentInfo();
+        JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
 
-        // TODO hent inn kodeverk for feletene setKodevrksRef() og setKodeRef() som tilhører dokumenttyper-objektet
         Dokumenttyper dokumenttyper = new Dokumenttyper();
         dokumenttyper.setValue("I");
 

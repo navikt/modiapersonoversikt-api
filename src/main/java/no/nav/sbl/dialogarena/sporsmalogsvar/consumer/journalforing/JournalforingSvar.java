@@ -43,8 +43,6 @@ public class JournalforingSvar extends Journalforing {
 
     private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForSvar(byte[] pdf) {
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
-
-        // TODO hent inn kodeverk for feletene setKodevrksRef() og setKodeRef() som tilhører dokumenttyper-objektet
         Dokumenttyper dokumenttyper = new Dokumenttyper();
         dokumenttyper.setValue("U");
 

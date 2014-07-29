@@ -24,6 +24,7 @@ public class JournalforingNotat extends Journalforing {
         journalpost.setInnhold("Elektronisk kommunikasjon med NAV ");
         journalpost.setDokumentDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(DateTime.now()));
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));
+        // TODO sjekk om det er enhetsId som skal inn i journalforendeEnhetREF eller om det er navn
         journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
 
         if (journalfortPostId.isSome()) {
@@ -45,7 +46,7 @@ public class JournalforingNotat extends Journalforing {
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
 
         Dokumenttyper dokumenttyper = new Dokumenttyper();
-        dokumenttyper.setValue("U");
+        dokumenttyper.setValue("N");
         dokumenttyper.setKodeRef(dokumenttyper.getKodeverksRef());
 
         journalfoertDokumentInfo.setDokumentType(dokumenttyper);
