@@ -29,7 +29,12 @@ public class JournalforingsPanel extends Panel {
         journalforingsPanelEnkeltSak.add(visibleIf(valgtTraadErJournalfortTidligere));
         journalforingsPanelVelgSak.add(visibleIf(not(valgtTraadErJournalfortTidligere)));
 
-        add(journalforingsPanelVelgSak, journalforingsPanelEnkeltSak, getAvbrytLenke());
+        add(journalforingsPanelVelgSak, journalforingsPanelEnkeltSak, new AjaxLink<InnboksVM>("avbrytJournalforing") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                lukkJournalforingsPanel(target);
+            }
+        });
     }
 
     private AbstractReadOnlyModel<Boolean> lagValgtTraadErJournalfortTidligereModel(final InnboksVM innboksVM) {
@@ -37,15 +42,6 @@ public class JournalforingsPanel extends Panel {
             @Override
             public Boolean getObject() {
                 return(innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortDato != null);
-            }
-        };
-    }
-
-    private AjaxLink<InnboksVM> getAvbrytLenke() {
-        return new AjaxLink<InnboksVM>("avbrytJournalforing") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                lukkJournalforingsPanel(target);
             }
         };
     }
