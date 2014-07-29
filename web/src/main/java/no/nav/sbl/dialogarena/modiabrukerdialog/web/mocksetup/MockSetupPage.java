@@ -33,7 +33,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.Sak
 public class MockSetupPage extends BasePage {
 
     private List<MockSetupModel> mockSetupModeller;
-    private Model<String> antallSaker = new Model<>(getProperty(ANTALLSAKER_PROPERTY));
+    private Model<String> antallSaker = new Model<>(getProperty(ANTALLSAKER_PROPERTY, "0"));
 
     public MockSetupPage() {
         mockSetupModeller = lagModeller();

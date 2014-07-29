@@ -9,8 +9,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 import javax.inject.Inject;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.SystemProperties.load;
-
 @ContextConfiguration(classes = WicketTesterConfig.class)
 public abstract class WicketPageTest {
 
@@ -20,7 +18,6 @@ public abstract class WicketPageTest {
     @BeforeClass
     public static void staticSetup() {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
-        load("/jetty-environment.properties");
     }
 
     @Before
