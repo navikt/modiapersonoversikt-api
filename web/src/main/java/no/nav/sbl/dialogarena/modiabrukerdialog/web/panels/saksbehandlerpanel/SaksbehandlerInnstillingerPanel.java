@@ -85,11 +85,11 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
 
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target, WebMarkupContainer valgContainer) {
         if (valgContainer.isVisibilityAllowed()) {
-            target.appendJavaScript("animasjonSkliTogglingMedVent('.nav-enhet',700)");
+            target.prependJavaScript("saksbehandlerPanelLukket|lukkMedAnimasjon('.nav-enhet',700,saksbehandlerPanelLukket)");
             valgContainer.setVisibilityAllowed(false);
         } else {
             valgContainer.setVisibilityAllowed(true);
-            target.appendJavaScript("animasjonSkliToggling('.nav-enhet',700)");
+            target.appendJavaScript("apneMedAnimasjon('.nav-enhet',700)");
         }
         target.add(valgContainer);
     }
