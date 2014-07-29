@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
+import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.WicketTesterConfig;
 import org.junit.Before;
@@ -18,6 +19,7 @@ public abstract class WicketPageTest {
 
     @BeforeClass
     public static void staticSetup() {
+        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         load("/jetty-environment.properties");
     }
 
