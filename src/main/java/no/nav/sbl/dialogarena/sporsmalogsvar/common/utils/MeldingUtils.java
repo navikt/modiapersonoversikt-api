@@ -34,6 +34,7 @@ public class MeldingUtils {
 
     /**
      * Deler inn en liste henvendelser i tråder
+     *
      * @param meldinger liste med henvendelser
      * @return map med key: trådid og value: alle henvendelser som tilhører tråden
      */
@@ -85,7 +86,7 @@ public class MeldingUtils {
 
     private static void fyllInnJournalforingsInformasjon(XMLBehandlingsinformasjon info, Melding melding) {
         XMLJournalfortInformasjon journalfortInformasjon = info.getJournalfortInformasjon();
-        if(info.getJournalfortInformasjon() != null){
+        if (info.getJournalfortInformasjon() != null) {
             melding.journalfortDato = journalfortInformasjon.getJournalfortDato();
             melding.journalfortTema = journalfortInformasjon.getJournalfortTema();
             melding.journalfortSaksId = journalfortInformasjon.getJournalfortSaksId();
@@ -93,7 +94,7 @@ public class MeldingUtils {
         }
     }
 
-    private static String getNavIdentFraAktor(XMLAktor aktor){
+    private static String getNavIdentFraAktor(XMLAktor aktor) {
         return aktor != null ? aktor.getNavIdent() : null;
     }
 

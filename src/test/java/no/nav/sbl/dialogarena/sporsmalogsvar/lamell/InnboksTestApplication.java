@@ -40,7 +40,8 @@ public class InnboksTestApplication extends WebApplication {
                         new MetaTag.With()
                                 .attribute("http-equiv", "X-UA-Compatible")
                                 .attribute("content", "IE=edge,chrome=1")
-                                .done())
+                                .done()
+                )
                 .addLess(new PackageResourceReference(Innboks.class, "innboks.less"))
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);

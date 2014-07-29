@@ -171,7 +171,8 @@ public class MeldingUtilsTest {
                                 .withJournalfortDato(JOURNALFORT_DATO)
                                 .withJournalfortTema(JOURNALFORT_TEMA)
                                 .withJournalpostId(JOURNALFORT_ID)
-                                .withJournalfortSaksId(JOURNALFORT_SAKSID))
+                                .withJournalfortSaksId(JOURNALFORT_SAKSID)
+                )
                 .withMetadataListe(new XMLMetadataListe().withMetadata(xmlMetadata));
     }
 

@@ -33,7 +33,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
     private InnboksVM innboksVM;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         innboksVM = new InnboksVM(meldingService, FODSELSNR);
     }
 

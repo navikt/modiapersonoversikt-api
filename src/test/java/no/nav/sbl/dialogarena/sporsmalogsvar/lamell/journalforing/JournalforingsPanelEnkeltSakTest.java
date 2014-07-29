@@ -34,7 +34,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
     private InnboksVM innboksVM;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         innboksVM = new InnboksVM(meldingService, FODSELSNR);
         List<Sak> sakerForBruker = meldingService.hentSakerForBruker(innboksVM.getFnr());
         sakerForBruker.get(0).opprettetDato = DateTime.now();

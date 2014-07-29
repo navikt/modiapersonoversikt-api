@@ -17,7 +17,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.joda.time.LocalDate;
 
 import javax.inject.Inject;
 
@@ -93,15 +92,17 @@ public class NyOppgavePanel extends Panel {
 
     public void apneNyOppgavePanel(AjaxRequestTarget target) {
         this.setVisibilityAllowed(true);
-        target.appendJavaScript("animasjonSkliToggling('.nyoppgave',700)");
+        target.appendJavaScript("apneMedAnimasjon('.nyoppgave',400)");
         target.add(this);
     }
 
     @RunOnEvents(VALGT_MELDING_EVENT)
     public void lukkNyOppgavePanel(AjaxRequestTarget target) {
-        target.prependJavaScript("animasjonSkliTogglingMedVent('.nyoppgave',700)");
-        this.setVisibilityAllowed(false);
-        target.add(this);
+        if (isVisibleInHierarchy()) {
+            target.prependJavaScript("oppgavePanelLukket|lukkMedAnimasjon('.nyoppgave',400,oppgavePanelLukket)");
+            this.setVisibilityAllowed(false);
+            target.add(this);
+        }
     }
 
 

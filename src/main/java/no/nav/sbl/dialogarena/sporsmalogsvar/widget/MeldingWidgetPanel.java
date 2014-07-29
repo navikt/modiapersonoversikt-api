@@ -22,6 +22,7 @@ public class MeldingWidgetPanel extends GenericPanel<MeldingVM> {
                 new Label("melding.temagruppe", new StringResourceModel("${melding.temagruppe}", getModel())),
                 new WebMarkupContainer("statusIndikator")
                         .add(cssClass(getStatusKlasse(getModelObject().melding.status))),
-                new Label("melding.status",  new StringResourceModel("widget.${melding.status}", getModel())));
+                new Label("melding.status", new StringResourceModel("widget.${melding.status}", getModel()))
+        );
     }
 }

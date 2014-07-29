@@ -32,7 +32,7 @@ public class JournalforingInngaaende extends Journalforing {
         return journalpost;
     }
 
-    private static void lagRelasjon(Melding melding, Journalpost journalpost){
+    private static void lagRelasjon(Melding melding, Journalpost journalpost) {
         DokumentinfoRelasjon dokumentinfoRelasjon = new DokumentinfoRelasjon();
         byte[] pdfInnhold = PdfUtils.genererPdf(melding);
         dokumentinfoRelasjon.setJournalfoertDokument(lagJournalfoertDokumentInfoForSporsmal(pdfInnhold));

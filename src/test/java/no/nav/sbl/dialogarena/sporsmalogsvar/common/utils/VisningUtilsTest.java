@@ -19,15 +19,15 @@ import static org.joda.time.DateTime.now;
 public class VisningUtilsTest {
     @Test
     public void testGetStatusKlasse() throws Exception {
-        assertThat(getStatusKlasse(IKKE_BESVART),               is(equalTo("status ikke-besvart")));
-        assertThat(getStatusKlasse(LEST_AV_BRUKER),             is(equalTo("status lest-av-bruker")));
-        assertThat(getStatusKlasse(IKKE_LEST_AV_BRUKER),        is(equalTo("status ikke-lest-av-bruker")));
+        assertThat(getStatusKlasse(IKKE_BESVART), is(equalTo("status ikke-besvart")));
+        assertThat(getStatusKlasse(LEST_AV_BRUKER), is(equalTo("status lest-av-bruker")));
+        assertThat(getStatusKlasse(IKKE_LEST_AV_BRUKER), is(equalTo("status ikke-lest-av-bruker")));
     }
 
     @Test
     public void testLagMeldingOverskriftKey() throws Exception {
-        assertThat(lagMeldingOverskriftKey(new Melding("", SPORSMAL, now())),       is(equalTo("melding.overskrift.sporsmal")));
-        assertThat(lagMeldingOverskriftKey(new Melding("", SVAR, now())),           is(equalTo("melding.overskrift.svar")));
+        assertThat(lagMeldingOverskriftKey(new Melding("", SPORSMAL, now())), is(equalTo("melding.overskrift.sporsmal")));
+        assertThat(lagMeldingOverskriftKey(new Melding("", SVAR, now())), is(equalTo("melding.overskrift.svar")));
         assertThat(lagMeldingOverskriftKey(new Melding("", SAMTALEREFERAT, now())), is(equalTo("melding.overskrift.samtalereferat")));
     }
 }

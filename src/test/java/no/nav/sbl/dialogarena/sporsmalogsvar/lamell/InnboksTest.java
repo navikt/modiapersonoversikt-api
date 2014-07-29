@@ -43,7 +43,7 @@ public class InnboksTest {
     private FluentWicketTester wicket;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         when(meldingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding(ELDSTE_MELDING_ID_TRAAD1, Meldingstype.SPORSMAL, now().minusDays(1), "TEMA", ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(NYESTE_MELDING_ID_TRAAD1, Meldingstype.SVAR, now(), "TEMA", ELDSTE_MELDING_ID_TRAAD1),

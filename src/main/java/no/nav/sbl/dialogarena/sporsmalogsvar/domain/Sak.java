@@ -14,7 +14,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     public static final String SAKSTYPE_GENERELL = "Generell";
     public static final String SAKSTEMA_OPPFOLGING = "Oppfølging";
 
-    public boolean isSakstypeForVisingGenerell(){
+    public boolean isSakstypeForVisingGenerell() {
         return sakstype.equals(SAKSTYPE_GENERELL) && (!tema.equals(SAKSTEMA_OPPFOLGING));
     }
 
@@ -32,7 +32,7 @@ public class Sak implements Serializable, Comparable<Sak> {
         }
     };
 
-    public String getOpprettetDatoFormatert(){
+    public String getOpprettetDatoFormatert() {
         return Datoformat.kortMedTid(opprettetDato);
     }
 
@@ -43,8 +43,12 @@ public class Sak implements Serializable, Comparable<Sak> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Sak sak = (Sak) o;
 
