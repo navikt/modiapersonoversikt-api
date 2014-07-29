@@ -54,6 +54,8 @@ public class MeldingServiceTest {
     BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Mock
     BehandleJournalV2 behandleJournalV2;
+    @Mock
+    ValgtEnhetService valgtEnhetService;
 
     @InjectMocks
     private MeldingService meldingService;
@@ -64,6 +66,7 @@ public class MeldingServiceTest {
 
     private static final String SPORSMAL_POST_ID = "7863478648";
     private static final String GENERELL_POST_ID = "623674836846";
+    private static final String JOURNALFOERENDE_ENHET_ID = "1234";
 
     @Before
     public void setUp() {
@@ -78,6 +81,8 @@ public class MeldingServiceTest {
 
         when(journalfoerUtgaaendeHenvendelseResponseMock.getJournalpostId()).thenReturn(GENERELL_POST_ID);
         when(behandleJournalV2.journalfoerUtgaaendeHenvendelse(any(JournalfoerUtgaaendeHenvendelseRequest.class))).thenReturn(journalfoerUtgaaendeHenvendelseResponseMock);
+
+        when(valgtEnhetService.getEnhetId()).thenReturn(JOURNALFOERENDE_ENHET_ID);
     }
 
     @Test

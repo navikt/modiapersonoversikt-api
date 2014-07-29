@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config.mock;
 
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ValgtEnhetService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
@@ -46,4 +48,9 @@ public class MeldingServiceTestContext {
         return mock(Sak.class);
     }
 
+    @Bean
+    public GOSYSNAVansatt GOSYSNAVansatt() {return mock(GOSYSNAVansatt.class);}
+
+    @Bean
+    public ValgtEnhetService valgtEnhetService() { return mock(ValgtEnhetService.class);}
 }
