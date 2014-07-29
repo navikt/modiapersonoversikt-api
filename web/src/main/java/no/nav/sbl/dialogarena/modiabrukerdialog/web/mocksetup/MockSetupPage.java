@@ -6,13 +6,16 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.TextField;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.List;
 
+import static java.lang.System.getProperty;
 import static java.lang.System.setProperty;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.MockableContext.KJERNEINFO_KEY;
@@ -25,24 +28,33 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.journalforing.BehandleJournalV2EndpointConfig.BEHANDLE_JOURNAL_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v3.gsak.GsakOppgaveV3EndpointConfig.GSAK_V3_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock.ANTALLSAKER_PROPERTY;
 
 public class MockSetupPage extends BasePage {
 
     private List<MockSetupModel> mockSetupModeller;
+    private Model<String> antallSaker = new Model<>(getProperty(ANTALLSAKER_PROPERTY));
 
     public MockSetupPage() {
         mockSetupModeller = lagModeller();
 
         add(new ContextImage("modia-logo", "img/modiaLogo.svg"));
-        add(new Form("velgMockForm") {
+        Form form = new Form("velgMockForm") {
             @Override
             protected void onSubmit() {
                 for (MockSetupModel model : mockSetupModeller) {
                     setProperty(model.getKey(), model.getMockProperty());
                 }
+                setProperty(ANTALLSAKER_PROPERTY, antallSaker.getObject());
                 setResponsePage(HentPersonPage.class);
             }
-        }.add(createMockCheckBoxer()));
+        };
+        form.add(
+                createMockCheckBoxer(),
+                new TextField<>("antallSaker", antallSaker)
+        );
+
+        add(form);
     }
 
     private ListView<MockSetupModel> createMockCheckBoxer() {

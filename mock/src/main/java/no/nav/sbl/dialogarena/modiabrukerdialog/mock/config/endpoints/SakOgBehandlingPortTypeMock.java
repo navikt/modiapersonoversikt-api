@@ -7,9 +7,17 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingRequest;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingskjedensBehandlingerRequest;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
+import static java.lang.System.getProperty;
+import static java.util.Arrays.asList;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -30,24 +38,43 @@ public class SakOgBehandlingPortTypeMock {
     public static final String DAGPENGER_BEHANDLINGSTEMA = "ab0001";
     public static final String AAP_BEHANDLINGSTEMA = "aX000X";
 
+    public static final String ANTALLSAKER_PROPERTY = "sakogbehandling.antallmocksaker";
+
     @Bean
     public SakOgBehandlingPortType getSakOgBehandlingPortTypeMock() {
         SakOgBehandlingPortType mock = mock(SakOgBehandlingPortType.class);
-        when(mock.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenReturn(finnSakOgBehandlingskjedeListe());
+        when(mock.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return finnSakOgBehandlingskjedeListe();
+            }
+        });
+
+        try {
+            RuntimeException notImplemented = new RuntimeException("Denne tjenesten er ikke implementert i mock (eller i S&B prod per dags dato)");
+            when(mock.hentBehandlingskjedensBehandlinger(any(HentBehandlingskjedensBehandlingerRequest.class))).thenThrow(notImplemented);
+            when(mock.hentBehandling(any(HentBehandlingRequest.class))).thenThrow(notImplemented);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         return mock;
     }
 
     public static FinnSakOgBehandlingskjedeListeResponse finnSakOgBehandlingskjedeListe() {
-        return new FinnSakOgBehandlingskjedeListeResponse()
-                .withSak(
-                        dagpengerSak(),
-                        aapSak(),
-                        omsSak(),
-                        hjeSak(),
-                        gruSak(),
-                        konSak(),
-                        sykSak()
-                );
+        Integer antallSaker = Integer.valueOf(getProperty(ANTALLSAKER_PROPERTY, "100000"));
+
+        List<WSSak> liste = asList(
+                dagpengerSak(),
+                aapSak(),
+                omsSak(),
+                hjeSak(),
+                gruSak(),
+                konSak(),
+                sykSak()
+        ).subList(0, antallSaker);
+
+        return new FinnSakOgBehandlingskjedeListeResponse().withSak(liste);
     }
 
     public static WSSak dagpengerSak() {
