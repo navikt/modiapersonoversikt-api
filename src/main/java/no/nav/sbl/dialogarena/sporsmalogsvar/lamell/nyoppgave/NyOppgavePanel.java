@@ -17,6 +17,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.joda.time.LocalDate;
 
 import javax.inject.Inject;
 
@@ -40,10 +41,11 @@ public class NyOppgavePanel extends Panel {
         Form<NyOppgave> form = new Form<>("nyoppgaveform", nyOppgaveModel);
         add(form);
 
-        form.add(new DropDownChoice<>("tema", asList("Arbeid", "Uføre")).setRequired(true));
-        form.add(new DropDownChoice<>("enhet", asList("1111", "2222")).setRequired(true));
-        form.add(new DropDownChoice<>("type", asList("Kontakt NAV", "Kontakt Bruker")).setRequired(true));
-        form.add(new DropDownChoice<>("prioritet", asList("1", "2")).setRequired(true));
+        // TODO: Endre når kodeverk er på plass
+        form.add(new DropDownChoice<>("tema", asList("BAR", "BID", "HJE", "GRA")).setRequired(true));
+        form.add(new DropDownChoice<>("enhet", asList("2820")).setRequired(true));
+        form.add(new DropDownChoice<>("type", asList("KONT_BRUK_GEN")).setRequired(true));
+        form.add(new DropDownChoice<>("prioritet", asList("NORM_GEN")).setRequired(true));
         form.add(new TextArea<String>("beskrivelse").setRequired(true));
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
@@ -55,19 +57,22 @@ public class NyOppgavePanel extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 NyOppgave nyOppgave = (NyOppgave) form.getModelObject();
                 oppgavebehandling.opprettOppgave(
-                        new WSOpprettOppgaveRequest()
-                                .withOpprettetAvEnhetId(4112)
-                                .withOpprettOppgave(
-                                        new WSOpprettOppgave()
-                                                .withHenvendelseId(innboksVM.getValgtTraad().getEldsteMelding().melding.id)
-                                                .withFagomradeKode(nyOppgave.tema)
-                                                .withAnsvarligEnhetId(nyOppgave.enhet)
-                                                .withOppgavetypeKode(nyOppgave.type)
-                                                .withPrioritetKode(nyOppgave.prioritet)
-                                                .withBeskrivelse(nyOppgave.beskrivelse)));
+                    new WSOpprettOppgaveRequest()
+                        .withOpprettetAvEnhetId(2820)   // TODO: Endre til å hente den faktiske enhetsid
+                        .withOpprettOppgave(
+                            new WSOpprettOppgave()
+                                .withAktivFra(LocalDate.now())
+                                .withAnsvarligEnhetId(nyOppgave.enhet)
+                                .withBeskrivelse(nyOppgave.beskrivelse)
+                                .withFagomradeKode(nyOppgave.tema)
+                                .withOppgavetypeKode(nyOppgave.type)
+                                .withPrioritetKode(nyOppgave.prioritet)
+                                .withLest(false)
+                        ));
                 lukkNyOppgavePanel(target);
                 nullstillSkjema();
             }
+
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
