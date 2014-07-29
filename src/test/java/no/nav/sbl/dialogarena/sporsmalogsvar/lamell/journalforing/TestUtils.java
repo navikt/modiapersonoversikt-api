@@ -35,7 +35,7 @@ public class TestUtils {
     public final static String TEMA_2 = "Dagpenger";
     public final static String TEMA_3 = "Barnebidrag";
 
-    public static ArrayList<Sak> createMockSaksliste(){
+    public static ArrayList<Sak> createMockSaksliste() {
         return new ArrayList<>(asList(
                 createSak("111111111", TEMA_1, "Fagsystem1", SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
                 createSak("22222222", TEMA_2, "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
@@ -59,7 +59,7 @@ public class TestUtils {
         return sak;
     }
 
-    public static Melding createMelding(String id, Meldingstype type, DateTime opprettetDato, String temagruppe, String traadId){
+    public static Melding createMelding(String id, Meldingstype type, DateTime opprettetDato, String temagruppe, String traadId) {
         Melding melding = new Melding(id, type, opprettetDato);
         melding.temagruppe = temagruppe;
         melding.traadId = traadId;
@@ -67,7 +67,7 @@ public class TestUtils {
         return melding;
     }
 
-    public static Melding createMeldingMedJournalfortDato(String id, Meldingstype type, DateTime opprettetDato, String temagruppe, String traadId, DateTime journalfortDato){
+    public static Melding createMeldingMedJournalfortDato(String id, Meldingstype type, DateTime opprettetDato, String temagruppe, String traadId, DateTime journalfortDato) {
         Melding melding = new Melding(id, type, opprettetDato);
         melding.temagruppe = temagruppe;
         melding.traadId = traadId;

@@ -12,7 +12,7 @@ import static no.nav.sbl.dialogarena.test.path.FilesAndDirs.TEST_RESOURCES;
 
 public final class StartJettyInnboks {
 
-    public static void main(String ... args) {
+    public static void main(String... args) {
         SystemProperties.setFrom("jetty-innside.properties");
         Jetty jetty = Jetty.usingWar(new File(TEST_RESOURCES, "webapp")).at("innboks").port(8384)
                 .buildJetty();

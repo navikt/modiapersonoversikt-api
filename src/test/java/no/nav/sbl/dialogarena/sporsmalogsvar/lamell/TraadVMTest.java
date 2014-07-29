@@ -35,7 +35,7 @@ public class TraadVMTest {
     private TraadVM traadVM;
 
     @Before
-    public void setUp(){
+    public void setUp() {
         meldinger = createMeldingVMer();
         traadVM = new TraadVM(meldinger);
     }
@@ -48,21 +48,21 @@ public class TraadVMTest {
     }
 
     @Test
-    public void gittSortertMeldingsListeFinnNyesteMelding () {
+    public void gittSortertMeldingsListeFinnNyesteMelding() {
         MeldingVM nyesteMeldingVM = meldinger.get(0);
 
         assertSame(traadVM.getNyesteMelding(), nyesteMeldingVM);
     }
 
     @Test
-    public void gittSortertMeldingsListeFinnEldsteMelding () {
+    public void gittSortertMeldingsListeFinnEldsteMelding() {
         MeldingVM eldsteMeldingVM = meldinger.get(2);
 
         assertSame(traadVM.getEldsteMelding(), eldsteMeldingVM);
     }
 
     @Test
-    public void gittSortertListeFinnTidligereMeldinger () {
+    public void gittSortertListeFinnTidligereMeldinger() {
         MeldingVM melding3VM = meldinger.get(2);
         MeldingVM melding2VM = meldinger.get(1);
 
@@ -81,7 +81,7 @@ public class TraadVMTest {
     }
 
     @Test
-    public void gittMeldingstypeIkkeSpørsmålIEldsteMeldingReturnererBleInitiertAvBrukerFalse () {
+    public void gittMeldingstypeIkkeSpørsmålIEldsteMeldingReturnererBleInitiertAvBrukerFalse() {
         MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, Meldingstype.SAMTALEREFERAT, DATE_4), 4);
         traadVM.getMeldinger().add(eldsteMeldingVM);
 
@@ -89,7 +89,7 @@ public class TraadVMTest {
     }
 
     @Test
-    public void gittMeldingstypeSpørsmålIEldsteMeldingReturnererBleInitiertAvBrukerTrue () {
+    public void gittMeldingstypeSpørsmålIEldsteMeldingReturnererBleInitiertAvBrukerTrue() {
         MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, Meldingstype.SPORSMAL, DATE_4), 4);
         traadVM.getMeldinger().add(eldsteMeldingVM);
 

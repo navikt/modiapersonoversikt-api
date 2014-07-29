@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -49,8 +49,8 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
     };
 
     @RunOnEvents(MELDING_SENDT_TIL_BRUKER)
-    public void meldingSendtTilBruker(AjaxRequestTarget target){
-        if(this.isVisibleInHierarchy()){
+    public void meldingSendtTilBruker(AjaxRequestTarget target) {
+        if (this.isVisibleInHierarchy()) {
             target.add(this);
         }
     }

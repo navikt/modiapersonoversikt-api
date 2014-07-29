@@ -32,8 +32,12 @@ public class TemaSaker implements Serializable, Comparable<TemaSaker> {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) { return true; }
-        if (o == null || getClass() != o.getClass()) { return false; }
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         TemaSaker temaSaker = (TemaSaker) o;
 

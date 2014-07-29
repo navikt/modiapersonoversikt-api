@@ -10,7 +10,7 @@ import org.junit.Test;
 public class PdfUtilsTest {
 
     @Test
-    public void skalKunneLageNotatPdf(){
+    public void skalKunneLageNotatPdf() {
         DateTime opprettetDato = DateTime.now();
         Melding melding = new Melding("ID", Meldingstype.SAMTALEREFERAT, opprettetDato);
         melding.fritekst = "Bruker ringte inn og sa ... Jeg svarte ... Ca 400 ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord";
@@ -22,7 +22,7 @@ public class PdfUtilsTest {
     }
 
     @Test
-    public void skalKunneLageUtgaaendePdf(){
+    public void skalKunneLageUtgaaendePdf() {
         DateTime opprettetDato = DateTime.now();
         Melding melding = new Melding("ID", Meldingstype.SVAR, opprettetDato);
         melding.fritekst = "Dersom du lurer på hvor mye du har rett på ... Ca 400 ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord";
@@ -34,7 +34,7 @@ public class PdfUtilsTest {
     }
 
     @Test
-    public void skalKunneLageInngaaendePdf(){
+    public void skalKunneLageInngaaendePdf() {
         DateTime opprettetDato = DateTime.now();
         Melding melding = new Melding("ID", Meldingstype.SPORSMAL, opprettetDato);
         melding.fritekst = "Jeg lurer på hvor mye jeg har rett på i forbindelse med ... Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ?";

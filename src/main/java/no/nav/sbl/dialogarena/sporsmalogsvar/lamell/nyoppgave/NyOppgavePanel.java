@@ -64,10 +64,13 @@ public class NyOppgavePanel extends Panel {
                                                 .withAnsvarligEnhetId(nyOppgave.enhet)
                                                 .withOppgavetypeKode(nyOppgave.type)
                                                 .withPrioritetKode(nyOppgave.prioritet)
-                                                .withBeskrivelse(nyOppgave.beskrivelse)));
+                                                .withBeskrivelse(nyOppgave.beskrivelse)
+                                )
+                );
                 lukkNyOppgavePanel(target);
                 nullstillSkjema();
             }
+
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);

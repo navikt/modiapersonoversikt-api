@@ -21,6 +21,7 @@ public abstract class WicketPageTest {
     /**
      * Override this method to provide @Before functionality
      */
-    protected void additionalSetup() { }
+    protected void additionalSetup() {
+    }
 
 }

@@ -41,7 +41,7 @@ public class JournalforingsPanel extends Panel {
         return new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
-                return(innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortDato != null);
+                return (innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortDato != null);
             }
         };
     }

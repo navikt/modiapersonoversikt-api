@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.SakerVM.*;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.SakerVM.TEMA_MAPPING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createSak;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
@@ -134,7 +134,7 @@ public class SakerVMTest {
         List<String> traadTemagruppeSineTemaer = TEMA_MAPPING.get(traadTemagruppe);
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
         for (String tema : traadTemagruppeSineTemaer) {
-            saksliste.add(createSak("44444444", tema, "Fagsystem 4",SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
+            saksliste.add(createSak("44444444", tema, "Fagsystem 4", SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
 
@@ -177,7 +177,7 @@ public class SakerVMTest {
 
     // Sjekk at fagsaker og generelle saker kommer i to ulike lister
     @Test
-    public void sjekkAtGenerelleSakerOgFagsakerErPlassertISinKorresponderendeListe(){
+    public void sjekkAtGenerelleSakerOgFagsakerErPlassertISinKorresponderendeListe() {
         ArrayList<Sak> sakslistekloneMedAndreSakstyper = new ArrayList<>();
         for (Sak sak : saksliste) {
             sakslistekloneMedAndreSakstyper.add(createSak("101010101", sak.tema, "Fagsystem", SAKSTYPE_FAG, sak.opprettetDato));
@@ -224,7 +224,7 @@ public class SakerVMTest {
 
     private int antallSaker(List<TemaSaker> temasakerListe) {
         int lengde = 0;
-        for (TemaSaker temaSaker :temasakerListe) {
+        for (TemaSaker temaSaker : temasakerListe) {
             lengde += temaSaker.saksliste.size();
         }
         return lengde;
@@ -232,7 +232,7 @@ public class SakerVMTest {
 
     private void assertSakstypeGenerell(List<TemaSaker> temaSakerListe, boolean generell) {
         for (TemaSaker temaSaker : temaSakerListe) {
-            for (Sak sak : temaSaker.saksliste){
+            for (Sak sak : temaSaker.saksliste) {
                 assertThat(sak.isSakstypeForVisingGenerell(), is(generell));
             }
         }
@@ -240,10 +240,10 @@ public class SakerVMTest {
 
     private ArrayList<Sak> createSakslisteBasertPaTemaMap() {
         return new ArrayList<>(Arrays.asList(
-                        createSak("111111111", alleTemaer.get(0), "Fagsystem1", SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
-                        createSak("22222222", alleTemaer.get(2), "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
-                        createSak("33333333", alleTemaer.get(4), "Fagsystem3", SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
-                        createSak("44444444", alleTemaer.get(6), "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(2))
+                createSak("111111111", alleTemaer.get(0), "Fagsystem1", SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
+                createSak("22222222", alleTemaer.get(2), "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
+                createSak("33333333", alleTemaer.get(4), "Fagsystem3", SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
+                createSak("44444444", alleTemaer.get(6), "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(2))
         ));
     }
 
@@ -261,14 +261,14 @@ public class SakerVMTest {
     }
 
     private void assertSortert(List<TemaSaker> temaSakerListe) {
-        for (int i = 0; i<temaSakerListe.size() - 1; i++) {
+        for (int i = 0; i < temaSakerListe.size() - 1; i++) {
             assertThat(temaSakerListe.get(i).compareTo(temaSakerListe.get(i + 1)), lessThan(0));
         }
     }
 
     public void assertDatoSortert(TemaSaker temaSaker) {
-        for(int i = 0; i < temaSaker.saksliste.size() - 1; i++) {
-            assertThat(temaSaker.saksliste.get(i).opprettetDato.compareTo(temaSaker.saksliste.get(i+1).opprettetDato), greaterThanOrEqualTo(0));
+        for (int i = 0; i < temaSaker.saksliste.size() - 1; i++) {
+            assertThat(temaSaker.saksliste.get(i).opprettetDato.compareTo(temaSaker.saksliste.get(i + 1).opprettetDato), greaterThanOrEqualTo(0));
         }
     }
 

@@ -39,8 +39,9 @@ public class InnboksVMTest {
     private List<Melding> meldinger;
 
     private InnboksVM innboksVM;
+
     @Before
-    public void setUp(){
+    public void setUp() {
         MeldingService meldingService = mock(MeldingService.class);
         meldinger = createMeldingerIToTraader();
         when(meldingService.hentMeldinger(anyString())).thenReturn(meldinger);
@@ -61,7 +62,7 @@ public class InnboksVMTest {
 
     @Test
     public void skalHaRiktigAntallMeldingIHverTraad() {
-        Map<String,TraadVM> traader = innboksVM.getTraader();
+        Map<String, TraadVM> traader = innboksVM.getTraader();
 
         assertThat(traader.get(ID_1).getTraadLengde(), is(1));
         assertThat(traader.get(ID_2).getTraadLengde(), is(3));

@@ -27,20 +27,22 @@ public class MeldingServiceTestContext {
     }
 
     @Bean
-    public HenvendelsePortType henvendelsePortType(){
+    public HenvendelsePortType henvendelsePortType() {
         return mock(HenvendelsePortType.class);
     }
 
     @Bean
-    public BehandleHenvendelsePortType behandleHenvendelsePortType(){
+    public BehandleHenvendelsePortType behandleHenvendelsePortType() {
         return mock(BehandleHenvendelsePortType.class);
     }
 
     @Bean
-    public BehandleJournalV2 behandleJournalV2(){return mock(BehandleJournalV2.class);}
+    public BehandleJournalV2 behandleJournalV2() {
+        return mock(BehandleJournalV2.class);
+    }
 
     @Bean
-    public Sak sakWs(){
+    public Sak sakWs() {
         return mock(Sak.class);
     }
 

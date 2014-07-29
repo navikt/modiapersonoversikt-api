@@ -14,5 +14,7 @@ public class SporsmalOgSvarContext {
     }
 
     @Bean
-    public ValgtEnhetService valgtEnhetService() {return new ValgtEnhetService();}
+    public ValgtEnhetService valgtEnhetService() {
+        return new ValgtEnhetService();
+    }
 }

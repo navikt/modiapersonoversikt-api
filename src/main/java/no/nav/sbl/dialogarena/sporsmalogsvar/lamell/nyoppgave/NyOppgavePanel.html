@@ -5,9 +5,12 @@
 <body>
 <wicket:panel>
     <section class="nyoppgave">
-        <h2><wicket:message key="nyoppgave.overskrift"/></h2>
+        <h2>
+            <wicket:message key="nyoppgave.overskrift"/>
+        </h2>
         <div class="robust-strek"></div>
         <h3 wicket:id="temagruppe"></h3>
+
         <form wicket:id="nyoppgaveform">
             <label>
                 <wicket:message key="nyoppgave.form.label.tema"/>
@@ -29,11 +32,16 @@
                 <wicket:message key="nyoppgave.form.label.beskrivelse"/>
                 <textarea wicket:id="beskrivelse"></textarea>
             </label>
+
             <div class="robust-strek"></div>
             <div wicket:id="feedback"></div>
-            <a wicket:id="opprettoppgave" class="knapp-hoved-stor"><wicket:message key="nyoppgave.form.opprett"/></a>
+            <a wicket:id="opprettoppgave" class="knapp-hoved-stor">
+                <wicket:message key="nyoppgave.form.opprett"/>
+            </a>
         </form>
-        <a wicket:id="avbrytlink" class="avbryt"><wicket:message key="nyoppgave.avbryt"/></a>
+        <a wicket:id="avbrytlink" class="avbryt">
+            <wicket:message key="nyoppgave.avbryt"/>
+        </a>
     </section>
 </wicket:panel>
 </body>

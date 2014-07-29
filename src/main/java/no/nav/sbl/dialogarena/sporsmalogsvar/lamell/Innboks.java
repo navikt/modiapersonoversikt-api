@@ -39,9 +39,9 @@ public class Innboks extends Lerret {
 
     private void setValgtTraadBasertPaaTraadIdPageParameter() {
         RequestCycle requestCycle = getRequestCycle();
-        if(requestCycle != null){
+        if (requestCycle != null) {
             StringValue traadIdParameter = requestCycle.getRequest().getRequestParameters().getParameterValue(TRAAD_ID_PARAMETER_NAME);
-            if(traadIdParameter.toString() != null && !traadIdParameter.toString().isEmpty()){
+            if (traadIdParameter.toString() != null && !traadIdParameter.toString().isEmpty()) {
                 innboksVM.setValgtTraad(traadIdParameter.toString());
             }
         }
