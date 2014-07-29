@@ -14,7 +14,7 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 public class JournalforingSvar extends Journalforing {
-    public static Journalpost lagJournalforingSvar(String journalfortPostId, Sak sak, Melding melding) {
+    public static Journalpost lagJournalforingSvar(String journalfortPostId, Sak sak, Melding melding, String journalforendeEnhetId) {
         Journalpost journalpost = new Journalpost();
         journalpost.setKanal(lagKommunikasjonskanaler());
         journalpost.setSignatur(lagSignatur());
@@ -25,6 +25,8 @@ public class JournalforingSvar extends Journalforing {
         journalpost.setInnhold("Elektronisk kommunikasjon med NAV ");
         journalpost.setDokumentDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(DateTime.now()));
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));
+        // TODO sjekk om det er enhetsId som skal inn i journalforendeEnhetREF eller om det er navn
+        journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
         journalpost.getKryssreferanseListe().add(lagKryssreferanse(journalfortPostId));
 
         lagRelasjon(melding, journalpost);
@@ -40,8 +42,7 @@ public class JournalforingSvar extends Journalforing {
     }
 
     private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForSvar(byte[] pdf) {
-        JournalfoertDokumentInfo
-                journalfoertDokumentInfo = new JournalfoertDokumentInfo();
+        JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
 
         // TODO hent inn kodeverk for feletene setKodevrksRef() og setKodeRef() som tilhører dokumenttyper-objektet
         Dokumenttyper dokumenttyper = new Dokumenttyper();

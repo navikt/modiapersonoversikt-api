@@ -14,7 +14,8 @@ import org.joda.time.DateTime;
 import java.util.List;
 
 public class JournalforingNotat extends Journalforing {
-    public static Journalpost lagJournalforingNotat(Optional<String> journalfortPostId, Sak sak, Melding melding) {
+
+    public static Journalpost lagJournalforingNotat(Optional<String> journalfortPostId, Sak sak, Melding melding, String journalforendeEnhetId) {
         Journalpost journalpost = new Journalpost();
         journalpost.setKanal(lagKommunikasjonskanaler());
         journalpost.setSignatur(lagSignatur());
@@ -23,6 +24,7 @@ public class JournalforingNotat extends Journalforing {
         journalpost.setInnhold("Elektronisk kommunikasjon med NAV ");
         journalpost.setDokumentDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(DateTime.now()));
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));
+        journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
 
         if (journalfortPostId.isSome()) {
             journalpost.getKryssreferanseListe().add(lagKryssreferanse(journalfortPostId.get()));

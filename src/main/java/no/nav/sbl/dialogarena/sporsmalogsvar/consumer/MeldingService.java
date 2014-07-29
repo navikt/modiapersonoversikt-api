@@ -53,6 +53,9 @@ public class MeldingService {
     @Inject
     BehandleJournalV2 behandleJournalV2;
 
+    @Inject
+    private ValgtEnhetService valgtEnhetService;
+
     public static final String MODIA_SYSTEM_ID = "BD06";
 
     public List<Melding> hentMeldinger(String fnr) {
@@ -114,7 +117,7 @@ public class MeldingService {
         journalfoerInngaaendeHenvendelseRequest.setPersonEtternavn(SubjectHandler.getSubjectHandler().getUid());
         journalfoerInngaaendeHenvendelseRequest.setPersonFornavn(SubjectHandler.getSubjectHandler().getUid());
         journalfoerInngaaendeHenvendelseRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
-        journalfoerInngaaendeHenvendelseRequest.setJournalpost(JournalforingSporsmal.lagJournalforingSporsmal(sak, melding));
+        journalfoerInngaaendeHenvendelseRequest.setJournalpost(JournalforingSporsmal.lagJournalforingSporsmal(sak, melding, valgtEnhetService.getEnhetId()));
 
         JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelseResponse = behandleJournalV2.journalfoerInngaaendeHenvendelse(journalfoerInngaaendeHenvendelseRequest);
         return journalfoerInngaaendeHenvendelseResponse.getJournalpostId();
@@ -127,7 +130,7 @@ public class MeldingService {
         journalfoerUtgaaendeHenvendelseRequest.setPersonEtternavn(getSubjectHandler().getUid());
         journalfoerUtgaaendeHenvendelseRequest.setPersonFornavn(getSubjectHandler().getUid());
         journalfoerUtgaaendeHenvendelseRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
-        journalfoerUtgaaendeHenvendelseRequest.setJournalpost(JournalforingSvar.lagJournalforingSvar(journalfortPostIdForTilhorendeSporsmal, sak, melding));
+        journalfoerUtgaaendeHenvendelseRequest.setJournalpost(JournalforingSvar.lagJournalforingSvar(journalfortPostIdForTilhorendeSporsmal, sak, melding, valgtEnhetService.getEnhetId()));
 
         JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelseResponse = behandleJournalV2.journalfoerUtgaaendeHenvendelse(journalfoerUtgaaendeHenvendelseRequest);
         return journalfoerUtgaaendeHenvendelseResponse.getJournalpostId();
@@ -140,7 +143,7 @@ public class MeldingService {
         journalfoerNotatRequest.setPersonEtternavn(getSubjectHandler().getUid());
         journalfoerNotatRequest.setPersonFornavn(getSubjectHandler().getUid());
         journalfoerNotatRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
-        journalfoerNotatRequest.setJournalpost(JournalforingNotat.lagJournalforingNotat(journalfortPostIdForTilhorendeSporsmal, sak, melding));
+        journalfoerNotatRequest.setJournalpost(JournalforingNotat.lagJournalforingNotat(journalfortPostIdForTilhorendeSporsmal, sak, melding, valgtEnhetService.getEnhetId()));
 
         JournalfoerNotatResponse journalfoerNotatResponse = behandleJournalV2.journalfoerNotat(journalfoerNotatRequest);
         return journalfoerNotatResponse.getJournalpostId();
