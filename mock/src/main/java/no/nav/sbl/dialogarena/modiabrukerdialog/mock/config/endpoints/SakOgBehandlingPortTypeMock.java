@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+import static java.lang.Math.min;
 import static java.lang.System.getProperty;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERING1;
@@ -70,9 +71,9 @@ public class SakOgBehandlingPortTypeMock {
                 gruSak(),
                 konSak(),
                 sykSak()
-        ).subList(0, antallSaker);
-
-        return new FinnSakOgBehandlingskjedeListeResponse().withSak(liste);
+        );
+        
+        return new FinnSakOgBehandlingskjedeListeResponse().withSak(liste.subList(0, min(liste.size(), antallSaker)));
     }
 
     public static WSSak dagpengerSak() {
