@@ -69,6 +69,7 @@ public class SakOgBehandlingPortTypeMock {
                 omsSak(),
                 hjeSak(),
                 gruSak(),
+                gruSak(),
                 konSak(),
                 sykSak()
         );
