@@ -1,5 +1,43 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
+    <div>
+        <p wicket:id="sendtAv"></p>
+        <span wicket:id="sendt-inn"/>
+    </div>
 
+    <div>
+        <hr>
+        <p>
+            <!--<span wicket:id="behandlingstid">[]</span>-->
+            <!--<span wicket:id="behandlingstidbeskrivelse">[]</span>-->
+        </p>
+
+        <section wicket:id="innsendteVedleggSection">
+            <h2 wicket:id="innsendteDokumenterHeader">[]</h2>
+            <ul>
+                <li wicket:id="innsendteVedlegg">
+                    <wicket:container wicket:id="dokument"/>
+                </li>
+            </ul>
+        </section>
+
+        <section wicket:id="manglendeVedleggSection">
+            <h2 wicket:id="manglendeVedleggHeader">[]</h2>
+            <ul>
+                <li wicket:id="manglendeVedlegg">
+                    <wicket:container wicket:id="dokument"/>
+                </li>
+            </ul>
+        </section>
+        <p wicket:id="kvitteringsinfo-bottom">[]</p>
+        <div>
+            <a href="#" wicket:id="skrivut-lenke">[]</a>
+        </div>
+
+    </div>
+    <a href="#">
+        <span wicket:id="skjul-kvittering"></span>
+        <span wicket:id="vis-kvittering"></span>
+    </a>
 </wicket:panel>
 </html>

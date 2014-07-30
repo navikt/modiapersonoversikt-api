@@ -21,14 +21,14 @@ public class BehandlingsPanel extends Panel {
         GenerellBehandling behandling = behandlingModel.getObject();
         String opprettetDato = behandling.opprettetDato.toString("d. MMMM yyyy, HH:mm", new Locale("nb", "no"));
         add(
-                new Label("opprettet-dato", format("Behandling opprettet: %s", opprettetDato)),
+                new Label("opprettet-dato", format(getString("behandling.opprettet"), opprettetDato)),
                 lagAvsluttetDato(behandling)
         );
     }
 
     private Component lagAvsluttetDato(GenerellBehandling behandling) {
         return new Label("avsluttet-dato",
-                format("Behandling avsluttet: %s", behandling.behandlingDato.toString("d. MMMM yyyy, HH:mm", new Locale("nb", "no"))))
+                format(getString("behandling.avsluttet"), behandling.behandlingDato.toString("d. MMMM yyyy, HH:mm", new Locale("nb", "no"))))
                 .add(visibleIf(of(behandling.behandlingsStatus.equals(AVSLUTTET))));
     }
 

@@ -29,7 +29,7 @@ public class SaksoversiktLerret extends Lerret {
         super(id);
         this.fnr = fnr;
         hendelserContainer = (WebMarkupContainer) new WebMarkupContainer("hendelserContainer")
-                .add(new BehandlingerListView("behandlinger", new ArrayList<GenerellBehandling>())).setOutputMarkupPlaceholderTag(true);
+                .add(new BehandlingerListView("behandlinger", new ArrayList<GenerellBehandling>(), fnr)).setOutputMarkupPlaceholderTag(true);
         add(
                 new Label("saksoversikt.fnr", fnr),
                 hendelserContainer);
@@ -38,6 +38,6 @@ public class SaksoversiktLerret extends Lerret {
     @SuppressWarnings("unused")
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void filtrerDetaljerPaaValgtTema(AjaxRequestTarget target, FeedItemPayload payload) {
-        hendelserContainer.addOrReplace(new BehandlingerListView("behandlinger", saksoversiktService.hentBehandlingerForTemakode(fnr, payload.getItemId())));
+        hendelserContainer.addOrReplace(new BehandlingerListView("behandlinger", saksoversiktService.hentBehandlingerForTemakode(fnr, payload.getItemId()), fnr));
     }
 }
