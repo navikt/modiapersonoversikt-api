@@ -40,7 +40,7 @@ public class MeldingVM implements Serializable {
     }
 
     public String getJournalfortDatoFormatert() {
-        return melding.journalfortDato == null ? "" : Datoformat.kortMedTid(melding.journalfortDato);
+        return melding.journalfortDato == null ? "" : Datoformat.kort(melding.journalfortDato);
     }
 
     public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {
