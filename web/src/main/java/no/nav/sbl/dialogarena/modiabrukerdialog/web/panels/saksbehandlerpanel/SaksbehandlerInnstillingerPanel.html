@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
 <body>
 <wicket:panel>
-    <section class="saksbehandlerpanel">
+    <section class="saksbehandlerpanelflik">
         <div class="tekst-anker">
             <div class="nav-ident-pil"></div>
             <div class="tekst-container">
@@ -22,8 +22,8 @@
             <wicket:message key="enhetsvalg.overskrift"/>
         </h3>
         <form wicket:id="enhetsform" class="centered enhetsform">
-            <wicket:container wicket:id="enhet" class="kontorradio">
-                <div wicket:id="enhetsvalg" class="kanalvalg">
+            <wicket:container wicket:id="enhet">
+                <div wicket:id="enhetsvalg" class="enhetsvalg">
                     <input wicket:id="enhetId" type="radio"/>
                     <label wicket:for="enhetId" class="sort-skrift">
                         <div wicket:id="enhetNavn"></div>
