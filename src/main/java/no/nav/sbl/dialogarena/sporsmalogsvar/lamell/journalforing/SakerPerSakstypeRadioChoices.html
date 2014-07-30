@@ -5,16 +5,14 @@
 <body>
 <wicket:panel>
     <div>
-        <h4 wicket:id="sakstype" class="midtstilt-innhold"></h4>
-
-        <div class="robust-strek"></div>
+        <h3 wicket:id="sakstype" class="midtstilt-innhold"></h3>
     </div>
     <wicket:container wicket:id="saksgruppeliste">
-        <div>
-            <div>
+        <div class="saklisteelement">
+            <div class="temaoverskrift">
                 <span wicket:id="tema"></span>
             </div>
-            <wicket:container wicket:id="saksliste">
+            <wicket:container wicket:id="saksliste" class="radioenhet">
                 <input wicket:id="sak" type="radio">
                 <label wicket:for="sak">
                     <div class="saksTekst">

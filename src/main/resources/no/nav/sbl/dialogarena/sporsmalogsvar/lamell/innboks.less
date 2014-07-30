@@ -148,6 +148,7 @@
       }
     }
     .nyeste-melding {
+      margin-top: 10px;
       overflow: hidden;
       .header {
         .temagruppe {
@@ -158,27 +159,37 @@
     }
 
     .journalfort-skiller {
-      background-color: @modiasvart;
+      background-color: #333333;
       color: white;
       padding-top: 3px;
-      padding-bottom: 3px;
+      padding-bottom: 35px;
       padding-left: 1em;
-      margin-top: 10px;
-      margin-bottom: 5px;
+      margin-bottom: 0px;
+      margin-top: 2rem;
       text-align: left;
-      .medium-skrift {
-        font-size: 1.2em;
+      &.nyeste {
+        margin-top: 0.2rem;
       }
-      .liten-skrift {
-        font-size: 0.8em;
+      .medium-skrift {
+        color: @modiagraaskrift;
+        font-size: 1em;
+        margin-top: 0.2em;
+        margin-bottom: 0.2em;
       }
       .journalfort-data-div {
         float: left;
+        font-size: 0.85rem;
+        margin-bottom: 0.2em;
+        font: arial, helvetica, clean, sans-serif;
       }
-
+      .skillestrek {
+        color: @modiagraaskrift;
+        font-size: 0.95rem;
+        font-weight: 800;
+      }
       span {
         display: inline;
-        margin-right: 8em;
+        padding-right: 0.2rem;
       }
 
     }
@@ -186,9 +197,9 @@
     .tidligere-melding {
       position: relative;
       background-color: @graabakgrunn;
-      border: 1px solid @rammeborder;
+      border: 2px solid @rammeborder;
       padding: 20px;
-      margin-top: 20px;
+      margin-top: 0px;
 
       p:last-child {
         margin-bottom: 0;
@@ -209,8 +220,8 @@
       }
       &:before {
         border-bottom-color: @rammeborder;
-        border-width: 16px;
-        margin-left: -16px;
+        border-width: 20px;
+        margin-left: -20px;
       }
       .venstre-kolonne {
         width: 15%;
@@ -305,75 +316,93 @@
     }
   }
 
-  .journalforing {
+  .haandtermeldingpaneler {
     margin-bottom: 20px;
     background-color: @modiasvart;
     color: @modiagraaskrift;
-    padding: 20px;
+    padding: 30px;
     display: none;
+    h2 {
+      color: @modiagraaskrift;
+      text-align: center;
+    }
     h3 {
       color: @modiagraaskrift;
-    }
-    h4 {
-      color: @modiagraaskrift;
-      text-transform: uppercase;
-      font-weight: normal;
-      font-size: 1.1em;
-    }
-    .saksTekst {
-      text-transform: uppercase;
-    }
-    label {
-      width: 30%;
-    }
-    a {
-      margin-top: 10px;
-    }
-    .send {
-      color: #fff;
-    }
-    .avbryt-knapp {
-      color: #20a9e1;
-      display: block;
-    }
-  }
-
-  .nyoppgave {
-    padding: 2em;
-    margin-bottom: 20px;
-    background-color: @modiasvart;
-    color: @modiagraaskrift;
-    text-align: center;
-    display: none;
-    h2, h3 {
-      color: @modiagraaskrift;
+      font-weight: 800;
+      font-size: 20px;
+      font-family: modus, arial, helvetica, sans-serif;
+      text-transform: lowercase;
       text-transform: capitalize;
-    }
-    form {
       text-align: center;
-      label, select, textarea {
-        display: block;
-        width: 100%;
+    }
+    &.journalforing {
+      .temaoverskrift {
+        color: #ffffff;
+      }
+      .sakliste {
+        margin-bottom: 30px;
+      }
+      .saklisteelement {
+        margin-bottom: 10px;
       }
       label {
-        text-align: left;
-      }
-      textarea {
-        resize: none;
-        height: 150px;
-      }
-      a {
-        margin: 0 auto;
-        text-align: center;
-        &.knapp-hoved-stor {
-          color: #ffffff;
+        color: @modiagraaskrift;
+        .verdi {
+          text-transform: lowercase;
+          text-transform: capitalize;
         }
       }
+      .saksTekst {
+        text-transform: uppercase;
+      }
+      .radioenhet {
+        margin-bottom: 10px;
+      }
+      .nopad {
+        padding: 0;
+        margin: 0;
+      }
+      label {
+        width: 30%;
+      }
+      a {
+        margin-top: 10px;
+      }
+      .send {
+        color: #fff;
+      }
+      .avbryt-knapp {
+        color: #20a9e1;
+        display: block;
+      }
     }
-    .avbryt {
-      color: #20a9e1;
-      margin-top: 2em;
-      display: block;
+    &.nyoppgave {
+      form {
+        text-align: center;
+        label, select, textarea {
+          display: block;
+          width: 100%;
+        }
+        label {
+          text-align: left;
+        }
+        textarea {
+          resize: none;
+          height: 150px;
+        }
+        a {
+          margin: 0 auto;
+          text-align: center;
+          &.knapp-hoved-stor {
+            color: #ffffff;
+          }
+        }
+      }
+      .avbryt {
+        color: #20a9e1;
+        margin-top: 2em;
+        display: block;
+      }
     }
   }
 }

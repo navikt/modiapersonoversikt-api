@@ -6,14 +6,15 @@
 <wicket:panel>
     <form wicket:id="plukkSakForm">
         <div>
-            <h3 class="midtstilt-innhold">
+            <h2 class="midtstilt-innhold">
                 <wicket:message key="journalforingVelgSak.overskrift" class="midtstilt-innhold"/>
-            </h3>
+            </h2>
         </div>
+        <div class="robust-strek"></div>
         <div>
             <wicket:container wicket:id="valgtTraad.journalfortSak">
-                <div wicket:id="sakstypePanelFagsaker"></div>
-                <div wicket:id="sakstypePanelGenerelle"></div>
+                <div wicket:id="sakstypePanelFagsaker" class="sakliste"></div>
+                <div wicket:id="sakstypePanelGenerelle" class="sakliste"></div>
             </wicket:container>
         </div>
         <div wicket:id="feedback" class="feedback"></div>

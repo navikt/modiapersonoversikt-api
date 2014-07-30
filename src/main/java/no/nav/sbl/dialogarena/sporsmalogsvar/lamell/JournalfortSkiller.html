@@ -4,26 +4,16 @@
 <head></head>
 <body>
 <wicket:panel>
-    <div wicket:id="journalfortDatoFormatert" class="liten-skrift"></div>
-    <div>
-        <div class="journalfort-data-div">
-            <div class="medium-skrift">
-                <span><wicket:message key="journalfortSkiller.jornalfortTekst"/></span>
-            </div>
-            <div class="liten-skrift">
-                <wicket:message key="journalfortSkiller.journalfortAvTekst"/>
-                <span wicket:id="melding.journalfortAvNavIdent"></span>
-            </div>
-        </div>
-        <div>
-            <div class="medium-skrift">
-                <span wicket:id="melding.journalfortTema"></span>
-            </div>
-            <div class="liten-skrift">
-                <wicket:message key="journalfortSkiller.jornalfortSaksIdTekst"/>
-                <span wicket:id="melding.journalfortSaksId"></span>
-            </div>
-        </div>
+    <div class="journalfort-data-div">
+        <wicket:message key="journalfortSkiller.journalfortAvTekst"/>
+        <span wicket:id="melding.journalfortAvNavIdent"></span>
+        <span class = "skillestrek">|</span>
+        <span wicket:id="journalfortDatoFormatert">|</span>
+        <span class = "skillestrek">|</span>
+        <span wicket:id="melding.journalfortTema"></span>
+        <span class = "skillestrek">|</span>
+        <wicket:message key="journalfortSkiller.jornalfortSaksIdTekst"/>
+        <span wicket:id="melding.journalfortSaksId"></span>
     </div>
 </wicket:panel>
 </body>
