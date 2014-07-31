@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sak;
 
+import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
@@ -14,8 +15,10 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
 
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Configuration
 public class WicketTesterConfig {
@@ -46,6 +49,13 @@ public class WicketTesterConfig {
     @Bean
     public HenvendelseSoknaderPortType henvendelseSoknaderPortType() {
         return mock(HenvendelseSoknaderPortType.class, RETURNS_MOCKS);
+    }
+
+    @Bean
+    public CmsContentRetriever cmsContentRetriever() {
+        CmsContentRetriever cmsMock = mock(CmsContentRetriever.class, RETURNS_MOCKS);
+        when(cmsMock.hentTekst(anyString())).thenReturn("Tekst fra CMS");
+        return cmsMock;
     }
 
     public class DummyApplication extends WebApplication {
