@@ -146,6 +146,10 @@
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-lang</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-content</artifactId>
+        </dependency>
 
         <!--Spring-->
         <dependency>

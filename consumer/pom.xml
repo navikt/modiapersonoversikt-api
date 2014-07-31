@@ -231,6 +231,10 @@
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
+        <dependency>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-content</artifactId>
+        </dependency>
 
         <!--Spring-->
         <dependency>
