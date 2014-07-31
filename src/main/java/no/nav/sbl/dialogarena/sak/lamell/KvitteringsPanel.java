@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
+import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -8,15 +10,23 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.inject.Inject;
 import java.util.List;
 import java.util.Locale;
+import java.util.MissingResourceException;
 
 import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static org.apache.wicket.model.Model.of;
 
 public class KvitteringsPanel extends Panel {
+    @Inject
+    private CmsContentRetriever cmsContentRetriever;
+
+    private Logger logger = LoggerFactory.getLogger(KvitteringsPanel.class);
 
     public KvitteringsPanel(String id, Model<Kvittering> kvitteringsModel, String fnr) {
         super(id, kvitteringsModel);
@@ -37,7 +47,32 @@ public class KvitteringsPanel extends Panel {
 
         leggTilInnsendteVedlegg(kvittering);
         leggTilManglendeVedlegg(kvittering);
+        leggTilBehandlingsTidInfo(kvittering);
 
+    }
+
+    private void leggTilBehandlingsTidInfo(Kvittering kvittering) {
+        String behandlingstid = "";
+        String temakode = kvittering.behandlingstema;
+        boolean fantInfoOmTid = true;
+        try {
+            behandlingstid = format(cmsContentRetriever.hentTekst("soknader.normertbehandlingstid"), cmsContentRetriever.hentTekst("soknader.normertbehandlingstid." + temakode));
+        } catch (MissingResourceException e) {
+            logger.warn("Behandlingstid er ikke satt for temakode " + temakode, e);
+            fantInfoOmTid = false;
+        }
+        add(
+                new Label("behandlingstid").setDefaultModel(new Model<>(behandlingstid)).setVisible(fantInfoOmTid),
+                new Label("behandlingstidbeskrivelse", hentBehandlingstidBeskrivelseTekst(kvittering)).setVisible(fantInfoOmTid));
+    }
+
+    private String hentBehandlingstidBeskrivelseTekst(Kvittering kvittering) {
+        String cmsKey = "soknader.normertbehandlingstid.beskrivelse";
+
+        if (kvittering.behandlingsType.equals(GenerellBehandling.HenvendelseType.SOKNADSINNSENDING)) {
+            cmsKey = cmsKey + ".sendsoknad";
+        }
+        return cmsContentRetriever.hentTekst(cmsKey);
     }
 
     private void leggTilInnsendteVedlegg(Kvittering kvittering) {
