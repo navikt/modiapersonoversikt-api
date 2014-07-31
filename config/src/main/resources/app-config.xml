@@ -42,6 +42,7 @@
         <webservice alias="domene.Brukerdialog:BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
         <applicationProperties alias="modiabrukerdialog.properties"/>
         <!-- App-->
+        <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>
 
         <applicationCertificate alias="srvModiabrukerdialog"/>
     </resources>
