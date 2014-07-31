@@ -69,7 +69,7 @@ public class KvitteringsPanel extends Panel {
     private String hentBehandlingstidBeskrivelseTekst(Kvittering kvittering) {
         String cmsKey = "soknader.normertbehandlingstid.beskrivelse";
 
-        if (kvittering.behandlingsType.equals(GenerellBehandling.HenvendelseType.SOKNADSINNSENDING)) {
+        if (kvittering.henvendelseType.equals(GenerellBehandling.HenvendelseType.SOKNADSINNSENDING)) {
             cmsKey = cmsKey + ".sendsoknad";
         }
         return cmsContentRetriever.hentTekst(cmsKey);
