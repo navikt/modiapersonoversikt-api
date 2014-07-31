@@ -13,7 +13,6 @@ import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
@@ -49,10 +48,6 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         final Form form = new Form<>("enhetsform");
         form.add(gruppe);
 
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
-        feedbackPanel.setOutputMarkupId(true);
-        form.add(feedbackPanel);
-
         final WebMarkupContainer valgContainer = new WebMarkupContainer("valgContainer");
         valgContainer.setOutputMarkupPlaceholderTag(true);
         valgContainer.setVisibilityAllowed(false);
@@ -62,11 +57,6 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 saksbehandlerInnstillingerService.setSaksbehandlerValgtEnhetCookie(valgtEnhet);
                 toggleSaksbehandlerPanel(target, valgContainer);
-            }
-
-            @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
-                target.add(feedbackPanel);
             }
         });
 
