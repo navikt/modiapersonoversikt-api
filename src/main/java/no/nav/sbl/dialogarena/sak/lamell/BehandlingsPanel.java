@@ -21,6 +21,7 @@ public class BehandlingsPanel extends Panel {
         GenerellBehandling behandling = behandlingModel.getObject();
         String opprettetDato = behandling.opprettetDato.toString("d. MMMM yyyy, HH:mm", new Locale("nb", "no"));
         add(
+                new Label("hendelse-beskrivelse", getString("behandling.beskrivelse")),
                 new Label("opprettet-dato", format(getString("behandling.opprettet"), opprettetDato)),
                 lagAvsluttetDato(behandling)
         );
