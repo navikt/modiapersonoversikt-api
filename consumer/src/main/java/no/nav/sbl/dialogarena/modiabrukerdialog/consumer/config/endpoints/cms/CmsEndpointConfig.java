@@ -51,15 +51,12 @@ public class CmsEndpointConfig {
 
     @Bean
     public Pingable cmsPing() throws URISyntaxException {
-        final ValueRetriever prod = getValueRetriever();
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
                 String name = "CMS";
                 try {
-                    //PING HER
-                    // Må endre klassen HttpContentRetriever til å ha en ping-metode
                     new HttpContentRetriever().ping(new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE));
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
