@@ -425,6 +425,17 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.modig</groupId>
+                <artifactId>modig-content</artifactId>
+                <version>2.0.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>commons-logging</groupId>
+                        <artifactId>commons-logging</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.modig</groupId>
                 <artifactId>modig-wicket</artifactId>
                 <version>${modig.wicket.version}</version>
                 <exclusions>

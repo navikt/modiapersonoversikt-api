@@ -97,4 +97,6 @@
            overflowToDisk="false"
            diskPersistent="false"
            memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="cms.content" maxElementsInMemory="10" overflowToDisk="false" timeToLiveSeconds="1800" timeToIdleSeconds="1800"/>
 </ehcache>

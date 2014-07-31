@@ -29,6 +29,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.journalforing.BehandleJournalV2EndpointConfig.BEHANDLE_JOURNAL_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v3.gsak.GsakOppgaveV3EndpointConfig.GSAK_V3_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock.ANTALLSAKER_PROPERTY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock.CMS_KEY;
 
 public class MockSetupPage extends BasePage {
 
@@ -80,7 +81,8 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("SakOgBehandling", SAKOGBEHANDLING_KEY),
                 new MockSetupModel("AktoerId", AKTOER_KEY),
                 new MockSetupModel("HenvendelseSoknader", HENVENDELSESOKNADER_KEY),
-                new MockSetupModel("GosysAnsatt", GOSYS_ANSATT_KEY)
+                new MockSetupModel("GosysAnsatt", GOSYS_ANSATT_KEY),
+                new MockSetupModel("CMS", CMS_KEY)
         );
     }
 

@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.aktoer.AktoerEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.cms.CmsEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.henvendelsesoknader.HenvendelseSoknaderEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeverk.KodeverkV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeverk.KodeverkV2WrapperConfig;
@@ -38,7 +39,8 @@ import org.springframework.context.annotation.Import;
         SakOgBehandlingEndpointConfig.class,
         AktoerEndpointConfig.class,
         HenvendelseSoknaderEndpointConfig.class,
-        GosysAnsattEndpointConfig.class
+        GosysAnsattEndpointConfig.class,
+        CmsEndpointConfig.class
 })
 public class EndpointsConfig {
 
