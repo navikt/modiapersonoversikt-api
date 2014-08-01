@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.modig.core.context.StaticSubjectHandler;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
@@ -67,6 +68,7 @@ public class MeldingServiceTest {
     private static final String SPORSMAL_POST_ID = "7863478648";
     private static final String GENERELL_POST_ID = "623674836846";
     private static final String JOURNALFOERENDE_ENHET_ID = "1234";
+    private static final String KANAL_TELEFON = "TELEFON";
 
     @Before
     public void setUp() {
@@ -88,8 +90,8 @@ public class MeldingServiceTest {
     @Test
     public void sjekkAtRiktigJounalforHenvendelseKallBlirUtfortGittTraadMedEttSporsmalOgEttSamtaleReferat() {
         meldinger = new ArrayList<>(asList(
-                createMeldingVM(Meldingstype.SAMTALEREFERAT, 2),
-                createMeldingVM(Meldingstype.SPORSMAL, 2)));
+                createMeldingVM(Meldingstype.SAMTALEREFERAT, 2, KANAL_TELEFON),
+                createMeldingVM(Meldingstype.SPORSMAL, 2, "")));
         traadVM = new TraadVM(meldinger);
 
         meldingService.journalforTraad(traadVM, sak);
@@ -100,7 +102,7 @@ public class MeldingServiceTest {
 
     @Test
     public void sjekkAtRiktigJournalforHenvendelseKallBlirUtfortGittTraadMedKunEttReferat() {
-        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 1)));
+        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 1, KANAL_TELEFON)));
         traadVM = new TraadVM(meldinger);
 
         meldingService.journalforTraad(traadVM, sak);
@@ -110,8 +112,8 @@ public class MeldingServiceTest {
 
     @Test
     public void sjekkAtRiktigJournalforHenvendelseKallBlirUtfortGittTraadMedSporsmalOgEttSvar() {
-        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SVAR, 2),
-                createMeldingVM(Meldingstype.SPORSMAL, 2)));
+        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SVAR, 2, ""),
+                createMeldingVM(Meldingstype.SPORSMAL, 2, "")));
         traadVM = new TraadVM(meldinger);
 
         meldingService.journalforTraad(traadVM, sak);
@@ -122,8 +124,8 @@ public class MeldingServiceTest {
 
     @Test
     public void sjekkAtRiktigKryssReferanseForSvarSettesTilKorresponderendeSporsmaalVedJournalforingAvHenvendelse() {
-        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SVAR, 2),
-                createMeldingVM(Meldingstype.SPORSMAL, 2)));
+        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SVAR, 2, ""),
+                createMeldingVM(Meldingstype.SPORSMAL, 2, "")));
         traadVM = new TraadVM(meldinger);
 
         meldingService.journalforTraad(traadVM, sak);
@@ -134,8 +136,8 @@ public class MeldingServiceTest {
 
     @Test
     public void sjekkAtRiktigKryssReferanseForReferatSettesTilKorresponderendeSporsmalVedJournalforingAvHenvendelse() {
-        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 2),
-                createMeldingVM(Meldingstype.SPORSMAL, 2)));
+        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 2, KANAL_TELEFON),
+                createMeldingVM(Meldingstype.SPORSMAL, 2, "")));
         traadVM = new TraadVM(meldinger);
 
         meldingService.journalforTraad(traadVM, sak);
@@ -144,8 +146,10 @@ public class MeldingServiceTest {
         assertThat(journalfoerNotatRequestCaptor.getValue().getJournalpost().getKryssreferanseListe().get(0).getReferanseId(), is(SPORSMAL_POST_ID));
     }
 
-    private MeldingVM createMeldingVM(Meldingstype meldingstype, int traadlengde) {
-        return new MeldingVM(createMelding("ID 2", meldingstype, DateTime.now(), "Temagruppe", "ID"), traadlengde);
+    private MeldingVM createMeldingVM(Meldingstype meldingstype, int traadlengde, String kanal) {
+        Melding melding = createMelding("ID 2", meldingstype, DateTime.now(), "Temagruppe", "ID");
+        melding.kanal ="kanal";
+        return new MeldingVM(melding, traadlengde);
     }
 
 }
