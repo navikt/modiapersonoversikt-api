@@ -163,12 +163,17 @@
       color: white;
       padding-top: 3px;
       padding-bottom: 35px;
-      padding-left: 1em;
+      padding-left: 0.5em;
       margin-bottom: 0px;
       margin-top: 2rem;
       text-align: left;
       &.nyeste {
         margin-top: 0.2rem;
+      }
+      .journalfor-ikon {
+        background-image: url(../img/journalfore_hvit.svg);
+        background-repeat: no-repeat;
+        padding-right: 1.4rem ;
       }
       .medium-skrift {
         color: @modiagraaskrift;
@@ -215,13 +220,13 @@
       }
       &:after {
         border-bottom-color: @graabakgrunn;
-        border-width: 15px;
-        margin-left: -15px;
+        border-width: 13px;
+        margin-left: -13px;
       }
       &:before {
         border-bottom-color: @rammeborder;
-        border-width: 20px;
-        margin-left: -20px;
+        border-width: 18px;
+        margin-left: -18px;
       }
       .venstre-kolonne {
         width: 15%;
@@ -322,18 +327,21 @@
     color: @modiagraaskrift;
     padding: 30px;
     display: none;
+    text-transform: lowercase;
+    text-transform: capitalize;
     h2 {
       color: @modiagraaskrift;
       text-align: center;
+      margin-bottom: 3px;
     }
     h3 {
       color: @modiagraaskrift;
       font-weight: 800;
       font-size: 20px;
       font-family: modus, arial, helvetica, sans-serif;
+      text-align: center;
       text-transform: lowercase;
       text-transform: capitalize;
-      text-align: center;
     }
     &.journalforing {
       .temaoverskrift {
@@ -342,28 +350,28 @@
       .sakliste {
         margin-bottom: 30px;
       }
-      .saklisteelement {
-        margin-bottom: 10px;
-      }
       label {
         color: @modiagraaskrift;
-        .verdi {
-          text-transform: lowercase;
-          text-transform: capitalize;
+        width: 100%;
+        margin-top: 6px;
+        div {
+          display: inline-block;
         }
+        span {
+          display: block;
+          margin-right: 3rem;
+        }
+        .saksTekst {
+          text-transform: uppercase;
+        }
+        margin-bottom: 10px;
       }
-      .saksTekst {
-        text-transform: uppercase;
+      form input[type="radio"]:checked + label {
+        font-weight: normal;
+        color: #ffffff;
       }
       .radioenhet {
         margin-bottom: 10px;
-      }
-      .nopad {
-        padding: 0;
-        margin: 0;
-      }
-      label {
-        width: 30%;
       }
       a {
         margin-top: 10px;

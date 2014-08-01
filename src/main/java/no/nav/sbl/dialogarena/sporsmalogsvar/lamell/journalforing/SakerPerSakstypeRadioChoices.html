@@ -12,25 +12,27 @@
             <div class="temaoverskrift">
                 <span wicket:id="tema"></span>
             </div>
-            <wicket:container wicket:id="saksliste" class="radioenhet">
+            <wicket:container wicket:id="saksliste">
                 <input wicket:id="sak" type="radio">
                 <label wicket:for="sak">
-                    <div class="saksTekst">
-                        <wicket:message key="journalfor.sak.saksIdTekst"/>
+                    <div>
+                        <span class="saksTekst">
+                            <wicket:message key="journalfor.sak.saksIdTekst"/>
+                        </span>
+                        <span wicket:id="saksId"/>
                     </div>
-                    <div wicket:id="saksId"/>
-                </label>
-                <label wicket:for="sak">
-                    <div class="saksTekst">
-                        <wicket:message key="journalfor.sak.opprettetDatoTekst"/>
+                    <div>
+                        <span class="saksTekst">
+                            <wicket:message key="journalfor.sak.opprettetDatoTekst"/>
+                        </span>
+                        <span wicket:id="opprettetDatoFormatert"/>
                     </div>
-                    <div wicket:id="opprettetDatoFormatert"/>
-                </label>
-                <label wicket:for="sak">
-                    <div class="saksTekst">
-                        <wicket:message key="journalfor.sak.fagsystemTekst"/>
+                    <div>
+                        <span class="saksTekst">
+                            <wicket:message key="journalfor.sak.fagsystemTekst"/>
+                        </span>
+                        <span wicket:id="fagsystem"/>
                     </div>
-                    <div wicket:id="fagsystem"/>
                 </label>
             </wicket:container>
         </div>
