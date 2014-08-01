@@ -62,18 +62,18 @@ public class HenvendelsePortTypeMock {
                     createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST, valueOf(oppgaveId)), now().minusDays(2), "Foreldrepenger", "", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(2),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST), null, "", "", ""),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Vi kan bekrefte at du får foreldrepenger"), null, "", "", ""),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(3),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), KORT_TEKST),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Det er meget sannsynlig at du kan få foreldrepenger"),
                     now().minusDays(2), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(5), KORT_TEKST),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(5), "Det kan hende at du kan få foredrepenger "),
                     now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6), KORT_TEKST),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6),"Vi har hatt en samtale og det kommer frem at Test Testesen ønsker foreldrepenger "),
                     now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(3),
@@ -94,7 +94,7 @@ public class HenvendelsePortTypeMock {
                     createXMLSvar("OVRIGE_HENVENDELSER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), now().minusDays(3), "Ovrige", "", ""),
 
             createXmlBehandlingsinformasjon(REFERAT, now(),
-                    createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST), null, "", "", ""),
+                    createXMLReferat("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", "TELEFON", null, "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, "", "", ""),
 
             createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(1),
                     createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", "")
