@@ -8,39 +8,39 @@
         <h2 class="midtstilt-innhold">
             <wicket:message key="journalforingEnkeltSak.overskrift"/>
         </h2>
-
         <div class="robust-strek"></div>
         <div>
             <h3 wicket:id="sakstype" class="midtstilt-innhold"></h3>
         </div>
-        <div class="saklisteelement">
-            <div class="temaoverskrift">
-                <span wicket:id="tema"></span>
-            </div>
-            <label>
-                <div class="saksTekst">
+        <div class="temaoverskrift">
+            <span wicket:id="tema"></span>
+        </div>
+        <label>
+            <div>
+                <span class="saksTekst">
                     <wicket:message key="journalfor.sak.saksIdTekst"/>
-                </div>
-                <div wicket:id="saksId"/>
-            </label>
-            <label>
-                <div class="saksTekst">
+                </span>
+                <span wicket:id="saksId"/>
+            </div>
+            <div>
+                <span class="saksTekst">
                     <wicket:message key="journalfor.sak.opprettetDatoTekst"/>
-                </div>
-                <div wicket:id="opprettetDatoFormatert"/>
-            </label>
-            <label>
-                <div class="saksTekst">
+                </span>
+                <span wicket:id="opprettetDatoFormatert"/>
+            </div>
+            <div>
+                <span class="saksTekst">
                     <wicket:message key="journalfor.sak.fagsystemTekst"/>
-                </div>
-                <div class="verdi">
+                </span>
+                <span class="verdi">
                     <div wicket:id="fagsystem"/>
-                </div>
-            </label>
-        </div>
-        <div class="midtstilt-innhold">
-            <a href="#" wicket:id="journalforTraad" class="send knapp-hoved-liten">Journalfør</a>
-        </div>
+                </span>
+            </div>
+        </label>
+    </div>
+    <hr size ="1" class="linje"/>
+    <div class="midtstilt-innhold">
+        <a href="#" wicket:id="journalforTraad" class="send knapp-hoved-liten">Journalfør</a>
     </div>
 </wicket:panel>
 </body>
