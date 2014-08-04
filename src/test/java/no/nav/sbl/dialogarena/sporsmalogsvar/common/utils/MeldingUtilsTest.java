@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
@@ -67,24 +66,24 @@ public class MeldingUtilsTest {
 
     @Test
     public void testStatusTransformer() {
-        XMLBehandlingsinformasjon behandlingsinformasjonV2 = new XMLBehandlingsinformasjon();
-        behandlingsinformasjonV2.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSporsmal()));
+        XMLHenvendelse xmlHenvendelse = new XMLHenvendelse();
+        xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSporsmal()));
 
-        behandlingsinformasjonV2.withHenvendelseType(XMLHenvendelseType.SPORSMAL.name());
-        behandlingsinformasjonV2.withOpprettetDato(now());
-        assertThat(STATUS.transform(behandlingsinformasjonV2), is(equalTo(IKKE_BESVART)));
+        xmlHenvendelse.withHenvendelseType(XMLHenvendelseType.SPORSMAL.name());
+        xmlHenvendelse.withOpprettetDato(now());
+        assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(IKKE_BESVART)));
 
-        behandlingsinformasjonV2.withHenvendelseType(XMLHenvendelseType.SVAR.name());
-        behandlingsinformasjonV2.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar()));
-        assertThat(STATUS.transform(behandlingsinformasjonV2), is(equalTo(IKKE_LEST_AV_BRUKER)));
+        xmlHenvendelse.withHenvendelseType(XMLHenvendelseType.SVAR.name());
+        xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar()));
+        assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(IKKE_LEST_AV_BRUKER)));
 
-        behandlingsinformasjonV2.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar().withLestDato(now())));
-        assertThat(STATUS.transform(behandlingsinformasjonV2), is(equalTo(LEST_AV_BRUKER)));
+        xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar().withLestDato(now())));
+        assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(LEST_AV_BRUKER)));
     }
 
     @Test(expected = ApplicationException.class)
     public void testStatusTransformerUkjentType() {
-        STATUS.transform(new XMLBehandlingsinformasjon().withHenvendelseType(""));
+        STATUS.transform(new XMLHenvendelse().withHenvendelseType(""));
     }
 
     @Test
@@ -93,7 +92,7 @@ public class MeldingUtilsTest {
                 .withFritekst(FRITEKST)
                 .withTemagruppe(TEMAGRUPPE);
 
-        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SPORSMAL.name(), xmlSporsmal));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SPORSMAL.name(), xmlSporsmal));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -113,9 +112,10 @@ public class MeldingUtilsTest {
                 .withTemagruppe(TEMAGRUPPE)
                 .withLestDato(LEST_DATO)
                 .withFritekst(FRITEKST)
-                .withKanal(KANAL);
+                .withKanal(KANAL)
+                .withNavident(NAVIDENT);
 
-        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SVAR.name(), xmlSvar));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SVAR.name(), xmlSvar));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_2)));
@@ -137,9 +137,10 @@ public class MeldingUtilsTest {
                 .withFritekst(FRITEKST)
                 .withTemagruppe(TEMAGRUPPE)
                 .withLestDato(LEST_DATO)
-                .withKanal(KANAL);
+                .withKanal(KANAL)
+                .withNavident(NAVIDENT);
 
-        Melding melding = TIL_MELDING.transform(lagXMLBehandlingsInformasjon(ID_1, OPPRETTET_DATO, REFERAT.name(), xmlReferat));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, REFERAT.name(), xmlReferat));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -160,9 +161,8 @@ public class MeldingUtilsTest {
         TIL_MELDING.transform(new XMLSporsmal());
     }
 
-    private static XMLBehandlingsinformasjon lagXMLBehandlingsInformasjon(String behandlingsId, DateTime opprettetDato, String henvendelseType, XMLMetadata xmlMetadata) {
-        return new XMLBehandlingsinformasjon()
-                .withAktor(new XMLAktor().withNavIdent(NAVIDENT))
+    private static XMLHenvendelse lagXMLHenvendelse(String behandlingsId, DateTime opprettetDato, String henvendelseType, XMLMetadata xmlMetadata) {
+        return new XMLHenvendelse()
                 .withBehandlingsId(behandlingsId)
                 .withOpprettetDato(opprettetDato)
                 .withHenvendelseType(henvendelseType)

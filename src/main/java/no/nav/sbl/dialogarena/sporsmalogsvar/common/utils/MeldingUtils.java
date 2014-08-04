@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
@@ -49,7 +48,7 @@ public class MeldingUtils {
     public static final Transformer<Object, Melding> TIL_MELDING = new Transformer<Object, Melding>() {
         @Override
         public Melding transform(Object o) {
-            XMLBehandlingsinformasjon info = (XMLBehandlingsinformasjon) o;
+            XMLHenvendelse info = (XMLHenvendelse) o;
 
             Meldingstype meldingstype = info.getHenvendelseType().equals(SPORSMAL.name()) ?
                     Meldingstype.SPORSMAL : info.getHenvendelseType().equals(SVAR.name()) ?
@@ -57,7 +56,7 @@ public class MeldingUtils {
                     Meldingstype.SAMTALEREFERAT;
 
             Melding melding = new Melding(info.getBehandlingsId(), meldingstype, info.getOpprettetDato());
-            melding.fnrBruker = info.getAktor().getFodselsnummer();
+            melding.fnrBruker = info.getFnr();
             melding.traadId = info.getBehandlingsId();
             melding.status = STATUS.transform(info);
             fyllInnJournalforingsInformasjon(info, melding);
@@ -67,24 +66,26 @@ public class MeldingUtils {
                 melding.temagruppe = ((XMLSporsmal) xmlMetadata).getTemagruppe();
                 melding.fritekst = ((XMLSporsmal) xmlMetadata).getFritekst();
             } else if (xmlMetadata instanceof XMLSvar) {
-                melding.traadId = ((XMLSvar) xmlMetadata).getSporsmalsId();
-                melding.temagruppe = ((XMLSvar) xmlMetadata).getTemagruppe();
-                melding.fritekst = ((XMLSvar) xmlMetadata).getFritekst();
-                melding.kanal = ((XMLSvar) xmlMetadata).getKanal();
-                melding.lestDato = ((XMLSvar) xmlMetadata).getLestDato();
-                melding.navIdent = getNavIdentFraAktor(info.getAktor());
+                XMLSvar svar = (XMLSvar) xmlMetadata;
+                melding.traadId = svar.getSporsmalsId();
+                melding.temagruppe = svar.getTemagruppe();
+                melding.fritekst = svar.getFritekst();
+                melding.kanal = svar.getKanal();
+                melding.lestDato = svar.getLestDato();
+                melding.navIdent = svar.getNavident();
             } else if (xmlMetadata instanceof XMLReferat) {
-                melding.temagruppe = ((XMLReferat) xmlMetadata).getTemagruppe();
-                melding.fritekst = ((XMLReferat) xmlMetadata).getFritekst();
-                melding.kanal = ((XMLReferat) xmlMetadata).getKanal();
-                melding.lestDato = ((XMLReferat) xmlMetadata).getLestDato();
-                melding.navIdent = getNavIdentFraAktor(info.getAktor());
+                XMLReferat referat = (XMLReferat) xmlMetadata;
+                melding.temagruppe = referat.getTemagruppe();
+                melding.fritekst = referat.getFritekst();
+                melding.kanal = referat.getKanal();
+                melding.lestDato = referat.getLestDato();
+                melding.navIdent = referat.getNavident();
             }
             return melding;
         }
     };
 
-    private static void fyllInnJournalforingsInformasjon(XMLBehandlingsinformasjon info, Melding melding) {
+    private static void fyllInnJournalforingsInformasjon(XMLHenvendelse info, Melding melding) {
         XMLJournalfortInformasjon journalfortInformasjon = info.getJournalfortInformasjon();
         if (info.getJournalfortInformasjon() != null) {
             melding.journalfortDato = journalfortInformasjon.getJournalfortDato();
@@ -94,13 +95,9 @@ public class MeldingUtils {
         }
     }
 
-    private static String getNavIdentFraAktor(XMLAktor aktor) {
-        return aktor != null ? aktor.getNavIdent() : null;
-    }
-
-    public static final Transformer<XMLBehandlingsinformasjon, Status> STATUS = new Transformer<XMLBehandlingsinformasjon, Status>() {
+    public static final Transformer<XMLHenvendelse, Status> STATUS = new Transformer<XMLHenvendelse, Status>() {
         @Override
-        public Status transform(XMLBehandlingsinformasjon info) {
+        public Status transform(XMLHenvendelse info) {
             String henvendelseType = info.getHenvendelseType();
             if (henvendelseType.equals(SPORSMAL.name())) {
                 return IKKE_BESVART;

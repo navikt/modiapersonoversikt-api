@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
@@ -47,21 +47,21 @@ public class JettyTestContext {
             "minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure " +
             "dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
 
-    public static final List<XMLBehandlingsinformasjon> HENVENDELSER = asList(
-            createXmlBehandlingsinformasjon(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusWeeks(2), createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST)),
-            createXmlBehandlingsinformasjon(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusWeeks(1), createXMLSporsmal("INTERNASJONALT", LANG_TEKST)),
-            createXmlBehandlingsinformasjon(behandlingsid, SVAR, now().minusDays(5), createXMLSvar("INTERNASJONALT", String.valueOf(behandlingsid), now().minusDays(4), KORT_TEKST)),
-            createXmlBehandlingsinformasjon(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusDays(3), createXMLSporsmal("HJELPEMIDLER", LANG_TEKST)),
-            createXmlBehandlingsinformasjon(behandlingsid, SVAR, now().minusHours(5), createXMLSvar("HJELPEMIDLER", String.valueOf(behandlingsid), null, KORT_TEKST)),
-            createXmlBehandlingsinformasjon(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusMonths(4), createXMLSporsmal("SOSIALE_TJENESTER", LANG_TEKST)),
-            createXmlBehandlingsinformasjon(behandlingsid, SVAR, now().minusMonths(4).plusDays(1), createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsid), now().minusMonths(4).plusDays(3), LANG_TEKST)),
-            createXmlBehandlingsinformasjon(behandlingsid, SVAR, now().minusDays(7), createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsid), null, KORT_TEKST)),
-            createXmlBehandlingsinformasjon(behandlingsid = idGenerator.nextInt(), REFERAT, now(), createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST)),
-            createXmlBehandlingsinformasjon(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusDays(1), createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST))
+    public static final List<XMLHenvendelse> HENVENDELSER = asList(
+            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusWeeks(2), createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST)),
+            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusWeeks(1), createXMLSporsmal("INTERNASJONALT", LANG_TEKST)),
+            createXMLHenvendelse(behandlingsid, SVAR, now().minusDays(5), createXMLSvar("INTERNASJONALT", String.valueOf(behandlingsid), now().minusDays(4), KORT_TEKST)),
+            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusDays(3), createXMLSporsmal("HJELPEMIDLER", LANG_TEKST)),
+            createXMLHenvendelse(behandlingsid, SVAR, now().minusHours(5), createXMLSvar("HJELPEMIDLER", String.valueOf(behandlingsid), null, KORT_TEKST)),
+            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusMonths(4), createXMLSporsmal("SOSIALE_TJENESTER", LANG_TEKST)),
+            createXMLHenvendelse(behandlingsid, SVAR, now().minusMonths(4).plusDays(1), createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsid), now().minusMonths(4).plusDays(3), LANG_TEKST)),
+            createXMLHenvendelse(behandlingsid, SVAR, now().minusDays(7), createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsid), null, KORT_TEKST)),
+            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), REFERAT, now(), createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST)),
+            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusDays(1), createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST))
     );
 
-    private static XMLBehandlingsinformasjon createXmlBehandlingsinformasjon(int behandlingsId, XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata) {
-        return new XMLBehandlingsinformasjon()
+    private static XMLHenvendelse createXMLHenvendelse(int behandlingsId, XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata) {
+        return new XMLHenvendelse()
                 .withHenvendelseType(type.name())
                 .withOpprettetDato(opprettet)
                 .withBehandlingsId(String.valueOf(behandlingsId))
