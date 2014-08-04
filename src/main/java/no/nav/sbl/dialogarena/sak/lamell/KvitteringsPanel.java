@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sak.lamell;
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
@@ -20,9 +19,11 @@ import java.util.MissingResourceException;
 
 import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.HenvendelseType.SOKNADSINNSENDING;
 import static org.apache.wicket.model.Model.of;
 
 public class KvitteringsPanel extends Panel {
+
     @Inject
     private CmsContentRetriever cmsContentRetriever;
 
@@ -69,7 +70,7 @@ public class KvitteringsPanel extends Panel {
     private String hentBehandlingstidBeskrivelseTekst(Kvittering kvittering) {
         String cmsKey = "soknader.normertbehandlingstid.beskrivelse";
 
-        if (kvittering.henvendelseType.equals(GenerellBehandling.HenvendelseType.SOKNADSINNSENDING)) {
+        if (kvittering.henvendelseType.equals(SOKNADSINNSENDING)) {
             cmsKey = cmsKey + ".sendsoknad";
         }
         return cmsContentRetriever.hentTekst(cmsKey);
