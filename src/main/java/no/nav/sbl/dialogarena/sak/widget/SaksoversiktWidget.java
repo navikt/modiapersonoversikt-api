@@ -27,21 +27,23 @@ public class SaksoversiktWidget extends FeedWidget<TemaVM> {
     private static final Logger log = LoggerFactory.getLogger(SaksoversiktWidget.class);
 
     public SaksoversiktWidget(String id, String initial, String fnr) {
-        super(id, initial, true);
+        super(id, initial, false);
 
         setDefaultModel(lagLDMforTema(fnr));
     }
 
-    private LoadableDetachableModel<List<? extends FeedItemVM>> lagLDMforTema(final String fnr) {
-        return new LoadableDetachableModel<List<? extends FeedItemVM>>() {
+    private LoadableDetachableModel<List<FeedItemVM>> lagLDMforTema(final String fnr) {
+        return new LoadableDetachableModel<List<FeedItemVM>>() {
             @Override
-            protected List<? extends FeedItemVM> load() {
+            protected List<FeedItemVM> load() {
                 try {
-                    List<? extends FeedItemVM> temaVMList = saksoversiktService.hentTemaer(fnr);
-                    return temaVMList.isEmpty() ? asList(new GenericListing(getString("ingen.saker"))) : temaVMList;
+                    List<FeedItemVM> temaVMList = (List<FeedItemVM>)(List<?>)saksoversiktService.hentTemaer(fnr);
+                    FeedItemVM genericListing = new GenericListing(getString("ingen.saker"));
+                    temaVMList.add(genericListing);
+                    return temaVMList.isEmpty() ? (List<FeedItemVM>)(List<?>)asList(new GenericListing(getString("ingen.saker"))) : temaVMList;
                 } catch (ApplicationException | SystemException e) {
                     log.warn("Feilet ved henting av saksbehandlingsinformasjon for fnr {}", fnr, e);
-                    return asList(new ErrorListing(getString("saker.feilet")));
+                    return (List<FeedItemVM>)(List<?>)asList(new ErrorListing(getString("saker.feilet")));
                 }
             }
         };

@@ -30,6 +30,7 @@ public class HenvendelseTransformers {
                     .withManglendeDokumenter(hentDokumenter(wsSoknad, false))
                     .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
                     .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
+                    .withBehandlingsDato(wsSoknad.getInnsendtDato())
                     .withBehandlingsType(BehandlingsType.KVITTERING);
         }
     };

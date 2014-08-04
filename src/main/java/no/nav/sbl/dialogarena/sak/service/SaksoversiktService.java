@@ -53,7 +53,9 @@ public class SaksoversiktService {
      * Henter alle tema for en gitt person
      */
     public List<TemaVM> hentTemaer(String fnr) {
-        return on(hentSakerForAktor(hentAktorId(fnr))).map(TEMA_VM).collect(new SistOppdaterteBehandlingComparator());
+        PreparedIterable<TemaVM> map = on(hentSakerForAktor(hentAktorId(fnr))).map(TEMA_VM);
+        List<TemaVM> collect = map.collect(new SistOppdaterteBehandlingComparator());
+        return collect;
     }
 
     /**

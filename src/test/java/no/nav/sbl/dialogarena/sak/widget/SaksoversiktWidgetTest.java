@@ -14,7 +14,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 import java.util.ArrayList;
 
-import static java.util.Arrays.asList;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +30,9 @@ public class SaksoversiktWidgetTest extends AbstractWicketTest {
     @Test
     public void skalViseSaker() {
         TemaVM temaVM = new TemaVM().withTemaKode("AAP").withSistOppdaterteBehandling(new GenerellBehandling().withBehandlingsDato(DateTime.now()));
-        when(saksoversiktService.hentTemaer(anyString())).thenReturn(asList(temaVM));
+        ArrayList<TemaVM> temaVMs = new ArrayList<>();
+        temaVMs.add(temaVM);
+        when(saksoversiktService.hentTemaer(anyString())).thenReturn(temaVMs);
 
         SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
         wicketTester.goToPageWith(widget);
