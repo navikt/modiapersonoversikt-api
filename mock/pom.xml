@@ -25,6 +25,12 @@
             <artifactId>kontrakter-domain</artifactId>
         </dependency>
 
+        <!--dialogarena-common-->
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-collections</artifactId>
+        </dependency>
+
         <!--Kjerneinfo-->
         <dependency>
             <groupId>no.nav</groupId>
