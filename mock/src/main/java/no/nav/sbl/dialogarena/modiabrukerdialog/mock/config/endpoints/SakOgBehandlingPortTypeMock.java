@@ -147,7 +147,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withBehandlingskjedeId("motta" + now())
                 .withSisteBehandlingREF(sisteBehandlingsREF)
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
-                .withStart(now().minusDays(3));
+                .withStart(now().minusDays(5));
 
     }
 
@@ -159,7 +159,6 @@ public class SakOgBehandlingPortTypeMock {
                 .withStart(now().minusDays(3).minusHours(5))
                 .withSlutt(now());
     }
-
 
     private static WSBehandlingskjede createBehandlingKobletTilKvittering(String behandlingsListeRef, String behandlingstema) {
         return new WSBehandlingskjede()

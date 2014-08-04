@@ -15,6 +15,7 @@ import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informa
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType.DOKUMENTINNSENDING;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType.SOKNADSINNSENDING;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSInnsendingsvalg.INNSENDT;
+import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSInnsendingsvalg.SEND_SENERE;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -50,10 +51,10 @@ public class HenvendelseSoknaderPortTypeMock {
                         .withDokumentforventninger(
                                 new WSSoknad.Dokumentforventninger()
                                         .withDokumentforventning(
-                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("dokinn-id").withTilleggsTittel("abc"),
-                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("dokinn-id").withTilleggsTittel("abc"),
-                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("dokinn-id").withTilleggsTittel("abc"),
-                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("dokinn-id").withTilleggsTittel("abc")
+                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-01.01").withTilleggsTittel("abc"),
+                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-01.02").withTilleggsTittel("abc"),
+                                                new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
+                                                new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-01.04").withTilleggsTittel("abc")
                                         )),
                 new WSSoknad()
                         .withBehandlingsId(KVITTERING2)
@@ -67,10 +68,10 @@ public class HenvendelseSoknaderPortTypeMock {
                         .withDokumentforventninger(
                                 new WSSoknad.Dokumentforventninger()
                                         .withDokumentforventning(
-                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("dokinn-id").withTilleggsTittel("abc"),
-                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("dokinn-id").withTilleggsTittel("abc"),
-                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("dokinn-id").withTilleggsTittel("abc"),
-                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("dokinn-id").withTilleggsTittel("abc")
+                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-01.01").withTilleggsTittel("abc"),
+                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-01.02").withTilleggsTittel("abc"),
+                                                new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
+                                                new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc")
                                         )),
                 new WSSoknad().withHenvendelseStatus(UNDER_ARBEID.value()).withBehandlingsId(IKKE_KVITTERING),
                 new WSSoknad().withHenvendelseStatus(UNDER_ARBEID.value()).withBehandlingsId(IKKE_KVITTERING)
