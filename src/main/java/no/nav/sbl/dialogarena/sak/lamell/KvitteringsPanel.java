@@ -36,14 +36,15 @@ public class KvitteringsPanel extends Panel {
         int antallInnsendteVedlegg = kvittering.innsendteDokumenter.size();
         int totalAntallVedlegg = antallInnsendteVedlegg + kvittering.manglendeDokumenter.size();
         String dato = kvittering.behandlingDato.toString("d. MMMM yyyy, HH:mm", new Locale("nb", "no"));
+        String sendtAvString = kvittering.ettersending ? getString("kvittering.sendt.av") : getString("ettersending.kvittering.sendt.av");
 
         add(
+                new Label("sendtAv", format(sendtAvString, fnr)),
                 new Label("kvitteringsinfo-bottom", getString("kvittering.info.bottom")).setEscapeModelStrings(false),
                 new Label("skjul-kvittering", getString("kvittering.skjul")),
                 new Label("vis-kvittering", getString("kvittering.vis")),
                 new Label("skrivut-lenke", getString("detaljer.skrivut")),
-                new Label("sendt-inn", format(getString("kvittering.vedlegg.sendtInn.antall"), antallInnsendteVedlegg, totalAntallVedlegg, dato)),
-                new Label("sendtAv", format(getString("kvittering.sendt.av"), fnr))
+                new Label("sendt-inn", format(getString("kvittering.vedlegg.sendtInn.antall"), antallInnsendteVedlegg, totalAntallVedlegg, dato))
         );
 
         leggTilInnsendteVedlegg(kvittering);
@@ -88,7 +89,7 @@ public class KvitteringsPanel extends Panel {
 
     private void leggTilManglendeVedlegg(Kvittering kvittering) {
         WebMarkupContainer manglendeVedlegg = new WebMarkupContainer("manglendeVedleggSection");
-        manglendeVedlegg.add(visibleIf(of(!kvittering.manglendeDokumenter.isEmpty())));
+        manglendeVedlegg.add(visibleIf(of(!kvittering.manglendeDokumenter.isEmpty() && !kvittering.ettersending)));
         manglendeVedlegg.add(
                 new Label("manglendeVedleggHeader", getString("behandling.manglende.dokumenter.header")),
                 getDokumenterView("manglendeVedlegg", kvittering.manglendeDokumenter)
