@@ -13,6 +13,7 @@ import java.util.List;
 
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType.KVITTERING;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.HenvendelseType.DOKUMENTINNSENDING;
 import static org.apache.wicket.model.Model.of;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -31,6 +32,7 @@ public class KvitteringsPanelTest extends AbstractWicketTest {
                 .withBehandlingsTema("tema")
                 .withBehandlingStatus(AVSLUTTET)
                 .withBehandlingsType(KVITTERING)
+                .withHenvendelseType(DOKUMENTINNSENDING)
                 .withBehandlingsDato(new DateTime());
         kvitteringsPanel = new KvitteringsPanel("id", of(kvittering), "12");
         wicketTester.goToPageWith(kvitteringsPanel);

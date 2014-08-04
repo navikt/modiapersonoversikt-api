@@ -39,15 +39,15 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
     }
 
     private String getTittel(GenerellBehandling behandling) {
-        String temanavn = behandling.behandlingstema;
+        String behandlingstema = behandling.behandlingstema;
         switch (behandling.behandlingsType) {
             case BEHANDLING:
-                return format(getString(resolveMarkupKey(behandling)), temanavn);
+                return format(getString(resolveMarkupKey(behandling)), behandlingstema);
             case KVITTERING:
                 return format(behandling.ettersending
                         ? getString("hendelse.kvittering.ettersending.tittel")
                         : getString("hendelse.kvittering.tittel"),
-                        temanavn);
+                        behandlingstema);
             default:
                 throw new ApplicationException("Ukjent behandlingstype: " + behandling.behandlingsType);
         }

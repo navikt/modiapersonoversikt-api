@@ -5,7 +5,9 @@ import org.joda.time.DateTime;
 import java.io.Serializable;
 
 public class GenerellBehandling implements Serializable {
+
     public enum BehandlingsType {BEHANDLING, KVITTERING};
+    public enum HenvendelseType {DOKUMENTINNSENDING, SOKNADSINNSENDING};
     public enum BehandlingsStatus {
         OPPRETTET { @Override public String cmsKey() { return "hendelse.sistoppdatert.dato"; }},
         AVSLUTTET { @Override public String cmsKey() { return "hendelse.sistoppdatert.dato"; }};
@@ -17,6 +19,7 @@ public class GenerellBehandling implements Serializable {
     public DateTime behandlingDato;
     public BehandlingsStatus behandlingsStatus;
     public BehandlingsType behandlingsType;
+    public HenvendelseType henvendelseType;
     public boolean ettersending;
     public String behandlingstema;
 
@@ -45,4 +48,8 @@ public class GenerellBehandling implements Serializable {
         return this;
     }
 
+    public GenerellBehandling withHenvendelseType(HenvendelseType henvendelseType) {
+        this.henvendelseType = henvendelseType;
+        return this;
+    }
 }

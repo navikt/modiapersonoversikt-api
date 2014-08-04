@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import org.apache.commons.collections15.Transformer;
 
@@ -31,7 +33,8 @@ public class HenvendelseTransformers {
                     .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
                     .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
                     .withBehandlingsDato(wsSoknad.getInnsendtDato())
-                    .withBehandlingsType(BehandlingsType.KVITTERING);
+                    .withBehandlingsType(BehandlingsType.KVITTERING)
+                    .withHenvendelseType(GenerellBehandling.HenvendelseType.valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()));
         }
     };
 
