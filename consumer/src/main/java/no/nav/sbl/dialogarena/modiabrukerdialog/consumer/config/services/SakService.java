@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
@@ -8,6 +8,7 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -45,7 +46,7 @@ import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createSporsmalFromHenvendelse;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createSvarFromHenvendelse;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createXMLBehandlingsinformasjon;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createXMLHenvendelse;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.tilWSEndreOppgave;
 
 public class SakService {
@@ -80,12 +81,12 @@ public class SakService {
     protected SendUtHenvendelsePortType sendUtHenvendelsePortType;
 
     public void sendSvar(Svar svar) {
-        XMLBehandlingsinformasjon info = createXMLBehandlingsinformasjon(svar);
+        XMLHenvendelse info = createXMLHenvendelse(svar);
         sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(svar.fnr).withAny(info));
     }
 
     public void sendReferat(Referat referat) {
-        XMLBehandlingsinformasjon info = createXMLBehandlingsinformasjon(referat);
+        XMLHenvendelse info = SakUtils.createXMLHenvendelse(referat);
         sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(referat.fnr).withAny(info));
     }
 
@@ -93,9 +94,9 @@ public class SakService {
         List<Object> henvendelseliste =
                 henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withTyper(SPORSMAL.name()).withFodselsnummer(fnr)).getAny();
 
-        XMLBehandlingsinformasjon henvendelse;
+        XMLHenvendelse henvendelse;
         for (Object o : henvendelseliste) {
-            henvendelse = (XMLBehandlingsinformasjon) o;
+            henvendelse = (XMLHenvendelse) o;
             XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
             if (xmlMetadata instanceof XMLSporsmal && oppgaveId.equals(((XMLSporsmal) xmlMetadata).getOppgaveIdGsak())) {
                 return createSporsmalFromHenvendelse(henvendelse);
@@ -110,9 +111,9 @@ public class SakService {
 
         List<Svar> svarliste = new ArrayList<>();
 
-        XMLBehandlingsinformasjon henvendelse;
+        XMLHenvendelse henvendelse;
         for (Object o : henvendelseliste) {
-            henvendelse = (XMLBehandlingsinformasjon) o;
+            henvendelse = (XMLHenvendelse) o;
             XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
             if (xmlMetadata instanceof XMLSvar && ((XMLSvar) xmlMetadata).getSporsmalsId().equals(sporsmalId)) {
                 svarliste.add(createSvarFromHenvendelse(henvendelse));
@@ -122,9 +123,9 @@ public class SakService {
     }
 
     public Sporsmal getSporsmal(String sporsmalId) {
-        XMLBehandlingsinformasjon behandlingsinformasjon =
-                (XMLBehandlingsinformasjon) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalId)).getAny();
-        return createSporsmalFromHenvendelse(behandlingsinformasjon);
+        XMLHenvendelse xmlHenvendelse =
+                (XMLHenvendelse) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalId)).getAny();
+        return createSporsmalFromHenvendelse(xmlHenvendelse);
     }
 
     public void tilordneOppgaveIGsak(String oppgaveId) {

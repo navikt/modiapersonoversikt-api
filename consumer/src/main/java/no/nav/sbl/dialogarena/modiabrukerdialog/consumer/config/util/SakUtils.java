@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
@@ -20,7 +19,7 @@ import static org.joda.time.DateTime.now;
 
 public class SakUtils {
 
-    public static Sporsmal createSporsmalFromHenvendelse(XMLBehandlingsinformasjon henvendelse) {
+    public static Sporsmal createSporsmalFromHenvendelse(XMLHenvendelse henvendelse) {
         Sporsmal sporsmal = new Sporsmal(henvendelse.getBehandlingsId(), henvendelse.getOpprettetDato());
 
         XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
@@ -35,27 +34,27 @@ public class SakUtils {
         }
     }
 
-    public static Svar createSvarFromHenvendelse(XMLBehandlingsinformasjon henvendelse) {
+    public static Svar createSvarFromHenvendelse(XMLHenvendelse henvendelse) {
         XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
         if (xmlMetadata instanceof XMLSvar) {
             XMLSvar xmlSvar = (XMLSvar) xmlMetadata;
             return new Svar()
-                    .withFnr(henvendelse.getAktor().getFodselsnummer())
-                    .withNavIdent(henvendelse.getAktor().getNavIdent())
+                    .withFnr(henvendelse.getFnr())
                     .withSporsmalsId(xmlSvar.getSporsmalsId())
                     .withTemagruppe(xmlSvar.getTemagruppe())
                     .withKanal(xmlSvar.getKanal())
                     .withFritekst(xmlSvar.getFritekst())
+                    .withNavIdent(xmlSvar.getNavident())
                     .withOpprettetDato(henvendelse.getOpprettetDato());
         } else {
             throw new ApplicationException("Henvendelsen er ikke av typen XMLSvar: " + xmlMetadata);
         }
     }
 
-    public static XMLBehandlingsinformasjon createXMLBehandlingsinformasjon(Svar svar) {
-        return new XMLBehandlingsinformasjon()
+    public static XMLHenvendelse createXMLHenvendelse(Svar svar) {
+        return new XMLHenvendelse()
                 .withHenvendelseType(SVAR.name())
-                .withAktor(new XMLAktor().withFodselsnummer(svar.fnr).withNavIdent(svar.navIdent))
+                .withFnr(svar.fnr)
                 .withOpprettetDato(now())
                 .withAvsluttetDato(now())
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
@@ -64,17 +63,22 @@ public class SakUtils {
                                 .withTemagruppe(svar.temagruppe)
                                 .withKanal(svar.kanal)
                                 .withFritekst(svar.fritekst)
+                                .withNavident(svar.navIdent)
                 ));
     }
 
-    public static XMLBehandlingsinformasjon createXMLBehandlingsinformasjon(Referat referat) {
-        return new XMLBehandlingsinformasjon()
+    public static XMLHenvendelse createXMLHenvendelse(Referat referat) {
+        return new XMLHenvendelse()
                 .withHenvendelseType(REFERAT.name())
-                .withAktor(new XMLAktor().withFodselsnummer(referat.fnr).withNavIdent(referat.navIdent))
+                .withFnr(referat.fnr)
                 .withOpprettetDato(now())
                 .withAvsluttetDato(now())
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
-                        new XMLReferat().withTemagruppe(referat.temagruppe).withKanal(referat.kanal).withFritekst(referat.fritekst)));
+                        new XMLReferat()
+                                .withTemagruppe(referat.temagruppe)
+                                .withKanal(referat.kanal)
+                                .withFritekst(referat.fritekst)
+                                .withNavident(referat.navIdent)));
     }
 
     public static WSEndreOppgave tilWSEndreOppgave(WSOppgave wsOppgave) {

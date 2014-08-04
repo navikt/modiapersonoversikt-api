@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
@@ -32,7 +31,9 @@ public class HenvendelsePortTypeMock {
     private static Random idGenerator = new Random();
     private static int behandlingsId = idGenerator.nextInt();
     private static int oppgaveId = 0;
-    private static String navIdent = "Z999999";
+
+    private static final String FNR = "11111111111";
+    private static final String NAVIDENT = "Z999999";
 
     private static final String JOURNALFORT_SAKSID_FORELDREPENGER = "22222222";
     private static final String JOURNALFORT_SAKSID_HJELPEMIDLER = "44444444";
@@ -54,60 +55,60 @@ public class HenvendelsePortTypeMock {
             "minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure " +
             "dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
 
-    public static final XMLBehandlingsinformasjon[] HENVENDELSER = {
-            createXmlBehandlingsinformasjon(SPORSMAL, now().minusWeeks(2),
+    public static final XMLHenvendelse[] HENVENDELSER = {
+            createXMLHenvendelse(SPORSMAL, now().minusWeeks(2),
                     createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(2), "Arbeidsavklaring", "", ""),
 
-            createXmlBehandlingsinformasjon(SPORSMAL, now().minusWeeks(1),
+            createXMLHenvendelse(SPORSMAL, now().minusWeeks(1),
                     createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST, valueOf(oppgaveId)), now().minusDays(2), "Foreldrepenger", "", ""),
 
-            createXmlBehandlingsinformasjon(SVAR, now().minusDays(2),
+            createXMLHenvendelse(SVAR, now().minusDays(2),
                     createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Vi kan bekrefte at du får foreldrepenger"), null, "", "", ""),
 
-            createXmlBehandlingsinformasjon(SVAR, now().minusDays(3),
+            createXMLHenvendelse(SVAR, now().minusDays(3),
                     createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Det er meget sannsynlig at du kan få foreldrepenger"),
                     now().minusDays(2), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
-            createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
+            createXMLHenvendelse(SVAR, now().minusDays(5),
                     createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(5), "Det kan hende at du kan få foredrepenger "),
                     now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
-            createXmlBehandlingsinformasjon(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6),"Vi har hatt en samtale og det kommer frem at Test Testesen ønsker foreldrepenger "),
+            createXMLHenvendelse(SVAR, now().minusDays(5),
+                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6), "Vi har hatt en samtale og det kommer frem at Test Testesen ønsker foreldrepenger "),
                     now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
-            createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(3),
+            createXMLHenvendelse(SPORSMAL, now().minusDays(3),
                     createXMLSporsmal("HJELPEMIDLER", LANG_TEKST, valueOf(oppgaveId++)),
                     now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
 
-            createXmlBehandlingsinformasjon(SVAR, now().minusHours(5),
+            createXMLHenvendelse(SVAR, now().minusHours(5),
                     createXMLSvar("HJELPEMIDLER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST),
                     now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
 
-            createXmlBehandlingsinformasjon(SPORSMAL, now().minusMonths(4),
+            createXMLHenvendelse(SPORSMAL, now().minusMonths(4),
                     createXMLSporsmal("OVRIGE_HENVENDELSER", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", ""),
 
-            createXmlBehandlingsinformasjon(SVAR, now().minusMonths(4).plusDays(1),
+            createXMLHenvendelse(SVAR, now().minusMonths(4).plusDays(1),
                     createXMLSvar("OVRIGE_HENVENDELSER", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), now().minusDays(3), "Ovrige", "", ""),
 
-            createXmlBehandlingsinformasjon(SVAR, now().minusDays(7),
+            createXMLHenvendelse(SVAR, now().minusDays(7),
                     createXMLSvar("OVRIGE_HENVENDELSER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), now().minusDays(3), "Ovrige", "", ""),
 
-            createXmlBehandlingsinformasjon(REFERAT, now(),
+            createXMLHenvendelse(REFERAT, now(),
                     createXMLReferat("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", "TELEFON", null, "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, "", "", ""),
 
-            createXmlBehandlingsinformasjon(SPORSMAL, now().minusDays(1),
+            createXMLHenvendelse(SPORSMAL, now().minusDays(1),
                     createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", "")
     };
 
-    private static XMLBehandlingsinformasjon createXmlBehandlingsinformasjon(XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata,
-                                                                             DateTime journalfortDato, String journalfortTema, String journalfortSaksId, String journalforerNavIdent) {
+    private static XMLHenvendelse createXMLHenvendelse(XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata,
+                                                       DateTime journalfortDato, String journalfortTema, String journalfortSaksId, String journalforerNavIdent) {
         behandlingsId = idGenerator.nextInt();
-        return new XMLBehandlingsinformasjon()
+        return new XMLHenvendelse()
                 .withHenvendelseType(type.name())
                 .withOpprettetDato(opprettet)
                 .withBehandlingsId(valueOf(behandlingsId))
-                .withAktor(new XMLAktor().withNavIdent(navIdent))
+                .withFnr(FNR)
                 .withJournalfortInformasjon(
                         new XMLJournalfortInformasjon()
                                 .withJournalfortDato(journalfortDato)
@@ -124,11 +125,11 @@ public class HenvendelsePortTypeMock {
     }
 
     private static XMLSvar createXMLSvar(String temagruppe, String kanal, String sporsmalsId, DateTime lestDato, String fritekst) {
-        return new XMLSvar().withTemagruppe(temagruppe).withKanal(kanal).withSporsmalsId(sporsmalsId).withLestDato(lestDato).withFritekst(fritekst);
+        return new XMLSvar().withTemagruppe(temagruppe).withKanal(kanal).withSporsmalsId(sporsmalsId).withLestDato(lestDato).withFritekst(fritekst).withNavident(NAVIDENT);
     }
 
     private static XMLReferat createXMLReferat(String temagruppe, String kanal, DateTime lestDato, String tekst) {
-        return new XMLReferat().withTemagruppe(temagruppe).withKanal(kanal).withLestDato(lestDato).withFritekst(tekst);
+        return new XMLReferat().withTemagruppe(temagruppe).withKanal(kanal).withLestDato(lestDato).withFritekst(tekst).withNavident(NAVIDENT);
     }
 
     @Bean
@@ -141,8 +142,8 @@ public class HenvendelsePortTypeMock {
 
             @Override
             public WSHentHenvendelseResponse hentHenvendelse(WSHentHenvendelseRequest wsHentHenvendelseRequest) {
-                XMLBehandlingsinformasjon henvendelse = new XMLBehandlingsinformasjon();
-                for (XMLBehandlingsinformasjon xmlBehandlingsinformasjon : HENVENDELSER) {
+                XMLHenvendelse henvendelse = new XMLHenvendelse();
+                for (XMLHenvendelse xmlBehandlingsinformasjon : HENVENDELSER) {
                     if (xmlBehandlingsinformasjon.getBehandlingsId().equals(wsHentHenvendelseRequest.getBehandlingsId())) {
                         henvendelse = xmlBehandlingsinformasjon;
                     }

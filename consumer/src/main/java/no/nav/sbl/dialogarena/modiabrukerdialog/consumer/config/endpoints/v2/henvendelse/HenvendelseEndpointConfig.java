@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
@@ -73,7 +73,7 @@ public class HenvendelseEndpointConfig {
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
         proxyFactoryBean.setProperties(new HashMap<String, Object>());
         proxyFactoryBean.getProperties().put("jaxb.additionalContextClasses", new Class[]{
-                XMLBehandlingsinformasjon.class,
+                XMLHenvendelse.class,
                 XMLMetadataListe.class,
                 XMLSporsmal.class,
                 XMLSvar.class,
@@ -86,4 +86,5 @@ public class HenvendelseEndpointConfig {
         httpConduit.setTlsClientParameters(clientParameters);
         return portType;
     }
+
 }

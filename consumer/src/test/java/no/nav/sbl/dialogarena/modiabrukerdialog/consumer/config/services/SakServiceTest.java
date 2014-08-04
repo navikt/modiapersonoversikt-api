@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLAktor;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLBehandlingsinformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
@@ -239,7 +238,7 @@ public class SakServiceTest {
 
     private WSHentHenvendelseResponse mockWSHentHenvendelseResponse() {
         return new WSHentHenvendelseResponse().withAny(
-                new XMLBehandlingsinformasjon()
+                new XMLHenvendelse()
                         .withBehandlingsId(SPORSMAL_ID)
                         .withOpprettetDato(now())
                         .withHenvendelseType(SPORSMAL.name())
@@ -256,14 +255,14 @@ public class SakServiceTest {
         return new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withAnsvarligId("id").withBeskrivelse("opprinnelig beskrivelse"));
     }
 
-    private XMLBehandlingsinformasjon createXMLSporsmal(String oppgaveId, String fritekst) {
-        return new XMLBehandlingsinformasjon().withMetadataListe(new XMLMetadataListe()
+    private XMLHenvendelse createXMLSporsmal(String oppgaveId, String fritekst) {
+        return new XMLHenvendelse().withMetadataListe(new XMLMetadataListe()
                 .withMetadata(new XMLSporsmal().withOppgaveIdGsak(oppgaveId).withFritekst(fritekst)));
     }
 
-    private XMLBehandlingsinformasjon createXMLSvar(String sporsmalId) {
-        return new XMLBehandlingsinformasjon()
-                .withAktor(new XMLAktor().withFodselsnummer("").withNavIdent(""))
-                .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar().withSporsmalsId(sporsmalId)));
+    private XMLHenvendelse createXMLSvar(String sporsmalId) {
+        return new XMLHenvendelse()
+                .withFnr("")
+                .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar().withSporsmalsId(sporsmalId).withNavident("")));
     }
 }
