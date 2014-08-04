@@ -36,12 +36,12 @@ public class KvitteringsPanel extends Panel {
         int antallInnsendteVedlegg = kvittering.innsendteDokumenter.size();
         int totalAntallVedlegg = antallInnsendteVedlegg + kvittering.manglendeDokumenter.size();
         String dato = kvittering.behandlingDato.toString("d. MMMM yyyy, HH:mm", new Locale("nb", "no"));
-        String sendtAvString = kvittering.ettersending ? getString("kvittering.sendt.av") : getString("ettersending.kvittering.sendt.av");
+        String sendtAvString = cmsContentRetriever.hentTekst("kvittering.sendt.av");
 
         add(
                 new Label("sendtAv", format(sendtAvString, fnr)),
-                new Label("kvitteringsinfo-bottom", getString("kvittering.info.bottom")).setEscapeModelStrings(false),
-                new Label("sendt-inn", format(getString("kvittering.vedlegg.sendtInn.antall"), antallInnsendteVedlegg, totalAntallVedlegg, dato))
+                new Label("kvitteringsinfo-bottom", cmsContentRetriever.hentTekst("kvittering.info.bottom")).setEscapeModelStrings(false),
+                new Label("sendt-inn", format(cmsContentRetriever.hentTekst("kvittering.vedlegg.sendtInn.antall"), antallInnsendteVedlegg, totalAntallVedlegg, dato))
         );
 
         leggTilInnsendteVedlegg(kvittering);
@@ -78,7 +78,7 @@ public class KvitteringsPanel extends Panel {
         WebMarkupContainer innsendteVedlegg = new WebMarkupContainer("innsendteVedleggSection");
         innsendteVedlegg.add(visibleIf(of(!kvittering.innsendteDokumenter.isEmpty())));
         innsendteVedlegg.add(
-                new Label("innsendteDokumenterHeader", getString("behandling.innsendte.dokumenter.header")),
+                new Label("innsendteDokumenterHeader", cmsContentRetriever.hentTekst("behandling.innsendte.dokumenter.header")),
                 getDokumenterView("innsendteVedlegg", kvittering.innsendteDokumenter)
         );
         add(innsendteVedlegg);
@@ -88,7 +88,7 @@ public class KvitteringsPanel extends Panel {
         WebMarkupContainer manglendeVedlegg = new WebMarkupContainer("manglendeVedleggSection");
         manglendeVedlegg.add(visibleIf(of(!kvittering.manglendeDokumenter.isEmpty() && !kvittering.ettersending)));
         manglendeVedlegg.add(
-                new Label("manglendeVedleggHeader", getString("behandling.manglende.dokumenter.header")),
+                new Label("manglendeVedleggHeader", cmsContentRetriever.hentTekst("behandling.manglende.dokumenter.header")),
                 getDokumenterView("manglendeVedlegg", kvittering.manglendeDokumenter)
         );
         add(manglendeVedlegg);
