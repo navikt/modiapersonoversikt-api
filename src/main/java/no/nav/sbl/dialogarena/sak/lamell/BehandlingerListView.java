@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
+import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
@@ -7,6 +8,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 
+import javax.inject.Inject;
 import java.util.List;
 
 import static java.lang.String.format;
@@ -18,6 +20,8 @@ import static org.apache.wicket.model.Model.ofList;
 
 
 public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
+    @Inject
+    private CmsContentRetriever cms;
 
     private String fnr;
 
@@ -42,11 +46,11 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
         String behandlingstema = behandling.behandlingstema;
         switch (behandling.behandlingsType) {
             case BEHANDLING:
-                return format(getString(resolveMarkupKey(behandling)), behandlingstema);
+                return format(cms.hentTekst(resolveMarkupKey(behandling)), behandlingstema);
             case KVITTERING:
                 return format(behandling.ettersending
-                        ? getString("hendelse.kvittering.ettersending.tittel")
-                        : getString("hendelse.kvittering.tittel"),
+                        ? cms.hentTekst("hendelse.kvittering.ettersending.tittel")
+                        : cms.hentTekst("hendelse.kvittering.tittel"),
                         behandlingstema);
             default:
                 throw new ApplicationException("Ukjent behandlingstype: " + behandling.behandlingsType);

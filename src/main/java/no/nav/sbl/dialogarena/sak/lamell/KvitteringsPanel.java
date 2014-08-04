@@ -41,9 +41,6 @@ public class KvitteringsPanel extends Panel {
         add(
                 new Label("sendtAv", format(sendtAvString, fnr)),
                 new Label("kvitteringsinfo-bottom", getString("kvittering.info.bottom")).setEscapeModelStrings(false),
-                new Label("skjul-kvittering", getString("kvittering.skjul")),
-                new Label("vis-kvittering", getString("kvittering.vis")),
-                new Label("skrivut-lenke", getString("detaljer.skrivut")),
                 new Label("sendt-inn", format(getString("kvittering.vedlegg.sendtInn.antall"), antallInnsendteVedlegg, totalAntallVedlegg, dato))
         );
 

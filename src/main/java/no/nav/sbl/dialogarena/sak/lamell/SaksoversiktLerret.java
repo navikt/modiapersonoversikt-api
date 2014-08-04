@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
@@ -30,9 +29,7 @@ public class SaksoversiktLerret extends Lerret {
         this.fnr = fnr;
         hendelserContainer = (WebMarkupContainer) new WebMarkupContainer("hendelserContainer")
                 .add(new BehandlingerListView("behandlinger", new ArrayList<GenerellBehandling>(), fnr)).setOutputMarkupPlaceholderTag(true);
-        add(
-                new Label("saksoversikt.fnr", fnr),
-                hendelserContainer);
+        add(hendelserContainer);
     }
 
     @SuppressWarnings("unused")
