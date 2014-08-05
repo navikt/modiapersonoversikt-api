@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak.lamell;
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -16,9 +17,13 @@ import java.util.List;
 import java.util.Locale;
 
 import static java.lang.String.format;
+<<<<<<< HEAD
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
+=======
+import static no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService.BEHANDLINGSTEMA;
+>>>>>>> develop
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType.BEHANDLING;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType.KVITTERING;
@@ -27,8 +32,12 @@ import static org.apache.wicket.model.Model.ofList;
 
 
 public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
+
     @Inject
     private CmsContentRetriever cms;
+
+    @Inject
+    private BulletProofKodeverkService kodeverk;
 
     private String fnr;
 
@@ -87,7 +96,7 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
     }
 
     private String getTittel(GenerellBehandling behandling) {
-        String behandlingstema = behandling.behandlingstema;
+        String behandlingstema = kodeverk.getTemanavnForTemakode(behandling.behandlingstema, BEHANDLINGSTEMA);
         switch (behandling.behandlingsType) {
             case BEHANDLING:
                 return format(cms.hentTekst(resolveMarkupKey(behandling)), behandlingstema);
