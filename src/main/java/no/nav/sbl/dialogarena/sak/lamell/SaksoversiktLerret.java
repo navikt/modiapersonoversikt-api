@@ -38,4 +38,6 @@ public class SaksoversiktLerret extends Lerret {
         String sakstema = payload.getItemId();
         hendelserContainer.addOrReplace(new BehandlingerListView("behandlinger", saksoversiktService.hentBehandlingerForTemakode(fnr, sakstema), fnr));
     }
+
+
 }

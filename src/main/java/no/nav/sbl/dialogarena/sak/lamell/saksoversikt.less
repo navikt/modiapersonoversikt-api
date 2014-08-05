@@ -1,14 +1,123 @@
-.saksoversikt {
-  .hent-saker {
-      text-align: center;
-      a {
-        margin: 0;
+.saksoversikt.lamell {
+    .lerret {
         padding: 0;
-        color: #0067cf;
-      }
-      span {
-        display: block;
-        margin: 0.5em 0;
-      }
-  }
+    }
+}
+
+.saksoversikt {
+    .lerret {
+        border-top: 1px solid #ccc;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+    }
+
+    .saker {
+        display: flex;
+        flex-direction: row;
+
+        .sak-navigering {
+            flex: 2;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            border-right: 1px solid #ccc;
+
+            li {
+                padding: 15px 20px;
+                border-bottom: 1px solid #ccc;
+
+                .dato {
+                    font-family: Modus, Arial, Helvetica, sans-serif;
+                    color: #999;
+                }
+            }
+        }
+
+        .sak-informasjon {
+            flex: 5;
+            flex-direction: column;
+            padding-top: 20px;
+
+            .aar {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                background-image: linear-gradient(to right, #ccc 33%, rgba(255,255,255,0) 0%);
+                background-position: center;
+                background-size: 5px 2px;
+                background-repeat: repeat-x;
+
+                span {
+                    background: #fff;
+                    padding: 0 20px;
+                    font-size: 1.1rem;
+                    font-weight: bold;
+                    font-family: Modus, Arial, sans-serif;
+                }
+            }
+
+            .ikke-nytt-aar {
+                .behandling-informasjon {
+                    margin-right: 30px;
+                    background-image: linear-gradient(to right, #ccc 33%, rgba(255,255,255,0) 0%);
+                    background-position: top;
+                    background-size: 5px 2px;
+                    background-repeat: repeat-x;
+                }
+            }
+
+            .behandling {
+                display: flex;
+                flex-direction: row;
+                padding-bottom: 30px;
+
+                .dato, .behandling-informasjon {
+                    padding-top: 30px;
+                }
+
+                .dato {
+                    display: flex;
+                    justify-content: flex-start;
+                    flex: 1;
+                    flex-direction: column;
+                    align-items: center;
+
+                    &.avsluttet {
+                        color: #8f8f8f;
+                    }
+
+                    .dag {
+                        font-size: 2rem;
+                    }
+
+                    .maaned {
+                        text-transform: uppercase;
+                        font-size: 0.9rem;
+                        font-family: Modus, Arial, sans-serif;
+                        font-weight: bold;
+                    }
+                }
+
+                .behandling-informasjon {
+                    flex: 6;
+                }
+            }
+        }
+    }
+
+
+
+    .hent-saker {
+        text-align: center;
+        a {
+            margin: 0;
+            padding: 0;
+            color: #0067cf;
+        }
+        span {
+            display: block;
+            margin: 0.5em 0;
+        }
+    }
 }
