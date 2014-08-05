@@ -48,20 +48,20 @@ public class MeldingUtils {
     public static final Transformer<Object, Melding> TIL_MELDING = new Transformer<Object, Melding>() {
         @Override
         public Melding transform(Object o) {
-            XMLHenvendelse info = (XMLHenvendelse) o;
+            XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) o;
 
-            Meldingstype meldingstype = info.getHenvendelseType().equals(SPORSMAL.name()) ?
-                    Meldingstype.SPORSMAL : info.getHenvendelseType().equals(SVAR.name()) ?
+            Meldingstype meldingstype = xmlHenvendelse.getHenvendelseType().equals(SPORSMAL.name()) ?
+                    Meldingstype.SPORSMAL : xmlHenvendelse.getHenvendelseType().equals(SVAR.name()) ?
                     Meldingstype.SVAR :
                     Meldingstype.SAMTALEREFERAT;
 
-            Melding melding = new Melding(info.getBehandlingsId(), meldingstype, info.getOpprettetDato());
-            melding.fnrBruker = info.getFnr();
-            melding.traadId = info.getBehandlingsId();
-            melding.status = STATUS.transform(info);
-            fyllInnJournalforingsInformasjon(info, melding);
+            Melding melding = new Melding(xmlHenvendelse.getBehandlingsId(), meldingstype, xmlHenvendelse.getOpprettetDato());
+            melding.fnrBruker = xmlHenvendelse.getFnr();
+            melding.traadId = xmlHenvendelse.getBehandlingsId();
+            melding.status = STATUS.transform(xmlHenvendelse);
+            fyllInnJournalforingsInformasjon(xmlHenvendelse, melding);
 
-            XMLMetadata xmlMetadata = info.getMetadataListe().getMetadata().get(0);
+            XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
             if (xmlMetadata instanceof XMLSporsmal) {
                 melding.temagruppe = ((XMLSporsmal) xmlMetadata).getTemagruppe();
                 melding.fritekst = ((XMLSporsmal) xmlMetadata).getFritekst();
