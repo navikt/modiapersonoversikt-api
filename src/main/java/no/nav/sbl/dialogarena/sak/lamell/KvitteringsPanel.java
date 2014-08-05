@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
 import no.nav.modig.content.CmsContentRetriever;
+import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -26,6 +27,9 @@ public class KvitteringsPanel extends Panel {
 
     @Inject
     private CmsContentRetriever cmsContentRetriever;
+
+    @Inject
+    private BulletProofKodeverkService kodeverk;
 
     private Logger logger = LoggerFactory.getLogger(KvitteringsPanel.class);
 
@@ -67,7 +71,6 @@ public class KvitteringsPanel extends Panel {
 
     private String hentBehandlingstidBeskrivelseTekst(Kvittering kvittering) {
         String cmsKey = "soknader.normertbehandlingstid.beskrivelse";
-
         if (kvittering.henvendelseType.equals(SOKNADSINNSENDING)) {
             cmsKey = cmsKey + ".sendsoknad";
         }
@@ -101,10 +104,10 @@ public class KvitteringsPanel extends Panel {
             protected void populateItem(ListItem<Dokument> item) {
                 final Dokument dokument = item.getModelObject();
                 String tilleggsTittelString = "";
-                if (dokument.tilleggstittel != null && !dokument.tilleggstittel.isEmpty()) {
+                if (kodeverk.isEgendefinert(dokument.kodeverkRef)) {
                     tilleggsTittelString = ": " + dokument.tilleggstittel;
                 }
-                item.add(new Label("dokument", dokument.kodeverkRef + tilleggsTittelString));
+                item.add(new Label("dokument", kodeverk.getSkjematittelForSkjemanummer(dokument.kodeverkRef) + tilleggsTittelString));
             }
         };
     }
