@@ -7,6 +7,8 @@ import no.nav.modig.content.enonic.HttpContentRetriever;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +18,7 @@ import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.MissingResourceException;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
@@ -33,6 +36,8 @@ public class CmsEndpointConfig {
     @Value("${appres.cms.url}")
     private String appresUrl;
 
+    private Logger log = LoggerFactory.getLogger(CmsEndpointConfig.class);
+
     @Bean
     public ValueRetriever siteContentRetriever() throws URISyntaxException {
         final ValueRetriever prod = getValueRetriever();
@@ -41,10 +46,15 @@ public class CmsEndpointConfig {
         return new ValueRetriever() {
             @Override
             public String getValueOf(String key, String language) {
-                if (mockErTillattOgSlaattPaaForKey(CMS_KEY)) {
-                    return mock.getValueOf(key, language);
+                try {
+                    if (mockErTillattOgSlaattPaaForKey(CMS_KEY)) {
+                        return mock.getValueOf(key, language);
+                    }
+                    return prod.getValueOf(key, language);
+                } catch (MissingResourceException e) {
+                    log.error("MissingResourceException", e);
+                    return "Manglende tekst"; // Vi returnerer allikevel fordi man ikke vil ødelegge for resten av Modia som stort sett ikke bruker CMS
                 }
-                return prod.getValueOf(key, language);
             }
         };
     }
