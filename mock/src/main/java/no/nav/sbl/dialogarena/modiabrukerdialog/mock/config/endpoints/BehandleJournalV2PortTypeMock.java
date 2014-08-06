@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.FerdigstillDokumentopplastingFerdigstillDokumentopplastingjournalpostIkkeFunnet;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.LagreVedleggPaaJournalpostLagreVedleggPaaJournalpostjournalpostIkkeFunnet;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.UstrukturertInnhold;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.ArkiverUstrukturertKravRequest;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.ArkiverUstrukturertKravResponse;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.FerdigstillDokumentopplastingRequest;
@@ -19,6 +20,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.xml.bind.JAXB;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.StringWriter;
 
 import static java.lang.String.valueOf;
@@ -44,13 +48,13 @@ public class BehandleJournalV2PortTypeMock {
 
             @Override
             public LagreVedleggPaaJournalpostResponse lagreVedleggPaaJournalpost(LagreVedleggPaaJournalpostRequest lagreVedleggPaaJournalpostRequest)
-                    throws LagreVedleggPaaJournalpostLagreVedleggPaaJournalpostjournalpostIkkeFunnet {
+                throws LagreVedleggPaaJournalpostLagreVedleggPaaJournalpostjournalpostIkkeFunnet {
                 return new LagreVedleggPaaJournalpostResponse();
             }
 
             @Override
             public void ferdigstillDokumentopplasting(FerdigstillDokumentopplastingRequest ferdigstillDokumentopplastingRequest)
-                    throws FerdigstillDokumentopplastingFerdigstillDokumentopplastingjournalpostIkkeFunnet {
+                throws FerdigstillDokumentopplastingFerdigstillDokumentopplastingjournalpostIkkeFunnet {
             }
 
             @Override
@@ -61,6 +65,10 @@ public class BehandleJournalV2PortTypeMock {
             public JournalfoerNotatResponse journalfoerNotat(JournalfoerNotatRequest journalfoerNotatRequest) {
                 loggJournalforing("Journalført notat", journalfoerNotatRequest);
 
+                UstrukturertInnhold ustrukturertInnhold = (UstrukturertInnhold) journalfoerNotatRequest.getJournalpost().getDokumentinfoRelasjon().get(0).getJournalfoertDokument().getBeskriverInnhold().get(0);
+                byte[] innhold = ustrukturertInnhold.getInnhold();
+                lagreTilDisk(innhold, "/var/tmp/notat.pdf");
+
                 JournalfoerNotatResponse journalfoerNotatResponse = new JournalfoerNotatResponse();
                 journalfoerNotatResponse.setJournalpostId(valueOf(journalpostId++));
                 return journalfoerNotatResponse;
@@ -70,6 +78,10 @@ public class BehandleJournalV2PortTypeMock {
             public JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelse(JournalfoerUtgaaendeHenvendelseRequest journalfoerUtgaaendeHenvendelseRequest) {
                 loggJournalforing("Journalført utgående henvendelse", journalfoerUtgaaendeHenvendelseRequest);
 
+                UstrukturertInnhold ustrukturertInnhold = (UstrukturertInnhold) journalfoerUtgaaendeHenvendelseRequest.getJournalpost().getDokumentinfoRelasjon().get(0).getJournalfoertDokument().getBeskriverInnhold().get(0);
+                byte[] innhold = ustrukturertInnhold.getInnhold();
+                lagreTilDisk(innhold, "/var/tmp/svar.pdf");
+
                 JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelseResponse = new JournalfoerUtgaaendeHenvendelseResponse();
                 journalfoerUtgaaendeHenvendelseResponse.setJournalpostId(valueOf(journalpostId++));
                 return journalfoerUtgaaendeHenvendelseResponse;
@@ -78,6 +90,10 @@ public class BehandleJournalV2PortTypeMock {
             @Override
             public JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelse(JournalfoerInngaaendeHenvendelseRequest journalfoerInngaaendeHenvendelseRequest) {
                 loggJournalforing("Journalført inngående henvendelse", journalfoerInngaaendeHenvendelseRequest);
+
+                UstrukturertInnhold ustrukturertInnhold = (UstrukturertInnhold) journalfoerInngaaendeHenvendelseRequest.getJournalpost().getDokumentinfoRelasjon().get(0).getJournalfoertDokument().getBeskriverInnhold().get(0);
+                byte[] innhold = ustrukturertInnhold.getInnhold();
+                lagreTilDisk(innhold, "/var/tmp/sporsmaal.pdf");
 
                 JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelseResponse = new JournalfoerInngaaendeHenvendelseResponse();
                 journalfoerInngaaendeHenvendelseResponse.setJournalpostId(valueOf(journalpostId++));
@@ -89,10 +105,33 @@ public class BehandleJournalV2PortTypeMock {
     private static void loggJournalforing(String overskrift, Object request) {
         StringWriter tekst = new StringWriter();
         tekst.append("\n========================================\n")
-                .append(overskrift.toUpperCase())
-                .append(":\n========================================\n");
+            .append(overskrift.toUpperCase())
+            .append(":\n========================================\n");
         JAXB.marshal(request, tekst);
         logger.info(tekst.toString());
+    }
+
+    private static void lagreTilDisk(byte[] bytes, String pathname) {
+
+        try {
+            File file = createFile(pathname);
+            FileOutputStream fileOutputStream = new FileOutputStream(file, false);
+            fileOutputStream.write(bytes);
+            fileOutputStream.close();
+        } catch (IOException e) {
+            logger.debug("Feil ved opprettelse av pdf fil for lagrring på disk", e);
+        }
+
+        logger.info("Pdf lagret til disk: " + pathname);
+    }
+
+
+    private static File createFile(String pathname) throws IOException {
+        File file = new File(pathname);
+        if (!file.exists()) {
+            file.createNewFile();
+        }
+        return file;
     }
 
 }
