@@ -15,6 +15,8 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v3.gsak.GsakOppgavebehandlingV3EndpointConfig.GSAK_V3_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslistePortTypeMock.createGsakHentSakslisteMock;
 
 @Configuration
@@ -22,12 +24,11 @@ public class GsakHentSakslisteEndpointConfig {
 
     @Bean
     public Sak sakEndpoint() {
-        return createGsakHentSakslisteMock();
+        return createSwitcher(createEndpoint(), createGsakHentSakslisteMock(), GSAK_V3_KEY, Sak.class);
     }
 
     @Bean
-    public Pingable gsakSakslistePing() {
-        final Sak ws = createEndpoint(new SystemSAMLOutInterceptor());
+    public Pingable gsakSakslistePing(final Sak ws) {
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
@@ -43,11 +44,11 @@ public class GsakHentSakslisteEndpointConfig {
         };
     }
 
-    private static Sak createEndpoint(AbstractSAMLOutInterceptor interceptor) {
+    private static Sak createEndpoint() {
         return new CXFClient<>(Sak.class)
                 .address(System.getProperty("gsak.saksliste.v1.url"))
                 .wsdl("classpath:no/nav/virksomhet/tjenester/sak/sak.wsdl")
-                .withOutInterceptor(interceptor)
+                .withOutInterceptor(new SystemSAMLOutInterceptor())
                 .build();
     }
 }
