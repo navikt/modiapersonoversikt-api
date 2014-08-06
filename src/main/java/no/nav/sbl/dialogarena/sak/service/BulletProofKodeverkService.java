@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 
 import javax.inject.Inject;
 
+import static java.lang.String.format;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class BulletProofKodeverkService {
@@ -48,7 +49,7 @@ public class BulletProofKodeverkService {
     }
 
     private String hentUkjentKodeverkverdi(String kode) {
-        return String.format("Fant ikke kodeverksverdi for kodeverkskode: %s", kode);
+        return format("Fant ikke kodeverksverdi for kodeverkskode: %s", kode);
     }
 
 }

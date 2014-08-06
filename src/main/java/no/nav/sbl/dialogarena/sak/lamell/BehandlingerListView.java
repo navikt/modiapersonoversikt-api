@@ -98,13 +98,14 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
             case BEHANDLING:
                 return format(cms.hentTekst(resolveMarkupKey(behandling)), behandlingstema);
             case KVITTERING:
-                return format(behandling.ettersending
-                        ? cms.hentTekst("hendelse.kvittering.ettersending.tittel")
-                        : cms.hentTekst("hendelse.kvittering.tittel"),
-                        behandlingstema);
+                return format(hentKvitteringsstreng(behandling), behandlingstema);
             default:
                 throw new ApplicationException("Ukjent behandlingstype: " + behandling.behandlingsType);
         }
+    }
+
+    private String hentKvitteringsstreng(GenerellBehandling behandling) {
+        return cms.hentTekst(behandling.ettersending ? "hendelse.kvittering.ettersending.tittel" : "hendelse.kvittering.tittel");
     }
 
     private String resolveMarkupKey(GenerellBehandling behandling) {
