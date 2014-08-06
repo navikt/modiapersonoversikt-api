@@ -39,13 +39,17 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
     @Test
     public void skalStarteJournalforingsPanelVelgSakUtenFeil() {
-        wicket.goToPageWith(new JournalforingsPanelVelgSak("panel", innboksVM));
+        JournalforingsPanelVelgSak panel = new JournalforingsPanelVelgSak("panel", innboksVM);
+        panel.oppdater();
+        wicket.goToPageWith(panel);
     }
 
     @Test
     public void skalJournalforeVedSubmit() {
+        JournalforingsPanelVelgSak panel = new JournalforingsPanelVelgSak("panel", innboksVM);
+        panel.oppdater();
         wicket
-                .goToPageWith(new JournalforingsPanelVelgSak("panel", innboksVM))
+                .goToPageWith(panel)
                 .inForm("panel:plukkSakForm")
                 .select("valgtTraad.journalfortSak", 0)
                 .submitWithAjaxButton(withId("journalforTraad"));
@@ -56,6 +60,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
     @Test
     public void skalKreveAtMinstEnSakErValgt() {
         JournalforingsPanelVelgSak journalforingsPanel = new JournalforingsPanelVelgSak("panel", innboksVM);
+        journalforingsPanel.oppdater();
 
         wicket
                 .goToPageWith(journalforingsPanel)

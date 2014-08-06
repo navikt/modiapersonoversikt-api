@@ -46,7 +46,6 @@ public class SakerVM implements Serializable {
     public SakerVM(InnboksVM innboksVM, MeldingService meldingService) {
         this.innboksVM = innboksVM;
         this.meldingService = meldingService;
-        oppdater();
     }
 
     public final void oppdater() {

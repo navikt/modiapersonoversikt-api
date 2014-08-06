@@ -73,6 +73,7 @@ public class SakerVMTest {
     @Test
     public void gittHverSakHarUniktTemaReturnerKorrektSakstemaliste() {
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
 
@@ -88,6 +89,7 @@ public class SakerVMTest {
         Sak sak4 = createSak("44444444", alleTemaer.get(0), "Fagsak 4", SAKSTYPE_GENERELL, DateTime.now().minusDays(5));
         saksliste.add(sak4);
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
 
@@ -105,6 +107,7 @@ public class SakerVMTest {
     @Test
     public void gittValgtTemagruppe0sjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        sakerVM.oppdater();
         String traadTemagruppe = alleTemagrupper.get(0);
         meldingVM.melding.temagruppe = traadTemagruppe;
 
@@ -117,6 +120,7 @@ public class SakerVMTest {
     @Test
     public void gittValgtTemagruppe2sjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        sakerVM.oppdater();
         String traadTemagruppe = alleTemagrupper.get(2);
         meldingVM.melding.temagruppe = traadTemagruppe;
 
@@ -137,6 +141,7 @@ public class SakerVMTest {
             saksliste.add(createSak("44444444", tema, "Fagsystem 4", SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        sakerVM.oppdater();
 
         List<TemaSaker> temaSakerInnenforValgtTemagruppe = sakerVM.getGenerelleSakerGruppertPaaTema().subList(0, traadTemagruppeLengde);
 
@@ -151,6 +156,7 @@ public class SakerVMTest {
         List<String> traadTemagruppeSineTemaer = TEMA_MAPPING.get(traadTemagruppe);
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        sakerVM.oppdater();
 
         List<TemaSaker> alleTemaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
 
@@ -167,6 +173,7 @@ public class SakerVMTest {
         }
         saksliste.addAll(sakslistekloneMedAndreDatoer);
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
 
@@ -184,6 +191,7 @@ public class SakerVMTest {
         }
         saksliste.addAll(sakslistekloneMedAndreSakstyper);
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListeGenerell = sakerVM.getGenerelleSakerGruppertPaaTema();
         List<TemaSaker> temaSakerListeFag = sakerVM.getFagsakerGruppertPaaTema();
@@ -199,6 +207,7 @@ public class SakerVMTest {
         saksliste.add(sakMedSakstypeFagsak);
         saksliste.add(sakMedTemaOppfolging);
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListeFag = sakerVM.getFagsakerGruppertPaaTema();
 
@@ -212,6 +221,7 @@ public class SakerVMTest {
     @Test
     public void sjekkAtIngenElementerForsvinnerFraListeMedSakerVedGjentatteKall() {
         SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        sakerVM.oppdater();
 
         for (int i = 0; i < 4; i++) {
             meldingVM.melding.temagruppe = alleTemagrupper.get(i);

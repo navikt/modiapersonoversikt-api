@@ -18,7 +18,6 @@ public class JournalfortSakVM implements Serializable {
     public JournalfortSakVM(InnboksVM innboksVM, MeldingService meldingService) {
         this.innboksVM = innboksVM;
         this.meldingService = meldingService;
-        oppdater();
     }
 
     public final void oppdater() {
