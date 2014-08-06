@@ -29,7 +29,12 @@ public class SaksoversiktLerret extends Lerret {
         this.fnr = fnr;
         hendelserContainer = (WebMarkupContainer) new WebMarkupContainer("hendelserContainer")
                 .add(new BehandlingerListView("behandlinger", new ArrayList<GenerellBehandling>(), fnr)).setOutputMarkupPlaceholderTag(true);
-        add(hendelserContainer);
+        add(hendelserContainer, lagSakerContainer(fnr));
+    }
+
+    private WebMarkupContainer lagSakerContainer(String fnr) {
+        return (WebMarkupContainer) new WebMarkupContainer("sakerContainer")
+                .add(new SakerListView("saker", fnr).setOutputMarkupPlaceholderTag(true));
     }
 
     @SuppressWarnings("unused")

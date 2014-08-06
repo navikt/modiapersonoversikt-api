@@ -1,20 +1,18 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div class="saker">
-        <ul class="sak-navigering">
-            <li>
-                <div class="medium">Foreldrepenger</div>
-                <div class="dato">22. juni 2014 kl. 13:45</div>
-            </li>
-            <li>
-                <div class="medium">Dagpenger</div>
-                <div class="dato">22. juni 2014 kl. 13:45</div>
-            </li>
-            <li>
-                <div class="medium">Arbeidsavklaringspenger</div>
-                <div class="dato">22. juni 2014 kl. 13:45</div>
-            </li>
-        </ul>
+        <article wicket:id="sakerContainer">
+            <ul wicket:id="saker" class="sak-navigering">
+                <li>
+                    <div class="medium">
+                        <span wicket:id="sakstema"/>
+                    </div>
+                    <div class="dato">
+                        <span wicket:id="dato"/>
+                    </div>
+                </li>
+            </ul>
+        </article>
         <div class="sak-informasjon" wicket:id="hendelserContainer">
             <article wicket:id="behandlinger">
                 <div class="aar">
