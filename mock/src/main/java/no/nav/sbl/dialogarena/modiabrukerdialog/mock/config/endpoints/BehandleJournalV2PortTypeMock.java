@@ -4,6 +4,8 @@ import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.FerdigstillDokumentopplastingFerdigstillDokumentopplastingjournalpostIkkeFunnet;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.LagreVedleggPaaJournalpostLagreVedleggPaaJournalpostjournalpostIkkeFunnet;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.UstrukturertInnhold;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.Journalpost;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.ArkiverUstrukturertKravRequest;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.ArkiverUstrukturertKravResponse;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.FerdigstillDokumentopplastingRequest;
@@ -65,8 +67,7 @@ public class BehandleJournalV2PortTypeMock {
             public JournalfoerNotatResponse journalfoerNotat(JournalfoerNotatRequest journalfoerNotatRequest) {
                 loggJournalforing("Journalført notat", journalfoerNotatRequest);
 
-                UstrukturertInnhold ustrukturertInnhold = (UstrukturertInnhold) journalfoerNotatRequest.getJournalpost().getDokumentinfoRelasjon().get(0).getJournalfoertDokument().getBeskriverInnhold().get(0);
-                byte[] innhold = ustrukturertInnhold.getInnhold();
+                byte[] innhold = hentJounalfortNotatInnhold(journalfoerNotatRequest);
                 lagreTilDisk(innhold, "/var/tmp/notat.pdf");
 
                 JournalfoerNotatResponse journalfoerNotatResponse = new JournalfoerNotatResponse();
@@ -78,8 +79,7 @@ public class BehandleJournalV2PortTypeMock {
             public JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelse(JournalfoerUtgaaendeHenvendelseRequest journalfoerUtgaaendeHenvendelseRequest) {
                 loggJournalforing("Journalført utgående henvendelse", journalfoerUtgaaendeHenvendelseRequest);
 
-                UstrukturertInnhold ustrukturertInnhold = (UstrukturertInnhold) journalfoerUtgaaendeHenvendelseRequest.getJournalpost().getDokumentinfoRelasjon().get(0).getJournalfoertDokument().getBeskriverInnhold().get(0);
-                byte[] innhold = ustrukturertInnhold.getInnhold();
+                byte[] innhold = hentJounalfortSvarInnhold(journalfoerUtgaaendeHenvendelseRequest);
                 lagreTilDisk(innhold, "/var/tmp/svar.pdf");
 
                 JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelseResponse = new JournalfoerUtgaaendeHenvendelseResponse();
@@ -91,8 +91,7 @@ public class BehandleJournalV2PortTypeMock {
             public JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelse(JournalfoerInngaaendeHenvendelseRequest journalfoerInngaaendeHenvendelseRequest) {
                 loggJournalforing("Journalført inngående henvendelse", journalfoerInngaaendeHenvendelseRequest);
 
-                UstrukturertInnhold ustrukturertInnhold = (UstrukturertInnhold) journalfoerInngaaendeHenvendelseRequest.getJournalpost().getDokumentinfoRelasjon().get(0).getJournalfoertDokument().getBeskriverInnhold().get(0);
-                byte[] innhold = ustrukturertInnhold.getInnhold();
+                byte[] innhold = hentJounalfortSporsmaalInnhold(journalfoerInngaaendeHenvendelseRequest);
                 lagreTilDisk(innhold, "/var/tmp/sporsmaal.pdf");
 
                 JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelseResponse = new JournalfoerInngaaendeHenvendelseResponse();
@@ -125,13 +124,34 @@ public class BehandleJournalV2PortTypeMock {
         logger.info("Pdf lagret til disk: " + pathname);
     }
 
-
     private static File createFile(String pathname) throws IOException {
         File file = new File(pathname);
         if (!file.exists()) {
             file.createNewFile();
         }
         return file;
+    }
+
+    private static byte[] hentJounalfortSporsmaalInnhold(JournalfoerInngaaendeHenvendelseRequest journalfoerInngaaendeHenvendelseRequest) {
+        Journalpost journalpost = journalfoerInngaaendeHenvendelseRequest.getJournalpost();
+        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.DokumentinfoRelasjon dokumentinfoRelasjon = journalpost.getDokumentinfoRelasjon().get(0);
+        UstrukturertInnhold ustrukturertInnhold = (UstrukturertInnhold) dokumentinfoRelasjon.getJournalfoertDokument().getBeskriverInnhold().get(0);
+        return ustrukturertInnhold.getInnhold();
+    }
+
+    private static byte[] hentJounalfortSvarInnhold(JournalfoerUtgaaendeHenvendelseRequest journalfoerUtgaaendeHenvendelseRequest) {
+        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.Journalpost journalpost = journalfoerUtgaaendeHenvendelseRequest.getJournalpost();
+        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.DokumentinfoRelasjon dokumentinfoRelasjon = journalpost.getDokumentinfoRelasjon().get(0);
+        UstrukturertInnhold ustrukturertInnhold = (UstrukturertInnhold) dokumentinfoRelasjon.getJournalfoertDokument().getBeskriverInnhold().get(0);
+        return ustrukturertInnhold.getInnhold();
+    }
+
+
+    private static byte[] hentJounalfortNotatInnhold(JournalfoerNotatRequest journalfoerNotatRequest) {
+        no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.Journalpost journalpost = journalfoerNotatRequest.getJournalpost();
+        DokumentinfoRelasjon dokumentinfoRelasjon = journalpost.getDokumentinfoRelasjon().get(0);
+        UstrukturertInnhold ustrukturertInnhold = (UstrukturertInnhold) dokumentinfoRelasjon.getJournalfoertDokument().getBeskriverInnhold().get(0);
+        return ustrukturertInnhold.getInnhold();
     }
 
 }
