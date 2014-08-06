@@ -56,18 +56,9 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
         Label aar = new Label("aar", behandling.behandlingDato.getYear());
         aar.add(visibleIf(erNyttAarModell));
 
-        WebMarkupContainer dato = new WebMarkupContainer("dato");
-
-        boolean erAvsluttet = behandling.behandlingsStatus.equals(AVSLUTTET);
-        dato.add(hasCssClassIf("avsluttet", Model.of(erAvsluttet)));
-        dato.add(
-                new Label("dag", behandling.behandlingDato.getDayOfMonth()),
-                new Label("maaned", behandling.behandlingDato.toString("MMM", new Locale("no")))
-        );
-
         item.add(
                 new Label("hendelse-tittel", getTittel(behandling)),
-                dato,
+                getDato(behandling),
                 aar
         );
 
@@ -76,6 +67,16 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
         } else if (KVITTERING.equals(behandling.behandlingsType)) {
             item.add(new KvitteringsPanel("behandling", of((Kvittering)behandling), fnr));
         }
+    }
+
+    private WebMarkupContainer getDato(GenerellBehandling behandling) {
+        WebMarkupContainer dato = new WebMarkupContainer("dato");
+        dato.add(hasCssClassIf("avsluttet", Model.of(behandling.behandlingsStatus.equals(AVSLUTTET))));
+        dato.add(
+                new Label("dag", behandling.behandlingDato.getDayOfMonth()),
+                new Label("maaned", behandling.behandlingDato.toString("MMM", new Locale("no")))
+        );
+        return dato;
     }
 
     private Model<Boolean> getErNyttAarModell(GenerellBehandling behandling, List<? extends GenerellBehandling> list, int idx) {
