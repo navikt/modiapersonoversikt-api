@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
+import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
@@ -10,7 +11,11 @@ import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentReques
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingsstegtyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstemaer;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstid;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstidtyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSSakstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
@@ -24,10 +29,12 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSBehandlingskjede;
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSSak;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseStatus.FERDIG;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseStatus.UNDER_ARBEID;
@@ -35,7 +42,9 @@ import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informa
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSInnsendingsvalg.INNSENDT;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad.Dokumentforventninger;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -89,10 +98,11 @@ public class SaksoversiktServiceTest {
 
     @Test
     public void hentTemaer_skalSortere_omvendtKronologisk() {
-        WSSak sak2013 = createWSSak();
-        WSSak sak2014 = createWSSak();
-        saker.withSak(sak2013, sak2014);
-        assertThat(service.hentTemaer("abc").size(), equalTo(saker.getSak().size()));
+        WSSak oldSak = createWSSakMinusYear(1);
+        WSSak newSak = createWSSakMinusYear(0);
+        saker.withSak(oldSak, newSak);
+        List<TemaVM> temaer = service.hentTemaer("abc");
+        assertTrue(temaer.get(0).sistoppdaterteBehandling.behandlingDato.isAfter(temaer.get(1).sistoppdaterteBehandling.behandlingDato));
     }
 
     @Test
@@ -105,6 +115,20 @@ public class SaksoversiktServiceTest {
         Kvittering kvittering = (Kvittering) finnBehandlingSomErSammensatt(behandlingerFraTemaKodeDag);
 
         assertThat(kvittering.innsendteDokumenter.size(), equalTo(4));
+    }
+
+    @Test
+    public void hentBehandlingerForTemakode_skalSortere_omvendtKronologisk() {
+        String kronotema = "kronotema";
+        WSSak sak = createWSSak().withSakstema(new WSSakstemaer().withValue(kronotema));
+        sak.withBehandlingskjede(
+                createWSBehandlingskjede().withSlutt(now().minusYears(2)),
+                createWSBehandlingskjede().withSlutt(now().minusYears(1)),
+                createWSBehandlingskjede().withSlutt(now().minusYears(0))
+        );
+        saker.withSak(sak);
+        List<GenerellBehandling> behandlinger = service.hentBehandlingerForTemakode("123123123", kronotema);
+        assertTrue(behandlinger.get(0).behandlingDato.isAfter(behandlinger.get(1).behandlingDato));
     }
 
     private GenerellBehandling finnBehandlingSomErSammensatt(List<GenerellBehandling> behandlingerFraTemaKodeDag) {
@@ -154,7 +178,28 @@ public class SaksoversiktServiceTest {
                         ),
                 new WSSak().withSakstema(new WSSakstemaer().withValue(HJL))
         );
+    }
 
+    private WSSak createWSSakMinusYear(int i) {
+        return new WSSak()
+                .withSaksId("saksId-mock")
+                .withSakstema(new WSSakstemaer().withValue("DAG").withKodeverksRef("kodeverk-ref-mock"))
+                .withBehandlingskjede(
+                        new WSBehandlingskjede()
+                                .withBehandlingskjedeId("behandlingskjedeid-mock")
+                                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withKodeverksRef("kodeverk-ref-mock"))
+                                .withNormertBehandlingstid(
+                                        new WSBehandlingstid()
+                                                .withTid(new BigInteger("1"))
+                                                .withType(new WSBehandlingstidtyper().withValue("dager"))
+                                )
+                                .withKjedensNAVfrist(now().plusDays(10))
+                                .withSisteBehandlingREF("siste-behandling-ref-mock")
+                                .withSisteBehandlingstype(new WSBehandlingstyper().withKodeverksRef("behandlingstype-ref-mock"))
+                                .withSisteBehandlingsstegREF("siste-behandling-steg-ref-mock")
+                                .withSisteBehandlingsstegtype(new WSBehandlingsstegtyper().withKodeverksRef("behandlingssteg-ref-mock"))
+                                .withStart(now().minusYears(i).minusDays(1))
+                                .withSlutt(now().minusYears(i)));
     }
 
 }

@@ -15,10 +15,12 @@ import static org.joda.time.DateTime.now;
 
 public class SakOgBehandlingMocks {
 
+    public static final String TEMA = "DAG";
+
     public static WSSak createWSSak() {
         return new WSSak()
                 .withSaksId("saksId-mock")
-                .withSakstema(new WSSakstemaer().withValue("DAG").withKodeverksRef("kodeverk-ref-mock"))
+                .withSakstema(new WSSakstemaer().withValue(TEMA).withKodeverksRef("kodeverk-ref-mock"))
                 .withBehandlingskjede(createWSBehandlingskjede())
                 .withOpprettet(now());
     }
