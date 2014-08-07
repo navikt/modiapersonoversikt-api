@@ -3,13 +3,16 @@ package no.nav.sbl.dialogarena.sak.lamell;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
 
+import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static org.apache.wicket.model.Model.ofList;
 
 public class SakerListView extends PropertyListView<TemaVM> {
@@ -18,10 +21,12 @@ public class SakerListView extends PropertyListView<TemaVM> {
     private SaksoversiktService saksoversiktService;
 
     private final SaksoversiktLerret lerret;
+    private IModel<String> aktivtTema;
 
-    public SakerListView(String id, String fnr, SaksoversiktLerret lerret) {
+    public SakerListView(String id, String fnr, IModel<String> aktivtTema, SaksoversiktLerret lerret) {
         super(id);
         this.lerret = lerret;
+        this.aktivtTema = aktivtTema;
         setDefaultModel(ofList(saksoversiktService.hentTemaer(fnr)));
     }
 
@@ -32,6 +37,8 @@ public class SakerListView extends PropertyListView<TemaVM> {
         item.add(
                 new Superlenke("temalenke", sakstema, datoStreng)
         );
+        item.add(hasCssClassIf("aktiv", Model.of(sakstema.equals(aktivtTema.getObject()))));
+
     }
 
     private class Superlenke extends AjaxLink {

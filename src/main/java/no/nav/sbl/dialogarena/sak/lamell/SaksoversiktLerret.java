@@ -7,6 +7,8 @@ import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
@@ -23,6 +25,7 @@ public class SaksoversiktLerret extends Lerret {
 
     private WebMarkupContainer hendelserContainer;
     private String fnr;
+    private IModel<String> aktivtTema = new Model<>();
 
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
@@ -34,7 +37,7 @@ public class SaksoversiktLerret extends Lerret {
 
     private WebMarkupContainer lagSakerContainer(String fnr) {
         return (WebMarkupContainer) new WebMarkupContainer("sakerContainer")
-                .add(new SakerListView("saker", fnr, this).setOutputMarkupPlaceholderTag(true));
+                .add(new SakerListView("saker", fnr, aktivtTema, this).setOutputMarkupPlaceholderTag(true));
     }
 
     @SuppressWarnings("unused")
@@ -44,6 +47,7 @@ public class SaksoversiktLerret extends Lerret {
     }
 
     public void hentNyeHendelser(String sakstema) {
+        aktivtTema.setObject(sakstema);
         hendelserContainer.addOrReplace(new BehandlingerListView("behandlinger", saksoversiktService.hentBehandlingerForTemakode(fnr, sakstema), fnr));
     }
 
