@@ -70,49 +70,34 @@ public class BehandleJournalV2PortTypeMock {
             @Override
             public JournalfoerNotatResponse journalfoerNotat(JournalfoerNotatRequest journalfoerNotatRequest) {
                 loggJournalforing("Journalført notat", journalfoerNotatRequest);
-
                 byte[] innhold = hentJounalfortNotatInnhold(journalfoerNotatRequest);
                 String saksid = journalfoerNotatRequest.getJournalpost().getGjelderSak().getSaksId();
-                XMLGregorianCalendar dokumentDato = journalfoerNotatRequest.getJournalpost().getDokumentDato();
-                String formatertDokumentDato = formaterTimestamp(dokumentDato);
+                String formatertDokumentDato = formaterTimestamp(journalfoerNotatRequest.getJournalpost().getDokumentDato());
                 String filePath = String.format("/var/tmp/notat-%s-%s.pdf", saksid, formatertDokumentDato);
                 lagreTilDisk(innhold, filePath);
-
-                JournalfoerNotatResponse journalfoerNotatResponse = new JournalfoerNotatResponse();
-                journalfoerNotatResponse.setJournalpostId(valueOf(journalpostId++));
-                return journalfoerNotatResponse;
+                return createJournalfoerNotatResponse();
             }
 
             @Override
             public JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelse(JournalfoerUtgaaendeHenvendelseRequest journalfoerUtgaaendeHenvendelseRequest) {
                 loggJournalforing("Journalført utgående henvendelse", journalfoerUtgaaendeHenvendelseRequest);
-
                 byte[] innhold = hentJounalfortSvarInnhold(journalfoerUtgaaendeHenvendelseRequest);
                 String saksid = journalfoerUtgaaendeHenvendelseRequest.getJournalpost().getGjelderSak().getSaksId();
-                XMLGregorianCalendar dokumentDato = journalfoerUtgaaendeHenvendelseRequest.getJournalpost().getDokumentDato();
-                String formatertDokumentDato = formaterTimestamp(dokumentDato);
+                String formatertDokumentDato = formaterTimestamp(journalfoerUtgaaendeHenvendelseRequest.getJournalpost().getDokumentDato());
                 String filePath = String.format("/var/tmp/svar-%s-%s.pdf", saksid, formatertDokumentDato);
                 lagreTilDisk(innhold, filePath);
-
-                JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelseResponse = new JournalfoerUtgaaendeHenvendelseResponse();
-                journalfoerUtgaaendeHenvendelseResponse.setJournalpostId(valueOf(journalpostId++));
-                return journalfoerUtgaaendeHenvendelseResponse;
+                return createJournalfoerUtgaaendeHenvendelseResponse();
             }
 
             @Override
             public JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelse(JournalfoerInngaaendeHenvendelseRequest journalfoerInngaaendeHenvendelseRequest) {
                 loggJournalforing("Journalført inngående henvendelse", journalfoerInngaaendeHenvendelseRequest);
-
                 byte[] innhold = hentJounalfortSporsmaalInnhold(journalfoerInngaaendeHenvendelseRequest);
                 String saksid = journalfoerInngaaendeHenvendelseRequest.getJournalpost().getGjelderSak().getSaksId();
-                XMLGregorianCalendar dokumentDato = journalfoerInngaaendeHenvendelseRequest.getJournalpost().getDokumentDato();
-                String formatertDokumentDato = formaterTimestamp(dokumentDato);
+                String formatertDokumentDato = formaterTimestamp(journalfoerInngaaendeHenvendelseRequest.getJournalpost().getDokumentDato());
                 String filePath = String.format("/var/tmp/sporsmaal-%s-%s.pdf", saksid, formatertDokumentDato);
                 lagreTilDisk(innhold, filePath);
-
-                JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelseResponse = new JournalfoerInngaaendeHenvendelseResponse();
-                journalfoerInngaaendeHenvendelseResponse.setJournalpostId(valueOf(journalpostId++));
-                return journalfoerInngaaendeHenvendelseResponse;
+                return createJournalfoerInngaaendeHenvendelseResponse();
             }
         };
     }
@@ -168,12 +153,30 @@ public class BehandleJournalV2PortTypeMock {
         return ustrukturertInnhold.getInnhold();
     }
 
-
     private static byte[] hentJounalfortNotatInnhold(JournalfoerNotatRequest journalfoerNotatRequest) {
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.Journalpost journalpost = journalfoerNotatRequest.getJournalpost();
         DokumentinfoRelasjon dokumentinfoRelasjon = journalpost.getDokumentinfoRelasjon().get(0);
         UstrukturertInnhold ustrukturertInnhold = (UstrukturertInnhold) dokumentinfoRelasjon.getJournalfoertDokument().getBeskriverInnhold().get(0);
         return ustrukturertInnhold.getInnhold();
+    }
+
+    private static JournalfoerNotatResponse createJournalfoerNotatResponse() {
+        JournalfoerNotatResponse journalfoerNotatResponse = new JournalfoerNotatResponse();
+        journalfoerNotatResponse.setJournalpostId(valueOf(journalpostId++));
+        return journalfoerNotatResponse;
+    }
+
+    private static JournalfoerInngaaendeHenvendelseResponse createJournalfoerInngaaendeHenvendelseResponse() {
+        JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelseResponse = new JournalfoerInngaaendeHenvendelseResponse();
+        journalfoerInngaaendeHenvendelseResponse.setJournalpostId(valueOf(journalpostId++));
+        return journalfoerInngaaendeHenvendelseResponse;
+    }
+
+
+    private static JournalfoerUtgaaendeHenvendelseResponse createJournalfoerUtgaaendeHenvendelseResponse() {
+        JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelseResponse = new JournalfoerUtgaaendeHenvendelseResponse();
+        journalfoerUtgaaendeHenvendelseResponse.setJournalpostId(valueOf(journalpostId++));
+        return journalfoerUtgaaendeHenvendelseResponse;
     }
 
 }
