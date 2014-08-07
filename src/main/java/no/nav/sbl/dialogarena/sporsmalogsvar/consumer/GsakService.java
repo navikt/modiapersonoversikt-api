@@ -30,7 +30,7 @@ public class GsakService {
         return on(response.getSakListe()).map(TIL_SAK).collect();
     }
 
-    public final static Transformer<WSGenerellSak, Sak> TIL_SAK = new Transformer<WSGenerellSak, Sak>() {
+    public static final Transformer<WSGenerellSak, Sak> TIL_SAK = new Transformer<WSGenerellSak, Sak>() {
         @Override
         public Sak transform(WSGenerellSak wsGenerellSak) {
             Sak sak = new Sak();
