@@ -29,7 +29,6 @@ public class SaksoversiktLerretTest extends AbstractWicketTest {
     @Override
     protected void setup() {
         lerret = new SaksoversiktLerret("lerret", "123");
-        wicketTester.goToPageWith(lerret);
     }
 
     @Test
@@ -45,5 +44,6 @@ public class SaksoversiktLerretTest extends AbstractWicketTest {
         );
         when(service.hentBehandlingerForTemakode("123", TEMA)).thenReturn(behandlinger);
         lerret.hentNyeHendelser(TEMA);
+        wicketTester.goToPageWith(lerret);
     }
 }
