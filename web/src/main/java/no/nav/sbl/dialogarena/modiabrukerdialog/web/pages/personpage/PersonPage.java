@@ -15,7 +15,8 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
@@ -88,7 +89,9 @@ public class PersonPage extends BasePage {
     public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(SvarOgReferatVM.class, "jquery-ui-selectmenu.min.js");
 
     @Inject
-    protected SakService sakService;
+    protected HenvendelseUtsendingService henvendelseUtsendingService;
+    @Inject
+    protected OppgaveBehandlingService oppgaveBehandlingService;
 
     private SjekkForlateSideAnswer answer;
     private RedirectModalWindow redirectPopup;
@@ -206,8 +209,8 @@ public class PersonPage extends BasePage {
     }
 
     public void visSvarPanelBasertPaaOppgaveId(String oppgaveId) {
-        Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId(fnr, oppgaveId);
-        erstattReferatPanelMedSvarPanel(sporsmal, sakService.getSvarTilSporsmal(fnr, sporsmal.id), optional(oppgaveId));
+        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmalFromOppgaveId(fnr, oppgaveId);
+        erstattReferatPanelMedSvarPanel(sporsmal, henvendelseUtsendingService.getSvarTilSporsmal(fnr, sporsmal.id), optional(oppgaveId));
     }
 
     private void erstattReferatPanelMedSvarPanel(Sporsmal sporsmal, List<Svar> svarTilSporsmal, Optional<String> oppgaveId) {
@@ -216,11 +219,11 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void visSvarPanelBasertPaaSporsmalId(AjaxRequestTarget target, String sporsmalId) {
-        Sporsmal sporsmal = sakService.getSporsmal(sporsmalId);
-        List<Svar> svar = sakService.getSvarTilSporsmal(fnr, sporsmalId);
+        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(sporsmalId);
+        List<Svar> svar = henvendelseUtsendingService.getSvarTilSporsmal(fnr, sporsmalId);
         Optional<String> oppgaveId = none();
         if (sporsmaletIkkeErBesvartTidligere(svar)) {
-            sakService.tilordneOppgaveIGsak(sporsmal.oppgaveId);
+            oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmal.oppgaveId);
             oppgaveId = optional(sporsmal.oppgaveId);
         }
         erstattReferatPanelMedSvarPanel(sporsmal, svar, oppgaveId);

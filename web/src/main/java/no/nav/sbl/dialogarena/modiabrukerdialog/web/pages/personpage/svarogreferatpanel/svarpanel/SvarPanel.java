@@ -6,7 +6,8 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurat
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
@@ -44,7 +45,9 @@ public class SvarPanel extends Panel {
     public static final String SVAR_AVBRUTT = "svar.avbrutt";
 
     @Inject
-    private SakService sakService;
+    private HenvendelseUtsendingService henvendelseUtsendingService;
+    @Inject
+    protected OppgaveBehandlingService oppgaveBehandlingService;
 
     private final String fnr;
     private final Optional<String> oppgaveId;
@@ -206,8 +209,8 @@ public class SvarPanel extends Panel {
                     .withKanal(svarOgReferatVM.kanal.name())
                     .withFritekst(svarOgReferatVM.getFritekst());
 
-            sakService.sendSvar(svar);
-            sakService.ferdigstillOppgaveIGsak(oppgaveId);
+            henvendelseUtsendingService.sendSvar(svar);
+            oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);
         }
     }
 }

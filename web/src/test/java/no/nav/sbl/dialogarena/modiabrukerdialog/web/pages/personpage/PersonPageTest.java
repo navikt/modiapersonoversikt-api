@@ -8,7 +8,8 @@ import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
@@ -56,15 +57,17 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 public class PersonPageTest extends WicketPageTest {
 
     @Inject
-    private SakService sakService;
+    private HenvendelseUtsendingService henvendelseUtsendingService;
+    @Inject
+    private OppgaveBehandlingService oppgaveBehandlingService;
 
     @Before
     public void setUp() {
         Sporsmal sporsmal = new Sporsmal("id", DateTime.now());
         sporsmal.temagruppe = ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT.name();
         sporsmal.oppgaveId = "id";
-        when(sakService.getSporsmalFromOppgaveId(anyString(), anyString())).thenReturn(sporsmal);
-        when(sakService.getSporsmal(anyString())).thenReturn(sporsmal);
+        when(henvendelseUtsendingService.getSporsmalFromOppgaveId(anyString(), anyString())).thenReturn(sporsmal);
+        when(henvendelseUtsendingService.getSporsmal(anyString())).thenReturn(sporsmal);
     }
 
     @Test
@@ -121,7 +124,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void skalErstatteReferatPanelMedSvarPanelVedEventetSVAR_PAA_MELDING() {
-        when(sakService.getSvarTilSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Svar())));
+        when(henvendelseUtsendingService.getSvarTilSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Svar())));
 
         wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
                 .sendEvent(createEvent(SVAR_PAA_MELDING))
@@ -130,22 +133,22 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void skalIkkeTilordneOppgaveIGsakDersomSporsmaaletTidligereErBesvartVedEventetSVAR_PAA_MELDING() {
-        when(sakService.getSvarTilSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Svar())));
+        when(henvendelseUtsendingService.getSvarTilSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Svar())));
 
         wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
 
-        verify(sakService, never()).tilordneOppgaveIGsak(anyString());
+        verify(oppgaveBehandlingService, never()).tilordneOppgaveIGsak(anyString());
     }
 
     @Test
     public void skalTilordneOppgaveIGsakDersomSporsmaaletIkkeTidligereErBesvartVedEventetSVAR_PAA_MELDING() {
-        when(sakService.getSvarTilSporsmal(anyString(), anyString())).thenReturn(new ArrayList<Svar>());
+        when(henvendelseUtsendingService.getSvarTilSporsmal(anyString(), anyString())).thenReturn(new ArrayList<Svar>());
 
         wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
 
-        verify(sakService).tilordneOppgaveIGsak(anyString());
+        verify(oppgaveBehandlingService).tilordneOppgaveIGsak(anyString());
     }
 
     @Test

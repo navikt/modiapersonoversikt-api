@@ -2,7 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PlukkOppgavePanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
@@ -32,17 +33,17 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-        PlukkOppgavePanelMockContext.class
-})
+@ContextConfiguration(classes = PlukkOppgavePanelMockContext.class)
 public class PlukkOppgavePanelTest extends WicketPageTest {
 
     @Inject
-    private SakService sakService;
+    private HenvendelseUtsendingService henvendelseUtsendingService;
+    @Inject
+    private OppgaveBehandlingService oppgaveBehandlingService;
 
     @Test
     public void skalPlukkeOppgaveOgSetteSessionAttribute() {
-        when(sakService.plukkOppgaveFraGsak(anyString())).thenReturn(optional(
+        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(optional(
                 new WSOppgave()
                         .withGjelder(new WSBruker().withBrukerId("fnr"))
                         .withOppgaveId("oppgave")
@@ -50,7 +51,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
         Sporsmal sporsmal = new Sporsmal("sporsmal", now());
         sporsmal.temagruppe = "HJELPEMIDLER";
-        when(sakService.getSporsmalFromOppgaveId(anyString(), anyString())).thenReturn(sporsmal);
+        when(henvendelseUtsendingService.getSporsmalFromOppgaveId(anyString(), anyString())).thenReturn(sporsmal);
 
         wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"))
                 .inForm(withId("plukk-oppgave-form"))
@@ -77,7 +78,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void skalGiFeilmeldingHvisIngenOppgaverPaaTema() {
-        when(sakService.plukkOppgaveFraGsak(anyString())).thenReturn(Optional.<WSOppgave>none());
+        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(Optional.<WSOppgave>none());
 
         TestPlukkOppgavePanel plukkoppgave = new TestPlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)

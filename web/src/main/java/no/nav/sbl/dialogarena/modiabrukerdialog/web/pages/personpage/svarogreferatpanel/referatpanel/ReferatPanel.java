@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
@@ -32,7 +32,7 @@ import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 public class ReferatPanel extends Panel {
 
     @Inject
-    private SakService sakService;
+    private HenvendelseUtsendingService henvendelseUtsendingService;
 
     private final String fnr;
     private final KvitteringsPanel kvittering;
@@ -111,6 +111,7 @@ public class ReferatPanel extends Panel {
                 .withKanal(svarOgReferatVM.kanal.name())
                 .withFritekst(svarOgReferatVM.getFritekst());
 
-        sakService.sendReferat(referat);
+        henvendelseUtsendingService.sendReferat(referat);
     }
+
 }

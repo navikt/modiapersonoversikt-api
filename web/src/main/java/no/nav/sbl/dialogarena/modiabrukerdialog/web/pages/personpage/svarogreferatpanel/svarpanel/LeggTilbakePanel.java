@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -39,7 +39,7 @@ public class LeggTilbakePanel extends Panel {
     public static final String LEGG_TILBAKE_UTFORT = "leggtilbake.utfort";
 
     @Inject
-    private SakService sakService;
+    protected OppgaveBehandlingService oppgaveBehandlingService;
 
     public LeggTilbakePanel(String id, String temagruppe, final Optional<String> oppgaveId) {
         super(id);
@@ -102,7 +102,7 @@ public class LeggTilbakePanel extends Panel {
         form.add(new AjaxButton("leggtilbake") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                sakService.leggTilbakeOppgaveIGsak(
+                oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
                         oppgaveId,
                         leggTilbakeVM.lagBeskrivelse(new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
                         leggTilbakeVM.lagTemagruppeTekst());
@@ -135,4 +135,5 @@ public class LeggTilbakePanel extends Panel {
     public void renderHead(IHeaderResponse response) {
         response.render(OnDomReadyHeaderItem.forScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});"));
     }
+
 }

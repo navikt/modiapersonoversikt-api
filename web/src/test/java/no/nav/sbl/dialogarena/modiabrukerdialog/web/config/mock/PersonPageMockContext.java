@@ -17,7 +17,7 @@ import static org.mockito.Mockito.mock;
         SaksbehandlerInnstillingerPanelMockContext.class,
         UtbetalingLamellContext.class,
         SporsmalOgSvarContext.class,
-        SakServiceMockContext.class
+        ConsumerServicesMockContext.class
 })
 public class PersonPageMockContext {
 

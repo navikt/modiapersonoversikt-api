@@ -16,8 +16,13 @@ import org.springframework.context.annotation.Import;
 public class ServicesConfig {
 
     @Bean
-    public SakService sakService() {
-        return new SakService();
+    public HenvendelseUtsendingService henvendelseUtsendingService() {
+        return new HenvendelseUtsendingService();
+    }
+
+    @Bean
+    public OppgaveBehandlingService oppgaveBehandlingService() {
+        return new OppgaveBehandlingService();
     }
 
     @Bean

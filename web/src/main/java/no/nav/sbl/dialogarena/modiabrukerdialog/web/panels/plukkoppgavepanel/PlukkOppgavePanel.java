@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SakService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -34,7 +34,7 @@ public class PlukkOppgavePanel extends Panel {
     public static final String TEMAGRUPPE_ATTR = "sos-temagruppe";
 
     @Inject
-    private SakService sakService;
+    private OppgaveBehandlingService oppgaveBehandlingService;
 
     public PlukkOppgavePanel(String id) {
         super(id);
@@ -48,7 +48,7 @@ public class PlukkOppgavePanel extends Panel {
         AjaxButton plukkOppgave = new AjaxButton("plukk-oppgave") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                Optional<WSOppgave> oppgave = sakService.plukkOppgaveFraGsak(valgtTemagruppe.getObject().name());
+                Optional<WSOppgave> oppgave = oppgaveBehandlingService.plukkOppgaveFraGsak(valgtTemagruppe.getObject().name());
                 if (oppgave.isSome()) {
                     setResponsePage(PersonPage.class,
                             new PageParameters()
@@ -86,4 +86,5 @@ public class PlukkOppgavePanel extends Panel {
     public void renderHead(IHeaderResponse response) {
         response.render(forReference(new JavaScriptResourceReference(PlukkOppgavePanel.class, "plukkoppgave.js")));
     }
+
 }

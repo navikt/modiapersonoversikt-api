@@ -5,7 +5,6 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataL
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
 import no.nav.modig.core.context.StaticSubjectHandler;
-import no.nav.modig.core.context.SubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
@@ -17,22 +16,14 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
-import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeRequest;
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeResponse;
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
-import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import org.mockito.InjectMocks;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -44,8 +35,6 @@ import java.util.List;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
-import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV3PortTypeMock.lagWSOppgave;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
@@ -60,35 +49,26 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {HenvendelseTestConfig.class, OppgaveTestConfig.class})
-public class SakServiceTest {
+@ContextConfiguration(classes = {HenvendelseTestConfig.class})
+public class HenvendelseUtsendingServiceTest {
 
     private final static String FNR = "fnr";
     private final static String SPORSMAL_ID = "id";
     private final static String FRITEKST = "fritekst";
     private final static String TEMAGRUPPE = "temagruppe";
 
-    @Inject
-    private SakService sakService;
+    @Captor
+    ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
+    @Captor
+    ArgumentCaptor<WSHentHenvendelseListeRequest> hentHenvendelseListeRequestCaptor;
+
     @Inject
     private HenvendelsePortType henvendelsePortType;
     @Inject
     protected SendUtHenvendelsePortType sendUtHenvendelsePortType;
-    @Inject
-    private OppgaveV3 oppgaveWS;
-    @Inject
-    private OppgavebehandlingV3 oppgavebehandlingWS;
 
-    @Captor
-    ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
-    @Captor
-    ArgumentCaptor<WSFinnOppgaveListeRequest> finnOppgaveListeRequestCaptor;
-    @Captor
-    ArgumentCaptor<WSFerdigstillOppgaveBolkRequest> ferdigstillOppgaveBolkRequestCaptor;
-    @Captor
-    ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor;
-    @Captor
-    ArgumentCaptor<WSHentHenvendelseListeRequest> hentHenvendelseListeRequestCaptor;
+    @InjectMocks
+    private HenvendelseUtsendingService henvendelseUtsendingService;
 
     @Before
     public void init() {
@@ -99,13 +79,8 @@ public class SakServiceTest {
     public void skalHenteSporsmaalOgTilordneIGsak() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
-        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
 
-        Sporsmal sporsmal = sakService.getSporsmal(SPORSMAL_ID);
-        sakService.tilordneOppgaveIGsak(sporsmal.oppgaveId);
-
-        verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
-        assertThat(lagreOppgaveRequestCaptor.getValue().getEndreOppgave().getAnsvarligId(), is(SubjectHandler.getSubjectHandler().getUid()));
+        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(SPORSMAL_ID);
 
         assertThat(sporsmal.id, is(SPORSMAL_ID));
         assertThat(sporsmal.fritekst, is(FRITEKST));
@@ -114,7 +89,7 @@ public class SakServiceTest {
 
     @Test
     public void skalSendeReferat() {
-        sakService.sendReferat(new Referat().withFnr(FNR).withFritekst(FRITEKST));
+        henvendelseUtsendingService.sendReferat(new Referat().withFnr(FNR).withFritekst(FRITEKST));
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(REFERAT.name()));
@@ -122,31 +97,10 @@ public class SakServiceTest {
 
     @Test
     public void skalSendeSvar() {
-        sakService.sendSvar(new Svar().withFnr(FNR).withFritekst(FRITEKST));
+        henvendelseUtsendingService.sendSvar(new Svar().withFnr(FNR).withFritekst(FRITEKST));
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(SVAR.name()));
-    }
-
-    @Test
-    public void skalPlukkeOppgaveFraGsak() {
-        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
-        WSFinnOppgaveListeResponse finnOppgaveListeResponse = new WSFinnOppgaveListeResponse();
-        finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
-        when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
-
-        sakService.plukkOppgaveFraGsak("HJELPEMIDLER");
-        verify(oppgaveWS).finnOppgaveListe(finnOppgaveListeRequestCaptor.capture());
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("HJE"));
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().getMaxAntallSvar(), is(1));
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().isUfordelte(), is(true));
-    }
-
-    @Test
-    public void skalFerdigstilleOppgaveFraGsak() {
-        sakService.ferdigstillOppgaveIGsak(optional("1"));
-        verify(oppgavebehandlingWS).ferdigstillOppgaveBolk(ferdigstillOppgaveBolkRequestCaptor.capture());
-        assertThat(ferdigstillOppgaveBolkRequestCaptor.getValue().getOppgaveIdListe().get(0), is("1"));
     }
 
     @Test
@@ -160,7 +114,7 @@ public class SakServiceTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        Sporsmal sporsmal = sakService.getSporsmalFromOppgaveId("fnr", "id2");
+        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmalFromOppgaveId("fnr", "id2");
 
         assertThat(sporsmal.fritekst, is("fritekst2"));
     }
@@ -170,7 +124,7 @@ public class SakServiceTest {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLSporsmal("id1", "fritekst1"));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        sakService.getSporsmalFromOppgaveId("fnr", "id2");
+        henvendelseUtsendingService.getSporsmalFromOppgaveId("fnr", "id2");
 
         verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
@@ -190,7 +144,7 @@ public class SakServiceTest {
                 );
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        List<Svar> svarliste = sakService.getSvarTilSporsmal("fnr", sporsmalId);
+        List<Svar> svarliste = henvendelseUtsendingService.getSvarTilSporsmal("fnr", sporsmalId);
 
         assertThat(svarliste, hasSize(2));
         assertThat(svarliste.get(0).sporsmalsId, is(sporsmalId));
@@ -202,38 +156,12 @@ public class SakServiceTest {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLSvar("sporsmalId"));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        sakService.getSvarTilSporsmal("fnr", "sporsmalId");
+        henvendelseUtsendingService.getSvarTilSporsmal("fnr", "sporsmalId");
 
         verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(SVAR.name()));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(SPORSMAL.name(), REFERAT.name())));
-    }
-
-    @Test
-    public void skalLeggeTilbakeOppgaveIGsakUtenEndretTemagruppe() throws LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing {
-        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
-
-        sakService.leggTilbakeOppgaveIGsak(optional("1"), "beskrivelse", null);
-
-        verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
-        WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
-        assertThat(endreOppgave.getAnsvarligId(), is(""));
-        assertThat(endreOppgave.getBeskrivelse(), is("beskrivelse"));
-        assertThat(endreOppgave.getFagomradeKode(), is("HJE"));
-    }
-
-    @Test
-    public void skalLeggeTilbakeOppgaveIGsakMedEndretTemagruppe() throws LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing {
-        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
-
-        sakService.leggTilbakeOppgaveIGsak(optional("1"), "beskrivelse", "FAMILIE_OG_BARN");
-
-        verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
-        WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
-        assertThat(endreOppgave.getAnsvarligId(), is(""));
-        assertThat(endreOppgave.getBeskrivelse(), is("beskrivelse"));
-        assertThat(endreOppgave.getFagomradeKode(), is("BID"));
     }
 
     private WSHentHenvendelseResponse mockWSHentHenvendelseResponse() {
@@ -247,14 +175,6 @@ public class SakServiceTest {
         );
     }
 
-    private WSHentOppgaveResponse mockHentOppgaveResponse() {
-        return new WSHentOppgaveResponse().withOppgave(lagWSOppgave());
-    }
-
-    private WSHentOppgaveResponse mockHentOppgaveResponseMedTilordning() {
-        return new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withAnsvarligId("id").withBeskrivelse("opprinnelig beskrivelse"));
-    }
-
     private XMLHenvendelse createXMLSporsmal(String oppgaveId, String fritekst) {
         return new XMLHenvendelse().withMetadataListe(new XMLMetadataListe()
                 .withMetadata(new XMLSporsmal().withOppgaveIdGsak(oppgaveId).withFritekst(fritekst)));
@@ -265,4 +185,5 @@ public class SakServiceTest {
                 .withFnr("")
                 .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar().withSporsmalsId(sporsmalId).withNavident("")));
     }
+
 }

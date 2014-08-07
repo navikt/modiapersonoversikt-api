@@ -20,9 +20,4 @@ public class HenvendelseTestConfig {
         return mock(SendUtHenvendelsePortType.class);
     }
 
-    @Bean
-    public SakService sakService() {
-        return new SakService();
-    }
-
 }
