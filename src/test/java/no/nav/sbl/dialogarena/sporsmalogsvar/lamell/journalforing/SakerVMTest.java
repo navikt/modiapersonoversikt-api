@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -39,15 +40,15 @@ public class SakerVMTest {
     public final static String SAKSTYPE_FAG = "Fag";
     private final static String TEMA_OPPFOLGING = "Oppfølging";
 
-    private ArrayList<Sak> saksliste;
-    private MeldingVM meldingVM;
-
     @Mock
-    private MeldingService meldingService;
-
+    private GsakService gsakService;
+    @Mock
+    private JoarkJournalforingService joarkJournalforingService;
     @Mock
     private InnboksVM innboksVM;
 
+    private ArrayList<Sak> saksliste;
+    private MeldingVM meldingVM;
     private List<String> alleTemaer;
     private List<String> alleTemagrupper;
 
@@ -58,7 +59,7 @@ public class SakerVMTest {
         alleTemaer = getAlleEksisterendeTemaer();
         alleTemagrupper = getAlleEksisterendeTemagrupper();
         saksliste = createSakslisteBasertPaTemaMap();
-        when(meldingService.hentSakerForBruker(anyString())).thenReturn(saksliste);
+        when(gsakService.hentSakerForBruker(anyString())).thenReturn(saksliste);
         meldingVM = opprettMeldingVM("temagruppe");
         when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
     }
@@ -72,7 +73,7 @@ public class SakerVMTest {
     // Gruppering på tema
     @Test
     public void gittHverSakHarUniktTemaReturnerKorrektSakstemaliste() {
-        SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
@@ -88,7 +89,7 @@ public class SakerVMTest {
     public void gittToSakerMedLiktTemaReturnerKorrektSakstemaliste() {
         Sak sak4 = createSak("44444444", alleTemaer.get(0), "Fagsak 4", SAKSTYPE_GENERELL, DateTime.now().minusDays(5));
         saksliste.add(sak4);
-        SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
@@ -106,7 +107,7 @@ public class SakerVMTest {
     //Valgt temgruppe øverst
     @Test
     public void gittValgtTemagruppe0sjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
-        SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
         String traadTemagruppe = alleTemagrupper.get(0);
         meldingVM.melding.temagruppe = traadTemagruppe;
@@ -119,7 +120,7 @@ public class SakerVMTest {
 
     @Test
     public void gittValgtTemagruppe2sjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
-        SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
         String traadTemagruppe = alleTemagrupper.get(2);
         meldingVM.melding.temagruppe = traadTemagruppe;
@@ -140,7 +141,7 @@ public class SakerVMTest {
         for (String tema : traadTemagruppeSineTemaer) {
             saksliste.add(createSak("44444444", tema, "Fagsystem 4", SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
-        SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerInnenforValgtTemagruppe = sakerVM.getGenerelleSakerGruppertPaaTema().subList(0, traadTemagruppeLengde);
@@ -155,7 +156,7 @@ public class SakerVMTest {
         meldingVM.melding.temagruppe = traadTemagruppe;
         List<String> traadTemagruppeSineTemaer = TEMA_MAPPING.get(traadTemagruppe);
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
-        SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
 
         List<TemaSaker> alleTemaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
@@ -172,7 +173,7 @@ public class SakerVMTest {
             sakslistekloneMedAndreDatoer.add(createSak("101010101", sak.tema, "Fagsystem", SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
         saksliste.addAll(sakslistekloneMedAndreDatoer);
-        SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
@@ -190,7 +191,7 @@ public class SakerVMTest {
             sakslistekloneMedAndreSakstyper.add(createSak("101010101", sak.tema, "Fagsystem", SAKSTYPE_FAG, sak.opprettetDato));
         }
         saksliste.addAll(sakslistekloneMedAndreSakstyper);
-        SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListeGenerell = sakerVM.getGenerelleSakerGruppertPaaTema();
@@ -206,7 +207,7 @@ public class SakerVMTest {
         Sak sakMedSakstypeFagsak = createSak("15472473245", alleTemaer.get(3), "Fagsystem 3", SAKSTYPE_FAG, DateTime.now().minusDays(4));
         saksliste.add(sakMedSakstypeFagsak);
         saksliste.add(sakMedTemaOppfolging);
-        SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListeFag = sakerVM.getFagsakerGruppertPaaTema();
@@ -220,7 +221,7 @@ public class SakerVMTest {
 
     @Test
     public void sjekkAtIngenElementerForsvinnerFraListeMedSakerVedGjentatteKall() {
-        SakerVM sakerVM = new SakerVM(innboksVM, meldingService);
+        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
 
         for (int i = 0; i < 4; i++) {

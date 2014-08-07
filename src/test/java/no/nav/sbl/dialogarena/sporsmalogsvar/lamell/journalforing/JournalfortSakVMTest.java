@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -28,14 +28,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class JournalfortSakVMTest {
 
-    @Mock
-    private MeldingService meldingService;
-
-    @Mock
-    private InnboksVM innboksVM;
-
-    private ArrayList<Sak> saksliste;
-
     private final static String TEMA_1 = "Dagpenger";
     private final static String TEMA_2 = "Arbeidsstønad";
     private final static String TEMA_3 = "Oppfølging";
@@ -46,19 +38,26 @@ public class JournalfortSakVMTest {
     private final static String SAKS_ID_3 = "333333333";
     private final static String SAKS_ID_4 = "444444444";
 
+    @Mock
+    private GsakService gsakService;
+    @Mock
+    private InnboksVM innboksVM;
+
+    private ArrayList<Sak> saksliste;
+
     @Before
     public void setUp() {
         TraadVM traadVM = mock(TraadVM.class);
         when(innboksVM.getValgtTraad()).thenReturn(traadVM);
         saksliste = createSaksliste();
-        when(meldingService.hentSakerForBruker(anyString())).thenReturn(saksliste);
+        when(gsakService.hentSakerForBruker(anyString())).thenReturn(saksliste);
         MeldingVM eldsteMeldingVM = opprettMeldingVMogSetJournalfortSaksId(SAKS_ID_3);
         when(traadVM.getEldsteMelding()).thenReturn(eldsteMeldingVM);
     }
 
     @Test
     public void sjekkAtGetSakMetodenReturnererKorrektSakBasertPaJournalforingsId() {
-        JournalfortSakVM journalfortSakVM = new JournalfortSakVM(innboksVM, meldingService);
+        JournalfortSakVM journalfortSakVM = new JournalfortSakVM(innboksVM, gsakService);
         journalfortSakVM.oppdater();
 
         assertThat(journalfortSakVM.getSak().saksId, is(SAKS_ID_3));

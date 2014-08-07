@@ -1,10 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.nyoppgave;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -17,7 +16,6 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.joda.time.LocalDate;
 
 import javax.inject.Inject;
 
@@ -27,7 +25,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING
 public class NyOppgavePanel extends Panel {
 
     @Inject
-    private OppgavebehandlingV3 oppgavebehandling;
+    private GsakService gsakService;
 
     private final CompoundPropertyModel<NyOppgave> nyOppgaveModel;
 
@@ -56,20 +54,7 @@ public class NyOppgavePanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 NyOppgave nyOppgave = (NyOppgave) form.getModelObject();
-                oppgavebehandling.opprettOppgave(
-                    new WSOpprettOppgaveRequest()
-                        .withOpprettetAvEnhetId(2820)   // TODO: Endre til å hente den faktiske enhetsid
-                        .withOpprettOppgave(
-                            new WSOpprettOppgave()
-                                .withAktivFra(LocalDate.now())
-                                .withAnsvarligEnhetId(nyOppgave.enhet)
-                                .withBeskrivelse(nyOppgave.beskrivelse)
-                                .withFagomradeKode(nyOppgave.tema)
-                                .withOppgavetypeKode(nyOppgave.type)
-                                .withPrioritetKode(nyOppgave.prioritet)
-                                .withLest(false)
-                                // TODO:  Det må opprettes eller benytte et eksisterende felt for å sette en referanse/id til pågående tråd (innboksVM.getValgtTraad().getEldsteMelding().melding.id)
-                        ));
+                gsakService.opprettGsakOppgave(nyOppgave);
                 lukkNyOppgavePanel(target);
                 nullstillSkjema();
             }

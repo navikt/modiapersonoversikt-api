@@ -1,5 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
+import no.nav.modig.core.context.ModigSecurityConstants;
+import no.nav.modig.core.context.SubjectHandler;
+import no.nav.modig.core.context.SubjectHandlerUtils;
+import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.modig.core.domain.IdentType;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -34,6 +43,11 @@ public class TestUtils {
     public final static String TEMA_1 = "Pensjon";
     public final static String TEMA_2 = "Dagpenger";
     public final static String TEMA_3 = "Barnebidrag";
+
+    public static final String JOURNALFORT_ID = "journalfortId";
+    public static final DateTime JOURNALFORT_DATO = DateTime.now().minusDays(1);
+    public static final String JOURNALFORT_TEMA = "journalfortTema";
+    public static final String JOURNALFORT_SAKSID = "journalfortSaksId1";
 
     public static ArrayList<Sak> createMockSaksliste() {
         return new ArrayList<>(asList(
@@ -84,6 +98,27 @@ public class TestUtils {
         MeldingVM melding2VM = new MeldingVM(createMelding(ID_2, Meldingstype.SAMTALEREFERAT, DATE_2, TEMAGRUPPE_2, ID_1), TRAAD_LENGDE);
         MeldingVM melding3VM = new MeldingVM(createMelding(ID_3, Meldingstype.SAMTALEREFERAT, DATE_1, TEMAGRUPPE_3, ID_1), TRAAD_LENGDE);
         return new ArrayList<>(asList(melding1VM, melding2VM, melding3VM));
+    }
+
+    public static XMLHenvendelse lagXMLHenvendelse(String behandlingsId, DateTime opprettetDato, String henvendelseType, XMLMetadata xmlMetadata) {
+        return new XMLHenvendelse()
+                .withBehandlingsId(behandlingsId)
+                .withOpprettetDato(opprettetDato)
+                .withHenvendelseType(henvendelseType)
+                .withJournalfortInformasjon(
+                        new XMLJournalfortInformasjon()
+                                .withJournalfortDato(JOURNALFORT_DATO)
+                                .withJournalfortTema(JOURNALFORT_TEMA)
+                                .withJournalpostId(JOURNALFORT_ID)
+                                .withJournalfortSaksId(JOURNALFORT_SAKSID)
+                )
+                .withMetadataListe(new XMLMetadataListe().withMetadata(xmlMetadata));
+    }
+
+    public static void innloggetBrukerEr(String userId) {
+        System.setProperty(SubjectHandler.SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getCanonicalName());
+        System.setProperty(ModigSecurityConstants.SYSTEMUSER_USERNAME, "srvHenvendelse");
+        SubjectHandlerUtils.setSubject(new SubjectHandlerUtils.SubjectBuilder(userId, IdentType.EksternBruker).withAuthLevel(4).getSubject());
     }
 
 }

@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -23,15 +23,13 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.TEMA;
 public class SakerVM implements Serializable {
 
     public static final Map<String, List<String>> TEMA_MAPPING = opprettTemaMapping();
-
     public static final String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
-
-    private InnboksVM innboksVM;
-
-    private MeldingService meldingService;
 
     private TemaSakerListe temaSakerListeFagsak;
     private TemaSakerListe temaSakerListeGenerelle;
+
+    private InnboksVM innboksVM;
+    private GsakService gsakService;
 
     // TODO: Dette er en midlertidig mapping mellom temagruppe og tema, mens vi venter på kodeverk.
     private static Map<String, List<String>> opprettTemaMapping() {
@@ -43,13 +41,13 @@ public class SakerVM implements Serializable {
         return temaMapping;
     }
 
-    public SakerVM(InnboksVM innboksVM, MeldingService meldingService) {
+    public SakerVM(InnboksVM innboksVM, GsakService gsakService) {
         this.innboksVM = innboksVM;
-        this.meldingService = meldingService;
+        this.gsakService = gsakService;
     }
 
     public final void oppdater() {
-        List<Sak> sakerForBruker = meldingService.hentSakerForBruker(innboksVM.getFnr());
+        List<Sak> sakerForBruker = gsakService.hentSakerForBruker(innboksVM.getFnr());
         Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker = splittIGenerelleSakerOgIkkeGenerelleSaker(sakerForBruker);
         temaSakerListeFagsak = new TemaSakerListe(grupperSakerPaaTema(generelleOgIkkeGenerelleSaker.get(false)));
         temaSakerListeGenerelle = new TemaSakerListe(grupperSakerPaaTema(generelleOgIkkeGenerelleSaker.get(true)));

@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -21,7 +21,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.widget.MeldingVM.NYESTE_OVER
 public class MeldingerWidget extends FeedWidget<MeldingVM> {
 
     @Inject
-    private MeldingService meldingService;
+    private HenvendelseService henvendelseService;
 
     public MeldingerWidget(String id, String initial, final String fnr) {
         super(id, initial, true);
@@ -31,7 +31,7 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
         setDefaultModel(new CompoundPropertyModel<>(new LoadableDetachableModel<List<MeldingVM>>() {
             @Override
             protected List<MeldingVM> load() {
-                return on(skillUtTraader(meldingService.hentMeldinger(fnr)).values()).map(TIL_MELDINGVM).collect(NYESTE_OVERST);
+                return on(skillUtTraader(henvendelseService.hentMeldinger(fnr)).values()).map(TIL_MELDINGVM).collect(NYESTE_OVERST);
             }
         }));
     }

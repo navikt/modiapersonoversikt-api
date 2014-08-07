@@ -33,33 +33,37 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUti
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class MeldingServiceTest {
+public class JoarkJournalforingServiceTest {
 
     @Captor
-    ArgumentCaptor<JournalfoerNotatRequest> journalfoerNotatRequestCaptor;
+    private ArgumentCaptor<JournalfoerNotatRequest> journalfoerNotatRequestCaptor;
     @Captor
-    ArgumentCaptor<JournalfoerUtgaaendeHenvendelseRequest> journalfoerUtgaaendeHenvendelseRequestCaptor;
+    private ArgumentCaptor<JournalfoerUtgaaendeHenvendelseRequest> journalfoerUtgaaendeHenvendelseRequestCaptor;
 
     @Mock
-    JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelseResponseMock;
+    private JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelseResponseMock;
     @Mock
-    JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelseResponseMock;
+    private JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelseResponseMock;
     @Mock
-    JournalfoerNotatResponse journalfoerNotatResponseMock;
+    private JournalfoerNotatResponse journalfoerNotatResponseMock;
 
     @Mock
-    BehandleHenvendelsePortType behandleHenvendelsePortType;
+    private BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Mock
-    BehandleJournalV2 behandleJournalV2;
+    private BehandleJournalV2 behandleJournalV2;
     @Mock
-    ValgtEnhetService valgtEnhetService;
+    private ValgtEnhetService valgtEnhetService;
+    @Mock
+    private HenvendelseService henvendelseService;
 
     @InjectMocks
-    private MeldingService meldingService;
+    private JoarkJournalforingService joarkJournalforingService;
 
     private List<MeldingVM> meldinger;
     private TraadVM traadVM;
@@ -89,12 +93,10 @@ public class MeldingServiceTest {
 
     @Test
     public void sjekkAtRiktigJounalforHenvendelseKallBlirUtfortGittTraadMedEttSporsmalOgEttSamtaleReferat() {
-        meldinger = new ArrayList<>(asList(
-                createMeldingVM(Meldingstype.SAMTALEREFERAT, 2, KANAL_TELEFON),
-                createMeldingVM(Meldingstype.SPORSMAL, 2, "")));
+        meldinger = createMeldingListeMedEttSporsmaalOgEttSamtalereferat();
         traadVM = new TraadVM(meldinger);
 
-        meldingService.journalforTraad(traadVM, sak);
+        joarkJournalforingService.journalforTraad(traadVM, sak);
 
         verify(behandleJournalV2).journalfoerInngaaendeHenvendelse(any(JournalfoerInngaaendeHenvendelseRequest.class));
         verify(behandleJournalV2).journalfoerNotat(any(JournalfoerNotatRequest.class));
@@ -105,7 +107,7 @@ public class MeldingServiceTest {
         meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 1, KANAL_TELEFON)));
         traadVM = new TraadVM(meldinger);
 
-        meldingService.journalforTraad(traadVM, sak);
+        joarkJournalforingService.journalforTraad(traadVM, sak);
 
         verify(behandleJournalV2).journalfoerNotat(any(JournalfoerNotatRequest.class));
     }
@@ -116,7 +118,7 @@ public class MeldingServiceTest {
                 createMeldingVM(Meldingstype.SPORSMAL, 2, "")));
         traadVM = new TraadVM(meldinger);
 
-        meldingService.journalforTraad(traadVM, sak);
+        joarkJournalforingService.journalforTraad(traadVM, sak);
 
         verify(behandleJournalV2).journalfoerInngaaendeHenvendelse(any(JournalfoerInngaaendeHenvendelseRequest.class));
         verify(behandleJournalV2).journalfoerUtgaaendeHenvendelse(any(JournalfoerUtgaaendeHenvendelseRequest.class));
@@ -128,7 +130,7 @@ public class MeldingServiceTest {
                 createMeldingVM(Meldingstype.SPORSMAL, 2, "")));
         traadVM = new TraadVM(meldinger);
 
-        meldingService.journalforTraad(traadVM, sak);
+        joarkJournalforingService.journalforTraad(traadVM, sak);
 
         verify(behandleJournalV2).journalfoerUtgaaendeHenvendelse(journalfoerUtgaaendeHenvendelseRequestCaptor.capture());
         assertThat(journalfoerUtgaaendeHenvendelseRequestCaptor.getValue().getJournalpost().getKryssreferanseListe().get(0).getReferanseId(), is(SPORSMAL_POST_ID));
@@ -136,19 +138,33 @@ public class MeldingServiceTest {
 
     @Test
     public void sjekkAtRiktigKryssReferanseForReferatSettesTilKorresponderendeSporsmalVedJournalforingAvHenvendelse() {
-        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 2, KANAL_TELEFON),
-                createMeldingVM(Meldingstype.SPORSMAL, 2, "")));
+        meldinger = createMeldingListeMedEttSporsmaalOgEttSamtalereferat();
         traadVM = new TraadVM(meldinger);
 
-        meldingService.journalforTraad(traadVM, sak);
+        joarkJournalforingService.journalforTraad(traadVM, sak);
 
         verify(behandleJournalV2).journalfoerNotat(journalfoerNotatRequestCaptor.capture());
         assertThat(journalfoerNotatRequestCaptor.getValue().getJournalpost().getKryssreferanseListe().get(0).getReferanseId(), is(SPORSMAL_POST_ID));
     }
 
+    @Test
+    public void skalKalleOppdaterJournalfortInformasjonIHenvendelse() {
+        meldinger = createMeldingListeMedEttSporsmaalOgEttSamtalereferat();
+        traadVM = new TraadVM(meldinger);
+
+        joarkJournalforingService.journalforTraad(traadVM, sak);
+
+        verify(henvendelseService, atLeast(2)).oppdaterJournalfortInformasjonIHenvendelse(any(Sak.class), anyString(), any(Melding.class));
+    }
+
+    private ArrayList<MeldingVM> createMeldingListeMedEttSporsmaalOgEttSamtalereferat() {
+        return new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 2, KANAL_TELEFON),
+                createMeldingVM(Meldingstype.SPORSMAL, 2, "")));
+    }
+
     private MeldingVM createMeldingVM(Meldingstype meldingstype, int traadlengde, String kanal) {
         Melding melding = createMelding("ID 2", meldingstype, DateTime.now(), "Temagruppe", "ID");
-        melding.kanal ="kanal";
+        melding.kanal = kanal;
         return new MeldingVM(melding, traadlengde);
     }
 

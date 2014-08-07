@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelEnkeltSakTestConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -18,25 +20,29 @@ import java.util.List;
 
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
-@ContextConfiguration(classes = {JournalforingPanelEnkeltSakTestConfig.class})
+@ContextConfiguration(classes = {JournalforingPanelVelgSakTestConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
-    @Inject
-    private MeldingService meldingService;
-
     private final static String FODSELSNR = "52765236723";
-
     private final static String JOURNALFORT_SAKSID = "123123123";
+
+    @Inject
+    private HenvendelseService henvendelseService;
+    @Inject
+    private GsakService gsakService;
+    @Inject
+    private JoarkJournalforingService joarkJournalforingService;
 
     private InnboksVM innboksVM;
 
     @Before
     public void setUp() {
-        innboksVM = new InnboksVM(meldingService, FODSELSNR);
-        List<Sak> sakerForBruker = meldingService.hentSakerForBruker(innboksVM.getFnr());
+        innboksVM = new InnboksVM(henvendelseService, FODSELSNR);
+        List<Sak> sakerForBruker = gsakService.hentSakerForBruker(innboksVM.getFnr());
         sakerForBruker.get(0).opprettetDato = DateTime.now();
         sakerForBruker.get(0).saksId = JOURNALFORT_SAKSID;
         innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortSaksId = JOURNALFORT_SAKSID;
@@ -53,7 +59,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
                 .goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVM))
                 .click().link(withId("journalforTraad"));
 
-        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class));
+        verify(joarkJournalforingService, atLeast(1)).journalforTraad(any(TraadVM.class), any(Sak.class));
     }
 
 }

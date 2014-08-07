@@ -4,8 +4,8 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.modig.wicket.test.FluentWicketTester;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.MeldingServiceTestContext;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -28,7 +28,7 @@ import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {MeldingServiceTestContext.class, InnboksTestConfig.class})
+@ContextConfiguration(classes = {ServiceTestContext.class, InnboksTestConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InnboksTest {
 
@@ -37,14 +37,13 @@ public class InnboksTest {
     private static final String ENESTE_MELDING_ID_TRAAD2 = "enesteIdTraad2";
 
     @Inject
-    private MeldingService meldingService;
-
+    private HenvendelseService henvendelseService;
     @Inject
     private FluentWicketTester wicket;
 
     @Before
     public void setUp() {
-        when(meldingService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding(ELDSTE_MELDING_ID_TRAAD1, Meldingstype.SPORSMAL, now().minusDays(1), "TEMA", ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(NYESTE_MELDING_ID_TRAAD1, Meldingstype.SVAR, now(), "TEMA", ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(ENESTE_MELDING_ID_TRAAD2, Meldingstype.SPORSMAL, now().minusDays(2), "TEMA", ENESTE_MELDING_ID_TRAAD2)));

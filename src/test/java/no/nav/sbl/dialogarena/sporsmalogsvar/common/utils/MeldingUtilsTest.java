@@ -2,8 +2,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
@@ -27,6 +25,10 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.IKKE_BESVART;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.IKKE_LEST_AV_BRUKER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.LEST_AV_BRUKER;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.JOURNALFORT_DATO;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.JOURNALFORT_SAKSID;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.JOURNALFORT_TEMA;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.lagXMLHenvendelse;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.joda.time.DateTime.now;
@@ -43,11 +45,6 @@ public class MeldingUtilsTest {
     public static final String KANAL = "kanal";
     public static final DateTime OPPRETTET_DATO = DateTime.now().minusDays(2);
     public static final DateTime LEST_DATO = DateTime.now();
-    public static final String JOURNALFORT_ID = "journalfortId";
-    public static final DateTime JOURNALFORT_DATO = DateTime.now().minusDays(1);
-    public static final String JOURNALFORT_TEMA = "journalfortTema";
-    public static final String JOURNALFORT_SAKSID = "journalfortSaksId1";
-
 
     @Test
     public void testSkillUtTraader() {
@@ -159,21 +156,6 @@ public class MeldingUtilsTest {
     @Test(expected = ClassCastException.class)
     public void tilMeldingTransformer_girClassCastExceptionVedFeilType() {
         TIL_MELDING.transform(new XMLSporsmal());
-    }
-
-    private static XMLHenvendelse lagXMLHenvendelse(String behandlingsId, DateTime opprettetDato, String henvendelseType, XMLMetadata xmlMetadata) {
-        return new XMLHenvendelse()
-                .withBehandlingsId(behandlingsId)
-                .withOpprettetDato(opprettetDato)
-                .withHenvendelseType(henvendelseType)
-                .withJournalfortInformasjon(
-                        new XMLJournalfortInformasjon()
-                                .withJournalfortDato(JOURNALFORT_DATO)
-                                .withJournalfortTema(JOURNALFORT_TEMA)
-                                .withJournalpostId(JOURNALFORT_ID)
-                                .withJournalfortSaksId(JOURNALFORT_SAKSID)
-                )
-                .withMetadataListe(new XMLMetadataListe().withMetadata(xmlMetadata));
     }
 
 }

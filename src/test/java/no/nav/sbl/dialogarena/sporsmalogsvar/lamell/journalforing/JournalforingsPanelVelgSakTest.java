@@ -2,7 +2,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -19,22 +20,25 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.hamcrest.Matchers.contains;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
 
 @ContextConfiguration(classes = {JournalforingPanelVelgSakTestConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
-    @Inject
-    private MeldingService meldingService;
-
     private final static String FODSELSNR = "52765236723";
+
+    @Inject
+    private HenvendelseService henvendelseService;
+    @Inject
+    private JoarkJournalforingService joarkJournalforingService;
 
     private InnboksVM innboksVM;
 
     @Before
     public void setUp() {
-        innboksVM = new InnboksVM(meldingService, FODSELSNR);
+        innboksVM = new InnboksVM(henvendelseService, FODSELSNR);
     }
 
     @Test
@@ -54,7 +58,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
                 .select("valgtTraad.journalfortSak", 0)
                 .submitWithAjaxButton(withId("journalforTraad"));
 
-        verify(meldingService).journalforTraad(any(TraadVM.class), any(Sak.class));
+        verify(joarkJournalforingService, atLeast(1)).journalforTraad(any(TraadVM.class), any(Sak.class));
     }
 
     @Test

@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -19,7 +20,9 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.Journal
 public class JournalforingsPanelVelgSak extends Panel {
 
     @Inject
-    private MeldingService meldingService;
+    private JoarkJournalforingService joarkJournalforingService;
+    @Inject
+    private GsakService gsakService;
 
     private SakerVM sakerVM;
 
@@ -29,7 +32,7 @@ public class JournalforingsPanelVelgSak extends Panel {
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
-        sakerVM = new SakerVM(innboksVM, meldingService);
+        sakerVM = new SakerVM(innboksVM, gsakService);
         Form<InnboksVM> form = new Form<>("plukkSakForm", new CompoundPropertyModel<>(innboksVM));
         form.add(
                 feedbackPanel,
@@ -43,7 +46,7 @@ public class JournalforingsPanelVelgSak extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 TraadVM valgtTraadVM = innboksVM.getValgtTraad();
-                meldingService.journalforTraad(valgtTraadVM, valgtTraadVM.journalfortSak);
+                joarkJournalforingService.journalforTraad(valgtTraadVM, valgtTraadVM.journalfortSak);
                 send(this, Broadcast.BUBBLE, TRAAD_JOURNALFORT);
             }
 
@@ -58,8 +61,4 @@ public class JournalforingsPanelVelgSak extends Panel {
         sakerVM.oppdater();
     }
 
-    private void lukkJournalforingsPanel(AjaxRequestTarget target) {
-        getParent().setVisibilityAllowed(false);
-        target.add(this);
-    }
 }

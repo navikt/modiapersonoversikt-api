@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.MeldingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -37,16 +37,15 @@ public class InnboksVMTest {
     public final static DateTime DATE_4 = new DateTime().minusDays(4);
 
     private List<Melding> meldinger;
-
     private InnboksVM innboksVM;
 
     @Before
     public void setUp() {
-        MeldingService meldingService = mock(MeldingService.class);
+        HenvendelseService henvendelseService = mock(HenvendelseService.class);
         meldinger = createMeldingerIToTraader();
-        when(meldingService.hentMeldinger(anyString())).thenReturn(meldinger);
+        when(henvendelseService.hentMeldinger(anyString())).thenReturn(meldinger);
 
-        innboksVM = new InnboksVM(meldingService, "fnr");
+        innboksVM = new InnboksVM(henvendelseService, "fnr");
     }
 
     @Test
@@ -119,9 +118,9 @@ public class InnboksVMTest {
 
     @Test
     public void skalFungereUtenMeldinger() {
-        MeldingService meldingServiceUtenMelding = mock(MeldingService.class);
-        when(meldingServiceUtenMelding.hentMeldinger(anyString())).thenReturn(new ArrayList<Melding>());
-        innboksVM = new InnboksVM(meldingServiceUtenMelding, "fnr");
+        HenvendelseService henvendelseServiceUtenHenvendelser = mock(HenvendelseService.class);
+        when(henvendelseServiceUtenHenvendelser.hentMeldinger(anyString())).thenReturn(new ArrayList<Melding>());
+        innboksVM = new InnboksVM(henvendelseServiceUtenHenvendelser, "fnr");
 
         assertThat(innboksVM.getTraader().size(), is(0));
         assertThat(innboksVM.getValgtTraad().getMeldinger().size(), is(0));
@@ -134,4 +133,5 @@ public class InnboksVMTest {
         Melding melding4 = createMelding(ID_4, SVAR, DATE_1, TEMAGRUPPE_2, ID_2);
         return new ArrayList<>(Arrays.asList(melding1, melding2, melding3, melding4));
     }
+
 }
