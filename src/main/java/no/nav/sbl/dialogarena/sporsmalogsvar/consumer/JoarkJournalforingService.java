@@ -32,14 +32,14 @@ public class JoarkJournalforingService {
     @Inject
     private ValgtEnhetService valgtEnhetService;
     @Inject
-    private HenvendelseService henvendelseService;
+    private HenvendelseBehandlingService henvendelseBehandlingService;
 
     public void journalforTraad(TraadVM valgtTraad, Sak sak) {
         Melding eldsteMelding = valgtTraad.getEldsteMelding().melding;
         String journalpostIdEldsteMelding;
         if (eldsteMelding.journalfortDato == null) {
             journalpostIdEldsteMelding = behandleJournalforing(eldsteMelding, sak, null);
-            henvendelseService.oppdaterJournalfortInformasjonIHenvendelse(sak, journalpostIdEldsteMelding, eldsteMelding);
+            henvendelseBehandlingService.oppdaterJournalfortInformasjonIHenvendelse(sak, journalpostIdEldsteMelding, eldsteMelding);
         } else {
             journalpostIdEldsteMelding = eldsteMelding.journalfortSaksId;
         }
@@ -47,7 +47,7 @@ public class JoarkJournalforingService {
             Melding melding = meldingVM.melding;
             if (melding.journalfortDato == null) {
                 String journalpostId = behandleJournalforing(melding, sak, journalpostIdEldsteMelding);
-                henvendelseService.oppdaterJournalfortInformasjonIHenvendelse(sak, journalpostId, melding);
+                henvendelseBehandlingService.oppdaterJournalfortInformasjonIHenvendelse(sak, journalpostId, melding);
             }
         }
     }

@@ -19,7 +19,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
 
-public class HenvendelseService {
+public class HenvendelseBehandlingService {
 
     @Inject
     private HenvendelsePortType henvendelsePortType;

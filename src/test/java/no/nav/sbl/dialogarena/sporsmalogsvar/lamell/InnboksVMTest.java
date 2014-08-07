@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.joda.time.DateTime;
 import org.junit.Before;
@@ -41,11 +41,11 @@ public class InnboksVMTest {
 
     @Before
     public void setUp() {
-        HenvendelseService henvendelseService = mock(HenvendelseService.class);
+        HenvendelseBehandlingService henvendelseBehandlingService = mock(HenvendelseBehandlingService.class);
         meldinger = createMeldingerIToTraader();
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(meldinger);
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(meldinger);
 
-        innboksVM = new InnboksVM(henvendelseService, "fnr");
+        innboksVM = new InnboksVM(henvendelseBehandlingService, "fnr");
     }
 
     @Test
@@ -118,9 +118,9 @@ public class InnboksVMTest {
 
     @Test
     public void skalFungereUtenMeldinger() {
-        HenvendelseService henvendelseServiceUtenHenvendelser = mock(HenvendelseService.class);
-        when(henvendelseServiceUtenHenvendelser.hentMeldinger(anyString())).thenReturn(new ArrayList<Melding>());
-        innboksVM = new InnboksVM(henvendelseServiceUtenHenvendelser, "fnr");
+        HenvendelseBehandlingService henvendelseBehandlingServiceUtenHenvendelser = mock(HenvendelseBehandlingService.class);
+        when(henvendelseBehandlingServiceUtenHenvendelser.hentMeldinger(anyString())).thenReturn(new ArrayList<Melding>());
+        innboksVM = new InnboksVM(henvendelseBehandlingServiceUtenHenvendelser, "fnr");
 
         assertThat(innboksVM.getTraader().size(), is(0));
         assertThat(innboksVM.getValgtTraad().getMeldinger().size(), is(0));

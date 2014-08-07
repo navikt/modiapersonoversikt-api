@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Test;
@@ -25,17 +25,17 @@ import static org.mockito.Mockito.when;
 public class MeldingerWidgetTest extends WicketPageTest {
 
     @Inject
-    private HenvendelseService henvendelseService;
+    private HenvendelseBehandlingService henvendelseBehandlingService;
 
     @Test
     public void skalKonstrueresRiktig() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", Meldingstype.SPORSMAL, now(), "TEMA", "1")));
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", Meldingstype.SPORSMAL, now(), "TEMA", "1")));
         wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"));
     }
 
     @Test
     public void skalInneholdeRiktigAntallMeldinger() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("id1", Meldingstype.SPORSMAL, now(), "TEMA", "1"),
                 createMelding("id2", Meldingstype.SPORSMAL, now(), "TEMA", "2"),
                 createMelding("id3", Meldingstype.SPORSMAL, now(), "TEMA", "3"),
@@ -47,7 +47,7 @@ public class MeldingerWidgetTest extends WicketPageTest {
 
     @Test
     public void skalInneholdeMaksFemMeldinger() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("id1", Meldingstype.SPORSMAL, now(), "TEMA", "1"),
                 createMelding("id2", Meldingstype.SPORSMAL, now(), "TEMA", "2"),
                 createMelding("id3", Meldingstype.SPORSMAL, now(), "TEMA", "3"),
@@ -61,7 +61,7 @@ public class MeldingerWidgetTest extends WicketPageTest {
 
     @Test
     public void skalRegerePaaEvent() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", Meldingstype.SPORSMAL, now(), "TEMA", "1")));
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", Meldingstype.SPORSMAL, now(), "TEMA", "1")));
         wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
                 .sendEvent(new EventGenerator() {
                     @Override

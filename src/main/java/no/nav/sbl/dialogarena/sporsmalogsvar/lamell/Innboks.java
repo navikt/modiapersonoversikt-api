@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.CompoundPropertyModel;
@@ -20,7 +20,7 @@ public class Innboks extends Lerret {
     public static final String TRAAD_ID_PARAMETER_NAME = "henvendelseid";
 
     @Inject
-    private HenvendelseService henvendelseService;
+    private HenvendelseBehandlingService henvendelseBehandlingService;
 
     private InnboksVM innboksVM;
 
@@ -28,7 +28,7 @@ public class Innboks extends Lerret {
         super(id);
         setOutputMarkupId(true);
 
-        this.innboksVM = new InnboksVM(henvendelseService, fnr);
+        this.innboksVM = new InnboksVM(henvendelseBehandlingService, fnr);
         setDefaultModel(new CompoundPropertyModel<Object>(innboksVM));
 
         setValgtTraadBasertPaaTraadIdPageParameter();

@@ -41,7 +41,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class HenvendelseServiceTest {
+public class HenvendelseBehandlingServiceTest {
 
     private static final String FNR = "11111111";
     private static final String TEMAGRUPPE = "temagruppe";
@@ -63,7 +63,7 @@ public class HenvendelseServiceTest {
     protected BehandleHenvendelsePortType behandleHenvendelsePortType;
 
     @InjectMocks
-    private HenvendelseService henvendelseService;
+    private HenvendelseBehandlingService henvendelseBehandlingService;
 
     private XMLHenvendelse xmlHenvendelse;
     private Sak sak;
@@ -88,7 +88,7 @@ public class HenvendelseServiceTest {
 
     @Test
     public void skalHenteMeldingerMedRiktigType() {
-        henvendelseService.hentMeldinger(FNR);
+        henvendelseBehandlingService.hentMeldinger(FNR);
 
         verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
         WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
@@ -101,7 +101,7 @@ public class HenvendelseServiceTest {
 
     @Test
     public void skalTransformereResponsenTilMeldingsliste() {
-        List<Melding> meldinger = henvendelseService.hentMeldinger(FNR);
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
         assertThat(meldinger.size(), is(1));
         assertThat(meldinger.get(0).id, is(BEHANDLINGS_ID));
@@ -110,7 +110,7 @@ public class HenvendelseServiceTest {
     @Test
     public void skalSendeJournalfortInformasjonTilBehandleHenvendelse() {
         innloggetBrukerEr(NAVIDENT);
-        henvendelseService.oppdaterJournalfortInformasjonIHenvendelse(sak, JOURNALPOST_ID, melding);
+        henvendelseBehandlingService.oppdaterJournalfortInformasjonIHenvendelse(sak, JOURNALPOST_ID, melding);
 
         verify(behandleHenvendelsePortType).oppdaterJournalfortInformasjon(anyString(), xmlJournalfortInformasjonArgumentCaptor.capture());
         XMLJournalfortInformasjon journalfortInformasjon = xmlJournalfortInformasjonArgumentCaptor.getValue();

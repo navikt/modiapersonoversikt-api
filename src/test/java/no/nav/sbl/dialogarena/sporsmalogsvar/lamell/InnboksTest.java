@@ -5,7 +5,7 @@ import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -37,13 +37,13 @@ public class InnboksTest {
     private static final String ENESTE_MELDING_ID_TRAAD2 = "enesteIdTraad2";
 
     @Inject
-    private HenvendelseService henvendelseService;
+    private HenvendelseBehandlingService henvendelseBehandlingService;
     @Inject
     private FluentWicketTester wicket;
 
     @Before
     public void setUp() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding(ELDSTE_MELDING_ID_TRAAD1, Meldingstype.SPORSMAL, now().minusDays(1), "TEMA", ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(NYESTE_MELDING_ID_TRAAD1, Meldingstype.SVAR, now(), "TEMA", ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(ENESTE_MELDING_ID_TRAAD2, Meldingstype.SPORSMAL, now().minusDays(2), "TEMA", ENESTE_MELDING_ID_TRAAD2)));

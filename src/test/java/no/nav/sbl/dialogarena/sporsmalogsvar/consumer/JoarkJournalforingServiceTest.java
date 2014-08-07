@@ -60,7 +60,7 @@ public class JoarkJournalforingServiceTest {
     @Mock
     private ValgtEnhetService valgtEnhetService;
     @Mock
-    private HenvendelseService henvendelseService;
+    private HenvendelseBehandlingService henvendelseBehandlingService;
 
     @InjectMocks
     private JoarkJournalforingService joarkJournalforingService;
@@ -154,7 +154,7 @@ public class JoarkJournalforingServiceTest {
 
         joarkJournalforingService.journalforTraad(traadVM, sak);
 
-        verify(henvendelseService, atLeast(2)).oppdaterJournalfortInformasjonIHenvendelse(any(Sak.class), anyString(), any(Melding.class));
+        verify(henvendelseBehandlingService, atLeast(2)).oppdaterJournalfortInformasjonIHenvendelse(any(Sak.class), anyString(), any(Melding.class));
     }
 
     private ArrayList<MeldingVM> createMeldingListeMedEttSporsmaalOgEttSamtalereferat() {

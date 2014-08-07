@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.config.mock;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ValgtEnhetService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -31,10 +31,10 @@ public class ServiceTestContext {
     }
 
     @Bean
-    public HenvendelseService henvendelseService() {
-        HenvendelseService henvendelseService = mock(HenvendelseService.class);
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(opprettMeldingEksempel()));
-        return henvendelseService;
+    public HenvendelseBehandlingService henvendelseBehandlingService() {
+        HenvendelseBehandlingService henvendelseBehandlingService = mock(HenvendelseBehandlingService.class);
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(opprettMeldingEksempel()));
+        return henvendelseBehandlingService;
     }
 
     @Bean

@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.JournalforingsPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.nyoppgave.NyOppgavePanel;
 import org.junit.Test;
@@ -33,78 +33,78 @@ import static org.mockito.Mockito.when;
 public class HaandterMeldingPanelTest extends WicketPageTest {
 
     @Inject
-    private HenvendelseService henvendelseService;
+    private HenvendelseBehandlingService henvendelseBehandlingService;
 
     @Test
     public void skalKunneBesvareTraadInitiertAvBruker() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseBehandlingService, "fnr")))
                 .should().containComponent(thatIsEnabled().and(withId("besvar")));
     }
 
     @Test
     public void skalKunneBesvareTraadInitiertAvBrukerMedTidligereSvar() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1"),
                 createMelding("melding2", SVAR, now(), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseBehandlingService, "fnr")))
                 .should().containComponent(thatIsEnabled().and(withId("besvar")));
     }
 
     @Test
     public void skalIkkeKunneBesvareTraadInitiertAvSaksbehandler() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SAMTALEREFERAT, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseBehandlingService, "fnr")))
                 .should().containComponent(thatIsDisabled().and(withId("besvar")));
     }
 
     @Test
     public void skalKunneJournalforeHvisNyesteMeldingIkkeErJournalfort() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseBehandlingService, "fnr")))
                 .should().containComponent(thatIsEnabled().and(withId("journalfor")));
     }
 
     @Test
     public void skalIkkeKunneJournalforeHvisNyesteMeldingErJournalfort() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMeldingMedJournalfortDato("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1", now())));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseBehandlingService, "fnr")))
                 .should().containComponent(thatIsDisabled().and(withId("journalfor")));
     }
 
     @Test
     public void skalKunneOppretteNyOppgaveHvisTraadenErBehandlet() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SAMTALEREFERAT, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseBehandlingService, "fnr")))
                 .should().containComponent(thatIsEnabled().and(withId("nyoppgave")));
     }
 
     @Test
     public void skalIkkeKunneOppretteNyOppgaveHvisTraadenIkkeErBehandlet() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseBehandlingService, "fnr")))
                 .should().containComponent(thatIsDisabled().and(withId("nyoppgave")));
     }
 
     @Test
     public void skalViseJournalforingsPanelogSkjuleNyOppgavePanelVedKlikkPaaJournalfor() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseBehandlingService, "fnr")))
                 .click().link(withId("journalfor"))
                 .should().containComponent(thatIsVisible().and(ofType(JournalforingsPanel.class)))
                 .should().containComponent(thatIsInvisible().and(ofType(NyOppgavePanel.class)));
@@ -112,12 +112,13 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
 
     @Test
     public void skalViseNyOppgavePanelogSkjuleJournalforingsPanelVedKlikkPaaNyOppgave() {
-        when(henvendelseService.hentMeldinger(anyString())).thenReturn(asList(
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SAMTALEREFERAT, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel("haandtermeldinger", new InnboksVM(henvendelseBehandlingService, "fnr")))
                 .click().link(withId("nyoppgave"))
                 .should().containComponent(thatIsVisible().and(ofType(NyOppgavePanel.class)))
                 .should().containComponent(thatIsInvisible().and(ofType(JournalforingsPanel.class)));
     }
+
 }

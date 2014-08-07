@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -20,9 +21,10 @@ import java.util.List;
 
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.verify;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = {JournalforingPanelVelgSakTestConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
@@ -31,7 +33,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
     private final static String JOURNALFORT_SAKSID = "123123123";
 
     @Inject
-    private HenvendelseService henvendelseService;
+    private HenvendelseBehandlingService henvendelseBehandlingService;
     @Inject
     private GsakService gsakService;
     @Inject
@@ -41,7 +43,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        innboksVM = new InnboksVM(henvendelseService, FODSELSNR);
+        innboksVM = new InnboksVM(henvendelseBehandlingService, FODSELSNR);
         List<Sak> sakerForBruker = gsakService.hentSakerForBruker(innboksVM.getFnr());
         sakerForBruker.get(0).opprettetDato = DateTime.now();
         sakerForBruker.get(0).saksId = JOURNALFORT_SAKSID;
@@ -59,7 +61,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
                 .goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVM))
                 .click().link(withId("journalforTraad"));
 
-        verify(joarkJournalforingService, atLeast(1)).journalforTraad(any(TraadVM.class), any(Sak.class));
+        verify(joarkJournalforingService).journalforTraad(any(TraadVM.class), any(Sak.class));
     }
 
 }
