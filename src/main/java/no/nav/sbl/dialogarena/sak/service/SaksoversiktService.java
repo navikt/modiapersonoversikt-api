@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
+import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
@@ -72,7 +73,7 @@ public class SaksoversiktService {
         for (String kvitteringsID : kvitteringerForBehandlingsID.keySet()) {
             behandlinger.add(beriketKvittering(kvitteringerForBehandlingsID.get(kvitteringsID), kjederForBehandlingsID.get(kvitteringsID), temakode));
         }
-        return behandlinger;
+        return on(behandlinger).collect(new OmvendtKronologiskBehandlingComparator());
     }
 
     private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede, String sakstema) {
