@@ -39,7 +39,7 @@ public class SaksoversiktLerret extends Lerret {
 
     private WebMarkupContainer lagSakerContainer(String fnr) {
         return (WebMarkupContainer) new WebMarkupContainer("sakerContainer")
-                .add(new SakerListView("saker", fnr, aktivtTema, this).setOutputMarkupPlaceholderTag(true));
+                .add(new SakerListView("saker", fnr, this).setOutputMarkupPlaceholderTag(true));
     }
 
     @SuppressWarnings("unused")
@@ -53,5 +53,7 @@ public class SaksoversiktLerret extends Lerret {
         hendelserContainer.addOrReplace(new BehandlingerListView("behandlinger", saksoversiktService.hentBehandlingerForTemakode(fnr, sakstema), fnr));
     }
 
-
+    public IModel<String> getAktivtTema() {
+        return aktivtTema;
+    }
 }
