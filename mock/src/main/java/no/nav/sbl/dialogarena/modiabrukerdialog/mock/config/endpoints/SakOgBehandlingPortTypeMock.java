@@ -93,7 +93,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSakstema(new WSSakstemaer().withValue(AAPARKIVTEMA))
                 .withBehandlingskjede(
                         createBehandlingKobletTilKvittering(KVITTERING1, AAP_BEHANDLINGSTEMA),
-                        createAvsluttetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA)
+                        createAvsluttetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSlutt(now().minusYears(1))
                 );
     }
 
@@ -111,7 +111,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSaksId("2")
                 .withSakstema(new WSSakstemaer().withValue("HJE"))
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, "HJE")
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, "HJE").withStart(now().minusYears(1))
                 );
     }
 
