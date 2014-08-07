@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.list.PropertyListView;
 import javax.inject.Inject;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.sbl.dialogarena.sak.util.SakDateFormatter.printLongDate;
 import static org.apache.wicket.model.Model.of;
 import static org.apache.wicket.model.Model.ofList;
 
@@ -30,7 +31,7 @@ public class SakerListView extends PropertyListView<TemaVM> {
     @Override
     protected void populateItem(ListItem<TemaVM> item) {
         String sakstema = item.getModelObject().temakode;
-        String datoStreng = item.getModelObject().sistoppdaterteBehandling.behandlingDato.toString();
+        String datoStreng = printLongDate(item.getModelObject().sistoppdaterteBehandling.behandlingDato);
         item.add(
                 new Superlenke("temalenke", sakstema, datoStreng)
         );
