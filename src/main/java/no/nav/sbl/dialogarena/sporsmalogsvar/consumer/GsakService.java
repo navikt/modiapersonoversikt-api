@@ -27,10 +27,10 @@ public class GsakService {
 
     public List<Sak> hentSakerForBruker(String fnr) {
         WSFinnGenerellSakListeResponse response = sakWs.finnGenerellSakListe(new WSFinnGenerellSakListeRequest().withBrukerId(fnr));
-        return on(response.getSakListe()).map(tilSak).collect();
+        return on(response.getSakListe()).map(TIL_SAK).collect();
     }
 
-    public static Transformer<WSGenerellSak, Sak> tilSak = new Transformer<WSGenerellSak, Sak>() {
+    public final static Transformer<WSGenerellSak, Sak> TIL_SAK = new Transformer<WSGenerellSak, Sak>() {
         @Override
         public Sak transform(WSGenerellSak wsGenerellSak) {
             Sak sak = new Sak();

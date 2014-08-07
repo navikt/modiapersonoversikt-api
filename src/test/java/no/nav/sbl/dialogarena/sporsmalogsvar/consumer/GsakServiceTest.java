@@ -71,7 +71,7 @@ public class GsakServiceTest {
 
     @Test
     public void skalTransformasjonenSkalGenerereRelevanteFelter() {
-        Sak sak = GsakService.tilSak.transform(wsGenerellSak);
+        Sak sak = GsakService.TIL_SAK.transform(wsGenerellSak);
 
         assertThat(sak.saksId, is(SAK_ID));
         assertThat(sak.tema, is(TEMA));
