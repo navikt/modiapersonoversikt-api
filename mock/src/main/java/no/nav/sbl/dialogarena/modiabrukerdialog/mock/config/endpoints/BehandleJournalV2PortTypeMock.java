@@ -22,10 +22,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.xml.bind.JAXB;
+import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 import static java.lang.String.valueOf;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -68,7 +72,11 @@ public class BehandleJournalV2PortTypeMock {
                 loggJournalforing("Journalført notat", journalfoerNotatRequest);
 
                 byte[] innhold = hentJounalfortNotatInnhold(journalfoerNotatRequest);
-                lagreTilDisk(innhold, "/var/tmp/notat.pdf");
+                String saksid = journalfoerNotatRequest.getJournalpost().getGjelderSak().getSaksId();
+                XMLGregorianCalendar dokumentDato = journalfoerNotatRequest.getJournalpost().getDokumentDato();
+                String formatertDokumentDato = formaterTimestamp(dokumentDato);
+                String filePath = String.format("/var/tmp/notat-%s-%s.pdf", saksid, formatertDokumentDato);
+                lagreTilDisk(innhold, filePath);
 
                 JournalfoerNotatResponse journalfoerNotatResponse = new JournalfoerNotatResponse();
                 journalfoerNotatResponse.setJournalpostId(valueOf(journalpostId++));
@@ -80,7 +88,11 @@ public class BehandleJournalV2PortTypeMock {
                 loggJournalforing("Journalført utgående henvendelse", journalfoerUtgaaendeHenvendelseRequest);
 
                 byte[] innhold = hentJounalfortSvarInnhold(journalfoerUtgaaendeHenvendelseRequest);
-                lagreTilDisk(innhold, "/var/tmp/svar.pdf");
+                String saksid = journalfoerUtgaaendeHenvendelseRequest.getJournalpost().getGjelderSak().getSaksId();
+                XMLGregorianCalendar dokumentDato = journalfoerUtgaaendeHenvendelseRequest.getJournalpost().getDokumentDato();
+                String formatertDokumentDato = formaterTimestamp(dokumentDato);
+                String filePath = String.format("/var/tmp/svar-%s-%s.pdf", saksid, formatertDokumentDato);
+                lagreTilDisk(innhold, filePath);
 
                 JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelseResponse = new JournalfoerUtgaaendeHenvendelseResponse();
                 journalfoerUtgaaendeHenvendelseResponse.setJournalpostId(valueOf(journalpostId++));
@@ -92,13 +104,22 @@ public class BehandleJournalV2PortTypeMock {
                 loggJournalforing("Journalført inngående henvendelse", journalfoerInngaaendeHenvendelseRequest);
 
                 byte[] innhold = hentJounalfortSporsmaalInnhold(journalfoerInngaaendeHenvendelseRequest);
-                lagreTilDisk(innhold, "/var/tmp/sporsmaal.pdf");
+                String saksid = journalfoerInngaaendeHenvendelseRequest.getJournalpost().getGjelderSak().getSaksId();
+                XMLGregorianCalendar dokumentDato = journalfoerInngaaendeHenvendelseRequest.getJournalpost().getDokumentDato();
+                String formatertDokumentDato = formaterTimestamp(dokumentDato);
+                String filePath = String.format("/var/tmp/sporsmaal-%s-%s.pdf", saksid, formatertDokumentDato);
+                lagreTilDisk(innhold, filePath);
 
                 JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelseResponse = new JournalfoerInngaaendeHenvendelseResponse();
                 journalfoerInngaaendeHenvendelseResponse.setJournalpostId(valueOf(journalpostId++));
                 return journalfoerInngaaendeHenvendelseResponse;
             }
         };
+    }
+
+    private static String formaterTimestamp(XMLGregorianCalendar dokumentDato) {
+        Date date = dokumentDato.toGregorianCalendar().getTime();
+        return new SimpleDateFormat("dd-MM-yyyy HH:mm:ss", new Locale("nb", "no")).format(date);
     }
 
     private static void loggJournalforing(String overskrift, Object request) {
@@ -118,7 +139,8 @@ public class BehandleJournalV2PortTypeMock {
             fileOutputStream.write(bytes);
             fileOutputStream.close();
         } catch (IOException e) {
-            logger.debug("Feil ved opprettelse av pdf fil for lagrring på disk", e);
+            String logMsg = String.format("Feil ved opprettelse av pdf filen for lagrring på disk: %s", pathname);
+            logger.debug(logMsg, e);
         }
 
         logger.info("Pdf lagret til disk: " + pathname);
