@@ -4,6 +4,8 @@ import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -45,7 +47,9 @@ public class KvitteringsPanel extends Panel {
         add(
                 new Label("sendtAv", format(sendtAvString, fnr)),
                 new Label("kvitteringsinfo-bottom", cms.hentTekst("kvittering.info.bottom")).setEscapeModelStrings(false),
-                new Label("sendt-inn", format(cms.hentTekst("kvittering.vedlegg.sendtInn.antall"), antallInnsendteVedlegg, totalAntallVedlegg, dato))
+                new Label("sendt-inn", format(cms.hentTekst("kvittering.vedlegg.sendtInn.antall"), antallInnsendteVedlegg, totalAntallVedlegg, dato)),
+                new Label("skjul-kollapsbar", cms.hentTekst("kvittering.skjul")),
+                new Label("vis-kollapsbar", cms.hentTekst("kvittering.vis"))
         );
 
         leggTilInnsendteVedlegg(kvittering);
@@ -112,4 +116,9 @@ public class KvitteringsPanel extends Panel {
         };
     }
 
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        response.render(OnLoadHeaderItem.forScript("addExpandClickEvent()"));
+    }
 }

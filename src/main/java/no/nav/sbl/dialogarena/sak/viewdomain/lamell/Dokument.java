@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.sak.viewdomain.lamell;
 
-public class Dokument {
+import java.io.Serializable;
+
+public class Dokument implements Serializable {
 
     public String kodeverkRef;
     public String tilleggstittel;

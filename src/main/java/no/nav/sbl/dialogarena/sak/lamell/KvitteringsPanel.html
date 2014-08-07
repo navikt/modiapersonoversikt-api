@@ -5,7 +5,7 @@
         <span wicket:id="sendt-inn"/>
     </div>
 
-    <div>
+    <div class="kollapsbar">
         <p>
             <span wicket:id="behandlingstid">[]</span>
             <span wicket:id="behandlingstidbeskrivelse">[]</span>
@@ -29,7 +29,10 @@
             </ul>
         </section>
         <p wicket:id="kvitteringsinfo-bottom">[]</p>
-
     </div>
+    <a class="mini toggle-kollapsbar" href="#">
+        <span class="skjul" wicket:id="skjul-kollapsbar"/>
+        <span wicket:id="vis-kollapsbar"/>
+    </a>
 </wicket:panel>
 </html>
