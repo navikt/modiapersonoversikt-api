@@ -34,13 +34,16 @@ public class SaksoversiktLerret extends Lerret {
 
     private WebMarkupContainer lagSakerContainer(String fnr) {
         return (WebMarkupContainer) new WebMarkupContainer("sakerContainer")
-                .add(new SakerListView("saker", fnr).setOutputMarkupPlaceholderTag(true));
+                .add(new SakerListView("saker", fnr, this).setOutputMarkupPlaceholderTag(true));
     }
 
     @SuppressWarnings("unused")
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void filtrerDetaljerPaaValgtTema(AjaxRequestTarget target, FeedItemPayload payload) {
-        String sakstema = payload.getItemId();
+        hentNyeHendelser(payload.getItemId());
+    }
+
+    public void hentNyeHendelser(String sakstema) {
         hendelserContainer.addOrReplace(new BehandlingerListView("behandlinger", saksoversiktService.hentBehandlingerForTemakode(fnr, sakstema), fnr));
     }
 
