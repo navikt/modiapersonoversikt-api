@@ -66,8 +66,8 @@ public class KvitteringsPanel extends Panel {
 
         try {
             String behandlingstid = format(cms.hentTekst("soknader.normertbehandlingstid"), cms.hentTekst("soknader.normertbehandlingstid." + temakode));
-            behandlingstidLabel.setDefaultModelObject(behandlingstid);
-            behandlingstidbeskrivelse.setDefaultModelObject(hentBehandlingstidBeskrivelseTekst(kvittering));
+            behandlingstidLabel.setDefaultModel(new Model<>(behandlingstid));
+            behandlingstidbeskrivelse.setDefaultModel(new Model<>(hentBehandlingstidBeskrivelseTekst(kvittering)));
         } catch (MissingResourceException e) {
             logger.warn("Behandlingstid er ikke satt for temakode " + temakode, e);
             behandlingstidLabel.setVisible(false);
