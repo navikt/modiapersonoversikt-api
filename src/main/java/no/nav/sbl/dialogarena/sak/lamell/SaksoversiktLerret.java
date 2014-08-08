@@ -5,6 +5,7 @@ import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
@@ -19,6 +20,7 @@ import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 
 public class SaksoversiktLerret extends Lerret {
 
+    // Brukes av Modia (containeren):
     public static final PackageResourceReference SAKSOVERSIKT_LESS = new PackageResourceReference(SaksoversiktLerret.class, "saksoversikt.less");
     public static final JavaScriptResourceReference SAKSOVERSIKT_JS = new JavaScriptResourceReference(SaksoversiktLerret.class, "saksoversikt.js");
 
@@ -32,13 +34,17 @@ public class SaksoversiktLerret extends Lerret {
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
         this.fnr = fnr;
-        hendelserContainer = (WebMarkupContainer) new WebMarkupContainer("hendelserContainer")
-                .add(new BehandlingerListView("behandlinger", new ArrayList<GenerellBehandling>(), fnr)).setOutputMarkupPlaceholderTag(true);
+        hendelserContainer = lagHendelserContainer(fnr);
         add(hendelserContainer, lagSakerContainer(fnr));
     }
 
-    private WebMarkupContainer lagSakerContainer(String fnr) {
-        return (WebMarkupContainer) new WebMarkupContainer("sakerContainer")
+    private WebMarkupContainer lagHendelserContainer(String fnr) {
+        return (WebMarkupContainer) new WebMarkupContainer("hendelserContainer")
+                .add(new BehandlingerListView("behandlinger", new ArrayList<GenerellBehandling>(), fnr)).setOutputMarkupPlaceholderTag(true);
+    }
+
+    private Component lagSakerContainer(String fnr) {
+        return new WebMarkupContainer("sakerContainer")
                 .add(new SakerListView("saker", fnr, this).setOutputMarkupPlaceholderTag(true));
     }
 

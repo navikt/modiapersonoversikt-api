@@ -27,7 +27,6 @@ import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.Be
 import static org.apache.wicket.model.Model.of;
 import static org.apache.wicket.model.Model.ofList;
 
-
 public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
 
     @Inject
