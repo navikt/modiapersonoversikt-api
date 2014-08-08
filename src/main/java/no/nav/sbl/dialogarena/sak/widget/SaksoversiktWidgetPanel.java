@@ -23,8 +23,7 @@ public class SaksoversiktWidgetPanel extends GenericPanel<TemaVM> {
     private BulletProofKodeverkService kodeverk;
 
     public SaksoversiktWidgetPanel(String id, IModel<TemaVM> model) {
-        super(id, model);
-        setOutputMarkupId(true);
+        super(id);
         TemaVM temaVM = model.getObject();
 
         DateTime sistOppdatert = temaVM.sistoppdaterteBehandling.behandlingDato;

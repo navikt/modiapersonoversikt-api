@@ -49,7 +49,7 @@ public class BulletProofKodeverkService {
     }
 
     private String hentUkjentKodeverkverdi(String kode) {
-        return format("Fant ikke kodeverksverdi for kodeverkskode: %s", kode);
+        return format("[Fant ikke \"%s\" i kodeverk]", kode);
     }
 
 }
