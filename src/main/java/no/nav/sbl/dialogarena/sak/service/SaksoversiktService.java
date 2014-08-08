@@ -17,6 +17,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import org.apache.commons.collections15.Predicate;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -38,8 +39,11 @@ import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformer
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.TEMA_VM;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.behandlingsDato;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.behandlingsStatus;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class SaksoversiktService {
+
+    private static final Logger LOG = getLogger(SaksoversiktService.class);
 
     @Inject
     private AktoerPortType fodselnummerAktorService;
@@ -54,6 +58,7 @@ public class SaksoversiktService {
      * Henter alle tema for en gitt person
      */
     public List<TemaVM> hentTemaer(String fnr) {
+        LOG.info("Henter tema fra Sak og Behandling til Modiasaksoversikt. Fnr: " + fnr);
         return on(hentSakerForAktor(hentAktorId(fnr))).map(TEMA_VM).collect(new SistOppdaterteBehandlingComparator());
     }
 
@@ -61,6 +66,7 @@ public class SaksoversiktService {
      * Henter alle behandlinger for et gitt tema fra flere baksystemer
      */
     public List<GenerellBehandling> hentBehandlingerForTemakode(String fnr, String temakode) {
+        LOG.info("Henter behandlinger fra Sak og Behandling & Henvendelse til Modiasaksoversikt. Fnr: " + fnr + ". Temakode: " + temakode);
         List<GenerellBehandling> behandlinger = new ArrayList<>();
         WSSak wsSak = hentSakForAktorPaaTema(hentAktorId(fnr), temakode);
         List<WSBehandlingskjede> alleBehandlingskjeder = wsSak.getBehandlingskjede();
@@ -133,13 +139,19 @@ public class SaksoversiktService {
     }
 
     private List<WSSoknad> hentInnsendteSoknader(String fnr) {
-        return on(henvendelseSoknaderPortType.hentSoknadListe(fnr)).filter(where(INNSENDT, equalTo(true))).collect();
+        try {
+            return on(henvendelseSoknaderPortType.hentSoknadListe(fnr)).filter(where(INNSENDT, equalTo(true))).collect();
+        } catch (Exception e) {
+            LOG.warn("Feil ved kall til henvendelse, kaster SystemException");
+            throw new SystemException("Feil ved kall til henvendelse", e);
+        }
     }
 
     private String hentAktorId(String fnr) {
         try {
             return fodselnummerAktorService.hentAktoerIdForIdent(lagAktorRequest(fnr)).getAktoerId();
         } catch (HentAktoerIdForIdentPersonIkkeFunnet hentAktoerIdForIdentPersonIkkeFunnet) {
+            LOG.warn("Feil ved kall til aktørid service, kaster SystemException");
             throw new SystemException("Klarte ikke hente aktørId", hentAktoerIdForIdentPersonIkkeFunnet);
         }
     }
@@ -152,6 +164,7 @@ public class SaksoversiktService {
         try {
             return sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
         } catch (RuntimeException ex) {
+            LOG.warn("Feil ved kall til sakogbehandling, kaster SystemException");
             throw new SystemException("Feil ved kall til sakogbehandling", ex);
         }
     }
