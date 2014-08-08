@@ -15,14 +15,14 @@ import static no.nav.sbl.dialogarena.sak.util.SakDateFormatter.printLongDate;
 import static org.apache.wicket.model.Model.of;
 import static org.apache.wicket.model.Model.ofList;
 
-public class SakerListView extends PropertyListView<TemaVM> {
+public class TemaListView extends PropertyListView<TemaVM> {
 
     @Inject
     private SaksoversiktService saksoversiktService;
 
     private final SaksoversiktLerret lerret;
 
-    public SakerListView(String id, String fnr, SaksoversiktLerret lerret) {
+    public TemaListView(String id, String fnr, SaksoversiktLerret lerret) {
         super(id);
         this.lerret = lerret;
         setDefaultModel(ofList(saksoversiktService.hentTemaer(fnr)));
@@ -32,17 +32,17 @@ public class SakerListView extends PropertyListView<TemaVM> {
     protected void populateItem(ListItem<TemaVM> item) {
         String sakstema = item.getModelObject().temakode;
         String datoStreng = printLongDate(item.getModelObject().sistoppdaterteBehandling.behandlingDato);
-        item.add(
-                new Superlenke("temalenke", sakstema, datoStreng)
-        );
-        item.add(hasCssClassIf("aktiv", of(sakstema.equals(lerret.getAktivtTema().getObject()))));
+        boolean sakstemaErValgt = sakstema.equals(lerret.getAktivtTema().getObject());
+
+        item.add(new Temalenke("temalenke", sakstema, datoStreng));
+        item.add(hasCssClassIf("aktiv", of(sakstemaErValgt)));
     }
 
-    private class Superlenke extends AjaxLink {
+    private class Temalenke extends AjaxLink {
 
         private String sakstema;
 
-        public Superlenke(String id, String sakstema, String datoStreng) {
+        public Temalenke(String id, String sakstema, String datoStreng) {
             super(id);
             this.sakstema = sakstema;
             add(

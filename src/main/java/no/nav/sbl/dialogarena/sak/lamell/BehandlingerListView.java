@@ -5,6 +5,7 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -48,12 +49,10 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
         GenerellBehandling behandling = item.getModelObject();
 
         List<? extends GenerellBehandling> list = getList();
-        int idx = list.indexOf(behandling);
 
-        Model<Boolean> erNyttAarModell = getErNyttAarModell(behandling, list, idx);
-        item.add(hasCssClassIf("ikke-nytt-aar", not(erNyttAarModell)));
-        Label aar = new Label("aar", behandling.behandlingDato.getYear());
-        aar.add(visibleIf(erNyttAarModell));
+        Model<Boolean> erNyttAar =  Model.of(getErNyttAarModell(behandling, list));
+        Component aar = new Label("aar", behandling.behandlingDato.getYear()).add(visibleIf(erNyttAar));
+        item.add(hasCssClassIf("ikke-nytt-aar", not(erNyttAar)));
 
         item.add(
                 new Label("hendelse-tittel", getTittel(behandling)),
@@ -78,18 +77,16 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
         return dato;
     }
 
-    private Model<Boolean> getErNyttAarModell(GenerellBehandling behandling, List<? extends GenerellBehandling> list, int idx) {
-        boolean erNyttAar = false;
-        if (idx > 0) {
-            DateTime forrigeBehandlingDato = list.get(idx - 1).behandlingDato;
+    private Boolean getErNyttAarModell(GenerellBehandling behandling, List<? extends GenerellBehandling> list) {
+        int index = list.indexOf(behandling);
 
-            if (forrigeBehandlingDato.getYear() != behandling.behandlingDato.getYear()) {
-                erNyttAar = true;
-            }
-        } else {
-            erNyttAar = true;
+        if (index == 0) {
+            return true;
         }
-        return Model.of(erNyttAar);
+
+        DateTime forrigeBehandlingDato = list.get(index - 1).behandlingDato;
+
+        return forrigeBehandlingDato.getYear() != behandling.behandlingDato.getYear();
     }
 
     private String getTittel(GenerellBehandling behandling) {

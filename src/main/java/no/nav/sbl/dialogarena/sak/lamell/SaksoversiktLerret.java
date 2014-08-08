@@ -35,7 +35,7 @@ public class SaksoversiktLerret extends Lerret {
         super(id);
         this.fnr = fnr;
         hendelserContainer = lagHendelserContainer(fnr);
-        add(hendelserContainer, lagSakerContainer(fnr));
+        add(hendelserContainer, lagTemaContainer(fnr));
     }
 
     private WebMarkupContainer lagHendelserContainer(String fnr) {
@@ -43,9 +43,9 @@ public class SaksoversiktLerret extends Lerret {
                 .add(new BehandlingerListView("behandlinger", new ArrayList<GenerellBehandling>(), fnr)).setOutputMarkupPlaceholderTag(true);
     }
 
-    private Component lagSakerContainer(String fnr) {
+    private Component lagTemaContainer(String fnr) {
         return new WebMarkupContainer("sakerContainer")
-                .add(new SakerListView("saker", fnr, this).setOutputMarkupPlaceholderTag(true));
+                .add(new TemaListView("saker", fnr, this).setOutputMarkupPlaceholderTag(true));
     }
 
     @SuppressWarnings("unused")
