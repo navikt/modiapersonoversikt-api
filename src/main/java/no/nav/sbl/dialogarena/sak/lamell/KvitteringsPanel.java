@@ -59,18 +59,25 @@ public class KvitteringsPanel extends Panel {
     }
 
     private void leggTilBehandlingsTidInfo(Kvittering kvittering) {
-        String behandlingstid = "";
         String temakode = kvittering.behandlingstema;
-        boolean fantInfoOmTid = true;
+
+        Label behandlingstidLabel = new Label("behandlingstid");
+        Label behandlingstidbeskrivelse = new Label("behandlingstidbeskrivelse");
+
         try {
-            behandlingstid = format(cms.hentTekst("soknader.normertbehandlingstid"), cms.hentTekst("soknader.normertbehandlingstid." + temakode));
+            String behandlingstid = format(cms.hentTekst("soknader.normertbehandlingstid"), cms.hentTekst("soknader.normertbehandlingstid." + temakode));
+            behandlingstidLabel.setDefaultModelObject(behandlingstid);
+            behandlingstidbeskrivelse.setDefaultModelObject(hentBehandlingstidBeskrivelseTekst(kvittering));
         } catch (MissingResourceException e) {
             logger.warn("Behandlingstid er ikke satt for temakode " + temakode, e);
-            fantInfoOmTid = false;
+            behandlingstidLabel.setVisible(false);
+            behandlingstidbeskrivelse.setVisible(false);
         }
+
         add(
-                new Label("behandlingstid").setDefaultModel(new Model<>(behandlingstid)).setVisible(fantInfoOmTid),
-                new Label("behandlingstidbeskrivelse", hentBehandlingstidBeskrivelseTekst(kvittering)).setVisible(fantInfoOmTid));
+                behandlingstidLabel,
+                behandlingstidbeskrivelse
+        );
     }
 
     private String hentBehandlingstidBeskrivelseTekst(Kvittering kvittering) {
@@ -106,12 +113,12 @@ public class KvitteringsPanel extends Panel {
 
             @Override
             protected void populateItem(ListItem<Dokument> item) {
-                final Dokument dokument = item.getModelObject();
-                String tilleggsTittelString = "";
+                Dokument dokument = item.getModelObject();
+                String dokumentTittel = kodeverk.getSkjematittelForSkjemanummer(dokument.kodeverkRef);
                 if (kodeverk.isEgendefinert(dokument.kodeverkRef)) {
-                    tilleggsTittelString = ": " + dokument.tilleggstittel;
+                    dokumentTittel += ": " + dokument.tilleggstittel;
                 }
-                item.add(new Label("dokument", kodeverk.getSkjematittelForSkjemanummer(dokument.kodeverkRef) + tilleggsTittelString));
+                item.add(new Label("dokument", dokumentTittel));
             }
         };
     }
