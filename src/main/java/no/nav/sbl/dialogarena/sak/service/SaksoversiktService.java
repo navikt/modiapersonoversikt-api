@@ -142,7 +142,6 @@ public class SaksoversiktService {
         try {
             return on(henvendelseSoknaderPortType.hentSoknadListe(fnr)).filter(where(INNSENDT, equalTo(true))).collect();
         } catch (Exception e) {
-            LOG.warn("Feil ved kall til henvendelse, kaster SystemException");
             throw new SystemException("Feil ved kall til henvendelse", e);
         }
     }
@@ -151,7 +150,6 @@ public class SaksoversiktService {
         try {
             return fodselnummerAktorService.hentAktoerIdForIdent(lagAktorRequest(fnr)).getAktoerId();
         } catch (HentAktoerIdForIdentPersonIkkeFunnet hentAktoerIdForIdentPersonIkkeFunnet) {
-            LOG.warn("Feil ved kall til aktørid service, kaster SystemException");
             throw new SystemException("Klarte ikke hente aktørId", hentAktoerIdForIdentPersonIkkeFunnet);
         }
     }
@@ -164,7 +162,6 @@ public class SaksoversiktService {
         try {
             return sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
         } catch (RuntimeException ex) {
-            LOG.warn("Feil ved kall til sakogbehandling, kaster SystemException");
             throw new SystemException("Feil ved kall til sakogbehandling", ex);
         }
     }
