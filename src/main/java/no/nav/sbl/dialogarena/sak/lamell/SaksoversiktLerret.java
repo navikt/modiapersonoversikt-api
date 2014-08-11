@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
+import no.nav.modig.frontend.ConditionalCssResource;
+import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -7,9 +9,12 @@ import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
@@ -22,7 +27,9 @@ public class SaksoversiktLerret extends Lerret {
 
     // Brukes av Modia (containeren):
     public static final PackageResourceReference SAKSOVERSIKT_LESS = new PackageResourceReference(SaksoversiktLerret.class, "saksoversikt.less");
+    public static final ConditionalCssResource SAKSOVERSIKT_IE_CSS = new ConditionalCssResource(new CssResourceReference(SaksoversiktLerret.class, "saksoversikt-ie.css"), "screen", "IE");
     public static final JavaScriptResourceReference SAKSOVERSIKT_JS = new JavaScriptResourceReference(SaksoversiktLerret.class, "saksoversikt.js");
+    public static final ConditionalJavascriptResource SAKSOVERSIKT_IE_JS = new ConditionalJavascriptResource(new JavaScriptResourceReference(SaksoversiktLerret.class, "saksoversikt-ie.js"), "IE");
 
     @Inject
     private SaksoversiktService saksoversiktService;
@@ -61,5 +68,11 @@ public class SaksoversiktLerret extends Lerret {
 
     public IModel<String> getAktivtTema() {
         return aktivtTema;
+    }
+
+    @Override
+    public void renderHead(IHeaderResponse response) {
+        super.renderHead(response);
+        response.render(OnLoadHeaderItem.forScript("resizeElement()"));
     }
 }

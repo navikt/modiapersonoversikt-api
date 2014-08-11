@@ -5,7 +5,6 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
-import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -51,13 +50,15 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
         List<? extends GenerellBehandling> list = getList();
 
         Model<Boolean> erNyttAar =  Model.of(getErNyttAarModell(behandling, list));
-        Component aar = new Label("aar", behandling.behandlingDato.getYear()).add(visibleIf(erNyttAar));
+        WebMarkupContainer aarContainer = new WebMarkupContainer("aar-container");
+        aarContainer.add(visibleIf(erNyttAar));
+        aarContainer.add(new Label("aar", behandling.behandlingDato.getYear()));
         item.add(hasCssClassIf("ikke-nytt-aar", not(erNyttAar)));
 
         item.add(
                 new Label("hendelse-tittel", getTittel(behandling)),
                 getDato(behandling),
-                aar
+                aarContainer
         );
 
         if (BEHANDLING.equals(behandling.behandlingsType)) {

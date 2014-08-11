@@ -10,19 +10,19 @@
                     </a>
                 </li>
             </ul>
-        </article>
-        <div class="sak-informasjon" wicket:id="hendelserContainer">
+        </article><div class="sak-informasjon" wicket:id="hendelserContainer">
+        <!-- Ikke flytt div ned på ny linje! Det vil bryte styling i IE9. -->
             <article wicket:id="behandlinger">
-                <div class="aar">
+                <div class="aar" wicket:id="aar-container">
                     <span wicket:id="aar"/>
                 </div>
                 <div class="behandling">
                     <div class="dato" wicket:id="dato">
                         <span class="dag" wicket:id="dag"/>
                         <span class="maaned" wicket:id="maaned"/>
-                    </div>
-                    <div class="behandling-informasjon">
-                        <h2 class="robust" wicket:id="hendelse-tittel">[]</h2>
+                    </div><div class="behandling-informasjon">
+                    <!-- Se over... -->
+                        <h2 class="robust" wicket:id="hendelse-tittel"/>
                         <wicket:container wicket:id="behandling"/>
                     </div>
                 </div>
