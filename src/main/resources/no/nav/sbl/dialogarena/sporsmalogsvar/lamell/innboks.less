@@ -161,50 +161,26 @@
     .journalfort-skiller {
       background-color: #333333;
       color: white;
-      padding-top: 3px;
-      padding-bottom: 35px;
-      padding-left: 0.5em;
-      margin-bottom: 0px;
-      margin-top: 2rem;
-      text-align: left;
-      &.nyeste {
-        margin-top: 0.2rem;
-      }
+      margin: 15px 0;
+      padding: 1em;
       .journalfor-ikon {
         background-image: url(../img/journalfore_hvit.svg);
         background-repeat: no-repeat;
-        padding-right: 1.4rem ;
+        padding-right: 1.4rem;
       }
-      .medium-skrift {
-        color: @modiagraaskrift;
-        font-size: 1em;
-        margin-top: 0.2em;
-        margin-bottom: 0.2em;
-      }
-      .journalfort-data-div {
-        float: left;
+      .journalfort-data {
         font-size: 0.85rem;
-        margin-bottom: 0.2em;
-        font: arial, helvetica, clean, sans-serif;
       }
       .skillestrek {
         color: @modiagraaskrift;
-        font-size: 0.95rem;
-        font-weight: 800;
       }
-      span {
-        display: inline;
-        padding-right: 0.2rem;
-      }
-
     }
 
     .tidligere-melding {
       position: relative;
       background-color: @graabakgrunn;
-      border: 2px solid @rammeborder;
+      border: 1px solid @rammeborder;
       padding: 20px;
-      margin-top: 0px;
 
       p:last-child {
         margin-bottom: 0;
@@ -225,8 +201,8 @@
       }
       &:before {
         border-bottom-color: @rammeborder;
-        border-width: 18px;
-        margin-left: -18px;
+        border-width: 15px;
+        margin-left: -15px;
       }
       .venstre-kolonne {
         width: 15%;
