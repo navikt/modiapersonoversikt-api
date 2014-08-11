@@ -119,8 +119,8 @@ public class WicketApplication extends WebApplication {
                         MetaTag.CHARSET_UTF8,
                         MetaTag.VIEWPORT_SCALE_1
                 )
-                .addConditionalCss(PersonPage.INTERN_IE)
-                .addConditionalJavascript(PersonPage.RESPOND_JS)
+                .addConditionalCss(PersonPage.INTERN_IE, SaksoversiktLerret.SAKSOVERSIKT_IE_CSS)
+                .addConditionalJavascript(PersonPage.RESPOND_JS, SaksoversiktLerret.SAKSOVERSIKT_IE_JS)
                 .addLess(
                         BasePage.MODIA_COMMON_LESS,
                         BasePage.MODIA_KOMPONENTER_LESS,
