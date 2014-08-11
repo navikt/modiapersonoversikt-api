@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.modig.core.context.StaticSubjectHandler;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -25,12 +25,16 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService.MODIA_SYSTEM_ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createSak;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.innloggetBrukerEr;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -41,6 +45,8 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class JoarkJournalforingServiceTest {
 
+    @Captor
+    private ArgumentCaptor<JournalfoerInngaaendeHenvendelseRequest> journalfoerInngaaendeRequestCaptor;
     @Captor
     private ArgumentCaptor<JournalfoerNotatRequest> journalfoerNotatRequestCaptor;
     @Captor
@@ -73,10 +79,12 @@ public class JoarkJournalforingServiceTest {
     private static final String GENERELL_POST_ID = "623674836846";
     private static final String JOURNALFOERENDE_ENHET_ID = "1234";
     private static final String KANAL_TELEFON = "TELEFON";
+    private static final String NAVIDENT = "navident";
 
     @Before
     public void setUp() {
-        System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
+        innloggetBrukerEr(NAVIDENT);
+
         sak = createSak("542747214621", "Dagpenger", "Fagsystem", "Generell", DateTime.now());
 
         when(journalfoerInngaaendeHenvendelseResponseMock.getJournalpostId()).thenReturn(SPORSMAL_POST_ID);
@@ -155,6 +163,55 @@ public class JoarkJournalforingServiceTest {
         joarkJournalforingService.journalforTraad(traadVM, sak);
 
         verify(henvendelseBehandlingService, atLeast(2)).oppdaterJournalfortInformasjonIHenvendelse(any(Sak.class), anyString(), any(Melding.class));
+    }
+
+    @Test
+    public void skalSetteRiktigeFelterIJournalforingInngaaendeRequest() {
+        MeldingVM sporsmaal = new MeldingVM(new Melding("id", Meldingstype.SPORSMAL, DateTime.now()), 1);
+        traadVM = new TraadVM(new ArrayList<>(Arrays.asList(sporsmaal)));
+
+        joarkJournalforingService.journalforTraad(traadVM, sak);
+
+        verify(behandleJournalV2).journalfoerInngaaendeHenvendelse(journalfoerInngaaendeRequestCaptor.capture());
+        JournalfoerInngaaendeHenvendelseRequest request = journalfoerInngaaendeRequestCaptor.getValue();
+
+        assertThat(request.getPersonFornavn(), is(NAVIDENT));
+        assertThat(request.getPersonEtternavn(), is(NAVIDENT));
+        assertThat(request.getApplikasjonsID(), is(MODIA_SYSTEM_ID));
+        assertNotNull(request.getJournalpost());
+    }
+
+    @Test
+    public void skalSetteRiktigeFelterIJournalforingUtgaaendeRequest() {
+        MeldingVM sporsmaal = new MeldingVM(new Melding("id", Meldingstype.SVAR, DateTime.now()), 1);
+        traadVM = new TraadVM(new ArrayList<>(Arrays.asList(sporsmaal)));
+
+        joarkJournalforingService.journalforTraad(traadVM, sak);
+
+        verify(behandleJournalV2).journalfoerUtgaaendeHenvendelse(journalfoerUtgaaendeHenvendelseRequestCaptor.capture());
+        JournalfoerUtgaaendeHenvendelseRequest request = journalfoerUtgaaendeHenvendelseRequestCaptor.getValue();
+
+        assertThat(request.getPersonFornavn(), is(NAVIDENT));
+        assertThat(request.getPersonEtternavn(), is(NAVIDENT));
+        assertThat(request.getApplikasjonsID(), is(MODIA_SYSTEM_ID));
+        assertNotNull(request.getJournalpost());
+    }
+
+    @Test
+    public void skalSetteRiktigeFelterIJournalforingNotatRequest() {
+        MeldingVM sporsmaal = new MeldingVM(new Melding("id", Meldingstype.SAMTALEREFERAT, DateTime.now()), 1);
+        sporsmaal.melding.kanal = JournalforingNotat.KANAL_TYPE_TELEFON;
+        traadVM = new TraadVM(new ArrayList<>(Arrays.asList(sporsmaal)));
+
+        joarkJournalforingService.journalforTraad(traadVM, sak);
+
+        verify(behandleJournalV2).journalfoerNotat(journalfoerNotatRequestCaptor.capture());
+        JournalfoerNotatRequest request = journalfoerNotatRequestCaptor.getValue();
+
+        assertThat(request.getPersonFornavn(), is(NAVIDENT));
+        assertThat(request.getPersonEtternavn(), is(NAVIDENT));
+        assertThat(request.getApplikasjonsID(), is(MODIA_SYSTEM_ID));
+        assertNotNull(request.getJournalpost());
     }
 
     private ArrayList<MeldingVM> createMeldingListeMedEttSporsmaalOgEttSamtalereferat() {
