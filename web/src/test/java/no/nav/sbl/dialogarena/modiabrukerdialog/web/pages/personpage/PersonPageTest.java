@@ -40,7 +40,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.OPPGAVEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.SVAR_OG_REFERAT_PANEL_ID;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
 import static org.mockito.Matchers.anyString;
@@ -64,7 +64,7 @@ public class PersonPageTest extends WicketPageTest {
     @Before
     public void setUp() {
         Sporsmal sporsmal = new Sporsmal("id", DateTime.now());
-        sporsmal.temagruppe = ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT.name();
+        sporsmal.temagruppe = ARBD.name();
         sporsmal.oppgaveId = "id";
         when(henvendelseUtsendingService.getSporsmalFromOppgaveId(anyString(), anyString())).thenReturn(sporsmal);
         when(henvendelseUtsendingService.getSporsmal(anyString())).thenReturn(sporsmal);

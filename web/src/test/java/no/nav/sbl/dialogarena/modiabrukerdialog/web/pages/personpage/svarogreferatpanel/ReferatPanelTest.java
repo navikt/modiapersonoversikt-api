@@ -94,7 +94,7 @@ public class ReferatPanelTest extends WicketPageTest {
         Object referatformModel = referatPanel.get("referatform").getDefaultModelObject();
         SvarOgReferatVM svarOgReferatVM = (SvarOgReferatVM) referatformModel;
         svarOgReferatVM.kanal = ReferatKanal.TELEFON;
-        svarOgReferatVM.temagruppe = Temagruppe.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT;
+        svarOgReferatVM.temagruppe = Temagruppe.ARBD;
         return referatPanel;
     }
 

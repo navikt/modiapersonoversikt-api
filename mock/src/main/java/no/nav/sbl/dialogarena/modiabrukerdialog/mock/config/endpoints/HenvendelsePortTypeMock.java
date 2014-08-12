@@ -57,48 +57,48 @@ public class HenvendelsePortTypeMock {
 
     public static final XMLHenvendelse[] HENVENDELSER = {
             createXMLHenvendelse(SPORSMAL, now().minusWeeks(2),
-                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(2), "Arbeidsavklaring", "", ""),
+                    createXMLSporsmal("ARBD", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(2), "Arbeidsavklaring", "", ""),
 
             createXMLHenvendelse(SPORSMAL, now().minusWeeks(1),
-                    createXMLSporsmal("FAMILIE_OG_BARN", LANG_TEKST, valueOf(oppgaveId)), now().minusDays(2), "Foreldrepenger", "", ""),
+                    createXMLSporsmal("FMLI", LANG_TEKST, valueOf(oppgaveId)), now().minusDays(2), "Foreldrepenger", "", ""),
 
             createXMLHenvendelse(SVAR, now().minusDays(2),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Vi kan bekrefte at du får foreldrepenger"), null, "", "", ""),
+                    createXMLSvar("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Vi kan bekrefte at du får foreldrepenger"), null, "", "", ""),
 
             createXMLHenvendelse(SVAR, now().minusDays(3),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Det er meget sannsynlig at du kan få foreldrepenger"),
+                    createXMLSvar("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Det er meget sannsynlig at du kan få foreldrepenger"),
                     now().minusDays(2), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(5), "Det kan hende at du kan få foredrepenger "),
+                    createXMLSvar("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(5), "Det kan hende at du kan få foredrepenger "),
                     now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SVAR, now().minusDays(5),
-                    createXMLSvar("FAMILIE_OG_BARN", "TELEFON", valueOf(oppgaveId), now().minusDays(6), "Vi har hatt en samtale og det kommer frem at Test Testesen ønsker foreldrepenger "),
+                    createXMLSvar("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(6), "Vi har hatt en samtale og det kommer frem at Test Testesen ønsker foreldrepenger "),
                     now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SPORSMAL, now().minusDays(3),
-                    createXMLSporsmal("HJELPEMIDLER", LANG_TEKST, valueOf(oppgaveId++)),
+                    createXMLSporsmal("ARBD", LANG_TEKST, valueOf(oppgaveId++)),
                     now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SVAR, now().minusHours(5),
-                    createXMLSvar("HJELPEMIDLER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST),
+                    createXMLSvar("ARBD", "TEKST", valueOf(behandlingsId), null, KORT_TEKST),
                     now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SPORSMAL, now().minusMonths(4),
-                    createXMLSporsmal("OVRIGE_HENVENDELSER", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", ""),
+                    createXMLSporsmal("ARBD", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", ""),
 
             createXMLHenvendelse(SVAR, now().minusMonths(4).plusDays(1),
-                    createXMLSvar("OVRIGE_HENVENDELSER", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), now().minusDays(3), "Ovrige", "", ""),
+                    createXMLSvar("ARBD", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), now().minusDays(3), "Ovrige", "", ""),
 
             createXMLHenvendelse(SVAR, now().minusDays(7),
-                    createXMLSvar("OVRIGE_HENVENDELSER", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), now().minusDays(3), "Ovrige", "", ""),
+                    createXMLSvar("ARBD", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), now().minusDays(3), "Ovrige", "", ""),
 
             createXMLHenvendelse(REFERAT, now(),
-                    createXMLReferat("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", "TELEFON", null, "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, "", "", ""),
+                    createXMLReferat("ARBD", "TELEFON", null, "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, "", "", ""),
 
             createXMLHenvendelse(SPORSMAL, now().minusDays(1),
-                    createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", "")
+                    createXMLSporsmal("ARBD", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", "")
     };
 
     private static XMLHenvendelse createXMLHenvendelse(XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata,

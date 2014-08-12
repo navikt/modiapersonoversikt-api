@@ -96,7 +96,7 @@ public class SvarPanelTest extends WicketPageTest {
     public void viserTemagruppenFraSporsmalet() {
         TestSvarPanel svarPanel = new TestSvarPanel("id", "fnr", lagSporsmal());
         wicket.goToPageWith(svarPanel)
-                .should().containComponent(withId("temagruppe").and(withTextSaying(svarPanel.getString(Temagruppe.FAMILIE_OG_BARN.name()))));
+                .should().containComponent(withId("temagruppe").and(withTextSaying(svarPanel.getString(Temagruppe.FMLI.name()))));
     }
 
     @Test
@@ -161,12 +161,12 @@ public class SvarPanelTest extends WicketPageTest {
 
     private Sporsmal lagSporsmal() {
         Sporsmal sporsmal = new Sporsmal("id", now());
-        sporsmal.temagruppe = Temagruppe.FAMILIE_OG_BARN.name();
+        sporsmal.temagruppe = Temagruppe.FMLI.name();
         return sporsmal;
     }
 
     private List<Svar> lagSvar() {
-        return asList(new Svar().withOpprettetDato(now()).withFritekst("fritekst").withTemagruppe(Temagruppe.HJELPEMIDLER.name()));
+        return asList(new Svar().withOpprettetDato(now()).withFritekst("fritekst").withTemagruppe(Temagruppe.FMLI.name()));
     }
 
 }

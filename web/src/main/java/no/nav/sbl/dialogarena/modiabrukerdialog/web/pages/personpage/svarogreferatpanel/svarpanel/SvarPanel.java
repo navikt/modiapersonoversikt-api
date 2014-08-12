@@ -131,7 +131,7 @@ public class SvarPanel extends Panel {
                 return temagruppe;
             }
         }
-        return Temagruppe.ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT; //Bruker denne som default
+        return Temagruppe.ARBD; //Bruker denne som default
     }
 
     @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_AVBRUTT)

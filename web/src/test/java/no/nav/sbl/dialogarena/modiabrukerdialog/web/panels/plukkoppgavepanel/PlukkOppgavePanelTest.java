@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.Henvend
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PlukkOppgavePanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSBruker;
@@ -50,7 +51,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
         ));
 
         Sporsmal sporsmal = new Sporsmal("sporsmal", now());
-        sporsmal.temagruppe = "HJELPEMIDLER";
+        sporsmal.temagruppe = Temagruppe.ARBD.toString();
         when(henvendelseUtsendingService.getSporsmalFromOppgaveId(anyString(), anyString())).thenReturn(sporsmal);
 
         wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"))
