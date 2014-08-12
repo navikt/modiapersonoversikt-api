@@ -1,6 +1,6 @@
 @modiasvart: #333;
 @graabakgrunn: #f1f1f1;
-@rammeborder: #e4e3e3;
+@rammefarge: #d1d1d1;
 @dodgerblue: #0067c5;
 @modiagraaskrift: #b7b1a9;
 @maxwidth: 1080px;
@@ -9,7 +9,7 @@
 
 .meldinglamell {
   position: relative;
-  border-top: 1px solid @rammeborder;
+  border-top: 1px solid @rammefarge;
   .meldingsliste {
     width: 40%;
     height: 100%;
@@ -17,13 +17,13 @@
     overflow: auto;
     background-color: @graabakgrunn;
     margin: 0;
-    border-right: 1px solid @rammeborder;
-    border-left: 1px solid @rammeborder;
+    border-right: 1px solid @rammefarge;
+    border-left: 1px solid @rammefarge;
     .melding {
       position: relative;
       min-height: 100px;
       padding: @toppmargin @meldingslistemargin @toppmargin @meldingslistemargin;
-      border-bottom: solid 1px @rammeborder;
+      border-bottom: solid 1px @rammefarge;
       header {
         .indikator {
           margin-bottom: 1em;
@@ -81,7 +81,7 @@
       position: relative;
       width: 70px;
       height: 70px;
-      border: 1px solid @rammeborder;
+      border: 1px solid @rammefarge;
       background-color: #fff;
       &.lite {
         width: 55px;
@@ -160,28 +160,27 @@
 
     .journalfort-skiller {
       background-color: #333333;
-      color: white;
       margin: 15px 0;
-      padding: 1em;
+      padding: 10px;
+      color: @modiagraaskrift;
       .journalfor-ikon {
         background-image: url(../img/journalfore_hvit.svg);
         background-repeat: no-repeat;
         padding-right: 1.4rem;
       }
       .journalfort-data {
-        font-size: 0.85rem;
+        font-size: 0.75rem;
       }
       .skillestrek {
-        color: @modiagraaskrift;
+        margin: 0 5px;
       }
     }
 
     .tidligere-melding {
       position: relative;
       background-color: @graabakgrunn;
-      border: 1px solid @rammeborder;
+      border: 1px solid @rammefarge;
       padding: 20px;
-
       p:last-child {
         margin-bottom: 0;
       }
@@ -200,9 +199,9 @@
         margin-left: -13px;
       }
       &:before {
-        border-bottom-color: @rammeborder;
-        border-width: 15px;
-        margin-left: -15px;
+        border-bottom-color: @rammefarge;
+        border-width: 14px;
+        margin-left: -14px;
       }
       .venstre-kolonne {
         width: 15%;
@@ -249,10 +248,6 @@
 
   .hoyrestilt-innhold {
     text-align: right;
-  }
-
-  .midtstilt-innhold {
-    text-align: center;
   }
 
   .haandter-meldinger {
@@ -304,61 +299,63 @@
     padding: 30px;
     display: none;
     text-transform: capitalize;
+    text-align: center;
     h2 {
-      color: @modiagraaskrift;
-      text-align: center;
-      margin-bottom: 3px;
-      text-transform: none;
+      color: #b7b1a9;
+      margin: 0 0 15px;
     }
-    h3 {
-      color: @modiagraaskrift;
-      font-weight: 800;
-      font-size: 20px;
-      font-family: modus, arial, helvetica, sans-serif;
-      text-align: center;
-      text-transform: capitalize;
+    .avbryt-knapp {
+      color: #20a9e1;
+      display: block;
     }
     &.journalforing {
       .temaoverskrift {
+        display: block;
         color: #ffffff;
+        margin-bottom: 5px;
       }
       .linje {
-        align-self: center;
         width: 100%;
-        color: @modiagraaskrift;
+        height: 1px;
+        border: none;
+        background-color: #675c53;
+        margin-bottom: 15px;
       }
       .sakliste {
-        margin-bottom: 30px;
+        margin-top: 30px;
+        text-align: left;
+        .sakstype {
+          text-align: center;
+        }
       }
       label {
         color: @modiagraaskrift;
         width: 100%;
         margin-top: 6px;
+        margin-bottom: 10px;
         div {
           display: inline-block;
         }
         span {
           display: block;
-          margin-right: 3rem;
+          margin: 0 3rem 0 0;
         }
         .saksTekst {
           text-transform: uppercase;
         }
-        margin-bottom: 10px;
       }
-      form input[type="radio"]:checked + label {
-        font-weight: normal;
-        color: #ffffff;
+      form {
+        text-align: center;
+        input[type="radio"]:checked + label {
+          font-weight: normal;
+          color: #ffffff;
+        }
       }
       a {
-        margin-top: 10px;
+        margin-top: 15px;
       }
       .send {
         color: #fff;
-      }
-      .avbryt-knapp {
-        color: #20a9e1;
-        display: block;
       }
     }
     &.nyoppgave {
@@ -382,12 +379,6 @@
             color: #ffffff;
           }
         }
-      }
-      .avbryt {
-        text-align: center;
-        color: #20a9e1;
-        margin-top: 2em;
-        display: block;
       }
     }
   }

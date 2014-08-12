@@ -4,38 +4,32 @@
 <head></head>
 <body>
 <wicket:panel>
-    <div>
-        <h3 wicket:id="sakstype" class="midtstilt-innhold"></h3>
-    </div>
-    <hr size ="1" class="linje"/>
+    <h2 wicket:id="sakstype" class="medium sakstype"></h2>
+    <hr class="linje"/>
     <wicket:container wicket:id="saksgruppeliste">
         <div class="saklisteelement">
-        <div class="temaoverskrift">
-            <span wicket:id="tema"></span>
-        </div>
-        <wicket:container wicket:id="saksliste">
-            <input wicket:id="sak" type="radio">
-            <label wicket:for="sak">
-                <div>
-                    <span class="saksTekst">
-                        <wicket:message key="journalfor.sak.saksIdTekst"/>
-                    </span>
-                    <span wicket:id="saksId"/>
-                </div>
-                <div>
+            <span wicket:id="tema" class="temaoverskrift"></span>
+            <wicket:container wicket:id="saksliste">
+                <input wicket:id="sak" type="radio">
+                <label wicket:for="sak">
+                    <div>
+                        <span class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></span>
+                        <span wicket:id="saksId"></span>
+                    </div>
+                    <div>
                     <span class="saksTekst">
                         <wicket:message key="journalfor.sak.opprettetDatoTekst"/>
                     </span>
-                    <span wicket:id="opprettetDatoFormatert"/>
-                </div>
-                <div>
+                        <span wicket:id="opprettetDatoFormatert"/>
+                    </div>
+                    <div>
                     <span class="saksTekst">
                         <wicket:message key="journalfor.sak.fagsystemTekst"/>
                     </span>
-                    <span wicket:id="fagsystem"/>
-                </div>
-            </label>
-        </wicket:container>
+                        <span wicket:id="fagsystem"/>
+                    </div>
+                </label>
+            </wicket:container>
         </div>
     </wicket:container>
 </wicket:panel>

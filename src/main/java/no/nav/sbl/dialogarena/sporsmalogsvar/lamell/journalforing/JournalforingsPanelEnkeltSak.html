@@ -4,17 +4,12 @@
 <head></head>
 <body>
 <wicket:panel>
-    <div>
-        <h2 class="midtstilt-innhold">
-            <wicket:message key="journalforingEnkeltSak.overskrift"/>
-        </h2>
-        <div class="robust-strek"></div>
-        <div>
-            <h3 wicket:id="sakstype" class="midtstilt-innhold"></h3>
-        </div>
-        <div class="temaoverskrift">
-            <span wicket:id="tema"></span>
-        </div>
+    <h2><wicket:message key="journalforingEnkeltSak.overskrift"/></h2>
+    <div class="robust-strek"></div>
+    <div class="sakliste">
+        <h2 wicket:id="sakstype" class="medium sakstype"></h2>
+        <hr class="linje"/>
+        <span wicket:id="tema" class="temaoverskrift"></span>
         <label>
             <div>
                 <span class="saksTekst">
@@ -39,9 +34,7 @@
         </label>
     </div>
     <hr size ="1" class="linje"/>
-    <div class="midtstilt-innhold">
-        <a href="#" wicket:id="journalforTraad" class="send knapp-hoved-liten">Journalfør</a>
-    </div>
+    <a href="#" wicket:id="journalforTraad" class="send knapp-hoved-liten">Journalfør</a>
 </wicket:panel>
 </body>
 </html>
