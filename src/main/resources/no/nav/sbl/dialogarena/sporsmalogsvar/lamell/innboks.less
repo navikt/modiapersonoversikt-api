@@ -160,12 +160,11 @@
 
     .journalfort-skiller {
       background-color: #333333;
-      margin: 15px 0;
+      margin: 15px 0 16px;
       padding: 10px;
       color: @modiagraaskrift;
       .journalfor-ikon {
-        background-image: url(../img/journalfore_hvit.svg);
-        background-repeat: no-repeat;
+        background: url(../img/journalfore_graa.svg) no-repeat;
         padding-right: 1.4rem;
       }
       .journalfort-data {
@@ -181,6 +180,7 @@
       background-color: @graabakgrunn;
       border: 1px solid @rammefarge;
       padding: 20px;
+      margin-top: -1px;
       p:last-child {
         margin-bottom: 0;
       }
@@ -219,8 +219,7 @@
     width: 26px;
     padding: 2px 1px 0 0;
     font-size: 0.85em;
-    background-image: url("../img/snakkeboble.svg");
-    background-repeat: no-repeat;
+    background: url(../img/snakkeboble.svg) no-repeat;
     color: white;
     text-align: center;
   }
@@ -346,7 +345,11 @@
       }
       form {
         text-align: center;
+        input[type="radio"] + label {
+          background: url(../img/radio_svart_bg.svg) 0 0 no-repeat;
+        }
         input[type="radio"]:checked + label {
+          background: url(../img/radio_svart_valgt.svg) 0 0 no-repeat;
           font-weight: normal;
           color: #ffffff;
         }
