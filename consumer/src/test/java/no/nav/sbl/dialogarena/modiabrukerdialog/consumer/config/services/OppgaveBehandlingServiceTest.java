@@ -35,7 +35,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService.ENDRET_AV_ENHET;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService.ENHET;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -80,7 +80,7 @@ public class OppgaveBehandlingServiceTest {
         WSLagreOppgaveRequest request = lagreOppgaveRequestCaptor.getValue();
 
         assertThat(request.getEndreOppgave().getAnsvarligId(), is(SubjectHandler.getSubjectHandler().getUid()));
-        assertThat(request.getEndretAvEnhetId(), is(ENDRET_AV_ENHET));
+        assertThat(request.getEndretAvEnhetId(), is(ENHET));
     }
 
     @Test
@@ -90,9 +90,9 @@ public class OppgaveBehandlingServiceTest {
         finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
         when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
 
-        oppgaveBehandlingService.plukkOppgaveFraGsak("HJELPEMIDLER");
+        oppgaveBehandlingService.plukkOppgaveFraGsak("ARBD");
         verify(oppgaveWS).finnOppgaveListe(finnOppgaveListeRequestCaptor.capture());
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("HJE"));
+        assertThat(finnOppgaveListeRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("ARBD_KNA"));
         assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().getMaxAntallSvar(), is(1));
         assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().isUfordelte(), is(true));
     }
@@ -114,20 +114,20 @@ public class OppgaveBehandlingServiceTest {
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
         assertThat(endreOppgave.getAnsvarligId(), is(""));
         assertThat(endreOppgave.getBeskrivelse(), is("beskrivelse"));
-        assertThat(endreOppgave.getFagomradeKode(), is("HJE"));
+        assertThat(endreOppgave.getFagomradeKode(), is("ARBD_KNA"));
     }
 
     @Test
     public void skalLeggeTilbakeOppgaveIGsakMedEndretTemagruppe() throws LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
 
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), "beskrivelse", "FAMILIE_OG_BARN");
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), "beskrivelse", "FMLI");
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
         assertThat(endreOppgave.getAnsvarligId(), is(""));
         assertThat(endreOppgave.getBeskrivelse(), is("beskrivelse"));
-        assertThat(endreOppgave.getFagomradeKode(), is("BID"));
+        assertThat(endreOppgave.getFagomradeKode(), is("FMLI_KNA"));
     }
 
     private WSHentOppgaveResponse mockHentOppgaveResponse() {
@@ -144,7 +144,7 @@ public class OppgaveBehandlingServiceTest {
                 .withOppgavetype(new WSOppgavetype().withKode("wsOppgavetype"))
                 .withGjelder(new WSBruker().withBrukerId("***REMOVED***"))
                 .withStatus(new WSStatus().withKode("statuskode"))
-                .withFagomrade(new WSFagomrade().withKode("HJE"))
+                .withFagomrade(new WSFagomrade().withKode("ARBD_KNA"))
                 .withAktivFra(now().toLocalDate())
                 .withPrioritet(new WSPrioritet().withKode("NORM_GEN"))
                 .withUnderkategori(new WSUnderkategori().withKode("ARBEID_HJE"))

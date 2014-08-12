@@ -17,11 +17,8 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOp
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 
 import static java.lang.String.valueOf;
-import static java.util.Collections.unmodifiableMap;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
@@ -30,22 +27,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakU
 
 public class OppgaveBehandlingService {
 
-    private static final Map<String, String> TEMAGRUPPE;
-
-    static {
-        Map<String, String> tmp = new HashMap<>();
-        tmp.put("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", "BAR");
-        tmp.put("FAMILIE_OG_BARN", "BID");
-        tmp.put("HJELPEMIDLER", "HJE");
-        tmp.put("OVRIGE_HENVENDELSER", "GRA");
-        TEMAGRUPPE = unmodifiableMap(tmp);
-    }
-
-    public static final int ENDRET_AV_ENHET = 4112;
-    public static final int ANSVARLIG_ENHET = 4112;
-    public static final int OPPRETTET_AV_ENHET = 4112;
-    public static final int FERDIGSTILT_AV_ENHET = 4112;
-    public static final String OPPGAVETYPEKODE = "KONT_BRUK_GEN"; // Brukergenerert. Denne brukes lite og er dermed ganske safe
+    public static final int ENHET = 4112;
 
     @Inject
     private OppgavebehandlingV3 oppgavebehandlingWS;
@@ -58,7 +40,7 @@ public class OppgaveBehandlingService {
     }
 
     public Optional<WSOppgave> plukkOppgaveFraGsak(String temagruppe) {
-        Optional<WSOppgave> oppgave = finnIkkeTilordnedeOppgaver(TEMAGRUPPE.get(temagruppe));
+        Optional<WSOppgave> oppgave = finnIkkeTilordnedeOppgaver(underkategoriKode(temagruppe));
         if (oppgave.isSome()) {
             WSOppgave tilordnet = tilordneOppgave(oppgave.get());
             return optional(tilordnet);
@@ -69,7 +51,7 @@ public class OppgaveBehandlingService {
 
     public void ferdigstillOppgaveIGsak(Optional<String> oppgaveId) {
         if (oppgaveId.isSome()) {
-            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId.get()).withFerdigstiltAvEnhetId(FERDIGSTILT_AV_ENHET));
+            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId.get()).withFerdigstiltAvEnhetId(ENHET));
         }
     }
 
@@ -79,7 +61,7 @@ public class OppgaveBehandlingService {
             wsOppgave.withAnsvarligId("");
             wsOppgave.withBeskrivelse(beskrivelse);
             if (temagruppe != null) {
-                wsOppgave.withFagomrade(new WSFagomrade().withKode(TEMAGRUPPE.get(temagruppe)));
+                wsOppgave.withFagomrade(new WSFagomrade().withKode(underkategoriKode(temagruppe)));
             }
             lagreOppgaveIGsak(wsOppgave);
         }
@@ -104,7 +86,7 @@ public class OppgaveBehandlingService {
             oppgavebehandlingWS.lagreOppgave(
                     new WSLagreOppgaveRequest()
                             .withEndreOppgave(tilWSEndreOppgave(wsOppgave))
-                            .withEndretAvEnhetId(ENDRET_AV_ENHET)
+                            .withEndretAvEnhetId(ENHET)
             );
         } catch (LagreOppgaveOppgaveIkkeFunnet lagreOppgaveOppgaveIkkeFunnet) {
             throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);
@@ -118,18 +100,22 @@ public class OppgaveBehandlingService {
         return on(oppgaveWS.finnOppgaveListe(
                 new WSFinnOppgaveListeRequest()
                         .withFilter(new WSFinnOppgaveListeFilter()
-                                .withOpprettetEnhetId(valueOf(OPPRETTET_AV_ENHET))
-                                .withOppgavetypeKodeListe(OPPGAVETYPEKODE)
+                                .withOpprettetEnhetId(valueOf(ENHET))
+                                .withOppgavetypeKodeListe("SPM_OG_SVR")
                                 .withMaxAntallSvar(1)
                                 .withUfordelte(true))
                         .withSok(new WSFinnOppgaveListeSok()
-                                .withAnsvarligEnhetId(valueOf(ANSVARLIG_ENHET))
+                                .withAnsvarligEnhetId(valueOf(ENHET))
                                 .withFagomradeKodeListe(temagruppe))
                         .withSorteringKode(new WSFinnOppgaveListeSortering()
                                 .withSorteringKode("STIGENDE")
                                 .withSorteringselementKode("OPPRETTET_DATO")))
                 .getOppgaveListe())
                 .head();
+    }
+
+    private static String underkategoriKode(String temagruppe) {
+        return temagruppe + "_KNA";
     }
 
 }
