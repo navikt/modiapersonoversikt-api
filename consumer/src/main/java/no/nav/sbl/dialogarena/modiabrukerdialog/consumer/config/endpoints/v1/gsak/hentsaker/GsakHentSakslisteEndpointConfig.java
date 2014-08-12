@@ -14,16 +14,17 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v3.gsak.GsakOppgavebehandlingV3EndpointConfig.GSAK_V3_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakHentSakslistePortTypeMock.createGsakHentSakslisteMock;
 
 @Configuration
 public class GsakHentSakslisteEndpointConfig {
 
+    public static final String GSAK_SAKSLISTE_KEY = "start.gsak.saksliste.withmock";
+
     @Bean
     public Sak sakEndpoint() {
-        return createSwitcher(createEndpoint(), createGsakHentSakslisteMock(), GSAK_V3_KEY, Sak.class);
+        return createSwitcher(createEndpoint(), createGsakHentSakslisteMock(), GSAK_SAKSLISTE_KEY, Sak.class);
     }
 
     @Bean

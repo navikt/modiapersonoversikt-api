@@ -25,11 +25,12 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.sakogbehandling.SakOgBehandlingEndpointConfig.SAKOGBEHANDLING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingEndpointConfig.UTBETALING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.gosys.GosysAnsattEndpointConfig.GOSYS_ANSATT_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.gsak.hentsaker.GsakHentSakslisteEndpointConfig.GSAK_SAKSLISTE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.HenvendelseEndpointConfig.HENVENDELSE_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.journalforing.BehandleJournalV2EndpointConfig.BEHANDLE_JOURNAL_V2_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v3.gsak.GsakOppgaveV3EndpointConfig.GSAK_V3_KEY;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock.ANTALLSAKER_PROPERTY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock.CMS_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock.ANTALLSAKER_PROPERTY;
 
 public class MockSetupPage extends BasePage {
 
@@ -77,6 +78,7 @@ public class MockSetupPage extends BasePage {
                 new MockSetupModel("Kjerneinfo", KJERNEINFO_KEY),
                 new MockSetupModel("Henvendelse", HENVENDELSE_KEY),
                 new MockSetupModel("Gsak", GSAK_V3_KEY),
+                new MockSetupModel("Gsak saksliste", GSAK_SAKSLISTE_KEY),
                 new MockSetupModel("Journalføring", BEHANDLE_JOURNAL_V2_KEY),
                 new MockSetupModel("SakOgBehandling", SAKOGBEHANDLING_KEY),
                 new MockSetupModel("AktoerId", AKTOER_KEY),
