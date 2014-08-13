@@ -22,7 +22,6 @@ import java.util.MissingResourceException;
 
 import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.HenvendelseType.SOKNADSINNSENDING;
 import static org.apache.wicket.model.Model.of;
 
 public class KvitteringsPanel extends Panel {
