@@ -1,4 +1,5 @@
 /* Generelle mixins, variabler, typografi og stiler som bruker av andre stilregler */
+@navbarHeight: 140px;
 @sidebarWidth: 24%;
 @mainContentWidth: 100% - (@sidebarWidth * 2);
 @sidebarYtrePadding: 15px;
@@ -508,7 +509,7 @@ UL.feedbackPanel {
 [class*=sidebar-] {
   position: absolute;
   top: 0;
-  padding-top: 140px;
+  padding-top: @navbarHeight;
   width: @sidebarWidth;
   min-height: 100%;
   z-index: 1;
