@@ -40,7 +40,7 @@ public class OppgaveBehandlingService {
     }
 
     public Optional<WSOppgave> plukkOppgaveFraGsak(String temagruppe) {
-        Optional<WSOppgave> oppgave = finnIkkeTilordnedeOppgaver(underkategoriKode(temagruppe));
+        Optional<WSOppgave> oppgave = finnIkkeTilordnedeOppgaver(temagruppe);
         if (oppgave.isSome()) {
             WSOppgave tilordnet = tilordneOppgave(oppgave.get());
             return optional(tilordnet);
@@ -102,11 +102,12 @@ public class OppgaveBehandlingService {
                         .withFilter(new WSFinnOppgaveListeFilter()
                                 .withOpprettetEnhetId(valueOf(ENHET))
                                 .withOppgavetypeKodeListe("SPM_OG_SVR")
+                                .withUnderkategoriKode(underkategoriKode(temagruppe))
                                 .withMaxAntallSvar(1)
                                 .withUfordelte(true))
                         .withSok(new WSFinnOppgaveListeSok()
                                 .withAnsvarligEnhetId(valueOf(ENHET))
-                                .withFagomradeKodeListe(temagruppe))
+                                .withFagomradeKodeListe("KNA"))
                         .withSorteringKode(new WSFinnOppgaveListeSortering()
                                 .withSorteringKode("STIGENDE")
                                 .withSorteringselementKode("OPPRETTET_DATO")))
