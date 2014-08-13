@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
-import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.sak.config.SaksoversiktServiceConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
 import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
@@ -28,11 +27,6 @@ public class ServicesConfig {
     @Bean
     public AnsattService ansattService() {
         return new AnsattService();
-    }
-
-    @Bean
-    public CmsContentRetriever cmsService() {
-        return new CMSService();
     }
 
 }
