@@ -76,14 +76,6 @@ public class KvitteringsPanel extends Panel {
         );
     }
 
-    private String hentBehandlingstidBeskrivelseTekst(Kvittering kvittering) {
-        String cmsKey = "soknader.normertbehandlingstid.beskrivelse";
-        if (kvittering.henvendelseType.equals(SOKNADSINNSENDING)) {
-            cmsKey = cmsKey + ".sendsoknad";
-        }
-        return cms.hentTekst(cmsKey);
-    }
-
     private void leggTilInnsendteVedlegg(Kvittering kvittering) {
         WebMarkupContainer innsendteVedlegg = new WebMarkupContainer("innsendteVedleggSection");
         innsendteVedlegg.add(visibleIf(of(!kvittering.innsendteDokumenter.isEmpty())));
