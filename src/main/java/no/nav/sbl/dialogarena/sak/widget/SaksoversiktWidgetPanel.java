@@ -29,7 +29,7 @@ public class SaksoversiktWidgetPanel extends GenericPanel<TemaVM> {
         DateTime sistOppdatert = temaVM.sistoppdaterteBehandling.behandlingDato;
         add(
                 new Label("temaTittel", kodeverk.getTemanavnForTemakode(temaVM.temakode, ARKIVTEMA)),
-                new Label("temaDato", format(cmsContentRetriever.hentTekst("behandling.opprettet.dato"), printLongDate(sistOppdatert)))
+                new Label("temaDato", format(cmsContentRetriever.hentTekst("hendelse.sistoppdatert.dato"), printLongDate(sistOppdatert)))
         );
     }
 }
