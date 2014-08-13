@@ -60,19 +60,16 @@ public class KvitteringsPanel extends Panel {
     private void leggTilBehandlingsTidInfo(Kvittering kvittering) {
         String temakode = kvittering.behandlingstema;
 
-        Label behandlingstidLabel = new Label("behandlingstid");
-
+        String behandlingstidTekst = cms.hentTekst("soknader.normertbehandlingstid");
+        String behandlingstid;
         try {
-            String behandlingstid = format(cms.hentTekst("soknader.normertbehandlingstid"), cms.hentTekst("soknader.normertbehandlingstid." + temakode));
-            behandlingstidLabel.setDefaultModel(new Model<>(behandlingstid));
+            behandlingstid = cms.hentTekst("soknader.normertbehandlingstid." + temakode);
         } catch (MissingResourceException e) {
             logger.warn("Behandlingstid er ikke satt for temakode " + temakode, e);
-            behandlingstidLabel.setVisible(false);
+            behandlingstid = cms.hentTekst("soknader.normertbehandlingstid.default");
         }
 
-        add(
-                behandlingstidLabel
-        );
+        add(new Label("behandlingstid", format(behandlingstidTekst, behandlingstid)));
     }
 
     private void leggTilInnsendteVedlegg(Kvittering kvittering) {
