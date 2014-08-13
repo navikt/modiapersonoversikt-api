@@ -5,7 +5,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.SaksbehandlerInnstil
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
@@ -16,12 +15,10 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
 public class SaksbehandlerInnstillingerPanel extends Panel {
 
@@ -75,17 +72,12 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
 
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target, WebMarkupContainer valgContainer) {
         if (valgContainer.isVisibilityAllowed()) {
-            target.prependJavaScript("saksbehandlerPanelLukket|lukkMedAnimasjon('.nav-enhet',700,saksbehandlerPanelLukket)");
+            target.prependJavaScript("saksbehandlerPanelLukket|$('.nav-enhet').slideUp(700,saksbehandlerPanelLukket)");
             valgContainer.setVisibilityAllowed(false);
         } else {
             valgContainer.setVisibilityAllowed(true);
-            target.appendJavaScript("apneMedAnimasjon('.nav-enhet',700)");
+            target.appendJavaScript("$('.nav-enhet').slideDown(700)");
         }
         target.add(valgContainer);
-    }
-
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        response.render(forReference(new JavaScriptResourceReference(SaksbehandlerInnstillingerPanel.class, "saksbehandlerinnstillinger.js")));
     }
 }
