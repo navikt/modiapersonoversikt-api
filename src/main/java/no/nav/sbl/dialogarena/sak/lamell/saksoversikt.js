@@ -1,5 +1,19 @@
+function addKvitteringsPanelEvents() {
+    addExpandClickEvent();
+    addPrintClickEvent();
+}
+
+function addPrintClickEvent() {
+    $('.saksoversikt .skriv-ut').click(function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+        prepareElementForPrint($(this).closest('.behandling-informasjon'), 'saksoversikt');
+        window.print();
+    });
+}
+
 function addExpandClickEvent() {
-    $('.kollapsbar').each(function() {
+    $('.saksoversikt .kollapsbar').each(function() {
         var $kollapsbar, $toggleKollapsbar;
 
         $kollapsbar = $(this);

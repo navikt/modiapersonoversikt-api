@@ -115,34 +115,96 @@
                         font-weight: bold;
                     }
                 }
-
-                .behandling-informasjon {
-                    flex: 6;
-                    margin-right: 30px;
-
-                    .behandling-datoer {
-                        span {
-                            font-size: 0.8rem;
-
-                            &:first-child {
-                                margin-right: 10px;
-                            }
-                        }
-                    }
-
-                    .kollapsbar {
-                        display: none;
-                    }
-
-                    .skjul {
-                        display: none;
-                    }
-                }
             }
         }
     }
 
+    .behandling-informasjon {
+        flex: 6;
+        margin-right: 30px;
 
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .kvittering-topp {
+            p {
+                display: none;
+            }
+        }
+
+        .behandlingstid {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .behandling-datoer {
+            span {
+                font-size: 0.8rem;
+
+                &:first-child {
+                    margin-right: 10px;
+                }
+            }
+        }
+
+        .kollapsbar {
+            display: none;
+            position: relative;
+
+            section {
+                padding-bottom: 0;
+            }
+
+            .skriv-ut {
+                position: absolute;
+                right: 10px;
+                background: url(../img/print.svg) no-repeat left center;
+                padding-left: 20px;
+                color: @gray-dark;
+
+                &:hover {
+                    background: url(../img/print_hover.svg) no-repeat left center;
+                    color: #0067c5;
+                }
+            }
+
+            ul {
+                list-style: none;
+                padding-left: 0;
+                margin-bottom: 40px;
+
+                li {
+                    margin-bottom: 10px;
+
+                    img {
+                        margin-right: 5px;
+                        width: 10px;
+                    }
+
+                    &.kule {
+                        &:before {
+                            border: 3px solid black;
+                            border-radius: 3px;
+                            content: " ";
+                            display: inline-block;
+                            position: relative;
+                            top: -2px;
+                            margin-right: 10px;
+                        }
+                    }
+                }
+            }
+
+            .kvitteringsinfo {
+                margin-bottom: 30px;
+            }
+        }
+
+        .skjul {
+            display: none;
+        }
+    }
 
     .hent-saker {
         text-align: center;
@@ -154,6 +216,52 @@
         span {
             display: block;
             margin: 0.5em 0;
+        }
+    }
+}
+
+@media print {
+    .saksoversikt {
+
+        .content > .behandling-informasjon {
+            margin-right: 0;
+
+            h2 {
+                text-align: center;
+                font-size: 22px;
+                text-transform: none;
+
+                &:after {
+                    content: "";
+                    border-top: 1px solid #d1d1d1;
+                    display: block;
+                    margin: 30px auto;
+                    width: 30px;
+                }
+            }
+
+            .kvittering-topp {
+                text-align: center;
+                padding-bottom: 40px;
+                border-bottom: 1px solid #d1d1d1;
+
+                p {
+                    display: block;
+                    font-size: 17px;
+                    font-family: Modus, Arial, Helvetica, sans-serif;
+                    font-weight: 600;
+                    margin-bottom: 0;
+                }
+            }
+
+            .kollapsbar {
+                display: block !important;
+                margin-top: 40px;
+            }
+
+            .toggle-kollapsbar, .skriv-ut {
+                display: none !important;
+            }
         }
     }
 }

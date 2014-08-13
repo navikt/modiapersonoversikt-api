@@ -1,20 +1,18 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
-    <div>
+    <div class="kvittering-topp">
         <p wicket:id="sendtAv"></p>
-        <span wicket:id="sendt-inn"/>
+        <span class="mini" wicket:id="sendt-inn"/>
     </div>
 
     <div class="kollapsbar">
-        <p>
-            <span wicket:id="behandlingstid">[]</span>
-            <span wicket:id="behandlingstidbeskrivelse">[]</span>
-        </p>
+        <p class="behandlingstid" wicket:id="behandlingstid"/>
 
         <section wicket:id="innsendteVedleggSection">
             <h3 class="liten" wicket:id="innsendteDokumenterHeader">[]</h3>
             <ul>
                 <li class="mini" wicket:id="innsendteVedlegg">
+                    <img src="./img/hake_svart.svg">
                     <wicket:container wicket:id="dokument"/>
                 </li>
             </ul>
@@ -23,12 +21,13 @@
         <section wicket:id="manglendeVedleggSection">
             <h3 class="liten" wicket:id="manglendeVedleggHeader">[]</h3>
             <ul>
-                <li class="mini" wicket:id="manglendeVedlegg">
+                <li class="mini kule" wicket:id="manglendeVedlegg">
                     <wicket:container wicket:id="dokument"/>
                 </li>
             </ul>
         </section>
-        <p wicket:id="kvitteringsinfo-bottom">[]</p>
+        <p class="kvitteringsinfo" wicket:id="kvitteringsinfo-bottom">[]</p>
+        <a href="#" class="skriv-ut">Skriv ut</a>
     </div>
     <a class="mini toggle-kollapsbar" href="#">
         <span class="skjul" wicket:id="skjul-kollapsbar"/>

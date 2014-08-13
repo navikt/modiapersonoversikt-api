@@ -62,21 +62,17 @@ public class KvitteringsPanel extends Panel {
         String temakode = kvittering.behandlingstema;
 
         Label behandlingstidLabel = new Label("behandlingstid");
-        Label behandlingstidbeskrivelse = new Label("behandlingstidbeskrivelse");
 
         try {
             String behandlingstid = format(cms.hentTekst("soknader.normertbehandlingstid"), cms.hentTekst("soknader.normertbehandlingstid." + temakode));
             behandlingstidLabel.setDefaultModel(new Model<>(behandlingstid));
-            behandlingstidbeskrivelse.setDefaultModel(new Model<>(hentBehandlingstidBeskrivelseTekst(kvittering)));
         } catch (MissingResourceException e) {
             logger.warn("Behandlingstid er ikke satt for temakode " + temakode, e);
             behandlingstidLabel.setVisible(false);
-            behandlingstidbeskrivelse.setVisible(false);
         }
 
         add(
-                behandlingstidLabel,
-                behandlingstidbeskrivelse
+                behandlingstidLabel
         );
     }
 
@@ -126,6 +122,6 @@ public class KvitteringsPanel extends Panel {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.render(OnLoadHeaderItem.forScript("addExpandClickEvent()"));
+        response.render(OnLoadHeaderItem.forScript("addKvitteringsPanelEvents()"));
     }
 }
