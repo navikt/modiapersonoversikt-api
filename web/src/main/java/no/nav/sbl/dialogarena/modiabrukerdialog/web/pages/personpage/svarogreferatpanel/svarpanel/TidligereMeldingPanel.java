@@ -14,7 +14,7 @@ import org.joda.time.DateTime;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 
 public class TidligereMeldingPanel extends Panel {
-    public TidligereMeldingPanel(String id, String temagruppe, DateTime opprettetDato, final String fritekst, boolean minimert) {
+    public TidligereMeldingPanel(String id, String type, String temagruppe, DateTime opprettetDato, final String fritekst, boolean minimert) {
         super(id);
 
         final URLParsingMultiLineLabel fritekstFelt = new URLParsingMultiLineLabel("fritekst", fritekst);
@@ -25,7 +25,7 @@ public class TidligereMeldingPanel extends Panel {
         overskriftContainer.setOutputMarkupId(true);
         overskriftContainer
                 .add(
-                        new Label("overskrift", new ResourceModel("tidligeremelding.overskrift." + id)),
+                        new Label("overskrift", new ResourceModel("tidligeremelding.overskrift." + type)),
                         new WebMarkupContainer("ekspanderingspil").add(hasCssClassIf("ekspandert", new PropertyModel<Boolean>(fritekstFelt, "visibilityAllowed"))))
                 .add(
                         new AjaxEventBehavior("click") {

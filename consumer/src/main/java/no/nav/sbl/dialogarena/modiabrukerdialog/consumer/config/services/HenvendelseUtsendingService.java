@@ -1,13 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -18,12 +17,9 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createSporsmalFromHenvendelse;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createSvarFromHenvendelse;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createXMLHenvendelse;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createSporsmalFromXMLHenvendelse;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createSvarEllerReferatFromXMLHenvendelse;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createXMLHenvendelseMedMeldingTilBruker;
 
 public class HenvendelseUtsendingService {
 
@@ -32,52 +28,69 @@ public class HenvendelseUtsendingService {
     @Inject
     protected SendUtHenvendelsePortType sendUtHenvendelsePortType;
 
-    public void sendSvar(Svar svar) {
-        XMLHenvendelse info = createXMLHenvendelse(svar);
-        sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest().withType(SVAR.name()).withFodselsnummer(svar.fnr).withAny(info));
+    public void sendSvar(SvarEllerReferat svarEllerReferat) {
+        sendSvarEllerReferat(svarEllerReferat, XMLHenvendelseType.SVAR);
     }
 
-    public void sendReferat(Referat referat) {
-        XMLHenvendelse info = SakUtils.createXMLHenvendelse(referat);
-        sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest().withType(REFERAT.name()).withFodselsnummer(referat.fnr).withAny(info));
+    public void sendReferat(SvarEllerReferat svarEllerReferat) {
+        sendSvarEllerReferat(svarEllerReferat, XMLHenvendelseType.REFERAT);
+    }
+
+    private void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat, XMLHenvendelseType type) {
+        XMLHenvendelse info = createXMLHenvendelseMedMeldingTilBruker(svarEllerReferat, type);
+        sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest()
+                .withType(type.name())
+                .withFodselsnummer(svarEllerReferat.fnr)
+                .withAny(info));
     }
 
     public Sporsmal getSporsmalFromOppgaveId(String fnr, String oppgaveId) {
         List<Object> henvendelseliste =
-                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withTyper(SPORSMAL.name()).withFodselsnummer(fnr)).getAny();
+                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withTyper(XMLHenvendelseType.SPORSMAL.name()).withFodselsnummer(fnr)).getAny();
 
         XMLHenvendelse henvendelse;
         for (Object o : henvendelseliste) {
             henvendelse = (XMLHenvendelse) o;
             XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
-            if (xmlMetadata instanceof XMLSporsmal && oppgaveId.equals(((XMLSporsmal) xmlMetadata).getOppgaveIdGsak())) {
-                return createSporsmalFromHenvendelse(henvendelse);
+            if (erDetteEtSporsmaletMedDenneGsakIden(oppgaveId, xmlMetadata)) {
+                return createSporsmalFromXMLHenvendelse(henvendelse);
             }
         }
         return null;
     }
 
-    public List<Svar> getSvarTilSporsmal(String fnr, String sporsmalId) {
-        List<Object> henvendelseliste =
-                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withTyper(SVAR.name()).withFodselsnummer(fnr)).getAny();
+    private boolean erDetteEtSporsmaletMedDenneGsakIden(String oppgaveId, XMLMetadata xmlMetadata) {
+        return xmlMetadata instanceof XMLMeldingFraBruker && oppgaveId.equals(((XMLMeldingFraBruker) xmlMetadata).getOppgaveIdGsak());
+    }
 
-        List<Svar> svarliste = new ArrayList<>();
+    public List<SvarEllerReferat> getSvarEllerReferatForSporsmal(String fnr, String sporsmalId) {
+        List<Object> henvendelseliste =
+                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
+                        .withTyper(XMLHenvendelseType.SVAR.name(), XMLHenvendelseType.REFERAT.name())
+                        .withFodselsnummer(fnr)).getAny();
+
+        List<SvarEllerReferat> svarliste = new ArrayList<>();
 
         XMLHenvendelse henvendelse;
         for (Object o : henvendelseliste) {
             henvendelse = (XMLHenvendelse) o;
             XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
-            if (xmlMetadata instanceof XMLSvar && ((XMLSvar) xmlMetadata).getSporsmalsId().equals(sporsmalId)) {
-                svarliste.add(createSvarFromHenvendelse(henvendelse));
+            if (erDetteEtSvarEllerReferatForSporsmalet(sporsmalId, xmlMetadata)) {
+                svarliste.add(createSvarEllerReferatFromXMLHenvendelse(henvendelse));
             }
         }
         return svarliste;
     }
 
+    private boolean erDetteEtSvarEllerReferatForSporsmalet(String sporsmalId, XMLMetadata xmlMetadata) {
+        return xmlMetadata instanceof XMLMeldingTilBruker &&
+                ((XMLMeldingTilBruker) xmlMetadata).getSporsmalsId() != null && ((XMLMeldingTilBruker) xmlMetadata).getSporsmalsId().equals(sporsmalId);
+    }
+
     public Sporsmal getSporsmal(String sporsmalId) {
         XMLHenvendelse xmlHenvendelse =
                 (XMLHenvendelse) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalId)).getAny();
-        return createSporsmalFromHenvendelse(xmlHenvendelse);
+        return createSporsmalFromXMLHenvendelse(xmlHenvendelse);
     }
 
 }

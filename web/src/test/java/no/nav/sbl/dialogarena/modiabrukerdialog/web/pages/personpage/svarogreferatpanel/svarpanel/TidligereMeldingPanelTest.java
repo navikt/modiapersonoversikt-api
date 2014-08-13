@@ -16,22 +16,25 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svar
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TidligereMeldingPanelTest extends WicketPageTest {
 
+    private static final String ID = "id";
+    private static final String TYPE = "type";
+
     @Test
     public void skalAapnesMedFritekstUsynlig() {
-        wicket.goToPageWith(new TestTidligereMeldingPanel("panel", FMLI.name(), DateTime.now(), "fritekst", true))
+        wicket.goToPageWith(new TestTidligereMeldingPanel(ID, TYPE, FMLI.name(), DateTime.now(), "fritekst", true))
                 .should().containComponent(thatIsInvisible().withId("fritekst"));
     }
 
     @Test
     public void skalAapnesMedFritekstSynlig() {
-        wicket.goToPageWith(new TestTidligereMeldingPanel("panel", FMLI.name(), DateTime.now(), "fritekst", false))
+        wicket.goToPageWith(new TestTidligereMeldingPanel(ID, TYPE, FMLI.name(), DateTime.now(), "fritekst", false))
                 .should().containComponent(thatIsVisible().withId("fritekst"));
     }
 
     @Test
     public void skalToggleFritekstSynligVedKlikkPaaOverskriftContainer() {
 
-        wicket.goToPageWith(new TestTidligereMeldingPanel("panel", FMLI.name(), DateTime.now(), "fritekst", false))
+        wicket.goToPageWith(new TestTidligereMeldingPanel(ID, TYPE, FMLI.name(), DateTime.now(), "fritekst", false))
                 .should().containComponent(thatIsVisible().withId("fritekst"))
                 .onComponent(withId("overskriftContainer")).executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsInvisible().withId("fritekst"));

@@ -7,7 +7,7 @@ import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -124,7 +124,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void skalErstatteReferatPanelMedSvarPanelVedEventetSVAR_PAA_MELDING() {
-        when(henvendelseUtsendingService.getSvarTilSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Svar())));
+        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new SvarEllerReferat())));
 
         wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
                 .sendEvent(createEvent(SVAR_PAA_MELDING))
@@ -133,7 +133,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void skalIkkeTilordneOppgaveIGsakDersomSporsmaaletTidligereErBesvartVedEventetSVAR_PAA_MELDING() {
-        when(henvendelseUtsendingService.getSvarTilSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Svar())));
+        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new SvarEllerReferat())));
 
         wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
@@ -143,7 +143,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void skalTilordneOppgaveIGsakDersomSporsmaaletIkkeTidligereErBesvartVedEventetSVAR_PAA_MELDING() {
-        when(henvendelseUtsendingService.getSvarTilSporsmal(anyString(), anyString())).thenReturn(new ArrayList<Svar>());
+        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<SvarEllerReferat>());
 
         wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
