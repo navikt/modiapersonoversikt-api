@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 import no.nav.modig.lang.option.Optional;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSFagomrade;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSUnderkategori;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeFilter;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeRequest;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeSok;
@@ -24,6 +24,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.tilWSEndreOppgave;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class OppgaveBehandlingService {
 
@@ -60,8 +61,8 @@ public class OppgaveBehandlingService {
             WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId.get());
             wsOppgave.withAnsvarligId("");
             wsOppgave.withBeskrivelse(beskrivelse);
-            if (temagruppe != null) {
-                wsOppgave.withFagomrade(new WSFagomrade().withKode(underkategoriKode(temagruppe)));
+            if (!isBlank(temagruppe)) {
+                wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe)));
             }
             lagreOppgaveIGsak(wsOppgave);
         }

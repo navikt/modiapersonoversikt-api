@@ -127,7 +127,7 @@ public class OppgaveBehandlingServiceTest {
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
         assertThat(endreOppgave.getAnsvarligId(), is(""));
         assertThat(endreOppgave.getBeskrivelse(), is("beskrivelse"));
-        assertThat(endreOppgave.getFagomradeKode(), is("FMLI_KNA"));
+        assertThat(endreOppgave.getUnderkategoriKode(), is("FMLI_KNA"));
     }
 
     private WSHentOppgaveResponse mockHentOppgaveResponse() {
