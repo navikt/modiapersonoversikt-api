@@ -2,11 +2,10 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
@@ -48,16 +47,16 @@ public class JettyTestContext {
             "dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
 
     public static final List<XMLHenvendelse> HENVENDELSER = asList(
-            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusWeeks(2), createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST)),
-            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusWeeks(1), createXMLSporsmal("INTERNASJONALT", LANG_TEKST)),
-            createXMLHenvendelse(behandlingsid, SVAR, now().minusDays(5), createXMLSvar("INTERNASJONALT", String.valueOf(behandlingsid), now().minusDays(4), KORT_TEKST)),
-            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusDays(3), createXMLSporsmal("HJELPEMIDLER", LANG_TEKST)),
-            createXMLHenvendelse(behandlingsid, SVAR, now().minusHours(5), createXMLSvar("HJELPEMIDLER", String.valueOf(behandlingsid), null, KORT_TEKST)),
-            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusMonths(4), createXMLSporsmal("SOSIALE_TJENESTER", LANG_TEKST)),
-            createXMLHenvendelse(behandlingsid, SVAR, now().minusMonths(4).plusDays(1), createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsid), now().minusMonths(4).plusDays(3), LANG_TEKST)),
-            createXMLHenvendelse(behandlingsid, SVAR, now().minusDays(7), createXMLSvar("SOSIALE_TJENESTER", String.valueOf(behandlingsid), null, KORT_TEKST)),
-            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), REFERAT, now(), createXMLReferat("HJELPEMIDLER", "TELEFON", null, LANG_TEKST)),
-            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusDays(1), createXMLSporsmal("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST))
+            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusWeeks(2), createXMLMeldingFraBruker("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST)),
+            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusWeeks(1), createXMLMeldingFraBruker("INTERNASJONALT", LANG_TEKST)),
+            createXMLHenvendelse(behandlingsid, SVAR, now().minusDays(5), createXMLMeldingTilBruker("INTERNASJONALT", String.valueOf(behandlingsid), now().minusDays(4), KORT_TEKST)),
+            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusDays(3), createXMLMeldingFraBruker("HJELPEMIDLER", LANG_TEKST)),
+            createXMLHenvendelse(behandlingsid, SVAR, now().minusHours(5), createXMLMeldingTilBruker("HJELPEMIDLER", String.valueOf(behandlingsid), null, KORT_TEKST)),
+            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusMonths(4), createXMLMeldingFraBruker("SOSIALE_TJENESTER", LANG_TEKST)),
+            createXMLHenvendelse(behandlingsid, SVAR, now().minusMonths(4).plusDays(1), createXMLMeldingTilBruker("SOSIALE_TJENESTER", String.valueOf(behandlingsid), now().minusMonths(4).plusDays(3), LANG_TEKST)),
+            createXMLHenvendelse(behandlingsid, SVAR, now().minusDays(7), createXMLMeldingTilBruker("SOSIALE_TJENESTER", String.valueOf(behandlingsid), null, KORT_TEKST)),
+            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), REFERAT, now(), createXMLMeldingTilBruker("HJELPEMIDLER", "TELEFON", null, LANG_TEKST)),
+            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL, now().minusDays(1), createXMLMeldingFraBruker("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST))
     );
 
     private static XMLHenvendelse createXMLHenvendelse(int behandlingsId, XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata) {
@@ -69,17 +68,14 @@ public class JettyTestContext {
                         new XMLMetadataListe().withMetadata(metadata));
     }
 
-    private static XMLSporsmal createXMLSporsmal(String temagruppe, String tekst) {
-        return new XMLSporsmal().withTemagruppe(temagruppe).withFritekst(tekst);
+    private static XMLMeldingFraBruker createXMLMeldingFraBruker(String temagruppe, String tekst) {
+        return new XMLMeldingFraBruker().withTemagruppe(temagruppe).withFritekst(tekst);
     }
 
-    private static XMLSvar createXMLSvar(String temagruppe, String sporsmalsId, DateTime lestDato, String fritekst) {
-        return new XMLSvar().withTemagruppe(temagruppe).withSporsmalsId(sporsmalsId).withLestDato(lestDato).withFritekst(fritekst);
+    private static XMLMeldingTilBruker createXMLMeldingTilBruker(String temagruppe, String sporsmalsId, DateTime lestDato, String fritekst) {
+        return new XMLMeldingTilBruker().withTemagruppe(temagruppe).withSporsmalsId(sporsmalsId).withLestDato(lestDato).withFritekst(fritekst);
     }
 
-    private static XMLReferat createXMLReferat(String temagruppe, String kanal, DateTime lestDato, String tekst) {
-        return new XMLReferat().withTemagruppe(temagruppe).withKanal(kanal).withLestDato(lestDato).withFritekst(tekst);
-    }
 
     @Bean
     public HenvendelsePortType henvendelsePortType() {

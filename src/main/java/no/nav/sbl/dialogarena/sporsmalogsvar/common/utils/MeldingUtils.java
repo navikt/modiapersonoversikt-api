@@ -2,10 +2,10 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
+
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
@@ -62,24 +62,17 @@ public class MeldingUtils {
             fyllInnJournalforingsInformasjon(xmlHenvendelse, melding);
 
             XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
-            if (xmlMetadata instanceof XMLSporsmal) {
-                melding.temagruppe = ((XMLSporsmal) xmlMetadata).getTemagruppe();
-                melding.fritekst = ((XMLSporsmal) xmlMetadata).getFritekst();
-            } else if (xmlMetadata instanceof XMLSvar) {
-                XMLSvar svar = (XMLSvar) xmlMetadata;
+            if (xmlMetadata instanceof XMLMeldingFraBruker) {
+                melding.temagruppe = ((XMLMeldingFraBruker) xmlMetadata).getTemagruppe();
+                melding.fritekst = ((XMLMeldingFraBruker) xmlMetadata).getFritekst();
+            } else if (xmlMetadata instanceof XMLMeldingTilBruker) {
+                XMLMeldingTilBruker svar = (XMLMeldingTilBruker) xmlMetadata;
                 melding.traadId = svar.getSporsmalsId();
                 melding.temagruppe = svar.getTemagruppe();
                 melding.fritekst = svar.getFritekst();
                 melding.kanal = svar.getKanal();
                 melding.lestDato = svar.getLestDato();
                 melding.navIdent = svar.getNavident();
-            } else if (xmlMetadata instanceof XMLReferat) {
-                XMLReferat referat = (XMLReferat) xmlMetadata;
-                melding.temagruppe = referat.getTemagruppe();
-                melding.fritekst = referat.getFritekst();
-                melding.kanal = referat.getKanal();
-                melding.lestDato = referat.getLestDato();
-                melding.navIdent = referat.getNavident();
             }
             return melding;
         }
@@ -104,12 +97,9 @@ public class MeldingUtils {
             } else if (henvendelseType.equals(SVAR.name()) || henvendelseType.equals(REFERAT.name())) {
                 XMLMetadata xmlMetadata = info.getMetadataListe().getMetadata().get(0);
                 DateTime lestDato = null;
-                if (xmlMetadata instanceof XMLSvar) {
-                    lestDato = ((XMLSvar) xmlMetadata).getLestDato();
-                } else if (xmlMetadata instanceof XMLReferat) {
-                    lestDato = ((XMLReferat) xmlMetadata).getLestDato();
+                if (xmlMetadata instanceof XMLMeldingTilBruker) {
+                    lestDato = ((XMLMeldingTilBruker) xmlMetadata).getLestDato();
                 }
-
                 if (lestDato != null) {
                     return LEST_AV_BRUKER;
                 } else {

@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -71,12 +71,12 @@ public class HenvendelseBehandlingServiceTest {
 
     @Before
     public void setUp() {
-        XMLSporsmal xmlSporsmal = new XMLSporsmal()
+        XMLMeldingFraBruker xmlMeldingFraBruker = new XMLMeldingFraBruker()
                 .withFritekst("fritekst")
                 .withTemagruppe(TEMAGRUPPE);
 
         List<Object> xmlHenvendelseListe = new ArrayList<>();
-        xmlHenvendelse = lagXMLHenvendelse(BEHANDLINGS_ID, DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), xmlSporsmal);
+        xmlHenvendelse = lagXMLHenvendelse(BEHANDLINGS_ID, DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), xmlMeldingFraBruker);
         xmlHenvendelseListe.add(xmlHenvendelse);
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(

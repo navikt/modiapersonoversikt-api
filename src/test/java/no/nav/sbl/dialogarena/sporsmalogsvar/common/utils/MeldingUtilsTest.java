@@ -2,10 +2,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.joda.time.DateTime;
@@ -64,17 +63,17 @@ public class MeldingUtilsTest {
     @Test
     public void testStatusTransformer() {
         XMLHenvendelse xmlHenvendelse = new XMLHenvendelse();
-        xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSporsmal()));
+        xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker()));
 
         xmlHenvendelse.withHenvendelseType(XMLHenvendelseType.SPORSMAL.name());
         xmlHenvendelse.withOpprettetDato(now());
         assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(IKKE_BESVART)));
 
         xmlHenvendelse.withHenvendelseType(XMLHenvendelseType.SVAR.name());
-        xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar()));
+        xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker()));
         assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(IKKE_LEST_AV_BRUKER)));
 
-        xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLSvar().withLestDato(now())));
+        xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker().withLestDato(now())));
         assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(LEST_AV_BRUKER)));
     }
 
@@ -85,11 +84,11 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medSporsmal() {
-        XMLSporsmal xmlSporsmal = new XMLSporsmal()
+        XMLMeldingFraBruker xmlMeldingFraBruker = new XMLMeldingFraBruker()
                 .withFritekst(FRITEKST)
                 .withTemagruppe(TEMAGRUPPE);
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SPORSMAL.name(), xmlSporsmal));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SPORSMAL.name(), xmlMeldingFraBruker));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -104,15 +103,9 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medSvar() {
-        XMLSvar xmlSvar = new XMLSvar()
-                .withSporsmalsId(ID_2)
-                .withTemagruppe(TEMAGRUPPE)
-                .withLestDato(LEST_DATO)
-                .withFritekst(FRITEKST)
-                .withKanal(KANAL)
-                .withNavident(NAVIDENT);
+        XMLMeldingTilBruker meldingTilBruker = createMeldingTilBruker();
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SVAR.name(), xmlSvar));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SVAR.name(), meldingTilBruker));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_2)));
@@ -130,17 +123,12 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medReferat() {
-        XMLReferat xmlReferat = new XMLReferat()
-                .withFritekst(FRITEKST)
-                .withTemagruppe(TEMAGRUPPE)
-                .withLestDato(LEST_DATO)
-                .withKanal(KANAL)
-                .withNavident(NAVIDENT);
+        XMLMeldingTilBruker xmlMeldingTilBruker = createMeldingTilBruker();
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, REFERAT.name(), xmlReferat));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, REFERAT.name(), xmlMeldingTilBruker));
 
         assertThat(melding.id, is(equalTo(ID_1)));
-        assertThat(melding.traadId, is(equalTo(ID_1)));
+        assertThat(melding.traadId, is(equalTo(ID_2)));
         assertThat(melding.opprettetDato, is(equalTo(OPPRETTET_DATO)));
         assertThat(melding.meldingstype, is(equalTo(SAMTALEREFERAT)));
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
@@ -153,9 +141,19 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
     }
 
+    private XMLMeldingTilBruker createMeldingTilBruker() {
+        return new XMLMeldingTilBruker()
+                .withSporsmalsId(ID_2)
+                .withFritekst(FRITEKST)
+                .withTemagruppe(TEMAGRUPPE)
+                .withLestDato(LEST_DATO)
+                .withKanal(KANAL)
+                .withNavident(NAVIDENT);
+    }
+
     @Test(expected = ClassCastException.class)
     public void tilMeldingTransformer_girClassCastExceptionVedFeilType() {
-        TIL_MELDING.transform(new XMLSporsmal());
+        TIL_MELDING.transform(new XMLMeldingFraBruker());
     }
 
 }
