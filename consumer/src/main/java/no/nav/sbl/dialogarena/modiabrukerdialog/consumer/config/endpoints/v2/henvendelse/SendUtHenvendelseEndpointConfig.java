@@ -1,10 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLReferat;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSporsmal;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLSvar;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
@@ -74,9 +73,8 @@ public class SendUtHenvendelseEndpointConfig {
         proxyFactoryBean.getProperties().put("jaxb.additionalContextClasses", new Class[]{
                 XMLHenvendelse.class,
                 XMLMetadataListe.class,
-                XMLSporsmal.class,
-                XMLSvar.class,
-                XMLReferat.class});
+                XMLMeldingFraBruker.class,
+                XMLMeldingTilBruker.class});
         SendUtHenvendelsePortType portType = proxyFactoryBean.create(SendUtHenvendelsePortType.class);
         Client client = ClientProxy.getClient(portType);
         HTTPConduit httpConduit = (HTTPConduit) client.getConduit();

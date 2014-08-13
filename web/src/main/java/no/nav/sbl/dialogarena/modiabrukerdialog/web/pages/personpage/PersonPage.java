@@ -13,10 +13,10 @@ import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Svar;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
@@ -35,7 +35,6 @@ import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
-import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
@@ -99,7 +98,6 @@ public class PersonPage extends BasePage {
     private HentPersonPanel hentPersonPanel;
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
-    private Label fnrContainer;
     private Component svarOgReferatPanel;
     private final String fnr;
 
@@ -112,7 +110,6 @@ public class PersonPage extends BasePage {
                 nullstillLink,
                 lamellContainer,
                 redirectPopup,
-                fnrContainer,
                 new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel"),
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
@@ -131,7 +128,6 @@ public class PersonPage extends BasePage {
         hentPersonPanel = (HentPersonPanel) new HentPersonPanel("searchPanel").setOutputMarkupPlaceholderTag(true);
         searchToggleButton = (Button) new Button("toggle-sok").setOutputMarkupPlaceholderTag(true);
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
-        fnrContainer = new Label("fnr", fnr);
         svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
     }
 
@@ -210,17 +206,17 @@ public class PersonPage extends BasePage {
 
     public void visSvarPanelBasertPaaOppgaveId(String oppgaveId) {
         Sporsmal sporsmal = henvendelseUtsendingService.getSporsmalFromOppgaveId(fnr, oppgaveId);
-        erstattReferatPanelMedSvarPanel(sporsmal, henvendelseUtsendingService.getSvarTilSporsmal(fnr, sporsmal.id), optional(oppgaveId));
+        erstattReferatPanelMedSvarPanel(sporsmal, henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, sporsmal.id), optional(oppgaveId));
     }
 
-    private void erstattReferatPanelMedSvarPanel(Sporsmal sporsmal, List<Svar> svarTilSporsmal, Optional<String> oppgaveId) {
+    private void erstattReferatPanelMedSvarPanel(Sporsmal sporsmal, List<SvarEllerReferat> svarTilSporsmal, Optional<String> oppgaveId) {
         svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svarTilSporsmal, oppgaveId));
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void visSvarPanelBasertPaaSporsmalId(AjaxRequestTarget target, String sporsmalId) {
         Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(sporsmalId);
-        List<Svar> svar = henvendelseUtsendingService.getSvarTilSporsmal(fnr, sporsmalId);
+        List<SvarEllerReferat> svar = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, sporsmalId);
         Optional<String> oppgaveId = none();
         if (sporsmaletIkkeErBesvartTidligere(svar)) {
             oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmal.oppgaveId);
@@ -230,7 +226,7 @@ public class PersonPage extends BasePage {
         target.add(svarOgReferatPanel);
     }
 
-    private boolean sporsmaletIkkeErBesvartTidligere(List<Svar> svar) {
+    private boolean sporsmaletIkkeErBesvartTidligere(List<SvarEllerReferat> svar) {
         return svar.isEmpty();
     }
 

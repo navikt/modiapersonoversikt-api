@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.cms;
 
+import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.content.ValueRetriever;
 import no.nav.modig.content.ValuesFromContentWithResourceBundleFallback;
@@ -39,24 +40,12 @@ public class CmsEndpointConfig {
     private Logger log = LoggerFactory.getLogger(CmsEndpointConfig.class);
 
     @Bean
-    public ValueRetriever siteContentRetriever() throws URISyntaxException {
-        final ValueRetriever prod = getValueRetriever();
-        final ValueRetriever mock = new CMSValueRetrieverMock().getValueRetrieverMock();
-
-        return new ValueRetriever() {
-            @Override
-            public String getValueOf(String key, String language) {
-                try {
-                    if (mockErTillattOgSlaattPaaForKey(CMS_KEY)) {
-                        return mock.getValueOf(key, language);
-                    }
-                    return prod.getValueOf(key, language);
-                } catch (MissingResourceException e) {
-                    log.error("MissingResourceException", e);
-                    return "Manglende tekst"; // Vi returnerer allikevel fordi man ikke vil ødelegge for resten av Modia som stort sett ikke bruker CMS
-                }
-            }
-        };
+    public CmsContentRetriever cmsContentRetriever()  throws URISyntaxException {
+        CmsContentRetriever cmsContentRetriever = new CmsContentRetriever();
+        cmsContentRetriever.setDefaultLocale(DEFAULT_LOCALE);
+        cmsContentRetriever.setTeksterRetriever(siteContentRetriever());
+        cmsContentRetriever.setArtikkelRetriever(siteContentRetriever());
+        return cmsContentRetriever;
     }
 
     @Bean
@@ -71,6 +60,29 @@ public class CmsEndpointConfig {
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
+                }
+            }
+        };
+    }
+
+    private ValueRetriever siteContentRetriever() throws URISyntaxException {
+        final ValueRetriever prod = getValueRetriever();
+        final ValueRetriever mock = new CMSValueRetrieverMock().getValueRetrieverMock();
+
+        return new ValueRetriever() {
+            @Override
+            public String getValueOf(String key, String language) {
+                try {
+                    log.debug("Henter tekst fra CMS");
+                    if (mockErTillattOgSlaattPaaForKey(CMS_KEY)) {
+                        return mock.getValueOf(key, language);
+                    }
+                    String valueOf = prod.getValueOf(key, language);
+                    log.debug("Tekst fra CMS OK");
+                    return valueOf;
+                } catch (MissingResourceException e) {
+                    log.error("MissingResourceException", e);
+                    return "Manglende tekst"; // Vi returnerer allikevel fordi man ikke vil ødelegge for resten av Modia som stort sett ikke bruker CMS
                 }
             }
         };

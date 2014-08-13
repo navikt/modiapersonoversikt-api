@@ -92,7 +92,7 @@ public class OppgaveBehandlingServiceTest {
 
         oppgaveBehandlingService.plukkOppgaveFraGsak("ARBD");
         verify(oppgaveWS).finnOppgaveListe(finnOppgaveListeRequestCaptor.capture());
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("ARBD_KNA"));
+        assertThat(finnOppgaveListeRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("KNA"));
         assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().getMaxAntallSvar(), is(1));
         assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().isUfordelte(), is(true));
     }
@@ -127,7 +127,7 @@ public class OppgaveBehandlingServiceTest {
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
         assertThat(endreOppgave.getAnsvarligId(), is(""));
         assertThat(endreOppgave.getBeskrivelse(), is("beskrivelse"));
-        assertThat(endreOppgave.getFagomradeKode(), is("FMLI_KNA"));
+        assertThat(endreOppgave.getUnderkategoriKode(), is("FMLI_KNA"));
     }
 
     private WSHentOppgaveResponse mockHentOppgaveResponse() {

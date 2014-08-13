@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Referat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
@@ -104,7 +104,7 @@ public class ReferatPanel extends Panel {
     }
 
     private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) {
-        Referat referat = new Referat()
+        SvarEllerReferat referat = new SvarEllerReferat()
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
                 .withTemagruppe(svarOgReferatVM.temagruppe.name())

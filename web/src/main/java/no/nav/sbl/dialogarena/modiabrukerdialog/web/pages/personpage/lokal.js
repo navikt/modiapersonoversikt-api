@@ -15,6 +15,9 @@ jQuery(document).ready(function ($) {
     Modig.shortcutListener.on({alt: true, keyCode: 117}, focusLamellHead);  // F6
     Modig.shortcutListener.on({alt: true, keyCode: 118}, closeLamellHead);  // F7
 
+
+    addPrintEventListener();
+
     $('body').on('click', '.lamell .lamellhode > a', function () {
         if ($('.main > .personsok').is(':visible')) {
             toggleAvansertSok();
@@ -255,3 +258,54 @@ function createTabHandler(application) {
 
     init();
 }
+
+function prepareElementForPrint(element, additionalClass) {
+    if (additionalClass) {
+        $('.print').addClass(additionalClass);
+    }
+    $('.print .content').append(element.clone());
+}
+
+function addPrintEventListener() {
+    var called = 0; // Chrome kjører listeneren 2 ganger, men vi vil bare kjøre beforePrint første gang og afterPrint siste gang de kjører
+    var print = $('.print');
+    var printContent = print.find('.content');
+
+    function afterPrint() {
+        if (window.chrome) {
+            if (called === 0) {
+                called = called + 1;
+                return;
+            }
+            called = 0;
+        }
+        printContent.empty();
+        print.attr('class', 'print');
+    }
+
+    function beforePrint() {
+        if (window.chrome && called === 0) {
+            return;
+        }
+        var selectedLamell = $('.lamell.selected');
+        if (printContent.children().length === 0 && !selectedLamell.hasClass('oversikt')) {
+            prepareElementForPrint(selectedLamell);
+        }
+    }
+
+    if (window.matchMedia) {
+        var mediaQueryList = window.matchMedia('print');
+        mediaQueryList.addListener(function (mql) {
+            if (mql.matches) {
+                beforePrint();
+            } else {
+                afterPrint();
+            }
+
+        });
+    } else {
+        window.onafterprint = afterPrint;
+        window.onbeforeprint = beforePrint;
+    }
+}
+
