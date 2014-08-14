@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefer
 public enum ReferatKanal implements Kanal {
     TELEFON("referatpanel.TELEFON.kvittering.bekreftelse"),
     OPPMOTE("referatpanel.OPPMOTE.kvittering.bekreftelse");
+
     private final String kvitteringKey;
 
     ReferatKanal(String kvitteringKey) {

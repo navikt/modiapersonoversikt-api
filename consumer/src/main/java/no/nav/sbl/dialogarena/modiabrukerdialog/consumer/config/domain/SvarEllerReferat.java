@@ -2,7 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain;
 
 import org.joda.time.DateTime;
 
-public class SvarEllerReferat {
+import java.io.Serializable;
+
+public class SvarEllerReferat implements Serializable {
 
     public String sporsmalsId, fnr, navIdent, temagruppe, kanal, fritekst;
     public DateTime opprettetDato;
