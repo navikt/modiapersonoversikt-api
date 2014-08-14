@@ -104,7 +104,7 @@ public class OppgaveBehandlingService {
                                 .withOpprettetEnhetId(valueOf(ENHET))
                                 .withOppgavetypeKodeListe("SPM_OG_SVR")
                                 .withUnderkategoriKode(underkategoriKode(temagruppe))
-                                .withMaxAntallSvar(1)
+                                .withMaxAntallSvar(0)
                                 .withUfordelte(true))
                         .withSok(new WSFinnOppgaveListeSok()
                                 .withAnsvarligEnhetId(valueOf(ENHET))

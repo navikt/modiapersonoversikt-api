@@ -93,7 +93,7 @@ public class OppgaveBehandlingServiceTest {
         oppgaveBehandlingService.plukkOppgaveFraGsak("ARBD");
         verify(oppgaveWS).finnOppgaveListe(finnOppgaveListeRequestCaptor.capture());
         assertThat(finnOppgaveListeRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("KNA"));
-        assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().getMaxAntallSvar(), is(1));
+        assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().getMaxAntallSvar(), is(0));
         assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().isUfordelte(), is(true));
     }
 
