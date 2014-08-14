@@ -32,9 +32,10 @@ public class KodeverkV2PortTypeImpl {
         proxyFactoryBean.setAddress(kodeverkEndpoint != null ? kodeverkEndpoint.toString() : "Address not set");
         proxyFactoryBean.setWsdlURL("classpath:kodeverk/no/nav/tjeneste/virksomhet/kodeverk/v2/Kodeverk.wsdl");
 
+        proxyFactoryBean.setProperties(new HashMap<String, Object>());
+
         //setter mustunderstand i header slik at tjenester som ikke forstår sikkerhetsheader ikke skal avvise requester
         proxyFactoryBean.getProperties().put(MUST_UNDERSTAND, false);
-        proxyFactoryBean.setProperties(new HashMap<String, Object>());
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());
         proxyFactoryBean.getFeatures().add(new LoggingFeature());
         proxyFactoryBean.getFeatures().add(new TimeoutFeature().withConnectionTimeout(MODIA_CONNECTION_TIMEOUT).withReceiveTimeout(MODIA_RECEIVE_TIMEOUT));
