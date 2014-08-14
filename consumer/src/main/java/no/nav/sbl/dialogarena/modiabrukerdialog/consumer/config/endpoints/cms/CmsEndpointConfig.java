@@ -1,16 +1,24 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.cms;
 
+import net.sf.ehcache.Cache;
+import net.sf.ehcache.Element;
 import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.content.Content;
 import no.nav.modig.content.ContentRetriever;
 import no.nav.modig.content.ValueRetriever;
 import no.nav.modig.content.ValuesFromContentWithResourceBundleFallback;
 import no.nav.modig.content.enonic.HttpContentRetriever;
+import no.nav.modig.content.enonic.innholdstekst.Innholdstekst;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.CacheManager;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -28,7 +36,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Mock
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock.CMS_KEY;
 
 @Configuration
-public class CmsEndpointConfig {
+public class CmsEndpointConfig implements ApplicationContextAware {
 
     public static final String DEFAULT_LOCALE = "nb";
     private static final String INNHOLDSTEKSTER_NB_NO_REMOTE = "/app/saksoversikt/nb/tekster";
@@ -38,6 +46,8 @@ public class CmsEndpointConfig {
     private String appresUrl;
 
     private Logger log = LoggerFactory.getLogger(CmsEndpointConfig.class);
+
+    private ApplicationContext applicationContext;
 
     @Bean
     public CmsContentRetriever cmsContentRetriever()  throws URISyntaxException {
@@ -91,7 +101,29 @@ public class CmsEndpointConfig {
     private ValuesFromContentWithResourceBundleFallback getValueRetriever() throws URISyntaxException {
         Map<String, URI> uris = new HashMap<>();
         uris.put(DEFAULT_LOCALE, new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE));
-        ContentRetriever contentRetriever = new HttpContentRetriever();
+
+        // Cacheable-annotasjonen i den opprinnelige getContent ser ikke ut til å funke
+        // Overrider derfor getContent for å brukt cms-cache for DEMO 14.08
+        // Lover helt totally seriously at vi skal fikse cachen ordentlig neste uke
+        ContentRetriever contentRetriever = new HttpContentRetriever() {
+            @Override
+            public Content getContent(URI uri) {
+                Cache cmsCache = (Cache) applicationContext.getBean(CacheManager.class).getCache("cms.content").getNativeCache();
+                if (cmsCache.get(uri) == null) {
+                    Content<Innholdstekst> content = super.getContent(uri);
+                    cmsCache.put(new Element(uri, content));
+                    return content;
+                } else {
+                    return (Content) cmsCache.get(uri).getObjectValue();
+                }
+            }
+        };
+
         return new ValuesFromContentWithResourceBundleFallback(INNHOLDSTEKSTER_NB_NO_LOCAL, contentRetriever, uris, DEFAULT_LOCALE);
+    }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
     }
 }
