@@ -60,6 +60,7 @@ jQuery(document).ready(function ($) {
         });
     }
 
+    settHovedinnholdHoyde();
 });
 
 function focusSearchField() {
@@ -306,6 +307,15 @@ function addPrintEventListener() {
     } else {
         window.onafterprint = afterPrint;
         window.onbeforeprint = beforePrint;
+    }
+}
+
+function settHovedinnholdHoyde() {
+    settHoyde();
+    $(window).resize(settHoyde);
+
+    function settHoyde() {
+        $('.main-content').css('min-height', $('html').height() - $('.navbar ').outerHeight());
     }
 }
 
