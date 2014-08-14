@@ -49,14 +49,14 @@ public class JournalforingsPanel extends Panel {
     public void apneJournalforingsPanel(AjaxRequestTarget target) {
         oppdatereJournalforingssaker();
         this.setVisibilityAllowed(true);
-        target.appendJavaScript("apneMedAnimasjon('.journalforing',400)");
+        target.appendJavaScript("$('.journalforing').slideDown(400)");
         target.add(this);
     }
 
     @RunOnEvents({VALGT_MELDING_EVENT, TRAAD_JOURNALFORT})
     public void lukkJournalforingsPanel(AjaxRequestTarget target) {
         if (isVisibleInHierarchy()) {
-            target.prependJavaScript("journalforingsPanelLukket|lukkMedAnimasjon('.journalforing',400,journalforingsPanelLukket)");
+            target.prependJavaScript("journalforingsPanelLukket|$('.journalforing').slideUp(400, journalforingsPanelLukket)");
             this.setVisibilityAllowed(false);
             target.add(this);
         }

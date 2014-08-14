@@ -79,18 +79,16 @@ public class NyOppgavePanel extends Panel {
 
     public void apneNyOppgavePanel(AjaxRequestTarget target) {
         this.setVisibilityAllowed(true);
-        target.appendJavaScript("apneMedAnimasjon('.nyoppgave',400)");
+        target.appendJavaScript("$('.nyoppgave').slideDown(400)");
         target.add(this);
     }
 
     @RunOnEvents(VALGT_MELDING_EVENT)
     public void lukkNyOppgavePanel(AjaxRequestTarget target) {
         if (isVisibleInHierarchy()) {
-            target.prependJavaScript("oppgavePanelLukket|lukkMedAnimasjon('.nyoppgave',400,oppgavePanelLukket)");
+            target.prependJavaScript("oppgavePanelLukket|$('.nyoppgave').slideUp(400, oppgavePanelLukket)");
             this.setVisibilityAllowed(false);
             target.add(this);
         }
     }
-
-
 }

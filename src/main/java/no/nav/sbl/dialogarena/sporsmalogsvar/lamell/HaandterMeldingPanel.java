@@ -6,15 +6,12 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.nyoppgave.NyOppgavePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
 public class HaandterMeldingPanel extends Panel {
 
@@ -53,10 +50,5 @@ public class HaandterMeldingPanel extends Panel {
         nyOppgaveLink.add(enabledIf(new PropertyModel<Boolean>(innboksVM, "valgtTraad.erBehandlet()")));
 
         add(besvarLink, journalforLink, nyOppgaveLink, journalforingsPanel, nyOppgavePanel);
-    }
-
-    @Override
-    public void renderHead(IHeaderResponse response) {
-        response.render(forReference(new JavaScriptResourceReference(HaandterMeldingPanel.class, "haandtermelding.js")));
     }
 }
