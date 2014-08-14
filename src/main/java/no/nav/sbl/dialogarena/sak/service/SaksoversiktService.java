@@ -77,16 +77,16 @@ public class SaksoversiktService {
         Map<String, Kvittering> kvitteringerForBehandlingsID = mapKvitteringMedBehandlingsID(kvitteringer);
         Map<String, WSBehandlingskjede> kjederForBehandlingsID = mappedeKjeder(kvitteringerForBehandlingsID.keySet(), finnBehandlingskjederSomHarKvittering(alleBehandlingskjeder, kvitteringer));
         for (String kvitteringsID : kvitteringerForBehandlingsID.keySet()) {
-            behandlinger.add(beriketKvittering(kvitteringerForBehandlingsID.get(kvitteringsID), kjederForBehandlingsID.get(kvitteringsID), temakode));
+            behandlinger.add(beriketKvittering(kvitteringerForBehandlingsID.get(kvitteringsID), kjederForBehandlingsID.get(kvitteringsID)));
         }
         return on(behandlinger).collect(new OmvendtKronologiskBehandlingComparator());
     }
 
-    private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede, String sakstema) {
+    private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede) {
         return (Kvittering) kvittering.withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
                 .withOpprettetDato(wsBehandlingskjede.getStart())
                 .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede))
-                .withBehandlingsTema(sakstema);
+                .withBehandlingsTema(wsBehandlingskjede.getBehandlingskjedetype().getValue());
     }
 
     private List<GenerellBehandling> behandlingerSomIkkeErKvitteringer(List<WSBehandlingskjede> alleBehandlingskjeder, List<Kvittering> kvitteringer) {
