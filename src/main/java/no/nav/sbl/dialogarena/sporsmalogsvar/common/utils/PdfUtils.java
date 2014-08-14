@@ -42,7 +42,7 @@ public class PdfUtils {
             @Override
             public CharSequence apply(DateTime dato, Options options) throws IOException {
                 Locale locale = new Locale("nb", "no");
-                return dato.toString("d. MMMM yyyy", locale);
+                return dato.toString("d. MMMM yyyy HH:mm", locale);
             }
         };
 
