@@ -1,4 +1,4 @@
-function resizeElement() {
+function resizeElementIE() {
     setHeight();
     $(window).resize(setHeight)
 }

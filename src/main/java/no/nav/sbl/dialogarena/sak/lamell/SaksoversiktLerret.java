@@ -10,6 +10,7 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
+import org.apache.wicket.markup.head.JavaScriptContentHeaderItem;
 import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
@@ -73,6 +74,7 @@ public class SaksoversiktLerret extends Lerret {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.render(OnLoadHeaderItem.forScript("resizeElement()"));
+        response.render(new JavaScriptContentHeaderItem("resizeElement()", "saksoversikt-ie-js", "IE"));
+        response.render(OnLoadHeaderItem.forScript("settSakHoyde()"));
     }
 }

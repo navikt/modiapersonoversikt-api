@@ -32,3 +32,18 @@ function addExpandOnClickListener(toggleElement, expandableElement) {
         return false;
     });
 }
+
+function settSakHoyde() {
+    settHoyde();
+    $(window).resize(settHoyde);
+
+    function settHoyde() {
+        var height = $('.main-content').height();
+        $('.lamell .lamellhode')
+            .each(function() {
+                height -= $(this).height()
+            }
+        );
+        $('.saker').css('min-height', height - 1); // -1 for å fjerne scrollbar dersom den ikke er nødvendig
+    }
+}
