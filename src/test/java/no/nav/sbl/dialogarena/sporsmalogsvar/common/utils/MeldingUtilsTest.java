@@ -103,7 +103,7 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medSvar() {
-        XMLMeldingTilBruker meldingTilBruker = createMeldingTilBruker();
+        XMLMeldingTilBruker meldingTilBruker = createMeldingTilBruker(ID_2);
 
         Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SVAR.name(), meldingTilBruker));
 
@@ -123,12 +123,12 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medReferat() {
-        XMLMeldingTilBruker xmlMeldingTilBruker = createMeldingTilBruker();
+        XMLMeldingTilBruker xmlMeldingTilBruker = createMeldingTilBruker(null);
 
         Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, REFERAT.name(), xmlMeldingTilBruker));
 
         assertThat(melding.id, is(equalTo(ID_1)));
-        assertThat(melding.traadId, is(equalTo(ID_2)));
+        assertThat(melding.traadId, is(equalTo(ID_1)));
         assertThat(melding.opprettetDato, is(equalTo(OPPRETTET_DATO)));
         assertThat(melding.meldingstype, is(equalTo(SAMTALEREFERAT)));
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
@@ -141,9 +141,9 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
     }
 
-    private XMLMeldingTilBruker createMeldingTilBruker() {
+    private XMLMeldingTilBruker createMeldingTilBruker(String traadId) {
         return new XMLMeldingTilBruker()
-                .withSporsmalsId(ID_2)
+                .withSporsmalsId(traadId)
                 .withFritekst(FRITEKST)
                 .withTemagruppe(TEMAGRUPPE)
                 .withLestDato(LEST_DATO)

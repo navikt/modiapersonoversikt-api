@@ -66,13 +66,15 @@ public class MeldingUtils {
                 melding.temagruppe = ((XMLMeldingFraBruker) xmlMetadata).getTemagruppe();
                 melding.fritekst = ((XMLMeldingFraBruker) xmlMetadata).getFritekst();
             } else if (xmlMetadata instanceof XMLMeldingTilBruker) {
-                XMLMeldingTilBruker svar = (XMLMeldingTilBruker) xmlMetadata;
-                melding.traadId = svar.getSporsmalsId();
-                melding.temagruppe = svar.getTemagruppe();
-                melding.fritekst = svar.getFritekst();
-                melding.kanal = svar.getKanal();
-                melding.lestDato = svar.getLestDato();
-                melding.navIdent = svar.getNavident();
+                XMLMeldingTilBruker svarEllerReferat = (XMLMeldingTilBruker) xmlMetadata;
+                if(svarEllerReferat.getSporsmalsId() != null){
+                    melding.traadId = svarEllerReferat.getSporsmalsId();
+                }
+                melding.temagruppe = svarEllerReferat.getTemagruppe();
+                melding.fritekst = svarEllerReferat.getFritekst();
+                melding.kanal = svarEllerReferat.getKanal();
+                melding.lestDato = svarEllerReferat.getLestDato();
+                melding.navIdent = svarEllerReferat.getNavident();
             }
             return melding;
         }
