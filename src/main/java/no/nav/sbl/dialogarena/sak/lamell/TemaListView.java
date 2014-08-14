@@ -39,7 +39,7 @@ public class TemaListView extends PropertyListView<TemaVM> {
         String datoStreng = printLongDate(item.getModelObject().sistoppdaterteBehandling.behandlingDato);
         boolean sakstemaErValgt = sakstema.equals(lerret.getAktivtTema().getObject());
 
-        item.add(new Temalenke("temalenke", kodeverk.getTemanavnForTemakode(sakstema, ARKIVTEMA), datoStreng));
+        item.add(new Temalenke("temalenke", sakstema, datoStreng));
         item.add(hasCssClassIf("aktiv", of(sakstemaErValgt)));
     }
 
@@ -51,7 +51,7 @@ public class TemaListView extends PropertyListView<TemaVM> {
             super(id);
             this.sakstema = sakstema;
             add(
-                    new Label("sakstema", sakstema),
+                    new Label("sakstema", kodeverk.getTemanavnForTemakode(sakstema, ARKIVTEMA)),
                     new Label("dato", datoStreng)
             );
         }
