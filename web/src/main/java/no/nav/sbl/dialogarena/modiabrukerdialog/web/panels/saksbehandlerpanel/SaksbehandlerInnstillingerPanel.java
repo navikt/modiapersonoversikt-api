@@ -19,6 +19,7 @@ import org.apache.wicket.model.PropertyModel;
 import javax.inject.Inject;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 
 public class SaksbehandlerInnstillingerPanel extends Panel {
 
@@ -71,13 +72,7 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
     }
 
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target, WebMarkupContainer valgContainer) {
-        if (valgContainer.isVisibilityAllowed()) {
-            target.prependJavaScript("saksbehandlerPanelLukket|$('.nav-enhet').slideUp(700,saksbehandlerPanelLukket)");
-            valgContainer.setVisibilityAllowed(false);
-        } else {
-            valgContainer.setVisibilityAllowed(true);
-            target.appendJavaScript("$('.nav-enhet').slideDown(700)");
-        }
+        animertVisningToggle(target, valgContainer);
         target.add(valgContainer);
     }
 }

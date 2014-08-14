@@ -12,6 +12,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.joda.time.DateTime;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 
 public class TidligereMeldingPanel extends Panel {
     public TidligereMeldingPanel(String id, String type, String temagruppe, DateTime opprettetDato, final String fritekst, boolean minimert) {
@@ -31,7 +32,7 @@ public class TidligereMeldingPanel extends Panel {
                         new AjaxEventBehavior("click") {
                             @Override
                             protected void onEvent(AjaxRequestTarget target) {
-                                fritekstFelt.setVisibilityAllowed(!fritekstFelt.isVisibilityAllowed());
+                                animertVisningToggle(target, fritekstFelt);
                                 target.add(overskriftContainer, fritekstFelt);
                             }
                         }
