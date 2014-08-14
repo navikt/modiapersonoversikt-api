@@ -42,15 +42,15 @@ public abstract class Journalforing {
     public static final String KOMMUNIKASJONSKANAL = "NAV_NO";
     public static final String INNHOLD_BESKRIVELSE = "Elektronisk kommunikasjon med NAV ";
 
-    public static final String FORELØPIG_PERSONIDENTIFIKATOR = "FNR";
-    public static final String FORELØPIG_DOKUMENTTITTEL = "Dokumenttittel";
+    public static final String FORELOPIG_PERSONIDENTIFIKATOR = "FNR";
+    public static final String FORELOPIG_DOKUMENTTITTEL = "Dokumenttittel";
 
     protected static Person lagPerson(String fnr) {
         Person bruker = new Person();
         Personidenter personidenter = new Personidenter();
         personidenter.setKodeRef(personidenter.getKodeverksRef());
         //TODO Her må man skille mellom fnr og dnr når man setter verdien til kodeverket, foreløpig hardkodet til FNR
-        personidenter.setValue(FORELØPIG_PERSONIDENTIFIKATOR);
+        personidenter.setValue(FORELOPIG_PERSONIDENTIFIKATOR);
 
         NorskIdent norskIdent = new NorskIdent();
         norskIdent.setIdent(fnr);
@@ -117,7 +117,7 @@ public abstract class Journalforing {
         public UstrukturertInnhold transform(byte[] pdf) {
             UstrukturertInnhold dokumentInnhold = new UstrukturertInnhold();
             // TODO få inn den egentlige tittelen her
-            dokumentInnhold.setFilnavn(FORELØPIG_DOKUMENTTITTEL);
+            dokumentInnhold.setFilnavn(FORELOPIG_DOKUMENTTITTEL);
             Arkivfiltyper arkivFilTyper = new Arkivfiltyper();
             arkivFilTyper.setValue(ARKIV_FILTYPE);
             dokumentInnhold.setFiltype(arkivFilTyper);

@@ -22,8 +22,8 @@ import java.util.List;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.ARKIV_FILTYPE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.DOKUMENTTYPE_NOTAT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.FORELØPIG_DOKUMENTTITTEL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.FORELØPIG_PERSONIDENTIFIKATOR;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.FORELOPIG_DOKUMENTTITTEL;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.FORELOPIG_PERSONIDENTIFIKATOR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.KOMMUNIKASJONSKANAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.KRYSSREFERANSE_KODE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.VARIANSFORMAT;
@@ -45,7 +45,7 @@ public class JournalforingTest {
         assertNotNull(person.getIdent());
         assertNotNull(person.getIdent().getType());
         assertThat(person.getIdent().getIdent(), is(FNR));
-        assertThat(person.getIdent().getType().getValue(), is(FORELØPIG_PERSONIDENTIFIKATOR));
+        assertThat(person.getIdent().getType().getValue(), is(FORELOPIG_PERSONIDENTIFIKATOR));
         assertThat(person.getIdent().getType().getKodeverksRef(), is(new Personidenter().getKodeverksRef()));
     }
 
@@ -135,7 +135,7 @@ public class JournalforingTest {
         UstrukturertInnhold ustrukturertInnhold =
                 KlasseSomArverJournalforing.PdfDokumentToUstrukturertInnholdConverter.INSTANCE.transform(byteliste);
 
-        assertThat(ustrukturertInnhold.getFilnavn(), is(FORELØPIG_DOKUMENTTITTEL));
+        assertThat(ustrukturertInnhold.getFilnavn(), is(FORELOPIG_DOKUMENTTITTEL));
         assertThat(ustrukturertInnhold.getFiltype().getValue(), is(ARKIV_FILTYPE));
         assertThat(ustrukturertInnhold.getVariantformat().getValue(), is(VARIANSFORMAT));
         assertThat(ustrukturertInnhold.getInnhold(), is(byteliste));
