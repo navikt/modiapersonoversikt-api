@@ -33,7 +33,7 @@ public class SakOgBehandlingPortTypeMock {
     public static final String DAGPENGEARKIVTEMA = "DAG";
     public static final String AAPARKIVTEMA = "AAP";
     public static final String DAGPENGER_BEHANDLINGSTEMA = "ab0001";
-    public static final String AAP_BEHANDLINGSTEMA = "aX000X";
+    public static final String AAP_BEHANDLINGSTEMA = "ab0100";
 
     public static final String ANTALLSAKER_PROPERTY = "sakogbehandling.antallmocksaker";
 
