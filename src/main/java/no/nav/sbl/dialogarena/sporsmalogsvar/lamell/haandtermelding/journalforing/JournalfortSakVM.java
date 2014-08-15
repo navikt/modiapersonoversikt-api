@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
+package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;

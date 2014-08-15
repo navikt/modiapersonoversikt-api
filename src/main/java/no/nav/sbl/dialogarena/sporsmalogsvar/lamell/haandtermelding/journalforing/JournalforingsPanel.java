@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing;
+package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -48,15 +48,15 @@ public class JournalforingsPanel extends Panel {
 
     public void apneJournalforingsPanel(AjaxRequestTarget target) {
         oppdatereJournalforingssaker();
+        target.appendJavaScript("$('.journalforing').slideDown()");
         this.setVisibilityAllowed(true);
-        target.appendJavaScript("$('.journalforing').slideDown(400)");
         target.add(this);
     }
 
     @RunOnEvents({VALGT_MELDING_EVENT, TRAAD_JOURNALFORT})
     public void lukkJournalforingsPanel(AjaxRequestTarget target) {
-        if (isVisibleInHierarchy()) {
-            target.prependJavaScript("journalforingsPanelLukket|$('.journalforing').slideUp(400, journalforingsPanelLukket)");
+        if (isVisibilityAllowed()) {
+            target.prependJavaScript("journalforingsPanelLukket|$('.journalforing').slideUp(journalforingsPanelLukket)");
             this.setVisibilityAllowed(false);
             target.add(this);
         }

@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.nyoppgave;
+package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgave;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -80,15 +80,15 @@ public class NyOppgavePanel extends Panel {
     }
 
     public void apneNyOppgavePanel(AjaxRequestTarget target) {
+        target.appendJavaScript("$('.nyoppgave').slideDown()");
         this.setVisibilityAllowed(true);
-        target.appendJavaScript("$('.nyoppgave').slideDown(400)");
         target.add(this);
     }
 
     @RunOnEvents(VALGT_MELDING_EVENT)
     public void lukkNyOppgavePanel(AjaxRequestTarget target) {
-        if (isVisibleInHierarchy()) {
-            target.prependJavaScript("oppgavePanelLukket|$('.nyoppgave').slideUp(400, oppgavePanelLukket)");
+        if (isVisibilityAllowed()) {
+            target.prependJavaScript("oppgavePanelLukket|$('.nyoppgave').slideUp(oppgavePanelLukket)");
             this.setVisibilityAllowed(false);
             target.add(this);
         }

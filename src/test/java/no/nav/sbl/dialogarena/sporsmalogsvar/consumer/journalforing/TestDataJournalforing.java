@@ -6,8 +6,8 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import org.joda.time.DateTime;
 import org.junit.Before;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createMelding;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.journalforing.TestUtils.createSak;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createSak;
 
 
 public abstract class TestDataJournalforing {
