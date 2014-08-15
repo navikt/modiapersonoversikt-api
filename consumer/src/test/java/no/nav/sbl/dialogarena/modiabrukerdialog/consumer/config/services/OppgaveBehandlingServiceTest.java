@@ -108,12 +108,14 @@ public class OppgaveBehandlingServiceTest {
     public void skalLeggeTilbakeOppgaveIGsakUtenEndretTemagruppe() throws LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
 
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), "beskrivelse", null);
+        String nyBeskrivelse = "nyBeskrivelse";
+        String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), nyBeskrivelse, null);
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
         assertThat(endreOppgave.getAnsvarligId(), is(""));
-        assertThat(endreOppgave.getBeskrivelse(), is("beskrivelse"));
+        assertThat(endreOppgave.getBeskrivelse(), is(opprinneligBeskrivelse + "\n" + nyBeskrivelse));
         assertThat(endreOppgave.getFagomradeKode(), is("ARBD_KNA"));
     }
 
@@ -121,12 +123,14 @@ public class OppgaveBehandlingServiceTest {
     public void skalLeggeTilbakeOppgaveIGsakMedEndretTemagruppe() throws LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
 
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), "beskrivelse", "FMLI");
+        String nyBeskrivelse = "nyBeskrivelse";
+        String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), nyBeskrivelse, "FMLI");
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
         assertThat(endreOppgave.getAnsvarligId(), is(""));
-        assertThat(endreOppgave.getBeskrivelse(), is("beskrivelse"));
+        assertThat(endreOppgave.getBeskrivelse(), is(opprinneligBeskrivelse + "\n" + nyBeskrivelse));
         assertThat(endreOppgave.getUnderkategoriKode(), is("FMLI_KNA"));
     }
 

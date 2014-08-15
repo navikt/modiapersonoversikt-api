@@ -60,12 +60,16 @@ public class OppgaveBehandlingService {
         if (oppgaveId.isSome()) {
             WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId.get());
             wsOppgave.withAnsvarligId("");
-            wsOppgave.withBeskrivelse(beskrivelse);
+            wsOppgave.withBeskrivelse(leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse));
             if (!isBlank(temagruppe)) {
                 wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe)));
             }
             lagreOppgaveIGsak(wsOppgave);
         }
+    }
+
+    private static String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {
+        return isBlank(gammelBeskrivelse) ? leggTil : gammelBeskrivelse + "\n" + leggTil;
     }
 
     private WSOppgave hentOppgaveFraGsak(String oppgaveId) {
@@ -111,7 +115,8 @@ public class OppgaveBehandlingService {
                                 .withFagomradeKodeListe("KNA"))
                         .withSorteringKode(new WSFinnOppgaveListeSortering()
                                 .withSorteringKode("STIGENDE")
-                                .withSorteringselementKode("OPPRETTET_DATO")))
+                                .withSorteringselementKode("OPPRETTET_DATO"))
+                        .withIkkeTidligereFordeltTil(getSubjectHandler().getUid()))
                 .getOppgaveListe())
                 .head();
     }
