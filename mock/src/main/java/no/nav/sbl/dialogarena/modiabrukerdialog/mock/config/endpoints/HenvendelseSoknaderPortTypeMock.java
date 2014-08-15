@@ -26,6 +26,8 @@ public class HenvendelseSoknaderPortTypeMock {
     public static final String IKKE_KVITTERING = "ikke-kvittering";
     public static final String KVITTERING1 = "kvittering1";
     public static final String KVITTERING2 = "kvittering2";
+    public static final String KVITTERINGETTERSENDELSE1 = "kvitteringEttersendelse1";
+    public static final String KVITTERINGETTERSENDELSE2 = "kvitteringEttersendelse2";
     public static final String BEHANDLINGSKJEDEID_1 = "behandlingskjedeid-1";
     public static final String BEHANDLINGSKJEDEID_2 = "behandlingskjedeid-1";
     public static final DateTime MERGET_OPPRETTET = new DateTime().minusDays(110);
@@ -46,7 +48,7 @@ public class HenvendelseSoknaderPortTypeMock {
                         .withHenvendelseType(DOKUMENTINNSENDING.value())
                         .withHenvendelseStatus(FERDIG.value())
                         .withOpprettetDato(MERGET_OPPRETTET)
-                        .withInnsendtDato(new DateTime())
+                        .withInnsendtDato(new DateTime().minusDays(3))
                         .withHovedskjemaKodeverkId("hovedskjema")
                         .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
                                 new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
@@ -61,6 +63,36 @@ public class HenvendelseSoknaderPortTypeMock {
                         .withHenvendelseType(SOKNADSINNSENDING.value())
                         .withHenvendelseStatus(FERDIG.value())
                         .withOpprettetDato(MERGET_OPPRETTET)
+                        .withInnsendtDato(new DateTime().minusDays(3))
+                        .withHovedskjemaKodeverkId("hovedskjema")
+                        .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
+                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
+                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
+                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
+                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel("abc")
+                        )),
+                new WSSoknad()
+                        .withBehandlingsId(KVITTERINGETTERSENDELSE1)
+                        .withBehandlingsKjedeId(BEHANDLINGSKJEDEID_1)
+                        .withEttersending(true)
+                        .withHenvendelseType(DOKUMENTINNSENDING.value())
+                        .withHenvendelseStatus(FERDIG.value())
+                        .withOpprettetDato(new DateTime())
+                        .withInnsendtDato(new DateTime())
+                        .withHovedskjemaKodeverkId("hovedskjema")
+                        .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
+                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
+                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
+                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
+                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel("abc")
+                        )),
+                new WSSoknad()
+                        .withBehandlingsId(KVITTERINGETTERSENDELSE2)
+                        .withBehandlingsKjedeId(BEHANDLINGSKJEDEID_2)
+                        .withEttersending(true)
+                        .withHenvendelseType(SOKNADSINNSENDING.value())
+                        .withHenvendelseStatus(FERDIG.value())
+                        .withOpprettetDato(new DateTime())
                         .withInnsendtDato(new DateTime())
                         .withHovedskjemaKodeverkId("hovedskjema")
                         .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(

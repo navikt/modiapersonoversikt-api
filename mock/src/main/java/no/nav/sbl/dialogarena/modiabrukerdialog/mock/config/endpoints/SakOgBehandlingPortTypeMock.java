@@ -21,6 +21,8 @@ import static java.lang.System.getProperty;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERING1;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERING2;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERINGETTERSENDELSE1;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock.KVITTERINGETTERSENDELSE2;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -82,7 +84,8 @@ public class SakOgBehandlingPortTypeMock {
                 .withSakstema(new WSSakstemaer().withValue(DAGPENGEARKIVTEMA))
                 .withBehandlingskjede(
                         createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, DAGPENGER_BEHANDLINGSTEMA),
-                        createBehandlingKobletTilKvittering(KVITTERING2, DAGPENGER_BEHANDLINGSTEMA)
+                        createBehandlingKobletTilKvittering(KVITTERING2, DAGPENGER_BEHANDLINGSTEMA),
+                        createBehandlingKobletTilKvittering(KVITTERINGETTERSENDELSE2, DAGPENGER_BEHANDLINGSTEMA)
                 );
     }
 
@@ -92,6 +95,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSakstema(new WSSakstemaer().withValue(AAPARKIVTEMA))
                 .withBehandlingskjede(
                         createBehandlingKobletTilKvittering(KVITTERING1, AAP_BEHANDLINGSTEMA),
+                        createBehandlingKobletTilKvittering(KVITTERINGETTERSENDELSE1, AAP_BEHANDLINGSTEMA),
                         createAvsluttetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSlutt(now().minusYears(1))
                 );
     }
