@@ -49,6 +49,7 @@ public class GsakService {
                         .withOpprettetAvEnhetId(OPPRETTET_AV_ENHET_ID)   // TODO: Endre til å hente den faktiske enhetsid
                         .withOpprettOppgave(
                                 new WSOpprettOppgave()
+                                        .withHenvendelseId(nyOppgave.henvendelseId)
                                         .withAktivFra(LocalDate.now())
                                         .withAnsvarligEnhetId(nyOppgave.enhet)
                                         .withBeskrivelse(nyOppgave.beskrivelse)
@@ -56,7 +57,6 @@ public class GsakService {
                                         .withOppgavetypeKode(nyOppgave.type)
                                         .withPrioritetKode(nyOppgave.prioritet)
                                         .withLest(false)
-                                // TODO:  Det må opprettes eller benytte et eksisterende felt for å sette en referanse/id til pågående tråd (innboksVM.getValgtTraad().getEldsteMelding().melding.id)
                         ));
     }
 

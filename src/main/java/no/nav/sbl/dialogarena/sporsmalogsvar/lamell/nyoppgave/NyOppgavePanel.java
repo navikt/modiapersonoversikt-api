@@ -54,6 +54,8 @@ public class NyOppgavePanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 NyOppgave nyOppgave = (NyOppgave) form.getModelObject();
+                nyOppgave.henvendelseId = innboksVM.getValgtTraad().getEldsteMelding().melding.id;
+
                 gsakService.opprettGsakOppgave(nyOppgave);
                 lukkNyOppgavePanel(target);
                 nullstillSkjema();
