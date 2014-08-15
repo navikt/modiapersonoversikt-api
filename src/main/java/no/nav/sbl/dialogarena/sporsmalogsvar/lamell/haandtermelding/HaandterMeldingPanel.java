@@ -10,11 +10,16 @@ import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class HaandterMeldingPanel extends Panel {
+
+    private final List<AnimertPanel> meldingHaandteringsPaneler;
 
     public HaandterMeldingPanel(String id, final InnboksVM innboksVM) {
         super(id);
@@ -23,6 +28,8 @@ public class HaandterMeldingPanel extends Panel {
         journalforingsPanel.setVisibilityAllowed(false);
         final NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyOppgavePanel", innboksVM);
         nyOppgavePanel.setVisibilityAllowed(false);
+
+        meldingHaandteringsPaneler = asList(journalforingsPanel, nyOppgavePanel);
 
         AjaxLink<InnboksVM> besvarLink = new AjaxLink<InnboksVM>("besvar") {
             @Override
@@ -35,8 +42,7 @@ public class HaandterMeldingPanel extends Panel {
         AjaxLink journalforLink = new AjaxLink("journalfor") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                nyOppgavePanel.lukkNyOppgavePanel(target);
-                journalforingsPanel.apneJournalforingsPanel(target);
+                togglePaneler(target, JournalforingsPanel.class);
             }
         };
         journalforLink.add(enabledIf(not(new PropertyModel<Boolean>(innboksVM, "valgtTraad.nyesteMelding.nyesteMeldingISinJournalfortgruppe"))));
@@ -44,12 +50,21 @@ public class HaandterMeldingPanel extends Panel {
         AjaxLink nyOppgaveLink = new AjaxLink("nyoppgave") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                journalforingsPanel.lukkJournalforingsPanel(target);
-                nyOppgavePanel.apneNyOppgavePanel(target);
+                togglePaneler(target, NyOppgavePanel.class);
             }
         };
         nyOppgaveLink.add(enabledIf(new PropertyModel<Boolean>(innboksVM, "valgtTraad.erBehandlet()")));
 
         add(besvarLink, journalforLink, nyOppgaveLink, journalforingsPanel, nyOppgavePanel);
+    }
+
+    private void togglePaneler(AjaxRequestTarget target, Class synligPanelType) {
+        for (AnimertPanel panel : meldingHaandteringsPaneler) {
+            if (panel.getClass() == synligPanelType) {
+                panel.togglePanel(target);
+            } else {
+                panel.lukkPanel(target);
+            }
+        }
     }
 }

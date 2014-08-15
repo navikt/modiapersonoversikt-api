@@ -4,45 +4,43 @@
 <head></head>
 <body>
 <wicket:panel>
-    <section class="haandtermeldingpanel nyoppgave">
-        <h2>
-            <wicket:message key="nyoppgave.overskrift"/>
-        </h2>
+    <h2>
+        <wicket:message key="nyoppgave.overskrift"/>
+    </h2>
+    <div class="robust-strek"></div>
+    <h2 wicket:id="temagruppe" class="medium temagruppe"></h2>
+
+    <form wicket:id="nyoppgaveform">
+        <label>
+            <wicket:message key="nyoppgave.form.label.tema"/>
+            <select wicket:id="tema"></select>
+        </label>
+        <label>
+            <wicket:message key="nyoppgave.form.label.tilenhet"/>
+            <select wicket:id="enhet"></select>
+        </label>
+        <label>
+            <wicket:message key="nyoppgave.form.label.oppgavetype"/>
+            <select wicket:id="type"></select>
+        </label>
+        <label>
+            <wicket:message key="nyoppgave.form.label.prioritet"/>
+            <select wicket:id="prioritet"></select>
+        </label>
+        <label>
+            <wicket:message key="nyoppgave.form.label.beskrivelse"/>
+            <textarea wicket:id="beskrivelse"></textarea>
+        </label>
+
         <div class="robust-strek"></div>
-        <h2 wicket:id="temagruppe" class="medium temagruppe"></h2>
-
-        <form wicket:id="nyoppgaveform">
-            <label>
-                <wicket:message key="nyoppgave.form.label.tema"/>
-                <select wicket:id="tema"></select>
-            </label>
-            <label>
-                <wicket:message key="nyoppgave.form.label.tilenhet"/>
-                <select wicket:id="enhet"></select>
-            </label>
-            <label>
-                <wicket:message key="nyoppgave.form.label.oppgavetype"/>
-                <select wicket:id="type"></select>
-            </label>
-            <label>
-                <wicket:message key="nyoppgave.form.label.prioritet"/>
-                <select wicket:id="prioritet"></select>
-            </label>
-            <label>
-                <wicket:message key="nyoppgave.form.label.beskrivelse"/>
-                <textarea wicket:id="beskrivelse"></textarea>
-            </label>
-
-            <div class="robust-strek"></div>
-            <div wicket:id="feedback"></div>
-            <a wicket:id="opprettoppgave" class="knapp-hoved-stor">
-                <wicket:message key="nyoppgave.form.opprett"/>
-            </a>
-        </form>
-        <a wicket:id="avbrytlink" class="avbryt-knapp">
-            <wicket:message key="nyoppgave.avbryt"/>
+        <div wicket:id="feedback"></div>
+        <a wicket:id="opprettoppgave" class="knapp-hoved-stor">
+            <wicket:message key="nyoppgave.form.opprett"/>
         </a>
-    </section>
+    </form>
+    <a wicket:id="avbrytlink" class="avbryt-knapp">
+        <wicket:message key="nyoppgave.avbryt"/>
+    </a>
 </wicket:panel>
 </body>
 </html>

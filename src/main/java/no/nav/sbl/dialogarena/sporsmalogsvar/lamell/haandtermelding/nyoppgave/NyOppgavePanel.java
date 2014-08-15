@@ -4,6 +4,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
@@ -12,7 +13,6 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
@@ -22,7 +22,7 @@ import javax.inject.Inject;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 
-public class NyOppgavePanel extends Panel {
+public class NyOppgavePanel extends AnimertPanel {
 
     @Inject
     private GsakService gsakService;
@@ -57,7 +57,7 @@ public class NyOppgavePanel extends Panel {
                 nyOppgave.henvendelseId = innboksVM.getValgtTraad().getEldsteMelding().melding.id;
 
                 gsakService.opprettGsakOppgave(nyOppgave);
-                lukkNyOppgavePanel(target);
+                lukkPanel(target);
                 nullstillSkjema();
             }
 
@@ -70,7 +70,7 @@ public class NyOppgavePanel extends Panel {
         add(new AjaxLink<Void>("avbrytlink") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                lukkNyOppgavePanel(target);
+                lukkPanel(target);
             }
         });
     }
@@ -79,18 +79,9 @@ public class NyOppgavePanel extends Panel {
         nyOppgaveModel.setObject(new NyOppgave());
     }
 
-    public void apneNyOppgavePanel(AjaxRequestTarget target) {
-        target.appendJavaScript("$('.nyoppgave').slideDown()");
-        this.setVisibilityAllowed(true);
-        target.add(this);
-    }
-
     @RunOnEvents(VALGT_MELDING_EVENT)
-    public void lukkNyOppgavePanel(AjaxRequestTarget target) {
-        if (isVisibilityAllowed()) {
-            target.prependJavaScript("oppgavePanelLukket|$('.nyoppgave').slideUp(oppgavePanelLukket)");
-            this.setVisibilityAllowed(false);
-            target.add(this);
-        }
+    @Override
+    public void lukkPanel(AjaxRequestTarget target) {
+        super.lukkPanel(target);
     }
 }
