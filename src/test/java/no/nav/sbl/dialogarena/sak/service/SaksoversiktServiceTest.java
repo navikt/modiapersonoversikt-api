@@ -58,6 +58,7 @@ public class SaksoversiktServiceTest {
     private static final String KVITTERING = "kvittering";
     private static final String BEHANDLINGSKJEDEID_1 = "behandlingskjedeid-1";
     private static final DateTime MERGET_OPPRETTET = new DateTime().minusDays(110);
+    public static final String BEHANDLINGSKJEDETYPER = "behandlingskjedetyper";
 
     @Mock
     SakOgBehandlingPortType sakOgBehandling;
@@ -133,7 +134,7 @@ public class SaksoversiktServiceTest {
 
     private GenerellBehandling finnBehandlingSomErSammensatt(List<GenerellBehandling> behandlingerFraTemaKodeDag) {
         for (GenerellBehandling behandling : behandlingerFraTemaKodeDag) {
-            if (behandling.opprettetDato.equals(MERGET_OPPRETTET)) {
+            if (behandling.behandlingstema.equals(BEHANDLINGSKJEDETYPER)) {
                 return behandling;
             }
         }
@@ -171,7 +172,7 @@ public class SaksoversiktServiceTest {
                         .withBehandlingskjede(new WSBehandlingskjede()
                                 .withStart(value)
                                 .withBehandlingskjedeId("behandlingskjedeid")
-                                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue("behandlingskjedetyper"))
+                                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(BEHANDLINGSKJEDETYPER))
                                 .withBehandlingstema(new WSBehandlingstemaer().withValue("behandlingstema"))
                                 .withStart(MERGET_OPPRETTET)
                                 .withBehandlingsListeRef(KVITTERING, IKKE_KVITTERING, IKKE_KVITTERING)

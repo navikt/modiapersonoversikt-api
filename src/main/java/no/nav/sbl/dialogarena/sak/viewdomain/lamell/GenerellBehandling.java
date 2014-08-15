@@ -20,7 +20,6 @@ public class GenerellBehandling implements Serializable {
     public BehandlingsStatus behandlingsStatus;
     public BehandlingsType behandlingsType;
     public HenvendelseType henvendelseType;
-    public boolean ettersending;
     public String behandlingstema;
 
     public GenerellBehandling withBehandlingsType(BehandlingsType type)  {

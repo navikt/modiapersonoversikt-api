@@ -84,7 +84,6 @@ public class SaksoversiktService {
 
     private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede) {
         return (Kvittering) kvittering.withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
-                .withOpprettetDato(wsBehandlingskjede.getStart())
                 .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede))
                 .withBehandlingsTema(wsBehandlingskjede.getBehandlingskjedetype().getValue());
     }

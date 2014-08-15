@@ -30,6 +30,7 @@ public class HenvendelseTransformers {
                     .withBehandlingsId(wsSoknad.getBehandlingsId())
                     .withInnsendteDokumenter(hentDokumenter(wsSoknad, true))
                     .withManglendeDokumenter(hentDokumenter(wsSoknad, false))
+                    .withEttersending(wsSoknad.isEttersending())
                     .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
                     .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
                     .withBehandlingsDato(wsSoknad.getInnsendtDato())
