@@ -17,6 +17,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,11 +30,13 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
@@ -55,6 +58,9 @@ public class HenvendelseUtsendingServiceTest {
     private final static String SPORSMAL_ID = "id";
     private final static String FRITEKST = "fritekst";
     private final static String TEMAGRUPPE = "temagruppe";
+
+    private final static String NYESTE_HENVENDELSE_ID = "Nyeste henvendelse";
+    private final static String ELDSTE_HENVENDELSE = "Eldste henvendelse";
 
     @Captor
     ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
@@ -152,7 +158,8 @@ public class HenvendelseUtsendingServiceTest {
 
     @Test
     public void skalHenteSvarlisteMedRiktigTypeSpesifisert() {
-        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLMeldingTilBruker("sporsmalId"));
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
+                new WSHentHenvendelseListeResponse().withAny(createXMLMeldingTilBruker("sporsmalId"));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
         henvendelseUtsendingService.getSvarEllerReferatForSporsmal("fnr", "sporsmalId");
@@ -161,6 +168,19 @@ public class HenvendelseUtsendingServiceTest {
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(SVAR.name(), REFERAT.name()));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(SPORSMAL.name())));
+    }
+
+    @Test
+    public void skalHenteSortertListeAvSvarEllerReferatForSporsmalMedEldsteForst() {
+        String sporsmalId = "sporsmalId";
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
+                new WSHentHenvendelseListeResponse().withAny(createToXMLMeldingTilBrukerSomSvarerPaaSporsmalsIdMedNyesteForst(sporsmalId));
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
+
+        List<SvarEllerReferat> svarEllerReferatForSporsmal = henvendelseUtsendingService.getSvarEllerReferatForSporsmal("fnr", sporsmalId);
+
+        assertThat(svarEllerReferatForSporsmal.get(0).type, is(SvarEllerReferat.Henvendelsetype.REFERAT));
+        assertThat(svarEllerReferatForSporsmal.get(1).type, is(SvarEllerReferat.Henvendelsetype.SVAR));
     }
 
     private WSHentHenvendelseResponse mockWSHentHenvendelseResponse() {
@@ -182,8 +202,28 @@ public class HenvendelseUtsendingServiceTest {
     private XMLHenvendelse createXMLMeldingTilBruker(String sporsmalId) {
         return new XMLHenvendelse()
                 .withFnr("")
+                .withOpprettetDato(DateTime.now())
                 .withHenvendelseType(SVAR.name())
                 .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker().withSporsmalsId(sporsmalId).withNavident("")));
+    }
+
+    private List<Object> createToXMLMeldingTilBrukerSomSvarerPaaSporsmalsIdMedNyesteForst(String sporsmalId) {
+        return new ArrayList<Object>(Arrays.asList(
+                new XMLHenvendelse()
+                        .withFnr("")
+                        .withBehandlingsId(NYESTE_HENVENDELSE_ID)
+                        .withHenvendelseType(SVAR.name())
+                        .withOpprettetDato(DateTime.now())
+                        .withMetadataListe(new XMLMetadataListe().withMetadata(
+                                new XMLMeldingTilBruker().withSporsmalsId(sporsmalId).withNavident(""))),
+                new XMLHenvendelse()
+                        .withFnr("")
+                        .withBehandlingsId(ELDSTE_HENVENDELSE)
+                        .withOpprettetDato(DateTime.now().minusDays(1))
+                        .withHenvendelseType(REFERAT.name())
+                        .withMetadataListe(new XMLMetadataListe().withMetadata(
+                                new XMLMeldingTilBruker().withSporsmalsId(sporsmalId).withNavident("")))
+        ));
     }
 
 }

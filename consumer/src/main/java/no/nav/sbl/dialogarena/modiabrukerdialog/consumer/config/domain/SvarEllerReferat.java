@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain;
 import org.joda.time.DateTime;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
 public class SvarEllerReferat implements Serializable {
 
@@ -19,7 +20,7 @@ public class SvarEllerReferat implements Serializable {
         return this;
     }
 
-    public SvarEllerReferat withType(Henvendelsetype type){
+    public SvarEllerReferat withType(Henvendelsetype type) {
         this.type = type;
         return this;
     }
@@ -53,5 +54,12 @@ public class SvarEllerReferat implements Serializable {
         this.opprettetDato = opprettetDato;
         return this;
     }
+
+    public static final Comparator<SvarEllerReferat> ELDSTE_FORST = new Comparator<SvarEllerReferat>() {
+        @Override
+        public int compare(SvarEllerReferat o1, SvarEllerReferat o2) {
+            return o1.opprettetDato.compareTo(o2.opprettetDato);
+        }
+    };
 
 }

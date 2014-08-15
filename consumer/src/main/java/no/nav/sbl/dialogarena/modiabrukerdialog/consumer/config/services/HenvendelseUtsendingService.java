@@ -17,6 +17,8 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat.ELDSTE_FORST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createSporsmalFromXMLHenvendelse;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createSvarEllerReferatFromXMLHenvendelse;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createXMLHenvendelseMedMeldingTilBruker;
@@ -79,7 +81,7 @@ public class HenvendelseUtsendingService {
                 svarliste.add(createSvarEllerReferatFromXMLHenvendelse(henvendelse));
             }
         }
-        return svarliste;
+        return on(svarliste).collect(ELDSTE_FORST);
     }
 
     private boolean erDetteEtSvarEllerReferatForSporsmalet(String sporsmalId, XMLMetadata xmlMetadata) {
