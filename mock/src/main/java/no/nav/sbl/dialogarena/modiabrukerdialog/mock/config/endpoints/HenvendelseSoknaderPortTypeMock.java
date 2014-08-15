@@ -48,14 +48,12 @@ public class HenvendelseSoknaderPortTypeMock {
                         .withOpprettetDato(MERGET_OPPRETTET)
                         .withInnsendtDato(new DateTime())
                         .withHovedskjemaKodeverkId("hovedskjema")
-                        .withDokumentforventninger(
-                                new WSSoknad.Dokumentforventninger()
-                                        .withDokumentforventning(
-                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
-                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
-                                                new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
-                                                new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel("abc")
-                                        )),
+                        .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
+                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
+                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
+                                new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
+                                new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel("abc")
+                        )),
                 new WSSoknad()
                         .withBehandlingsId(KVITTERING2)
                         .withBehandlingsKjedeId(BEHANDLINGSKJEDEID_2)
@@ -65,14 +63,12 @@ public class HenvendelseSoknaderPortTypeMock {
                         .withOpprettetDato(MERGET_OPPRETTET)
                         .withInnsendtDato(new DateTime())
                         .withHovedskjemaKodeverkId("hovedskjema")
-                        .withDokumentforventninger(
-                                new WSSoknad.Dokumentforventninger()
-                                        .withDokumentforventning(
-                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
-                                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
-                                                new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
-                                                new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel("abc")
-                                        )),
+                        .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
+                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
+                                new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
+                                new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
+                                new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel("abc")
+                        )),
                 new WSSoknad().withHenvendelseStatus(UNDER_ARBEID.value()).withBehandlingsId(IKKE_KVITTERING),
                 new WSSoknad().withHenvendelseStatus(UNDER_ARBEID.value()).withBehandlingsId(IKKE_KVITTERING)
         );
