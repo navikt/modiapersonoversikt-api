@@ -36,8 +36,10 @@ function addExpandOnClickListener(toggleElement, expandableElement) {
 function settSakHoyde() {
     settHoyde();
     $(window).resize(settHoyde);
+    var saker = $('.saker');
 
     function settHoyde() {
+        saker.css('min-height', 0);
         var height = $('.main-content').height();
         $('.lamell .lamellhode')
             .each(function() {

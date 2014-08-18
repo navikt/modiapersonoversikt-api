@@ -5,8 +5,11 @@ import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.model.Model;
@@ -14,7 +17,6 @@ import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Locale;
 
 import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
@@ -55,9 +57,11 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
         aarContainer.add(new Label("aar", behandling.behandlingDato.getYear()));
         item.add(hasCssClassIf("ikke-nytt-aar", not(erNyttAar)));
 
+
+
         item.add(
                 new Label("hendelse-tittel", getTittel(behandling)),
-                getDato(behandling),
+                getStatusImage(behandling),
                 aarContainer
         );
 
@@ -68,21 +72,18 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
         }
     }
 
-    private WebMarkupContainer getDato(GenerellBehandling behandling) {
-        WebMarkupContainer dato = new WebMarkupContainer("dato");
-        dato.add(hasCssClassIf("avsluttet", Model.of(behandling.behandlingsStatus.equals(AVSLUTTET))));
-        dato.add(
-                new Label("dag", behandling.behandlingDato.getDayOfMonth()),
-                new Label("maaned", behandling.behandlingDato.toString("MMM", new Locale("no")))
-        );
-        return dato;
+    private Component getStatusImage(GenerellBehandling behandling) {
+        boolean erAvsluttet = behandling.behandlingsStatus.equals(AVSLUTTET);
+        String bildeNavn = erAvsluttet ? "./img/hake_stor.svg" : "./img/under_arbeid_stor.svg";
+        String bildeAltTekstKey = erAvsluttet ? "detaljer.hendelse.avsluttet" : "detaljer.hendelse.underArbeid";
+        return new ContextImage("status-bilde", bildeNavn).add(new AttributeModifier("alt", bildeAltTekstKey));
     }
 
     private Boolean getErNyttAarModell(GenerellBehandling behandling, List<? extends GenerellBehandling> list) {
         int index = list.indexOf(behandling);
 
         if (index == 0) {
-            return true;
+            return false;
         }
 
         DateTime forrigeBehandlingDato = list.get(index - 1).behandlingDato;

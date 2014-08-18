@@ -98,38 +98,19 @@
                 flex-direction: row;
                 padding-bottom: 30px;
 
-                .dato, .behandling-informasjon {
+                .behandling-informasjon {
                     padding-top: 30px;
                 }
 
-                .dato {
-                    display: flex;
-                    justify-content: flex-start;
-                    flex: 1;
-                    flex-direction: column;
-                    align-items: center;
-
-                    &.avsluttet {
-                        color: #8f8f8f;
-                    }
-
-                    .dag {
-                        font-size: 2rem;
-                    }
-
-                    .maaned {
-                        text-transform: uppercase;
-                        font-size: 0.9rem;
-                        font-family: Modus, Arial, sans-serif;
-                        font-weight: bold;
-                    }
+                img.status {
+                    padding: 0 25px;
                 }
             }
         }
     }
 
     .behandling-informasjon {
-        flex: 6;
+        flex: 1;
         margin-right: 30px;
 
         h2 {
