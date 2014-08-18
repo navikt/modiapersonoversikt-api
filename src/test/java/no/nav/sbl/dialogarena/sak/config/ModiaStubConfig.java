@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sak.config;
 
+import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
@@ -10,6 +11,8 @@ import org.springframework.context.annotation.Bean;
 
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSSak;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -40,6 +43,13 @@ public class ModiaStubConfig {
     @Bean
     public KodeverkClient kodeverkClient() {
         return mock(KodeverkClient.class);
+    }
+
+    @Bean
+    public CmsContentRetriever cmsContentRetriever() {
+        CmsContentRetriever cmsMock = mock(CmsContentRetriever.class, RETURNS_MOCKS);
+        when(cmsMock.hentTekst(anyString())).thenReturn("Tekst fra CMS-mock");
+        return cmsMock;
     }
 
 }

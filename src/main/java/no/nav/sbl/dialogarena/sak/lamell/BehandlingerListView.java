@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
-import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
+import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -30,7 +30,7 @@ import static org.apache.wicket.model.Model.ofList;
 public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
 
     @Inject
-    private CmsContentRetriever cms;
+    private BulletproofCmsService cms;
 
     @Inject
     private BulletProofKodeverkService kodeverk;

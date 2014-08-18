@@ -17,6 +17,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import org.apache.commons.collections15.Predicate;
+import org.apache.commons.collections15.Transformer;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -65,7 +66,7 @@ public class SaksoversiktService {
     /**
      * Henter alle behandlinger for et gitt tema fra flere baksystemer
      */
-    public List<GenerellBehandling> hentBehandlingerForTemakode(String fnr, String temakode) {
+    public List<GenerellBehandling> hentBehandlingerForTemakode(String fnr, final String temakode) {
         LOG.info("Henter behandlinger fra Sak og Behandling & Henvendelse til Modiasaksoversikt. Fnr: " + fnr + ". Temakode: " + temakode);
         List<GenerellBehandling> behandlinger = new ArrayList<>();
         WSSak wsSak = hentSakForAktorPaaTema(hentAktorId(fnr), temakode);
@@ -79,6 +80,13 @@ public class SaksoversiktService {
         for (String kvitteringsID : kvitteringerForBehandlingsID.keySet()) {
             behandlinger.add(beriketKvittering(kvitteringerForBehandlingsID.get(kvitteringsID), kjederForBehandlingsID.get(kvitteringsID)));
         }
+
+        behandlinger = on(behandlinger).map(new Transformer<GenerellBehandling, GenerellBehandling>() {
+            @Override public GenerellBehandling transform(GenerellBehandling generellBehandling) {
+                return generellBehandling.withSaksTema(temakode);
+            }
+        }).collect();
+
         return on(behandlinger).collect(new OmvendtKronologiskBehandlingComparator());
     }
 

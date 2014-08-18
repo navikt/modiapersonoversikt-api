@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sak.service;
 
-import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.common.kodeverk.Kodeverk;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import org.junit.Before;
@@ -39,7 +38,7 @@ public class BulletProofKodeverkServiceTest {
     private KodeverkClient kodeverkClient;
 
     @Mock
-    private CmsContentRetriever cmsContentRetriever;
+    private BulletproofCmsService bulletproofCmsService;
 
     @Before
     public void setupMocks() {
@@ -50,7 +49,7 @@ public class BulletProofKodeverkServiceTest {
         when(kodeverkClient.hentFoersteTermnavnForKode(TEMAKODE_DAGPENGER, BEHANDLINGSTEMA)).thenReturn(TEMANAVN_DAGPENGER);
         when(kodeverkClient.hentFoersteTermnavnForKode(TEMAKODE_UFORE, BEHANDLINGSTEMA)).thenThrow(new RuntimeException());
 
-        when(cmsContentRetriever.hentTekst(anyString())).thenReturn("ledetekst");
+        when(bulletproofCmsService.hentTekst(anyString())).thenReturn("ledetekst");
     }
 
     @Test

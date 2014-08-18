@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.widget;
 
-import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
+import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -17,7 +17,7 @@ import static no.nav.sbl.dialogarena.sak.util.SakDateFormatter.printLongDate;
 public class SaksoversiktWidgetPanel extends GenericPanel<TemaVM> {
 
     @Inject
-    private CmsContentRetriever cmsContentRetriever;
+    private BulletproofCmsService cms;
 
     @Inject
     private BulletProofKodeverkService kodeverk;
@@ -29,7 +29,7 @@ public class SaksoversiktWidgetPanel extends GenericPanel<TemaVM> {
         DateTime sistOppdatert = temaVM.sistoppdaterteBehandling.behandlingDato;
         add(
                 new Label("temaTittel", kodeverk.getTemanavnForTemakode(temaVM.temakode, ARKIVTEMA)),
-                new Label("temaDato", format(cmsContentRetriever.hentTekst("hendelse.sistoppdatert.dato"), printLongDate(sistOppdatert)))
+                new Label("temaDato", format(cms.hentTekst("hendelse.sistoppdatert.dato"), printLongDate(sistOppdatert)))
         );
     }
 }

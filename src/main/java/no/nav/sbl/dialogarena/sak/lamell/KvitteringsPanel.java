@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
-import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
+import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -18,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Locale;
-import java.util.MissingResourceException;
 
 import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -27,7 +26,7 @@ import static org.apache.wicket.model.Model.of;
 public class KvitteringsPanel extends Panel {
 
     @Inject
-    private CmsContentRetriever cms;
+    private BulletproofCmsService cms;
 
     @Inject
     private BulletProofKodeverkService kodeverk;
@@ -58,14 +57,16 @@ public class KvitteringsPanel extends Panel {
     }
 
     private void leggTilBehandlingsTidInfo(Kvittering kvittering) {
-        String temakode = kvittering.behandlingstema;
+        String temakode = kvittering.sakstema;
 
         String behandlingstidTekst = cms.hentTekst("soknader.normertbehandlingstid");
+        String key = "soknader.normertbehandlingstid." + temakode;
+
         String behandlingstid;
-        try {
-            behandlingstid = cms.hentTekst("soknader.normertbehandlingstid." + temakode);
-        } catch (MissingResourceException e) {
-            logger.warn("Behandlingstid er ikke satt for temakode " + temakode, e);
+        if (cms.eksistererKey(key)) {
+            behandlingstid = cms.hentTekst(key);
+        } else {
+            logger.warn("Behandlingstid er ikke satt for temakode " + temakode);
             behandlingstid = cms.hentTekst("soknader.normertbehandlingstid.default");
         }
 
