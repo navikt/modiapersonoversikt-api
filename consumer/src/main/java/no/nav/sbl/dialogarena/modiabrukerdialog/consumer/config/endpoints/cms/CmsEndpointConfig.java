@@ -10,10 +10,7 @@ import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -31,7 +28,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Mock
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock.CMS_KEY;
 
 @Configuration
-public class CmsEndpointConfig implements ApplicationContextAware {
+public class CmsEndpointConfig {
 
     public static final String DEFAULT_LOCALE = "nb";
     private static final String INNHOLDSTEKSTER_NB_NO_REMOTE = "/app/saksoversikt/nb/tekster";
@@ -41,8 +38,6 @@ public class CmsEndpointConfig implements ApplicationContextAware {
     private String appresUrl;
 
     private Logger log = LoggerFactory.getLogger(CmsEndpointConfig.class);
-
-    private ApplicationContext applicationContext;
 
     @Bean
     public CmsContentRetriever cmsContentRetriever()  throws URISyntaxException {
@@ -102,10 +97,5 @@ public class CmsEndpointConfig implements ApplicationContextAware {
         Map<String, URI> uris = new HashMap<>();
         uris.put(DEFAULT_LOCALE, new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE));
         return new ValuesFromContentWithResourceBundleFallback(INNHOLDSTEKSTER_NB_NO_LOCAL, contentRetriever(), uris, DEFAULT_LOCALE);
-    }
-
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
     }
 }

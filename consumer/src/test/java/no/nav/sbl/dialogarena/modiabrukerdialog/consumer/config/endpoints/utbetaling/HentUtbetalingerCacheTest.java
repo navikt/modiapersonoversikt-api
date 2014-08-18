@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.CacheConfig;
+import no.nav.modig.cache.CacheConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Wrapper;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSHentUtbetalingListeRequest;
 import no.nav.virksomhet.tjenester.utbetaling.meldinger.v2.WSPeriode;
