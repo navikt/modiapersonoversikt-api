@@ -104,9 +104,9 @@ public class SvarPanel extends Panel {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
                         if (svar.isEmpty()) {
-                            svarContainer.setVisibilityAllowed(false);
                             traadContainer.setVisibilityAllowed(true);
-                            leggTilbakePanel.setVisibilityAllowed(true);
+                            animertVisningToggle(target, svarContainer);
+                            animertVisningToggle(target, leggTilbakePanel);
                             target.add(SvarPanel.this);
                         } else {
                             send(SvarPanel.this, Broadcast.BUBBLE, SVAR_AVBRUTT);
@@ -139,8 +139,8 @@ public class SvarPanel extends Panel {
 
     @RunOnEvents(LeggTilbakePanel.LEGG_TILBAKE_AVBRUTT)
     public void skjulLeggTilbakePanel(AjaxRequestTarget target) {
-        svarContainer.setVisibilityAllowed(true);
-        leggTilbakePanel.setVisibilityAllowed(false);
+        animertVisningToggle(target, svarContainer);
+        animertVisningToggle(target, leggTilbakePanel);
         target.add(this);
     }
 
