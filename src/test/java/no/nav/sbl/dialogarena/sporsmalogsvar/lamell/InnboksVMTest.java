@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.joda.time.DateTime;
@@ -7,10 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR;
@@ -94,13 +96,6 @@ public class InnboksVMTest {
     }
 
     @Test
-    public void skalSetteValgtTraadBasertPaaTraadId() {
-        innboksVM.setValgtTraad(ID_2);
-
-        assertThat(innboksVM.getValgtTraad().getNyesteMelding().melding.id, is(ID_4));
-    }
-
-    @Test
     public void skalFinneUtOmGittMeldingVMErIValgtMelding() {
         MeldingVM nyesteMeldingITraad1 = innboksVM.getTraader().get(ID_1).getNyesteMelding();
         MeldingVM nyesteMeldingITraad2 = innboksVM.getTraader().get(ID_2).getNyesteMelding();
@@ -126,12 +121,35 @@ public class InnboksVMTest {
         assertThat(innboksVM.getValgtTraad().getMeldinger().size(), is(0));
     }
 
+    @Test
+    public void henterNyesteMeldingITraad() {
+        String fnr = "fnr";
+        String traadId = "traadId";
+
+        HenvendelseBehandlingService henvendelseBehandlingServiceUtenHenvendelser = mock(HenvendelseBehandlingService.class);
+        when(henvendelseBehandlingServiceUtenHenvendelser.hentMeldinger(fnr)).thenReturn(asList(createMelding(traadId, SPORSMAL, DateTime.now(), "temagruppe", traadId)));
+        innboksVM = new InnboksVM(henvendelseBehandlingServiceUtenHenvendelser, fnr);
+
+        Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad(traadId);
+        assertTrue(nyesteMeldingITraad.isSome());
+    }
+
+    @Test
+    public void henterNyesteMeldingITraadMedUkjentTraadId() {
+        HenvendelseBehandlingService henvendelseBehandlingServiceUtenHenvendelser = mock(HenvendelseBehandlingService.class);
+        when(henvendelseBehandlingServiceUtenHenvendelser.hentMeldinger(anyString())).thenReturn(Collections.<Melding>emptyList());
+        innboksVM = new InnboksVM(henvendelseBehandlingServiceUtenHenvendelser, "fnr");
+
+        Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad("traadId");
+        assertFalse(nyesteMeldingITraad.isSome());
+    }
+
     public static List<Melding> createMeldingerIToTraader() {
         Melding melding1 = createMelding(ID_1, SPORSMAL, DATE_4, TEMAGRUPPE_1, ID_1);
         Melding melding2 = createMelding(ID_2, SPORSMAL, DATE_3, TEMAGRUPPE_2, ID_2);
         Melding melding3 = createMelding(ID_3, SAMTALEREFERAT, DATE_2, TEMAGRUPPE_2, ID_2);
         Melding melding4 = createMelding(ID_4, SVAR, DATE_1, TEMAGRUPPE_2, ID_2);
-        return new ArrayList<>(Arrays.asList(melding1, melding2, melding3, melding4));
+        return asList(melding1, melding2, melding3, melding4);
     }
 
 }

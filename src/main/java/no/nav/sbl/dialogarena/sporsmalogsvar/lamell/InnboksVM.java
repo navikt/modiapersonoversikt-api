@@ -63,8 +63,8 @@ public class InnboksVM implements Serializable {
         setValgtMelding(on(nyesteMeldingerITraad).filter(where(ID, equalTo(id))).head().get());
     }
 
-    public void setValgtTraad(String traadId) {
-        setValgtMelding(on(nyesteMeldingerITraad).filter(where(TRAAD_ID, equalTo(traadId))).head().get());
+    public Optional<MeldingVM> getNyesteMeldingITraad(String traadId) {
+        return on(nyesteMeldingerITraad).filter(where(TRAAD_ID, equalTo(traadId))).head();
     }
 
     public void setValgtMelding(MeldingVM meldingVM) {

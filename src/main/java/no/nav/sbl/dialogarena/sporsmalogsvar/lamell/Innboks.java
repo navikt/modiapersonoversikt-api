@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -7,7 +8,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingServi
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.request.cycle.RequestCycle;
 import org.apache.wicket.util.string.StringValue;
 
 import javax.inject.Inject;
@@ -37,11 +37,11 @@ public class Innboks extends Lerret {
     }
 
     private void setValgtTraadBasertPaaTraadIdPageParameter() {
-        RequestCycle requestCycle = getRequestCycle();
-        if (requestCycle != null) {
-            StringValue traadIdParameter = requestCycle.getRequest().getRequestParameters().getParameterValue(TRAAD_ID_PARAMETER_NAME);
-            if (traadIdParameter.toString() != null && !traadIdParameter.toString().isEmpty()) {
-                innboksVM.setValgtTraad(traadIdParameter.toString());
+        StringValue traadIdParameter = getRequestCycle().getRequest().getRequestParameters().getParameterValue(TRAAD_ID_PARAMETER_NAME);
+        if (!traadIdParameter.isEmpty()) {
+            Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(traadIdParameter.toString());
+            if (meldingITraad.isSome()) {
+                innboksVM.setValgtMelding(meldingITraad.get());
             }
         }
     }
