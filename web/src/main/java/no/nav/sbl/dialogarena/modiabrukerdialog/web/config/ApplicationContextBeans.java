@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.CacheConfig;
+import no.nav.modig.cache.CacheConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.ConsumerContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.SaksbehandlerInnstillingerService;
 import org.springframework.context.annotation.Bean;
