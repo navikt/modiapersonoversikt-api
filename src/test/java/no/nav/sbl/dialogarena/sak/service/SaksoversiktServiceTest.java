@@ -123,9 +123,9 @@ public class SaksoversiktServiceTest {
         String kronotema = "kronotema";
         WSSak sak = createWSSak().withSakstema(new WSSakstemaer().withValue(kronotema));
         sak.withBehandlingskjede(
+                createWSBehandlingskjede().withSlutt(now().minusYears(3)),
                 createWSBehandlingskjede().withSlutt(now().minusYears(2)),
-                createWSBehandlingskjede().withSlutt(now().minusYears(1)),
-                createWSBehandlingskjede().withSlutt(now().minusYears(0))
+                createWSBehandlingskjede().withSlutt(now().minusYears(1))
         );
         saker.withSak(sak);
         List<GenerellBehandling> behandlinger = service.hentBehandlingerForTemakode("123123123", kronotema);
