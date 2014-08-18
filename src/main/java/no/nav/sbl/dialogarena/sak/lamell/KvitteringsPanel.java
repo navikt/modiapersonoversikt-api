@@ -78,7 +78,7 @@ public class KvitteringsPanel extends Panel {
         innsendteVedlegg.add(visibleIf(of(!kvittering.innsendteDokumenter.isEmpty())));
         innsendteVedlegg.add(
                 new Label("innsendteDokumenterHeader", cms.hentTekst("behandling.innsendte.dokumenter.header")),
-                getDokumenterView("innsendteVedlegg", kvittering.innsendteDokumenter)
+                getDokumenterView("innsendteVedlegg", kvittering.innsendteDokumenter, false)
         );
         add(innsendteVedlegg);
     }
@@ -88,12 +88,12 @@ public class KvitteringsPanel extends Panel {
         manglendeVedlegg.add(visibleIf(of(!kvittering.manglendeDokumenter.isEmpty() && !kvittering.ettersending)));
         manglendeVedlegg.add(
                 new Label("manglendeVedleggHeader", cms.hentTekst("behandling.manglende.dokumenter.header")),
-                getDokumenterView("manglendeVedlegg", kvittering.manglendeDokumenter)
+                getDokumenterView("manglendeVedlegg", kvittering.manglendeDokumenter, true)
         );
         add(manglendeVedlegg);
     }
 
-    private PropertyListView<Dokument> getDokumenterView(String listViewId, List<Dokument> dokumenter) {
+    private PropertyListView<Dokument> getDokumenterView(String listViewId, List<Dokument> dokumenter, final boolean visInnsendingsvalg) {
         return new PropertyListView<Dokument>(listViewId, dokumenter) {
 
             @Override
@@ -102,6 +102,9 @@ public class KvitteringsPanel extends Panel {
                 String dokumentTittel = kodeverk.getSkjematittelForSkjemanummer(dokument.kodeverkRef);
                 if (kodeverk.isEgendefinert(dokument.kodeverkRef)) {
                     dokumentTittel += ": " + dokument.tilleggstittel;
+                }
+                if (visInnsendingsvalg) {
+                    item.add(new Label("innsendingsvalg", cms.hentTekst("kvittering.innsendingsvalg." + dokument.innsendingsvalg)));
                 }
                 item.add(new Label("dokument", dokumentTittel));
             }

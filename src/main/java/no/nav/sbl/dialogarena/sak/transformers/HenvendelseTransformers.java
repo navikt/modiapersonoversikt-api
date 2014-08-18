@@ -48,6 +48,7 @@ public class HenvendelseTransformers {
                         .withHovedskjema(wsDokumentforventning.getKodeverkId().equals(hovedskjemaId))
                         .withInnsendt(innsendt)
                         .withKodeverkRef(wsDokumentforventning.getKodeverkId())
+                        .withInnsendingsvalg(wsDokumentforventning.getInnsendingsvalg())
                         .withTilleggsTittel(wsDokumentforventning.getTilleggsTittel());
             }
         };

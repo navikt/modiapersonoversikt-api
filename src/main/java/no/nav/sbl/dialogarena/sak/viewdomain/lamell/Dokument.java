@@ -8,6 +8,7 @@ public class Dokument implements Serializable {
     public String tilleggstittel;
     public boolean innsendt;
     public boolean hovedskjema;
+    public String innsendingsvalg;
 
     public Dokument withKodeverkRef(String ref) {
         kodeverkRef = ref;
@@ -29,4 +30,8 @@ public class Dokument implements Serializable {
         return this;
     }
 
+    public Dokument withInnsendingsvalg(String innsendingsvalg) {
+        this.innsendingsvalg = innsendingsvalg;
+        return this;
+    }
 }
