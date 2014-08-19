@@ -16,7 +16,7 @@ public class JournalforingInngaaende extends Journalforing {
         Journalpost journalpost = new Journalpost();
         journalpost.setKanal(lagKommunikasjonskanaler());
         journalpost.setSignatur(lagSignatur());
-        journalpost.setArkivtema(lagArkivtema(sak));
+        journalpost.setArkivtema(lagArkivtema(sak.tema));
         Person bruker = lagPerson(melding.fnrBruker);
         journalpost.getForBruker().add(bruker);
         journalpost.setEksternPart(lagEksternPart(bruker));

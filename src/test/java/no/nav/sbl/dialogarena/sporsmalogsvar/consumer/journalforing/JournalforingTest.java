@@ -89,7 +89,7 @@ public class JournalforingTest {
         Sak sak = new Sak();
         sak.tema = "tema";
 
-        Arkivtemaer arkivtemaer = KlasseSomArverJournalforing.lagArkivtema(sak);
+        Arkivtemaer arkivtemaer = KlasseSomArverJournalforing.lagArkivtema(sak.tema);
 
         assertThat(arkivtemaer.getValue(), is(sak.tema));
     }
