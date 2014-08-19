@@ -14,7 +14,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     public static final String SAKSTYPE_GENERELL = "Generell";
     public static final String SAKSTEMA_OPPFOLGING = "Oppfølging";
 
-    public boolean isSakstypeForVisingGenerell() {
+    public boolean isSakstypeForVisningGenerell() {
         return sakstype.equals(SAKSTYPE_GENERELL) && (!tema.equals(SAKSTEMA_OPPFOLGING));
     }
 
@@ -28,7 +28,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     public static final Transformer<Sak, Boolean> IS_GENERELL_SAK = new Transformer<Sak, Boolean>() {
         @Override
         public Boolean transform(Sak sak) {
-            return sak.isSakstypeForVisingGenerell();
+            return sak.isSakstypeForVisningGenerell();
         }
     };
 

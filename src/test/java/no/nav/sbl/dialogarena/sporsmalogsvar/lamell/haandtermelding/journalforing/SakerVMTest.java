@@ -243,7 +243,7 @@ public class SakerVMTest {
     private void assertSakstypeGenerell(List<TemaSaker> temaSakerListe, boolean generell) {
         for (TemaSaker temaSaker : temaSakerListe) {
             for (Sak sak : temaSaker.saksliste) {
-                assertThat(sak.isSakstypeForVisingGenerell(), is(generell));
+                assertThat(sak.isSakstypeForVisningGenerell(), is(generell));
             }
         }
     }
