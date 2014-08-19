@@ -63,8 +63,8 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
-                        new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
-                        new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel("abc")
+                        new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
+                        new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel("abc")
                 ));
     }
 
@@ -99,8 +99,8 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
-                        new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
-                        new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel("abc")
+                        new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
+                        new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel("abc")
                 ));
     }
 
