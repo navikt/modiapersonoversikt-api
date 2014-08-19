@@ -13,6 +13,7 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
+import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
 
@@ -23,7 +24,6 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.tilWSEndreOppgave;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class OppgaveBehandlingService {
@@ -37,13 +37,13 @@ public class OppgaveBehandlingService {
     private OppgaveV3 oppgaveWS;
 
     public void tilordneOppgaveIGsak(String oppgaveId) {
-        tilordneOppgave(hentOppgaveFraGsak(oppgaveId));
+        tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId));
     }
 
     public Optional<WSOppgave> plukkOppgaveFraGsak(String temagruppe) {
         Optional<WSOppgave> oppgave = finnIkkeTilordnedeOppgaver(temagruppe);
         if (oppgave.isSome()) {
-            WSOppgave tilordnet = tilordneOppgave(oppgave.get());
+            WSOppgave tilordnet = tilordneOppgaveIGsak(oppgave.get());
             return optional(tilordnet);
         } else {
             return none();
@@ -80,7 +80,7 @@ public class OppgaveBehandlingService {
         }
     }
 
-    private WSOppgave tilordneOppgave(WSOppgave oppgave) {
+    private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave) {
         WSOppgave wsOppgave = oppgave.withAnsvarligId(getSubjectHandler().getUid());
         lagreOppgaveIGsak(wsOppgave);
         return wsOppgave;
@@ -123,6 +123,28 @@ public class OppgaveBehandlingService {
 
     private static String underkategoriKode(String temagruppe) {
         return temagruppe + "_KNA";
+    }
+
+    public static WSEndreOppgave tilWSEndreOppgave(WSOppgave wsOppgave) {
+        return new WSEndreOppgave()
+                .withOppgaveId(wsOppgave.getOppgaveId())
+                .withAnsvarligId(wsOppgave.getAnsvarligId())
+                .withBrukerId(wsOppgave.getGjelder().getBrukerId())
+                .withDokumentId(wsOppgave.getDokumentId())
+                .withKravId(wsOppgave.getKravId())
+                .withAnsvarligEnhetId(wsOppgave.getAnsvarligEnhetId())
+
+                .withFagomradeKode(wsOppgave.getFagomrade().getKode())
+                .withOppgavetypeKode(wsOppgave.getOppgavetype().getKode())
+                .withPrioritetKode(wsOppgave.getPrioritet().getKode())
+                .withBrukertypeKode(wsOppgave.getGjelder().getBrukertypeKode())
+                .withUnderkategoriKode(wsOppgave.getUnderkategori().getKode())
+
+                .withAktivFra(wsOppgave.getAktivFra())
+                .withBeskrivelse(wsOppgave.getBeskrivelse())
+                .withVersjon(wsOppgave.getVersjon())
+                .withSaksnummer(wsOppgave.getSaksnummer())
+                .withLest(wsOppgave.isLest());
     }
 
 }

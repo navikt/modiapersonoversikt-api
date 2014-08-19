@@ -9,14 +9,12 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataL
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat;
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat.Henvendelsetype.SVAR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat.Henvendelsetype.REFERAT;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat.Henvendelsetype.SVAR;
 import static org.joda.time.DateTime.now;
 
-public class SakUtils {
+public class HenvendelseUtils {
 
     public static Sporsmal createSporsmalFromXMLHenvendelse(XMLHenvendelse henvendelse) {
         Sporsmal sporsmal = new Sporsmal(henvendelse.getBehandlingsId(), henvendelse.getOpprettetDato());
@@ -40,12 +38,12 @@ public class SakUtils {
             return new SvarEllerReferat()
                     .withType(henvendelse.getHenvendelseType().equals(XMLHenvendelseType.SVAR.name()) ? SVAR : REFERAT)
                     .withFnr(henvendelse.getFnr())
+                    .withOpprettetDato(henvendelse.getOpprettetDato())
                     .withSporsmalsId(xmlMeldingTilBruker.getSporsmalsId())
                     .withTemagruppe(xmlMeldingTilBruker.getTemagruppe())
                     .withKanal(xmlMeldingTilBruker.getKanal())
                     .withFritekst(xmlMeldingTilBruker.getFritekst())
-                    .withNavIdent(xmlMeldingTilBruker.getNavident())
-                    .withOpprettetDato(henvendelse.getOpprettetDato());
+                    .withNavIdent(xmlMeldingTilBruker.getNavident());
         } else {
             throw new ApplicationException("Henvendelsen er ikke av typen XMlMeldingTilBruker: " + xmlMetadata);
         }
@@ -65,28 +63,6 @@ public class SakUtils {
                                 .withFritekst(svarEllerReferat.fritekst)
                                 .withNavident(svarEllerReferat.navIdent)
                 ));
-    }
-
-    public static WSEndreOppgave tilWSEndreOppgave(WSOppgave wsOppgave) {
-        return new WSEndreOppgave()
-                .withOppgaveId(wsOppgave.getOppgaveId())
-                .withAnsvarligId(wsOppgave.getAnsvarligId())
-                .withBrukerId(wsOppgave.getGjelder().getBrukerId())
-                .withDokumentId(wsOppgave.getDokumentId())
-                .withKravId(wsOppgave.getKravId())
-                .withAnsvarligEnhetId(wsOppgave.getAnsvarligEnhetId())
-
-                .withFagomradeKode(wsOppgave.getFagomrade().getKode())
-                .withOppgavetypeKode(wsOppgave.getOppgavetype().getKode())
-                .withPrioritetKode(wsOppgave.getPrioritet().getKode())
-                .withBrukertypeKode(wsOppgave.getGjelder().getBrukertypeKode())
-                .withUnderkategoriKode(wsOppgave.getUnderkategori().getKode())
-
-                .withAktivFra(wsOppgave.getAktivFra())
-                .withBeskrivelse(wsOppgave.getBeskrivelse())
-                .withVersjon(wsOppgave.getVersjon())
-                .withSaksnummer(wsOppgave.getSaksnummer())
-                .withLest(wsOppgave.isLest());
     }
 
 }

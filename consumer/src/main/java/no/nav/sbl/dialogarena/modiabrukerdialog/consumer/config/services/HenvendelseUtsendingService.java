@@ -19,9 +19,9 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat.ELDSTE_FORST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createSporsmalFromXMLHenvendelse;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createSvarEllerReferatFromXMLHenvendelse;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.SakUtils.createXMLHenvendelseMedMeldingTilBruker;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.HenvendelseUtils.createSporsmalFromXMLHenvendelse;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.HenvendelseUtils.createSvarEllerReferatFromXMLHenvendelse;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
 
 public class HenvendelseUtsendingService {
 

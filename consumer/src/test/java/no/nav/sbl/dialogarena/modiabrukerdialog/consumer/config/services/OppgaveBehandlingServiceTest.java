@@ -142,18 +142,53 @@ public class OppgaveBehandlingServiceTest {
         return new WSHentOppgaveResponse().withOppgave(lagWSOppgave().withAnsvarligId("id").withBeskrivelse("opprinnelig beskrivelse"));
     }
 
+    @Test
+    public void skalKonvertereFraWSOppgaveTilWSEndreOppgave() {
+        WSOppgave oppgave = lagWSOppgave();
+
+        WSEndreOppgave endreOppgave = OppgaveBehandlingService.tilWSEndreOppgave(oppgave);
+
+        assertThat(endreOppgave.getOppgaveId(), is(oppgave.getOppgaveId()));
+        assertThat(endreOppgave.getAnsvarligId(), is(oppgave.getAnsvarligId()));
+        assertThat(endreOppgave.getBrukerId(), is(oppgave.getGjelder().getBrukerId()));
+        assertThat(endreOppgave.getDokumentId(), is(oppgave.getDokumentId()));
+        assertThat(endreOppgave.getKravId(), is(oppgave.getKravId()));
+        assertThat(endreOppgave.getAnsvarligEnhetId(), is(oppgave.getAnsvarligEnhetId()));
+
+        assertThat(endreOppgave.getFagomradeKode(), is(oppgave.getFagomrade().getKode()));
+        assertThat(endreOppgave.getOppgavetypeKode(), is(oppgave.getOppgavetype().getKode()));
+        assertThat(endreOppgave.getPrioritetKode(), is(oppgave.getPrioritet().getKode()));
+        assertThat(endreOppgave.getBrukertypeKode(), is(oppgave.getGjelder().getBrukertypeKode()));
+        assertThat(endreOppgave.getUnderkategoriKode(), is(oppgave.getUnderkategori().getKode()));
+
+        assertThat(endreOppgave.getAktivFra(), is(oppgave.getAktivFra()));
+        assertThat(endreOppgave.getBeskrivelse(), is(oppgave.getBeskrivelse()));
+        assertThat(endreOppgave.getVersjon(), is(oppgave.getVersjon()));
+        assertThat(endreOppgave.getSaksnummer(), is(oppgave.getSaksnummer()));
+        assertThat(endreOppgave.isLest(), is(oppgave.isLest()));
+
+    }
+
     public static WSOppgave lagWSOppgave() {
         return new WSOppgave()
                 .withOppgaveId("oppgaveid")
-                .withOppgavetype(new WSOppgavetype().withKode("wsOppgavetype"))
-                .withGjelder(new WSBruker().withBrukerId("***REMOVED***"))
-                .withStatus(new WSStatus().withKode("statuskode"))
+                .withAnsvarligId("ansvarligid")
+                .withGjelder(new WSBruker().withBrukerId("***REMOVED***").withBrukertypeKode("brukertypekode"))
+                .withDokumentId("dokumentid")
+                .withKravId("kravid")
+                .withAnsvarligEnhetId("ansvarligenhetid")
+
                 .withFagomrade(new WSFagomrade().withKode("ARBD_KNA"))
-                .withAktivFra(now().toLocalDate())
+                .withOppgavetype(new WSOppgavetype().withKode("wsOppgavetype"))
                 .withPrioritet(new WSPrioritet().withKode("NORM_GEN"))
                 .withUnderkategori(new WSUnderkategori().withKode("ARBEID_HJE"))
-                .withLest(false)
-                .withVersjon(1);
+
+                .withAktivFra(now().toLocalDate())
+                .withBeskrivelse("beskrivelse")
+                .withVersjon(1)
+                .withSaksnummer("saksnummer")
+                .withStatus(new WSStatus().withKode("statuskode"))
+                .withLest(false);
     }
 
 }
