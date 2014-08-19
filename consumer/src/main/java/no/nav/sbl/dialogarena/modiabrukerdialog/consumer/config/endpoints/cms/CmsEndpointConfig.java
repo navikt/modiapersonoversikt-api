@@ -8,8 +8,6 @@ import no.nav.modig.content.enonic.HttpContentRetriever;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,8 +33,6 @@ public class CmsEndpointConfig {
 
     @Value("${appres.cms.url}")
     private String appresUrl;
-
-    private Logger log = LoggerFactory.getLogger(CmsEndpointConfig.class);
 
     @Bean
     public CmsContentRetriever cmsContentRetriever() throws URISyntaxException {
