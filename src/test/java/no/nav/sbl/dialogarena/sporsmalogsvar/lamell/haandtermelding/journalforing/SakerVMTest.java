@@ -38,7 +38,6 @@ import static org.mockito.Mockito.when;
 public class SakerVMTest {
 
     public final static String SAKSTYPE_FAG = "Fag";
-    private final static String TEMA_OPPFOLGING = "Oppfølging";
 
     @Mock
     private GsakService gsakService;
@@ -203,7 +202,7 @@ public class SakerVMTest {
 
     @Test
     public void sjekkAtGenrellSakMedTemaOppfolgingErPlassertIFagsakerListen() {
-        Sak sakMedTemaOppfolging = createSak("15472473245", TEMA_OPPFOLGING, "Fagsystem 3", SAKSTYPE_GENERELL, DateTime.now().minusDays(4));
+        Sak sakMedTemaOppfolging = createSak("15472473245", Sak.SAKSTEMA_OPPFOLGING, "Fagsystem 3", SAKSTYPE_GENERELL, DateTime.now().minusDays(4));
         Sak sakMedSakstypeFagsak = createSak("15472473245", alleTemaer.get(3), "Fagsystem 3", SAKSTYPE_FAG, DateTime.now().minusDays(4));
         saksliste.add(sakMedSakstypeFagsak);
         saksliste.add(sakMedTemaOppfolging);
@@ -251,10 +250,10 @@ public class SakerVMTest {
 
     private ArrayList<Sak> createSakslisteBasertPaTemaMap() {
         return new ArrayList<>(Arrays.asList(
-                createSak("111111111", alleTemaer.get(0), "Fagsystem1", SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
-                createSak("22222222", alleTemaer.get(2), "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
-                createSak("33333333", alleTemaer.get(4), "Fagsystem3", SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
-                createSak("44444444", alleTemaer.get(6), "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(2))
+                createSak("111111111", TEMA_MAPPING.get(alleTemagrupper.get(0)).get(0), "Fagsystem1", SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
+                createSak("22222222", TEMA_MAPPING.get(alleTemagrupper.get(1)).get(0), "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
+                createSak("33333333", TEMA_MAPPING.get(alleTemagrupper.get(2)).get(0), "Fagsystem3", SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
+                createSak("44444444", TEMA_MAPPING.get(alleTemagrupper.get(3)).get(0), "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(2))
         ));
     }
 

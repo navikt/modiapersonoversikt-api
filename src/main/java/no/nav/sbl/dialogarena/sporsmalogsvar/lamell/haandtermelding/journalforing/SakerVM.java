@@ -34,10 +34,11 @@ public class SakerVM implements Serializable {
     // TODO: Dette er en midlertidig mapping mellom temagruppe og tema, mens vi venter på kodeverk.
     private static Map<String, List<String>> opprettTemaMapping() {
         Map<String, List<String>> temaMapping = new HashMap<>();
-        temaMapping.put("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", asList("Dagpenger", "Arbeidsavklaring"));
-        temaMapping.put("FAMILIE_OG_BARN", asList("Foreldrepenger", "Barnebidrag"));
-        temaMapping.put("HJELPEMIDLER", asList("Hjelpemiddel", "Bilsøknad"));
-        temaMapping.put("OVRIGE_HENVENDELSER", asList("Øvrige henvendelser", "Annen øvrig hendelse"));
+        temaMapping.put("ARBD", asList("DAG", "AAP", "FOS", "IND", "OPP", "SYK", "SYM", "VEN", "YRK"));
+        temaMapping.put("FMLI", asList("FOR", "BAR", "BID", "ENF", "GRA", "GRU", "KON", "OMS"));
+        temaMapping.put("HJLPM", asList("BIL", "HEL", "HJE", "MOB"));
+        temaMapping.put("OVRG", asList("FUL", "MED", "SER", "TRK"));
+        temaMapping.put("PENS", asList("PEN", "UFO"));
         return temaMapping;
     }
 
