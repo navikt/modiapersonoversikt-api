@@ -7,243 +7,243 @@
 @modiaaquablaa: #008fc4;
 
 .dialogpanel {
-  text-align: center;
-  padding-bottom: 2em;
-  .traadcontainer {
-    margin: 30px 0 0;
-  }
-  .vistraad {
-    .ekspanderingspil {
-      top: 4px;
-      &.ekspandert {
-        top: -4px;
-      }
-    }
-  }
-  .traadoverskrift {
-    .ekspanderingspil {
-      border-top-color: #333333;
-      &.ekspandert {
-        border-bottom-color: #333333;
-      }
-    }
-  }
-  .ekspanderingcontainer {
-    position: relative;
-    cursor: pointer;
-  }
-  .ekspanderingspil {
-    display: inline-block;
-    position: absolute;
-    top: 14px;
-    width: 0;
-    height: 0;
-    margin-left: 1em;
-    border: 8px solid transparent;
-    border-top-color: #0067c5;
-    &.ekspandert {
-      top: 6px;
-      border: 8px solid transparent;
-      border-bottom-color: #0067c5;
-    }
-  }
-  form {
-    text-align: center;
-  }
-  .typeoverskrift {
-    display: inline-block;
-    &.svarpaneloverskrift {
-      margin: 0;
-    }
-  }
-  .temagruppeoverskrift {
-    margin: 0.8em 0 0;
-  }
-  .fritekst {
-    margin: 0 @sideMargin;
-    text-align: left;
-    line-height: 1.4em;
-    a {
-      text-decoration: underline;
-    }
-  }
-  .dato {
-    text-transform: uppercase;
-  }
-  .kanalvelger {
-    margin: 1em auto;
-    text-align: center;
-    .kanalvalg {
-      display: inline;
-      width: 40%;
-      margin-right: 1.5rem;
-      input[type="radio"] + label {
-        width: auto;
-        margin: 0.5rem 0;
-        border: 1px solid transparent;
-        background-position: 0;
-        > * {
-          width: 32px;
-          height: 32px;
-          background-repeat: no-repeat;
-        }
-        > .tekst {
-          background-image: url(../img/skriftlig.svg);
-        }
-        > .telefon {
-          background-image: url(../img/telefon.svg);
-        }
-        > .oppmote {
-          background-image: url(../img/personligoppmote.svg);
-        }
-      }
-      input[type="radio"]:checked + label {
-        > .tekst {
-          background-image: url(../img/skriftlig_valgt.svg);
-        }
-        > .telefon {
-          background-image: url(../img/telefon_valgt.svg);
-        }
-        > .oppmote {
-          background-image: url(../img/personligoppmote_valgt.svg);
-        }
-      }
-      input[type="radio"]:focus + label {
-        border: 1px dashed #00a9e0;
-      }
-    }
-  }
-  .navident {
-    font-weight: bold;
-  }
-  .send {
-    margin: 2em 0;
-  }
-  .kanaloverskrift {
-    font-weight: 600;
-    background-color: @modiasvart;
-    color: @modiagraaskrift;
-    padding: 7px 0;
-    margin: 0 @sideMargin;
-  }
-  .tekstfelt {
-    margin: 0 @sideMargin;
-  }
-  .temagruppevelger-wrapper {
-    margin: 0 @sideMargin;
-    position: relative;
-    .temagruppevelger {
-      width: 100%;
-    }
-    .ui-front {
-      z-index: 100;
-    }
-    .ui-menu {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: block;
-      outline: none;
-      .ui-menu-item {
-        position: relative;
-        margin: 0;
-        padding: 0.5em 1em;
-        cursor: pointer;
-        min-height: 0;
-      }
-      .ui-state-focus, .ui-state-active {
-        background-color: #0067c5;
-        color: #fff;
-      }
-    }
-    .ui-selectmenu-menu {
-      padding: 0;
-      margin: 0;
-      position: absolute;
-      top: 0;
-      left: 0;
-      display: none;
-      background-color: #fff;
-      box-shadow: 0 5px 8px 0 #cccccc;
-    }
-    .ui-selectmenu-open {
-      display: block;
-    }
-    .ui-selectmenu-button {
-      display: inline-block;
-      overflow: hidden;
-      position: relative;
-      cursor: pointer;
-      font-weight: bold;
-      background-color: #fff;
-      border: 1px solid #cccccc;
-      span {
-        &.ui-icon {
-          position: absolute;
-          height: 0;
-          width: 0;
-          border: 8px solid transparent;
-          border-top-color: #0067c5;
-          right: 1em;
-          top: 12px;
-        }
-        &.ui-selectmenu-text {
-          padding: 0.5em 1em;
-          display: block;
-          line-height: 1.4;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-      }
-    }
-  }
-  .feedback {
-    margin: 0 @sideMargin;
-  }
+	text-align: center;
+	padding-bottom: 2em;
+	.traadcontainer {
+		margin: 30px 0 0;
+	}
+	.vistraad {
+		.ekspanderingspil {
+			top: 4px;
+			&.ekspandert {
+				top: -4px;
+			}
+		}
+	}
+	.traadoverskrift {
+		.ekspanderingspil {
+			border-top-color: #333333;
+			&.ekspandert {
+				border-bottom-color: #333333;
+			}
+		}
+	}
+	.ekspanderingcontainer {
+		position: relative;
+		cursor: pointer;
+	}
+	.ekspanderingspil {
+		display: inline-block;
+		position: absolute;
+		top: 14px;
+		width: 0;
+		height: 0;
+		margin-left: 1em;
+		border: 8px solid transparent;
+		border-top-color: #0067c5;
+		&.ekspandert {
+			top: 6px;
+			border: 8px solid transparent;
+			border-bottom-color: #0067c5;
+		}
+	}
+	form {
+		text-align: center;
+	}
+	.typeoverskrift {
+		display: inline-block;
+		&.svarpaneloverskrift {
+			margin: 0;
+		}
+	}
+	.temagruppeoverskrift {
+		margin: 0.8em 0 0;
+	}
+	.fritekst {
+		margin: 0 @sideMargin;
+		text-align: left;
+		line-height: 1.4em;
+		a {
+			text-decoration: underline;
+		}
+	}
+	.dato {
+		text-transform: uppercase;
+	}
+	.kanalvelger {
+		margin: 1em auto;
+		text-align: center;
+		.kanalvalg {
+			display: inline;
+			width: 40%;
+			margin-right: 1.5rem;
+			input[type="radio"] + label {
+				width: auto;
+				margin: 0.5rem 0;
+				border: 1px solid transparent;
+				background-position: 0;
+				> * {
+					width: 32px;
+					height: 32px;
+					background-repeat: no-repeat;
+				}
+				> .tekst {
+					background-image: url(../img/skriftlig.svg);
+				}
+				> .telefon {
+					background-image: url(../img/telefon.svg);
+				}
+				> .oppmote {
+					background-image: url(../img/personligoppmote.svg);
+				}
+			}
+			input[type="radio"]:checked + label {
+				> .tekst {
+					background-image: url(../img/skriftlig_valgt.svg);
+				}
+				> .telefon {
+					background-image: url(../img/telefon_valgt.svg);
+				}
+				> .oppmote {
+					background-image: url(../img/personligoppmote_valgt.svg);
+				}
+			}
+			input[type="radio"]:focus + label {
+				border: 1px dashed #00a9e0;
+			}
+		}
+	}
+	.navident {
+		font-weight: bold;
+	}
+	.send {
+		margin: 2em 0;
+	}
+	.kanaloverskrift {
+		font-weight: 600;
+		background-color: @modiasvart;
+		color: @modiagraaskrift;
+		padding: 7px 0;
+		margin: 0 @sideMargin;
+	}
+	.tekstfelt {
+		margin: 0 @sideMargin;
+	}
+	.temagruppevelger-wrapper {
+		margin: 0 @sideMargin;
+		position: relative;
+		.temagruppevelger {
+			width: 100%;
+		}
+		.ui-front {
+			z-index: 100;
+		}
+		.ui-menu {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			display: block;
+			outline: none;
+			.ui-menu-item {
+				position: relative;
+				margin: 0;
+				padding: 0.5em 1em;
+				cursor: pointer;
+				min-height: 0;
+			}
+			.ui-state-focus, .ui-state-active {
+				background-color: #0067c5;
+				color: #fff;
+			}
+		}
+		.ui-selectmenu-menu {
+			padding: 0;
+			margin: 0;
+			position: absolute;
+			top: 0;
+			left: 0;
+			display: none;
+			background-color: #fff;
+			box-shadow: 0 5px 8px 0 #cccccc;
+		}
+		.ui-selectmenu-open {
+			display: block;
+		}
+		.ui-selectmenu-button {
+			display: inline-block;
+			overflow: hidden;
+			position: relative;
+			cursor: pointer;
+			font-weight: bold;
+			background-color: #fff;
+			border: 1px solid #cccccc;
+			span {
+				&.ui-icon {
+					position: absolute;
+					height: 0;
+					width: 0;
+					border: 8px solid transparent;
+					border-top-color: #0067c5;
+					right: 1em;
+					top: 12px;
+				}
+				&.ui-selectmenu-text {
+					padding: 0.5em 1em;
+					display: block;
+					line-height: 1.4;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+				}
+			}
+		}
+	}
+	.feedback {
+		margin: 0 @sideMargin;
+	}
 }
 
 .leggtilbake {
-  position: relative;
-  width: 100%;
-  padding: @sideMargin;
-  border-top: 1px solid black;
-  text-align: center;
-  background-color: #333333;
-  h2, h4 {
-    color: @modiagraaskrift;
-  }
-  a {
-    display: inline-block;
-    margin-top: 1em;
-    color: #00a9e0;
-  }
-  textarea {
-    display: block;
-    width: 100%;
-    height: 10em;
-    resize: none;
-  }
-  label {
-    text-align: left;
-    width: 46%;
-  }
-  .knapp-hoved {
-    color: #fff;
-  }
-  .skjult {
-    display: none;
-  }
-  .temagruppevelger-wrapper {
-    margin: 0;
-    .ui-selectmenu-menu {
-      box-shadow: none;
-    }
-  }
+	position: relative;
+	width: 100%;
+	padding: @sideMargin;
+	border-top: 1px solid black;
+	text-align: center;
+	background-color: #333333;
+	h2, h4 {
+		color: @modiagraaskrift;
+	}
+	a {
+		display: inline-block;
+		margin-top: 1em;
+		color: #00a9e0;
+	}
+	textarea {
+		display: block;
+		width: 100%;
+		height: 10em;
+		resize: none;
+	}
+	label {
+		text-align: left;
+		width: auto;
+	}
+	.knapp-hoved {
+		color: #fff;
+	}
+	.skjult {
+		display: none;
+	}
+	.temagruppevelger-wrapper {
+		margin: 0;
+		.ui-selectmenu-menu {
+			box-shadow: none;
+		}
+	}
 }
 
 .kvittering {
-  margin-top: 200px;
-  text-align: center;
+	margin-top: 200px;
+	text-align: center;
 }
 

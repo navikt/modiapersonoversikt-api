@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
+import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.personsok.result.PersonsokResultPanel;
 import no.nav.personsok.search.PersonsokSearchPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
@@ -15,12 +16,15 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 public class BasePage extends WebPage {
 
     public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(PersonPage.class, "lokal.js");
+	public static final ConditionalJavascriptResource MODIA_FLEXBOX_IE_JS = new ConditionalJavascriptResource(
+			new PackageResourceReference(BasePage.class, "js/flexbox-ie9.js"), "lt IE 10");
     public static final CssResourceReference PERSONINFO_LESS = new CssResourceReference(PersonPage.class, "personpage.less");
     public static final CssResourceReference PERSONSOKRESULT = new CssResourceReference(PersonsokResultPanel.class, "PersonsokResultPanel.css");
     public static final CssResourceReference PERSONSOKSEARCH = new CssResourceReference(PersonsokSearchPanel.class, "PersonsokSearchPanel.css");
     public static final PackageResourceReference MODIA_COMMON_LESS = new PackageResourceReference(BasePage.class, "less/common.less");
     public static final PackageResourceReference MODIA_KOMPONENTER_LESS = new PackageResourceReference(BasePage.class, "less/komponenter.less");
     public static final PackageResourceReference MODIA_RAMME_LESS = new PackageResourceReference(BasePage.class, "less/ramme.less");
+    public static final PackageResourceReference MODIA_FLEXBOX_LESS = new PackageResourceReference(BasePage.class, "less/flexbox.less");
     public static final PackageResourceReference MELDINGERWIDGET = new PackageResourceReference(MeldingerWidget.class, "meldingerwidget.less");
     public static final PackageResourceReference MELDINGERLAMELL = new PackageResourceReference(Innboks.class, "innboks.less");
 

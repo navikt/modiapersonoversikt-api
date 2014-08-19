@@ -15,7 +15,6 @@ jQuery(document).ready(function ($) {
     Modig.shortcutListener.on({alt: true, keyCode: 117}, focusLamellHead);  // F6
     Modig.shortcutListener.on({alt: true, keyCode: 118}, closeLamellHead);  // F7
 
-
     addPrintEventListener();
 
     $('body').on('click', '.lamell .lamellhode > a', function () {
@@ -60,7 +59,7 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    settHovedinnholdHoyde();
+    //settHovedinnholdHoyde();
 });
 
 function focusSearchField() {
@@ -307,15 +306,6 @@ function addPrintEventListener() {
     } else {
         window.onafterprint = afterPrint;
         window.onbeforeprint = beforePrint;
-    }
-}
-
-function settHovedinnholdHoyde() {
-    settHoyde();
-    $(window).resize(settHoyde);
-
-    function settHoyde() {
-        $('.main-content').css('min-height', $('html').height() - $('.navbar ').outerHeight());
     }
 }
 

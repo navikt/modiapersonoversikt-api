@@ -1,48 +1,50 @@
 <!DOCTYPE html>
 <html lang="no" xmlns:wicket="http://wicket.apache.org">
-    <wicket:head>
-        <title>Modia</title>
-    </wicket:head>
-    <wicket:extend>
-        <body>
-            <div wicket:id="modal">[]</div>
-            <section wicket:id="saksbehandlerInnstillingerPanel"></section>
-            <section class="personpanel clearfix">
-                <section class="navbar menu-intern active">
-                    <wicket:container wicket:id="plukkOppgave"/>
-                    <div class="sokeboks clearfix">
-                        <wicket:container wicket:id="searchPanel"/>
-                        <button wicket:id="toggle-sok" class="personsok-button" id="toggle-personsok"
-                                wicket:message="aria-label:personsok.apnetekst,
+	<wicket:head>
+		<title>Modia</title>
+	</wicket:head>
+	<wicket:extend>
+		<body>
+			<div wicket:id="modal">[]</div>
+			<wicket:container wicket:id="saksbehandlerInnstillingerPanel"/>
+			<section class="personpanel clearfix">
+				<section class="navbar menu-intern active">
+					<wicket:container wicket:id="plukkOppgave"/>
+					<div class="sokeboks clearfix">
+						<wicket:container wicket:id="searchPanel"/>
+						<button wicket:id="toggle-sok" class="personsok-button" id="toggle-personsok"
+								wicket:message="aria-label:personsok.apnetekst,
 						title:personsok.apnetekst,
 						data-apne:personsok.apnetekst,
 						data-lukke:personsok.lukketekst">
-                            A
-                            <span class="personsok-pil"></span>
-                        </button>
-                        <button class="nullstill-button" wicket:message="aria-label:hentperson.nullstillbruker,
+							A
+							<span class="personsok-pil"></span>
+						</button>
+						<button class="nullstill-button" wicket:message="aria-label:hentperson.nullstillbruker,
 					title:hentperson.nullstillbruker" wicket:id="nullstill">[]
-                        </button>
-                    </div>
-                </section>
-                <aside class="sidebar-venstre">
-                    <div wicket:id="visittkort">[]</div>
-                    <section class="kjerneinfo clearfix" wicket:id="personKjerneinfoPanel">[]</section>
-                </aside>
-                <div class="main-content intern">
-                    <wicket:container wicket:id="personsokPanel"/>
-                    <section class="lameller" wicket:id="lameller">[]</section>
-                </div>
-                <aside class="sidebar-hoyre">
-                    <div wicket:id="svarOgReferatPanel"/>
-                </aside>
-            </section>
-            <wicket:container wicket:id="timeoutBoks"/>
+						</button>
+					</div>
+				</section>
+				<div class="flexbox row clearfix">
+					<aside class="sidebar-venstre flex1">
+						<div wicket:id="visittkort">[]</div>
+						<section class="kjerneinfo clearfix" wicket:id="personKjerneinfoPanel">[]</section>
+					</aside>
+					<div class="main-content intern flex2">
+						<wicket:container wicket:id="personsokPanel"/>
+						<section class="lameller" wicket:id="lameller">[]</section>
+					</div>
+					<aside class="sidebar-hoyre flex1">
+						<div wicket:id="svarOgReferatPanel"></div>
+					</aside>
+				</div>
+			</section>
+			<wicket:container wicket:id="timeoutBoks"/>
 
-            <div class="print">
-                <img alt="NAV-logo" src="img/nav-logo.svg"/>
-                <div class="content"></div>
-            </div>
-        </body>
-    </wicket:extend>
+			<div class="print">
+				<img alt="NAV-logo" src="img/nav-logo.svg"/>
+				<div class="content"></div>
+			</div>
+		</body>
+	</wicket:extend>
 </html>

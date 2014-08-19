@@ -6,724 +6,716 @@
 
 /* Mixins */
 .kolonne {
-  float: left;
-  display: block;
-  min-height: 30px;
-  width: 47.93617021276595%;
+	float: left;
+	display: block;
+	min-height: 30px;
+	width: 47.93617021276595%;
 }
 
 /* Generelle elementer */
 
 HTML {
-  overflow-y: auto;
-  height: 100%;
-  background: @white;
-  font-size: 14px;
+	overflow-y: auto;
+	height: 100%;
+	background: @white;
+	font-size: 14px;
 }
 
 BODY {
-  height: auto;
-  min-height: 100%;
-  background: @white;
+	height: auto;
+	min-height: 100%;
+	background: @white;
 }
 
 /* Typografi */
 H1, H2, H3 {
-  font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: normal;
-  line-height: 1.2em;
+	font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: normal;
+	line-height: 1.2em;
 }
 
 H1 {
-  font-size: 2.5rem;
+	font-size: 2.5rem;
 }
 
 H2, ._H2 {
-  font-size: 2.0rem;
+	font-size: 2.0rem;
 }
 
 H3, ._H3 {
-  font-size: 1.43rem;
-  font-weight: 600;
-  text-transform: uppercase;
+	font-size: 1.43rem;
+	font-weight: 600;
+	text-transform: uppercase;
 }
 
 /* FORMS */
 LABEL, .label {
-  text-transform: uppercase;
-  position: relative;
-  margin-top: 1em;
-  color: @grayLight;
-  font-size: 0.857rem;
+	text-transform: uppercase;
+	position: relative;
+	margin-top: 1em;
+	color: @grayLight;
+	font-size: 0.857rem;
 }
 
 INPUT.errorJS, SELECT.errorJS {
-  background-color: @errorBackgroundLight;
-  border: 1px solid @errorTextLight;
+	background-color: @errorBackgroundLight;
+	border: 1px solid @errorTextLight;
 }
 
 LABEL.errorJS {
-  position: absolute;
-  left: 0;
-  bottom: -2.9rem;
-  white-space: nowrap;
-  color: @errorTextLight;
-  text-transform: none;
+	position: absolute;
+	left: 0;
+	bottom: -2.9rem;
+	white-space: nowrap;
+	color: @errorTextLight;
+	text-transform: none;
 }
 
 UL.feedbackPanel {
-  padding: 1rem 1rem 1rem 2rem;
-  list-style-type: none;
-  color: @white;
-  background-color: #da153a;
-  font: 1.43rem Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  LI:before {
-    content: "* ";
-  }
-  A, A:visited {
-    color: @white;
-    font-weight: bold;
-    text-decoration: underline;
-  }
+	padding: 1rem 1rem 1rem 2rem;
+	list-style-type: none;
+	color: @white;
+	background-color: #da153a;
+	font: 1.43rem Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+	LI:before {
+		content: "* ";
+	}
+	A, A:visited {
+		color: @white;
+		font-weight: bold;
+		text-decoration: underline;
+	}
 }
 
 .description {
-  color: @grayLight;
-  font-size: 0.714rem;
-  white-space: nowrap;
-  text-transform: none;
+	color: @grayLight;
+	font-size: 0.714rem;
+	white-space: nowrap;
+	text-transform: none;
 }
 
 .dateGroup INPUT[type=text] {
-  background: @white url(../img/kalender.svg) no-repeat right center;
-  background-size: 21px;
+	background: @white url(../img/kalender.svg) no-repeat right center;
+	background-size: 21px;
 }
 
 [class*=-liten] {
-  margin-top: 2px;
+	margin-top: 2px;
 }
 
 /* Spesifikke sider */
 
 .hentperson.main {
-  background-color: @modiasvart;
-  .navbar {
-    border-bottom: 1px solid #000;
-  }
-  .modia-logo {
-    width: 15rem;
-    display: block;
-    margin: 10rem auto;
-  }
-  #personsok {
-    box-shadow: none;
-    border: none;
-  }
+	background-color: @modiasvart;
+	.navbar {
+		border-bottom: 1px solid #000;
+	}
+	.modia-logo {
+		width: 15rem;
+		display: block;
+		margin: 10rem auto;
+	}
+	#personsok {
+		box-shadow: none;
+		border: none;
+	}
 }
 
 /* Individuelle lameller */
 .lamell {
-  .lerret {
-    .oppfolging-lenker {
-      padding-bottom: 2rem;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid @bodyBackground;
-      DIV {
-        display: inline-block;
-        width: auto;
-        float: none;
-        margin-right: 5rem;
-        DT, DD {
-          width: auto;
-        }
-      }
-    }
-  }
+	.lerret {
+		.oppfolging-lenker {
+			padding-bottom: 2rem;
+			margin-bottom: 2rem;
+			border-bottom: 1px solid @bodyBackground;
+			DIV {
+				display: inline-block;
+				width: auto;
+				float: none;
+				margin-right: 5rem;
+				DT, DD {
+					width: auto;
+				}
+			}
+		}
+	}
 
-  UL.arbeisdgiver {
-    padding-left: 0;
-    list-style-type: none;
-    margin: 0;
-    LI:not(:first-child) {
-      margin-top: 2rem;
-    }
-  }
+	UL.arbeisdgiver {
+		padding-left: 0;
+		list-style-type: none;
+		margin: 0;
+		LI:not(:first-child) {
+			margin-top: 2rem;
+		}
+	}
 
-  /* Oversikt */
-  &.oversikt {
-    .kolonne:first-of-type {
-      margin-left: 0;
-    }
+	/* Oversikt */
+	&.oversikt {
+		.kolonne:first-of-type {
+			margin-left: 0;
+		}
 
-    .kolonne:last-child {
-      margin-left: 3.8%;
-    }
-  }
+		.kolonne:last-child {
+			margin-left: 3.8%;
+		}
+	}
 
-  /* Kontrakter */
-  &.kontrakter {
-    H3 {
-      font-size: 1.3rem;
-      margin-bottom: 0.7rem;
-    }
-    SECTION > H1 {
-      font-size: 1.8rem;
-    }
-    .dobbeldato LABEL {
-      color: @textColor;
-    }
-    FORM {
-      width: 50%;
-      H2 {
-        font-size: 1.35rem;
-        font-weight: 700;
-      }
-    }
-    .lerret > .default-error {
-      .kolonne;
-    }
-    .kontrakt {
-      .kolonne;
-      &.sykeoppfolging {
-        float: right;
-        margin-left: 3.8%;
-      }
-      &.ytelser {
-        float: none;
-        clear: left;
-      }
-      .liste {
-        width: 100%;
-        margin-top: 20px;
-        LI {
-          overflow: auto;
-          width: 100%;
-        }
-      }
-      SECTION {
-        padding-top: 0;
-      }
-      H1 {
-        margin: 2rem 0;
-      }
-    }
-  }
+	/* Kontrakter */
+	&.kontrakter {
+		H3 {
+			font-size: 1.3rem;
+			margin-bottom: 0.7rem;
+		}
+		SECTION > H1 {
+			font-size: 1.8rem;
+		}
+		.dobbeldato LABEL {
+			color: @textColor;
+		}
+		FORM {
+			width: 50%;
+			H2 {
+				font-size: 1.35rem;
+				font-weight: 700;
+			}
+		}
+		.lerret > .default-error {
+			.kolonne;
+		}
+		.kontrakt {
+			.kolonne;
+			&.sykeoppfolging {
+				float: right;
+				margin-left: 3.8%;
+			}
+			&.ytelser {
+				float: none;
+				clear: left;
+			}
+			.liste {
+				width: 100%;
+				margin-top: 20px;
+				LI {
+					overflow: auto;
+					width: 100%;
+				}
+			}
+			SECTION {
+				padding-top: 0;
+			}
+			H1 {
+				margin: 2rem 0;
+			}
+		}
+	}
 
-  /* Brukerprofil */
-  .brukerprofil {
-    padding-left: 32px;
-    INPUT[type=radio] ~ LABEL {
-      margin-left: -30px;
-      padding-left: 30px;
-    }
-    INPUT[type="submit"]:disabled, INPUT[type="button"]:disabled {
-      cursor: default;
-    }
-    #forkastButton {
-      margin-left: 10px;
-    }
-    FIELDSET {
-      border: none;
-      border-top: 1px solid @borderColorLight;
-      padding-top: 2rem;
-      padding-bottom: 0;
-      margin: 0 0 2rem 0;
-      max-width: 45rem;
-      padding-left: 0;
-      &:first-of-type {
-        border-top: none;
-        padding-top: 1px;
-      }
-      &:last-of-type {
-        margin-bottom: 40px;
-      }
-      LEGEND {
-        ._H2;
-        position: absolute;
-      }
-      .gatenavn, .husnummer, .husbokstav, .bolignummer, .poststed, .postnummer {
-        display: inline-block;
-        float: none !important;
-      }
-      .gyldigTil {
-        width: 20%;
-        min-width: 125px;
-      }
-      .poststed {
-        width: 33.5%;
-      }
-      .husnummer, .husbokstav, .bolignummer, .postnummer {
-        width: 12% !important;
-      }
-      .husnummer, .husbokstav, .bolignummer, .poststed {
-        margin-left: 10px;
-      }
-      .bostedfolkeregistre {
-        p {
-          margin-top: 5px;
-          margin-bottom: 19px;
-        }
-      }
-      .midlertidigNorge {
-        INPUT[type="radio"]:checked + label + div {
-          margin-bottom: 24px;
-        }
-      }
-      .endringsinformasjon {
-        font-size: 0.8rem;
-        color: @grayLight;
-        position: relative;
-        top: -7px;
-      }
-      .sublegend {
-        margin-top: 4rem;
-      }
-      UL {
-        list-style-type: none;
-        padding: 0;
-        margin: 4rem 0 0 0;
-        LI LABEL:first-child {
-          font-size: 1rem;
-        }
-      }
-      P {
-        font-weight: bold;
-        SPAN {
-          display: block;
-        }
-      }
-      INPUT, SELECT {
-        width: 100%;
-      }
-      DIV.label-wrapper {
-        font-size: 0.8rem;
-        line-height: 1.4rem;
-        margin-top: 1rem;
-        text-transform: uppercase;
-        position: relative;
-        min-height: 20px !important;
-      }
-      LABEL, DIV.label-wrapper {
-        width: 55%;
-        display: block;
-        float: none;
-        clear: both;
-        color: @textColor;
-        margin-top: 1.5rem;
-        &.selected {
-          font-weight: bold;
-        }
-      }
-      LABEL.errorJS {
-        position: absolute;
-        bottom: -23px;
-        margin-left: 0;
-        color: @red;
-        min-height: 25px;
-      }
-      LABEL.husnummer {
-        width: 16%;
-        float: left;
-      }
-      LABEL.husbokstav {
-        width: 14%;
-        float: left;
-      }
-      LABEL.bolignummer {
-        width: 18%;
-        float: left;
-      }
-      LABEL.postnummer {
-        width: 33%;
-        clear: left;
-        float: left;
-      }
-      LABEL.poststed {
-        width: 16.5%;
-        float: left;
-      }
-      /* Begrense inputs til adresse uten label */
-      INPUT[aria-label*=adresse] {
-        width: 55%;
-        float: none;
-        clear: both;
-      }
-      .hasDatepicker {
-        display: inline;
-      }
-      .gyldigTil {
-        SPAN {
-          display: block;
-        }
-      }
-      INPUT.adresselinje {
-        margin-bottom: 10px;
-        width: 100%;
-      }
-      LABEL .hiddenlabel {
-        position: absolute;
-        left: -2600px;
-      }
-      #adresseUtlandLand {
-        margin-bottom: 10px;
-      }
-      #kontonummer {
-        &.errorJS {
-          margin-bottom: 18px;
-        }
-      }
-      #kontaktinformasjon {
-        LABEL.errorJS {
-          bottom: -25px;
-        }
-        LABEL:not(.errorJS), DIV.label-wrapper {
-          float: left;
-          font-size: 0.8rem;
-          line-height: 1.4rem;
-          margin-top: 1.5rem;
-          position: relative;
-          DIV:not(.endringsinformasjon) {
-            position: absolute;
-            width: 10rem;
-          }
-          .endringsinformasjon {
-            text-transform: none;
-            display: inline;
-            top: 0;
-          }
-          INPUT:not(.fallback) {
-            width: 12.5rem;
-            margin-left: 10.5rem;
-          }
-          INPUT.fallback {
-            width: 4.2rem;
-          }
-          &.epostadresse {
-            INPUT {
-              width: 100%;
-              margin-left: 0;
-            }
-            LABEL.errorJS {
-              bottom: -17px;
-            }
-          }
-        }
-      }
-    }
-  }
+	/* Brukerprofil */
+	.brukerprofil {
+		padding-left: 32px;
+		INPUT[type=radio] ~ LABEL {
+			margin-left: -30px;
+			padding-left: 30px;
+		}
+		INPUT[type="submit"]:disabled, INPUT[type="button"]:disabled {
+			cursor: default;
+		}
+		#forkastButton {
+			margin-left: 10px;
+		}
+		FIELDSET {
+			border: none;
+			border-top: 1px solid @borderColorLight;
+			padding-top: 2rem;
+			padding-bottom: 0;
+			margin: 0 0 2rem 0;
+			max-width: 45rem;
+			padding-left: 0;
+			&:first-of-type {
+				border-top: none;
+				padding-top: 1px;
+			}
+			&:last-of-type {
+				margin-bottom: 40px;
+			}
+			LEGEND {
+				._H2;
+				position: absolute;
+			}
+			.gatenavn, .husnummer, .husbokstav, .bolignummer, .poststed, .postnummer {
+				display: inline-block;
+				float: none !important;
+			}
+			.gyldigTil {
+				width: 20%;
+				min-width: 125px;
+			}
+			.poststed {
+				width: 33.5%;
+			}
+			.husnummer, .husbokstav, .bolignummer, .postnummer {
+				width: 12% !important;
+			}
+			.husnummer, .husbokstav, .bolignummer, .poststed {
+				margin-left: 10px;
+			}
+			.bostedfolkeregistre {
+				p {
+					margin-top: 5px;
+					margin-bottom: 19px;
+				}
+			}
+			.midlertidigNorge {
+				INPUT[type="radio"]:checked + label + div {
+					margin-bottom: 24px;
+				}
+			}
+			.endringsinformasjon {
+				font-size: 0.8rem;
+				color: @grayLight;
+				position: relative;
+				top: -7px;
+			}
+			.sublegend {
+				margin-top: 4rem;
+			}
+			UL {
+				list-style-type: none;
+				padding: 0;
+				margin: 4rem 0 0 0;
+				LI LABEL:first-child {
+					font-size: 1rem;
+				}
+			}
+			P {
+				font-weight: bold;
+				SPAN {
+					display: block;
+				}
+			}
+			INPUT, SELECT {
+				width: 100%;
+			}
+			DIV.label-wrapper {
+				font-size: 0.8rem;
+				line-height: 1.4rem;
+				margin-top: 1rem;
+				text-transform: uppercase;
+				position: relative;
+				min-height: 20px !important;
+			}
+			LABEL, DIV.label-wrapper {
+				width: 55%;
+				display: block;
+				float: none;
+				clear: both;
+				color: @textColor;
+				margin-top: 1.5rem;
+				&.selected {
+					font-weight: bold;
+				}
+			}
+			LABEL.errorJS {
+				position: absolute;
+				bottom: -23px;
+				margin-left: 0;
+				color: @red;
+				min-height: 25px;
+			}
+			LABEL.husnummer {
+				width: 16%;
+				float: left;
+			}
+			LABEL.husbokstav {
+				width: 14%;
+				float: left;
+			}
+			LABEL.bolignummer {
+				width: 18%;
+				float: left;
+			}
+			LABEL.postnummer {
+				width: 33%;
+				clear: left;
+				float: left;
+			}
+			LABEL.poststed {
+				width: 16.5%;
+				float: left;
+			}
+			/* Begrense inputs til adresse uten label */
+			INPUT[aria-label*=adresse] {
+				width: 55%;
+				float: none;
+				clear: both;
+			}
+			.hasDatepicker {
+				display: inline;
+			}
+			.gyldigTil {
+				SPAN {
+					display: block;
+				}
+			}
+			INPUT.adresselinje {
+				margin-bottom: 10px;
+				width: 100%;
+			}
+			LABEL .hiddenlabel {
+				position: absolute;
+				left: -2600px;
+			}
+			#adresseUtlandLand {
+				margin-bottom: 10px;
+			}
+			#kontonummer {
+				&.errorJS {
+					margin-bottom: 18px;
+				}
+			}
+			#kontaktinformasjon {
+				LABEL.errorJS {
+					bottom: -25px;
+				}
+				LABEL:not(.errorJS), DIV.label-wrapper {
+					float: left;
+					font-size: 0.8rem;
+					line-height: 1.4rem;
+					margin-top: 1.5rem;
+					position: relative;
+					DIV:not(.endringsinformasjon) {
+						position: absolute;
+						width: 10rem;
+					}
+					.endringsinformasjon {
+						text-transform: none;
+						display: inline;
+						top: 0;
+					}
+					INPUT:not(.fallback) {
+						width: 12.5rem;
+						margin-left: 10.5rem;
+					}
+					INPUT.fallback {
+						width: 4.2rem;
+					}
+					&.epostadresse {
+						INPUT {
+							width: 100%;
+							margin-left: 0;
+						}
+						LABEL.errorJS {
+							bottom: -17px;
+						}
+					}
+				}
+			}
+		}
+	}
 
-  /* Sykepenger */
-  &.sykepenger {
-    SECTION {
-      margin-top: 0;
+	/* Sykepenger */
+	&.sykepenger {
+		SECTION {
+			margin-top: 0;
 
-      > SECTION H1 {
-        margin-bottom: 1rem;
-      }
-    }
-    .liste {
-      float: right;
-      margin: 2rem 0 0 3.8%;
-      width: 47.93617021276595%;
-    }
-    .arbeidssituasjon {
-      clear: left;
-    }
-    .sykmelding {
-      clear: left;
-      .liste {
-        width: 100%;
-      }
-    }
-    .sykmeldinger {
-      clear: left;
-      float: left;
-      margin-left: 0;
-    }
-  }
+			> SECTION H1 {
+				margin-bottom: 1rem;
+			}
+		}
+		.liste {
+			float: right;
+			margin: 2rem 0 0 3.8%;
+			width: 47.93617021276595%;
+		}
+		.arbeidssituasjon {
+			clear: left;
+		}
+		.sykmelding {
+			clear: left;
+			.liste {
+				width: 100%;
+			}
+		}
+		.sykmeldinger {
+			clear: left;
+			float: left;
+			margin-left: 0;
+		}
+	}
 
-  /* FORELDREPENGER */
-  &.foreldrepenger {
-    SECTION > H1 {
-      ._H2;
-      margin-bottom: 2rem;
-    }
-    .arbeidssituasjon {
-      margin: 0 0 0 0;
-      padding-bottom: 1.3rem;
-      float: left;
-      .arbeisdgiver {
-        margin-top: 2rem;
-      }
-    }
-    .barnet {
-      margin: 0;
-    }
-    SECTION.periode, SECTION[title=Periode] {
-      clear: both;
-      display: block;
-      padding-top: 2rem;
-      border-top: 1px solid @borderColorLight;
-      DL.oppsummering, ARTICLE.liste {
-        .kolonne;
-        margin-left: 0;
-      }
-      ARTICLE.liste {
-        margin-left: 3.8%;
-      }
-    }
-  }
+	/* FORELDREPENGER */
+	&.foreldrepenger {
+		SECTION > H1 {
+			._H2;
+			margin-bottom: 2rem;
+		}
+		.arbeidssituasjon {
+			margin: 0 0 0 0;
+			padding-bottom: 1.3rem;
+			float: left;
+			.arbeisdgiver {
+				margin-top: 2rem;
+			}
+		}
+		.barnet {
+			margin: 0;
+		}
+		SECTION.periode, SECTION[title=Periode] {
+			clear: both;
+			display: block;
+			padding-top: 2rem;
+			border-top: 1px solid @borderColorLight;
+			DL.oppsummering, ARTICLE.liste {
+				.kolonne;
+				margin-left: 0;
+			}
+			ARTICLE.liste {
+				margin-left: 3.8%;
+			}
+		}
+	}
 
-  .liste {
-    float: none;
-    width: auto;
-    P.overskrift, LI.expandable A {
-      font-weight: 600;
-      font-size: 1.16rem;
-      font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-      position: relative;
-      padding-right: 30px;
-      .dato {
-        display: block;
-        font-size: 0.857rem;
-        font-weight: normal;
-        font-family: Helvetica, Arial, sans-serif;
-        text-transform: uppercase;
-      }
-      .belop {
-        position: absolute;
-        left: 50%;
-      }
-      DL {
-        font-weight: normal;
-      }
-    }
-    .gradering {
-      position: absolute;
-      right: 0;
-    }
-  }
+	.liste {
+		float: none;
+		width: auto;
+		P.overskrift, LI.expandable A {
+			font-weight: 600;
+			font-size: 1.16rem;
+			font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+			position: relative;
+			padding-right: 30px;
+			.dato {
+				display: block;
+				font-size: 0.857rem;
+				font-weight: normal;
+				font-family: Helvetica, Arial, sans-serif;
+				text-transform: uppercase;
+			}
+			.belop {
+				position: absolute;
+				left: 50%;
+			}
+			DL {
+				font-weight: normal;
+			}
+		}
+		.gradering {
+			position: absolute;
+			right: 0;
+		}
+	}
 }
 
 /* Sidebars */
 [class*=sidebar-] {
-  position: absolute;
-  top: 0;
-  padding-top: @navbarHeight;
-  width: @sidebarWidth;
-  min-height: 100%;
-  z-index: 1;
+	z-index: 1;
 }
 
 [class*=sidebar-venstre] {
-  overflow: visible;
-  color: #b7b1a9;
-  background: @modiaBackground;
-  padding-bottom: 20px;
-  left: 0;
-  > * {
-    margin: 0 30px;
-  }
-  HR {
-    height: 1px;
-    width: 20px;
-    margin: -5px auto 0;
-    border: 0;
-    color: @white;
-    background-color: @white;
-  }
-  P {
-    margin: 0;
-    line-height: 1.2em;
-    &.dato {
-      text-align: center;
-    }
-  }
-  .visittkort {
-    margin: 0;
-    padding: 15px @sidebarYtrePadding 5px 0;
-    min-height: 266px;
-    background-repeat: no-repeat;
-    background-position: 27px 30px;
-    background-color: inherit;
-    background-size: 64px;
-    color: @grayLight;
-    border-top: 1px solid #000;
-    width: 100%;
-    A {
-      color: @blue;
-    }
-    &.mann {
-      background-image: url(../img/mann.svg);
-      .left > * {
-        color: #0fba47;
-      }
-    }
-    &.kvinne {
-      background-image: url(../img/kvinne.svg);
-      .left {
-        .label {
-          color: #ff61b3;
-        }
-        .year {
-          color: #ec288d;
-        }
-      }
-    ;
-    }
-    H1, H2 {
-      ._H2;
-      font-size: 2.2rem;
-      line-height: 104%;
-      margin: 0;
-      color: @grayLight;
-    }
-    .left {
-      font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-      float: left;
-      text-align: center;
-      width: 55px;
-      margin: 68px 25px 0 0;
-      line-height: 1.6rem;
-      text-transform: uppercase;
-      .label, .year {
-        display: block;
-      }
-      .label {
-        font-size: 0.7rem;
-      }
-      .year {
-        font-size: 2.5rem;
-        font-weight: 600;
-      }
-    }
-    .right {
-      padding-left: 80px;
-    }
-  }
-  table {
-    border-collapse: collapse;
-    margin: 0 0 1.5rem;
-    tbody {
-      tr:first-child {
-        th, td {
-          padding-top: 3px;
-        }
-      }
-      tr:last-child {
-        th, td {
-          padding-bottom: 3px;
-        }
-      }
-    }
-    tr {
-      th {
-        float: left;
-        clear: right;
-        padding: 1.2rem 0 0 !important;
-        text-transform: uppercase;
-        font-size: 0.857rem;
-        font-weight: normal;
-        text-align: left;
-      }
-      td {
-        float: left;
-        clear: left;
-        font-weight: bold;
-        text-align: left;
-        font-size: 1.3rem;
-        font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-      }
-    }
-  }
-  .kjerneinfo {
-    margin: 0;
-    padding-right: @sidebarYtrePadding;
-    border-top: 1px solid #000;
-    .tabs {
-      float: left;
-      div {
-        color: #fff;
-        padding-top: 71px;
-        width: 90px;
-        height: 102px;
-        font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 0.7rem;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        text-align: center;
-        background-repeat: no-repeat;
-        background-position: 35px 18px;
-        padding-left: 26px;
-        &.valgt {
-          background-color: #333;
-        }
-        &.familie {
-          background-image: url(../img/familie_ikon.svg);
-        }
-      }
-    }
-    .tab-info {
-      padding-left: 110px;
-      padding-top: 30px;
-      .info {
-        .barn {
-          display: table;
-          margin-top: 1.5rem;
-          .barnAlder {
-            float: left;
-            text-align: center;
-            margin-right: 15px;
-            min-width: 40px;
-            SPAN {
-              display: block;
-              font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-              &.alderEnhet {
-                font-size: 0.7rem;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-              }
-              &.alder {
-                font-size: 2.5rem;
-                font-weight: 600;
-              }
-            }
-          }
-          UL {
-            display: inherit;
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            font-weight: bold;
-            max-width: 290px;
-            LI:last-child {
-              font-weight: normal;
-              font-size: 0.7rem;
-            }
-          }
-          &.boy {
-            .barnAlder {
-              color: #0fba47;
-            }
-          }
-          &.girl {
-            .barnAlder {
-              .alderEnhet {
-                color: #ff61b3;
-              }
-              .alder {
-                color: #ec288d;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
+	overflow: visible;
+	color: #b7b1a9;
+	background: @modiaBackground;
+	padding-bottom: 20px;
+	> * {
+		margin: 0 30px;
+	}
+	HR {
+		height: 1px;
+		width: 20px;
+		margin: -5px auto 0;
+		border: 0;
+		color: @white;
+		background-color: @white;
+	}
+	P {
+		margin: 0;
+		line-height: 1.2em;
+		&.dato {
+			text-align: center;
+		}
+	}
+	.visittkort {
+		margin: 0;
+		padding: 15px @sidebarYtrePadding 5px 0;
+		min-height: 266px;
+		background: no-repeat 27px 30px;
+		background-color: inherit;
+		background-size: 64px;
+		color: @grayLight;
+		border-top: 1px solid #000;
+		width: 100%;
+		A {
+			color: @blue;
+		}
+		&.mann {
+			background-image: url(../img/mann.svg);
+			.left > * {
+				color: #0fba47;
+			}
+		}
+		&.kvinne {
+			background-image: url(../img/kvinne.svg);
+			.left {
+				.label {
+					color: #ff61b3;
+				}
+				.year {
+					color: #ec288d;
+				}
+			}
+		;
+		}
+		H1, H2 {
+			._H2;
+			font-size: 2.2rem;
+			line-height: 104%;
+			margin: 0;
+			color: @grayLight;
+		}
+		.left {
+			font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+			float: left;
+			text-align: center;
+			width: 55px;
+			margin: 68px 25px 0 0;
+			line-height: 1.6rem;
+			text-transform: uppercase;
+			.label, .year {
+				display: block;
+			}
+			.label {
+				font-size: 0.7rem;
+			}
+			.year {
+				font-size: 2.5rem;
+				font-weight: 600;
+			}
+		}
+		.right {
+			padding-left: 80px;
+		}
+	}
+	table {
+		border-collapse: collapse;
+		margin: 0 0 1.5rem;
+		tbody {
+			tr:first-child {
+				th, td {
+					padding-top: 3px;
+				}
+			}
+			tr:last-child {
+				th, td {
+					padding-bottom: 3px;
+				}
+			}
+		}
+		tr {
+			th {
+				float: left;
+				clear: right;
+				padding: 1.2rem 0 0 !important;
+				text-transform: uppercase;
+				font-size: 0.857rem;
+				font-weight: normal;
+				text-align: left;
+			}
+			td {
+				float: left;
+				clear: left;
+				font-weight: bold;
+				text-align: left;
+				font-size: 1.3rem;
+				font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+			}
+		}
+	}
+	.kjerneinfo {
+		margin: 0;
+		padding-right: @sidebarYtrePadding;
+		border-top: 1px solid #000;
+		.tabs {
+			float: left;
+			div {
+				color: #fff;
+				padding-top: 71px;
+				width: 90px;
+				height: 102px;
+				font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+				font-size: 0.7rem;
+				text-transform: uppercase;
+				letter-spacing: 1px;
+				text-align: center;
+				background-repeat: no-repeat;
+				background-position: 35px 18px;
+				padding-left: 26px;
+				&.valgt {
+					background-color: #333;
+				}
+				&.familie {
+					background-image: url(../img/familie_ikon.svg);
+				}
+			}
+		}
+		.tab-info {
+			padding-left: 110px;
+			padding-top: 30px;
+			.info {
+				.barn {
+					display: table;
+					margin-top: 1.5rem;
+					.barnAlder {
+						float: left;
+						text-align: center;
+						margin-right: 15px;
+						min-width: 40px;
+						SPAN {
+							display: block;
+							font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+							&.alderEnhet {
+								font-size: 0.7rem;
+								text-transform: uppercase;
+								letter-spacing: 1px;
+							}
+							&.alder {
+								font-size: 2.5rem;
+								font-weight: 600;
+							}
+						}
+					}
+					UL {
+						display: inherit;
+						list-style: none;
+						padding: 0;
+						margin: 0;
+						font-weight: bold;
+						max-width: 290px;
+						LI:last-child {
+							font-weight: normal;
+							font-size: 0.7rem;
+						}
+					}
+					&.boy {
+						.barnAlder {
+							color: #0fba47;
+						}
+					}
+					&.girl {
+						.barnAlder {
+							.alderEnhet {
+								color: #ff61b3;
+							}
+							.alder {
+								color: #ec288d;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 [class*=sidebar-hoyre] {
-  background-color: #f7f7f7;
-  border-left: 2px solid #a5a5a5;
-  right: 0;
+	background-color: #f7f7f7;
+	border-left: 2px solid #a5a5a5;
 }
