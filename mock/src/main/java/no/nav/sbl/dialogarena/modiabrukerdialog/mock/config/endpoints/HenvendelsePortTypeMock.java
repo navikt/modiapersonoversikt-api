@@ -16,9 +16,12 @@ import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
@@ -54,7 +57,7 @@ public class HenvendelsePortTypeMock {
             "minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure " +
             "dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
 
-    public static final XMLHenvendelse[] HENVENDELSER = {
+    public static final List<XMLHenvendelse> HENVENDELSER = new ArrayList<>(asList(
             createXMLHenvendelse(SPORSMAL, now().minusWeeks(2),
                     createXMLMeldingFraBruker("ARBD", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(2), "Arbeidsavklaring", "", ""),
 
@@ -99,7 +102,7 @@ public class HenvendelsePortTypeMock {
 
             createXMLHenvendelse(SPORSMAL, now().minusDays(1),
                     createXMLMeldingFraBruker("ARBD", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", "")
-    };
+    ));
 
     private static XMLHenvendelse createXMLHenvendelse(XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata,
                                                        DateTime journalfortDato, String journalfortTema, String journalfortSaksId, String journalforerNavIdent) {
@@ -139,9 +142,9 @@ public class HenvendelsePortTypeMock {
             @Override
             public WSHentHenvendelseResponse hentHenvendelse(WSHentHenvendelseRequest wsHentHenvendelseRequest) {
                 XMLHenvendelse henvendelse = new XMLHenvendelse();
-                for (XMLHenvendelse xmlBehandlingsinformasjon : HENVENDELSER) {
-                    if (xmlBehandlingsinformasjon.getBehandlingsId().equals(wsHentHenvendelseRequest.getBehandlingsId())) {
-                        henvendelse = xmlBehandlingsinformasjon;
+                for (XMLHenvendelse xmlHenvendelse : HENVENDELSER) {
+                    if (xmlHenvendelse.getBehandlingsId().equals(wsHentHenvendelseRequest.getBehandlingsId())) {
+                        henvendelse = xmlHenvendelse;
                     }
                 }
                 return new WSHentHenvendelseResponse().withAny(henvendelse);
@@ -149,7 +152,7 @@ public class HenvendelsePortTypeMock {
 
             @Override
             public WSHentHenvendelseListeResponse hentHenvendelseListe(WSHentHenvendelseListeRequest wsHentHenvendelseListeRequest) {
-                return new WSHentHenvendelseListeResponse().withAny(HENVENDELSER);
+                return new WSHentHenvendelseListeResponse().withAny(HENVENDELSER.toArray());
             }
 
             @Override

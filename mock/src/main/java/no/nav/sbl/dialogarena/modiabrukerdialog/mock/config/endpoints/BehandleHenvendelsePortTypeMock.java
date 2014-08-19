@@ -1,10 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLOppgaveOpprettetInformasjon;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.HENVENDELSER;
 
 @Configuration
 public class BehandleHenvendelsePortTypeMock {
@@ -19,6 +22,7 @@ public class BehandleHenvendelsePortTypeMock {
 
             @Override
             public void oppdaterJournalfortInformasjon(String behandlingId, XMLJournalfortInformasjon journalfortInformasjon) {
+                hentHenvendelse(behandlingId).setJournalfortInformasjon(journalfortInformasjon);
             }
 
             @Override
@@ -33,5 +37,15 @@ public class BehandleHenvendelsePortTypeMock {
             public void ping() {
             }
         };
+
+    }
+
+    private static XMLHenvendelse hentHenvendelse(String behandlingsId) {
+        for (XMLHenvendelse henvendelse : HENVENDELSER) {
+            if (behandlingsId.equals(henvendelse.getBehandlingsId())) {
+                return henvendelse;
+            }
+        }
+        return new XMLHenvendelse();
     }
 }
