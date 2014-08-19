@@ -23,10 +23,30 @@ public class GsakHentSakslistePortTypeMock {
     public static final String SAKSID_2 = "85154832";
 
     private static Random idGenerator = new Random();
+    private static List<WSGenerellSak> defaultSaksliste = asList(
+            createGenerellSak("Arbeidsavklaring", DateTime.now().minusDays(1)),
+            createGenerellSak("Foreldrepenger", "Fagsystem 2", "Generell", SAKSID_1, DateTime.now().minusDays(4)),
+            createGenerellSak("Hjelpemiddel", "Fagsystem 3", DateTime.now().minusDays(4)),
+            createGenerellSak("Hjelpemiddel", "Fagsystem 3", "Generell", SAKSID_2, DateTime.now().minusDays(3)),
+            createGenerellSak("Oppfølging", "Fagsystem 3", DateTime.now().minusDays(4)),
+            createGenerellSak("Bilsøknad", "Fagsystem 2", "Bilsøknad", DateTime.now().minusDays(4)),
+            createGenerellSak("Annet", "Fagsystem 2", "Annet", DateTime.now().minusDays(4)),
+            createGenerellSak("Dagpenger", "Fagsystem 1", "Dagpenger", DateTime.now().minusDays(4)));
+
+    private static List<WSGenerellSak> saksliste2 = asList(
+            createGenerellSak("Sykepenger", DateTime.now().minusDays(4)),
+            createGenerellSak("Dagpenger", "Arena", "Dagpenger", DateTime.now().minusDays(20)),
+            createGenerellSak("Dagpenger", "Arena", "Dagpenger", DateTime.now().minusDays(5)),
+            createGenerellSak("Dagpenger", "Arena", "Dagpenger", DateTime.now().minusDays(10)),
+            createGenerellSak("Foreldrepenger", "Arena", "Foreldrepenger", DateTime.now().minusDays(1)),
+            createGenerellSak("Foreldrepenger", "Arena", "Foreldrepenger", DateTime.now().minusDays(10)));
+
+    private static List<WSGenerellSak> saksliste3 = asList(createGenerellSak("Sykepenger", DateTime.now().minusWeeks(3)));
+
     private static Map<String, List<WSGenerellSak>> sakslisteMap =
             asMap(
-                    "11111111111", saksliste2(),
-                    "12345678901", saksliste3());
+                    "11111111111", saksliste2,
+                    "12345678901", saksliste3);
 
     @Bean
     public Sak sakMock() {
@@ -46,35 +66,8 @@ public class GsakHentSakslistePortTypeMock {
         if (sakslisteMap.containsKey(fnr)) {
             return sakslisteMap.get(fnr);
         } else {
-            return defaultSaksliste();
+            return defaultSaksliste;
         }
-    }
-
-    private static List<WSGenerellSak> defaultSaksliste() {
-        return asList(
-                createGenerellSak("Arbeidsavklaring", DateTime.now().minusDays(1)),
-                createGenerellSak("Foreldrepenger", "Fagsystem 2", "Generell", SAKSID_1, DateTime.now().minusDays(4)),
-                createGenerellSak("Hjelpemiddel", "Fagsystem 3", DateTime.now().minusDays(4)),
-                createGenerellSak("Hjelpemiddel", "Fagsystem 3", "Generell", SAKSID_2, DateTime.now().minusDays(3)),
-                createGenerellSak("Oppfølging", "Fagsystem 3", DateTime.now().minusDays(4)),
-                createGenerellSak("Bilsøknad", "Fagsystem 2", "Bilsøknad", DateTime.now().minusDays(4)),
-                createGenerellSak("Annet", "Fagsystem 2", "Annet", DateTime.now().minusDays(4)),
-                createGenerellSak("Dagpenger", "Fagsystem 1", "Dagpenger", DateTime.now().minusDays(4)));
-    }
-
-    private static List<WSGenerellSak> saksliste2() {
-        return asList(
-                createGenerellSak("Sykepenger", DateTime.now().minusDays(4)),
-                createGenerellSak("Dagpenger", "Arena", "Dagpenger", DateTime.now().minusDays(20)),
-                createGenerellSak("Dagpenger", "Arena", "Dagpenger", DateTime.now().minusDays(5)),
-                createGenerellSak("Dagpenger", "Arena", "Dagpenger", DateTime.now().minusDays(10)),
-                createGenerellSak("Foreldrepenger", "Arena", "Foreldrepenger", DateTime.now().minusDays(1)),
-                createGenerellSak("Foreldrepenger", "Arena", "Foreldrepenger", DateTime.now().minusDays(10)));
-    }
-
-    private static List<WSGenerellSak> saksliste3() {
-        return asList(createGenerellSak("Sykepenger", DateTime.now().minusWeeks(3)));
-
     }
 
     private static WSGenerellSak createGenerellSak(String tema, DateTime opprettet) {
