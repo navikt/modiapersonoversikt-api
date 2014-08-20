@@ -59,7 +59,7 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withHenvendelseStatus(FERDIG.value())
                 .withOpprettetDato(new DateTime())
                 .withInnsendtDato(new DateTime())
-                .withHovedskjemaKodeverkId("hovedskjema")
+                .withHovedskjemaKodeverkId("NAV 04-01.03")
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
@@ -77,7 +77,7 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withHenvendelseStatus(FERDIG.value())
                 .withOpprettetDato(new DateTime())
                 .withInnsendtDato(new DateTime())
-                .withHovedskjemaKodeverkId("hovedskjema")
+                .withHovedskjemaKodeverkId("NAV 11-13.05")
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
@@ -95,7 +95,7 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withHenvendelseStatus(FERDIG.value())
                 .withOpprettetDato(MERGET_OPPRETTET)
                 .withInnsendtDato(new DateTime().minusDays(3))
-                .withHovedskjemaKodeverkId("hovedskjema")
+                .withHovedskjemaKodeverkId("NAV 04-01.03")
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
@@ -113,7 +113,7 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withHenvendelseStatus(FERDIG.value())
                 .withOpprettetDato(MERGET_OPPRETTET)
                 .withInnsendtDato(new DateTime().minusDays(3))
-                .withHovedskjemaKodeverkId("hovedskjema")
+                .withHovedskjemaKodeverkId("NAV 11-13.05")
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
