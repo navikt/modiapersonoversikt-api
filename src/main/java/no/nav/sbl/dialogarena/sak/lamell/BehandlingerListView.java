@@ -96,7 +96,8 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
             case BEHANDLING:
                 return format(cms.hentTekst(resolveMarkupKey(behandling)), behandlingstema);
             case KVITTERING:
-                return format(hentKvitteringsstreng((Kvittering) behandling), behandlingstema);
+                String skjemanavn = kodeverk.getSkjematittelForSkjemanummer(((Kvittering) behandling).skjemanummerRef);
+                return format(hentKvitteringsstreng((Kvittering) behandling), skjemanavn);
             default:
                 throw new ApplicationException("Ukjent behandlingstype: " + behandling.behandlingsType);
         }
