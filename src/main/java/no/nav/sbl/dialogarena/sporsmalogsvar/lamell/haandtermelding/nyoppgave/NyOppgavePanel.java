@@ -7,7 +7,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -50,7 +50,7 @@ public class NyOppgavePanel extends AnimertPanel {
         feedbackPanel.setOutputMarkupId(true);
         form.add(feedbackPanel);
 
-        form.add(new AjaxSubmitLink("opprettoppgave") {
+        form.add(new AjaxButton("opprettoppgave") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 NyOppgave nyOppgave = (NyOppgave) form.getModelObject();
@@ -84,4 +84,5 @@ public class NyOppgavePanel extends AnimertPanel {
     public void lukkPanel(AjaxRequestTarget target) {
         super.lukkPanel(target);
     }
+
 }
