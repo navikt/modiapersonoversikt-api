@@ -22,13 +22,15 @@ import java.util.Collection;
 import java.util.List;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.SakerVM.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.SakerVM.GODKJENTE_TEMA_FOR_GENERELLE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.SakerVM.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.SakerVM.TEMA_MAPPING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createSak;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -50,6 +52,8 @@ public class SakerVMTest {
     private MeldingVM meldingVM;
     private List<String> alleTemaer;
     private List<String> alleTemagrupper;
+    private String godkjentTemaSomFinnesIEnTemagruppe;
+    private String temagruppeMedEtGodkjentTema;
 
     @Before
     public void setUp() {
@@ -59,7 +63,7 @@ public class SakerVMTest {
         alleTemagrupper = getAlleEksisterendeTemagrupper();
         saksliste = createSakslisteBasertPaTemaMap();
         when(gsakService.hentSakerForBruker(anyString())).thenReturn(saksliste);
-        meldingVM = opprettMeldingVM("temagruppe");
+        meldingVM = opprettMeldingVM(GODKJENTE_TEMA_FOR_GENERELLE.get(0));
         when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
     }
 
@@ -86,7 +90,7 @@ public class SakerVMTest {
 
     @Test
     public void gittToSakerMedLiktTemaReturnerKorrektSakstemaliste() {
-        Sak sak4 = createSak("44444444", alleTemaer.get(0), "Fagsak 4", SAKSTYPE_GENERELL, DateTime.now().minusDays(5));
+        Sak sak4 = createSak("44444444", alleTemaer.get(0), GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5));
         saksliste.add(sak4);
         SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
@@ -103,31 +107,16 @@ public class SakerVMTest {
         }
     }
 
-    //Valgt temgruppe øverst
+    //Valgt temagruppe øverst
     @Test
-    public void gittValgtTemagruppe0sjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
+    public void gittEnValgtTemagruppeSjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
         SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
-        String traadTemagruppe = alleTemagrupper.get(0);
-        meldingVM.melding.temagruppe = traadTemagruppe;
+        meldingVM.melding.temagruppe = temagruppeMedEtGodkjentTema;
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
 
-        assertThat(temaSakerListe.get(0).temagruppe, is(traadTemagruppe));
-        assertThat(temaSakerListe.get(0).saksliste.size(), is(1));
-    }
-
-    @Test
-    public void gittValgtTemagruppe2sjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
-        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
-        sakerVM.oppdater();
-        String traadTemagruppe = alleTemagrupper.get(2);
-        meldingVM.melding.temagruppe = traadTemagruppe;
-
-        List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
-
-        assertThat(temaSakerListe.get(0).temagruppe, is(traadTemagruppe));
-        assertThat(temaSakerListe.get(0).saksliste.size(), is(1));
+        assertThat(temaSakerListe.get(0).temagruppe, is(temagruppeMedEtGodkjentTema));
     }
 
     // Sorterer alfabetisk innen valgt temagruppe
@@ -138,7 +127,7 @@ public class SakerVMTest {
         List<String> traadTemagruppeSineTemaer = TEMA_MAPPING.get(traadTemagruppe);
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
         for (String tema : traadTemagruppeSineTemaer) {
-            saksliste.add(createSak("44444444", tema, "Fagsystem 4", SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
+            saksliste.add(createSak("44444444", tema, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
         SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
         sakerVM.oppdater();
@@ -169,7 +158,7 @@ public class SakerVMTest {
     public void sjekkDatoSorteringInnenforSammeTema() {
         ArrayList<Sak> sakslistekloneMedAndreDatoer = new ArrayList<>();
         for (Sak sak : saksliste) {
-            sakslistekloneMedAndreDatoer.add(createSak("101010101", sak.tema, "Fagsystem", SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
+            sakslistekloneMedAndreDatoer.add(createSak("101010101", sak.tema, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
         saksliste.addAll(sakslistekloneMedAndreDatoer);
         SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
@@ -187,7 +176,7 @@ public class SakerVMTest {
     public void sjekkAtGenerelleSakerOgFagsakerErPlassertISinKorresponderendeListe() {
         ArrayList<Sak> sakslistekloneMedAndreSakstyper = new ArrayList<>();
         for (Sak sak : saksliste) {
-            sakslistekloneMedAndreSakstyper.add(createSak("101010101", sak.tema, "Fagsystem", SAKSTYPE_FAG, sak.opprettetDato));
+            sakslistekloneMedAndreSakstyper.add(createSak("101010101", sak.tema, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), SAKSTYPE_FAG, sak.opprettetDato));
         }
         saksliste.addAll(sakslistekloneMedAndreSakstyper);
         SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
@@ -198,24 +187,6 @@ public class SakerVMTest {
 
         assertSakstypeGenerell(temaSakerListeGenerell, true);
         assertSakstypeGenerell(temaSakerListeFag, false);
-    }
-
-    @Test
-    public void sjekkAtGenrellSakMedTemaOppfolgingErPlassertIFagsakerListen() {
-        Sak sakMedTemaOppfolging = createSak("15472473245", Sak.SAKSTEMA_OPPFOLGING, "Fagsystem 3", SAKSTYPE_GENERELL, DateTime.now().minusDays(4));
-        Sak sakMedSakstypeFagsak = createSak("15472473245", alleTemaer.get(3), "Fagsystem 3", SAKSTYPE_FAG, DateTime.now().minusDays(4));
-        saksliste.add(sakMedSakstypeFagsak);
-        saksliste.add(sakMedTemaOppfolging);
-        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
-        sakerVM.oppdater();
-
-        List<TemaSaker> temaSakerListeFag = sakerVM.getFagsakerGruppertPaaTema();
-
-        boolean containsSakMedTemaOppfolging = false;
-        for (TemaSaker temaSaker : temaSakerListeFag) {
-            containsSakMedTemaOppfolging = temaSaker.saksliste.contains(sakMedTemaOppfolging);
-        }
-        assertTrue(containsSakMedTemaOppfolging);
     }
 
     @Test
@@ -249,12 +220,28 @@ public class SakerVMTest {
     }
 
     private ArrayList<Sak> createSakslisteBasertPaTemaMap() {
+        finnTemagruppenTilEtGodkjentTema();
+        List<String> unikeTema = new ArrayList<>(GODKJENTE_TEMA_FOR_GENERELLE);
+        unikeTema.remove(godkjentTemaSomFinnesIEnTemagruppe);
+
         return new ArrayList<>(Arrays.asList(
-                createSak("111111111", TEMA_MAPPING.get(alleTemagrupper.get(0)).get(0), "Fagsystem1", SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
-                createSak("22222222", TEMA_MAPPING.get(alleTemagrupper.get(1)).get(0), "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
-                createSak("33333333", TEMA_MAPPING.get(alleTemagrupper.get(2)).get(0), "Fagsystem3", SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
-                createSak("44444444", TEMA_MAPPING.get(alleTemagrupper.get(3)).get(0), "Fagsystem2", SAKSTYPE_GENERELL, DateTime.now().minusDays(2))
+                createSak("11111111", unikeTema.get(0), GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
+                createSak("22222222", unikeTema.get(1), GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
+                createSak("33333333", godkjentTemaSomFinnesIEnTemagruppe, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
+                createSak("44444444", unikeTema.get(2), GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(2))
         ));
+    }
+
+    private void finnTemagruppenTilEtGodkjentTema() {
+        for (String godkjentTema : GODKJENTE_TEMA_FOR_GENERELLE) {
+            for (String temagruppe : TEMA_MAPPING.keySet()) {
+                if (TEMA_MAPPING.get(temagruppe).contains(godkjentTema)) {
+                    temagruppeMedEtGodkjentTema = temagruppe;
+                    godkjentTemaSomFinnesIEnTemagruppe = godkjentTema;
+                    return;
+                }
+            }
+        }
     }
 
     private ArrayList<String> getAlleEksisterendeTemaer() {

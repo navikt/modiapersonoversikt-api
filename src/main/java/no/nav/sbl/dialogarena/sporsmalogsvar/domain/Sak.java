@@ -12,10 +12,9 @@ public class Sak implements Serializable, Comparable<Sak> {
     public DateTime opprettetDato;
 
     public static final String SAKSTYPE_GENERELL = "Generell";
-    public static final String SAKSTEMA_OPPFOLGING = "Oppfølging";
 
     public boolean isSakstypeForVisningGenerell() {
-        return sakstype.equals(SAKSTYPE_GENERELL) && (!tema.equals(SAKSTEMA_OPPFOLGING));
+        return sakstype.equals(SAKSTYPE_GENERELL);
     }
 
     public static final Transformer<Sak, String> TEMA = new Transformer<Sak, String>() {

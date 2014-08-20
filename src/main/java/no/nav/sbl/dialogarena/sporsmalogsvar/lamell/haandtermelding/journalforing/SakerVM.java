@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 
 import java.io.Serializable;
@@ -24,6 +25,9 @@ public class SakerVM implements Serializable {
 
     public static final Map<String, List<String>> TEMA_MAPPING = opprettTemaMapping();
     public static final String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
+    static final List<String> GODKJENTE_TEMA_FOR_GENERELLE = asList("AGR", "FUL", "GEN", "KTR", "STO", "SER", "SIK", "SYM", "TRK", "TRY", "VEN");
+    static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = asList("AO01", "IT01", "OEBS", "V2", "AO11");
+    static final String GODKJENT_FAGSYSTEM_FOR_GENERELLE = "FS22";
 
     private TemaSakerListe temaSakerListeFagsak;
     private TemaSakerListe temaSakerListeGenerelle;
@@ -50,9 +54,38 @@ public class SakerVM implements Serializable {
     public final void oppdater() {
         List<Sak> sakerForBruker = gsakService.hentSakerForBruker(innboksVM.getFnr());
         Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker = splittIGenerelleSakerOgIkkeGenerelleSaker(sakerForBruker);
-        temaSakerListeFagsak = new TemaSakerListe(grupperSakerPaaTema(generelleOgIkkeGenerelleSaker.get(false)));
-        temaSakerListeGenerelle = new TemaSakerListe(grupperSakerPaaTema(generelleOgIkkeGenerelleSaker.get(true)));
+        List<Sak> fagsakerFraGodkjenteFagsystemer = on(generelleOgIkkeGenerelleSaker.get(false))
+                .filter(IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK)
+                .collect();
+        temaSakerListeFagsak = new TemaSakerListe(grupperSakerPaaTema(fagsakerFraGodkjenteFagsystemer));
+
+        List<Sak> generelleSakerFraGodkjentFagsystemMedKunGodkjenteTemaer = on(generelleOgIkkeGenerelleSaker.get(true))
+                .filter(IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE)
+                .filter(IS_GODKJENT_TEMA_FOR_GENERELLE)
+                .collect();
+        temaSakerListeGenerelle = new TemaSakerListe(grupperSakerPaaTema(generelleSakerFraGodkjentFagsystemMedKunGodkjenteTemaer));
     }
+
+    private static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK = new Predicate<Sak>() {
+        @Override
+        public boolean evaluate(Sak sak) {
+            return GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystem);
+        }
+    };
+
+    private static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE = new Predicate<Sak>() {
+        @Override
+        public boolean evaluate(Sak sak) {
+            return GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystem);
+        }
+    };
+
+    private static final Predicate<Sak> IS_GODKJENT_TEMA_FOR_GENERELLE = new Predicate<Sak>() {
+        @Override
+        public boolean evaluate(Sak sak) {
+            return GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.tema);
+        }
+    };
 
     private Map<Boolean, List<Sak>> splittIGenerelleSakerOgIkkeGenerelleSaker(List<Sak> saker) {
         return on(saker).reduce(indexBy(IS_GENERELL_SAK));
