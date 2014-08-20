@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ns:jbosspdp xmlns:ns="urn:jboss:xacml:2.0">
+    <ns:Policies>
+        <ns:PolicySet>
+            <ns:Location>policy/rolletilgang-policyset.xml</ns:Location>
+        </ns:PolicySet>
+    </ns:Policies>
+
+    <ns:Locators>
+        <!-- JBossPolicySetLocator må alltid være med -->
+        <ns:Locator Name="org.jboss.security.xacml.locators.JBossPolicySetLocator" />
+        <!--  LDAP for å hente rolle -->
+        <ns:Locator Name="no.nav.modig.security.tilgangskontroll.policy.pip.PicketLinkAttributeCacheLocator">
+            <ns:Option Name="attributeLocatorClass">no.nav.modig.security.tilgangskontroll.policy.pip.LDAPRoleAttributeLocator</ns:Option>
+            <ns:Option Name="url">${ldap.url}</ns:Option>
+            <ns:Option Name="username">${ldap.username}</ns:Option>
+            <ns:Option Name="password">${ldap.password}</ns:Option>
+            <ns:Option Name="baseDN">OU=Users,OU=NAV,OU=BusinessUnits,${ldap.basedn}</ns:Option>
+            <ns:Option Name="attributeSupportedId">urn:oasis:names:tc:xacml:2.0:subject:role</ns:Option>
+            <ns:Option Name="cacheKeySubjectID">urn:oasis:names:tc:xacml:1.0:subject:subject-id</ns:Option>
+            <ns:Option Name="attributeCacheName">pip.attribute</ns:Option>
+        </ns:Locator>
+    </ns:Locators>
+</ns:jbosspdp>
