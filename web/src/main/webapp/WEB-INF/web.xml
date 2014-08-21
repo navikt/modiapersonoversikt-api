@@ -51,7 +51,7 @@
         <auth-method>FORM</auth-method>
         <form-login-config>
             <form-login-page>/login.html</form-login-page>
-            <form-error-page>/feilsider/loginfeil.html</form-error-page>
+            <form-error-page>/login.html?status=fail</form-error-page>
         </form-login-config>
     </login-config>
     <security-role>
