@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSInnsendingsvalg;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import org.joda.time.DateTime;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,7 @@ import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informa
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType.DOKUMENTINNSENDING;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType.SOKNADSINNSENDING;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSInnsendingsvalg.INNSENDT;
+import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSInnsendingsvalg.SENDES_IKKE;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSInnsendingsvalg.SEND_SENERE;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -117,8 +119,8 @@ public class HenvendelseSoknaderPortTypeMock {
                 .withDokumentforventninger(new WSSoknad.Dokumentforventninger().withDokumentforventning(
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-16.03").withTilleggsTittel("abc"),
                         new WSDokumentforventning().withInnsendingsvalg(INNSENDT.value()).withKodeverkId("NAV 04-08.04").withTilleggsTittel("abc"),
-                        new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
-                        new WSDokumentforventning().withInnsendingsvalg(SEND_SENERE.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel("abc")
+                        new WSDokumentforventning().withInnsendingsvalg(SENDES_IKKE.value()).withKodeverkId("NAV 04-01.03").withTilleggsTittel("abc"),
+                        new WSDokumentforventning().withInnsendingsvalg(SENDES_IKKE.value()).withKodeverkId("NAV 04-08.03").withTilleggsTittel("abc")
                 ));
     }
 
