@@ -25,23 +25,23 @@ public class GsakHentSakslistePortTypeMock {
     private static Random idGenerator = new Random();
     private static List<WSGenerellSak> defaultSaksliste = asList(
             createGenerellSak("DAG", DateTime.now().minusDays(1)),
-            createGenerellSak("FOR", "Fagsystem 2", "Generell", SAKSID_1, DateTime.now().minusDays(4)),
-            createGenerellSak("HJE", "Fagsystem 3", DateTime.now().minusDays(4)),
-            createGenerellSak("HJE", "Fagsystem 3", "Generell", SAKSID_2, DateTime.now().minusDays(3)),
-            createGenerellSak("OPP", "Fagsystem 3", DateTime.now().minusDays(4)),
-            createGenerellSak("BIL", "Fagsystem 2", "Bilsøknad", DateTime.now().minusDays(4)),
-            createGenerellSak("IND", "Fagsystem 2", "Individstønad", DateTime.now().minusDays(4)),
-            createGenerellSak("DAG", "Fagsystem 1", "Dagpenger", DateTime.now().minusDays(4)));
+            createGenerellSak("TRY", "FS22", "Generell", SAKSID_1, DateTime.now().minusDays(4)),
+            createGenerellSak("HJE", "IT01", DateTime.now().minusDays(4)),
+            createGenerellSak("FUL", "FS22", "Generell", SAKSID_2, DateTime.now().minusDays(3)),
+            createGenerellSak("OPP", "IT01", DateTime.now().minusDays(4)),
+            createGenerellSak("BIL", "V2", "Bilsøknad", DateTime.now().minusDays(4)),
+            createGenerellSak("IND", "V2", "Individstønad", DateTime.now().minusDays(4)),
+            createGenerellSak("DAG", "OEBS", "Dagpenger", DateTime.now().minusDays(4)));
 
     private static List<WSGenerellSak> saksliste2 = asList(
-            createGenerellSak("SYK", DateTime.now().minusDays(4)),
-            createGenerellSak("DAG", "Arena", "Dagpenger", DateTime.now().minusDays(20)),
-            createGenerellSak("DAG", "Arena", "Dagpenger", DateTime.now().minusDays(5)),
-            createGenerellSak("DAG", "Arena", "Dagpenger", DateTime.now().minusDays(10)),
-            createGenerellSak("FOR", "Arena", "Foreldrepenger", DateTime.now().minusDays(1)),
-            createGenerellSak("FOR", "Arena", "Foreldrepenger", DateTime.now().minusDays(10)));
+            createGenerellSak("SYM", DateTime.now().minusDays(4)),
+            createGenerellSak("DAG", "FS22", "Dagpenger", DateTime.now().minusDays(20)),
+            createGenerellSak("DAG", "FS22", "Dagpenger", DateTime.now().minusDays(5)),
+            createGenerellSak("DAG", "FS22", "Dagpenger", DateTime.now().minusDays(10)),
+            createGenerellSak("FOR", "FS22", "Foreldrepenger", DateTime.now().minusDays(1)),
+            createGenerellSak("FOR", "FS22", "Foreldrepenger", DateTime.now().minusDays(10)));
 
-    private static List<WSGenerellSak> saksliste3 = asList(createGenerellSak("Sykepenger", DateTime.now().minusWeeks(3)));
+    private static List<WSGenerellSak> saksliste3 = asList(createGenerellSak("SYM", DateTime.now().minusWeeks(3)));
 
     private static Map<String, List<WSGenerellSak>> sakslisteMap =
             asMap(
@@ -76,7 +76,7 @@ public class GsakHentSakslistePortTypeMock {
                 .withFagomradeKode(tema)
                 .withEndringsinfo(new WSEndringsinfo().withOpprettetDato(opprettet))
                 .withSakstypeKode("Generell")
-                .withFagsystemKode("Fagsystem 1");
+                .withFagsystemKode("FS22");
     }
 
     private static WSGenerellSak createGenerellSak(String tema, String fagsystem, DateTime opprettet) {
