@@ -59,7 +59,6 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    //settHovedinnholdHoyde();
 });
 
 function focusSearchField() {
