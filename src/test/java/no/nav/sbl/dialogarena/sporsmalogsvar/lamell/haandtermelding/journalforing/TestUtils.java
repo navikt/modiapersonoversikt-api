@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.SakerVM.GODKJENTE_TEMA_FOR_GENERELLE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.SakerVM.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
 
 public class TestUtils {
 

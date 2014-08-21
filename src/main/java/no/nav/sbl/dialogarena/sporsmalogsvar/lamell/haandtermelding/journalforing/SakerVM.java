@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 
 import java.io.Serializable;
@@ -19,15 +18,15 @@ import static java.util.Map.Entry;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.IS_GENERELL_SAK;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.IS_GODKJENT_TEMA_FOR_GENERELLE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.TEMA;
 
 public class SakerVM implements Serializable {
 
     public static final Map<String, List<String>> TEMA_MAPPING = opprettTemaMapping();
     public static final String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
-    static final List<String> GODKJENTE_TEMA_FOR_GENERELLE = asList("AGR", "FUL", "GEN", "KTR", "STO", "SER", "SIK", "SYM", "TRK", "TRY", "VEN");
-    static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = asList("AO01", "IT01", "OEBS", "V2", "AO11");
-    static final String GODKJENT_FAGSYSTEM_FOR_GENERELLE = "FS22";
 
     private TemaSakerListe temaSakerListeFagsak;
     private TemaSakerListe temaSakerListeGenerelle;
@@ -65,27 +64,6 @@ public class SakerVM implements Serializable {
                 .collect();
         temaSakerListeGenerelle = new TemaSakerListe(grupperSakerPaaTema(generelleSakerFraGodkjentFagsystemMedKunGodkjenteTemaer));
     }
-
-    private static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK = new Predicate<Sak>() {
-        @Override
-        public boolean evaluate(Sak sak) {
-            return GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystem);
-        }
-    };
-
-    private static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE = new Predicate<Sak>() {
-        @Override
-        public boolean evaluate(Sak sak) {
-            return GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystem);
-        }
-    };
-
-    private static final Predicate<Sak> IS_GODKJENT_TEMA_FOR_GENERELLE = new Predicate<Sak>() {
-        @Override
-        public boolean evaluate(Sak sak) {
-            return GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.tema);
-        }
-    };
 
     private Map<Boolean, List<Sak>> splittIGenerelleSakerOgIkkeGenerelleSaker(List<Sak> saker) {
         return on(saker).reduce(indexBy(IS_GENERELL_SAK));

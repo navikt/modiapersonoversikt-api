@@ -21,10 +21,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.SakerVM.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.SakerVM.GODKJENTE_TEMA_FOR_GENERELLE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.SakerVM.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.SakerVM.TEMA_MAPPING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createSak;
 import static org.hamcrest.core.Is.is;
