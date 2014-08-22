@@ -253,6 +253,10 @@
     position: absolute;
     top: -34px;
     right: 0;
+    [class*="-knapp"] {
+      background-repeat: no-repeat;
+      padding-left: 1.3em;
+    }
     .meldingsvalg {
       display: inline-block;
       &:not(:last-child) {
@@ -261,16 +265,12 @@
       a:hover {
         text-decoration: underline;
       }
-      [class*="-knapp"] {
-        background-repeat: no-repeat;
-        padding-left: 1.3em;
-      }
       &:not(.inaktiv) {
+        &.besvar-knapp {
+          background-image: url(../img/besvar.svg);
+        }
         .journalfor-knapp {
           background-image: url(../img/journalfore.svg);
-        }
-        .besvar-knapp {
-          background-image: url(../img/besvar.svg);
         }
         .nyoppgave-knapp {
           background-image: url(../img/ny_oppgave.svg);
@@ -284,13 +284,12 @@
         em {
           font-style: normal;
         }
-
-        .journalfor-knapp {
-          background-image: url(../img/journalfore_inaktiv.svg);
-        }
-        .besvar-knapp {
+        &.besvar-knapp {
           background-image: url(../img/besvar_inaktiv.svg);
         }
+        .journalfor-knapp {
+          background-image: url(../img/journalfore_inaktiv.svg);
+          }
         .nyoppgave-knapp {
           background-image: url(../img/ny_oppgave_inaktiv.svg);
         }
