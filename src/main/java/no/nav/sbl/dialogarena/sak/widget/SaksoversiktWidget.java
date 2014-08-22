@@ -38,7 +38,7 @@ public class SaksoversiktWidget extends FeedWidget<TemaVM> {
             protected List<FeedItemVM> load() {
                 try {
                     List<FeedItemVM> temaVMList = (List<FeedItemVM>)(List<?>)saksoversiktService.hentTemaer(fnr);
-                    if (temaVMList.size() > 7) {
+                    if (temaVMList.size() > MAX_NUMBER_OF_FEED_ITEMS) {
                         temaVMList.add(new GenericListing(getString("mange.saker")));
                     }
                     return temaVMList.isEmpty() ? (List<FeedItemVM>)(List<?>)asList(new GenericListing(getString("ingen.saker"))) : temaVMList;
