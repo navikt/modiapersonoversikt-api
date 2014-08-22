@@ -253,8 +253,11 @@
     position: absolute;
     top: -34px;
     right: 0;
-    .meldingsvalg:not(:last-child) {
-      margin-right: 1em;
+    .meldingsvalg {
+      display: inline-block;
+      &:not(:last-child) {
+        margin-right: 1em;
+      }
     }
     a:hover {
       text-decoration: underline;
@@ -294,6 +297,7 @@
     }
     .pil {
       display: inline-block;
+      margin-bottom: 1px;
       .pil(6px, @dodgerblue); // definisjon i personpage.less
     }
   }
