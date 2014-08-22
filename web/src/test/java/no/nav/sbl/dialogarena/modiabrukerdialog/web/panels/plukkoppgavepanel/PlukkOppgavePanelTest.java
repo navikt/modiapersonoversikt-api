@@ -15,6 +15,7 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -25,6 +26,8 @@ import java.util.List;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel.TEMAGRUPPE_ATTR;
 import static org.apache.wicket.authorization.IAuthorizationStrategy.ALLOW_ALL;
 import static org.hamcrest.CoreMatchers.is;
@@ -33,8 +36,12 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = PlukkOppgavePanelMockContext.class)
 public class PlukkOppgavePanelTest extends WicketPageTest {
@@ -45,21 +52,21 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     private OppgaveBehandlingService oppgaveBehandlingService;
 
     @Before
-    public void skruAvAutorisering() {
+    public void setUp() {
         wicket.tester.getApplication().getSecuritySettings().setAuthorizationStrategy(ALLOW_ALL);
+
+        Sporsmal sporsmal = new Sporsmal("sporsmal", now());
+        sporsmal.temagruppe = Temagruppe.ARBD.toString();
+        when(henvendelseUtsendingService.getSporsmalFromOppgaveId(anyString(), anyString())).thenReturn(sporsmal);
     }
 
     @Test
-    public void skalPlukkeOppgaveOgSetteSessionAttribute() {
+    public void skalPlukkeOppgaveOgSetteSessionAttributes() {
         when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(optional(
                 new WSOppgave()
                         .withGjelder(new WSBruker().withBrukerId("fnr"))
                         .withOppgaveId("oppgave")
         ));
-
-        Sporsmal sporsmal = new Sporsmal("sporsmal", now());
-        sporsmal.temagruppe = Temagruppe.ARBD.toString();
-        when(henvendelseUtsendingService.getSporsmalFromOppgaveId(anyString(), anyString())).thenReturn(sporsmal);
 
         wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"))
                 .inForm(withId("plukk-oppgave-form"))
@@ -69,8 +76,12 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
                 .should().containComponent(ofType(SvarPanel.class))
                 .should().notContainComponent(ofType(ReferatPanel.class));
 
-        Serializable temagruppeAttribute = wicket.get().component(ofType(PlukkOppgavePanel.class)).getSession().getAttribute(TEMAGRUPPE_ATTR);
+        Serializable temagruppeAttribute = wicket.tester.getSession().getAttribute(TEMAGRUPPE_ATTR);
+        Serializable fnrAttribute = wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR);
+        Serializable oppgaveidAttribute = wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR);
         assertThat(temagruppeAttribute, is(notNullValue()));
+        assertThat(fnrAttribute, is(notNullValue()));
+        assertThat(oppgaveidAttribute, is(notNullValue()));
     }
 
     @Test
@@ -82,6 +93,22 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertThat(errorMessages, hasItem(plukkoppgave.getString("temagruppe.Required")));
+    }
+
+    @Test
+    public void skalIkkePlukkeOppgaveHvisEnAlleredeErPlukket() {
+        wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"));
+        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
+        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, "oppgaveid");
+        wicket
+                .inForm(withId("plukk-oppgave-form"))
+                .select("temagruppe", 0)
+                .submitWithAjaxButton(withId("plukk-oppgave"))
+                .should().beOn(PersonPage.class)
+                .should().containComponent(ofType(SvarPanel.class))
+                .should().notContainComponent(ofType(ReferatPanel.class));
+
+        verify(oppgaveBehandlingService, never()).plukkOppgaveFraGsak(anyString());
     }
 
     @Test

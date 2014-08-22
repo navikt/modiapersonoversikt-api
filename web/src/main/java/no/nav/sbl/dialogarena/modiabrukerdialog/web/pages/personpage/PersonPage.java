@@ -77,6 +77,8 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class PersonPage extends BasePage {
 
+    public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
+    public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
     private static final Logger logger = getLogger(PersonPage.class);
 
     public static final String SVAR_OG_REFERAT_PANEL_ID = "svarOgReferatPanel";
@@ -234,6 +236,12 @@ public class PersonPage extends BasePage {
     public void visReferatPanel(AjaxRequestTarget target) {
         svarOgReferatPanel = svarOgReferatPanel.replaceWith(new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr));
         target.add(svarOgReferatPanel);
+    }
+
+    @RunOnEvents({MELDING_SENDT_TIL_BRUKER, LEGG_TILBAKE_UTFORT})
+    public void slettPlukketOppgaveFraSession() {
+        getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, null);
+        getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, null);
     }
 
     @Override
