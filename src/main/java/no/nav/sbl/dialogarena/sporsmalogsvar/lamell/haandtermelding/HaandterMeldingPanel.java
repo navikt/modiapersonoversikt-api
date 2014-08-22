@@ -11,9 +11,12 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -24,21 +27,21 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class HaandterMeldingPanel extends Panel {
 
-    private final List<AnimertPanel> meldingHaandteringsPaneler;
-    private List<WebMarkupContainer> piler = new ArrayList<>();
+    private final List<AnimertPanel> meldingHaandteringsPaneler = new ArrayList<>();
+    private final List<WebMarkupContainer> piler = new ArrayList<>();
+    private InnboksVM innboksVM;
 
     public HaandterMeldingPanel(String id, final InnboksVM innboksVM) {
         super(id);
+        this.innboksVM = innboksVM;
 
-        final JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforingsPanel", innboksVM);
-        journalforingsPanel.setVisibilityAllowed(false);
-        final NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyOppgavePanel", innboksVM);
-        nyOppgavePanel.setVisibilityAllowed(false);
-        final MerkePanel merkePanel = new MerkePanel("merkePanel", innboksVM);
-        merkePanel.setVisibilityAllowed(false);
+        add(lagBesvareLink());
+        add(lagJournalforEnhet());
+        add(lagNyOppgaveEnhet());
+        add(lagMerkeEnhet());
+    }
 
-        meldingHaandteringsPaneler = asList(journalforingsPanel, nyOppgavePanel, merkePanel);
-
+    private Component lagBesvareLink() {
         AjaxLink<InnboksVM> besvarLink = new AjaxLink<InnboksVM>("besvar") {
             @Override
             public void onClick(AjaxRequestTarget target) {
@@ -46,49 +49,50 @@ public class HaandterMeldingPanel extends Panel {
             }
         };
         besvarLink.add(enabledIf(new PropertyModel<Boolean>(innboksVM, "valgtTraad.bleInitiertAvBruker()")));
-
-        AjaxLink journalforLink = new AjaxLink("journalfor") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                togglePaneler(target, JournalforingsPanel.class);
-            }
-        };
-        journalforLink.add(enabledIf(not(new PropertyModel<Boolean>(innboksVM, "valgtTraad.nyesteMelding.nyesteMeldingISinJournalfortgruppe"))));
-        WebMarkupContainer journalforPil = new WebMarkupContainer("journalfor-pil");
-        journalforPil.setOutputMarkupId(true);
-        journalforPil.add(hasCssClassIf("opp", new PropertyModel<Boolean>(journalforingsPanel, "visibilityAllowed")));
-        journalforPil.add(hasCssClassIf("ned", not(new PropertyModel<Boolean>(journalforingsPanel, "visibilityAllowed"))));
-        piler.add(journalforPil);
-
-        AjaxLink nyOppgaveLink = new AjaxLink("nyoppgave") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                togglePaneler(target, NyOppgavePanel.class);
-            }
-        };
-        nyOppgaveLink.add(enabledIf(new PropertyModel<Boolean>(innboksVM, "valgtTraad.erBehandlet()")));
-        WebMarkupContainer nyOppgavePil = new WebMarkupContainer("ny-oppgave-pil");
-        nyOppgavePil.setOutputMarkupId(true);
-        nyOppgavePil.add(hasCssClassIf("opp", new PropertyModel<Boolean>(nyOppgavePanel, "visibilityAllowed")));
-        nyOppgavePil.add(hasCssClassIf("ned", not(new PropertyModel<Boolean>(nyOppgavePanel, "visibilityAllowed"))));
-        piler.add(nyOppgavePil);
-
-        AjaxLink merkeLink = new AjaxLink("merke") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                togglePaneler(target, MerkePanel.class);
-            }
-        };
-        WebMarkupContainer merkePil = new WebMarkupContainer("merke-pil");
-        merkePil.setOutputMarkupId(true);
-        merkePil.add(hasCssClassIf("opp", new PropertyModel<Boolean>(merkePanel, "visibilityAllowed")));
-        merkePil.add(hasCssClassIf("ned", not(new PropertyModel<Boolean>(merkePanel, "visibilityAllowed"))));
-        piler.add(merkePil);
-
-        add(besvarLink, journalforLink, nyOppgaveLink, merkeLink, journalforPil, nyOppgavePil, merkePil,
-                journalforingsPanel, nyOppgavePanel, merkePanel);
+        return besvarLink;
+    }
+    private Component[] lagJournalforEnhet() {
+        return toArray(lagHaandterMeldingEnhet("journalfor", not(new PropertyModel<Boolean>(innboksVM, "valgtTraad.nyesteMelding.nyesteMeldingISinJournalfortgruppe")),
+                JournalforingsPanel.class));
     }
 
+    private Component[] lagNyOppgaveEnhet() {
+        return toArray(lagHaandterMeldingEnhet("nyoppgave", new PropertyModel<Boolean>(innboksVM, "valgtTraad.erBehandlet()"), NyOppgavePanel.class));
+    }
+
+    private Component[] lagMerkeEnhet() {
+        return toArray(lagHaandterMeldingEnhet("merke", Model.of(true), MerkePanel.class));
+    }
+
+    private static <T extends Component> Component[] toArray(Collection<T> collection) {
+        return collection.toArray(new Component[collection.size()]);
+    }
+
+    private List<? extends Component> lagHaandterMeldingEnhet(String id, IModel<Boolean> enabled, final Class<? extends AnimertPanel> clazz) {
+        AnimertPanel panel;
+        try {
+            panel = clazz.getConstructor(String.class, InnboksVM.class).newInstance(id + "-panel", innboksVM);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+        panel.setVisibilityAllowed(false);
+        meldingHaandteringsPaneler.add(panel);
+
+        AjaxLink link = new AjaxLink(id + "-link") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                togglePaneler(target, clazz);
+            }
+        };
+        link.add(enabledIf(enabled));
+
+        WebMarkupContainer pil = new WebMarkupContainer(id + "-pil");
+        pil.setOutputMarkupId(true);
+        pil.add(hasCssClassIf("opp", new PropertyModel<Boolean>(panel, "visibilityAllowed")));
+        pil.add(hasCssClassIf("ned", not(new PropertyModel<Boolean>(panel, "visibilityAllowed"))));
+        piler.add(pil);
+        return asList(panel, link, pil);
+    }
     private void togglePaneler(AjaxRequestTarget target, Class synligPanelType) {
         for (AnimertPanel panel : meldingHaandteringsPaneler) {
             if (panel.getClass() == synligPanelType) {
