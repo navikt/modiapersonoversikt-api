@@ -61,7 +61,7 @@
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.3</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.2</send.ut.henvendelse.version>
-        <behandle.henvendelse.version>0.6</behandle.henvendelse.version>
+        <behandle.henvendelse.version>0.8</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.17</dialogarena.behandlingsinformasjon.version>
         <saksoversikt.version>1.1-SNAPSHOT</saksoversikt.version>
         <sporsmalogsvar.version>1.22-SNAPSHOT</sporsmalogsvar.version>

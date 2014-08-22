@@ -7,6 +7,8 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.Be
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.HENVENDELSER;
 
 @Configuration
@@ -31,6 +33,10 @@ public class BehandleHenvendelsePortTypeMock {
 
             @Override
             public void oppdaterHenvendelsesarkivInformasjon(String behandlingId, String arkivpostId) {
+            }
+
+            @Override
+            public void oppdaterKontorsperre(String enhet, List<String> behandlingsIdListe) {
             }
 
             @Override
