@@ -38,8 +38,9 @@ public class SaksoversiktWidget extends FeedWidget<TemaVM> {
             protected List<FeedItemVM> load() {
                 try {
                     List<FeedItemVM> temaVMList = (List<FeedItemVM>)(List<?>)saksoversiktService.hentTemaer(fnr);
-                    FeedItemVM genericListing = new GenericListing(getString("ingen.saker"));
-                    temaVMList.add(genericListing);
+                    if (temaVMList.size() > 7) {
+                        temaVMList.add(new GenericListing(getString("mange.saker")));
+                    }
                     return temaVMList.isEmpty() ? (List<FeedItemVM>)(List<?>)asList(new GenericListing(getString("ingen.saker"))) : temaVMList;
                 } catch (ApplicationException | SystemException e) {
                     log.warn("Feilet ved henting av saksbehandlingsinformasjon for fnr {}", fnr, e);
