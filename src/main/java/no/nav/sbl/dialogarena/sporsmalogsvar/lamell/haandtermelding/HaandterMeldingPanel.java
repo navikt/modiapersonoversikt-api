@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.JournalforingsPanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgave.NyOppgavePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -28,8 +29,10 @@ public class HaandterMeldingPanel extends Panel {
         journalforingsPanel.setVisibilityAllowed(false);
         final NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyOppgavePanel", innboksVM);
         nyOppgavePanel.setVisibilityAllowed(false);
+        final MerkePanel merkePanel = new MerkePanel("merkePanel", innboksVM);
+        merkePanel.setVisibilityAllowed(false);
 
-        meldingHaandteringsPaneler = asList(journalforingsPanel, nyOppgavePanel);
+        meldingHaandteringsPaneler = asList(journalforingsPanel, nyOppgavePanel, merkePanel);
 
         AjaxLink<InnboksVM> besvarLink = new AjaxLink<InnboksVM>("besvar") {
             @Override
@@ -55,7 +58,14 @@ public class HaandterMeldingPanel extends Panel {
         };
         nyOppgaveLink.add(enabledIf(new PropertyModel<Boolean>(innboksVM, "valgtTraad.erBehandlet()")));
 
-        add(besvarLink, journalforLink, nyOppgaveLink, journalforingsPanel, nyOppgavePanel);
+        AjaxLink merkeLink = new AjaxLink("merke") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                togglePaneler(target, MerkePanel.class);
+            }
+        };
+
+        add(besvarLink, journalforLink, nyOppgaveLink, merkeLink, journalforingsPanel, nyOppgavePanel, merkePanel);
     }
 
     private void togglePaneler(AjaxRequestTarget target, Class synligPanelType) {

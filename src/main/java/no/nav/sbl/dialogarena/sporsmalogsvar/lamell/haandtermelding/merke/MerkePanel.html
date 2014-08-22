@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head></head>
+<body>
+<wicket:panel>
+    <h2>
+        <wicket:message key="merke.overskrift"/>
+    </h2>
+    <div class="robust-strek"></div>
+    <form wicket:id="form">
+        <h2 class="medium">Merk som kontorsperret</h2>
+        <input wicket:id="kontorsperret" type="checkbox" id="opprett-oppgave"><label for="opprett-oppgave">Opprett oppgave</label>
+        <div class="merk-container">
+            <a href="#" wicket:id="merk" class="knapp-hoved-stor">Merk</a>
+        </div>
+    </form>
+    <a href="#" wicket:id="avbryt" class="avbryt-knapp">Avbryt</a>
+</wicket:panel>
+</body>
+</html>

@@ -3,9 +3,12 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
@@ -40,6 +43,18 @@ public class HenvendelseBehandlingService {
                         .withJournalfortSaksId(sak.saksId)
                         .withJournalforerNavIdent(getSubjectHandler().getUid())
         );
+    }
+
+    public void merkSomKontorsperret(TraadVM traadVM) {
+        String enhet = "1234"; //TODO: Finn brukers enhet
+        List<String> ider = on(traadVM.getMeldinger()).map(new Transformer<MeldingVM, String>() {
+            @Override
+            public String transform(MeldingVM meldingVM) {
+                return meldingVM.melding.id;
+            }
+        }).collect();
+
+        behandleHenvendelsePortType.oppdaterKontorsperre(enhet, ider);
     }
 
 }
