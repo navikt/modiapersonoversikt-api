@@ -77,7 +77,8 @@
     document.getElementById("mainbutton").focus();
 
     var status = location.search.split('status')[1];
-    if (status) {
+    var j_security = location.search.split('j_security')[1];
+    if (status || j_security) {
         var tr = document.createElement("tr");
         var td = document.createElement("td");
         tr.appendChild(td);
