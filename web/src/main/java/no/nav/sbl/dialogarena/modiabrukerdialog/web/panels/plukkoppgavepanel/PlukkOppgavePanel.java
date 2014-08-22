@@ -26,6 +26,9 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
+import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.OPPGAVEID;
 import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
@@ -38,6 +41,8 @@ public class PlukkOppgavePanel extends Panel {
 
     public PlukkOppgavePanel(String id) {
         super(id);
+
+        add(accessRestriction(RENDER).withAttributes(actionId("plukkoppgave"), resourceId("")));
 
         final IModel<Temagruppe> valgtTemagruppe = new Model<>((Temagruppe) getSession().getAttribute(TEMAGRUPPE_ATTR));
         Form<Temagruppe> form = new Form<>("plukk-oppgave-form", valgtTemagruppe);

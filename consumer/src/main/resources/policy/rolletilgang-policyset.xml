@@ -13,7 +13,9 @@
                 <Action>
                     <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">plukkoppgave</AttributeValue>
-                        <ActionAttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" DataType="http://www.w3.org/2001/XMLSchema#string" />
+                        <ActionAttributeDesignator
+                                DataType="http://www.w3.org/2001/XMLSchema#string"
+                                AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" />
                     </ActionMatch>
                 </Action>
             </Actions>
@@ -23,8 +25,10 @@
             <Description>Gi tilgang hvis saksbehandler har plukk oppgave rolle.</Description>
             <Condition>
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string"><!-- ROLLE ID HER --></AttributeValue>
-                    <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"/>
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-GOSYS<!-- MIDLERTIDIG - MÅ HA PLUKK OPPGAVE ROLLE --></AttributeValue>
+                    <SubjectAttributeDesignator
+                            DataType="http://www.w3.org/2001/XMLSchema#string"
+                            AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"/>
                 </Apply>
             </Condition>
         </Rule>

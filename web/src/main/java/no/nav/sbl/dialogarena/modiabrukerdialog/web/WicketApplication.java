@@ -25,13 +25,13 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.util.UnchainedCompoundAuthorizationStrategy;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import org.apache.wicket.Application;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
-import org.apache.wicket.authorization.strategies.CompoundAuthorizationStrategy;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
@@ -54,6 +54,9 @@ public class WicketApplication extends WebApplication {
 
     @Resource(name = "kjerneinfoPep")
     private EnforcementPoint kjerneinfoPep;
+
+    @Resource(name = "plukkOppgavePep")
+    private EnforcementPoint plukkOppgavePep;
 
     public static WicketApplication get() {
         return (WicketApplication) Application.get();
@@ -83,9 +86,10 @@ public class WicketApplication extends WebApplication {
 
         setMarkupSettings();
 
-        CompoundAuthorizationStrategy compoundAuthorizationStrategy = new CompoundAuthorizationStrategy();
-        compoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(kjerneinfoPep));
-        getSecuritySettings().setAuthorizationStrategy(compoundAuthorizationStrategy);
+        UnchainedCompoundAuthorizationStrategy unchainedCompoundAuthorizationStrategy = new UnchainedCompoundAuthorizationStrategy();
+        unchainedCompoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(kjerneinfoPep));
+        unchainedCompoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(plukkOppgavePep));
+        getSecuritySettings().setAuthorizationStrategy(unchainedCompoundAuthorizationStrategy);
 
         new ApplicationSettingsConfig().withUtf8Properties(true).configure(this);
 
