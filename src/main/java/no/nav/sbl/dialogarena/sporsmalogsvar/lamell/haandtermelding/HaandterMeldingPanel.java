@@ -91,7 +91,12 @@ public class HaandterMeldingPanel extends Panel {
         pil.add(hasCssClassIf("opp", new PropertyModel<Boolean>(panel, "visibilityAllowed")));
         pil.add(hasCssClassIf("ned", not(new PropertyModel<Boolean>(panel, "visibilityAllowed"))));
         piler.add(pil);
-        return asList(panel, link, pil);
+
+        WebMarkupContainer container = new WebMarkupContainer(id + "-container");
+        container.add(link, pil);
+        container.add(hasCssClassIf("inaktiv", not(enabled)));
+
+        return asList(panel, container);
     }
     private void togglePaneler(AjaxRequestTarget target, Class synligPanelType) {
         for (AnimertPanel panel : meldingHaandteringsPaneler) {
