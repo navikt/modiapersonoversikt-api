@@ -20,8 +20,8 @@ public class GenerellBehandling implements Serializable {
     public BehandlingsStatus behandlingsStatus;
     public BehandlingsType behandlingsType;
     public HenvendelseType henvendelseType;
-    public boolean ettersending;
     public String behandlingstema;
+    public String sakstema;
 
     public GenerellBehandling withBehandlingsType(BehandlingsType type)  {
         behandlingsType = type;
@@ -45,6 +45,11 @@ public class GenerellBehandling implements Serializable {
 
     public GenerellBehandling withBehandlingsTema(String tema) {
         behandlingstema = tema;
+        return this;
+    }
+
+    public GenerellBehandling withSaksTema(String tema) {
+        sakstema = tema;
         return this;
     }
 

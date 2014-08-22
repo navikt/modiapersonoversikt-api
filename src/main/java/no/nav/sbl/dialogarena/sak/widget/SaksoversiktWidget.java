@@ -51,6 +51,6 @@ public class SaksoversiktWidget extends FeedWidget<TemaVM> {
 
     @Override
     public Component newFeedPanel(String id, IModel<TemaVM> model) {
-        return new SaksoversiktWidgetPanel(id, model);
+        return new SaksoversiktWidgetPanel(id, model).setOutputMarkupId(true);
     }
 }

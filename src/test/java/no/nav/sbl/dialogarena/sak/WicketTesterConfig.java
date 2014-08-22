@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak;
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.test.FluentWicketTester;
+import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
@@ -52,10 +53,8 @@ public class WicketTesterConfig {
     }
 
     @Bean
-    public CmsContentRetriever cmsContentRetriever() {
-        CmsContentRetriever cmsMock = mock(CmsContentRetriever.class, RETURNS_MOCKS);
-        when(cmsMock.hentTekst(anyString())).thenReturn("Tekst fra CMS");
-        return cmsMock;
+    public BulletproofCmsService bulletproofCmsService() {
+        return new BulletproofCmsService();
     }
 
     public class DummyApplication extends WebApplication {

@@ -19,7 +19,7 @@
         <modig.wicket.version>2.0.9</modig.wicket.version>
         <modig.core.version>1.0.1</modig.core.version>
         <wicket.version>6.11.0</wicket.version>
-        <modig.frontend.version>1.1.21</modig.frontend.version>
+        <modig.frontend.version>1.1.45</modig.frontend.version>
         <mockito.core.version>1.9.5</mockito.core.version>
         <modig.lang.version>1.1.0</modig.lang.version>
     </properties>
@@ -55,6 +55,24 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-lokalt-kodeverk</artifactId>
+            <version>1.0.40</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>cglib</groupId>
+                    <artifactId>cglib</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>common-kodeverk</artifactId>
+            <version>1.0.1</version>
         </dependency>
 
         <dependency>
@@ -191,7 +209,6 @@
                     <artifactId>commons-logging</artifactId>
                 </exclusion>
             </exclusions>
-            <scope>test</scope>
         </dependency>
 
         <dependency>

@@ -1,0 +1,37 @@
+.saksoversikt .lerret, .saksoversikt .saker {
+    height: 100%;
+}
+
+.saksoversikt .saker .sak-navigering {
+    display: inline-block;
+    width: 29%;
+    height: 100%;
+}
+
+.saksoversikt .saker .sak-informasjon {
+    display: inline-block;
+    width: 71%;
+    min-height: 100%;
+    vertical-align: top;
+}
+
+.saksoversikt .saker .sak-informasjon .aar {
+    text-align: center;
+}
+
+.saksoversikt .saker .sak-informasjon .behandling .dato {
+    display: inline-block;
+    width: 15%;
+    text-align: center;
+    vertical-align: top;
+}
+
+.saksoversikt .saker .sak-informasjon .behandling .dato span {
+    display: block;
+}
+
+.saksoversikt .saker .sak-informasjon .behandling .behandling-informasjon {
+    display: inline-block;
+    width: 80%;
+    margin-right: 5%;
+}

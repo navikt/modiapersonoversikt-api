@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
+import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
@@ -16,6 +17,8 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehand
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import org.apache.commons.collections15.Predicate;
+import org.apache.commons.collections15.Transformer;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -37,8 +40,11 @@ import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformer
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.TEMA_VM;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.behandlingsDato;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.behandlingsStatus;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class SaksoversiktService {
+
+    private static final Logger LOG = getLogger(SaksoversiktService.class);
 
     @Inject
     private AktoerPortType fodselnummerAktorService;
@@ -53,35 +59,41 @@ public class SaksoversiktService {
      * Henter alle tema for en gitt person
      */
     public List<TemaVM> hentTemaer(String fnr) {
-        PreparedIterable<TemaVM> map = on(hentSakerForAktor(hentAktorId(fnr))).map(TEMA_VM);
-        List<TemaVM> collect = map.collect(new SistOppdaterteBehandlingComparator());
-        return collect;
+        LOG.info("Henter tema fra Sak og Behandling til Modiasaksoversikt. Fnr: " + fnr);
+        return on(hentSakerForAktor(hentAktorId(fnr))).map(TEMA_VM).collect(new SistOppdaterteBehandlingComparator());
     }
 
     /**
      * Henter alle behandlinger for et gitt tema fra flere baksystemer
      */
-    public List<GenerellBehandling> hentBehandlingerForTemakode(String fnr, String temakode) {
+    public List<GenerellBehandling> hentBehandlingerForTemakode(String fnr, final String temakode) {
+        LOG.info("Henter behandlinger fra Sak og Behandling & Henvendelse til Modiasaksoversikt. Fnr: " + fnr + ". Temakode: " + temakode);
         List<GenerellBehandling> behandlinger = new ArrayList<>();
         WSSak wsSak = hentSakForAktorPaaTema(hentAktorId(fnr), temakode);
         List<WSBehandlingskjede> alleBehandlingskjeder = wsSak.getBehandlingskjede();
 
         List<Kvittering> kvitteringer = hentKvitteringer(fnr, BEHANDLINGSIDER_FRA_SAK.transform(wsSak));
-        behandlinger.addAll(behandlingerSomIkkeErKvitteringer(alleBehandlingskjeder, kvitteringer)); // TODO: Legg på temakode her også
+        behandlinger.addAll(behandlingerSomIkkeErKvitteringer(alleBehandlingskjeder, kvitteringer));
 
         Map<String, Kvittering> kvitteringerForBehandlingsID = mapKvitteringMedBehandlingsID(kvitteringer);
         Map<String, WSBehandlingskjede> kjederForBehandlingsID = mappedeKjeder(kvitteringerForBehandlingsID.keySet(), finnBehandlingskjederSomHarKvittering(alleBehandlingskjeder, kvitteringer));
         for (String kvitteringsID : kvitteringerForBehandlingsID.keySet()) {
-            behandlinger.add(beriketKvittering(kvitteringerForBehandlingsID.get(kvitteringsID), kjederForBehandlingsID.get(kvitteringsID), temakode));
+            behandlinger.add(beriketKvittering(kvitteringerForBehandlingsID.get(kvitteringsID), kjederForBehandlingsID.get(kvitteringsID)));
         }
-        return behandlinger;
+
+        behandlinger = on(behandlinger).map(new Transformer<GenerellBehandling, GenerellBehandling>() {
+            @Override public GenerellBehandling transform(GenerellBehandling generellBehandling) {
+                return generellBehandling.withSaksTema(temakode);
+            }
+        }).collect();
+
+        return on(behandlinger).collect(new OmvendtKronologiskBehandlingComparator());
     }
 
-    private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede, String sakstema) {
+    private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede) {
         return (Kvittering) kvittering.withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
-                .withOpprettetDato(wsBehandlingskjede.getStart())
                 .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede))
-                .withBehandlingsTema(sakstema);
+                .withBehandlingsTema(wsBehandlingskjede.getBehandlingskjedetype().getValue());
     }
 
     private List<GenerellBehandling> behandlingerSomIkkeErKvitteringer(List<WSBehandlingskjede> alleBehandlingskjeder, List<Kvittering> kvitteringer) {
@@ -134,7 +146,11 @@ public class SaksoversiktService {
     }
 
     private List<WSSoknad> hentInnsendteSoknader(String fnr) {
-        return on(henvendelseSoknaderPortType.hentSoknadListe(fnr)).filter(where(INNSENDT, equalTo(true))).collect();
+        try {
+            return on(henvendelseSoknaderPortType.hentSoknadListe(fnr)).filter(where(INNSENDT, equalTo(true))).collect();
+        } catch (Exception e) {
+            throw new SystemException("Feil ved kall til henvendelse", e);
+        }
     }
 
     private String hentAktorId(String fnr) {

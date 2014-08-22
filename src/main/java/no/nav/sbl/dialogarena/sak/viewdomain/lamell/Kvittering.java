@@ -9,6 +9,7 @@ public class Kvittering extends GenerellBehandling {
     public String behandlingsId;
     public String behandlingskjedeId;
     public String skjemanummerRef;
+    public boolean ettersending;
 
     public Kvittering withInnsendteDokumenter(List<Dokument> innsendteDokumenter) {
         this.innsendteDokumenter = innsendteDokumenter;
@@ -32,6 +33,11 @@ public class Kvittering extends GenerellBehandling {
 
     public Kvittering withSkjemanummerRef(String ref) {
         skjemanummerRef = ref;
+        return this;
+    }
+
+    public Kvittering withEttersending(Boolean ettersending) {
+        this.ettersending = ettersending;
         return this;
     }
 

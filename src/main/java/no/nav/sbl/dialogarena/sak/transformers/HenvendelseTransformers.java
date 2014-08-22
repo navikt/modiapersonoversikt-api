@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
@@ -12,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.HenvendelseType;
 
 public class HenvendelseTransformers {
 
@@ -30,11 +30,12 @@ public class HenvendelseTransformers {
                     .withBehandlingsId(wsSoknad.getBehandlingsId())
                     .withInnsendteDokumenter(hentDokumenter(wsSoknad, true))
                     .withManglendeDokumenter(hentDokumenter(wsSoknad, false))
+                    .withEttersending(wsSoknad.isEttersending())
                     .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
                     .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
                     .withBehandlingsDato(wsSoknad.getInnsendtDato())
                     .withBehandlingsType(BehandlingsType.KVITTERING)
-                    .withHenvendelseType(GenerellBehandling.HenvendelseType.valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()));
+                    .withHenvendelseType(HenvendelseType.valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()));
         }
     };
 
@@ -47,6 +48,7 @@ public class HenvendelseTransformers {
                         .withHovedskjema(wsDokumentforventning.getKodeverkId().equals(hovedskjemaId))
                         .withInnsendt(innsendt)
                         .withKodeverkRef(wsDokumentforventning.getKodeverkId())
+                        .withInnsendingsvalg(wsDokumentforventning.getInnsendingsvalg())
                         .withTilleggsTittel(wsDokumentforventning.getTilleggsTittel());
             }
         };

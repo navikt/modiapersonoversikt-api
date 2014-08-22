@@ -1,14 +1,277 @@
-.saksoversikt {
-  .hent-saker {
-      text-align: center;
-      a {
-        margin: 0;
+.saksoversikt.lamell {
+    .lerret {
         padding: 0;
-        color: #0067cf;
-      }
-      span {
-        display: block;
-        margin: 0.5em 0;
-      }
-  }
+    }
+}
+
+.widget .widgetDato {
+    float: right;
+}
+
+.widget .widgetTema {
+    max-width: 45%;
+    display: inline-block;
+    font-weight: bold;
+}
+
+.saksoversikt {
+    .lerret {
+        border-top: 1px solid #ccc;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+    }
+
+    .saker {
+        display: flex;
+        flex-direction: row;
+
+        .sak-navigering {
+            flex: 2;
+
+            ul {
+                list-style: none;
+                margin: 0;
+                padding: 0;
+
+                li {
+                    background: #f1f1f1;
+
+                    &.aktiv {
+                        background: #fff;
+                    }
+
+                    a {
+                        padding: 15px 20px;
+                        border-bottom: 1px solid #ccc;
+                        color: #3e3832;
+                        display: block;
+
+                        .dato {
+                            font-family: Modus, Arial, Helvetica, sans-serif;
+                            color: #999;
+                        }
+                    }
+                }
+            }
+        }
+
+        .sak-informasjon {
+            flex: 5;
+            flex-direction: column;
+            padding-top: 20px;
+            border-left: 1px solid #ccc;
+
+            .aar {
+                display: flex;
+                flex-direction: row;
+                justify-content: center;
+                position: relative;
+                z-index: 1;
+
+                &:before {
+                    content: "";
+                    border-top: 1px solid #3e3832;
+                    position: absolute;
+                    top: 50%;
+                    left: 0;
+                    width: 100%;
+                    z-index: -1;
+                }
+
+                span {
+                    background: #fff;
+                    padding: 0 20px;
+                    font-size: 1.1rem;
+                    font-weight: bold;
+                    font-family: Modus, Arial, sans-serif;
+                }
+            }
+
+            .ikke-nytt-aar {
+                .behandling-informasjon {
+                    border-top: 1px solid #3e3832;
+                }
+            }
+
+            .behandling {
+                display: flex;
+                flex-direction: row;
+                padding-bottom: 30px;
+
+                .dato, .behandling-informasjon {
+                    padding-top: 30px;
+                }
+
+                .dato {
+                    display: flex;
+                    justify-content: flex-start;
+                    flex: 1;
+                    flex-direction: column;
+                    align-items: center;
+
+                    &.avsluttet {
+                        color: #8f8f8f;
+                    }
+
+                    .dag {
+                        font-size: 2rem;
+                    }
+
+                    .maaned {
+                        text-transform: uppercase;
+                        font-size: 0.9rem;
+                        font-family: Modus, Arial, sans-serif;
+                        font-weight: bold;
+                    }
+                }
+            }
+        }
+    }
+
+    .behandling-informasjon {
+        flex: 6;
+        margin-right: 30px;
+
+        h2 {
+            margin-bottom: 20px;
+        }
+
+        .kvittering-topp {
+            p {
+                display: none;
+            }
+        }
+
+        .behandlingstid {
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        .behandling-datoer {
+            span {
+                font-size: 0.8rem;
+
+                &:first-child {
+                    margin-right: 10px;
+                }
+            }
+        }
+
+        .kollapsbar {
+            display: none;
+            position: relative;
+
+            section {
+                padding-bottom: 0;
+            }
+
+            .skriv-ut {
+                position: absolute;
+                right: 10px;
+                background: url(../img/print.svg) no-repeat left center;
+                padding-left: 20px;
+                color: @gray-dark;
+
+                &:hover {
+                    background: url(../img/print_hover.svg) no-repeat left center;
+                    color: #0067c5;
+                }
+            }
+
+            ul {
+                list-style: none;
+                padding-left: 0;
+                margin-bottom: 40px;
+
+                li {
+                    margin-bottom: 10px;
+
+                    img {
+                        margin-right: 5px;
+                        width: 10px;
+                    }
+
+                    &.kule {
+                        &:before {
+                            border: 3px solid black;
+                            border-radius: 3px;
+                            content: " ";
+                            display: inline-block;
+                            position: relative;
+                            top: -2px;
+                            margin-right: 10px;
+                        }
+                    }
+                }
+            }
+
+            .kvitteringsinfo {
+                margin-bottom: 30px;
+            }
+        }
+
+        .skjul {
+            display: none;
+        }
+    }
+
+    .hent-saker {
+        text-align: center;
+        a {
+            margin: 0;
+            padding: 0;
+            color: #0067cf;
+        }
+        span {
+            display: block;
+            margin: 0.5em 0;
+        }
+    }
+}
+
+@media print {
+    .saksoversikt {
+
+        .content > .behandling-informasjon {
+            margin-right: 0;
+
+            h2 {
+                text-align: center;
+                font-size: 22px;
+                text-transform: none;
+
+                &:after {
+                    content: "";
+                    border-top: 1px solid #d1d1d1;
+                    display: block;
+                    margin: 30px auto;
+                    width: 30px;
+                }
+            }
+
+            .kvittering-topp {
+                text-align: center;
+                padding-bottom: 40px;
+                border-bottom: 1px solid #d1d1d1;
+
+                p {
+                    display: block;
+                    font-size: 17px;
+                    font-family: Modus, Arial, Helvetica, sans-serif;
+                    font-weight: 600;
+                    margin-bottom: 0;
+                }
+            }
+
+            .kollapsbar {
+                display: block !important;
+                margin-top: 40px;
+            }
+
+            .toggle-kollapsbar, .skriv-ut {
+                display: none !important;
+            }
+        }
+    }
 }

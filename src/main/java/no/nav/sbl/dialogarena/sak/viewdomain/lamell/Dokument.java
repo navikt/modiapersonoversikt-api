@@ -1,11 +1,14 @@
 package no.nav.sbl.dialogarena.sak.viewdomain.lamell;
 
-public class Dokument {
+import java.io.Serializable;
+
+public class Dokument implements Serializable {
 
     public String kodeverkRef;
     public String tilleggstittel;
     public boolean innsendt;
     public boolean hovedskjema;
+    public String innsendingsvalg;
 
     public Dokument withKodeverkRef(String ref) {
         kodeverkRef = ref;
@@ -27,4 +30,8 @@ public class Dokument {
         return this;
     }
 
+    public Dokument withInnsendingsvalg(String innsendingsvalg) {
+        this.innsendingsvalg = innsendingsvalg;
+        return this;
+    }
 }

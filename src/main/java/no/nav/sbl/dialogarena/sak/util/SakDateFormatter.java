@@ -2,25 +2,33 @@ package no.nav.sbl.dialogarena.sak.util;
 
 import no.nav.modig.core.exception.ApplicationException;
 import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
 
 import java.util.Locale;
 
+import static org.joda.time.format.DateTimeFormat.forPattern;
+
 public class SakDateFormatter {
+
+    public static final Locale LOCALE = new Locale("no");
 
     public static String printShortDate(DateTime dateTime) {
         throwExceptionIfNullDate(dateTime);
-        return DateTimeFormat
-                .forPattern("dd.MM.YYYY")
-                .withLocale(new Locale("no"))
+        return forPattern("dd.MM.YYYY")
+                .withLocale(LOCALE)
                 .print(dateTime);
     }
 
     public static String printLongDate(DateTime dateTime) {
         throwExceptionIfNullDate(dateTime);
-        return DateTimeFormat
-                .forPattern("d. MMMM YYYY")
-                .withLocale(new Locale("no"))
+        return forPattern("d. MMMM YYYY")
+                .withLocale(LOCALE)
+                .print(dateTime);
+    }
+
+    public static String printFullDate(DateTime dateTime) {
+        throwExceptionIfNullDate(dateTime);
+        return forPattern("d. MMMM yyyy, HH:mm")
+                .withLocale(LOCALE)
                 .print(dateTime);
     }
 
