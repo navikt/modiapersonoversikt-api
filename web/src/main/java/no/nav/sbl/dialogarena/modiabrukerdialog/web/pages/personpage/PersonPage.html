@@ -6,11 +6,12 @@
 	<wicket:extend>
 		<body>
 			<div wicket:id="modal">[]</div>
-			<wicket:container wicket:id="saksbehandlerInnstillingerPanel"/>
+			<section wicket:id="saksbehandlerInnstillingerPanel"></section>
 			<section class="personpanel clearfix">
 				<section class="navbar menu-intern active">
 					<wicket:container wicket:id="plukkOppgave"/>
-					<div class="sokeboks clearfix">
+                    <div wicket:id="saksbehandlerInstillingerToggler"></div>
+                    <div class="sokeboks clearfix">
 						<wicket:container wicket:id="searchPanel"/>
 						<button wicket:id="toggle-sok" class="personsok-button" id="toggle-personsok"
 								wicket:message="aria-label:personsok.apnetekst,

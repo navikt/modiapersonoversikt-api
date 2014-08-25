@@ -8,7 +8,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMoc
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.SaksbehandlerInnstillingerService;
 import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,9 +15,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
@@ -47,22 +46,24 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
     @Test
     public void sjekkAtSaksbehandlerPanelVisesVedKlikkPaNavIdentKnapp() {
         wicket
-                .goToPageWith(new SaksbehandlerInnstillingerPanel("saksbehandlerPanel"))
-                .should().containComponent(thatIsInvisible().and(ofType(WebMarkupContainer.class)).and(withId("valgContainer")))
+                .goTo(SaksbehandlerInstillingerTestPage.class)
+                .should().containComponent(thatIsInvisible().and(ofType(SaksbehandlerInnstillingerPanel.class)))
+                .onComponent(ofType(SaksbehandlerInstillingerTogglerPanel.class))
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
-                .should().containComponent(thatIsVisible().and(ofType(WebMarkupContainer.class)).and(withId("valgContainer")));
+                .should().containComponent(thatIsVisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
     }
 
     @Test
     public void sjekkAtSaksbehandlerPanelSkjulesVedKlikkPaVelgKnapp() {
-        List<AnsattEnhet> ansattEnheter = Arrays.asList(new AnsattEnhet("111", "Grunerløkka"), new AnsattEnhet("222", "Torshov"));
+        List<AnsattEnhet> ansattEnheter = asList(new AnsattEnhet("111", "Grunerløkka"), new AnsattEnhet("222", "Torshov"));
         when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(ansattEnheter);
         wicket
-                .goToPageWith(new SaksbehandlerInnstillingerPanel("saksbehandlerPanel"))
+                .goTo(SaksbehandlerInstillingerTestPage.class)
+                .onComponent(ofType(SaksbehandlerInstillingerTogglerPanel.class))
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .inForm(withId("enhetsform"))
                 .select("enhet", 1)
                 .submitWithAjaxButton(withId("velg"))
-                .should().containComponent(thatIsInvisible().and(ofType(WebMarkupContainer.class)).and(withId("valgContainer")));
+                .should().containComponent(thatIsInvisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
     }
 }

@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInstillingerTogglerPanel;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -34,6 +35,7 @@ public class HentPersonPage extends BasePage {
         setupErrorText(pageParameters, hentPersonPanel);
         add(
                 new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel"),
+                new SaksbehandlerInstillingerTogglerPanel("saksbehandlerInstillingerToggler"),
                 hentPersonPanel,
                 new PlukkOppgavePanel("plukk-oppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true)

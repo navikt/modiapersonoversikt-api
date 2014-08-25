@@ -398,46 +398,34 @@
 	}
 }
 
-.saksbehandlerpanelflik {
-	position: absolute;
-	z-index: 2000;
-	cursor: pointer;
-	width: 20%;
-	top: 43px;
-	left: 42%;
-	div {
-		margin: 0 auto;
-		&:hover {
-			&:after {
-				border-bottom-color: #00a9e0;
-			}
-		}
-		&:after {
-			content: " ";
-			display: inline-block;
-			border-bottom: 10px solid #fff;
-			border-right: 10px solid transparent;
-			border-left: 10px solid transparent;
-			position: absolute;
-			left: 65%;
-			top: 53%;
-		}
-		img {
-			width: 60%;
-		}
-	}
+.saksbehandlerinstillinger-toggle {
+  position: absolute;
+  z-index: 1020;
+  width: 240px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  :hover {
+    cursor: pointer;
+  }
+  .togglebilde {
+    width: 85%;
+  }
+  .pil {
+    margin-top: 25px;
+    float: right;
+    .pil(8px, #fff);
+  }
 }
 
-.nav-enhet {
+.saksbehandlerinstillinger {
 	text-align: center;
 	background-color: @graabakgrunn;
 	color: #000000;
-	padding-top: 6em;
-	padding-bottom: 2em;
+    padding: 2em 0;
 	-webkit-box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
 	-moz-box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
 	box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
-	display: none;
 	.enhetsform {
 		max-width: 22%;
 		margin: auto;
