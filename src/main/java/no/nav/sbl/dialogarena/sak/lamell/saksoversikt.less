@@ -15,68 +15,64 @@
 }
 
 .saksoversikt {
+
     .lerret {
         border-top: 1px solid #ccc;
-        display: flex;
-        flex: 1;
-        flex-direction: column;
     }
 
-    .saker {
-        display: flex;
-        flex-direction: row;
+    .sak-navigering {
+        background: #f1f1f1;
+        border-right: 1px solid #ccc;
 
-        .sak-navigering {
-            flex: 2;
-            background: #f1f1f1;
-            border-right: 1px solid #ccc;
+        ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
 
-            ul {
-                list-style: none;
-                margin: 0;
-                padding: 0;
+            li {
+                &.aktiv, &:hover {
+                    background: #fff;
+                }
 
-                li {
-                    &.aktiv, &:hover {
-                        background: #fff;
-                    }
+                a {
+                    padding: 15px 20px;
+                    border-bottom: 1px solid #ccc;
+                    color: #3e3832;
+                    display: block;
 
-                    a {
-                        padding: 15px 20px;
-                        border-bottom: 1px solid #ccc;
-                        color: #3e3832;
-                        display: block;
-
-                        .dato {
-                            font-family: Modus, Arial, Helvetica, sans-serif;
-                            color: #999;
-                        }
+                    .dato {
+                        font-family: Modus, Arial, Helvetica, sans-serif;
+                        color: #999;
                     }
                 }
             }
         }
+    }
 
-        .sak-informasjon {
-            flex: 5;
-            flex-direction: column;
-            padding-top: 20px;
+    .sak-informasjon {
+        padding-top: 20px;
 
-            .aar {
-                display: flex;
-                flex-direction: row;
-                justify-content: center;
-                position: relative;
-                z-index: 1;
+        .aar {
+            position: relative;
+            z-index: 1;
 
-                &:before {
-                    content: "";
-                    border-top: 1px solid #3e3832;
-                    position: absolute;
-                    top: 50%;
-                    left: 0;
-                    width: 100%;
-                    z-index: -1;
-                }
+            &:before {
+                content: "";
+                border-top: 1px solid #d1d1d1;
+                position: absolute;
+                top: 50%;
+                left: 0;
+                width: 100%;
+                z-index: -1;
+            }
+
+            &.avsluttet:before {
+                border-color: #3e3832;
+            }
+
+            div {
+                width: 100%;
+                text-align: center;
 
                 span {
                     background: #fff;
@@ -86,31 +82,25 @@
                     font-family: Modus, Arial, sans-serif;
                 }
             }
+        }
 
-            .ikke-nytt-aar {
-                .behandling-informasjon {
-                    border-top: 1px solid #3e3832;
-                }
-            }
+        .behandling-container {
+            padding: 0 30px 40px;
 
             .behandling {
-                display: flex;
-                flex-direction: row;
-                padding-bottom: 30px;
+                padding-left: 90px;
+                padding-top: 40px;
+                background: url(../img/hake_stor.svg) no-repeat left 15px;
 
-                .behandling-informasjon {
-                    padding-top: 30px;
-                }
 
-                img.status {
-                    padding: 0 25px;
+                &.avsluttet {
+                    background-image: url(../img/under_arbeid_stor.svg);
                 }
             }
         }
     }
 
     .behandling-informasjon {
-        flex: 1;
         margin-right: 30px;
 
         h2 {

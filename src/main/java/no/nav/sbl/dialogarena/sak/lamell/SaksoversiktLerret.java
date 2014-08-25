@@ -75,6 +75,5 @@ public class SaksoversiktLerret extends Lerret {
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
         response.render(new JavaScriptContentHeaderItem("resizeElement()", "saksoversikt-ie-js", "IE"));
-        response.render(OnLoadHeaderItem.forScript("settSakHoyde()"));
     }
 }

@@ -1,37 +1,14 @@
-.saksoversikt .lerret, .saksoversikt .saker {
-    height: 100%;
-}
-
-.saksoversikt .saker .sak-navigering {
-    display: inline-block;
-    width: 29%;
-    height: 100%;
-}
-
-.saksoversikt .saker .sak-informasjon {
-    display: inline-block;
-    width: 71%;
-    min-height: 100%;
+.saker .sak-informasjon {
+    display: table-cell;
+    width: 75%;
     vertical-align: top;
+    min-height: 86.5vh;
 }
 
-.saksoversikt .saker .sak-informasjon .aar {
-    text-align: center;
+.saker .sak-navigering {
+    width: 35% !important;
 }
 
-.saksoversikt .saker .sak-informasjon .behandling .dato {
-    display: inline-block;
-    width: 15%;
-    text-align: center;
-    vertical-align: top;
-}
-
-.saksoversikt .saker .sak-informasjon .behandling .dato span {
-    display: block;
-}
-
-.saksoversikt .saker .sak-informasjon .behandling .behandling-informasjon {
-    display: inline-block;
-    width: 80%;
-    margin-right: 5%;
+.saker .behandling-informasjon {
+    min-height: auto !important;
 }
