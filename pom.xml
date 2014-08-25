@@ -84,17 +84,6 @@
             </dependency>
             <dependency>
                 <groupId>no.nav</groupId>
-                <artifactId>personsok-pip</artifactId>
-                <version>${personsok.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>no.nav</groupId>
                 <artifactId>personsok-consumer</artifactId>
                 <version>${personsok.version}</version>
                 <exclusions>
