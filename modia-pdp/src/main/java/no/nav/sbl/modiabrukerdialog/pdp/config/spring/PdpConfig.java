@@ -1,7 +1,6 @@
 package no.nav.sbl.modiabrukerdialog.pdp.config.spring;
 
 import no.nav.modig.security.tilgangskontroll.config.AccessControlInterceptorConfig;
-import no.nav.modig.security.tilgangskontroll.config.SecurityCacheConfig;
 import no.nav.modig.security.tilgangskontroll.policy.pdp.DecisionPoint;
 import no.nav.modig.security.tilgangskontroll.policy.pdp.picketlink.PicketLinkDecisionPoint;
 import org.slf4j.Logger;
@@ -16,7 +15,7 @@ import java.net.URL;
 
 
 @Configuration
-@Import(value = { AccessControlInterceptorConfig.class, SecurityCacheConfig.class })
+@Import(value = { AccessControlInterceptorConfig.class})
 public class PdpConfig {
 	private final Logger logger = LoggerFactory.getLogger(getClass());
 
