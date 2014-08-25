@@ -59,6 +59,7 @@ public class MeldingUtils {
             melding.fnrBruker = xmlHenvendelse.getFnr();
             melding.traadId = xmlHenvendelse.getBehandlingsId();
             melding.status = STATUS.transform(xmlHenvendelse);
+            melding.kontorsperretEnhet = xmlHenvendelse.getKontorsperreEnhet();
             fyllInnJournalforingsInformasjon(xmlHenvendelse, melding);
 
             XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
