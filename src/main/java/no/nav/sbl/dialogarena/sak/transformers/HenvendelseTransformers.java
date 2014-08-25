@@ -5,11 +5,15 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
+import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.both;
+import static no.nav.modig.lang.collections.PredicateUtils.not;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.HenvendelseType;
 
@@ -28,8 +32,8 @@ public class HenvendelseTransformers {
         public Kvittering transform(WSSoknad wsSoknad) {
             return (Kvittering) new Kvittering()
                     .withBehandlingsId(wsSoknad.getBehandlingsId())
-                    .withInnsendteDokumenter(hentDokumenter(wsSoknad, true))
-                    .withManglendeDokumenter(hentDokumenter(wsSoknad, false))
+                    .withInnsendteDokumenter(hentDokument(wsSoknad, ER_DOKUMENT_INNSENDT))
+                    .withManglendeDokumenter(hentDokument(wsSoknad, not(ER_DOKUMENT_INNSENDT)))
                     .withEttersending(wsSoknad.isEttersending())
                     .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
                     .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
@@ -43,7 +47,7 @@ public class HenvendelseTransformers {
         return new Transformer<WSDokumentforventning, Dokument>() {
             @Override
             public Dokument transform(WSDokumentforventning wsDokumentforventning) {
-                boolean innsendt = dokumentforventningErMottatt(wsDokumentforventning);
+                boolean innsendt = wsDokumentforventning.getInnsendingsvalg().equals("INNSENDT") || wsDokumentforventning.getInnsendingsvalg().equals("LASTET_OPP");
                 return new Dokument()
                         .withHovedskjema(wsDokumentforventning.getKodeverkId().equals(hovedskjemaId))
                         .withInnsendt(innsendt)
@@ -54,22 +58,24 @@ public class HenvendelseTransformers {
         };
     }
 
-    private static List<Dokument> hentDokumenter(WSSoknad wsSoknad, boolean erInnsendt) {
-        List<Dokument> dokumenter = new ArrayList<>();
-        List<WSDokumentforventning> wsDokumentforventninger = wsSoknad.getDokumentforventninger().getDokumentforventning();
-        for (WSDokumentforventning wsDokumentforventning : wsDokumentforventninger) {
-            Dokument dokument = tilDokument(wsSoknad.getHovedskjemaKodeverkId()).transform(wsDokumentforventning);
-            if (erInnsendt && dokument.innsendt) {
-                dokumenter.add(dokument);
-            } else if (!erInnsendt && !dokument.innsendt) {
-                dokumenter.add(dokument);
-            }
+    private static List<Dokument> hentDokument(WSSoknad wsSoknad, Predicate<WSDokumentforventning> erInnsendtPredikat) {
+        return on(wsSoknad.getDokumentforventninger().getDokumentforventning())
+                .filter(both(erInnsendtPredikat).and(not(ER_KVITTERING)))
+                .map(tilDokument(wsSoknad.getHovedskjemaKodeverkId()))
+                .collect();
+    }
+
+    private static final Predicate<WSDokumentforventning> ER_KVITTERING = new Predicate<WSDokumentforventning>() {
+        @Override
+        public boolean evaluate(WSDokumentforventning dokumentforventning) {
+            return dokumentforventning.getKodeverkId().equals("L7");
         }
-        return dokumenter;
-    }
+    };
 
-    private static boolean dokumentforventningErMottatt(WSDokumentforventning dokumentforventning) {
-        return dokumentforventning.getInnsendingsvalg().equals("INNSENDT") || dokumentforventning.getInnsendingsvalg().equals("LASTET_OPP");
-    }
-
+    private static final Predicate<WSDokumentforventning> ER_DOKUMENT_INNSENDT = new Predicate<WSDokumentforventning>() {
+        @Override
+        public boolean evaluate(WSDokumentforventning dokumentforventning) {
+            return asList("INNSENDT", "LASTET_OPP").contains(dokumentforventning.getInnsendingsvalg());
+        }
+    };
 }
