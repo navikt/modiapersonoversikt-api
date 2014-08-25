@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxSubmitLink;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.model.Model;
@@ -15,6 +16,8 @@ import org.apache.wicket.model.Model;
 import javax.inject.Inject;
 
 public class MerkePanel extends AnimertPanel {
+
+    public static final String TRAAD_KONTORSPERRET = "sos.merkepanel.traadkontorsperret";
 
     @Inject
     private HenvendelseBehandlingService henvendelse;
@@ -36,6 +39,7 @@ public class MerkePanel extends AnimertPanel {
                     gsak.opprettGsakOppgave(new NyOppgave());
                     checkBox.setModelObject(false);
                 }
+                send(this, Broadcast.BUBBLE, TRAAD_KONTORSPERRET);
                 lukkPanel(target);
             }
         });

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import org.joda.time.LocalDate;
 
@@ -11,6 +12,7 @@ import java.util.Map;
 import static java.util.Map.Entry;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.JOURNALFORT_DATO;
@@ -51,6 +53,14 @@ public class TraadVM implements Serializable {
 
     public boolean erBehandlet() {
         return meldinger.size() > 1 || getEldsteMelding().melding.meldingstype.equals(SAMTALEREFERAT);
+    }
+
+    public boolean erKontorsperret() {
+        return getKontorsperretEnhet().isSome();
+    }
+
+    public Optional<String> getKontorsperretEnhet() {
+        return optional(meldinger.get(0).melding.kontorsperretEnhet);
     }
 
     public boolean bleInitiertAvBruker() {

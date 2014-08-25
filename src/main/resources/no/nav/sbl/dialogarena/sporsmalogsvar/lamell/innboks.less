@@ -159,22 +159,13 @@
     }
 
     .journalfort-skiller {
-      background-color: #333333;
-      margin: 15px 0 16px;
-      padding: 10px;
-      color: @modiagraaskrift;
-      .journalfor-ikon {
+      .ikon {
         background: url(../img/journalfore_graa.svg) no-repeat;
-        padding-right: 1.4rem;
-      }
-      .journalfort-data {
-        font-size: 0.75rem;
       }
       .skillestrek {
         margin: 0 5px;
       }
     }
-
     .tidligere-melding {
       position: relative;
       background-color: @graabakgrunn;
@@ -209,6 +200,21 @@
       .hoyre-kolonne {
         width: 85%;
         overflow: hidden;
+      }
+    }
+    .traad-info {
+      background-color: #333333;
+      margin: 15px 0 16px;
+      padding: 10px;
+      color: @modiagraaskrift;
+      font-size: 0.75rem;
+      .ikon {
+        padding-right: 1.4rem;
+      }
+    }
+    .kontorsperret-info {
+      .ikon {
+        background: url(../img/merk_ikon_graa.svg) no-repeat;
       }
     }
   }
