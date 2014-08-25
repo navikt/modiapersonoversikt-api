@@ -18,6 +18,7 @@ public class HenvendelseUtils {
 
     public static Sporsmal createSporsmalFromXMLHenvendelse(XMLHenvendelse henvendelse) {
         Sporsmal sporsmal = new Sporsmal(henvendelse.getBehandlingsId(), henvendelse.getOpprettetDato());
+        sporsmal.konorsperretEnhet = henvendelse.getKontorsperreEnhet();
 
         XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
         if (xmlMetadata instanceof XMLMeldingFraBruker) {
@@ -43,6 +44,7 @@ public class HenvendelseUtils {
                     .withTemagruppe(xmlMeldingTilBruker.getTemagruppe())
                     .withKanal(xmlMeldingTilBruker.getKanal())
                     .withFritekst(xmlMeldingTilBruker.getFritekst())
+                    .withKontorsperretEnhet(henvendelse.getKontorsperreEnhet())
                     .withNavIdent(xmlMeldingTilBruker.getNavident());
         } else {
             throw new ApplicationException("Henvendelsen er ikke av typen XMlMeldingTilBruker: " + xmlMetadata);
@@ -55,6 +57,7 @@ public class HenvendelseUtils {
                 .withFnr(svarEllerReferat.fnr)
                 .withOpprettetDato(now())
                 .withAvsluttetDato(now())
+                .withKontorsperreEnhet(svarEllerReferat.kontorsperretEnhet)
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
                         new XMLMeldingTilBruker()
                                 .withSporsmalsId(svarEllerReferat.sporsmalsId)

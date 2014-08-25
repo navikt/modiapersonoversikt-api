@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 public class SvarEllerReferat implements Serializable {
 
-    public String sporsmalsId, fnr, navIdent, temagruppe, kanal, fritekst;
+    public String sporsmalsId, fnr, navIdent, temagruppe, kanal, fritekst, kontorsperretEnhet;
     public DateTime opprettetDato;
     public Henvendelsetype type;
 
@@ -47,6 +47,11 @@ public class SvarEllerReferat implements Serializable {
 
     public SvarEllerReferat withFritekst(String fritekst) {
         this.fritekst = fritekst;
+        return this;
+    }
+
+    public SvarEllerReferat withKontorsperretEnhet(String kontorsperretEnhet) {
+        this.kontorsperretEnhet = kontorsperretEnhet;
         return this;
     }
 

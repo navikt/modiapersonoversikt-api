@@ -39,11 +39,11 @@ public class HenvendelseUtsendingService {
     }
 
     private void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat, XMLHenvendelseType type) {
-        XMLHenvendelse info = createXMLHenvendelseMedMeldingTilBruker(svarEllerReferat, type);
+        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedMeldingTilBruker(svarEllerReferat, type);
         sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest()
                 .withType(type.name())
                 .withFodselsnummer(svarEllerReferat.fnr)
-                .withAny(info));
+                .withAny(xmlHenvendelse));
     }
 
     public Sporsmal getSporsmalFromOppgaveId(String fnr, String oppgaveId) {

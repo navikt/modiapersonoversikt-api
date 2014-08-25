@@ -210,7 +210,8 @@ public class SvarPanel extends Panel {
                     .withSporsmalsId(sporsmal.id)
                     .withTemagruppe(svarOgReferatVM.temagruppe.name())
                     .withKanal(svarOgReferatVM.kanal.name())
-                    .withFritekst(svarOgReferatVM.getFritekst());
+                    .withFritekst(svarOgReferatVM.getFritekst())
+                    .withKontorsperretEnhet(sporsmal.konorsperretEnhet);
 
             if (svarOgReferatVM.kanal.equals(SvarKanal.TEKST)) {
                 henvendelseUtsendingService.sendSvar(svarEllerReferat);

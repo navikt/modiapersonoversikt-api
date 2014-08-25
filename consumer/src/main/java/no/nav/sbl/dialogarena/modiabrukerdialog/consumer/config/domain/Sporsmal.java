@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 public class Sporsmal implements Serializable {
     public final String id;
-    public String fritekst, temagruppe, oppgaveId;
+    public String fritekst, temagruppe, oppgaveId, konorsperretEnhet;
     public DateTime opprettetDato;
 
     public Sporsmal(String id, DateTime opprettetDato) {
