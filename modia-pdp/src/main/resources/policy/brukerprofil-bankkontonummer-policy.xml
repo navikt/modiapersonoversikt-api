@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os
+      http://docs.oasis-open.org/xacml/access_control-xacml-2.0-policy-schema-os.xsd"
+
+        PolicyId="urn:xacml:2.0:nav:modia:policyid:kontonummer" RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+    <Description>
+        Saksbehandler som tilhører 0000-GA-BD06_EndreKontonummer har tilgang
+    </Description>
+    <Target>
+        <Resources>
+            <Resource>
+                <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">kontonummer</AttributeValue>
+                    <ResourceAttributeDesignator AttributeId="urn:oasis:names:tc:xacml:1.0:resource:resource-id"
+                                                 DataType="http://www.w3.org/2001/XMLSchema#string"/>
+                </ResourceMatch>
+            </Resource>
+        </Resources>
+    </Target>
+    <Rule RuleId="saksbehandler-skal-ha-tilgang" Effect="Permit">
+        <Target>
+            <Actions>
+                <Action>
+                    <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">update</AttributeValue>
+                        <ActionAttributeDesignator
+                                DataType="http://www.w3.org/2001/XMLSchema#string"
+                                AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" />
+                    </ActionMatch>
+                </Action>
+            </Actions>
+        </Target>
+        <Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-BD06_EndreKontonummer</AttributeValue>
+                <SubjectAttributeDesignator
+                        AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"
+                        DataType="http://www.w3.org/2001/XMLSchema#string"/>
+            </Apply>
+        </Condition>
+    </Rule>
+    <!-- Saksbehandler har ikke tilgang by default -->
+    <Rule RuleId="ingen-andre-har-tilgang" Effect="Deny"/>
+</Policy>

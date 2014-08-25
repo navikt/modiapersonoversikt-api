@@ -53,13 +53,13 @@ public class MockEnhetAttributeLocator extends AttributeLocator {
 		return new EvaluationResult(new BagAttribute(attributeType, values));
 	}
 
-	private void addRoleValue(String subjectId, Set<AttributeValue> values) {
-		if (subjectId.endsWith("900001")) {
-			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-GOSYS-NASJONAL"));
-		} else if (subjectId.endsWith("900002")) {
-			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-GOSYS-UTVIDBAR_TIL_REGIONAL"));
-		}
-	}
+//	private void addRoleValue(String subjectId, Set<AttributeValue> values) {
+//		if (subjectId.endsWith("900001")) {
+//			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-GOSYS-NASJONAL"));
+//		} else if (subjectId.endsWith("900002")) {
+//			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-GOSYS-UTVIDBAR_TIL_REGIONAL"));
+//		}
+//	}
 
 	private void addEnhetValue(String subjectId, Set<AttributeValue> values) {
 		if (subjectId.endsWith("900002")) {
