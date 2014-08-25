@@ -27,6 +27,7 @@
         <henvendelse.informasjon.v2.version>0.3</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.2</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.8</behandle.henvendelse.version>
+        <kjerneinfo.versjon>1.0.80</kjerneinfo.versjon>
         <dialogarena.behandlingsinformasjon.version>0.0.18</dialogarena.behandlingsinformasjon.version>
         <handlebars.version>1.1.2</handlebars.version>
     </properties>
@@ -70,7 +71,23 @@
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-consumer</artifactId>
-            <version>1.0.80</version>
+            <version>${kjerneinfo.versjon}</version>
+            <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xml-apis</groupId>
+                    <artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-domain</artifactId>
+            <version>${kjerneinfo.versjon}</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>

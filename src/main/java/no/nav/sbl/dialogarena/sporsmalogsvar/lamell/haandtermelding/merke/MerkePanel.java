@@ -33,7 +33,7 @@ public class MerkePanel extends AnimertPanel {
         form.add(new AjaxSubmitLink("merk") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                henvendelse.merkSomKontorsperret(innboksVM.getValgtTraad());
+                henvendelse.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
                 if (checkBox.getModelObject()) {
                     gsak.opprettGsakOppgave(new NyOppgave());
                     checkBox.setModelObject(false);

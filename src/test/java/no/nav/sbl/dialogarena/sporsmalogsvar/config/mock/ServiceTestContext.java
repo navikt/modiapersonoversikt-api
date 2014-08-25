@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.config.mock;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
@@ -75,6 +76,11 @@ public class ServiceTestContext {
     @Bean
     public ValgtEnhetService valgtEnhetService() {
         return mock(ValgtEnhetService.class);
+    }
+
+    @Bean
+    public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
+        return mock(PersonKjerneinfoServiceBi.class);
     }
 
 }
