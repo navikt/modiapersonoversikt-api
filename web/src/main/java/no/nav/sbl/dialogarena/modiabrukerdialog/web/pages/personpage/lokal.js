@@ -59,7 +59,6 @@ jQuery(document).ready(function ($) {
         });
     }
 
-    //settHovedinnholdHoyde();
 });
 
 function focusSearchField() {
@@ -293,7 +292,7 @@ function addPrintEventListener() {
         }
     }
 
-    if (window.matchMedia) {
+    if (window.onafterprint === undefined) {
         var mediaQueryList = window.matchMedia('print');
         mediaQueryList.addListener(function (mql) {
             if (mql.matches) {

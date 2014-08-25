@@ -25,18 +25,20 @@
 						</button>
 					</div>
 				</section>
-				<div class="flexbox row clearfix">
-					<aside class="sidebar-venstre flex1">
-						<div wicket:id="visittkort">[]</div>
-						<section class="kjerneinfo clearfix" wicket:id="personKjerneinfoPanel">[]</section>
-					</aside>
-					<div class="main-content intern flex2">
-						<wicket:container wicket:id="personsokPanel"/>
-						<section class="lameller" wicket:id="lameller">[]</section>
+				<div class="flexbox col">
+					<div class="flexbox row flex1">
+						<aside class="sidebar-venstre flex1">
+							<div wicket:id="visittkort">[]</div>
+							<section class="kjerneinfo clearfix" wicket:id="personKjerneinfoPanel">[]</section>
+						</aside>
+						<div class="main-content intern flex2">
+							<wicket:container wicket:id="personsokPanel"/>
+							<section class="lameller" wicket:id="lameller">[]</section>
+						</div>
+						<aside class="sidebar-hoyre flex1">
+							<div wicket:id="svarOgReferatPanel"></div>
+						</aside>
 					</div>
-					<aside class="sidebar-hoyre flex1">
-						<div wicket:id="svarOgReferatPanel"></div>
-					</aside>
 				</div>
 			</section>
 			<wicket:container wicket:id="timeoutBoks"/>

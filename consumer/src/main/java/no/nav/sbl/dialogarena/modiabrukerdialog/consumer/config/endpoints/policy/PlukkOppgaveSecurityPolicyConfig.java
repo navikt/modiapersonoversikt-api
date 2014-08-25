@@ -25,7 +25,7 @@ public class PlukkOppgaveSecurityPolicyConfig {
         return pep;
     }
 
-    public DecisionPoint plukkOppgavePdp() {
+    private DecisionPoint plukkOppgavePdp() {
         URL url;
         try {
             url = new ClassPathResource("config/modiabrukerdialog-plukkoppgave-policy-config.xml").getURL();

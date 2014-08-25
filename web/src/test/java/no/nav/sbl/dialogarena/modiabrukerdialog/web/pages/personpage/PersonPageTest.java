@@ -8,8 +8,8 @@ import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
@@ -40,9 +40,12 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.OPPGAVEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.SVAR_OG_REFERAT_PANEL_ID;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -152,24 +155,34 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void skalErstatteSvarOgReferatPanelMedReferatPanelVedEventetMELDING_SENDT_TIL_BRUKER() {
+    public void skalErstatteSvarOgReferatPanelMedReferatPanelVedRiktigeEvents() {
+        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(MELDING_SENDT_TIL_BRUKER);
+        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(LEGG_TILBAKE_UTFORT);
+        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(SVAR_AVBRUTT);
+    }
+
+    private void assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(String event) {
         wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
-                .sendEvent(createEvent(MELDING_SENDT_TIL_BRUKER))
+                .sendEvent(createEvent(event))
                 .should().inAjaxResponse().haveComponents(ofType(ReferatPanel.class));
     }
 
     @Test
-    public void skalErstatteSvarOgReferatPanelMedReferatPanelVedEventetLEGG_TILBAKE_UTFORT() {
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
-                .sendEvent(createEvent(LEGG_TILBAKE_UTFORT))
-                .should().inAjaxResponse().haveComponents(ofType(ReferatPanel.class));
+    public void skalSlettePlukketOppgaveFraSessionVedRiktigeEvents() {
+        assertSletterPlukketOppgaveFraSessionVedEvent(MELDING_SENDT_TIL_BRUKER);
+        assertSletterPlukketOppgaveFraSessionVedEvent(LEGG_TILBAKE_UTFORT);
     }
 
-    @Test
-    public void skalErstatteSvarOgReferatPanelMedReferatPanelVedEventetSVAR_AVBRUTT() {
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
-                .sendEvent(createEvent(SVAR_AVBRUTT))
-                .should().inAjaxResponse().haveComponents(ofType(ReferatPanel.class));
+    private void assertSletterPlukketOppgaveFraSessionVedEvent(String event) {
+        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"));
+
+        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
+        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, "oppgaveid");
+
+        wicket.sendEvent(createEvent(event));
+
+        assertNull(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR));
+        assertNull(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR));
     }
 
     private EventGenerator createEvent(final String eventNavn) {

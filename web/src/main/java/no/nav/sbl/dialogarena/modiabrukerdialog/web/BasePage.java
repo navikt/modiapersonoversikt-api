@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
-import no.nav.modig.frontend.ConditionalJavascriptResource;
+import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.personsok.result.PersonsokResultPanel;
 import no.nav.personsok.search.PersonsokSearchPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
@@ -15,9 +15,10 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 
 public class BasePage extends WebPage {
 
+	public static final ConditionalCssResource MODIA_FLEXBOX_IE_CSS = new ConditionalCssResource(
+			new CssResourceReference(BasePage.class, "css/flexbox-ie9.css"), "screen", "lt IE 10");
+
     public static final JavaScriptResourceReference JS_RESOURCE = new JavaScriptResourceReference(PersonPage.class, "lokal.js");
-	public static final ConditionalJavascriptResource MODIA_FLEXBOX_IE_JS = new ConditionalJavascriptResource(
-			new PackageResourceReference(BasePage.class, "js/flexbox-ie9.js"), "lt IE 10");
     public static final CssResourceReference PERSONINFO_LESS = new CssResourceReference(PersonPage.class, "personpage.less");
     public static final CssResourceReference PERSONSOKRESULT = new CssResourceReference(PersonsokResultPanel.class, "PersonsokResultPanel.css");
     public static final CssResourceReference PERSONSOKSEARCH = new CssResourceReference(PersonsokSearchPanel.class, "PersonsokSearchPanel.css");

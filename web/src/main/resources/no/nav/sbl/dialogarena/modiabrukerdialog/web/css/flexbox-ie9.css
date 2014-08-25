@@ -1,0 +1,12 @@
+.flexbox .flex1 {
+	display: table-cell;
+	width: 25%;
+	min-height: 86.5vh;
+}
+
+.flexbox .flex2 {
+	display: table-cell;
+	width: 50%;
+	vertical-align: top;
+	min-height: 86.5vh;
+}

@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html xmlns:wicket="http://wicket.apache.org">
-<wicket:head>
-    <title>Modia</title>
-</wicket:head>
-<wicket:extend>
-    <body class="main hentperson">
-    <section wicket:id="saksbehandlerInnstillingerPanel"></section>
-    <section class="navbar menu-intern active">
-        <wicket:container wicket:id="plukk-oppgave"/>
-        <div id="hentPerson">
-            <wicket:container wicket:id="searchPanel"/>
-            <button class="personsok-button" id="toggle-personsok"
-                    wicket:message="aria-label:personsok.apnetekst,
+	<wicket:head>
+		<title>Modia</title>
+	</wicket:head>
+	<wicket:extend>
+		<body class="main hentperson">
+			<wicket:container wicket:id="saksbehandlerInnstillingerPanel"/>
+			<section class="navbar menu-intern active">
+				<wicket:container wicket:id="plukk-oppgave"/>
+				<div id="hentPerson">
+					<wicket:container wicket:id="searchPanel"/>
+					<button class="personsok-button" id="toggle-personsok"
+							wicket:message="aria-label:personsok.apnetekst,
                             title:personsok.apnetekst,
                             data-apne:personsok.apnetekst,
                             data-lukke:personsok.lukketekst">
-                A
-                <span class="personsok-pil"></span>
-            </button>
-        </div>
-    </section>
-    <wicket:container wicket:id="personsokPanel"/>
-    <img class="modia-logo" wicket:id="modia-logo"/>
-    </body>
-</wicket:extend>
+						A
+						<span class="personsok-pil"></span>
+					</button>
+				</div>
+			</section>
+			<wicket:container wicket:id="personsokPanel"/>
+			<img class="modia-logo" wicket:id="modia-logo"/>
+		</body>
+	</wicket:extend>
 </html>

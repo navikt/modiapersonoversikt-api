@@ -35,6 +35,10 @@
         font-size: 12px;
     }
 
+    .feilmelding {
+        color: red;
+    }
+
     input[type="submit"] {
         padding: 5px 25px;
         font-size: 12px;
@@ -62,7 +66,7 @@
                 <td><input type="password" name="j_password"/></td>
             </tr>
             <tr>
-                <td class="centered" colspan="100%"><input id="mainbutton" type="submit" value="Logg inn"/></td>
+                <td class="centered" colspan="2"><input id="mainbutton" type="submit" value="Logg inn"/></td>
             </tr>
             </tbody>
         </table>
@@ -71,5 +75,20 @@
 </body>
 <script>
     document.getElementById("mainbutton").focus();
+
+    var status = location.search.split('status')[1];
+    var j_security = location.search.split('j_security')[1];
+    if (status || j_security) {
+        var tr = document.createElement("tr");
+        var td = document.createElement("td");
+        tr.appendChild(td);
+
+        td.className = "centered feilmelding";
+        td.colSpan = "2";
+        td.appendChild(document.createTextNode("Innlogging feilet"));
+
+        var tbody = document.getElementsByTagName("tbody")[0];
+        tbody.appendChild(tr);
+    }
 </script>
 </html>

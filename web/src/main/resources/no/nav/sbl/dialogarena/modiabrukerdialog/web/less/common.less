@@ -1,6 +1,7 @@
 /* Generelle mixins, variabler, typografi og stiler som bruker av andre stilregler */
 @navbarHeight: 140px;
-@mainContentWidth: 50%;
+@sidebarWidth: 24%;
+@mainContentWidth: 100% - (@sidebarWidth * 2);
 @sidebarYtrePadding: 15px;
 
 /* Mixins */
@@ -108,6 +109,7 @@ UL.feedbackPanel {
 	background-color: @modiasvart;
 	.navbar {
 		border-bottom: 1px solid #000;
+		margin-top: -150px;
 	}
 	.modia-logo {
 		width: 15rem;

@@ -78,6 +78,19 @@ body {
   width: 100%;
 }
 
+.pil(@size, @color) {
+  height: 0;
+  width: 0;
+  border-left: @size solid transparent;
+  border-right: @size solid transparent;
+  &.ned {
+    border-top: @size solid @color;
+  }
+  &.opp {
+    border-bottom: @size solid @color;
+  }
+}
+
 body > .print {
   display: none;;
 }
