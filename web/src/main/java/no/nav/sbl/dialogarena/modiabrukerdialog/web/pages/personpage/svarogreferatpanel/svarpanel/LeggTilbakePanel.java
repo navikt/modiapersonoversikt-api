@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.SaksbehandlerInnstillingerService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -25,6 +26,7 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
+import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
@@ -41,11 +43,14 @@ public class LeggTilbakePanel extends Panel {
     @Inject
     protected OppgaveBehandlingService oppgaveBehandlingService;
 
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
     public LeggTilbakePanel(String id, String temagruppe, final Optional<String> oppgaveId) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        final LeggTilbakeVM leggTilbakeVM = new LeggTilbakeVM();
+        final LeggTilbakeVM leggTilbakeVM = new LeggTilbakeVM(saksbehandlerInnstillingerService);
 
         add(new Label("temagruppe", new ResourceModel(temagruppe)));
 
@@ -104,7 +109,9 @@ public class LeggTilbakePanel extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
                         oppgaveId,
-                        leggTilbakeVM.lagBeskrivelse(new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
+                        leggTilbakeVM.lagBeskrivelse(
+                                new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString(),
+                                DateTime.now()),
                         leggTilbakeVM.lagTemagruppeTekst());
                 send(LeggTilbakePanel.this, Broadcast.BUBBLE, LEGG_TILBAKE_UTFORT);
             }
