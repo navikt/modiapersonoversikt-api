@@ -1,8 +1,7 @@
-package no.nav.sbl.dialogarena.sak.viewdomain.widget;
+package no.nav.sbl.dialogarena.sak.widget;
 
 import no.nav.modig.modia.widget.panels.GenericListingPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
-import no.nav.sbl.dialogarena.sak.widget.SaksoversiktWidget;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
