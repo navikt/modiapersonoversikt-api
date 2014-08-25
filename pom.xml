@@ -60,7 +60,7 @@
         <aspectj.version>1.7.2</aspectj.version>
 
         <!-- Modia-komponenter-->
-        <personsok.version>1.0.81-SNAPSHOT</personsok.version>
+        <personsok.version>1.0.80</personsok.version>
         <kjerneinfo.versjon>1.0.80</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>2.0.40</utbetaling.version>
@@ -82,17 +82,6 @@
                 <artifactId>personsok-panel</artifactId>
                 <version>${personsok.version}</version>
             </dependency>
-            <!--<dependency>-->
-                <!--<groupId>no.nav</groupId>-->
-                <!--<artifactId>personsok-pdp</artifactId>-->
-                <!--<version>${personsok.version}</version>-->
-                <!--<exclusions>-->
-                    <!--<exclusion>-->
-                        <!--<groupId>xml-apis</groupId>-->
-                        <!--<artifactId>xml-apis</artifactId>-->
-                    <!--</exclusion>-->
-                <!--</exclusions>-->
-            <!--</dependency>-->
             <dependency>
                 <groupId>no.nav</groupId>
                 <artifactId>personsok-pip</artifactId>

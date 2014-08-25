@@ -12,11 +12,6 @@
     <artifactId>modia-pip</artifactId>
 
     <dependencies>
-
-        <!--<dependency>-->
-            <!--<groupId>no.nav.modig</groupId>-->
-            <!--<artifactId>modig-security-authorization-pip-ut</artifactId>-->
-        <!--</dependency>-->
         <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -136,18 +131,6 @@
                                         <extraarg>-verbose</extraarg>
                                         <extraarg>-p</extraarg>
                                         <extraarg>no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer</extraarg>
-                                        <!--<extraarg>-p</extraarg>-->
-                                        <!--<extraarg>http://nav-cons-sak-gosys-3.0.0/no/nav/fault=no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.fault</extraarg>-->
-                                        <!--<extraarg>-p</extraarg>-->
-                                        <!--<extraarg>http://nav-cons-sak-gosys-3.0.0/no/nav/inf=no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.inf</extraarg>-->
-                                        <!--<extraarg>-p</extraarg>-->
-                                        <!--<extraarg>http://nav-cons-sak-gosys-3.0.0/no/nav/navansatt=no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.navansatt</extraarg>-->
-                                        <!--<extraarg>-p</extraarg>-->
-                                        <!--<extraarg>http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/navansatt=no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.navansatt.asbo</extraarg>-->
-                                        <!--<extraarg>-p</extraarg>-->
-                                        <!--<extraarg>http://nav-cons-sak-gosys-3.0.0/no/nav/fault/navansatt=no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.navansatt.fault</extraarg>-->
-                                        <!--<extraarg>-p</extraarg>-->
-                                        <!--<extraarg>http://nav-cons-sak-gosys-3.0.0/no/nav/inf/navansatt=no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.navansatt.inf</extraarg>-->
                                     </extraargs>
                                 </wsdlOption>
                                 <wsdlOption>
@@ -158,18 +141,6 @@
                                         <extraarg>-verbose</extraarg>
                                         <extraarg>-p</extraarg>
                                         <extraarg>no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer</extraarg>
-                                        <!--<extraarg>-p</extraarg>-->
-                                        <!--<extraarg>http://nav-cons-sak-gosys-3.0.0/no/nav/fault=no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.fault</extraarg>-->
-                                        <!--<extraarg>-p</extraarg>-->
-                                        <!--<extraarg>http://nav-cons-sak-gosys-3.0.0/no/nav/inf=no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.inf</extraarg>-->
-                                        <!--<extraarg>-p</extraarg>-->
-                                        <!--<extraarg>http://nav-cons-sak-gosys-3.0.0/no/nav/navorgenhet=no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.navorgenhet</extraarg>-->
-                                        <!--<extraarg>-p</extraarg>-->
-                                        <!--<extraarg>http://nav-cons-sak-gosys-3.0.0/no/nav/asbo/navorgenhet=no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.navorgenhet.asbo</extraarg>-->
-                                        <!--<extraarg>-p</extraarg>-->
-                                        <!--<extraarg>http://nav-cons-sak-gosys-3.0.0/no/nav/fault/navorgenhet=no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.navorgenhet.fault</extraarg>-->
-                                        <!--<extraarg>-p</extraarg>-->
-                                        <!--<extraarg>http://nav-cons-sak-gosys-3.0.0/no/nav/inf/navorgenhet=no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.navorgenhet.inf</extraarg>-->
                                     </extraargs>
                                 </wsdlOption>
                             </wsdlOptions>

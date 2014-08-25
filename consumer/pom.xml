@@ -41,14 +41,6 @@
             <groupId>no.nav</groupId>
             <artifactId>personsok-consumer</artifactId>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>no.nav</groupId>-->
-            <!--<artifactId>personsok-pdp</artifactId>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>no.nav</groupId>-->
-            <!--<artifactId>personsok-pip</artifactId>-->
-        <!--</dependency>-->
 
         <!--Kontrakter-->
         <dependency>
