@@ -11,7 +11,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.Sa
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
 
@@ -35,10 +34,10 @@ public class HentPersonPage extends BasePage {
         setupErrorText(pageParameters, hentPersonPanel);
         add(
                 new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel"),
-                new ContextImage("modia-logo", "img/modiaLogo.svg"),
                 hentPersonPanel,
                 new PlukkOppgavePanel("plukk-oppgave"),
-                new PersonsokPanel("personsokPanel").setVisible(true));
+                new PersonsokPanel("personsokPanel").setVisible(true)
+        );
     }
 
     private void setupErrorText(PageParameters pageParameters, HentPersonPanel hentPersonPanel) {

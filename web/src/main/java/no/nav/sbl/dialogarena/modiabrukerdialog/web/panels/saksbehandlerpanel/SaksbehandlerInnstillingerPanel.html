@@ -1,40 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
-<body>
-<wicket:panel>
-    <section class="saksbehandlerpanelflik">
-        <div class="tekst-anker">
-            <div class="nav-ident-pil"></div>
-            <div class="tekst-container">
-                <div>
-                    <wicket:message key="navIdent.tekst"/>
-                </div>
-                <div wicket:id="navIdent"/>
-                <div class="plusstegn">
-                    <wicket:message key="navIdent.plussSymbol"/>
-                </div>
-            </div>
-        </div>
-        <div wicket:id="apneSaksbehandlerInnstillingerPanel" class="click-object"></div>
-    </section>
-    <div wicket:id="valgContainer" class="nav-enhet">
-        <h3>
-            <wicket:message key="enhetsvalg.overskrift"/>
-        </h3>
-        <form wicket:id="enhetsform" class="centered enhetsform">
-            <wicket:container wicket:id="enhet">
-                <div wicket:id="enhetsvalg" class="enhetsvalg">
-                    <input wicket:id="enhetId" type="radio"/>
-                    <label wicket:for="enhetId" class="sort-skrift">
-                        <div wicket:id="enhetNavn"></div>
-                    </label>
-                </div>
-            </wicket:container>
-            <div class="midtstilt-innhold">
-                <a wicket:id="velg" class="send knapp-hoved-liten">velg</a>
-            </div>
-        </form>
-    </div>
-</wicket:panel>
-</body>
+	<body>
+		<wicket:panel>
+			<div class="saksbehandlerpanelflik">
+				<div wicket:id="apneSaksbehandlerInnstillingerPanel">
+					<img wicket:id="modia-logo" alt="Modia logo"/>
+				</div>
+			</div>
+			<div wicket:id="valgContainer" class="nav-enhet">
+				<h3>
+					<wicket:message key="enhetsvalg.overskrift"/>
+				</h3>
+				<form wicket:id="enhetsform" class="centered enhetsform">
+					<wicket:container wicket:id="enhet">
+						<div wicket:id="enhetsvalg" class="enhetsvalg">
+							<input wicket:id="enhetId" type="radio"/>
+							<label wicket:for="enhetId" class="sort-skrift">
+								<div wicket:id="enhetNavn"></div>
+							</label>
+						</div>
+					</wicket:container>
+					<div class="midtstilt-innhold">
+						<a wicket:id="velg" class="send knapp-hoved-liten">velg</a>
+					</div>
+				</form>
+			</div>
+		</wicket:panel>
+	</body>
 </html>

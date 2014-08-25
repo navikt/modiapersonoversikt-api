@@ -5,7 +5,6 @@
 	</wicket:head>
 	<wicket:extend>
 		<body class="main hentperson">
-			<wicket:container wicket:id="saksbehandlerInnstillingerPanel"/>
 			<section class="navbar menu-intern active">
 				<wicket:container wicket:id="plukk-oppgave"/>
 				<div id="hentPerson">
@@ -19,9 +18,9 @@
 						<span class="personsok-pil"></span>
 					</button>
 				</div>
+				<wicket:container wicket:id="saksbehandlerInnstillingerPanel"/>
 			</section>
 			<wicket:container wicket:id="personsokPanel"/>
-			<img class="modia-logo" wicket:id="modia-logo"/>
 		</body>
 	</wicket:extend>
 </html>

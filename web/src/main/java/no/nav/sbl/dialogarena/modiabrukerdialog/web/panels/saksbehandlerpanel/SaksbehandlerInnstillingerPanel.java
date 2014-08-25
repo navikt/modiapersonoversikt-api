@@ -10,6 +10,7 @@ import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -18,7 +19,6 @@ import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
 
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 
 public class SaksbehandlerInnstillingerPanel extends Panel {
@@ -60,15 +60,16 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
 
         valgContainer.add(form);
 
-        add(new WebMarkupContainer("apneSaksbehandlerInnstillingerPanel")
-                .add(new AjaxEventBehavior("click") {
-                    @Override
-                    protected void onEvent(AjaxRequestTarget target) {
-                        toggleSaksbehandlerPanel(target, valgContainer);
-                    }
-                }));
+        WebMarkupContainer apneSaksbehandlerInnstillingerPanel = new WebMarkupContainer("apneSaksbehandlerInnstillingerPanel");
+        apneSaksbehandlerInnstillingerPanel.add(new AjaxEventBehavior("click") {
+            @Override
+            protected void onEvent(AjaxRequestTarget target) {
+                toggleSaksbehandlerPanel(target, valgContainer);
+            }
+        });
+        apneSaksbehandlerInnstillingerPanel.add(new ContextImage("modia-logo", "img/modiaLogo.svg"));
 
-        add(new Label("navIdent", getSubjectHandler().getUid()), valgContainer);
+        add(apneSaksbehandlerInnstillingerPanel, valgContainer);
     }
 
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target, WebMarkupContainer valgContainer) {
