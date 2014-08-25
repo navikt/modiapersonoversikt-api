@@ -20,7 +20,7 @@ public class SaksbehandlerInnstillingerService {
     }
 
     public String getSaksbehandlerValgtEnhet() {
-        if (getCookieUtils().load(brukerSpesifikCookieId()) == null) {
+        if (!valgtEnhetCookieEksisterer()) {
             return ansattService.hentEnhetsliste().get(0).enhetId;
         } else {
             return getCookieUtils().load(brukerSpesifikCookieId());
@@ -29,6 +29,10 @@ public class SaksbehandlerInnstillingerService {
 
     public void setSaksbehandlerValgtEnhetCookie(String valgtEnhet) {
         getCookieUtils().save(brukerSpesifikCookieId(), valgtEnhet);
+    }
+
+    public boolean valgtEnhetCookieEksisterer() {
+        return getCookieUtils().load(brukerSpesifikCookieId()) != null;
     }
 
     private String brukerSpesifikCookieId() {
