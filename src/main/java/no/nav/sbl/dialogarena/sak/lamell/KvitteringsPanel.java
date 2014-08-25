@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sak.lamell;
 
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
+import no.nav.sbl.dialogarena.sak.util.SakDateFormatter;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -17,7 +18,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.List;
-import java.util.Locale;
 
 import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -39,7 +39,8 @@ public class KvitteringsPanel extends Panel {
 
         int antallInnsendteVedlegg = kvittering.innsendteDokumenter.size();
         int totalAntallVedlegg = antallInnsendteVedlegg + kvittering.manglendeDokumenter.size();
-        String dato = kvittering.behandlingDato.toString("d. MMMM yyyy, HH:mm", new Locale("nb", "no"));
+
+        String dato = SakDateFormatter.printFullDate(kvittering.behandlingDato);
         String sendtAvString = cms.hentTekst("kvittering.sendt.av");
 
         add(

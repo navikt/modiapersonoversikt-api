@@ -25,11 +25,15 @@ public class SakDateFormatter {
                 .print(dateTime);
     }
 
-    public static String printFullDate(DateTime dateTime) {
+    public static String printTime(DateTime dateTime) {
         throwExceptionIfNullDate(dateTime);
-        return forPattern("d. MMMM yyyy, HH:mm")
+        return forPattern("HH:mm")
                 .withLocale(LOCALE)
                 .print(dateTime);
+    }
+
+    public static String printFullDate(DateTime dateTime) {
+        return String.format("%s, kl. %s", printLongDate(dateTime), printTime(dateTime));
     }
 
     private static void throwExceptionIfNullDate(DateTime dateTime) {
