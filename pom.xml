@@ -20,6 +20,9 @@
         <module>jee</module>
         <module>mock</module>
         <module>consumer</module>
+        <module>modia-pep</module>
+        <module>modia-pip</module>
+        <module>modia-pdp</module>
     </modules>
 
     <properties>
@@ -53,6 +56,9 @@
         <ws.security.version>1.6.10</ws.security.version>
         <mockito.version>1.9.5</mockito.version>
         <jodatime.version>2.2</jodatime.version>
+        <org.apache.cxf.version>2.7.6</org.apache.cxf.version>
+        <aspectj.version>1.7.2</aspectj.version>
+
         <!-- Modia-komponenter-->
         <personsok.version>1.0.80</personsok.version>
         <kjerneinfo.versjon>1.0.80</kjerneinfo.versjon>
@@ -75,28 +81,6 @@
                 <groupId>no.nav</groupId>
                 <artifactId>personsok-panel</artifactId>
                 <version>${personsok.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>no.nav</groupId>
-                <artifactId>personsok-pdp</artifactId>
-                <version>${personsok.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>no.nav</groupId>
-                <artifactId>personsok-pip</artifactId>
-                <version>${personsok.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>xml-apis</groupId>
-                        <artifactId>xml-apis</artifactId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>no.nav</groupId>
@@ -534,6 +518,11 @@
             </dependency>
             <dependency>
                 <groupId>no.nav.modig</groupId>
+                <artifactId>modig-security-authorization-pip-ut</artifactId>
+                <version>${modig.security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>no.nav.modig</groupId>
                 <artifactId>modig-wicket-test</artifactId>
                 <version>1.0.0</version>
                 <scope>test</scope>
@@ -832,7 +821,16 @@
                 <artifactId>mockito-core</artifactId>
                 <version>${mockito.version}</version>
             </dependency>
-
+            <dependency>
+                <groupId>org.aspectj</groupId>
+                <artifactId>aspectjweaver</artifactId>
+                <version>${aspectj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.security</groupId>
+                <artifactId>jbossxacml</artifactId>
+                <version>2.0.9.Final</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

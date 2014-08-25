@@ -1,0 +1,44 @@
+<ns:jbosspdp xmlns:ns="urn:jboss:xacml:2.0">
+    <ns:Policies>
+        <ns:PolicySet>
+            <ns:Location>policy/modia-policyset.xml</ns:Location>
+            <ns:Policy>
+                <ns:Location>policy/diskresjon-policy.xml</ns:Location>
+            </ns:Policy>
+            <ns:Policy>
+                <ns:Location>policy/geografisk-policy.xml</ns:Location>
+            </ns:Policy>
+        </ns:PolicySet>
+    </ns:Policies>
+    <ns:Locators>
+        <!-- JBossPolicySetLocator må alltid være med -->
+        <ns:Locator Name="org.jboss.security.xacml.locators.JBossPolicySetLocator" />
+
+        <ns:Locator Name="no.nav.modig.security.tilgangskontroll.policy.pip.PicketLinkAttributeCacheLocator">
+            <ns:Option Name="attributeLocatorClass">no.nav.modig.security.tilgangskontroll.policy.pip.LDAPRoleAttributeLocator</ns:Option>
+            <ns:Option Name="url">${ldap.url}</ns:Option>
+            <ns:Option Name="username">${ldap.username}</ns:Option>
+            <ns:Option Name="password">${ldap.password}</ns:Option>
+            <ns:Option Name="baseDN">OU=Users,OU=NAV,OU=BusinessUnits,${ldap.basedn}</ns:Option>
+            <ns:Option Name="attributeSupportedId">urn:oasis:names:tc:xacml:2.0:subject:role</ns:Option>
+            <ns:Option Name="cacheKeySubjectID">urn:oasis:names:tc:xacml:1.0:subject:subject-id</ns:Option>
+            <ns:Option Name="attributeCacheName">pip.role</ns:Option>
+        </ns:Locator>
+
+        <ns:Locator Name="no.nav.modig.security.tilgangskontroll.policy.pip.PicketLinkAttributeCacheLocator">
+            <ns:Option Name="attributeLocatorClass">no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator</ns:Option>
+            <ns:Option Name="attributeSupportedId">urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet</ns:Option>
+            <ns:Option Name="attributeDesignatorInt">0</ns:Option>
+            <ns:Option Name="cacheKeySubjectID">urn:oasis:names:tc:xacml:1.0:subject:subject-id</ns:Option>
+            <ns:Option Name="attributeCacheName">pip.localenhet</ns:Option>
+        </ns:Locator>
+
+        <ns:Locator Name="no.nav.modig.security.tilgangskontroll.policy.pip.PicketLinkAttributeCacheLocator">
+            <ns:Option Name="attributeLocatorClass">no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator</ns:Option>
+            <ns:Option Name="attributeSupportedId">urn:nav:ikt:tilgangskontroll:xacml:subject:fylkesenhet</ns:Option>
+            <ns:Option Name="attributeDesignatorInt">0</ns:Option>
+            <ns:Option Name="cacheKeySubjectID">urn:oasis:names:tc:xacml:1.0:subject:subject-id</ns:Option>
+            <ns:Option Name="attributeCacheName">pip.fylkesenhet</ns:Option>
+        </ns:Locator>
+    </ns:Locators>
+</ns:jbosspdp>

@@ -5,6 +5,7 @@ import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketApplication;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PlukkOppgavePepMockContext;
+import no.nav.sbl.modiabrukerdialog.pep.config.spring.PepTestConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -19,6 +20,7 @@ import static org.mockito.Mockito.when;
 @Import({
         WicketApplicationTestContext.class,
         KjerneinfoPepMockContext.class,
+		PepTestConfig.class,
         PlukkOppgavePepMockContext.class
 })
 public class WicketTesterConfig {
