@@ -44,13 +44,13 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void sjekkAtSaksbehandlerPanelVisesVedKlikkPaNavIdentKnapp() {
+    public void sjekkAtSaksbehandlerPanelTogglesVedKlikkPaNavIdentKnapp() {
         wicket
                 .goTo(SaksbehandlerInstillingerTestPage.class)
-                .should().containComponent(thatIsInvisible().and(ofType(SaksbehandlerInnstillingerPanel.class)))
+                .should().containComponent(thatIsVisible().and(ofType(SaksbehandlerInnstillingerPanel.class)))
                 .onComponent(ofType(SaksbehandlerInstillingerTogglerPanel.class))
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
-                .should().containComponent(thatIsVisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
+                .should().containComponent(thatIsInvisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
     }
 
     @Test
@@ -59,8 +59,6 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
         when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(ansattEnheter);
         wicket
                 .goTo(SaksbehandlerInstillingerTestPage.class)
-                .onComponent(ofType(SaksbehandlerInstillingerTogglerPanel.class))
-                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .inForm(withId("enhetsform"))
                 .select("enhet", 1)
                 .submitWithAjaxButton(withId("velg"))
