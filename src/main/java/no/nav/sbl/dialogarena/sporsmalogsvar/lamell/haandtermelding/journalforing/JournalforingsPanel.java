@@ -9,7 +9,6 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 
 public class JournalforingsPanel extends AnimertPanel {
 
@@ -51,7 +50,7 @@ public class JournalforingsPanel extends AnimertPanel {
         super.togglePanel(target);
     }
 
-    @RunOnEvents({VALGT_MELDING_EVENT, TRAAD_JOURNALFORT})
+    @RunOnEvents(TRAAD_JOURNALFORT)
     @Override
     public void lukkPanel(AjaxRequestTarget target) {
         super.lukkPanel(target);

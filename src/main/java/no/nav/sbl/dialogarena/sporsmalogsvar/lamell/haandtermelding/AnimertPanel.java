@@ -4,6 +4,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
 
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel.PANEL_LUKKET;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.HaandterMeldingPanel.PANEL_TOGGLET;
 import static org.apache.wicket.event.Broadcast.BREADTH;
@@ -37,6 +38,7 @@ public abstract class AnimertPanel extends Panel {
         }
     }
 
+    @RunOnEvents(VALGT_MELDING_EVENT)
     public void lukkPanel(AjaxRequestTarget target) {
         if (isVisibilityAllowed()) {
             target.prependJavaScript("lukket|$('#" + this.getMarkupId() + "').slideUp(lukket)");

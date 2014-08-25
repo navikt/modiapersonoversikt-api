@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgave;
 
-import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -20,7 +19,6 @@ import org.apache.wicket.model.StringResourceModel;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 
 public class NyOppgavePanel extends AnimertPanel {
 
@@ -76,12 +74,6 @@ public class NyOppgavePanel extends AnimertPanel {
 
     private void nullstillSkjema() {
         nyOppgaveModel.setObject(new NyOppgave());
-    }
-
-    @RunOnEvents(VALGT_MELDING_EVENT)
-    @Override
-    public void lukkPanel(AjaxRequestTarget target) {
-        super.lukkPanel(target);
     }
 
 }
