@@ -37,6 +37,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
     private static final String BESVAR_ID = "besvar";
     private static final String NYOPPGAVE_VALG_ID = "nyoppgaveValg";
     private static final String JOURNALFOR_VALG_ID = "journalforingValg";
+    private static final String MERKE_VALG_ID = "merkeValg";
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
@@ -106,6 +107,16 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
     }
 
     @Test
+    public void skalIkkeKunneMerkeMeldingHvisEldsteMeldingErJournalfort() {
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
+                createMeldingMedJournalfortDato("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1", now())));
+
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM(henvendelseBehandlingService, "fnr")))
+                .should().containComponent(thatIsDisabled().and(withId(MERKE_VALG_ID)));
+    }
+
+
+    @Test
     public void skalViseJournalforingsPanelogSkjuleNyOppgavePanelVedKlikkPaaJournalfor() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1")));
@@ -116,4 +127,5 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
                 .should().containComponent(thatIsVisible().and(ofType(JournalforingsPanel.class)))
                 .should().containComponent(thatIsInvisible().and(ofType(NyOppgavePanel.class)));
     }
+
 }

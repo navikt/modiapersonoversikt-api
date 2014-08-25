@@ -12,7 +12,6 @@ import org.apache.wicket.model.PropertyModel;
 
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
-import static no.nav.modig.wicket.model.ModelUtils.TRUE;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static org.apache.wicket.event.Broadcast.EXACT;
 
@@ -43,6 +42,7 @@ public class HaandterMeldingPanel extends Panel {
 
         MerkePanel merkePanel = new MerkePanel("merke-panel", innboksVM);
         add(merkePanel);
-        add(new MeldingValgPanel("merkeValg", TRUE, merkePanel));
+        add(new MeldingValgPanel("merkeValg", not(new PropertyModel<Boolean>(innboksVM, "valgtTraad.eldsteMelding.journalfort")), merkePanel));
     }
+
 }

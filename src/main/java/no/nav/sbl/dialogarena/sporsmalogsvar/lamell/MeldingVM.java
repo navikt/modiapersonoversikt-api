@@ -43,6 +43,10 @@ public class MeldingVM implements Serializable {
         return melding.journalfortDato == null ? "" : Datoformat.kort(melding.journalfortDato);
     }
 
+    public boolean isJournalfort() {
+        return melding.journalfortDato != null;
+    }
+
     public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {
         @Override
         public int compare(MeldingVM o1, MeldingVM o2) {
