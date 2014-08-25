@@ -1,0 +1,23 @@
+<ns:jbosspdp xmlns:ns="urn:jboss:xacml:2.0">
+    <ns:Policies>
+        <ns:PolicySet>
+            <ns:Location>policy/modia-policyset.xml</ns:Location>
+            <ns:Policy>
+                <ns:Location>policy/diskresjon-policy.xml</ns:Location>
+            </ns:Policy>
+            <ns:Policy>
+                <ns:Location>policy/geografisk-policy.xml</ns:Location>
+            </ns:Policy>
+        </ns:PolicySet>
+    </ns:Policies>
+    <ns:Locators>
+        <ns:Locator Name="org.jboss.security.xacml.locators.JBossPolicySetLocator" />
+        <ns:Locator Name="no.nav.sbl.modiabrukerdialog.pdp.config.mock.MockAttributeLocator">
+            <ns:Option Name="attributeSupportedId">urn:oasis:names:tc:xacml:2.0:subject:role,urn:nav:ikt:tilgangskontroll:xacml:subject:alive</ns:Option>
+        </ns:Locator>
+        <ns:Locator Name="no.nav.sbl.modiabrukerdialog.pdp.config.mock.MockAttributeLocator">
+            <ns:Option Name="attributeSupportedId">urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet,urn:nav:ikt:tilgangskontroll:xacml:subject:fylkesenhet</ns:Option>
+            <ns:Option Name="attributeDesignatorInt">0</ns:Option>
+        </ns:Locator>
+    </ns:Locators>
+</ns:jbosspdp>

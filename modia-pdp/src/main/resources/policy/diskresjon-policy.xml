@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os http://docs.oasis-open.org/xacml/access_control-xacml-2.0-policy-schema-os.xsd"
+        PolicyId="urn:xacml:2.0:nav.modia:policysetid:diskresjon"
+        RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
+
+    <Description>Policies applicable to resultset of component Personsok.</Description>
+    <Target />
+
+    <Rule RuleId="modia-deny-if-not-kode6" Effect="Deny" >
+        <Target>
+            <Resources>
+                <!-- if resource is flagged code 6 -->
+                <Resource>
+                    <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">6</AttributeValue>
+                        <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code" />
+                    </ResourceMatch>
+                </Resource>
+            </Resources>
+        </Target>
+        <Condition>
+            <!-- if resource doesn't have role AD:0000-GA-GOSYS_KODE6 -->
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-GOSYS_KODE6</AttributeValue>
+                    <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role" />
+                </Apply>
+            </Apply>
+        </Condition>
+    </Rule>
+
+    <Rule RuleId="modia-deny-if-not-kode7" Effect="Deny" >
+        <Target>
+            <Resources>
+                <!-- if resource is flagged code 6 -->
+                <Resource>
+                    <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">7</AttributeValue>
+                        <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code" />
+                    </ResourceMatch>
+                </Resource>
+            </Resources>
+        </Target>
+        <Condition>
+            <!-- if resource doesn't have role AD:0000-GA-GOSYS_KODE6 -->
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-GOSYS_KODE7</AttributeValue>
+                    <SubjectAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role" />
+                </Apply>
+            </Apply>
+        </Condition>
+    </Rule>
+    <Rule RuleId="allow-access-by-default" Effect="Permit" />
+</Policy>

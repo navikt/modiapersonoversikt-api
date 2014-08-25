@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidget
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
 import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
+import no.nav.sbl.modiabrukerdialog.pep.config.spring.PepConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -24,7 +25,8 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         SykepengerWidgetMockContext.class,
         SaksbehandlerInnstillingerPanelMockContext.class,
         UtbetalingLamellContext.class,
-        SporsmalOgSvarContext.class
+        SporsmalOgSvarContext.class,
+		PepConfig.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MockSetupPageTest extends WicketPageTest {
