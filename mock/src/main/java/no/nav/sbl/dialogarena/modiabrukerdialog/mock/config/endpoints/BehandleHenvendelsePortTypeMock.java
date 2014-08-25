@@ -37,6 +37,10 @@ public class BehandleHenvendelsePortTypeMock {
 
             @Override
             public void oppdaterKontorsperre(String enhet, List<String> behandlingsIdListe) {
+                for (String id : behandlingsIdListe) {
+                    XMLHenvendelse xmlHenvendelse = hentHenvendelse(id);
+                    xmlHenvendelse.setKontorsperreEnhet(enhet);
+                }
             }
 
             @Override
