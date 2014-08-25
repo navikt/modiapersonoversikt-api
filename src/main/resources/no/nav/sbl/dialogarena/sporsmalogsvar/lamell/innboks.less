@@ -259,59 +259,53 @@
     position: absolute;
     top: -34px;
     right: 0;
-    [class*="-knapp"] {
-      background-repeat: no-repeat;
-      padding-left: 1.3em;
-    }
     .meldingsvalg {
       display: inline-block;
       &:not(:last-child) {
         margin-right: 1em;
       }
-      a:hover {
-        text-decoration: underline;
+      &.besvar span {
+          background-image: url(../img/besvar_inaktiv.svg);
       }
-      &:not(.inaktiv) {
-        &.besvar-knapp {
-          background-image: url(../img/besvar.svg);
-        }
-        .journalfor-knapp {
-          background-image: url(../img/journalfore.svg);
-        }
-        .nyoppgave-knapp {
-          background-image: url(../img/ny_oppgave.svg);
-        }
-        .merke-knapp {
-          background-image: url(../img/merk_ikon_blaa.svg);
-        }
+      &.journalfor span {
+          background-image: url(../img/journalfore_inaktiv.svg);
       }
-      &.inaktiv {
+      &.nyoppgave span {
+          background-image: url(../img/ny_oppgave_inaktiv.svg);
+      }
+      &.inaktiv .pil {
+        .pil(6px, darkgray);
+      }
+      span {
         color: darkgray;
         em {
           font-style: normal;
         }
-        &.besvar-knapp {
-          background-image: url(../img/besvar_inaktiv.svg);
-        }
-        .journalfor-knapp {
-          background-image: url(../img/journalfore_inaktiv.svg);
-          }
-        .nyoppgave-knapp {
-          background-image: url(../img/ny_oppgave_inaktiv.svg);
-        }
-        .merke-knapp {
-          background-image: url(../img/merk_ikon_graa.svg);
-        }
-        .pil {
-          visibility: hidden;
-        }
       }
-
-      .pil {
-        display: inline-block;
-        margin-bottom: 1px;
-        .pil(6px, @dodgerblue); // definisjon i personpage.less
+      &.besvar a {
+          background-image: url(../img/besvar.svg);
       }
+      &.journalfor a {
+          background-image: url(../img/journalfore.svg);
+      }
+      &.nyoppgave a {
+          background-image: url(../img/ny_oppgave.svg);
+      }
+      &.merke a {
+          background-image: url(../img/merk_ikon_blaa.svg);
+      }
+      a, span {
+        background-repeat: no-repeat;
+        padding-left: 1.3em;
+      }
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .pil {
+      display: inline-block;
+      margin-bottom: 1px;
+      .pil(6px, @dodgerblue); // definisjon i personpage.less
     }
   }
 

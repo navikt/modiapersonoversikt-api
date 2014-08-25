@@ -5,19 +5,14 @@
 <body>
 <wicket:panel>
     <div class="haandter-meldinger">
-        <a href="#" wicket:id="besvar" class="meldingsvalg besvar-knapp">Besvar</a>
-
-        <div wicket:id="journalfor-container" class="meldingsvalg">
-            <a href="#" wicket:id="journalfor-link" class="journalfor-knapp">Journalfør</a>
-            <span wicket:id="journalfor-pil" class="pil"></span>
+        <div class="meldingsvalg besvar">
+            <a href="#" wicket:id="besvar">Besvar</a>
         </div>
-        <div wicket:id="nyoppgave-container" class="meldingsvalg">
-            <a href="#" wicket:id="nyoppgave-link" class="nyoppgave-knapp">Ny Oppgave</a>
-            <span wicket:id="nyoppgave-pil" class="pil"></span>
+        <div wicket:id="journalforingValg" class="meldingsvalg journalfor">
         </div>
-        <div wicket:id="merke-container" class="meldingsvalg">
-            <a href="#" wicket:id="merke-link" class="merke-knapp">Merke</a>
-            <span wicket:id="merke-pil" class="pil"></span>
+        <div wicket:id="nyoppgaveValg" class="meldingsvalg nyoppgave">
+        </div>
+        <div wicket:id="merkeValg" class="meldingsvalg merke">
         </div>
     </div>
     <section wicket:id="journalfor-panel" class="haandtermeldingpanel journalforing"></section>

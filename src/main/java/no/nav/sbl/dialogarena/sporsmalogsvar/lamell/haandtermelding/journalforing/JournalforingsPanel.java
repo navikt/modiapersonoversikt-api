@@ -20,7 +20,6 @@ public class JournalforingsPanel extends AnimertPanel {
 
     public JournalforingsPanel(String id, final InnboksVM innboksVM) {
         super(id);
-        setOutputMarkupPlaceholderTag(true);
 
         journalforingsPanelEnkeltSak = new JournalforingsPanelEnkeltSak("journalforingsPanelEnkeltSak", innboksVM);
         journalforingsPanelVelgSak = new JournalforingsPanelVelgSak("journalforingsPanelVelgSak", innboksVM);

@@ -31,7 +31,6 @@ public class NyOppgavePanel extends AnimertPanel {
 
     public NyOppgavePanel(String id, final InnboksVM innboksVM) {
         super(id);
-        setOutputMarkupPlaceholderTag(true);
 
         add(new Label("temagruppe", new StringResourceModel("${temagruppe}", this, new PropertyModel<>(innboksVM, "valgtTraad.eldsteMelding.melding"))));
 

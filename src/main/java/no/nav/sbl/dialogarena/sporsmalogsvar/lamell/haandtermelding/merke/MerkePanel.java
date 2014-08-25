@@ -26,7 +26,6 @@ public class MerkePanel extends AnimertPanel {
 
     public MerkePanel(String id, final InnboksVM innboksVM) {
         super(id);
-        setOutputMarkupPlaceholderTag(true);
 
         Form form = new Form("form");
         final CheckBox checkBox = new CheckBox("kontorsperret", Model.of(false));
