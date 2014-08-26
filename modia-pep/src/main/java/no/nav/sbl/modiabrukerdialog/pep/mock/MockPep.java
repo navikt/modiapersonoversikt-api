@@ -33,6 +33,11 @@ public class MockPep implements EnforcementPoint{
 		return true;
 	}
 
+	/**
+	 *
+	 * @param request
+	 * @return false if discretion code 6 or 7
+	 */
 	@Override
 	public PolicyResponse evaluate(PolicyRequest request) {
 		return hasAccess(request) ? new PolicyResponse(Decision.Permit) : new PolicyResponse(Decision.Deny);

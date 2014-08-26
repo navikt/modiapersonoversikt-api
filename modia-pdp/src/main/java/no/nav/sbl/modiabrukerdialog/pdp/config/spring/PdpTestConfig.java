@@ -28,7 +28,7 @@ public class PdpTestConfig {
 		return new PicketLinkDecisionPoint(getConfigUrl("config/modia-policy-config-test.xml"));
 	}
 
-	private URL getConfigUrl(String path) {
+	protected URL getConfigUrl(String path) {
 		try {
 			return new ClassPathResource(path).getURL();
 		} catch (IOException e) {

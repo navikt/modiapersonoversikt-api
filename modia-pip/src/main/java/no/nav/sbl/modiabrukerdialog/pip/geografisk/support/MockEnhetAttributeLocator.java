@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
  * Mock LDAP Role attribute locator.
  */
 public class MockEnhetAttributeLocator extends AttributeLocator {
@@ -28,6 +27,10 @@ public class MockEnhetAttributeLocator extends AttributeLocator {
 	public MockEnhetAttributeLocator() {
 		this.attributeDesignatorSupported = true;
 		this.attributeSelectorSupported = true;
+		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET);
+		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET);
+		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_ROLLE);
+
 
 		this.designatorTypes.add(Integer.valueOf(0));
 	}
@@ -44,7 +47,9 @@ public class MockEnhetAttributeLocator extends AttributeLocator {
 		String subjectId = getSubjectId(context);
 		Set<AttributeValue> values = new HashSet<>();
 
-		if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET)) {
+		if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_ROLLE)) {
+			addRoleValue(subjectId, values);
+		} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET)) {
 			addEnhetValue(subjectId, values);
 		} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET)) {
 			addEnhetValue(subjectId, values);
@@ -53,14 +58,13 @@ public class MockEnhetAttributeLocator extends AttributeLocator {
 		return new EvaluationResult(new BagAttribute(attributeType, values));
 	}
 
-//	private void addRoleValue(String subjectId, Set<AttributeValue> values) {
-//		if (subjectId.endsWith("900001")) {
-//			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-GOSYS-NASJONAL"));
-//			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-GOSYS-NASJONAL"));
-//		} else if (subjectId.endsWith("900002")) {
-//			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-GOSYS-UTVIDBAR_TIL_REGIONAL"));
-//		}
-//	}
+	private void addRoleValue(String subjectId, Set<AttributeValue> values) {
+		if (subjectId.endsWith("900001")) {
+			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-GOSYS-NASJONAL"));
+		} else if (subjectId.endsWith("900002")) {
+			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-GOSYS-UTVIDBAR_TIL_REGIONAL"));
+		}
+	}
 
 	private void addEnhetValue(String subjectId, Set<AttributeValue> values) {
 		if (subjectId.endsWith("900002")) {

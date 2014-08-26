@@ -29,6 +29,7 @@ public class EnhetAttributeLocator extends AttributeLocator {
 	public static final URI SUBJECT_ID = URI.create(XACMLConstants.ATTRIBUTEID_SUBJECT_ID);
 	public static final URI ATTRIBUTEID_LOCAL_ENHET = URI.create("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet");
 	public static final URI ATTRIBUTEID_FYLKESENHET = URI.create("urn:nav:ikt:tilgangskontroll:xacml:subject:fylkesenhet");
+	public static final URI ATTRIBUTEID_ROLLE = URI.create("urn:oasis:names:tc:xacml:2.0:subject:role");
 
 
 	private EnhetAttributeLocatorDelegate delegate;
