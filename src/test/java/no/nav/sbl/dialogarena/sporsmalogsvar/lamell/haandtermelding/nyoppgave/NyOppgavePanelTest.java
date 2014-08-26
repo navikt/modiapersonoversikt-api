@@ -77,15 +77,15 @@ public class NyOppgavePanelTest extends WicketPageTest {
     public void skalGiFeilmeldingHvisManSenderInnSkjemaUtenAAFylleInnAlleFeltene() {
         TestNyOppgavePanel nyOppgavePanel = new TestNyOppgavePanel("panel", innboksVM);
         wicket.goToPageWith(nyOppgavePanel)
-                .inForm("panel:nyoppgaveform")
+                .inForm("panel:nyoppgave-form:nyoppgaveform")
                 .submit();
 
         List<String> errorMessages = wicket.get().errorMessages();
-        assertTrue(errorMessages.contains(nyOppgavePanel.get("nyoppgaveform").getString("nyoppgaveform.tema.Required")));
-        assertTrue(errorMessages.contains(nyOppgavePanel.get("nyoppgaveform").getString("nyoppgaveform.enhet.Required")));
-        assertTrue(errorMessages.contains(nyOppgavePanel.get("nyoppgaveform").getString("nyoppgaveform.type.Required")));
-        assertTrue(errorMessages.contains(nyOppgavePanel.get("nyoppgaveform").getString("nyoppgaveform.prioritet.Required")));
-        assertTrue(errorMessages.contains(nyOppgavePanel.get("nyoppgaveform").getString("nyoppgaveform.beskrivelse.Required")));
+        assertTrue(errorMessages.contains(nyOppgavePanel.get("nyoppgave-form:nyoppgaveform").getString("nyoppgaveform.tema.Required")));
+        assertTrue(errorMessages.contains(nyOppgavePanel.get("nyoppgave-form:nyoppgaveform").getString("enhet.Required")));
+        assertTrue(errorMessages.contains(nyOppgavePanel.get("nyoppgave-form:nyoppgaveform").getString("type.Required")));
+        assertTrue(errorMessages.contains(nyOppgavePanel.get("nyoppgave-form:nyoppgaveform").getString("prioritet.Required")));
+        assertTrue(errorMessages.contains(nyOppgavePanel.get("nyoppgave-form:nyoppgaveform").getString("beskrivelse.Required")));
     }
 
     @Test
@@ -104,7 +104,7 @@ public class NyOppgavePanelTest extends WicketPageTest {
         TestNyOppgavePanel nyOppgavePanel = new TestNyOppgavePanel("panel", innboksVM);
         MockitoAnnotations.initMocks(this);
         wicket.goToPageWith(nyOppgavePanel)
-                .inForm("panel:nyoppgaveform")
+                .inForm("panel:nyoppgave-form:nyoppgaveform")
                     .select("tema", 0)
                     .select("enhet", 0)
                     .select("type", 0)

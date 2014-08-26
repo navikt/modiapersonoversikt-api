@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head></head>
+<body>
+<wicket:panel>
+    <form wicket:id="nyoppgaveform">
+        <label>
+            <wicket:message key="nyoppgave.form.label.tema"/>
+            <select wicket:id="tema"></select>
+        </label>
+        <label>
+            <wicket:message key="nyoppgave.form.label.tilenhet"/>
+            <select wicket:id="enhet"></select>
+        </label>
+        <label>
+            <wicket:message key="nyoppgave.form.label.oppgavetype"/>
+            <select wicket:id="type"></select>
+        </label>
+        <label>
+            <wicket:message key="nyoppgave.form.label.prioritet"/>
+            <select wicket:id="prioritet"></select>
+        </label>
+        <label>
+            <wicket:message key="nyoppgave.form.label.beskrivelse"/>
+            <textarea wicket:id="beskrivelse"></textarea>
+        </label>
+
+        <div class="robust-strek"></div>
+        <div wicket:id="feedback"></div>
+        <a wicket:id="opprettoppgave" class="knapp-hoved-stor">
+            <wicket:message key="nyoppgave.form.opprett"/>
+        </a>
+    </form>
+</wicket:panel>
+</body>
+</html>
