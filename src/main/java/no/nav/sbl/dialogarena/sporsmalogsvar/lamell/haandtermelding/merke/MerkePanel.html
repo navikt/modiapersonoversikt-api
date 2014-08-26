@@ -8,13 +8,18 @@
         <wicket:message key="merke.overskrift"/>
     </h2>
     <div class="robust-strek"></div>
-    <form wicket:id="form">
-        <h2 class="medium">Merk som kontorsperret</h2>
-        <input wicket:id="kontorsperret" type="checkbox" id="opprett-oppgave"><label for="opprett-oppgave">Opprett oppgave</label>
-        <div class="merk-container">
-            <a href="#" wicket:id="merk" class="knapp-hoved-stor">Merk</a>
-        </div>
+    <h2 class="medium">Merk som kontorsperret</h2>
+    <form>
+        <input wicket:id="opprett-oppgave" type="checkbox" id="opprett-oppgave">
+        <label for="opprett-oppgave">Opprett oppgave</label>
     </form>
+
+    <div wicket:id="nyoppgave-form"></div>
+
+    <div class="merk-container">
+        <a href="#" wicket:id="merk" class="knapp-hoved-stor">Merk</a>
+    </div>
+
     <a href="#" wicket:id="avbryt" class="avbryt-knapp">Avbryt</a>
 </wicket:panel>
 </body>

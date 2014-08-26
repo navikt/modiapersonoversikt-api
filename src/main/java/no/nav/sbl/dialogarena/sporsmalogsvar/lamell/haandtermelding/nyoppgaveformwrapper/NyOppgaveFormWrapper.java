@@ -16,7 +16,7 @@ import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 
-public abstract class NyOppgaveFormWrapper extends Panel {
+public class NyOppgaveFormWrapper extends Panel {
 
     @Inject
     private GsakService gsakService;
