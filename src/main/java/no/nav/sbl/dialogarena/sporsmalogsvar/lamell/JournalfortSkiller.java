@@ -11,7 +11,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 public class JournalfortSkiller extends Panel {
 
 
-    public JournalfortSkiller(String id, final IModel<MeldingVM> model) {
+    public JournalfortSkiller(String id, final IModel<?> model) {
         super(id, new CompoundPropertyModel<>(model));
         setOutputMarkupPlaceholderTag(true);
 
