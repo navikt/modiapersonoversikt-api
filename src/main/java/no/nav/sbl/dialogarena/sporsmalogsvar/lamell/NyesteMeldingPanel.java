@@ -19,7 +19,7 @@ import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 
 public class NyesteMeldingPanel extends Panel {
 
-    AvsenderBilde avsenderbilde;
+    private AvsenderBilde avsenderbilde;
 
     public NyesteMeldingPanel(String id, final InnboksVM innboksVM) {
         super(id, new CompoundPropertyModel<>(new PropertyModel<MeldingVM>(innboksVM, "valgtTraad.nyesteMelding")));
