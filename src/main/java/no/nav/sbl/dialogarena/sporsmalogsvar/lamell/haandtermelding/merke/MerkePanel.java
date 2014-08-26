@@ -3,18 +3,12 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.NyOppgaveFormWrapper;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.opprettoppgave.OpprettOppgave;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
-import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
-
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 
 public class MerkePanel extends AnimertPanel {
 
@@ -26,26 +20,8 @@ public class MerkePanel extends AnimertPanel {
     public MerkePanel(String id, final InnboksVM innboksVM) {
         super(id);
 
-        final IModel<Boolean> skalOppretteOppgave = Model.of(false);
-        final IModel<Boolean> erOppgaveOpprettet = Model.of(false);
 
-        CheckBox opprettOppgaveCheckbox = new CheckBox("opprett-oppgave", skalOppretteOppgave);
-
-        final NyOppgaveFormWrapper nyoppgaveForm = new NyOppgaveFormWrapper("nyoppgave-form", innboksVM){
-            @Override
-            protected void etterSubmit(AjaxRequestTarget target) {
-                erOppgaveOpprettet.setObject(true);
-            }
-        };
-        nyoppgaveForm.setOutputMarkupPlaceholderTag(true);
-        nyoppgaveForm.add(visibleIf(skalOppretteOppgave));
-
-        opprettOppgaveCheckbox.add(new AjaxFormComponentUpdatingBehavior("change") {
-            @Override
-            protected void onUpdate(AjaxRequestTarget target) {
-                target.add(nyoppgaveForm);
-            }
-        });
+        final OpprettOppgave opprettOppgavePanel = new OpprettOppgave("opprett-oppgave-panel", innboksVM);
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);
@@ -53,13 +29,12 @@ public class MerkePanel extends AnimertPanel {
         AjaxLink merkeLink = new AjaxLink("merk") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                if (kanMerkeSomKontorsperret(skalOppretteOppgave.getObject(), erOppgaveOpprettet.getObject())) {
+                if (opprettOppgavePanel.kanMerkeSomKontorsperret()) {
                     henvendelse.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
                     innboksVM.oppdaterMeldinger();
                     lukkPanel(target);
 
-                    erOppgaveOpprettet.setObject(false);
-                    skalOppretteOppgave.setObject(false);
+                    opprettOppgavePanel.reset();
                 } else {
                     error(getString("kontorsperre.oppgave.opprettet.feil"));
                     target.add(feedbackPanel);
@@ -73,10 +48,6 @@ public class MerkePanel extends AnimertPanel {
                 lukkPanel(target);
             }
         };
-        add(opprettOppgaveCheckbox, nyoppgaveForm, feedbackPanel, merkeLink, avbrytLink);
-    }
-
-    private static boolean kanMerkeSomKontorsperret(boolean skalOppretteOppgave, boolean harOpprettetOppgave) {
-        return !skalOppretteOppgave || harOpprettetOppgave;
+        add(opprettOppgavePanel, feedbackPanel, merkeLink, avbrytLink);
     }
 }
