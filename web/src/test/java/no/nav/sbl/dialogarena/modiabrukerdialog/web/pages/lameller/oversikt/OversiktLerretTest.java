@@ -4,6 +4,7 @@ import no.nav.modig.modia.widget.LenkeWidget;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.KodeverkV2PortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.sak.config.SaksoversiktServiceConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
@@ -24,7 +25,8 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
         UtbetalingLamellContext.class,
         SporsmalOgSvarContext.class,
         SaksoversiktServiceConfig.class,
-        KodeverkV2PortTypeMock.class
+        KodeverkV2PortTypeMock.class,
+        PersonPageMockContext.class
 })
 public class OversiktLerretTest extends WicketPageTest {
 
