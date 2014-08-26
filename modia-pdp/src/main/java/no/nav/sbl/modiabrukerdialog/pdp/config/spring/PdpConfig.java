@@ -28,7 +28,7 @@ public class PdpConfig {
 		return new PicketLinkDecisionPoint(getConfigUrl("config/modia-policy-config.xml"));
 	}
 
-	private URL getConfigUrl(String path) {
+	protected URL getConfigUrl(String path) {
 		try {
 			return new ClassPathResource(path).getURL();
 		} catch (IOException e) {

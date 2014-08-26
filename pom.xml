@@ -938,7 +938,7 @@
                 </property>
             </activation>
             <properties>
-                <sonar.jacoco.excludes>*SelfTestPage.*:*/example/*:*no/nav/sbl/dialogarena/modiabrukerdialog/mock/**:*no/nav/sbl/dialogarena/modiabrukerdialog/modia-pdp/**:*no/nav/sbl/dialogarena/modiabrukerdialog/modia-pep/**
+                <sonar.jacoco.excludes>*SelfTestPage.*:*/example/*:*no/nav/sbl/dialogarena/modiabrukerdialog/mock/**
                 </sonar.jacoco.excludes>
             </properties>
         </profile>

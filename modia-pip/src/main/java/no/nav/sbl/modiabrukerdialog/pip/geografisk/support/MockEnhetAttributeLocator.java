@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
  * Mock LDAP Role attribute locator.
  */
 public class MockEnhetAttributeLocator extends AttributeLocator {
@@ -48,7 +47,7 @@ public class MockEnhetAttributeLocator extends AttributeLocator {
 		String subjectId = getSubjectId(context);
 		Set<AttributeValue> values = new HashSet<>();
 
-		if( attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_ROLLE)) {
+		if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_ROLLE)) {
 			addRoleValue(subjectId, values);
 		} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET)) {
 			addEnhetValue(subjectId, values);
