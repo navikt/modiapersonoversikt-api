@@ -6,6 +6,7 @@ import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.modig.modia.widget.panels.ErrorListing;
 import no.nav.modig.modia.widget.panels.GenericListing;
+import no.nav.modig.modia.widget.panels.OverflowListing;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.Component;
@@ -30,6 +31,7 @@ public class SaksoversiktWidget extends FeedWidget<TemaVM> {
         super(id, initial, false);
 
         setDefaultModel(lagLDMforTema(fnr));
+        setOverflowPanel(new OverflowListing(getString("mange.saker")));
     }
 
     private LoadableDetachableModel<List<FeedItemVM>> lagLDMforTema(final String fnr) {
@@ -38,9 +40,6 @@ public class SaksoversiktWidget extends FeedWidget<TemaVM> {
             protected List<FeedItemVM> load() {
                 try {
                     List<FeedItemVM> temaVMList = (List<FeedItemVM>)(List<?>)saksoversiktService.hentTemaer(fnr);
-                    if (temaVMList.size() > MAX_NUMBER_OF_FEED_ITEMS) {
-                        temaVMList.add(new GenericListing(getString("mange.saker")));
-                    }
                     return temaVMList.isEmpty() ? (List<FeedItemVM>)(List<?>)asList(new GenericListing(getString("ingen.saker"))) : temaVMList;
                 } catch (ApplicationException | SystemException e) {
                     log.warn("Feilet ved henting av saksbehandlingsinformasjon for fnr {}", fnr, e);
