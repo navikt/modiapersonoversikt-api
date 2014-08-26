@@ -383,6 +383,25 @@
       }
     }
     &.nyoppgave {
+      .full-width-form;
+    }
+    &.merke {
+      form {
+        .user-select(none);
+      }
+      a.knapp-hoved-stor {
+        margin: 15px 0;
+        color: #ffffff;
+      }
+      .merk-container {
+        text-align: center;
+      }
+      .temagruppe {
+        margin-top: 30px;
+      }
+      .full-width-form;
+    }
+    .full-width-form {
       .temagruppe {
         margin-top: 30px;
       }
@@ -407,18 +426,6 @@
             color: #ffffff;
           }
         }
-      }
-    }
-    &.merke {
-      form {
-        .user-select(none);
-      }
-      a.knapp-hoved-stor {
-        margin: 15px 0;
-        color: #ffffff;
-      }
-      .merk-container {
-        text-align: center;
       }
     }
   }
