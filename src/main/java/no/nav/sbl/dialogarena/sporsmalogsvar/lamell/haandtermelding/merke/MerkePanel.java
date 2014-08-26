@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
@@ -22,17 +21,21 @@ public class MerkePanel extends AnimertPanel {
 
     @Inject
     private HenvendelseBehandlingService henvendelse;
-    @Inject
-    private GsakService gsak;
 
     public MerkePanel(String id, final InnboksVM innboksVM) {
         super(id);
 
         final IModel<Boolean> skalOppretteOppgave = Model.of(false);
+        final IModel<Boolean> erOppgaveOpprettet = Model.of(false);
+
         CheckBox opprettOppgaveCheckbox = new CheckBox("opprett-oppgave", skalOppretteOppgave);
 
-        final NyOppgaveFormWrapper nyoppgaveForm = new NyOppgaveFormWrapper("nyoppgave-form", innboksVM);
-        //nyoppgaveForm.setOutputMarkupId(true);
+        final NyOppgaveFormWrapper nyoppgaveForm = new NyOppgaveFormWrapper("nyoppgave-form", innboksVM){
+            @Override
+            protected void etterSubmit(AjaxRequestTarget target) {
+                erOppgaveOpprettet.setObject(true);
+            }
+        };
         nyoppgaveForm.setOutputMarkupPlaceholderTag(true);
         nyoppgaveForm.add(visibleIf(skalOppretteOppgave));
 
@@ -47,6 +50,14 @@ public class MerkePanel extends AnimertPanel {
         AjaxLink merkeLink = new AjaxLink("merk") {
             @Override
             public void onClick(AjaxRequestTarget target) {
+                if (kanMerkeSomKontorsperret(skalOppretteOppgave.getObject(), erOppgaveOpprettet.getObject())) {
+                    henvendelse.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
+                    innboksVM.oppdaterMeldinger();
+                    lukkPanel(target);
+
+                    erOppgaveOpprettet.setObject(false);
+                    skalOppretteOppgave.setObject(false);
+                }
             }
         };
 
@@ -57,5 +68,9 @@ public class MerkePanel extends AnimertPanel {
             }
         };
         add(opprettOppgaveCheckbox, nyoppgaveForm, merkeLink, avbrytLink);
+    }
+
+    private static boolean kanMerkeSomKontorsperret(boolean skalOppretteOppgave, boolean harOpprettetOppgave) {
+        return !skalOppretteOppgave || harOpprettetOppgave;
     }
 }
