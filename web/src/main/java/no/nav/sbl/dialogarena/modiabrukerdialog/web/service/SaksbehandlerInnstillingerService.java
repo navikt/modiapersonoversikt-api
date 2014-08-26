@@ -2,12 +2,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
+import org.apache.wicket.util.cookies.CookieUtils;
 
 import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.service.CookieHandler.getCookieUtils;
 
 
 public class SaksbehandlerInnstillingerService {
@@ -20,22 +20,42 @@ public class SaksbehandlerInnstillingerService {
     }
 
     public String getSaksbehandlerValgtEnhet() {
-        if (!valgtEnhetCookieEksisterer()) {
-            return ansattService.hentEnhetsliste().get(0).enhetId;
+        if (valgtEnhetCookieEksistererIkke()) {
+            String enhetId = ansattService.hentEnhetsliste().get(0).enhetId;
+            setSaksbehandlerValgtEnhetCookie(enhetId);
+            return enhetId;
         } else {
-            return getCookieUtils().load(brukerSpesifikCookieId());
+            return new CookieUtils().load(saksbehandlerInstillingerCookieId());
         }
     }
 
     public void setSaksbehandlerValgtEnhetCookie(String valgtEnhet) {
-        getCookieUtils().save(brukerSpesifikCookieId(), valgtEnhet);
+        CookieUtils cookieUtils = new CookieUtils();
+        cookieUtils.getSettings().setMaxAge(3600 * 24 * 365);
+        cookieUtils.save(saksbehandlerInstillingerCookieId(), valgtEnhet);
+
+        setSaksbehandlerInstillingerTimeoutCookie();
     }
 
-    public boolean valgtEnhetCookieEksisterer() {
-        return getCookieUtils().load(brukerSpesifikCookieId()) != null;
+    public boolean saksbehandlerInstillingerErUtdatert() {
+        return new CookieUtils().load(saksbehandlerInstillingerTimeoutCookieId()) == null;
     }
 
-    private String brukerSpesifikCookieId() {
+    private boolean valgtEnhetCookieEksistererIkke() {
+        return new CookieUtils().load(saksbehandlerInstillingerCookieId()) == null;
+    }
+
+    private void setSaksbehandlerInstillingerTimeoutCookie() {
+        CookieUtils cookieUtils = new CookieUtils();
+        cookieUtils.getSettings().setMaxAge(3600 * 12);
+        cookieUtils.save(saksbehandlerInstillingerTimeoutCookieId(), "");
+    }
+
+    private String saksbehandlerInstillingerTimeoutCookieId() {
+        return "saksbehandlerinstillinger-timeout-" + getSubjectHandler().getUid();
+    }
+
+    private String saksbehandlerInstillingerCookieId() {
         return "saksbehandlerinstillinger-" + getSubjectHandler().getUid();
     }
 }

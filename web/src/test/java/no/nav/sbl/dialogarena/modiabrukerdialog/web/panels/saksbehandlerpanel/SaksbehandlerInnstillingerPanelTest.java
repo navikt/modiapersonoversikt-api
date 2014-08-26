@@ -44,9 +44,31 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void sjekkAtSaksbehandlerPanelTogglesVedKlikkPaNavIdentKnapp() {
+    public void saksbehandlerPanelVisesVedFlereEnheter() {
+        when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(flereAnsattEnheter());
+        when(saksbehandlerInnstillingerService.saksbehandlerInstillingerErUtdatert()).thenReturn(true);
+
         wicket
                 .goTo(SaksbehandlerInstillingerTestPage.class)
+                .should().containComponent(thatIsVisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
+    }
+
+    @Test
+    public void saksbehandlerPanelVisesIkkeVedEnEnhet() {
+        when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(asList(new AnsattEnhet("111", "Grunerløkka")));
+        when(saksbehandlerInnstillingerService.saksbehandlerInstillingerErUtdatert()).thenReturn(true);
+
+        wicket
+                .goTo(SaksbehandlerInstillingerTestPage.class)
+                .should().containComponent(thatIsInvisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
+    }
+
+    @Test
+    public void saksbehandlerPanelTogglesVedKlikkPaToggler() {
+        wicket
+                .goTo(SaksbehandlerInstillingerTestPage.class)
+                .onComponent(ofType(SaksbehandlerInstillingerTogglerPanel.class))
+                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsVisible().and(ofType(SaksbehandlerInnstillingerPanel.class)))
                 .onComponent(ofType(SaksbehandlerInstillingerTogglerPanel.class))
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
@@ -54,14 +76,19 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void sjekkAtSaksbehandlerPanelSkjulesVedKlikkPaVelgKnapp() {
-        List<AnsattEnhet> ansattEnheter = asList(new AnsattEnhet("111", "Grunerløkka"), new AnsattEnhet("222", "Torshov"));
-        when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(ansattEnheter);
+    public void saksbehandlerPanelSkjulesVedKlikkPaVelgKnapp() {
+        when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(flereAnsattEnheter());
+        when(saksbehandlerInnstillingerService.saksbehandlerInstillingerErUtdatert()).thenReturn(true);
+
         wicket
                 .goTo(SaksbehandlerInstillingerTestPage.class)
                 .inForm(withId("enhetsform"))
                 .select("enhet", 1)
                 .submitWithAjaxButton(withId("velg"))
                 .should().containComponent(thatIsInvisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
+    }
+
+    private List<AnsattEnhet> flereAnsattEnheter() {
+        return asList(new AnsattEnhet("111", "Grunerløkka"), new AnsattEnhet("222", "Torshov"));
     }
 }

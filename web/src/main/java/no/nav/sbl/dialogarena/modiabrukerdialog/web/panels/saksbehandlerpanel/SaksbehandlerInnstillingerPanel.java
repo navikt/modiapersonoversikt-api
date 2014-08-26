@@ -34,7 +34,9 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         super(id);
 
         setOutputMarkupPlaceholderTag(true);
-        setVisibilityAllowed(!saksbehandlerInnstillingerService.valgtEnhetCookieEksisterer());
+        setVisibilityAllowed(
+                saksbehandlerInnstillingerService.hentEnhetsListe().size() > 1 &&
+                        saksbehandlerInnstillingerService.saksbehandlerInstillingerErUtdatert());
 
         valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
