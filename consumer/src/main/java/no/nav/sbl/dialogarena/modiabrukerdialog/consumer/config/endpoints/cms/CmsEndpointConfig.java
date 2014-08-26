@@ -56,7 +56,7 @@ public class CmsEndpointConfig {
                 long start = System.currentTimeMillis();
                 String name = "CMS";
                 try {
-                    new HttpContentRetriever().ping(new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE));
+                    contentRetriever().ping(new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE));
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
