@@ -11,6 +11,13 @@
 
     <artifactId>modia-pip</artifactId>
 
+    <properties>
+        <!-- The destination file for the code coverage report has to be set to the same value
+        in the parent pom and in each module pom. Then JaCoCo will add up information in the
+        same report, so that, it will give the cross-module code coverage. -->
+        <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
+    </properties>
+
     <dependencies>
         <!-- Spring -->
         <dependency>
@@ -86,6 +93,13 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <configuration>
+                    <destFile>${sonar.jacoco.reportPath}</destFile>
+                </configuration>
+            </plugin>
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
