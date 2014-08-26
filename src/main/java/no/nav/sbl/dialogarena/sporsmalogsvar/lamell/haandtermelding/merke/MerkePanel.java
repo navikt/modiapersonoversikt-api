@@ -8,6 +8,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.form.CheckBox;
+import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -46,6 +47,8 @@ public class MerkePanel extends AnimertPanel {
             }
         });
 
+        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+        feedbackPanel.setOutputMarkupId(true);
 
         AjaxLink merkeLink = new AjaxLink("merk") {
             @Override
@@ -57,6 +60,9 @@ public class MerkePanel extends AnimertPanel {
 
                     erOppgaveOpprettet.setObject(false);
                     skalOppretteOppgave.setObject(false);
+                } else {
+                    error(getString("kontorsperre.oppgave.opprettet.feil"));
+                    target.add(feedbackPanel);
                 }
             }
         };
@@ -67,7 +73,7 @@ public class MerkePanel extends AnimertPanel {
                 lukkPanel(target);
             }
         };
-        add(opprettOppgaveCheckbox, nyoppgaveForm, merkeLink, avbrytLink);
+        add(opprettOppgaveCheckbox, nyoppgaveForm, feedbackPanel, merkeLink, avbrytLink);
     }
 
     private static boolean kanMerkeSomKontorsperret(boolean skalOppretteOppgave, boolean harOpprettetOppgave) {
