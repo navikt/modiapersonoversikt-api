@@ -5,10 +5,13 @@
 <body>
 <wicket:panel>
     <form>
-        <input wicket:id="opprett-oppgave" type="checkbox" id="opprett-oppgave"/>
-        <label wicket:for="opprett-oppgave">Opprett oppgave</label>
+        <div wicket:id="vis-opprett-oppgave">
+            <input wicket:id="opprett-oppgave" type="checkbox" id="opprett-oppgave"/>
+            <label wicket:for="opprett-oppgave">Opprett oppgave</label>
 
-        <div wicket:id="nyoppgave-form"></div>
+            <div wicket:id="nyoppgave-form"></div>
+        </div>
+        <div wicket:id="feedback"></div>
     </form>
 </wicket:panel>
 </body>

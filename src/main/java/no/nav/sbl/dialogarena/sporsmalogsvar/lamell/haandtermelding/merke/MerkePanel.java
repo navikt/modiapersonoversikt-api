@@ -22,6 +22,7 @@ public class MerkePanel extends AnimertPanel {
 
 
         final OpprettOppgave opprettOppgavePanel = new OpprettOppgave("opprett-oppgave-panel", innboksVM);
+        opprettOppgavePanel.setOutputMarkupId(true);
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);
@@ -46,6 +47,8 @@ public class MerkePanel extends AnimertPanel {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 lukkPanel(target);
+                opprettOppgavePanel.reset();
+                target.add(opprettOppgavePanel);
             }
         };
         add(opprettOppgavePanel, feedbackPanel, merkeLink, avbrytLink);
