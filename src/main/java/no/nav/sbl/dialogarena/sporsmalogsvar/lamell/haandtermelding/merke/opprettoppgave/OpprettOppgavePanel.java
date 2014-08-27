@@ -17,8 +17,8 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class OpprettOppgavePanel extends Panel {
 
-    final IModel<Boolean> skalOppretteOppgave = Model.of(false);
-    final IModel<Boolean> erOppgaveOpprettet = Model.of(false);
+    protected final IModel<Boolean> skalOppretteOppgave = Model.of(false);
+    protected final IModel<Boolean> erOppgaveOpprettet = Model.of(false);
 
     public OpprettOppgavePanel(String id, InnboksVM innboksVM) {
         super(id);
