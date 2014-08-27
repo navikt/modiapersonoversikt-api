@@ -22,37 +22,40 @@ public class OpprettOppgave extends Panel {
 
     public OpprettOppgave(String id, InnboksVM innboksVM) {
         super(id);
-        final WebMarkupContainer visForm = new WebMarkupContainer("vis-opprett-oppgave");
-        visForm.setOutputMarkupId(true);
-        visForm.add(visibleIf(not(erOppgaveOpprettet)));
+
+        final WebMarkupContainer visNyOppgaveForm = new WebMarkupContainer("vis-ny-oppgave-wrapper");
+        visNyOppgaveForm.add(visibleIf(not(erOppgaveOpprettet)));
+        visNyOppgaveForm.setOutputMarkupId(true);
+
+        CheckBox opprettOppgaveCheckbox = new CheckBox("opprett-oppgave-checkbox", skalOppretteOppgave);
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
-        feedbackPanel.add(new AttributeModifier("class", "success"));
         feedbackPanel.setOutputMarkupId(true);
 
-        CheckBox opprettOppgaveCheckbox = new CheckBox("opprett-oppgave", skalOppretteOppgave);
 
-        final NyOppgaveFormWrapper nyoppgaveForm = new NyOppgaveFormWrapper("nyoppgave-form", innboksVM) {
+        final NyOppgaveFormWrapper nyOppgaveForm = new NyOppgaveFormWrapper("nyoppgave-form", innboksVM) {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
                 erOppgaveOpprettet.setObject(true);
+
                 info("Oppgave opprettet.");
-                target.add(visForm);
-                target.add(feedbackPanel);
+                feedbackPanel.add(new AttributeModifier("class", "success"));
+
+                target.add(visNyOppgaveForm, feedbackPanel);
             }
         };
-        nyoppgaveForm.setOutputMarkupPlaceholderTag(true);
-        nyoppgaveForm.add(visibleIf(skalOppretteOppgave));
+        nyOppgaveForm.add(visibleIf(skalOppretteOppgave));
+        nyOppgaveForm.setOutputMarkupPlaceholderTag(true);
 
         opprettOppgaveCheckbox.add(new AjaxFormComponentUpdatingBehavior("change") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                target.add(nyoppgaveForm);
+                target.add(nyOppgaveForm);
             }
         });
-        visForm.add(opprettOppgaveCheckbox, nyoppgaveForm);
 
-        add(visForm, feedbackPanel);
+        visNyOppgaveForm.add(opprettOppgaveCheckbox, nyOppgaveForm);
+        add(visNyOppgaveForm, feedbackPanel);
     }
 
     public boolean kanMerkeSomKontorsperret() {

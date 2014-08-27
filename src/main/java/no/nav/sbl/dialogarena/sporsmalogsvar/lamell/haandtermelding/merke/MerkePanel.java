@@ -17,11 +17,13 @@ public class MerkePanel extends AnimertPanel {
     @Inject
     private HenvendelseBehandlingService henvendelse;
 
+    final OpprettOppgave opprettOppgavePanel;
+
     public MerkePanel(String id, final InnboksVM innboksVM) {
         super(id);
 
 
-        final OpprettOppgave opprettOppgavePanel = new OpprettOppgave("opprett-oppgave-panel", innboksVM);
+        opprettOppgavePanel = new OpprettOppgave("opprett-oppgave-panel", innboksVM);
         opprettOppgavePanel.setOutputMarkupId(true);
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
@@ -52,5 +54,11 @@ public class MerkePanel extends AnimertPanel {
             }
         };
         add(opprettOppgavePanel, feedbackPanel, merkeLink, avbrytLink);
+    }
+
+    @Override
+    public void lukkPanel(AjaxRequestTarget target) {
+        super.lukkPanel(target);
+        opprettOppgavePanel.reset();
     }
 }
