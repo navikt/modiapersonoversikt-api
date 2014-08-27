@@ -38,7 +38,7 @@ public class OpprettOppgavePanel extends Panel {
             protected void etterSubmit(AjaxRequestTarget target) {
                 erOppgaveOpprettet.setObject(true);
 
-                info("Oppgave opprettet.");
+                info(getString("oppgave.opprettet"));
                 feedbackPanel.add(new AttributeModifier("class", "success"));
 
                 target.add(visNyOppgaveForm, feedbackPanel);
