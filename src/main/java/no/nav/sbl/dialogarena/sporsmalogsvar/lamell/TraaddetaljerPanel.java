@@ -52,7 +52,7 @@ public class TraaddetaljerPanel extends Panel {
         target.add(this);
     }
 
-    @RunOnEvents({MELDING_SENDT_TIL_BRUKER, TRAAD_JOURNALFORT})
+    @RunOnEvents({MELDING_SENDT_TIL_BRUKER, TRAAD_JOURNALFORT, TRAAD_KONTORSPERRET})
     public void oppdaterMeldingerHvisSynlig(AjaxRequestTarget target) {
         if (this.isVisibleInHierarchy()) {
             innboksVM.oppdaterMeldinger();
@@ -60,9 +60,4 @@ public class TraaddetaljerPanel extends Panel {
         }
     }
 
-    @RunOnEvents(TRAAD_KONTORSPERRET)
-    public void oppdaterTraadKontorSperret(AjaxRequestTarget target) {
-        innboksVM.oppdaterMeldinger();
-        target.add(this);
-    }
 }

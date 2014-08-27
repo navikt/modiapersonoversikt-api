@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.opprettoppgave.OpprettOppgavePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 
 import javax.inject.Inject;
@@ -36,7 +37,7 @@ public class MerkePanel extends AnimertPanel {
                     henvendelse.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
                     innboksVM.oppdaterMeldinger();
                     lukkPanel(target);
-
+                    send(this, Broadcast.BUBBLE, TRAAD_KONTORSPERRET);
                     opprettOppgavePanel.reset();
                 } else {
                     error(getString("kontorsperre.oppgave.opprettet.feil"));
