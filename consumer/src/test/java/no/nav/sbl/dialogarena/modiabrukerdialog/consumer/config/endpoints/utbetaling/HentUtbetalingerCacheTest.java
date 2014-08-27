@@ -11,10 +11,12 @@ import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeMottakerIkke
 import no.nav.virksomhet.tjenester.utbetaling.v2.HentUtbetalingListeUgyldigDato;
 import no.nav.virksomhet.tjenester.utbetaling.v2.UtbetalingPortType;
 import org.joda.time.DateTime;
+import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -34,6 +36,9 @@ public class HentUtbetalingerCacheTest {
 
     @Inject
     private UtbetalingPortType utbetalingPortType;
+
+    @Inject
+    private EhCacheCacheManager cm;
 
     @Inject
     @Qualifier("utbetalingPortTypeWrapperMock")
@@ -75,4 +80,11 @@ public class HentUtbetalingerCacheTest {
                         .withFom(fom)
                         .withTom(tom));
     }
+
+    @After
+    public void shutdown() {
+        cm.getCacheManager().shutdown();
+    }
+
+
 }
