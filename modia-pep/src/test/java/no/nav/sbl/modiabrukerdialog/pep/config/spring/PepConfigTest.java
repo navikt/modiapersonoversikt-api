@@ -1,5 +1,6 @@
 package no.nav.sbl.modiabrukerdialog.pep.config.spring;
 
+import no.nav.modig.cache.CacheConfig;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,7 +12,7 @@ import javax.inject.Inject;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {PepConfig.class})
+@ContextConfiguration(classes = {CacheConfig.class, PepConfig.class})
 public class PepConfigTest {
 
 	@Inject

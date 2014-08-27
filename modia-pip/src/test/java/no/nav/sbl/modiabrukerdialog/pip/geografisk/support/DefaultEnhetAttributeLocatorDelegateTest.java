@@ -1,13 +1,13 @@
 package no.nav.sbl.modiabrukerdialog.pip.geografisk.support;
 
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentNAVEnhetListeRequest;
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNAVEnhetListe;
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.config.GeografiskPipConfig;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.ASBOGOSYSHentNAVEnhetListeRequest;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.ASBOGOSYSNAVAnsatt;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.ASBOGOSYSNAVEnhetListe;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.ASBOGOSYSNavEnhet;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.GOSYSNAVOrgEnhet;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.GOSYSNAVansatt;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;

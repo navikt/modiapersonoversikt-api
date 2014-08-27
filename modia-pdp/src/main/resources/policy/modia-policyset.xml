@@ -6,8 +6,8 @@
            PolicyCombiningAlgId="urn:oasis:names:tc:xacml:1.0:policy-combining-algorithm:deny-overrides">
     <Description>Policies applicable Modia</Description>
     <Target />
-    <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:geografisk</PolicyIdReference>
     <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:diskresjon</PolicyIdReference>
+    <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:geografisk</PolicyIdReference>
     <PolicyIdReference>urn:xacml:2.0:nav:modia:policyid:kontonummer</PolicyIdReference>
     <PolicyIdReference>urn:xacml:2.0:nav:modia:policyid:adresse</PolicyIdReference>
 </PolicySet>

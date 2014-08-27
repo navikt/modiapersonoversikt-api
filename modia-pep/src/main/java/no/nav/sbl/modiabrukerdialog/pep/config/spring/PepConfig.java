@@ -16,7 +16,7 @@ import javax.inject.Named;
 import java.util.Arrays;
 
 @Configuration
-@Import(value = { AccessControlInterceptorConfig.class, PdpConfig.class })
+@Import(value = { AccessControlInterceptorConfig.class, PdpConfig.class, ModiaSecurityCacheConfig.class })
 public class PepConfig {
 	/*
 	 * Tilgang håndheves i PEP - Policy Enforcement Point. PEP kjenner ikke til hvilke vilkår som gjelder for tilgangskontroll

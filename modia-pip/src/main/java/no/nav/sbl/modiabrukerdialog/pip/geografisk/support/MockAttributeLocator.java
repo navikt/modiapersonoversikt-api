@@ -18,13 +18,13 @@ import java.util.Set;
 /**
  * Mock LDAP Role attribute locator.
  */
-public class MockEnhetAttributeLocator extends AttributeLocator {
+public class MockAttributeLocator extends AttributeLocator {
 
 	private static final URI STRING_TYPE = URI.create("http://www.w3.org/2001/XMLSchema#string");
 	private static final URI SUBJECT_CATEGORY = URI.create(AttributeDesignator.SUBJECT_CATEGORY_DEFAULT);
 	private static final URI SUBJECT_ID = URI.create(XACMLConstants.ATTRIBUTEID_SUBJECT_ID);
 
-	public MockEnhetAttributeLocator() {
+	public MockAttributeLocator() {
 		this.attributeDesignatorSupported = true;
 		this.attributeSelectorSupported = true;
 		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET);
@@ -47,12 +47,14 @@ public class MockEnhetAttributeLocator extends AttributeLocator {
 		String subjectId = getSubjectId(context);
 		Set<AttributeValue> values = new HashSet<>();
 
-		if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_ROLLE)) {
-			addRoleValue(subjectId, values);
-		} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET)) {
-			addEnhetValue(subjectId, values);
-		} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET)) {
-			addEnhetValue(subjectId, values);
+		if(subjectId != null) {
+			if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_ROLLE)) {
+				addRoleValue(subjectId, values);
+			} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_LOCAL_ENHET)) {
+				addEnhetValue(subjectId, values);
+			} else if (attributeId.equals(EnhetAttributeLocator.ATTRIBUTEID_FYLKESENHET)) {
+				addEnhetValue(subjectId, values);
+			}
 		}
 
 		return new EvaluationResult(new BagAttribute(attributeType, values));
@@ -61,6 +63,9 @@ public class MockEnhetAttributeLocator extends AttributeLocator {
 	private void addRoleValue(String subjectId, Set<AttributeValue> values) {
 		if (subjectId.endsWith("900001")) {
 			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-GOSYS-NASJONAL"));
+			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-BD06_EndreKontonummer"));
+			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-BD06_EndreKontaktAdresse"));
+			values.add(JBossXACMLUtil.getAttributeValue("0000-X-KONTONUMMER_ENDRER"));
 		} else if (subjectId.endsWith("900002")) {
 			values.add(JBossXACMLUtil.getAttributeValue("0000-GA-GOSYS-UTVIDBAR_TIL_REGIONAL"));
 		}

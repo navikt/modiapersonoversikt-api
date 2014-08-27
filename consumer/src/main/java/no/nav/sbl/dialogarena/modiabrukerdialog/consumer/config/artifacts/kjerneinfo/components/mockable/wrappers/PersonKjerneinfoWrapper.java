@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers;
 
-import no.nav.kjerneinfo.consumer.config.KjerneinfoSecurityPolicyConfig;
 import no.nav.kjerneinfo.consumer.fim.mapping.KjerneinfoMapper;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.config.PersonKjerneinfoConsumerConfig;
@@ -23,8 +22,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kje
 @Configuration
 @Import({
         PersonKjerneinfoConsumerConfig.class,
-        KjerneinfoMapperConfigResolver.class,
-        KjerneinfoSecurityPolicyConfig.class
+        KjerneinfoMapperConfigResolver.class
 })
 public class PersonKjerneinfoWrapper {
 
@@ -39,7 +37,7 @@ public class PersonKjerneinfoWrapper {
     @Inject
     private KjerneinfoMapper kjerneinfoMapperBean;
 
-    @Resource(name = "personKjerneinfoPep")
+    @Resource(name = "pep")
     private EnforcementPoint kjerneinfoPep;
 
     @Bean

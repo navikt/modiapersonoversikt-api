@@ -52,7 +52,7 @@ public class WicketApplication extends WebApplication {
     @Inject
     private ApplicationContext applicationContext;
 
-    @Resource(name = "kjerneinfoPep")
+    @Resource(name = "pep")
     private EnforcementPoint kjerneinfoPep;
 
     @Resource(name = "plukkOppgavePep")

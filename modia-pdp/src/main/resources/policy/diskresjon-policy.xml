@@ -4,7 +4,7 @@
         PolicyId="urn:xacml:2.0:nav.modia:policysetid:diskresjon"
         RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:deny-overrides">
 
-    <Description>Policies applicable to resultset of component Personsok.</Description>
+    <Description>Policies applicable to resultset of component Modia.</Description>
     <Target />
 
     <Rule RuleId="modia-deny-if-not-kode6" Effect="Deny" >

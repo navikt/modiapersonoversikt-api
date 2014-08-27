@@ -1,19 +1,22 @@
 package no.nav.sbl.modiabrukerdialog.pip.geografisk.support;
 
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentNAVEnhetListeRequest;
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetGruppeListeFaultGOSYSGeneriskMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetGruppeListeFaultGOSYSNAVEnhetIkkeFunnetMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetListeFaultGOSYSGeneriskMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetListeFaultGOSYSNAVEnhetIkkeFunnetMsg;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.norg.NAVAnsattEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.norg.NAVOrgEnhetEndpointConfig;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.ASBOGOSYSHentNAVEnhetListeRequest;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.ASBOGOSYSNAVAnsatt;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.ASBOGOSYSNavEnhet;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.GOSYSNAVOrgEnhet;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.GOSYSNAVansatt;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.HentNAVEnhetGruppeListeFaultGOSYSGeneriskMsg;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.HentNAVEnhetGruppeListeFaultGOSYSNAVEnhetIkkeFunnetMsg;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.HentNAVEnhetListeFaultGOSYSGeneriskMsg;
-import no.nav.sbl.modiabrukerdialog.pip.geografisk.consumer.HentNAVEnhetListeFaultGOSYSNAVEnhetIkkeFunnetMsg;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Import;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -23,6 +26,7 @@ import java.util.Set;
 /**
  * Delegate that retrieves enhet information from NORG and NAVAnsatt services.
  */
+@Import(value = {NAVAnsattEndpointConfig.class, NAVOrgEnhetEndpointConfig.class})
 public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocatorDelegate {
 
 	private static Logger logger = LoggerFactory.getLogger(EnhetAttributeLocator.class);

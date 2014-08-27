@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
+import no.nav.modig.cache.CacheConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
@@ -26,6 +27,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         SaksbehandlerInnstillingerPanelMockContext.class,
         UtbetalingLamellContext.class,
         SporsmalOgSvarContext.class,
+		CacheConfig.class,
 		PepConfig.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)
