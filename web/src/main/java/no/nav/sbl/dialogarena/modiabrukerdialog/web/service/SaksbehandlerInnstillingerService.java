@@ -8,6 +8,8 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet.ENHET_ID;
 
 
 public class SaksbehandlerInnstillingerService {
@@ -20,12 +22,15 @@ public class SaksbehandlerInnstillingerService {
     }
 
     public String getSaksbehandlerValgtEnhet() {
+        List<String> ansattEnhetsIdListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
+        String enhetId = ansattEnhetsIdListe.get(0);
+
         if (valgtEnhetCookieEksistererIkke()) {
-            String enhetId = ansattService.hentEnhetsliste().get(0).enhetId;
             setSaksbehandlerValgtEnhetCookie(enhetId);
             return enhetId;
         } else {
-            return new CookieUtils().load(saksbehandlerInstillingerCookieId());
+            String cookieEnhetId = new CookieUtils().load(saksbehandlerInstillingerCookieId());
+            return ansattEnhetsIdListe.contains(cookieEnhetId) ? cookieEnhetId : enhetId;
         }
     }
 
