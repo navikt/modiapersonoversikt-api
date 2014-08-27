@@ -17,7 +17,7 @@ public class MerkePanel extends AnimertPanel {
     @Inject
     private HenvendelseBehandlingService henvendelse;
 
-    final OpprettOppgavePanel opprettOppgavePanel;
+    protected final OpprettOppgavePanel opprettOppgavePanel;
 
     public MerkePanel(String id, final InnboksVM innboksVM) {
         super(id);

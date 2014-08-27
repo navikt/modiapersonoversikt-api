@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 
 @ContextConfiguration(classes = {ServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class NyOppgaveWrapperTest extends WicketPageTest {
+public class NyOppgaveFormWrapperTest extends WicketPageTest {
 
     @Captor
     private ArgumentCaptor<NyOppgave> nyOppgaveArgumentCaptor;
