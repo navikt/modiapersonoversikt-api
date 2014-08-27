@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
+import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
@@ -31,7 +32,9 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.lang.reflect.Reflect.on;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
@@ -45,6 +48,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.Pers
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -173,6 +178,19 @@ public class PersonPageTest extends WicketPageTest {
         assertSletterPlukketOppgaveFraSessionVedEvent(LEGG_TILBAKE_UTFORT);
     }
 
+    @Test
+    public void skalOppdatereKjerneInfoVedFodselsnummerFunnetMedBegrunnelse() {
+        final String testFnr = "12345612345";
+
+        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"));
+        wicket.tester.getSession().setAttribute(HENT_PERSON_BEGRUNNET, false);
+        wicket.sendEvent(createEvent(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE, testFnr));
+
+        assertEquals(true, wicket.tester.getSession().getAttribute(HENT_PERSON_BEGRUNNET));
+        wicket.tester.assertRenderedPage(PersonPage.class);
+        wicket.tester.assertContains(testFnr);
+    }
+
     private void assertSletterPlukketOppgaveFraSessionVedEvent(String event) {
         wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"));
 
@@ -190,6 +208,15 @@ public class PersonPageTest extends WicketPageTest {
             @Override
             public Object createEvent(AjaxRequestTarget target) {
                 return new NamedEventPayload(eventNavn, "");
+            }
+        };
+    }
+
+    private EventGenerator createEvent(final String eventNavn, final Object payload) {
+        return new EventGenerator() {
+            @Override
+            public Object createEvent(AjaxRequestTarget target) {
+                return new NamedEventPayload(eventNavn, payload);
             }
         };
     }
