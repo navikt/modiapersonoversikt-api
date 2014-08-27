@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.opprettoppgave.OpprettOppgave;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.opprettoppgave.OpprettOppgavePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -17,13 +17,13 @@ public class MerkePanel extends AnimertPanel {
     @Inject
     private HenvendelseBehandlingService henvendelse;
 
-    final OpprettOppgave opprettOppgavePanel;
+    final OpprettOppgavePanel opprettOppgavePanel;
 
     public MerkePanel(String id, final InnboksVM innboksVM) {
         super(id);
 
 
-        opprettOppgavePanel = new OpprettOppgave("opprett-oppgave-panel", innboksVM);
+        opprettOppgavePanel = new OpprettOppgavePanel("opprett-oppgave-panel", innboksVM);
         opprettOppgavePanel.setOutputMarkupId(true);
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");

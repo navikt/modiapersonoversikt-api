@@ -15,12 +15,12 @@ import org.apache.wicket.model.Model;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 
-public class OpprettOppgave extends Panel {
+public class OpprettOppgavePanel extends Panel {
 
     final IModel<Boolean> skalOppretteOppgave = Model.of(false);
     final IModel<Boolean> erOppgaveOpprettet = Model.of(false);
 
-    public OpprettOppgave(String id, InnboksVM innboksVM) {
+    public OpprettOppgavePanel(String id, InnboksVM innboksVM) {
         super(id);
 
         final WebMarkupContainer visNyOppgaveForm = new WebMarkupContainer("vis-ny-oppgave-wrapper");
