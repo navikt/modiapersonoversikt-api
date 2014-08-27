@@ -34,16 +34,16 @@ public class SaksoversiktWidget extends FeedWidget<TemaVM> {
         setOverflowPanel(new OverflowListing(getString("mange.saker")));
     }
 
-    private LoadableDetachableModel<List<FeedItemVM>> lagLDMforTema(final String fnr) {
-        return new LoadableDetachableModel<List<FeedItemVM>>() {
+    private LoadableDetachableModel<List<? extends FeedItemVM>> lagLDMforTema(final String fnr) {
+        return new LoadableDetachableModel<List<? extends FeedItemVM>>() {
             @Override
-            protected List<FeedItemVM> load() {
+            protected List<? extends FeedItemVM> load() {
                 try {
-                    List<FeedItemVM> temaVMList = (List<FeedItemVM>)(List<?>)saksoversiktService.hentTemaer(fnr);
-                    return temaVMList.isEmpty() ? (List<FeedItemVM>)(List<?>)asList(new GenericListing(getString("ingen.saker"))) : temaVMList;
+                    List<? extends FeedItemVM> temaVMList = saksoversiktService.hentTemaer(fnr);
+                    return temaVMList.isEmpty() ? asList(new GenericListing(getString("ingen.saker"))) : temaVMList;
                 } catch (ApplicationException | SystemException e) {
                     log.warn("Feilet ved henting av saksbehandlingsinformasjon for fnr {}", fnr, e);
-                    return (List<FeedItemVM>)(List<?>)asList(new ErrorListing(getString("saker.feilet")));
+                    return asList(new ErrorListing(getString("saker.feilet")));
                 }
             }
         };
