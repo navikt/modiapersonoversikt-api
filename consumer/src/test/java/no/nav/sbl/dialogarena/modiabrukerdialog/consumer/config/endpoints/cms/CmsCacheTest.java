@@ -19,7 +19,10 @@ import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {CacheConfig.class, CmsEndpointConfig.class, ProperySourcesPlaceholderConfigurer.class})
+@ContextConfiguration(classes = {
+        CacheConfig.class,
+        CmsEndpointConfig.class,
+        ProperySourcesPlaceholderConfigurer.class})
 public class CmsCacheTest {
 
     @Inject

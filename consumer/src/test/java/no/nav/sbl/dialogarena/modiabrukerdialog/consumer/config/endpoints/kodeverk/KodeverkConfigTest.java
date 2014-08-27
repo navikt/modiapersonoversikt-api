@@ -7,6 +7,7 @@ import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIk
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLFinnKodeverkListeRequest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkRequest;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -44,12 +45,5 @@ public class KodeverkConfigTest {
         portType.ping();
         verifyZeroInteractions(kodeverkPort.wrappedObject);
     }
-
-//    @Test
-//    public void perDefaultSkalProdkodeEksekveres() {
-//        setProperty(TILLATMOCKSETUP_PROPERTY, "nei");
-//        portType.finnKodeverkListe(new XMLFinnKodeverkListeRequest());
-//        verify(kodeverkPort.wrappedObject, times(1)).kodeverkPortType().finnKodeverkListe(any(XMLFinnKodeverkListeRequest.class));
-//    }
 
 }
