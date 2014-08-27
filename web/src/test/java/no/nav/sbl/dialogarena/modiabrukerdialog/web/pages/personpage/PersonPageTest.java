@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
+import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
@@ -33,6 +34,7 @@ import java.util.Arrays;
 
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.lang.reflect.Reflect.on;
+import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
@@ -47,9 +49,11 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.Pers
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
+import static no.nav.sykmeldingsperioder.widget.SykepengerWidgetServiceImpl.SYKEPENGER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -68,6 +72,8 @@ public class PersonPageTest extends WicketPageTest {
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
 
+    private final static String testFnr = "12037649749";
+
     @Before
     public void setUp() {
         Sporsmal sporsmal = new Sporsmal("id", DateTime.now());
@@ -79,7 +85,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void shouldLoadPage() {
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .should().containComponent(withId("searchPanel").and(ofType(HentPersonPanel.class)))
                 .should().containComponent(withId("personKjerneinfoPanel").and(ofType(PersonKjerneinfoPanel.class)))
                 .should().containComponent(withId("personsokPanel").and(ofType(PersonsokPanel.class)))
@@ -89,7 +95,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void vedUlagredeEndringerOgRefreshSkalViseModaldialog() {
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"));
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
         PersonPage personPage = (PersonPage) wicket.tester.getLastRenderedPage();
         RedirectModalWindow redirectPopup = mock(RedirectModalWindow.class);
         LamellContainer lamellContainer = mock(LamellContainer.class);
@@ -104,7 +110,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void vedIngenUlagredeEndringerOgRefreshSkalIkkeViseModaldialog() {
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"));
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
         PersonPage personPage = (PersonPage) wicket.tester.getLastRenderedPage();
         RedirectModalWindow redirectPopup = mock(RedirectModalWindow.class);
         LamellContainer lamellContainer = mock(LamellContainer.class);
@@ -119,13 +125,13 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void skalViseReferatPanelSomDefaultSvarOfReferatPanel() {
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(ReferatPanel.class)));
     }
 
     @Test
     public void skalErstatteReferatPanelMedSvarPanelDersomOppgaveidErSattIPageParameters() {
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749").param(OPPGAVEID, "oppgaveid"))
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(OPPGAVEID, "oppgaveid"))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
     }
 
@@ -133,7 +139,7 @@ public class PersonPageTest extends WicketPageTest {
     public void skalErstatteReferatPanelMedSvarPanelVedEventetSVAR_PAA_MELDING() {
         when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new SvarEllerReferat())));
 
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING))
                 .should().inAjaxResponse().haveComponents(ofType(SvarPanel.class));
     }
@@ -142,7 +148,7 @@ public class PersonPageTest extends WicketPageTest {
     public void skalIkkeTilordneOppgaveIGsakDersomSporsmaaletTidligereErBesvartVedEventetSVAR_PAA_MELDING() {
         when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new SvarEllerReferat())));
 
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
 
         verify(oppgaveBehandlingService, never()).tilordneOppgaveIGsak(anyString());
@@ -152,7 +158,7 @@ public class PersonPageTest extends WicketPageTest {
     public void skalTilordneOppgaveIGsakDersomSporsmaaletIkkeTidligereErBesvartVedEventetSVAR_PAA_MELDING() {
         when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<SvarEllerReferat>());
 
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
 
         verify(oppgaveBehandlingService).tilordneOppgaveIGsak(anyString());
@@ -166,7 +172,7 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     private void assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(String event) {
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"))
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(event))
                 .should().inAjaxResponse().haveComponents(ofType(ReferatPanel.class));
     }
@@ -177,21 +183,8 @@ public class PersonPageTest extends WicketPageTest {
         assertSletterPlukketOppgaveFraSessionVedEvent(LEGG_TILBAKE_UTFORT);
     }
 
-    @Test
-    public void skalOppdatereKjerneInfoVedFodselsnummerFunnetMedBegrunnelse() {
-        final String testFnr = "12345612345";
-
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"));
-        wicket.tester.getSession().setAttribute(HENT_PERSON_BEGRUNNET, false);
-        wicket.sendEvent(createEvent(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE, testFnr));
-
-        assertEquals(true, wicket.tester.getSession().getAttribute(HENT_PERSON_BEGRUNNET));
-        wicket.tester.assertRenderedPage(PersonPage.class);
-        wicket.tester.assertContains(testFnr);
-    }
-
     private void assertSletterPlukketOppgaveFraSessionVedEvent(String event) {
-        wicket.goTo(PersonPage.class, with().param("fnr", "12037649749"));
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
 
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, "oppgaveid");
@@ -200,6 +193,19 @@ public class PersonPageTest extends WicketPageTest {
 
         assertNull(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR));
         assertNull(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR));
+    }
+
+    @Test
+    public void skalOppdatereKjerneInfoVedFodselsnummerFunnetMedBegrunnelse() {
+        final String newFnr = "12345612345";
+
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
+        wicket.tester.getSession().setAttribute(HENT_PERSON_BEGRUNNET, false);
+        wicket.sendEvent(createEvent(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE, newFnr));
+
+        assertEquals(true, wicket.tester.getSession().getAttribute(HENT_PERSON_BEGRUNNET));
+        assertFalse(wicket.tester.ifContains(newFnr).wasFailed());
+        assertTrue(wicket.tester.ifContains(testFnr).wasFailed());
     }
 
     private EventGenerator createEvent(final String eventNavn) {
