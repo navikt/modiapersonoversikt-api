@@ -22,8 +22,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 /**
- * MODIA ønsker å selv definere opp endpoints, slik at kontekst for samme endepunkt
- * enkelt kan gjenbrukes på tvers av komponenter
+ * MODIA ønsker å selv definere opp endpoints, slik at config for samme endepunkt
+ * kan gjenbrukes på tvers av komponenter
  */
 @Configuration
 @Import({
@@ -32,16 +32,19 @@ import org.springframework.context.annotation.Import;
         KodeverkV2EndpointConfig.class,
         KodeverkV2WrapperConfig.class,
         SendUtHenvendelseEndpointConfig.class,
+
         BehandleHenvendelseEndpointConfig.class,
         HenvendelseEndpointConfig.class,
         GsakOppgaveV3EndpointConfig.class,
         GsakOppgavebehandlingV3EndpointConfig.class,
         BehandleJournalV2EndpointConfig.class,
+
         GsakHentSakslisteEndpointConfig.class,
         SakOgBehandlingEndpointConfig.class,
         AktoerEndpointConfig.class,
         HenvendelseSoknaderEndpointConfig.class,
         NAVAnsattEndpointConfig.class,
+
         NAVOrgEnhetEndpointConfig.class,
         CmsEndpointConfig.class,
         PlukkOppgaveSecurityPolicyConfig.class

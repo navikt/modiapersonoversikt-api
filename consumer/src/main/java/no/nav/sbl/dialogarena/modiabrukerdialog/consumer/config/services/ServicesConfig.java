@@ -11,7 +11,10 @@ import org.springframework.context.annotation.Import;
  * MODIA ønsker å selv wire inn sine komponenters kontekster for å ha full kontroll over springoppsettet.
  */
 @Configuration
-@Import({UtbetalingLamellContext.class, SporsmalOgSvarContext.class, SaksoversiktServiceConfig.class})
+@Import({
+        UtbetalingLamellContext.class,
+        SporsmalOgSvarContext.class,
+        SaksoversiktServiceConfig.class})
 public class ServicesConfig {
 
     @Bean
