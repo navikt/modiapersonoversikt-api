@@ -23,12 +23,13 @@ public class MerkePanel extends AnimertPanel {
     public MerkePanel(String id, final InnboksVM innboksVM) {
         super(id);
 
+        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+        feedbackPanel.setOutputMarkupId(true);
+        add(feedbackPanel);
 
         opprettOppgavePanel = new OpprettOppgavePanel("opprett-oppgave-panel", innboksVM);
         opprettOppgavePanel.setOutputMarkupId(true);
-
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
-        feedbackPanel.setOutputMarkupId(true);
+        add(opprettOppgavePanel);
 
         AjaxLink merkeLink = new AjaxLink("merk") {
             @Override
@@ -36,25 +37,23 @@ public class MerkePanel extends AnimertPanel {
                 if (opprettOppgavePanel.kanMerkeSomKontorsperret()) {
                     henvendelse.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
                     innboksVM.oppdaterMeldinger();
-                    lukkPanel(target);
                     send(this, Broadcast.BUBBLE, TRAAD_KONTORSPERRET);
-                    opprettOppgavePanel.reset();
+                    lukkPanel(target);
                 } else {
                     error(getString("kontorsperre.oppgave.opprettet.feil"));
                     target.add(feedbackPanel);
                 }
             }
         };
+        add(merkeLink);
 
         AjaxLink<Void> avbrytLink = new AjaxLink<Void>("avbryt") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 lukkPanel(target);
-                opprettOppgavePanel.reset();
-                target.add(opprettOppgavePanel);
             }
         };
-        add(opprettOppgavePanel, feedbackPanel, merkeLink, avbrytLink);
+        add(avbrytLink);
     }
 
     @Override

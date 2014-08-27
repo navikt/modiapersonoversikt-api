@@ -21,13 +21,10 @@ public class NyOppgaveFormWrapper extends Panel {
     @Inject
     private GsakService gsakService;
 
-    private final CompoundPropertyModel<NyOppgave> nyOppgaveModel;
-
     public NyOppgaveFormWrapper(String id, final InnboksVM innboksVM) {
-        super(id);
+        super(id, new CompoundPropertyModel<>(new NyOppgave()));
 
-        nyOppgaveModel = new CompoundPropertyModel<>(new NyOppgave());
-        Form<NyOppgave> form = new Form<>("nyoppgaveform", nyOppgaveModel);
+        Form form = new Form<>("nyoppgaveform", getDefaultModel());
         add(form);
 
         // TODO: Endre når kodeverk er på plass
@@ -62,6 +59,6 @@ public class NyOppgaveFormWrapper extends Panel {
     protected void etterSubmit(AjaxRequestTarget target) {}
 
     private void nullstillSkjema() {
-        nyOppgaveModel.setObject(new NyOppgave());
+        setDefaultModelObject(new NyOppgave());
     }
 }

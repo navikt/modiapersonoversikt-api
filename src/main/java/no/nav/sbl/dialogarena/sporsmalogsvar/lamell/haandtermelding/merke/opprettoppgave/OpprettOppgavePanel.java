@@ -23,26 +23,26 @@ public class OpprettOppgavePanel extends Panel {
     public OpprettOppgavePanel(String id, InnboksVM innboksVM) {
         super(id);
 
-        final WebMarkupContainer visNyOppgaveForm = new WebMarkupContainer("vis-ny-oppgave-wrapper");
-        visNyOppgaveForm.add(visibleIf(not(erOppgaveOpprettet)));
-        visNyOppgaveForm.setOutputMarkupId(true);
-
-
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+        feedbackPanel.add(new AttributeModifier("class", "success"));
         feedbackPanel.setOutputMarkupId(true);
+        add(feedbackPanel);
 
+        final WebMarkupContainer opprettOppgaveWrapper = new WebMarkupContainer("vis-ny-oppgave-wrapper");
+        opprettOppgaveWrapper.add(visibleIf(not(erOppgaveOpprettet)));
+        opprettOppgaveWrapper.setOutputMarkupId(true);
 
         final NyOppgaveFormWrapper nyOppgaveForm = new NyOppgaveFormWrapper("nyoppgave-form", innboksVM) {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
                 erOppgaveOpprettet.setObject(true);
-
                 success(getString("oppgave.opprettet.bekreftelse"));
-                feedbackPanel.add(new AttributeModifier("class", "success"));
 
-                target.add(visNyOppgaveForm, feedbackPanel);
+                target.add(opprettOppgaveWrapper, feedbackPanel);
             }
         };
+        nyOppgaveForm.add(visibleIf(skalOppretteOppgave));
+        nyOppgaveForm.setOutputMarkupPlaceholderTag(true);
 
         CheckBox opprettOppgaveCheckbox = new AjaxCheckBox("opprett-oppgave-checkbox", skalOppretteOppgave) {
             @Override
@@ -51,11 +51,8 @@ public class OpprettOppgavePanel extends Panel {
             }
         };
 
-        nyOppgaveForm.add(visibleIf(skalOppretteOppgave));
-        nyOppgaveForm.setOutputMarkupPlaceholderTag(true);
-
-        visNyOppgaveForm.add(opprettOppgaveCheckbox, nyOppgaveForm);
-        add(visNyOppgaveForm, feedbackPanel);
+        opprettOppgaveWrapper.add(opprettOppgaveCheckbox, nyOppgaveForm);
+        add(opprettOppgaveWrapper);
     }
 
     public boolean kanMerkeSomKontorsperret() {

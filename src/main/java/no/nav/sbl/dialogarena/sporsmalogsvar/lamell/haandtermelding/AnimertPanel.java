@@ -41,10 +41,10 @@ public abstract class AnimertPanel extends Panel {
     @RunOnEvents(VALGT_MELDING_EVENT)
     public void lukkPanel(AjaxRequestTarget target) {
         if (isVisibilityAllowed()) {
-            target.prependJavaScript("lukket|$('#" + this.getMarkupId() + "').slideUp(lukket)");
             this.setVisibilityAllowed(false);
-            target.add(this);
             send(getParent(), BREADTH, PANEL_LUKKET);
+            target.prependJavaScript("lukket|$('#" + this.getMarkupId() + "').slideUp(lukket)");
+            target.add(this);
         }
     }
 }
