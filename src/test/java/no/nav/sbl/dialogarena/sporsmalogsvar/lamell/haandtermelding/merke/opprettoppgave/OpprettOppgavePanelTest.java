@@ -20,7 +20,7 @@ public class OpprettOppgavePanelTest extends WicketPageTest {
     @Test
     public void opprettOppgavePanelInnholderAlleKomponenter() throws Exception {
         wicket.goToPageWith(lagOpprettOppgavePanel())
-                .should().containComponent(withId("vis-ny-oppgave-wrapper"));
+                .should().containComponent(withId("visNyOppgaveWrapper"));
     }
 
     @Test

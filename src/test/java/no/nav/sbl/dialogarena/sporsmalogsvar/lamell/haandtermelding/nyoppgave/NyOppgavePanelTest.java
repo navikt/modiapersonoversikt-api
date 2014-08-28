@@ -50,7 +50,7 @@ public class NyOppgavePanelTest extends WicketPageTest {
                 .should().containComponent(both(ofType(Form.class).and(withId("nyoppgaveform"))))
                 .should().containComponent(both(ofType(FeedbackPanel.class).and(withId("feedback"))))
                 .should().containComponent(both(ofType(AjaxButton.class).and(withId("opprettoppgave"))))
-                .should().containComponent(both(ofType(AjaxLink.class).and(withId("avbrytlink"))));
+                .should().containComponent(both(ofType(AjaxLink.class).and(withId("avbryt"))));
     }
 
     @Test
@@ -58,7 +58,7 @@ public class NyOppgavePanelTest extends WicketPageTest {
         TestNyOppgavePanel nyOppgavePanel = new TestNyOppgavePanel("panel", innboksVM);
         wicket.goToPageWith(nyOppgavePanel)
                 .should().containComponent(thatIsVisible().and(withId("panel")))
-                .click().link(withId("avbrytlink"));
+                .click().link(withId("avbryt"));
 
         assertThat(nyOppgavePanel.isVisibilityAllowed(), is(false));
     }
