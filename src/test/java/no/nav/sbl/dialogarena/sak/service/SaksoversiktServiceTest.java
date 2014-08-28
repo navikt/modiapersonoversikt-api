@@ -9,16 +9,14 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WS
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingskjedetyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingsstegtyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstemaer;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstid;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstidtyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingstyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSSakstemaer;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstegtyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import org.joda.time.DateTime;
@@ -29,7 +27,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,7 +58,7 @@ public class SaksoversiktServiceTest {
     public static final String BEHANDLINGSKJEDETYPER = "behandlingskjedetyper";
 
     @Mock
-    SakOgBehandlingPortType sakOgBehandling;
+    SakOgBehandling_v1PortType sakOgBehandling;
 
     @Mock
     HenvendelseSoknaderPortType henvendelse;
@@ -189,12 +186,6 @@ public class SaksoversiktServiceTest {
                         new WSBehandlingskjede()
                                 .withBehandlingskjedeId("behandlingskjedeid-mock")
                                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withKodeverksRef("kodeverk-ref-mock"))
-                                .withNormertBehandlingstid(
-                                        new WSBehandlingstid()
-                                                .withTid(new BigInteger("1"))
-                                                .withType(new WSBehandlingstidtyper().withValue("dager"))
-                                )
-                                .withKjedensNAVfrist(now().plusDays(10))
                                 .withSisteBehandlingREF("siste-behandling-ref-mock")
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withKodeverksRef("behandlingstype-ref-mock"))
                                 .withSisteBehandlingsstegREF("siste-behandling-steg-ref-mock")

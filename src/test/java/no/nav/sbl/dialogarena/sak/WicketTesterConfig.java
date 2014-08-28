@@ -1,12 +1,11 @@
 package no.nav.sbl.dialogarena.sak;
 
-import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
@@ -16,10 +15,8 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
 
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 @Configuration
 public class WicketTesterConfig {
@@ -43,8 +40,8 @@ public class WicketTesterConfig {
     }
 
     @Bean
-    public SakOgBehandlingPortType sakOgBehandlingPortType() {
-        return mock(SakOgBehandlingPortType.class, RETURNS_MOCKS);
+    public SakOgBehandling_v1PortType sakOgBehandlingPortType() {
+        return mock(SakOgBehandling_v1PortType.class, RETURNS_MOCKS);
     }
 
     @Bean

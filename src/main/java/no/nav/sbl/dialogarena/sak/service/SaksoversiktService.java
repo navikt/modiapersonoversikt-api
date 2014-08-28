@@ -12,7 +12,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WS
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
@@ -50,7 +50,7 @@ public class SaksoversiktService {
     private AktoerPortType fodselnummerAktorService;
 
     @Inject
-    private SakOgBehandlingPortType sakOgBehandlingPortType;
+    private SakOgBehandling_v1PortType sakOgBehandlingPortType;
 
     @Inject
     private HenvendelseSoknaderPortType henvendelseSoknaderPortType;
