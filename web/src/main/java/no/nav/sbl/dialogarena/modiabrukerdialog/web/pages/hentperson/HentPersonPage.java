@@ -37,7 +37,7 @@ public class HentPersonPage extends BasePage {
                 new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel"),
                 new SaksbehandlerInstillingerTogglerPanel("saksbehandlerInstillingerToggler"),
                 hentPersonPanel,
-                new PlukkOppgavePanel("plukk-oppgave"),
+                new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true)
         );
     }

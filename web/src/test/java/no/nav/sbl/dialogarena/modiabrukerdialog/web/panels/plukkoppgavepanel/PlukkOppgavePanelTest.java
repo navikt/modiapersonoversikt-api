@@ -69,9 +69,9 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
         ));
 
         wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"))
-                .inForm(withId("plukk-oppgave-form"))
+                .inForm(withId("plukkOppgaveForm"))
                 .select("temagruppe", 0)
-                .submitWithAjaxButton(withId("plukk-oppgave"))
+                .submitWithAjaxButton(withId("plukkOppgave"))
                 .should().beOn(PersonPage.class)
                 .should().containComponent(ofType(SvarPanel.class))
                 .should().notContainComponent(ofType(ReferatPanel.class));
@@ -88,8 +88,8 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     public void skalIkkePlukkeOppgaveHvisTemagruppeIkkeErValgt() {
         TestPlukkOppgavePanel plukkoppgave = new TestPlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)
-                .inForm(withId("plukk-oppgave-form"))
-                .submitWithAjaxButton(withId("plukk-oppgave"));
+                .inForm(withId("plukkOppgaveForm"))
+                .submitWithAjaxButton(withId("plukkOppgave"));
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertThat(errorMessages, hasItem(plukkoppgave.getString("temagruppe.Required")));
@@ -101,9 +101,9 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, "oppgaveid");
         wicket
-                .inForm(withId("plukk-oppgave-form"))
+                .inForm(withId("plukkOppgaveForm"))
                 .select("temagruppe", 0)
-                .submitWithAjaxButton(withId("plukk-oppgave"))
+                .submitWithAjaxButton(withId("plukkOppgave"))
                 .should().beOn(PersonPage.class)
                 .should().containComponent(ofType(SvarPanel.class))
                 .should().notContainComponent(ofType(ReferatPanel.class));
@@ -117,9 +117,9 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
         TestPlukkOppgavePanel plukkoppgave = new TestPlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)
-                .inForm(withId("plukk-oppgave-form"))
+                .inForm(withId("plukkOppgaveForm"))
                 .select("temagruppe", 0)
-                .submitWithAjaxButton(withId("plukk-oppgave"));
+                .submitWithAjaxButton(withId("plukkOppgave"));
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertThat(errorMessages, hasItem(plukkoppgave.getString("plukkoppgave.ingenoppgaverpaatemagruppe")));

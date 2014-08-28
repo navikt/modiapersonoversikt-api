@@ -48,12 +48,12 @@ public class PlukkOppgavePanel extends Panel {
         add(accessRestriction(RENDER).withAttributes(actionId("plukkoppgave"), resourceId("")));
 
         final IModel<Temagruppe> valgtTemagruppe = new Model<>((Temagruppe) getSession().getAttribute(TEMAGRUPPE_ATTR));
-        Form<Temagruppe> form = new Form<>("plukk-oppgave-form", valgtTemagruppe);
+        Form<Temagruppe> form = new Form<>("plukkOppgaveForm", valgtTemagruppe);
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
 
-        AjaxButton plukkOppgave = new AjaxButton("plukk-oppgave") {
+        AjaxButton plukkOppgave = new AjaxButton("plukkOppgave") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 if (brukerHarEnAnnenPlukketOppgavePaaSession()) {
