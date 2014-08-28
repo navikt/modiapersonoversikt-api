@@ -34,7 +34,7 @@
         </dependency>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>modia-pep</artifactId>
+            <artifactId>modiabrukerdialog-pep</artifactId>
             <version>${project.version}</version>
         </dependency>
 

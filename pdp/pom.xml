@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>modia-pip</artifactId>
+    <artifactId>modiabrukerdialog-pdp</artifactId>
 
     <properties>
         <!-- The destination file for the code coverage report has to be set to the same value
@@ -19,23 +19,23 @@
     </properties>
 
     <dependencies>
-        <!-- Interne -->
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>modiabrukerdialog-consumer</artifactId>
+            <artifactId>modiabrukerdialog-pip</artifactId>
             <version>${project.version}</version>
+            <scope>runtime</scope>
         </dependency>
-
-        <!--Kjerneinfo-->
         <dependency>
-            <groupId>no.nav</groupId>
-            <artifactId>kjerneinfo-consumer</artifactId>
+            <groupId>no.nav.modig</groupId>
+            <artifactId>modig-security-authorization</artifactId>
         </dependency>
-
-        <!-- Spring -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
@@ -53,17 +53,13 @@
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.jboss.security</groupId>
-            <artifactId>jbossxacml</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>jcl-over-slf4j</artifactId>
             <scope>runtime</scope>
         </dependency>
         <dependency>
-            <groupId>javax.inject</groupId>
-            <artifactId>javax.inject</artifactId>
+            <groupId>org.jboss.security</groupId>
+            <artifactId>jbossxacml</artifactId>
         </dependency>
 
         <!-- Test -->
@@ -71,14 +67,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
         </dependency>
         <dependency>
             <groupId>no.nav.modig</groupId>
@@ -99,4 +87,5 @@
             </plugin>
         </plugins>
     </build>
+
 </project>

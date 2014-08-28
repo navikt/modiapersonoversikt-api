@@ -20,9 +20,9 @@
         <module>jee</module>
         <module>mock</module>
         <module>consumer</module>
-        <module>modia-pep</module>
-        <module>modia-pip</module>
-        <module>modia-pdp</module>
+        <module>pep</module>
+        <module>pip</module>
+        <module>pdp</module>
     </modules>
 
     <properties>
