@@ -18,7 +18,7 @@
             </Resource>
         </Resources>
     </Target>
-    <Rule RuleId="saksbehandler-skal-ha-tilgang" Effect="Deny">
+    <Rule RuleId="saksbehandler-skal-ha-tilgang" Effect="Permit">
         <Target>
             <Actions>
                 <Action>
@@ -32,16 +32,14 @@
             </Actions>
         </Target>
         <Condition>
-            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
-                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-BD06_EndreKontonummer</AttributeValue>
-                    <SubjectAttributeDesignator
-                            AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"
-                            DataType="http://www.w3.org/2001/XMLSchema#string"/>
-                </Apply>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-BD06_EndreKontonummer</AttributeValue>
+                <SubjectAttributeDesignator
+                        AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"
+                        DataType="http://www.w3.org/2001/XMLSchema#string"/>
             </Apply>
         </Condition>
     </Rule>
     <!-- Saksbehandler har ikke tilgang by default -->
-    <Rule RuleId="alle-andre-har-tilgang" Effect="Permit"/>
+    <Rule RuleId="alle-andre-har-tilgang" Effect="Deny"/>
 </Policy>
