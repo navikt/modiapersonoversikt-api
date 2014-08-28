@@ -35,7 +35,7 @@
         <!-- versjoner -->
         <wicket.version>6.11.0</wicket.version>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <modig.frontend.version>1.1.46-SNAPSHOT</modig.frontend.version>
+        <modig.frontend.version>1.1.46</modig.frontend.version>
         <modig.security.version>1.0.19</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
@@ -69,7 +69,7 @@
         <send.ut.henvendelse.version>0.2</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.8</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.19</dialogarena.behandlingsinformasjon.version>
-        <saksoversikt.version>1.1-SNAPSHOT</saksoversikt.version>
+        <saksoversikt.version>1.1</saksoversikt.version>
         <sporsmalogsvar.version>1.22</sporsmalogsvar.version>
     </properties>
 
