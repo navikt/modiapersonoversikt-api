@@ -79,6 +79,9 @@ public class TestUtils {
         melding.temagruppe = temagruppe;
         melding.traadId = traadId;
         melding.status = Status.IKKE_BESVART;
+        if (type != Meldingstype.SPORSMAL) {
+            melding.kanal = "telefon";
+        }
         return melding;
     }
 

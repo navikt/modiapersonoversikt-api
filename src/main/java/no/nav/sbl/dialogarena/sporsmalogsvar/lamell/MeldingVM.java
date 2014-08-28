@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.commons.collections15.Transformer;
@@ -9,21 +8,19 @@ import org.joda.time.LocalDate;
 import java.io.Serializable;
 import java.util.Comparator;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingOverskriftKey;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingStatusTekstKey;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagStatusIkonKlasse;
 
 
 public class MeldingVM implements Serializable {
 
     public final Melding melding;
 
-    public final String avsender;
     public final int traadlengde;
     public boolean nyesteMeldingISinJournalfortgruppe;
 
     public MeldingVM(Melding melding, int traadLengde) {
         this.melding = melding;
-
-        avsender = lagMeldingOverskriftKey(melding);
         this.traadlengde = traadLengde;
     }
 
@@ -35,8 +32,12 @@ public class MeldingVM implements Serializable {
         return Datoformat.kortMedTid(melding.lestDato);
     }
 
-    public String getStatusKlasse() {
-        return VisningUtils.getStatusKlasse(melding.status);
+    public String getMeldingStatusTekstKey() {
+        return lagMeldingStatusTekstKey(melding);
+    }
+
+    public String getStatusIkonKlasse() {
+        return lagStatusIkonKlasse(melding);
     }
 
     public String getJournalfortDatoFormatert() {
@@ -76,7 +77,6 @@ public class MeldingVM implements Serializable {
     @Override
     public int hashCode() {
         int result = melding.hashCode();
-        result = 31 * result + avsender.hashCode();
         result = 31 * result + traadlengde;
         return result;
     }

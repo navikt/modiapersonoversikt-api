@@ -4,8 +4,12 @@
 @dodgerblue: #0067c5;
 @modiagraaskrift: #b7b1a9;
 @maxwidth: 1080px;
-@meldingslistemargin: 30px;
+@sidemargin: 30px;
 @toppmargin: 1em;
+
+.lamell.meldinger .lerret {
+  padding: 0;
+}
 
 .meldinglamell {
   position: relative;
@@ -18,11 +22,10 @@
     background-color: @graabakgrunn;
     margin: 0;
     border-right: 1px solid @rammefarge;
-    border-left: 1px solid @rammefarge;
     .melding {
       position: relative;
       min-height: 100px;
-      padding: @toppmargin @meldingslistemargin @toppmargin @meldingslistemargin;
+      padding: @toppmargin @sidemargin @toppmargin @sidemargin;
       border-bottom: solid 1px @rammefarge;
       header {
         .indikator {
@@ -70,7 +73,7 @@
     background-color: #fff;
     float: right;
     width: 57%;
-    padding-top: @toppmargin;
+    padding: 22px @sidemargin 0 0;
 
     .traadcontainer {
       max-width: @maxwidth;
@@ -148,7 +151,7 @@
       }
     }
     .nyeste-melding {
-      margin-top: 10px;
+      margin-bottom: 2em;
       overflow: hidden;
       .header {
         .temagruppe {
@@ -164,6 +167,9 @@
       }
       .skillestrek {
         margin: 0 5px;
+      }
+      &.nyeste {
+        margin-top: 0;
       }
     }
     .tidligere-melding {
@@ -221,33 +227,26 @@
 
   .traadlengde {
     float: right;
-    height: 22px;
-    width: 26px;
-    padding: 2px 1px 0 0;
-    font-size: 0.85em;
-    background: url(../img/snakkeboble.svg) no-repeat;
-    color: white;
-    text-align: center;
+    padding-right: 2em;
+    line-height: 21px;
+    font-weight: bold;
+    background: url(../img/melding_flere.svg) no-repeat right;
   }
 
-  .status {
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 0.25em;
-    height: 1em;
-    width: 1em;
-    border-radius: 2em;
-    -moz-border-radius: 2em;
-    -webkit-border-radius: 2em;
-    &.ikke-besvart {
-      background-color: #eebe00;
+  .meldingstatus {
+    margin: 0 0 1em;
+    padding-left: 2.5em;
+    font-weight: normal;
+    line-height: 22px;
+    background-repeat: no-repeat;
+    &.sporsmal {
+      background-image: url(../img/melding_sporsmaal.svg);
     }
-    &.ikke-lest-av-bruker {
-      background-color: #0067c5;
+    &.svar-ikke-lest-av-bruker, &.samtalereferat-ikke-lest-av-bruker  {
+      background-image: url(../img/melding_svar_sendt.svg)
     }
-    &.lest-av-bruker {
-      background-color: transparent;
-      border: 1px solid #0067c5;
+    &.svar-lest-av-bruker, &.samtalereferat-lest-av-bruker {
+      background-image: url(../img/melding_svar_lest.svg)
     }
   }
 
@@ -259,6 +258,7 @@
     position: absolute;
     top: -34px;
     right: 0;
+    margin-right: @sidemargin;
     .meldingsvalg {
       display: inline-block;
       &:not(:last-child) {

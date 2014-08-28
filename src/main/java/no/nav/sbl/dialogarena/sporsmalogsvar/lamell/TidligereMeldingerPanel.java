@@ -7,12 +7,10 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
+import org.apache.wicket.model.StringResourceModel;
 
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.modig.wicket.model.ModelUtils.isEmptyString;
-import static no.nav.modig.wicket.model.ModelUtils.not;
+import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 
 public class TidligereMeldingerPanel extends Panel {
     public TidligereMeldingerPanel(String id, InnboksVM innboksVM) {
@@ -23,9 +21,10 @@ public class TidligereMeldingerPanel extends Panel {
                 final MeldingVM meldingVM = item.getModelObject();
                 item.add(new JournalfortSkiller("journalfortSkiller", item.getModel()));
                 item.add(new AvsenderBilde("avsenderbilde", meldingVM));
+                item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getDefaultModel()))
+                        .add(cssClass(item.getModelObject().getStatusIkonKlasse())));
                 item.add(new Label("opprettetDato"));
                 item.add(new Label("temagruppe", new ResourceModel(meldingVM.melding.temagruppe)));
-                item.add(new Label("melding.navIdent").add(visibleIf(not(isEmptyString(new PropertyModel<String>(meldingVM, "melding.navIdent"))))));
                 item.add(new URLParsingMultiLineLabel("melding.fritekst"));
             }
         });

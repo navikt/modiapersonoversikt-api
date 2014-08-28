@@ -4,26 +4,23 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
-import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.getStatusKlasse;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 
 public class AlleMeldingerPanel extends Panel {
 
-    private final InnboksVM innboksVM;
+    private InnboksVM innboksVM;
 
-    public AlleMeldingerPanel(String id, InnboksVM innboksVM) {
+    public AlleMeldingerPanel(String id, final InnboksVM innboksVM) {
         super(id, new CompoundPropertyModel<>(innboksVM));
         setOutputMarkupId(true);
 
@@ -34,17 +31,13 @@ public class AlleMeldingerPanel extends Panel {
             protected void populateItem(final ListItem<MeldingVM> item) {
 
                 item.add(new Label("traadlengde"));
-
-                item.add(new WebMarkupContainer("indikatorDot").add(cssClass(getStatusKlasse(item.getModelObject().melding.status))));
-                item.add(new Label("indikatorTekst", new StringResourceModel("lamell.${melding.status}", item.getModel())));
-
+                item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getDefaultModel()))
+                        .add(cssClass(item.getModelObject().getStatusIkonKlasse())));
                 item.add(new Label("opprettetDato"));
-                item.add(new Label("avsender", new ResourceModel(item.getModelObject().avsender)));
                 item.add(new Label("melding.temagruppe", new StringResourceModel("${melding.temagruppe}", item.getModel())));
-
                 item.add(new Label("melding.fritekst"));
 
-                item.add(hasCssClassIf("valgt", AlleMeldingerPanel.this.innboksVM.erValgtMelding(item.getModelObject())));
+                item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(item.getModelObject())));
                 item.add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
