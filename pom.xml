@@ -70,7 +70,7 @@
         <behandle.henvendelse.version>0.8</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.18</dialogarena.behandlingsinformasjon.version>
         <saksoversikt.version>1.1-SNAPSHOT</saksoversikt.version>
-        <sporsmalogsvar.version>1.22-SNAPSHOT</sporsmalogsvar.version>
+        <sporsmalogsvar.version>1.22</sporsmalogsvar.version>
     </properties>
 
     <dependencyManagement>
