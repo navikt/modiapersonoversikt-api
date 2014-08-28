@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -22,6 +23,8 @@ public class HenvendelseSoknaderEndpointConfig {
         final HenvendelseSoknaderPortType mock = new HenvendelseSoknaderPortTypeMock().getHenvendelseSoknaderPortTypeMock();
         final HenvendelseSoknaderPortType prod = createHenvendelsePortType();
         return new HenvendelseSoknaderPortType() {
+
+            @Cacheable("endpointCache")
             @Override
             public List<WSSoknad> hentSoknadListe(@WebParam(name = "fodselsnummer", targetNamespace = "") String fodselsnummer) {
                 if (mockErTillattOgSlaattPaaForKey(HENVENDELSESOKNADER_KEY)) {
