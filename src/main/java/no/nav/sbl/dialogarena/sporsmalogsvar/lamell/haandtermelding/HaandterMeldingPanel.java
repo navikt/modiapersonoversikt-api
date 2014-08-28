@@ -40,15 +40,15 @@ public class HaandterMeldingPanel extends Panel {
                 }.add(enabledIf(bleInitiertAvBruker))
         );
 
-        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalfor-panel", innboksVM);
+        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforPanel", innboksVM);
         add(journalforingsPanel);
         add(new MeldingValgPanel("journalforingValg", both(not(erKontorsperret)).and(not(nyesteMeldingErJournalfort)), journalforingsPanel));
 
-        NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyoppgave-panel", innboksVM);
+        NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyoppgavePanel", innboksVM);
         add(nyOppgavePanel);
         add(new MeldingValgPanel("nyoppgaveValg", erBehandlet, nyOppgavePanel));
 
-        MerkePanel merkePanel = new MerkePanel("merke-panel", innboksVM);
+        MerkePanel merkePanel = new MerkePanel("merkePanel", innboksVM);
         add(merkePanel);
         add(new MeldingValgPanel("merkeValg", both(not(eldsteMeldingErJournalfort)).and(not(erKontorsperret)).and(erBehandlet), merkePanel));
     }

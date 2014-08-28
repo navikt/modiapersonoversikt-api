@@ -35,8 +35,8 @@ public class AlleMeldingerPanel extends Panel {
 
                 item.add(new Label("traadlengde"));
 
-                item.add(new WebMarkupContainer("indikator-dot").add(cssClass(getStatusKlasse(item.getModelObject().melding.status))));
-                item.add(new Label("indikator-tekst", new StringResourceModel("lamell.${melding.status}", item.getModel())));
+                item.add(new WebMarkupContainer("indikatorDot").add(cssClass(getStatusKlasse(item.getModelObject().melding.status))));
+                item.add(new Label("indikatorTekst", new StringResourceModel("lamell.${melding.status}", item.getModel())));
 
                 item.add(new Label("opprettetDato"));
                 item.add(new Label("avsender", new ResourceModel(item.getModelObject().avsender)));

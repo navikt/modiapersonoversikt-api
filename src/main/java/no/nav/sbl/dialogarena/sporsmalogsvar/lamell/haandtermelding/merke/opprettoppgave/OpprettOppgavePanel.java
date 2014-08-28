@@ -28,11 +28,11 @@ public class OpprettOppgavePanel extends Panel {
         feedbackPanel.setOutputMarkupId(true);
         add(feedbackPanel);
 
-        final WebMarkupContainer opprettOppgaveWrapper = new WebMarkupContainer("vis-ny-oppgave-wrapper");
+        final WebMarkupContainer opprettOppgaveWrapper = new WebMarkupContainer("visNyOppgaveWrapper");
         opprettOppgaveWrapper.add(visibleIf(not(erOppgaveOpprettet)));
         opprettOppgaveWrapper.setOutputMarkupId(true);
 
-        final NyOppgaveFormWrapper nyOppgaveForm = new NyOppgaveFormWrapper("nyoppgave-form", innboksVM) {
+        final NyOppgaveFormWrapper nyOppgaveForm = new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
                 erOppgaveOpprettet.setObject(true);
@@ -44,7 +44,7 @@ public class OpprettOppgavePanel extends Panel {
         nyOppgaveForm.add(visibleIf(skalOppretteOppgave));
         nyOppgaveForm.setOutputMarkupPlaceholderTag(true);
 
-        CheckBox opprettOppgaveCheckbox = new AjaxCheckBox("opprett-oppgave-checkbox", skalOppretteOppgave) {
+        CheckBox opprettOppgaveCheckbox = new AjaxCheckBox("opprettOppgaveCheckbox", skalOppretteOppgave) {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 target.add(nyOppgaveForm);

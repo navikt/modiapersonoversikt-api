@@ -28,7 +28,7 @@ public class NyesteMeldingPanel extends Panel {
         add(avsenderbilde);
         add(new JournalfortSkiller("journalfortSkiller", getDefaultModel()));
         add(new Label("opprettetDato"));
-        add(new WebMarkupContainer("indikator-dot").add(cssClass(new PropertyModel<String>(getDefaultModel(), "statusKlasse"))));
+        add(new WebMarkupContainer("indikatorDot").add(cssClass(new PropertyModel<String>(getDefaultModel(), "statusKlasse"))));
         add(new Label("temagruppe", new StringResourceModel("${melding.temagruppe}", getDefaultModel())));
         add(new Label("traadlengde"));
         add(new Label("melding.navIdent").add(visibleIf(both(
