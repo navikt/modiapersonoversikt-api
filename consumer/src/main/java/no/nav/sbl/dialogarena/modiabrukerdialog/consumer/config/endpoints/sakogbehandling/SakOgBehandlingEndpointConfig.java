@@ -1,9 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.sakogbehandling;
 
+import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingHentBehandlingBehandlingIkkeFunnet;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingBehandlingIkkeFunnet;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingRequest;
@@ -23,33 +24,16 @@ public class SakOgBehandlingEndpointConfig {
     public static final String SAKOGBEHANDLING_KEY = "start.sakogbehandling.withmock";
 
     @Bean
-    public SakOgBehandlingPortType sakOgBehandlingPortType() {
-        final SakOgBehandlingPortType prod = null;
-        final SakOgBehandlingPortType mock = new SakOgBehandlingPortTypeMock().getSakOgBehandlingPortTypeMock();
-        return new SakOgBehandlingPortType() {
+    public SakOgBehandling_v1PortType sakOgBehandlingPortType() {
+        final SakOgBehandling_v1PortType prod = null;
+        final SakOgBehandling_v1PortType mock = new SakOgBehandlingPortTypeMock().getSakOgBehandlingPortTypeMock();
+        return new SakOgBehandling_v1PortType() {
             @Override
             public FinnSakOgBehandlingskjedeListeResponse finnSakOgBehandlingskjedeListe(@WebParam(name = "request", targetNamespace = "") FinnSakOgBehandlingskjedeListeRequest request) {
                 if (mockErTillattOgSlaattPaaForKey(SAKOGBEHANDLING_KEY)) {
                     return mock.finnSakOgBehandlingskjedeListe(request);
                 }
                 return prod.finnSakOgBehandlingskjedeListe(request);
-            }
-
-            @Override
-            public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest request)
-                    throws HentBehandlingskjedensBehandlingerHentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
-                if (mockErTillattOgSlaattPaaForKey(SAKOGBEHANDLING_KEY)) {
-                    return mock.hentBehandlingskjedensBehandlinger(request);
-                }
-                return prod.hentBehandlingskjedensBehandlinger(request);
-            }
-
-            @Override
-            public HentBehandlingResponse hentBehandling(@WebParam(name = "request", targetNamespace = "") HentBehandlingRequest request) throws HentBehandlingHentBehandlingBehandlingIkkeFunnet {
-                if (mockErTillattOgSlaattPaaForKey(SAKOGBEHANDLING_KEY)) {
-                    return mock.hentBehandling(request);
-                }
-                return prod.hentBehandling(request);
             }
 
             @Override
@@ -60,7 +44,24 @@ public class SakOgBehandlingEndpointConfig {
                     prod.ping();
                 }
             }
+
+            @Override
+            public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest hentBehandlingskjedensBehandlingerRequest) throws HentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
+                throw new RuntimeException("skal ikke brukes");
+            }
+
+            @Override
+            public HentBehandlingResponse hentBehandling(@WebParam(name = "request", targetNamespace = "") HentBehandlingRequest hentBehandlingRequest) throws HentBehandlingBehandlingIkkeFunnet {
+                throw new RuntimeException("skal ikke brukes");
+            }
         };
+    }
+
+    private SakOgBehandling_v1PortType createSakogbehandlingPortType() {
+        return new CXFClient<>(SakOgBehandling_v1PortType.class)
+                .address(System.getProperty("sakogbehandling.ws.url"))
+                .wsdl("classpath:sakOgBehandling/no/nav/tjeneste/virksomhet/sakOgBehandling/v1/sakOgBehandling.wsdl")
+                .build();
     }
 
 }

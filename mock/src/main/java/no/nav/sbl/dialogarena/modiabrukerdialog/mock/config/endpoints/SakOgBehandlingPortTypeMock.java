@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandlingPortType;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSBehandlingskjedetyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.WSSakstemaer;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.HentBehandlingRequest;
@@ -40,8 +40,8 @@ public class SakOgBehandlingPortTypeMock {
     public static final String ANTALLSAKER_PROPERTY = "sakogbehandling.antallmocksaker";
 
     @Bean
-    public SakOgBehandlingPortType getSakOgBehandlingPortTypeMock() {
-        SakOgBehandlingPortType mock = mock(SakOgBehandlingPortType.class);
+    public SakOgBehandling_v1PortType getSakOgBehandlingPortTypeMock() {
+        SakOgBehandling_v1PortType mock = mock(SakOgBehandling_v1PortType.class);
 
         // Bruker thenAnswer slik at antall saker (ANTALLSAKER_PROPERTY) kan justeres under kjøring fra mocksetup
         when(mock.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenAnswer(new Answer<Object>() {
