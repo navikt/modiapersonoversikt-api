@@ -21,7 +21,7 @@
         <Description>Gi tilgang hvis bruker har ingen enhet</Description>
         <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
-                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string"></AttributeValue>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string"/>
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
                     <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string" AttributeId="urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet"/>
                 </Apply>

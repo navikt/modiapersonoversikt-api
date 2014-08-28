@@ -94,7 +94,7 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
 			return enheter;
 		} catch (HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg ex) {
 			logger.warn("Exception while calling hentNAVAnsattEnhetListe with ansattId {}.", ansattId, ex);
-			return Collections.EMPTY_LIST;
+			return Collections.emptyList();
 		}
 	}
 
@@ -116,7 +116,7 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
 			fylkesEnheter = enhetService.hentNAVEnhetListe(request).getNAVEnheter();
 		} catch (HentNAVEnhetListeFaultGOSYSGeneriskMsg | HentNAVEnhetListeFaultGOSYSNAVEnhetIkkeFunnetMsg ex) {
 			logger.info("Feil ved kall på hentNAVEnhetListe", ex.getMessage());
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 
 		for (ASBOGOSYSNavEnhet fylkesEnhet : fylkesEnheter) {
@@ -152,7 +152,7 @@ public class DefaultEnhetAttributeLocatorDelegate implements EnhetAttributeLocat
 			return enhetIdSet;
 		} catch (HentNAVEnhetGruppeListeFaultGOSYSGeneriskMsg | HentNAVEnhetGruppeListeFaultGOSYSNAVEnhetIkkeFunnetMsg ex) {
 			logger.warn("Exception while calling hentNAVEnhetGruppeListe with ansattId {}.", enhetId, ex);
-			return Collections.EMPTY_SET;
+			return Collections.emptySet();
 		}
 	}
 }

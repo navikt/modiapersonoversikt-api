@@ -32,7 +32,7 @@ public class MockAttributeLocator extends AttributeLocator {
 		this.ids.add(EnhetAttributeLocator.ATTRIBUTEID_ROLLE);
 
 
-		this.designatorTypes.add(Integer.valueOf(0));
+		this.designatorTypes.add(0);
 	}
 
 	@Override

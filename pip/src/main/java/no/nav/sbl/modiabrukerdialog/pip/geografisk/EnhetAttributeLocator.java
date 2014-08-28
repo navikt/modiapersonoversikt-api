@@ -37,7 +37,7 @@ public class EnhetAttributeLocator extends AttributeLocator {
 	public EnhetAttributeLocator() {
 		this.attributeDesignatorSupported = true;
 		this.attributeSelectorSupported = true;
-		this.designatorTypes.add(Integer.valueOf(0));
+		this.designatorTypes.add(0);
 		ApplicationContext context = new AnnotationConfigApplicationContext(GeografiskPipConfig.class);
 		delegate = context.getBean(EnhetAttributeLocatorDelegate.class);
 	}
@@ -52,7 +52,7 @@ public class EnhetAttributeLocator extends AttributeLocator {
 		}
 
 		String subjectId = getSubjectId(context);
-		Set<AttributeValue> values = Collections.EMPTY_SET;
+		Set<AttributeValue> values = Collections.emptySet();
 
 		if (attributeId.equals(ATTRIBUTEID_LOCAL_ENHET)) {
 			values = convertSet(delegate.getLokalEnheterForAnsatt(subjectId));
