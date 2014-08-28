@@ -27,8 +27,7 @@ public class MerkePanel extends AnimertPanel {
         feedbackPanel.setOutputMarkupId(true);
         add(feedbackPanel);
 
-        opprettOppgavePanel = new OpprettOppgavePanel("opprett-oppgave-panel", innboksVM);
-        opprettOppgavePanel.setOutputMarkupId(true);
+        opprettOppgavePanel = new OpprettOppgavePanel("opprettOppgavePanel", innboksVM);
         add(opprettOppgavePanel);
 
         AjaxLink merkeLink = new AjaxLink("merk") {
