@@ -2,19 +2,24 @@ package no.nav.sbl.dialogarena.sak;
 
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
+import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
 
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
 
@@ -52,6 +57,17 @@ public class WicketTesterConfig {
     @Bean
     public BulletproofCmsService bulletproofCmsService() {
         return new BulletproofCmsService();
+    }
+
+    @Bean
+    public SakOgBehandlingFilter sakOgBehandlingFilter() {
+        SakOgBehandlingFilter mock = mock(SakOgBehandlingFilter.class, RETURNS_MOCKS);
+        when(mock.filtrer(anyListOf(WSSak.class))).thenAnswer(new Answer<Object>() {
+            @Override public Object answer(InvocationOnMock invocation) throws Throwable {
+                return invocation.getArguments()[0]; // Filtrerer ingenting og returnerer argumentet
+            }
+        });
+        return mock;
     }
 
     public class DummyApplication extends WebApplication {

@@ -25,7 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +45,7 @@ import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -66,6 +69,9 @@ public class SaksoversiktServiceTest {
     @Mock
     AktoerPortType aktoer;
 
+    @Mock
+    private SakOgBehandlingFilter sakOgBehandlingFilter = new SakOgBehandlingFilter();
+
     @InjectMocks
     private SaksoversiktService service;
 
@@ -86,6 +92,11 @@ public class SaksoversiktServiceTest {
         } catch (Exception e) {
             //whatever
         }
+        when(sakOgBehandlingFilter.filtrer(anyListOf(WSSak.class))).thenAnswer(new Answer<Object>() {
+            @Override public Object answer(InvocationOnMock invocation) throws Throwable {
+                return invocation.getArguments()[0]; // Filtrerer ingenting og returnerer argumentet
+            }
+        });
     }
 
     @Test

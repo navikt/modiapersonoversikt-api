@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.config;
 
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
+import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +21,11 @@ public class SaksoversiktServiceConfig {
     @Bean
     public BulletproofCmsService bulletproofCmsService() {
         return new BulletproofCmsService();
+    }
+
+    @Bean
+    public SakOgBehandlingFilter sakOgBehandlingFilter() {
+        return new SakOgBehandlingFilter();
     }
 
 }

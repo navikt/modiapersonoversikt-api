@@ -55,6 +55,9 @@ public class SaksoversiktService {
     @Inject
     private HenvendelseSoknaderPortType henvendelseSoknaderPortType;
 
+    @Inject
+    private SakOgBehandlingFilter sakOgBehandlingFilter;
+
     /**
      * Henter alle tema for en gitt person
      */
@@ -167,7 +170,8 @@ public class SaksoversiktService {
 
     private List<WSSak> hentSakerForAktor(String aktorId) {
         try {
-            return sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
+            List<WSSak> saker = sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
+            return sakOgBehandlingFilter.filtrer(saker);
         } catch (RuntimeException ex) {
             throw new SystemException("Feil ved kall til sakogbehandling", ex);
         }
