@@ -2,11 +2,13 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
+import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.SaksbehandlerInnstillingerService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -28,21 +30,27 @@ import javax.inject.Inject;
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINSTILLINGER_VALGT;
 
 public class ReferatPanel extends Panel {
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
 
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
     private final String fnr;
     private final KvitteringsPanel kvittering;
+    private final SvarOgReferatVM svarOgReferatVM;
 
     public ReferatPanel(String id, String fnr) {
         super(id);
         this.fnr = fnr;
         setOutputMarkupPlaceholderTag(true);
 
-        final Form<SvarOgReferatVM> form = new Form<>("referatform", new CompoundPropertyModel<>(new SvarOgReferatVM()));
+        this.svarOgReferatVM = new SvarOgReferatVM();
+        final Form<SvarOgReferatVM> form = new Form<>("referatform", new CompoundPropertyModel<>(vmMedDefaultVerdier()));
         form.setOutputMarkupPlaceholderTag(true);
 
         form.add(new EnhancedTextArea("tekstfelt", form.getModel(),
@@ -94,6 +102,19 @@ public class ReferatPanel extends Panel {
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
         response.render(OnDomReadyHeaderItem.forScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});"));
+    }
+
+    @RunOnEvents(SAKSBEHANDLERINSTILLINGER_VALGT)
+    public void oppdaterReferatVM(AjaxRequestTarget target) {
+        vmMedDefaultVerdier();
+        target.add(this);
+    }
+
+    private SvarOgReferatVM vmMedDefaultVerdier() {
+        if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {
+            svarOgReferatVM.kanal = ReferatKanal.TELEFON;
+        }
+        return svarOgReferatVM;
     }
 
     private void sendOgVisKvittering(AjaxRequestTarget target, Form<SvarOgReferatVM> form) {

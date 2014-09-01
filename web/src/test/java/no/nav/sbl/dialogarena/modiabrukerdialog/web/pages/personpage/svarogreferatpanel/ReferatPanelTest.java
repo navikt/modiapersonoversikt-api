@@ -4,9 +4,10 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatKanal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.SaksbehandlerInnstillingerService;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -25,10 +26,13 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -40,6 +44,9 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Inject
     protected HenvendelseUtsendingService henvendelseUtsendingService;
+
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @Test
     public void inneholderReferatspesifikkeKomponenter() {
@@ -87,6 +94,26 @@ public class ReferatPanelTest extends WicketPageTest {
                 .submitWithAjaxButton(withId("send"))
                 .should().containComponent(thatIsInvisible().withId("referatform"))
                 .should().containComponent(thatIsVisible().ofType(KvitteringsPanel.class));
+    }
+
+    @Test
+    public void telefonSomDefaultKanalHvisSaksbehandlerErTilknyttetKontaktsenter() {
+        when(saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()).thenReturn(true);
+
+        wicket.goToPageWith(new TestReferatPanel("id", "fnr"));
+
+        SvarOgReferatVM modelObject = (SvarOgReferatVM) wicket.get().component(withId("referatform").and(ofType(Form.class))).getDefaultModelObject();
+        assertThat(modelObject.kanal, is((equalTo((Kanal) ReferatKanal.TELEFON))));
+    }
+
+    @Test
+    public void ingenDefaultKanalHvisSaksbehandlerIkkeErTilknyttetKontaktsenter() {
+        when(saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()).thenReturn(false);
+
+        wicket.goToPageWith(new TestReferatPanel("id", "fnr"));
+
+        SvarOgReferatVM modelObject = (SvarOgReferatVM) wicket.get().component(withId("referatform").and(ofType(Form.class))).getDefaultModelObject();
+        assertThat(modelObject.kanal, is(equalTo(null)));
     }
 
     protected TestReferatPanel lagReferatPanelMedKanalSatt() {

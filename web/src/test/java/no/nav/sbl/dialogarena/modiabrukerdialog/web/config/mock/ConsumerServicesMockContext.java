@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.SaksbehandlerInnstillingerService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,4 +22,13 @@ public class ConsumerServicesMockContext {
         return mock(OppgaveBehandlingService.class);
     }
 
+    @Bean
+    public AnsattService ansattService() {
+        return mock(AnsattService.class);
+    }
+
+    @Bean
+    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
+        return mock(SaksbehandlerInnstillingerService.class);
+    }
 }

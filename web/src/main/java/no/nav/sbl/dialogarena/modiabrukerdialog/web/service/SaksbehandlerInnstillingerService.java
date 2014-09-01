@@ -46,6 +46,10 @@ public class SaksbehandlerInnstillingerService {
         return new CookieUtils().load(saksbehandlerInstillingerTimeoutCookieId()) == null;
     }
 
+    public boolean valgtEnhetErKontaktsenter() {
+        return getSaksbehandlerValgtEnhet().startsWith("41");
+    }
+
     private boolean valgtEnhetCookieEksistererIkke() {
         return new CookieUtils().load(saksbehandlerInstillingerCookieId()) == null;
     }
