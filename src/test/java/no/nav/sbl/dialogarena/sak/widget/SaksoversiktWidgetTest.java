@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.widget;
 
 import no.nav.modig.core.exception.SystemException;
+import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.sbl.dialogarena.sak.AbstractWicketTest;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
@@ -63,5 +64,33 @@ public class SaksoversiktWidgetTest extends AbstractWicketTest {
         wicketTester.goToPageWith(widget);
 
         wicketTester.should().containPatterns("kan ikke vise saker");
+    }
+
+    @Test
+    public void skalViseMeldingVedForMangeSaker() {
+        ArrayList<TemaVM> temaVMs = new ArrayList<>();
+        for (int x = 0; x < FeedWidget.MAX_NUMBER_OF_FEED_ITEMS + 1; x++) {
+            temaVMs.add(new TemaVM().withTemaKode("AAP").withSistOppdaterteBehandling(new GenerellBehandling().withBehandlingsDato(DateTime.now())));
+        }
+
+        when(saksoversiktService.hentTemaer(anyString())).thenReturn(temaVMs);
+
+        SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
+        wicketTester.goToPageWith(widget);
+        wicketTester.should().containPatterns("2 flere saker.");
+    }
+
+    @Test
+    public void skalIkkeViseMeldingVedAkkuratNokSaker() {
+        ArrayList<TemaVM> temaVMs = new ArrayList<>();
+        for (int x = 0; x < FeedWidget.MAX_NUMBER_OF_FEED_ITEMS; x++) {
+            temaVMs.add(new TemaVM().withTemaKode("AAP").withSistOppdaterteBehandling(new GenerellBehandling().withBehandlingsDato(DateTime.now())));
+        }
+
+        when(saksoversiktService.hentTemaer(anyString())).thenReturn(temaVMs);
+
+        SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
+        wicketTester.goToPageWith(widget);
+        wicketTester.should().notContainPatterns("flere saker.");
     }
 }
