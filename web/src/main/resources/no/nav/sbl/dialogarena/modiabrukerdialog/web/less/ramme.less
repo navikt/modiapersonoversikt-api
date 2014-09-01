@@ -542,6 +542,7 @@
 	.lamell {
 		position: relative;
 		&.bunn {
+            box-shadow: 0px 3px 25px #999;
 			position: fixed;
 			width: @mainContentWidth;
 			> HEADER {
@@ -564,20 +565,15 @@
 			position: absolute;
 			right: 30px;
 			top: 15px;
-			padding: 2px;
 			width: 26px;
-			height: 25px;
-			overflow: hidden;
-			text-align: center;
+			height: 26px;
 			color: transparent;
-			background: transparent url(../img/kryss_blaa.png) no-repeat center center;
-			border: 1px solid #ccc;
+			background: url(../img/kryss.svg) no-repeat center center;
+            background-size: contain;
 		}
 		.close:focus, .close:hover {
-			border-color: @blue;
-			background: @blue url(../img/kryss_hvit.png) no-repeat center center;
-			color: transparent;
-			outline: none;
+			background: url(../img/kryss_hover.svg) no-repeat center center;
+            background-size: contain;
 		}
 		.error-panel {
 			padding: 30px 30px 40px 30px;

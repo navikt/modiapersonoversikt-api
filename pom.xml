@@ -68,7 +68,7 @@
         <send.ut.henvendelse.version>0.2</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.8</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.19</dialogarena.behandlingsinformasjon.version>
-        <saksoversikt.version>1.1-SNAPSHOT</saksoversikt.version>
+        <saksoversikt.version>1.2-SNAPSHOT</saksoversikt.version>
         <sporsmalogsvar.version>1.22-SNAPSHOT</sporsmalogsvar.version>
     </properties>
 
