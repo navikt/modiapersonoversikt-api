@@ -11,15 +11,15 @@
 
     <name>modia-saksoversikt</name>
     <artifactId>modia-saksoversikt</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
         <spring.version>3.2.4.RELEASE</spring.version>
-        <modig.wicket.version>2.0.24-SNAPSHOT</modig.wicket.version>
+        <modig.wicket.version>2.0.24</modig.wicket.version>
         <modig.core.version>1.0.1</modig.core.version>
         <wicket.version>6.11.0</wicket.version>
-        <modig.frontend.version>1.1.47-SNAPSHOT</modig.frontend.version>
+        <modig.frontend.version>1.1.45</modig.frontend.version>
         <mockito.core.version>1.9.5</mockito.core.version>
         <modig.lang.version>1.1.0</modig.lang.version>
     </properties>
@@ -85,7 +85,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
-            <version>1.0.11</version>
+            <version>1.0.9</version>
         </dependency>
 
         <dependency>
@@ -104,7 +104,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>henvendelse-soknader-tjenestespesifikasjon</artifactId>
-            <version>0.0.19</version>
+            <version>0.0.17</version>
         </dependency>
 
         <dependency>

@@ -6,7 +6,6 @@ import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.modig.modia.widget.panels.ErrorListing;
 import no.nav.modig.modia.widget.panels.GenericListing;
-import no.nav.modig.modia.widget.panels.OverflowListing;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.Component;
@@ -28,10 +27,9 @@ public class SaksoversiktWidget extends FeedWidget<TemaVM> {
     private static final Logger log = LoggerFactory.getLogger(SaksoversiktWidget.class);
 
     public SaksoversiktWidget(String id, String initial, String fnr) {
-        super(id, initial, false);
+        super(id, initial, false, "mange.saker");
 
         setDefaultModel(lagLDMforTema(fnr));
-        setOverflowPanel(new OverflowListing(getString("mange.saker")));
     }
 
     private LoadableDetachableModel<List<? extends FeedItemVM>> lagLDMforTema(final String fnr) {
