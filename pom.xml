@@ -27,7 +27,7 @@
         <send.ut.henvendelse.version>0.2</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.8</behandle.henvendelse.version>
         <kjerneinfo.versjon>1.0.80</kjerneinfo.versjon>
-        <dialogarena.behandlingsinformasjon.version>0.0.18</dialogarena.behandlingsinformasjon.version>
+        <dialogarena.behandlingsinformasjon.version>0.0.20</dialogarena.behandlingsinformasjon.version>
         <handlebars.version>1.1.2</handlebars.version>
     </properties>
 
