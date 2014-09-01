@@ -7,11 +7,11 @@ import org.apache.wicket.behavior.AttributeAppender;
 public class AnimasjonsUtils {
 
     public static void animertVisningToggle(AjaxRequestTarget target, Component component) {
-        component.add(new DisplayNoneBehavior());
         if (component.isVisibilityAllowed()) {
             target.prependJavaScript("lukket|$('#" + component.getMarkupId() + "').slideUp(lukket)");
             component.setVisibilityAllowed(false);
         } else {
+            component.add(new DisplayNoneBehavior());
             target.appendJavaScript("$('#" + component.getMarkupId() + "').slideDown()");
             component.setVisibilityAllowed(true);
         }

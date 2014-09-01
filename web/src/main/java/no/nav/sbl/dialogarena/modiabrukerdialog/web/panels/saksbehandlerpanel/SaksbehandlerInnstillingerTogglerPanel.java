@@ -21,13 +21,14 @@ public class SaksbehandlerInnstillingerTogglerPanel extends Panel {
 
     public SaksbehandlerInnstillingerTogglerPanel(String id) {
         super(id);
-
         setOutputMarkupId(true);
+
+        PropertyModel<Boolean> ekspandertModel = new PropertyModel<>(this, "ekspandert");
 
         add(new ContextImage("togglebilde", "img/modiaLogo.svg"));
         add(new WebMarkupContainer("togglepil")
-                .add(hasCssClassIf("ned", new PropertyModel<Boolean>(this, "ekspandert")))
-                .add(hasCssClassIf("opp", not(new PropertyModel<Boolean>(this, "ekspandert")))));
+                .add(hasCssClassIf("ned", ekspandertModel))
+                .add(hasCssClassIf("opp", not(ekspandertModel))));
 
         add(new AjaxEventBehavior("click") {
             @Override

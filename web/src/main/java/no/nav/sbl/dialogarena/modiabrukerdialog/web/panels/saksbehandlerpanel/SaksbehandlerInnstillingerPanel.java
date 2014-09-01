@@ -11,9 +11,8 @@ import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListItem;
-import org.apache.wicket.markup.html.list.ListView;
+import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
@@ -32,8 +31,8 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
 
     public SaksbehandlerInnstillingerPanel(String id) {
         super(id);
-
         setOutputMarkupPlaceholderTag(true);
+
         setVisibilityAllowed(
                 saksbehandlerInnstillingerService.hentEnhetsListe().size() > 1 &&
                         saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert());
@@ -43,10 +42,10 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         RadioGroup<String> gruppe = new RadioGroup<>("enhet", new PropertyModel<String>(this, "valgtEnhet"));
         gruppe.setRequired(true);
 
-        gruppe.add(new ListView<AnsattEnhet>("enhetsvalg", saksbehandlerInnstillingerService.hentEnhetsListe()) {
+        gruppe.add(new PropertyListView<AnsattEnhet>("enhetsvalg", saksbehandlerInnstillingerService.hentEnhetsListe()) {
             protected void populateItem(ListItem<AnsattEnhet> item) {
-                item.add(new Radio<>("enhetId", Model.of(item.getModelObject().enhetId)));
-                item.add(new Label("enhetNavn", item.getModelObject().enhetNavn));
+                item.add(new Radio<>("enhetId"));
+                item.add(new Label("enhetNavn"));
             }
         });
 

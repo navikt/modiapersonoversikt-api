@@ -25,13 +25,18 @@ public class SaksbehandlerInnstillingerService {
         List<String> ansattEnhetsIdListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();
         String enhetId = ansattEnhetsIdListe.get(0);
 
-        if (valgtEnhetCookieEksistererIkke()) {
+        if (valgtEnhetCookieEksisterer()) {
+            return hentEnhetFraCookie(ansattEnhetsIdListe, enhetId);
+        } else {
             setSaksbehandlerValgtEnhetCookie(enhetId);
             return enhetId;
-        } else {
-            String cookieEnhetId = new CookieUtils().load(saksbehandlerInnstillingerCookieId());
-            return ansattEnhetsIdListe.contains(cookieEnhetId) ? cookieEnhetId : enhetId;
         }
+    }
+
+    private String hentEnhetFraCookie(List<String> ansattEnhetsIdListe, String enhetId) {
+        String cookieEnhetId = new CookieUtils().load(saksbehandlerInnstillingerCookieId());
+        boolean saksbehanderHarTilgangTilEnhet = ansattEnhetsIdListe.contains(cookieEnhetId);
+        return saksbehanderHarTilgangTilEnhet ? cookieEnhetId : enhetId;
     }
 
     public void setSaksbehandlerValgtEnhetCookie(String valgtEnhet) {
@@ -50,8 +55,8 @@ public class SaksbehandlerInnstillingerService {
         return getSaksbehandlerValgtEnhet().startsWith("41");
     }
 
-    private boolean valgtEnhetCookieEksistererIkke() {
-        return new CookieUtils().load(saksbehandlerInnstillingerCookieId()) == null;
+    private boolean valgtEnhetCookieEksisterer() {
+        return new CookieUtils().load(saksbehandlerInnstillingerCookieId()) != null;
     }
 
     private void setSaksbehandlerInnstillingerTimeoutCookie() {

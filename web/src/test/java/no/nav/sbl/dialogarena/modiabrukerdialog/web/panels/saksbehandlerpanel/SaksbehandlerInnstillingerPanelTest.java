@@ -54,7 +54,7 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void saksbehandlerPanelVisesIkkeVedEnEnhet() {
+    public void saksbehandlerPanelVisesIkkeVedKunEnEnhet() {
         when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(asList(new AnsattEnhet("111", "Grunerløkka")));
         when(saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert()).thenReturn(true);
 
@@ -67,6 +67,7 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
     public void saksbehandlerPanelTogglesVedKlikkPaToggler() {
         wicket
                 .goTo(SaksbehandlerInnstillingerTestPage.class)
+                .should().containComponent(thatIsInvisible().and(ofType(SaksbehandlerInnstillingerPanel.class)))
                 .onComponent(ofType(SaksbehandlerInnstillingerTogglerPanel.class))
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsVisible().and(ofType(SaksbehandlerInnstillingerPanel.class)))
