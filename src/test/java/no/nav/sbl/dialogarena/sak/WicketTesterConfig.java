@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Configuration
 public class WicketTesterConfig {
