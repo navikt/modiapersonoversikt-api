@@ -41,6 +41,6 @@ public class ValgtEnhetService {
     }
 
     private String brukerSpesifikCookieId() {
-        return "saksbehandlerinstillinger-" + getSubjectHandler().getUid();
+        return "saksbehandlerinnstillinger-" + getSubjectHandler().getUid();
     }
 }
