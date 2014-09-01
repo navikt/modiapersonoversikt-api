@@ -9,19 +9,20 @@
         <p class="behandlingstid" wicket:id="behandlingstid"/>
 
         <section wicket:id="innsendteVedleggSection">
-            <h3 class="liten" wicket:id="innsendteDokumenterHeader">[]</h3>
+            <h3 wicket:id="innsendteDokumenterHeader">[]</h3>
             <ul>
                 <li class="mini" wicket:id="innsendteVedlegg">
-                    <img src="./img/hake_svart.svg">
+                    <img class="hake" src="./img/hake_svart.svg">
                     <wicket:container wicket:id="dokument"/>
                 </li>
             </ul>
         </section>
 
         <section wicket:id="manglendeVedleggSection">
-            <h3 class="liten" wicket:id="manglendeVedleggHeader">[]</h3>
+            <h3 wicket:id="manglendeVedleggHeader">[]</h3>
             <ul>
-                <li class="mini kule" wicket:id="manglendeVedlegg">
+                <li class="mini" wicket:id="manglendeVedlegg">
+                    <img class="minus" src="./img/minus.svg">
                     <wicket:container wicket:id="dokument"/>
                     <span>(<wicket:container wicket:id="innsendingsvalg"/>)</span>
                 </li>

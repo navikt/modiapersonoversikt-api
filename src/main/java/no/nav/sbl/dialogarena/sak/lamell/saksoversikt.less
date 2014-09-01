@@ -5,13 +5,15 @@
 }
 
 .widget .widgetDato {
-    float: right;
+    display: block;
+    font-size: 0.85rem;
 }
 
 .widget .widgetTema {
-    max-width: 45%;
     display: inline-block;
     font-weight: bold;
+    font-size: 1.2rem;
+    font-family: Modus, arial, sans-serif;
 }
 
 .saksoversikt {
@@ -41,8 +43,7 @@
                     display: block;
 
                     .dato {
-                        font-family: Modus, Arial, Helvetica, sans-serif;
-                        color: #999;
+                        margin-bottom: 0.17rem;
                     }
                 }
             }
@@ -50,8 +51,6 @@
     }
 
     .sak-informasjon {
-        padding-top: 20px;
-
         .aar {
             position: relative;
             z-index: 1;
@@ -85,10 +84,16 @@
         }
 
         .behandling-container {
-            padding: 0 30px 40px;
+            padding: 0 30px 30px;
+
+            &:first-child {
+                .aar {
+                    display: none;
+                }
+            }
 
             .behandling {
-                padding-left: 90px;
+                padding-left: 85px;
                 padding-top: 40px;
                 background: url(../img/hake_stor.svg) no-repeat left 15px;
 
@@ -101,8 +106,6 @@
     }
 
     .behandling-informasjon {
-        margin-right: 30px;
-
         h2 {
             margin-bottom: 20px;
         }
@@ -120,17 +123,38 @@
 
         .behandling-datoer {
             span {
-                font-size: 0.8rem;
+                font-size: 0.85rem;
 
                 &:first-child {
-                    margin-right: 10px;
+                    &:after {
+                        content: "";
+                        margin-left: 10px;
+                        margin-right: 5px;
+                        border: 2px solid #3e3832;
+                        border-radius: 2px;
+                        display: inline-block;
+                        position: relative;
+                        top: -2px;
+                    }
                 }
+            }
+        }
+
+        .toggle-kollapsbar {
+            color: #2768B2;
+
+            &:hover {
+                text-decoration: underline;
             }
         }
 
         .kollapsbar {
             display: none;
             position: relative;
+
+            h3 {
+                font-size: 1rem;
+            }
 
             section {
                 padding-bottom: 0;
@@ -139,38 +163,38 @@
             .skriv-ut {
                 position: absolute;
                 right: 10px;
-                background: url(../img/print.svg) no-repeat left center;
+                background: url(../img/print_hover.svg) no-repeat left center;
                 padding-left: 20px;
-                color: @gray-dark;
+                color: #2768B2;
 
                 &:hover {
-                    background: url(../img/print_hover.svg) no-repeat left center;
-                    color: #0067c5;
+                    text-decoration: underline;
                 }
             }
 
             ul {
                 list-style: none;
                 padding-left: 0;
-                margin-bottom: 40px;
+                margin-bottom: 30px;
 
                 li {
                     margin-bottom: 10px;
+                    padding-left: 20px;
 
                     img {
+                        margin-left: -20px;
                         margin-right: 5px;
-                        width: 10px;
-                    }
 
-                    &.kule {
-                        &:before {
-                            border: 3px solid black;
-                            border-radius: 3px;
-                            content: " ";
-                            display: inline-block;
+                        &.hake {
+                            -ms-transform: scale(0.75, 0.75);
+                            -moz-transform: scale(0.75, 0.75);
+                            -webkit-transform: scale(0.75, 0.75);
+                            transform: scale(0.75, 0.75);
+                        }
+
+                        &.minus {
                             position: relative;
                             top: -2px;
-                            margin-right: 10px;
                         }
                     }
                 }
