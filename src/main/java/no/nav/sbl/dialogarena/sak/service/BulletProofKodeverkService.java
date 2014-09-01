@@ -39,9 +39,9 @@ public class BulletProofKodeverkService {
         return lokaltKodeverk.isEgendefinert(vedleggsIdOrskjemaId);
     }
 
-    public String getTemanavnForTemakode(String temakode, String behandlingstema) {
+    public String getTemanavnForTemakode(String temakode, String kodeverk) {
         try {
-            return kodeverkClient.hentFoersteTermnavnForKode(temakode, behandlingstema);
+            return kodeverkClient.hentFoersteTermnavnForKode(temakode, kodeverk);
         } catch(Exception e) {
             LOG.warn("Fant ikke kodeverkid '" + temakode + "'. Bruker generisk tittel.", e);
             return hentUkjentKodeverkverdi(temakode);
