@@ -29,7 +29,7 @@ public class SaksbehandlerInnstillingerService {
             setSaksbehandlerValgtEnhetCookie(enhetId);
             return enhetId;
         } else {
-            String cookieEnhetId = new CookieUtils().load(saksbehandlerInstillingerCookieId());
+            String cookieEnhetId = new CookieUtils().load(saksbehandlerInnstillingerCookieId());
             return ansattEnhetsIdListe.contains(cookieEnhetId) ? cookieEnhetId : enhetId;
         }
     }
@@ -37,13 +37,13 @@ public class SaksbehandlerInnstillingerService {
     public void setSaksbehandlerValgtEnhetCookie(String valgtEnhet) {
         CookieUtils cookieUtils = new CookieUtils();
         cookieUtils.getSettings().setMaxAge(3600 * 24 * 365);
-        cookieUtils.save(saksbehandlerInstillingerCookieId(), valgtEnhet);
+        cookieUtils.save(saksbehandlerInnstillingerCookieId(), valgtEnhet);
 
-        setSaksbehandlerInstillingerTimeoutCookie();
+        setSaksbehandlerInnstillingerTimeoutCookie();
     }
 
-    public boolean saksbehandlerInstillingerErUtdatert() {
-        return new CookieUtils().load(saksbehandlerInstillingerTimeoutCookieId()) == null;
+    public boolean saksbehandlerInnstillingerErUtdatert() {
+        return new CookieUtils().load(saksbehandlerInnstillingerTimeoutCookieId()) == null;
     }
 
     public boolean valgtEnhetErKontaktsenter() {
@@ -51,21 +51,21 @@ public class SaksbehandlerInnstillingerService {
     }
 
     private boolean valgtEnhetCookieEksistererIkke() {
-        return new CookieUtils().load(saksbehandlerInstillingerCookieId()) == null;
+        return new CookieUtils().load(saksbehandlerInnstillingerCookieId()) == null;
     }
 
-    private void setSaksbehandlerInstillingerTimeoutCookie() {
+    private void setSaksbehandlerInnstillingerTimeoutCookie() {
         CookieUtils cookieUtils = new CookieUtils();
         cookieUtils.getSettings().setMaxAge(3600 * 12);
-        cookieUtils.save(saksbehandlerInstillingerTimeoutCookieId(), "");
+        cookieUtils.save(saksbehandlerInnstillingerTimeoutCookieId(), "");
     }
 
-    private String saksbehandlerInstillingerTimeoutCookieId() {
-        return "saksbehandlerinstillinger-timeout-" + getSubjectHandler().getUid();
+    private String saksbehandlerInnstillingerTimeoutCookieId() {
+        return "saksbehandlerinnstillinger-timeout-" + getSubjectHandler().getUid();
     }
 
-    private String saksbehandlerInstillingerCookieId() {
-        return "saksbehandlerinstillinger-" + getSubjectHandler().getUid();
+    private String saksbehandlerInnstillingerCookieId() {
+        return "saksbehandlerinnstillinger-" + getSubjectHandler().getUid();
     }
 }
 

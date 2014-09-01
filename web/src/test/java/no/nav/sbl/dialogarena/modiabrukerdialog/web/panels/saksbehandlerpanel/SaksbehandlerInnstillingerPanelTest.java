@@ -46,31 +46,31 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
     @Test
     public void saksbehandlerPanelVisesVedFlereEnheter() {
         when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(flereAnsattEnheter());
-        when(saksbehandlerInnstillingerService.saksbehandlerInstillingerErUtdatert()).thenReturn(true);
+        when(saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert()).thenReturn(true);
 
         wicket
-                .goTo(SaksbehandlerInstillingerTestPage.class)
+                .goTo(SaksbehandlerInnstillingerTestPage.class)
                 .should().containComponent(thatIsVisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
     }
 
     @Test
     public void saksbehandlerPanelVisesIkkeVedEnEnhet() {
         when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(asList(new AnsattEnhet("111", "Grunerløkka")));
-        when(saksbehandlerInnstillingerService.saksbehandlerInstillingerErUtdatert()).thenReturn(true);
+        when(saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert()).thenReturn(true);
 
         wicket
-                .goTo(SaksbehandlerInstillingerTestPage.class)
+                .goTo(SaksbehandlerInnstillingerTestPage.class)
                 .should().containComponent(thatIsInvisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
     }
 
     @Test
     public void saksbehandlerPanelTogglesVedKlikkPaToggler() {
         wicket
-                .goTo(SaksbehandlerInstillingerTestPage.class)
-                .onComponent(ofType(SaksbehandlerInstillingerTogglerPanel.class))
+                .goTo(SaksbehandlerInnstillingerTestPage.class)
+                .onComponent(ofType(SaksbehandlerInnstillingerTogglerPanel.class))
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsVisible().and(ofType(SaksbehandlerInnstillingerPanel.class)))
-                .onComponent(ofType(SaksbehandlerInstillingerTogglerPanel.class))
+                .onComponent(ofType(SaksbehandlerInnstillingerTogglerPanel.class))
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsInvisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
     }
@@ -78,10 +78,10 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
     @Test
     public void saksbehandlerPanelSkjulesVedKlikkPaVelgKnapp() {
         when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(flereAnsattEnheter());
-        when(saksbehandlerInnstillingerService.saksbehandlerInstillingerErUtdatert()).thenReturn(true);
+        when(saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert()).thenReturn(true);
 
         wicket
-                .goTo(SaksbehandlerInstillingerTestPage.class)
+                .goTo(SaksbehandlerInnstillingerTestPage.class)
                 .inForm(withId("enhetsform"))
                 .select("enhet", 1)
                 .submitWithAjaxButton(withId("velg"))

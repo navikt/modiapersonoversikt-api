@@ -54,14 +54,14 @@ public class SaksbehandlerInnstillingerServiceTest  {
 
     @Test
     public void getSaksbehandlerValgtEnhetHenterEnhetFraCookieOmDenFinnesOgBrukerErTilknyttet() {
-        tester.getRequest().addCookie(new Cookie("saksbehandlerinstillinger-" + getSubjectHandler().getUid(), "2222"));
+        tester.getRequest().addCookie(new Cookie("saksbehandlerinnstillinger-" + getSubjectHandler().getUid(), "2222"));
 
         assertThat(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet(), is(equalTo("2222")));
     }
 
     @Test
     public void getSaksbehandlerValgtEnhetHenterIkkeEnheterFraCookieSomBrukerIkkeErTilknyttet() {
-        tester.getRequest().addCookie(new Cookie("saksbehandlerinstillinger-" + getSubjectHandler().getUid(), "3333"));
+        tester.getRequest().addCookie(new Cookie("saksbehandlerinnstillinger-" + getSubjectHandler().getUid(), "3333"));
 
         assertThat(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet(), is(equalTo("1111")));
     }
@@ -70,7 +70,7 @@ public class SaksbehandlerInnstillingerServiceTest  {
     public void setSaksbehandlerValgtEnhetCookieHarLevetidPaaEttAar() {
         saksbehandlerInnstillingerService.setSaksbehandlerValgtEnhetCookie("1111");
 
-        assertThat(tester.getResponse().getCookies().get(0).getName(), is(equalTo("saksbehandlerinstillinger-" + getSubjectHandler().getUid())));
+        assertThat(tester.getResponse().getCookies().get(0).getName(), is(equalTo("saksbehandlerinnstillinger-" + getSubjectHandler().getUid())));
         assertThat(tester.getResponse().getCookies().get(0).getMaxAge(), is(equalTo(3600 * 24 * 365)));
     }
 
@@ -78,19 +78,19 @@ public class SaksbehandlerInnstillingerServiceTest  {
     public void setSaksbehandlerValgtEnhetCookieLagerTimeoutCookieMedLevetidPaaTolvTimer() {
         saksbehandlerInnstillingerService.setSaksbehandlerValgtEnhetCookie("1111");
 
-        assertThat(tester.getResponse().getCookies().get(1).getName(), is(equalTo("saksbehandlerinstillinger-timeout-" + getSubjectHandler().getUid())));
+        assertThat(tester.getResponse().getCookies().get(1).getName(), is(equalTo("saksbehandlerinnstillinger-timeout-" + getSubjectHandler().getUid())));
         assertThat(tester.getResponse().getCookies().get(1).getMaxAge(), is(equalTo(3600 * 12)));
     }
 
     @Test
-    public void saksbehandlerInstillingerErUtdatertHvisTimeoutCookieIkkeFinnes() {
-        assertTrue(saksbehandlerInnstillingerService.saksbehandlerInstillingerErUtdatert());
+    public void saksbehandlerInnstillingerErUtdatertHvisTimeoutCookieIkkeFinnes() {
+        assertTrue(saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert());
     }
 
     @Test
-    public void saksbehandlerInstillingerErIkkeUtdatertHvisTimeoutCookieFinnes() {
-        tester.getRequest().addCookie(new Cookie("saksbehandlerinstillinger-timeout-" + getSubjectHandler().getUid(), ""));
+    public void saksbehandlerInnstillingerErIkkeUtdatertHvisTimeoutCookieFinnes() {
+        tester.getRequest().addCookie(new Cookie("saksbehandlerinnstillinger-timeout-" + getSubjectHandler().getUid(), ""));
 
-        assertFalse(saksbehandlerInnstillingerService.saksbehandlerInstillingerErUtdatert());
+        assertFalse(saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert());
     }
 }

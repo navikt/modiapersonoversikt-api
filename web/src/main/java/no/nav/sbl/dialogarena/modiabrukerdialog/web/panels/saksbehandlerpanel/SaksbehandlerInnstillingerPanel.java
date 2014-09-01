@@ -18,12 +18,12 @@ import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInstillingerTogglerPanel.SAKSBEHANDLERINSTILLINGER_TOGGLET;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLERINNSTILLINGER_TOGGLET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 
 public class SaksbehandlerInnstillingerPanel extends Panel {
 
-    public static final String SAKSBEHANDLERINSTILLINGER_VALGT = "saksbehandlerinstillinger.valgt";
+    public static final String SAKSBEHANDLERINNSTILLINGER_VALGT = "saksbehandlerinnstillinger.valgt";
 
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
@@ -36,7 +36,7 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         setOutputMarkupPlaceholderTag(true);
         setVisibilityAllowed(
                 saksbehandlerInnstillingerService.hentEnhetsListe().size() > 1 &&
-                        saksbehandlerInnstillingerService.saksbehandlerInstillingerErUtdatert());
+                        saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert());
 
         valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
@@ -57,7 +57,7 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 saksbehandlerInnstillingerService.setSaksbehandlerValgtEnhetCookie(valgtEnhet);
-                send(getPage(), Broadcast.DEPTH, SAKSBEHANDLERINSTILLINGER_VALGT);
+                send(getPage(), Broadcast.DEPTH, SAKSBEHANDLERINNSTILLINGER_VALGT);
                 toggleSaksbehandlerPanel(target);
             }
         });
@@ -65,7 +65,7 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         add(form);
     }
 
-    @RunOnEvents(SAKSBEHANDLERINSTILLINGER_TOGGLET)
+    @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target) {
         animertVisningToggle(target, this);
         target.add(this);
