@@ -139,10 +139,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>modia-saksoversikt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>send-ut-henvendelse</artifactId>
         </dependency>
         <dependency>
@@ -151,14 +147,6 @@
         </dependency>
 
         <!--Dialogarena-->
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>modia-utbetalinger</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>sporsmal-og-svar</artifactId>
-        </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-kodeverk</artifactId>

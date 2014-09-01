@@ -6,7 +6,8 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @Import({
         WicketApplicationBeans.class,
-        ApplicationContextBeans.class
+        ApplicationContextBeans.class,
+        ModulesApplicationContext.class
 })
 public class ModiaApplicationContext {
 
