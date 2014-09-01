@@ -19,13 +19,13 @@ public class HenvendelseUtils {
     public static Sporsmal createSporsmalFromXMLHenvendelse(XMLHenvendelse henvendelse) {
         Sporsmal sporsmal = new Sporsmal(henvendelse.getBehandlingsId(), henvendelse.getOpprettetDato());
         sporsmal.konorsperretEnhet = henvendelse.getKontorsperreEnhet();
+        sporsmal.oppgaveId = henvendelse.getOppgaveIdGsak();
 
         XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
         if (xmlMetadata instanceof XMLMeldingFraBruker) {
             XMLMeldingFraBruker xmlMeldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
             sporsmal.temagruppe = xmlMeldingFraBruker.getTemagruppe();
             sporsmal.fritekst = xmlMeldingFraBruker.getFritekst();
-            sporsmal.oppgaveId = xmlMeldingFraBruker.getOppgaveIdGsak();
             return sporsmal;
         } else {
             throw new ApplicationException("Henvendelsen er ikke av typen XMLMeldingFraBruker: " + xmlMetadata);

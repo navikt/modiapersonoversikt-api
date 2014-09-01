@@ -47,9 +47,9 @@ public class HenvendelseUtilsTest {
 
         assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
+        assertThat(sporsmal.oppgaveId, is(xmlHenvendelse.getOppgaveIdGsak()));
         assertThat(sporsmal.temagruppe, is(xmlMeldingFraBruker.getTemagruppe()));
         assertThat(sporsmal.fritekst, is(xmlMeldingFraBruker.getFritekst()));
-        assertThat(sporsmal.oppgaveId, is(xmlMeldingFraBruker.getOppgaveIdGsak()));
     }
 
     @Test(expected = ApplicationException.class)
@@ -114,11 +114,11 @@ public class HenvendelseUtilsTest {
         return new XMLHenvendelse()
                 .withBehandlingsId("behandlingsid")
                 .withOpprettetDato(DateTime.now())
+                .withOppgaveIdGsak("oppgaveidgsak")
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
                         new XMLMeldingFraBruker()
                                 .withTemagruppe("temagruppe")
-                                .withFritekst("fritekst")
-                                .withOppgaveIdGsak("oppgaveidgsak")));
+                                .withFritekst("fritekst")));
     }
 
     private XMLHenvendelse createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType type) {

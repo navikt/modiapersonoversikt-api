@@ -195,8 +195,8 @@ public class HenvendelseUtsendingServiceTest {
     }
 
     private XMLHenvendelse createXMLMeldingFraBruker(String oppgaveId, String fritekst) {
-        return new XMLHenvendelse().withMetadataListe(new XMLMetadataListe()
-                .withMetadata(new XMLMeldingFraBruker().withOppgaveIdGsak(oppgaveId).withFritekst(fritekst)));
+        return new XMLHenvendelse().withOppgaveIdGsak(oppgaveId).withMetadataListe(new XMLMetadataListe()
+                .withMetadata(new XMLMeldingFraBruker().withFritekst(fritekst)));
     }
 
     private XMLHenvendelse createXMLMeldingTilBruker(String sporsmalId) {

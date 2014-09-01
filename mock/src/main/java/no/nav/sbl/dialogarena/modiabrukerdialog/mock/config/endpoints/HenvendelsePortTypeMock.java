@@ -59,52 +59,52 @@ public class HenvendelsePortTypeMock {
 
     public static final List<XMLHenvendelse> HENVENDELSER = new ArrayList<>(asList(
             createXMLHenvendelse(SPORSMAL, now().minusWeeks(2),
-                    createXMLMeldingFraBruker("ARBD", LANG_TEKST, valueOf(oppgaveId++)), now().minusDays(2), "Arbeidsavklaring", "", ""),
+                    createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), now().minusDays(2), "Arbeidsavklaring", "", ""),
 
             createXMLHenvendelse(SPORSMAL, now().minusWeeks(1),
-                    createXMLMeldingFraBruker("FMLI", LANG_TEKST, valueOf(oppgaveId)), now().minusDays(2), "Foreldrepenger", "", ""),
+                    createXMLMeldingFraBruker("FMLI", LANG_TEKST), valueOf(oppgaveId), now().minusDays(2), "Foreldrepenger", "", ""),
 
             createXMLHenvendelse(SVAR, now().minusDays(2),
-                    createXMLMeldingTilBruker("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Vi kan bekrefte at du får foreldrepenger"), null, "", "", ""),
+                    createXMLMeldingTilBruker("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Vi kan bekrefte at du får foreldrepenger"), null, null, "", "", ""),
 
             createXMLHenvendelse(SVAR, now().minusDays(3),
                     createXMLMeldingTilBruker("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Det er meget sannsynlig at du kan få foreldrepenger"),
-                    now().minusDays(2), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
+                    null, now().minusDays(2), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SVAR, now().minusDays(5),
                     createXMLMeldingTilBruker("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(5), "Det kan hende at du kan få foredrepenger "),
-                    now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
+                    null, now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SVAR, now().minusDays(5),
                     createXMLMeldingTilBruker("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(6), "Vi har hatt en samtale og det kommer frem at Test Testesen ønsker foreldrepenger "),
-                    now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
+                    null, now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SPORSMAL, now().minusDays(3),
-                    createXMLMeldingFraBruker("ARBD", LANG_TEKST, valueOf(oppgaveId++)),
-                    now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
+                    createXMLMeldingFraBruker("ARBD", LANG_TEKST),
+                    valueOf(oppgaveId++), now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SVAR, now().minusHours(5),
                     createXMLMeldingTilBruker("ARBD", "TEKST", valueOf(behandlingsId), null, KORT_TEKST),
-                    now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
+                    null, now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SPORSMAL, now().minusMonths(4),
-                    createXMLMeldingFraBruker("ARBD", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", ""),
+                    createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), null, "", "", ""),
 
             createXMLHenvendelse(REFERAT, now(),
-                    createXMLMeldingTilBruker("ARBD", "TELEFON", valueOf(behandlingsId), null, "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, "", "", ""),
+                    createXMLMeldingTilBruker("ARBD", "TELEFON", valueOf(behandlingsId), null, "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, null, "", "", ""),
 
             createXMLHenvendelse(SVAR, now().minusMonths(4).plusDays(1),
-                    createXMLMeldingTilBruker("ARBD", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), now().minusDays(3), "Ovrige", "", ""),
+                    createXMLMeldingTilBruker("ARBD", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), null, now().minusDays(3), "Ovrige", "", ""),
 
             createXMLHenvendelse(SVAR, now().minusDays(7),
-                    createXMLMeldingTilBruker("ARBD", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), now().minusDays(3), "Ovrige", "", ""),
+                    createXMLMeldingTilBruker("ARBD", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), null, now().minusDays(3), "Ovrige", "", ""),
 
 
             createXMLHenvendelse(SPORSMAL, now().minusDays(1),
-                    createXMLMeldingFraBruker("ARBD", LANG_TEKST, valueOf(oppgaveId++)), null, "", "", "")
+                    createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), null, "", "", "")
     ));
 
-    private static XMLHenvendelse createXMLHenvendelse(XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata,
+    private static XMLHenvendelse createXMLHenvendelse(XMLHenvendelseType type, DateTime opprettet, XMLMetadata metadata, String oppgaveId,
                                                        DateTime journalfortDato, String journalfortTema, String journalfortSaksId, String journalforerNavIdent) {
         behandlingsId = idGenerator.nextInt();
         return new XMLHenvendelse()
@@ -119,12 +119,13 @@ public class HenvendelsePortTypeMock {
                                 .withJournalfortSaksId(journalfortSaksId)
                                 .withJournalforerNavIdent(journalforerNavIdent)
                 )
+                .withOppgaveIdGsak(oppgaveId)
                 .withMetadataListe(
                         new XMLMetadataListe().withMetadata(metadata));
     }
 
-    private static XMLMeldingFraBruker createXMLMeldingFraBruker(String temagruppe, String tekst, String oppgaveId) {
-        return new XMLMeldingFraBruker().withTemagruppe(temagruppe).withFritekst(tekst).withOppgaveIdGsak(oppgaveId);
+    private static XMLMeldingFraBruker createXMLMeldingFraBruker(String temagruppe, String tekst) {
+        return new XMLMeldingFraBruker().withTemagruppe(temagruppe).withFritekst(tekst);
     }
 
     private static XMLMeldingTilBruker createXMLMeldingTilBruker(String temagruppe, String kanal, String sporsmalsId, DateTime lestDato, String fritekst) {

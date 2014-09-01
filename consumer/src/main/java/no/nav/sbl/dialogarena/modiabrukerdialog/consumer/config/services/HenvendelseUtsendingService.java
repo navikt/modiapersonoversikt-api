@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
@@ -49,20 +48,18 @@ public class HenvendelseUtsendingService {
     public Sporsmal getSporsmalFromOppgaveId(String fnr, String oppgaveId) {
         List<Object> henvendelseliste =
                 henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withTyper(XMLHenvendelseType.SPORSMAL.name()).withFodselsnummer(fnr)).getAny();
-
         XMLHenvendelse henvendelse;
         for (Object o : henvendelseliste) {
             henvendelse = (XMLHenvendelse) o;
-            XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
-            if (erDetteEtSporsmaletMedDenneGsakIden(oppgaveId, xmlMetadata)) {
+            if (erDetteEtSporsmaletMedDenneGsakIden(oppgaveId, henvendelse)) {
                 return createSporsmalFromXMLHenvendelse(henvendelse);
             }
         }
         return null;
     }
 
-    private boolean erDetteEtSporsmaletMedDenneGsakIden(String oppgaveId, XMLMetadata xmlMetadata) {
-        return xmlMetadata instanceof XMLMeldingFraBruker && oppgaveId.equals(((XMLMeldingFraBruker) xmlMetadata).getOppgaveIdGsak());
+    private boolean erDetteEtSporsmaletMedDenneGsakIden(String oppgaveId, XMLHenvendelse henvendelse) {
+        return oppgaveId.equals(henvendelse.getOppgaveIdGsak());
     }
 
     public List<SvarEllerReferat> getSvarEllerReferatForSporsmal(String fnr, String sporsmalId) {
