@@ -25,7 +25,7 @@ public class SakOgBehandlingEndpointConfig {
 
     @Bean
     public SakOgBehandling_v1PortType sakOgBehandlingPortType() {
-        final SakOgBehandling_v1PortType prod = null;
+        final SakOgBehandling_v1PortType prod = createSakogbehandlingPortType();
         final SakOgBehandling_v1PortType mock = new SakOgBehandlingPortTypeMock().getSakOgBehandlingPortTypeMock();
         return new SakOgBehandling_v1PortType() {
             @Override
@@ -46,7 +46,9 @@ public class SakOgBehandlingEndpointConfig {
             }
 
             @Override
-            public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger(@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest hentBehandlingskjedensBehandlingerRequest) throws HentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
+            public HentBehandlingskjedensBehandlingerResponse hentBehandlingskjedensBehandlinger
+                    (@WebParam(name = "request", targetNamespace = "") HentBehandlingskjedensBehandlingerRequest hentBehandlingskjedensBehandlingerRequest)
+                    throws HentBehandlingskjedensBehandlingerBehandlingskjedeIkkeFunnet {
                 throw new RuntimeException("skal ikke brukes");
             }
 
