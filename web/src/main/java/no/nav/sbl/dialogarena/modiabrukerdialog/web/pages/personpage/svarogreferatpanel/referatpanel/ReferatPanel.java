@@ -118,7 +118,6 @@ public class ReferatPanel extends Panel {
     }
 
     private void sendOgVisKvittering(AjaxRequestTarget target, Form<SvarOgReferatVM> form) {
-        SvarOgReferatVM svarOgReferatVM = form.getModelObject();
         sendHenvendelse(svarOgReferatVM);
 
         kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey()), target, form);
