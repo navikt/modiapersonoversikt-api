@@ -1,7 +1,9 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.henvendelsesoknader;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.sakogbehandling;
+
 
 import no.nav.modig.cache.CacheConfig;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -12,7 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.henvendelsesoknader.HenvendelseSoknaderEndpointConfig.HENVENDELSESOKNADER_KEY;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.sakogbehandling.SakOgBehandlingEndpointConfig.SAKOGBEHANDLING_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
@@ -20,27 +22,27 @@ import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
         CacheConfig.class,
-        HenvendelseSoknaderEndpointConfig.class
-        })
-public class HenvendelseSoknaderCacheTest {
+        SakOgBehandlingEndpointConfig.class
+})
+public class SakOgBehandlingCacheTest {
 
     @Inject
     private EhCacheCacheManager cm;
 
     @Inject
-    private HenvendelseSoknaderPortType henvendelse;
+    private SakOgBehandling_v1PortType sakOgBehandling;
 
     @BeforeClass
     public static void setup() {
         //Problemfritt å kjøre med mock ettersom cacheannotasjon wrapper rundt switchingen
-        System.setProperty(HENVENDELSESOKNADER_KEY, "true");
+        System.setProperty(SAKOGBEHANDLING_KEY, "true");
         System.setProperty(TILLATMOCKSETUP_PROPERTY, "true");
     }
 
     @Test
     public void cacheManager_harEntryForEndpointCache_etterKallTilHenvendelse() {
-        String cacheKey = "string";
-        henvendelse.hentSoknadListe(cacheKey);
+        FinnSakOgBehandlingskjedeListeRequest cacheKey = new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF("aktoer");
+        sakOgBehandling.finnSakOgBehandlingskjedeListe(cacheKey);
 
         Object fromCache = cm.getCache("endpointCache").get(cacheKey).get();
 
