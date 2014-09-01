@@ -4,6 +4,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
@@ -68,6 +69,7 @@ public class SakOgBehandlingPortTypeMock {
         List<WSSak> liste = asList(
                 dagpengerSak(),
                 aapSak(),
+                feilutbetalingSak(),
                 omsSak(),
                 hjeSak(),
                 gruSak(),
@@ -96,7 +98,17 @@ public class SakOgBehandlingPortTypeMock {
                 .withBehandlingskjede(
                         createBehandlingKobletTilKvittering(KVITTERING1, AAP_BEHANDLINGSTEMA),
                         createBehandlingKobletTilKvittering(KVITTERINGETTERSENDELSE1, AAP_BEHANDLINGSTEMA),
-                        createAvsluttetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSlutt(now().minusYears(1))
+                        createAvsluttetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSlutt(now().minusYears(1)),
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae00XX")) // Skal filtreres bort
+                );
+    }
+
+    public static WSSak feilutbetalingSak() {
+        return new WSSak()
+                .withSaksId("2")
+                .withSakstema(new WSSakstemaer().withValue("FEI"))
+                .withBehandlingskjede(
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, "feilutbtema")
                 );
     }
 
@@ -150,6 +162,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withBehandlingskjedeId("motta" + now())
                 .withSisteBehandlingREF(sisteBehandlingsREF)
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
+                .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
                 .withStart(now().minusDays(5));
 
     }
@@ -159,6 +172,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withBehandlingskjedeId("behandlingskjedeid" + now())
                 .withSisteBehandlingREF(sisteBehandlingREF)
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
+                .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
                 .withStart(now().minusDays(3).minusHours(5))
                 .withSlutt(now());
     }
@@ -168,6 +182,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withBehandlingsListeRef(behandlingsListeRef) // Kobler behandling i henvendelse til behandlingskjeden
                 .withSisteBehandlingREF(behandlingsListeRef)
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
+                .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
                 .withBehandlingskjedeId("behandle" + now())
                 .withStart(now().minusDays(3).minusHours(2));
     }
