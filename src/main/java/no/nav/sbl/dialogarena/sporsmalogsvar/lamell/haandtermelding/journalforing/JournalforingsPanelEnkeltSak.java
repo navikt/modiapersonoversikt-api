@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -20,8 +19,6 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journ
 public class JournalforingsPanelEnkeltSak extends Panel {
 
     @Inject
-    private GsakService gsakService;
-    @Inject
     private JoarkJournalforingService joarkJournalforingService;
 
     private JournalfortSakVM journalfortSakVM;
@@ -30,7 +27,7 @@ public class JournalforingsPanelEnkeltSak extends Panel {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        journalfortSakVM = new JournalfortSakVM(innboksVM, gsakService);
+        journalfortSakVM = new JournalfortSakVM(innboksVM);
         setDefaultModel(new CompoundPropertyModel<Object>(new PropertyModel<Sak>(journalfortSakVM, "sak")));
 
         add(new Label("sakstype"));

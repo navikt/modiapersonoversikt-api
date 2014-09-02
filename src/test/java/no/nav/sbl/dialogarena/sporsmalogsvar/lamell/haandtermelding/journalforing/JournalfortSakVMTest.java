@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
@@ -7,13 +8,16 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -24,8 +28,10 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-@RunWith(MockitoJUnitRunner.class)
+@ContextConfiguration(classes = {ServiceTestContext.class, InnboksTestConfig.class})
+@RunWith(SpringJUnit4ClassRunner.class)
 public class JournalfortSakVMTest {
 
     private final static String TEMA_1 = "Dagpenger";
@@ -38,26 +44,25 @@ public class JournalfortSakVMTest {
     private final static String SAKS_ID_3 = "333333333";
     private final static String SAKS_ID_4 = "444444444";
 
-    @Mock
+    @Inject
     private GsakService gsakService;
+
     @Mock
     private InnboksVM innboksVM;
-
-    private ArrayList<Sak> saksliste;
 
     @Before
     public void setUp() {
         TraadVM traadVM = mock(TraadVM.class);
+        initMocks(this);
         when(innboksVM.getValgtTraad()).thenReturn(traadVM);
-        saksliste = createSaksliste();
-        when(gsakService.hentSakerForBruker(anyString())).thenReturn(saksliste);
+        when(gsakService.hentSakerForBruker(anyString())).thenReturn(createSaksliste());
         MeldingVM eldsteMeldingVM = opprettMeldingVMogSetJournalfortSaksId(SAKS_ID_3);
         when(traadVM.getEldsteMelding()).thenReturn(eldsteMeldingVM);
     }
 
     @Test
     public void sjekkAtGetSakMetodenReturnererKorrektSakBasertPaJournalforingsId() {
-        JournalfortSakVM journalfortSakVM = new JournalfortSakVM(innboksVM, gsakService);
+        JournalfortSakVM journalfortSakVM = new JournalfortSakVM(innboksVM);
         journalfortSakVM.oppdater();
 
         assertThat(journalfortSakVM.getSak().saksId, is(SAKS_ID_3));
@@ -68,7 +73,6 @@ public class JournalfortSakVMTest {
         melding.journalfortSaksId = journalfortSaksId;
         return new MeldingVM(melding, 1);
     }
-
 
     private ArrayList<Sak> createSaksliste() {
         return new ArrayList<>(Arrays.asList(
