@@ -27,9 +27,7 @@
         <ns:Locator Name="org.jboss.security.xacml.locators.JBossPolicySetLocator"/>
 
         <ns:Locator Name="no.nav.modig.security.tilgangskontroll.policy.pip.PicketLinkAttributeCacheLocator">
-            <ns:Option Name="attributeLocatorClass">
-                no.nav.modig.security.tilgangskontroll.policy.pip.LDAPRoleAttributeLocator
-            </ns:Option>
+            <ns:Option Name="attributeLocatorClass">no.nav.modig.security.tilgangskontroll.policy.pip.LDAPRoleAttributeLocator</ns:Option>
             <ns:Option Name="url">${ldap.url}</ns:Option>
             <ns:Option Name="username">${ldap.username}</ns:Option>
             <ns:Option Name="password">${ldap.password}</ns:Option>
@@ -40,8 +38,7 @@
         </ns:Locator>
 
         <ns:Locator Name="no.nav.modig.security.tilgangskontroll.policy.pip.PicketLinkAttributeCacheLocator">
-            <ns:Option Name="attributeLocatorClass">no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator
-            </ns:Option>
+            <ns:Option Name="attributeLocatorClass">no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator</ns:Option>
             <ns:Option Name="attributeSupportedId">urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet</ns:Option>
             <ns:Option Name="attributeDesignatorInt">0</ns:Option>
             <ns:Option Name="cacheKeySubjectID">urn:oasis:names:tc:xacml:1.0:subject:subject-id</ns:Option>
@@ -49,8 +46,7 @@
         </ns:Locator>
 
         <ns:Locator Name="no.nav.modig.security.tilgangskontroll.policy.pip.PicketLinkAttributeCacheLocator">
-            <ns:Option Name="attributeLocatorClass">no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator
-            </ns:Option>
+            <ns:Option Name="attributeLocatorClass">no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator</ns:Option>
             <ns:Option Name="attributeSupportedId">urn:nav:ikt:tilgangskontroll:xacml:subject:fylkesenhet</ns:Option>
             <ns:Option Name="attributeDesignatorInt">0</ns:Option>
             <ns:Option Name="cacheKeySubjectID">urn:oasis:names:tc:xacml:1.0:subject:subject-id</ns:Option>
