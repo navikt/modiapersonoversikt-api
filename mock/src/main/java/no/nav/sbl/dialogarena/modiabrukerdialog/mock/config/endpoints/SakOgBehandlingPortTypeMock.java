@@ -74,7 +74,8 @@ public class SakOgBehandlingPortTypeMock {
                 hjeSak(),
                 gruSak(),
                 konSak(),
-                sykSak()
+                sykSak(),
+                klaSak()
         );
         
         return new FinnSakOgBehandlingskjedeListeResponse().withSak(liste.subList(0, min(liste.size(), antallSaker)));
@@ -118,6 +119,15 @@ public class SakOgBehandlingPortTypeMock {
                 .withSakstema(new WSSakstemaer().withValue("OMS"))
                 .withBehandlingskjede(
                         createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, "OMS")
+                );
+    }
+
+    public static WSSak klaSak() {
+        return new WSSak()
+                .withSaksId("2")
+                .withSakstema(new WSSakstemaer().withValue("KLA"))
+                .withBehandlingskjede(
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, "KLA").withStart(now().minusYears(1))
                 );
     }
 
