@@ -10,4 +10,5 @@
     <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:geografisk</PolicyIdReference>
     <PolicyIdReference>urn:xacml:2.0:nav:modia:policyid:kontonummer</PolicyIdReference>
     <PolicyIdReference>urn:xacml:2.0:nav:modia:policyid:adresse</PolicyIdReference>
+    <PolicyIdReference>urn:xacml:2.0:nav.modia:policyid:plukkoppgave</PolicyIdReference>
 </PolicySet>

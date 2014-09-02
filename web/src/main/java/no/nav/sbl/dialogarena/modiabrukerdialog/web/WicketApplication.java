@@ -25,7 +25,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.util.UnchainedCompoundAuthorizationStrategy;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
@@ -53,10 +52,7 @@ public class WicketApplication extends WebApplication {
     private ApplicationContext applicationContext;
 
     @Resource(name = "pep")
-    private EnforcementPoint kjerneinfoPep;
-
-    @Resource(name = "plukkOppgavePep")
-    private EnforcementPoint plukkOppgavePep;
+    private EnforcementPoint pep;
 
     public static WicketApplication get() {
         return (WicketApplication) Application.get();
@@ -86,10 +82,7 @@ public class WicketApplication extends WebApplication {
 
         setMarkupSettings();
 
-        UnchainedCompoundAuthorizationStrategy unchainedCompoundAuthorizationStrategy = new UnchainedCompoundAuthorizationStrategy();
-        unchainedCompoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(kjerneinfoPep));
-        unchainedCompoundAuthorizationStrategy.add(new BehaviorPolicyAuthorizationStrategy(plukkOppgavePep));
-        getSecuritySettings().setAuthorizationStrategy(unchainedCompoundAuthorizationStrategy);
+        getSecuritySettings().setAuthorizationStrategy(new BehaviorPolicyAuthorizationStrategy(pep));
 
         new ApplicationSettingsConfig().withUtf8Properties(true).configure(this);
 

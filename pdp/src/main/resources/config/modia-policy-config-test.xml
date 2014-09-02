@@ -14,6 +14,9 @@
             <ns:Policy>
                 <ns:Location>policy/bankkontonummer-policy.xml</ns:Location>
             </ns:Policy>
+            <ns:Policy>
+                <ns:Location>policy/plukkoppgave-policy.xml</ns:Location>
+            </ns:Policy>
         </ns:PolicySet>
     </ns:Policies>
     <ns:Locators>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Policy xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os http://docs.oasis-open.org/xacml/access_control-xacml-2.0-policy-schema-os.xsd"
+        PolicyId="urn:xacml:2.0:nav.modia:policyid:plukkoppgave"
+        RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
+    <Description>Tilgangsregler for plukking av oppgaver</Description>
+
+    <Target>
+        <Actions>
+            <Action>
+                <ActionMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                    <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">plukkoppgave</AttributeValue>
+                    <ActionAttributeDesignator
+                            DataType="http://www.w3.org/2001/XMLSchema#string"
+                            AttributeId="urn:oasis:names:tc:xacml:1.0:action:action-id" />
+                </ActionMatch>
+            </Action>
+        </Actions>
+    </Target>
+
+    <Rule RuleId="ident-har-plukk-oppgave-tilgang" Effect="Permit">
+        <Description>Gi tilgang hvis saksbehandler har plukk oppgave rolle.</Description>
+        <Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-GOSYS<!-- MIDLERTIDIG - MÅ HA PLUKK OPPGAVE ROLLE --></AttributeValue>
+                <SubjectAttributeDesignator
+                        DataType="http://www.w3.org/2001/XMLSchema#string"
+                        AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"/>
+            </Apply>
+        </Condition>
+    </Rule>
+
+    <Rule RuleId="ingen-andre-har-tilgang" Effect="Deny"/>
+</Policy>

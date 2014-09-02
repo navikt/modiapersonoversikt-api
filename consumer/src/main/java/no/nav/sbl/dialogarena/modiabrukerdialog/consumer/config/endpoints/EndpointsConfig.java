@@ -5,12 +5,11 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.cms.Cm
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.henvendelsesoknader.HenvendelseSoknaderEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeverk.KodeverkV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.kodeverk.KodeverkV2WrapperConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.policy.PlukkOppgaveSecurityPolicyConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.sakogbehandling.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.utbetaling.UtbetalingWrapperConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.norg.NAVAnsattEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.gsak.hentsaker.GsakHentSakslisteEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.norg.NAVAnsattEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.norg.NAVOrgEnhetEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.BehandleHenvendelseEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v2.henvendelse.HenvendelseEndpointConfig;
@@ -46,8 +45,7 @@ import org.springframework.context.annotation.Import;
         NAVAnsattEndpointConfig.class,
 
         NAVOrgEnhetEndpointConfig.class,
-        CmsEndpointConfig.class,
-        PlukkOppgaveSecurityPolicyConfig.class
+        CmsEndpointConfig.class
 })
 public class EndpointsConfig {
 
