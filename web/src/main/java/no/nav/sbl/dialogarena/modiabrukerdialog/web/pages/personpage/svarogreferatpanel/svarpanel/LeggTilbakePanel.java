@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.SaksbehandlerInnstillingerService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -46,9 +45,6 @@ public class LeggTilbakePanel extends Panel {
 
     @Inject
     protected OppgaveBehandlingService oppgaveBehandlingService;
-
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     public LeggTilbakePanel(String id, String temagruppe, final Optional<String> oppgaveId) {
         super(id);
@@ -115,8 +111,7 @@ public class LeggTilbakePanel extends Panel {
                 oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
                         oppgaveId,
                         leggTilbakeVM.lagBeskrivelse(
-                                new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString(),
-                                saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()),
+                                new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
                         leggTilbakeVM.lagTemagruppeTekst()
                 );
                 send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_UTFORT);

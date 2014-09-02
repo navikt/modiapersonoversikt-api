@@ -1,8 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.SaksbehandlerInnstillingerService;
+import org.apache.wicket.injection.Injector;
 import org.joda.time.DateTime;
 
+import javax.inject.Inject;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
@@ -13,6 +16,13 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 public class LeggTilbakeVM implements Serializable {
 
     public static final String LINJESKILLER = "\n";
+
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
+    public LeggTilbakeVM() {
+        Injector.get().inject(this);
+    }
 
     public Aarsak valgtAarsak;
     public Temagruppe nyTemagruppe;
@@ -37,11 +47,12 @@ public class LeggTilbakeVM implements Serializable {
         }
     }
 
-    public String lagBeskrivelse(String beskrivelseStart, String saksbehandlerValgtEnhet) {
+    public String lagBeskrivelse(String beskrivelseStart) {
         String navident = getSubjectHandler().getUid();
 
         StringBuilder beskrivelseBuilder = new StringBuilder();
-        beskrivelseBuilder.append(format("- %s (%s, %s) -", getFormatertTimestamp(), navident, saksbehandlerValgtEnhet));
+        beskrivelseBuilder.append(format("- %s (%s, %s) -",
+                getFormatertTimestamp(), navident, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()));
         beskrivelseBuilder.append(LINJESKILLER);
         beskrivelseBuilder.append((beskrivelseStart + " " + (annenAarsakTekst == null ? "" : annenAarsakTekst)).trim());
 
