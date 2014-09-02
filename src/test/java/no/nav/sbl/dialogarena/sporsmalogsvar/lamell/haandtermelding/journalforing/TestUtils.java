@@ -26,6 +26,11 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL
 
 public class TestUtils {
 
+    public final static String SAKS_ID_1 = "11111111";
+    public final static String SAKS_ID_2 = "22222222";
+    public final static String SAKS_ID_3 = "33333333";
+    public final static String SAKS_ID_4 = "44444444";
+
     public final static String ID_1 = "id1";
     public final static String ID_2 = "id2";
     public final static String ID_3 = "id3";
@@ -53,10 +58,10 @@ public class TestUtils {
 
     public static ArrayList<Sak> createMockSaksliste() {
         return new ArrayList<>(asList(
-                createSak("11111111", TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
-                createSak("22222222", TEMA_2, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
-                createSak("33333333", TEMA_3, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
-                createSak("44444444", TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(2))));
+                createSak(SAKS_ID_1, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
+                createSak(SAKS_ID_2, TEMA_2, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(3)),
+                createSak(SAKS_ID_3, TEMA_3, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(9)),
+                createSak(SAKS_ID_4, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(2))));
     }
 
     public static Sak createSak(String saksId, String tema, String fagsystem, String sakstype, DateTime opprettet) {
