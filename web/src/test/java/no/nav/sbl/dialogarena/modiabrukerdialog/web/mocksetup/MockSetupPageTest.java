@@ -1,15 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup;
 
-import no.nav.modig.cache.CacheConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
-import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
-import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
-import no.nav.sbl.modiabrukerdialog.pep.config.spring.PepConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -23,12 +18,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @ContextConfiguration(classes = {
         EndpointMockContext.class,
         HentPersonPanelMockContext.class,
-        SykepengerWidgetMockContext.class,
-        SaksbehandlerInnstillingerPanelMockContext.class,
-        UtbetalingLamellContext.class,
-        SporsmalOgSvarContext.class,
-		CacheConfig.class,
-		PepConfig.class
+        SaksbehandlerInnstillingerPanelMockContext.class
 })
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MockSetupPageTest extends WicketPageTest {
