@@ -55,7 +55,7 @@ public class HenvendelseUtsendingService {
                 return createSporsmalFromXMLHenvendelse(henvendelse);
             }
         }
-        return null;
+        throw new RuntimeException("Finner ikke spørsmål med oppgaveId " + oppgaveId);
     }
 
     private boolean erDetteEtSporsmaletMedDenneGsakIden(String oppgaveId, XMLHenvendelse henvendelse) {

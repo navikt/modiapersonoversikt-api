@@ -55,12 +55,15 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 public class HenvendelseUtsendingServiceTest {
 
     private final static String FNR = "fnr";
-    private final static String SPORSMAL_ID = "id";
+    private final static String SPORSMAL_ID_1 = "id";
     private final static String FRITEKST = "fritekst";
     private final static String TEMAGRUPPE = "temagruppe";
 
     private final static String NYESTE_HENVENDELSE_ID = "Nyeste henvendelse";
     private final static String ELDSTE_HENVENDELSE = "Eldste henvendelse";
+    public static final String OPPGAVE_ID_1 = "id1";
+    public static final String OPPGAVE_ID_2 = "id2";
+    public static final String OPPGAVE_ID_3 = "id3";
 
     @Captor
     ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
@@ -85,9 +88,9 @@ public class HenvendelseUtsendingServiceTest {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
 
-        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(SPORSMAL_ID);
+        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(SPORSMAL_ID_1);
 
-        assertThat(sporsmal.id, is(SPORSMAL_ID));
+        assertThat(sporsmal.id, is(SPORSMAL_ID_1));
         assertThat(sporsmal.fritekst, is(FRITEKST));
         assertThat(sporsmal.temagruppe, is(TEMAGRUPPE));
     }
@@ -112,24 +115,24 @@ public class HenvendelseUtsendingServiceTest {
     public void skalHenteSporsmalFraOppgaveId() {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
                 new WSHentHenvendelseListeResponse().withAny(
-                        createXMLMeldingFraBruker("id1", "fritekst1"),
-                        createXMLMeldingFraBruker("id2", "fritekst2"),
-                        createXMLMeldingFraBruker("id3", "fritekst3")
+                        createXMLMeldingFraBruker(OPPGAVE_ID_1, "fritekst1"),
+                        createXMLMeldingFraBruker(OPPGAVE_ID_2, "fritekst2"),
+                        createXMLMeldingFraBruker(OPPGAVE_ID_3, "fritekst3")
                 );
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmalFromOppgaveId("fnr", "id2");
+        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmalFromOppgaveId(FNR, OPPGAVE_ID_2);
 
         assertThat(sporsmal.fritekst, is("fritekst2"));
     }
 
     @Test
     public void skalHenteSporsmalMedRiktigTypeSpesifisert() {
-        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLMeldingFraBruker("id1", "fritekst1"));
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLMeldingFraBruker(OPPGAVE_ID_2, "fritekst1"));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        henvendelseUtsendingService.getSporsmalFromOppgaveId("fnr", "id2");
+        henvendelseUtsendingService.getSporsmalFromOppgaveId(FNR, OPPGAVE_ID_2);
 
         verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
@@ -137,32 +140,39 @@ public class HenvendelseUtsendingServiceTest {
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(SVAR.name(), REFERAT.name())));
     }
 
+    @Test(expected = RuntimeException.class)
+    public void skalKasteExceptionDersomDetIkkeFinnesNoeSporsmalMedDenOppgaveIden() {
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLMeldingFraBruker(OPPGAVE_ID_1, "fritekst1"));
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
+
+        henvendelseUtsendingService.getSporsmalFromOppgaveId(FNR, "random oppgaveid");
+    }
+
     @Test
     public void skalHenteSvarlisteTilhorendeSporsmal() {
-        String sporsmalId = "sporsmalId";
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
                 new WSHentHenvendelseListeResponse().withAny(
-                        createXMLMeldingTilBruker(sporsmalId),
-                        createXMLMeldingTilBruker(sporsmalId),
+                        createXMLMeldingTilBruker(SPORSMAL_ID_1),
+                        createXMLMeldingTilBruker(SPORSMAL_ID_1),
                         createXMLMeldingTilBruker("annenId"),
                         createXMLMeldingTilBruker("endaEnAnnenId")
                 );
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        List<SvarEllerReferat> svarliste = henvendelseUtsendingService.getSvarEllerReferatForSporsmal("fnr", sporsmalId);
+        List<SvarEllerReferat> svarliste = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
 
         assertThat(svarliste, hasSize(2));
-        assertThat(svarliste.get(0).sporsmalsId, is(sporsmalId));
-        assertThat(svarliste.get(1).sporsmalsId, is(sporsmalId));
+        assertThat(svarliste.get(0).sporsmalsId, is(SPORSMAL_ID_1));
+        assertThat(svarliste.get(1).sporsmalsId, is(SPORSMAL_ID_1));
     }
 
     @Test
     public void skalHenteSvarlisteMedRiktigTypeSpesifisert() {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
-                new WSHentHenvendelseListeResponse().withAny(createXMLMeldingTilBruker("sporsmalId"));
+                new WSHentHenvendelseListeResponse().withAny(createXMLMeldingTilBruker(SPORSMAL_ID_1));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        henvendelseUtsendingService.getSvarEllerReferatForSporsmal("fnr", "sporsmalId");
+        henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
 
         verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
@@ -172,12 +182,11 @@ public class HenvendelseUtsendingServiceTest {
 
     @Test
     public void skalHenteSortertListeAvSvarEllerReferatForSporsmalMedEldsteForst() {
-        String sporsmalId = "sporsmalId";
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
-                new WSHentHenvendelseListeResponse().withAny(createToXMLMeldingTilBrukerSomSvarerPaaSporsmalsIdMedNyesteForst(sporsmalId));
+                new WSHentHenvendelseListeResponse().withAny(createToXMLMeldingTilBrukerSomSvarerPaaSporsmalsIdMedNyesteForst(SPORSMAL_ID_1));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        List<SvarEllerReferat> svarEllerReferatForSporsmal = henvendelseUtsendingService.getSvarEllerReferatForSporsmal("fnr", sporsmalId);
+        List<SvarEllerReferat> svarEllerReferatForSporsmal = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
 
         assertThat(svarEllerReferatForSporsmal.get(0).type, is(SvarEllerReferat.Henvendelsetype.REFERAT));
         assertThat(svarEllerReferatForSporsmal.get(1).type, is(SvarEllerReferat.Henvendelsetype.SVAR));
@@ -186,7 +195,7 @@ public class HenvendelseUtsendingServiceTest {
     private WSHentHenvendelseResponse mockWSHentHenvendelseResponse() {
         return new WSHentHenvendelseResponse().withAny(
                 new XMLHenvendelse()
-                        .withBehandlingsId(SPORSMAL_ID)
+                        .withBehandlingsId(SPORSMAL_ID_1)
                         .withOpprettetDato(now())
                         .withHenvendelseType(SPORSMAL.name())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
