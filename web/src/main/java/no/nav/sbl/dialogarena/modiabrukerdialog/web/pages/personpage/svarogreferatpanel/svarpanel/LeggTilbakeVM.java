@@ -49,7 +49,7 @@ public class LeggTilbakeVM implements Serializable {
         String saksbehandlerValgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
 
         StringBuilder beskrivelseBuilder = new StringBuilder();
-        beskrivelseBuilder.append("- " + formaterTimestamp(now) + " (" + navident + ", " + saksbehandlerValgtEnhet + ") -");
+        beskrivelseBuilder.append(String.format("- %s (%s, %s) -", formaterTimestamp(now), navident, saksbehandlerValgtEnhet));
         beskrivelseBuilder.append(LINJESKILLER);
         beskrivelseBuilder.append((beskrivelseStart + " " + (annenAarsakTekst == null ? "" : annenAarsakTekst)).trim());
 
