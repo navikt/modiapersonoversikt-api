@@ -84,6 +84,7 @@ public class PersonPage extends BasePage {
 
     public static final String SVAR_OG_REFERAT_PANEL_ID = "svarOgReferatPanel";
     public static final String OPPGAVEID = "oppgaveid";
+    public static final String HENVENDELSEID = "henvendelseid";
 
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
@@ -137,8 +138,11 @@ public class PersonPage extends BasePage {
 
     private void erstattReferatPanelMedSvarPanelBasertPaaOppgaveIdParameter(PageParameters pageParameters) {
         StringValue oppgaveId = pageParameters.get(OPPGAVEID);
-        if (!oppgaveId.isEmpty()) {
-            visSvarPanelBasertPaaOppgaveId(oppgaveId.toString());
+        StringValue henvendelseId = pageParameters.get(HENVENDELSEID);
+        if(!henvendelseId.isEmpty()){
+            visSvarPanelBasertPaaHenvendelsesId(henvendelseId.toString(), oppgaveId.toString());
+        } else if (!oppgaveId.isEmpty()) {
+            visSvarPanelBasertPaaOppgaveIdForSporsmal(oppgaveId.toString());
         }
     }
 
@@ -208,13 +212,15 @@ public class PersonPage extends BasePage {
         send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
     }
 
-    public void visSvarPanelBasertPaaOppgaveId(String oppgaveId) {
+    public void visSvarPanelBasertPaaOppgaveIdForSporsmal(String oppgaveId) {
         Sporsmal sporsmal = henvendelseUtsendingService.getSporsmalFromOppgaveId(fnr, oppgaveId);
         erstattReferatPanelMedSvarPanel(sporsmal, henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, sporsmal.id), optional(oppgaveId));
     }
 
-    private void erstattReferatPanelMedSvarPanel(Sporsmal sporsmal, List<SvarEllerReferat> svarTilSporsmal, Optional<String> oppgaveId) {
-        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svarTilSporsmal, oppgaveId));
+    private void visSvarPanelBasertPaaHenvendelsesId(String henvendelseId, String oppgaveId) {
+        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(henvendelseId);
+        List<SvarEllerReferat> svar = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, henvendelseId);
+        erstattReferatPanelMedSvarPanel(sporsmal, svar, optional(oppgaveId));
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
@@ -228,6 +234,10 @@ public class PersonPage extends BasePage {
         }
         erstattReferatPanelMedSvarPanel(sporsmal, svar, oppgaveId);
         target.add(svarOgReferatPanel);
+    }
+
+    private void erstattReferatPanelMedSvarPanel(Sporsmal sporsmal, List<SvarEllerReferat> svarTilSporsmal, Optional<String> oppgaveId) {
+        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svarTilSporsmal, oppgaveId));
     }
 
     private boolean sporsmaletIkkeErBesvartTidligere(List<SvarEllerReferat> svar) {

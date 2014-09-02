@@ -128,8 +128,31 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void skalErstatteReferatPanelMedSvarPanelDersomOppgaveidErSattIPageParameters() {
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(OPPGAVEID, "oppgaveid"))
+        String oppgaveid = "oppgaveid";
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(OPPGAVEID, oppgaveid))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
+
+        verify(henvendelseUtsendingService).getSporsmalFromOppgaveId(testFnr, oppgaveid);
+    }
+
+    @Test
+    public void skalErstatteReferatPanelMedSvarPanelDersomHenvendelseIdErSattIPageParameters() {
+        String henvendelsesId = "id 1";
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(PersonPage.HENVENDELSEID, henvendelsesId))
+                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
+
+        verify(henvendelseUtsendingService).getSporsmal(henvendelsesId);
+        verify(henvendelseUtsendingService).getSvarEllerReferatForSporsmal(testFnr, henvendelsesId);
+    }
+
+    @Test
+    public void skalErstatteReferatPanelMedSvarPanelDersomHenvendelseIdOgOppgaveIdErSattIPageParameters() {
+        String henvendelsesId = "id 1";
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(PersonPage.HENVENDELSEID, henvendelsesId).param(OPPGAVEID, "oppgaveid"))
+                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
+
+        verify(henvendelseUtsendingService).getSporsmal(henvendelsesId);
+        verify(henvendelseUtsendingService).getSvarEllerReferatForSporsmal(testFnr, henvendelsesId);
     }
 
     @Test
