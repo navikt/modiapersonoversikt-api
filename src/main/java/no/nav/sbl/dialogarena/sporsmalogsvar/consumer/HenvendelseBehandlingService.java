@@ -43,7 +43,7 @@ public class HenvendelseBehandlingService {
     private PersonKjerneinfoServiceBi kjerneinfo;
     @Inject
     @Named("pep")
-    private EnforcementPoint pep;
+    private EnforcementPoint enforcementPoint;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
@@ -94,7 +94,7 @@ public class HenvendelseBehandlingService {
             public boolean evaluate(Melding melding) {
                 if (melding.kontorsperretEnhet == null || melding.kontorsperretEnhet.isEmpty())return true;
 
-                return pep.hasAccess(req.copyAndAppend(new ResourceAttribute(
+                return enforcementPoint.hasAccess(req.copyAndAppend(new ResourceAttribute(
                         new URN("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet"),
                         new StringValue(melding.kontorsperretEnhet)))
                 );

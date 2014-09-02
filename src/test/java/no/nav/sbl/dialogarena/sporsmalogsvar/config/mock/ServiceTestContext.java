@@ -2,6 +2,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.config.mock;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
@@ -82,5 +85,14 @@ public class ServiceTestContext {
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
         return mock(PersonKjerneinfoServiceBi.class);
     }
+
+    @Bean
+    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() { return mock(SaksbehandlerInnstillingerService.class); }
+
+    @Bean
+    public AnsattService ansattService() { return mock(AnsattService.class); }
+
+    @Bean(name = "pep")
+    public EnforcementPoint enforcementPoint() { return mock(EnforcementPoint.class); }
 
 }

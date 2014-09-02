@@ -4,6 +4,8 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -25,13 +27,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.innloggetBrukerEr;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.lagXMLHenvendelse;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.*;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -61,6 +59,10 @@ public class HenvendelseBehandlingServiceTest {
     private HenvendelsePortType henvendelsePortType;
     @Mock
     protected BehandleHenvendelsePortType behandleHenvendelsePortType;
+    @Mock
+    private EnforcementPoint pep;
+    @Mock
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @InjectMocks
     private HenvendelseBehandlingService henvendelseBehandlingService;
@@ -81,6 +83,8 @@ public class HenvendelseBehandlingServiceTest {
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
                 new WSHentHenvendelseListeResponse().withAny(xmlHenvendelseListe));
+
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("1231");
 
         sak = TestUtils.createSak(SAKS_ID, SAKSTEMA, SAKSTYPE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4));
         melding = createMelding(BEHANDLINGS_ID, Meldingstype.SPORSMAL, DateTime.now(), TEMAGRUPPE, BEHANDLINGS_ID);
