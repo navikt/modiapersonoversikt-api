@@ -1,8 +1,7 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
 import org.apache.wicket.util.tester.WicketTester;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -19,9 +18,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)

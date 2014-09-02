@@ -24,4 +24,8 @@ public class ServicesConfig {
         return new AnsattService();
     }
 
+    @Bean
+    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
+        return new SaksbehandlerInnstillingerService();
+    }
 }

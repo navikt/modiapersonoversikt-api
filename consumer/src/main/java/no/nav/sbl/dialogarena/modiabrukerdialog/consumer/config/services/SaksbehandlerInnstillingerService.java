@@ -1,7 +1,6 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
 import org.apache.wicket.util.cookies.CookieUtils;
 
 import javax.inject.Inject;
