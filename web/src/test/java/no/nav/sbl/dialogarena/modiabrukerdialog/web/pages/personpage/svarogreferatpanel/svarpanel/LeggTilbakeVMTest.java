@@ -5,51 +5,40 @@ import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.core.context.SubjectHandlerUtils;
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.core.domain.IdentType;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.SaksbehandlerInnstillingerService;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.inject.Inject;
-
+import static java.lang.String.format;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.LINJESKILLER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = {SaksbehandlerInnstillingerPanelMockContext.class})
-@RunWith(SpringJUnit4ClassRunner.class)
 public class LeggTilbakeVMTest {
 
     private static final String NAVIDENT = "navident";
     private static final String ENHET = "enhet";
 
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-
-    @InjectMocks
-    private LeggTilbakeVM leggTilbakeVM;
-
     @Before
     public void setUp() {
-        leggTilbakeVM = new LeggTilbakeVM(saksbehandlerInnstillingerService);
         innloggetBrukerEr(NAVIDENT);
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(ENHET);
+
+        DateTimeUtils.setCurrentMillisFixed(DateTime.now().getMillis()); //Setter klokka til en fast tid for testen
+    }
+
+    @After
+    public void tearDown() {
+        DateTimeUtils.setCurrentMillisSystem(); //Frigir klokka igjen slik at andre tester fortsatt vil funke
     }
 
     @Test
     public void skalGiRiktigBeskrivelse() {
         String beskrivelseStart = "arsak";
-        DateTime date = DateTime.now();
+        String beskrivelse = new LeggTilbakeVM().lagBeskrivelse(beskrivelseStart, ENHET);
 
-        String beskrivelse = leggTilbakeVM.lagBeskrivelse(beskrivelseStart, date);
-
-        assertThat(beskrivelse, is("- " + LeggTilbakeVM.formaterTimestamp(date) + " (" + NAVIDENT + ", " + ENHET + ") -" + LINJESKILLER + beskrivelseStart));
+        assertThat(beskrivelse, is(format("- %s (%s, %s) -%s%s", LeggTilbakeVM.getFormatertTimestamp(), NAVIDENT, ENHET, LINJESKILLER, beskrivelseStart)));
     }
 
     public static void innloggetBrukerEr(String userId) {

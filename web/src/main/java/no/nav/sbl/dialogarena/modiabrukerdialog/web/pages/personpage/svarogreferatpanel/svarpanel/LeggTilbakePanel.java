@@ -8,7 +8,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -24,16 +23,21 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak.ANNEN;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak.FEIL_TEMAGRUPPE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak.INHABIL;
+import static org.apache.wicket.event.Broadcast.BUBBLE;
 
 public class LeggTilbakePanel extends Panel {
 
@@ -50,7 +54,8 @@ public class LeggTilbakePanel extends Panel {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        final LeggTilbakeVM leggTilbakeVM = new LeggTilbakeVM(saksbehandlerInnstillingerService);
+        final LeggTilbakeVM leggTilbakeVM = new LeggTilbakeVM();
+        PropertyModel valgtAarsak = new PropertyModel(leggTilbakeVM, "valgtAarsak");
 
         add(new Label("temagruppe", new ResourceModel(temagruppe)));
 
@@ -63,18 +68,18 @@ public class LeggTilbakePanel extends Panel {
                 return getString(object.name());
             }
         });
-        temagruppevelgerWrapper.add(hasCssClassIf("skjult", not(leggTilbakeVM.erValgtAarsak(Aarsak.FEIL_TEMAGRUPPE))));
+        temagruppevelgerWrapper.add(hasCssClassIf("skjult", not(isEqualTo(valgtAarsak, FEIL_TEMAGRUPPE))));
         temagruppevelgerWrapper.add(temagruppevelger);
 
         final TextArea annenAarsak = new TextArea("annenAarsakTekst");
-        annenAarsak.add(hasCssClassIf("skjult", not(leggTilbakeVM.erValgtAarsak(Aarsak.ANNEN))));
+        annenAarsak.add(hasCssClassIf("skjult", not(isEqualTo(valgtAarsak, ANNEN))));
 
         final RadioGroup<Aarsak> aarsaker = new RadioGroup<>("valgtAarsak");
         aarsaker.setRequired(true);
-        aarsaker.add(new Radio<>("feiltema", Model.of(Aarsak.FEIL_TEMAGRUPPE)));
+        aarsaker.add(new Radio<>("feiltema", Model.of(FEIL_TEMAGRUPPE)));
         aarsaker.add(temagruppevelgerWrapper);
-        aarsaker.add(new Radio<>("inhabil", Model.of(Aarsak.INHABIL)));
-        aarsaker.add(new Radio<>("annen", Model.of(Aarsak.ANNEN)));
+        aarsaker.add(new Radio<>("inhabil", Model.of(INHABIL)));
+        aarsaker.add(new Radio<>("annen", Model.of(ANNEN)));
         aarsaker.add(annenAarsak);
 
         form.add(aarsaker);
@@ -111,9 +116,10 @@ public class LeggTilbakePanel extends Panel {
                         oppgaveId,
                         leggTilbakeVM.lagBeskrivelse(
                                 new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString(),
-                                DateTime.now()),
-                        leggTilbakeVM.lagTemagruppeTekst());
-                send(LeggTilbakePanel.this, Broadcast.BUBBLE, LEGG_TILBAKE_UTFORT);
+                                saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()),
+                        leggTilbakeVM.lagTemagruppeTekst()
+                );
+                send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_UTFORT);
             }
 
             @Override
@@ -125,7 +131,7 @@ public class LeggTilbakePanel extends Panel {
         form.add(new AjaxLink<Void>("avbryt") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                send(LeggTilbakePanel.this, Broadcast.BUBBLE, LEGG_TILBAKE_AVBRUTT);
+                send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_AVBRUTT);
             }
         });
 
