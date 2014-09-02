@@ -33,7 +33,7 @@
     <Rule RuleId="modia-deny-if-not-kode7" Effect="Deny" >
         <Target>
             <Resources>
-                <!-- if resource is flagged code 6 -->
+                <!-- if resource is flagged code 7 -->
                 <Resource>
                     <ResourceMatch MatchId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
                         <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">7</AttributeValue>
@@ -43,7 +43,7 @@
             </Resources>
         </Target>
         <Condition>
-            <!-- if resource doesn't have role AD:0000-GA-GOSYS_KODE6 -->
+            <!-- if resource doesn't have role AD:0000-GA-GOSYS_KODE7 -->
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:not">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
                     <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-GOSYS_KODE7</AttributeValue>

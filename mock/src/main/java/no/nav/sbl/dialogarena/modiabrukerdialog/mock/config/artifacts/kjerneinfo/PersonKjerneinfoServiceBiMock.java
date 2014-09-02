@@ -31,7 +31,7 @@ public class PersonKjerneinfoServiceBiMock {
         return serviceMock;
     }
 
-    private static HentKjerneinformasjonResponse createPersonResponse() {
+    public static HentKjerneinformasjonResponse createPersonResponse() {
         HentKjerneinformasjonResponse mockReturnValue = new HentKjerneinformasjonResponse();
         mockReturnValue.setPerson(createPerson());
         return mockReturnValue;

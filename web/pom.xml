@@ -74,6 +74,10 @@
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-consumer</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-domain</artifactId>
+        </dependency>
 
         <!--Sykmeldingsperioder-->
         <dependency>
@@ -332,6 +336,11 @@
             <groupId>javax.inject</groupId>
             <artifactId>javax.inject</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
         </dependency>
 
         <!--Testing-->

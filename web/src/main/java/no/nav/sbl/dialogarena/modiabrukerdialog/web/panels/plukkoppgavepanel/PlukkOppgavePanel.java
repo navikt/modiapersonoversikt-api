@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -40,7 +40,7 @@ public class PlukkOppgavePanel extends Panel {
     public static final String TEMAGRUPPE_ATTR = "sos-temagruppe";
 
     @Inject
-    private OppgaveBehandlingService oppgaveBehandlingService;
+    private PlukkOppgaveService plukkOppgaveService;
 
     public PlukkOppgavePanel(String id) {
         super(id);
@@ -61,7 +61,7 @@ public class PlukkOppgavePanel extends Panel {
                     return;
                 }
 
-                Optional<WSOppgave> oppgave = oppgaveBehandlingService.plukkOppgaveFraGsak(valgtTemagruppe.getObject().name());
+                Optional<WSOppgave> oppgave = plukkOppgaveService.plukkOppgave(valgtTemagruppe.getObject().name());
                 if (oppgave.isSome()) {
                     lagrePlukketOppgavePaaSession(oppgave);
                     lagreValgtTemagruppePaaSession(valgtTemagruppe.getObject());

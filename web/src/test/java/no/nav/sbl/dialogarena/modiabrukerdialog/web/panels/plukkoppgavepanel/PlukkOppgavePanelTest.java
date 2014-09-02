@@ -3,13 +3,13 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PlukkOppgavePanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSBruker;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import org.junit.Before;
@@ -49,7 +49,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
-    private OppgaveBehandlingService oppgaveBehandlingService;
+    private PlukkOppgaveService plukkOppgaveService;
 
     @Before
     public void setUp() {
@@ -62,7 +62,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void skalPlukkeOppgaveOgSetteSessionAttributes() {
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(optional(
+        when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(optional(
                 new WSOppgave()
                         .withGjelder(new WSBruker().withBrukerId("fnr"))
                         .withOppgaveId("oppgave")
@@ -108,12 +108,12 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
                 .should().containComponent(ofType(SvarPanel.class))
                 .should().notContainComponent(ofType(ReferatPanel.class));
 
-        verify(oppgaveBehandlingService, never()).plukkOppgaveFraGsak(anyString());
+        verify(plukkOppgaveService, never()).plukkOppgave(anyString());
     }
 
     @Test
     public void skalGiFeilmeldingHvisIngenOppgaverPaaTema() {
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(Optional.<WSOppgave>none());
+        when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(Optional.<WSOppgave>none());
 
         TestPlukkOppgavePanel plukkoppgave = new TestPlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)
