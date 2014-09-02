@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -33,8 +32,6 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
     private final static String JOURNALFORT_SAKSID = "123123123";
 
     @Inject
-    private HenvendelseBehandlingService henvendelseBehandlingService;
-    @Inject
     private GsakService gsakService;
     @Inject
     private JoarkJournalforingService joarkJournalforingService;
@@ -43,7 +40,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        innboksVM = new InnboksVM(henvendelseBehandlingService, FODSELSNR);
+        innboksVM = new InnboksVM(FODSELSNR);
         List<Sak> sakerForBruker = gsakService.hentSakerForBruker(innboksVM.getFnr());
         sakerForBruker.get(0).opprettetDato = DateTime.now();
         sakerForBruker.get(0).saksId = JOURNALFORT_SAKSID;

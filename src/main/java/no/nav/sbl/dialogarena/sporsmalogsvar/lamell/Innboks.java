@@ -4,13 +4,10 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.util.string.StringValue;
-
-import javax.inject.Inject;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 
@@ -19,16 +16,13 @@ public class Innboks extends Lerret {
     public static final String VALGT_MELDING_EVENT = "sos.innboks.valgt_melding";
     public static final String TRAAD_ID_PARAMETER_NAME = "henvendelseid";
 
-    @Inject
-    private HenvendelseBehandlingService henvendelseBehandlingService;
-
     private InnboksVM innboksVM;
 
     public Innboks(String id, String fnr) {
         super(id);
         setOutputMarkupId(true);
 
-        this.innboksVM = new InnboksVM(henvendelseBehandlingService, fnr);
+        this.innboksVM = new InnboksVM(fnr);
         setDefaultModel(new CompoundPropertyModel<Object>(innboksVM));
 
         setValgtTraadBasertPaaTraadIdPageParameter();

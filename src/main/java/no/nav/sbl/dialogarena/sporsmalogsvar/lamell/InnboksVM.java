@@ -4,9 +4,11 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.apache.commons.collections15.Transformer;
+import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 
+import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,15 +25,16 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.TRAAD_ID;
 
 public class InnboksVM implements Serializable {
 
+    @Inject
+    private HenvendelseBehandlingService henvendelseBehandlingService;
+
     private Map<String, TraadVM> traader = new HashMap<>();
     private List<MeldingVM> nyesteMeldingerITraad = new ArrayList<>();
     private Optional<MeldingVM> valgtMelding;
-
-    private HenvendelseBehandlingService henvendelseBehandlingService;
     private String fnr;
 
-    public InnboksVM(HenvendelseBehandlingService henvendelseBehandlingService, String fnr) {
-        this.henvendelseBehandlingService = henvendelseBehandlingService;
+    public InnboksVM(String fnr) {
+        Injector.get().inject(this);
         this.fnr = fnr;
         oppdaterMeldinger();
         valgtMelding = optional(nyesteMeldingerITraad.isEmpty() ? null : nyesteMeldingerITraad.get(0));

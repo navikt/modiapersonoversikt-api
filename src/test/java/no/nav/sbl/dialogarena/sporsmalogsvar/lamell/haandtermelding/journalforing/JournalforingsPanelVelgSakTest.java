@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -29,15 +28,13 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
     private final static String FODSELSNR = "52765236723";
 
     @Inject
-    private HenvendelseBehandlingService henvendelseBehandlingService;
-    @Inject
     private JoarkJournalforingService joarkJournalforingService;
 
     private InnboksVM innboksVM;
 
     @Before
     public void setUp() {
-        innboksVM = new InnboksVM(henvendelseBehandlingService, FODSELSNR);
+        innboksVM = new InnboksVM(FODSELSNR);
     }
 
     @Test

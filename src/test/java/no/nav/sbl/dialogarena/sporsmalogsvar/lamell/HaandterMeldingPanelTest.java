@@ -7,6 +7,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforin
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgave.NyOppgavePanel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -29,6 +30,7 @@ import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 @ContextConfiguration(classes = {ServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class HaandterMeldingPanelTest extends WicketPageTest {
@@ -47,7 +49,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM(henvendelseBehandlingService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
                 .should().containComponent(thatIsEnabled().and(withId(BESVAR_ID)));
     }
 
@@ -57,7 +59,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
                 createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1"),
                 createMelding("melding2", SVAR, now(), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM(henvendelseBehandlingService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
                 .should().containComponent(thatIsEnabled().and(withId(BESVAR_ID)));
     }
 
@@ -66,7 +68,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SAMTALEREFERAT, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM(henvendelseBehandlingService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
                 .should().containComponent(thatIsDisabled().and(withId(BESVAR_ID)));
     }
 
@@ -75,7 +77,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM(henvendelseBehandlingService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
                 .should().containComponent(thatIsEnabled().and(withId(JOURNALFOR_VALG_ID)));
     }
 
@@ -84,7 +86,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMeldingMedJournalfortDato("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1", now())));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM(henvendelseBehandlingService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
                 .should().containComponent(thatIsDisabled().and(withId(JOURNALFOR_VALG_ID)));
     }
 
@@ -93,7 +95,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SAMTALEREFERAT, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM(henvendelseBehandlingService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
                 .should().containComponent(thatIsEnabled().and(withId(NYOPPGAVE_VALG_ID)));
     }
 
@@ -102,7 +104,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM(henvendelseBehandlingService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
                 .should().containComponent(thatIsDisabled().and(withId(NYOPPGAVE_VALG_ID)));
     }
 
@@ -111,7 +113,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMeldingMedJournalfortDato("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1", now())));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM(henvendelseBehandlingService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
                 .should().containComponent(thatIsDisabled().and(withId(MERKE_VALG_ID)));
     }
 
@@ -121,7 +123,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM(henvendelseBehandlingService, "fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
                 .printComponentsTree()
                 .click().link(containedInComponent(withId(JOURNALFOR_VALG_ID)))
                 .should().containComponent(thatIsVisible().and(ofType(JournalforingsPanel.class)))

@@ -28,7 +28,7 @@ public class MerkePanelTest extends WicketPageTest {
     public void merkeTraadSomKontorsperret() {
         String fnr = "fnr";
 
-        InnboksVM innboksVM = new InnboksVM(henvendelseBehandlingService, fnr);
+        InnboksVM innboksVM = new InnboksVM(fnr);
 
         MerkePanel merkePanel = new MerkePanel("panel", innboksVM);
         merkePanel.setVisibilityAllowed(true);

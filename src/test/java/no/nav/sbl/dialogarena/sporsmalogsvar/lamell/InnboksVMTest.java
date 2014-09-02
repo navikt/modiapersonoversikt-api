@@ -1,13 +1,19 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
+import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +34,11 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
+@ContextConfiguration(classes = {ServiceTestContext.class, InnboksTestConfig.class})
+@RunWith(SpringJUnit4ClassRunner.class)
 public class InnboksVMTest {
 
     public final static DateTime DATE_1 = new DateTime().minusDays(1);
@@ -38,16 +46,16 @@ public class InnboksVMTest {
     public final static DateTime DATE_3 = new DateTime().minusDays(3);
     public final static DateTime DATE_4 = new DateTime().minusDays(4);
 
-    private List<Melding> meldinger;
+    @Inject
+    HenvendelseBehandlingService henvendelseBehandlingService;
+
     private InnboksVM innboksVM;
 
     @Before
     public void setUp() {
-        HenvendelseBehandlingService henvendelseBehandlingService = mock(HenvendelseBehandlingService.class);
-        meldinger = createMeldingerIToTraader();
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(meldinger);
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(createMeldingerIToTraader());
 
-        innboksVM = new InnboksVM(henvendelseBehandlingService, "fnr");
+        innboksVM = new InnboksVM("fnr");
     }
 
     @Test
@@ -113,9 +121,8 @@ public class InnboksVMTest {
 
     @Test
     public void skalFungereUtenMeldinger() {
-        HenvendelseBehandlingService henvendelseBehandlingServiceUtenHenvendelser = mock(HenvendelseBehandlingService.class);
-        when(henvendelseBehandlingServiceUtenHenvendelser.hentMeldinger(anyString())).thenReturn(new ArrayList<Melding>());
-        innboksVM = new InnboksVM(henvendelseBehandlingServiceUtenHenvendelser, "fnr");
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(Collections.<Melding>emptyList());
+        innboksVM = new InnboksVM("fnr");
 
         assertThat(innboksVM.getTraader().size(), is(0));
         assertThat(innboksVM.getValgtTraad().getMeldinger().size(), is(0));
@@ -126,9 +133,8 @@ public class InnboksVMTest {
         String fnr = "fnr";
         String traadId = "traadId";
 
-        HenvendelseBehandlingService henvendelseBehandlingServiceUtenHenvendelser = mock(HenvendelseBehandlingService.class);
-        when(henvendelseBehandlingServiceUtenHenvendelser.hentMeldinger(fnr)).thenReturn(asList(createMelding(traadId, SPORSMAL, DateTime.now(), "temagruppe", traadId)));
-        innboksVM = new InnboksVM(henvendelseBehandlingServiceUtenHenvendelser, fnr);
+        when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(createMelding(traadId, SPORSMAL, DateTime.now(), "temagruppe", traadId)));
+        innboksVM = new InnboksVM(fnr);
 
         Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad(traadId);
         assertTrue(nyesteMeldingITraad.isSome());
@@ -136,9 +142,8 @@ public class InnboksVMTest {
 
     @Test
     public void henterNyesteMeldingITraadMedUkjentTraadId() {
-        HenvendelseBehandlingService henvendelseBehandlingServiceUtenHenvendelser = mock(HenvendelseBehandlingService.class);
-        when(henvendelseBehandlingServiceUtenHenvendelser.hentMeldinger(anyString())).thenReturn(Collections.<Melding>emptyList());
-        innboksVM = new InnboksVM(henvendelseBehandlingServiceUtenHenvendelser, "fnr");
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(Collections.<Melding>emptyList());
+        innboksVM = new InnboksVM("fnr");
 
         Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad("traadId");
         assertFalse(nyesteMeldingITraad.isSome());
