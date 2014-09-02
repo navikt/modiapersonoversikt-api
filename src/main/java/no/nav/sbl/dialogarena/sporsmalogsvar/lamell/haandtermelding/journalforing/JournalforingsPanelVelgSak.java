@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -21,8 +20,6 @@ public class JournalforingsPanelVelgSak extends Panel {
 
     @Inject
     private JoarkJournalforingService joarkJournalforingService;
-    @Inject
-    private GsakService gsakService;
 
     private SakerVM sakerVM;
 
@@ -32,7 +29,7 @@ public class JournalforingsPanelVelgSak extends Panel {
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
-        sakerVM = new SakerVM(innboksVM, gsakService);
+        sakerVM = new SakerVM(innboksVM);
         Form<InnboksVM> form = new Form<>("plukkSakForm", new CompoundPropertyModel<>(innboksVM));
         form.add(
                 feedbackPanel,

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
@@ -9,13 +10,16 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -34,14 +38,15 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
-
-@RunWith(MockitoJUnitRunner.class)
+@ContextConfiguration(classes = {JournalforingPanelVelgSakTestConfig.class, InnboksTestConfig.class})
+@RunWith(SpringJUnit4ClassRunner.class)
 public class SakerVMTest {
 
     public final static String SAKSTYPE_FAG = "Fag";
 
-    @Mock
+    @Inject
     private GsakService gsakService;
     @Mock
     private JoarkJournalforingService joarkJournalforingService;
@@ -57,6 +62,7 @@ public class SakerVMTest {
 
     @Before
     public void setUp() {
+        initMocks(this);
         TraadVM traadVM = mock(TraadVM.class);
         when(innboksVM.getValgtTraad()).thenReturn(traadVM);
         alleTemaer = getAlleEksisterendeTemaer();
@@ -76,7 +82,7 @@ public class SakerVMTest {
     // Gruppering på tema
     @Test
     public void gittHverSakHarUniktTemaReturnerKorrektSakstemaliste() {
-        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
+        SakerVM sakerVM = new SakerVM(innboksVM);
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
@@ -92,7 +98,7 @@ public class SakerVMTest {
     public void gittToSakerMedLiktTemaReturnerKorrektSakstemaliste() {
         Sak sak4 = createSak("44444444", alleTemaer.get(0), GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5));
         saksliste.add(sak4);
-        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
+        SakerVM sakerVM = new SakerVM(innboksVM);
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
@@ -110,7 +116,7 @@ public class SakerVMTest {
     //Valgt temagruppe øverst
     @Test
     public void gittEnValgtTemagruppeSjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
-        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
+        SakerVM sakerVM = new SakerVM(innboksVM);
         sakerVM.oppdater();
         meldingVM.melding.temagruppe = temagruppeMedEtGodkjentTema;
 
@@ -129,7 +135,7 @@ public class SakerVMTest {
         for (String tema : traadTemagruppeSineTemaer) {
             saksliste.add(createSak("44444444", tema, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
-        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
+        SakerVM sakerVM = new SakerVM(innboksVM);
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerInnenforValgtTemagruppe = sakerVM.getGenerelleSakerGruppertPaaTema().subList(0, traadTemagruppeLengde);
@@ -144,7 +150,7 @@ public class SakerVMTest {
         meldingVM.melding.temagruppe = traadTemagruppe;
         List<String> traadTemagruppeSineTemaer = TEMA_MAPPING.get(traadTemagruppe);
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
-        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
+        SakerVM sakerVM = new SakerVM(innboksVM);
         sakerVM.oppdater();
 
         List<TemaSaker> alleTemaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
@@ -161,7 +167,7 @@ public class SakerVMTest {
             sakslistekloneMedAndreDatoer.add(createSak("101010101", sak.tema, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
         saksliste.addAll(sakslistekloneMedAndreDatoer);
-        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
+        SakerVM sakerVM = new SakerVM(innboksVM);
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
@@ -179,7 +185,7 @@ public class SakerVMTest {
             sakslistekloneMedAndreSakstyper.add(createSak("101010101", sak.tema, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), SAKSTYPE_FAG, sak.opprettetDato));
         }
         saksliste.addAll(sakslistekloneMedAndreSakstyper);
-        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
+        SakerVM sakerVM = new SakerVM(innboksVM);
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListeGenerell = sakerVM.getGenerelleSakerGruppertPaaTema();
@@ -191,7 +197,7 @@ public class SakerVMTest {
 
     @Test
     public void sjekkAtIngenElementerForsvinnerFraListeMedSakerVedGjentatteKall() {
-        SakerVM sakerVM = new SakerVM(innboksVM, gsakService);
+        SakerVM sakerVM = new SakerVM(innboksVM);
         sakerVM.oppdater();
 
         for (int i = 0; i < 4; i++) {

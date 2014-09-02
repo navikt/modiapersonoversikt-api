@@ -5,7 +5,9 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.commons.collections15.Transformer;
+import org.apache.wicket.injection.Injector;
 
+import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +34,8 @@ public class SakerVM implements Serializable {
     private TemaSakerListe temaSakerListeGenerelle;
 
     private InnboksVM innboksVM;
+
+    @Inject
     private GsakService gsakService;
 
     // TODO: Dette er en midlertidig mapping mellom temagruppe og tema, mens vi venter på kodeverk.
@@ -45,9 +49,9 @@ public class SakerVM implements Serializable {
         return temaMapping;
     }
 
-    public SakerVM(InnboksVM innboksVM, GsakService gsakService) {
+    public SakerVM(InnboksVM innboksVM) {
         this.innboksVM = innboksVM;
-        this.gsakService = gsakService;
+        Injector.get().inject(this);
     }
 
     public final void oppdater() {
