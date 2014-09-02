@@ -14,46 +14,42 @@ public class KontorsperrePolicyTest extends AbstractPDPTest {
 
     @Test
     public void allowAccessSammeLokalEnhet() {
-        RequestContext request = XACMLRequestBuilder.create()
-                .withSubjectAttr(ATTRIBUTEID_SUBJECT_ID, SUBJECT_ID)
-                .withSubjectAttr(ATTRIBUTEID_LOCAL_ENHET, ENHET)
-                .withResourceAttr(ATTRIBUTEID_RESOURCE_ID, FNR)
-                .withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
-                .withActionAttr(ATTRIBUTEID_ACTION_ID, "kontorsperre")
-                .build();
+        RequestContext request = createRequest(ENHET, ENHET);
         assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
     }
 
     @Test
     public void denyAccessIkkeSammeLokalEnhet() {
-        RequestContext request = XACMLRequestBuilder.create()
-                .withSubjectAttr(ATTRIBUTEID_SUBJECT_ID, SUBJECT_ID)
-                .withSubjectAttr(ATTRIBUTEID_LOCAL_ENHET, "1234")
-                .withResourceAttr(ATTRIBUTEID_RESOURCE_ID, FNR)
-                .withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
-                .withActionAttr(ATTRIBUTEID_ACTION_ID, "kontorsperre")
-                .build();
+        RequestContext request = createRequest("1234", ENHET);
         assertEquals("Access should be denied.", DENY, pdp.evaluate(request).getResult().getDecision());
     }
 
     @Test
     public void denyAccessHvisSubjectEnhetIkkeErSatt() {
-        RequestContext request = XACMLRequestBuilder.create()
-                .withSubjectAttr(ATTRIBUTEID_SUBJECT_ID, SUBJECT_ID)
-                .withResourceAttr(ATTRIBUTEID_RESOURCE_ID, FNR)
-                .withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
-                .withActionAttr(ATTRIBUTEID_ACTION_ID, "kontorsperre")
-                .build();
+        RequestContext request = createRequest(null, ENHET);
         assertEquals("Access should be denied.", DENY, pdp.evaluate(request).getResult().getDecision());
     }
+
     @Test
-    public void denyAccessHvisAnsvarligEnhetIkkeErSatt() {
-        RequestContext request = XACMLRequestBuilder.create()
-                .withSubjectAttr(ATTRIBUTEID_SUBJECT_ID, SUBJECT_ID)
-                .withSubjectAttr(ATTRIBUTEID_LOCAL_ENHET, "1234")
-                .withResourceAttr(ATTRIBUTEID_RESOURCE_ID, FNR)
-                .withActionAttr(ATTRIBUTEID_ACTION_ID, "kontorsperre")
-                .build();
-        assertEquals("Access should be denied.", DENY, pdp.evaluate(request).getResult().getDecision());
+    public void allowAccessHvisAnsvarligEnhetIkkeErSatt() {//Melding ikke kontorsperret
+        RequestContext request = createRequest("ENHET", null);
+        assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
+    }
+
+    private RequestContext createRequest(String saksbehandlerEnhet, String ansvarligEnhet) {
+        XACMLRequestBuilder req = XACMLRequestBuilder.create();
+
+        req.withSubjectAttr(ATTRIBUTEID_SUBJECT_ID, SUBJECT_ID);
+        req.withResourceAttr(ATTRIBUTEID_RESOURCE_ID, FNR);
+        req.withActionAttr(ATTRIBUTEID_ACTION_ID, "kontorsperre");
+
+        if (saksbehandlerEnhet != null && !saksbehandlerEnhet.isEmpty()) {
+            req.withSubjectAttr(ATTRIBUTEID_LOCAL_ENHET, saksbehandlerEnhet);
+        }
+        if (ansvarligEnhet != null && !ansvarligEnhet.isEmpty()) {
+            req.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ansvarligEnhet);
+        }
+
+        return req.build();
     }
 }

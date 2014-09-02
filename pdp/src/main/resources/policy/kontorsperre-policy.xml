@@ -18,7 +18,18 @@
             </Action>
         </Actions>
     </Target>
-
+    <Rule RuleId="ansvarlig-enhet-ikke-satt" Effect="Permit">
+        <Description>Gi tilgang hvis ansvarlig.enhet ikke er satt (Melding ikke kontorsperret).</Description>
+        <Condition>
+            <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:integer-equal">
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#integer">0</AttributeValue>
+                <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-bag-size">
+                    <ResourceAttributeDesignator DataType="http://www.w3.org/2001/XMLSchema#string"
+                                                 AttributeId="urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet"/>
+                </Apply>
+            </Apply>
+        </Condition>
+    </Rule>
     <Rule RuleId="ident-har-samme-lokal-enhet" Effect="Permit">
         <Description>Gi tilgang hvis saksbehandler.lokaleenhet lik bruker.enhet</Description>
         <Condition>
