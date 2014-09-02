@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter;
+import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
 import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +26,16 @@ public class PersonPageMockContext {
     @Bean
     public PersonKjerneinfoServiceBi personKjerneinfoServiceBi() {
         return mock(PersonKjerneinfoServiceBi.class);
+    }
+
+    @Bean
+    public SaksoversiktService saksoversiktService() {
+        return mock(SaksoversiktService.class);
+    }
+
+    @Bean
+    public SakOgBehandlingFilter sakOgBehandlingFilter() {
+        return mock(SakOgBehandlingFilter.class);
     }
 
     @Bean(name = "pep")
