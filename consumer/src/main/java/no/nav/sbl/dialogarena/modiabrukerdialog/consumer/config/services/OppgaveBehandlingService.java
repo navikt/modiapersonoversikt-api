@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Oppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -40,11 +41,11 @@ public class OppgaveBehandlingService {
         tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId));
     }
 
-    public Optional<WSOppgave> plukkOppgaveFraGsak(String temagruppe) {
+    public Optional<Oppgave> plukkOppgaveFraGsak(String temagruppe) {
         Optional<WSOppgave> oppgave = finnIkkeTilordnedeOppgaver(temagruppe);
         if (oppgave.isSome()) {
             WSOppgave tilordnet = tilordneOppgaveIGsak(oppgave.get());
-            return optional(tilordnet);
+            return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId()));
         } else {
             return none();
         }

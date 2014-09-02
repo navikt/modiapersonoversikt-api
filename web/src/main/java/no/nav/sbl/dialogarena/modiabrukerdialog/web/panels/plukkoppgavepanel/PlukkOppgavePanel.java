@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
@@ -61,11 +61,11 @@ public class PlukkOppgavePanel extends Panel {
                     return;
                 }
 
-                Optional<WSOppgave> oppgave = plukkOppgaveService.plukkOppgave(valgtTemagruppe.getObject().name());
+                Optional<Oppgave> oppgave = plukkOppgaveService.plukkOppgave(valgtTemagruppe.getObject().name());
                 if (oppgave.isSome()) {
-                    lagrePlukketOppgavePaaSession(oppgave);
+                    lagrePlukketOppgavePaaSession(oppgave.get());
                     lagreValgtTemagruppePaaSession(valgtTemagruppe.getObject());
-                    redirectForAaBesvareOppgave(oppgave.get().getGjelder().getBrukerId(), oppgave.get().getOppgaveId());
+                    redirectForAaBesvareOppgave(oppgave.get().fnr, oppgave.get().oppgaveId);
                 } else {
                     error(getString("plukkoppgave.ingenoppgaverpaatemagruppe"));
                     target.add(feedbackPanel);
@@ -103,9 +103,9 @@ public class PlukkOppgavePanel extends Panel {
         );
     }
 
-    private void lagrePlukketOppgavePaaSession(Optional<WSOppgave> oppgave) {
-        getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, oppgave.get().getOppgaveId());
-        getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, oppgave.get().getGjelder().getBrukerId());
+    private void lagrePlukketOppgavePaaSession(Oppgave oppgave) {
+        getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, oppgave.oppgaveId);
+        getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, oppgave.fnr);
     }
 
     private void lagreValgtTemagruppePaaSession(Temagruppe temagruppe) {

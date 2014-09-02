@@ -3,12 +3,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +17,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.artifacts.kjerneinfo.PersonKjerneinfoServiceBiMock.createPersonResponse;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgaveV3PortTypeMock.lagWSOppgave;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -52,31 +50,31 @@ public class PlukkOppgaveServiceTest {
 
     @Test
     public void girNoneHvisIngenOppgaveFraTjenesten() {
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(Optional.<WSOppgave>none());
+        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(Optional.<Oppgave>none());
 
-        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(Optional.<WSOppgave>none())));
+        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(Optional.<Oppgave>none())));
     }
 
     @Test
     public void girOppgaveHvisSaksbehandlerHarTilgang() {
-        Optional<WSOppgave> wsOppgave = optional(lagWSOppgave());
+        Optional<Oppgave> oppgave = optional(new Oppgave("oppgaveId", "fnr"));
 
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(wsOppgave);
+        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
 
-        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(wsOppgave)));
+        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(oppgave)));
     }
 
     @Test
     public void leggerTilbakeOppgaveOgPlukkerNyHvisSaksbehandlerIkkeHarTilgang() {
-        Optional<WSOppgave> wsOppgave1 = optional(lagWSOppgave("1"));
-        Optional<WSOppgave> wsOppgave2 = optional(lagWSOppgave("2"));
+        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr"));
+        Optional<Oppgave> oppgave2 = optional(new Oppgave("2", "fnr"));
 
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(wsOppgave1, wsOppgave2);
+        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave1, oppgave2);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false, true);
 
-        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(wsOppgave2)));
-        verify(oppgaveBehandlingService).leggTilbakeOppgaveIGsak(eq(optional(wsOppgave1.get().getOppgaveId())), anyString(), anyString());
+        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(oppgave2)));
+        verify(oppgaveBehandlingService).leggTilbakeOppgaveIGsak(eq(optional(oppgave1.get().oppgaveId)), anyString(), anyString());
     }
 
 }

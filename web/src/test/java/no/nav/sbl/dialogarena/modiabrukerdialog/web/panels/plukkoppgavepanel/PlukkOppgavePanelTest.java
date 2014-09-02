@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -10,8 +11,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefer
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSBruker;
-import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,11 +61,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void skalPlukkeOppgaveOgSetteSessionAttributes() {
-        when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(optional(
-                new WSOppgave()
-                        .withGjelder(new WSBruker().withBrukerId("fnr"))
-                        .withOppgaveId("oppgave")
-        ));
+        when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(optional(new Oppgave("oppgaveId", "fnr")));
 
         wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"))
                 .inForm(withId("plukkOppgaveForm"))
@@ -113,7 +108,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void skalGiFeilmeldingHvisIngenOppgaverPaaTema() {
-        when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(Optional.<WSOppgave>none());
+        when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(Optional.<Oppgave>none());
 
         TestPlukkOppgavePanel plukkoppgave = new TestPlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)
