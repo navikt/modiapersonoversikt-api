@@ -120,7 +120,7 @@ public class SaksoversiktServiceTest {
         when(henvendelse.hentSoknadListe(anyString())).thenReturn(henvendelseSoknader);
 
         List<GenerellBehandling> behandlingerFraTemaKodeDag = service.hentBehandlingerForTemakode("213454 12312", DAG);
-        Kvittering kvittering = (Kvittering) finnBehandlingSomErSammensatt(behandlingerFraTemaKodeDag);
+        Kvittering kvittering = (Kvittering) behandlingerFraTemaKodeDag.iterator().next();
 
         assertThat(kvittering.innsendteDokumenter.size(), equalTo(4));
     }
@@ -137,15 +137,6 @@ public class SaksoversiktServiceTest {
         saker.withSak(sak);
         List<GenerellBehandling> behandlinger = service.hentBehandlingerForTemakode("123123123", kronotema);
         assertTrue(behandlinger.get(0).behandlingDato.isAfter(behandlinger.get(1).behandlingDato));
-    }
-
-    private GenerellBehandling finnBehandlingSomErSammensatt(List<GenerellBehandling> behandlingerFraTemaKodeDag) {
-        for (GenerellBehandling behandling : behandlingerFraTemaKodeDag) {
-            if (behandling.behandlingstema.equals(BEHANDLINGSTEMA)) {
-                return behandling;
-            }
-        }
-        throw new RuntimeException("test feilet, fant ikke merget behandling");
     }
 
     private List<WSSoknad> opprettHenvendelseGrunnlag() {

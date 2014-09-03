@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -51,12 +52,16 @@ public class SakOgBehandlingTransformers {
 
                 @Override
                 public GenerellBehandling transform(WSBehandlingskjede wsBehandlingskjede) {
-                    return new GenerellBehandling()
+                    GenerellBehandling generellBehandling = new GenerellBehandling()
                             .withBehandlingsType(BEHANDLING)
                             .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
                             .withOpprettetDato(wsBehandlingskjede.getStart())
-                            .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede))
-                            .withBehandlingsTema(wsBehandlingskjede.getBehandlingstema().getValue());
+                            .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede));
+                    WSBehandlingstemaer behandlingstema = wsBehandlingskjede.getBehandlingstema();
+                    if (behandlingstema != null) {
+                        generellBehandling = generellBehandling.withBehandlingsTema(behandlingstema.getValue());
+                    }
+                    return generellBehandling;
                 }
             };
 
