@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.sakogbehandling;
 
+import no.nav.modig.modia.ping.PingResult;
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.HentBehandlingBehandlingIkkeFunnet;
@@ -20,6 +22,12 @@ import org.springframework.context.annotation.Configuration;
 
 import javax.jws.WebParam;
 
+import java.util.List;
+
+import static java.lang.System.currentTimeMillis;
+import static java.util.Arrays.asList;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockErTillattOgSlaattPaaForKey;
 
 @Configuration
@@ -61,6 +69,24 @@ public class SakOgBehandlingEndpointConfig {
             @Override
             public HentBehandlingResponse hentBehandling(@WebParam(name = "request", targetNamespace = "") HentBehandlingRequest hentBehandlingRequest) throws HentBehandlingBehandlingIkkeFunnet {
                 throw new RuntimeException("skal ikke brukes");
+            }
+        };
+    }
+
+    @Bean
+    public Pingable pingSakOgBehandling() {
+        return new Pingable() {
+            @Override
+            public List<PingResult> ping() {
+
+                long start = currentTimeMillis();
+                String name = "SAKOGBEHANDLING";
+                try {
+                    sakOgBehandlingPortType().ping();
+                    return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
+                } catch (Exception e) {
+                    return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
+                }
             }
         };
     }
