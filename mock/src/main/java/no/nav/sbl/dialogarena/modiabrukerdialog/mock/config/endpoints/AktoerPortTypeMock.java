@@ -15,11 +15,15 @@ import static org.mockito.Mockito.when;
 @Configuration
 public class AktoerPortTypeMock {
 
+    public static final String AKTOER_ID_MOCK = "1000042149824"; // 15065933818
+
     @Bean
     public AktoerPortType getAktoerPortTypeMock() {
         AktoerPortType mock = mock(AktoerPortType.class);
         try {
-            when(mock.hentAktoerIdForIdent(any(HentAktoerIdForIdentRequest.class))).thenReturn(new HentAktoerIdForIdentResponse());
+            HentAktoerIdForIdentResponse response = new HentAktoerIdForIdentResponse();
+            response.setAktoerId(AKTOER_ID_MOCK);
+            when(mock.hentAktoerIdForIdent(any(HentAktoerIdForIdentRequest.class))).thenReturn(response);
         } catch (HentAktoerIdForIdentPersonIkkeFunnet hentAktoerIdForIdentPersonIkkeFunnet) {
             throw new ApplicationException("Mock klarte ikke å returnere aktørid", hentAktoerIdForIdentPersonIkkeFunnet);
         }
