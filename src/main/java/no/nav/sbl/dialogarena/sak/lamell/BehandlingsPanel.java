@@ -26,8 +26,10 @@ public class BehandlingsPanel extends Panel {
 
         GenerellBehandling behandling = behandlingModel.getObject();
         String opprettetDato = printFullDate(behandling.opprettetDato);
+        String beskrivelsesKey = behandling.behandlingsStatus.equals(AVSLUTTET) ? "behandling.beskrivelse.avsluttet" : "behandling.beskrivelse.underArbeid";
+        
         add(
-                new Label("hendelse-beskrivelse", cms.hentTekst("behandling.beskrivelse")),
+                new Label("hendelse-beskrivelse", cms.hentTekst(beskrivelsesKey)),
                 new Label("opprettet-dato", format(cms.hentTekst("behandling.opprettet.dato"), opprettetDato)),
                 lagAvsluttetDato(behandling)
         );
