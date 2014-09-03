@@ -36,7 +36,7 @@ public class MerkePanel extends AnimertPanel {
                 if (opprettOppgavePanel.kanMerkeSomKontorsperret()) {
                     henvendelse.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
                     innboksVM.oppdaterMeldinger();
-                    send(this, Broadcast.BUBBLE, TRAAD_KONTORSPERRET);
+                    send(getPage(), Broadcast.DEPTH, TRAAD_KONTORSPERRET);
                     lukkPanel(target);
                 } else {
                     error(getString("kontorsperre.oppgave.opprettet.feil"));

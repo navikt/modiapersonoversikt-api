@@ -149,12 +149,28 @@ public class InnboksVMTest {
         assertFalse(nyesteMeldingITraad.isSome());
     }
 
+    @Test
+    public void slettGamleMeldinger() {
+        assertThat(innboksVM.getTraader().size(), is(2));
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(createMeldingerIEnTraad());
+
+        innboksVM.oppdaterMeldinger();
+
+        assertThat(innboksVM.getTraader().size(), is(1));
+    }
+
     public static List<Melding> createMeldingerIToTraader() {
         Melding melding1 = createMelding(ID_1, SPORSMAL, DATE_4, TEMAGRUPPE_1, ID_1);
         Melding melding2 = createMelding(ID_2, SPORSMAL, DATE_3, TEMAGRUPPE_2, ID_2);
         Melding melding3 = createMelding(ID_3, SAMTALEREFERAT, DATE_2, TEMAGRUPPE_2, ID_2);
         Melding melding4 = createMelding(ID_4, SVAR, DATE_1, TEMAGRUPPE_2, ID_2);
         return asList(melding1, melding2, melding3, melding4);
+    }
+
+    private static List<Melding> createMeldingerIEnTraad() {
+        return asList(
+                createMelding(ID_1, SPORSMAL, DATE_4, TEMAGRUPPE_1, ID_1)
+        );
     }
 
 }

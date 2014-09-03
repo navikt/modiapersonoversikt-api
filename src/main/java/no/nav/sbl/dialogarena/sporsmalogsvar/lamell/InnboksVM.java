@@ -45,7 +45,9 @@ public class InnboksVM implements Serializable {
     }
 
     public final void oppdaterMeldinger() {
+        traader.clear();
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(fnr);
+
         Map<String, List<Melding>> meldingTraader = skillUtTraader(meldinger);
         for (Map.Entry<String, List<Melding>> meldingTraad : meldingTraader.entrySet()) {
             traader.put(meldingTraad.getKey(), new TraadVM(TIL_MELDINGVM_TRAAD.transform(meldingTraad.getValue())));
