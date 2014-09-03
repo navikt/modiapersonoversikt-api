@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
+import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.henvendelsesoknader.HenvendelseSoknaderEndpointConfig.HENVENDELSESOKNADER_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.CoreMatchers.notNullValue;
@@ -35,6 +36,7 @@ public class HenvendelseSoknaderCacheTest {
         //Problemfritt å kjøre med mock ettersom cacheannotasjon wrapper rundt switchingen
         System.setProperty(HENVENDELSESOKNADER_KEY, "true");
         System.setProperty(TILLATMOCKSETUP_PROPERTY, "true");
+        setupKeyAndTrustStore();
     }
 
     @Test
