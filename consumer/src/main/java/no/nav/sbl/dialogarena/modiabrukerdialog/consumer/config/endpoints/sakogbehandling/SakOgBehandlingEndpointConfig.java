@@ -94,7 +94,7 @@ public class SakOgBehandlingEndpointConfig {
 
     private SakOgBehandling_v1PortType createSakogbehandlingPortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
-        proxyFactoryBean.setWsdlLocation("classpath://sakOgBehandling/no/nav/virksomhet/tjenester/sakOgBehandling/v1/sakOgBehandling.wsdl");
+        proxyFactoryBean.setWsdlLocation("classpath:sakOgBehandling/no/nav/virksomhet/tjenester/sakOgBehandling/v1/sakOgBehandling.wsdl");
         proxyFactoryBean.setAddress(System.getProperty("sakogbehandling.ws.url"));
         proxyFactoryBean.setServiceClass(SakOgBehandling_v1PortType.class);
         proxyFactoryBean.getOutInterceptors().add(interceptor);
