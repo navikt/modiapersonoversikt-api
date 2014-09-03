@@ -28,7 +28,9 @@ import javax.inject.Named;
 import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
@@ -84,19 +86,23 @@ public class HenvendelseBehandlingService {
         Person person = kjerneinfo.hentKjerneinformasjon(new HentKjerneinformasjonRequest(fnr)).getPerson();
         return person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
     }
+
     private Predicate<Melding> lagPepFilter(final String fnr) {
         return new Predicate<Melding>() {
             private PolicyRequest req = new PolicyRequest()
                     .copyAndAppend(new ActionAttribute(new URN("urn:oasis:names:tc:xacml:1.0:action:action-id"), new StringValue("kontorsperre")))
                     .copyAndAppend(new SubjectAttribute(new URN("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet"), new StringValue(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())))
                     .copyAndAppend(new ResourceAttribute(new URN("urn:oasis:names:tc:xacml:1.0:resource:resource-id"), new StringValue(fnr)));
+
             @Override
             public boolean evaluate(Melding melding) {
-                if (melding.kontorsperretEnhet == null || melding.kontorsperretEnhet.isEmpty())return true;
+                if (melding.kontorsperretEnhet == null || melding.kontorsperretEnhet.isEmpty()) {
+                    return true;
+                }
 
                 return enforcementPoint.hasAccess(req.copyAndAppend(new ResourceAttribute(
-                        new URN("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet"),
-                        new StringValue(melding.kontorsperretEnhet)))
+                                new URN("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet"),
+                                new StringValue(melding.kontorsperretEnhet)))
                 );
             }
         };
