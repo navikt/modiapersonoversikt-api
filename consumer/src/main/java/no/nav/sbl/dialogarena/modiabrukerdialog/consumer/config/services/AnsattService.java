@@ -11,7 +11,6 @@ import org.apache.commons.collections15.Transformer;
 import javax.inject.Inject;
 import java.util.List;
 
-import static java.util.Collections.emptyList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 
@@ -25,10 +24,9 @@ public class AnsattService {
         hentNAVAnsattEnhetListeRequest.setAnsattId(getSubjectHandler().getUid());
         try {
             return on(ansattWS.hentNAVAnsattEnhetListe(hentNAVAnsattEnhetListeRequest).getNAVEnheter()).map(TIL_ANSATTENHET).collect();
-        } catch (HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg hentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg) {
-            hentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg.printStackTrace();
+        } catch (HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg e) {
+            throw new RuntimeException(e);
         }
-        return emptyList();
     }
 
     private static final Transformer<ASBOGOSYSNavEnhet, AnsattEnhet> TIL_ANSATTENHET = new Transformer<ASBOGOSYSNavEnhet, AnsattEnhet>() {
