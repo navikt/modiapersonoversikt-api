@@ -4,6 +4,8 @@ import no.nav.modig.content.CmsContentRetriever;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import org.apache.commons.collections15.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Arrays;
@@ -18,23 +20,37 @@ public class SakOgBehandlingFilter {
     private static List<String> ulovligeSakstema;
     private static List<String> lovligeBehandlingstyper;
 
+    private final static Logger log = LoggerFactory.getLogger(SakOgBehandlingFilter.class);
+
     public static final Predicate<WSSak> HAR_LOVLIG_SAKSTEMA = new Predicate<WSSak>() {
         @Override public boolean evaluate(WSSak wsSak) {
             String sakstema = wsSak.getSakstema().getValue();
-            return !ulovligeSakstema.contains(sakstema);
+            boolean erLovlig = !ulovligeSakstema.contains(sakstema);
+            if (!erLovlig) {
+                log.info(String.format("Filtrerer bort sakstema %s", sakstema));
+            }
+            return erLovlig;
         }
     };
 
     public static final Predicate<WSSak> HAR_BEHANDLINGER = new Predicate<WSSak>() {
         @Override public boolean evaluate(WSSak wsSak) {
-            return !wsSak.getBehandlingskjede().isEmpty();
+            boolean harBehandlinger = !wsSak.getBehandlingskjede().isEmpty();
+            if (!harBehandlinger) {
+                log.info(String.format("Filtrerer bort sak uten behandlinger. Sakstema var %s", wsSak.getSakstema().getValue()));
+            }
+            return harBehandlinger;
         }
     };
 
     public static final Predicate<WSBehandlingskjede> HAR_LOVLIG_BEHANDLINGSTYPE = new Predicate<WSBehandlingskjede>() {
         @Override public boolean evaluate(WSBehandlingskjede behandlingskjede) {
             String behandlingstype = behandlingskjede.getSisteBehandlingstype().getValue();
-            return lovligeBehandlingstyper.contains(behandlingstype);
+            boolean erLovlig = lovligeBehandlingstyper.contains(behandlingstype);
+            if (!erLovlig) {
+                log.info(String.format("Filtrerer bort behandlingstype %s", behandlingstype));
+            }
+            return erLovlig;
         }
     };
 
