@@ -14,6 +14,7 @@ import javax.jws.WebParam;
 import java.util.List;
 
 import static java.lang.System.currentTimeMillis;
+import static java.lang.System.getProperty;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
@@ -68,10 +69,9 @@ public class HenvendelseSoknaderEndpointConfig {
         };
     }
 
-
     private HenvendelseSoknaderPortType createHenvendelsePortType() {
         return new CXFClient<>(HenvendelseSoknaderPortType.class)
-                .address(System.getProperty("henvendelse.soknader.url"))
+                .address(getProperty("henvendelse.soknader.url"))
                 .wsdl("classpath:no/nav/tjeneste/domene/brukerdialog/henvendelsesoknader/v1/Soknader.wsdl")
                 .build();
     }
