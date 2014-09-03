@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sak.transformers;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class SakOgBehandlingTransformersTest {
         WSBehandlingskjede wsBehandlingskjede = createWSBehandlingskjede()
                 .withSlutt(avsluttetDato)
                 .withStart(startTid)
-                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema));
+                .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema));
         GenerellBehandling behandling = BEHANDLINGSKJEDE_TIL_BEHANDLING.transform(wsBehandlingskjede);
 
         assertThat(behandling.behandlingsType, equalTo(BEHANDLING));

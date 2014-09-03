@@ -96,7 +96,7 @@ public class SaksoversiktService {
     private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede) {
         return (Kvittering) kvittering.withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
                 .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede))
-                .withBehandlingsTema(wsBehandlingskjede.getBehandlingskjedetype().getValue());
+                .withBehandlingsTema(wsBehandlingskjede.getBehandlingstema().getValue());
     }
 
     private List<GenerellBehandling> behandlingerSomIkkeErKvitteringer(List<WSBehandlingskjede> alleBehandlingskjeder, List<Kvittering> kvitteringer) {

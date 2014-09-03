@@ -12,7 +12,6 @@ import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRespon
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingskjedetyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstegtyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
@@ -58,7 +57,7 @@ public class SaksoversiktServiceTest {
     private static final String KVITTERING = "kvittering";
     private static final String BEHANDLINGSKJEDEID_1 = "behandlingskjedeid-1";
     private static final DateTime MERGET_OPPRETTET = new DateTime().minusDays(110);
-    public static final String BEHANDLINGSKJEDETYPER = "behandlingskjedetyper";
+    public static final String BEHANDLINGSTEMA = "behandlingstema";
 
     @Mock
     SakOgBehandling_v1PortType sakOgBehandling;
@@ -142,7 +141,7 @@ public class SaksoversiktServiceTest {
 
     private GenerellBehandling finnBehandlingSomErSammensatt(List<GenerellBehandling> behandlingerFraTemaKodeDag) {
         for (GenerellBehandling behandling : behandlingerFraTemaKodeDag) {
-            if (behandling.behandlingstema.equals(BEHANDLINGSKJEDETYPER)) {
+            if (behandling.behandlingstema.equals(BEHANDLINGSTEMA)) {
                 return behandling;
             }
         }
@@ -180,8 +179,7 @@ public class SaksoversiktServiceTest {
                         .withBehandlingskjede(new WSBehandlingskjede()
                                 .withStart(value)
                                 .withBehandlingskjedeId("behandlingskjedeid")
-                                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(BEHANDLINGSKJEDETYPER))
-                                .withBehandlingstema(new WSBehandlingstemaer().withValue("behandlingstema"))
+                                .withBehandlingstema(new WSBehandlingstemaer().withValue(BEHANDLINGSTEMA))
                                 .withStart(MERGET_OPPRETTET)
                                 .withBehandlingsListeRef(KVITTERING, IKKE_KVITTERING, IKKE_KVITTERING)
                         ),
@@ -196,7 +194,7 @@ public class SaksoversiktServiceTest {
                 .withBehandlingskjede(
                         new WSBehandlingskjede()
                                 .withBehandlingskjedeId("behandlingskjedeid-mock")
-                                .withBehandlingskjedetype(new WSBehandlingskjedetyper().withKodeverksRef("kodeverk-ref-mock"))
+                                .withBehandlingstema(new WSBehandlingstemaer().withKodeverksRef("kodeverk-ref-mock"))
                                 .withSisteBehandlingREF("siste-behandling-ref-mock")
                                 .withSisteBehandlingstype(new WSBehandlingstyper().withKodeverksRef("behandlingstype-ref-mock"))
                                 .withSisteBehandlingsstegREF("siste-behandling-steg-ref-mock")

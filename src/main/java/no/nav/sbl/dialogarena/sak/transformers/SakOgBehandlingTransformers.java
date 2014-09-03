@@ -56,7 +56,7 @@ public class SakOgBehandlingTransformers {
                             .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
                             .withOpprettetDato(wsBehandlingskjede.getStart())
                             .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede))
-                            .withBehandlingsTema(wsBehandlingskjede.getBehandlingskjedetype().getValue());
+                            .withBehandlingsTema(wsBehandlingskjede.getBehandlingstema().getValue());
                 }
             };
 
