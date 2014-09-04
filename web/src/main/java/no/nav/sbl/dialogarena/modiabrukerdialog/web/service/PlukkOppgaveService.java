@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
+import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Oppgave;
@@ -12,9 +13,10 @@ import javax.inject.Inject;
 
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.defaultString;
 
 public class PlukkOppgaveService {
 
@@ -30,7 +32,7 @@ public class PlukkOppgaveService {
     public Optional<Oppgave> plukkOppgave(String temagruppe) {
         Optional<Oppgave> oppgave = oppgaveBehandlingService.plukkOppgaveFraGsak(temagruppe);
         if (oppgave.isSome()) {
-            if (saksbehandlerHarTilgangTilBrukersDiskresjonskode(oppgave.get())) {
+            if (saksbehandlerHarTilgangTilBruker(oppgave.get())) {
                 return oppgave;
             } else {
                 return leggTilbakeOgPlukkNyOppgave(oppgave.get(), temagruppe);
@@ -48,11 +50,12 @@ public class PlukkOppgaveService {
         return plukkOppgave(temagruppe);
     }
 
-    private boolean saksbehandlerHarTilgangTilBrukersDiskresjonskode(Oppgave oppgave) {
-        String brukersDiskresjonskode =
-                personKjerneinfoServiceBi.hentKjerneinformasjon(new HentKjerneinformasjonRequest(oppgave.fnr))
-                        .getPerson().getPersonfakta().getDiskresjonskode();
+    private boolean saksbehandlerHarTilgangTilBruker(Oppgave oppgave) {
+        Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(new HentKjerneinformasjonRequest(oppgave.fnr)).getPerson().getPersonfakta();
+        String brukersDiskresjonskode = defaultString(personfakta.getDiskresjonskode());
+        String brukersEnhet = defaultString(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
 
-        return isBlank(brukersDiskresjonskode) || pep.hasAccess(forRequest(resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code", brukersDiskresjonskode)));
+        return pep.hasAccess(forRequest(resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code", brukersDiskresjonskode)))
+                && pep.hasAccess(forRequest(actionId("les"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));
     }
 }

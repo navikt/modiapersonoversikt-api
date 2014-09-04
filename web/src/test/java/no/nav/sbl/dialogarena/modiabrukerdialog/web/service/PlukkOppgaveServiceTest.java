@@ -71,10 +71,20 @@ public class PlukkOppgaveServiceTest {
         Optional<Oppgave> oppgave2 = optional(new Oppgave("2", "fnr"));
 
         when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave1, oppgave2);
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false, true);
+        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false, false, false, true);
 
         assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(oppgave2)));
         verify(oppgaveBehandlingService).leggTilbakeOppgaveIGsak(eq(optional(oppgave1.get().oppgaveId)), anyString(), anyString());
     }
 
+    @Test
+    public void leggerTilbakeHvisIkkeTilgangTilSamtligePep() {
+        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr"));
+
+        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave1, Optional.<Oppgave>none());
+        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
+
+        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(Optional.<Oppgave>none())));
+        verify(oppgaveBehandlingService).leggTilbakeOppgaveIGsak(eq(optional(oppgave1.get().oppgaveId)), anyString(), anyString());
+    }
 }
