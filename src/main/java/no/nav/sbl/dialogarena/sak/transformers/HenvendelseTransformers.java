@@ -69,7 +69,7 @@ public class HenvendelseTransformers {
         return new Predicate<WSDokumentforventning>() {
             @Override
             public boolean evaluate(WSDokumentforventning dokumentforventning) {
-                return dokumentforventning.getKodeverkId().equals("L7");
+                return dokumentforventning.getKodeverkId().equals(hovedskjemaId);
             }
         };
     }
