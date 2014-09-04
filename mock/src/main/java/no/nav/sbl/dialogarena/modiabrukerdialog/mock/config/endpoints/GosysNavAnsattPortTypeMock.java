@@ -68,7 +68,8 @@ public class GosysNavAnsattPortTypeMock {
                                 lagNavEnhet("2960", "NAV Drift og Utvikling - Anskaffelse og økonomi"),
                                 lagNavEnhet("4303", "NAV Id og fordeling"),
                                 lagNavEnhet("4403", "NAV Forvaltning Oslo og Akershus"),
-                                lagNavEnhet("4100", "NAV Kontaktsenter Test")
+                                lagNavEnhet("4100", "NAV Kontaktsenter Test"),
+                                lagNavEnhet("1234", "NAV Mockbrukers Enhet")
                         ));
                 return enhetListe;
             }
