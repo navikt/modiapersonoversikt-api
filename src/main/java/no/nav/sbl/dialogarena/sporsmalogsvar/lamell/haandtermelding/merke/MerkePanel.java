@@ -23,7 +23,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke
 
 public class MerkePanel extends AnimertPanel {
 
-    public static final String TRAAD_KONTORSPERRET = "sos.merkepanel.traadkontorsperret";
+    public static final String TRAAD_MERKET = "sos.merkepanel.merket";
 
     @Inject
     private HenvendelseBehandlingService henvendelse;
@@ -64,8 +64,7 @@ public class MerkePanel extends AnimertPanel {
             private void haandterKontorsperring(AjaxRequestTarget target) {
                 if (opprettOppgavePanel.kanMerkeSomKontorsperret()) {
                     henvendelse.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
-                    innboksVM.oppdaterMeldinger();
-                    send(getPage(), Broadcast.DEPTH, TRAAD_KONTORSPERRET);
+                    send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
                     lukkPanel(target);
                 } else {
                     error(getString("kontorsperre.oppgave.opprettet.feil"));
@@ -75,6 +74,7 @@ public class MerkePanel extends AnimertPanel {
 
             private void haandterFeilsendt(AjaxRequestTarget target) {
                 henvendelse.merkSomFeilsendt(innboksVM.getValgtTraad());
+                send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
                 lukkPanel(target);
             }
 
