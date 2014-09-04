@@ -12,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 public class PlukkOppgavePolicyTest extends AbstractPDPTest {
 
     @Test
-    public void allowAccessKontonummerPanel() throws Exception {
+    public void allowAccessPlukkOppgavePanel() throws Exception {
         RequestContext request = createRequestBuilder()
                 .withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-GOSYS")
                 .withActionAttr(ATTRIBUTEID_ACTION_ID, "plukkoppgave")
@@ -22,7 +22,7 @@ public class PlukkOppgavePolicyTest extends AbstractPDPTest {
     }
 
     @Test
-    public void denyAccessKontonummerPanel() throws Exception {
+    public void denyAccessPlukkOppgavePanel() throws Exception {
         RequestContext request = createRequestBuilder()
                 .withActionAttr(ATTRIBUTEID_ACTION_ID, "plukkoppgave")
                 .withResourceAttr(ATTRIBUTEID_RESOURCE_ID, "")
