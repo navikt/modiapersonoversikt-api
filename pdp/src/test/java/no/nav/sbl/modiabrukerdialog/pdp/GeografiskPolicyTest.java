@@ -84,7 +84,7 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 				.withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-GOSYS_UTVIDBAR_TIL_NASJONAL")
 				.withResourceAttr(ATTRIBUTEID_RESOURCE_ID, FNR)
 				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
-				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
+				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID_MED_BEGRUNNELSE)
 				.build();
 		assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
 	}
@@ -94,7 +94,7 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 		RequestContext request = XACMLRequestBuilder.create()
 				.withSubjectAttr(ATTRIBUTEID_SUBJECT_ID, SUBJECT_ID)
 				.withResourceAttr(ATTRIBUTEID_RESOURCE_ID, FNR)
-				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, null)
+				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, "")
 				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
 				.build();
 		assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
@@ -108,7 +108,7 @@ public class GeografiskPolicyTest extends AbstractPDPTest {
 				.withSubjectAttr(ATTRIBUTEID_FYLKESENHET, ENHET)
 				.withResourceAttr(ATTRIBUTEID_RESOURCE_ID, FNR)
 				.withResourceAttr(ATTRIBUTEID_ANSVARLIG_ENHET, ENHET)
-				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID)
+				.withActionAttr(ATTRIBUTEID_ACTION_ID, ACTION_ID_MED_BEGRUNNELSE)
 				.build();
 		assertEquals("Access should be permitted.", PERMIT, pdp.evaluate(request).getResult().getDecision());
 	}

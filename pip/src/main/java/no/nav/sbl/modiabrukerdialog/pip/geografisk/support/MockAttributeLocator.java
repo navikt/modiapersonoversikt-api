@@ -74,6 +74,7 @@ public class MockAttributeLocator extends AttributeLocator {
 	private void addEnhetValue(String subjectId, Set<AttributeValue> values) {
 		if (subjectId.endsWith("900002")) {
 			values.add(JBossXACMLUtil.getAttributeValue("1234"));
+			values.add(JBossXACMLUtil.getAttributeValue("0313"));
 		} else if (subjectId.endsWith("900003")) {
 			values.add(JBossXACMLUtil.getAttributeValue("0313"));
 		}

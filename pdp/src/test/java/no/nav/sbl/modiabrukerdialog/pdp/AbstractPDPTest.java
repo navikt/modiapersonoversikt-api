@@ -16,6 +16,7 @@ public class AbstractPDPTest {
 	protected static final String ATTR_ID_DISCRETION_CODE = "urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code";
 	protected static final String POLICY_FILE = "config/modia-policy-config-test.xml";
 	protected static final String ACTION_ID = "les";
+	protected static final String ACTION_ID_MED_BEGRUNNELSE = "lesMedBegrunnelse";
 	protected static final String FNR = "***REMOVED***";
 	protected static final String ENHET = "0313";
 	protected static final String SUBJECT_ID = "Z999999";
