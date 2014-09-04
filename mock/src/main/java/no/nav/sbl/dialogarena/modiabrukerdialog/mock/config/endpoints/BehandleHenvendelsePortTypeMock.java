@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
 
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.HENVENDELSER;
 
 @Configuration
@@ -29,6 +30,14 @@ public class BehandleHenvendelsePortTypeMock {
 
             @Override
             public void oppdaterOppgaveOpprettetInformasjon(XMLOppgaveOpprettetInformasjon oppdaterOppgaveOpprettetInformasjon) {
+            }
+
+            @Override
+            public void oppdaterTilKassering(List<String> behandlingsIdListe) {
+                for (String id : behandlingsIdListe) {
+                    XMLHenvendelse xmlHenvendelse = hentHenvendelse(id);
+                    xmlHenvendelse.setMarkertSomFeilsendtAv(getSubjectHandler().getUid());
+                }
             }
 
             @Override
