@@ -219,8 +219,7 @@ public class PersonPage extends BasePage {
 
     private void visSvarPanelBasertPaaHenvendelsesId(String henvendelseId, String oppgaveId) {
         Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(henvendelseId);
-        List<SvarEllerReferat> svar = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, henvendelseId);
-        erstattReferatPanelMedSvarPanel(sporsmal, svar, optional(oppgaveId));
+        erstattReferatPanelMedSvarPanel(sporsmal, henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, henvendelseId), optional(oppgaveId));
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
