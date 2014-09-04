@@ -63,6 +63,14 @@ public class TraadVM implements Serializable {
         return optional(meldinger.get(0).melding.kontorsperretEnhet);
     }
 
+    public boolean erFeilsendt() {
+        return getMarkertSomFeilsendtAv().isSome();
+    }
+
+    public Optional<String> getMarkertSomFeilsendtAv() {
+        return optional(meldinger.get(0).melding.markertSomFeilsendtAv);
+    }
+
     public boolean bleInitiertAvBruker() {
         return getEldsteMelding().melding.meldingstype == SPORSMAL;
     }

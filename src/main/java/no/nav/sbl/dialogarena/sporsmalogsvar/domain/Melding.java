@@ -12,7 +12,7 @@ public class Melding implements Serializable {
     public final Meldingstype meldingstype;
     public final DateTime opprettetDato;
     public String fritekst, temagruppe, kanal, traadId, navIdent, journalfortSaksId, journalfortTema,
-            journalfortAvNavIdent, fnrBruker, kontorsperretEnhet;
+            journalfortAvNavIdent, fnrBruker, kontorsperretEnhet, markertSomFeilsendtAv;
     // TODO: Følg opp.
     public String sammensattNavnBruker = "TODO Hent fra context når Computas har satt det der.";
     public DateTime lestDato, journalfortDato;

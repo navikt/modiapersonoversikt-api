@@ -20,6 +20,8 @@ public class NyesteMeldingPanel extends Panel {
         this.avsenderbilde = new AvsenderBilde("avsenderbilde", (MeldingVM) getDefaultModelObject());
         add(avsenderbilde);
         add(new JournalfortSkiller("journalfortSkiller", getDefaultModel()));
+        add(new KontorsperreInfoPanel("kontorsperretInfo", innboksVM));
+        add(new FeilsendtInfoPanel("feilsendtInfo", innboksVM));
         add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", getDefaultModel()))
                 .add(cssClass(new PropertyModel<String>(getDefaultModel(), "statusIkonKlasse"))));
         add(new Label("opprettetDato"));

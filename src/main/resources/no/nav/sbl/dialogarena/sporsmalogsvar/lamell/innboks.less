@@ -161,17 +161,6 @@
       }
     }
 
-    .journalfort-skiller {
-      .ikon {
-        background: url(../img/journalfore_graa.svg) no-repeat;
-      }
-      .skillestrek {
-        margin: 0 5px;
-      }
-      &.nyeste {
-        margin-top: 0;
-      }
-    }
     .tidligere-melding {
       position: relative;
       background-color: @graabakgrunn;
@@ -210,18 +199,29 @@
     }
     .traad-info {
       background-color: #333333;
-      margin: 15px 0 16px;
+      margin-bottom: 16px;
       padding: 10px;
       color: @modiagraaskrift;
       font-size: 0.75rem;
       .ikon {
         padding-right: 1.4rem;
       }
-    }
-    .kontorsperret-info {
-      margin-top: 0;
-      .ikon {
-        background: url(../img/merk_ikon_graa.svg) no-repeat;
+      &.journalfort-skiller {
+        margin-top: 15px;
+        .ikon {
+          background: url(../img/journalfore_graa.svg) no-repeat;
+        }
+        .skillestrek {
+          margin: 0 5px;
+        }
+        &.nyeste {
+          margin-top: 0;
+        }
+      }
+      &.kontorsperret-info, &.feilsendt-info {
+        .ikon {
+          background: url(../img/merk_ikon_graa.svg) no-repeat;
+        }
       }
     }
   }
@@ -243,7 +243,7 @@
     &.sporsmal {
       background-image: url(../img/melding_sporsmaal.svg);
     }
-    &.svar-ikke-lest-av-bruker, &.samtalereferat-ikke-lest-av-bruker  {
+    &.svar-ikke-lest-av-bruker, &.samtalereferat-ikke-lest-av-bruker {
       background-image: url(../img/melding_svar_sendt.svg)
     }
     &.svar-lest-av-bruker, &.samtalereferat-lest-av-bruker {

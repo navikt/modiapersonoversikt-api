@@ -14,13 +14,11 @@ import no.nav.modig.security.tilgangskontroll.policy.request.attributes.SubjectA
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import org.apache.commons.collections15.Predicate;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
@@ -34,6 +32,7 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
 
 public class HenvendelseBehandlingService {
 
@@ -70,14 +69,9 @@ public class HenvendelseBehandlingService {
         );
     }
 
-    public void merkSomKontorsperret(String fnr, TraadVM traadVM) {
+    public void merkSomKontorsperret(String fnr, TraadVM valgtTraad) {
         String enhet = getEnhet(fnr);
-        List<String> ider = on(traadVM.getMeldinger()).map(new Transformer<MeldingVM, String>() {
-            @Override
-            public String transform(MeldingVM meldingVM) {
-                return meldingVM.melding.id;
-            }
-        }).collect();
+        List<String> ider = on(valgtTraad.getMeldinger()).map(ID).collect();
 
         behandleHenvendelsePortType.oppdaterKontorsperre(enhet, ider);
     }
@@ -109,6 +103,7 @@ public class HenvendelseBehandlingService {
     }
 
     public void merkSomFeilsendt(TraadVM valgtTraad) {
-        //TODO: Implementer
+        List<String> behandlingsIdListe = on(valgtTraad.getMeldinger()).map(ID).collect();
+        behandleHenvendelsePortType.oppdaterTilKassering(behandlingsIdListe);
     }
 }

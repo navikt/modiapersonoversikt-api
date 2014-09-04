@@ -23,7 +23,6 @@ public class TraaddetaljerPanel extends Panel {
         this.innboksVM = innboksVM;
 
         add(new HaandterMeldingPanel("haandter-melding", innboksVM));
-        add(new KontorsperreInfoPanel("kontorsperret-info", innboksVM));
         add(new NyesteMeldingPanel("nyeste-melding", innboksVM));
         add(new TidligereMeldingerPanel("tidligere-meldinger", innboksVM));
     }

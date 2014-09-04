@@ -1,6 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
+import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
+import no.nav.kjerneinfo.domain.person.Person;
+import no.nav.kjerneinfo.domain.person.Personfakta;
+import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
+import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
@@ -9,6 +15,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.Saksbeh
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -27,9 +34,18 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
+import static java.util.Arrays.asList;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.*;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_1;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_2;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_3;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMeldingVMer;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.innloggetBrukerEr;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.lagXMLHenvendelse;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -49,6 +65,9 @@ public class HenvendelseBehandlingServiceTest {
     private static final String SAKSTYPE = "Fagsystem1";
     private static final String JOURNALPOST_ID = "journalpostId";
     private static final String NAVIDENT = "navident";
+    private static final TraadVM VALGT_TRAAD = new TraadVM(createMeldingVMer());
+    private static final List<String> IDER_I_VALGT_TRAAD = asList(ID_1, ID_2, ID_3);
+    private static final String NAVBRUKERS_ENHET = "Navbrukers enhet";
 
     @Captor
     private ArgumentCaptor<WSHentHenvendelseListeRequest> wsHentHenvendelseListeRequestArgumentCaptor;
@@ -63,11 +82,12 @@ public class HenvendelseBehandlingServiceTest {
     private EnforcementPoint pep;
     @Mock
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Mock
+    private PersonKjerneinfoServiceBi kjerneinfo;
 
     @InjectMocks
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
-    private XMLHenvendelse xmlHenvendelse;
     private Sak sak;
     private Melding melding;
 
@@ -78,8 +98,7 @@ public class HenvendelseBehandlingServiceTest {
                 .withTemagruppe(TEMAGRUPPE);
 
         List<Object> xmlHenvendelseListe = new ArrayList<>();
-        xmlHenvendelse = lagXMLHenvendelse(BEHANDLINGS_ID, DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), xmlMeldingFraBruker);
-        xmlHenvendelseListe.add(xmlHenvendelse);
+        xmlHenvendelseListe.add(lagXMLHenvendelse(BEHANDLINGS_ID, DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), xmlMeldingFraBruker));
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
                 new WSHentHenvendelseListeResponse().withAny(xmlHenvendelseListe));
@@ -125,4 +144,30 @@ public class HenvendelseBehandlingServiceTest {
         assertThat(journalfortInformasjon.getJournalforerNavIdent(), is(NAVIDENT));
     }
 
+    @Test
+    public void skalMerkeSomKontorsperret() {
+        HentKjerneinformasjonResponse hentKjerneinformasjonResponse = new HentKjerneinformasjonResponse();
+        hentKjerneinformasjonResponse.setPerson(
+                new Person.With().personfakta(
+                        new Personfakta.With().harAnsvarligEnhet(
+                                new AnsvarligEnhet.With().organisasjonsenhet(
+                                        new Organisasjonsenhet.With().organisasjonselementId(NAVBRUKERS_ENHET)
+                                                .done()
+                                ).done()
+                        ).done()
+                ).done()
+        );
+
+        when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(hentKjerneinformasjonResponse);
+        henvendelseBehandlingService.merkSomKontorsperret("navbrukers fnr", VALGT_TRAAD);
+
+        verify(behandleHenvendelsePortType).oppdaterKontorsperre(NAVBRUKERS_ENHET, IDER_I_VALGT_TRAAD);
+    }
+
+    @Test
+    public void skalMerkeSomFeilsendt() {
+        henvendelseBehandlingService.merkSomFeilsendt(VALGT_TRAAD);
+
+        verify(behandleHenvendelsePortType).oppdaterTilKassering(IDER_I_VALGT_TRAAD);
+    }
 }

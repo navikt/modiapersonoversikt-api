@@ -60,6 +60,7 @@ public class MeldingUtils {
             melding.traadId = xmlHenvendelse.getBehandlingsId();
             melding.status = STATUS.transform(xmlHenvendelse);
             melding.kontorsperretEnhet = xmlHenvendelse.getKontorsperreEnhet();
+            melding.markertSomFeilsendtAv = xmlHenvendelse.getMarkertSomFeilsendtAv();
             fyllInnJournalforingsInformasjon(xmlHenvendelse, melding);
 
             XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
