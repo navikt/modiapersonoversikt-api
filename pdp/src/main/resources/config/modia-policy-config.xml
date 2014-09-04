@@ -20,6 +20,9 @@
             <ns:Policy>
                 <ns:Location>policy/kontorsperre-policy.xml</ns:Location>
             </ns:Policy>
+            <ns:Policy>
+                <ns:Location>policy/temagruppe-policy.xml</ns:Location>
+            </ns:Policy>
         </ns:PolicySet>
     </ns:Policies>
     <ns:Locators>
@@ -51,6 +54,14 @@
             <ns:Option Name="attributeDesignatorInt">0</ns:Option>
             <ns:Option Name="cacheKeySubjectID">urn:oasis:names:tc:xacml:1.0:subject:subject-id</ns:Option>
             <ns:Option Name="attributeCacheName">pip.fylkesenhet</ns:Option>
+        </ns:Locator>
+
+        <ns:Locator Name="no.nav.modig.security.tilgangskontroll.policy.pip.PicketLinkAttributeCacheLocator">
+            <ns:Option Name="attributeLocatorClass">no.nav.sbl.modiabrukerdialog.pip.journalforing.TemagruppeAttributeLocator</ns:Option>
+            <ns:Option Name="attributeSupportedId">urn:nav:ikt:tilgangskontroll:xacml:subject:temagruppe</ns:Option>
+            <ns:Option Name="attributeDesignatorInt">0</ns:Option>
+            <ns:Option Name="cacheKeySubjectID">urn:oasis:names:tc:xacml:1.0:subject:subject-id</ns:Option>
+            <ns:Option Name="attributeCacheName">pip.temagruppe</ns:Option>
         </ns:Locator>
     </ns:Locators>
 </ns:jbosspdp>
