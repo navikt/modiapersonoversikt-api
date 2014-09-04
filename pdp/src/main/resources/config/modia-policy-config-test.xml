@@ -12,6 +12,9 @@
                 <ns:Location>policy/adresse-policy.xml</ns:Location>
             </ns:Policy>
             <ns:Policy>
+                <ns:Location>policy/geografisk-med-begrunnelse-policy.xml</ns:Location>
+            </ns:Policy>
+            <ns:Policy>
                 <ns:Location>policy/bankkontonummer-policy.xml</ns:Location>
             </ns:Policy>
             <ns:Policy>

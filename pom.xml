@@ -59,8 +59,8 @@
         <aspectj.version>1.7.2</aspectj.version>
 
         <!-- Modia-komponenter-->
-        <personsok.version>1.0.81</personsok.version>
-        <kjerneinfo.versjon>1.0.83</kjerneinfo.versjon>
+        <personsok.version>1.0.82</personsok.version>
+        <kjerneinfo.versjon>1.0.84</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>2.0.40</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
