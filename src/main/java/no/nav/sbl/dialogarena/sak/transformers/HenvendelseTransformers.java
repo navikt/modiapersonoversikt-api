@@ -60,9 +60,18 @@ public class HenvendelseTransformers {
 
     private static List<Dokument> hentDokument(WSSoknad wsSoknad, Predicate<WSDokumentforventning> erInnsendtPredikat) {
         return on(wsSoknad.getDokumentforventninger().getDokumentforventning())
-                .filter(both(erInnsendtPredikat).and(not(ER_KVITTERING)))
+                .filter(both(erInnsendtPredikat).and(not(er_Hovedskjema(wsSoknad.getHovedskjemaKodeverkId()))).and(not(ER_KVITTERING)))
                 .map(tilDokument(wsSoknad.getHovedskjemaKodeverkId()))
                 .collect();
+    }
+
+    private static Predicate<WSDokumentforventning> er_Hovedskjema(final String hovedskjemaId) {
+        return new Predicate<WSDokumentforventning>() {
+            @Override
+            public boolean evaluate(WSDokumentforventning dokumentforventning) {
+                return dokumentforventning.getKodeverkId().equals("L7");
+            }
+        };
     }
 
     private static final Predicate<WSDokumentforventning> ER_KVITTERING = new Predicate<WSDokumentforventning>() {
