@@ -194,7 +194,8 @@ public class SakOgBehandlingPortTypeMock {
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
                 .withBehandlingskjedeId("behandle" + now())
-                .withStart(now().minusDays(3).minusHours(2));
+                .withStart(now().minusDays(3).minusHours(2))
+                .withSlutt(now().minusDays(3).minusHours(1));
     }
 
 }
