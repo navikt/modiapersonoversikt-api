@@ -107,4 +107,8 @@ public class HenvendelseBehandlingService {
             }
         };
     }
+
+    public void merkSomFeilsendt(TraadVM valgtTraad) {
+        //TODO: Implementer
+    }
 }

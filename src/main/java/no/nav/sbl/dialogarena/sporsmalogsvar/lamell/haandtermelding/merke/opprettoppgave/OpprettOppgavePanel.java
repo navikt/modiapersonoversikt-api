@@ -63,4 +63,5 @@ public class OpprettOppgavePanel extends Panel {
         erOppgaveOpprettet.setObject(false);
         skalOppretteOppgave.setObject(false);
     }
+
 }

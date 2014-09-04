@@ -6,10 +6,20 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.opprettoppgave.OpprettOppgavePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.Radio;
+import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
+
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MERK_TYPE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MERK_TYPE.FEILSENDT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MERK_TYPE.KONTORSPERRET;
 
 public class MerkePanel extends AnimertPanel {
 
@@ -20,19 +30,38 @@ public class MerkePanel extends AnimertPanel {
 
     protected final OpprettOppgavePanel opprettOppgavePanel;
 
+    private Form<MerkVM> merkForm;
+
     public MerkePanel(String id, final InnboksVM innboksVM) {
         super(id);
 
+        merkForm = new Form<>("merkForm", new CompoundPropertyModel<>(new MerkVM()));
+
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);
-        add(feedbackPanel);
+        merkForm.add(feedbackPanel);
 
+        RadioGroup<MERK_TYPE> merkRadioGroup = new RadioGroup<>("merkType");
+        merkRadioGroup.setRequired(true);
+        merkRadioGroup.add(new Radio<>("feilsendtRadio", Model.of(FEILSENDT)));
+        merkRadioGroup.add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)));
         opprettOppgavePanel = new OpprettOppgavePanel("opprettOppgavePanel", innboksVM);
-        add(opprettOppgavePanel);
+        opprettOppgavePanel.setDefaultModel(this.getDefaultModel());
+        merkRadioGroup.add(opprettOppgavePanel);
+        merkForm.add(merkRadioGroup);
 
-        AjaxLink merkeLink = new AjaxLink("merk") {
+        AjaxButton merkeLink = new AjaxButton("merk") {
             @Override
-            public void onClick(AjaxRequestTarget target) {
+            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+                MERK_TYPE merkTypeModel = ((MerkVM)form.getModelObject()).getMerkType();
+                if (merkTypeModel.equals(KONTORSPERRET)) {
+                    haandterKontorsperring(target);
+                } else if (merkTypeModel.equals(FEILSENDT)) {
+                    haandterFeilsendt(target);
+                }
+            }
+
+            private void haandterKontorsperring(AjaxRequestTarget target) {
                 if (opprettOppgavePanel.kanMerkeSomKontorsperret()) {
                     henvendelse.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
                     innboksVM.oppdaterMeldinger();
@@ -43,8 +72,19 @@ public class MerkePanel extends AnimertPanel {
                     target.add(feedbackPanel);
                 }
             }
+
+            private void haandterFeilsendt(AjaxRequestTarget target) {
+                henvendelse.merkSomFeilsendt(innboksVM.getValgtTraad());
+                lukkPanel(target);
+            }
+
+            @Override
+            protected void onError(AjaxRequestTarget target, Form<?> form) {
+                target.add(feedbackPanel);
+            }
         };
-        add(merkeLink);
+        merkForm.add(merkeLink);
+        add(merkForm);
 
         AjaxLink<Void> avbrytLink = new AjaxLink<Void>("avbryt") {
             @Override
@@ -58,6 +98,8 @@ public class MerkePanel extends AnimertPanel {
     @Override
     public void lukkPanel(AjaxRequestTarget target) {
         super.lukkPanel(target);
+        merkForm.setDefaultModelObject(new MerkVM());
         opprettOppgavePanel.reset();
     }
+
 }

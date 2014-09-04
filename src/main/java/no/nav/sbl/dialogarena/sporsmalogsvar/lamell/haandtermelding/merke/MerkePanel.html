@@ -8,13 +8,21 @@
         <wicket:message key="merke.overskrift"/>
     </h2>
     <div class="robust-strek"></div>
-    <h2 class="medium"><wicket:message key="merke.underoverskrift"/></h2>
-
-    <wicket:container wicket:id="opprettOppgavePanel"></wicket:container>
-
-    <div wicket:id="feedback"></div>
-
-    <a href="#" wicket:id="merk" class="knapp-hoved-stor">Merk</a>
+    <form  wicket:id="merkForm">
+        <div wicket:id="merkType">
+            <div>
+                <input wicket:id="feilsendtRadio" id="feilsendtRadio" type="radio" />
+                <label for="feilsendtRadio" class="medium"><wicket:message key="merke.feilsendt"/></label>
+            </div>
+            <div>
+                <input wicket:id="kontorsperretRadio" id="kontorsperretRadio" type="radio" />
+                <label for="kontorsperretRadio" class="medium"><wicket:message key="merke.kontorsperret"/></label>
+                <div wicket:id="opprettOppgavePanel"></div>
+            </div>
+        </div>
+        <div wicket:id="feedback"></div>
+        <a wicket:id="merk" class="knapp-hoved"><wicket:message key="merk.sendknapp"/></a>
+    </form>
     <a href="#" wicket:id="avbryt" class="avbryt-knapp">Avbryt</a>
 </wicket:panel>
 </body>

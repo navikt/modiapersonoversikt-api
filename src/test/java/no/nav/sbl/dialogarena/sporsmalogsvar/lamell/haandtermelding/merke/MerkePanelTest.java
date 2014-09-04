@@ -33,7 +33,9 @@ public class MerkePanelTest extends WicketPageTest {
         MerkePanel merkePanel = new MerkePanel("panel", innboksVM);
         merkePanel.setVisibilityAllowed(true);
         wicket.goToPageWith(merkePanel)
-                .click().link(withId("merk"));
+                .inForm("panel:merkForm")
+                .select("merkType", 1)
+                .submitWithAjaxButton(withId("merk"));
         verify(henvendelseBehandlingService).merkSomKontorsperret(eq(fnr), any(TraadVM.class));
     }
 }
