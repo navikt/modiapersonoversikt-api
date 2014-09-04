@@ -17,9 +17,9 @@ import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MERK_TYPE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MERK_TYPE.FEILSENDT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MERK_TYPE.KONTORSPERRET;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.FEILSENDT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.KONTORSPERRET;
 
 public class MerkePanel extends AnimertPanel {
 
@@ -41,7 +41,7 @@ public class MerkePanel extends AnimertPanel {
         feedbackPanel.setOutputMarkupId(true);
         merkForm.add(feedbackPanel);
 
-        RadioGroup<MERK_TYPE> merkRadioGroup = new RadioGroup<>("merkType");
+        RadioGroup<MerkVM.MerkType> merkRadioGroup = new RadioGroup<>("merkType");
         merkRadioGroup.setRequired(true);
         merkRadioGroup.add(new Radio<>("feilsendtRadio", Model.of(FEILSENDT)));
         merkRadioGroup.add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)));
@@ -53,7 +53,7 @@ public class MerkePanel extends AnimertPanel {
         AjaxButton merkeLink = new AjaxButton("merk") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                MERK_TYPE merkTypeModel = ((MerkVM)form.getModelObject()).getMerkType();
+                MerkType merkTypeModel = ((MerkVM) form.getModelObject()).getMerkType();
                 if (merkTypeModel.equals(KONTORSPERRET)) {
                     haandterKontorsperring(target);
                 } else if (merkTypeModel.equals(FEILSENDT)) {
@@ -100,6 +100,10 @@ public class MerkePanel extends AnimertPanel {
         super.lukkPanel(target);
         merkForm.setDefaultModelObject(new MerkVM());
         opprettOppgavePanel.reset();
+    }
+
+    public Form<MerkVM> getMerkForm() {
+        return merkForm;
     }
 
 }

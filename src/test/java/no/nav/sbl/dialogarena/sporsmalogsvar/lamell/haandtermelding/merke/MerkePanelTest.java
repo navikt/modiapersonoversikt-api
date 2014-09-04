@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
+import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -72,5 +74,40 @@ public class MerkePanelTest extends WicketPageTest {
         verify(henvendelseBehandlingService).merkSomFeilsendt(any(TraadVM.class));
     }
 
+    @Test
+    public void skalViseFeilMeldingDersomManHarHuketAvForOpprettOppgaveOgProeverAaMerkeUtenAaFullfoereOppgaveopprettelse() {
+        wicket.goToPageWith(merkePanel)
+                .printComponentsTree()
+                .inForm("panel:merkForm")
+                .select("merkType", 1)
+                .check("merkType:opprettOppgavePanel:visNyOppgaveWrapper:opprettOppgaveCheckbox", true)
+                .submitWithAjaxButton(withId("merk"));
+
+        List<String> errorMessages = wicket.get().errorMessages();
+        assertThat(errorMessages.isEmpty(), is(false));
+        assertThat(errorMessages, contains(wicket.get().component(ofType(AjaxCheckBox.class)).getString("kontorsperre.oppgave.opprettet.feil")));
+    }
+
+    @Test
+    public void skalResetteMerkVMIdetManMarkererSomFeilsenddt() {
+        wicket.goToPageWith(merkePanel)
+                .inForm("panel:merkForm")
+                .select("merkType", 0)
+                .submitWithAjaxButton(withId("merk"));
+
+        assertNull(merkePanel.getMerkForm().getModelObject().getMerkType());
+        assertThat(merkePanel.isVisibilityAllowed(), is(false));
+    }
+
+    @Test
+    public void skalSkjuleMerkPaneletIdetManTrykkerAvbryt() {
+        wicket.goToPageWith(merkePanel)
+                .inForm("panel:merkForm")
+                .select("merkType", 0)
+                .andReturn()
+                .click().link(withId("avbryt"));
+
+        assertThat(merkePanel.isVisibilityAllowed(), is(false));
+    }
 
 }
