@@ -26,6 +26,7 @@ public class HaandterMeldingPanel extends Panel {
         super(id, new PropertyModel(innboksVM, "valgtTraad"));
 
         IModel<Boolean> erKontorsperret = new PropertyModel<>(getDefaultModel(), "erKontorsperret()");
+        IModel<Boolean> erFeilsendt = new PropertyModel<>(getDefaultModel(), "erFeilsendt()");
         IModel<Boolean> nyesteMeldingErJournalfort = new PropertyModel<>(getDefaultModel(), "nyesteMelding.journalfort");
         IModel<Boolean> eldsteMeldingErJournalfort = new PropertyModel<>(getDefaultModel(), "eldsteMelding.journalfort");
         IModel<Boolean> erBehandlet = new PropertyModel<>(getDefaultModel(), "erBehandlet()");
@@ -42,7 +43,7 @@ public class HaandterMeldingPanel extends Panel {
 
         JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforPanel", innboksVM);
         add(journalforingsPanel);
-        add(new MeldingValgPanel("journalforingValg", both(not(erKontorsperret)).and(not(nyesteMeldingErJournalfort)), journalforingsPanel));
+        add(new MeldingValgPanel("journalforingValg", both(not(erKontorsperret)).and(not(erFeilsendt)).and(not(nyesteMeldingErJournalfort)), journalforingsPanel));
 
         NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyoppgavePanel", innboksVM);
         add(nyOppgavePanel);
@@ -50,7 +51,7 @@ public class HaandterMeldingPanel extends Panel {
 
         MerkePanel merkePanel = new MerkePanel("merkePanel", innboksVM);
         add(merkePanel);
-        add(new MeldingValgPanel("merkeValg", both(not(eldsteMeldingErJournalfort)).and(not(erKontorsperret)).and(erBehandlet), merkePanel));
+        add(new MeldingValgPanel("merkeValg", both(not(eldsteMeldingErJournalfort)).and(erBehandlet), merkePanel));
     }
 
 }

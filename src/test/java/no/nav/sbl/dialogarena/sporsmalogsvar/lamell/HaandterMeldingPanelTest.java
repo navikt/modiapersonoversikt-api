@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.JournalforingsPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgave.NyOppgavePanel;
 import org.junit.Test;
@@ -54,6 +55,15 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
     }
 
     @Test
+    public void skalIkkeKunneBesvareTraadInitiertAvSaksbehandler() {
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
+                createMelding("melding1", SAMTALEREFERAT, now().minusDays(1), "TEMA", "traad1")));
+
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+                .should().containComponent(thatIsDisabled().and(withId(BESVAR_ID)));
+    }
+
+    @Test
     public void skalKunneBesvareTraadInitiertAvBrukerMedTidligereSvar() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1"),
@@ -64,12 +74,14 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void skalIkkeKunneBesvareTraadInitiertAvSaksbehandler() {
+    public void skalKunneBesvareTraadSomErMarkertSomKontorsperret() {
+        Melding melding = createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1");
+        melding.kontorsperretEnhet = "kontorsperretEnhet";
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("melding1", SAMTALEREFERAT, now().minusDays(1), "TEMA", "traad1")));
+                melding));
 
         wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
-                .should().containComponent(thatIsDisabled().and(withId(BESVAR_ID)));
+                .should().containComponent(thatIsEnabled().and(withId(BESVAR_ID)));
     }
 
     @Test
@@ -85,6 +97,28 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
     public void skalIkkeKunneJournalforeHvisNyesteMeldingErJournalfort() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMeldingMedJournalfortDato("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1", now())));
+
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+                .should().containComponent(thatIsDisabled().and(withId(JOURNALFOR_VALG_ID)));
+    }
+
+    @Test
+    public void skalIkkeKunneJournalforeHvisTraadErMerketMedFeilsendt() {
+        Melding melding = createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1");
+        melding.markertSomFeilsendtAv = "feilsendtNavident";
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
+                melding));
+
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+                .should().containComponent(thatIsDisabled().and(withId(JOURNALFOR_VALG_ID)));
+    }
+
+    @Test
+    public void skalIkkeKunneJournalforeHvisTraadErMerketMedKontorsperret() {
+        Melding melding = createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1");
+        melding.kontorsperretEnhet = "kontorsperretEnhet";
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
+                melding));
 
         wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
                 .should().containComponent(thatIsDisabled().and(withId(JOURNALFOR_VALG_ID)));
@@ -117,6 +151,14 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
                 .should().containComponent(thatIsDisabled().and(withId(MERKE_VALG_ID)));
     }
 
+    @Test
+    public void skalIkkeKunneMerkeMeldingHvisTraadIkkeErBehandlet() {
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
+                createMelding("melding1", SPORSMAL, now().minusDays(1), "TEMA", "traad1")));
+
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+                .should().containComponent(thatIsDisabled().and(withId(MERKE_VALG_ID)));
+    }
 
     @Test
     public void skalViseJournalforingsPanelogSkjuleNyOppgavePanelVedKlikkPaaJournalfor() {
