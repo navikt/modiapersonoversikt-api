@@ -99,7 +99,7 @@ public class HenvendelseBehandlingService {
             PolicyRequest temagruppePolicyRequest = forRequest(
                     actionId("temagruppe"),
                     resourceId(""),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:temagruppe", defaultString(melding.journalfortTema)));
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
 
             return (isBlank(melding.kontorsperretEnhet) || pep.hasAccess(kontorsperrePolicyRequest))
                     && (isBlank(melding.journalfortTema) || pep.hasAccess(temagruppePolicyRequest));
