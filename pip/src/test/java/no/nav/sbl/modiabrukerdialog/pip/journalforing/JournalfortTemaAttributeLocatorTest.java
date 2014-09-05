@@ -1,6 +1,6 @@
 package no.nav.sbl.modiabrukerdialog.pip.journalforing;
 
-import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.TemagruppeAttributeLocatorDelegate;
+import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.JournalfortTemaAttributeLocatorDelegate;
 import org.jboss.security.xacml.sunxacml.attr.BagAttribute;
 import org.jboss.security.xacml.sunxacml.cond.EvaluationResult;
 import org.junit.Before;
@@ -13,8 +13,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.net.URI;
 
 import static no.nav.sbl.dialogarena.common.collections.Collections.asSet;
-import static no.nav.sbl.modiabrukerdialog.pip.journalforing.TemagruppeAttributeLocator.ATTRIBUTEID_TEMAGRUPPE;
-import static no.nav.sbl.modiabrukerdialog.pip.journalforing.TemagruppeAttributeLocator.STRING_TYPE;
+import static no.nav.sbl.modiabrukerdialog.pip.journalforing.JournalfortTemaAttributeLocator.ATTRIBUTEID_TEMA;
+import static no.nav.sbl.modiabrukerdialog.pip.journalforing.JournalfortTemaAttributeLocator.STRING_TYPE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -24,24 +24,24 @@ import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class TemagruppeAttributeLocatorTest {
+public class JournalfortTemaAttributeLocatorTest {
 
     @Mock
-    private TemagruppeAttributeLocatorDelegate delegate;
+    private JournalfortTemaAttributeLocatorDelegate delegate;
 
     @InjectMocks
-    private TemagruppeAttributeLocator temagruppeAttributeLocator;
+    private JournalfortTemaAttributeLocator journalfortTemaAttributeLocator;
 
     @Before
     public void setUp() {
-        temagruppeAttributeLocator.getSupportedIds().add(ATTRIBUTEID_TEMAGRUPPE);
+        journalfortTemaAttributeLocator.getSupportedIds().add(ATTRIBUTEID_TEMA);
     }
 
     @Test
     public void bagMedTemagrupperVedVellykketKallTilDelegate() {
         when(delegate.getTemagrupperForAnsattesValgteEnhet()).thenReturn(asSet("ARBD", "FAML"));
         EvaluationResult evaluationResult =
-                temagruppeAttributeLocator.findAttribute(STRING_TYPE, ATTRIBUTEID_TEMAGRUPPE, null, null, null, 0);
+                journalfortTemaAttributeLocator.findAttribute(STRING_TYPE, ATTRIBUTEID_TEMA, null, null, null, 0);
 
         assertThat(((BagAttribute) evaluationResult.getAttributeValue()).size(), is(2));
         verify(delegate, only()).getTemagrupperForAnsattesValgteEnhet();
@@ -51,7 +51,7 @@ public class TemagruppeAttributeLocatorTest {
     public void tomBagVedUgyldigAttributeId() {
         URI ugyldigAttribute = URI.create("UGYLDIG_ATTRIBUTE");
         EvaluationResult evaluationResult =
-                temagruppeAttributeLocator.findAttribute(null, ugyldigAttribute, null, null, null, 0);
+                journalfortTemaAttributeLocator.findAttribute(null, ugyldigAttribute, null, null, null, 0);
 
         assertTrue(((BagAttribute) evaluationResult.getAttributeValue()).isEmpty());
         assertThat(evaluationResult.getAttributeValue().getType(), is(ugyldigAttribute));
@@ -61,7 +61,7 @@ public class TemagruppeAttributeLocatorTest {
     @Test
     public void tomBagVedUgyldigAttributeIdOgOppgittAttributeType() {
         EvaluationResult evaluationResult =
-                temagruppeAttributeLocator.findAttribute(STRING_TYPE, URI.create("UGYLDIG_ATTRIBUTE"), null, null, null, 0);
+                journalfortTemaAttributeLocator.findAttribute(STRING_TYPE, URI.create("UGYLDIG_ATTRIBUTE"), null, null, null, 0);
 
         assertTrue(((BagAttribute) evaluationResult.getAttributeValue()).isEmpty());
         assertThat(evaluationResult.getAttributeValue().getType(), is(STRING_TYPE));

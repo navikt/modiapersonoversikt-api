@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
 
 @RunWith(MockitoJUnitRunner.class)
-public class DefaultTemagruppeAttributeLocatorDelegateTest {
+public class DefaultJournalfortTemaAttributeLocatorDelegateTest {
 
     @Mock
     private GOSYSNAVOrgEnhet gosysnavOrgEnhet;
@@ -34,7 +34,7 @@ public class DefaultTemagruppeAttributeLocatorDelegateTest {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @InjectMocks
-    private DefaultTemagruppeAttributeLocatorDelegate delegate;
+    private DefaultJournalfortTemaAttributeLocatorDelegate delegate;
 
     @Before
     public void setUp() {

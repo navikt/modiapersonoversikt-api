@@ -1,7 +1,7 @@
 package no.nav.sbl.modiabrukerdialog.pip.journalforing;
 
-import no.nav.sbl.modiabrukerdialog.pip.journalforing.config.JournalforingPipConfig;
-import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.TemagruppeAttributeLocatorDelegate;
+import no.nav.sbl.modiabrukerdialog.pip.journalforing.config.JournalfortTemaPipConfig;
+import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.JournalfortTemaAttributeLocatorDelegate;
 import org.jboss.security.xacml.locators.AttributeLocator;
 import org.jboss.security.xacml.sunxacml.EvaluationCtx;
 import org.jboss.security.xacml.sunxacml.attr.AttributeValue;
@@ -15,19 +15,19 @@ import java.net.URI;
 import java.util.HashSet;
 import java.util.Set;
 
-public class TemagruppeAttributeLocator extends AttributeLocator {
+public class JournalfortTemaAttributeLocator extends AttributeLocator {
 
-    public static final URI ATTRIBUTEID_TEMAGRUPPE = URI.create("urn:nav:ikt:tilgangskontroll:xacml:subject:temagruppe");
+    public static final URI ATTRIBUTEID_TEMA = URI.create("urn:nav:ikt:tilgangskontroll:xacml:subject:tema");
     public static final URI STRING_TYPE = URI.create("http://www.w3.org/2001/XMLSchema#string");
 
-    private TemagruppeAttributeLocatorDelegate delegate;
+    private JournalfortTemaAttributeLocatorDelegate delegate;
 
-    public TemagruppeAttributeLocator() {
+    public JournalfortTemaAttributeLocator() {
         this.attributeDesignatorSupported = true;
         this.attributeSelectorSupported = true;
         this.designatorTypes.add(0);
-        ApplicationContext context = new AnnotationConfigApplicationContext(JournalforingPipConfig.class);
-        delegate = context.getBean(TemagruppeAttributeLocatorDelegate.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(JournalfortTemaPipConfig.class);
+        delegate = context.getBean(JournalfortTemaAttributeLocatorDelegate.class);
     }
 
     @Override

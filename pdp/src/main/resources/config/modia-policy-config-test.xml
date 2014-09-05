@@ -35,7 +35,7 @@
             <ns:Option Name="attributeDesignatorInt">0</ns:Option>
         </ns:Locator>
         <ns:Locator Name="no.nav.sbl.modiabrukerdialog.pip.journalforing.support.MockAttributeLocator">
-            <ns:Option Name="attributeSupportedId">urn:oasis:names:tc:xacml:2.0:subject:role,urn:nav:ikt:tilgangskontroll:xacml:subject:alive,urn:nav:ikt:tilgangskontroll:xacml:subject:temagruppe</ns:Option>
+            <ns:Option Name="attributeSupportedId">urn:oasis:names:tc:xacml:2.0:subject:role,urn:nav:ikt:tilgangskontroll:xacml:subject:alive,urn:nav:ikt:tilgangskontroll:xacml:subject:tema</ns:Option>
             <ns:Option Name="attributeDesignatorInt">0</ns:Option>
         </ns:Locator>
     </ns:Locators>

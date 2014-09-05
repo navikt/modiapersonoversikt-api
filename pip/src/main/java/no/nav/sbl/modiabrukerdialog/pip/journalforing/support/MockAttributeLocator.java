@@ -1,6 +1,5 @@
 package no.nav.sbl.modiabrukerdialog.pip.journalforing.support;
 
-import no.nav.sbl.modiabrukerdialog.pip.journalforing.TemagruppeAttributeLocator;
 import org.jboss.security.xacml.locators.AttributeLocator;
 import org.jboss.security.xacml.sunxacml.EvaluationCtx;
 import org.jboss.security.xacml.sunxacml.attr.BagAttribute;
@@ -10,13 +9,14 @@ import org.jboss.security.xacml.util.JBossXACMLUtil;
 import java.net.URI;
 
 import static no.nav.sbl.dialogarena.common.collections.Collections.asSet;
+import static no.nav.sbl.modiabrukerdialog.pip.journalforing.JournalfortTemaAttributeLocator.ATTRIBUTEID_TEMA;
 
 public class MockAttributeLocator extends AttributeLocator {
 
     public MockAttributeLocator() {
         this.attributeDesignatorSupported = true;
         this.attributeSelectorSupported = true;
-        this.ids.add(TemagruppeAttributeLocator.ATTRIBUTEID_TEMAGRUPPE);
+        this.ids.add(ATTRIBUTEID_TEMA);
 
         this.designatorTypes.add(0);
     }

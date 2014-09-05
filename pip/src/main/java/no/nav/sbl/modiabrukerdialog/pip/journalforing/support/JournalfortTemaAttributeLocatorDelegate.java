@@ -2,7 +2,7 @@ package no.nav.sbl.modiabrukerdialog.pip.journalforing.support;
 
 import java.util.Set;
 
-public interface TemagruppeAttributeLocatorDelegate {
+public interface JournalfortTemaAttributeLocatorDelegate {
 
     /**
      * Henter temagrupper som ansattes valgte enhet har tilgang til

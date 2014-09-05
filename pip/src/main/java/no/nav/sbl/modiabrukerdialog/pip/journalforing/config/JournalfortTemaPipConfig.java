@@ -5,8 +5,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.nor
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.norg.NAVOrgEnhetEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SaksbehandlerInnstillingerService;
-import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.DefaultTemagruppeAttributeLocatorDelegate;
-import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.TemagruppeAttributeLocatorDelegate;
+import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.DefaultJournalfortTemaAttributeLocatorDelegate;
+import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.JournalfortTemaAttributeLocatorDelegate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -15,14 +15,14 @@ import javax.inject.Inject;
 
 @Configuration
 @Import({NAVOrgEnhetEndpointConfig.class, NAVAnsattEndpointConfig.class})
-public class JournalforingPipConfig {
+public class JournalfortTemaPipConfig {
 
     @Inject
     private GOSYSNAVOrgEnhet enhetService;
 
     @Bean
-    public TemagruppeAttributeLocatorDelegate enhetAttributeLocatorDelegate() {
-        return new DefaultTemagruppeAttributeLocatorDelegate(enhetService, saksbehandlerInnstillingerService());
+    public JournalfortTemaAttributeLocatorDelegate enhetAttributeLocatorDelegate() {
+        return new DefaultJournalfortTemaAttributeLocatorDelegate(enhetService, saksbehandlerInnstillingerService());
     }
 
     @Bean
