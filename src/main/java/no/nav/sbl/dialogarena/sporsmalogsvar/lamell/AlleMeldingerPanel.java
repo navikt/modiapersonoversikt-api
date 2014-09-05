@@ -13,10 +13,8 @@ import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.traadLengdeStorreEnnEn;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
 
 public class AlleMeldingerPanel extends Panel {
@@ -32,22 +30,20 @@ public class AlleMeldingerPanel extends Panel {
         add(new PropertyListView<MeldingVM>("nyesteMeldingerITraad") {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {
-
-                Label traadlengde = new Label("traadlengde");
-                traadlengde.add(visibleIf(traadLengdeStorreEnnEn(item.getModelObject())));
-                item.add(traadlengde);
-
+                final MeldingVM meldingVM = item.getModelObject();
+                item.add(new Label("traadlengde")
+                        .setVisibilityAllowed(meldingVM.traadlengde > 2));
                 item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getDefaultModel()))
-                        .add(cssClass(item.getModelObject().getStatusIkonKlasse())));
+                        .add(cssClass(meldingVM.getStatusIkonKlasse())));
                 item.add(new Label("opprettetDato"));
                 item.add(new Label("melding.temagruppe", new StringResourceModel("${melding.temagruppe}", item.getModel())));
                 item.add(new Label("melding.fritekst"));
 
-                item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(item.getModelObject())));
+                item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
                 item.add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
-                        AlleMeldingerPanel.this.innboksVM.setValgtMelding(item.getModelObject());
+                        AlleMeldingerPanel.this.innboksVM.setValgtMelding(meldingVM);
                         send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
                         target.add(AlleMeldingerPanel.this);
                     }

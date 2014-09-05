@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.commons.collections15.Transformer;
-import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
@@ -91,13 +90,5 @@ public class MeldingVM implements Serializable {
             return null;
         }
     };
-    public static AbstractReadOnlyModel<Boolean> traadLengdeStorreEnnEn(final MeldingVM meldingVM) {
-        return new AbstractReadOnlyModel<Boolean>() {
-            @Override
-            public Boolean getObject() {
-                return meldingVM.traadlengde > 1;
-            }
-        };
-    }
 
 }
