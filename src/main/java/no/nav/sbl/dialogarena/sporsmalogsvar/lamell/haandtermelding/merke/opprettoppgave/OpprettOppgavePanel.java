@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavefor
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -17,13 +18,16 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class OpprettOppgavePanel extends Panel {
 
+    public static final String OPPGAVE_OPPRETTET = "sos.oppgave.opprettet";
+
     protected final IModel<Boolean> skalOppretteOppgave = Model.of(false);
     protected final IModel<Boolean> erOppgaveOpprettet = Model.of(false);
 
     public OpprettOppgavePanel(String id, InnboksVM innboksVM) {
         super(id);
+        setOutputMarkupPlaceholderTag(true);
 
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedbackOppgavePanel");
         feedbackPanel.add(new AttributeModifier("class", "success"));
         feedbackPanel.setOutputMarkupId(true);
         add(feedbackPanel);
@@ -37,6 +41,8 @@ public class OpprettOppgavePanel extends Panel {
             protected void etterSubmit(AjaxRequestTarget target) {
                 erOppgaveOpprettet.setObject(true);
                 success(getString("oppgave.opprettet.bekreftelse"));
+
+                send(getPage(), Broadcast.DEPTH, OPPGAVE_OPPRETTET);
 
                 target.add(opprettOppgaveWrapper, feedbackPanel);
             }

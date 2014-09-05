@@ -1,25 +1,31 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke;
 
+import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.opprettoppgave.OpprettOppgavePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
+import org.apache.wicket.feedback.ComponentFeedbackMessageFilter;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.Model;
+import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
 
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.FEILSENDT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.KONTORSPERRET;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.opprettoppgave.OpprettOppgavePanel.OPPGAVE_OPPRETTET;
 
 public class MerkePanel extends AnimertPanel {
 
@@ -29,46 +35,65 @@ public class MerkePanel extends AnimertPanel {
     private HenvendelseBehandlingService henvendelse;
 
     protected final OpprettOppgavePanel opprettOppgavePanel;
-
+    private final FeedbackPanel feedbackPanel;
     private Form<MerkVM> merkForm;
+    private CompoundPropertyModel<MerkVM> merkVMModel;
 
     public MerkePanel(String id, final InnboksVM innboksVM) {
         super(id);
 
-        merkForm = new Form<>("merkForm", new CompoundPropertyModel<>(new MerkVM()));
+        merkVMModel = new CompoundPropertyModel<>(new MerkVM());
+        merkForm = new Form<>("merkForm", merkVMModel);
 
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+        final RadioGroup<MerkType> merkRadioGroup = new RadioGroup<>("merkType");
+
+        feedbackPanel = new FeedbackPanel("feedbackMerkPanel", new ComponentFeedbackMessageFilter(merkRadioGroup));
         feedbackPanel.setOutputMarkupId(true);
         merkForm.add(feedbackPanel);
 
-        RadioGroup<MerkVM.MerkType> merkRadioGroup = new RadioGroup<>("merkType");
         merkRadioGroup.setRequired(true);
         merkRadioGroup.add(new Radio<>("feilsendtRadio", Model.of(FEILSENDT)));
         merkRadioGroup.add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)));
         opprettOppgavePanel = new OpprettOppgavePanel("opprettOppgavePanel", innboksVM);
         opprettOppgavePanel.setDefaultModel(this.getDefaultModel());
+        opprettOppgavePanel.add(visibleIf(new PropertyModel<Boolean>(merkVMModel, "kontorsperret")));
         merkRadioGroup.add(opprettOppgavePanel);
+        merkRadioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.add(opprettOppgavePanel);
+                refreshFeedbackPanel(target);
+            }
+        });
         merkForm.add(merkRadioGroup);
+        merkForm.add(createAjaxSubmitLink(innboksVM, merkRadioGroup));
+        add(merkForm);
+        add(new AjaxLink<Void>("avbryt") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                lukkPanel(target);
+            }
+        });
+    }
 
-        AjaxButton merkeLink = new AjaxButton("merk") {
+    private AjaxButton createAjaxSubmitLink(final InnboksVM innboksVM, final RadioGroup<MerkType> merkRadioGroup) {
+        return new AjaxButton("merk") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                MerkType merkTypeModel = ((MerkVM) form.getModelObject()).getMerkType();
-                if (merkTypeModel.equals(KONTORSPERRET)) {
-                    haandterKontorsperring(target);
-                } else if (merkTypeModel.equals(FEILSENDT)) {
+                if (merkVMModel.getObject().isKontorsperret()) {
+                    haandterKontorsperring(target, form);
+                } else {
                     haandterFeilsendt(target);
                 }
             }
 
-            private void haandterKontorsperring(AjaxRequestTarget target) {
+            private void haandterKontorsperring(AjaxRequestTarget target, Form<?> form) {
                 if (opprettOppgavePanel.kanMerkeSomKontorsperret()) {
                     henvendelse.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
                     send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
                     lukkPanel(target);
                 } else {
-                    error(getString("kontorsperre.oppgave.opprettet.feil"));
-                    target.add(feedbackPanel);
+                    onError(target, form);
                 }
             }
 
@@ -80,30 +105,27 @@ public class MerkePanel extends AnimertPanel {
 
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
-                target.add(feedbackPanel);
+                if (merkVMModel.getObject().isKontorsperret() && !opprettOppgavePanel.kanMerkeSomKontorsperret()) {
+                    merkRadioGroup.error(getString("kontorsperre.oppgave.opprettet.feil"));
+                }
+                refreshFeedbackPanel(target);
             }
         };
-        merkForm.add(merkeLink);
-        add(merkForm);
+    }
 
-        AjaxLink<Void> avbrytLink = new AjaxLink<Void>("avbryt") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                lukkPanel(target);
-            }
-        };
-        add(avbrytLink);
+    @RunOnEvents(OPPGAVE_OPPRETTET)
+    public void refreshFeedbackPanel(AjaxRequestTarget target) {
+        target.add(feedbackPanel);
     }
 
     @Override
     public void lukkPanel(AjaxRequestTarget target) {
         super.lukkPanel(target);
-        merkForm.setDefaultModelObject(new MerkVM());
+        merkVMModel.setObject(new MerkVM());
         opprettOppgavePanel.reset();
     }
 
     public Form<MerkVM> getMerkForm() {
         return merkForm;
     }
-
 }
