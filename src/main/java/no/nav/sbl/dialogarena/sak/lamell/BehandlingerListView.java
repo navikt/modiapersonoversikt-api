@@ -50,18 +50,17 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
         List<? extends GenerellBehandling> list = getList();
 
         Model<Boolean> erNyttAar =  Model.of(getErNyttAarModell(behandling, list));
-        IModel<Boolean> erAvsluttet = Model.of(behandling.behandlingsStatus.equals(AVSLUTTET));
         WebMarkupContainer aarContainer = new WebMarkupContainer("aar-container");
-        aarContainer.add(hasCssClassIf("avsluttet", erAvsluttet));
+        aarContainer.add(hasCssClassIf("sort", erNyttAar));
         aarContainer.add(new Label("aar", behandling.behandlingDato.getYear()).add(visibleIf(erNyttAar)));
         item.add(
-                getBehandlingContainer(behandling, erAvsluttet),
+                getBehandlingContainer(behandling),
                 aarContainer
         );
     }
 
-    private Component getBehandlingContainer(GenerellBehandling behandling, IModel<Boolean> erAvsluttet) {
-
+    private Component getBehandlingContainer(GenerellBehandling behandling) {
+        IModel<Boolean> erAvsluttet = Model.of(behandling.behandlingsStatus.equals(AVSLUTTET));
         WebMarkupContainer container = new WebMarkupContainer("behandling-container");
         container.add(hasCssClassIf("avsluttet", erAvsluttet));
         container.add(new Label("hendelse-tittel", getTittel(behandling)));
