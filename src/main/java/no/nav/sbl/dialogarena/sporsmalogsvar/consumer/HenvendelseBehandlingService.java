@@ -48,13 +48,12 @@ public class HenvendelseBehandlingService {
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
-    public List<Melding> hentMeldinger(final String fnr) {
+    public List<Melding> hentMeldinger(String fnr) {
         List<String> typer = Arrays.asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());
-
 
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny())
                 .map(TIL_MELDING)
-                .filter(lagPepFilter(fnr))
+                .filter(new KontorsperretPredicate(fnr))
                 .collect();
     }
 
@@ -81,29 +80,33 @@ public class HenvendelseBehandlingService {
         return person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
     }
 
-    private Predicate<Melding> lagPepFilter(final String fnr) {
-        return new Predicate<Melding>() {
-            private PolicyRequest req = new PolicyRequest()
-                    .copyAndAppend(new ActionAttribute(new URN("urn:oasis:names:tc:xacml:1.0:action:action-id"), new StringValue("kontorsperre")))
-                    .copyAndAppend(new SubjectAttribute(new URN("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet"), new StringValue(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())))
-                    .copyAndAppend(new ResourceAttribute(new URN("urn:oasis:names:tc:xacml:1.0:resource:resource-id"), new StringValue(fnr)));
-
-            @Override
-            public boolean evaluate(Melding melding) {
-                if (melding.kontorsperretEnhet == null || melding.kontorsperretEnhet.isEmpty()) {
-                    return true;
-                }
-
-                return enforcementPoint.hasAccess(req.copyAndAppend(new ResourceAttribute(
-                                new URN("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet"),
-                                new StringValue(melding.kontorsperretEnhet)))
-                );
-            }
-        };
-    }
-
     public void merkSomFeilsendt(TraadVM valgtTraad) {
         List<String> behandlingsIdListe = on(valgtTraad.getMeldinger()).map(ID).collect();
         behandleHenvendelsePortType.oppdaterTilKassering(behandlingsIdListe);
+    }
+
+    private class KontorsperretPredicate implements Predicate<Melding> {
+        private PolicyRequest req;
+
+        public KontorsperretPredicate(String fnr) {
+            req = new PolicyRequest()
+                    .copyAndAppend(new ActionAttribute(new URN("urn:oasis:names:tc:xacml:1.0:action:action-id"), new StringValue("kontorsperre")))
+                    .copyAndAppend(new SubjectAttribute(
+                            new URN("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet"),
+                            new StringValue(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())))
+                    .copyAndAppend(new ResourceAttribute(new URN("urn:oasis:names:tc:xacml:1.0:resource:resource-id"), new StringValue(fnr)));
+        }
+
+        @Override
+        public boolean evaluate(Melding melding) {
+            if (melding.kontorsperretEnhet == null || melding.kontorsperretEnhet.isEmpty()) {
+                return true;
+            }
+
+            return enforcementPoint.hasAccess(req.copyAndAppend(new ResourceAttribute(
+                            new URN("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet"),
+                            new StringValue(melding.kontorsperretEnhet)))
+            );
+        }
     }
 }
