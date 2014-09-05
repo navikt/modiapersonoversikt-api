@@ -44,7 +44,7 @@ public class JournalforingsPanelEnkeltSak extends Panel {
             public void onClick(AjaxRequestTarget target) {
                 TraadVM valgtTraadVM = innboksVM.getValgtTraad();
                 joarkJournalforingService.journalforTraad(valgtTraadVM, journalfortSakVM.getSak());
-                send(this, Broadcast.BUBBLE, TRAAD_JOURNALFORT);
+                send(getPage(), Broadcast.DEPTH, TRAAD_JOURNALFORT);
             }
         };
     }
