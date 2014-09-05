@@ -5,7 +5,6 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfo
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
-
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
@@ -56,6 +55,7 @@ public class MeldingUtils {
                     Meldingstype.SAMTALEREFERAT;
 
             Melding melding = new Melding(xmlHenvendelse.getBehandlingsId(), meldingstype, xmlHenvendelse.getOpprettetDato());
+            melding.lestDato = xmlHenvendelse.getLestDato();
             melding.fnrBruker = xmlHenvendelse.getFnr();
             melding.traadId = xmlHenvendelse.getBehandlingsId();
             melding.status = STATUS.transform(xmlHenvendelse);
@@ -69,13 +69,12 @@ public class MeldingUtils {
                 melding.fritekst = ((XMLMeldingFraBruker) xmlMetadata).getFritekst();
             } else if (xmlMetadata instanceof XMLMeldingTilBruker) {
                 XMLMeldingTilBruker svarEllerReferat = (XMLMeldingTilBruker) xmlMetadata;
-                if(svarEllerReferat.getSporsmalsId() != null){
+                if (svarEllerReferat.getSporsmalsId() != null) {
                     melding.traadId = svarEllerReferat.getSporsmalsId();
                 }
                 melding.temagruppe = svarEllerReferat.getTemagruppe();
                 melding.fritekst = svarEllerReferat.getFritekst();
                 melding.kanal = svarEllerReferat.getKanal();
-                melding.lestDato = svarEllerReferat.getLestDato();
                 melding.navIdent = svarEllerReferat.getNavident();
             }
             return melding;
@@ -99,11 +98,7 @@ public class MeldingUtils {
             if (henvendelseType.equals(SPORSMAL.name())) {
                 return IKKE_BESVART;
             } else if (henvendelseType.equals(SVAR.name()) || henvendelseType.equals(REFERAT.name())) {
-                XMLMetadata xmlMetadata = info.getMetadataListe().getMetadata().get(0);
-                DateTime lestDato = null;
-                if (xmlMetadata instanceof XMLMeldingTilBruker) {
-                    lestDato = ((XMLMeldingTilBruker) xmlMetadata).getLestDato();
-                }
+                DateTime lestDato = info.getLestDato();
                 if (lestDato != null) {
                     return LEST_AV_BRUKER;
                 } else {

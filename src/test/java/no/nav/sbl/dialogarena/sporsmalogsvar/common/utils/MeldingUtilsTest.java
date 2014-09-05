@@ -73,7 +73,7 @@ public class MeldingUtilsTest {
         xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker()));
         assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(IKKE_LEST_AV_BRUKER)));
 
-        xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker().withLestDato(now())));
+        xmlHenvendelse.withLestDato(now()).withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker()));
         assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(LEST_AV_BRUKER)));
     }
 
@@ -88,7 +88,7 @@ public class MeldingUtilsTest {
                 .withFritekst(FRITEKST)
                 .withTemagruppe(TEMAGRUPPE);
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SPORSMAL.name(), xmlMeldingFraBruker));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL.name(), xmlMeldingFraBruker));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -105,7 +105,7 @@ public class MeldingUtilsTest {
     public void testTilMeldingTransformer_medSvar() {
         XMLMeldingTilBruker meldingTilBruker = createMeldingTilBruker(ID_2);
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, XMLHenvendelseType.SVAR.name(), meldingTilBruker));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR.name(), meldingTilBruker));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_2)));
@@ -125,7 +125,7 @@ public class MeldingUtilsTest {
     public void testTilMeldingTransformer_medReferat() {
         XMLMeldingTilBruker xmlMeldingTilBruker = createMeldingTilBruker(null);
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, REFERAT.name(), xmlMeldingTilBruker));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT.name(), xmlMeldingTilBruker));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -146,7 +146,6 @@ public class MeldingUtilsTest {
                 .withSporsmalsId(traadId)
                 .withFritekst(FRITEKST)
                 .withTemagruppe(TEMAGRUPPE)
-                .withLestDato(LEST_DATO)
                 .withKanal(KANAL)
                 .withNavident(NAVIDENT);
     }

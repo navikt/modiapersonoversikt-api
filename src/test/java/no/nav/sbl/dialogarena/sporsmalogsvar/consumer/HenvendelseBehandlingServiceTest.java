@@ -102,7 +102,7 @@ public class HenvendelseBehandlingServiceTest {
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
 
         List<Object> xmlHenvendelseListe = new ArrayList<>();
-        xmlHenvendelseListe.add(lagXMLHenvendelse(BEHANDLINGS_ID, DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), xmlMeldingFraBruker));
+        xmlHenvendelseListe.add(lagXMLHenvendelse(BEHANDLINGS_ID, DateTime.now(), null, XMLHenvendelseType.SPORSMAL.name(), xmlMeldingFraBruker));
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
                 new WSHentHenvendelseListeResponse().withAny(xmlHenvendelseListe));
@@ -178,15 +178,15 @@ public class HenvendelseBehandlingServiceTest {
     @Test
     public void skalAlltidHenteMeldingerSomIkkeErKontorSperretEllerJournalfort() {
         List<Object> xmlHenvendelsesListe = new ArrayList<>();
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
                 .withJournalfortInformasjon(null)
                 .withKontorsperreEnhet(null));
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", DateTime.now(), null, XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
                 .withJournalfortInformasjon(null)
                 .withKontorsperreEnhet(null));
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id3", DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id3", DateTime.now(), null, XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
                 .withKontorsperreEnhet(null));
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", DateTime.now(), null, XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
                 .withKontorsperreEnhet("1111"));
 
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);

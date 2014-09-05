@@ -109,10 +109,11 @@ public class TestUtils {
         return new ArrayList<>(asList(melding1VM, melding2VM, melding3VM));
     }
 
-    public static XMLHenvendelse lagXMLHenvendelse(String behandlingsId, DateTime opprettetDato, String henvendelseType, XMLMetadata xmlMetadata) {
+    public static XMLHenvendelse lagXMLHenvendelse(String behandlingsId, DateTime opprettetDato, DateTime lestDato, String henvendelseType, XMLMetadata xmlMetadata) {
         return new XMLHenvendelse()
                 .withBehandlingsId(behandlingsId)
                 .withOpprettetDato(opprettetDato)
+                .withLestDato(lestDato)
                 .withHenvendelseType(henvendelseType)
                 .withJournalfortInformasjon(
                         new XMLJournalfortInformasjon()
