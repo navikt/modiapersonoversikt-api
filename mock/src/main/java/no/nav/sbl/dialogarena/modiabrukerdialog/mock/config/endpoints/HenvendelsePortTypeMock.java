@@ -59,33 +59,33 @@ public class HenvendelsePortTypeMock {
 
     public static final List<XMLHenvendelse> HENVENDELSER = new ArrayList<>(asList(
             createXMLHenvendelse(SPORSMAL, now().minusWeeks(2),
-                    createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), now().minusDays(2), "Arbeidsavklaring", "", ""),
+                    createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), now().minusDays(2), "AAP", "", ""),
 
             createXMLHenvendelse(SPORSMAL, now().minusWeeks(1),
-                    createXMLMeldingFraBruker("FMLI", LANG_TEKST), valueOf(oppgaveId), now().minusDays(2), "Foreldrepenger", "", ""),
+                    createXMLMeldingFraBruker("FMLI", LANG_TEKST), valueOf(oppgaveId), now().minusDays(2), "FOR", "", ""),
 
             createXMLHenvendelse(SVAR, now().minusDays(2),
                     createXMLMeldingTilBruker("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Vi kan bekrefte at du får foreldrepenger"), null, null, "", "", ""),
 
             createXMLHenvendelse(SVAR, now().minusDays(3),
                     createXMLMeldingTilBruker("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(4), "Det er meget sannsynlig at du kan få foreldrepenger"),
-                    null, now().minusDays(2), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
+                    null, now().minusDays(2), "FOR", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SVAR, now().minusDays(5),
                     createXMLMeldingTilBruker("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(5), "Det kan hende at du kan få foredrepenger "),
-                    null, now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
+                    null, now().minusDays(3), "FOR", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SVAR, now().minusDays(5),
                     createXMLMeldingTilBruker("FMLI", "TELEFON", valueOf(oppgaveId), now().minusDays(6), "Vi har hatt en samtale og det kommer frem at Test Testesen ønsker foreldrepenger "),
-                    null, now().minusDays(3), "Foreldrepenger", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
+                    null, now().minusDays(3), "FOR", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SPORSMAL, now().minusDays(3),
                     createXMLMeldingFraBruker("ARBD", LANG_TEKST),
-                    valueOf(oppgaveId++), now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
+                    valueOf(oppgaveId++), now().minusDays(1), "SYK", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SVAR, now().minusHours(5),
                     createXMLMeldingTilBruker("ARBD", "TEKST", valueOf(behandlingsId), null, KORT_TEKST),
-                    null, now().minusDays(1), "Hjelpemidler", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
+                    null, now().minusDays(1), "SYK", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SPORSMAL, now().minusMonths(4),
                     createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), null, "", "", ""),
@@ -94,10 +94,10 @@ public class HenvendelsePortTypeMock {
                     createXMLMeldingTilBruker("ARBD", "TELEFON", valueOf(behandlingsId), null, "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, null, "", "", ""),
 
             createXMLHenvendelse(SVAR, now().minusMonths(4).plusDays(1),
-                    createXMLMeldingTilBruker("ARBD", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), null, now().minusDays(3), "Ovrige", "", ""),
+                    createXMLMeldingTilBruker("ARBD", "TELEFON", valueOf(behandlingsId), now().minusMonths(4).plusDays(3), LANG_TEKST), null, now().minusDays(3), "YRK", "", ""),
 
             createXMLHenvendelse(SVAR, now().minusDays(7),
-                    createXMLMeldingTilBruker("ARBD", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), null, now().minusDays(3), "Ovrige", "", ""),
+                    createXMLMeldingTilBruker("ARBD", "TEKST", valueOf(behandlingsId), null, KORT_TEKST), null, now().minusDays(3), "YRK", "", ""),
 
 
             createXMLHenvendelse(SPORSMAL, now().minusDays(1),
