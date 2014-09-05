@@ -55,7 +55,7 @@ public class HenvendelseBehandlingService {
 
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny())
                 .map(TIL_MELDING)
-                .filter(pepFilter())
+                .filter(new TilgangskontrollPredicate())
                 .collect();
     }
 
@@ -77,34 +77,32 @@ public class HenvendelseBehandlingService {
         behandleHenvendelsePortType.oppdaterKontorsperre(enhet, ider);
     }
 
+    public void merkSomFeilsendt(TraadVM valgtTraad) {
+        List<String> behandlingsIdListe = on(valgtTraad.getMeldinger()).map(ID).collect();
+        behandleHenvendelsePortType.oppdaterTilKassering(behandlingsIdListe);
+    }
+
     private String getEnhet(String fnr) {
         Person person = kjerneinfo.hentKjerneinformasjon(new HentKjerneinformasjonRequest(fnr)).getPerson();
         return person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
     }
 
-    private Predicate<Melding> pepFilter() {
-        return new Predicate<Melding>() {
-            @Override
-            public boolean evaluate(Melding melding) {
-                PolicyRequest kontorsperrePolicyRequest = forRequest(
-                        actionId("kontorsperre"),
-                        resourceId(""),
-                        subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())),
-                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(melding.kontorsperretEnhet)));
+    private class TilgangskontrollPredicate implements Predicate<Melding> {
+        @Override
+        public boolean evaluate(Melding melding) {
+            PolicyRequest kontorsperrePolicyRequest = forRequest(
+                    actionId("kontorsperre"),
+                    resourceId(""),
+                    subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())),
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(melding.kontorsperretEnhet)));
 
-                PolicyRequest temagruppePolicyRequest = forRequest(
-                        actionId("temagruppe"),
-                        resourceId(""),
-                        resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:temagruppe", defaultString(melding.journalfortTema)));
+            PolicyRequest temagruppePolicyRequest = forRequest(
+                    actionId("temagruppe"),
+                    resourceId(""),
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:temagruppe", defaultString(melding.journalfortTema)));
 
-                return (isBlank(melding.kontorsperretEnhet) || pep.hasAccess(kontorsperrePolicyRequest))
-                        && (isBlank(melding.journalfortTema) || pep.hasAccess(temagruppePolicyRequest));
-            }
-        };
-    }
-
-    public void merkSomFeilsendt(TraadVM valgtTraad) {
-        List<String> behandlingsIdListe = on(valgtTraad.getMeldinger()).map(ID).collect();
-        behandleHenvendelsePortType.oppdaterTilKassering(behandlingsIdListe);
+            return (isBlank(melding.kontorsperretEnhet) || pep.hasAccess(kontorsperrePolicyRequest))
+                    && (isBlank(melding.journalfortTema) || pep.hasAccess(temagruppePolicyRequest));
+        }
     }
 }
