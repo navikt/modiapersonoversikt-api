@@ -4,13 +4,8 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
-import no.nav.modig.security.tilgangskontroll.URN;
-import no.nav.modig.security.tilgangskontroll.policy.attributes.values.StringValue;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.modig.security.tilgangskontroll.policy.request.attributes.ActionAttribute;
-import no.nav.modig.security.tilgangskontroll.policy.request.attributes.ResourceAttribute;
-import no.nav.modig.security.tilgangskontroll.policy.request.attributes.SubjectAttribute;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -23,16 +18,23 @@ import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.subjectAttribute;
+import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
+import static org.apache.commons.lang3.StringUtils.defaultString;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class HenvendelseBehandlingService {
 
@@ -44,17 +46,16 @@ public class HenvendelseBehandlingService {
     private PersonKjerneinfoServiceBi kjerneinfo;
     @Inject
     @Named("pep")
-    private EnforcementPoint enforcementPoint;
+    private EnforcementPoint pep;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     public List<Melding> hentMeldinger(final String fnr) {
-        List<String> typer = Arrays.asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());
-
+        List<String> typer = asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());
 
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny())
                 .map(TIL_MELDING)
-                .filter(lagPepFilter(fnr))
+                .filter(new TilgangskontrollPredicate())
                 .collect();
     }
 
@@ -76,34 +77,32 @@ public class HenvendelseBehandlingService {
         behandleHenvendelsePortType.oppdaterKontorsperre(enhet, ider);
     }
 
+    public void merkSomFeilsendt(TraadVM valgtTraad) {
+        List<String> behandlingsIdListe = on(valgtTraad.getMeldinger()).map(ID).collect();
+        behandleHenvendelsePortType.oppdaterTilKassering(behandlingsIdListe);
+    }
+
     private String getEnhet(String fnr) {
         Person person = kjerneinfo.hentKjerneinformasjon(new HentKjerneinformasjonRequest(fnr)).getPerson();
         return person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
     }
 
-    private Predicate<Melding> lagPepFilter(final String fnr) {
-        return new Predicate<Melding>() {
-            private PolicyRequest req = new PolicyRequest()
-                    .copyAndAppend(new ActionAttribute(new URN("urn:oasis:names:tc:xacml:1.0:action:action-id"), new StringValue("kontorsperre")))
-                    .copyAndAppend(new SubjectAttribute(new URN("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet"), new StringValue(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())))
-                    .copyAndAppend(new ResourceAttribute(new URN("urn:oasis:names:tc:xacml:1.0:resource:resource-id"), new StringValue(fnr)));
+    private class TilgangskontrollPredicate implements Predicate<Melding> {
+        @Override
+        public boolean evaluate(Melding melding) {
+            PolicyRequest kontorsperrePolicyRequest = forRequest(
+                    actionId("kontorsperre"),
+                    resourceId(""),
+                    subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())),
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(melding.kontorsperretEnhet)));
 
-            @Override
-            public boolean evaluate(Melding melding) {
-                if (melding.kontorsperretEnhet == null || melding.kontorsperretEnhet.isEmpty()) {
-                    return true;
-                }
+            PolicyRequest temagruppePolicyRequest = forRequest(
+                    actionId("temagruppe"),
+                    resourceId(""),
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
 
-                return enforcementPoint.hasAccess(req.copyAndAppend(new ResourceAttribute(
-                                new URN("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet"),
-                                new StringValue(melding.kontorsperretEnhet)))
-                );
-            }
-        };
-    }
-
-    public void merkSomFeilsendt(TraadVM valgtTraad) {
-        List<String> behandlingsIdListe = on(valgtTraad.getMeldinger()).map(ID).collect();
-        behandleHenvendelsePortType.oppdaterTilKassering(behandlingsIdListe);
+            return (isBlank(melding.kontorsperretEnhet) || pep.hasAccess(kontorsperrePolicyRequest))
+                    && (isBlank(melding.journalfortTema) || pep.hasAccess(temagruppePolicyRequest));
+        }
     }
 }

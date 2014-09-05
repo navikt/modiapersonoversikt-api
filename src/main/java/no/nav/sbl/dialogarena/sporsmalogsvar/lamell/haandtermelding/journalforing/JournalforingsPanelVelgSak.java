@@ -44,7 +44,7 @@ public class JournalforingsPanelVelgSak extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 TraadVM valgtTraadVM = innboksVM.getValgtTraad();
                 joarkJournalforingService.journalforTraad(valgtTraadVM, valgtTraadVM.journalfortSak);
-                send(this, Broadcast.BUBBLE, TRAAD_JOURNALFORT);
+                send(getPage(), Broadcast.DEPTH, TRAAD_JOURNALFORT);
             }
 
             @Override

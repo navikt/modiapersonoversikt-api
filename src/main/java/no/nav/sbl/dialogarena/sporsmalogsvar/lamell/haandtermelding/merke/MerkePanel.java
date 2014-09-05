@@ -32,18 +32,17 @@ public class MerkePanel extends AnimertPanel {
     public static final String TRAAD_MERKET = "sos.merkepanel.merket";
 
     @Inject
-    private HenvendelseBehandlingService henvendelse;
+    private HenvendelseBehandlingService henvendelseService;
 
-    protected final OpprettOppgavePanel opprettOppgavePanel;
+    private final OpprettOppgavePanel opprettOppgavePanel;
     private final FeedbackPanel feedbackPanel;
-    private Form<MerkVM> merkForm;
-    private CompoundPropertyModel<MerkVM> merkVMModel;
+    private final CompoundPropertyModel<MerkVM> merkVMModel;
 
     public MerkePanel(String id, final InnboksVM innboksVM) {
         super(id);
 
         merkVMModel = new CompoundPropertyModel<>(new MerkVM());
-        merkForm = new Form<>("merkForm", merkVMModel);
+        final Form<MerkVM> merkForm = new Form<>("merkForm", merkVMModel);
 
         final RadioGroup<MerkType> merkRadioGroup = new RadioGroup<>("merkType");
 
@@ -89,7 +88,7 @@ public class MerkePanel extends AnimertPanel {
 
             private void haandterKontorsperring(AjaxRequestTarget target, Form<?> form) {
                 if (opprettOppgavePanel.kanMerkeSomKontorsperret()) {
-                    henvendelse.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
+                    henvendelseService.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
                     send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
                     lukkPanel(target);
                 } else {
@@ -98,7 +97,7 @@ public class MerkePanel extends AnimertPanel {
             }
 
             private void haandterFeilsendt(AjaxRequestTarget target) {
-                henvendelse.merkSomFeilsendt(innboksVM.getValgtTraad());
+                henvendelseService.merkSomFeilsendt(innboksVM.getValgtTraad());
                 send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
                 lukkPanel(target);
             }
@@ -123,9 +122,5 @@ public class MerkePanel extends AnimertPanel {
         super.lukkPanel(target);
         merkVMModel.setObject(new MerkVM());
         opprettOppgavePanel.reset();
-    }
-
-    public Form<MerkVM> getMerkForm() {
-        return merkForm;
     }
 }

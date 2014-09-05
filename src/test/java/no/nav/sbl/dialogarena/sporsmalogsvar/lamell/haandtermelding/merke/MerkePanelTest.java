@@ -120,7 +120,7 @@ public class MerkePanelTest extends WicketPageTest {
                 .select(MERK_TYPE_RADIOGROUP_ID, 0)
                 .submitWithAjaxButton(withId("merk"));
 
-        assertNull(merkePanel.getMerkForm().getModelObject().getMerkType());
+        assertNull(((MerkVM) merkePanel.get("merkForm").getDefaultModelObject()).getMerkType());
         assertThat(merkePanel.isVisibilityAllowed(), is(false));
     }
 

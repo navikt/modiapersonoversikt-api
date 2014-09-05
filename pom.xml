@@ -27,7 +27,7 @@
         <send.ut.henvendelse.version>0.2</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.9</behandle.henvendelse.version>
         <kjerneinfo.versjon>1.0.80</kjerneinfo.versjon>
-        <dialogarena.behandlingsinformasjon.version>0.0.20</dialogarena.behandlingsinformasjon.version>
+        <dialogarena.behandlingsinformasjon.version>0.0.21</dialogarena.behandlingsinformasjon.version>
         <handlebars.version>1.1.2</handlebars.version>
     </properties>
 
@@ -407,6 +407,13 @@
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <!--Testing-->
