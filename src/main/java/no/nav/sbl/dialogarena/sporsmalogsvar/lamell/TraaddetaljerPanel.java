@@ -22,9 +22,9 @@ public class TraaddetaljerPanel extends Panel {
 
         this.innboksVM = innboksVM;
 
-        add(new HaandterMeldingPanel("haandter-melding", innboksVM));
-        add(new NyesteMeldingPanel("nyeste-melding", innboksVM));
-        add(new TidligereMeldingerPanel("tidligere-meldinger", innboksVM));
+        add(new HaandterMeldingPanel("haandterMelding", innboksVM));
+        add(new NyesteMeldingPanel("nyesteMelding", innboksVM));
+        add(new TidligereMeldingerPanel("tidligereMeldinger", innboksVM));
     }
 
     @RunOnEvents(TRAAD_JOURNALFORT)
