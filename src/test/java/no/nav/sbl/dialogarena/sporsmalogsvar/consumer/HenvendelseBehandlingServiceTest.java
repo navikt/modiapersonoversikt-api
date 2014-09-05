@@ -11,12 +11,12 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
@@ -44,8 +44,10 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journ
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_3;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMeldingVMer;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createSak;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.innloggetBrukerEr;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.lagXMLHenvendelse;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
@@ -97,6 +99,8 @@ public class HenvendelseBehandlingServiceTest {
                 .withFritekst("fritekst")
                 .withTemagruppe(TEMAGRUPPE);
 
+        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
+
         List<Object> xmlHenvendelseListe = new ArrayList<>();
         xmlHenvendelseListe.add(lagXMLHenvendelse(BEHANDLINGS_ID, DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), xmlMeldingFraBruker));
 
@@ -105,7 +109,7 @@ public class HenvendelseBehandlingServiceTest {
 
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("1231");
 
-        sak = TestUtils.createSak(SAKS_ID, SAKSTEMA, SAKSTYPE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4));
+        sak = createSak(SAKS_ID, SAKSTEMA, SAKSTYPE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4));
         melding = createMelding(BEHANDLINGS_ID, Meldingstype.SPORSMAL, DateTime.now(), TEMAGRUPPE, BEHANDLINGS_ID);
     }
 
@@ -169,5 +173,28 @@ public class HenvendelseBehandlingServiceTest {
         henvendelseBehandlingService.merkSomFeilsendt(VALGT_TRAAD);
 
         verify(behandleHenvendelsePortType).oppdaterTilKassering(IDER_I_VALGT_TRAAD);
+    }
+
+    @Test
+    public void skalAlltidHenteMeldingerSomIkkeErKontorSperretEllerJournalfort() {
+        List<Object> xmlHenvendelsesListe = new ArrayList<>();
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+                .withJournalfortInformasjon(null)
+                .withKontorsperreEnhet(null));
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+                .withJournalfortInformasjon(null)
+                .withKontorsperreEnhet(null));
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id3", DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+                .withKontorsperreEnhet(null));
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", DateTime.now(), XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+                .withKontorsperreEnhet("1111"));
+
+        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
+
+        assertThat(meldinger.size(), is(2));
+        assertThat(meldinger.get(0).id, is(equalTo("id1")));
+        assertThat(meldinger.get(1).id, is(equalTo("id2")));
     }
 }
