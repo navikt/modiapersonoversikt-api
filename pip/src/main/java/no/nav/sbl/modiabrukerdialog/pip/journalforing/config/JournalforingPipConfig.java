@@ -22,12 +22,17 @@ public class JournalforingPipConfig {
 
     @Bean
     public TemagruppeAttributeLocatorDelegate enhetAttributeLocatorDelegate() {
-        return new DefaultTemagruppeAttributeLocatorDelegate(enhetService, new SaksbehandlerInnstillingerService());
+        return new DefaultTemagruppeAttributeLocatorDelegate(enhetService, saksbehandlerInnstillingerService());
     }
 
     @Bean
     public AnsattService ansattService() {
         return new AnsattService();
+    }
+
+    @Bean
+    public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
+        return new SaksbehandlerInnstillingerService();
     }
 
 }
