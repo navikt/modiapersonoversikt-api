@@ -23,7 +23,7 @@
         <Description>Gi tilgang hvis saksbehandler har plukk oppgave rolle.</Description>
         <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
-                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-GOSYS<!-- MIDLERTIDIG - MÅ HA PLUKK OPPGAVE ROLLE --></AttributeValue>
+                <AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0000-GA-BD06_HentOppgave</AttributeValue>
                 <SubjectAttributeDesignator
                         DataType="http://www.w3.org/2001/XMLSchema#string"
                         AttributeId="urn:oasis:names:tc:xacml:2.0:subject:role"/>

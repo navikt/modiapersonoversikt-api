@@ -14,7 +14,7 @@ public class PlukkOppgavePolicyTest extends AbstractPDPTest {
     @Test
     public void allowAccessPlukkOppgavePanel() throws Exception {
         RequestContext request = createRequestBuilder()
-                .withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-GOSYS")
+                .withSubjectAttr(ATTRIBUTEID_ROLE, "0000-GA-BD06_HentOppgave")
                 .withActionAttr(ATTRIBUTEID_ACTION_ID, "plukkoppgave")
                 .withResourceAttr(ATTRIBUTEID_RESOURCE_ID, "")
                 .build();
