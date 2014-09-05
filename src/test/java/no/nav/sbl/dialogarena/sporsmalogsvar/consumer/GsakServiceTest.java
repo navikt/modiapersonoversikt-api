@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKode;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSEndringsinfo;
@@ -18,6 +19,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -85,9 +87,9 @@ public class GsakServiceTest {
         NyOppgave nyOppgave = new NyOppgave();
         nyOppgave.beskrivelse = "beskrivelse";
         nyOppgave.enhet = "enhetsnavn";
-        nyOppgave.prioritet = "prioritet";
-        nyOppgave.tema = "tema";
-        nyOppgave.type = "type";
+        nyOppgave.prioritet = new GsakKode.Prioritet("tema", "");
+        nyOppgave.type = new GsakKode.OppgaveType("type", "", 0);
+        nyOppgave.tema = new GsakKode.Tema("tema", "", Arrays.asList(nyOppgave.type), Arrays.asList(nyOppgave.prioritet));
         nyOppgave.henvendelseId = "henvendelseId";
 
         gsakService.opprettGsakOppgave(nyOppgave);
@@ -98,9 +100,9 @@ public class GsakServiceTest {
         assertThat(request.getOpprettetAvEnhetId(), is(GsakService.OPPRETTET_AV_ENHET_ID));
         assertThat(request.getOpprettOppgave().getAnsvarligEnhetId(), is(nyOppgave.enhet));
         assertThat(request.getOpprettOppgave().getBeskrivelse(), is(nyOppgave.beskrivelse));
-        assertThat(request.getOpprettOppgave().getFagomradeKode(), is(nyOppgave.tema));
-        assertThat(request.getOpprettOppgave().getOppgavetypeKode(), is(nyOppgave.type));
-        assertThat(request.getOpprettOppgave().getPrioritetKode(), is(nyOppgave.prioritet));
+        assertThat(request.getOpprettOppgave().getFagomradeKode(), is(nyOppgave.tema.kode));
+        assertThat(request.getOpprettOppgave().getOppgavetypeKode(), is(nyOppgave.type.kode));
+        assertThat(request.getOpprettOppgave().getPrioritetKode(), is(nyOppgave.prioritet.kode));
         assertThat(request.getOpprettOppgave().isLest(), is(false));
         assertThat(request.getOpprettOppgave().getHenvendelseId(), is(nyOppgave.henvendelseId));
     }

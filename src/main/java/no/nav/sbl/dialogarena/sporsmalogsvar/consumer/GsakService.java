@@ -53,9 +53,9 @@ public class GsakService {
                                         .withAktivFra(LocalDate.now())
                                         .withAnsvarligEnhetId(nyOppgave.enhet)
                                         .withBeskrivelse(nyOppgave.beskrivelse)
-                                        .withFagomradeKode(nyOppgave.tema)
-                                        .withOppgavetypeKode(nyOppgave.type)
-                                        .withPrioritetKode(nyOppgave.prioritet)
+                                        .withFagomradeKode(nyOppgave.tema.kode)
+                                        .withOppgavetypeKode(nyOppgave.type.kode)
+                                        .withPrioritetKode(nyOppgave.prioritet.kode)
                                         .withLest(false)
                         ));
     }

@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavewrapper;
 
+import no.nav.modig.wicket.test.internal.FluentFormTester;
+import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -9,6 +11,8 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.NyOppgaveFormWrapper;
+import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -65,10 +69,10 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
         String beskrivelse = "Dette er en beskrivelse";
         NyOppgaveFormWrapper nyOppgaveFormWrapper = new NyOppgaveFormWrapper("panel", innboksVM);
         MockitoAnnotations.initMocks(this);
-        wicket.goToPageWith(nyOppgaveFormWrapper)
-                .inForm("panel:nyoppgaveform")
-                .select("tema", 0)
-                .select("enhet", 0)
+        FluentFormTester<? extends WebApplication> tester = wicket.goToPageWith(nyOppgaveFormWrapper)
+                .inForm("panel:nyoppgaveform").select("tema", 0);
+        wicket.executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormComponentUpdatingBehavior.class));
+        tester.select("enhet", 0)
                 .select("type", 0)
                 .select("prioritet", 0)
                 .write("beskrivelse", beskrivelse)

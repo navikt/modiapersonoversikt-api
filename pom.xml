@@ -58,6 +58,33 @@
             <version>0.0.5</version>
         </dependency>
 
+        <!-- Gsak kodeverk -->
+        <dependency>
+            <groupId>no.nav.fellessystemer</groupId>
+            <artifactId>nav-fellessystemer-environment</artifactId>
+            <version>4.2.2</version>
+            <scope>runtime</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.jamon</groupId>
+                    <artifactId>jamon-runtime</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-lang</groupId>
+                    <artifactId>commons-lang</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.poi</groupId>
+                    <artifactId>poi</artifactId>
+                </exclusion>
+
+            </exclusions>
+        </dependency>
+
         <!-- Tjenestespesifikasjon -->
         <dependency>
             <groupId>no.nav.tjenester.fim</groupId>
@@ -163,6 +190,14 @@
                 <exclusion>
                     <groupId>org.bouncycastle</groupId>
                     <artifactId>bctsp-jdk14</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.xml.stream</groupId>
+                    <artifactId>stax-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.codehaus.woodstox</groupId>
+                    <artifactId>stax2-api</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -357,10 +392,16 @@
         <dependency>
             <groupId>net.sourceforge.collections</groupId>
             <artifactId>collections-generic</artifactId>
-            <version>4.01</version>
             <scope>provided</scope>
+            <version>4.01</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.1</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>

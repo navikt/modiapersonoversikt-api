@@ -9,6 +9,8 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ValgtEnhetService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
+import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverkFraFil;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
@@ -94,5 +96,8 @@ public class ServiceTestContext {
 
     @Bean(name = "pep")
     public EnforcementPoint enforcementPoint() { return mock(EnforcementPoint.class); }
+
+    @Bean(name="gsakKodeverk")
+    public GsakKodeverk gsakKodeverk() { return new GsakKodeverkFraFil(); }
 
 }
