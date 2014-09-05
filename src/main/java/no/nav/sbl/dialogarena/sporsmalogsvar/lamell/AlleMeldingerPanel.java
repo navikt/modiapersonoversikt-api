@@ -13,8 +13,10 @@ import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.traadLengdeStorreEnnEn;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
 
 public class AlleMeldingerPanel extends Panel {
@@ -31,7 +33,10 @@ public class AlleMeldingerPanel extends Panel {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {
 
-                item.add(new Label("traadlengde"));
+                Label traadlengde = new Label("traadlengde");
+                traadlengde.add(visibleIf(traadLengdeStorreEnnEn(item.getModelObject())));
+                item.add(traadlengde);
+
                 item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getDefaultModel()))
                         .add(cssClass(item.getModelObject().getStatusIkonKlasse())));
                 item.add(new Label("opprettetDato"));
