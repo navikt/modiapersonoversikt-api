@@ -75,7 +75,7 @@ public class MerkePanel extends AnimertPanel {
         });
     }
 
-    private AjaxButton createAjaxSubmitLink(final InnboksVM innboksVM, final RadioGroup<MerkType> merkRadioGroup) {
+    protected final AjaxButton createAjaxSubmitLink(final InnboksVM innboksVM, final RadioGroup<MerkType> merkRadioGroup) {
         return new AjaxButton("merk") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {

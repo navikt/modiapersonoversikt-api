@@ -33,9 +33,6 @@ public abstract class GsakKode implements Serializable {
         this.kode = kode;
         this.tekst = tekst;
     }
-    public static void main(String[] args) {
-        System.out.println(GsakKode.Parser.parse());
-    }
 
     public static class Tema extends GsakKode implements Serializable {
         public final List<OppgaveType> oppgaveTyper;

@@ -61,7 +61,7 @@ public class Innboks extends Lerret {
         add(alleMeldingerPanel, traaddetaljerPanel, tilbakemeldingPanel, ikkeTilgangPanel);
     }
 
-    protected boolean redirectHvisHenvendelsePageParam() {
+    protected final boolean redirectHvisHenvendelsePageParam() {
         if (flyttParamFraURLTilSession()) {
             return true;
         }

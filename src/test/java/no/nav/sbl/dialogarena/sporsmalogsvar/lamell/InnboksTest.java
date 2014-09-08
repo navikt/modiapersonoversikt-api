@@ -8,10 +8,12 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
+import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -27,7 +29,9 @@ import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
+@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @ContextConfiguration(classes = {ServiceTestContext.class, InnboksTestConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InnboksTest {
@@ -79,14 +83,21 @@ public class InnboksTest {
         assertThat(((InnboksVM) innboks.getDefaultModelObject()).getValgtTraad().getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
     }
 
-    @Test
-    public void skalSetteTraadSomErReferertITraadIdPageParameterSomValgtTraad() {
+    @Test(expected = RestartResponseException.class)
+    public void skalSetteTraadSomErReferertITraadIdPageParameterTilSessionVariable() {
         wicket.tester.getRequest().setParameter(TRAAD_ID_PARAMETER_NAME, ENESTE_MELDING_ID_TRAAD2);
+
+        TestInnboks innboks = new TestInnboks("innboks", "fnr");
+        wicket.goToPageWith(innboks);
+    }
+
+    @Test
+    public void skalSetteTraadSomErReferertISessionTilValgtTraadIInnboks() {
+        wicket.tester.getSession().setAttribute(TRAAD_ID_PARAMETER_NAME, ENESTE_MELDING_ID_TRAAD2);
 
         TestInnboks innboks = new TestInnboks("innboks", "fnr");
         wicket.goToPageWith(innboks);
 
         assertThat(((InnboksVM) innboks.getDefaultModelObject()).getValgtTraad().getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
     }
-
 }
