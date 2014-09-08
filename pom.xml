@@ -29,6 +29,7 @@
         <kjerneinfo.versjon>1.0.80</kjerneinfo.versjon>
         <dialogarena.behandlingsinformasjon.version>0.0.21</dialogarena.behandlingsinformasjon.version>
         <handlebars.version>1.1.2</handlebars.version>
+        <modig.security.version>1.0.21</modig.security.version>
     </properties>
 
     <dependencies>
@@ -260,7 +261,8 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-security-core</artifactId>
-            <version>1.0.19</version>
+            <version>${modig.security.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <!--Wicket-->
@@ -450,7 +452,7 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-security-core</artifactId>
-            <version>1.0.19</version>
+            <version>${modig.security.version}</version>
             <scope>test</scope>
             <type>test-jar</type>
         </dependency>
