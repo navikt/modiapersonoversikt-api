@@ -18,12 +18,14 @@ public class AvsenderBilde extends Image {
 
     public final void settBildeRessurs(MeldingVM meldingVM) {
         String avsender = "", bilde = "";
-        if (meldingVM.melding.meldingstype == SVAR || meldingVM.melding.meldingstype == SAMTALEREFERAT) {
-            avsender = "nav";
-            bilde = "nav-logo.svg";
-        } else if (meldingVM.melding.meldingstype == SPORSMAL) {
-            avsender = "bruker";
-            bilde = "siluett.svg";
+        if (meldingVM != null) {
+            if (meldingVM.melding.meldingstype == SVAR || meldingVM.melding.meldingstype == SAMTALEREFERAT) {
+                avsender = "nav";
+                bilde = "nav-logo.svg";
+            } else if (meldingVM.melding.meldingstype == SPORSMAL) {
+                avsender = "bruker";
+                bilde = "siluett.svg";
+            }
         }
         add(new AttributeModifier("src", WebApplication.get().getServletContext().getContextPath() + "/img/" + bilde));
         add(new AttributeModifier("alt", new StringResourceModel("innboks.avsender." + avsender, this, null)));

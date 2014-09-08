@@ -97,6 +97,10 @@ public class InnboksVM implements Serializable {
         return traader;
     }
 
+    public boolean harTraader() {
+        return !this.getTraader().isEmpty();
+    }
+
     private static final Transformer<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = new Transformer<List<Melding>, List<MeldingVM>>() {
         @Override
         public List<MeldingVM> transform(List<Melding> meldinger) {

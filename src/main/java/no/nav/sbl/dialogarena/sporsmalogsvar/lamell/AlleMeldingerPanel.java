@@ -57,7 +57,9 @@ public class AlleMeldingerPanel extends Panel {
     public void oppdaterMeldinger(AjaxRequestTarget target) {
         if (this.isVisibleInHierarchy()) {
             innboksVM.oppdaterMeldinger();
-            innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
+            if (innboksVM.harTraader()) {
+                innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
+            }
             target.add(this);
         }
     }

@@ -32,6 +32,7 @@ public class TraadVM implements Serializable {
     }
 
     public MeldingVM getNyesteMelding() {
+        if (meldinger.isEmpty())return null;
         return meldinger.get(0);
     }
 
