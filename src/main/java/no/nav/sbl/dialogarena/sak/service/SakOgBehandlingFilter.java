@@ -1,19 +1,36 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.content.CmsContentRetriever;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import org.apache.commons.collections15.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class SakOgBehandlingFilter {
+
+    private static final Predicate<GenerellBehandling> ER_KVITTERING = new Predicate<GenerellBehandling>() {
+        @Override
+        public boolean evaluate(GenerellBehandling generellBehandling) {
+            return (generellBehandling instanceof Kvittering);
+        }
+    };
+
+    private static final Predicate<GenerellBehandling> HAR_LOVLIG_BEHANDLINGSTYPE = new Predicate<GenerellBehandling>() {
+        @Override
+        public boolean evaluate(GenerellBehandling generellBehandling) {
+            return lovligeBehandlingstyper.contains(generellBehandling.behandlingsType);
+        }
+    };
+
     @Inject
     private CmsContentRetriever cms;
 
@@ -43,31 +60,16 @@ public class SakOgBehandlingFilter {
         }
     };
 
-    public static final Predicate<WSBehandlingskjede> HAR_LOVLIG_BEHANDLINGSTYPE = new Predicate<WSBehandlingskjede>() {
-        @Override public boolean evaluate(WSBehandlingskjede behandlingskjede) {
-            String behandlingstype = behandlingskjede.getSisteBehandlingstype().getValue();
-            boolean erLovlig = lovligeBehandlingstyper.contains(behandlingstype);
-            if (!erLovlig) {
-                log.info(String.format("Filtrerer bort behandlingstype %s", behandlingstype));
-            }
-            return erLovlig;
-        }
-    };
+    public List<GenerellBehandling> filtrerBehandlinger(List<GenerellBehandling> behandlinger) {
+        lovligeBehandlingstyper = asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
+        ArrayList<GenerellBehandling> allebehandlinger = new ArrayList<>();
+        allebehandlinger.addAll(on(behandlinger).filter(ER_KVITTERING).collect());
+        allebehandlinger.addAll(on(behandlinger).filter(HAR_LOVLIG_BEHANDLINGSTYPE).collect());
+        return allebehandlinger;
+    }
 
-    public List<WSSak> filtrer(List<WSSak> saker) {
-        ulovligeSakstema = Arrays.asList(cms.hentTekst("filter.ulovligesakstema").trim().split("\\s*,\\s*"));
-        lovligeBehandlingstyper = Arrays.asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
-
-        saker = on(saker).filter(HAR_LOVLIG_SAKSTEMA).collect();
-
-        for (WSSak sak : saker) {
-            List<WSBehandlingskjede> behandlingskjeder = on(sak.getBehandlingskjede()).filter(HAR_LOVLIG_BEHANDLINGSTYPE).collect();
-            sak.getBehandlingskjede().clear();
-            sak.withBehandlingskjede(behandlingskjeder);
-        }
-
-        saker = on(saker).filter(HAR_BEHANDLINGER).collect();
-
-        return saker;
+    public List<WSSak> filtrerSaker(List<WSSak> saker) {
+        ulovligeSakstema = asList(cms.hentTekst("filter.ulovligesakstema").trim().split("\\s*,\\s*"));
+        return on(saker).filter(HAR_LOVLIG_SAKSTEMA).filter(HAR_BEHANDLINGER).collect();
     }
 }

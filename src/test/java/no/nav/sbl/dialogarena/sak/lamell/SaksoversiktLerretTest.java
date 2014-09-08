@@ -34,7 +34,7 @@ public class SaksoversiktLerretTest extends AbstractWicketTest {
     public void skalÅpneLerretUtenFeil() {
         List<GenerellBehandling> behandlinger = asList(lagBehandling());
         when(service.hentTemaer("123")).thenReturn(asList(new TemaVM().withSistOppdaterteBehandling(lagBehandling()).withTemaKode("abc")));
-        when(service.hentBehandlingerForTemakode("123", TEMA)).thenReturn(behandlinger);
+        when(service.hentFiltrerteBehandlingerForTemakode("123", TEMA)).thenReturn(behandlinger);
         lerret = new SaksoversiktLerret("lerret", "123");
 
         lerret.hentNyeHendelser(TEMA);
