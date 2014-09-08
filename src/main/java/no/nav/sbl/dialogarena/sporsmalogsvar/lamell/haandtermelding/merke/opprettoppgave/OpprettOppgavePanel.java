@@ -23,6 +23,8 @@ public class OpprettOppgavePanel extends Panel {
     protected final IModel<Boolean> skalOppretteOppgave = Model.of(false);
     protected final IModel<Boolean> erOppgaveOpprettet = Model.of(false);
 
+    private CheckBox opprettOppgaveCheckbox;
+
     public OpprettOppgavePanel(String id, InnboksVM innboksVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
@@ -50,7 +52,7 @@ public class OpprettOppgavePanel extends Panel {
         nyOppgaveForm.add(visibleIf(skalOppretteOppgave));
         nyOppgaveForm.setOutputMarkupPlaceholderTag(true);
 
-        CheckBox opprettOppgaveCheckbox = new AjaxCheckBox("opprettOppgaveCheckbox", skalOppretteOppgave) {
+        opprettOppgaveCheckbox = new AjaxCheckBox("opprettOppgaveCheckbox", skalOppretteOppgave) {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 target.add(nyOppgaveForm);
@@ -63,6 +65,10 @@ public class OpprettOppgavePanel extends Panel {
 
     public boolean kanMerkeSomKontorsperret() {
         return !skalOppretteOppgave.getObject() || erOppgaveOpprettet.getObject();
+    }
+
+    public void tvingFremMarkupOppdateringAvCheckBox() {
+        opprettOppgaveCheckbox.modelChanged();
     }
 
     public void reset() {

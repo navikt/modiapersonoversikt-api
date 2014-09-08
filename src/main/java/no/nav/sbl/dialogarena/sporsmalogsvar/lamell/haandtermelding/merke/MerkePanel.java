@@ -60,6 +60,7 @@ public class MerkePanel extends AnimertPanel {
         merkRadioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
+                opprettOppgavePanel.tvingFremMarkupOppdateringAvCheckBox();
                 target.add(opprettOppgavePanel);
                 refreshFeedbackPanel(target);
             }
@@ -123,4 +124,5 @@ public class MerkePanel extends AnimertPanel {
         merkVMModel.setObject(new MerkVM());
         opprettOppgavePanel.reset();
     }
+
 }
