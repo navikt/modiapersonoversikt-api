@@ -104,7 +104,7 @@ public class MerkePanel extends AnimertPanel {
             }
 
             @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
+            protected final void onError(AjaxRequestTarget target, Form<?> form) {
                 if (merkVMModel.getObject().isKontorsperret() && !opprettOppgavePanel.kanMerkeSomKontorsperret()) {
                     merkRadioGroup.error(getString("kontorsperre.oppgave.opprettet.feil"));
                 }
