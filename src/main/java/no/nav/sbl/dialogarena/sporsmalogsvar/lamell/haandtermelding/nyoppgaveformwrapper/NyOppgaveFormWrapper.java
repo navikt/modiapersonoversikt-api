@@ -44,7 +44,9 @@ public class NyOppgaveFormWrapper extends Panel {
             @Override
             public List<GsakKode.OppgaveType> getObject() {
                 GsakKode.Tema tema = ((NyOppgave)form.getModelObject()).tema;
-                if(tema != null) return tema.oppgaveTyper;
+                if(tema != null) {
+                    return tema.oppgaveTyper;
+                }
                 return emptyList();
             }
         };
@@ -52,7 +54,9 @@ public class NyOppgaveFormWrapper extends Panel {
             @Override
             public List<GsakKode.Prioritet> getObject() {
                 GsakKode.Tema tema = ((NyOppgave)form.getModelObject()).tema;
-                if(tema != null) return tema.prioriteter;
+                if(tema != null) {
+                    return tema.prioriteter;
+                }
                 return emptyList();
             }
         };

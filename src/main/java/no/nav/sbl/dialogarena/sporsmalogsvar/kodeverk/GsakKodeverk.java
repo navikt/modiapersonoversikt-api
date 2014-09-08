@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk;
 
 
+import java.util.List;
+
 public interface GsakKodeverk {
-    public java.util.List<GsakKode.Tema> hentTemaListe();
+    List<GsakKode.Tema> hentTemaListe();
 }

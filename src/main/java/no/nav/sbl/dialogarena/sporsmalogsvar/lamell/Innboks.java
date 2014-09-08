@@ -28,7 +28,7 @@ public class Innboks extends Lerret {
     public static final String VALGT_MELDING_EVENT = "sos.innboks.valgt_melding";
     public static final String TRAAD_ID_PARAMETER_NAME = "henvendelseid";
 
-    private boolean harTilgang = true;
+    protected boolean harTilgang = true;
 
     private InnboksVM innboksVM;
 
@@ -61,7 +61,7 @@ public class Innboks extends Lerret {
         add(alleMeldingerPanel, traaddetaljerPanel, tilbakemeldingPanel, ikkeTilgangPanel);
     }
 
-    protected final boolean redirectHvisHenvendelsePageParam() {
+    private boolean redirectHvisHenvendelsePageParam() {
         if (flyttParamFraURLTilSession()) {
             return true;
         }
@@ -69,7 +69,7 @@ public class Innboks extends Lerret {
         return false;
     }
 
-    protected boolean flyttParamFraURLTilSession() {
+    private boolean flyttParamFraURLTilSession() {
         StringValue pageParam = getRequestCycle().getRequest().getRequestParameters().getParameterValue(TRAAD_ID_PARAMETER_NAME);
         if (!pageParam.isEmpty()) {
             getSession().setAttribute(TRAAD_ID_PARAMETER_NAME, pageParam.toString());
@@ -78,7 +78,7 @@ public class Innboks extends Lerret {
         return false;
     }
 
-    protected void setValgtTraadBasertPaaTraadIdSessionParameter() {
+    private void setValgtTraadBasertPaaTraadIdSessionParameter() {
         String traadIdParameter = ((String) getSession().getAttribute(TRAAD_ID_PARAMETER_NAME));
         if (!isBlank(traadIdParameter)) {
             Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(traadIdParameter);

@@ -75,7 +75,7 @@ public class MerkePanel extends AnimertPanel {
         });
     }
 
-    protected final AjaxButton createAjaxSubmitLink(final InnboksVM innboksVM, final RadioGroup<MerkType> merkRadioGroup) {
+    private AjaxButton createAjaxSubmitLink(final InnboksVM innboksVM, final RadioGroup<MerkType> merkRadioGroup) {
         return new AjaxButton("merk") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -118,7 +118,7 @@ public class MerkePanel extends AnimertPanel {
     }
 
     @Override
-    public void lukkPanel(AjaxRequestTarget target) {
+    public final void lukkPanel(AjaxRequestTarget target) {
         super.lukkPanel(target);
         merkVMModel.setObject(new MerkVM());
         opprettOppgavePanel.reset();
