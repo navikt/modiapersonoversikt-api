@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
-import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
@@ -22,8 +21,6 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService.BEHANDLINGSTEMA;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType.BEHANDLING;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType.KVITTERING;
 import static org.apache.wicket.model.Model.of;
 import static org.apache.wicket.model.Model.ofList;
 
@@ -64,10 +61,10 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
         WebMarkupContainer container = new WebMarkupContainer("behandling-container");
         container.add(hasCssClassIf("avsluttet", erAvsluttet));
         container.add(new Label("hendelse-tittel", getTittel(behandling)));
-        if (BEHANDLING.equals(behandling.behandlingsType)) {
-            container.add(new BehandlingsPanel("behandling", of(behandling)));
-        } else if (KVITTERING.equals(behandling.behandlingsType)) {
+        if (behandling instanceof Kvittering) {
             container.add(new KvitteringsPanel("behandling", of((Kvittering)behandling), fnr));
+        } else { //Behandling er GenerellBehandling
+            container.add(new BehandlingsPanel("behandling", of(behandling)));
         }
         return container;
     }
@@ -86,14 +83,11 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
 
     private String getTittel(GenerellBehandling behandling) {
         String behandlingstema = kodeverk.getTemanavnForTemakode(behandling.behandlingstema, BEHANDLINGSTEMA);
-        switch (behandling.behandlingsType) {
-            case BEHANDLING:
-                return format(cms.hentTekst(resolveMarkupKey(behandling)), behandlingstema);
-            case KVITTERING:
-                String skjemanavn = kodeverk.getSkjematittelForSkjemanummer(((Kvittering) behandling).skjemanummerRef);
-                return format(hentKvitteringsstreng((Kvittering) behandling), skjemanavn);
-            default:
-                throw new ApplicationException("Ukjent behandlingstype: " + behandling.behandlingsType);
+        if (behandling instanceof Kvittering) {
+            String skjemanavn = kodeverk.getSkjematittelForSkjemanummer(((Kvittering) behandling).skjemanummerRef);
+            return format(hentKvitteringsstreng((Kvittering) behandling), skjemanavn);
+        } else {
+            return format(cms.hentTekst(resolveMarkupKey(behandling)), behandlingstema);
         }
     }
 

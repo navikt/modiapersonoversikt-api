@@ -14,7 +14,6 @@ import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformer
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSKJEDE_TIL_BEHANDLING;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.TEMA_VM;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType.BEHANDLING;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 
@@ -41,7 +40,6 @@ public class SakOgBehandlingTransformersTest {
                 .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema));
         GenerellBehandling behandling = BEHANDLINGSKJEDE_TIL_BEHANDLING.transform(wsBehandlingskjede);
 
-        assertThat(behandling.behandlingsType, equalTo(BEHANDLING));
         assertThat(behandling.behandlingDato, equalTo(avsluttetDato));
         assertThat(behandling.behandlingsStatus, equalTo(AVSLUTTET));
         assertThat(behandling.opprettetDato, equalTo(startTid));

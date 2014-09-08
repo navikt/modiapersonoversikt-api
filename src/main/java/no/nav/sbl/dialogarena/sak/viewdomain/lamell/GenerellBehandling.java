@@ -6,24 +6,24 @@ import java.io.Serializable;
 
 public class GenerellBehandling implements Serializable {
 
-    public enum BehandlingsType {BEHANDLING, KVITTERING};
-    public enum HenvendelseType {DOKUMENTINNSENDING, SOKNADSINNSENDING};
+
+    public enum HenvendelseType {DOKUMENTINNSENDING, SOKNADSINNSENDING;};
     public enum BehandlingsStatus {
         OPPRETTET { @Override public String cmsKey() { return "hendelse.sistoppdatert.dato"; }},
         AVSLUTTET { @Override public String cmsKey() { return "hendelse.sistoppdatert.dato"; }};
-
         public abstract String cmsKey();
-    }
 
+    }
     public DateTime opprettetDato;
+
+    public String behandlingsType;
     public DateTime behandlingDato;
     public BehandlingsStatus behandlingsStatus;
-    public BehandlingsType behandlingsType;
     public HenvendelseType henvendelseType;
     public String behandlingstema;
     public String sakstema;
 
-    public GenerellBehandling withBehandlingsType(BehandlingsType type)  {
+    public GenerellBehandling withBehandlingsType(String type)  {
         behandlingsType = type;
         return this;
     }

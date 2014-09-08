@@ -14,7 +14,6 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.both;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.HenvendelseType;
 
 public class HenvendelseTransformers {
@@ -38,7 +37,6 @@ public class HenvendelseTransformers {
                     .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
                     .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
                     .withBehandlingsDato(wsSoknad.getInnsendtDato())
-                    .withBehandlingsType(BehandlingsType.KVITTERING)
                     .withHenvendelseType(HenvendelseType.valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()));
         }
     };

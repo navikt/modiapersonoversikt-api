@@ -16,7 +16,6 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.OPPRETTET;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsType.BEHANDLING;
 
 public class SakOgBehandlingTransformers {
 
@@ -53,7 +52,6 @@ public class SakOgBehandlingTransformers {
                 @Override
                 public GenerellBehandling transform(WSBehandlingskjede wsBehandlingskjede) {
                     GenerellBehandling generellBehandling = new GenerellBehandling()
-                            .withBehandlingsType(BEHANDLING)
                             .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
                             .withOpprettetDato(wsBehandlingskjede.getStart())
                             .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede));
