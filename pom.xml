@@ -63,7 +63,7 @@
         <kjerneinfo.versjon>1.0.84</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>2.0.40</utbetaling.version>
-        <utbetaling.tjenestespesifikasjon.version>1.0.7</utbetaling.tjenestespesifikasjon.version>
+        <utbetaling.tjenestespesifikasjon.version>1.0.6</utbetaling.tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.3</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.2</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.9</behandle.henvendelse.version>
