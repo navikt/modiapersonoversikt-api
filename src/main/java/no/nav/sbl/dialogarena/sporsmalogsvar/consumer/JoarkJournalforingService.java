@@ -65,7 +65,6 @@ public class JoarkJournalforingService {
     private String behandleJournalSporsmal(Melding melding, Sak sak) {
         JournalfoerInngaaendeHenvendelseRequest journalfoerInngaaendeHenvendelseRequest = new JournalfoerInngaaendeHenvendelseRequest();
 
-        // TODO Få tak i etternavn og fornavn, foreløpig har vi bare navident
         journalfoerInngaaendeHenvendelseRequest.setPersonEtternavn(SubjectHandler.getSubjectHandler().getUid());
         journalfoerInngaaendeHenvendelseRequest.setPersonFornavn(SubjectHandler.getSubjectHandler().getUid());
         journalfoerInngaaendeHenvendelseRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
@@ -78,7 +77,6 @@ public class JoarkJournalforingService {
     private String behandleJournalSvar(Melding melding, Sak sak, String journalfortPostIdForTilhorendeSporsmal) {
         JournalfoerUtgaaendeHenvendelseRequest journalfoerUtgaaendeHenvendelseRequest = new JournalfoerUtgaaendeHenvendelseRequest();
 
-        // TODO Få tak i etternavn og fornavn, foreløpig har vi bare nav ident
         journalfoerUtgaaendeHenvendelseRequest.setPersonEtternavn(getSubjectHandler().getUid());
         journalfoerUtgaaendeHenvendelseRequest.setPersonFornavn(getSubjectHandler().getUid());
         journalfoerUtgaaendeHenvendelseRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
@@ -91,7 +89,6 @@ public class JoarkJournalforingService {
     private String behandleJournalSamtalereferat(Melding melding, Sak sak, Optional<String> journalfortPostIdForTilhorendeSporsmal) {
         JournalfoerNotatRequest journalfoerNotatRequest = new JournalfoerNotatRequest();
 
-        // TODO Få tak i etternavn og fornavn, foreløpig har vi bare nav ident
         journalfoerNotatRequest.setPersonEtternavn(getSubjectHandler().getUid());
         journalfoerNotatRequest.setPersonFornavn(getSubjectHandler().getUid());
         journalfoerNotatRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
