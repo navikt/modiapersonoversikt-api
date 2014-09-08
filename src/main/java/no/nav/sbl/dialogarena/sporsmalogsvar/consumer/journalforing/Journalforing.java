@@ -30,7 +30,7 @@ public abstract class Journalforing {
     public static final String HOVEDDOKUMENT = "HOVEDDOKUMENT";
     public static final String BREVKODE_SPORSMAL_OG_SVAR = "SP_OG_SVAR";
     public static final String BREVKODE_NOTAT = "SAMTALEREF";
-    public static final String KATEGORI_ELEKTRONISK_DIALOG = "ED";
+    public static final String KATEGORI_ELEKTRONISK_DIALOG = "ELEKTRONISK_DIALOG";
 
     public static final String DOKUMENTTYPE_INNGAAENDE = "I";
     public static final String DOKUMENTTYPE_NOTAT = "N";
