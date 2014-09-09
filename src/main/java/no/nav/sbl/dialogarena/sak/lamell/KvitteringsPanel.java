@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sak.lamell;
 
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
-import no.nav.sbl.dialogarena.sak.util.SakDateFormatter;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -21,6 +20,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.sbl.dialogarena.sak.util.SakDateFormatter.printFullDate;
 import static org.apache.wicket.model.Model.of;
 
 public class KvitteringsPanel extends Panel {
@@ -40,13 +40,20 @@ public class KvitteringsPanel extends Panel {
         int antallInnsendteVedlegg = kvittering.innsendteDokumenter.size();
         int totalAntallVedlegg = antallInnsendteVedlegg + kvittering.manglendeDokumenter.size();
 
-        String dato = SakDateFormatter.printFullDate(kvittering.behandlingDato);
+        String dato = printFullDate(kvittering.behandlingDato);
         String sendtAvString = cms.hentTekst("kvittering.sendt.av");
+
+        String sendtInnTekst;
+        if (totalAntallVedlegg > 0) {
+            sendtInnTekst = format(cms.hentTekst("kvittering.vedlegg.sendtInn.antall"), antallInnsendteVedlegg, totalAntallVedlegg, dato);
+        } else {
+            sendtInnTekst = dato;
+        }
 
         add(
                 new Label("sendtAv", format(sendtAvString, fnr)),
                 new Label("kvitteringsinfo-bottom", cms.hentTekst("kvittering.info.bottom")).setEscapeModelStrings(false),
-                new Label("sendt-inn", format(cms.hentTekst("kvittering.vedlegg.sendtInn.antall"), antallInnsendteVedlegg, totalAntallVedlegg, dato)),
+                new Label("sendt-inn", sendtInnTekst),
                 new Label("skjul-kollapsbar", cms.hentTekst("kvittering.skjul")),
                 new Label("vis-kollapsbar", cms.hentTekst("kvittering.vis"))
         );
