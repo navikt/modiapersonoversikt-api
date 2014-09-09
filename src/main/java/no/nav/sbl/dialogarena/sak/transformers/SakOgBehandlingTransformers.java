@@ -54,6 +54,7 @@ public class SakOgBehandlingTransformers {
                     GenerellBehandling generellBehandling = new GenerellBehandling()
                             .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
                             .withOpprettetDato(wsBehandlingskjede.getStart())
+                            .withBehandlingsType(wsBehandlingskjede.getSisteBehandlingstype().getValue())
                             .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede));
                     WSBehandlingstemaer behandlingstema = wsBehandlingskjede.getBehandlingstema();
                     if (behandlingstema != null) {

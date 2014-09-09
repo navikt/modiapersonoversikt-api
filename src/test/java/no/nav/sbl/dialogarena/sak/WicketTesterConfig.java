@@ -63,7 +63,7 @@ public class WicketTesterConfig {
     @Bean
     public SakOgBehandlingFilter sakOgBehandlingFilter() {
         SakOgBehandlingFilter mock = mock(SakOgBehandlingFilter.class, RETURNS_MOCKS);
-        when(mock.filtrer(anyListOf(WSSak.class))).thenAnswer(new Answer<Object>() {
+        when(mock.filtrerSaker(anyListOf(WSSak.class))).thenAnswer(new Answer<Object>() {
             @Override public Object answer(InvocationOnMock invocation) throws Throwable {
                 return invocation.getArguments()[0]; // Filtrerer ingenting og returnerer argumentet
             }

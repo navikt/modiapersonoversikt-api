@@ -69,7 +69,11 @@ public class SaksoversiktService {
     /**
      * Henter alle behandlinger for et gitt tema fra flere baksystemer
      */
-    public List<GenerellBehandling> hentBehandlingerForTemakode(String fnr, final String temakode) {
+    public List<GenerellBehandling> hentFiltrerteBehandlingerForTemakode(String fnr, String temakode) {
+        return sakOgBehandlingFilter.filtrerBehandlinger(hentBehandlingerForTemakode(fnr, temakode));
+    }
+
+    protected List<GenerellBehandling> hentBehandlingerForTemakode(String fnr, final String temakode) {
         LOG.info("Henter behandlinger fra Sak og Behandling & Henvendelse til Modiasaksoversikt. Fnr: " + fnr + ". Temakode: " + temakode);
         List<GenerellBehandling> behandlinger = new ArrayList<>();
         WSSak wsSak = hentSakForAktorPaaTema(hentAktorId(fnr), temakode);
@@ -95,6 +99,7 @@ public class SaksoversiktService {
 
     private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede) {
         return (Kvittering) kvittering.withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
+                .withBehandlingsType(null) //setter eksplisitt for å unngå duplisering fra filteret
                 .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede));
     }
 
@@ -170,7 +175,7 @@ public class SaksoversiktService {
     private List<WSSak> hentSakerForAktor(String aktorId) {
         try {
             List<WSSak> saker = sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
-            return sakOgBehandlingFilter.filtrer(saker);
+            return sakOgBehandlingFilter.filtrerSaker(saker);
         } catch (RuntimeException ex) {
             throw new SystemException("Feil ved kall til sakogbehandling", ex);
         }

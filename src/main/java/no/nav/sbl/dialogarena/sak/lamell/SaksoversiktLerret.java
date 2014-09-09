@@ -63,7 +63,7 @@ public class SaksoversiktLerret extends Lerret {
 
     public void hentNyeHendelser(String sakstema) {
         aktivtTema.setObject(sakstema);
-        hendelserContainer.addOrReplace(new BehandlingerListView("behandlinger", saksoversiktService.hentBehandlingerForTemakode(fnr, sakstema), fnr));
+        hendelserContainer.addOrReplace(new BehandlingerListView("behandlinger", saksoversiktService.hentFiltrerteBehandlingerForTemakode(fnr, sakstema), fnr));
     }
 
     public IModel<String> getAktivtTema() {

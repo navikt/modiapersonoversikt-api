@@ -91,7 +91,7 @@ public class SaksoversiktServiceTest {
         } catch (Exception e) {
             //whatever
         }
-        when(sakOgBehandlingFilter.filtrer(anyListOf(WSSak.class))).thenAnswer(new Answer<Object>() {
+        when(sakOgBehandlingFilter.filtrerSaker(anyListOf(WSSak.class))).thenAnswer(new Answer<Object>() {
             @Override public Object answer(InvocationOnMock invocation) throws Throwable {
                 return invocation.getArguments()[0]; // Filtrerer ingenting og returnerer argumentet
             }
