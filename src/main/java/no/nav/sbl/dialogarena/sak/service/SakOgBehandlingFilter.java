@@ -17,6 +17,27 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class SakOgBehandlingFilter {
 
+    @Inject
+    private CmsContentRetriever cms;
+
+    private static List<String> ulovligeSakstema;
+    private static List<String> lovligeBehandlingstyper;
+
+    private final static Logger log = LoggerFactory.getLogger(SakOgBehandlingFilter.class);
+
+    public List<GenerellBehandling> filtrerBehandlinger(List<GenerellBehandling> behandlinger) {
+        lovligeBehandlingstyper = asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
+        ArrayList<GenerellBehandling> allebehandlinger = new ArrayList<>();
+        allebehandlinger.addAll(on(behandlinger).filter(ER_KVITTERING).collect());
+        allebehandlinger.addAll(on(behandlinger).filter(HAR_LOVLIG_BEHANDLINGSTYPE).collect());
+        return allebehandlinger;
+    }
+
+    public List<WSSak> filtrerSaker(List<WSSak> saker) {
+        ulovligeSakstema = asList(cms.hentTekst("filter.ulovligesakstema").trim().split("\\s*,\\s*"));
+        return on(saker).filter(HAR_LOVLIG_SAKSTEMA).filter(HAR_BEHANDLINGER).collect();
+    }
+
     private static final Predicate<GenerellBehandling> ER_KVITTERING = new Predicate<GenerellBehandling>() {
         @Override
         public boolean evaluate(GenerellBehandling generellBehandling) {
@@ -31,15 +52,7 @@ public class SakOgBehandlingFilter {
         }
     };
 
-    @Inject
-    private CmsContentRetriever cms;
-
-    private static List<String> ulovligeSakstema;
-    private static List<String> lovligeBehandlingstyper;
-
-    private final static Logger log = LoggerFactory.getLogger(SakOgBehandlingFilter.class);
-
-    public static final Predicate<WSSak> HAR_LOVLIG_SAKSTEMA = new Predicate<WSSak>() {
+    private static final Predicate<WSSak> HAR_LOVLIG_SAKSTEMA = new Predicate<WSSak>() {
         @Override public boolean evaluate(WSSak wsSak) {
             String sakstema = wsSak.getSakstema().getValue();
             boolean erLovlig = !ulovligeSakstema.contains(sakstema);
@@ -50,7 +63,7 @@ public class SakOgBehandlingFilter {
         }
     };
 
-    public static final Predicate<WSSak> HAR_BEHANDLINGER = new Predicate<WSSak>() {
+    private static final Predicate<WSSak> HAR_BEHANDLINGER = new Predicate<WSSak>() {
         @Override public boolean evaluate(WSSak wsSak) {
             boolean harBehandlinger = !wsSak.getBehandlingskjede().isEmpty();
             if (!harBehandlinger) {
@@ -60,16 +73,4 @@ public class SakOgBehandlingFilter {
         }
     };
 
-    public List<GenerellBehandling> filtrerBehandlinger(List<GenerellBehandling> behandlinger) {
-        lovligeBehandlingstyper = asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
-        ArrayList<GenerellBehandling> allebehandlinger = new ArrayList<>();
-        allebehandlinger.addAll(on(behandlinger).filter(ER_KVITTERING).collect());
-        allebehandlinger.addAll(on(behandlinger).filter(HAR_LOVLIG_BEHANDLINGSTYPE).collect());
-        return allebehandlinger;
-    }
-
-    public List<WSSak> filtrerSaker(List<WSSak> saker) {
-        ulovligeSakstema = asList(cms.hentTekst("filter.ulovligesakstema").trim().split("\\s*,\\s*"));
-        return on(saker).filter(HAR_LOVLIG_SAKSTEMA).filter(HAR_BEHANDLINGER).collect();
-    }
 }
