@@ -11,7 +11,7 @@
 
     <name>modia-saksoversikt</name>
     <artifactId>modia-saksoversikt</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -286,6 +286,6 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modia-saksoversikt.git</developerConnection>
         <url>http://stash.devillo.no/scm/dial/modia-saksoversikt.git</url>
-        <tag>HEAD</tag>
+        <tag>20140909-1104_1.2</tag>
     </scm>
 </project>
