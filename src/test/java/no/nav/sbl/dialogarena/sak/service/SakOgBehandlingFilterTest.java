@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.content.CmsContentRetriever;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstegtyper;
@@ -8,16 +10,16 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -34,13 +36,13 @@ public class SakOgBehandlingFilterTest {
 
     @Before
     public void setup() {
-        when(cmsContentRetriever.hentTekst("filter.ulovligesakstema")).thenReturn("FEI, SAK,SAP  ");
-        when(cmsContentRetriever.hentTekst("filter.lovligebehandlingstyper")).thenReturn("ae0047,ae0034,ae0014");
+        when(cmsContentRetriever.hentTekst("filter.ulovligesakstema")).thenReturn("FEI,SAK, SAP");
+        when(cmsContentRetriever.hentTekst("filter.lovligebehandlingstyper")).thenReturn("ae0047, ae0034, ae0014");
     }
 
     @Test
     public void filtrererSakstema() throws Exception {
-        List<WSSak> saker = Arrays.asList(
+        List<WSSak> saker = asList(
                 createWSSak().withSakstema(new WSSakstemaer().withValue("FEI")).withBehandlingskjede( // Ulovlig
                         createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
                 ),
@@ -61,31 +63,19 @@ public class SakOgBehandlingFilterTest {
     }
 
     @Test
-    @Ignore
     public void filtrererBehandlingstyper() throws Exception {
-        List<WSSak> saker = Arrays.asList(
-                createWSSak().withSakstema(new WSSakstemaer().withValue("DAG")).withBehandlingskjede(
-                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0001")), // Ulovlig
-                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
-                ),
-                createWSSak().withSakstema(new WSSakstemaer().withValue("DAG")).withBehandlingskjede(
-                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0034")),
-                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0047"))
-                ),
-                createWSSak().withSakstema(new WSSakstemaer().withValue("FEI")).withBehandlingskjede(                      // Ulovlig
-                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0034")),
-                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0047"))
-                ),
-                createWSSak().withSakstema(new WSSakstemaer().withValue("AAP")).withBehandlingskjede(
-                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0001")), // Ulovlig
-                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0002")) // Ulovlig
-                )
-        );
+        List<GenerellBehandling> alleBehandlinger = new ArrayList<>();
+        alleBehandlinger.addAll(asList(
+                new GenerellBehandling().withBehandlingsType("ae0047"), //lovlig
+                new GenerellBehandling().withBehandlingsType("ae0034"), //lovlig
+                new GenerellBehandling().withBehandlingsType("ae0014"), //lovlig
+                new GenerellBehandling().withBehandlingsType("LOL1337"), //ulovlig
+                new Kvittering()
+        ));
 
-        List<WSSak> filtrerteSaker = sakOgBehandlingFilter.filtrerSaker(saker);
-        assertThat(filtrerteSaker.size(), is(2));
-        assertThat(filtrerteSaker.get(0).getBehandlingskjede().size(), is(1));
-        assertThat(filtrerteSaker.get(1).getBehandlingskjede().size(), is(2));
+        List<GenerellBehandling> filtrerteBehandlinger = sakOgBehandlingFilter.filtrerBehandlinger(alleBehandlinger);
+
+        assertThat(filtrerteBehandlinger.size(), is(4));
     }
 
     public static WSSak createWSSak() {

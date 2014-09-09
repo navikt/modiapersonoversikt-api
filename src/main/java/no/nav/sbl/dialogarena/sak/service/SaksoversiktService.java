@@ -97,8 +97,6 @@ public class SaksoversiktService {
         return on(behandlinger).collect(new OmvendtKronologiskBehandlingComparator());
     }
 
-
-
     private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede) {
         return (Kvittering) kvittering.withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
                 .withBehandlingsType(null) //setter eksplisitt for å unngå duplisering fra filteret
