@@ -51,14 +51,14 @@ public class HenvendelseUtsendingService {
         XMLHenvendelse henvendelse;
         for (Object o : henvendelseliste) {
             henvendelse = (XMLHenvendelse) o;
-            if (erDetteEtSporsmaletMedDenneGsakIden(oppgaveId, henvendelse)) {
+            if (erDetteEtSporsmalMedDenneGsakIden(oppgaveId, henvendelse)) {
                 return createSporsmalFromXMLHenvendelse(henvendelse);
             }
         }
         throw new RuntimeException("Finner ikke spørsmål med oppgaveId " + oppgaveId);
     }
 
-    private boolean erDetteEtSporsmaletMedDenneGsakIden(String oppgaveId, XMLHenvendelse henvendelse) {
+    private boolean erDetteEtSporsmalMedDenneGsakIden(String oppgaveId, XMLHenvendelse henvendelse) {
         return oppgaveId.equals(henvendelse.getOppgaveIdGsak());
     }
 
