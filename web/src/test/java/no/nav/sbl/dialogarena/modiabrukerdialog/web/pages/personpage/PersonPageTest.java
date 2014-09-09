@@ -136,13 +136,10 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void skalErstatteReferatPanelMedSvarPanelDersomHenvendelseIdErSattIPageParameters() {
+    public void skalIkkeErstatteReferatPanelMedSvarPanelDersomHenvendelseIdErSattIPageParameters() {
         String henvendelsesId = "id 1";
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(PersonPage.HENVENDELSEID, henvendelsesId))
-                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
-
-        verify(henvendelseUtsendingService).getSporsmal(henvendelsesId);
-        verify(henvendelseUtsendingService).getSvarEllerReferatForSporsmal(testFnr, henvendelsesId);
+                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(ReferatPanel.class)));
     }
 
     @Test

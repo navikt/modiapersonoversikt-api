@@ -13,8 +13,8 @@ import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
@@ -50,19 +50,7 @@ import java.util.List;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGANG;
-import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
-import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
-import static no.nav.modig.modia.events.InternalEvents.LAMELL_LINK_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
-import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
-import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
@@ -80,22 +68,19 @@ public class PersonPage extends BasePage {
 
     public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
     public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
-    private static final Logger logger = getLogger(PersonPage.class);
-
     public static final String SVAR_OG_REFERAT_PANEL_ID = "svarOgReferatPanel";
     public static final String OPPGAVEID = "oppgaveid";
     public static final String HENVENDELSEID = "henvendelseid";
-
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
     public static final PackageResourceReference SVAR_OG_REFERATPANEL_LESS = new PackageResourceReference(SvarOgReferatVM.class, "SvarOgReferatPanel.less");
     public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(SvarOgReferatVM.class, "jquery-ui-selectmenu.min.js");
-
+    private static final Logger logger = getLogger(PersonPage.class);
+    private final String fnr;
     @Inject
     protected HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     protected OppgaveBehandlingService oppgaveBehandlingService;
-
     private SjekkForlateSideAnswer answer;
     private RedirectModalWindow redirectPopup;
     private LamellContainer lamellContainer;
@@ -103,7 +88,6 @@ public class PersonPage extends BasePage {
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
     private Component svarOgReferatPanel;
-    private final String fnr;
 
     public PersonPage(PageParameters pageParameters) {
         fnr = pageParameters.get("fnr").toString(null);
@@ -139,10 +123,12 @@ public class PersonPage extends BasePage {
     private void erstattReferatPanelMedSvarPanelBasertPaaOppgaveIdParameter(PageParameters pageParameters) {
         StringValue oppgaveId = pageParameters.get(OPPGAVEID);
         StringValue henvendelseId = pageParameters.get(HENVENDELSEID);
-        if(!henvendelseId.isEmpty()){
-            visSvarPanelBasertPaaHenvendelsesId(henvendelseId.toString(), oppgaveId.toString());
-        } else if (!oppgaveId.isEmpty()) {
-            visSvarPanelBasertPaaOppgaveIdForSporsmal(oppgaveId.toString());
+        if (!oppgaveId.isEmpty()) {
+            if (!henvendelseId.isEmpty()) {
+                visSvarPanelBasertPaaHenvendelsesId(henvendelseId.toString(), oppgaveId.toString());
+            } else {
+                visSvarPanelBasertPaaOppgaveIdForSporsmal(oppgaveId.toString());
+            }
         }
     }
 
@@ -260,17 +246,6 @@ public class PersonPage extends BasePage {
         return false;
     }
 
-    private class NullstillLink extends AjaxLink<Void> {
-        public NullstillLink(String id) {
-            super(id);
-        }
-
-        @Override
-        public void onClick(AjaxRequestTarget target) {
-            handleRedirect(target, new PageParameters(), HentPersonPage.class);
-        }
-    }
-
     private RedirectModalWindow createModalWindow(String id) {
         RedirectModalWindow modiaModalWindow = new RedirectModalWindow(id);
         modiaModalWindow.setInitialHeight(280);
@@ -310,6 +285,17 @@ public class PersonPage extends BasePage {
                 return true;
             }
         };
+    }
+
+    private class NullstillLink extends AjaxLink<Void> {
+        public NullstillLink(String id) {
+            super(id);
+        }
+
+        @Override
+        public void onClick(AjaxRequestTarget target) {
+            handleRedirect(target, new PageParameters(), HentPersonPage.class);
+        }
     }
 
 }
