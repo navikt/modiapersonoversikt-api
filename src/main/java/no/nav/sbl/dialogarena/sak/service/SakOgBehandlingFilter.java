@@ -48,7 +48,7 @@ public class SakOgBehandlingFilter {
     private static final Predicate<GenerellBehandling> HAR_LOVLIG_BEHANDLINGSTYPE = new Predicate<GenerellBehandling>() {
         @Override
         public boolean evaluate(GenerellBehandling generellBehandling) {
-            return lovligeBehandlingstyper.contains(generellBehandling.behandlingsType);
+            return generellBehandling.behandlingsType != null && lovligeBehandlingstyper.contains(generellBehandling.behandlingsType);
         }
     };
 
