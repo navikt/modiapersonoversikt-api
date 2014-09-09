@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
+import no.nav.modig.wicket.services.HealthCheckService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,5 +28,10 @@ public class ServicesConfig {
     @Bean
     public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
         return new SaksbehandlerInnstillingerService();
+    }
+
+    @Bean
+    public HealthCheckService healthCheckService() {
+        return new HealthCheckService();
     }
 }
