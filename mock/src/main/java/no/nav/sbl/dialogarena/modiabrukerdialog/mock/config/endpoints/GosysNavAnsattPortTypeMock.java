@@ -21,10 +21,23 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattListeFaultGO
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
+
 import static java.util.Arrays.asList;
 
 @Configuration
 public class GosysNavAnsattPortTypeMock {
+
+    public static final String ANSATT_ID = "u1241";
+    public static final List<ASBOGOSYSNavEnhet> NAV_ENHET_LISTE = asList(
+            lagNavEnhet("0122", "NAV Trøgstad"),
+            lagNavEnhet("0100", "NAV Østfold"),
+            lagNavEnhet("2960", "NAV Drift og Utvikling - Anskaffelse og økonomi"),
+            lagNavEnhet("4303", "NAV Id og fordeling"),
+            lagNavEnhet("4403", "NAV Forvaltning Oslo og Akershus"),
+            lagNavEnhet("4100", "NAV Kontaktsenter Test"),
+            lagNavEnhet("1234", "NAV Mockbrukers Enhet")
+    );
 
     @Bean
     public GOSYSNAVansatt navAnsatt() {
@@ -54,7 +67,15 @@ public class GosysNavAnsattPortTypeMock {
             @Override
             public ASBOGOSYSNAVAnsatt hentNAVAnsatt(ASBOGOSYSNAVAnsatt hentNAVAnsattRequest)
                     throws HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattFaultGOSYSGeneriskfMsg {
-                return new ASBOGOSYSNAVAnsatt();
+                ASBOGOSYSNAVAnsatt ansatt = new ASBOGOSYSNAVAnsatt();
+                ansatt.setAnsattId(ANSATT_ID);
+                try {
+                    ansatt.getEnheter()
+                            .addAll(hentNAVAnsattEnhetListe(null).getNAVEnheter());
+                } catch (HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg ex) {
+                    ex.printStackTrace();
+                }
+                return ansatt;
             }
 
             @Override
@@ -62,15 +83,7 @@ public class GosysNavAnsattPortTypeMock {
                     throws HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg, HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg {
                 ASBOGOSYSNAVEnhetListe enhetListe = new ASBOGOSYSNAVEnhetListe();
                 enhetListe.getNAVEnheter()
-                        .addAll(asList(
-                                lagNavEnhet("0122", "NAV Trøgstad"),
-                                lagNavEnhet("0100", "NAV Østfold"),
-                                lagNavEnhet("2960", "NAV Drift og Utvikling - Anskaffelse og økonomi"),
-                                lagNavEnhet("4303", "NAV Id og fordeling"),
-                                lagNavEnhet("4403", "NAV Forvaltning Oslo og Akershus"),
-                                lagNavEnhet("4100", "NAV Kontaktsenter Test"),
-                                lagNavEnhet("1234", "NAV Mockbrukers Enhet")
-                        ));
+                        .addAll(NAV_ENHET_LISTE);
                 return enhetListe;
             }
         };

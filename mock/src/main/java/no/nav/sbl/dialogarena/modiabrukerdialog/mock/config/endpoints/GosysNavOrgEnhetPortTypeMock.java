@@ -21,6 +21,8 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentSpesialEnhetTilPers
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GosysNavAnsattPortTypeMock.NAV_ENHET_LISTE;
+
 @Configuration
 public class GosysNavOrgEnhetPortTypeMock {
 
@@ -46,7 +48,9 @@ public class GosysNavOrgEnhetPortTypeMock {
             @Override
             public ASBOGOSYSNAVEnhetListe hentNAVEnhetListe(ASBOGOSYSHentNAVEnhetListeRequest hentNAVEnhetListeRequest)
                     throws HentNAVEnhetListeFaultGOSYSGeneriskMsg, HentNAVEnhetListeFaultGOSYSNAVEnhetIkkeFunnetMsg {
-                return new ASBOGOSYSNAVEnhetListe();
+                ASBOGOSYSNAVEnhetListe enhetsListe = new ASBOGOSYSNAVEnhetListe();
+                enhetsListe.getNAVEnheter().addAll(NAV_ENHET_LISTE);
+                return enhetsListe;
             }
 
             @Override
