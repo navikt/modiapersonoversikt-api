@@ -26,6 +26,7 @@ public class JournalforingUtgaaende extends Journalforing {
         // TODO sjekk om det er enhetsId som skal inn i journalforendeEnhetREF eller om det er navn
         journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
         journalpost.getKryssreferanseListe().add(lagKryssreferanse(journalfortPostId));
+        journalpost.setOpprettetAvNavn(melding.navIdent);
 
         lagRelasjon(melding, journalpost);
         return journalpost;

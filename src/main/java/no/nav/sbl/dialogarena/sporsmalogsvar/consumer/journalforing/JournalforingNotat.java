@@ -13,7 +13,7 @@ public class JournalforingNotat extends Journalforing {
     public static final String KANAL_TYPE_TELEFON = "TELEFON";
     public static final String DOKUMENTTITTEL_TELEFON = "Referat fra samtale på telefon";
     public static final String DOKUMENTTITTEL_OPPMOTE = "Referat fra samtale ved oppmøte";
-    public static final String KATEGORIKODE = "REF";
+    public static final String KATEGORIKODE = "REFERAT";
 
     public static Journalpost lagJournalforingNotat(Optional<String> journalfortPostId, Sak sak, Melding melding, String journalforendeEnhetId) {
         Journalpost journalpost = new Journalpost();
@@ -26,6 +26,7 @@ public class JournalforingNotat extends Journalforing {
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));
         // TODO sjekk om det er enhetsId som skal inn i journalforendeEnhetREF eller om det er navn
         journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
+        journalpost.setOpprettetAvNavn(melding.navIdent);
 
         if (journalfortPostId.isSome()) {
             journalpost.getKryssreferanseListe().add(lagKryssreferanse(journalfortPostId.get()));

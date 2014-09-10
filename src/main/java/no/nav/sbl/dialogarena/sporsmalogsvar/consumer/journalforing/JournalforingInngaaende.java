@@ -25,6 +25,7 @@ public class JournalforingInngaaende extends Journalforing {
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));
         // TODO sjekk om det er enhetsId som skal inn i journalforendeEnhetREF eller om det er navn
         journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
+        journalpost.setOpprettetAvNavn(melding.fnrBruker);
 
         lagRelasjon(melding, journalpost);
         return journalpost;

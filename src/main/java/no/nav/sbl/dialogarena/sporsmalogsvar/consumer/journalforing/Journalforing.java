@@ -36,7 +36,7 @@ public abstract class Journalforing {
     public static final String DOKUMENTTYPE_NOTAT = "N";
     public static final String DOKUMENTTYPE_UTGAAENDE = "U";
 
-    public static final String KRYSSREFERANSE_KODE = "DIALOG_REKKE";
+    public static final String KRYSSREFERANSE_KODE = "SPOERSMAAL";
     public static final String ARKIV_FILTYPE = "PDF";
     public static final String VARIANSFORMAT = "ARKIV";
     public static final String KOMMUNIKASJONSKANAL = "NAV_NO";
