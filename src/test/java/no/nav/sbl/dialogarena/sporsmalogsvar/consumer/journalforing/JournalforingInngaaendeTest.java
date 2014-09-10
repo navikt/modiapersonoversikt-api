@@ -1,11 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
+import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.DokumentinfoRelasjon;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.JournalfoertDokumentInfo;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.Journalpost;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import static no.nav.modig.core.context.SubjectHandler.SUBJECTHANDLER_KEY;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.BREVKODE_SPORSMAL_OG_SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.DOKUMENTTYPE_INNGAAENDE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.HOVEDDOKUMENT;
@@ -17,6 +20,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 public class JournalforingInngaaendeTest extends TestDataJournalforing {
+
+    @Before
+    public void init() {
+        System.setProperty(SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getName());
+    }
 
     @Test
     public void skalLageJournalforingInngaaendeMedRiktigeFelter() {

@@ -8,6 +8,8 @@ import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinng
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.Journalpost;
 import org.joda.time.DateTime;
 
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+
 public class JournalforingInngaaende extends Journalforing {
 
     public static final String DOKUMENTTITTEL = "Sporsmal fra Ditt NAV";
@@ -25,7 +27,7 @@ public class JournalforingInngaaende extends Journalforing {
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));
         // TODO sjekk om det er enhetsId som skal inn i journalforendeEnhetREF eller om det er navn
         journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
-        journalpost.setOpprettetAvNavn(melding.fnrBruker);
+        journalpost.setOpprettetAvNavn(getSubjectHandler().getUid());
         journalpost.setMottattDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(melding.opprettetDato));
 
         lagRelasjon(melding, journalpost);

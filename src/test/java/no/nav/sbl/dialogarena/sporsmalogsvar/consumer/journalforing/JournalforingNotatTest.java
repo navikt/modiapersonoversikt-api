@@ -1,11 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
+import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.lang.option.Optional;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.Journalpost;
+import org.junit.Before;
 import org.junit.Test;
 
+import static no.nav.modig.core.context.SubjectHandler.SUBJECTHANDLER_KEY;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.DOKUMENTTYPE_NOTAT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.HOVEDDOKUMENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.INNHOLD_BESKRIVELSE;
@@ -20,6 +23,11 @@ import static org.junit.Assert.assertThat;
 public class JournalforingNotatTest extends TestDataJournalforing {
 
     private static final Optional<String> journalfortPostIdOptional = Optional.optional(journalfortPostId);
+
+    @Before
+    public void init() {
+        System.setProperty(SUBJECTHANDLER_KEY, ThreadLocalSubjectHandler.class.getName());
+    }
 
     @Test
     public void skalLageJournalforingNotatMedRiktigeFelter() {

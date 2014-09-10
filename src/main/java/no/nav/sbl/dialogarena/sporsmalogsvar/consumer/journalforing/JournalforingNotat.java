@@ -8,6 +8,8 @@ import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernota
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.Journalpost;
 import org.joda.time.DateTime;
 
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+
 public class JournalforingNotat extends Journalforing {
 
     public static final String KANAL_TYPE_TELEFON = "TELEFON";
@@ -26,7 +28,7 @@ public class JournalforingNotat extends Journalforing {
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));
         // TODO sjekk om det er enhetsId som skal inn i journalforendeEnhetREF eller om det er navn
         journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
-        journalpost.setOpprettetAvNavn(melding.navIdent);
+        journalpost.setOpprettetAvNavn(getSubjectHandler().getUid());
 
         if (journalfortPostId.isSome()) {
             journalpost.getKryssreferanseListe().add(lagKryssreferanse(journalfortPostId.get()));

@@ -8,6 +8,8 @@ import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutga
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.Journalpost;
 import org.joda.time.DateTime;
 
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+
 public class JournalforingUtgaaende extends Journalforing {
 
     public static final String DOKUMENTTITTEL = "Svar fra Ditt NAV";
@@ -26,7 +28,7 @@ public class JournalforingUtgaaende extends Journalforing {
         // TODO sjekk om det er enhetsId som skal inn i journalforendeEnhetREF eller om det er navn
         journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
         journalpost.getKryssreferanseListe().add(lagKryssreferanse(journalfortPostId));
-        journalpost.setOpprettetAvNavn(melding.navIdent);
+        journalpost.setOpprettetAvNavn(getSubjectHandler().getUid());
 
         lagRelasjon(melding, journalpost);
         return journalpost;
