@@ -1,27 +1,19 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentNAVEnhetListeRequest;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetListeFaultGOSYSGeneriskMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetListeFaultGOSYSNAVEnhetIkkeFunnetMsg;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.EnhetService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKode;
 import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.IChoiceRenderer;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -33,7 +25,6 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
-import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class NyOppgaveFormWrapper extends Panel {
 
@@ -44,14 +35,7 @@ public class NyOppgaveFormWrapper extends Panel {
     private GsakKodeverk gsakKodeverk;
 
     @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
-
-    @Inject
-    private GOSYSNAVOrgEnhet enhetWS;
-
-    @Inject
-    private GOSYSNAVansatt ansattWS;
-
+    private EnhetService enhetService;
 
     public NyOppgaveFormWrapper(String id, final InnboksVM innboksVM) {
         super(id, new CompoundPropertyModel<>(new NyOppgave()));
@@ -80,10 +64,23 @@ public class NyOppgaveFormWrapper extends Panel {
                 return emptyList();
             }
         };
-        ChoiceRenderer<GsakKode> choiceRenderer = new ChoiceRenderer<>("tekst", "kode");
-        final DropDownChoice<GsakKode.Tema> temaDropDown = new DropDownChoice<>("tema", gsakKodeverk.hentTemaListe(), choiceRenderer);
-        final DropDownChoice<GsakKode.OppgaveType> typeDropDown = new DropDownChoice<>("type", typeModel, choiceRenderer);
-        final DropDownChoice<GsakKode.Prioritet> prioritetDropDown = new DropDownChoice<>("prioritet", priModel, choiceRenderer);
+        IChoiceRenderer<GsakKode> gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
+        IChoiceRenderer<AnsattEnhet> enhetChoiceRenderer = new IChoiceRenderer<AnsattEnhet>() {
+            @Override
+            public Object getDisplayValue(AnsattEnhet object) {
+                return object.enhetId + " " + object.enhetNavn;
+            }
+
+            @Override
+            public String getIdValue(AnsattEnhet object, int index) {
+                return object.enhetId;
+            }
+        };
+
+        final DropDownChoice<GsakKode.Tema> temaDropDown = new DropDownChoice<>("tema", gsakKodeverk.hentTemaListe(), gsakKodeChoiceRenderer);
+        final DropDownChoice<AnsattEnhet> enhetDropDown = new DropDownChoice<>("enhet", enhetService.hentAlleEnheter(), enhetChoiceRenderer);
+        final DropDownChoice<GsakKode.OppgaveType> typeDropDown = new DropDownChoice<>("type", typeModel, gsakKodeChoiceRenderer);
+        final DropDownChoice<GsakKode.Prioritet> prioritetDropDown = new DropDownChoice<>("prioritet", priModel, gsakKodeChoiceRenderer);
 
         temaDropDown.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
@@ -93,7 +90,7 @@ public class NyOppgaveFormWrapper extends Panel {
             }
         });
         form.add(temaDropDown.setRequired(true));
-        form.add(new DropDownChoice<>("enhet", hentEnhetsListe()).setRequired(true));
+        form.add(enhetDropDown.setRequired(true));
         form.add(typeDropDown.setRequired(true).setOutputMarkupId(true));
         form.add(prioritetDropDown.setRequired(true).setOutputMarkupId(true));
         form.add(new TextArea<String>("beskrivelse").setRequired(true));
@@ -118,33 +115,6 @@ public class NyOppgaveFormWrapper extends Panel {
                 target.add(feedbackPanel);
             }
         });
-    }
-
-    private List<String> hentEnhetsListe() {
-        try {
-            ASBOGOSYSHentNAVEnhetListeRequest req = new ASBOGOSYSHentNAVEnhetListeRequest();
-            req.setNAVEnhet(hentASBOGOSYSAnsatt());
-
-            return on(enhetWS.hentNAVEnhetListe(req).getNAVEnheter()).map(new Transformer<ASBOGOSYSNavEnhet, String>() {
-                @Override
-                public String transform(ASBOGOSYSNavEnhet enhet) {
-                    return enhet.getEnhetsId() + " " + enhet.getEnhetsNavn();
-                }
-            }).collect();
-        } catch (HentNAVEnhetListeFaultGOSYSGeneriskMsg |
-                HentNAVEnhetListeFaultGOSYSNAVEnhetIkkeFunnetMsg |
-                HentNAVAnsattFaultGOSYSGeneriskfMsg |
-                HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg ex) {
-            ex.printStackTrace();
-        }
-        return emptyList();
-    }
-
-    private ASBOGOSYSNavEnhet hentASBOGOSYSAnsatt() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
-        String navIdent = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
-        ASBOGOSYSNAVAnsatt ansatt = new ASBOGOSYSNAVAnsatt();
-        ansatt.setAnsattId(navIdent);
-        return ansattWS.hentNAVAnsatt(ansatt).getEnheter().get(0);
     }
 
     protected void etterSubmit(AjaxRequestTarget target) {
