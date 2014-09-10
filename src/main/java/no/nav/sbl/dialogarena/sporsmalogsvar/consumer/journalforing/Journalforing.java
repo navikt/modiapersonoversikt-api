@@ -63,6 +63,7 @@ public abstract class Journalforing {
     protected static EksternPart lagEksternPart(Person bruker) {
         EksternPart eksternPart = new EksternPart();
         eksternPart.setEksternAktoer(bruker);
+        eksternPart.setNavn(bruker.getIdent().getIdent());
         return eksternPart;
     }
 
