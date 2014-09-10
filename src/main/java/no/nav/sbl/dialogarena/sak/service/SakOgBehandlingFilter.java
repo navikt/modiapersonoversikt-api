@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.content.CmsContentRetriever;
+import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -30,6 +32,7 @@ public class SakOgBehandlingFilter {
         ArrayList<GenerellBehandling> allebehandlinger = new ArrayList<>();
         allebehandlinger.addAll(on(behandlinger).filter(ER_KVITTERING).collect());
         allebehandlinger.addAll(on(behandlinger).filter(HAR_LOVLIG_BEHANDLINGSTYPE).collect());
+        Collections.sort(allebehandlinger, new OmvendtKronologiskBehandlingComparator());
         return allebehandlinger;
     }
 
