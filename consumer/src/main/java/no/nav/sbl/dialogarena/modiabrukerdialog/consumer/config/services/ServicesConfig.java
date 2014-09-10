@@ -26,6 +26,11 @@ public class ServicesConfig {
     }
 
     @Bean
+    public EnhetService enhetService() {
+        return new EnhetService();
+    }
+
+    @Bean
     public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
         return new SaksbehandlerInnstillingerService();
     }
