@@ -9,6 +9,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -66,11 +67,11 @@ public class SakOgBehandlingFilterTest {
     public void filtrererBehandlingstyper() throws Exception {
         List<GenerellBehandling> alleBehandlinger = new ArrayList<>();
         alleBehandlinger.addAll(asList(
-                new GenerellBehandling().withBehandlingsType("ae0047"), //lovlig
-                new GenerellBehandling().withBehandlingsType("ae0034"), //lovlig
-                new GenerellBehandling().withBehandlingsType("ae0014"), //lovlig
-                new GenerellBehandling().withBehandlingsType("LOL1337"), //ulovlig
-                new Kvittering()
+                new GenerellBehandling().withBehandlingsType("ae0047").withBehandlingsDato(DateTime.now().minusDays(1)), //lovlig
+                new GenerellBehandling().withBehandlingsType("ae0034").withBehandlingsDato(DateTime.now().minusDays(2)), //lovlig
+                new GenerellBehandling().withBehandlingsType("ae0014").withBehandlingsDato(DateTime.now().minusDays(3)), //lovlig
+                new GenerellBehandling().withBehandlingsType("LOL1337").withBehandlingsDato(DateTime.now().minusDays(4)), //ulovlig
+                new Kvittering().withBehandlingsDato(DateTime.now().minusDays(5))
         ));
 
         List<GenerellBehandling> filtrerteBehandlinger = sakOgBehandlingFilter.filtrerBehandlinger(alleBehandlinger);
