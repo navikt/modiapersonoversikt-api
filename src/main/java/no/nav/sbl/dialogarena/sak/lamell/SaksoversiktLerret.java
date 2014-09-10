@@ -3,10 +3,12 @@ package no.nav.sbl.dialogarena.sak.lamell;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.events.FeedItemPayload;
+import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
+import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -20,8 +22,10 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.List;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 
 public class SaksoversiktLerret extends Lerret {
 
@@ -59,6 +63,15 @@ public class SaksoversiktLerret extends Lerret {
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void filtrerDetaljerPaaValgtTema(AjaxRequestTarget target, FeedItemPayload payload) {
         hentNyeHendelser(payload.getItemId());
+    }
+
+    @SuppressWarnings("unused")
+    @RunOnEvents(WIDGET_HEADER_CLICKED)
+    private void aapneForsteItem(AjaxRequestTarget target, WidgetHeaderPayload payload) {
+        List<TemaVM> temaer = saksoversiktService.hentTemaer(fnr);
+        if(!temaer.isEmpty()) {
+            hentNyeHendelser(temaer.get(0).temakode);
+        }
     }
 
     public void hentNyeHendelser(String sakstema) {
