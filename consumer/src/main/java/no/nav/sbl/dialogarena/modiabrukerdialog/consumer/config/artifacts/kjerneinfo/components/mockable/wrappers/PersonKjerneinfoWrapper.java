@@ -7,7 +7,7 @@ import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.KjerneinfoMapperConfigResolver;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.mockableimpl.PersonKjerneinfoConsumerConfigImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Wrapper;
-import no.nav.tjeneste.virksomhet.person.v1.PersonPortType;
+import no.nav.tjeneste.virksomhet.person.v2.PersonV2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,11 +28,11 @@ public class PersonKjerneinfoWrapper {
 
     @Inject
     @Named("hentPersonKjerneinfoJaxWsPortProxyFactoryBean")
-    private PersonPortType personPortType;
+    private PersonV2 personPortType;
 
     @Inject
     @Named("hentSelftestPersonKjerneinfoJaxWsPortProxyFactoryBean")
-    private PersonPortType selfTestPersonPortType;
+    private PersonV2 selfTestPersonPortType;
 
     @Inject
     private KjerneinfoMapper kjerneinfoMapperBean;
