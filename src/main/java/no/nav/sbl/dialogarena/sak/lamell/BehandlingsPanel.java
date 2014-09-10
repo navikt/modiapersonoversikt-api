@@ -36,7 +36,7 @@ public class BehandlingsPanel extends Panel {
     }
 
     private Component lagAvsluttetDato(GenerellBehandling behandling) {
-        return new Label("avsluttet-dato", format(cms.hentTekst("behandling.avsluttet.dato"), printFullDate(behandling.opprettetDato)))
+        return new Label("avsluttet-dato", format(cms.hentTekst("behandling.avsluttet.dato"), printFullDate(behandling.behandlingDato)))
                 .add(visibleIf(of(behandling.behandlingsStatus.equals(AVSLUTTET))));
     }
 
