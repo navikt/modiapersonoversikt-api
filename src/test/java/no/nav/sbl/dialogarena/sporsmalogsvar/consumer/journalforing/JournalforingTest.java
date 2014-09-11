@@ -24,6 +24,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journ
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.DOKUMENTTYPE_NOTAT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.FORELOPIG_DOKUMENTTITTEL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.FORELOPIG_PERSONIDENTIFIKATOR;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.GSAK_FAGSYSTEMKODE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.KOMMUNIKASJONSKANAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.KRYSSREFERANSE_KODE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.VARIANSFORMAT;
@@ -151,7 +152,7 @@ public class JournalforingTest {
                 = KlasseSomArverJournalforing.SakToJournalforingSak.INSTANCE.transform(sak);
 
         assertThat(journalforingssak.getSaksId(), is(sak.saksId));
-        assertThat(journalforingssak.getFagsystemkode(), is(sak.fagsystem));
+        assertThat(journalforingssak.getFagsystemkode(), is(GSAK_FAGSYSTEMKODE));
     }
 
     @Test

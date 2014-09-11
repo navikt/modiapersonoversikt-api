@@ -45,6 +45,8 @@ public abstract class Journalforing {
     public static final String FORELOPIG_PERSONIDENTIFIKATOR = "FNR";
     public static final String FORELOPIG_DOKUMENTTITTEL = "Dokumenttittel";
 
+    public static final String GSAK_FAGSYSTEMKODE = "FS22";
+
     protected static Person lagPerson(String fnr) {
         Person bruker = new Person();
         Personidenter personidenter = new Personidenter();
@@ -139,7 +141,7 @@ public abstract class Journalforing {
         public no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Sak transform(Sak sak) {
             no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Sak journalSak = new no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Sak();
             journalSak.setSaksId(sak.saksId);
-            journalSak.setFagsystemkode(sak.fagsystem);
+            journalSak.setFagsystemkode(GSAK_FAGSYSTEMKODE);
             return journalSak;
         }
 
