@@ -16,13 +16,13 @@ public class Sak implements Serializable, Comparable<Sak> {
     public String saksId, tema, fagsystem, sakstype;
     public DateTime opprettetDato;
 
-    public static final String SAKSTYPE_GENERELL = "Generell";
+    public static final String SAKSTYPE_GENERELL = "GEN";
     public static final List<String> GODKJENTE_TEMA_FOR_GENERELLE = unmodifiableList(asList("AGR", "FUL", "GEN", "KTR", "STO", "SER", "SIK", "SYM", "TRK", "TRY", "VEN"));
     public static final List<String> GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER = unmodifiableList(asList("AO01", "IT01", "OEBS", "V2", "AO11"));
     public static final String GODKJENT_FAGSYSTEM_FOR_GENERELLE = "FS22";
 
     public boolean isSakstypeForVisningGenerell() {
-        return sakstype.equals(SAKSTYPE_GENERELL);
+        return SAKSTYPE_GENERELL.equals(sakstype);
     }
 
     public static final Transformer<Sak, String> TEMA = new Transformer<Sak, String>() {
