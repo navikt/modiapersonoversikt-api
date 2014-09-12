@@ -10,9 +10,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.time.Duration;
 
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
-
 public class KvitteringsPanel extends Panel {
+
+    public static final String KVITTERING_VIST = "kvittering.vist";
 
     private String kvitteringsmelding;
     private AbstractAjaxTimerBehavior timeout;
@@ -44,7 +44,7 @@ public class KvitteringsPanel extends Panel {
                     target.add(getComponent());
                     target.add(components);
                     stop(target);
-                    send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
+                    send(getPage(), Broadcast.BREADTH, new NamedEventPayload(KVITTERING_VIST));
                 }
             };
             add(timeout);
