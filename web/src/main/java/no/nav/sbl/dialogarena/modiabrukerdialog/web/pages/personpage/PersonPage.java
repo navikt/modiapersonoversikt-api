@@ -122,6 +122,9 @@ public class PersonPage extends BasePage {
                 svarOgReferatPanel,
                 new TimeoutBoks("timeoutBoks", fnr)
         );
+//        if (harHenvendelsesIdIURLEllerSession(pageParameters)) {
+//            lamellContainer.goToLamell(LAMELL_MELDINGER);
+//        }
         erstattReferatPanelMedSvarPanelBasertPaaOppgaveIdParameter(pageParameters);
 
         if (harHenvendelsesIdIURLEllerSession(pageParameters)) {
