@@ -77,7 +77,7 @@ public class SaksoversiktWidgetTest extends AbstractWicketTest {
 
         SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
         wicketTester.goToPageWith(widget);
-        wicketTester.should().containPatterns("2 saker som ikke vises");
+        wicketTester.should().containPatterns("2 flere saker.");
     }
 
     @Test
