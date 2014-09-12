@@ -89,6 +89,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 target.add(prioritetDropDown);
             }
         });
+
         form.add(temaDropDown.setRequired(true));
         form.add(enhetDropDown.setRequired(true));
         form.add(typeDropDown.setRequired(true).setOutputMarkupId(true));
