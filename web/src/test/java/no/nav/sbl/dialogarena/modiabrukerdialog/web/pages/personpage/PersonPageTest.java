@@ -131,7 +131,7 @@ public class PersonPageTest extends WicketPageTest {
     public void gittBareOppgaveUrlParamVisSvarPanelOgOversiktLamell() {
         String oppgaveid = "oppgaveid";
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(OPPGAVEID, oppgaveid))
-                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)))
+                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
 
         verify(henvendelseUtsendingService).getSporsmalFromOppgaveId(testFnr, oppgaveid);
     }
