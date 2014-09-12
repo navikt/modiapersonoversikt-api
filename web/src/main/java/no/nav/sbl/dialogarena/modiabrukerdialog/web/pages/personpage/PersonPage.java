@@ -63,11 +63,13 @@ import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow.CloseButtonCallback;
@@ -121,6 +123,10 @@ public class PersonPage extends BasePage {
                 new TimeoutBoks("timeoutBoks", fnr)
         );
         erstattReferatPanelMedSvarPanelBasertPaaOppgaveIdParameter(pageParameters);
+
+        if (harHenvendelsesIdIURLEllerSession(pageParameters)) {
+            lamellContainer.goToLamell(LAMELL_MELDINGER);
+        }
     }
 
     private void instansierFelter() {
@@ -298,6 +304,21 @@ public class PersonPage extends BasePage {
                 return true;
             }
         };
+    }
+
+    private boolean harHenvendelsesIdIURLEllerSession(PageParameters pageParameters) {
+        StringValue henvendelseIdURLParam = pageParameters.get(HENVENDELSEID);
+        String henvendelseIdSessionParam = (String) getSession().getAttribute(HENVENDELSEID);
+        StringValue oppgaveIdURLParam = pageParameters.get(OPPGAVEID);
+
+        if (!oppgaveIdURLParam.isEmpty()) {
+            return false;
+        }
+
+        if (henvendelseIdURLParam.isEmpty() && isBlank(henvendelseIdSessionParam)) {
+            return false;
+        }
+        return true;
     }
 
     private class NullstillLink extends AjaxLink<Void> {
