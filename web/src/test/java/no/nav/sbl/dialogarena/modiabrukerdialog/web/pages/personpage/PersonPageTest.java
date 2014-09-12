@@ -122,29 +122,29 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void skalViseReferatPanelSomDefaultSvarOfReferatPanel() {
+    public void gittIngenUrlParamVisReferatPanelOgOversiktLamell() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(ReferatPanel.class)));
     }
 
     @Test
-    public void skalErstatteReferatPanelMedSvarPanelDersomOppgaveidErSattIPageParameters() {
+    public void gittBareOppgaveUrlParamVisSvarPanelOgOversiktLamell() {
         String oppgaveid = "oppgaveid";
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(OPPGAVEID, oppgaveid))
-                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
+                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)))
 
         verify(henvendelseUtsendingService).getSporsmalFromOppgaveId(testFnr, oppgaveid);
     }
 
     @Test
-    public void skalIkkeErstatteReferatPanelMedSvarPanelDersomHenvendelseIdErSattIPageParameters() {
+    public void gittBareHenvendelseUrlParamVisReferatPanelOgMeldingsLamell() {
         String henvendelsesId = "id 1";
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(PersonPage.HENVENDELSEID, henvendelsesId))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(ReferatPanel.class)));
     }
 
     @Test
-    public void skalErstatteReferatPanelMedSvarPanelDersomHenvendelseIdOgOppgaveIdErSattIPageParameters() {
+    public void gittBaadeHenvendelseOgOppgaveUrlParamVisSvarPanelOgMeldingsLamell() {
         String henvendelsesId = "id 1";
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(PersonPage.HENVENDELSEID, henvendelsesId).param(OPPGAVEID, "oppgaveid"))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
