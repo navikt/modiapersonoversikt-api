@@ -7,15 +7,16 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import org.apache.commons.collections15.Predicate;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class SakOgBehandlingFilter {
 
@@ -25,14 +26,14 @@ public class SakOgBehandlingFilter {
     private static List<String> ulovligeSakstema;
     private static List<String> lovligeBehandlingstyper;
 
-    private final static Logger log = LoggerFactory.getLogger(SakOgBehandlingFilter.class);
+    private final static Logger log = getLogger(SakOgBehandlingFilter.class);
 
     public List<GenerellBehandling> filtrerBehandlinger(List<GenerellBehandling> behandlinger) {
         lovligeBehandlingstyper = asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
         ArrayList<GenerellBehandling> allebehandlinger = new ArrayList<>();
-        allebehandlinger.addAll(on(behandlinger).filter(ER_KVITTERING).collect());
+        allebehandlinger.addAll(on(behandlinger).filter(ER_AVSLUTTET_KVITTERING).collect());
         allebehandlinger.addAll(on(behandlinger).filter(HAR_LOVLIG_BEHANDLINGSTYPE).collect());
-        Collections.sort(allebehandlinger, new OmvendtKronologiskBehandlingComparator());
+        sort(allebehandlinger, new OmvendtKronologiskBehandlingComparator());
         return allebehandlinger;
     }
 
@@ -41,10 +42,10 @@ public class SakOgBehandlingFilter {
         return on(saker).filter(HAR_LOVLIG_SAKSTEMA).filter(HAR_BEHANDLINGER).collect();
     }
 
-    private static final Predicate<GenerellBehandling> ER_KVITTERING = new Predicate<GenerellBehandling>() {
+    private static final Predicate<GenerellBehandling> ER_AVSLUTTET_KVITTERING = new Predicate<GenerellBehandling>() {
         @Override
         public boolean evaluate(GenerellBehandling generellBehandling) {
-            return (generellBehandling instanceof Kvittering);
+            return (generellBehandling instanceof Kvittering && ((Kvittering) generellBehandling).avsluttet);
         }
     };
 
@@ -60,7 +61,7 @@ public class SakOgBehandlingFilter {
             String sakstema = wsSak.getSakstema().getValue();
             boolean erLovlig = !ulovligeSakstema.contains(sakstema);
             if (!erLovlig) {
-                log.info(String.format("Filtrerer bort sakstema %s", sakstema));
+                log.info(format("Filtrerer bort sakstema %s", sakstema));
             }
             return erLovlig;
         }
@@ -70,7 +71,7 @@ public class SakOgBehandlingFilter {
         @Override public boolean evaluate(WSSak wsSak) {
             boolean harBehandlinger = !wsSak.getBehandlingskjede().isEmpty();
             if (!harBehandlinger) {
-                log.info(String.format("Filtrerer bort sak uten behandlinger. Sakstema var %s", wsSak.getSakstema().getValue()));
+                log.info(format("Filtrerer bort sak uten behandlinger. Sakstema var %s", wsSak.getSakstema().getValue()));
             }
             return harBehandlinger;
         }

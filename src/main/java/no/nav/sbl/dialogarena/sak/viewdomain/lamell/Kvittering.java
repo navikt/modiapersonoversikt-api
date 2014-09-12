@@ -10,6 +10,7 @@ public class Kvittering extends GenerellBehandling {
     public String behandlingskjedeId;
     public String skjemanummerRef;
     public boolean ettersending;
+    public boolean avsluttet;
 
     public Kvittering withInnsendteDokumenter(List<Dokument> innsendteDokumenter) {
         this.innsendteDokumenter = innsendteDokumenter;
@@ -36,8 +37,13 @@ public class Kvittering extends GenerellBehandling {
         return this;
     }
 
-    public Kvittering withEttersending(Boolean ettersending) {
+    public Kvittering withEttersending(boolean ettersending) {
         this.ettersending = ettersending;
+        return this;
+    }
+
+    public Kvittering withAvsluttet(boolean avsluttet) {
+        this.avsluttet = avsluttet;
         return this;
     }
 
