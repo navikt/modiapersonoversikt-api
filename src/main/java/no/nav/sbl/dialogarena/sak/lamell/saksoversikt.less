@@ -50,7 +50,7 @@
             padding: 0;
 
             li {
-                &.aktiv, &:hover {
+                &.aktiv{
                     background: #fff;
                 }
 
@@ -62,6 +62,15 @@
 
                     .dato {
                         margin-bottom: 0.17rem;
+                    }
+
+                    &:active,&:focus {
+                        background: #0067c5;
+                        color: #FFFFFF;
+                    }
+
+                    &:hover {
+                        background: #dadada;
                     }
                 }
             }

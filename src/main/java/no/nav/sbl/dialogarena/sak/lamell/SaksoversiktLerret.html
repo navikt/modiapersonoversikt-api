@@ -1,10 +1,10 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div class="saker flexbox row flex1">
-        <article class="sak-navigering flex2" wicket:id="sakerContainer">
+        <article tabindex="0" class="sak-navigering flex2" wicket:id="sakerContainer">
             <ul>
                 <li wicket:id="saker">
-                    <a href="#" wicket:id="temalenke">
+                    <a href="#" wicket:id="temalenke" tabindex="-1">
                         <div class="mini dato" wicket:id="dato"/>
                         <div class="medium" wicket:id="sakstema"/>
                     </a>
@@ -15,7 +15,7 @@
             <article class="behandling-container" wicket:id="behandlinger">
                 <div class="aar" wicket:id="aar-container">
                     <div>
-                        <span wicket:id="aar"/>
+                        <span wicket:id="aar" />
                     </div>
                 </div>
                 <div class="behandling flexbox row" wicket:id="behandling-container">

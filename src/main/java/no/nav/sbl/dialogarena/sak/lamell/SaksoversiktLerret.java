@@ -5,6 +5,7 @@ import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.Lerret;
+import no.nav.modig.modia.navigation.KeyNavigationDependentResourceReference;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
@@ -13,6 +14,8 @@ import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptContentHeaderItem;
+import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
+import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -34,10 +37,13 @@ public class SaksoversiktLerret extends Lerret {
     public static final ConditionalCssResource SAKSOVERSIKT_IE_CSS = new ConditionalCssResource(new CssResourceReference(SaksoversiktLerret.class, "saksoversikt-ie.css"), "screen", "IE");
     public static final JavaScriptResourceReference SAKSOVERSIKT_JS = new JavaScriptResourceReference(SaksoversiktLerret.class, "saksoversikt.js");
     public static final ConditionalJavascriptResource SAKSOVERSIKT_IE_JS = new ConditionalJavascriptResource(new JavaScriptResourceReference(SaksoversiktLerret.class, "saksoversikt-ie.js"), "IE");
+    public static final KeyNavigationDependentResourceReference JS_RESOURCE = new KeyNavigationDependentResourceReference(SaksoversiktLerret.class, "saksoversikt-navigation.js");
+    private static final String initial = "S";
 
     @Inject
     private SaksoversiktService saksoversiktService;
 
+    private Component temaContainer;
     private WebMarkupContainer hendelserContainer;
     private String fnr;
     private IModel<String> aktivtTema = new Model<>();
@@ -46,7 +52,8 @@ public class SaksoversiktLerret extends Lerret {
         super(id);
         this.fnr = fnr;
         hendelserContainer = lagHendelserContainer(fnr);
-        add(hendelserContainer, lagTemaContainer(fnr));
+        temaContainer = lagTemaContainer(fnr);
+        add(hendelserContainer, temaContainer);
     }
 
     private WebMarkupContainer lagHendelserContainer(String fnr) {
@@ -56,7 +63,8 @@ public class SaksoversiktLerret extends Lerret {
 
     private Component lagTemaContainer(String fnr) {
         return new WebMarkupContainer("sakerContainer")
-                .add(new TemaListView("saker", fnr, this).setOutputMarkupPlaceholderTag(true));
+                .add(new TemaListView("saker", fnr, this).setOutputMarkupPlaceholderTag(true))
+                .setOutputMarkupId(true);
     }
 
     @SuppressWarnings("unused")
@@ -87,5 +95,7 @@ public class SaksoversiktLerret extends Lerret {
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
         response.render(new JavaScriptContentHeaderItem("resizeElement()", "saksoversikt-ie-js", "IE"));
+        response.render(JavaScriptReferenceHeaderItem.forReference(JS_RESOURCE));
+        response.render(OnDomReadyHeaderItem.forScript("new Modig.Modia.SaksoversiktView('#" + temaContainer.getMarkupId() + "','" + initial + "');"));
     }
 }
