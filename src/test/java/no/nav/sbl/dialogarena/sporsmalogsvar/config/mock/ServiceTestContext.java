@@ -4,10 +4,9 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.EnhetService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
@@ -85,6 +84,7 @@ public class ServiceTestContext {
     public GOSYSNAVOrgEnhet GOSYSNAVOrgEnhet() {
         return mock(GOSYSNAVOrgEnhet.class);
     }
+
     @Bean
     public ValgtEnhetService valgtEnhetService() {
         return mock(ValgtEnhetService.class);
@@ -101,13 +101,8 @@ public class ServiceTestContext {
     }
 
     @Bean
-    public AnsattService ansattService() {
-        return mock(AnsattService.class);
-    }
-
-    @Bean
     public EnhetService enhetService() {
-        EnhetService service =  mock(EnhetService.class);
+        EnhetService service = mock(EnhetService.class);
         when(service.hentAlleEnheter()).thenReturn(asList(new AnsattEnhet("1231", "Sinsen")));
         return service;
     }

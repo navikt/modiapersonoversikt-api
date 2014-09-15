@@ -136,11 +136,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>modiabrukerdialog-consumer</artifactId>
-            <version>3.2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dialogarena-behandlingsinformasjon</artifactId>
             <version>${dialogarena.behandlingsinformasjon.version}</version>
             <scope>provided</scope>
@@ -201,6 +196,11 @@
                     <artifactId>stax2-api</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modiabrukerdialog-api</artifactId>
+            <version>1.0</version>
         </dependency>
 
         <!--Modig-->
