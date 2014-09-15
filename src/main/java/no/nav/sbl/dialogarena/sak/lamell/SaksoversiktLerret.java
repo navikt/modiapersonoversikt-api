@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
+import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.events.FeedItemPayload;
@@ -17,11 +18,13 @@ import org.apache.wicket.markup.head.JavaScriptContentHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -29,8 +32,11 @@ import java.util.List;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class SaksoversiktLerret extends Lerret {
+
+    private Logger logger = getLogger(SaksoversiktLerret.class);
 
     // Brukes av Modia (containeren):
     public static final PackageResourceReference SAKSOVERSIKT_LESS = new PackageResourceReference(SaksoversiktLerret.class, "saksoversikt.less");
@@ -47,6 +53,7 @@ public class SaksoversiktLerret extends Lerret {
     private WebMarkupContainer hendelserContainer;
     private String fnr;
     private IModel<String> aktivtTema = new Model<>();
+    private Label feilmelding = (Label) new Label("feilmelding", "Feil ved kall til baksystem").setVisible(false);
 
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
@@ -58,6 +65,7 @@ public class SaksoversiktLerret extends Lerret {
 
     private WebMarkupContainer lagHendelserContainer(String fnr) {
         return (WebMarkupContainer) new WebMarkupContainer("hendelserContainer")
+                .add(feilmelding)
                 .add(new BehandlingerListView("behandlinger", new ArrayList<GenerellBehandling>(), fnr)).setOutputMarkupPlaceholderTag(true);
     }
 
@@ -83,8 +91,13 @@ public class SaksoversiktLerret extends Lerret {
     }
 
     public void hentNyeHendelser(String sakstema) {
-        aktivtTema.setObject(sakstema);
-        hendelserContainer.addOrReplace(new BehandlingerListView("behandlinger", saksoversiktService.hentFiltrerteBehandlingerForTemakode(fnr, sakstema), fnr));
+        try {
+            aktivtTema.setObject(sakstema);
+            hendelserContainer.addOrReplace(new BehandlingerListView("behandlinger", saksoversiktService.hentFiltrerteBehandlingerForTemakode(fnr, sakstema), fnr));
+        } catch (SystemException e) {
+            logger.error("Feil ved kall til baksystem", e);
+            feilmelding.setVisible(true);
+        }
     }
 
     public IModel<String> getAktivtTema() {
