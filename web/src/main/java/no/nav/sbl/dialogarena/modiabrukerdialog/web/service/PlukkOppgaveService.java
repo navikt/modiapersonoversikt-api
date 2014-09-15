@@ -5,8 +5,8 @@ import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Oppgave;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;

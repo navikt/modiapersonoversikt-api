@@ -11,8 +11,8 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetGruppeListe
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetGruppeListeFaultGOSYSNAVEnhetIkkeFunnetMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetListeFaultGOSYSGeneriskMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetListeFaultGOSYSNAVEnhetIkkeFunnetMsg;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.norg.NAVAnsattEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.norg.NAVOrgEnhetEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVAnsattEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVOrgEnhetEndpointConfig;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.EnhetAttributeLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

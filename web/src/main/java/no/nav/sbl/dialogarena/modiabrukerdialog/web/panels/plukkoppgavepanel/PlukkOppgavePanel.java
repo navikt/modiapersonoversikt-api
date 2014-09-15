@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Oppgave;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;

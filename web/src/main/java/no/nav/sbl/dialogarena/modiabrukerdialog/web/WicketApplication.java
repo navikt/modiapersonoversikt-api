@@ -44,7 +44,7 @@ import javax.inject.Inject;
 import java.util.Locale;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.MockUtil.mockSetupErTillatt;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockSetupErTillatt;
 import static org.apache.wicket.util.time.Duration.ONE_SECOND;
 
 public class WicketApplication extends WebApplication {

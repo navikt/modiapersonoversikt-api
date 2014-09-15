@@ -2,9 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
