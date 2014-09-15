@@ -2,8 +2,8 @@ package no.nav.sbl.modiabrukerdialog.pip.geografisk.config;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.norg.NAVAnsattEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.v1.norg.NAVOrgEnhetEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVAnsattEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVOrgEnhetEndpointConfig;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.support.DefaultEnhetAttributeLocatorDelegate;
 import no.nav.sbl.modiabrukerdialog.pip.geografisk.support.EnhetAttributeLocatorDelegate;
 import org.springframework.context.annotation.Bean;

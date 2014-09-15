@@ -6,10 +6,10 @@ import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.SvarEllerReferat;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
@@ -31,8 +31,8 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.lang.reflect.Reflect.on;
+import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
@@ -44,6 +44,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.Pers
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.SVAR_OG_REFERAT_PANEL_ID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
@@ -121,13 +122,13 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void skalViseReferatPanelSomDefaultSvarOfReferatPanel() {
+    public void gittIngenUrlParamVisReferatPanelOgOversiktLamell() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(ReferatPanel.class)));
     }
 
     @Test
-    public void skalErstatteReferatPanelMedSvarPanelDersomOppgaveidErSattIPageParameters() {
+    public void gittBareOppgaveUrlParamVisSvarPanelOgOversiktLamell() {
         String oppgaveid = "oppgaveid";
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(OPPGAVEID, oppgaveid))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
@@ -136,17 +137,14 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void skalErstatteReferatPanelMedSvarPanelDersomHenvendelseIdErSattIPageParameters() {
+    public void gittBareHenvendelseUrlParamVisReferatPanelOgMeldingsLamell() {
         String henvendelsesId = "id 1";
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(PersonPage.HENVENDELSEID, henvendelsesId))
-                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
-
-        verify(henvendelseUtsendingService).getSporsmal(henvendelsesId);
-        verify(henvendelseUtsendingService).getSvarEllerReferatForSporsmal(testFnr, henvendelsesId);
+                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(ReferatPanel.class)));
     }
 
     @Test
-    public void skalErstatteReferatPanelMedSvarPanelDersomHenvendelseIdOgOppgaveIdErSattIPageParameters() {
+    public void gittBaadeHenvendelseOgOppgaveUrlParamVisSvarPanelOgMeldingsLamell() {
         String henvendelsesId = "id 1";
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(PersonPage.HENVENDELSEID, henvendelsesId).param(OPPGAVEID, "oppgaveid"))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
@@ -186,7 +184,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void skalErstatteSvarOgReferatPanelMedReferatPanelVedRiktigeEvents() {
-        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(MELDING_SENDT_TIL_BRUKER);
+        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(KVITTERING_VIST);
         assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(LEGG_TILBAKE_UTFORT);
         assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(SVAR_AVBRUTT);
     }

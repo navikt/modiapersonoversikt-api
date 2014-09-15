@@ -2,15 +2,17 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultSaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SaksbehandlerInnstillingerService;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -23,7 +25,9 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
+@DirtiesContext(classMode = AFTER_CLASS)
 @ContextConfiguration(classes = {
         KjerneinfoPepMockContext.class,
         SaksbehandlerInnstillingerPanelMockContext.class})
@@ -31,7 +35,10 @@ import static org.mockito.Mockito.when;
 public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
 
     @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    private DefaultSaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+
+    @Inject
+    private AnsattService ansattService;
 
     @Before
     public void setUp() {
@@ -45,7 +52,7 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
 
     @Test
     public void saksbehandlerPanelVisesVedFlereEnheter() {
-        when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(flereAnsattEnheter());
+        when(ansattService.hentEnhetsliste()).thenReturn(flereAnsattEnheter());
         when(saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert()).thenReturn(true);
 
         wicket
@@ -55,7 +62,7 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
 
     @Test
     public void saksbehandlerPanelVisesIkkeVedKunEnEnhet() {
-        when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(asList(new AnsattEnhet("111", "Grunerløkka")));
+        when(ansattService.hentEnhetsliste()).thenReturn(asList(new AnsattEnhet("111", "Grunerløkka")));
         when(saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert()).thenReturn(true);
 
         wicket
@@ -78,7 +85,7 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
 
     @Test
     public void saksbehandlerPanelSkjulesVedKlikkPaVelgKnapp() {
-        when(saksbehandlerInnstillingerService.hentEnhetsListe()).thenReturn(flereAnsattEnheter());
+        when(ansattService.hentEnhetsliste()).thenReturn(flereAnsattEnheter());
         when(saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert()).thenReturn(true);
 
         wicket

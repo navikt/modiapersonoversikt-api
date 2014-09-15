@@ -129,6 +129,10 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modiabrukerdialog-api</artifactId>
+        </dependency>
 
         <!--Modig-->
         <dependency>
