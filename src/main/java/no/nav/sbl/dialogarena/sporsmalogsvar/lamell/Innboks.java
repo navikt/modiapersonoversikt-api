@@ -5,14 +5,11 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RefreshOnEvents;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.util.string.StringValue;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
@@ -39,9 +36,7 @@ public class Innboks extends Lerret {
         this.innboksVM = new InnboksVM(fnr);
         setDefaultModel(new CompoundPropertyModel<Object>(innboksVM));
 
-        if (redirectHvisHenvendelsePageParam()) {
-            throw new RestartResponseException(new RedirectPage("/modiabrukerdialog/person/" + fnr + "#!meldinger"));
-        }
+        setValgtTraadBasertPaaTraadIdSessionParameter();
 
         PropertyModel<Boolean> harTraader = new PropertyModel<>(innboksVM, "harTraader");
         PropertyModel<Boolean> harTilgangModel = new PropertyModel<>(this, "harTilgang");
@@ -59,23 +54,6 @@ public class Innboks extends Lerret {
         ikkeTilgangPanel.add(visibleIf(not(harTilgangModel)));
 
         add(alleMeldingerPanel, traaddetaljerPanel, tilbakemeldingPanel, ikkeTilgangPanel);
-    }
-
-    private boolean redirectHvisHenvendelsePageParam() {
-        if (flyttParamFraURLTilSession()) {
-            return true;
-        }
-        setValgtTraadBasertPaaTraadIdSessionParameter();
-        return false;
-    }
-
-    private boolean flyttParamFraURLTilSession() {
-        StringValue pageParam = getRequestCycle().getRequest().getRequestParameters().getParameterValue(TRAAD_ID_PARAMETER_NAME);
-        if (!pageParam.isEmpty()) {
-            getSession().setAttribute(TRAAD_ID_PARAMETER_NAME, pageParam.toString());
-            return true;
-        }
-        return false;
     }
 
     private void setValgtTraadBasertPaaTraadIdSessionParameter() {
