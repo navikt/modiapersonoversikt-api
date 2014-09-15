@@ -83,14 +83,6 @@ public class InnboksTest {
         assertThat(((InnboksVM) innboks.getDefaultModelObject()).getValgtTraad().getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
     }
 
-    @Test(expected = RestartResponseException.class)
-    public void skalSetteTraadSomErReferertITraadIdPageParameterTilSessionVariable() {
-        wicket.tester.getRequest().setParameter(TRAAD_ID_PARAMETER_NAME, ENESTE_MELDING_ID_TRAAD2);
-
-        TestInnboks innboks = new TestInnboks("innboks", "fnr");
-        wicket.goToPageWith(innboks);
-    }
-
     @Test
     public void skalSetteTraadSomErReferertISessionTilValgtTraadIInnboks() {
         wicket.tester.getSession().setAttribute(TRAAD_ID_PARAMETER_NAME, ENESTE_MELDING_ID_TRAAD2);
