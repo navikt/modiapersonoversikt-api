@@ -1,8 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.AnsattService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -27,6 +28,9 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
+    @Inject
+    private AnsattService ansattService;
+
     public String valgtEnhet;
 
     public SaksbehandlerInnstillingerPanel(String id) {
@@ -34,7 +38,7 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         setOutputMarkupPlaceholderTag(true);
 
         setVisibilityAllowed(
-                saksbehandlerInnstillingerService.hentEnhetsListe().size() > 1 &&
+                ansattService.hentEnhetsliste().size() > 1 &&
                         saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert());
 
         valgtEnhet = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
@@ -42,7 +46,7 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         RadioGroup<String> gruppe = new RadioGroup<>("enhet", new PropertyModel<String>(this, "valgtEnhet"));
         gruppe.setRequired(true);
 
-        gruppe.add(new PropertyListView<AnsattEnhet>("enhetsvalg", saksbehandlerInnstillingerService.hentEnhetsListe()) {
+        gruppe.add(new PropertyListView<AnsattEnhet>("enhetsvalg", ansattService.hentEnhetsliste()) {
             protected void populateItem(ListItem<AnsattEnhet> item) {
                 item.add(new Radio<>("enhetId"));
                 item.add(new Label("enhetNavn"));

@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import org.apache.wicket.util.cookies.CookieUtils;
 
 import javax.inject.Inject;
@@ -8,17 +8,13 @@ import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.AnsattEnhet.ENHET_ID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet.ENHET_ID;
 
 
-public class SaksbehandlerInnstillingerService {
+public class DefaultSaksbehandlerInnstillingerService implements SaksbehandlerInnstillingerService {
 
     @Inject
     private AnsattService ansattService;
-
-    public List<AnsattEnhet> hentEnhetsListe() {
-        return ansattService.hentEnhetsliste();
-    }
 
     public String getSaksbehandlerValgtEnhet() {
         List<String> ansattEnhetsIdListe = on(ansattService.hentEnhetsliste()).map(ENHET_ID).collect();

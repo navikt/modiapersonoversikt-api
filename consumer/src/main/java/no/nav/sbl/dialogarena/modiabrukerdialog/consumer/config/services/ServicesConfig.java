@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services;
 
 import no.nav.modig.wicket.services.HealthCheckService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -27,12 +29,12 @@ public class ServicesConfig {
 
     @Bean
     public EnhetService enhetService() {
-        return new EnhetService();
+        return new DefaultEnhetService();
     }
 
     @Bean
     public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
-        return new SaksbehandlerInnstillingerService();
+        return new DefaultSaksbehandlerInnstillingerService();
     }
 
     @Bean
