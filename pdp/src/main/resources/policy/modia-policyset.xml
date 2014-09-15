@@ -13,5 +13,5 @@
     <PolicyIdReference>urn:xacml:2.0:nav:modia:policyid:adresse</PolicyIdReference>
     <PolicyIdReference>urn:xacml:2.0:nav.modia:policyid:plukkoppgave</PolicyIdReference>
     <PolicyIdReference>urn:xacml:2.0:nav.modia:policysetid:kontorsperre</PolicyIdReference>
-    <PolicyIdReference>urn:xacml:2.0:nav.modia:policyid:temagruppe</PolicyIdReference>
+    <PolicyIdReference>urn:xacml:2.0:nav.modia:policyid:tema</PolicyIdReference>
 </PolicySet>

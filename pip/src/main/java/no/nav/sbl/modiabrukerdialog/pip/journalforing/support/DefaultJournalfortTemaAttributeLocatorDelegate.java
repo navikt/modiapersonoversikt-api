@@ -1,16 +1,17 @@
 package no.nav.sbl.modiabrukerdialog.pip.journalforing.support;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.ASBOGOSYSFagomrade;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetFaultGOSYSGeneriskMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetFaultGOSYSNAVEnhetIkkeFunnetaMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFagomradeListeRequest;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.modiabrukerdialog.pip.journalforing.JournalfortTemaAttributeLocator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static java.util.Collections.emptySet;
@@ -18,36 +19,37 @@ import static java.util.Collections.emptySet;
 public class DefaultJournalfortTemaAttributeLocatorDelegate implements JournalfortTemaAttributeLocatorDelegate {
 
     private static Logger logger = LoggerFactory.getLogger(JournalfortTemaAttributeLocator.class);
-    private GOSYSNAVOrgEnhet enhetService;
+
+    private GOSYSNAVansatt ansattService;
     private SaksbehandlerInnstillingerService saksbehandlerService;
 
-    public DefaultJournalfortTemaAttributeLocatorDelegate(GOSYSNAVOrgEnhet enhetService, SaksbehandlerInnstillingerService saksbehandlerService) {
-        this.enhetService = enhetService;
+    public DefaultJournalfortTemaAttributeLocatorDelegate(GOSYSNAVansatt ansattService, SaksbehandlerInnstillingerService saksbehandlerService) {
+        this.ansattService = ansattService;
         this.saksbehandlerService = saksbehandlerService;
     }
 
     @Override
-    public Set<String> getTemagrupperForAnsattesValgteEnhet() {
+    public Set<String> getTemagrupperForAnsattesValgteEnhet(String ansattId) {
         String saksbehandlerValgtEnhet = saksbehandlerService.getSaksbehandlerValgtEnhet();
 
         try {
-            ASBOGOSYSNavEnhet navEnhetRequest = new ASBOGOSYSNavEnhet();
-            navEnhetRequest.setEnhetsId(saksbehandlerValgtEnhet);
+            ASBOGOSYSHentNAVAnsattFagomradeListeRequest ansattFagomraderRequest = new ASBOGOSYSHentNAVAnsattFagomradeListeRequest();
+            ansattFagomraderRequest.setAnsattId(ansattId);
+            ansattFagomraderRequest.setEnhetsId(saksbehandlerValgtEnhet);
 
-            ASBOGOSYSNavEnhet navEnhet = enhetService.hentNAVEnhet(navEnhetRequest);
+            List<ASBOGOSYSFagomrade> fagomrader = ansattService.hentNAVAnsattFagomradeListe(ansattFagomraderRequest).getFagomrader();
 
             Set<String> temaSet = new HashSet<>();
-
-            for (ASBOGOSYSFagomrade fagomrade : navEnhet.getFagomrader()) {
+            for (ASBOGOSYSFagomrade fagomrade : fagomrader) {
                 temaSet.add(fagomrade.getFagomradeKode());
             }
 
             return temaSet;
-        } catch (HentNAVEnhetFaultGOSYSNAVEnhetIkkeFunnetaMsg e) {
-            logger.warn("Fant ikke enhet med enhetsId {}.", saksbehandlerValgtEnhet, e);
+        } catch (HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg e) {
+            logger.warn("Feil oppsto under henting av ansatt fagområdeliste for enhet med enhetsId {}.", saksbehandlerValgtEnhet, e);
             return emptySet();
-        } catch (HentNAVEnhetFaultGOSYSGeneriskMsg e) {
-            logger.warn("Feil oppsto under henting av enhet med enhetsId {}.", saksbehandlerValgtEnhet, e);
+        } catch (HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg e) {
+            logger.warn("Fant ikke ansatt med ident {}.", ansattId, e);
             return emptySet();
         }
     }

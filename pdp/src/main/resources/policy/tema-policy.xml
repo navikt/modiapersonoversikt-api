@@ -2,7 +2,7 @@
 <Policy xmlns="urn:oasis:names:tc:xacml:2.0:policy:schema:os"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="urn:oasis:names:tc:xacml:2.0:policy:schema:os http://docs.oasis-open.org/xacml/access_control-xacml-2.0-policy-schema-os.xsd"
-        PolicyId="urn:xacml:2.0:nav.modia:policyid:temagruppe"
+        PolicyId="urn:xacml:2.0:nav.modia:policyid:tema"
         RuleCombiningAlgId="urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable">
     <Description>Tilgangsregler for temagrupper i saksbehandlers valgte enhet</Description>
 
@@ -18,7 +18,7 @@
     </Target>
 
     <Rule RuleId="saksbehandlers-enhet-har-tilgang-til-temagruppe" Effect="Permit">
-        <Description>Gi tilgang hvis saksbehandlers enhet har tilgang til temagruppe</Description>
+        <Description>Gi tilgang hvis saksbehandlers enhet har tilgang til tema</Description>
         <Condition>
             <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-is-in">
                 <Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
