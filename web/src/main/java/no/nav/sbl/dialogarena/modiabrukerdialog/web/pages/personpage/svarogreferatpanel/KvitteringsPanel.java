@@ -7,6 +7,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.util.time.Duration;
 
@@ -21,7 +22,12 @@ public class KvitteringsPanel extends Panel {
         super(id);
         setVisibilityAllowed(false);
         setOutputMarkupPlaceholderTag(true);
-        add(new Label("kvitteringsmelding", new PropertyModel(this, "kvitteringsmelding")));
+        add(new Label("kvitteringsmelding", new AbstractReadOnlyModel<String>() {
+            @Override
+            public String getObject() {
+                return kvitteringsmelding;
+            }
+        }));
     }
 
     public void visISekunder(int sekunder, String kvitteringsmelding, AjaxRequestTarget target, final Component... components) {
