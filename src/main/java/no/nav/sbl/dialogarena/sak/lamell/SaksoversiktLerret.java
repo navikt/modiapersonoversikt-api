@@ -37,7 +37,7 @@ public class SaksoversiktLerret extends Lerret {
     public static final ConditionalCssResource SAKSOVERSIKT_IE_CSS = new ConditionalCssResource(new CssResourceReference(SaksoversiktLerret.class, "saksoversikt-ie.css"), "screen", "IE");
     public static final JavaScriptResourceReference SAKSOVERSIKT_JS = new JavaScriptResourceReference(SaksoversiktLerret.class, "saksoversikt.js");
     public static final ConditionalJavascriptResource SAKSOVERSIKT_IE_JS = new ConditionalJavascriptResource(new JavaScriptResourceReference(SaksoversiktLerret.class, "saksoversikt-ie.js"), "IE");
-    public static final KeyNavigationDependentResourceReference JS_RESOURCE = new KeyNavigationDependentResourceReference(SaksoversiktLerret.class, "saksoversikt-navigation.js");
+    public static final KeyNavigationDependentResourceReference NAVIGATION_JS = new KeyNavigationDependentResourceReference(SaksoversiktLerret.class, "saksoversikt-navigation.js");
     private static final String initial = "S";
 
     @Inject
@@ -63,7 +63,7 @@ public class SaksoversiktLerret extends Lerret {
 
     private Component lagTemaContainer(String fnr) {
         return new WebMarkupContainer("sakerContainer")
-                .add(new TemaListView("saker", fnr, this).setOutputMarkupPlaceholderTag(true))
+                .add(new TemaListView("saker", fnr, hendelserContainer, this).setOutputMarkupPlaceholderTag(true))
                 .setOutputMarkupId(true);
     }
 
@@ -95,7 +95,7 @@ public class SaksoversiktLerret extends Lerret {
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
         response.render(new JavaScriptContentHeaderItem("resizeElement()", "saksoversikt-ie-js", "IE"));
-        response.render(JavaScriptReferenceHeaderItem.forReference(JS_RESOURCE));
+        response.render(JavaScriptReferenceHeaderItem.forReference(NAVIGATION_JS));
         response.render(OnDomReadyHeaderItem.forScript("new Modig.Modia.SaksoversiktView('#" + temaContainer.getMarkupId() + "','" + initial + "');"));
     }
 }

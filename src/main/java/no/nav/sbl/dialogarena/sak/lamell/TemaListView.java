@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
@@ -25,10 +26,12 @@ public class TemaListView extends PropertyListView<TemaVM> {
     @Inject
     private BulletProofKodeverkService kodeverk;
 
+    private final WebMarkupContainer hendelserContainer;
     private final SaksoversiktLerret lerret;
 
-    public TemaListView(String id, String fnr, SaksoversiktLerret lerret) {
+    public TemaListView(String id, String fnr, WebMarkupContainer hendelserContainer, SaksoversiktLerret lerret) {
         super(id);
+        this.hendelserContainer = hendelserContainer;
         this.lerret = lerret;
         setDefaultModel(ofList(saksoversiktService.hentTemaer(fnr)));
     }
@@ -58,7 +61,7 @@ public class TemaListView extends PropertyListView<TemaVM> {
 
         @Override
         public void onClick(AjaxRequestTarget target) {
-            target.add(lerret);
+            target.add(hendelserContainer);
             lerret.hentNyeHendelser(sakstema);
         }
     }
