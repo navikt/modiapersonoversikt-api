@@ -114,7 +114,7 @@ public class MerkePanel extends AnimertPanel {
     }
 
     @RunOnEvents(OPPGAVE_OPPRETTET)
-    public void refreshFeedbackPanel(AjaxRequestTarget target) {
+    public final void refreshFeedbackPanel(AjaxRequestTarget target) {
         target.add(feedbackPanel);
     }
 
