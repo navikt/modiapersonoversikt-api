@@ -104,6 +104,7 @@ public class PersonPage extends BasePage {
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
     private Component svarOgReferatPanel;
+    private String startLamell = LAMELL_OVERSIKT;
 
     public PersonPage(PageParameters pageParameters) {
         fnr = pageParameters.get("fnr").toString(null);
@@ -137,7 +138,16 @@ public class PersonPage extends BasePage {
     private void instansierFelter() {
         answer = new SjekkForlateSideAnswer();
         redirectPopup = createModalWindow("modal");
-        lamellContainer = new LamellContainer("lameller", fnr);
+        lamellContainer = new LamellContainer("lameller", fnr) {
+            @Override
+            protected void onInitialize() {
+                super.onInitialize();
+                String lamell = PersonPage.this.startLamell;
+                if (!lamell.equals(LAMELL_OVERSIKT)) {
+                    goToLamell(PersonPage.this.startLamell);
+                }
+            }
+        };
         hentPersonPanel = (HentPersonPanel) new HentPersonPanel("searchPanel").setOutputMarkupPlaceholderTag(true);
         searchToggleButton = (Button) new Button("toggle-sok").setOutputMarkupPlaceholderTag(true);
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
@@ -160,15 +170,15 @@ public class PersonPage extends BasePage {
     private void settOppRiktigPanelOgLamell() {
         String henvendelseId = (String) getSession().getAttribute(HENVENDELSEID);
         String oppgaveId = (String) getSession().getAttribute(OPPGAVEID);
-        lamellContainer.handleLamellLinkClicked(new LamellPayload(LAMELL_OVERSIKT));
 
         if (isBlank(henvendelseId) && isNotBlank(oppgaveId)) {
             visSvarPanelBasertPaaOppgaveIdForSporsmal(oppgaveId);
         } else if (isNotBlank(henvendelseId) && isBlank(oppgaveId)) {
-            lamellContainer.handleLamellLinkClicked(new LamellPayload(LAMELL_MELDINGER));
+//            lamellContainer.goToLamell(LAMELL_MELDINGER);
+            startLamell = LAMELL_MELDINGER;
         } else if (isNotBlank(henvendelseId) && isNotBlank(oppgaveId)) {
             visSvarPanelBasertPaaHenvendelsesId(henvendelseId, oppgaveId);
-            lamellContainer.handleLamellLinkClicked(new LamellPayload(LAMELL_MELDINGER));
+            startLamell = LAMELL_MELDINGER;
         }
     }
 
