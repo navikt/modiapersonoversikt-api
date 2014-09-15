@@ -145,13 +145,8 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void gittBareHenvendelseUrlParamMeldingsLamell() {
         String henvendelsesId = "id 1";
-        Parameters params = with().param("fnr", testFnr).param(HENVENDELSEID, henvendelsesId);
-        wicket.tester.startPage(PersonPage.class, params.pageParameters);
-        wicket.tester.assertRenderedPage(RedirectPage.class);
-
         wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelsesId);
         PersonPage page = wicket.tester.startPage(PersonPage.class);
-
         assertThat(page.startLamell, is(LAMELL_MELDINGER));
     }
 
@@ -168,10 +163,6 @@ public class PersonPageTest extends WicketPageTest {
         assertThat(((PersonPage) wicket.tester.getLastRenderedPage()).startLamell, is(LAMELL_MELDINGER));
         verify(henvendelseUtsendingService).getSporsmal(henvendelsesId);
         verify(henvendelseUtsendingService).getSvarEllerReferatForSporsmal(testFnr, henvendelsesId);
-
-        Parameters params = with().param("fnr", testFnr).param(HENVENDELSEID, henvendelsesId).param(OPPGAVEID, oppgaveId);
-        wicket.tester.startPage(PersonPage.class, params.pageParameters);
-        wicket.tester.assertRenderedPage(RedirectPage.class);
     }
 
     @Test
