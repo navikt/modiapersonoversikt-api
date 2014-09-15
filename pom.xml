@@ -90,7 +90,7 @@
         <dependency>
             <groupId>no.nav.tjenester.fim</groupId>
             <artifactId>nav-fim-behandleJournal-v2-tjenestespesifikasjon</artifactId>
-            <version>2.0.0-alpha008</version>
+            <version>2.0.0-alpha009</version>
             <classifier>jaxws</classifier>
         </dependency>
 

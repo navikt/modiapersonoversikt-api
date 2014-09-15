@@ -19,7 +19,6 @@ public class JournalforingNotat extends Journalforing {
 
     public static Journalpost lagJournalforingNotat(Optional<String> journalfortPostId, Sak sak, Melding melding, String journalforendeEnhetId) {
         Journalpost journalpost = new Journalpost();
-        journalpost.setKanal(lagKommunikasjonskanaler());
         journalpost.setSignatur(lagSignatur());
         journalpost.setArkivtema(lagArkivtema(sak.tema));
         journalpost.getForBruker().add(lagPerson(melding.fnrBruker));
@@ -50,7 +49,6 @@ public class JournalforingNotat extends Journalforing {
 
         journalfoertDokumentInfo.setDokumentType(lagDokumenttype(DOKUMENTTYPE_NOTAT));
         journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
-        journalfoertDokumentInfo.setBrevkode(BREVKODE_NOTAT);
         journalfoertDokumentInfo.setErOrganinternt(false);
         journalfoertDokumentInfo.setKategorikode(KATEGORIKODE);
         journalfoertDokumentInfo.setSensitivitet(false);

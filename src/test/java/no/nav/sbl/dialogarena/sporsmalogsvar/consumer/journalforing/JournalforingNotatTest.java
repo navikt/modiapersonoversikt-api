@@ -12,7 +12,6 @@ import static no.nav.modig.core.context.SubjectHandler.SUBJECTHANDLER_KEY;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.DOKUMENTTYPE_NOTAT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.HOVEDDOKUMENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.INNHOLD_BESKRIVELSE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat.BREVKODE_NOTAT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat.DOKUMENTTITTEL_OPPMOTE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat.DOKUMENTTITTEL_TELEFON;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat.KATEGORIKODE;
@@ -34,7 +33,6 @@ public class JournalforingNotatTest extends TestDataJournalforing {
         Journalpost journalpostNotat = JournalforingNotat.lagJournalforingNotat(
                 journalfortPostIdOptional, sak, melding, JOURNALFORENDE_ENHET_ID);
 
-        assertNotNull(journalpostNotat.getKanal());
         assertNotNull(journalpostNotat.getSignatur());
         assertNotNull(journalpostNotat.getArkivtema());
         assertNotNull(journalpostNotat.getForBruker());
@@ -56,7 +54,6 @@ public class JournalforingNotatTest extends TestDataJournalforing {
         JournalfoertDokumentInfo dokumentInfo = dokumentinfoRelasjon.getJournalfoertDokument();
         assertThat(dokumentInfo.getDokumentType().getValue(), is(DOKUMENTTYPE_NOTAT));
         assertThat(dokumentInfo.isBegrensetPartsInnsyn(), is(false));
-        assertThat(dokumentInfo.getBrevkode(), is(BREVKODE_NOTAT));
         assertThat(dokumentInfo.isErOrganinternt(), is(false));
         assertThat(dokumentInfo.getKategorikode(), is(KATEGORIKODE));
         assertThat(dokumentInfo.isSensitivitet(), is(false));

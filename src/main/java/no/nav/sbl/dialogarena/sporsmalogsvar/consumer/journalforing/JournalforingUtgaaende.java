@@ -47,7 +47,6 @@ public class JournalforingUtgaaende extends Journalforing {
 
         journalfoertDokumentInfo.setDokumentType(lagDokumenttype(DOKUMENTTYPE_UTGAAENDE));
         journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
-        journalfoertDokumentInfo.setBrevkode(BREVKODE_SPORSMAL_OG_SVAR);
         journalfoertDokumentInfo.setKategorikode(KATEGORI_ELEKTRONISK_DIALOG);
         journalfoertDokumentInfo.setSensitivitet(false);
         journalfoertDokumentInfo.setTittel(DOKUMENTTITTEL);
