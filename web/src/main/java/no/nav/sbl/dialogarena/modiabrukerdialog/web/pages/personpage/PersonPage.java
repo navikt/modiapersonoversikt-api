@@ -93,10 +93,12 @@ public class PersonPage extends BasePage {
     public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(SvarOgReferatVM.class, "jquery-ui-selectmenu.min.js");
     private static final Logger logger = getLogger(PersonPage.class);
     private final String fnr;
+
     @Inject
     protected HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     protected OppgaveBehandlingService oppgaveBehandlingService;
+
     private SjekkForlateSideAnswer answer;
     private RedirectModalWindow redirectPopup;
     private LamellContainer lamellContainer;
@@ -108,8 +110,8 @@ public class PersonPage extends BasePage {
 
     public PersonPage(PageParameters pageParameters) {
         fnr = pageParameters.get("fnr").toString(null);
-
-        if (flyttUrlParametereTilSession(pageParameters, HENVENDELSEID, OPPGAVEID)) {
+        boolean parametereBleFunnetOgFlyttet = flyttUrlParametereTilSession(pageParameters, HENVENDELSEID, OPPGAVEID);
+        if (parametereBleFunnetOgFlyttet) {
             setResponsePage(this.getClass(), pageParameters);
             return;
         }
@@ -131,7 +133,6 @@ public class PersonPage extends BasePage {
                 new TimeoutBoks("timeoutBoks", fnr)
         );
 
-
         settOppRiktigPanelOgLamell();
     }
 
@@ -144,7 +145,7 @@ public class PersonPage extends BasePage {
                 super.onInitialize();
                 String lamell = PersonPage.this.startLamell;
                 if (!lamell.equals(LAMELL_OVERSIKT)) {
-                    goToLamell(PersonPage.this.startLamell);
+                    goToLamell(lamell);
                 }
             }
         };
@@ -174,7 +175,6 @@ public class PersonPage extends BasePage {
         if (isBlank(henvendelseId) && isNotBlank(oppgaveId)) {
             visSvarPanelBasertPaaOppgaveIdForSporsmal(oppgaveId);
         } else if (isNotBlank(henvendelseId) && isBlank(oppgaveId)) {
-//            lamellContainer.goToLamell(LAMELL_MELDINGER);
             startLamell = LAMELL_MELDINGER;
         } else if (isNotBlank(henvendelseId) && isNotBlank(oppgaveId)) {
             visSvarPanelBasertPaaHenvendelsesId(henvendelseId, oppgaveId);
