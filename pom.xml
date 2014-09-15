@@ -10,7 +10,7 @@
 
     <name>Dialogarena - modiabrukerdialog-api</name>
     <artifactId>modiabrukerdialog-api</artifactId>
-    <version>1.0</version>
+    <version>1.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
@@ -24,7 +24,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog-api.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog-api/browse</url>
-        <tag>20140915-0921_1.0</tag>
+        <tag>HEAD</tag>
     </scm>
 
 </project>
