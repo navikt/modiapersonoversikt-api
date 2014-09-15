@@ -63,11 +63,14 @@ import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_OVERSIKT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow.CloseButtonCallback;
@@ -104,6 +107,12 @@ public class PersonPage extends BasePage {
 
     public PersonPage(PageParameters pageParameters) {
         fnr = pageParameters.get("fnr").toString(null);
+
+        if (flyttUrlParametereTilSession(pageParameters, HENVENDELSEID, OPPGAVEID)) {
+            setResponsePage(this.getClass(), pageParameters);
+            return;
+        }
+
         instansierFelter();
         add(
                 hentPersonPanel,
@@ -121,7 +130,8 @@ public class PersonPage extends BasePage {
                 new TimeoutBoks("timeoutBoks", fnr)
         );
 
-        erstattReferatPanelMedSvarPanelBasertPaaOppgaveIdParameter(pageParameters);
+
+        settOppRiktigPanelOgLamell();
     }
 
     private void instansierFelter() {
@@ -134,15 +144,31 @@ public class PersonPage extends BasePage {
         svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
     }
 
-    private void erstattReferatPanelMedSvarPanelBasertPaaOppgaveIdParameter(PageParameters pageParameters) {
-        StringValue oppgaveId = pageParameters.get(OPPGAVEID);
-        StringValue henvendelseId = pageParameters.get(HENVENDELSEID);
-        if (!oppgaveId.isEmpty()) {
-            if (!henvendelseId.isEmpty()) {
-                visSvarPanelBasertPaaHenvendelsesId(henvendelseId.toString(), oppgaveId.toString());
-            } else {
-                visSvarPanelBasertPaaOppgaveIdForSporsmal(oppgaveId.toString());
+    private boolean flyttUrlParametereTilSession(PageParameters pageParameters, String... params) {
+        boolean fantParamVerdi = false;
+        for (String param : params) {
+            StringValue paramVerdi = pageParameters.get(param);
+            if (!paramVerdi.isEmpty()) {
+                getSession().setAttribute(param, paramVerdi.toString());
+                pageParameters.remove(param, paramVerdi.toString());
+                fantParamVerdi = true;
             }
+        }
+        return fantParamVerdi;
+    }
+
+    private void settOppRiktigPanelOgLamell() {
+        String henvendelseId = (String) getSession().getAttribute(HENVENDELSEID);
+        String oppgaveId = (String) getSession().getAttribute(OPPGAVEID);
+        lamellContainer.handleLamellLinkClicked(new LamellPayload(LAMELL_OVERSIKT));
+
+        if (isBlank(henvendelseId) && isNotBlank(oppgaveId)) {
+            visSvarPanelBasertPaaOppgaveIdForSporsmal(oppgaveId);
+        } else if (isNotBlank(henvendelseId) && isBlank(oppgaveId)) {
+            lamellContainer.handleLamellLinkClicked(new LamellPayload(LAMELL_MELDINGER));
+        } else if (isNotBlank(henvendelseId) && isNotBlank(oppgaveId)) {
+            visSvarPanelBasertPaaHenvendelsesId(henvendelseId, oppgaveId);
+            lamellContainer.handleLamellLinkClicked(new LamellPayload(LAMELL_MELDINGER));
         }
     }
 
@@ -213,11 +239,13 @@ public class PersonPage extends BasePage {
     }
 
     public void visSvarPanelBasertPaaOppgaveIdForSporsmal(String oppgaveId) {
+        getSession().setAttribute(OPPGAVEID, null);
         Sporsmal sporsmal = henvendelseUtsendingService.getSporsmalFromOppgaveId(fnr, oppgaveId);
         erstattReferatPanelMedSvarPanel(sporsmal, henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, sporsmal.id), optional(oppgaveId));
     }
 
     private void visSvarPanelBasertPaaHenvendelsesId(String henvendelseId, String oppgaveId) {
+        getSession().setAttribute(OPPGAVEID, null);
         Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(henvendelseId);
         erstattReferatPanelMedSvarPanel(sporsmal, henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, henvendelseId), optional(oppgaveId));
     }
@@ -312,4 +340,7 @@ public class PersonPage extends BasePage {
         }
     }
 
+    public static Boolean isNotBlank(String s) {
+        return !isBlank(s);
+    }
 }
