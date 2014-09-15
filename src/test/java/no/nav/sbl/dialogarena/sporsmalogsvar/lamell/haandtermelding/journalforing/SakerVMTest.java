@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
@@ -38,6 +40,7 @@ import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
@@ -51,6 +54,8 @@ public class SakerVMTest {
 
     @Inject
     private GsakService gsakService;
+    @Inject
+    private ArenaService arenaService;
     @Mock
     private JoarkJournalforingService joarkJournalforingService;
     @Mock
@@ -63,6 +68,8 @@ public class SakerVMTest {
     private String godkjentTemaSomFinnesIEnTemagruppe;
     private String temagruppeMedEtGodkjentTema;
 
+    private SakerVM sakerVM;
+
     @Before
     public void setUp() {
         initMocks(this);
@@ -74,6 +81,8 @@ public class SakerVMTest {
         when(gsakService.hentSakerForBruker(anyString())).thenReturn(saksliste);
         meldingVM = opprettMeldingVM(GODKJENTE_TEMA_FOR_GENERELLE.get(0));
         when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
+
+        sakerVM = new SakerVM(innboksVM);
     }
 
     private MeldingVM opprettMeldingVM(String temagruppe) {
@@ -85,11 +94,9 @@ public class SakerVMTest {
     // Gruppering på tema
     @Test
     public void gittHverSakHarUniktTemaReturnerKorrektSakstemaliste() {
-        SakerVM sakerVM = new SakerVM(innboksVM);
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
-
         assertThat(temaSakerListe.size(), is(4));
         assertThat(temaSakerListe.get(0).saksliste.size(), is(1));
         assertThat(temaSakerListe.get(1).saksliste.size(), is(1));
@@ -101,11 +108,10 @@ public class SakerVMTest {
     public void gittToSakerMedLiktTemaReturnerKorrektSakstemaliste() {
         Sak sak4 = createSak("44444444", alleTemaer.get(0), GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5));
         saksliste.add(sak4);
-        SakerVM sakerVM = new SakerVM(innboksVM);
+
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
-
         assertThat(temaSakerListe.size(), is(4));
         for (TemaSaker temaSaker : temaSakerListe) {
             if (temaSaker.tema.equals(alleTemaer.get(0))) {
@@ -119,12 +125,11 @@ public class SakerVMTest {
     //Valgt temagruppe øverst
     @Test
     public void gittEnValgtTemagruppeSjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadLiggerForst() {
-        SakerVM sakerVM = new SakerVM(innboksVM);
-        sakerVM.oppdater();
         meldingVM.melding.temagruppe = temagruppeMedEtGodkjentTema;
 
-        List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
+        sakerVM.oppdater();
 
+        List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
         assertThat(temaSakerListe.get(0).temagruppe, is(temagruppeMedEtGodkjentTema));
     }
 
@@ -138,43 +143,40 @@ public class SakerVMTest {
         for (String tema : traadTemagruppeSineTemaer) {
             saksliste.add(createSak("44444444", tema, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
-        SakerVM sakerVM = new SakerVM(innboksVM);
+
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerInnenforValgtTemagruppe = sakerVM.getGenerelleSakerGruppertPaaTema().subList(0, traadTemagruppeLengde);
-
         assertSortert(temaSakerInnenforValgtTemagruppe);
     }
 
     // Sorter resten av listen alfabetisk
     @Test
-    public void sjekkAtDeSakeneSomIkkeHarTemagruppenTilTraadenErSortertAlfabetisk() {
+    public void deSakeneSomIkkeHarTemagruppenTilTraadenErSortertAlfabetisk() {
         String traadTemagruppe = alleTemagrupper.get(0);
         meldingVM.melding.temagruppe = traadTemagruppe;
         List<String> traadTemagruppeSineTemaer = TEMA_MAPPING.get(traadTemagruppe);
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
-        SakerVM sakerVM = new SakerVM(innboksVM);
+
         sakerVM.oppdater();
 
         List<TemaSaker> alleTemaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
-
         List<TemaSaker> temaUtenforValgtTemagruppe = alleTemaSakerListe.subList(traadTemagruppeLengde, alleTemaSakerListe.size());
         assertSortert(temaUtenforValgtTemagruppe);
     }
 
     // Sorter etter dato innefor hvert tema
     @Test
-    public void sjekkDatoSorteringInnenforSammeTema() {
+    public void sakerInnenforSammeTemaDatoSorteres() {
         ArrayList<Sak> sakslistekloneMedAndreDatoer = new ArrayList<>();
         for (Sak sak : saksliste) {
             sakslistekloneMedAndreDatoer.add(createSak("101010101", sak.tema, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
         saksliste.addAll(sakslistekloneMedAndreDatoer);
-        SakerVM sakerVM = new SakerVM(innboksVM);
+
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
-
         for (TemaSaker temaSaker : temaSakerListe) {
             assertDatoSortert(temaSaker);
         }
@@ -182,34 +184,43 @@ public class SakerVMTest {
 
     // Sjekk at fagsaker og generelle saker kommer i to ulike lister
     @Test
-    public void sjekkAtGenerelleSakerOgFagsakerErPlassertISinKorresponderendeListe() {
+    public void generelleSakerOgFagsakerErPlassertISinKorresponderendeListe() {
         ArrayList<Sak> sakslistekloneMedAndreSakstyper = new ArrayList<>();
         for (Sak sak : saksliste) {
             sakslistekloneMedAndreSakstyper.add(createSak("101010101", sak.tema, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), SAKSTYPE_FAG, sak.opprettetDato));
         }
         saksliste.addAll(sakslistekloneMedAndreSakstyper);
-        SakerVM sakerVM = new SakerVM(innboksVM);
+
         sakerVM.oppdater();
 
         List<TemaSaker> temaSakerListeGenerell = sakerVM.getGenerelleSakerGruppertPaaTema();
         List<TemaSaker> temaSakerListeFag = sakerVM.getFagsakerGruppertPaaTema();
-
         assertSakstypeGenerell(temaSakerListeGenerell, true);
         assertSakstypeGenerell(temaSakerListeFag, false);
     }
 
     @Test
-    public void sjekkAtIngenElementerForsvinnerFraListeMedSakerVedGjentatteKall() {
-        SakerVM sakerVM = new SakerVM(innboksVM);
+    public void ingenElementerForsvinnerFraListeMedSakerVedGjentatteKall() {
         sakerVM.oppdater();
 
         for (int i = 0; i < 4; i++) {
             meldingVM.melding.temagruppe = alleTemagrupper.get(i);
-
             List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
-
             assertThat(antallSaker(temaSakerListe), is(4));
         }
+    }
+
+    @Test
+    public void henterOppfolgingssakerFraArena() {
+        Sak oppfolgingssak = createSak("id 1", ArenaService.OPPFOLGING, ArenaService.ARENA_FAGSYSTEMNAVN, "sakstype", DateTime.now().minusDays(1));
+        Sak gsak = createSak("id 2", "dagpenger", Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "sakstype", DateTime.now());
+        when(arenaService.hentOppfolgingssak(anyString())).thenReturn(Optional.optional(oppfolgingssak));
+        when(gsakService.hentSakerForBruker(anyString())).thenReturn(new ArrayList<>(Arrays.asList(gsak)));
+
+        sakerVM.oppdater();
+
+        verify(arenaService).hentOppfolgingssak(anyString());
+        assertThat(sakerVM.getFagsakerGruppertPaaTema().size(), is(2));
     }
 
     private int antallSaker(List<TemaSaker> temasakerListe) {

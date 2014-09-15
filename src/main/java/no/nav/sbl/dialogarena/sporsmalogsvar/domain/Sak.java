@@ -87,4 +87,5 @@ public class Sak implements Serializable, Comparable<Sak> {
     public int hashCode() {
         return saksId != null ? saksId.hashCode() : 0;
     }
+
 }

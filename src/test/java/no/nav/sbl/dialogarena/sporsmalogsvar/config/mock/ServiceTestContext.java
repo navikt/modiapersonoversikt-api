@@ -3,7 +3,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.config.mock;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
@@ -17,6 +19,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.Be
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
+import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.v1.Sak;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -36,6 +39,18 @@ public class ServiceTestContext {
         GsakService gsakService = mock(GsakService.class);
         when(gsakService.hentSakerForBruker(anyString())).thenReturn(createMockSaksliste());
         return gsakService;
+    }
+
+    @Bean
+    public ArenaService arenaService() {
+        ArenaService arenaService = mock(ArenaService.class);
+        when(arenaService.hentOppfolgingssak(anyString())).thenReturn(Optional.<no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak>none());
+        return arenaService;
+    }
+
+    @Bean
+    public ArbeidOgAktivitet arbeidOgAktivitet(){
+        return mock(ArbeidOgAktivitet.class);
     }
 
     @Bean

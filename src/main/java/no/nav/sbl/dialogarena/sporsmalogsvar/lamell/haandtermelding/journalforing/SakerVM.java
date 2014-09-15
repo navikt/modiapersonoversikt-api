@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
+import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
@@ -37,8 +39,10 @@ public class SakerVM implements Serializable {
 
     @Inject
     private GsakService gsakService;
+    @Inject
+    private ArenaService arenaService;
 
-    // TODO: Dette er en midlertidig mapping mellom temagruppe og tema, mens vi venter på kodeverk.
+    // TODO: Kodeverk - Dette er en midlertidig mapping mellom temagruppe og tema, mens vi venter på kodeverk.
     private static Map<String, List<String>> opprettTemaMapping() {
         Map<String, List<String>> temaMapping = new HashMap<>();
         temaMapping.put("ARBD", asList("DAG", "AAP", "FOS", "IND", "OPP", "SYK", "SYM", "VEN", "YRK"));
@@ -54,23 +58,36 @@ public class SakerVM implements Serializable {
         Injector.get().inject(this);
     }
 
+    // TODO: Kodeverk - Oversett mellom sakstypekode og sakstype, feks: OPP -> Oppfølging
     public final void oppdater() {
         List<Sak> sakerForBruker = gsakService.hentSakerForBruker(innboksVM.getFnr());
         Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker = splittIGenerelleSakerOgIkkeGenerelleSaker(sakerForBruker);
-        List<Sak> fagsakerFraGodkjenteFagsystemer = on(generelleOgIkkeGenerelleSaker.get(false))
-                .filter(IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK)
-                .collect();
-        temaSakerListeFagsak = new TemaSakerListe(grupperSakerPaaTema(fagsakerFraGodkjenteFagsystemer));
 
-        List<Sak> generelleSakerFraGodkjentFagsystemMedKunGodkjenteTemaer = on(generelleOgIkkeGenerelleSaker.get(true))
-                .filter(IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE)
-                .filter(IS_GODKJENT_TEMA_FOR_GENERELLE)
-                .collect();
-        temaSakerListeGenerelle = new TemaSakerListe(grupperSakerPaaTema(generelleSakerFraGodkjentFagsystemMedKunGodkjenteTemaer));
+        temaSakerListeFagsak = getFagsaker(generelleOgIkkeGenerelleSaker);
+        temaSakerListeGenerelle = getGenerelleSaker(generelleOgIkkeGenerelleSaker);
     }
 
     private Map<Boolean, List<Sak>> splittIGenerelleSakerOgIkkeGenerelleSaker(List<Sak> saker) {
         return on(saker).reduce(indexBy(IS_GENERELL_SAK));
+    }
+
+    private TemaSakerListe getFagsaker(Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker) {
+        List<Sak> fagsakerFraGodkjenteFagsystemer = on(generelleOgIkkeGenerelleSaker.get(false))
+                .filter(IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK)
+                .collectIn(new ArrayList<Sak>());
+        Optional<Sak> oppfolgingssak = arenaService.hentOppfolgingssak(innboksVM.getFnr());
+        if(oppfolgingssak.isSome()){
+            fagsakerFraGodkjenteFagsystemer.add(oppfolgingssak.get());
+        }
+        return new TemaSakerListe(grupperSakerPaaTema(fagsakerFraGodkjenteFagsystemer));
+    }
+
+    private TemaSakerListe getGenerelleSaker(Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker) {
+        List<Sak> generelleSakerFraGodkjentFagsystemMedKunGodkjenteTemaer = on(generelleOgIkkeGenerelleSaker.get(true))
+                .filter(IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE)
+                .filter(IS_GODKJENT_TEMA_FOR_GENERELLE)
+                .collect();
+        return new TemaSakerListe(grupperSakerPaaTema(generelleSakerFraGodkjentFagsystemMedKunGodkjenteTemaer));
     }
 
     private List<TemaSaker> grupperSakerPaaTema(List<Sak> saker) {
