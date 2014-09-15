@@ -5,6 +5,7 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoP
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
+import no.nav.modig.wicket.test.internal.Parameters;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
@@ -19,6 +20,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefer
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.markup.html.pages.RedirectPage;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +42,8 @@ import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.HENVENDELSEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.OPPGAVEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.SVAR_OG_REFERAT_PANEL_ID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
@@ -48,6 +52,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svar
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
@@ -137,20 +143,35 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void gittBareHenvendelseUrlParamVisReferatPanelOgMeldingsLamell() {
+    public void gittBareHenvendelseUrlParamMeldingsLamell() {
         String henvendelsesId = "id 1";
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(PersonPage.HENVENDELSEID, henvendelsesId))
-                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(ReferatPanel.class)));
+        Parameters params = with().param("fnr", testFnr).param(HENVENDELSEID, henvendelsesId);
+        wicket.tester.startPage(PersonPage.class, params.pageParameters);
+        wicket.tester.assertRenderedPage(RedirectPage.class);
+
+        wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelsesId);
+        PersonPage page = wicket.tester.startPage(PersonPage.class);
+
+        assertThat(page.startLamell, is(LAMELL_MELDINGER));
     }
 
     @Test
     public void gittBaadeHenvendelseOgOppgaveUrlParamVisSvarPanelOgMeldingsLamell() {
         String henvendelsesId = "id 1";
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(PersonPage.HENVENDELSEID, henvendelsesId).param(OPPGAVEID, "oppgaveid"))
+        String oppgaveId = "oppg1";
+
+        wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelsesId);
+        wicket.tester.getSession().setAttribute(OPPGAVEID, oppgaveId);
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
 
+        assertThat(((PersonPage) wicket.tester.getLastRenderedPage()).startLamell, is(LAMELL_MELDINGER));
         verify(henvendelseUtsendingService).getSporsmal(henvendelsesId);
         verify(henvendelseUtsendingService).getSvarEllerReferatForSporsmal(testFnr, henvendelsesId);
+
+        Parameters params = with().param("fnr", testFnr).param(HENVENDELSEID, henvendelsesId).param(OPPGAVEID, oppgaveId);
+        wicket.tester.startPage(PersonPage.class, params.pageParameters);
+        wicket.tester.assertRenderedPage(RedirectPage.class);
     }
 
     @Test

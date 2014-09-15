@@ -104,7 +104,7 @@ public class PersonPage extends BasePage {
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
     private Component svarOgReferatPanel;
-    private String startLamell = LAMELL_OVERSIKT;
+    protected String startLamell = LAMELL_OVERSIKT;
 
     public PersonPage(PageParameters pageParameters) {
         fnr = pageParameters.get("fnr").toString(null);
