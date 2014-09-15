@@ -61,6 +61,7 @@ public class SaksoversiktLerret extends Lerret {
         hendelserContainer = lagHendelserContainer(fnr);
         temaContainer = lagTemaContainer(fnr);
         add(hendelserContainer, temaContainer);
+        aapneForsteItem();
     }
 
     private WebMarkupContainer lagHendelserContainer(String fnr) {
@@ -83,7 +84,11 @@ public class SaksoversiktLerret extends Lerret {
 
     @SuppressWarnings("unused")
     @RunOnEvents(WIDGET_HEADER_CLICKED)
-    private void aapneForsteItem(AjaxRequestTarget target, WidgetHeaderPayload payload) {
+    private void onWidgetHeaderClicked(AjaxRequestTarget target, WidgetHeaderPayload payload) {
+        aapneForsteItem();
+    }
+
+    private void aapneForsteItem() {
         List<TemaVM> temaer = saksoversiktService.hentTemaer(fnr);
         if(!temaer.isEmpty()) {
             hentNyeHendelser(temaer.get(0).temakode);
