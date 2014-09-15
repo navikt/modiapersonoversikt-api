@@ -75,11 +75,18 @@ public class SakerVM implements Serializable {
         List<Sak> fagsakerFraGodkjenteFagsystemer = on(generelleOgIkkeGenerelleSaker.get(false))
                 .filter(IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK)
                 .collectIn(new ArrayList<Sak>());
-        Optional<Sak> oppfolgingssak = arenaService.hentOppfolgingssak(innboksVM.getFnr());
-        if(oppfolgingssak.isSome()){
-            fagsakerFraGodkjenteFagsystemer.add(oppfolgingssak.get());
-        }
+        supplerMedOppfolgingssakDersomRelevant(fagsakerFraGodkjenteFagsystemer);
         return new TemaSakerListe(grupperSakerPaaTema(fagsakerFraGodkjenteFagsystemer));
+    }
+
+    private void supplerMedOppfolgingssakDersomRelevant(List<Sak> fagsakerFraGodkjenteFagsystemer) {
+        List<Sak> oppfolgingssaker = on(fagsakerFraGodkjenteFagsystemer).filter(Sak.IS_OPPFOLGINGSSAK).collect();
+        if(oppfolgingssaker.size() == 0){
+            Optional<Sak> oppfolgingssak = arenaService.hentOppfolgingssak(innboksVM.getFnr());
+            if(oppfolgingssak.isSome()){
+                fagsakerFraGodkjenteFagsystemer.add(oppfolgingssak.get());
+            }
+        }
     }
 
     private TemaSakerListe getGenerelleSaker(Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker) {

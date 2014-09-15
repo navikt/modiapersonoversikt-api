@@ -10,6 +10,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService.OPPFOLGING;
 
 public class Sak implements Serializable, Comparable<Sak> {
 
@@ -22,7 +23,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     public static final String GODKJENT_FAGSYSTEM_FOR_GENERELLE = "FS22";
 
     public boolean isSakstypeForVisningGenerell() {
-        return SAKSTYPE_GENERELL.equals(sakstype);
+        return SAKSTYPE_GENERELL.equals(sakstype) && !OPPFOLGING.equals(tema);
     }
 
     public static final Transformer<Sak, String> TEMA = new Transformer<Sak, String>() {
@@ -57,6 +58,13 @@ public class Sak implements Serializable, Comparable<Sak> {
         @Override
         public boolean evaluate(Sak sak) {
             return GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.tema);
+        }
+    };
+
+    public static final Predicate<Sak> IS_OPPFOLGINGSSAK = new Predicate<Sak>() {
+        @Override
+        public boolean evaluate(Sak sak) {
+            return OPPFOLGING.equals(sak.tema);
         }
     };
 

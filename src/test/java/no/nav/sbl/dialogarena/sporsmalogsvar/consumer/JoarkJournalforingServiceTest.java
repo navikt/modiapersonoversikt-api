@@ -85,7 +85,7 @@ public class JoarkJournalforingServiceTest {
     public void setUp() {
         innloggetBrukerEr(NAVIDENT);
 
-        sak = createSak("542747214621", "Dagpenger", "Fagsystem", "Generell", DateTime.now());
+        sak = createSak("542747214621", "Dagpenger", "Fagsystem", Sak.SAKSTYPE_GENERELL, DateTime.now());
 
         when(journalfoerInngaaendeHenvendelseResponseMock.getJournalpostId()).thenReturn(SPORSMAL_POST_ID);
         when(behandleJournalV2.journalfoerInngaaendeHenvendelse(any(JournalfoerInngaaendeHenvendelseRequest.class))).thenReturn(journalfoerInngaaendeHenvendelseResponseMock);

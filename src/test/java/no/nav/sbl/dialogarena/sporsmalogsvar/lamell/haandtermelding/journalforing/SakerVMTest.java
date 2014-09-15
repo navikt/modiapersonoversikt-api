@@ -38,8 +38,10 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -221,6 +223,32 @@ public class SakerVMTest {
 
         verify(arenaService).hentOppfolgingssak(anyString());
         assertThat(sakerVM.getFagsakerGruppertPaaTema().size(), is(2));
+    }
+
+    @Test
+    public void henterIkkeOppfolgingssakFraArenaDersomDetAlleredeFinnesEnOppfolgingssakFraGsak() {
+        Sak oppfolgingssak = createOppfolgingssak();
+        saksliste.add(oppfolgingssak);
+
+        sakerVM.oppdater();
+
+        verify(arenaService, never()).hentOppfolgingssak(anyString());
+    }
+
+    @Test
+    public void oppfolgingssakMedSaktypeGenerellHavnerIFagsaker() {
+        Sak oppfolgingssak = createOppfolgingssak();
+        saksliste.clear();
+        saksliste.add(oppfolgingssak);
+
+        sakerVM.oppdater();
+
+        assertTrue(sakerVM.getFagsakerGruppertPaaTema().get(0).tema.equals(ArenaService.OPPFOLGING));
+        assertTrue(sakerVM.getGenerelleSakerGruppertPaaTema().size() == 0);
+    }
+
+    private Sak createOppfolgingssak() {
+        return createSak("id 1", ArenaService.OPPFOLGING, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), SAKSTYPE_GENERELL, DateTime.now().minusDays(1));
     }
 
     private int antallSaker(List<TemaSaker> temasakerListe) {
