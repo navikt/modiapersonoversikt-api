@@ -372,10 +372,9 @@
                 <version>1.0.0</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenester.fim</groupId>
-                <artifactId>nav-fim-aktoer-v1-tjenestespesifikasjon</artifactId>
-                <version>1.0.0</version>
-                <classifier>jaxws</classifier>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>aktorid-jaxws</artifactId>
+                <version>1.2</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>

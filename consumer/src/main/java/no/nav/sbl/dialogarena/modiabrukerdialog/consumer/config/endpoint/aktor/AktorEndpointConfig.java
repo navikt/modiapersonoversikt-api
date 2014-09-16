@@ -9,6 +9,7 @@ import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -39,6 +40,8 @@ public class AktorEndpointConfig {
         final AktoerPortType mock = new AktoerPortTypeMock().getAktoerPortTypeMock();
         final AktoerPortType prod = aktoerPort();
         return new AktoerPortType() {
+
+            @Cacheable("aktorIdCache")
             @Override
             public HentAktoerIdForIdentResponse hentAktoerIdForIdent(@WebParam(name = "request", targetNamespace = "") HentAktoerIdForIdentRequest hentAktoerIdForIdentRequest)
                     throws HentAktoerIdForIdentPersonIkkeFunnet {
