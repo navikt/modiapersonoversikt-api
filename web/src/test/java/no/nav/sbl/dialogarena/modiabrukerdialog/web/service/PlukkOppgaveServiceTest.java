@@ -74,7 +74,7 @@ public class PlukkOppgaveServiceTest {
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false, false, false, true);
 
         assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(oppgave2)));
-        verify(oppgaveBehandlingService).leggTilbakeOppgaveIGsak(eq(optional(oppgave1.get().oppgaveId)), anyString(), anyString());
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
     }
 
     @Test
@@ -85,6 +85,6 @@ public class PlukkOppgaveServiceTest {
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
 
         assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(Optional.<Oppgave>none())));
-        verify(oppgaveBehandlingService).leggTilbakeOppgaveIGsak(eq(optional(oppgave1.get().oppgaveId)), anyString(), anyString());
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
     }
 }
