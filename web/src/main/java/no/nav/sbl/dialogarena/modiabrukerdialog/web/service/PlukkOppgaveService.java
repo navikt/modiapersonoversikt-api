@@ -12,7 +12,6 @@ import javax.annotation.Resource;
 import javax.inject.Inject;
 
 import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
@@ -43,10 +42,7 @@ public class PlukkOppgaveService {
     }
 
     private Optional<Oppgave> leggTilbakeOgPlukkNyOppgave(Oppgave oppgave, String temagruppe) {
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
-                optional(oppgave.oppgaveId),
-                "Saksbehandler har ikke tilgang til brukers diskresjonskode",
-                null);
+        oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId);
         return plukkOppgave(temagruppe);
     }
 

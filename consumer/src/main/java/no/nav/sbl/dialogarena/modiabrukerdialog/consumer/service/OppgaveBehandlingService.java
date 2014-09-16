@@ -69,6 +69,11 @@ public class OppgaveBehandlingService {
         }
     }
 
+    public void systemLeggTilbakeOppgaveIGsak(String oppgaveId) {
+        WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId).withAnsvarligId("");
+        lagreOppgaveIGsak(wsOppgave);
+    }
+
     private static String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {
         return isBlank(gammelBeskrivelse) ? leggTil : gammelBeskrivelse + "\n" + leggTil;
     }
