@@ -11,13 +11,22 @@
     }
   }
   & > ul > li > a {
-    &:focus {
-      background-color: #dadada !important;
-      color: black !important;
-      .melding-metadata {
-        border-right-color: #999;
+      &:focus {
+          background-color: #0067C5;
+          color: #ffffff !important;
+          .melding-metadata {
+              border-right-color: #999;
+              h4,p {
+                  color: #ffffff !important;
+              }
+          }
+          .ikke-lest-av-bruker {
+              background-color: #ffffff !important;
+          }
+          .lest-av-bruker {
+              border-color: #ffffff !important;
+          }
       }
-    }
     padding: 0;
     .melding-metadata {
       height: @meldingHoyde;
