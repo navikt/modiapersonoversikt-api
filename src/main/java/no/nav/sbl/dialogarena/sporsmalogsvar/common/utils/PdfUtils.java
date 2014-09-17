@@ -20,7 +20,8 @@ public class PdfUtils {
     public static byte[] genererPdf(Melding melding) {
         Map<String, Helper<?>> helpers = generateHelpers();
         try {
-            String html = HandleBarHtmlGenerator.fyllHtmlMalMedInnhold(melding, "html/melding", helpers);
+            PDFMelding innhold = new PDFMelding(melding.fnrBruker, melding.meldingstype.name(), melding.navIdent, melding.fritekst, melding.opprettetDato);
+            String html = HandleBarHtmlGenerator.fyllHtmlMalMedInnhold(innhold, "html/melding", helpers);
             return PDFFabrikk.lagPdfFil(html);
         } catch (IOException e) {
             throw new ApplicationException("Kunne ikke lage markup av melding", e);
@@ -59,6 +60,23 @@ public class PdfUtils {
             return (Melding) context.model();
         } else {
             return finnMelding(context.parent());
+        }
+    }
+
+    private static class PDFMelding {
+        public final String fnrBruker, meldingstype, navIdent, fritekst;
+        public final DateTime opprettetDato;
+
+        private PDFMelding(String fnrBruker, String meldingstype, String navIdent, String fritekst, DateTime opprettetDato) {
+            this.fnrBruker = fnrBruker;
+            this.meldingstype = lagPDFMeldingstype(meldingstype);
+            this.navIdent = navIdent;
+            this.fritekst = fritekst;
+            this.opprettetDato = opprettetDato;
+        }
+
+        private String lagPDFMeldingstype(String meldingstype) {
+            return meldingstype.substring(0, meldingstype.indexOf("_"));
         }
     }
 }
