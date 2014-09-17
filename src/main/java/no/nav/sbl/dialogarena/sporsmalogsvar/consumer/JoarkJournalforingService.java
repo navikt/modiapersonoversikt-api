@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforin
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingUtgaaende;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -22,6 +21,8 @@ import javax.inject.Inject;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SVAR;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 
 public class JoarkJournalforingService {
 
@@ -53,9 +54,9 @@ public class JoarkJournalforingService {
     }
 
     private String behandleJournalforing(Melding melding, Sak sak, String journalpostIdEldsteMelding) {
-        if (melding.meldingstype.equals(Meldingstype.SPORSMAL)) {
+        if (melding.meldingstype.equals(SPORSMAL_SKRIFTLIG)) {
             return behandleJournalSporsmal(melding, sak);
-        } else if (melding.meldingstype.equals(Meldingstype.SVAR)) {
+        } else if (SVAR.contains(melding.meldingstype)) {
             return (behandleJournalSvar(melding, sak, journalpostIdEldsteMelding));
         } else {
             return (behandleJournalSamtalereferat(melding, sak, optional(journalpostIdEldsteMelding)));

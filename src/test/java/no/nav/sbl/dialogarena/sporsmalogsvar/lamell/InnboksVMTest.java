@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_1;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_2;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_3;
@@ -133,7 +133,7 @@ public class InnboksVMTest {
         String fnr = "fnr";
         String traadId = "traadId";
 
-        when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(createMelding(traadId, SPORSMAL, DateTime.now(), "temagruppe", traadId)));
+        when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(createMelding(traadId, SPORSMAL_SKRIFTLIG, DateTime.now(), "temagruppe", traadId)));
         innboksVM = new InnboksVM(fnr);
 
         Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad(traadId);
@@ -160,16 +160,16 @@ public class InnboksVMTest {
     }
 
     public static List<Melding> createMeldingerIToTraader() {
-        Melding melding1 = createMelding(ID_1, SPORSMAL, DATE_4, TEMAGRUPPE_1, ID_1);
-        Melding melding2 = createMelding(ID_2, SPORSMAL, DATE_3, TEMAGRUPPE_2, ID_2);
-        Melding melding3 = createMelding(ID_3, SAMTALEREFERAT, DATE_2, TEMAGRUPPE_2, ID_2);
-        Melding melding4 = createMelding(ID_4, SVAR, DATE_1, TEMAGRUPPE_2, ID_2);
+        Melding melding1 = createMelding(ID_1, SPORSMAL_SKRIFTLIG, DATE_4, TEMAGRUPPE_1, ID_1);
+        Melding melding2 = createMelding(ID_2, SPORSMAL_SKRIFTLIG, DATE_3, TEMAGRUPPE_2, ID_2);
+        Melding melding3 = createMelding(ID_3, SAMTALEREFERAT_OPPMOTE, DATE_2, TEMAGRUPPE_2, ID_2);
+        Melding melding4 = createMelding(ID_4, SVAR_SKRIFTLIG, DATE_1, TEMAGRUPPE_2, ID_2);
         return asList(melding1, melding2, melding3, melding4);
     }
 
     private static List<Melding> createMeldingerIEnTraad() {
         return asList(
-                createMelding(ID_1, SPORSMAL, DATE_4, TEMAGRUPPE_1, ID_1)
+                createMelding(ID_1, SPORSMAL_SKRIFTLIG, DATE_4, TEMAGRUPPE_1, ID_1)
         );
     }
 

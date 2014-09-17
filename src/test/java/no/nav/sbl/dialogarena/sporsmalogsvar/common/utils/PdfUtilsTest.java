@@ -12,7 +12,7 @@ public class PdfUtilsTest {
     @Test
     public void skalKunneLageNotatPdf() {
         DateTime opprettetDato = DateTime.now();
-        Melding melding = new Melding("ID", Meldingstype.SAMTALEREFERAT, opprettetDato);
+        Melding melding = new Melding("ID", Meldingstype.SAMTALEREFERAT_OPPMOTE, opprettetDato);
         melding.fritekst = "Bruker ringte inn og sa ... Jeg svarte ... Ca 400 ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord";
         melding.navIdent = "EN_NAV_IDENT";
         melding.fnrBruker = "10111212345";
@@ -24,7 +24,7 @@ public class PdfUtilsTest {
     @Test
     public void skalKunneLageUtgaaendePdf() {
         DateTime opprettetDato = DateTime.now();
-        Melding melding = new Melding("ID", Meldingstype.SVAR, opprettetDato);
+        Melding melding = new Melding("ID", Meldingstype.SVAR_SKRIFTLIG, opprettetDato);
         melding.fritekst = "Dersom du lurer på hvor mye du har rett på ... Ca 400 ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord ord";
         melding.navIdent = "EN_NAV_IDENT";
         melding.fnrBruker = "10111212345";
@@ -36,7 +36,7 @@ public class PdfUtilsTest {
     @Test
     public void skalKunneLageInngaaendePdf() {
         DateTime opprettetDato = DateTime.now();
-        Melding melding = new Melding("ID", Meldingstype.SPORSMAL, opprettetDato);
+        Melding melding = new Melding("ID", Meldingstype.SPORSMAL_SKRIFTLIG, opprettetDato);
         melding.fritekst = "Jeg lurer på hvor mye jeg har rett på i forbindelse med ... Bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ?";
         melding.fnrBruker = "10111212345";
         byte[] bytes = PdfUtils.genererPdf(melding);

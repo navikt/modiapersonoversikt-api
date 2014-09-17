@@ -5,9 +5,9 @@ import org.apache.wicket.markup.html.image.Image;
 import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.protocol.http.WebApplication;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SAMTALEREFERAT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SVAR;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 
 public class AvsenderBilde extends Image {
 
@@ -19,10 +19,10 @@ public class AvsenderBilde extends Image {
     public final void settBildeRessurs(MeldingVM meldingVM) {
         String avsender = "", bilde = "";
         if (meldingVM != null) {
-            if (meldingVM.melding.meldingstype == SVAR || meldingVM.melding.meldingstype == SAMTALEREFERAT) {
+            if (SVAR.contains(meldingVM.melding.meldingstype)|| SAMTALEREFERAT.contains(meldingVM.melding.meldingstype)) {
                 avsender = "nav";
                 bilde = "nav-logo.svg";
-            } else if (meldingVM.melding.meldingstype == SPORSMAL) {
+            } else if (meldingVM.melding.meldingstype == SPORSMAL_SKRIFTLIG) {
                 avsender = "bruker";
                 bilde = "siluett.svg";
             }

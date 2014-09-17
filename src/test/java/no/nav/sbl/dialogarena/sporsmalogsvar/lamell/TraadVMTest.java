@@ -82,7 +82,7 @@ public class TraadVMTest {
 
     @Test
     public void gittMeldingstypeIkkeSpørsmålIEldsteMeldingReturnererBleInitiertAvBrukerFalse() {
-        MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, Meldingstype.SAMTALEREFERAT, DATE_4), 4);
+        MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_4), 4);
         traadVM.getMeldinger().add(eldsteMeldingVM);
 
         assertFalse(traadVM.bleInitiertAvBruker());
@@ -90,7 +90,7 @@ public class TraadVMTest {
 
     @Test
     public void gittMeldingstypeSpørsmålIEldsteMeldingReturnererBleInitiertAvBrukerTrue() {
-        MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, Meldingstype.SPORSMAL, DATE_4), 4);
+        MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, Meldingstype.SPORSMAL_SKRIFTLIG, DATE_4), 4);
         traadVM.getMeldinger().add(eldsteMeldingVM);
 
         assertTrue(traadVM.bleInitiertAvBruker());
@@ -98,10 +98,10 @@ public class TraadVMTest {
 
     @Test
     public void settFlaggPaaDenNyesteMeldingenInneforEnJournalfortgruppe() {
-        Melding melding1 = createMeldingMedJournalfortDato(ID_1, Meldingstype.SAMTALEREFERAT, DATE_1, TEMAGRUPPE_1, "Traad Id", DateTime.now());
-        Melding melding2 = createMeldingMedJournalfortDato(ID_2, Meldingstype.SAMTALEREFERAT, DATE_2, TEMAGRUPPE_1, "Traad Id", DateTime.now());
-        Melding melding3 = createMeldingMedJournalfortDato(ID_3, Meldingstype.SAMTALEREFERAT, DATE_3, TEMAGRUPPE_1, "Traad Id", DateTime.now().minusDays(2));
-        Melding melding4 = createMeldingMedJournalfortDato(ID_4, Meldingstype.SAMTALEREFERAT, DATE_4, TEMAGRUPPE_1, "Traad Id", DateTime.now().minusDays(2));
+        Melding melding1 = createMeldingMedJournalfortDato(ID_1, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_1, TEMAGRUPPE_1, "Traad Id", DateTime.now());
+        Melding melding2 = createMeldingMedJournalfortDato(ID_2, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_2, TEMAGRUPPE_1, "Traad Id", DateTime.now());
+        Melding melding3 = createMeldingMedJournalfortDato(ID_3, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_3, TEMAGRUPPE_1, "Traad Id", DateTime.now().minusDays(2));
+        Melding melding4 = createMeldingMedJournalfortDato(ID_4, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_4, TEMAGRUPPE_1, "Traad Id", DateTime.now().minusDays(2));
         List<MeldingVM> meldinger = new ArrayList<>(Arrays.asList(
                 new MeldingVM(melding1, 4),
                 new MeldingVM(melding2, 4),

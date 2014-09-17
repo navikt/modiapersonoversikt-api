@@ -17,8 +17,10 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
 import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
@@ -37,7 +39,7 @@ public class NyOppgavePanelTest extends WicketPageTest {
     public void setUp() {
         TraadVM traadVM = mock(TraadVM.class);
         String eldsteMeldingId = "id";
-        melding = createMelding(eldsteMeldingId, SPORSMAL, now(), "temagruppe", eldsteMeldingId);
+        melding = createMelding(eldsteMeldingId, SPORSMAL_SKRIFTLIG, now(), "temagruppe", eldsteMeldingId);
         MeldingVM meldingVM = new MeldingVM(melding, 1);
         when(innboksVM.getValgtTraad()).thenReturn(traadVM);
         when(traadVM.getEldsteMelding()).thenReturn(meldingVM);

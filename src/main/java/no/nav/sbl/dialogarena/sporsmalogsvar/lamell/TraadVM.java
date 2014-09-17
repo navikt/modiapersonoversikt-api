@@ -13,8 +13,8 @@ import static java.util.Map.Entry;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SAMTALEREFERAT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.JOURNALFORT_DATO;
 
 public class TraadVM implements Serializable {
@@ -55,7 +55,7 @@ public class TraadVM implements Serializable {
     }
 
     public boolean erBehandlet() {
-        return meldinger.size() > 1 || getEldsteMelding().melding.meldingstype.equals(SAMTALEREFERAT);
+        return meldinger.size() > 1 || SAMTALEREFERAT.contains(getEldsteMelding().melding.meldingstype);
     }
 
     public boolean erKontorsperret() {
@@ -75,7 +75,7 @@ public class TraadVM implements Serializable {
     }
 
     public boolean bleInitiertAvBruker() {
-        return getEldsteMelding().melding.meldingstype == SPORSMAL;
+        return getEldsteMelding().melding.meldingstype == SPORSMAL_SKRIFTLIG;
     }
 
     public static List<MeldingVM> grupperMeldingerPaaJournalfortdato(List<MeldingVM> meldinger) {

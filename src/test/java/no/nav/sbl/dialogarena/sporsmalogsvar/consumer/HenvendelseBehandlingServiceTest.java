@@ -35,9 +35,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_OPPMOTE;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_TELEFON;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_OPPMOTE;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_SKRIFTLIG;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_TELEFON;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_1;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_2;
@@ -102,7 +105,7 @@ public class HenvendelseBehandlingServiceTest {
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
 
         List<Object> xmlHenvendelseListe = new ArrayList<>();
-        xmlHenvendelseListe.add(lagXMLHenvendelse(BEHANDLINGS_ID, DateTime.now(), null, XMLHenvendelseType.SPORSMAL.name(), xmlMeldingFraBruker));
+        xmlHenvendelseListe.add(lagXMLHenvendelse(BEHANDLINGS_ID, DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), xmlMeldingFraBruker));
 
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
                 new WSHentHenvendelseListeResponse().withAny(xmlHenvendelseListe));
@@ -110,7 +113,7 @@ public class HenvendelseBehandlingServiceTest {
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("1231");
 
         sak = createSak(SAKS_ID, SAKSTEMA, SAKSTYPE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4));
-        melding = createMelding(BEHANDLINGS_ID, Meldingstype.SPORSMAL, DateTime.now(), TEMAGRUPPE, BEHANDLINGS_ID);
+        melding = createMelding(BEHANDLINGS_ID, Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now(), TEMAGRUPPE, BEHANDLINGS_ID);
     }
 
     @Test
@@ -121,9 +124,12 @@ public class HenvendelseBehandlingServiceTest {
         WSHentHenvendelseListeRequest request = wsHentHenvendelseListeRequestArgumentCaptor.getValue();
 
         assertThat(request.getFodselsnummer(), is(FNR));
-        assertTrue(request.getTyper().contains(SPORSMAL.name()));
-        assertTrue(request.getTyper().contains(SVAR.name()));
-        assertTrue(request.getTyper().contains(REFERAT.name()));
+        assertTrue(request.getTyper().contains(SPORSMAL_SKRIFTLIG.name()));
+        assertTrue(request.getTyper().contains(SVAR_SKRIFTLIG.name()));
+        assertTrue(request.getTyper().contains(SVAR_OPPMOTE.name()));
+        assertTrue(request.getTyper().contains(SVAR_TELEFON.name()));
+        assertTrue(request.getTyper().contains(REFERAT_OPPMOTE.name()));
+        assertTrue(request.getTyper().contains(REFERAT_TELEFON.name()));
     }
 
     @Test
@@ -178,15 +184,15 @@ public class HenvendelseBehandlingServiceTest {
     @Test
     public void skalAlltidHenteMeldingerSomIkkeErKontorSperretEllerJournalfort() {
         List<Object> xmlHenvendelsesListe = new ArrayList<>();
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
                 .withJournalfortInformasjon(null)
                 .withKontorsperreEnhet(null));
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", DateTime.now(), null, XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
                 .withJournalfortInformasjon(null)
                 .withKontorsperreEnhet(null));
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id3", DateTime.now(), null, XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id3", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
                 .withKontorsperreEnhet(null));
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", DateTime.now(), null, XMLHenvendelseType.SPORSMAL.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
                 .withKontorsperreEnhet("1111"));
 
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);

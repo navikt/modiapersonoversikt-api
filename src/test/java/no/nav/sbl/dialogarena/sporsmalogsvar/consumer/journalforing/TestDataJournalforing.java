@@ -20,7 +20,7 @@ public abstract class TestDataJournalforing {
     @Before
     public void setUp() {
         sak = createSak("saksid", "tema", "fagsak", "sakstype", DateTime.now());
-        melding = createMelding("meldingid", Meldingstype.SAMTALEREFERAT, DateTime.now().minusDays(1), "temagruppe", "traadid");
+        melding = createMelding("meldingid", Meldingstype.SAMTALEREFERAT_OPPMOTE, DateTime.now().minusDays(1), "temagruppe", "traadid");
         melding.kanal = JournalforingNotat.KANAL_TYPE_TELEFON;
     }
 

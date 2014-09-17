@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
@@ -17,9 +18,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
@@ -49,10 +48,7 @@ public class MeldingUtils {
         public Melding transform(Object o) {
             XMLHenvendelse xmlHenvendelse = (XMLHenvendelse) o;
 
-            Meldingstype meldingstype = xmlHenvendelse.getHenvendelseType().equals(SPORSMAL.name()) ?
-                    Meldingstype.SPORSMAL : xmlHenvendelse.getHenvendelseType().equals(SVAR.name()) ?
-                    Meldingstype.SVAR :
-                    Meldingstype.SAMTALEREFERAT;
+            Meldingstype meldingstype = MELDINGSTYPE_MAP.get(XMLHenvendelseType.fromValue(xmlHenvendelse.getHenvendelseType()));
 
             Melding melding = new Melding(xmlHenvendelse.getBehandlingsId(), meldingstype, xmlHenvendelse.getOpprettetDato());
             melding.lestDato = xmlHenvendelse.getLestDato();
@@ -94,10 +90,11 @@ public class MeldingUtils {
     public static final Transformer<XMLHenvendelse, Status> STATUS = new Transformer<XMLHenvendelse, Status>() {
         @Override
         public Status transform(XMLHenvendelse info) {
-            String henvendelseType = info.getHenvendelseType();
-            if (henvendelseType.equals(SPORSMAL.name())) {
+            Meldingstype meldingstype = MELDINGSTYPE_MAP.get(XMLHenvendelseType.fromValue(info.getHenvendelseType()));
+
+            if (meldingstype == Meldingstype.SPORSMAL_SKRIFTLIG) {
                 return IKKE_BESVART;
-            } else if (henvendelseType.equals(SVAR.name()) || henvendelseType.equals(REFERAT.name())) {
+            } else if (SVAR.contains(meldingstype) || SAMTALEREFERAT.contains(meldingstype)) {
                 DateTime lestDato = info.getLestDato();
                 if (lestDato != null) {
                     return LEST_AV_BRUKER;
@@ -105,9 +102,22 @@ public class MeldingUtils {
                     return IKKE_LEST_AV_BRUKER;
                 }
             } else {
-                throw new ApplicationException("Ukjent henvendelsestype: " + henvendelseType);
+                throw new ApplicationException("Ukjent henvendelsestype: " + meldingstype);
             }
         }
     };
 
+    public static final Map<XMLHenvendelseType, Meldingstype> MELDINGSTYPE_MAP = new HashMap<XMLHenvendelseType, Meldingstype>() {
+        {
+            put(XMLHenvendelseType.SPORSMAL_SKRIFTLIG,  Meldingstype.SPORSMAL_SKRIFTLIG);
+            put(XMLHenvendelseType.SVAR_SKRIFTLIG,      Meldingstype.SVAR_SKRIFTLIG);
+            put(XMLHenvendelseType.SVAR_OPPMOTE,        Meldingstype.SVAR_OPPMOTE);
+            put(XMLHenvendelseType.SVAR_TELEFON,        Meldingstype.SVAR_TELEFON);
+            put(XMLHenvendelseType.REFERAT_OPPMOTE,     Meldingstype.SAMTALEREFERAT_OPPMOTE);
+            put(XMLHenvendelseType.REFERAT_TELEFON,     Meldingstype.SAMTALEREFERAT_TELEFON);
+        }
+    };
+
+    public static final List<Meldingstype> SVAR = asList(Meldingstype.SVAR_SKRIFTLIG, Meldingstype.SVAR_OPPMOTE, Meldingstype.SVAR_TELEFON);
+    public static final List<Meldingstype> SAMTALEREFERAT = asList(Meldingstype.SAMTALEREFERAT_OPPMOTE, Meldingstype.SAMTALEREFERAT_TELEFON);
 }

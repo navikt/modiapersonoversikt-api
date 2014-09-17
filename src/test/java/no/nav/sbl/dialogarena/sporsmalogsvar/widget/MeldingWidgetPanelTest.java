@@ -22,7 +22,7 @@ public class MeldingWidgetPanelTest extends WicketPageTest {
 
     @Test
     public void skalInneholdeRiktigeKomponenter() {
-        wicket.goToPageWith(new TestMeldingWidgetPanel("melding", new Model<>(new MeldingVM(asList(createMelding("id", Meldingstype.SPORSMAL, now(), "TEMA", "1"))))))
+        wicket.goToPageWith(new TestMeldingWidgetPanel("melding", new Model<>(new MeldingVM(asList(createMelding("id", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "1"))))))
                 .should().containComponent(withId("opprettetDato").and(ofType(Label.class)))
                 .should().containComponent(withId("avsender").and(ofType(Label.class)))
                 .should().containComponent(withId("melding.temagruppe").and(ofType(Label.class)))

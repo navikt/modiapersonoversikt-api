@@ -50,7 +50,7 @@ public class JournalfortSakVMTest {
     }
 
     private MeldingVM opprettMeldingVMogSetJournalfortSaksId(String journalfortSaksId) {
-        Melding melding = new Melding("", Meldingstype.SPORSMAL, DateTime.now());
+        Melding melding = new Melding("", Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now());
         melding.journalfortSaksId = journalfortSaksId;
         return new MeldingVM(melding, 1);
     }

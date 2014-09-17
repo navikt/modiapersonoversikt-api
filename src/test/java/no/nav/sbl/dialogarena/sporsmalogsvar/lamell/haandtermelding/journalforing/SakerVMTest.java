@@ -88,7 +88,7 @@ public class SakerVMTest {
     }
 
     private MeldingVM opprettMeldingVM(String temagruppe) {
-        Melding melding = new Melding("", Meldingstype.SPORSMAL, DateTime.now());
+        Melding melding = new Melding("", Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now());
         melding.temagruppe = temagruppe;
         return new MeldingVM(melding, 1);
     }

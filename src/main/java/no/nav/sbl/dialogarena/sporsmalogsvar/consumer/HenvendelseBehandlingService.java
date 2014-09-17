@@ -21,9 +21,12 @@ import javax.inject.Named;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_OPPMOTE;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_TELEFON;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_OPPMOTE;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_SKRIFTLIG;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_TELEFON;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
@@ -51,7 +54,13 @@ public class HenvendelseBehandlingService {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     public List<Melding> hentMeldinger(final String fnr) {
-        List<String> typer = asList(SPORSMAL.name(), SVAR.name(), REFERAT.name());
+        List<String> typer = asList(
+                SPORSMAL_SKRIFTLIG.name(),
+                SVAR_SKRIFTLIG.name(),
+                SVAR_OPPMOTE.name(),
+                SVAR_TELEFON.name(),
+                REFERAT_OPPMOTE.name(),
+                REFERAT_TELEFON.name());
 
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny())
                 .map(TIL_MELDING)

@@ -5,9 +5,12 @@ import org.junit.Test;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.getStatusKlasse;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingOverskriftKey;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR_OPPMOTE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR_TELEFON;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.IKKE_BESVART;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.IKKE_LEST_AV_BRUKER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.LEST_AV_BRUKER;
@@ -26,8 +29,11 @@ public class VisningUtilsTest {
 
     @Test
     public void testLagMeldingOverskriftKey() throws Exception {
-        assertThat(lagMeldingOverskriftKey(new Melding("", SPORSMAL, now())), is(equalTo("melding.overskrift.sporsmal")));
-        assertThat(lagMeldingOverskriftKey(new Melding("", SVAR, now())), is(equalTo("melding.overskrift.svar")));
-        assertThat(lagMeldingOverskriftKey(new Melding("", SAMTALEREFERAT, now())), is(equalTo("melding.overskrift.samtalereferat")));
+        assertThat(lagMeldingOverskriftKey(new Melding("", SPORSMAL_SKRIFTLIG, now())), is(equalTo("melding.overskrift.sporsmal")));
+        assertThat(lagMeldingOverskriftKey(new Melding("", SVAR_SKRIFTLIG, now())), is(equalTo("melding.overskrift.svar")));
+        assertThat(lagMeldingOverskriftKey(new Melding("", SVAR_OPPMOTE, now())), is(equalTo("melding.overskrift.svar")));
+        assertThat(lagMeldingOverskriftKey(new Melding("", SVAR_TELEFON, now())), is(equalTo("melding.overskrift.svar")));
+        assertThat(lagMeldingOverskriftKey(new Melding("", SAMTALEREFERAT_OPPMOTE, now())), is(equalTo("melding.overskrift.samtalereferat")));
+        assertThat(lagMeldingOverskriftKey(new Melding("", SAMTALEREFERAT_TELEFON, now())), is(equalTo("melding.overskrift.samtalereferat")));
     }
 }

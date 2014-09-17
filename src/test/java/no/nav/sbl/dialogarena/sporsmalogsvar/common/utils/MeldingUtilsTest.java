@@ -14,13 +14,13 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_OPPMOTE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.STATUS;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SVAR_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.IKKE_BESVART;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.IKKE_LEST_AV_BRUKER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.LEST_AV_BRUKER;
@@ -47,11 +47,11 @@ public class MeldingUtilsTest {
 
     @Test
     public void testSkillUtTraader() {
-        Melding melding1 = new Melding(ID_1, SPORSMAL, now());
+        Melding melding1 = new Melding(ID_1, SPORSMAL_SKRIFTLIG, now());
         melding1.traadId = ID_1;
-        Melding melding2 = new Melding(ID_2, SVAR, now());
+        Melding melding2 = new Melding(ID_2, SVAR_SKRIFTLIG, now());
         melding2.traadId = ID_1;
-        Melding melding3 = new Melding(ID_3, SPORSMAL, now());
+        Melding melding3 = new Melding(ID_3, SPORSMAL_SKRIFTLIG, now());
         melding3.traadId = ID_2;
         Map<String, List<Melding>> traader = skillUtTraader(asList(melding1, melding2, melding3));
 
@@ -65,11 +65,11 @@ public class MeldingUtilsTest {
         XMLHenvendelse xmlHenvendelse = new XMLHenvendelse();
         xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker()));
 
-        xmlHenvendelse.withHenvendelseType(XMLHenvendelseType.SPORSMAL.name());
+        xmlHenvendelse.withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name());
         xmlHenvendelse.withOpprettetDato(now());
         assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(IKKE_BESVART)));
 
-        xmlHenvendelse.withHenvendelseType(XMLHenvendelseType.SVAR.name());
+        xmlHenvendelse.withHenvendelseType(XMLHenvendelseType.SVAR_SKRIFTLIG.name());
         xmlHenvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker()));
         assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(IKKE_LEST_AV_BRUKER)));
 
@@ -77,7 +77,7 @@ public class MeldingUtilsTest {
         assertThat(STATUS.transform(xmlHenvendelse), is(equalTo(LEST_AV_BRUKER)));
     }
 
-    @Test(expected = ApplicationException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testStatusTransformerUkjentType() {
         STATUS.transform(new XMLHenvendelse().withHenvendelseType(""));
     }
@@ -88,12 +88,12 @@ public class MeldingUtilsTest {
                 .withFritekst(FRITEKST)
                 .withTemagruppe(TEMAGRUPPE);
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL.name(), xmlMeldingFraBruker));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), xmlMeldingFraBruker));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
         assertThat(melding.opprettetDato, is(equalTo(OPPRETTET_DATO)));
-        assertThat(melding.meldingstype, is(equalTo(SPORSMAL)));
+        assertThat(melding.meldingstype, is(equalTo(SPORSMAL_SKRIFTLIG)));
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.journalfortDato, is(JOURNALFORT_DATO));
@@ -105,12 +105,12 @@ public class MeldingUtilsTest {
     public void testTilMeldingTransformer_medSvar() {
         XMLMeldingTilBruker meldingTilBruker = createMeldingTilBruker(ID_2);
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR.name(), meldingTilBruker));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), meldingTilBruker));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_2)));
         assertThat(melding.opprettetDato, is(equalTo(OPPRETTET_DATO)));
-        assertThat(melding.meldingstype, is(equalTo(SVAR)));
+        assertThat(melding.meldingstype, is(equalTo(SVAR_SKRIFTLIG)));
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.lestDato, is(equalTo(LEST_DATO)));
@@ -125,12 +125,12 @@ public class MeldingUtilsTest {
     public void testTilMeldingTransformer_medReferat() {
         XMLMeldingTilBruker xmlMeldingTilBruker = createMeldingTilBruker(null);
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT.name(), xmlMeldingTilBruker));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), xmlMeldingTilBruker));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
         assertThat(melding.opprettetDato, is(equalTo(OPPRETTET_DATO)));
-        assertThat(melding.meldingstype, is(equalTo(SAMTALEREFERAT)));
+        assertThat(melding.meldingstype, is(equalTo(SAMTALEREFERAT_OPPMOTE)));
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.lestDato, is(equalTo(LEST_DATO)));

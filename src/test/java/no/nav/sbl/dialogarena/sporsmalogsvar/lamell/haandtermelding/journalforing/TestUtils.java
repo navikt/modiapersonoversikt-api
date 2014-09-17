@@ -84,7 +84,7 @@ public class TestUtils {
         melding.temagruppe = temagruppe;
         melding.traadId = traadId;
         melding.status = Status.IKKE_BESVART;
-        if (type != Meldingstype.SPORSMAL) {
+        if (type != Meldingstype.SPORSMAL_SKRIFTLIG) {
             melding.kanal = "telefon";
         }
         return melding;
@@ -99,13 +99,13 @@ public class TestUtils {
     }
 
     public static Melding opprettMeldingEksempel() {
-        return createMelding(ID_1, Meldingstype.SPORSMAL, DateTime.now(), TEMA_1, ID_1);
+        return createMelding(ID_1, Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now(), TEMA_1, ID_1);
     }
 
     public static List<MeldingVM> createMeldingVMer() {
-        MeldingVM melding1VM = new MeldingVM(createMelding(ID_1, Meldingstype.SPORSMAL, DATE_3, TEMAGRUPPE_1, ID_1), TRAAD_LENGDE);
-        MeldingVM melding2VM = new MeldingVM(createMelding(ID_2, Meldingstype.SAMTALEREFERAT, DATE_2, TEMAGRUPPE_2, ID_1), TRAAD_LENGDE);
-        MeldingVM melding3VM = new MeldingVM(createMelding(ID_3, Meldingstype.SAMTALEREFERAT, DATE_1, TEMAGRUPPE_3, ID_1), TRAAD_LENGDE);
+        MeldingVM melding1VM = new MeldingVM(createMelding(ID_1, Meldingstype.SPORSMAL_SKRIFTLIG, DATE_3, TEMAGRUPPE_1, ID_1), TRAAD_LENGDE);
+        MeldingVM melding2VM = new MeldingVM(createMelding(ID_2, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_2, TEMAGRUPPE_2, ID_1), TRAAD_LENGDE);
+        MeldingVM melding3VM = new MeldingVM(createMelding(ID_3, Meldingstype.SAMTALEREFERAT_TELEFON, DATE_1, TEMAGRUPPE_3, ID_1), TRAAD_LENGDE);
         return new ArrayList<>(asList(melding1VM, melding2VM, melding3VM));
     }
 

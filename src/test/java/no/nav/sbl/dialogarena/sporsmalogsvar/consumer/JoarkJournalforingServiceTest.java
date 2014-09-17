@@ -112,7 +112,7 @@ public class JoarkJournalforingServiceTest {
 
     @Test
     public void sjekkAtRiktigJournalforHenvendelseKallBlirUtfortGittTraadMedKunEttReferat() {
-        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 1, KANAL_TELEFON)));
+        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT_OPPMOTE, 1, KANAL_TELEFON)));
         traadVM = new TraadVM(meldinger);
 
         joarkJournalforingService.journalforTraad(traadVM, sak);
@@ -122,8 +122,8 @@ public class JoarkJournalforingServiceTest {
 
     @Test
     public void sjekkAtRiktigJournalforHenvendelseKallBlirUtfortGittTraadMedSporsmalOgEttSvar() {
-        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SVAR, 2, ""),
-                createMeldingVM(Meldingstype.SPORSMAL, 2, "")));
+        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SVAR_SKRIFTLIG, 2, ""),
+                createMeldingVM(Meldingstype.SPORSMAL_SKRIFTLIG, 2, "")));
         traadVM = new TraadVM(meldinger);
 
         joarkJournalforingService.journalforTraad(traadVM, sak);
@@ -134,8 +134,8 @@ public class JoarkJournalforingServiceTest {
 
     @Test
     public void sjekkAtRiktigKryssReferanseForSvarSettesTilKorresponderendeSporsmaalVedJournalforingAvHenvendelse() {
-        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SVAR, 2, ""),
-                createMeldingVM(Meldingstype.SPORSMAL, 2, "")));
+        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SVAR_SKRIFTLIG, 2, ""),
+                createMeldingVM(Meldingstype.SPORSMAL_SKRIFTLIG, 2, "")));
         traadVM = new TraadVM(meldinger);
 
         joarkJournalforingService.journalforTraad(traadVM, sak);
@@ -167,7 +167,7 @@ public class JoarkJournalforingServiceTest {
 
     @Test
     public void skalSetteRiktigeFelterIJournalforingInngaaendeRequest() {
-        MeldingVM sporsmaal = new MeldingVM(new Melding("id", Meldingstype.SPORSMAL, DateTime.now()), 1);
+        MeldingVM sporsmaal = new MeldingVM(new Melding("id", Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now()), 1);
         traadVM = new TraadVM(new ArrayList<>(Arrays.asList(sporsmaal)));
 
         joarkJournalforingService.journalforTraad(traadVM, sak);
@@ -183,7 +183,7 @@ public class JoarkJournalforingServiceTest {
 
     @Test
     public void skalSetteRiktigeFelterIJournalforingUtgaaendeRequest() {
-        MeldingVM sporsmaal = new MeldingVM(new Melding("id", Meldingstype.SVAR, DateTime.now()), 1);
+        MeldingVM sporsmaal = new MeldingVM(new Melding("id", Meldingstype.SVAR_SKRIFTLIG, DateTime.now()), 1);
         traadVM = new TraadVM(new ArrayList<>(Arrays.asList(sporsmaal)));
 
         joarkJournalforingService.journalforTraad(traadVM, sak);
@@ -199,7 +199,7 @@ public class JoarkJournalforingServiceTest {
 
     @Test
     public void skalSetteRiktigeFelterIJournalforingNotatRequest() {
-        MeldingVM sporsmaal = new MeldingVM(new Melding("id", Meldingstype.SAMTALEREFERAT, DateTime.now()), 1);
+        MeldingVM sporsmaal = new MeldingVM(new Melding("id", Meldingstype.SAMTALEREFERAT_OPPMOTE, DateTime.now()), 1);
         sporsmaal.melding.kanal = JournalforingNotat.KANAL_TYPE_TELEFON;
         traadVM = new TraadVM(new ArrayList<>(Arrays.asList(sporsmaal)));
 
@@ -215,8 +215,8 @@ public class JoarkJournalforingServiceTest {
     }
 
     private ArrayList<MeldingVM> createMeldingListeMedEttSporsmaalOgEttSamtalereferat() {
-        return new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT, 2, KANAL_TELEFON),
-                createMeldingVM(Meldingstype.SPORSMAL, 2, "")));
+        return new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT_OPPMOTE, 2, KANAL_TELEFON),
+                createMeldingVM(Meldingstype.SPORSMAL_SKRIFTLIG, 2, "")));
     }
 
     private MeldingVM createMeldingVM(Meldingstype meldingstype, int traadlengde, String kanal) {
