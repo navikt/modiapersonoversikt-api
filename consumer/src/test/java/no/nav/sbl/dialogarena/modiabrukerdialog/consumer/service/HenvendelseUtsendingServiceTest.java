@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
@@ -31,12 +32,11 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR;
+import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_OPPMOTE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.SVAR_SKRIFTLIG;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
@@ -64,6 +64,13 @@ public class HenvendelseUtsendingServiceTest {
     public static final String OPPGAVE_ID_1 = "id1";
     public static final String OPPGAVE_ID_2 = "id2";
     public static final String OPPGAVE_ID_3 = "id3";
+
+    public static final String[] UTGAAENDE_TYPER = {
+            XMLHenvendelseType.SVAR_SKRIFTLIG.name(),
+            XMLHenvendelseType.SVAR_OPPMOTE.name(),
+            XMLHenvendelseType.SVAR_TELEFON.name(),
+            XMLHenvendelseType.REFERAT_OPPMOTE.name(),
+            XMLHenvendelseType.REFERAT_TELEFON.name()};
 
     @Captor
     ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
@@ -97,18 +104,18 @@ public class HenvendelseUtsendingServiceTest {
 
     @Test
     public void skalSendeSvar() {
-        henvendelseUtsendingService.sendSvar(new SvarEllerReferat().withFnr(FNR).withFritekst(FRITEKST));
+        henvendelseUtsendingService.sendSvarEllerReferat(new SvarEllerReferat().withFnr(FNR).withFritekst(FRITEKST).withType(SVAR_SKRIFTLIG));
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
-        assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(SVAR.name()));
+        assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.SVAR_SKRIFTLIG.name()));
     }
 
     @Test
     public void skalSendeReferat() {
-        henvendelseUtsendingService.sendReferat(new SvarEllerReferat().withFnr(FNR).withFritekst(FRITEKST));
+        henvendelseUtsendingService.sendSvarEllerReferat(new SvarEllerReferat().withFnr(FNR).withFritekst(FRITEKST).withType(REFERAT_OPPMOTE));
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
-        assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(REFERAT.name()));
+        assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.REFERAT_OPPMOTE.name()));
     }
 
     @Test
@@ -136,8 +143,8 @@ public class HenvendelseUtsendingServiceTest {
 
         verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
-        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(SPORSMAL.name()));
-        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(SVAR.name(), REFERAT.name())));
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name()));
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(UTGAAENDE_TYPER)));
     }
 
     @Test(expected = RuntimeException.class)
@@ -176,8 +183,8 @@ public class HenvendelseUtsendingServiceTest {
 
         verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
-        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(SVAR.name(), REFERAT.name()));
-        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(SPORSMAL.name())));
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(UTGAAENDE_TYPER));
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())));
     }
 
     @Test
@@ -188,8 +195,8 @@ public class HenvendelseUtsendingServiceTest {
 
         List<SvarEllerReferat> svarEllerReferatForSporsmal = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
 
-        assertThat(svarEllerReferatForSporsmal.get(0).type, is(SvarEllerReferat.Henvendelsetype.REFERAT));
-        assertThat(svarEllerReferatForSporsmal.get(1).type, is(SvarEllerReferat.Henvendelsetype.SVAR));
+        assertThat(svarEllerReferatForSporsmal.get(0).type, is(SvarEllerReferat.Henvendelsetype.REFERAT_OPPMOTE));
+        assertThat(svarEllerReferatForSporsmal.get(1).type, is(SvarEllerReferat.Henvendelsetype.SVAR_OPPMOTE));
     }
 
     private WSHentHenvendelseResponse mockWSHentHenvendelseResponse() {
@@ -197,7 +204,7 @@ public class HenvendelseUtsendingServiceTest {
                 new XMLHenvendelse()
                         .withBehandlingsId(SPORSMAL_ID_1)
                         .withOpprettetDato(now())
-                        .withHenvendelseType(SPORSMAL.name())
+                        .withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLMeldingFraBruker().withFritekst(FRITEKST).withTemagruppe(TEMAGRUPPE)))
         );
@@ -212,16 +219,16 @@ public class HenvendelseUtsendingServiceTest {
         return new XMLHenvendelse()
                 .withFnr("")
                 .withOpprettetDato(DateTime.now())
-                .withHenvendelseType(SVAR.name())
+                .withHenvendelseType(XMLHenvendelseType.SVAR_SKRIFTLIG.name())
                 .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker().withSporsmalsId(sporsmalId).withNavident("")));
     }
 
     private List<Object> createToXMLMeldingTilBrukerSomSvarerPaaSporsmalsIdMedNyesteForst(String sporsmalId) {
-        return new ArrayList<Object>(Arrays.asList(
+        return new ArrayList<Object>(asList(
                 new XMLHenvendelse()
                         .withFnr("")
                         .withBehandlingsId(NYESTE_HENVENDELSE_ID)
-                        .withHenvendelseType(SVAR.name())
+                        .withHenvendelseType(XMLHenvendelseType.SVAR_OPPMOTE.name())
                         .withOpprettetDato(DateTime.now())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLMeldingTilBruker().withSporsmalsId(sporsmalId).withNavident(""))),
@@ -229,7 +236,7 @@ public class HenvendelseUtsendingServiceTest {
                         .withFnr("")
                         .withBehandlingsId(ELDSTE_HENVENDELSE)
                         .withOpprettetDato(DateTime.now().minusDays(1))
-                        .withHenvendelseType(REFERAT.name())
+                        .withHenvendelseType(XMLHenvendelseType.REFERAT_OPPMOTE.name())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLMeldingTilBruker().withSporsmalsId(sporsmalId).withNavident("")))
         ));

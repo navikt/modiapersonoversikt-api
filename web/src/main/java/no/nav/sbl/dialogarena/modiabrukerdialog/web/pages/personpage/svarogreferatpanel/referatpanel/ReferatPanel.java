@@ -7,6 +7,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Kanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
@@ -33,6 +34,12 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_OPPMOTE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_TELEFON;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatKanal.OPPMOTE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatKanal.TELEFON;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatKanal.values;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class ReferatPanel extends Panel {
@@ -76,7 +83,7 @@ public class ReferatPanel extends Panel {
 
         form.add(new RadioGroup<>("kanal")
                 .setRequired(true)
-                .add(new ListView<ReferatKanal>("kanalvalg", asList(ReferatKanal.values())) {
+                .add(new ListView<ReferatKanal>("kanalvalg", asList(values())) {
                     @Override
                     protected void populateItem(ListItem<ReferatKanal> item) {
                         item.add(new Radio<>("kanalknapp", item.getModel()));
@@ -115,7 +122,7 @@ public class ReferatPanel extends Panel {
 
     private SvarOgReferatVM vmMedDefaultVerdier() {
         if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {
-            svarOgReferatVM.kanal = ReferatKanal.TELEFON;
+            svarOgReferatVM.kanal = TELEFON;
         }
         return svarOgReferatVM;
     }
@@ -132,9 +139,13 @@ public class ReferatPanel extends Panel {
                 .withNavIdent(getSubjectHandler().getUid())
                 .withTemagruppe(svarOgReferatVM.temagruppe.name())
                 .withKanal(svarOgReferatVM.kanal.name())
+                .withType(referatType(svarOgReferatVM.kanal))
                 .withFritekst(svarOgReferatVM.getFritekst());
 
-        henvendelseUtsendingService.sendReferat(referat);
+        henvendelseUtsendingService.sendSvarEllerReferat(referat);
     }
 
+    private Henvendelsetype referatType(Kanal kanal) {
+        return kanal == OPPMOTE ? REFERAT_OPPMOTE : REFERAT_TELEFON;
+    }
 }

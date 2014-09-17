@@ -10,8 +10,10 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
 
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.SVAR;
+import java.util.HashMap;
+import java.util.Map;
+
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
 import static org.joda.time.DateTime.now;
 
 public class HenvendelseUtils {
@@ -37,7 +39,7 @@ public class HenvendelseUtils {
         if (xmlMetadata instanceof XMLMeldingTilBruker) {
             XMLMeldingTilBruker xmlMeldingTilBruker = (XMLMeldingTilBruker) xmlMetadata;
             return new SvarEllerReferat()
-                    .withType(henvendelse.getHenvendelseType().equals(XMLHenvendelseType.SVAR.name()) ? SVAR : REFERAT)
+                    .withType(HENVENDELSETYPE_MAP.get(XMLHenvendelseType.fromValue(henvendelse.getHenvendelseType())))
                     .withFnr(henvendelse.getFnr())
                     .withOpprettetDato(henvendelse.getOpprettetDato())
                     .withSporsmalsId(xmlMeldingTilBruker.getSporsmalsId())
@@ -67,5 +69,15 @@ public class HenvendelseUtils {
                                 .withNavident(svarEllerReferat.navIdent)
                 ));
     }
+
+    public static final Map<XMLHenvendelseType, Henvendelsetype> HENVENDELSETYPE_MAP = new HashMap<XMLHenvendelseType, Henvendelsetype>() {
+        {
+            put(XMLHenvendelseType.SVAR_SKRIFTLIG,  Henvendelsetype.SVAR_SKRIFTLIG);
+            put(XMLHenvendelseType.SVAR_OPPMOTE,    Henvendelsetype.SVAR_OPPMOTE);
+            put(XMLHenvendelseType.SVAR_TELEFON,    Henvendelsetype.SVAR_TELEFON);
+            put(XMLHenvendelseType.REFERAT_OPPMOTE, Henvendelsetype.REFERAT_OPPMOTE);
+            put(XMLHenvendelseType.REFERAT_TELEFON, Henvendelsetype.REFERAT_TELEFON);
+        }
+    };
 
 }

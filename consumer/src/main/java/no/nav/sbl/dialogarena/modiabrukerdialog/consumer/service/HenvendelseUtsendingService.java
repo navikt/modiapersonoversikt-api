@@ -16,6 +16,12 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_OPPMOTE;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_TELEFON;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_OPPMOTE;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_SKRIFTLIG;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_TELEFON;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.ELDSTE_FORST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createSporsmalFromXMLHenvendelse;
@@ -29,15 +35,8 @@ public class HenvendelseUtsendingService {
     @Inject
     protected SendUtHenvendelsePortType sendUtHenvendelsePortType;
 
-    public void sendSvar(SvarEllerReferat svarEllerReferat) {
-        sendSvarEllerReferat(svarEllerReferat, XMLHenvendelseType.SVAR);
-    }
-
-    public void sendReferat(SvarEllerReferat svarEllerReferat) {
-        sendSvarEllerReferat(svarEllerReferat, XMLHenvendelseType.REFERAT);
-    }
-
-    private void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat, XMLHenvendelseType type) {
+    public void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat) {
+        XMLHenvendelseType type = XMLHenvendelseType.fromValue(svarEllerReferat.type.name());
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedMeldingTilBruker(svarEllerReferat, type);
         sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest()
                 .withType(type.name())
@@ -47,7 +46,7 @@ public class HenvendelseUtsendingService {
 
     public Sporsmal getSporsmalFromOppgaveId(String fnr, String oppgaveId) {
         List<Object> henvendelseliste =
-                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withTyper(XMLHenvendelseType.SPORSMAL.name()).withFodselsnummer(fnr)).getAny();
+                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withTyper(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name()).withFodselsnummer(fnr)).getAny();
         XMLHenvendelse henvendelse;
         for (Object o : henvendelseliste) {
             henvendelse = (XMLHenvendelse) o;
@@ -63,9 +62,10 @@ public class HenvendelseUtsendingService {
     }
 
     public List<SvarEllerReferat> getSvarEllerReferatForSporsmal(String fnr, String sporsmalId) {
+        List<String> xmlHenvendelseTyper = asList(SVAR_SKRIFTLIG.name(), SVAR_OPPMOTE.name(), SVAR_TELEFON.name(), REFERAT_OPPMOTE.name(), REFERAT_TELEFON.name());
         List<Object> henvendelseliste =
                 henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
-                        .withTyper(XMLHenvendelseType.SVAR.name(), XMLHenvendelseType.REFERAT.name())
+                        .withTyper(xmlHenvendelseTyper)
                         .withFodselsnummer(fnr)).getAny();
 
         List<SvarEllerReferat> svarliste = new ArrayList<>();
