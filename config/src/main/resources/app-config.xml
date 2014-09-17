@@ -40,6 +40,7 @@
         <webservice alias="domene.Brukerdialog:HenvendelseSoknaderService_v1" mapToProperty="henvendelser.ws"/>
         <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws" />
         <webservice alias="domene.Brukerdialog:BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
+        <!--<webservice alias="FYLL INN FRA FASIT" mapToProperty="arbeidOgAktivitet.v2"/>-->
         <applicationProperties alias="modiabrukerdialog.properties"/>
         <!-- App-->
         <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>

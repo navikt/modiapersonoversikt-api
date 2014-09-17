@@ -3,11 +3,12 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.service;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
+import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.domain.Oppgave;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -74,7 +75,7 @@ public class PlukkOppgaveServiceTest {
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false, false, false, true);
 
         assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(oppgave2)));
-        verify(oppgaveBehandlingService).leggTilbakeOppgaveIGsak(eq(optional(oppgave1.get().oppgaveId)), anyString(), anyString());
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
     }
 
     @Test
@@ -85,6 +86,17 @@ public class PlukkOppgaveServiceTest {
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
 
         assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(Optional.<Oppgave>none())));
-        verify(oppgaveBehandlingService).leggTilbakeOppgaveIGsak(eq(optional(oppgave1.get().oppgaveId)), anyString(), anyString());
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
+    }
+
+    @Test
+    public void leggerTilbakeHvisIkkeTilgangFraKjerneinfo() {
+        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr"));
+
+        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave1, Optional.<Oppgave>none());
+        when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenThrow(new AuthorizationException(""));
+
+        assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(Optional.<Oppgave>none())));
+        verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
     }
 }

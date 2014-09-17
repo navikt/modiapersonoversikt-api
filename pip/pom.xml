@@ -94,6 +94,11 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-collections</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>modiabrukerdialog-api</artifactId>
+        </dependency>
+
     </dependencies>
 
     <build>

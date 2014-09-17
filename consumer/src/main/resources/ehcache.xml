@@ -98,5 +98,13 @@
            diskPersistent="false"
            memoryStoreEvictionPolicy="LRU"/>
 
-    <cache name="cms.content" maxElementsInMemory="10" overflowToDisk="false" timeToLiveSeconds="1800" timeToIdleSeconds="1800"/>
+    <cache name="cms.content"
+           maxElementsInMemory="10"
+           overflowToDisk="false"
+           timeToLiveSeconds="1800"
+           timeToIdleSeconds="1800"/>
+
+    <cache name="aktorIdCache" maxElementsInMemory="100000"
+           eternal="true"
+           overflowToDisk="true"/>
 </ehcache>

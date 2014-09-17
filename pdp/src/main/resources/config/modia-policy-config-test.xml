@@ -24,7 +24,7 @@
                 <ns:Location>policy/kontorsperre-policy.xml</ns:Location>
             </ns:Policy>
             <ns:Policy>
-                <ns:Location>policy/temagruppe-policy.xml</ns:Location>
+                <ns:Location>policy/tema-policy.xml</ns:Location>
             </ns:Policy>
         </ns:PolicySet>
     </ns:Policies>
