@@ -47,7 +47,7 @@ public class ArbeidOgAktivitetEndpointConfig {
                 long start = System.currentTimeMillis();
                 String name = "ARENA_ARBEIDOGAKTIVITET_V1";
                 try {
-                    ws.hentSakListe(new WSHentSakListeRequest().withBruker(new WSBruker().withBruker("10108000398")));
+                    ws.hentSakListe(new WSHentSakListeRequest().withBruker(new WSBruker().withBrukertypeKode("PERSON").withBruker("10108000398")));
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
