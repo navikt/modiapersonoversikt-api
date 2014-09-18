@@ -10,13 +10,14 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.json.JSONException;
+import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.markup.head.IHeaderResponse;
-import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.util.string.StringValue;
-import org.apache.ws.security.util.StringUtil;
 
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
@@ -34,7 +35,11 @@ import static org.apache.wicket.markup.head.OnLoadHeaderItem.forScript;
 
 public class HentPersonPage extends BasePage {
 
-    public HentPersonPage(PageParameters pageParameters) {
+	public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
+	public static final String FNR = "fnr";
+	public static final String ERROR = "error";
+
+	public HentPersonPage(PageParameters pageParameters) {
         HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel");
         setupErrorText(pageParameters, hentPersonPanel);
         add(
@@ -44,16 +49,23 @@ public class HentPersonPage extends BasePage {
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true)
         );
-		StringValue sikkerhetstiltakBeskrivelse = pageParameters.get("sikkerhetstiltak");
-		if (!sikkerhetstiltakBeskrivelse.isEmpty()) {
-			add(new SikkerhetstiltakPersonPanel("sikkerhetstiltak", sikkerhetstiltakBeskrivelse.toString()));
-		} else {
-			add(new SikkerhetstiltakPersonPanel("sikkerhetstiltak", new String()));
-		}
+
+		setUpSikkerhetstiltakspanel(pageParameters);
     }
 
-    private void setupErrorText(PageParameters pageParameters, HentPersonPanel hentPersonPanel) {
-        StringValue errorText = pageParameters.get("error");
+	private void setUpSikkerhetstiltakspanel(PageParameters pageParameters) {
+		StringValue fnr = pageParameters.get(FNR);
+
+		StringValue sikkerhetstiltakBeskrivelse = pageParameters.get(SIKKERHETSTILTAK);
+		if (!sikkerhetstiltakBeskrivelse.isEmpty()) {
+			add(new SikkerhetstiltakPersonPanel(SIKKERHETSTILTAK, sikkerhetstiltakBeskrivelse.toString()));
+		} else {
+			add(new SikkerhetstiltakPersonPanel(SIKKERHETSTILTAK, new String()));
+		}
+	}
+
+	private void setupErrorText(PageParameters pageParameters, HentPersonPanel hentPersonPanel) {
+        StringValue errorText = pageParameters.get(ERROR);
         if (!errorText.isEmpty()) {
             hentPersonPanel.setErrorText(errorText.toString());
         }
@@ -74,13 +86,18 @@ public class HentPersonPage extends BasePage {
     }
 
 	@RunOnEvents(GOTO_HENT_PERSONPAGE)
-	public void refreshKjerneinfoSikkerhetsInfo(AjaxRequestTarget target, String query) {
-		String[] queryL = StringUtil.split(query,';');
-		if (queryL.length == 2) {
-			throw new RestartResponseException(HentPersonPage.class, new PageParameters().set("error", queryL[0]).set("sikkerhetstiltak", queryL[1]));
+	public void refreshKjerneinfoSikkerhetsInfo(AjaxRequestTarget target, String query) throws JSONException {
+		String errorText = getErrorText(query);
+		String sikkerhetstiltak = getSikkerhetsTiltakBeskrivelse(query);
+
+		PageParameters pageParameters = new PageParameters();
+		if (!StringUtils.isEmpty(sikkerhetstiltak)) {
+			pageParameters.set(ERROR, errorText).set(SIKKERHETSTILTAK, sikkerhetstiltak);
 		} else {
-			throw new RestartResponseException(HentPersonPage.class, new PageParameters().set("error", query));
+			pageParameters.set(ERROR, errorText);
 		}
+
+		throw new RestartResponseException(HentPersonPage.class, pageParameters);
 	}
 
     @RunOnEvents(FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE)
@@ -104,4 +121,20 @@ public class HentPersonPage extends BasePage {
         send(getPage(), DEPTH, new NamedEventPayload(HENTPERSON_CLEAR_MESSAGES, query));
     }
 
+	protected String getSikkerhetsTiltakBeskrivelse(String query) throws JSONException {
+		return getJsonField(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+	}
+
+	protected String getErrorText(String query) throws JSONException {
+		return getJsonField(query, HentPersonPanel.JSON_ERROR_TEXT);
+	}
+
+	private String getJsonField(String query, String field) throws JSONException {
+		JSONObject jsonObject =  new JSONObject(query);
+		if (jsonObject.has(field)) {
+			return new JSONObject(query).getString(field);
+		} else {
+			return null;
+		}
+	}
 }
