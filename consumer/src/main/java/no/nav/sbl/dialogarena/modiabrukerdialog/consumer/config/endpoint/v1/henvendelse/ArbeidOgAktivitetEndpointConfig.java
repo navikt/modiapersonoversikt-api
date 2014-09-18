@@ -59,6 +59,7 @@ public class ArbeidOgAktivitetEndpointConfig {
     private static ArbeidOgAktivitet createArbeidOgAktivitetPortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setAddress(System.getProperty("arbeidOgAktivitet.v1.url"));
+        proxyFactoryBean.setWsdlLocation("classpath:arbeid/nav/tjeneste/arbeidOgAktivitet/ArbeidOgAktivitetWSEXP.wsdl");
         proxyFactoryBean.setServiceClass(ArbeidOgAktivitet.class);
         proxyFactoryBean.getOutInterceptors().add(interceptor);
         proxyFactoryBean.getFeatures().add(new WSAddressingFeature());

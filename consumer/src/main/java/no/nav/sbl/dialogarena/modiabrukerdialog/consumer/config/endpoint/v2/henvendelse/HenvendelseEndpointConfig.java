@@ -10,12 +10,9 @@ import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
-import org.apache.cxf.configuration.jsse.TLSClientParameters;
-import org.apache.cxf.endpoint.Client;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.frontend.ClientProxy;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.apache.cxf.transport.http.HTTPConduit;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +24,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.TLSOppsettUtils.skruAvSertifikatsjekkDersomLokalOppstart;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock.createHenvendelsePortTypeMock;
 
 @Configuration
@@ -77,11 +75,7 @@ public class HenvendelseEndpointConfig {
                 XMLMeldingFraBruker.class,
                 XMLMeldingTilBruker.class});
         HenvendelsePortType portType = proxyFactoryBean.create(HenvendelsePortType.class);
-        Client client = ClientProxy.getClient(portType);
-        HTTPConduit httpConduit = (HTTPConduit) client.getConduit();
-        TLSClientParameters clientParameters = new TLSClientParameters();
-        clientParameters.setDisableCNCheck(true);
-        httpConduit.setTlsClientParameters(clientParameters);
+        skruAvSertifikatsjekkDersomLokalOppstart(ClientProxy.getClient(portType));
         return portType;
     }
 
