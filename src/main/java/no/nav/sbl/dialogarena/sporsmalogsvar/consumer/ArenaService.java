@@ -15,11 +15,8 @@ import java.util.List;
 public class ArenaService {
 
     public static final String ARENA_FAGSYSTEMNAVN = "Arena";
-    public static final String TEMA_OPPFOLGING = "OPP";
     public static final String BRUKERKODE_PERSON = "PERSON";
-
-    //TODO: Finn identifikator for oppfølgingssak
-    public static final String OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR = "opp";
+    public static final String OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR = "OPP";
 
     @Inject
     private ArbeidOgAktivitet arbeidOgAktivitet;
@@ -42,7 +39,7 @@ public class ArenaService {
     }
 
     private boolean sakErOppfolgingssak(no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak sak) {
-        return OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR.equalsIgnoreCase(sak.getSakstypeKode().getKode());
+        return OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR.equalsIgnoreCase(sak.getFagomradeKode().getKode());
     }
 
     private static final Transformer<no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak, Sak> TIL_SAK =
@@ -53,7 +50,7 @@ public class ArenaService {
                     sak.saksId = arenaSak.getSaksId();
                     sak.fagsystem = ARENA_FAGSYSTEMNAVN;
                     sak.sakstype = arenaSak.getSakstypeKode().getKode();
-                    sak.tema = TEMA_OPPFOLGING;
+                    sak.tema = arenaSak.getFagomradeKode().getKode();
                     sak.opprettetDato = new DateTime(arenaSak.getEndringsInfo().getOpprettetDato().toDate());
                     return sak;
                 }

@@ -213,7 +213,7 @@ public class SakerVMTest {
 
     @Test
     public void henterOppfolgingssakerFraArena() {
-        Sak oppfolgingssak = createSak("id 1", ArenaService.TEMA_OPPFOLGING, ArenaService.ARENA_FAGSYSTEMNAVN, "sakstype", DateTime.now().minusDays(1));
+        Sak oppfolgingssak = createSak("id 1", ArenaService.OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR, ArenaService.ARENA_FAGSYSTEMNAVN, "sakstype", DateTime.now().minusDays(1));
         Sak gsak = createSak("id 2", "dagpenger", Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "sakstype", DateTime.now());
         when(arenaService.hentOppfolgingssak(anyString())).thenReturn(Optional.optional(oppfolgingssak));
         when(gsakService.hentSakerForBruker(anyString())).thenReturn(new ArrayList<>(Arrays.asList(gsak)));
@@ -226,7 +226,7 @@ public class SakerVMTest {
 
     @Test
     public void henterIkkeOppfolgingssakFraArenaDersomDetAlleredeFinnesEnOppfolgingssakFraGsak() {
-        Sak oppfolgingssak = createSak("id 1", ArenaService.TEMA_OPPFOLGING, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "sakstype", DateTime.now().minusDays(1));
+        Sak oppfolgingssak = createSak("id 1", ArenaService.OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "sakstype", DateTime.now().minusDays(1));
         saksliste.add(oppfolgingssak);
 
         sakerVM.oppdater();

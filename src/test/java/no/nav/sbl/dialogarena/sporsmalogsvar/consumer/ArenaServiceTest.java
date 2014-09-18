@@ -36,9 +36,9 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ArenaServiceTest {
 
-    public static final String FAGOMRADEKODE = "fagomradekode";
     public static final String SAKSID = "ID 1";
     public static final LocalDate OPPRETTET_DATO = new LocalDate().minusDays(1);
+    public static final String SAKSTYPEKODE = "arenasak";
 
     @Captor
     private ArgumentCaptor<WSHentSakListeRequest> wsHentSakListeRequestArgumentCaptor;
@@ -74,8 +74,8 @@ public class ArenaServiceTest {
         Sak sak = optionalSak.get();
         assertThat(sak.saksId, is(SAKSID));
         assertThat(sak.fagsystem, is(ARENA_FAGSYSTEMNAVN));
-        assertThat(sak.sakstype, is(OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR));
-        assertThat(sak.tema, is(ArenaService.TEMA_OPPFOLGING));
+        assertThat(sak.sakstype, is(SAKSTYPEKODE));
+        assertThat(sak.tema, is(OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR));
         assertThat(sak.opprettetDato, is(new DateTime(OPPRETTET_DATO.toDate())));
     }
 
@@ -98,15 +98,15 @@ public class ArenaServiceTest {
 
     }
 
-    private WSHentSakListeResponse createResponseMedSak(String sakstypekode) {
+    private WSHentSakListeResponse createResponseMedSak(String tema) {
         return new WSHentSakListeResponse().withSakListe(
                 new no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak()
                         .withAnsvarligEnhetId("ansvarlig enhet")
                         .withAr("2014")
                         .withBruker(new Bruker().withBruker("bruker").withBrukertypeKode("type"))
                         .withEndringsInfo(new EndringsInfo().withOpprettetDato(OPPRETTET_DATO))
-                        .withFagomradeKode(new Fagomradekode().withKode(FAGOMRADEKODE))
-                        .withSakstypeKode(new Sakstypekode().withKode(sakstypekode))
+                        .withFagomradeKode(new Fagomradekode().withKode(tema))
+                        .withSakstypeKode(new Sakstypekode().withKode(SAKSTYPEKODE))
                         .withLopenr("løpenr")
                         .withSaksId(SAKSID));
     }
