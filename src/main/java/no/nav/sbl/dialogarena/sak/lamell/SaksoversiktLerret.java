@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
-import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.events.FeedItemPayload;
@@ -10,13 +9,13 @@ import no.nav.modig.modia.navigation.KeyNavigationDependentResourceReference;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptContentHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.head.OnLoadHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.IModel;
@@ -29,6 +28,7 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
@@ -54,10 +54,14 @@ public class SaksoversiktLerret extends Lerret {
     private String fnr;
     private IModel<String> aktivtTema = new Model<>();
     private Label feilmelding = (Label) new Label("feilmelding", "Feil ved kall til baksystem").setVisible(false);
+    private Map<String, List<GenerellBehandling>> alleBahandlinger;
+    private List<String> temaer;
 
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
         this.fnr = fnr;
+        alleBahandlinger = saksoversiktService.hentAlleBehandlinger(fnr);
+        temaer = new ArrayList(alleBahandlinger.keySet());
         hendelserContainer = lagHendelserContainer(fnr);
         temaContainer = lagTemaContainer(fnr);
         add(hendelserContainer, temaContainer);
@@ -67,7 +71,8 @@ public class SaksoversiktLerret extends Lerret {
     private WebMarkupContainer lagHendelserContainer(String fnr) {
         return (WebMarkupContainer) new WebMarkupContainer("hendelserContainer")
                 .add(feilmelding)
-                .add(new BehandlingerListView("behandlinger", new ArrayList<GenerellBehandling>(), fnr)).setOutputMarkupPlaceholderTag(true);
+                .add(new BehandlingSakerListView("behandling-sak", temaer, fnr, this))
+                .setOutputMarkupPlaceholderTag(true);
     }
 
     private Component lagTemaContainer(String fnr) {
@@ -79,7 +84,7 @@ public class SaksoversiktLerret extends Lerret {
     @SuppressWarnings("unused")
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void filtrerDetaljerPaaValgtTema(AjaxRequestTarget target, FeedItemPayload payload) {
-        hentNyeHendelser(payload.getItemId());
+        settAktivtTema(payload.getItemId());
     }
 
     @SuppressWarnings("unused")
@@ -89,24 +94,21 @@ public class SaksoversiktLerret extends Lerret {
     }
 
     private void aapneForsteItem() {
-        List<TemaVM> temaer = saksoversiktService.hentTemaer(fnr);
         if(!temaer.isEmpty()) {
-            hentNyeHendelser(temaer.get(0).temakode);
+            settAktivtTema(temaer.get(0));
         }
     }
 
-    public void hentNyeHendelser(String sakstema) {
-        try {
-            aktivtTema.setObject(sakstema);
-            hendelserContainer.addOrReplace(new BehandlingerListView("behandlinger", saksoversiktService.hentFiltrerteBehandlingerForTemakode(fnr, sakstema), fnr));
-        } catch (SystemException e) {
-            logger.error("Feil ved kall til baksystem", e);
-            feilmelding.setVisible(true);
-        }
+    public void settAktivtTema(String sakstema) {
+        aktivtTema.setObject(sakstema);
     }
 
     public IModel<String> getAktivtTema() {
         return aktivtTema;
+    }
+
+    public List<GenerellBehandling> getBehandlingerForTema(String sakstema) {
+        return this.alleBahandlinger.get(sakstema);
     }
 
     @Override
@@ -115,5 +117,6 @@ public class SaksoversiktLerret extends Lerret {
         response.render(new JavaScriptContentHeaderItem("resizeElement()", "saksoversikt-ie-js", "IE"));
         response.render(JavaScriptReferenceHeaderItem.forReference(NAVIGATION_JS));
         response.render(OnDomReadyHeaderItem.forScript("new Modig.Modia.SaksoversiktView('#" + temaContainer.getMarkupId() + "','" + initial + "');"));
+        response.render(OnLoadHeaderItem.forScript("addLamellTemaOnClickListeners();"));
     }
 }

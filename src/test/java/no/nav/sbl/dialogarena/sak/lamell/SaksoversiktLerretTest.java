@@ -37,7 +37,7 @@ public class SaksoversiktLerretTest extends AbstractWicketTest {
         when(service.hentFiltrerteBehandlingerForTemakode("123", TEMA)).thenReturn(behandlinger);
         lerret = new SaksoversiktLerret("lerret", "123");
 
-        lerret.hentNyeHendelser(TEMA);
+        lerret.settAktivtTema(TEMA);
         wicketTester.goToPageWith(lerret);
     }
 

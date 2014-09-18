@@ -33,17 +33,7 @@
         window.SaksoversiktViews = window.SaksoversiktViews || [];
         window.SaksoversiktViews[selector] = this;
 
-        var alleTemaLenker =  this.el.find(itemSelector);
-
-        alleTemaLenker.click(function(event, notClearFocus) {
-            $("UL > LI.aktiv").removeClass("aktiv");
-            $(event.currentTarget).parent("li").addClass("aktiv");
-            if(notClearFocus != true) {
-                $(".saksoversikt > header.lamellhode a").focus();
-            }
-        });
-
-        alleTemaLenker.focus(function(event) {
+        this.el.find(itemSelector).focus(function(event) {
             $(event.currentTarget).trigger("click", true);
         });
     }

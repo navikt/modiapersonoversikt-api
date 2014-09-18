@@ -33,6 +33,7 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
     private BulletProofKodeverkService kodeverk;
 
     private String fnr;
+    private String sakstema;
 
     public BehandlingerListView(String id, List<GenerellBehandling> behandlinger, String fnr) {
         super(id);

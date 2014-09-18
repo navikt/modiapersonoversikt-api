@@ -65,13 +65,13 @@
                         margin-bottom: 0.17rem;
                     }
 
+                    &:hover {
+                        background: #dadada;
+                    }
+
                     &:active,&:focus {
                         background: #0067c5;
                         color: #FFFFFF;
-                    }
-
-                    &:hover {
-                        background: #dadada;
                     }
                 }
             }
@@ -79,6 +79,16 @@
     }
 
     .sak-informasjon {
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+
+            li:not(.aktiv) {
+                display: none;
+            }
+        }
+
         .aar {
             position: relative;
             z-index: 1;

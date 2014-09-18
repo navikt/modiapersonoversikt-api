@@ -4,10 +4,9 @@ import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
-import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.slf4j.Logger;
@@ -59,23 +58,13 @@ public class TemaListView extends PropertyListView<TemaVM> {
         item.add(hasCssClassIf("aktiv", of(sakstemaErValgt)));
     }
 
-    private class Temalenke extends AjaxLink {
-
-        private String sakstema;
-
+    private class Temalenke extends ExternalLink {
         public Temalenke(String id, String sakstema, String datoStreng) {
-            super(id);
-            this.sakstema = sakstema;
+            super(id, "#"+sakstema);
             add(
                     new Label("sakstema", kodeverk.getTemanavnForTemakode(sakstema, ARKIVTEMA)),
                     new Label("dato", datoStreng)
             );
-        }
-
-        @Override
-        public void onClick(AjaxRequestTarget target) {
-            target.add(hendelserContainer);
-            lerret.hentNyeHendelser(sakstema);
         }
     }
 }

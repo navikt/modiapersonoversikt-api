@@ -73,20 +73,36 @@ public class SaksoversiktService {
         return sakOgBehandlingFilter.filtrerBehandlinger(hentBehandlingerForTemakode(fnr, temakode));
     }
 
+    /**
+     * Henter alle behandlinger sammen med deres temakode
+     */
+    public Map<String, List<GenerellBehandling>> hentAlleBehandlinger(String fnr) {
+        Map<String, List<GenerellBehandling>> behandlingerMedTemakoder = hentBehandlinger(fnr);
+        for(String sakstema : behandlingerMedTemakoder.keySet()) {
+            behandlingerMedTemakoder.put(sakstema, sakOgBehandlingFilter.filtrerBehandlinger(behandlingerMedTemakoder.get(sakstema)));
+        }
+        return behandlingerMedTemakoder;
+    }
+
+    protected Map<String, List<GenerellBehandling>> hentBehandlinger(String fnr) {
+        LOG.info("Henter alle behandlinger fra Sak og Behandling til Modiaoversikten. FNR: " + fnr);
+        Map<String, List<GenerellBehandling>> behandlinger = new HashMap<>();
+
+        List<WSSak> saker = hentSakerForAktor(fnr);
+        for(WSSak sak : saker) {
+            if(!behandlinger.containsKey(sak.getSakstema().getValue())) {
+                behandlinger.put(sak.getSakstema().getValue(), new ArrayList<GenerellBehandling>());
+            }
+            List<GenerellBehandling> sorterteBehandlinger = on(hentBehandlingerForSak(sak, fnr)).collect(new OmvendtKronologiskBehandlingComparator());
+            behandlinger.get(sak.getSakstema().getValue()).addAll(sorterteBehandlinger);
+        }
+        return behandlinger;
+    }
+
     protected List<GenerellBehandling> hentBehandlingerForTemakode(String fnr, final String temakode) {
         LOG.info("Henter behandlinger fra Sak og Behandling & Henvendelse til Modiasaksoversikt. Fnr: " + fnr + ". Temakode: " + temakode);
-        List<GenerellBehandling> behandlinger = new ArrayList<>();
         WSSak wsSak = hentSakForAktorPaaTema(hentAktorId(fnr), temakode);
-        List<WSBehandlingskjede> alleBehandlingskjeder = wsSak.getBehandlingskjede();
-
-        List<Kvittering> kvitteringer = hentKvitteringer(fnr, BEHANDLINGSIDER_FRA_SAK.transform(wsSak));
-        behandlinger.addAll(behandlingerSomIkkeErKvitteringer(alleBehandlingskjeder, kvitteringer));
-
-        Map<String, Kvittering> kvitteringerForBehandlingsID = mapKvitteringMedBehandlingsID(kvitteringer);
-        Map<String, WSBehandlingskjede> kjederForBehandlingsID = mappedeKjeder(kvitteringerForBehandlingsID.keySet(), finnBehandlingskjederSomHarKvittering(alleBehandlingskjeder, kvitteringer));
-        for (String kvitteringsID : kvitteringerForBehandlingsID.keySet()) {
-            behandlinger.add(beriketKvittering(kvitteringerForBehandlingsID.get(kvitteringsID), kjederForBehandlingsID.get(kvitteringsID)));
-        }
+        List<GenerellBehandling> behandlinger = hentBehandlingerForSak(wsSak, fnr);
 
         behandlinger = on(behandlinger).map(new Transformer<GenerellBehandling, GenerellBehandling>() {
             @Override public GenerellBehandling transform(GenerellBehandling generellBehandling) {
@@ -95,6 +111,21 @@ public class SaksoversiktService {
         }).collect();
 
         return on(behandlinger).collect(new OmvendtKronologiskBehandlingComparator());
+    }
+
+    private List<GenerellBehandling> hentBehandlingerForSak(WSSak sak, String fnr) {
+        List<WSBehandlingskjede> alleBehandlingskjeder = sak.getBehandlingskjede();
+        List<GenerellBehandling> behandlinger = new ArrayList<>();
+
+        List<Kvittering> kvitteringer = hentKvitteringer(fnr, BEHANDLINGSIDER_FRA_SAK.transform(sak));
+        behandlinger.addAll(behandlingerSomIkkeErKvitteringer(alleBehandlingskjeder, kvitteringer));
+
+        Map<String, Kvittering> kvitteringerForBehandlingsID = mapKvitteringMedBehandlingsID(kvitteringer);
+        Map<String, WSBehandlingskjede> kjederForBehandlingsID = mappedeKjeder(kvitteringerForBehandlingsID.keySet(), finnBehandlingskjederSomHarKvittering(alleBehandlingskjeder, kvitteringer));
+        for (String kvitteringsID : kvitteringerForBehandlingsID.keySet()) {
+            behandlinger.add(beriketKvittering(kvitteringerForBehandlingsID.get(kvitteringsID), kjederForBehandlingsID.get(kvitteringsID)));
+        }
+        return behandlinger;
     }
 
     private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede) {
