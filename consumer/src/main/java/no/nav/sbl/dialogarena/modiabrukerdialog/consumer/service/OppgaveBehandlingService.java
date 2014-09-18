@@ -114,7 +114,7 @@ public class OppgaveBehandlingService {
             lagreOppgaveIGsak(wsOppgave);
             return wsOppgave;
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
-            throw new FikkIkkeTilordnet();
+            throw new FikkIkkeTilordnet(lagreOppgaveOptimistiskLasing);
         }
     }
 
@@ -176,5 +176,9 @@ public class OppgaveBehandlingService {
                 .withLest(wsOppgave.isLest());
     }
 
-    public static class FikkIkkeTilordnet extends Exception {}
+    public static class FikkIkkeTilordnet extends Exception {
+        public FikkIkkeTilordnet(Throwable cause) {
+            super(cause);
+        }
+    }
 }
