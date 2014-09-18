@@ -1,12 +1,12 @@
-package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.wrappers;
+package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.wrapper;
 
 import no.nav.kjerneinfo.consumer.fim.mapping.KjerneinfoMapper;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.config.PersonKjerneinfoConsumerConfig;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.KjerneinfoMapperConfigResolver;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.kjerneinfo.components.mockable.mockableimpl.PersonKjerneinfoConsumerConfigImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.util.Wrapper;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.KjerneinfoMapperConfigResolver;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerneinfo.component.mockable.mockableimpl.PersonKjerneinfoConsumerConfigImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import no.nav.tjeneste.virksomhet.person.v2.PersonV2;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
