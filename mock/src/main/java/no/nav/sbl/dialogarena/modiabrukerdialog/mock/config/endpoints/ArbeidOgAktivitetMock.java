@@ -34,8 +34,8 @@ public class ArbeidOgAktivitetMock {
                                 .withAr("2013")
                                 .withBruker(new Bruker().withBruker("bruker 1").withBrukertypeKode("type 1"))
                                 .withEndringsInfo(new EndringsInfo().withOpprettetDato(new LocalDate().minusDays(2)))
-                                .withFagomradeKode(new Fagomradekode().withKode("fagomradekode 1"))
-                                .withSakstypeKode(new Sakstypekode().withKode("OPP"))
+                                .withFagomradeKode(new Fagomradekode().withKode("OPP"))
+                                .withSakstypeKode(new Sakstypekode().withKode("ARBEID"))
                                 .withLopenr("løpenr 1"),
                         new Sak()
                                 .withSaksId("13131313")
@@ -43,8 +43,8 @@ public class ArbeidOgAktivitetMock {
                                 .withAr("2014")
                                 .withBruker(new Bruker().withBruker("bruker 2").withBrukertypeKode("type 2"))
                                 .withEndringsInfo(new EndringsInfo().withOpprettetDato(new LocalDate().minusDays(1)))
-                                .withFagomradeKode(new Fagomradekode().withKode("fagomradekode 2"))
-                                .withSakstypeKode(new Sakstypekode().withKode("ikke en oppfølgingssak!"))
+                                .withFagomradeKode(new Fagomradekode().withKode("ikke en oppfølgingssak!"))
+                                .withSakstypeKode(new Sakstypekode().withKode("NOE ANNET"))
                                 .withLopenr("løpenr 2"))));
             }
         };
