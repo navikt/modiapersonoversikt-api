@@ -5,10 +5,10 @@ import org.jboss.security.xacml.core.model.context.DecisionType;
 import org.jboss.security.xacml.interfaces.RequestContext;
 import org.junit.Test;
 
-import static junit.framework.Assert.assertEquals;
 import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_ACTION_ID;
 import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_RESOURCE_ID;
 import static org.jboss.security.xacml.interfaces.XACMLConstants.ATTRIBUTEID_ROLE;
+import static org.junit.Assert.assertEquals;
 
 public class BankkontonummerPolicyTest extends AbstractPDPTest {
 
