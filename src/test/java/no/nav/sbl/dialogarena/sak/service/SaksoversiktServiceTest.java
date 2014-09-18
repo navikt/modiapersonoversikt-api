@@ -30,6 +30,7 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSBehandlingskjede;
@@ -137,6 +138,27 @@ public class SaksoversiktServiceTest {
         saker.withSak(sak);
         List<GenerellBehandling> behandlinger = service.hentBehandlingerForTemakode("123123123", kronotema);
         assertTrue(behandlinger.get(0).behandlingDato.isAfter(behandlinger.get(1).behandlingDato));
+    }
+
+    @Test
+    public void hentAlleBehandlingerSkalReturnereHenvendelserForAlleTema() {
+        String syk = "SYK";
+        String oms = "OMS";
+        String aap = "AAP";
+
+        saker.withSak(
+                createWSSak().withSakstema(new WSSakstemaer().withValue(syk)),
+                createWSSak().withSakstema(new WSSakstemaer().withValue(oms)),
+                createWSSak().withSakstema(new WSSakstemaer().withValue(aap)),
+                createWSSak().withSakstema(new WSSakstemaer().withValue(syk)),
+                createWSSak().withSakstema(new WSSakstemaer().withValue(aap)),
+                createWSSak().withSakstema(new WSSakstemaer().withValue(syk))
+        );
+
+        Map<String, List<GenerellBehandling>> behandlinger = service.hentBehandlinger("123123123");
+        assertTrue(behandlinger.get(syk).size() == 3);
+        assertTrue(behandlinger.get(aap).size() == 2);
+        assertTrue(behandlinger.get(oms).size() == 1);
     }
 
     private List<WSSoknad> opprettHenvendelseGrunnlag() {
