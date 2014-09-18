@@ -24,6 +24,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Collections;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService.ARENA_FAGSYSTEMNAVN;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService.BRUKERKODE_PERSON;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService.OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -62,6 +63,7 @@ public class ArenaServiceTest {
         WSHentSakListeRequest request = wsHentSakListeRequestArgumentCaptor.getValue();
 
         assertThat(request.getBruker().getBruker(), is(fnr));
+        assertThat(request.getBruker().getBrukertypeKode(), is(BRUKERKODE_PERSON));
     }
 
     @Test

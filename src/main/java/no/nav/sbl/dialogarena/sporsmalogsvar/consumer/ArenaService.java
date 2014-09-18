@@ -16,6 +16,7 @@ public class ArenaService {
 
     public static final String ARENA_FAGSYSTEMNAVN = "Arena";
     public static final String TEMA_OPPFOLGING = "OPP";
+    public static final String BRUKERKODE_PERSON = "PERSON";
 
     //TODO: Finn identifikator for oppfølgingssak
     public static final String OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR = "opp";
@@ -25,7 +26,7 @@ public class ArenaService {
 
     public Optional<Sak> hentOppfolgingssak(String fodselsnummer) {
         WSHentSakListeResponse response = arbeidOgAktivitet.hentSakListe(
-                new WSHentSakListeRequest().withBruker(new WSBruker().withBruker(fodselsnummer)));
+                new WSHentSakListeRequest().withBruker(new WSBruker().withBrukertypeKode(BRUKERKODE_PERSON).withBruker(fodselsnummer)));
         List<no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak> arenaSakListe = response.getSakListe();
         Optional<no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak> oppfolgingssak = filtrerUtOppfolgingssak(arenaSakListe);
         return oppfolgingssak.isSome() ? Optional.optional(TIL_SAK.transform(oppfolgingssak.get())) : Optional.<Sak>none();
