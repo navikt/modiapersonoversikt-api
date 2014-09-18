@@ -42,6 +42,7 @@ public class SakOgBehandlingFilter {
 
     public List<WSSak> filtrerSaker(List<WSSak> saker) {
         ulovligeSakstema = asList(cms.hentTekst("filter.ulovligesakstema").trim().split("\\s*,\\s*"));
+        lovligeBehandlingstyper = asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
         return on(saker)
                 .filter(HAR_LOVLIG_SAKSTEMA)
                 .filter(HAR_BEHANDLINGER)
