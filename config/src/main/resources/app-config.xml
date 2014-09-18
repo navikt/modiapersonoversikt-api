@@ -20,10 +20,10 @@
         <credential alias="srv_kjerneinfo_tjenestebuss" mapToProperty="ctjenestebuss"/>
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
+        <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>
         <webservice alias="virksomhet:Oppgavebehandling_v3" mapToProperty="gsak.oppgavebehandling.v3"/>
         <webservice alias="virksomhet:Oppgave_v3" mapToProperty="gsak.oppgave.v3"/>
         <webservice alias="virksomhet:BehandleJournal_v2" mapToProperty="behandlejournal.v2"/>
-        <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>
         <webservice alias="virksomhet:Sak_v1" mapToProperty="gsak.saksliste.v1"/>
         <webservice alias="virksomhet:Person_v1" mapToProperty="kjerneinfoendpoint"/>
         <webservice alias="virksomhet:Kodeverk_v1" mapToProperty="kodeverkendpoint"/>
@@ -35,12 +35,12 @@
         <webservice alias="virksomhet:foreldrepenger_v1" mapToProperty="foreldrepengerendpoint"/>
         <webservice alias="virksomhet:sykepenger_v1" mapToProperty="sykepengerendpoint"/>
         <webservice alias="virksomhet:utbetaling_v2" mapToProperty="utbetalingendpoint.v2"/>
+        <webservice alias="virksomhet:ArbeidOgAktivitet_v1" mapToProperty="arbeidOgAktivitet.v1"/>
         <webservice alias="domene.Brukerdialog:Henvendelse_v2" mapToProperty="henvendelse.v2"/>
         <webservice alias="domene.Brukerdialog:SendUtHenvendelse_v1" mapToProperty="send.ut.henvendelse"/>
         <webservice alias="domene.Brukerdialog:HenvendelseSoknaderService_v1" mapToProperty="henvendelser.ws"/>
-        <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws" />
         <webservice alias="domene.Brukerdialog:BehandleHenvendelse_v1" mapToProperty="behandle.henvendelse"/>
-        <!--<webservice alias="FYLL INN FRA FASIT" mapToProperty="arbeidOgAktivitet.v2"/>-->
+        <webservice alias="SakOgBehandling" mapToProperty="sakogbehandling.ws" />
         <applicationProperties alias="modiabrukerdialog.properties"/>
         <!-- App-->
         <baseUrl alias="appres.cms" mapToProperty="appres.cms"/>
