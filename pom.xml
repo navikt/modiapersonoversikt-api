@@ -317,7 +317,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>arena-arbeid-og-aktivitet</artifactId>
-                <version>1.0.5-SNAPSHOT</version>
+                <version>1.0.6-alpha001-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -372,10 +372,9 @@
                 <version>1.0.0</version>
             </dependency>
             <dependency>
-                <groupId>no.nav.tjenester.fim</groupId>
-                <artifactId>nav-fim-aktoer-v1-tjenestespesifikasjon</artifactId>
-                <version>1.0.0</version>
-                <classifier>jaxws</classifier>
+                <groupId>no.nav.sbl.dialogarena</groupId>
+                <artifactId>aktorid-jaxws</artifactId>
+                <version>1.2</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>

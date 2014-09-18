@@ -1,10 +1,11 @@
 package no.nav.sbl.modiabrukerdialog.pip.journalforing.support;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.ASBOGOSYSFagomrade;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetFaultGOSYSGeneriskMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetFaultGOSYSNAVEnhetIkkeFunnetaMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.ASBOGOSYSFagomradeListe;
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFagomradeListeRequest;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,7 +29,7 @@ import static org.mockito.internal.util.reflection.Whitebox.setInternalState;
 public class DefaultJournalfortTemaAttributeLocatorDelegateTest {
 
     @Mock
-    private GOSYSNAVOrgEnhet gosysnavOrgEnhet;
+    private GOSYSNAVansatt ansattService;
 
     @Mock
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
@@ -42,35 +43,34 @@ public class DefaultJournalfortTemaAttributeLocatorDelegateTest {
     }
 
     @Test
-    public void henterTemagrupperBasertPaaSaksbehandlersEnhetsValg() throws HentNAVEnhetFaultGOSYSNAVEnhetIkkeFunnetaMsg, HentNAVEnhetFaultGOSYSGeneriskMsg {
-        ASBOGOSYSNavEnhet enhet = new ASBOGOSYSNavEnhet();
-        enhet.setEnhetsId("1111");
+    public void henterTemaerBasertPaaSaksbehandlersEnhetsValg() throws HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg, HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
+        ASBOGOSYSFagomradeListe fagomradeListe = new ASBOGOSYSFagomradeListe();
 
         ASBOGOSYSFagomrade fagomrade1 = new ASBOGOSYSFagomrade();
         fagomrade1.setFagomradeKode("ARBD");
         ASBOGOSYSFagomrade fagomrade2 = new ASBOGOSYSFagomrade();
         fagomrade2.setFagomradeKode("FAML");
 
-        setInternalState(enhet, "fagomrader", asList(fagomrade1, fagomrade2));
+        setInternalState(fagomradeListe, "fagomrader", asList(fagomrade1, fagomrade2));
 
-        when(gosysnavOrgEnhet.hentNAVEnhet(any(ASBOGOSYSNavEnhet.class))).thenReturn(enhet);
+        when(ansattService.hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class))).thenReturn(fagomradeListe);
 
-        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet(), contains("ARBD", "FAML"));
+        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet(""), contains("ARBD", "FAML"));
         verify(saksbehandlerInnstillingerService, only()).getSaksbehandlerValgtEnhet();
-        verify(gosysnavOrgEnhet, only()).hentNAVEnhet(any(ASBOGOSYSNavEnhet.class));
+        verify(ansattService, only()).hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class));
     }
 
     @Test
-    public void emptySetHvisNorgIkkeFinnerEnhet() throws HentNAVEnhetFaultGOSYSNAVEnhetIkkeFunnetaMsg, HentNAVEnhetFaultGOSYSGeneriskMsg {
-        when(gosysnavOrgEnhet.hentNAVEnhet(any(ASBOGOSYSNavEnhet.class))).thenThrow(new HentNAVEnhetFaultGOSYSNAVEnhetIkkeFunnetaMsg());
+    public void emptySetHvisNorgIkkeFinnerEnhet() throws HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg, HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
+        when(ansattService.hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class))).thenThrow(new HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg());
 
-        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet(), is(empty()));
+        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet(""), is(empty()));
     }
 
     @Test
-    public void emptySetHvisNorgFeiler() throws HentNAVEnhetFaultGOSYSNAVEnhetIkkeFunnetaMsg, HentNAVEnhetFaultGOSYSGeneriskMsg {
-        when(gosysnavOrgEnhet.hentNAVEnhet(any(ASBOGOSYSNavEnhet.class))).thenThrow(new HentNAVEnhetFaultGOSYSGeneriskMsg());
+    public void emptySetHvisNorgFeiler() throws HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg, HentNAVAnsattFagomradeListeFaultGOSYSNAVAnsattIkkeFunnetMsg {
+        when(ansattService.hentNAVAnsattFagomradeListe(any(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class))).thenThrow(new HentNAVAnsattFagomradeListeFaultGOSYSGeneriskMsg());
 
-        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet(), is(empty()));
+        assertThat(delegate.getTemagrupperForAnsattesValgteEnhet(""), is(empty()));
     }
 }

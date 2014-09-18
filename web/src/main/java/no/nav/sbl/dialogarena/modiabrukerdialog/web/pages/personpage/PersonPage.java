@@ -63,11 +63,14 @@ import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_OVERSIKT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow.CloseButtonCallback;
@@ -90,10 +93,12 @@ public class PersonPage extends BasePage {
     public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(SvarOgReferatVM.class, "jquery-ui-selectmenu.min.js");
     private static final Logger logger = getLogger(PersonPage.class);
     private final String fnr;
+
     @Inject
     protected HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     protected OppgaveBehandlingService oppgaveBehandlingService;
+
     private SjekkForlateSideAnswer answer;
     private RedirectModalWindow redirectPopup;
     private LamellContainer lamellContainer;
@@ -101,9 +106,16 @@ public class PersonPage extends BasePage {
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
     private Component svarOgReferatPanel;
+    protected String startLamell = LAMELL_OVERSIKT;
 
     public PersonPage(PageParameters pageParameters) {
         fnr = pageParameters.get("fnr").toString(null);
+        boolean parametereBleFunnetOgFlyttet = flyttUrlParametereTilSession(pageParameters, HENVENDELSEID, OPPGAVEID);
+        if (parametereBleFunnetOgFlyttet) {
+            setResponsePage(this.getClass(), pageParameters);
+            return;
+        }
+
         instansierFelter();
         add(
                 hentPersonPanel,
@@ -121,28 +133,52 @@ public class PersonPage extends BasePage {
                 new TimeoutBoks("timeoutBoks", fnr)
         );
 
-        erstattReferatPanelMedSvarPanelBasertPaaOppgaveIdParameter(pageParameters);
+        settOppRiktigPanelOgLamell();
     }
 
     private void instansierFelter() {
         answer = new SjekkForlateSideAnswer();
         redirectPopup = createModalWindow("modal");
-        lamellContainer = new LamellContainer("lameller", fnr);
+        lamellContainer = new LamellContainer("lameller", fnr) {
+            @Override
+            protected void onInitialize() {
+                super.onInitialize();
+                String lamell = PersonPage.this.startLamell;
+                if (!lamell.equals(LAMELL_OVERSIKT)) {
+                    goToLamell(lamell);
+                }
+            }
+        };
         hentPersonPanel = (HentPersonPanel) new HentPersonPanel("searchPanel").setOutputMarkupPlaceholderTag(true);
         searchToggleButton = (Button) new Button("toggle-sok").setOutputMarkupPlaceholderTag(true);
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
         svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
     }
 
-    private void erstattReferatPanelMedSvarPanelBasertPaaOppgaveIdParameter(PageParameters pageParameters) {
-        StringValue oppgaveId = pageParameters.get(OPPGAVEID);
-        StringValue henvendelseId = pageParameters.get(HENVENDELSEID);
-        if (!oppgaveId.isEmpty()) {
-            if (!henvendelseId.isEmpty()) {
-                visSvarPanelBasertPaaHenvendelsesId(henvendelseId.toString(), oppgaveId.toString());
-            } else {
-                visSvarPanelBasertPaaOppgaveIdForSporsmal(oppgaveId.toString());
+    private boolean flyttUrlParametereTilSession(PageParameters pageParameters, String... params) {
+        boolean fantParamVerdi = false;
+        for (String param : params) {
+            StringValue paramVerdi = pageParameters.get(param);
+            if (!paramVerdi.isEmpty()) {
+                getSession().setAttribute(param, paramVerdi.toString());
+                pageParameters.remove(param, paramVerdi.toString());
+                fantParamVerdi = true;
             }
+        }
+        return fantParamVerdi;
+    }
+
+    private void settOppRiktigPanelOgLamell() {
+        String henvendelseId = (String) getSession().getAttribute(HENVENDELSEID);
+        String oppgaveId = (String) getSession().getAttribute(OPPGAVEID);
+
+        if (isBlank(henvendelseId) && isNotBlank(oppgaveId)) {
+            visSvarPanelBasertPaaOppgaveIdForSporsmal(oppgaveId);
+        } else if (isNotBlank(henvendelseId) && isBlank(oppgaveId)) {
+            startLamell = LAMELL_MELDINGER;
+        } else if (isNotBlank(henvendelseId) && isNotBlank(oppgaveId)) {
+            visSvarPanelBasertPaaHenvendelsesId(henvendelseId, oppgaveId);
+            startLamell = LAMELL_MELDINGER;
         }
     }
 
@@ -213,11 +249,13 @@ public class PersonPage extends BasePage {
     }
 
     public void visSvarPanelBasertPaaOppgaveIdForSporsmal(String oppgaveId) {
+        getSession().setAttribute(OPPGAVEID, null);
         Sporsmal sporsmal = henvendelseUtsendingService.getSporsmalFromOppgaveId(fnr, oppgaveId);
         erstattReferatPanelMedSvarPanel(sporsmal, henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, sporsmal.id), optional(oppgaveId));
     }
 
     private void visSvarPanelBasertPaaHenvendelsesId(String henvendelseId, String oppgaveId) {
+        getSession().setAttribute(OPPGAVEID, null);
         Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(henvendelseId);
         erstattReferatPanelMedSvarPanel(sporsmal, henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, henvendelseId), optional(oppgaveId));
     }
@@ -312,4 +350,7 @@ public class PersonPage extends BasePage {
         }
     }
 
+    public static Boolean isNotBlank(String s) {
+        return !isBlank(s);
+    }
 }
