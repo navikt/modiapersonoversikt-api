@@ -9,6 +9,8 @@ import no.nav.modig.modia.navigation.KeyNavigationDependentResourceReference;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
+import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
+import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -25,10 +27,10 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 
@@ -54,7 +56,14 @@ public class SaksoversiktLerret extends Lerret {
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
         alleBahandlinger = saksoversiktService.hentAlleBehandlinger(fnr);
-        temaer = new ArrayList(alleBahandlinger.keySet());
+
+        temaer = on(saksoversiktService.hentTemaer(fnr)).map(new Transformer<TemaVM, String> (){
+            @Override
+            public String transform(TemaVM temaVM) {
+                return temaVM.temakode;
+            }
+        }).collect();
+
         hendelserContainer = lagHendelserContainer(fnr);
         temaContainer = lagTemaContainer(fnr);
         add(hendelserContainer, temaContainer);
