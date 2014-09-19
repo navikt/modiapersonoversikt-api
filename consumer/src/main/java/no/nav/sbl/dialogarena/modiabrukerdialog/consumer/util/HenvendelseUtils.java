@@ -18,6 +18,8 @@ import static org.joda.time.DateTime.now;
 
 public class HenvendelseUtils {
 
+    public static final String KONTAKT_NAV_SAKSTEMA = "KNA";
+
     public static Sporsmal createSporsmalFromXMLHenvendelse(XMLHenvendelse henvendelse) {
         Sporsmal sporsmal = new Sporsmal(henvendelse.getBehandlingsId(), henvendelse.getOpprettetDato());
         sporsmal.konorsperretEnhet = henvendelse.getKontorsperreEnhet();
@@ -59,6 +61,7 @@ public class HenvendelseUtils {
                 .withFnr(svarEllerReferat.fnr)
                 .withOpprettetDato(now())
                 .withAvsluttetDato(now())
+                .withTema(KONTAKT_NAV_SAKSTEMA)
                 .withKontorsperreEnhet(svarEllerReferat.kontorsperretEnhet)
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
                         new XMLMeldingTilBruker()
