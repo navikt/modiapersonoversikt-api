@@ -23,7 +23,6 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
-import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -32,12 +31,8 @@ import java.util.Map;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
-import static org.slf4j.LoggerFactory.getLogger;
 
 public class SaksoversiktLerret extends Lerret {
-
-    private Logger logger = getLogger(SaksoversiktLerret.class);
-
     // Brukes av Modia (containeren):
     public static final PackageResourceReference SAKSOVERSIKT_LESS = new PackageResourceReference(SaksoversiktLerret.class, "saksoversikt.less");
     public static final ConditionalCssResource SAKSOVERSIKT_IE_CSS = new ConditionalCssResource(new CssResourceReference(SaksoversiktLerret.class, "saksoversikt-ie.css"), "screen", "IE");
@@ -51,7 +46,6 @@ public class SaksoversiktLerret extends Lerret {
 
     private Component temaContainer;
     private WebMarkupContainer hendelserContainer;
-    private String fnr;
     private IModel<String> aktivtTema = new Model<>();
     private Label feilmelding = (Label) new Label("feilmelding", "Feil ved kall til baksystem").setVisible(false);
     private Map<String, List<GenerellBehandling>> alleBahandlinger;
@@ -59,7 +53,6 @@ public class SaksoversiktLerret extends Lerret {
 
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
-        this.fnr = fnr;
         alleBahandlinger = saksoversiktService.hentAlleBehandlinger(fnr);
         temaer = new ArrayList(alleBahandlinger.keySet());
         hendelserContainer = lagHendelserContainer(fnr);
@@ -77,7 +70,7 @@ public class SaksoversiktLerret extends Lerret {
 
     private Component lagTemaContainer(String fnr) {
         return new WebMarkupContainer("sakerContainer")
-                .add(new TemaListView("saker", fnr, hendelserContainer, this).setOutputMarkupPlaceholderTag(true))
+                .add(new TemaListView("saker", fnr, this).setOutputMarkupPlaceholderTag(true))
                 .setOutputMarkupId(true);
     }
 

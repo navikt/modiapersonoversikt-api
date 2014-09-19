@@ -32,12 +32,10 @@ public class TemaListView extends PropertyListView<TemaVM> {
     @Inject
     private BulletProofKodeverkService kodeverk;
 
-    private final WebMarkupContainer hendelserContainer;
     private final SaksoversiktLerret lerret;
 
-    public TemaListView(String id, String fnr, WebMarkupContainer hendelserContainer, SaksoversiktLerret lerret) {
+    public TemaListView(String id, String fnr, SaksoversiktLerret lerret) {
         super(id);
-        this.hendelserContainer = hendelserContainer;
         this.lerret = lerret;
         try {
             setDefaultModel(ofList(saksoversiktService.hentTemaer(fnr)));
