@@ -15,7 +15,7 @@ import java.util.List;
 public class ArenaService {
 
     public static final String ARENA_FAGSYSTEMNAVN = "Arena";
-    public static final String OPPFOLGING = "OPP";
+    public static final String TEMA_OPPFOLGING = "OPP";
 
     //TODO: Finn identifikator for oppfølgingssak
     public static final String OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR = "opp";
@@ -52,7 +52,7 @@ public class ArenaService {
                     sak.saksId = arenaSak.getSaksId();
                     sak.fagsystem = ARENA_FAGSYSTEMNAVN;
                     sak.sakstype = arenaSak.getSakstypeKode().getKode();
-                    sak.tema = OPPFOLGING;
+                    sak.tema = TEMA_OPPFOLGING;
                     sak.opprettetDato = new DateTime(arenaSak.getEndringsInfo().getOpprettetDato().toDate());
                     return sak;
                 }

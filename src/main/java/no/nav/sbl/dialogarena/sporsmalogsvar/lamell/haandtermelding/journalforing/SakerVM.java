@@ -80,7 +80,7 @@ public class SakerVM implements Serializable {
     }
 
     private void supplerMedOppfolgingssakDersomRelevant(List<Sak> fagsakerFraGodkjenteFagsystemer) {
-        List<Sak> oppfolgingssaker = on(fagsakerFraGodkjenteFagsystemer).filter(Sak.IS_OPPFOLGINGSSAK).collect();
+        List<Sak> oppfolgingssaker = on(fagsakerFraGodkjenteFagsystemer).filter(Sak.IS_OPPFOLGINGSFAGSAK).collect();
         if(oppfolgingssaker.isEmpty()){
             Optional<Sak> oppfolgingssak = arenaService.hentOppfolgingssak(innboksVM.getFnr());
             if(oppfolgingssak.isSome()){
