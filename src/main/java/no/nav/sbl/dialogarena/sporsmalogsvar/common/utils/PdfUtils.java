@@ -63,7 +63,7 @@ public class PdfUtils {
         }
     }
 
-    private static class PDFMelding {
+    private static final class PDFMelding {
         public final String fnrBruker, meldingstype, navIdent, fritekst;
         public final DateTime opprettetDato;
 
@@ -76,7 +76,7 @@ public class PdfUtils {
         }
 
         private String lagPDFMeldingstype(String meldingstype) {
-            return meldingstype.substring(0, meldingstype.indexOf("_"));
+            return meldingstype.substring(0, meldingstype.indexOf('_'));
         }
     }
 }
