@@ -29,29 +29,26 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.TEMA;
 
 public class SakerVM implements Serializable {
 
-    public static final Map<String, List<String>> TEMA_MAPPING = opprettTemaMapping();
+    // TODO: Kodeverk - Dette er en midlertidig mapping mellom temagruppe og tema, mens vi venter på kodeverk.
+    public static final Map<String, List<String>> TEMA_MAPPING = new HashMap<String, List<String>>() {
+        {
+            put("ARBD",     asList("DAG", "AAP", "FOS", "IND", "OPP", "SYK", "SYM", "VEN", "YRK"));
+            put("FMLI",     asList("FOR", "BAR", "BID", "ENF", "GRA", "GRU", "KON", "OMS"));
+            put("HJLPM",    asList("BIL", "HEL", "HJE", "MOB"));
+            put("OVRG",     asList("FUL", "MED", "SER", "TRK"));
+            put("PENS",     asList("PEN", "UFO"));
+        }
+    };
     public static final String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
 
     private TemaSakerListe temaSakerListeFagsak;
     private TemaSakerListe temaSakerListeGenerelle;
-
     private InnboksVM innboksVM;
 
     @Inject
     private GsakService gsakService;
     @Inject
     private ArenaService arenaService;
-
-    // TODO: Kodeverk - Dette er en midlertidig mapping mellom temagruppe og tema, mens vi venter på kodeverk.
-    private static Map<String, List<String>> opprettTemaMapping() {
-        Map<String, List<String>> temaMapping = new HashMap<>();
-        temaMapping.put("ARBD", asList("DAG", "AAP", "FOS", "IND", "OPP", "SYK", "SYM", "VEN", "YRK"));
-        temaMapping.put("FMLI", asList("FOR", "BAR", "BID", "ENF", "GRA", "GRU", "KON", "OMS"));
-        temaMapping.put("HJLPM", asList("BIL", "HEL", "HJE", "MOB"));
-        temaMapping.put("OVRG", asList("FUL", "MED", "SER", "TRK"));
-        temaMapping.put("PENS", asList("PEN", "UFO"));
-        return temaMapping;
-    }
 
     public SakerVM(InnboksVM innboksVM) {
         this.innboksVM = innboksVM;
@@ -81,9 +78,9 @@ public class SakerVM implements Serializable {
 
     private void supplerMedOppfolgingssakDersomRelevant(List<Sak> fagsakerFraGodkjenteFagsystemer) {
         List<Sak> oppfolgingssaker = on(fagsakerFraGodkjenteFagsystemer).filter(Sak.IS_OPPFOLGINGSFAGSAK).collect();
-        if(oppfolgingssaker.isEmpty()){
+        if(oppfolgingssaker.isEmpty()) {
             Optional<Sak> oppfolgingssak = arenaService.hentOppfolgingssak(innboksVM.getFnr());
-            if(oppfolgingssak.isSome()){
+            if(oppfolgingssak.isSome()) {
                 fagsakerFraGodkjenteFagsystemer.add(oppfolgingssak.get());
             }
         }
