@@ -20,6 +20,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandli
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.OppgavetilordningFeilet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer;
@@ -63,6 +64,7 @@ import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_OVERSIKT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
@@ -101,6 +103,7 @@ public class PersonPage extends BasePage {
 
     private SjekkForlateSideAnswer answer;
     private RedirectModalWindow redirectPopup;
+    private OppgavetilordningFeilet oppgavetilordningFeiletPopup;
     private LamellContainer lamellContainer;
     private HentPersonPanel hentPersonPanel;
     private Button searchToggleButton;
@@ -123,6 +126,7 @@ public class PersonPage extends BasePage {
                 nullstillLink,
                 lamellContainer,
                 redirectPopup,
+                oppgavetilordningFeiletPopup,
                 new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel"),
                 new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler"),
                 new PlukkOppgavePanel("plukkOppgave"),
@@ -138,7 +142,8 @@ public class PersonPage extends BasePage {
 
     private void instansierFelter() {
         answer = new SjekkForlateSideAnswer();
-        redirectPopup = createModalWindow("modal");
+        redirectPopup = createRedirectModalWindow("redirectModal");
+        oppgavetilordningFeiletPopup = new OppgavetilordningFeilet("oppgavetilordningModal");
         lamellContainer = new LamellContainer("lameller", fnr) {
             @Override
             protected void onInitialize() {
@@ -248,7 +253,7 @@ public class PersonPage extends BasePage {
         send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
     }
 
-    public void visSvarPanelBasertPaaOppgaveIdForSporsmal(String oppgaveId) {
+    private void visSvarPanelBasertPaaOppgaveIdForSporsmal(String oppgaveId) {
         getSession().setAttribute(OPPGAVEID, null);
         Sporsmal sporsmal = henvendelseUtsendingService.getSporsmalFromOppgaveId(fnr, oppgaveId);
         erstattReferatPanelMedSvarPanel(sporsmal, henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, sporsmal.id), optional(oppgaveId));
@@ -266,8 +271,12 @@ public class PersonPage extends BasePage {
         List<SvarEllerReferat> svar = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, sporsmalId);
         Optional<String> oppgaveId = none();
         if (sporsmaletIkkeErBesvartTidligere(svar)) {
-            oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmal.oppgaveId);
-            oppgaveId = optional(sporsmal.oppgaveId);
+            try {
+                oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmal.oppgaveId);
+                oppgaveId = optional(sporsmal.oppgaveId);
+            } catch (FikkIkkeTilordnet fikkIkkeTilordnet) {
+                oppgavetilordningFeiletPopup.vis(target);
+            }
         }
         erstattReferatPanelMedSvarPanel(sporsmal, svar, oppgaveId);
         target.add(svarOgReferatPanel);
@@ -298,7 +307,7 @@ public class PersonPage extends BasePage {
         return false;
     }
 
-    private RedirectModalWindow createModalWindow(String id) {
+    private RedirectModalWindow createRedirectModalWindow(String id) {
         RedirectModalWindow modiaModalWindow = new RedirectModalWindow(id);
         modiaModalWindow.setInitialHeight(280);
         modiaModalWindow.setInitialWidth(600);

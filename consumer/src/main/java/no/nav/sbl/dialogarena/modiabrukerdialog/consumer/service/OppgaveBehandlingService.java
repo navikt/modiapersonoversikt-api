@@ -31,21 +31,34 @@ public class OppgaveBehandlingService {
 
     public static final int ENHET = 4112;
 
+    public static final int ANTALL_PLUKK_FORSOK = 20;
+
     @Inject
     private OppgavebehandlingV3 oppgavebehandlingWS;
-
     @Inject
     private OppgaveV3 oppgaveWS;
 
-    public void tilordneOppgaveIGsak(String oppgaveId) {
+    public void tilordneOppgaveIGsak(String oppgaveId) throws FikkIkkeTilordnet {
         tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId));
     }
 
     public Optional<Oppgave> plukkOppgaveFraGsak(String temagruppe) {
-        Optional<WSOppgave> oppgave = finnIkkeTilordnedeOppgaver(temagruppe);
+        return plukkOppgaveFraGsak(temagruppe, ANTALL_PLUKK_FORSOK);
+    }
+
+    private Optional<Oppgave> plukkOppgaveFraGsak(String temagruppe, int antallForsokIgjen) {
+        if (antallForsokIgjen <= 0) {
+            return none();
+        }
+
+        Optional<WSOppgave> oppgave = finnEldsteIkkeTilordnedeOppgave(temagruppe);
         if (oppgave.isSome()) {
-            WSOppgave tilordnet = tilordneOppgaveIGsak(oppgave.get());
-            return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId()));
+            try {
+                WSOppgave tilordnet = tilordneOppgaveIGsak(oppgave.get());
+                return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId()));
+            } catch (FikkIkkeTilordnet fikkIkkeTilordnet) {
+                return plukkOppgaveFraGsak(temagruppe, antallForsokIgjen - 1);
+            }
         } else {
             return none();
         }
@@ -59,19 +72,28 @@ public class OppgaveBehandlingService {
 
     public void leggTilbakeOppgaveIGsak(Optional<String> oppgaveId, String beskrivelse, String temagruppe) {
         if (oppgaveId.isSome()) {
-            WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId.get());
-            wsOppgave.withAnsvarligId("");
-            wsOppgave.withBeskrivelse(leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse));
-            if (!isBlank(temagruppe)) {
-                wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe)));
+            try {
+                WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId.get());
+                wsOppgave.withAnsvarligId("");
+                wsOppgave.withBeskrivelse(leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse));
+                if (!isBlank(temagruppe)) {
+                    wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe)));
+                }
+
+                lagreOppgaveIGsak(wsOppgave);
+            } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
+                throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
             }
-            lagreOppgaveIGsak(wsOppgave);
         }
     }
 
     public void systemLeggTilbakeOppgaveIGsak(String oppgaveId) {
-        WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId).withAnsvarligId("");
-        lagreOppgaveIGsak(wsOppgave);
+        try {
+            WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId).withAnsvarligId("");
+            lagreOppgaveIGsak(wsOppgave);
+        } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
+            throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
+        }
     }
 
     private static String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {
@@ -86,13 +108,17 @@ public class OppgaveBehandlingService {
         }
     }
 
-    private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave) {
-        WSOppgave wsOppgave = oppgave.withAnsvarligId(getSubjectHandler().getUid());
-        lagreOppgaveIGsak(wsOppgave);
-        return wsOppgave;
+    private WSOppgave tilordneOppgaveIGsak(WSOppgave oppgave) throws FikkIkkeTilordnet {
+        try {
+            WSOppgave wsOppgave = oppgave.withAnsvarligId(getSubjectHandler().getUid());
+            lagreOppgaveIGsak(wsOppgave);
+            return wsOppgave;
+        } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
+            throw new FikkIkkeTilordnet(lagreOppgaveOptimistiskLasing);
+        }
     }
 
-    private void lagreOppgaveIGsak(WSOppgave wsOppgave) {
+    private void lagreOppgaveIGsak(WSOppgave wsOppgave) throws LagreOppgaveOptimistiskLasing {
         try {
             oppgavebehandlingWS.lagreOppgave(
                     new WSLagreOppgaveRequest()
@@ -101,13 +127,10 @@ public class OppgaveBehandlingService {
             );
         } catch (LagreOppgaveOppgaveIkkeFunnet lagreOppgaveOppgaveIkkeFunnet) {
             throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);
-        } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
-            //TODO: Hva skal skje ved optimistisk låsing. Noen andre har låst filen.
-            throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
         }
     }
 
-    private Optional<WSOppgave> finnIkkeTilordnedeOppgaver(String temagruppe) {
+    private Optional<WSOppgave> finnEldsteIkkeTilordnedeOppgave(String temagruppe) {
         return on(oppgaveWS.finnOppgaveListe(
                 new WSFinnOppgaveListeRequest()
                         .withFilter(new WSFinnOppgaveListeFilter()
@@ -153,4 +176,9 @@ public class OppgaveBehandlingService {
                 .withLest(wsOppgave.isLest());
     }
 
+    public static class FikkIkkeTilordnet extends Exception {
+        public FikkIkkeTilordnet(Throwable cause) {
+            super(cause);
+        }
+    }
 }
