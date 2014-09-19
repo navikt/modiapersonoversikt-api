@@ -14,6 +14,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService.OPPFOL
 
 public class Sak implements Serializable, Comparable<Sak> {
 
+    //TODO: Map fra fagsystemkode til fagsystemnavn
     public String saksId, tema, fagsystem, sakstype;
     public DateTime opprettetDato;
 

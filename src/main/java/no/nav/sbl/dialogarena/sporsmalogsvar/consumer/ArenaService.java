@@ -17,7 +17,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 
 public class ArenaService {
 
-    public static final String ARENA_FAGSYSTEMNAVN = "Arena";
+    public static final String ARENA_FAGSYSTEMNAVN = "AO01";
     public static final String BRUKERKODE_PERSON = "PERSON";
     public static final String OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR = "OPP";
 
