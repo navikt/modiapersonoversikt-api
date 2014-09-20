@@ -1,7 +1,10 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
+import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.eksterneLenker.EksterneLenkerPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
+import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.AbstractTabPanel;
+import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.TabSubPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
@@ -37,7 +40,9 @@ import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
@@ -46,6 +51,7 @@ import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.option.Optional.none;
@@ -109,6 +115,7 @@ public class PersonPage extends BasePage {
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
     private Component svarOgReferatPanel;
+	private TabSubPanel tabSubPanel;
     protected String startLamell = LAMELL_OVERSIKT;
 
     public PersonPage(PageParameters pageParameters) {
@@ -132,7 +139,7 @@ public class PersonPage extends BasePage {
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
-                new PersonKjerneinfoPanel("personKjerneinfoPanel", fnr).setVisible(true),
+				tabSubPanel,
                 svarOgReferatPanel,
                 new TimeoutBoks("timeoutBoks", fnr)
         );
@@ -158,9 +165,30 @@ public class PersonPage extends BasePage {
         searchToggleButton = (Button) new Button("toggle-sok").setOutputMarkupPlaceholderTag(true);
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
         svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
+
+		tabSubPanel = new TabSubPanel("kjerneinfotabs", createTabs());
+
     }
 
-    private boolean flyttUrlParametereTilSession(PageParameters pageParameters, String... params) {
+	private List createTabs() {
+		List tabs = new ArrayList();
+		tabs.add(new AbstractTabPanel(new Model("img/familie_ikon.svg"), "familie") {
+			@Override
+			public WebMarkupContainer getPanel(String panelId ) {
+				return new PersonKjerneinfoPanel(panelId, fnr);
+			}
+		});
+		tabs.add(new AbstractTabPanel(new Model("svg/kjerneinfo/lenker_ikon.svg"), "lenker") {
+			@Override
+			public WebMarkupContainer getPanel(String panelId ) {
+				return new EksterneLenkerPanel(panelId, fnr);
+			}
+		});
+
+		return tabs;
+	}
+
+	private boolean flyttUrlParametereTilSession(PageParameters pageParameters, String... params) {
         boolean fantParamVerdi = false;
         for (String param : params) {
             StringValue paramVerdi = pageParameters.get(param);

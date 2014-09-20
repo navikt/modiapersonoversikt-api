@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
-import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
+import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.TabSubPanel;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
@@ -90,7 +90,7 @@ public class PersonPageTest extends WicketPageTest {
     public void lasterPersonPageUtenFeil() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .should().containComponent(withId("searchPanel").and(ofType(HentPersonPanel.class)))
-                .should().containComponent(withId("personKjerneinfoPanel").and(ofType(PersonKjerneinfoPanel.class)))
+                .should().containComponent(withId("kjerneinfotabs").and(ofType(TabSubPanel.class)))
                 .should().containComponent(withId("personsokPanel").and(ofType(PersonsokPanel.class)))
                 .should().containComponent(withId("lameller").and(ofType(TokenLamellPanel.class)))
                 .should().containComponent(withId("nullstill").and(ofType(AbstractLink.class)));
