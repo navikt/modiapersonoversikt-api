@@ -22,7 +22,7 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockErTillattOgSlaattPaaForKey;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock.CMS_KEY;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -74,16 +74,7 @@ public class CmsEndpointConfig {
     private ValueRetriever siteContentRetriever() throws URISyntaxException {
         final ValueRetriever prod = getValueRetriever();
         final ValueRetriever mock = new CMSValueRetrieverMock().getValueRetrieverMock();
-
-        return new ValueRetriever() {
-            @Override
-            public String getValueOf(String key, String language) {
-                if (mockErTillattOgSlaattPaaForKey(CMS_KEY)) {
-                    return mock.getValueOf(key, language);
-                }
-                return prod.getValueOf(key, language);
-            }
-        };
+        return createSwitcher(prod, mock, CMS_KEY, ValueRetriever.class);
     }
 
     private ValuesFromContentWithResourceBundleFallback getValueRetriever() throws URISyntaxException {
