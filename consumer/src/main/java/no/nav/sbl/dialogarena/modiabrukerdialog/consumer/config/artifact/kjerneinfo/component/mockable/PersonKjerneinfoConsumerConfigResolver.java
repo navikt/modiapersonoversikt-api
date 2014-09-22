@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.kjerne
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
+import no.nav.kjerneinfo.domain.person.fakta.Sikkerhetstiltak;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentSikkerhetstiltakRequest;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.Wrapper;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,7 +39,16 @@ public class PersonKjerneinfoConsumerConfigResolver {
                 return personKjerneinfoServiceDefault.wrappedObject.hentKjerneinformasjon(hentKjerneinformasjonRequest);
             }
 
-            @Override
+			@Override
+			public Sikkerhetstiltak hentSikkerhetstiltak(HentSikkerhetstiltakRequest ident) {
+				if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
+					return personKjerneinfoServiceMock.wrappedObject.hentSikkerhetstiltak(ident);
+				}
+				return personKjerneinfoServiceDefault.wrappedObject.hentSikkerhetstiltak(ident);
+
+			}
+
+			@Override
             public PingResult ping() {
                 if (mockErTillattOgSlaattPaaForKey(KJERNEINFO_KEY)) {
                     return personKjerneinfoServiceMock.wrappedObject.ping();
