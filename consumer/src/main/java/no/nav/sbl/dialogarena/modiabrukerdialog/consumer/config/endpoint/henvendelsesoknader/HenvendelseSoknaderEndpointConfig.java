@@ -7,19 +7,22 @@ import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import org.apache.cxf.feature.LoggingFeature;
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.apache.cxf.ws.addressing.WSAddressingFeature;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import javax.jws.WebParam;
 import java.util.List;
 
 import static java.lang.System.currentTimeMillis;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockErTillattOgSlaattPaaForKey;
 
 @Configuration
 public class HenvendelseSoknaderEndpointConfig {
@@ -30,9 +33,27 @@ public class HenvendelseSoknaderEndpointConfig {
     public HenvendelseSoknaderPortType henvendelseSoknaderPortType() {
         final HenvendelseSoknaderPortType mock = new HenvendelseSoknaderPortTypeMock().getHenvendelseSoknaderPortTypeMock();
         final HenvendelseSoknaderPortType prod = createHenvendelsePortType(new UserSAMLOutInterceptor());
-        return createSwitcher(prod, mock, HENVENDELSESOKNADER_KEY, HenvendelseSoknaderPortType.class);
-    }
+        return new HenvendelseSoknaderPortType() {
 
+            @Cacheable("endpointCache")
+            @Override
+            public List<WSSoknad> hentSoknadListe(@WebParam(name = "fodselsnummer", targetNamespace = "") String fodselsnummer) {
+                if (mockErTillattOgSlaattPaaForKey(HENVENDELSESOKNADER_KEY)) {
+                    return mock.hentSoknadListe(fodselsnummer);
+                }
+                return prod.hentSoknadListe(fodselsnummer);
+            }
+
+            @Override
+            public void ping() {
+                if (mockErTillattOgSlaattPaaForKey(HENVENDELSESOKNADER_KEY)) {
+                    mock.ping();
+                } else {
+                    prod.ping();
+                }
+            }
+        };
+    }
 
     @Bean
     public Pingable pingHenvendelseSoknader() {

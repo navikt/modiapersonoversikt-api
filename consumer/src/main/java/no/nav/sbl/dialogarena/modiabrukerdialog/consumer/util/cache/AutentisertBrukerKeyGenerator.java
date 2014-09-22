@@ -24,7 +24,7 @@ public class AutentisertBrukerKeyGenerator extends DefaultKeyGenerator {
     @Override
     public Object generate(Object target, Method method, Object... params) {
         String cacheKey = valueOf(super.generate(target, method, params));
-        return "user: " + getSubjectHandler().getUid() + "cachekey: " + target.getClass().getName() + method.getName() + cacheKey;
+        return "user: " + getSubjectHandler().getUid() + "cachekey: " + cacheKey;
     }
 
 }
