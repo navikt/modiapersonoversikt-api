@@ -120,5 +120,6 @@ public class SaksoversiktLerret extends Lerret {
         response.render(JavaScriptReferenceHeaderItem.forReference(NAVIGATION_JS));
         response.render(OnDomReadyHeaderItem.forScript("new Modig.Modia.SaksoversiktView('#" + temaContainer.getMarkupId() + "','" + initial + "');"));
         response.render(OnLoadHeaderItem.forScript("addLamellTemaOnClickListeners();"));
+        response.render(OnLoadHeaderItem.forScript("$(\".sak-navigering > UL > LI.aktiv > A\").focus();"));
     }
 }

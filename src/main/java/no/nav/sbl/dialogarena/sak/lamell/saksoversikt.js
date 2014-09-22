@@ -30,7 +30,7 @@ function addLamellTemaOnClickListeners() {
         }
     }
 
-    $(".sak-navigering > ul > li > a").click(function(event, notClearFocus) {
+    $(".sak-navigering > ul > li > a").click(function(event) {
         event.preventDefault();
         event.stopPropagation();
         var $el = $(event.currentTarget);
@@ -39,9 +39,7 @@ function addLamellTemaOnClickListeners() {
         $el.parent("li").addClass("aktiv");
 
         visBehandling($el.context.hash.substr(1));
-        if(notClearFocus != true) {
-            $(".saksoversikt > header.lamellhode a").focus();
-        }
+        $el.focus();
     });
 }
 

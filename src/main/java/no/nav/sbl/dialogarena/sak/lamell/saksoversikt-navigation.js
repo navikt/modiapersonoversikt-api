@@ -34,7 +34,7 @@
         window.SaksoversiktViews[selector] = this;
 
         this.el.find(itemSelector).focus(function(event) {
-            $(event.currentTarget).trigger("click", true);
+            $(event.currentTarget).trigger("click");
         });
     }
 
