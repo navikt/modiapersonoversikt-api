@@ -4,7 +4,7 @@ import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.eksterneLenker.EksterneLenkerPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.kjerneinfo.PersonKjerneinfoPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.AbstractTabPanel;
-import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.TabSubPanel;
+import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
@@ -115,7 +115,7 @@ public class PersonPage extends BasePage {
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
     private Component svarOgReferatPanel;
-	private TabSubPanel tabSubPanel;
+	private VisitkortTabListePanel visitkortTabListePanel;
     protected String startLamell = LAMELL_OVERSIKT;
 
     public PersonPage(PageParameters pageParameters) {
@@ -139,7 +139,7 @@ public class PersonPage extends BasePage {
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
-				tabSubPanel,
+				visitkortTabListePanel,
                 svarOgReferatPanel,
                 new TimeoutBoks("timeoutBoks", fnr)
         );
@@ -166,7 +166,7 @@ public class PersonPage extends BasePage {
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
         svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
 
-		tabSubPanel = new TabSubPanel("kjerneinfotabs", createTabs());
+		visitkortTabListePanel = new VisitkortTabListePanel("kjerneinfotabs", createTabs());
 
     }
 
