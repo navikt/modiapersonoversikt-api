@@ -9,6 +9,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.sakogbe
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbetaling.UtbetalingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbetaling.UtbetalingWrapperConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakHentSakslisteEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.ruting.GsakRutingEndpointConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.henvendelse.ArbeidOgAktivitetEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVAnsattEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVOrgEnhetEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.BehandleHenvendelseEndpointConfig;
@@ -17,7 +19,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henv
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.journalforing.BehandleJournalV2EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsak.GsakOppgaveV3EndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v3.gsak.GsakOppgavebehandlingV3EndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.henvendelse.ArbeidOgAktivitetEndpointConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -32,20 +33,18 @@ import org.springframework.context.annotation.Import;
         KodeverkV2EndpointConfig.class,
         KodeverkV2WrapperConfig.class,
         SendUtHenvendelseEndpointConfig.class,
-
         BehandleHenvendelseEndpointConfig.class,
         HenvendelseEndpointConfig.class,
         GsakOppgaveV3EndpointConfig.class,
-        ArbeidOgAktivitetEndpointConfig.class,
         GsakOppgavebehandlingV3EndpointConfig.class,
-        BehandleJournalV2EndpointConfig.class,
-
         GsakHentSakslisteEndpointConfig.class,
+        GsakRutingEndpointConfig.class,
+        ArbeidOgAktivitetEndpointConfig.class,
+        BehandleJournalV2EndpointConfig.class,
         SakOgBehandlingEndpointConfig.class,
         AktorEndpointConfig.class,
         HenvendelseSoknaderEndpointConfig.class,
         NAVAnsattEndpointConfig.class,
-
         NAVOrgEnhetEndpointConfig.class,
         CmsEndpointConfig.class
 })
