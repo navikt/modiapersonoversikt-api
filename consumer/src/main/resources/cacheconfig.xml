@@ -29,6 +29,7 @@
         <aop:advisor advice-ref="shortlivedAdvise" pointcut="bean(henvendelseSoknaderPortType)"/>
         <aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkPortType)"/>
         <aop:advisor advice-ref="aktorAdvice" pointcut="bean(aktoerPortType)"/>
+        <aop:advisor advice-ref="shortlivedAdvise" pointcut="bean(sakOgBehandlingPortType)"/>
     </aop:config>
 
 </beans>
