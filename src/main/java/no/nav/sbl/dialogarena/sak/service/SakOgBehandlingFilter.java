@@ -80,13 +80,22 @@ public class SakOgBehandlingFilter {
         public boolean evaluate(WSSak wsSak) {
             for (WSBehandlingskjede kjede : wsSak.getBehandlingskjede()) {
                 String type = kjede.getSisteBehandlingstype().getValue();
-                if (type.equals(SEND_SOKNAD_KVITTERINGSTYPE) || type.equals(DOKUMENTINNSENDING_KVITTERINGSTYPE) || lovligeBehandlingstyper.contains(type)) {
+                if ((erKvitteringstype(type) && erAvsluttet(kjede)) || lovligeBehandlingstyper.contains(type)) {
                     return true;
                 }
             }
             return false;
         }
     };
+
+    private static boolean erAvsluttet(WSBehandlingskjede kjede) {
+        return kjede.getSlutt() != null;
+    }
+
+    private static boolean erKvitteringstype(String type) {
+        return SEND_SOKNAD_KVITTERINGSTYPE.equals(type) || DOKUMENTINNSENDING_KVITTERINGSTYPE.equals(type);
+    }
+
     private static final Predicate<WSSak> HAR_BEHANDLINGER = new Predicate<WSSak>() {
         @Override
         public boolean evaluate(WSSak wsSak) {
