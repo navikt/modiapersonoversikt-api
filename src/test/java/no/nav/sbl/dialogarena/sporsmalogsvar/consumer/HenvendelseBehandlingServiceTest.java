@@ -52,6 +52,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journ
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.lagXMLHenvendelse;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.text.IsEmptyString.isEmptyString;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -182,17 +183,15 @@ public class HenvendelseBehandlingServiceTest {
     }
 
     @Test
-    public void skalAlltidHenteMeldingerSomIkkeErKontorSperretEllerJournalfort() {
+    public void skalAlltidHenteMeldingerSomIkkeErKontorsperret() {
         List<Object> xmlHenvendelsesListe = new ArrayList<>();
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst"))
                 .withJournalfortInformasjon(null)
                 .withKontorsperreEnhet(null));
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst"))
                 .withJournalfortInformasjon(null)
                 .withKontorsperreEnhet(null));
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id3", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
-                .withKontorsperreEnhet(null));
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker("fritekst", TEMAGRUPPE))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst"))
                 .withKontorsperreEnhet("1111"));
 
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
@@ -202,5 +201,22 @@ public class HenvendelseBehandlingServiceTest {
         assertThat(meldinger.size(), is(2));
         assertThat(meldinger.get(0).id, is(equalTo("id1")));
         assertThat(meldinger.get(1).id, is(equalTo("id2")));
+    }
+
+    @Test
+    public void skalFjerneFritekstFraJournalfortMeldingManIkkeHarTilgangTil() {
+        List<Object> xmlHenvendelsesListe = new ArrayList<>();
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst"))
+                .withJournalfortInformasjon(null));
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst"))
+                .withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortTema("tema")));
+
+        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
+
+        assertThat(meldinger.size(), is(2));
+        assertThat(meldinger.get(0).fritekst, is(equalTo("fritekst")));
+        assertThat(meldinger.get(1).fritekst, isEmptyString());
     }
 }

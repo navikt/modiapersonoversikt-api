@@ -14,6 +14,7 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.Be
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import org.apache.commons.collections15.Predicate;
+import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
 import javax.inject.Inject;
@@ -64,7 +65,8 @@ public class HenvendelseBehandlingService {
 
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny())
                 .map(TIL_MELDING)
-                .filter(new TilgangskontrollPredicate())
+                .filter(kontorsperreTilgang)
+                .map(journalfortTemaTilgang)
                 .collect();
     }
 
@@ -96,7 +98,7 @@ public class HenvendelseBehandlingService {
         return person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
     }
 
-    private class TilgangskontrollPredicate implements Predicate<Melding> {
+    private final Predicate<Melding> kontorsperreTilgang = new Predicate<Melding>() {
         @Override
         public boolean evaluate(Melding melding) {
             PolicyRequest kontorsperrePolicyRequest = forRequest(
@@ -105,13 +107,23 @@ public class HenvendelseBehandlingService {
                     subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())),
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(melding.kontorsperretEnhet)));
 
+            return isBlank(melding.kontorsperretEnhet) || pep.hasAccess(kontorsperrePolicyRequest);
+        }
+    };
+
+    private final Transformer<Melding, Melding> journalfortTemaTilgang = new Transformer<Melding, Melding>() {
+        @Override
+        public Melding transform(Melding melding) {
             PolicyRequest temagruppePolicyRequest = forRequest(
                     actionId("temagruppe"),
                     resourceId(""),
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema)));
 
-            return (isBlank(melding.kontorsperretEnhet) || pep.hasAccess(kontorsperrePolicyRequest))
-                    && (isBlank(melding.journalfortTema) || pep.hasAccess(temagruppePolicyRequest));
+            if (!isBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
+                melding.fritekst = "";
+            }
+
+            return melding;
         }
-    }
+    };
 }
