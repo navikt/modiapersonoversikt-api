@@ -20,7 +20,6 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandli
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeResponse;
 import org.joda.time.DateTime;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -36,6 +35,7 @@ import java.util.Map;
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSBehandlingskjede;
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSSak;
+import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.SEND_SOKNAD_KVITTERINGSTYPE;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseStatus.FERDIG;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseStatus.UNDER_ARBEID;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType.DOKUMENTINNSENDING;
@@ -46,6 +46,7 @@ import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
@@ -81,6 +82,17 @@ public class SaksoversiktServiceTest {
 
     @Before
     public void setup() {
+        when(sakOgBehandlingFilter.filtrerSaker(anyListOf(WSSak.class))).thenAnswer(new Answer<Object>() {
+            @Override public Object answer(InvocationOnMock invocation) throws Throwable {
+                return invocation.getArguments()[0]; // Filtrerer ingenting og returnerer argumentet
+            }
+        });
+        when(sakOgBehandlingFilter.filtrerBehandlinger(anyList())).thenAnswer(new Answer<Object>() {
+            @Override
+            public Object answer(InvocationOnMock invocation) throws Throwable {
+                return invocation.getArguments()[0]; // Filtrerer ingenting og returnerer argumentet
+            }
+        });
         HentAktoerIdForIdentResponse aktoerResponse = new HentAktoerIdForIdentResponse();
         aktoerResponse.setAktoerId("aktor");
         when(sakOgBehandling.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class)))
@@ -93,11 +105,6 @@ public class SaksoversiktServiceTest {
         } catch (Exception e) {
             //whatever
         }
-        when(sakOgBehandlingFilter.filtrerSaker(anyListOf(WSSak.class))).thenAnswer(new Answer<Object>() {
-            @Override public Object answer(InvocationOnMock invocation) throws Throwable {
-                return invocation.getArguments()[0]; // Filtrerer ingenting og returnerer argumentet
-            }
-        });
     }
 
     @Test
@@ -115,21 +122,18 @@ public class SaksoversiktServiceTest {
         assertTrue(temaer.get(0).sistoppdaterteBehandling.behandlingDato.isAfter(temaer.get(1).sistoppdaterteBehandling.behandlingDato));
     }
 
-    @Ignore
     @Test
     public void hentBehandlingerForTemakode_skalMerge_fraBeggeBaksystemer() {
         saker.withSak(opprettSakOgBehandlingGrunnlag());
         henvendelseSoknader = opprettHenvendelseGrunnlag();
         when(henvendelse.hentSoknadListe(anyString())).thenReturn(henvendelseSoknader);
 
-        // TODO: Fiks denne testen før merge med develop - NPE
         List<GenerellBehandling> behandlingerFraTemaKodeDag = service.hentBehandlingerByTema("asdasdasd").get(new TemaVM().withTemaKode("DAG"));
         Kvittering kvittering = (Kvittering) behandlingerFraTemaKodeDag.iterator().next();
 
         assertThat(kvittering.innsendteDokumenter.size(), equalTo(4));
     }
 
-    @Ignore
     @Test
     public void hentBehandlingerForTemakode_skalSortere_omvendtKronologisk() {
         String kronotema = "kronotema";
@@ -140,12 +144,10 @@ public class SaksoversiktServiceTest {
                 createWSBehandlingskjede().withSlutt(now().minusYears(1))
         );
         saker.withSak(sak);
-        // TODO: Fiks denne testen før merge med develop - NPE
-        List<GenerellBehandling> behandlinger = service.hentBehandlingerByTema("123123123").get(new TemaVM().withTemaKode("DAG"));
+        List<GenerellBehandling> behandlinger = service.hentBehandlingerByTema("123123123").get(new TemaVM().withTemaKode(kronotema));
         assertTrue(behandlinger.get(0).behandlingDato.isAfter(behandlinger.get(1).behandlingDato));
     }
 
-    @Ignore
     @Test
     public void hentAlleBehandlingerSkalReturnereHenvendelserForAlleTema() {
         String syk = "SYK";
@@ -161,7 +163,6 @@ public class SaksoversiktServiceTest {
                 createWSSak().withSakstema(new WSSakstemaer().withValue(syk))
         );
 
-        // TODO: Fiks denne testen før merge med develop - NPE
         Map<TemaVM, List<GenerellBehandling>> behandlinger = service.hentBehandlingerByTema("123123123");
         assertThat(behandlinger.keySet().size(), equalTo(3));
     }
@@ -191,14 +192,14 @@ public class SaksoversiktServiceTest {
     }
 
     private List<WSSak> opprettSakOgBehandlingGrunnlag() {
-        DateTime value = new DateTime().withYear(2013);
         return asList(
                 new WSSak().withSakstema(new WSSakstemaer().withValue(DAG))
                         .withBehandlingskjede(new WSBehandlingskjede()
-                                .withStart(value)
                                 .withBehandlingskjedeId("behandlingskjedeid")
                                 .withBehandlingstema(new WSBehandlingstemaer().withValue(BEHANDLINGSTEMA))
                                 .withStart(MERGET_OPPRETTET)
+                                .withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
+                                .withSlutt(new DateTime())
                                 .withBehandlingsListeRef(KVITTERING, IKKE_KVITTERING, IKKE_KVITTERING)
                         ),
                 new WSSak().withSakstema(new WSSakstemaer().withValue(HJL))

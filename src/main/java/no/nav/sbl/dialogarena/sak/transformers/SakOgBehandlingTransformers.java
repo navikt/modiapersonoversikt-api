@@ -19,13 +19,6 @@ import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.Be
 
 public class SakOgBehandlingTransformers {
 
-    public static final Transformer<WSSak, String> TEMAKODE_FOR_SAK = new Transformer<WSSak, String>() {
-        @Override
-        public String transform(WSSak wsSak) {
-            return wsSak.getSakstema().getValue();
-        }
-    };
-
     public static final Transformer<WSSak, TemaVM> TEMA_VM = new Transformer<WSSak, TemaVM>() {
         @Override
         public TemaVM transform(WSSak wsSak) {
