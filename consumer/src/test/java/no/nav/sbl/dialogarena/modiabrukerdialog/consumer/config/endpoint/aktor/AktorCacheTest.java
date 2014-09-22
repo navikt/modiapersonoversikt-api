@@ -1,14 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.aktor;
 
-import no.nav.modig.cache.CacheConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
-import org.junit.After;
+import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentResponse;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -17,21 +16,24 @@ import javax.inject.Inject;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.aktor.AktorEndpointConfig.AKTOER_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
-        CacheConfig.class,
         AktorEndpointConfig.class
 })
-public class AktorCacheTest {
+public class AktorCacheTest extends CacheTest {
 
-    @Inject
-    private EhCacheCacheManager cm;
+    public static final String AKTOR_CACHE = "aktorIdCache";
 
     @Inject
     private AktoerPortType aktoer;
+
+    public AktorCacheTest() {
+        super(AKTOR_CACHE);
+    }
 
     @BeforeClass
     public static void setup() {
@@ -43,17 +45,15 @@ public class AktorCacheTest {
 
     @Test
     public void cacheManager_harEntryForAktorCache_etterKallTilAktor() throws HentAktoerIdForIdentPersonIkkeFunnet {
-        HentAktoerIdForIdentRequest cacheKey = new HentAktoerIdForIdentRequest("242424 55555");
-        aktoer.hentAktoerIdForIdent(cacheKey);
+        HentAktoerIdForIdentRequest request1 = new HentAktoerIdForIdentRequest("242424 55555");
+        HentAktoerIdForIdentRequest request2 = new HentAktoerIdForIdentRequest("242424 55555");
+        when(aktoer.hentAktoerIdForIdent(request1)).thenReturn(
+                new HentAktoerIdForIdentResponse("1"),
+                new HentAktoerIdForIdentResponse("2")
+        );
+        HentAktoerIdForIdentResponse resp1 = aktoer.hentAktoerIdForIdent(request1);
+        HentAktoerIdForIdentResponse resp2 = aktoer.hentAktoerIdForIdent(request2);
 
-        Object fromCache = cm.getCache("aktorIdCache").get(cacheKey).get();
-
-        assertThat(fromCache, notNullValue());
+        assertThat(resp1.getAktoerId(), is(resp2.getAktoerId()));
     }
-
-    @After
-    public void shutdown() {
-        cm.getCacheManager().shutdown();
-    }
-
 }
