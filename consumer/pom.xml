@@ -64,6 +64,10 @@
             <groupId>no.nav</groupId>
             <artifactId>kjerneinfo-panel</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>kjerneinfo-domain</artifactId>
+        </dependency>
 
         <!--Sykmeldingsperioder-->
         <dependency>

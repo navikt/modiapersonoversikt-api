@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentSikkerhetstiltakRequest;
 
 import javax.inject.Inject;
 
@@ -41,6 +42,7 @@ public class PersonKjerneinfoConsumerConfigResolverTest {
         setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setProperty(KJERNEINFO_KEY, ALLOW_MOCK);
         resolver.personKjerneinfoServiceBi().hentKjerneinformasjon(new HentKjerneinformasjonRequest(""));
+		resolver.personKjerneinfoServiceBi().hentSikkerhetstiltak(new HentSikkerhetstiltakRequest(new String("12121212123")));
         resolver.personKjerneinfoServiceBi().ping();
         verifyZeroInteractions(personKjerneinfoServiceDefault.wrappedObject);
     }
@@ -49,8 +51,10 @@ public class PersonKjerneinfoConsumerConfigResolverTest {
     public void perDefaultSkalProdkodeEksekveres() throws HentKontaktinformasjonOgPreferanserSikkerhetsbegrensning, HentKontaktinformasjonOgPreferanserPersonIkkeFunnet {
         setProperty(TILLATMOCKSETUP_PROPERTY, "false");
         resolver.personKjerneinfoServiceBi().hentKjerneinformasjon(new HentKjerneinformasjonRequest(""));
+		resolver.personKjerneinfoServiceBi().hentSikkerhetstiltak(new HentSikkerhetstiltakRequest(new String("12121212123")));
         resolver.personKjerneinfoServiceBi().ping();
         verify(personKjerneinfoServiceDefault.wrappedObject, times(1)).hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class));
+        verify(personKjerneinfoServiceDefault.wrappedObject, times(1)).hentSikkerhetstiltak(any(HentSikkerhetstiltakRequest.class));
         verify(personKjerneinfoServiceDefault.wrappedObject, times(1)).ping();
     }
 
