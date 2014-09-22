@@ -1,17 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.henvendelsesoknader;
 
-import net.sf.ehcache.Ehcache;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.SubjectHandlerTestConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.CacheConfiguration;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
-import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.cache.ehcache.EhCacheCache;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -28,24 +22,18 @@ import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
-        CacheConfiguration.class,
-        SubjectHandlerTestConfig.class,
         HenvendelseSoknaderEndpointConfig.class
 })
-public class HenvendelseSoknaderCacheTest {
+public class HenvendelseSoknaderCacheTest extends CacheTest {
 
     public static final String ENDPOINT_CACHE = "endpointCache";
 
-
-    private static EhCacheCacheManager cm;
-
-    @Inject
-    public void setEhCacheCacheManager(EhCacheCacheManager eccm) {
-        cm = eccm;
-    }
-
     @Inject
     private HenvendelseSoknaderPortType henvendelse;
+
+    public HenvendelseSoknaderCacheTest() {
+        super(ENDPOINT_CACHE);
+    }
 
     @BeforeClass
     public static void setup() {
@@ -53,16 +41,6 @@ public class HenvendelseSoknaderCacheTest {
         System.setProperty(HENVENDELSESOKNADER_KEY, "true");
         System.setProperty(TILLATMOCKSETUP_PROPERTY, "true");
         setupKeyAndTrustStore();
-    }
-
-    @AfterClass
-    public static void after() {
-        cm.getCacheManager().shutdown();
-    }
-
-    @Before
-    public void teardown() {
-        getCache().removeAll();
     }
 
     @SuppressWarnings("unchecked")
@@ -84,9 +62,5 @@ public class HenvendelseSoknaderCacheTest {
         henvendelse.ping();
 
         assertThat(getCache().getKeys().size(), is(0));
-    }
-
-    private Ehcache getCache() {
-        return ((EhCacheCache) cm.getCache(ENDPOINT_CACHE)).getNativeCache();
     }
 }
