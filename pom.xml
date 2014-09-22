@@ -30,7 +30,7 @@
         <henvendelse.informasjon.v2.version>0.3</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.2</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.9</behandle.henvendelse.version>
-        <gsak.oppgave.version>0.0.5</gsak.oppgave.version>
+        <gsak.oppgave.version>0.0.8</gsak.oppgave.version>
         <arena.arbeidOgAktivitet.version>1.0.6-alpha001</arena.arbeidOgAktivitet.version>
     </properties>
 
