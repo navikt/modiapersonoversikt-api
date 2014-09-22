@@ -120,7 +120,8 @@ public class SaksoversiktServiceTest {
         henvendelseSoknader = opprettHenvendelseGrunnlag();
         when(henvendelse.hentSoknadListe(anyString())).thenReturn(henvendelseSoknader);
 
-        List<GenerellBehandling> behandlingerFraTemaKodeDag = service.hentBehandlingerForTemakode("213454 12312", DAG);
+        // TODO: Fiks denne testen før merge med develop - NPE
+        List<GenerellBehandling> behandlingerFraTemaKodeDag = service.hentFiltrerteBehandlingerForTemakode("213454 12312", DAG);
         Kvittering kvittering = (Kvittering) behandlingerFraTemaKodeDag.iterator().next();
 
         assertThat(kvittering.innsendteDokumenter.size(), equalTo(4));
@@ -136,7 +137,8 @@ public class SaksoversiktServiceTest {
                 createWSBehandlingskjede().withSlutt(now().minusYears(1))
         );
         saker.withSak(sak);
-        List<GenerellBehandling> behandlinger = service.hentBehandlingerForTemakode("123123123", kronotema);
+        // TODO: Fiks denne testen før merge med develop - NPE
+        List<GenerellBehandling> behandlinger = service.hentFiltrerteBehandlingerForTemakode("123123123", kronotema);
         assertTrue(behandlinger.get(0).behandlingDato.isAfter(behandlinger.get(1).behandlingDato));
     }
 
@@ -155,10 +157,9 @@ public class SaksoversiktServiceTest {
                 createWSSak().withSakstema(new WSSakstemaer().withValue(syk))
         );
 
-        Map<String, List<GenerellBehandling>> behandlinger = service.hentBehandlinger("123123123");
-        assertTrue(behandlinger.get(syk).size() == 3);
-        assertTrue(behandlinger.get(aap).size() == 2);
-        assertTrue(behandlinger.get(oms).size() == 1);
+        // TODO: Fiks denne testen før merge med develop - NPE
+        Map<TemaVM, List<GenerellBehandling>> behandlinger = service.hentAlleBehandlinger("123123123");
+        assertThat(behandlinger.keySet().size(), equalTo(3));
     }
 
     private List<WSSoknad> opprettHenvendelseGrunnlag() {

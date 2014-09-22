@@ -63,54 +63,26 @@ public class SaksoversiktService {
      */
     public List<TemaVM> hentTemaer(String fnr) {
         LOG.info("Henter tema fra Sak og Behandling til Modiasaksoversikt. Fnr: " + fnr);
-        return on(hentSakerForAktor(hentAktorId(fnr))).map(TEMA_VM).collect(new SistOppdaterteBehandlingComparator());
+        return on(hentAlleBehandlinger(fnr).keySet()).collect(new SistOppdaterteBehandlingComparator());
     }
 
     /**
      * Henter alle behandlinger for et gitt tema fra flere baksystemer
      */
     public List<GenerellBehandling> hentFiltrerteBehandlingerForTemakode(String fnr, String temakode) {
-        return sakOgBehandlingFilter.filtrerBehandlinger(hentBehandlingerForTemakode(fnr, temakode));
+        return sakOgBehandlingFilter.filtrerBehandlinger(hentAlleBehandlinger(fnr).get(hentSakForAktorPaaTema(fnr, temakode)));
     }
 
     /**
      * Henter alle behandlinger sammen med deres temakode
      */
-    public Map<String, List<GenerellBehandling>> hentAlleBehandlinger(String fnr) {
-        Map<String, List<GenerellBehandling>> behandlingerMedTemakoder = hentBehandlinger(fnr);
-        for(String sakstema : behandlingerMedTemakoder.keySet()) {
-            behandlingerMedTemakoder.put(sakstema, sakOgBehandlingFilter.filtrerBehandlinger(behandlingerMedTemakoder.get(sakstema)));
+    public Map<TemaVM, List<GenerellBehandling>> hentAlleBehandlinger(String fnr) {
+        Map<TemaVM, List<GenerellBehandling>> behandlingerMedTemakoder = new HashMap<>();
+        for(WSSak sak : hentSakerForAktor(fnr)) {
+            List<GenerellBehandling> sorterteBehandlinger = on(hentBehandlingerForSak(sak, fnr)).collect(new OmvendtKronologiskBehandlingComparator());
+            behandlingerMedTemakoder.put(TEMA_VM.transform(sak), sakOgBehandlingFilter.filtrerBehandlinger(sorterteBehandlinger));
         }
         return behandlingerMedTemakoder;
-    }
-
-    protected Map<String, List<GenerellBehandling>> hentBehandlinger(String fnr) {
-        LOG.info("Henter alle behandlinger fra Sak og Behandling til Modiaoversikten. FNR: " + fnr);
-        Map<String, List<GenerellBehandling>> behandlinger = new HashMap<>();
-
-        List<WSSak> saker = hentSakerForAktor(fnr);
-        for(WSSak sak : saker) {
-            if(!behandlinger.containsKey(sak.getSakstema().getValue())) {
-                behandlinger.put(sak.getSakstema().getValue(), new ArrayList<GenerellBehandling>());
-            }
-            List<GenerellBehandling> sorterteBehandlinger = on(hentBehandlingerForSak(sak, fnr)).collect(new OmvendtKronologiskBehandlingComparator());
-            behandlinger.get(sak.getSakstema().getValue()).addAll(sorterteBehandlinger);
-        }
-        return behandlinger;
-    }
-
-    protected List<GenerellBehandling> hentBehandlingerForTemakode(String fnr, final String temakode) {
-        LOG.info("Henter behandlinger fra Sak og Behandling & Henvendelse til Modiasaksoversikt. Fnr: " + fnr + ". Temakode: " + temakode);
-        WSSak wsSak = hentSakForAktorPaaTema(hentAktorId(fnr), temakode);
-        List<GenerellBehandling> behandlinger = hentBehandlingerForSak(wsSak, fnr);
-
-        behandlinger = on(behandlinger).map(new Transformer<GenerellBehandling, GenerellBehandling>() {
-            @Override public GenerellBehandling transform(GenerellBehandling generellBehandling) {
-                return generellBehandling.withSaksTema(temakode);
-            }
-        }).collect();
-
-        return on(behandlinger).collect(new OmvendtKronologiskBehandlingComparator());
     }
 
     private List<GenerellBehandling> hentBehandlingerForSak(WSSak sak, String fnr) {
@@ -125,6 +97,14 @@ public class SaksoversiktService {
         for (String kvitteringsID : kvitteringerForBehandlingsID.keySet()) {
             behandlinger.add(beriketKvittering(kvitteringerForBehandlingsID.get(kvitteringsID), kjederForBehandlingsID.get(kvitteringsID)));
         }
+
+        final String temakode = TEMA_VM.transform(sak).temakode;
+        behandlinger = on(behandlinger).map(new Transformer<GenerellBehandling, GenerellBehandling>() {
+            @Override public GenerellBehandling transform(GenerellBehandling generellBehandling) {
+                return generellBehandling.withSaksTema(temakode);
+            }
+        }).collect();
+
         return behandlinger;
     }
 

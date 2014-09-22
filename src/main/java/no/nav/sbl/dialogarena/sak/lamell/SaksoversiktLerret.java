@@ -7,6 +7,7 @@ import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.navigation.KeyNavigationDependentResourceReference;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
@@ -50,19 +51,13 @@ public class SaksoversiktLerret extends Lerret {
     private WebMarkupContainer hendelserContainer;
     private IModel<String> aktivtTema = new Model<>();
     private Label feilmelding = (Label) new Label("feilmelding", "Feil ved kall til baksystem").setVisible(false);
-    private Map<String, List<GenerellBehandling>> alleBahandlinger;
-    private List<String> temaer;
+    private Map<TemaVM, List<GenerellBehandling>> alleBahandlinger;
+    private List<TemaVM> temaer;
 
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
         alleBahandlinger = saksoversiktService.hentAlleBehandlinger(fnr);
-
-        temaer = on(saksoversiktService.hentTemaer(fnr)).map(new Transformer<TemaVM, String> (){
-            @Override
-            public String transform(TemaVM temaVM) {
-                return temaVM.temakode;
-            }
-        }).collect();
+        temaer = on(alleBahandlinger.keySet()).collect(new SistOppdaterteBehandlingComparator());
 
         hendelserContainer = lagHendelserContainer(fnr);
         temaContainer = lagTemaContainer(fnr);
@@ -97,7 +92,7 @@ public class SaksoversiktLerret extends Lerret {
 
     private void aapneForsteItem() {
         if(!temaer.isEmpty()) {
-            settAktivtTema(temaer.get(0));
+            settAktivtTema(temaer.get(0).temakode);
         }
     }
 
@@ -109,7 +104,7 @@ public class SaksoversiktLerret extends Lerret {
         return aktivtTema;
     }
 
-    public List<GenerellBehandling> getBehandlingerForTema(String sakstema) {
+    public List<GenerellBehandling> getBehandlingerForTema(TemaVM sakstema) {
         return this.alleBahandlinger.get(sakstema);
     }
 
