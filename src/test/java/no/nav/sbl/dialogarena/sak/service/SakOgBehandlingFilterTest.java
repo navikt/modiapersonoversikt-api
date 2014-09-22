@@ -9,6 +9,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -100,8 +101,8 @@ public class SakOgBehandlingFilterTest {
                 createWSSak().withSakstema(new WSSakstemaer().withValue("AAP")).withBehandlingskjede( // Lovlig tema, men ulovlig behandlingstype
                         createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("LOL1337"))
                 ),
-                createWSSak().withSakstema(new WSSakstemaer().withValue("PEN")).withBehandlingskjede( // Lovlig, men ingen lovlige typer: Kun kvittering
-                        createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
+                createWSSak().withSakstema(new WSSakstemaer().withValue("PEN")).withBehandlingskjede( // Lovlig, men ingen lovlige typer: Kun avsluttet kvittering
+                        createWSBehandlingskjede().withSlutt(new DateTime()).withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
                 )
         );
 
