@@ -597,6 +597,9 @@ UL.feedbackPanel {
 		.right {
 			padding-left: 80px;
 		}
+        #visittkortinfo {
+          padding: 15px 15px 30px 30px;
+        }
 	}
 	table {
 		border-collapse: collapse;
@@ -637,32 +640,44 @@ UL.feedbackPanel {
 		margin: 0;
 		padding-right: @sidebarYtrePadding;
 		border-top: 1px solid #000;
-		.tabs {
+		.tab-row {
 			float: left;
-			div {
+            ul {
+              display: inline;
+              padding: 0px;
+            }
+			li {
 				color: #fff;
-				padding-top: 71px;
-				width: 90px;
+				width: 110px;
 				height: 102px;
-				font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-				font-size: 0.7rem;
-				text-transform: uppercase;
-				letter-spacing: 1px;
-				text-align: center;
-				background-repeat: no-repeat;
-				background-position: 35px 18px;
-				padding-left: 26px;
-				&.valgt {
-					background-color: #333;
-				}
-				&.familie {
-					background-image: url(../img/familie_ikon.svg);
-				}
+                padding-left: 26px;
+                padding-top: 18px;
+                border-right: 1px solid #000;
+                border-bottom: 1px solid #000;
+                &.selected {
+                  border-right: none;
+                }
+                div {
+                  font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+                  font-size: 0.7rem;
+                  text-transform: uppercase;
+                  letter-spacing: 1px;
+                  padding-left: 5px;
+                  padding-top: 5px;
+                }
 			}
+            .tomDiv {
+              border-right: 1px solid #000000;
+              min-height: 86.5vh;
+            }
 		}
 		.tab-info {
-			padding-left: 110px;
-			padding-top: 30px;
+          padding: 30px 0 0 140px;
+          .gosyspersonoversiktLinkIkon {
+            a {
+              color: @blue;
+              }
+          }
 			.info {
 				.barn {
 					display: table;
