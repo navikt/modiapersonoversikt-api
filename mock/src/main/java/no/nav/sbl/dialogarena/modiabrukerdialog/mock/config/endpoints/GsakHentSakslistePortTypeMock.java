@@ -6,6 +6,8 @@ import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeReques
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
 import no.nav.virksomhet.tjenester.sak.v1.Sak;
 import org.joda.time.DateTime;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +17,9 @@ import java.util.Random;
 
 import static no.nav.sbl.dialogarena.common.collections.Collections.asList;
 import static no.nav.sbl.dialogarena.common.collections.Collections.asMap;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Configuration
 public class GsakHentSakslistePortTypeMock {
@@ -56,12 +61,15 @@ public class GsakHentSakslistePortTypeMock {
     }
 
     public static Sak createGsakHentSakslisteMock() {
-        return new Sak() {
+        Sak s = mock(Sak.class);
+        when(s.finnGenerellSakListe(any(WSFinnGenerellSakListeRequest.class))).thenAnswer(new Answer<WSFinnGenerellSakListeResponse>() {
             @Override
-            public WSFinnGenerellSakListeResponse finnGenerellSakListe(WSFinnGenerellSakListeRequest request) {
-                return new WSFinnGenerellSakListeResponse().withSakListe(sakslisteForBruker(request.getBrukerId()));
+            public WSFinnGenerellSakListeResponse answer(InvocationOnMock invocation) throws Throwable {
+                String user = ((WSFinnGenerellSakListeRequest) invocation.getArguments()[0]).getBrukerId();
+                return new WSFinnGenerellSakListeResponse().withSakListe(sakslisteForBruker(user));
             }
-        };
+        });
+        return s;
     }
 
     private static List<WSGenerellSak> sakslisteForBruker(String fnr) {

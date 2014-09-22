@@ -24,7 +24,12 @@ public class GsakHentSakslisteEndpointConfig {
 
     @Bean
     public Sak sakEndpoint() {
-        return createSwitcher(createEndpoint(), createGsakHentSakslisteMock(), GSAK_SAKSLISTE_KEY, Sak.class);
+        return createSwitcher(
+                createEndpoint(),
+                createGsakHentSakslisteMock(),
+                GSAK_SAKSLISTE_KEY,
+                Sak.class
+        );
     }
 
     @Bean
