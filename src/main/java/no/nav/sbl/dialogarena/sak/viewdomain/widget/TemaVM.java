@@ -32,12 +32,18 @@ public class TemaVM implements FeedItemVM, Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         TemaVM temaVM = (TemaVM) o;
 
-        if (!temakode.equals(temaVM.temakode)) return false;
+        if (!temakode.equals(temaVM.temakode)) {
+            return false;
+        }
 
         return true;
     }
