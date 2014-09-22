@@ -9,9 +9,6 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
-import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
-import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
-import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
@@ -29,14 +26,12 @@ import java.util.Set;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
-import static no.nav.modig.lang.collections.PredicateUtils.equalToIgnoreCase;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.sbl.dialogarena.sak.transformers.HenvendelseTransformers.INNSENDT;
 import static no.nav.sbl.dialogarena.sak.transformers.HenvendelseTransformers.KVITTERING;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSIDER_FRA_SAK;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSKJEDER_TIL_BEHANDLINGER;
-import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.TEMAKODE_FOR_SAK;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.TEMA_VM;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.behandlingsDato;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.behandlingsStatus;
@@ -47,42 +42,35 @@ public class SaksoversiktService {
     private static final Logger LOG = getLogger(SaksoversiktService.class);
 
     @Inject
-    private AktoerPortType fodselnummerAktorService;
-
-    @Inject
     private SakOgBehandling_v1PortType sakOgBehandlingPortType;
 
     @Inject
     private HenvendelseSoknaderPortType henvendelseSoknaderPortType;
 
     @Inject
-    private SakOgBehandlingFilter sakOgBehandlingFilter;
+    private SakOgBehandlingFilter filter;
 
     /**
      * Henter alle tema for en gitt person
      */
     public List<TemaVM> hentTemaer(String fnr) {
         LOG.info("Henter tema fra Sak og Behandling til Modiasaksoversikt. Fnr: " + fnr);
-        return on(hentAlleBehandlinger(fnr).keySet()).collect(new SistOppdaterteBehandlingComparator());
+        return on(filter.filtrerSaker((on(hentSakerForAktor(fnr)).collect()))).map(TEMA_VM).collect(new SistOppdaterteBehandlingComparator());
     }
 
     /**
-     * Henter alle behandlinger for et gitt tema fra flere baksystemer
+     * Henter alle behandlinger mappet på tema
      */
-    public List<GenerellBehandling> hentFiltrerteBehandlingerForTemakode(String fnr, String temakode) {
-        return sakOgBehandlingFilter.filtrerBehandlinger(hentAlleBehandlinger(fnr).get(hentSakForAktorPaaTema(fnr, temakode)));
-    }
-
-    /**
-     * Henter alle behandlinger sammen med deres temakode
-     */
-    public Map<TemaVM, List<GenerellBehandling>> hentAlleBehandlinger(String fnr) {
-        Map<TemaVM, List<GenerellBehandling>> behandlingerMedTemakoder = new HashMap<>();
-        for(WSSak sak : hentSakerForAktor(fnr)) {
-            List<GenerellBehandling> sorterteBehandlinger = on(hentBehandlingerForSak(sak, fnr)).collect(new OmvendtKronologiskBehandlingComparator());
-            behandlingerMedTemakoder.put(TEMA_VM.transform(sak), sakOgBehandlingFilter.filtrerBehandlinger(sorterteBehandlinger));
+    public Map<TemaVM, List<GenerellBehandling>> hentBehandlingerByTema(String fnr) {
+        Map<TemaVM, List<GenerellBehandling>> behandlingerByTema = new HashMap<>();
+        for (WSSak sak : hentSakerForAktor(fnr)) {
+            behandlingerByTema.put(TEMA_VM.transform(sak), filter.filtrerBehandlinger(hentSorterteBehandlinger(fnr, sak)));
         }
-        return behandlingerMedTemakoder;
+        return behandlingerByTema;
+    }
+
+    private List<GenerellBehandling> hentSorterteBehandlinger(String fnr, WSSak sak) {
+        return on(hentBehandlingerForSak(sak, fnr)).collect(new OmvendtKronologiskBehandlingComparator());
     }
 
     private List<GenerellBehandling> hentBehandlingerForSak(WSSak sak, String fnr) {
@@ -172,31 +160,12 @@ public class SaksoversiktService {
         }
     }
 
-    private String hentAktorId(String fnr) {
-        try {
-            return fodselnummerAktorService.hentAktoerIdForIdent(lagAktorRequest(fnr)).getAktoerId();
-        } catch (HentAktoerIdForIdentPersonIkkeFunnet hentAktoerIdForIdentPersonIkkeFunnet) {
-            throw new SystemException("Klarte ikke hente aktørId", hentAktoerIdForIdentPersonIkkeFunnet);
-        }
-    }
-
-    private WSSak hentSakForAktorPaaTema(String aktorId, String temakode) {
-        return on(hentSakerForAktor(aktorId)).filter(where(TEMAKODE_FOR_SAK, equalToIgnoreCase(temakode))).head().get();
-    }
-
     private List<WSSak> hentSakerForAktor(String aktorId) {
         try {
-            List<WSSak> saker = sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
-            return sakOgBehandlingFilter.filtrerSaker(saker);
+            return sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
         } catch (RuntimeException ex) {
             throw new SystemException("Feil ved kall til sakogbehandling", ex);
         }
-    }
-
-    private HentAktoerIdForIdentRequest lagAktorRequest(String fnr) {
-        HentAktoerIdForIdentRequest request = new HentAktoerIdForIdentRequest();
-        request.setIdent(fnr);
-        return request;
     }
 
     private static Predicate<WSBehandlingskjede> finnesKvitteringMedSammeBehandlingsid(final List<Kvittering> kvitteringer) {

@@ -11,7 +11,6 @@ import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
-import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -51,16 +50,16 @@ public class SaksoversiktLerret extends Lerret {
     private WebMarkupContainer hendelserContainer;
     private IModel<String> aktivtTema = new Model<>();
     private Label feilmelding = (Label) new Label("feilmelding", "Feil ved kall til baksystem").setVisible(false);
-    private Map<TemaVM, List<GenerellBehandling>> alleBahandlinger;
+    private Map<TemaVM, List<GenerellBehandling>> behandlingerByTema;
     private List<TemaVM> temaer;
 
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
-        alleBahandlinger = saksoversiktService.hentAlleBehandlinger(fnr);
-        temaer = on(alleBahandlinger.keySet()).collect(new SistOppdaterteBehandlingComparator());
+        behandlingerByTema = saksoversiktService.hentBehandlingerByTema(fnr);
+        temaer = on(behandlingerByTema.keySet()).collect(new SistOppdaterteBehandlingComparator());
 
         hendelserContainer = lagHendelserContainer(fnr);
-        temaContainer = lagTemaContainer(fnr);
+        temaContainer = lagTemaContainer();
         add(hendelserContainer, temaContainer);
         aapneForsteItem();
     }
@@ -72,9 +71,9 @@ public class SaksoversiktLerret extends Lerret {
                 .setOutputMarkupPlaceholderTag(true);
     }
 
-    private Component lagTemaContainer(String fnr) {
+    private Component lagTemaContainer() {
         return new WebMarkupContainer("sakerContainer")
-                .add(new TemaListView("saker", fnr, this).setOutputMarkupPlaceholderTag(true))
+                .add(new TemaListView("saker", temaer, this).setOutputMarkupPlaceholderTag(true))
                 .setOutputMarkupId(true);
     }
 
@@ -105,7 +104,7 @@ public class SaksoversiktLerret extends Lerret {
     }
 
     public List<GenerellBehandling> getBehandlingerForTema(TemaVM sakstema) {
-        return this.alleBahandlinger.get(sakstema);
+        return this.behandlingerByTema.get(sakstema);
     }
 
     @Override

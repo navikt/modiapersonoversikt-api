@@ -10,7 +10,9 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.TEMA;
@@ -32,9 +34,12 @@ public class SaksoversiktLerretTest extends AbstractWicketTest {
 
     @Test
     public void skalÅpneLerretUtenFeil() {
+        Map<TemaVM, List<GenerellBehandling>> behandlingerByTema = new HashMap<>();
         List<GenerellBehandling> behandlinger = asList(lagBehandling());
-        when(service.hentTemaer("123")).thenReturn(asList(new TemaVM().withSistOppdaterteBehandling(lagBehandling()).withTemaKode("abc")));
-        when(service.hentFiltrerteBehandlingerForTemakode("123", TEMA)).thenReturn(behandlinger);
+        TemaVM temaVM = new TemaVM().withSistOppdaterteBehandling(lagBehandling()).withTemaKode("abc");
+        behandlingerByTema.put(temaVM, behandlinger);
+        when(service.hentTemaer("123")).thenReturn(asList(temaVM));
+        when(service.hentBehandlingerByTema("123")).thenReturn(behandlingerByTema);
         lerret = new SaksoversiktLerret("lerret", "123");
 
         lerret.settAktivtTema(TEMA);
