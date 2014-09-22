@@ -9,6 +9,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Kanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
@@ -41,6 +42,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 
 public class SvarPanel extends Panel {
@@ -93,7 +95,7 @@ public class SvarPanel extends Panel {
                     @Override
                     protected void populateItem(ListItem<SvarEllerReferat> item) {
                         SvarEllerReferat svarEllerReferat = item.getModelObject();
-                        String type = svarEllerReferat.type.name().toLowerCase();
+                        String type = svarEllerReferat.type.name().substring(0, svarEllerReferat.type.name().lastIndexOf("_")).toLowerCase();
                         item.add(new TidligereMeldingPanel("svar", type, item.getModelObject().temagruppe, item.getModelObject().opprettetDato, item.getModelObject().fritekst, true));
                     }
                 }
@@ -213,15 +215,24 @@ public class SvarPanel extends Panel {
                     .withSporsmalsId(sporsmal.id)
                     .withTemagruppe(svarOgReferatVM.temagruppe.name())
                     .withKanal(svarOgReferatVM.kanal.name())
+                    .withType(svarType(svarOgReferatVM.kanal))
                     .withFritekst(svarOgReferatVM.getFritekst())
                     .withKontorsperretEnhet(sporsmal.konorsperretEnhet);
 
-            if (svarOgReferatVM.kanal.equals(SvarKanal.TEKST)) {
-                henvendelseUtsendingService.sendSvar(svarEllerReferat);
-            } else {
-                henvendelseUtsendingService.sendReferat(svarEllerReferat);
-            }
+            henvendelseUtsendingService.sendSvarEllerReferat(svarEllerReferat);
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);
+        }
+
+        private Henvendelsetype svarType(Kanal kanal) {
+            Henvendelsetype henvendelsetype = null;
+            if (kanal == SvarKanal.TEKST) {
+                henvendelsetype = Henvendelsetype.SVAR_SKRIFTLIG;
+            } else if (kanal == SvarKanal.OPPMOTE) {
+                henvendelsetype = Henvendelsetype.SVAR_OPPMOTE;
+            } else if (kanal == SvarKanal.TELEFON) {
+                henvendelsetype = Henvendelsetype.SVAR_TELEFON;
+            }
+            return henvendelsetype;
         }
     }
 

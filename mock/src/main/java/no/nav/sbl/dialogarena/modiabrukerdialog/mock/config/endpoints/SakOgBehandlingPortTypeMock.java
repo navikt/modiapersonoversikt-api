@@ -86,9 +86,9 @@ public class SakOgBehandlingPortTypeMock {
                 .withSaksId("1")
                 .withSakstema(new WSSakstemaer().withValue(DAGPENGEARKIVTEMA))
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, DAGPENGER_BEHANDLINGSTEMA),
-                        createBehandlingKobletTilKvittering(KVITTERING2, DAGPENGER_BEHANDLINGSTEMA),
-                        createBehandlingKobletTilKvittering(KVITTERINGETTERSENDELSE2, DAGPENGER_BEHANDLINGSTEMA)
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, DAGPENGER_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(2)),
+                        createBehandlingKobletTilKvittering(KVITTERING2, DAGPENGER_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(6)),
+                        createBehandlingKobletTilKvittering(KVITTERINGETTERSENDELSE2, DAGPENGER_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(22))
                 );
     }
 
@@ -97,8 +97,8 @@ public class SakOgBehandlingPortTypeMock {
                 .withSaksId("2")
                 .withSakstema(new WSSakstemaer().withValue(AAPARKIVTEMA))
                 .withBehandlingskjede(
-                        createBehandlingKobletTilKvittering(KVITTERING1, AAP_BEHANDLINGSTEMA),
-                        createBehandlingKobletTilKvittering(KVITTERINGETTERSENDELSE1, AAP_BEHANDLINGSTEMA),
+                        createBehandlingKobletTilKvittering(KVITTERING1, AAP_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(10)),
+                        createBehandlingKobletTilKvittering(KVITTERINGETTERSENDELSE1, AAP_BEHANDLINGSTEMA).withSlutt(now().minusMinutes(15)),
                         createAvsluttetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSlutt(now().minusYears(1)),
                         createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae00XX")) // Skal filtreres bort
                 );

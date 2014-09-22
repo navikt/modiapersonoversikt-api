@@ -19,7 +19,7 @@ public class HenvendelseUtilsTest {
 
     @Test
     public void skalLageXMLHenvendelseObjektMedMeldingTilBrukerBasertPaaSvarEllerReferatOgType() {
-        XMLHenvendelseType svartype = XMLHenvendelseType.SVAR;
+        XMLHenvendelseType svartype = XMLHenvendelseType.SVAR_SKRIFTLIG;
         SvarEllerReferat svar = createSvarEllerReferat();
 
         XMLHenvendelse xmlHenvendelse = HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker(svar, svartype);
@@ -54,20 +54,20 @@ public class HenvendelseUtilsTest {
 
     @Test(expected = ApplicationException.class)
     public void skalKasteExeptionDersomManLagerSporsmalBasertPaaXMLHenvendelseMedNoeAnnetEnnXMLMeldingFraBruker() {
-        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.SVAR);
+        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.SVAR_SKRIFTLIG);
 
         HenvendelseUtils.createSporsmalFromXMLHenvendelse(xmlHenvendelse);
     }
 
     @Test
     public void skallageSvarEllerReferatFromXMLHenvendelseMedXMLMeldingTilBrukerSomReferat() {
-        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.REFERAT);
+        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.REFERAT_OPPMOTE);
         XMLMeldingTilBruker xmlMeldingTilBruker = (XMLMeldingTilBruker) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
         SvarEllerReferat referat = HenvendelseUtils.createSvarEllerReferatFromXMLHenvendelse(xmlHenvendelse);
 
         assertThat(referat.fnr, is(xmlHenvendelse.getFnr()));
-        assertThat(referat.type, is(SvarEllerReferat.Henvendelsetype.REFERAT));
+        assertThat(referat.type, is(SvarEllerReferat.Henvendelsetype.REFERAT_OPPMOTE));
         assertThat(referat.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
         assertThat(referat.sporsmalsId, is(xmlMeldingTilBruker.getSporsmalsId()));
         assertThat(referat.temagruppe, is(xmlMeldingTilBruker.getTemagruppe()));
@@ -78,13 +78,13 @@ public class HenvendelseUtilsTest {
 
     @Test
     public void skallageSvarEllerReferatFromXMLHenvendelseMedXMLMeldingTilBrukerSomSvar() {
-        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.SVAR);
+        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.SVAR_SKRIFTLIG);
         XMLMeldingTilBruker xmlMeldingTilBruker = (XMLMeldingTilBruker) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
         SvarEllerReferat svar = HenvendelseUtils.createSvarEllerReferatFromXMLHenvendelse(xmlHenvendelse);
 
         assertThat(svar.fnr, is(xmlHenvendelse.getFnr()));
-        assertThat(svar.type, is(SvarEllerReferat.Henvendelsetype.SVAR));
+        assertThat(svar.type, is(SvarEllerReferat.Henvendelsetype.SVAR_SKRIFTLIG));
         assertThat(svar.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
         assertThat(svar.sporsmalsId, is(xmlMeldingTilBruker.getSporsmalsId()));
         assertThat(svar.temagruppe, is(xmlMeldingTilBruker.getTemagruppe()));

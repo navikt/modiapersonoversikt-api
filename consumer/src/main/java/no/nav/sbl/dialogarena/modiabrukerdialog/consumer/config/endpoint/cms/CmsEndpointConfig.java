@@ -8,6 +8,7 @@ import no.nav.modig.content.enonic.HttpContentRetriever;
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -23,6 +24,7 @@ import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
 import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockErTillattOgSlaattPaaForKey;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.CMSValueRetrieverMock.CMS_KEY;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @Configuration
 public class CmsEndpointConfig {
@@ -33,6 +35,8 @@ public class CmsEndpointConfig {
 
     @Value("${appres.cms.url}")
     private String appresUrl;
+
+    private static final Logger log = getLogger(CmsEndpointConfig.class);
 
     @Bean
     public CmsContentRetriever cmsContentRetriever() throws URISyntaxException {
@@ -59,6 +63,7 @@ public class CmsEndpointConfig {
                     contentRetriever().ping(new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE));
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
+                    log.error("Fikk exception fra CMS", e);
                     return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
                 }
             }

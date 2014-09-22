@@ -73,7 +73,7 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvar(any(SvarEllerReferat.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 1)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendReferat(any(SvarEllerReferat.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 2)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendReferat(any(SvarEllerReferat.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class));
     }
 
     @Test
@@ -188,7 +188,7 @@ public class SvarPanelTest extends WicketPageTest {
     }
 
     private List<SvarEllerReferat> lagSvar() {
-        return asList(new SvarEllerReferat().withOpprettetDato(now()).withType(SvarEllerReferat.Henvendelsetype.REFERAT).withFritekst("fritekst").withTemagruppe(Temagruppe.FMLI.name()));
+        return asList(new SvarEllerReferat().withOpprettetDato(now()).withType(SvarEllerReferat.Henvendelsetype.SVAR_SKRIFTLIG).withFritekst("fritekst").withTemagruppe(Temagruppe.FMLI.name()));
     }
 
 }

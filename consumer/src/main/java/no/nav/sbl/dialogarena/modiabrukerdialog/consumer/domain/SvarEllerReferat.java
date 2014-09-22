@@ -12,7 +12,7 @@ public class SvarEllerReferat implements Serializable {
     public Henvendelsetype type;
 
     public enum Henvendelsetype {
-        SVAR, REFERAT
+        SVAR_SKRIFTLIG, SVAR_OPPMOTE, SVAR_TELEFON, REFERAT_OPPMOTE, REFERAT_TELEFON
     }
 
     public SvarEllerReferat withSporsmalsId(String sporsmalsId) {

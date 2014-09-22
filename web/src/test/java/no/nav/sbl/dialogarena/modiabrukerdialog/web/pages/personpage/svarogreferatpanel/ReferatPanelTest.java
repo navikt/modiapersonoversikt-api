@@ -81,7 +81,7 @@ public class ReferatPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendReferat(any(SvarEllerReferat.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class));
     }
 
     @Test
