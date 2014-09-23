@@ -1,35 +1,39 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.henvendelsesoknader;
 
-import no.nav.modig.cache.CacheConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
-import org.junit.After;
+import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.cache.ehcache.EhCacheCacheManager;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustStore;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.henvendelsesoknader.HenvendelseSoknaderEndpointConfig.HENVENDELSESOKNADER_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
-import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
-        CacheConfig.class,
         HenvendelseSoknaderEndpointConfig.class
-        })
-public class HenvendelseSoknaderCacheTest {
+})
+public class HenvendelseSoknaderCacheTest extends CacheTest {
 
-    @Inject
-    private EhCacheCacheManager cm;
+    public static final String CACHE_NAME = "endpointCache";
 
     @Inject
     private HenvendelseSoknaderPortType henvendelse;
+
+    public HenvendelseSoknaderCacheTest() {
+        super(CACHE_NAME);
+    }
 
     @BeforeClass
     public static void setup() {
@@ -41,17 +45,16 @@ public class HenvendelseSoknaderCacheTest {
 
     @Test
     public void cacheManager_harEntryForEndpointCache_etterKallTilHenvendelse() {
-        String cacheKey = "string";
-        henvendelse.hentSoknadListe(cacheKey);
+        String request1 = "string";
+        String request2 = "string";
+        when(henvendelse.hentSoknadListe(anyString())).thenReturn(
+                asList(new WSSoknad().withBehandlingsId("1")),
+                asList(new WSSoknad().withBehandlingsId("2"))
+        );
 
-        Object fromCache = cm.getCache("endpointCache").get(cacheKey).get();
+        String resp1 = henvendelse.hentSoknadListe(request1).get(0).getBehandlingsId();
+        String resp2 = henvendelse.hentSoknadListe(request2).get(0).getBehandlingsId();
 
-        assertThat(fromCache, notNullValue());
+        assertThat(resp1, is(resp2));
     }
-
-    @After
-    public void shutdown() {
-        cm.getCacheManager().shutdown();
-    }
-
 }
