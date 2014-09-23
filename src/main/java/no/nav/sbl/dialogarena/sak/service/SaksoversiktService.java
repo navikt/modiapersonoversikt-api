@@ -69,7 +69,7 @@ public class SaksoversiktService {
      */
     public Map<TemaVM, List<GenerellBehandling>> hentBehandlingerByTema(String fnr) {
         Map<TemaVM, List<GenerellBehandling>> behandlingerByTema = new HashMap<>();
-        for (WSSak sak : hentSakerForAktor(hentAktorId(fnr))) {
+        for (WSSak sak : filter.filtrerSaker(hentSakerForAktor(hentAktorId(fnr)))) {
             behandlingerByTema.put(TEMA_VM.transform(sak), filter.filtrerBehandlinger(hentSorterteBehandlinger(fnr, sak)));
         }
         return behandlingerByTema;
