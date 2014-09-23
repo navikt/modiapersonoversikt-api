@@ -22,12 +22,23 @@ function addExpandClickEvent() {
     });
 }
 
+function oppdaterSaksinformasjonSynlighet() {
+    $(".behandling-container").removeClass("usynlig");
+    $(".saksinformasjon-container").addClass("usynlig");
+    if ($(".aktiv .saksinformasjon-container").length > 0) {
+        $("#saksinformasjonLenke").removeClass("usynlig");
+    } else {
+        $("#saksinformasjonLenke").addClass("usynlig");
+    }
+}
+
 function addLamellTemaOnClickListeners() {
     function visBehandling(sakstema) {
         $(".sak-informasjon > ul > li").removeClass("aktiv");
         if(sakstema != undefined) {
             $("#behandling_"+sakstema).addClass("aktiv");
         }
+        oppdaterSaksinformasjonSynlighet();
     }
 
     $(".sak-navigering > ul > li > a").click(function(event) {
@@ -40,6 +51,24 @@ function addLamellTemaOnClickListeners() {
 
         visBehandling($el.context.hash.substr(1));
         $el.focus();
+    });
+}
+
+function addSaksinformasjonClickListeners() {
+    $("#behandlingerListeLenke").click(function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        $(".behandling-container").removeClass("usynlig");
+        $(".saksinformasjon-container").addClass("usynlig");
+    });
+
+    $("#saksinformasjonLenke").click(function(event) {
+        event.preventDefault();
+        event.stopPropagation();
+
+        $(".saksinformasjon-container").removeClass("usynlig");
+        $(".behandling-container").addClass("usynlig");
     });
 }
 

@@ -11,10 +11,13 @@
                 </li>
             </ul>
         </article>
-        <div class="sak-informasjon flex3" wicket:id="hendelserContainer">
+        <div class="sak-informasjon flex3" wicket:id="detaljerContainer">
             <div wicket:id="feilmelding" class="feilmelding"/>
+            <div>
+                <a href="#" id="behandlingerListeLenke">Siste hendelser</a> <a href="#" id="saksinformasjonLenke" class="usynlig">Viktig å vite</a>
+            </div>
             <ul>
-                <li wicket:id="behandling-sak">
+                <li wicket:id="behandling-sak" class="sakdetaljer">
                     <article class="behandling-container" wicket:id="behandlinger">
                         <div class="aar" wicket:id="aar-container">
                             <div>
@@ -28,6 +31,7 @@
                             </div>
                         </div>
                     </article>
+                    <article wicket:id="saksinformasjonContainer" class="saksinformasjon-container usynlig"/>
                 </li>
             </ul>
         </div>

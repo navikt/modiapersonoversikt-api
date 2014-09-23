@@ -41,13 +41,12 @@ public class SaksoversiktLerret extends Lerret {
     public static final JavaScriptResourceReference SAKSOVERSIKT_JS = new JavaScriptResourceReference(SaksoversiktLerret.class, "saksoversikt.js");
     public static final ConditionalJavascriptResource SAKSOVERSIKT_IE_JS = new ConditionalJavascriptResource(new JavaScriptResourceReference(SaksoversiktLerret.class, "saksoversikt-ie.js"), "IE");
     public static final KeyNavigationDependentResourceReference NAVIGATION_JS = new KeyNavigationDependentResourceReference(SaksoversiktLerret.class, "saksoversikt-navigation.js");
-    private String initial = "S";
+    private static final String initial = "S";
 
     @Inject
     private SaksoversiktService saksoversiktService;
 
     private Component temaContainer;
-    private WebMarkupContainer hendelserContainer;
     private IModel<String> aktivtTema = new Model<>();
     private Label feilmelding = (Label) new Label("feilmelding", "Feil ved kall til baksystem").setVisible(false);
     private Map<TemaVM, List<GenerellBehandling>> behandlingerByTema;
@@ -58,17 +57,21 @@ public class SaksoversiktLerret extends Lerret {
         behandlingerByTema = saksoversiktService.hentBehandlingerByTema(fnr);
         temaer = on(behandlingerByTema.keySet()).collect(new SistOppdaterteBehandlingComparator());
 
-        hendelserContainer = lagHendelserContainer(fnr);
+        WebMarkupContainer hendelserContainer = lagDetaljerContainer(fnr);
         temaContainer = lagTemaContainer();
         add(hendelserContainer, temaContainer);
         aapneForsteItem();
     }
 
-    private WebMarkupContainer lagHendelserContainer(String fnr) {
-        return (WebMarkupContainer) new WebMarkupContainer("hendelserContainer")
-                .add(feilmelding)
-                .add(new BehandlingSakerListView("behandling-sak", temaer, fnr, this))
-                .setOutputMarkupPlaceholderTag(true);
+    private WebMarkupContainer lagDetaljerContainer(String fnr) {
+        WebMarkupContainer detaljerContainer = new WebMarkupContainer("detaljerContainer");
+        Component behandlingerContainer = new BehandlingSakerListView("behandling-sak", temaer, fnr, this);
+        detaljerContainer.add(
+                feilmelding,
+                behandlingerContainer
+        );
+        detaljerContainer.setOutputMarkupPlaceholderTag(true);
+        return detaljerContainer;
     }
 
     private Component lagTemaContainer() {
@@ -114,6 +117,8 @@ public class SaksoversiktLerret extends Lerret {
         response.render(JavaScriptReferenceHeaderItem.forReference(NAVIGATION_JS));
         response.render(OnDomReadyHeaderItem.forScript("new Modig.Modia.SaksoversiktView('#" + temaContainer.getMarkupId() + "','" + initial + "');"));
         response.render(OnLoadHeaderItem.forScript("addLamellTemaOnClickListeners();"));
+        response.render(OnLoadHeaderItem.forScript("addSaksinformasjonClickListeners();"));
+        response.render(OnLoadHeaderItem.forScript("oppdaterSaksinformasjonSynlighet();"));
         response.render(OnLoadHeaderItem.forScript("$(\".sak-navigering > UL > LI.aktiv > A\").focus();"));
     }
 }

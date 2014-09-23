@@ -71,7 +71,7 @@ public class KvitteringsPanel extends Panel {
         String key = "soknader.normertbehandlingstid." + temakode;
 
         String behandlingstid;
-        if (cms.eksistererKey(key)) {
+        if (cms.eksistererTekst(key)) {
             behandlingstid = cms.hentTekst(key);
         } else {
             logger.warn("Behandlingstid er ikke satt for temakode " + temakode);

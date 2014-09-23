@@ -24,12 +24,30 @@ public class BulletproofCmsService {
         }
     }
 
-    public Boolean eksistererKey(String key) {
+    public Boolean eksistererTekst(String key) {
         try {
             cmsContentRetriever.hentTekst(key);
             return true;
         } catch (RuntimeException e) {
             return false;
+        }
+    }
+
+    public Boolean eksistererArtikkel(String key) {
+        try {
+            cmsContentRetriever.hentArtikkel(key);
+            return true;
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
+
+    public String hentArtikkel(String key) {
+        try {
+            return cmsContentRetriever.hentArtikkel(key);
+        } catch (RuntimeException e) {
+            log.error("Exception i BulletproofCmsService", e);
+            return String.format("[Fant ikke %s i CMS]", key);
         }
     }
 }
