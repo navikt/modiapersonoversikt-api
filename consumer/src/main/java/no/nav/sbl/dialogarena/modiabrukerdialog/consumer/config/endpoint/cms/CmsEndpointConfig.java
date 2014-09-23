@@ -31,6 +31,7 @@ public class CmsEndpointConfig {
 
     public static final String DEFAULT_LOCALE = "nb";
     private static final String INNHOLDSTEKSTER_NB_NO_REMOTE = "/app/saksoversikt/nb/tekster";
+    private static final String ARTIKLER_NB_NO_REMOTE = "/app/saksoversikt/nb/saksinformasjon";
     private static final String INNHOLDSTEKSTER_NB_NO_LOCAL = "content.innholdstekster";
 
     @Value("${appres.cms.url}")
@@ -43,7 +44,7 @@ public class CmsEndpointConfig {
         CmsContentRetriever cmsContentRetriever = new CmsContentRetriever();
         cmsContentRetriever.setDefaultLocale(DEFAULT_LOCALE);
         cmsContentRetriever.setTeksterRetriever(siteContentRetriever());
-        cmsContentRetriever.setArtikkelRetriever(siteContentRetriever());
+        cmsContentRetriever.setArtikkelRetriever(siteArtikkelRetriever());
         return cmsContentRetriever;
     }
 
@@ -89,5 +90,11 @@ public class CmsEndpointConfig {
         Map<String, URI> uris = new HashMap<>();
         uris.put(DEFAULT_LOCALE, new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE));
         return new ValuesFromContentWithResourceBundleFallback(INNHOLDSTEKSTER_NB_NO_LOCAL, contentRetriever(), uris, DEFAULT_LOCALE);
+    }
+
+    private ValueRetriever siteArtikkelRetriever() throws URISyntaxException {
+        Map<String, List<URI>> uris = new HashMap<>();
+        uris.put(DEFAULT_LOCALE, asList(new URI(appresUrl + ARTIKLER_NB_NO_REMOTE)));
+        return new ValuesFromContentWithResourceBundleFallback(asList(INNHOLDSTEKSTER_NB_NO_LOCAL), contentRetriever(), uris, DEFAULT_LOCALE);
     }
 }
