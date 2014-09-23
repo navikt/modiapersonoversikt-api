@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKode;
@@ -86,7 +87,7 @@ public class GsakServiceTest {
     public void skalSendeKallOmOpprettelseAvOppgaveMedRiktigeFelter() {
         NyOppgave nyOppgave = new NyOppgave();
         nyOppgave.beskrivelse = "beskrivelse";
-        nyOppgave.enhet = "enhetsnavn";
+        nyOppgave.enhet = new AnsattEnhet("enhetId", "enhetNavn");
         nyOppgave.prioritet = new GsakKode.Prioritet("tema", "");
         nyOppgave.type = new GsakKode.OppgaveType("type", "", 0);
         nyOppgave.tema = new GsakKode.Tema("tema", "", Arrays.asList(nyOppgave.type), Arrays.asList(nyOppgave.prioritet));
@@ -98,7 +99,7 @@ public class GsakServiceTest {
         WSOpprettOppgaveRequest request = wsOpprettOppgaveRequestArgumentCaptor.getValue();
 
         assertThat(request.getOpprettetAvEnhetId(), is(GsakService.OPPRETTET_AV_ENHET_ID));
-        assertThat(request.getOpprettOppgave().getAnsvarligEnhetId(), is(nyOppgave.enhet));
+        assertThat(request.getOpprettOppgave().getAnsvarligEnhetId(), is(nyOppgave.enhet.enhetId));
         assertThat(request.getOpprettOppgave().getBeskrivelse(), is(nyOppgave.beskrivelse));
         assertThat(request.getOpprettOppgave().getFagomradeKode(), is(nyOppgave.tema.kode));
         assertThat(request.getOpprettOppgave().getOppgavetypeKode(), is(nyOppgave.type.kode));

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -10,6 +11,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -22,46 +24,59 @@ import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.isEmptyList;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class NyOppgaveFormWrapper extends Panel {
 
     @Inject
     private GsakService gsakService;
-
     @Inject
     private GsakKodeverk gsakKodeverk;
-
     @Inject
     private EnhetService enhetService;
 
+    private final Form<NyOppgave> form;
+    private final List<AnsattEnhet> enheter;
+
     public NyOppgaveFormWrapper(String id, final InnboksVM innboksVM) {
-        super(id, new CompoundPropertyModel<>(new NyOppgave()));
+        super(id);
 
-        final Form form = new Form<>("nyoppgaveform", getDefaultModel());
-        add(form);
+        enheter = unmodifiableList(enhetService.hentAlleEnheter());
 
+        form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
+        add(form.setOutputMarkupId(true));
 
-        IModel<List<GsakKode.OppgaveType>> typeModel = new AbstractReadOnlyModel<List<GsakKode.OppgaveType>>() {
+        IModel<List<AnsattEnhet>> enhetModel = new OppdaterbarListeModel<AnsattEnhet>(form.getModel()) {
             @Override
-            public List<GsakKode.OppgaveType> getObject() {
-                GsakKode.Tema tema = ((NyOppgave) form.getModelObject()).tema;
-                if (tema != null) {
-                    return tema.oppgaveTyper;
+            protected List<AnsattEnhet> oppdater(GsakKode.Tema tema) {
+                List<AnsattEnhet> ansattEnheter = new ArrayList<>();
+
+                Optional<AnsattEnhet> foreslattEnhet = gsakService.hentForeslattEnhet(innboksVM.getFnr(), tema.kode);
+                if (foreslattEnhet.isSome()) {
+                    ansattEnheter.add(foreslattEnhet.get());
                 }
-                return emptyList();
+
+                ansattEnheter.addAll(enheter);
+                return ansattEnheter;
             }
         };
-        IModel<List<GsakKode.Prioritet>> priModel = new AbstractReadOnlyModel<List<GsakKode.Prioritet>>() {
+        IModel<List<GsakKode.OppgaveType>> typeModel = new OppdaterbarListeModel<GsakKode.OppgaveType>(form.getModel()) {
             @Override
-            public List<GsakKode.Prioritet> getObject() {
-                GsakKode.Tema tema = ((NyOppgave) form.getModelObject()).tema;
-                if (tema != null) {
-                    return tema.prioriteter;
-                }
-                return emptyList();
+            protected List<GsakKode.OppgaveType> oppdater(GsakKode.Tema tema) {
+                return tema.oppgaveTyper;
+            }
+        };
+        IModel<List<GsakKode.Prioritet>> priModel = new OppdaterbarListeModel<GsakKode.Prioritet>(form.getModel()) {
+            @Override
+            protected List<GsakKode.Prioritet> oppdater(GsakKode.Tema tema) {
+                return tema.prioriteter;
             }
         };
         IChoiceRenderer<GsakKode> gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
@@ -77,40 +92,47 @@ public class NyOppgaveFormWrapper extends Panel {
             }
         };
 
-        final DropDownChoice<GsakKode.Tema> temaDropDown = new DropDownChoice<>("tema", gsakKodeverk.hentTemaListe(), gsakKodeChoiceRenderer);
-        final DropDownChoice<AnsattEnhet> enhetDropDown = new DropDownChoice<>("enhet", enhetService.hentAlleEnheter(), enhetChoiceRenderer);
-        final DropDownChoice<GsakKode.OppgaveType> typeDropDown = new DropDownChoice<>("type", typeModel, gsakKodeChoiceRenderer);
-        final DropDownChoice<GsakKode.Prioritet> prioritetDropDown = new DropDownChoice<>("prioritet", priModel, gsakKodeChoiceRenderer);
-
+        DropDownChoice<GsakKode.Tema> temaDropDown = new DropDownChoice<>("tema", gsakKodeverk.hentTemaListe(), gsakKodeChoiceRenderer);
         temaDropDown.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                target.add(typeDropDown);
-                target.add(prioritetDropDown);
+                target.add(form);
             }
         });
 
-        form.add(temaDropDown.setRequired(true));
-        form.add(enhetDropDown.setRequired(true));
-        form.add(typeDropDown.setRequired(true).setOutputMarkupId(true));
-        form.add(prioritetDropDown.setRequired(true).setOutputMarkupId(true));
-        form.add(new TextArea<String>("beskrivelse").setRequired(true));
+        WebMarkupContainer enhetContainer = new WebMarkupContainer("enhetContainer");
+        enhetContainer.add(new DropDownChoice<>("enhet", enhetModel, enhetChoiceRenderer).setRequired(true));
+        enhetContainer.add(visibleIf(not(isEmptyList(enhetModel))));
+
+        WebMarkupContainer typeContainer = new WebMarkupContainer("typeContainer");
+        typeContainer.add(new DropDownChoice<>("type", typeModel, gsakKodeChoiceRenderer).setRequired(true));
+        typeContainer.add(visibleIf(not(isEmptyList(typeModel))));
+
+        WebMarkupContainer prioritetContainer = new WebMarkupContainer("prioritetContainer");
+        prioritetContainer.add(new DropDownChoice<>("prioritet", priModel, gsakKodeChoiceRenderer).setRequired(true));
+        prioritetContainer.add(visibleIf(not(isEmptyList(priModel))));
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);
-        form.add(feedbackPanel);
+
+        form.add(
+                temaDropDown.setRequired(true),
+                enhetContainer,
+                typeContainer,
+                prioritetContainer,
+                new TextArea<String>("beskrivelse").setRequired(true),
+                feedbackPanel);
 
         form.add(new AjaxButton("opprettoppgave") {
             @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                NyOppgave nyOppgave = (NyOppgave) form.getModelObject();
+            protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
+                NyOppgave nyOppgave = form.getModelObject();
                 nyOppgave.henvendelseId = innboksVM.getValgtTraad().getEldsteMelding().melding.id;
 
                 gsakService.opprettGsakOppgave(nyOppgave);
                 etterSubmit(target);
                 nullstillSkjema();
             }
-
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
@@ -118,11 +140,30 @@ public class NyOppgaveFormWrapper extends Panel {
         });
     }
 
+    public final void nullstillSkjema() {
+        form.setModelObject(new NyOppgave());
+    }
+
     protected void etterSubmit(AjaxRequestTarget target) {
     }
 
-    private void nullstillSkjema() {
-        setDefaultModelObject(new NyOppgave());
-    }
+    private abstract static class OppdaterbarListeModel<T> extends AbstractReadOnlyModel<List<T>> {
 
+        private final IModel<NyOppgave> model;
+
+        private OppdaterbarListeModel(IModel<NyOppgave> model) {
+            this.model = model;
+        }
+
+        @Override
+        public final List<T> getObject() {
+            GsakKode.Tema tema = model.getObject().tema;
+            if (tema != null) {
+                return oppdater(tema);
+            }
+            return emptyList();
+        }
+
+        protected abstract List<T> oppdater(GsakKode.Tema tema);
+    }
 }

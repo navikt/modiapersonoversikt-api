@@ -16,16 +16,18 @@ public class NyOppgavePanel extends AnimertPanel {
 
         add(new Label("temagruppe", new StringResourceModel("${temagruppe}", this, new PropertyModel<>(innboksVM, "valgtTraad.eldsteMelding.melding"))));
 
-        add(new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
+        final NyOppgaveFormWrapper nyOppgaveFormWrapper = new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
                 lukkPanel(target);
             }
-        });
+        };
+        add(nyOppgaveFormWrapper);
 
         add(new AjaxLink<Void>("avbryt") {
             @Override
             public void onClick(AjaxRequestTarget target) {
+                nyOppgaveFormWrapper.nullstillSkjema();
                 lukkPanel(target);
             }
         });

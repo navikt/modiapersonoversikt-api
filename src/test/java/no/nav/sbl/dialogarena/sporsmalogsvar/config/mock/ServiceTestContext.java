@@ -19,12 +19,14 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.Be
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
+import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
 import no.nav.virksomhet.tjenester.sak.v1.Sak;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMockSaksliste;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.opprettMeldingEksempel;
 import static org.mockito.Matchers.anyString;
@@ -38,6 +40,7 @@ public class ServiceTestContext {
     public GsakService gsakService() {
         GsakService gsakService = mock(GsakService.class);
         when(gsakService.hentSakerForBruker(anyString())).thenReturn(createMockSaksliste());
+        when(gsakService.hentForeslattEnhet(anyString(), anyString())).thenReturn(optional(new AnsattEnhet("1231", "Sinsen")));
         return gsakService;
     }
 
@@ -120,6 +123,11 @@ public class ServiceTestContext {
         EnhetService service = mock(EnhetService.class);
         when(service.hentAlleEnheter()).thenReturn(asList(new AnsattEnhet("1231", "Sinsen")));
         return service;
+    }
+
+    @Bean
+    public Ruting ruting() {
+        return mock(Ruting.class);
     }
 
     @Bean(name = "pep")
