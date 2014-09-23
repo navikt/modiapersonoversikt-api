@@ -54,13 +54,11 @@ public class HentPersonPage extends BasePage {
     }
 
 	private void setUpSikkerhetstiltakspanel(PageParameters pageParameters) {
-		StringValue fnr = pageParameters.get(FNR);
-
 		StringValue sikkerhetstiltakBeskrivelse = pageParameters.get(SIKKERHETSTILTAK);
 		if (!sikkerhetstiltakBeskrivelse.isEmpty()) {
 			add(new SikkerhetstiltakPersonPanel(SIKKERHETSTILTAK, sikkerhetstiltakBeskrivelse.toString()));
 		} else {
-			add(new SikkerhetstiltakPersonPanel(SIKKERHETSTILTAK, new String()));
+			add(new SikkerhetstiltakPersonPanel(SIKKERHETSTILTAK, ""));
 		}
 	}
 
