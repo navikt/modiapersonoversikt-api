@@ -9,6 +9,9 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
+import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
+import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
+import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
@@ -42,6 +45,9 @@ public class SaksoversiktService {
     private static final Logger LOG = getLogger(SaksoversiktService.class);
 
     @Inject
+    private AktoerPortType fodselnummerAktorService;
+
+    @Inject
     private SakOgBehandling_v1PortType sakOgBehandlingPortType;
 
     @Inject
@@ -55,7 +61,7 @@ public class SaksoversiktService {
      */
     public List<TemaVM> hentTemaer(String fnr) {
         LOG.info("Henter tema fra Sak og Behandling til Modiasaksoversikt. Fnr: " + fnr);
-        return on(filter.filtrerSaker((on(hentSakerForAktor(fnr)).collect()))).map(TEMA_VM).collect(new SistOppdaterteBehandlingComparator());
+        return on(filter.filtrerSaker((on(hentSakerForAktor(hentAktorId(fnr))).collect()))).map(TEMA_VM).collect(new SistOppdaterteBehandlingComparator());
     }
 
     /**
@@ -63,10 +69,24 @@ public class SaksoversiktService {
      */
     public Map<TemaVM, List<GenerellBehandling>> hentBehandlingerByTema(String fnr) {
         Map<TemaVM, List<GenerellBehandling>> behandlingerByTema = new HashMap<>();
-        for (WSSak sak : hentSakerForAktor(fnr)) {
+        for (WSSak sak : hentSakerForAktor(hentAktorId(fnr))) {
             behandlingerByTema.put(TEMA_VM.transform(sak), filter.filtrerBehandlinger(hentSorterteBehandlinger(fnr, sak)));
         }
         return behandlingerByTema;
+    }
+
+    private String hentAktorId(String fnr) {
+        try {
+            return fodselnummerAktorService.hentAktoerIdForIdent(lagAktorRequest(fnr)).getAktoerId();
+        } catch (HentAktoerIdForIdentPersonIkkeFunnet hentAktoerIdForIdentPersonIkkeFunnet) {
+            throw new SystemException("Klarte ikke hente aktørId", hentAktoerIdForIdentPersonIkkeFunnet);
+        }
+    }
+
+    private HentAktoerIdForIdentRequest lagAktorRequest(String fnr) {
+        HentAktoerIdForIdentRequest request = new HentAktoerIdForIdentRequest();
+        request.setIdent(fnr);
+        return request;
     }
 
     private List<GenerellBehandling> hentSorterteBehandlinger(String fnr, WSSak sak) {
