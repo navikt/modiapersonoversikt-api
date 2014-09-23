@@ -4,6 +4,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
@@ -37,8 +38,14 @@ public class SakOgBehandlingPortTypeMock {
     public static final String AAPARKIVTEMA = "AAP";
     public static final String DAGPENGER_BEHANDLINGSTEMA = "ab0001";
     public static final String AAP_BEHANDLINGSTEMA = "ab0100";
+    public static final String OMS_BEHANDLINGSTEMA = "ab0149";
+    public static final String GRU_BEHANDLINGSTEMA = "ab0132";
+    public static final String KON_BEHANDLINGSTEMA = "ab0084";
+    public static final String SYK_BEHANDLINGSTEMA = "ab0061";
+    public static final String HJE_BEHANDLINGSTEMA = "ab0116";
 
     public static final String ANTALLSAKER_PROPERTY = "sakogbehandling.antallmocksaker";
+
 
     @Bean
     public SakOgBehandling_v1PortType getSakOgBehandlingPortTypeMock() {
@@ -109,7 +116,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSaksId("2")
                 .withSakstema(new WSSakstemaer().withValue("FEI"))
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, "feilutbtema")
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA)
                 );
     }
 
@@ -118,7 +125,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSaksId("2")
                 .withSakstema(new WSSakstemaer().withValue("OMS"))
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, "OMS")
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, OMS_BEHANDLINGSTEMA)
                 );
     }
 
@@ -127,7 +134,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSaksId("2")
                 .withSakstema(new WSSakstemaer().withValue("KLA"))
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, "KLA").withStart(now().minusYears(1))
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, AAP_BEHANDLINGSTEMA).withStart(now().minusYears(1))
                 );
     }
 
@@ -136,7 +143,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSaksId("2")
                 .withSakstema(new WSSakstemaer().withValue("HJE"))
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, "HJE").withStart(now().minusYears(1))
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, HJE_BEHANDLINGSTEMA).withStart(now().minusYears(1))
                 );
     }
 
@@ -145,7 +152,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSaksId("2")
                 .withSakstema(new WSSakstemaer().withValue("GRU"))
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, "GRU")
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, GRU_BEHANDLINGSTEMA)
                 );
     }
 
@@ -154,7 +161,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSaksId("2")
                 .withSakstema(new WSSakstemaer().withValue("KON"))
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, "KON")
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, KON_BEHANDLINGSTEMA)
                 );
     }
 
@@ -163,7 +170,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSaksId("2")
                 .withSakstema(new WSSakstemaer().withValue("SYK"))
                 .withBehandlingskjede(
-                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, "SYK")
+                        createOpprettetSoknadKjede(GENERISK_BEHANDLINGSID, SYK_BEHANDLINGSTEMA)
                 );
     }
 
@@ -172,6 +179,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withBehandlingskjedeId("motta" + now())
                 .withSisteBehandlingREF(sisteBehandlingsREF)
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
+                .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
                 .withStart(now().minusDays(5));
 
@@ -182,6 +190,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withBehandlingskjedeId("behandlingskjedeid" + now())
                 .withSisteBehandlingREF(sisteBehandlingREF)
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
+                .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
                 .withStart(now().minusDays(3).minusHours(5))
                 .withSlutt(now());
@@ -193,6 +202,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSisteBehandlingREF(behandlingsListeRef)
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
+                .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
                 .withBehandlingskjedeId("behandle" + now())
                 .withStart(now().minusDays(3).minusHours(2))
                 .withSlutt(now().minusDays(3).minusHours(1));
