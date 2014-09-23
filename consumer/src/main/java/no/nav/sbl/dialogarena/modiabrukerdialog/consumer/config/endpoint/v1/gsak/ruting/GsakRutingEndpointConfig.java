@@ -2,9 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsa
 
 import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
-import no.nav.modig.security.ws.AbstractSAMLOutInterceptor;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
-import no.nav.modig.security.ws.UserSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSBrukersok;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForSakRequest;
@@ -28,7 +26,7 @@ public class GsakRutingEndpointConfig {
 
     @Bean
     public Ruting rutingPortType() {
-        return createSwitcher(createRutingPortType(new UserSAMLOutInterceptor()), createRutingPortTypeMock(), GSAK_RUTING_KEY, Ruting.class);
+        return createSwitcher(createRutingPortType(), createRutingPortTypeMock(), GSAK_RUTING_KEY, Ruting.class);
     }
 
     @Bean
@@ -39,7 +37,7 @@ public class GsakRutingEndpointConfig {
                 long start = System.currentTimeMillis();
                 String name = "GSAK_RUTING_V1";
                 try {
-                    Ruting ws = createRutingPortType(new SystemSAMLOutInterceptor());
+                    Ruting ws = createRutingPortType();
                     ws.finnAnsvarligEnhetForSak(new WSFinnAnsvarligEnhetForSakRequest().withBrukersok(new WSBrukersok().withBrukerId("10108000398").withFagomradeKode("DAG")));
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
@@ -49,11 +47,11 @@ public class GsakRutingEndpointConfig {
         };
     }
 
-    private static Ruting createRutingPortType(AbstractSAMLOutInterceptor interceptor) {
+    private static Ruting createRutingPortType() {
         return new CXFClient<>(Ruting.class)
                 .address(System.getProperty("gsak.ruting.v1.url"))
                 .wsdl("classpath:ruting/no/nav/virksomhet/tjenester/ruting/ruting.wsdl")
-                .withOutInterceptor(interceptor)
+                .withOutInterceptor(new SystemSAMLOutInterceptor())
                 .build();
     }
 }
