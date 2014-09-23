@@ -47,5 +47,7 @@ public final class InstanceSwitcher implements InvocationHandler {
             throw new ApplicationException("Problemer med invokering av metode", exception);
         }
     }
-
+    public String getTargetClassName() {
+        return alternative.getClass().getName().split("\\$")[0];
+    }
 }

@@ -1,10 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache;
 
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher;
+import org.springframework.aop.framework.AopProxyUtils;
 import org.springframework.cache.interceptor.DefaultKeyGenerator;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 
-import static java.lang.String.valueOf;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 
 /**
@@ -23,8 +26,16 @@ public class AutentisertBrukerKeyGenerator extends DefaultKeyGenerator {
 
     @Override
     public Object generate(Object target, Method method, Object... params) {
-        String cacheKey = valueOf(super.generate(target, method, params));
-        return "user: " + getSubjectHandler().getUid() + "cachekey: " + cacheKey;
+        String cacheKey = Integer.toHexString(super.generate(target, method, params).hashCode());
+        return "user: " + getSubjectHandler().getUid() + " cachekey: " + getTargetClassName(target) + "." + method.getName() + "[" + cacheKey + "]";
     }
 
+    private String getTargetClassName(Object target) {
+        InvocationHandler invocationHandler = Proxy.getInvocationHandler(target);
+        if (invocationHandler instanceof InstanceSwitcher) {
+            return ((InstanceSwitcher) invocationHandler).getTargetClassName();
+        } else {
+            return AopProxyUtils.proxiedUserInterfaces(target)[0].getName();
+        }
+    }
 }

@@ -13,11 +13,6 @@
             <cache:cacheable method="finn*"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="gsakhentAdvise" key-generator="userkeygenerator">
-        <cache:caching cache="endpointCache">
-            <cache:cacheable method="finn*"/>
-        </cache:caching>
-    </cache:advice>
     <cache:advice id="kodeverkAdvice" key-generator="userkeygenerator">
         <cache:caching cache="kodeverkCache">
             <cache:cacheable method="hent*"/>
@@ -33,7 +28,7 @@
     <aop:config>
         <aop:advisor advice-ref="shortlivedAdvise" pointcut="bean(henvendelseSoknaderPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvise" pointcut="bean(sakOgBehandlingPortType)"/>
-        <aop:advisor advice-ref="gsakhentAdvise" pointcut="bean(sakEndpoint)" />
+        <aop:advisor advice-ref="shortlivedAdvise" pointcut="bean(sakEndpoint)" />
         <aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkPortType)"/>
         <aop:advisor advice-ref="aktorAdvice" pointcut="bean(aktoerPortType)"/>
     </aop:config>
