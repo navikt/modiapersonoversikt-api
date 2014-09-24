@@ -31,11 +31,14 @@ public class AutentisertBrukerKeyGenerator extends DefaultKeyGenerator {
     }
 
     private String getTargetClassName(Object target) {
-        InvocationHandler invocationHandler = Proxy.getInvocationHandler(target);
-        if (invocationHandler instanceof InstanceSwitcher) {
-            return ((InstanceSwitcher) invocationHandler).getTargetClassName();
-        } else {
-            return AopProxyUtils.proxiedUserInterfaces(target)[0].getName();
+        if (Proxy.isProxyClass(target.getClass())) {
+            InvocationHandler invocationHandler = Proxy.getInvocationHandler(target);
+            if (invocationHandler instanceof InstanceSwitcher) {
+                return ((InstanceSwitcher) invocationHandler).getTargetClassName();
+            } else {
+                return AopProxyUtils.proxiedUserInterfaces(target)[0].getName();
+            }
         }
+        return target.getClass().getName();
     }
 }
