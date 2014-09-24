@@ -1,15 +1,14 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentNAVEnhetListeRequest;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSFinnNAVEnhetRequest;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.FinnNAVEnhetFaultGOSYSGeneriskMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetListeFaultGOSYSGeneriskMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.HentNAVEnhetListeFaultGOSYSNAVEnhetIkkeFunnetMsg;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -21,22 +20,38 @@ public class DefaultEnhetService implements EnhetService {
     @Inject
     private GOSYSNAVOrgEnhet enhetWS;
 
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    private enum EnhetType {
+        EN, FYLKE, SPESEN, ENGR, GR
+    }
 
     public List<AnsattEnhet> hentAlleEnheter() {
-        ASBOGOSYSHentNAVEnhetListeRequest req = new ASBOGOSYSHentNAVEnhetListeRequest();
-        ASBOGOSYSNavEnhet enhet = new ASBOGOSYSNavEnhet();
-        enhet.setEnhetsId(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
-        req.setNAVEnhet(enhet);
+        List<AnsattEnhet> enheter = new ArrayList<>();
 
-        try {
-            return on(enhetWS.hentNAVEnhetListe(req).getNAVEnheter())
-                    .map(TIL_ANSATTENHET)
-                    .collect();
-        } catch (HentNAVEnhetListeFaultGOSYSGeneriskMsg | HentNAVEnhetListeFaultGOSYSNAVEnhetIkkeFunnetMsg ex) {
-            ex.printStackTrace();
-        }
-        return emptyList();
+        enheter.addAll(finnEnheterMedType(EnhetType.EN));
+        enheter.addAll(finnEnheterMedType(EnhetType.FYLKE));
+        enheter.addAll(finnEnheterMedType(EnhetType.SPESEN));
+        enheter.addAll(finnEnheterMedType(EnhetType.ENGR));
+        enheter.addAll(finnEnheterMedType(EnhetType.GR));
+
+        return on(enheter).collect(ENHET_ID_STIGENDE);
     }
+
+    private List<AnsattEnhet> finnEnheterMedType(EnhetType enhetType) {
+        try {
+            ASBOGOSYSFinnNAVEnhetRequest enhetRequest = new ASBOGOSYSFinnNAVEnhetRequest();
+            enhetRequest.setTypeEnhet(enhetType.name());
+
+            return on(enhetWS.finnNAVEnhet(enhetRequest).getNAVEnheter()).map(TIL_ANSATTENHET).collect();
+        } catch (FinnNAVEnhetFaultGOSYSGeneriskMsg finnNAVEnhetFaultGOSYSGeneriskMsg) {
+            finnNAVEnhetFaultGOSYSGeneriskMsg.printStackTrace();
+            return emptyList();
+        }
+    }
+
+    private static final Comparator<AnsattEnhet> ENHET_ID_STIGENDE = new Comparator<AnsattEnhet>() {
+        @Override
+        public int compare(AnsattEnhet o1, AnsattEnhet o2) {
+            return o1.enhetId.compareTo(o2.enhetId);
+        }
+    };
 }
