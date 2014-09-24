@@ -24,6 +24,7 @@ import java.util.List;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.ukedagerFraDato;
 
 public class GsakService {
 
@@ -73,6 +74,7 @@ public class GsakService {
                                 new WSOpprettOppgave()
                                         .withHenvendelseId(nyOppgave.henvendelseId)
                                         .withAktivFra(LocalDate.now())
+                                        .withAktivTil(ukedagerFraDato(nyOppgave.type.dagerFrist, LocalDate.now()))
                                         .withAnsvarligEnhetId(nyOppgave.enhet.enhetId)
                                         .withBeskrivelse(nyOppgave.beskrivelse)
                                         .withFagomradeKode(nyOppgave.tema.kode)

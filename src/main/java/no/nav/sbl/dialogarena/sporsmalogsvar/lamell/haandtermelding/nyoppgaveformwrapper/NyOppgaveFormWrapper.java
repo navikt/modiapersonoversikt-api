@@ -32,6 +32,8 @@ import static java.util.Collections.unmodifiableList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyList;
 import static no.nav.modig.wicket.model.ModelUtils.not;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeTema.OppgaveType;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeTema.Prioritet;
 
 public class NyOppgaveFormWrapper extends Panel {
 
@@ -67,15 +69,15 @@ public class NyOppgaveFormWrapper extends Panel {
                 return ansattEnheter;
             }
         };
-        IModel<List<GsakKodeTema.OppgaveType>> typeModel = new OppdaterbarListeModel<GsakKodeTema.OppgaveType>(form.getModel()) {
+        IModel<List<OppgaveType>> typeModel = new OppdaterbarListeModel<OppgaveType>(form.getModel()) {
             @Override
-            protected List<GsakKodeTema.OppgaveType> oppdater(GsakKodeTema.Tema tema) {
+            protected List<OppgaveType> oppdater(GsakKodeTema.Tema tema) {
                 return tema.oppgaveTyper;
             }
         };
-        IModel<List<GsakKodeTema.Prioritet>> priModel = new OppdaterbarListeModel<GsakKodeTema.Prioritet>(form.getModel()) {
+        IModel<List<Prioritet>> priModel = new OppdaterbarListeModel<Prioritet>(form.getModel()) {
             @Override
-            protected List<GsakKodeTema.Prioritet> oppdater(GsakKodeTema.Tema tema) {
+            protected List<Prioritet> oppdater(GsakKodeTema.Tema tema) {
                 return tema.prioriteter;
             }
         };
