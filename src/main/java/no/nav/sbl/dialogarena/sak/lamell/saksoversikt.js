@@ -25,6 +25,8 @@ function addExpandClickEvent() {
 function oppdaterSaksinformasjonSynlighet() {
     $(".behandling-container").removeClass("usynlig");
     $(".saksinformasjon-container").addClass("usynlig");
+    $("#behandlingerListeLenke").addClass("active");
+    $("#saksinformasjonLenke").removeClass("active");
     if ($(".aktiv .saksinformasjon-container").length > 0) {
         $("#saksinformasjonLenke").removeClass("usynlig");
     } else {
@@ -61,6 +63,10 @@ function addSaksinformasjonClickListeners() {
 
         $(".behandling-container").removeClass("usynlig");
         $(".saksinformasjon-container").addClass("usynlig");
+
+        $("#behandlingerListeLenke").addClass("active");
+        $("#saksinformasjonLenke").removeClass("active");
+
     });
 
     $("#saksinformasjonLenke").click(function(event) {
@@ -69,6 +75,9 @@ function addSaksinformasjonClickListeners() {
 
         $(".saksinformasjon-container").removeClass("usynlig");
         $(".behandling-container").addClass("usynlig");
+
+        $("#saksinformasjonLenke").addClass("active");
+        $("#behandlingerListeLenke").removeClass("active");
     });
 }
 

@@ -39,6 +39,70 @@
 .saksoversikt {
     .lerret {
         border-top: 1px solid #ccc;
+        position: relative;
+    }
+
+    .saksinformasjon {
+        padding: 30px;
+
+        h2 {
+            font-family: modus, arial, helvetica, sans-serif;
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        p {
+            margin-bottom: 30px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #d1d1d1;
+
+            &:last-child {
+                margin-bottom: 0;
+                padding-bottom: 10px;
+                border-bottom: none;
+            }
+        }
+
+        a {
+            font-size: 1rem;
+        }
+    }
+
+    .lamell-hode-lenker {
+        position: absolute;
+        top: -34px;
+        width: 100%;
+
+        .saksinformasjon-lenker {
+            position: relative;
+            left: 40%;
+            padding-left: 30px;
+            display: inline-block;
+
+            a {
+                font-size: 0.875rem;
+                font-family: modus, arial, helvetica, sans-serif;
+                text-transform: uppercase;
+                position: relative;
+
+                &.active {
+                    text-decoration: none;
+                    color: #3e3832;
+                }
+
+                &:first-child:after {
+                    content: "";
+                    position: relative;
+                    top: -3px;
+                    display: inline-block;
+                    border: 2px solid #3e3832;
+                    border-radius: 2px;
+                    margin-left: 10px;
+                    margin-right: 5px;
+                }
+            }
+        }
     }
 
     .sak-navigering {

@@ -1,5 +1,11 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
+    <div class="lamell-hode-lenker">
+        <div class="saksinformasjon-lenker">
+            <a href="#" class="active" id="behandlingerListeLenke">Siste hendelser</a>
+            <a href="#" id="saksinformasjonLenke" class="usynlig">Viktig å vite</a>
+        </div>
+    </div>
     <div class="saker flexbox row flex1">
         <article tabindex="0" class="sak-navigering flex2" wicket:id="sakerContainer">
             <ul>
@@ -13,9 +19,6 @@
         </article>
         <div class="sak-informasjon flex3" wicket:id="detaljerContainer">
             <div wicket:id="feilmelding" class="feilmelding"/>
-            <div>
-                <a href="#" id="behandlingerListeLenke">Siste hendelser</a> <a href="#" id="saksinformasjonLenke" class="usynlig">Viktig å vite</a>
-            </div>
             <ul>
                 <li wicket:id="behandling-sak" class="sakdetaljer">
                     <article class="behandling-container" wicket:id="behandlinger">
