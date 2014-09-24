@@ -7,6 +7,6 @@ import org.springframework.context.annotation.ImportResource;
 
 @Configuration
 @EnableCaching
-@ImportResource("/cacheconfig.xml")
+@ImportResource("classpath*:*cacheconfig.xml")
 public class CacheConfiguration extends CacheConfig {
 }
