@@ -29,10 +29,11 @@ public class GsakHentSakslistePortTypeMock {
             createSak("TRY", "FS22", SAKSTYPE_GENERELL, SAKSID_1, DateTime.now().minusDays(4)),
             createSak("HJE", "IT01", DateTime.now().minusDays(4)),
             createSak("FUL", "FS22", SAKSTYPE_GENERELL, SAKSID_2, DateTime.now().minusDays(3)),
-            createSak("OPP", "IT01", SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
+            createSak("OPP", "AO01", SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
             createSak("BIL", "V2", "Bilsøknad", DateTime.now().minusDays(4)),
-            createSak("IND", "V2", "Individstønad", DateTime.now().minusDays(4)),
-            createSak("DAG", "OEBS", "Dagpenger", DateTime.now().minusDays(4)));
+            createSak("IND", "OEBS", "Individstønad", DateTime.now().minusDays(4)),
+            createSak("DAG", "PP01", "Dagpenger", DateTime.now().minusDays(4)),
+            createSak("DAG", "AO11", "Dagpenger", DateTime.now().minusDays(2)));
 
     private static List<WSGenerellSak> saksliste2 = asList(
             createSak("SYM", DateTime.now().minusDays(4)),
@@ -91,6 +92,5 @@ public class GsakHentSakslistePortTypeMock {
     private static WSGenerellSak createSak(String tema, String fagsystem, String sakstype, String saksId, DateTime opprettet) {
         return createSak(tema, fagsystem, sakstype, opprettet).withSakId(saksId);
     }
-
 
 }
