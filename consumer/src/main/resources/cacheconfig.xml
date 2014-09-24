@@ -7,7 +7,7 @@
     <bean id="userkeygenerator"
           class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.AutentisertBrukerKeyGenerator"/>
 
-    <cache:advice id="shortlivedAdvise" key-generator="userkeygenerator">
+    <cache:advice id="shortlivedAdvice" key-generator="userkeygenerator">
         <cache:caching cache="endpointCache">
             <cache:cacheable method="hent*"/>
             <cache:cacheable method="finn*"/>
@@ -28,11 +28,12 @@
 
     <aop:config>
         <aop:advisor advice-ref="aktorAdvice" pointcut="bean(aktoerPortType)"/>
-        <aop:advisor advice-ref="shortlivedAdvise" pointcut="bean(henvendelseSoknaderPortType)"/>
-        <aop:advisor advice-ref="shortlivedAdvise" pointcut="bean(sakOgBehandlingPortType)"/>
-        <aop:advisor advice-ref="shortlivedAdvise" pointcut="bean(sakEndpoint)" />
+        <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelseSoknaderPortType)"/>
+        <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakOgBehandlingPortType)"/>
+        <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakEndpoint)" />
         <aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkPortTypeV2)"/>
         <aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkClient)"/>
+        <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(rutingPortType)"/>
     </aop:config>
 
 </beans>
