@@ -18,7 +18,8 @@ import static java.lang.System.setProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk.KodeverkV2EndpointConfig.KODEVERK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.ALLOW_MOCK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
-import static org.mockito.Mockito.verifyZeroInteractions;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
@@ -41,7 +42,7 @@ public class KodeverkConfigTest {
         portType.finnKodeverkListe(new XMLFinnKodeverkListeRequest());
         portType.hentKodeverk(new XMLHentKodeverkRequest());
         portType.ping();
-        verifyZeroInteractions(kodeverkPort.wrappedObject);
+        verify(kodeverkPort.wrappedObject, times(1)).kodeverkPortType();//Oppstart av switcher
     }
 
 }
