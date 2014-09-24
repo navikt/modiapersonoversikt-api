@@ -35,9 +35,9 @@ import static no.nav.sbl.dialogarena.sak.transformers.HenvendelseTransformers.IN
 import static no.nav.sbl.dialogarena.sak.transformers.HenvendelseTransformers.KVITTERING;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSIDER_FRA_SAK;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSKJEDER_TIL_BEHANDLINGER;
-import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.TEMA_VM;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.behandlingsDato;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.behandlingsStatus;
+import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.temaVMTransformer;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SaksoversiktService {
@@ -61,7 +61,7 @@ public class SaksoversiktService {
      */
     public List<TemaVM> hentTemaer(String fnr) {
         LOG.info("Henter tema fra Sak og Behandling til Modiasaksoversikt. Fnr: " + fnr);
-        return on(filter.filtrerSaker((on(hentSakerForAktor(hentAktorId(fnr))).collect()))).map(TEMA_VM).collect(new SistOppdaterteBehandlingComparator());
+        return on(filter.filtrerSaker((on(hentSakerForAktor(hentAktorId(fnr))).collect()))).map(temaVMTransformer(filter)).collect(new SistOppdaterteBehandlingComparator());
     }
 
     /**
@@ -70,7 +70,7 @@ public class SaksoversiktService {
     public Map<TemaVM, List<GenerellBehandling>> hentBehandlingerByTema(String fnr) {
         Map<TemaVM, List<GenerellBehandling>> behandlingerByTema = new HashMap<>();
         for (WSSak sak : filter.filtrerSaker(hentSakerForAktor(hentAktorId(fnr)))) {
-            behandlingerByTema.put(TEMA_VM.transform(sak), filter.filtrerBehandlinger(hentSorterteBehandlinger(fnr, sak)));
+            behandlingerByTema.put(temaVMTransformer(filter).transform(sak), filter.filtrerBehandlinger(hentSorterteBehandlinger(fnr, sak)));
         }
         return behandlingerByTema;
     }
@@ -106,7 +106,7 @@ public class SaksoversiktService {
             behandlinger.add(beriketKvittering(kvitteringerForBehandlingsID.get(kvitteringsID), kjederForBehandlingsID.get(kvitteringsID)));
         }
 
-        final String temakode = TEMA_VM.transform(sak).temakode;
+        final String temakode = temaVMTransformer(filter).transform(sak).temakode;
         behandlinger = on(behandlinger).map(new Transformer<GenerellBehandling, GenerellBehandling>() {
             @Override public GenerellBehandling transform(GenerellBehandling generellBehandling) {
                 return generellBehandling.withSaksTema(temakode);

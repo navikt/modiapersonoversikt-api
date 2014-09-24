@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
+import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
@@ -18,14 +19,6 @@ import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.Be
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.OPPRETTET;
 
 public class SakOgBehandlingTransformers {
-
-    public static final Transformer<WSSak, TemaVM> TEMA_VM = new Transformer<WSSak, TemaVM>() {
-        @Override
-        public TemaVM transform(WSSak wsSak) {
-            TemaVM tema = new TemaVM().withTemaKode(wsSak.getSakstema().getValue());
-            return behandlingskjedeFinnes(wsSak) ? tema.withSistOppdaterteBehandling(hentForsteBehandlingskjede(wsSak)) : tema;
-        }
-    };
 
     public static final Transformer<List<WSBehandlingskjede>, List<GenerellBehandling>> BEHANDLINGSKJEDER_TIL_BEHANDLINGER =
             new Transformer<List<WSBehandlingskjede>, List<GenerellBehandling>>() {
@@ -87,6 +80,21 @@ public class SakOgBehandlingTransformers {
 
     public static boolean erAvsluttet(WSBehandlingskjede wsBehandlingskjede) {
         return wsBehandlingskjede.getSlutt() != null;
+    }
+
+    public static Transformer<WSSak, TemaVM> temaVMTransformer(final SakOgBehandlingFilter filter) {
+        return new Transformer<WSSak, TemaVM>() {
+
+            @Override
+            public TemaVM transform(WSSak wsSak) {
+                TemaVM tema = new TemaVM().withTemaKode(wsSak.getSakstema().getValue());
+                return behandlingskjedeFinnes(wsSak) ? tema.withSistOppdaterteBehandling(hentSistOppdaterteLovligeBehandling(wsSak)) : tema;
+            }
+
+            private GenerellBehandling hentSistOppdaterteLovligeBehandling(WSSak wsSak) {
+                return on(filter.filtrerBehandlinger(on(wsSak.getBehandlingskjede()).map(BEHANDLINGSKJEDE_TIL_BEHANDLING).collect())).collect(new OmvendtKronologiskBehandlingComparator()).get(0);
+            }
+        };
     }
 
 }
