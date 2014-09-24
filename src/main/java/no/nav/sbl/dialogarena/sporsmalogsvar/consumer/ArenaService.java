@@ -17,7 +17,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 
 public class ArenaService {
 
-    public static final String ARENA_FAGSYSTEMNAVN = "AO01";
+    public static final String ARENA_FAGSYSTEMKODE = "AO01";
     public static final String BRUKERKODE_PERSON = "PERSON";
     public static final String OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR = "OPP";
 
@@ -47,7 +47,7 @@ public class ArenaService {
                 public Sak transform(no.nav.virksomhet.gjennomforing.sak.arbeidogaktivitet.v1.Sak arenaSak) {
                     Sak sak = new Sak();
                     sak.saksId = arenaSak.getSaksId();
-                    sak.fagsystem = ARENA_FAGSYSTEMNAVN;
+                    sak.fagsystemKode = ARENA_FAGSYSTEMKODE;
                     sak.sakstype = arenaSak.getSakstypeKode().getKode();
                     sak.tema = arenaSak.getFagomradeKode().getKode();
                     sak.opprettetDato = new DateTime(arenaSak.getEndringsInfo().getOpprettetDato().toDate());

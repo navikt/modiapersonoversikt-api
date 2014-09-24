@@ -5,16 +5,15 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ValgtEnhetService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverkFraFil;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
@@ -52,8 +51,13 @@ public class ServiceTestContext {
     }
 
     @Bean
-    public ArbeidOgAktivitet arbeidOgAktivitet(){
+    public ArbeidOgAktivitet arbeidOgAktivitet() {
         return mock(ArbeidOgAktivitet.class);
+    }
+
+    @Bean
+    public GsakKodeverk gsakKodeverk() {
+        return mock(GsakKodeverk.class);
     }
 
     @Bean
@@ -133,11 +137,6 @@ public class ServiceTestContext {
     @Bean(name = "pep")
     public EnforcementPoint enforcementPoint() {
         return mock(EnforcementPoint.class);
-    }
-
-    @Bean(name = "gsakKodeverk")
-    public GsakKodeverk gsakKodeverk() {
-        return new GsakKodeverkFraFil();
     }
 
 }

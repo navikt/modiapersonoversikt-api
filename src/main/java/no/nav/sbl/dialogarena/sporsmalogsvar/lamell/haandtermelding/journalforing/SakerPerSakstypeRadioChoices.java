@@ -29,7 +29,7 @@ public class SakerPerSakstypeRadioChoices extends Panel {
                                 item.add(new Radio<>("sak", item.getModel()));
                                 item.add(new Label("saksId"));
                                 item.add(new Label("opprettetDatoFormatert"));
-                                item.add(new Label("fagsystem"));
+                                item.add(new Label("fagsystemNavn"));
                             }
                         });
                     }

@@ -14,8 +14,8 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService.OPPFOL
 
 public class Sak implements Serializable, Comparable<Sak> {
 
-    //TODO: Map fra fagsystemkode til fagsystemnavn
-    public String saksId, tema, fagsystem, sakstype;
+    //TODO: Map fra temakode til temanavn
+    public String saksId, tema, fagsystemKode, fagsystemNavn, sakstype;
     public DateTime opprettetDato;
 
     public static final String SAKSTYPE_GENERELL = "GEN";
@@ -44,14 +44,14 @@ public class Sak implements Serializable, Comparable<Sak> {
     public static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK = new Predicate<Sak>() {
         @Override
         public boolean evaluate(Sak sak) {
-            return GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystem);
+            return GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.contains(sak.fagsystemKode);
         }
     };
 
     public static final Predicate<Sak> IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE = new Predicate<Sak>() {
         @Override
         public boolean evaluate(Sak sak) {
-            return GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystem);
+            return GODKJENT_FAGSYSTEM_FOR_GENERELLE.equals(sak.fagsystemKode);
         }
     };
 
@@ -65,7 +65,7 @@ public class Sak implements Serializable, Comparable<Sak> {
     public static final Predicate<Sak> IS_OPPFOLGINGSFAGSAK = new Predicate<Sak>() {
         @Override
         public boolean evaluate(Sak sak) {
-            return OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR.equals(sak.tema);
+            return OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR.equals(sak.tema) && !sak.isSakstypeForVisningGenerell();
         }
     };
 

@@ -5,7 +5,9 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
+import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import org.apache.commons.collections15.Closure;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.injection.Injector;
 
@@ -32,11 +34,11 @@ public class SakerVM implements Serializable {
     // TODO: Kodeverk - Dette er en midlertidig mapping mellom temagruppe og tema, mens vi venter på kodeverk.
     public static final Map<String, List<String>> TEMA_MAPPING = new HashMap<String, List<String>>() {
         {
-            put("ARBD",     asList("DAG", "AAP", "FOS", "IND", "OPP", "SYK", "SYM", "VEN", "YRK"));
-            put("FMLI",     asList("FOR", "BAR", "BID", "ENF", "GRA", "GRU", "KON", "OMS"));
-            put("HJLPM",    asList("BIL", "HEL", "HJE", "MOB"));
-            put("OVRG",     asList("FUL", "MED", "SER", "TRK"));
-            put("PENS",     asList("PEN", "UFO"));
+            put("ARBD", asList("DAG", "AAP", "FOS", "IND", "OPP", "SYK", "SYM", "VEN", "YRK"));
+            put("FMLI", asList("FOR", "BAR", "BID", "ENF", "GRA", "GRU", "KON", "OMS"));
+            put("HJLPM", asList("BIL", "HEL", "HJE", "MOB"));
+            put("OVRG", asList("FUL", "MED", "SER", "TRK"));
+            put("PENS", asList("PEN", "UFO"));
         }
     };
     public static final String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
@@ -49,19 +51,38 @@ public class SakerVM implements Serializable {
     private GsakService gsakService;
     @Inject
     private ArenaService arenaService;
+    @Inject
+    private GsakKodeverk gsakKodeverk;
 
     public SakerVM(InnboksVM innboksVM) {
         this.innboksVM = innboksVM;
         Injector.get().inject(this);
     }
 
-    // TODO: Kodeverk - Oversett mellom sakstypekode og sakstype, feks: OPP -> Oppfølging
     public final void oppdater() {
         List<Sak> sakerForBruker = gsakService.hentSakerForBruker(innboksVM.getFnr());
-        Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker = splittIGenerelleSakerOgIkkeGenerelleSaker(sakerForBruker);
+        supplerMedOppfolgingssakDersomRelevant(sakerForBruker);
+        on(sakerForBruker).forEach(new Closure<Sak>() {
+            @Override
+            public void execute(Sak sak) {
+                String fagsystemnavn = gsakKodeverk.hentFagsystemMapping().get(sak.fagsystemKode);
+                sak.fagsystemNavn = fagsystemnavn != null ? fagsystemnavn : sak.fagsystemKode;
+            }
+        });
 
+        Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker = splittIGenerelleSakerOgIkkeGenerelleSaker(sakerForBruker);
         temaSakerListeFagsak = getFagsaker(generelleOgIkkeGenerelleSaker);
         temaSakerListeGenerelle = getGenerelleSaker(generelleOgIkkeGenerelleSaker);
+    }
+
+    private void supplerMedOppfolgingssakDersomRelevant(List<Sak> saker) {
+        List<Sak> oppfolgingssaker = on(saker).filter(Sak.IS_OPPFOLGINGSFAGSAK).collect();
+        if (oppfolgingssaker.isEmpty()) {
+            Optional<Sak> oppfolgingssak = arenaService.hentOppfolgingssak(innboksVM.getFnr());
+            if (oppfolgingssak.isSome()) {
+                saker.add(oppfolgingssak.get());
+            }
+        }
     }
 
     private Map<Boolean, List<Sak>> splittIGenerelleSakerOgIkkeGenerelleSaker(List<Sak> saker) {
@@ -71,19 +92,8 @@ public class SakerVM implements Serializable {
     private TemaSakerListe getFagsaker(Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker) {
         List<Sak> fagsakerFraGodkjenteFagsystemer = on(generelleOgIkkeGenerelleSaker.get(false))
                 .filter(IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK)
-                .collectIn(new ArrayList<Sak>());
-        supplerMedOppfolgingssakDersomRelevant(fagsakerFraGodkjenteFagsystemer);
+                .collect();
         return new TemaSakerListe(grupperSakerPaaTema(fagsakerFraGodkjenteFagsystemer));
-    }
-
-    private void supplerMedOppfolgingssakDersomRelevant(List<Sak> fagsakerFraGodkjenteFagsystemer) {
-        List<Sak> oppfolgingssaker = on(fagsakerFraGodkjenteFagsystemer).filter(Sak.IS_OPPFOLGINGSFAGSAK).collect();
-        if(oppfolgingssaker.isEmpty()) {
-            Optional<Sak> oppfolgingssak = arenaService.hentOppfolgingssak(innboksVM.getFnr());
-            if(oppfolgingssak.isSome()) {
-                fagsakerFraGodkjenteFagsystemer.add(oppfolgingssak.get());
-            }
-        }
     }
 
     private TemaSakerListe getGenerelleSaker(Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker) {

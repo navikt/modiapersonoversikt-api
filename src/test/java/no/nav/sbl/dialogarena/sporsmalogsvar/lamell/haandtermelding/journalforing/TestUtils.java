@@ -64,11 +64,11 @@ public class TestUtils {
                 createSak(SAKS_ID_4, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(2))));
     }
 
-    public static Sak createSak(String saksId, String tema, String fagsystem, String sakstype, DateTime opprettet) {
+    public static Sak createSak(String saksId, String tema, String fagsystemKode, String sakstype, DateTime opprettet) {
         Sak sak = new Sak();
         sak.saksId = saksId;
         sak.tema = tema;
-        sak.fagsystem = fagsystem;
+        sak.fagsystemKode = fagsystemKode;
         if (sakstype.equals(SAKSTYPE_GENERELL)) {
             sak.sakstype = sakstype;
         } else {

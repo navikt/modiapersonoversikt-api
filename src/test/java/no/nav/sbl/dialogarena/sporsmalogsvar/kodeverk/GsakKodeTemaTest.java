@@ -8,11 +8,10 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
-public class GsakKodeTest {
+public class GsakKodeTemaTest {
     @Test
     public void shouldReadKodeverk() {
-        List<GsakKode.Tema> parse = GsakKode.Parser.parse();
+        List<GsakKodeTema.Tema> parse = GsakKodeTema.Parser.parse();
         assertThat(parse.size(), is(greaterThan(0)));
     }
-
 }

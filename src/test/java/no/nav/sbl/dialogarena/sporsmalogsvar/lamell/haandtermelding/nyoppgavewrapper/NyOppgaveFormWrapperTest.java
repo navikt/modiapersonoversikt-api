@@ -6,6 +6,8 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
+import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeTema;
+import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -20,6 +22,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -40,15 +44,29 @@ import static org.mockito.MockitoAnnotations.initMocks;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class NyOppgaveFormWrapperTest extends WicketPageTest {
 
+    public static final List<GsakKodeTema.Tema> TEMALISTE_MOCK =
+            new ArrayList<>(Arrays.asList(new GsakKodeTema.Tema("kode", "tekst",
+                    new ArrayList<>(Arrays.asList(new GsakKodeTema.OppgaveType("oppgKode", "oppgTekst", 1))),
+                    new ArrayList<>(Arrays.asList(new GsakKodeTema.Prioritet("priKode", "priTekst"))))));
+
     @Captor
     private ArgumentCaptor<NyOppgave> nyOppgaveArgumentCaptor;
 
     @Inject
     private GsakService gsakService;
+    @Inject
+    private GsakKodeverk gsakKodeverk;
+
+    private InnboksVM innboksVM;
+    private Melding melding;
 
     @Before
-    public void setup() {
+    public void setUp() {
         initMocks(this);
+        innboksVM = mock(InnboksVM.class);
+        melding = createMelding("id", SPORSMAL_SKRIFTLIG, now(), "temagruppe", "id");
+        when(innboksVM.getValgtTraad()).thenReturn(new TraadVM(asList(new MeldingVM(melding, 1))));
+        when(gsakKodeverk.hentTemaListe()).thenReturn(TEMALISTE_MOCK);
     }
 
     @Test
@@ -68,26 +86,25 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
 
     @Test
     public void skalSendeNyOppgaveObjektetTilGsakTjenestenForAaOppretteNy() {
-        InnboksVM innboksVM = mock(InnboksVM.class);
-        Melding melding = createMelding("id", SPORSMAL_SKRIFTLIG, now(), "temagruppe", "id");
-        when(innboksVM.getValgtTraad()).thenReturn(new TraadVM(asList(new MeldingVM(melding, 1))));
-
         String beskrivelse = "Dette er en beskrivelse";
         NyOppgaveFormWrapper nyOppgaveFormWrapper = new NyOppgaveFormWrapper("panel", innboksVM);
+        
         wicket.goToPageWith(nyOppgaveFormWrapper)
                 .inForm("panel:nyoppgaveform")
-                .select("tema", 0).andReturn()
+                    .select("tema", 0)
+                    .andReturn()
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormComponentUpdatingBehavior.class))
                 .inForm("panel:nyoppgaveform")
-                .select("enhetContainer:enhet", 0)
-                .select("typeContainer:type", 0)
-                .select("prioritetContainer:prioritet", 0)
-                .write("beskrivelse", beskrivelse)
-                .submitWithAjaxButton(withId("opprettoppgave"));
+                    .select("enhetContainer:enhet", 0)
+                    .select("typeContainer:type", 0)
+                    .select("prioritetContainer:prioritet", 0)
+                    .write("beskrivelse", beskrivelse)
+                    .submitWithAjaxButton(withId("opprettoppgave"));
 
         verify(gsakService).opprettGsakOppgave(nyOppgaveArgumentCaptor.capture());
         NyOppgave nyOppgave = nyOppgaveArgumentCaptor.getValue();
         assertThat(nyOppgave.beskrivelse, is(beskrivelse));
         assertThat(nyOppgave.henvendelseId, is(melding.id));
     }
+
 }

@@ -18,6 +18,7 @@ import org.apache.commons.collections15.Transformer;
 import org.joda.time.LocalDate;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -37,7 +38,7 @@ public class GsakService {
 
     public List<Sak> hentSakerForBruker(String fnr) {
         WSFinnGenerellSakListeResponse response = sakWs.finnGenerellSakListe(new WSFinnGenerellSakListeRequest().withBrukerId(fnr));
-        return on(response.getSakListe()).map(TIL_SAK).collect();
+        return on(response.getSakListe()).map(TIL_SAK).collectIn(new ArrayList<Sak>());
     }
 
     public Optional<AnsattEnhet> hentForeslattEnhet(String fnr, String tema) {
@@ -59,7 +60,7 @@ public class GsakService {
             sak.saksId = wsGenerellSak.getSakId();
             sak.tema = wsGenerellSak.getFagomradeKode();
             sak.sakstype = wsGenerellSak.getSakstypeKode();
-            sak.fagsystem = wsGenerellSak.getFagsystemKode();
+            sak.fagsystemKode = wsGenerellSak.getFagsystemKode();
             return sak;
         }
     };

@@ -5,7 +5,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKode;
+import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeTema;
 import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -55,7 +55,7 @@ public class NyOppgaveFormWrapper extends Panel {
 
         IModel<List<AnsattEnhet>> enhetModel = new OppdaterbarListeModel<AnsattEnhet>(form.getModel()) {
             @Override
-            protected List<AnsattEnhet> oppdater(GsakKode.Tema tema) {
+            protected List<AnsattEnhet> oppdater(GsakKodeTema.Tema tema) {
                 List<AnsattEnhet> ansattEnheter = new ArrayList<>();
 
                 Optional<AnsattEnhet> foreslattEnhet = gsakService.hentForeslattEnhet(innboksVM.getFnr(), tema.kode);
@@ -67,19 +67,19 @@ public class NyOppgaveFormWrapper extends Panel {
                 return ansattEnheter;
             }
         };
-        IModel<List<GsakKode.OppgaveType>> typeModel = new OppdaterbarListeModel<GsakKode.OppgaveType>(form.getModel()) {
+        IModel<List<GsakKodeTema.OppgaveType>> typeModel = new OppdaterbarListeModel<GsakKodeTema.OppgaveType>(form.getModel()) {
             @Override
-            protected List<GsakKode.OppgaveType> oppdater(GsakKode.Tema tema) {
+            protected List<GsakKodeTema.OppgaveType> oppdater(GsakKodeTema.Tema tema) {
                 return tema.oppgaveTyper;
             }
         };
-        IModel<List<GsakKode.Prioritet>> priModel = new OppdaterbarListeModel<GsakKode.Prioritet>(form.getModel()) {
+        IModel<List<GsakKodeTema.Prioritet>> priModel = new OppdaterbarListeModel<GsakKodeTema.Prioritet>(form.getModel()) {
             @Override
-            protected List<GsakKode.Prioritet> oppdater(GsakKode.Tema tema) {
+            protected List<GsakKodeTema.Prioritet> oppdater(GsakKodeTema.Tema tema) {
                 return tema.prioriteter;
             }
         };
-        IChoiceRenderer<GsakKode> gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
+        IChoiceRenderer<GsakKodeTema> gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
         IChoiceRenderer<AnsattEnhet> enhetChoiceRenderer = new IChoiceRenderer<AnsattEnhet>() {
             @Override
             public Object getDisplayValue(AnsattEnhet object) {
@@ -92,7 +92,7 @@ public class NyOppgaveFormWrapper extends Panel {
             }
         };
 
-        DropDownChoice<GsakKode.Tema> temaDropDown = new DropDownChoice<>("tema", gsakKodeverk.hentTemaListe(), gsakKodeChoiceRenderer);
+        DropDownChoice<GsakKodeTema.Tema> temaDropDown = new DropDownChoice<>("tema", gsakKodeverk.hentTemaListe(), gsakKodeChoiceRenderer);
         temaDropDown.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
@@ -157,13 +157,13 @@ public class NyOppgaveFormWrapper extends Panel {
 
         @Override
         public final List<T> getObject() {
-            GsakKode.Tema tema = model.getObject().tema;
+            GsakKodeTema.Tema tema = model.getObject().tema;
             if (tema != null) {
                 return oppdater(tema);
             }
             return emptyList();
         }
 
-        protected abstract List<T> oppdater(GsakKode.Tema tema);
+        protected abstract List<T> oppdater(GsakKodeTema.Tema tema);
     }
 }

@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKode;
+import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeTema;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSEndringsinfo;
@@ -36,7 +36,7 @@ public class GsakServiceTest {
     private static final String SAK_ID = "saksid";
     private static final String TEMA = "tema";
     private static final String SAKSTYPE = "sakstype";
-    private static final String FAGSYSTEM = "fagsystem";
+    private static final String FAGSYSTEMKODE = "fagsystemkode";
     private static final DateTime OPPRETTET_DATO = DateTime.now();
 
     @Captor
@@ -58,7 +58,7 @@ public class GsakServiceTest {
                 .withSakId(SAK_ID)
                 .withFagomradeKode(TEMA)
                 .withSakstypeKode(SAKSTYPE)
-                .withFagsystemKode(FAGSYSTEM)
+                .withFagsystemKode(FAGSYSTEMKODE)
                 .withEndringsinfo(new WSEndringsinfo().withOpprettetDato(OPPRETTET_DATO));
 
         when(sakWs.finnGenerellSakListe(any(WSFinnGenerellSakListeRequest.class)))
@@ -79,7 +79,7 @@ public class GsakServiceTest {
         assertThat(sak.saksId, is(SAK_ID));
         assertThat(sak.tema, is(TEMA));
         assertThat(sak.sakstype, is(SAKSTYPE));
-        assertThat(sak.fagsystem, is(FAGSYSTEM));
+        assertThat(sak.fagsystemKode, is(FAGSYSTEMKODE));
         assertThat(sak.opprettetDato, is(OPPRETTET_DATO));
     }
 
@@ -88,9 +88,9 @@ public class GsakServiceTest {
         NyOppgave nyOppgave = new NyOppgave();
         nyOppgave.beskrivelse = "beskrivelse";
         nyOppgave.enhet = new AnsattEnhet("enhetId", "enhetNavn");
-        nyOppgave.prioritet = new GsakKode.Prioritet("tema", "");
-        nyOppgave.type = new GsakKode.OppgaveType("type", "", 0);
-        nyOppgave.tema = new GsakKode.Tema("tema", "", Arrays.asList(nyOppgave.type), Arrays.asList(nyOppgave.prioritet));
+        nyOppgave.prioritet = new GsakKodeTema.Prioritet("tema", "");
+        nyOppgave.type = new GsakKodeTema.OppgaveType("type", "", 0);
+        nyOppgave.tema = new GsakKodeTema.Tema("tema", "", Arrays.asList(nyOppgave.type), Arrays.asList(nyOppgave.prioritet));
         nyOppgave.henvendelseId = "henvendelseId";
 
         gsakService.opprettGsakOppgave(nyOppgave);
@@ -107,4 +107,5 @@ public class GsakServiceTest {
         assertThat(request.getOpprettOppgave().isLest(), is(false));
         assertThat(request.getOpprettOppgave().getHenvendelseId(), is(nyOppgave.henvendelseId));
     }
+
 }

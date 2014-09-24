@@ -23,7 +23,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Collections;
 
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService.ARENA_FAGSYSTEMNAVN;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService.ARENA_FAGSYSTEMKODE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService.BRUKERKODE_PERSON;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService.OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -73,7 +73,7 @@ public class ArenaServiceTest {
         assertTrue(optionalSak.isSome());
         Sak sak = optionalSak.get();
         assertThat(sak.saksId, is(SAKSID));
-        assertThat(sak.fagsystem, is(ARENA_FAGSYSTEMNAVN));
+        assertThat(sak.fagsystemKode, is(ARENA_FAGSYSTEMKODE));
         assertThat(sak.sakstype, is(SAKSTYPEKODE));
         assertThat(sak.tema, is(OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR));
         assertThat(sak.opprettetDato, is(new DateTime(OPPRETTET_DATO.toDate())));

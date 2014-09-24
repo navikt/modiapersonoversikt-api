@@ -30,12 +30,14 @@ public class JournalforingsPanelEnkeltSak extends Panel {
         journalfortSakVM = new JournalfortSakVM(innboksVM);
         setDefaultModel(new CompoundPropertyModel<Object>(new PropertyModel<Sak>(journalfortSakVM, "sak")));
 
-        add(new Label("sakstype"));
-        add(new Label("tema"));
-        add(new Label("saksId"));
-        add(new Label("fagsystem"));
-        add(new Label("opprettetDatoFormatert"));
-        add(getSubmitLenke(innboksVM));
+        add(
+                new Label("sakstype"),
+                new Label("tema"),
+                new Label("saksId"),
+                new Label("fagsystemNavn"),
+                new Label("opprettetDatoFormatert"),
+                getSubmitLenke(innboksVM)
+        );
     }
 
     private AjaxLink getSubmitLenke(final InnboksVM innboksVM) {
@@ -52,6 +54,5 @@ public class JournalforingsPanelEnkeltSak extends Panel {
     public void oppdater() {
         journalfortSakVM.oppdater();
     }
-
 
 }

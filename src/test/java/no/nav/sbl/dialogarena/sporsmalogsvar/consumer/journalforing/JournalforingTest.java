@@ -146,7 +146,7 @@ public class JournalforingTest {
     public void skalTransformereSakTilJournalforingssak() {
         Sak sak = new Sak();
         sak.saksId = "saksid";
-        sak.fagsystem = "fagsystem";
+        sak.fagsystemKode = "fagsystem";
 
         no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Sak journalforingssak
                 = KlasseSomArverJournalforing.SakToJournalforingSak.INSTANCE.transform(sak);

@@ -4,11 +4,11 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
+import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -26,7 +26,9 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
@@ -51,14 +53,17 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SakerVMTest {
 
-    public final static String SAKSTYPE_FAG = "Fag";
+    private final static String SAKSTYPE_FAG = "Fag";
+    private static final Map<String, String> KODEVERK_MOCK_MAP =
+            new HashMap<String, String>() {{ put(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "FAGSYSTEMNAVN"); }};
 
     @Inject
     private GsakService gsakService;
     @Inject
     private ArenaService arenaService;
-    @Mock
-    private JoarkJournalforingService joarkJournalforingService;
+    @Inject
+    private GsakKodeverk gsakKodeverk;
+
     @Mock
     private InnboksVM innboksVM;
 
@@ -82,6 +87,7 @@ public class SakerVMTest {
         when(gsakService.hentSakerForBruker(anyString())).thenReturn(saksliste);
         meldingVM = opprettMeldingVM(GODKJENTE_TEMA_FOR_GENERELLE.get(0));
         when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
+        when(gsakKodeverk.hentFagsystemMapping()).thenReturn(KODEVERK_MOCK_MAP);
 
         sakerVM = new SakerVM(innboksVM);
     }
@@ -213,7 +219,7 @@ public class SakerVMTest {
 
     @Test
     public void henterOppfolgingssakerFraArena() {
-        Sak oppfolgingssak = createSak("id 1", ArenaService.OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR, ArenaService.ARENA_FAGSYSTEMNAVN, "sakstype", DateTime.now().minusDays(1));
+        Sak oppfolgingssak = createSak("id 1", ArenaService.OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR, ArenaService.ARENA_FAGSYSTEMKODE, "sakstype", DateTime.now().minusDays(1));
         Sak gsak = createSak("id 2", "dagpenger", Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "sakstype", DateTime.now());
         when(arenaService.hentOppfolgingssak(anyString())).thenReturn(Optional.optional(oppfolgingssak));
         when(gsakService.hentSakerForBruker(anyString())).thenReturn(new ArrayList<>(Arrays.asList(gsak)));
@@ -232,6 +238,28 @@ public class SakerVMTest {
         sakerVM.oppdater();
 
         verify(arenaService, never()).hentOppfolgingssak(anyString());
+    }
+
+    @Test
+    public void oversetterFagsystemKodeTilFagsystemNavn() {
+        Sak sak = createSak("id 1", ArenaService.OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "sakstype", DateTime.now().minusDays(1));
+        when(gsakService.hentSakerForBruker(anyString())).thenReturn(new ArrayList<>(Arrays.asList(sak)));
+
+        sakerVM.oppdater();
+
+        Sak sakMedNyttFagsystemNavn = sakerVM.getFagsakerGruppertPaaTema().get(0).saksliste.get(0);
+        assertThat(sakMedNyttFagsystemNavn.fagsystemNavn, is(KODEVERK_MOCK_MAP.get(sak.fagsystemKode)));
+    }
+
+    @Test
+    public void setterFagsystemNavnTilFagsystemKodeDersomNavnetIkkeFinnesIMapping() {
+        Sak sak = createSak("id 1", ArenaService.OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(1), "sakstype", DateTime.now().minusDays(1));
+        when(gsakService.hentSakerForBruker(anyString())).thenReturn(new ArrayList<>(Arrays.asList(sak)));
+
+        sakerVM.oppdater();
+
+        Sak sakMedNyttFagsystemNavn = sakerVM.getFagsakerGruppertPaaTema().get(0).saksliste.get(0);
+        assertThat(sakMedNyttFagsystemNavn.fagsystemNavn, is(sak.fagsystemKode));
     }
 
     private int antallSaker(List<TemaSaker> temasakerListe) {
