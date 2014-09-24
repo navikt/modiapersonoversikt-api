@@ -66,10 +66,6 @@ public class SakOgBehandlingTransformers {
         return optional(wsSak.getBehandlingskjede()).isSome() && !wsSak.getBehandlingskjede().isEmpty();
     }
 
-    private static GenerellBehandling hentForsteBehandlingskjede(WSSak wsSak) {
-        return on(wsSak.getBehandlingskjede()).map(BEHANDLINGSKJEDE_TIL_BEHANDLING).collect(new OmvendtKronologiskBehandlingComparator()).get(0);
-    }
-
     public static GenerellBehandling.BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {
         return erAvsluttet(wsBehandlingskjede) ? AVSLUTTET : OPPRETTET;
     }
