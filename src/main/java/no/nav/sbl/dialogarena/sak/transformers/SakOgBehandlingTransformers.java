@@ -61,7 +61,6 @@ public class SakOgBehandlingTransformers {
         }
     };
 
-
     private static boolean behandlingskjedeFinnes(WSSak wsSak) {
         return optional(wsSak.getBehandlingskjede()).isSome() && !wsSak.getBehandlingskjede().isEmpty();
     }
@@ -88,7 +87,10 @@ public class SakOgBehandlingTransformers {
             }
 
             private GenerellBehandling hentSistOppdaterteLovligeBehandling(WSSak wsSak) {
-                return on(filter.filtrerBehandlinger(on(wsSak.getBehandlingskjede()).map(BEHANDLINGSKJEDE_TIL_BEHANDLING).collect())).collect(new OmvendtKronologiskBehandlingComparator()).get(0);
+                List<GenerellBehandling> behandlinger = on(wsSak.getBehandlingskjede()).map(BEHANDLINGSKJEDE_TIL_BEHANDLING).collect();
+                List<GenerellBehandling> filtrerteBehandlinger = filter.filtrerBehandlinger(behandlinger);
+                List<GenerellBehandling> sorterteFiltrerteBehandlinger = on(filtrerteBehandlinger).collect(new OmvendtKronologiskBehandlingComparator());
+                return on(sorterteFiltrerteBehandlinger).head().getOrElse(null);
             }
         };
     }
