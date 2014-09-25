@@ -131,7 +131,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dial-nav-tjeneste-sak</artifactId>
-            <version>1.0</version>
+            <version>1.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
