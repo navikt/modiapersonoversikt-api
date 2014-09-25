@@ -17,9 +17,6 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.PropertyUtils.visUtbetalinger;
 
 public class OversiktLerret extends Lerret {
-    @Inject
-    private BulletproofCmsService cms;
-
     public OversiktLerret(String id, String fnr) {
         super(id);
         add(
