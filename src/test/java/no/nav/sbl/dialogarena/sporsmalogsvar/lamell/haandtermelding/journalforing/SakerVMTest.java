@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -8,7 +10,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -54,6 +55,8 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 public class SakerVMTest {
 
     private final static String SAKSTYPE_FAG = "Fag";
+    private final static String KODEVERK_TEMAKODE = "Tema kode";
+    private final static String KODEVERK_TEMANAVN = "Tema navn";
     private static final Map<String, String> KODEVERK_MOCK_MAP =
             new HashMap<String, String>() {{ put(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "FAGSYSTEMNAVN"); }};
 
@@ -63,6 +66,8 @@ public class SakerVMTest {
     private ArenaService arenaService;
     @Inject
     private GsakKodeverk gsakKodeverk;
+    @Inject
+    private StandardKodeverk standardKodeverk;
 
     @Mock
     private InnboksVM innboksVM;
@@ -88,6 +93,7 @@ public class SakerVMTest {
         meldingVM = opprettMeldingVM(GODKJENTE_TEMA_FOR_GENERELLE.get(0));
         when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
         when(gsakKodeverk.hentFagsystemMapping()).thenReturn(KODEVERK_MOCK_MAP);
+        when(standardKodeverk.getArkivtemaNavn(KODEVERK_TEMAKODE)).thenReturn(KODEVERK_TEMANAVN);
 
         sakerVM = new SakerVM(innboksVM);
     }
@@ -121,7 +127,7 @@ public class SakerVMTest {
         List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
         assertThat(temaSakerListe.size(), is(4));
         for (TemaSaker temaSaker : temaSakerListe) {
-            if (temaSaker.tema.equals(alleTemaer.get(0))) {
+            if (temaSaker.temaKode.equals(alleTemaer.get(0))) {
                 assertThat(temaSaker.saksliste.size(), is(2));
             } else {
                 assertThat(temaSaker.saksliste.size(), is(1));
@@ -177,7 +183,7 @@ public class SakerVMTest {
     public void sakerInnenforSammeTemaDatoSorteres() {
         ArrayList<Sak> sakslistekloneMedAndreDatoer = new ArrayList<>();
         for (Sak sak : saksliste) {
-            sakslistekloneMedAndreDatoer.add(createSak("101010101", sak.tema, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
+            sakslistekloneMedAndreDatoer.add(createSak("101010101", sak.temaKode, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
         }
         saksliste.addAll(sakslistekloneMedAndreDatoer);
 
@@ -194,7 +200,7 @@ public class SakerVMTest {
     public void generelleSakerOgFagsakerErPlassertISinKorresponderendeListe() {
         ArrayList<Sak> sakslistekloneMedAndreSakstyper = new ArrayList<>();
         for (Sak sak : saksliste) {
-            sakslistekloneMedAndreSakstyper.add(createSak("101010101", sak.tema, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), SAKSTYPE_FAG, sak.opprettetDato));
+            sakslistekloneMedAndreSakstyper.add(createSak("101010101", sak.temaKode, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), SAKSTYPE_FAG, sak.opprettetDato));
         }
         saksliste.addAll(sakslistekloneMedAndreSakstyper);
 
@@ -247,8 +253,8 @@ public class SakerVMTest {
 
         sakerVM.oppdater();
 
-        Sak sakMedNyttFagsystemNavn = sakerVM.getFagsakerGruppertPaaTema().get(0).saksliste.get(0);
-        assertThat(sakMedNyttFagsystemNavn.fagsystemNavn, is(KODEVERK_MOCK_MAP.get(sak.fagsystemKode)));
+        Sak sakResultat = sakerVM.getFagsakerGruppertPaaTema().get(0).saksliste.get(0);
+        assertThat(sakResultat.fagsystemNavn, is(KODEVERK_MOCK_MAP.get(sak.fagsystemKode)));
     }
 
     @Test
@@ -258,8 +264,31 @@ public class SakerVMTest {
 
         sakerVM.oppdater();
 
-        Sak sakMedNyttFagsystemNavn = sakerVM.getFagsakerGruppertPaaTema().get(0).saksliste.get(0);
-        assertThat(sakMedNyttFagsystemNavn.fagsystemNavn, is(sak.fagsystemKode));
+        Sak sakResultat = sakerVM.getFagsakerGruppertPaaTema().get(0).saksliste.get(0);
+        assertThat(sakResultat.fagsystemNavn, is(sak.fagsystemKode));
+    }
+
+    @Test
+    public void oversetterTemaKodeTilTemaNavn() {
+        Sak sak = createSak("id 1", KODEVERK_TEMAKODE, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "sakstype", DateTime.now().minusDays(1));
+        when(gsakService.hentSakerForBruker(anyString())).thenReturn(new ArrayList<>(Arrays.asList(sak)));
+
+        sakerVM.oppdater();
+
+        Sak sakResultat = sakerVM.getFagsakerGruppertPaaTema().get(0).saksliste.get(0);
+        assertThat(sakResultat.temaNavn, is(KODEVERK_TEMANAVN));
+    }
+
+    @Test
+    public void setterTemaNavnTilTemaKodeDersomNavnetIkkeFinnesIKodeverkMapping() {
+        String temaKodeSomIkkeFinnesIMapping = "Tema som ikke finnes i mapping";
+        Sak sak = createSak("id 1", temaKodeSomIkkeFinnesIMapping, GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(1), "sakstype", DateTime.now().minusDays(1));
+        when(gsakService.hentSakerForBruker(anyString())).thenReturn(new ArrayList<>(Arrays.asList(sak)));
+
+        sakerVM.oppdater();
+
+        Sak sakResultat = sakerVM.getFagsakerGruppertPaaTema().get(0).saksliste.get(0);
+        assertThat(sakResultat.temaNavn, is(temaKodeSomIkkeFinnesIMapping));
     }
 
     private int antallSaker(List<TemaSaker> temasakerListe) {

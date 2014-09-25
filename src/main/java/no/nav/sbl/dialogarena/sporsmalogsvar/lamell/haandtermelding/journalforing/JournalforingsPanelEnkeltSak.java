@@ -32,7 +32,7 @@ public class JournalforingsPanelEnkeltSak extends Panel {
 
         add(
                 new Label("sakstype"),
-                new Label("tema"),
+                new Label("temaNavn"),
                 new Label("saksId"),
                 new Label("fagsystemNavn"),
                 new Label("opprettetDatoFormatert"),

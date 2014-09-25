@@ -75,7 +75,7 @@ public class ArenaServiceTest {
         assertThat(sak.saksId, is(SAKSID));
         assertThat(sak.fagsystemKode, is(ARENA_FAGSYSTEMKODE));
         assertThat(sak.sakstype, is(SAKSTYPEKODE));
-        assertThat(sak.tema, is(OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR));
+        assertThat(sak.temaKode, is(OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR));
         assertThat(sak.opprettetDato, is(new DateTime(OPPRETTET_DATO.toDate())));
     }
 

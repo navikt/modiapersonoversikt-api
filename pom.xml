@@ -67,32 +67,11 @@
             <version>${arena.arbeidOgAktivitet.version}</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Gsak kodeverk -->
         <dependency>
-            <groupId>no.nav.fellessystemer</groupId>
-            <artifactId>nav-fellessystemer-environment</artifactId>
-            <version>4.2.2</version>
-            <scope>runtime</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jamon</groupId>
-                    <artifactId>jamon-runtime</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-lang</groupId>
-                    <artifactId>commons-lang</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>xerces</groupId>
-                    <artifactId>xercesImpl</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.poi</groupId>
-                    <artifactId>poi</artifactId>
-                </exclusion>
-
-            </exclusions>
+            <groupId>no.nav.sbl.dialogarena</groupId>
+            <artifactId>kodeverk-tjenestespesifikasjon</artifactId>
+            <version>2.0.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <!-- Tjenestespesifikasjon -->
@@ -209,7 +188,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-api</artifactId>
-            <version>1.0</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
 
         <!--Modig-->

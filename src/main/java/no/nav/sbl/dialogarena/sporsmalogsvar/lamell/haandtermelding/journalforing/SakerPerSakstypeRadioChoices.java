@@ -22,7 +22,7 @@ public class SakerPerSakstypeRadioChoices extends Panel {
                 new PropertyListView<TemaSaker>("saksgruppeliste", model) {
                     @Override
                     protected void populateItem(ListItem<TemaSaker> item) {
-                        item.add(new Label("tema"));
+                        item.add(new Label("temaNavn"));
                         item.add(new PropertyListView<Sak>("saksliste") {
                             @Override
                             protected void populateItem(ListItem<Sak> item) {

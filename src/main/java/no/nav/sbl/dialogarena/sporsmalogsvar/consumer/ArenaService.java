@@ -49,7 +49,7 @@ public class ArenaService {
                     sak.saksId = arenaSak.getSaksId();
                     sak.fagsystemKode = ARENA_FAGSYSTEMKODE;
                     sak.sakstype = arenaSak.getSakstypeKode().getKode();
-                    sak.tema = arenaSak.getFagomradeKode().getKode();
+                    sak.temaKode = arenaSak.getFagomradeKode().getKode();
                     sak.opprettetDato = new DateTime(arenaSak.getEndringsInfo().getOpprettetDato().toDate());
                     return sak;
                 }

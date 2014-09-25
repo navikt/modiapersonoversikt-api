@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.domain;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
 
 import java.io.Serializable;
 

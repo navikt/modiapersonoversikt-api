@@ -88,11 +88,11 @@ public class JournalforingTest {
     @Test
     public void skalLageArkivtemaMedRiktigeFelter() {
         Sak sak = new Sak();
-        sak.tema = "tema";
+        sak.temaKode = "tema";
 
-        Arkivtemaer arkivtemaer = KlasseSomArverJournalforing.lagArkivtema(sak.tema);
+        Arkivtemaer arkivtemaer = KlasseSomArverJournalforing.lagArkivtema(sak.temaKode);
 
-        assertThat(arkivtemaer.getValue(), is(sak.tema));
+        assertThat(arkivtemaer.getValue(), is(sak.temaKode));
     }
 
     @Test

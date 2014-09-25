@@ -2,11 +2,11 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavefo
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeTema;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -32,8 +32,6 @@ import static java.util.Collections.unmodifiableList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyList;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeTema.OppgaveType;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeTema.Prioritet;
 
 public class NyOppgaveFormWrapper extends Panel {
 
@@ -69,15 +67,15 @@ public class NyOppgaveFormWrapper extends Panel {
                 return ansattEnheter;
             }
         };
-        IModel<List<OppgaveType>> typeModel = new OppdaterbarListeModel<OppgaveType>(form.getModel()) {
+        IModel<List<GsakKodeTema.OppgaveType>> typeModel = new OppdaterbarListeModel<GsakKodeTema.OppgaveType>(form.getModel()) {
             @Override
-            protected List<OppgaveType> oppdater(GsakKodeTema.Tema tema) {
+            protected List<GsakKodeTema.OppgaveType> oppdater(GsakKodeTema.Tema tema) {
                 return tema.oppgaveTyper;
             }
         };
-        IModel<List<Prioritet>> priModel = new OppdaterbarListeModel<Prioritet>(form.getModel()) {
+        IModel<List<GsakKodeTema.Prioritet>> priModel = new OppdaterbarListeModel<GsakKodeTema.Prioritet>(form.getModel()) {
             @Override
-            protected List<Prioritet> oppdater(GsakKodeTema.Tema tema) {
+            protected List<GsakKodeTema.Prioritet> oppdater(GsakKodeTema.Tema tema) {
                 return tema.prioriteter;
             }
         };
@@ -169,4 +167,5 @@ public class NyOppgaveFormWrapper extends Panel {
 
         protected abstract List<T> oppdater(GsakKodeTema.Tema tema);
     }
+
 }

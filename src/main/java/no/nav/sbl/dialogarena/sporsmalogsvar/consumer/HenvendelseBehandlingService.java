@@ -73,7 +73,7 @@ public class HenvendelseBehandlingService {
     public void oppdaterJournalfortInformasjonIHenvendelse(Sak sak, String journalpostId, Melding melding) {
         behandleHenvendelsePortType.oppdaterJournalfortInformasjon(melding.id,
                 new XMLJournalfortInformasjon()
-                        .withJournalfortTema(sak.tema)
+                        .withJournalfortTema(sak.temaKode)
                         .withJournalfortDato(DateTime.now())
                         .withJournalpostId(journalpostId)
                         .withJournalfortSaksId(sak.saksId)

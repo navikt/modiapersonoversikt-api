@@ -59,7 +59,7 @@ public class GsakService {
             Sak sak = new Sak();
             sak.opprettetDato = wsGenerellSak.getEndringsinfo().getOpprettetDato();
             sak.saksId = wsGenerellSak.getSakId();
-            sak.tema = wsGenerellSak.getFagomradeKode();
+            sak.temaKode = wsGenerellSak.getFagomradeKode();
             sak.sakstype = wsGenerellSak.getSakstypeKode();
             sak.fagsystemKode = wsGenerellSak.getFagsystemKode();
             return sak;

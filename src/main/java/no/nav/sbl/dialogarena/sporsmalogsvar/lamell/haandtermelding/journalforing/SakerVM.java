@@ -1,11 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.commons.collections15.Closure;
 import org.apache.commons.collections15.Transformer;
@@ -27,7 +28,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.IS_GENERELL_SAK;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.IS_GODKJENT_FAGSYSTEM_FOR_FAGSAK;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.IS_GODKJENT_FAGSYSTEM_FOR_GENERELLE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.IS_GODKJENT_TEMA_FOR_GENERELLE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.TEMA;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.TEMAKODE;
 
 public class SakerVM implements Serializable {
 
@@ -53,6 +54,8 @@ public class SakerVM implements Serializable {
     private ArenaService arenaService;
     @Inject
     private GsakKodeverk gsakKodeverk;
+    @Inject
+    private StandardKodeverk standardKodeverk;
 
     public SakerVM(InnboksVM innboksVM) {
         this.innboksVM = innboksVM;
@@ -67,6 +70,9 @@ public class SakerVM implements Serializable {
             public void execute(Sak sak) {
                 String fagsystemnavn = gsakKodeverk.hentFagsystemMapping().get(sak.fagsystemKode);
                 sak.fagsystemNavn = fagsystemnavn != null ? fagsystemnavn : sak.fagsystemKode;
+
+                String temaNavn = standardKodeverk.getArkivtemaNavn(sak.temaKode);
+                sak.temaNavn = temaNavn != null ? temaNavn : sak.temaKode;
             }
         });
 
@@ -105,7 +111,7 @@ public class SakerVM implements Serializable {
     }
 
     private List<TemaSaker> grupperSakerPaaTema(List<Sak> saker) {
-        Map<String, List<Sak>> sakerGruppertPaaTema = on(saker).reduce(indexBy(TEMA, new TreeMap<String, List<Sak>>()));
+        Map<String, List<Sak>> sakerGruppertPaaTema = on(saker).reduce(indexBy(TEMAKODE, new TreeMap<String, List<Sak>>()));
         return new ArrayList<>(on(sakerGruppertPaaTema.entrySet()).map(TIL_TEMASAKER).collect());
     }
 
@@ -120,7 +126,7 @@ public class SakerVM implements Serializable {
     private static final Transformer<Entry<String, List<Sak>>, TemaSaker> TIL_TEMASAKER = new Transformer<Entry<String, List<Sak>>, TemaSaker>() {
         @Override
         public TemaSaker transform(Entry<String, List<Sak>> entry) {
-            return new TemaSaker(entry.getKey(), finnTemaetsGruppe(entry.getKey()), entry.getValue());
+            return new TemaSaker(entry.getKey(), entry.getValue().get(0).temaNavn, finnTemaetsGruppe(entry.getKey()), entry.getValue());
         }
     };
 

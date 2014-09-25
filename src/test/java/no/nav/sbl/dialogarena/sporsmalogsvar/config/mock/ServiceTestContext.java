@@ -7,16 +7,18 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ValgtEnhetService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
+import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import no.nav.virksomhet.tjenester.sak.arbeidogaktivitet.v1.ArbeidOgAktivitet;
@@ -34,6 +36,16 @@ import static org.mockito.Mockito.when;
 
 @Configuration
 public class ServiceTestContext {
+
+    @Bean
+    public StandardKodeverk standardKodeverk() {
+        return mock(StandardKodeverk.class);
+    }
+
+    @Bean(name = "kodeverkPortTypeV2")
+    public KodeverkPortType kodeverkPortType() {
+        return mock(KodeverkPortType.class);
+    }
 
     @Bean
     public GsakService gsakService() {

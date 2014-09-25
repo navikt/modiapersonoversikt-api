@@ -1,13 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavewrapper;
 
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeTema;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -88,7 +88,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     public void skalSendeNyOppgaveObjektetTilGsakTjenestenForAaOppretteNy() {
         String beskrivelse = "Dette er en beskrivelse";
         NyOppgaveFormWrapper nyOppgaveFormWrapper = new NyOppgaveFormWrapper("panel", innboksVM);
-        
+
         wicket.goToPageWith(nyOppgaveFormWrapper)
                 .inForm("panel:nyoppgaveform")
                     .select("tema", 0)

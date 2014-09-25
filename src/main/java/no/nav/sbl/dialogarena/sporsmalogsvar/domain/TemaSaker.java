@@ -6,15 +6,16 @@ import java.io.Serializable;
 import java.util.List;
 
 public class TemaSaker implements Serializable, Comparable<TemaSaker> {
-    public String tema;
-
     public String temagruppe;
+    public String temaKode;
+    public String temaNavn;
 
     public List<Sak> saksliste;
 
-    public TemaSaker(String tema, String temagruppe, List<Sak> saksliste) {
-        this.tema = tema;
+    public TemaSaker(String temaKode, String temaNavn, String temagruppe, List<Sak> saksliste) {
+        this.temaKode = temaKode;
         this.temagruppe = temagruppe;
+        this.temaNavn = temaNavn;
         this.saksliste = saksliste;
     }
 
@@ -27,7 +28,7 @@ public class TemaSaker implements Serializable, Comparable<TemaSaker> {
 
     @Override
     public int compareTo(TemaSaker other) {
-        return tema.compareTo(other.tema);
+        return temaKode.compareTo(other.temaKode);
     }
 
     @Override
@@ -42,14 +43,14 @@ public class TemaSaker implements Serializable, Comparable<TemaSaker> {
         TemaSaker temaSaker = (TemaSaker) o;
 
         return !(saksliste != null ? !saksliste.equals(temaSaker.saksliste) : temaSaker.saksliste != null)
-                && !(tema != null ? !tema.equals(temaSaker.tema) : temaSaker.tema != null)
+                && !(temaKode != null ? !temaKode.equals(temaSaker.temaKode) : temaSaker.temaKode != null)
                 && !(temagruppe != null ? !temagruppe.equals(temaSaker.temagruppe) : temaSaker.temagruppe != null);
 
     }
 
     @Override
     public int hashCode() {
-        int result = tema != null ? tema.hashCode() : 0;
+        int result = temaKode != null ? temaKode.hashCode() : 0;
         result = 31 * result + (temagruppe != null ? temagruppe.hashCode() : 0);
         result = 31 * result + (saksliste != null ? saksliste.hashCode() : 0);
         return result;

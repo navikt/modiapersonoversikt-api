@@ -20,7 +20,7 @@ public class JournalforingNotat extends Journalforing {
     public static Journalpost lagJournalforingNotat(Optional<String> journalfortPostId, Sak sak, Melding melding, String journalforendeEnhetId) {
         Journalpost journalpost = new Journalpost();
         journalpost.setSignatur(lagSignatur());
-        journalpost.setArkivtema(lagArkivtema(sak.tema));
+        journalpost.setArkivtema(lagArkivtema(sak.temaKode));
         journalpost.getForBruker().add(lagPerson(melding.fnrBruker));
         journalpost.setInnhold(INNHOLD_BESKRIVELSE);
         journalpost.setDokumentDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(DateTime.now()));

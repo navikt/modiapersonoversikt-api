@@ -5,8 +5,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ValgtEnhetService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverk;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeverkFraFil;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -36,11 +34,6 @@ public class SporsmalOgSvarContext {
     @Bean
     public ValgtEnhetService valgtEnhetService() {
         return new ValgtEnhetService();
-    }
-
-    @Bean
-    public GsakKodeverk gsakKodeverk() {
-        return new GsakKodeverkFraFil();
     }
 
 }

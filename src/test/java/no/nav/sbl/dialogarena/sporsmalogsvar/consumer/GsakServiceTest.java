@@ -1,9 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.sbl.dialogarena.sporsmalogsvar.kodeverk.GsakKodeTema;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSEndringsinfo;
@@ -77,7 +77,7 @@ public class GsakServiceTest {
         Sak sak = GsakService.TIL_SAK.transform(wsGenerellSak);
 
         assertThat(sak.saksId, is(SAK_ID));
-        assertThat(sak.tema, is(TEMA));
+        assertThat(sak.temaKode, is(TEMA));
         assertThat(sak.sakstype, is(SAKSTYPE));
         assertThat(sak.fagsystemKode, is(FAGSYSTEMKODE));
         assertThat(sak.opprettetDato, is(OPPRETTET_DATO));
