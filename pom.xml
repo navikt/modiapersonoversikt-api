@@ -23,15 +23,15 @@
         <modig.scm.plugin.version>1.1.11</modig.scm.plugin.version>
         <modig.frontend.version>1.1.47-SNAPSHOT</modig.frontend.version>
         <modig-core.version>1.0.0</modig-core.version>
-        <kjerneinfo.versjon>1.0.80</kjerneinfo.versjon>
+        <kjerneinfo.versjon>1.0.88</kjerneinfo.versjon>
         <dialogarena.behandlingsinformasjon.version>0.0.22</dialogarena.behandlingsinformasjon.version>
         <handlebars.version>1.1.2</handlebars.version>
         <modig.security.version>1.0.21</modig.security.version>
-        <henvendelse.informasjon.v2.version>0.3</henvendelse.informasjon.v2.version>
-        <send.ut.henvendelse.version>0.2</send.ut.henvendelse.version>
-        <behandle.henvendelse.version>0.9</behandle.henvendelse.version>
-        <gsak.oppgave.version>0.0.8</gsak.oppgave.version>
-        <arena.arbeidOgAktivitet.version>1.0.6-alpha001</arena.arbeidOgAktivitet.version>
+        <henvendelse.informasjon.v2.version>0.4</henvendelse.informasjon.v2.version>
+        <send.ut.henvendelse.version>0.4</send.ut.henvendelse.version>
+        <behandle.henvendelse.version>0.10</behandle.henvendelse.version>
+        <gsak.oppgave.version>0.0.9</gsak.oppgave.version>
+        <arena.arbeidOgAktivitet.version>1.0.6-alpha002</arena.arbeidOgAktivitet.version>
     </properties>
 
     <dependencies>
@@ -152,7 +152,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dial-nav-tjeneste-sak</artifactId>
-            <version>1.0</version>
+            <version>1.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
