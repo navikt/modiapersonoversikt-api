@@ -502,6 +502,10 @@
                         <groupId>xml-apis</groupId>
                         <artifactId>xml-apis</artifactId>
                     </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.xml.bind</groupId>
+                        <artifactId>jaxb-impl</artifactId>
+                    </exclusion>
                 </exclusions>
             </dependency>
             <dependency>
