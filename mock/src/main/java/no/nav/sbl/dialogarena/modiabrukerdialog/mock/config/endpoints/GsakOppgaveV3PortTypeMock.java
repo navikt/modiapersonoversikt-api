@@ -19,45 +19,48 @@ import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeRequest
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSFinnOppgaveListeResponse;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
 import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveResponse;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import static org.joda.time.DateTime.now;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Configuration
 public class GsakOppgaveV3PortTypeMock {
     @Bean
     public static OppgaveV3 createOppgavePortTypeMock() {
-        return new OppgaveV3() {
-            @Override
-            public void ping() {
-            }
+        OppgaveV3 v3 = mock(OppgaveV3.class);
+        try {
+            when(v3.finnMappeListe(any(WSFinnMappeListeRequest.class)))
+                    .thenReturn(new WSFinnMappeListeResponse());
 
-            @Override
-            public WSFinnMappeListeResponse finnMappeListe(WSFinnMappeListeRequest request) {
-                return new WSFinnMappeListeResponse();
-            }
+            when(v3.finnFeilregistrertOppgaveListe(any(WSFinnFeilregistrertOppgaveListeRequest.class)))
+                    .thenReturn(new WSFinnFeilregistrertOppgaveListeResponse());
 
-            @Override
-            public WSFinnFeilregistrertOppgaveListeResponse finnFeilregistrertOppgaveListe(WSFinnFeilregistrertOppgaveListeRequest request) {
-                return new WSFinnFeilregistrertOppgaveListeResponse();
-            }
+            when(v3.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class)))
+                    .thenReturn(new WSFinnOppgaveListeResponse().withOppgaveListe(lagWSOppgave()));
 
-            @Override
-            public WSFinnOppgaveListeResponse finnOppgaveListe(WSFinnOppgaveListeRequest request) {
-                return new WSFinnOppgaveListeResponse().withOppgaveListe(lagWSOppgave());
-            }
+            when(v3.hentOppgave(any(WSHentOppgaveRequest.class)))
+                    .thenAnswer(new Answer<WSHentOppgaveResponse>() {
+                        @Override
+                        public WSHentOppgaveResponse answer(InvocationOnMock invocation) throws Throwable {
+                            WSHentOppgaveRequest req = (WSHentOppgaveRequest) invocation.getArguments()[0];
+                            return new WSHentOppgaveResponse().withOppgave(lagWSOppgave(req.getOppgaveId()));
+                        }
+                    });
 
-            @Override
-            public WSHentOppgaveResponse hentOppgave(WSHentOppgaveRequest request) throws HentOppgaveOppgaveIkkeFunnet {
-                return new WSHentOppgaveResponse().withOppgave(lagWSOppgave(request.getOppgaveId()));
-            }
+            when(v3.finnFerdigstiltOppgaveListe(any(WSFinnFerdigstiltOppgaveListeRequest.class)))
+                    .thenReturn(new WSFinnFerdigstiltOppgaveListeResponse());
 
-            @Override
-            public WSFinnFerdigstiltOppgaveListeResponse finnFerdigstiltOppgaveListe(WSFinnFerdigstiltOppgaveListeRequest request) {
-                return new WSFinnFerdigstiltOppgaveListeResponse();
-            }
-        };
+        } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
+            hentOppgaveOppgaveIkkeFunnet.printStackTrace();
+        }
+
+        return v3;
     }
 
     public static WSOppgave lagWSOppgave() {
