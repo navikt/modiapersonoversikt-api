@@ -13,6 +13,8 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
 import org.joda.time.DateTime;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -26,6 +28,9 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_SKRIFTLIG;
 import static org.joda.time.DateTime.now;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @Configuration
 public class HenvendelsePortTypeMock {
@@ -60,7 +65,7 @@ public class HenvendelsePortTypeMock {
     public static final List<XMLHenvendelse> HENVENDELSER = new ArrayList<>(asList(
             createXMLHenvendelse(SPORSMAL_SKRIFTLIG, now().minusDays(1), null,
                     createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), null, "AAP", "", ""),
-            
+
             createXMLHenvendelse(SPORSMAL_SKRIFTLIG, now().minusWeeks(1), null,
                     createXMLMeldingFraBruker("FMLI", LANG_TEKST), valueOf(oppgaveId), now().minusDays(2), "FOR", "", ""),
 
@@ -132,34 +137,34 @@ public class HenvendelsePortTypeMock {
         return new XMLMeldingTilBruker().withTemagruppe(temagruppe).withKanal(kanal).withSporsmalsId(sporsmalsId).withFritekst(fritekst).withNavident(NAVIDENT);
     }
 
+    private static XMLHenvendelse hentHenvendelseMedBehandlingsId(WSHentHenvendelseRequest req) {
+        String behandlingsId = req == null ? "" : req.getBehandlingsId();
+        XMLHenvendelse henvendelse = new XMLHenvendelse();
+        for (XMLHenvendelse xmlHenvendelse : HENVENDELSER) {
+            if (xmlHenvendelse.getBehandlingsId().equals(behandlingsId)) {
+                henvendelse = xmlHenvendelse;
+            }
+        }
+        return henvendelse;
+    }
+
     @Bean
     public HenvendelsePortType henvendelsePortType() {
         return createHenvendelsePortTypeMock();
     }
 
     public static HenvendelsePortType createHenvendelsePortTypeMock() {
-        return new HenvendelsePortType() {
-
+        HenvendelsePortType mockI = mock(HenvendelsePortType.class);
+        when(mockI.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenAnswer(new Answer<WSHentHenvendelseResponse>() {
             @Override
-            public WSHentHenvendelseResponse hentHenvendelse(WSHentHenvendelseRequest wsHentHenvendelseRequest) {
-                XMLHenvendelse henvendelse = new XMLHenvendelse();
-                for (XMLHenvendelse xmlHenvendelse : HENVENDELSER) {
-                    if (xmlHenvendelse.getBehandlingsId().equals(wsHentHenvendelseRequest.getBehandlingsId())) {
-                        henvendelse = xmlHenvendelse;
-                    }
-                }
-                return new WSHentHenvendelseResponse().withAny(henvendelse);
+            public WSHentHenvendelseResponse answer(InvocationOnMock invocation) throws Throwable {
+                WSHentHenvendelseRequest req = (WSHentHenvendelseRequest) invocation.getArguments()[0];
+                return new WSHentHenvendelseResponse().withAny(hentHenvendelseMedBehandlingsId(req));
             }
-
-            @Override
-            public WSHentHenvendelseListeResponse hentHenvendelseListe(WSHentHenvendelseListeRequest wsHentHenvendelseListeRequest) {
-                return new WSHentHenvendelseListeResponse().withAny(HENVENDELSER.toArray());
-            }
-
-            @Override
-            public void ping() {
-            }
-
-        };
+        });
+        when(mockI.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
+                new WSHentHenvendelseListeResponse().withAny(HENVENDELSER.toArray())
+        );
+        return mockI;
     }
 }

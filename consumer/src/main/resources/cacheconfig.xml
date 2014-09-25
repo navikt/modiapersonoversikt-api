@@ -34,6 +34,7 @@
         <aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkPortTypeV2)"/>
         <aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkClient)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(rutingPortType)"/>
+        <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelsePortType)"/>
     </aop:config>
 
 </beans>
