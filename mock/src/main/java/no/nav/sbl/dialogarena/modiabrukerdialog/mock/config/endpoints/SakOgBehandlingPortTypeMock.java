@@ -85,7 +85,7 @@ public class SakOgBehandlingPortTypeMock {
                 klaSak()
         );
         
-        return new FinnSakOgBehandlingskjedeListeResponse().withSak(liste.subList(0, min(liste.size(), antallSaker+1)));
+        return new FinnSakOgBehandlingskjedeListeResponse().withSak(liste.subList(0, min(liste.size(), antallSaker)));
     }
 
     public static WSSak dagpengerSak() {
