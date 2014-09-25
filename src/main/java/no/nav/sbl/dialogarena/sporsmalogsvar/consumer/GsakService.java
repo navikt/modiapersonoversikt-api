@@ -70,6 +70,7 @@ public class GsakService {
         oppgavebehandling.opprettOppgave(
                 new WSOpprettOppgaveRequest()
                         .withOpprettetAvEnhetId(OPPRETTET_AV_ENHET_ID)   // TODO: Endre til å hente den faktiske enhetsid
+                        .withHenvendelsetypeKode("BESVAR_KNA")
                         .withOpprettOppgave(
                                 new WSOpprettOppgave()
                                         .withHenvendelseId(nyOppgave.henvendelseId)
