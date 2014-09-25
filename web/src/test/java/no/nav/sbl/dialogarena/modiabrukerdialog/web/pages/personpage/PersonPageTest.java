@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage;
 
+import junit.framework.Assert;
 import no.nav.kjerneinfo.hent.panels.HentPersonPanel;
 import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
@@ -18,7 +19,9 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefer
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel;
 import org.apache.wicket.ajax.AjaxRequestHandler;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.markup.html.link.AbstractLink;
+import org.apache.wicket.request.mapper.parameter.PageParameters;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -34,6 +37,7 @@ import java.util.Arrays;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
+import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
@@ -242,6 +246,44 @@ public class PersonPageTest extends WicketPageTest {
         assertFalse(wicket.tester.ifContains(newFnr).wasFailed());
         assertTrue(wicket.tester.ifContains(testFnr).wasFailed());
     }
+
+	@Test
+	public void vellykketGotoHentPersonPageBeggeError() {
+
+		wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
+
+		wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}"));
+	}
+
+	@Test
+	public void vellykketGotoHentPersonPageKunErrortekst() {
+
+		wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
+
+		wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\"}"));
+	}
+
+	@Test
+	public void shouldExtractSikkerhetstiltaksbeskrivelse() throws JSONException {
+		PersonPage page = new PersonPage(new PageParameters());
+		String sikkerhetstiltak = page.getSikkerhetsTiltakBeskrivelse("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}");
+		assertEquals("Farlig.", sikkerhetstiltak);
+	}
+
+
+	@Test
+	public void shouldExtractErrortext() throws JSONException {
+		PersonPage page = new PersonPage(new PageParameters());
+		String errorTxt = page.getErrorText("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}");
+		assertEquals("Feil tekst", errorTxt);
+	}
+
+	@Test
+	public void shouldExtractNullWhenFnrtExist() throws JSONException {
+		PersonPage page = new PersonPage(new PageParameters());
+		String sikkerhetstiltak = page.getSikkerhetsTiltakBeskrivelse("{\"errortext\":\"Feil tekst\"}");
+		Assert.assertNull(sikkerhetstiltak);
+	}
 
     private EventGenerator createEvent(final String eventNavn) {
         return new EventGenerator() {

@@ -34,10 +34,13 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout.Tim
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.json.JSONException;
+import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -101,6 +104,8 @@ public class PersonPage extends BasePage {
     public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(SvarOgReferatVM.class, "jquery-ui-selectmenu.min.js");
     private static final Logger logger = getLogger(PersonPage.class);
     private final String fnr;
+	public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
+	public static final String ERROR = "error";
 
     @Inject
     protected HenvendelseUtsendingService henvendelseUtsendingService;
@@ -227,8 +232,18 @@ public class PersonPage extends BasePage {
     }
 
     @RunOnEvents(GOTO_HENT_PERSONPAGE)
-    public void gotoHentPersonPage(AjaxRequestTarget target, String query) {
-        throw new RestartResponseException(HentPersonPage.class, new PageParameters().set("error", query));
+    public void gotoHentPersonPage(AjaxRequestTarget target, String query) throws JSONException {
+		String errorText = getErrorText(query);
+		String sikkerhetstiltak = getSikkerhetsTiltakBeskrivelse(query);
+
+		PageParameters pageParameters = new PageParameters();
+		if (!StringUtils.isEmpty(sikkerhetstiltak)) {
+			pageParameters.set(ERROR, errorText).set(SIKKERHETSTILTAK, sikkerhetstiltak);
+		} else {
+			pageParameters.set(ERROR, errorText);
+		}
+
+		throw new RestartResponseException(HentPersonPage.class, pageParameters);
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
@@ -390,4 +405,21 @@ public class PersonPage extends BasePage {
     public static Boolean isNotBlank(String s) {
         return !isBlank(s);
     }
+
+	protected String getSikkerhetsTiltakBeskrivelse(String query) throws JSONException {
+		return getJsonField(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
+	}
+
+	protected String getErrorText(String query) throws JSONException {
+		return getJsonField(query, HentPersonPanel.JSON_ERROR_TEXT);
+	}
+
+	private String getJsonField(String query, String field) throws JSONException {
+		JSONObject jsonObject =  new JSONObject(query);
+		if (jsonObject.has(field)) {
+			return new JSONObject(query).getString(field);
+		} else {
+			return null;
+		}
+	}
 }
