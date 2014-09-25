@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavewrapper;
 
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
@@ -27,6 +28,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
@@ -35,6 +37,7 @@ import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -86,20 +89,24 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
 
     @Test
     public void skalSendeNyOppgaveObjektetTilGsakTjenestenForAaOppretteNy() {
+        when(gsakService.hentForeslattEnhet(anyString(), anyString())).thenReturn(optional(new AnsattEnhet("1231", "Sinsen")));
+
         String beskrivelse = "Dette er en beskrivelse";
         NyOppgaveFormWrapper nyOppgaveFormWrapper = new NyOppgaveFormWrapper("panel", innboksVM);
 
         wicket.goToPageWith(nyOppgaveFormWrapper)
                 .inForm("panel:nyoppgaveform")
-                    .select("tema", 0)
-                    .andReturn()
-                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormComponentUpdatingBehavior.class))
-                .inForm("panel:nyoppgaveform")
-                    .select("enhetContainer:enhet", 0)
-                    .select("typeContainer:type", 0)
-                    .select("prioritetContainer:prioritet", 0)
-                    .write("beskrivelse", beskrivelse)
-                    .submitWithAjaxButton(withId("opprettoppgave"));
+                .select("tema", 0)
+                .andReturn()
+                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormComponentUpdatingBehavior.class));
+
+        wicket.tester.getRequest().setParameter("enhetContainer:enhet", "1231");
+
+        wicket.inForm("panel:nyoppgaveform")
+                .select("typeContainer:type", 0)
+                .select("prioritetContainer:prioritet", 0)
+                .write("beskrivelse", beskrivelse)
+                .submitWithAjaxButton(withId("opprettoppgave"));
 
         verify(gsakService).opprettGsakOppgave(nyOppgaveArgumentCaptor.capture());
         NyOppgave nyOppgave = nyOppgaveArgumentCaptor.getValue();

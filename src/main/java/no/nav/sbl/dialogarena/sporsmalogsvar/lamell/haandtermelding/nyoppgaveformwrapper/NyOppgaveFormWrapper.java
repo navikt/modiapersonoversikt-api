@@ -22,9 +22,9 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
@@ -43,12 +43,11 @@ public class NyOppgaveFormWrapper extends Panel {
     private EnhetService enhetService;
 
     private final Form<NyOppgave> form;
-    private final List<AnsattEnhet> enheter;
 
     public NyOppgaveFormWrapper(String id, final InnboksVM innboksVM) {
         super(id);
 
-        enheter = unmodifiableList(enhetService.hentAlleEnheter());
+        final List<AnsattEnhet> enheter = unmodifiableList(enhetService.hentAlleEnheter());
 
         form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
         add(form.setOutputMarkupId(true));
@@ -56,15 +55,7 @@ public class NyOppgaveFormWrapper extends Panel {
         IModel<List<AnsattEnhet>> enhetModel = new OppdaterbarListeModel<AnsattEnhet>(form.getModel()) {
             @Override
             protected List<AnsattEnhet> oppdater(GsakKodeTema.Tema tema) {
-                List<AnsattEnhet> ansattEnheter = new ArrayList<>();
-
-                Optional<AnsattEnhet> foreslattEnhet = gsakService.hentForeslattEnhet(innboksVM.getFnr(), tema.kode);
-                if (foreslattEnhet.isSome()) {
-                    ansattEnheter.add(foreslattEnhet.get());
-                }
-
-                ansattEnheter.addAll(enheter);
-                return ansattEnheter;
+                return enheter;
             }
         };
         IModel<List<GsakKodeTema.OppgaveType>> typeModel = new OppdaterbarListeModel<GsakKodeTema.OppgaveType>(form.getModel()) {
@@ -80,28 +71,21 @@ public class NyOppgaveFormWrapper extends Panel {
             }
         };
         IChoiceRenderer<GsakKodeTema> gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
-        IChoiceRenderer<AnsattEnhet> enhetChoiceRenderer = new IChoiceRenderer<AnsattEnhet>() {
-            @Override
-            public Object getDisplayValue(AnsattEnhet object) {
-                return object.enhetId + " " + object.enhetNavn;
-            }
-
-            @Override
-            public String getIdValue(AnsattEnhet object, int index) {
-                return object.enhetId;
-            }
-        };
 
         DropDownChoice<GsakKodeTema.Tema> temaDropDown = new DropDownChoice<>("tema", gsakKodeverk.hentTemaListe(), gsakKodeChoiceRenderer);
         temaDropDown.add(new AjaxFormComponentUpdatingBehavior("onchange") {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
+                Optional<AnsattEnhet> foreslattEnhet = gsakService.hentForeslattEnhet(innboksVM.getFnr(), form.getModelObject().tema.kode);
+                if (foreslattEnhet.isSome()) {
+                    form.getModelObject().enhet = foreslattEnhet.get();
+                }
                 target.add(form);
             }
         });
 
         WebMarkupContainer enhetContainer = new WebMarkupContainer("enhetContainer");
-        enhetContainer.add(new DropDownChoice<>("enhet", enhetModel, enhetChoiceRenderer).setRequired(true));
+        enhetContainer.add(new AnsattEnhetDropdown("enhet", new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"), enheter).setRequired(true));
         enhetContainer.add(visibleIf(not(isEmptyList(enhetModel))));
 
         WebMarkupContainer typeContainer = new WebMarkupContainer("typeContainer");
