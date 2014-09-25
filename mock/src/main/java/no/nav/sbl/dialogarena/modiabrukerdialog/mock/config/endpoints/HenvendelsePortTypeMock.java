@@ -138,10 +138,10 @@ public class HenvendelsePortTypeMock {
     }
 
     private static XMLHenvendelse hentHenvendelseMedBehandlingsId(WSHentHenvendelseRequest req) {
-        String behandlingsId = req == null ? "" : req.getBehandlingsId();
+        String behandlingId = req == null ? "" : req.getBehandlingsId();
         XMLHenvendelse henvendelse = new XMLHenvendelse();
         for (XMLHenvendelse xmlHenvendelse : HENVENDELSER) {
-            if (xmlHenvendelse.getBehandlingsId().equals(behandlingsId)) {
+            if (xmlHenvendelse.getBehandlingsId().equals(behandlingId)) {
                 henvendelse = xmlHenvendelse;
             }
         }
