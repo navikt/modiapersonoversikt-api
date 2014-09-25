@@ -79,6 +79,7 @@ public class GsakService {
                                         .withAnsvarligEnhetId(nyOppgave.enhet.enhetId)
                                         .withBeskrivelse(nyOppgave.beskrivelse)
                                         .withFagomradeKode(nyOppgave.tema.kode)
+                                        .withBrukerId(nyOppgave.brukerId)
                                         .withOppgavetypeKode(nyOppgave.type.kode)
                                         .withPrioritetKode(nyOppgave.prioritet.kode)
                                         .withLest(false)

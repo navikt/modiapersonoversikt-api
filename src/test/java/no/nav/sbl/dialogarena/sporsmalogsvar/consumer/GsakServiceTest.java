@@ -92,6 +92,7 @@ public class GsakServiceTest {
         nyOppgave.type = new GsakKodeTema.OppgaveType("type", "", 0);
         nyOppgave.tema = new GsakKodeTema.Tema("tema", "", Arrays.asList(nyOppgave.type), Arrays.asList(nyOppgave.prioritet));
         nyOppgave.henvendelseId = "henvendelseId";
+        nyOppgave.brukerId = "12345612345";
 
         gsakService.opprettGsakOppgave(nyOppgave);
 
@@ -106,6 +107,7 @@ public class GsakServiceTest {
         assertThat(request.getOpprettOppgave().getPrioritetKode(), is(nyOppgave.prioritet.kode));
         assertThat(request.getOpprettOppgave().isLest(), is(false));
         assertThat(request.getOpprettOppgave().getHenvendelseId(), is(nyOppgave.henvendelseId));
+        assertThat(request.getOpprettOppgave().getBrukerId(), is(nyOppgave.brukerId));
     }
 
 }

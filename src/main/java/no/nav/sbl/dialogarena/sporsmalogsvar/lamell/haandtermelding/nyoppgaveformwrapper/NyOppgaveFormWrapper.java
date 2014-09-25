@@ -130,6 +130,7 @@ public class NyOppgaveFormWrapper extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
                 NyOppgave nyOppgave = form.getModelObject();
                 nyOppgave.henvendelseId = innboksVM.getValgtTraad().getEldsteMelding().melding.id;
+                nyOppgave.brukerId = innboksVM.getFnr();
 
                 gsakService.opprettGsakOppgave(nyOppgave);
                 etterSubmit(target);
