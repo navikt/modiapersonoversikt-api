@@ -69,7 +69,7 @@ public class SaksoversiktWidgetTest extends AbstractWicketTest {
     @Test
     public void skalViseMeldingVedForMangeSaker() {
         ArrayList<TemaVM> temaVMs = new ArrayList<>();
-        for (int x = 0; x < FeedWidget.MAX_NUMBER_OF_FEED_ITEMS + 1; x++) {
+        for (int x = 0; x < FeedWidget.MAX_NUMBER_OF_FEED_ITEMS + 3; x++) {
             temaVMs.add(new TemaVM().withTemaKode("AAP").withSistOppdaterteBehandling(new GenerellBehandling().withBehandlingsDato(DateTime.now())));
         }
 
@@ -77,7 +77,7 @@ public class SaksoversiktWidgetTest extends AbstractWicketTest {
 
         SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
         wicketTester.goToPageWith(widget);
-        wicketTester.should().containPatterns("2 flere saker.");
+        wicketTester.should().containPatterns("4 flere saker.");
     }
 
     @Test

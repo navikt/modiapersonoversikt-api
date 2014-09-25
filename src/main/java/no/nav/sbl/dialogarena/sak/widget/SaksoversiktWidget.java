@@ -6,6 +6,7 @@ import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.modig.modia.widget.panels.ErrorListing;
 import no.nav.modig.modia.widget.panels.GenericListing;
+import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.Component;
@@ -24,11 +25,13 @@ public class SaksoversiktWidget extends FeedWidget<TemaVM> {
     @Inject
     private SaksoversiktService saksoversiktService;
 
+    @Inject
+    protected BulletproofCmsService cms;
+
     private static final Logger log = LoggerFactory.getLogger(SaksoversiktWidget.class);
 
     public SaksoversiktWidget(String id, String initial, String fnr) {
         super(id, initial, true, "mange.saker");
-
         setDefaultModel(lagLDMforTema(fnr));
     }
 
@@ -38,10 +41,10 @@ public class SaksoversiktWidget extends FeedWidget<TemaVM> {
             protected List<? extends FeedItemVM> load() {
                 try {
                     List<? extends FeedItemVM> temaVMList = saksoversiktService.hentTemaer(fnr);
-                    return temaVMList.isEmpty() ? asList(new GenericListing(getString("ingen.saker"))) : temaVMList;
+                    return temaVMList.isEmpty() ? asList(new GenericListing(cms.hentTekst("ingen.saker"))) : temaVMList;
                 } catch (ApplicationException | SystemException e) {
                     log.warn("Feilet ved henting av saksbehandlingsinformasjon for fnr {}", fnr, e);
-                    return asList(new ErrorListing(getString("saker.feilet")));
+                    return asList(new ErrorListing(cms.hentTekst("saker.feilet")));
                 }
             }
         };

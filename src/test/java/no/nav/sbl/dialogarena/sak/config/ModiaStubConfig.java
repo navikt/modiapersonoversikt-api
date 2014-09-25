@@ -11,8 +11,6 @@ import org.springframework.context.annotation.Bean;
 
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSSak;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.RETURNS_MOCKS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -47,8 +45,21 @@ public class ModiaStubConfig {
 
     @Bean
     public CmsContentRetriever cmsContentRetriever() {
-        CmsContentRetriever cmsMock = mock(CmsContentRetriever.class, RETURNS_MOCKS);
-        when(cmsMock.hentTekst(anyString())).thenReturn("Tekst fra CMS-mock");
+        CmsContentRetriever cmsMock = new CmsContentRetriever() {
+            @Override
+            public String hentTekst(String key) {
+                switch(key) {
+                    case "mange.saker":
+                        return "%d flere saker.";
+                    case "ingen.saker":
+                        return "finnes ikke noen saker";
+                    case "saker.feilet":
+                        return "kan ikke vise saker'";
+                    default:
+                        return "default tekst fra CMS-mock";
+                }
+            }
+        };
         return cmsMock;
     }
 
