@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.aktor.A
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.cms.CmsEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.henvendelsesoknader.HenvendelseSoknaderEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk.KodeverkV2EndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk.KodeverkV2WrapperConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.sakogbehandling.SakOgBehandlingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbetaling.UtbetalingEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbetaling.UtbetalingWrapperConfig;
@@ -31,7 +30,6 @@ import org.springframework.context.annotation.Import;
         UtbetalingWrapperConfig.class,
         UtbetalingEndpointConfig.class,
         KodeverkV2EndpointConfig.class,
-        KodeverkV2WrapperConfig.class,
         SendUtHenvendelseEndpointConfig.class,
         BehandleHenvendelseEndpointConfig.class,
         HenvendelseEndpointConfig.class,

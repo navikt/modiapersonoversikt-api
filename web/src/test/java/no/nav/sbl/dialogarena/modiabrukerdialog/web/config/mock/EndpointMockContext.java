@@ -11,6 +11,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakOppgav
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GsakRutingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.HenvendelseSoknaderPortTypeMock;
+import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.KodeverkV2PortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakOgBehandlingPortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SendUtHenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.UtbetalingPortTypeMock;
@@ -32,7 +33,8 @@ import org.springframework.context.annotation.Import;
         GsakOppgaveV3PortTypeMock.class,
         GsakOppgavebehandlingV3PortTypeMock.class,
         GsakRutingPortTypeMock.class,
-        GosysNavAnsattPortTypeMock.class
+        GosysNavAnsattPortTypeMock.class,
+        KodeverkV2PortTypeMock.class
 })
 public class EndpointMockContext {
 }
