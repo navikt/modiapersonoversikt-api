@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
@@ -31,4 +33,15 @@ public class ConsumerServicesMockContext {
     public SaksbehandlerInnstillingerService saksbehandlerInnstillingerService() {
         return mock(SaksbehandlerInnstillingerService.class);
     }
+
+    @Bean
+    public StandardKodeverk standardKodeverk() {
+        return mock(StandardKodeverk.class);
+    }
+
+    @Bean
+    public GsakKodeverk gsakKodeverk() {
+        return mock(GsakKodeverk.class);
+    }
+
 }

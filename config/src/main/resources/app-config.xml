@@ -18,6 +18,7 @@
         <!-- Slutt felles -->
         <baseUrl alias="tjenestebuss" mapToProperty="tjenestebuss"/>
         <credential alias="srv_kjerneinfo_tjenestebuss" mapToProperty="ctjenestebuss"/>
+        <localFiles name="modiabrukerdialog" mapToProperty="modiabrukerdialog.datadir"/>
         <baseUrl alias="server.gosys" mapToProperty="server.gosys"/>
         <baseUrl alias="server.arena" mapToProperty="server.arena"/>
         <webservice alias="Aktoer_v1" mapToProperty="aktorid.ws"/>

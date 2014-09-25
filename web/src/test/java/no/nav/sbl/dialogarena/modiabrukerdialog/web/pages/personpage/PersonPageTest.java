@@ -6,6 +6,8 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
@@ -78,6 +80,8 @@ public class PersonPageTest extends WicketPageTest {
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
+    @Inject
+    private GsakKodeverk gsakKodeverk;
 
     private final static String testFnr = "12037649749";
 
@@ -88,6 +92,10 @@ public class PersonPageTest extends WicketPageTest {
         sporsmal.oppgaveId = "id";
         when(henvendelseUtsendingService.getSporsmalFromOppgaveId(anyString(), anyString())).thenReturn(sporsmal);
         when(henvendelseUtsendingService.getSporsmal(anyString())).thenReturn(sporsmal);
+        when(gsakKodeverk.hentTemaListe()).thenReturn(new ArrayList<>(Arrays.asList(
+                new GsakKodeTema.Tema("kode", "tekst",
+                        new ArrayList<>(Arrays.asList(new GsakKodeTema.OppgaveType("kode", "tekst", 1))),
+                        new ArrayList<>(Arrays.asList(new GsakKodeTema.Prioritet("kode", "tekst")))))));
     }
 
     @Test
@@ -247,43 +255,43 @@ public class PersonPageTest extends WicketPageTest {
         assertTrue(wicket.tester.ifContains(testFnr).wasFailed());
     }
 
-	@Test
-	public void vellykketGotoHentPersonPageBeggeError() {
+    @Test
+    public void vellykketGotoHentPersonPageBeggeError() {
 
-		wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
 
-		wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}"));
-	}
+        wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}"));
+    }
 
-	@Test
-	public void vellykketGotoHentPersonPageKunErrortekst() {
+    @Test
+    public void vellykketGotoHentPersonPageKunErrortekst() {
 
-		wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr));
 
-		wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\"}"));
-	}
+        wicket.sendEvent(createEvent(GOTO_HENT_PERSONPAGE, "{\"errortext\":\"Feil tekst\"}"));
+    }
 
-	@Test
-	public void shouldExtractSikkerhetstiltaksbeskrivelse() throws JSONException {
-		PersonPage page = new PersonPage(new PageParameters());
-		String sikkerhetstiltak = page.getSikkerhetsTiltakBeskrivelse("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}");
-		assertEquals("Farlig.", sikkerhetstiltak);
-	}
+    @Test
+    public void shouldExtractSikkerhetstiltaksbeskrivelse() throws JSONException {
+        PersonPage page = new PersonPage(new PageParameters());
+        String sikkerhetstiltak = page.getSikkerhetsTiltakBeskrivelse("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}");
+        assertEquals("Farlig.", sikkerhetstiltak);
+    }
 
 
-	@Test
-	public void shouldExtractErrortext() throws JSONException {
-		PersonPage page = new PersonPage(new PageParameters());
-		String errorTxt = page.getErrorText("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}");
-		assertEquals("Feil tekst", errorTxt);
-	}
+    @Test
+    public void shouldExtractErrortext() throws JSONException {
+        PersonPage page = new PersonPage(new PageParameters());
+        String errorTxt = page.getErrorText("{\"errortext\":\"Feil tekst\",\"sikkerhettiltaksbeskrivelse\":\"Farlig.\"}");
+        assertEquals("Feil tekst", errorTxt);
+    }
 
-	@Test
-	public void shouldExtractNullWhenFnrtExist() throws JSONException {
-		PersonPage page = new PersonPage(new PageParameters());
-		String sikkerhetstiltak = page.getSikkerhetsTiltakBeskrivelse("{\"errortext\":\"Feil tekst\"}");
-		Assert.assertNull(sikkerhetstiltak);
-	}
+    @Test
+    public void shouldExtractNullWhenFnrtExist() throws JSONException {
+        PersonPage page = new PersonPage(new PageParameters());
+        String sikkerhetstiltak = page.getSikkerhetsTiltakBeskrivelse("{\"errortext\":\"Feil tekst\"}");
+        Assert.assertNull(sikkerhetstiltak);
+    }
 
     private EventGenerator createEvent(final String eventNavn) {
         return new EventGenerator() {

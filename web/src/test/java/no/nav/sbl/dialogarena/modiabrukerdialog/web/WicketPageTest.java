@@ -15,6 +15,10 @@ public abstract class WicketPageTest {
     @Inject
     protected FluentWicketTester<?> wicket;
 
+    protected WicketPageTest() {
+        System.setProperty("modiabrukerdialog.datadir", System.getProperty("java.io.tmpdir"));
+    }
+
     @BeforeClass
     public static void staticSetup() {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());

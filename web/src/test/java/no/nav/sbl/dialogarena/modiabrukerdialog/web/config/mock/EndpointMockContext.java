@@ -37,4 +37,5 @@ import org.springframework.context.annotation.Import;
         KodeverkV2PortTypeMock.class
 })
 public class EndpointMockContext {
+
 }
