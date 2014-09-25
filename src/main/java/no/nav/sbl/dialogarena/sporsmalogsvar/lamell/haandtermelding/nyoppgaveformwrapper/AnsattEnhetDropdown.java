@@ -12,6 +12,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.apache.commons.lang3.StringUtils.containsIgnoreCase;
 
 public class AnsattEnhetDropdown extends Select2Choice<AnsattEnhet> {
 
@@ -43,7 +44,7 @@ public class AnsattEnhetDropdown extends Select2Choice<AnsattEnhet> {
         public void query(String term, int page, Response<AnsattEnhet> response) {
             List<AnsattEnhet> resultater = new ArrayList<>();
             for (AnsattEnhet enhet : enheter) {
-                if (enhet.enhetId.contains(term) || enhet.enhetNavn.contains(term)) {
+                if (containsIgnoreCase(enhet.enhetId, term) || containsIgnoreCase(enhet.enhetNavn, term)) {
                     resultater.add(enhet);
                 }
             }
