@@ -31,7 +31,7 @@ public class HenvendelseTransformers {
         public Kvittering transform(WSSoknad wsSoknad) {
             return (Kvittering) new Kvittering()
                     .withBehandlingsId(wsSoknad.getBehandlingsId())
-                    .withAvsluttet(true)
+                    .withAvsluttet(INNSENDT.transform(wsSoknad))
                     .withInnsendteDokumenter(hentDokument(wsSoknad, ER_DOKUMENT_INNSENDT))
                     .withManglendeDokumenter(hentDokument(wsSoknad, not(ER_DOKUMENT_INNSENDT)))
                     .withEttersending(wsSoknad.isEttersending())
