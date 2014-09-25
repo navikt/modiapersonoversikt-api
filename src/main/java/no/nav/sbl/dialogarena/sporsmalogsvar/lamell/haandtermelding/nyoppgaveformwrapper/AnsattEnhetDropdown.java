@@ -21,7 +21,7 @@ public class AnsattEnhetDropdown extends Select2Choice<AnsattEnhet> {
         getSettings().setContainerCssClass("enhetvalg");
     }
 
-    private static class AnsattEnhetChoiceProvider extends TextChoiceProvider<AnsattEnhet> {
+    private static final class AnsattEnhetChoiceProvider extends TextChoiceProvider<AnsattEnhet> {
 
         private final List<AnsattEnhet> enheter;
 
