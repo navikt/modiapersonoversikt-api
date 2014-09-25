@@ -6,16 +6,14 @@ import java.io.Serializable;
 
 public class GenerellBehandling implements Serializable {
 
-
-    public enum HenvendelseType {DOKUMENTINNSENDING, SOKNADSINNSENDING;};
+    public enum HenvendelseType {DOKUMENTINNSENDING, SOKNADSINNSENDING}
     public enum BehandlingsStatus {
         OPPRETTET { @Override public String cmsKey() { return "hendelse.sistoppdatert.dato"; }},
         AVSLUTTET { @Override public String cmsKey() { return "hendelse.sistoppdatert.dato"; }};
         public abstract String cmsKey();
-
     }
-    public DateTime opprettetDato;
 
+    public DateTime opprettetDato;
     public String behandlingsType;
     public DateTime behandlingDato;
     public BehandlingsStatus behandlingsStatus;
