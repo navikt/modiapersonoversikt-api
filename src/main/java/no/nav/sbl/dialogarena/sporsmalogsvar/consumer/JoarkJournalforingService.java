@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingInngaaende;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingUtgaaende;
@@ -31,7 +32,7 @@ public class JoarkJournalforingService {
     @Inject
     private BehandleJournalV2 behandleJournalV2;
     @Inject
-    private ValgtEnhetService valgtEnhetService;
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
@@ -69,7 +70,8 @@ public class JoarkJournalforingService {
         journalfoerInngaaendeHenvendelseRequest.setPersonEtternavn(SubjectHandler.getSubjectHandler().getUid());
         journalfoerInngaaendeHenvendelseRequest.setPersonFornavn(SubjectHandler.getSubjectHandler().getUid());
         journalfoerInngaaendeHenvendelseRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
-        journalfoerInngaaendeHenvendelseRequest.setJournalpost(JournalforingInngaaende.lagJournalforingSporsmal(sak, melding, valgtEnhetService.getEnhetId()));
+        journalfoerInngaaendeHenvendelseRequest.setJournalpost(JournalforingInngaaende.lagJournalforingSporsmal(
+                sak, melding, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()));
 
         JournalfoerInngaaendeHenvendelseResponse journalfoerInngaaendeHenvendelseResponse = behandleJournalV2.journalfoerInngaaendeHenvendelse(journalfoerInngaaendeHenvendelseRequest);
         return journalfoerInngaaendeHenvendelseResponse.getJournalpostId();
@@ -81,7 +83,8 @@ public class JoarkJournalforingService {
         journalfoerUtgaaendeHenvendelseRequest.setPersonEtternavn(getSubjectHandler().getUid());
         journalfoerUtgaaendeHenvendelseRequest.setPersonFornavn(getSubjectHandler().getUid());
         journalfoerUtgaaendeHenvendelseRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
-        journalfoerUtgaaendeHenvendelseRequest.setJournalpost(JournalforingUtgaaende.lagJournalforingSvar(journalfortPostIdForTilhorendeSporsmal, sak, melding, valgtEnhetService.getEnhetId()));
+        journalfoerUtgaaendeHenvendelseRequest.setJournalpost(JournalforingUtgaaende.lagJournalforingSvar(
+                journalfortPostIdForTilhorendeSporsmal, sak, melding, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()));
 
         JournalfoerUtgaaendeHenvendelseResponse journalfoerUtgaaendeHenvendelseResponse = behandleJournalV2.journalfoerUtgaaendeHenvendelse(journalfoerUtgaaendeHenvendelseRequest);
         return journalfoerUtgaaendeHenvendelseResponse.getJournalpostId();
@@ -93,7 +96,8 @@ public class JoarkJournalforingService {
         journalfoerNotatRequest.setPersonEtternavn(getSubjectHandler().getUid());
         journalfoerNotatRequest.setPersonFornavn(getSubjectHandler().getUid());
         journalfoerNotatRequest.setApplikasjonsID(MODIA_SYSTEM_ID);
-        journalfoerNotatRequest.setJournalpost(JournalforingNotat.lagJournalforingNotat(journalfortPostIdForTilhorendeSporsmal, sak, melding, valgtEnhetService.getEnhetId()));
+        journalfoerNotatRequest.setJournalpost(JournalforingNotat.lagJournalforingNotat(
+                journalfortPostIdForTilhorendeSporsmal, sak, melding, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()));
 
         JournalfoerNotatResponse journalfoerNotatResponse = behandleJournalV2.journalfoerNotat(journalfoerNotatRequest);
         return journalfoerNotatResponse.getJournalpostId();

@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
@@ -33,6 +34,7 @@ import static org.mockito.Mockito.when;
 public class GsakServiceTest {
 
     private static final String FNR = "11111111";
+    private static final String JOURNALFORENDE_ENHET = "2222";
     private static final String SAK_ID = "saksid";
     private static final String TEMA = "tema";
     private static final String SAKSTYPE = "sakstype";
@@ -46,6 +48,8 @@ public class GsakServiceTest {
     private OppgavebehandlingV3 oppgavebehandling;
     @Mock
     private no.nav.virksomhet.tjenester.sak.v1.Sak sakWs;
+    @Mock
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @InjectMocks
     private GsakService gsakService;
@@ -63,17 +67,19 @@ public class GsakServiceTest {
 
         when(sakWs.finnGenerellSakListe(any(WSFinnGenerellSakListeRequest.class)))
                 .thenReturn(new WSFinnGenerellSakListeResponse().withSakListe(wsGenerellSak));
+
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(JOURNALFORENDE_ENHET);
     }
 
     @Test
-    public void skalTransformereResponseTilSaksliste() {
+    public void transformererResponseTilSaksliste() {
         List<Sak> saksliste = gsakService.hentSakerForBruker(FNR);
 
         assertThat(saksliste.get(0).saksId, is(SAK_ID));
     }
 
     @Test
-    public void skalTransformasjonenSkalGenerereRelevanteFelter() {
+    public void transformasjonenGenerererRelevanteFelter() {
         Sak sak = GsakService.TIL_SAK.transform(wsGenerellSak);
 
         assertThat(sak.saksId, is(SAK_ID));
@@ -84,22 +90,15 @@ public class GsakServiceTest {
     }
 
     @Test
-    public void skalSendeKallOmOpprettelseAvOppgaveMedRiktigeFelter() {
-        NyOppgave nyOppgave = new NyOppgave();
-        nyOppgave.beskrivelse = "beskrivelse";
-        nyOppgave.enhet = new AnsattEnhet("enhetId", "enhetNavn");
-        nyOppgave.prioritet = new GsakKodeTema.Prioritet("tema", "");
-        nyOppgave.type = new GsakKodeTema.OppgaveType("type", "", 0);
-        nyOppgave.tema = new GsakKodeTema.Tema("tema", "", Arrays.asList(nyOppgave.type), Arrays.asList(nyOppgave.prioritet));
-        nyOppgave.henvendelseId = "henvendelseId";
-        nyOppgave.brukerId = "12345612345";
+    public void senderKallOmOpprettelseAvOppgaveMedRiktigeFelter() {
+        NyOppgave nyOppgave = createNyOppgave();
 
         gsakService.opprettGsakOppgave(nyOppgave);
 
         verify(oppgavebehandling).opprettOppgave(wsOpprettOppgaveRequestArgumentCaptor.capture());
         WSOpprettOppgaveRequest request = wsOpprettOppgaveRequestArgumentCaptor.getValue();
 
-        assertThat(request.getOpprettetAvEnhetId(), is(GsakService.OPPRETTET_AV_ENHET_ID));
+        assertThat(request.getOpprettetAvEnhetId(), is(Integer.parseInt(JOURNALFORENDE_ENHET)));
         assertThat(request.getOpprettOppgave().getAnsvarligEnhetId(), is(nyOppgave.enhet.enhetId));
         assertThat(request.getOpprettOppgave().getBeskrivelse(), is(nyOppgave.beskrivelse));
         assertThat(request.getOpprettOppgave().getFagomradeKode(), is(nyOppgave.tema.kode));
@@ -108,6 +107,45 @@ public class GsakServiceTest {
         assertThat(request.getOpprettOppgave().isLest(), is(false));
         assertThat(request.getOpprettOppgave().getHenvendelseId(), is(nyOppgave.henvendelseId));
         assertThat(request.getOpprettOppgave().getBrukerId(), is(nyOppgave.brukerId));
+    }
+
+    private NyOppgave createNyOppgave() {
+        NyOppgave nyOppgave = new NyOppgave();
+        nyOppgave.beskrivelse = "beskrivelse";
+        nyOppgave.enhet = new AnsattEnhet("enhetId", "enhetNavn");
+        nyOppgave.prioritet = new GsakKodeTema.Prioritet("tema", "");
+        nyOppgave.type = new GsakKodeTema.OppgaveType("type", "", 0);
+        nyOppgave.tema = new GsakKodeTema.Tema("tema", "", Arrays.asList(nyOppgave.type), Arrays.asList(nyOppgave.prioritet));
+        nyOppgave.henvendelseId = "henvendelseId";
+        nyOppgave.brukerId = "12345612345";
+        return nyOppgave;
+    }
+
+    @Test
+    public void henterJournalforendeEnhetFraSaksbehandlerInnstillinger() {
+        NyOppgave nyOppgave = createNyOppgave();
+
+        gsakService.opprettGsakOppgave(nyOppgave);
+
+        verify(saksbehandlerInnstillingerService).getSaksbehandlerValgtEnhet();
+        verify(oppgavebehandling).opprettOppgave(wsOpprettOppgaveRequestArgumentCaptor.capture());
+        WSOpprettOppgaveRequest request = wsOpprettOppgaveRequestArgumentCaptor.getValue();
+
+        assertThat(request.getOpprettetAvEnhetId(), is(Integer.parseInt(JOURNALFORENDE_ENHET)));
+    }
+
+    @Test
+    public void setterDefaultJournalforendeEnhetDersomIntegerParsingFeilerForEnhetId() {
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("er ikke mulig å parse denne til Integer");
+        NyOppgave nyOppgave = createNyOppgave();
+
+        gsakService.opprettGsakOppgave(nyOppgave);
+
+        verify(oppgavebehandling).opprettOppgave(wsOpprettOppgaveRequestArgumentCaptor.capture());
+        WSOpprettOppgaveRequest request = wsOpprettOppgaveRequestArgumentCaptor.getValue();
+
+        assertThat(request.getOpprettetAvEnhetId(), is(GsakService.DEFAULT_OPPRETTET_AV_ENHET_ID));
+
     }
 
 }

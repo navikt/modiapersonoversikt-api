@@ -13,8 +13,6 @@ public class Melding implements Serializable {
     public final DateTime opprettetDato;
     public String fritekst, temagruppe, kanal, traadId, navIdent, journalfortSaksId, journalfortTema,
             journalfortAvNavIdent, fnrBruker, kontorsperretEnhet, markertSomFeilsendtAv;
-    // TODO: Følg opp.
-    public String sammensattNavnBruker = "TODO Hent fra context når Computas har satt det der.";
     public DateTime lestDato, journalfortDato;
     public boolean lest;
     public Status status;
@@ -39,10 +37,4 @@ public class Melding implements Serializable {
         }
     };
 
-    public static final Comparator<Melding> ELDSTE_FORST = new Comparator<Melding>() {
-        @Override
-        public int compare(Melding o1, Melding o2) {
-            return o1.opprettetDato.compareTo(o2.opprettetDato);
-        }
-    };
 }

@@ -25,7 +25,6 @@ public class JournalforingUtgaaende extends Journalforing {
         journalpost.setInnhold(INNHOLD_BESKRIVELSE);
         journalpost.setDokumentDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(DateTime.now()));
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));
-        // TODO sjekk om det er enhetsId som skal inn i journalforendeEnhetREF eller om det er navn
         journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
         journalpost.getKryssreferanseListe().add(lagKryssreferanse(journalfortPostId));
         journalpost.setOpprettetAvNavn(getSubjectHandler().getUid());

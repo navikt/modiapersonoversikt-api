@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
@@ -64,7 +65,7 @@ public class JoarkJournalforingServiceTest {
     @Mock
     private BehandleJournalV2 behandleJournalV2;
     @Mock
-    private ValgtEnhetService valgtEnhetService;
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Mock
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
@@ -96,7 +97,7 @@ public class JoarkJournalforingServiceTest {
         when(journalfoerUtgaaendeHenvendelseResponseMock.getJournalpostId()).thenReturn(GENERELL_POST_ID);
         when(behandleJournalV2.journalfoerUtgaaendeHenvendelse(any(JournalfoerUtgaaendeHenvendelseRequest.class))).thenReturn(journalfoerUtgaaendeHenvendelseResponseMock);
 
-        when(valgtEnhetService.getEnhetId()).thenReturn(JOURNALFOERENDE_ENHET_ID);
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(JOURNALFOERENDE_ENHET_ID);
     }
 
     @Test

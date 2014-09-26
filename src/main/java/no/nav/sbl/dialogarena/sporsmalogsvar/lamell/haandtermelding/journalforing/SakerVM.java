@@ -103,7 +103,12 @@ public class SakerVM implements Serializable {
 
     private List<TemaSaker> grupperSakerPaaTema(List<Sak> saker) {
         Map<String, List<Sak>> sakerGruppertPaaTema = on(saker).reduce(indexBy(TEMAKODE, new TreeMap<String, List<Sak>>()));
-        return new ArrayList<>(on(sakerGruppertPaaTema.entrySet()).map(tilTemasaker).collect());
+        return new ArrayList<>(on(sakerGruppertPaaTema.entrySet()).map(new Transformer<Entry<String, List<Sak>>, TemaSaker>() {
+            @Override
+            public TemaSaker transform(Entry<String, List<Sak>> entry) {
+                return new TemaSaker(entry.getKey(), entry.getValue().get(0).temaNavn, finnTemaetsGruppe(entry.getKey()), entry.getValue());
+            }
+        }).collect());
     }
 
     public List<TemaSaker> getFagsakerGruppertPaaTema() {
@@ -113,13 +118,6 @@ public class SakerVM implements Serializable {
     public List<TemaSaker> getGenerelleSakerGruppertPaaTema() {
         return temaSakerListeGenerelle.sorter(innboksVM.getValgtTraad().getEldsteMelding().melding.temagruppe);
     }
-
-    private final Transformer<Entry<String, List<Sak>>, TemaSaker> tilTemasaker = new Transformer<Entry<String, List<Sak>>, TemaSaker>() {
-        @Override
-        public TemaSaker transform(Entry<String, List<Sak>> entry) {
-            return new TemaSaker(entry.getKey(), entry.getValue().get(0).temaNavn, finnTemaetsGruppe(entry.getKey()), entry.getValue());
-        }
-    };
 
     private String finnTemaetsGruppe(String tema) {
         for (Entry<String, List<String>> temaEntry : lokaltKodeverk.hentTemagruppeTemaMapping().entrySet()) {
