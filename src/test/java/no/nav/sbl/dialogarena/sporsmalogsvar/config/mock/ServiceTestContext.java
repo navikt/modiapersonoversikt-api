@@ -8,6 +8,7 @@ import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
@@ -37,6 +38,16 @@ import static org.mockito.Mockito.when;
 public class ServiceTestContext {
 
     @Bean
+    public GsakKodeverk gsakKodeverk() {
+        return mock(GsakKodeverk.class);
+    }
+
+    @Bean
+    public LokaltKodeverk lokaltKodeverk() {
+        return mock(LokaltKodeverk.class);
+    }
+
+    @Bean
     public StandardKodeverk standardKodeverk() {
         return mock(StandardKodeverk.class);
     }
@@ -63,11 +74,6 @@ public class ServiceTestContext {
     @Bean
     public ArbeidOgAktivitet arbeidOgAktivitet() {
         return mock(ArbeidOgAktivitet.class);
-    }
-
-    @Bean
-    public GsakKodeverk gsakKodeverk() {
-        return mock(GsakKodeverk.class);
     }
 
     @Bean

@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
@@ -31,11 +32,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.SakerVM.TEMA_MAPPING;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createSak;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
@@ -54,11 +54,21 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SakerVMTest {
 
-    private final static String SAKSTYPE_FAG = "Fag";
-    private final static String KODEVERK_TEMAKODE = "Tema kode";
-    private final static String KODEVERK_TEMANAVN = "Tema navn";
-    private static final Map<String, String> KODEVERK_MOCK_MAP =
-            new HashMap<String, String>() {{ put(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "FAGSYSTEMNAVN"); }};
+    private static final String SAKSTYPE_FAG = "Fag";
+    private static final String KODEVERK_TEMAKODE = "Tema kode";
+    private static final String KODEVERK_TEMANAVN = "Tema navn";
+    private static final Map<String, String> KODEVERK_MOCK_MAP = new HashMap<String, String>() {
+        {
+            put(GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER.get(0), "FAGSYSTEMNAVN");
+        }
+    };
+    public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
+        {
+            put("ARBD", asList("FUL", "AAP"));
+            put("FMLI", asList("FOR", "SIK"));
+        }
+    };
+    private static final List<String> EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE = new ArrayList<>(Arrays.asList("FUL", "SER", "SIK", "VEN"));
 
     @Inject
     private GsakService gsakService;
@@ -68,6 +78,8 @@ public class SakerVMTest {
     private GsakKodeverk gsakKodeverk;
     @Inject
     private StandardKodeverk standardKodeverk;
+    @Inject
+    private LokaltKodeverk lokaltKodeverk;
 
     @Mock
     private InnboksVM innboksVM;
@@ -90,10 +102,11 @@ public class SakerVMTest {
         alleTemagrupper = getAlleEksisterendeTemagrupper();
         saksliste = createSakslisteBasertPaTemaMap();
         when(gsakService.hentSakerForBruker(anyString())).thenReturn(saksliste);
-        meldingVM = opprettMeldingVM(GODKJENTE_TEMA_FOR_GENERELLE.get(0));
+        meldingVM = opprettMeldingVM(EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE.get(0));
         when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
         when(gsakKodeverk.hentFagsystemMapping()).thenReturn(KODEVERK_MOCK_MAP);
         when(standardKodeverk.getArkivtemaNavn(KODEVERK_TEMAKODE)).thenReturn(KODEVERK_TEMANAVN);
+        when(lokaltKodeverk.hentTemagruppeTemaMapping()).thenReturn(TEMAGRUPPE_TEMA_MAPPING);
 
         sakerVM = new SakerVM(innboksVM);
     }
@@ -151,7 +164,7 @@ public class SakerVMTest {
     public void gittEnTemagruppeSjekkAtTemaSakerMedSammeTemagruppeSomValgtTraadErSortertAlfabetisk() {
         String traadTemagruppe = alleTemagrupper.get(0);
         meldingVM.melding.temagruppe = traadTemagruppe;
-        List<String> traadTemagruppeSineTemaer = TEMA_MAPPING.get(traadTemagruppe);
+        List<String> traadTemagruppeSineTemaer = TEMAGRUPPE_TEMA_MAPPING.get(traadTemagruppe);
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
         for (String tema : traadTemagruppeSineTemaer) {
             saksliste.add(createSak("44444444", tema, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(5)));
@@ -168,7 +181,7 @@ public class SakerVMTest {
     public void deSakeneSomIkkeHarTemagruppenTilTraadenErSortertAlfabetisk() {
         String traadTemagruppe = alleTemagrupper.get(0);
         meldingVM.melding.temagruppe = traadTemagruppe;
-        List<String> traadTemagruppeSineTemaer = TEMA_MAPPING.get(traadTemagruppe);
+        List<String> traadTemagruppeSineTemaer = TEMAGRUPPE_TEMA_MAPPING.get(traadTemagruppe);
         int traadTemagruppeLengde = traadTemagruppeSineTemaer.size();
 
         sakerVM.oppdater();
@@ -216,8 +229,8 @@ public class SakerVMTest {
     public void ingenElementerForsvinnerFraListeMedSakerVedGjentatteKall() {
         sakerVM.oppdater();
 
-        for (int i = 0; i < 4; i++) {
-            meldingVM.melding.temagruppe = alleTemagrupper.get(i);
+        for (String temagruppe : alleTemagrupper) {
+            meldingVM.melding.temagruppe = temagruppe;
             List<TemaSaker> temaSakerListe = sakerVM.getGenerelleSakerGruppertPaaTema();
             assertThat(antallSaker(temaSakerListe), is(4));
         }
@@ -309,7 +322,7 @@ public class SakerVMTest {
 
     private ArrayList<Sak> createSakslisteBasertPaTemaMap() {
         finnTemagruppenTilEtGodkjentTema();
-        List<String> unikeTema = new ArrayList<>(GODKJENTE_TEMA_FOR_GENERELLE);
+        List<String> unikeTema = new ArrayList<>(EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE);
         unikeTema.remove(godkjentTemaSomFinnesIEnTemagruppe);
 
         return new ArrayList<>(Arrays.asList(
@@ -321,9 +334,9 @@ public class SakerVMTest {
     }
 
     private void finnTemagruppenTilEtGodkjentTema() {
-        for (String godkjentTema : GODKJENTE_TEMA_FOR_GENERELLE) {
-            for (String temagruppe : TEMA_MAPPING.keySet()) {
-                if (TEMA_MAPPING.get(temagruppe).contains(godkjentTema)) {
+        for (String godkjentTema : EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE) {
+            for (String temagruppe : TEMAGRUPPE_TEMA_MAPPING.keySet()) {
+                if (TEMAGRUPPE_TEMA_MAPPING.get(temagruppe).contains(godkjentTema)) {
                     temagruppeMedEtGodkjentTema = temagruppe;
                     godkjentTemaSomFinnesIEnTemagruppe = godkjentTema;
                     return;
@@ -333,7 +346,7 @@ public class SakerVMTest {
     }
 
     private ArrayList<String> getAlleEksisterendeTemaer() {
-        Collection<List<String>> values = TEMA_MAPPING.values();
+        Collection<List<String>> values = TEMAGRUPPE_TEMA_MAPPING.values();
         ArrayList<String> strings = new ArrayList<>();
         for (List<String> value : values) {
             strings.addAll(value);
@@ -342,7 +355,7 @@ public class SakerVMTest {
     }
 
     private ArrayList<String> getAlleEksisterendeTemagrupper() {
-        return new ArrayList<>(TEMA_MAPPING.keySet());
+        return new ArrayList<>(TEMAGRUPPE_TEMA_MAPPING.keySet());
     }
 
     private void assertSortert(List<TemaSaker> temaSakerListe) {
