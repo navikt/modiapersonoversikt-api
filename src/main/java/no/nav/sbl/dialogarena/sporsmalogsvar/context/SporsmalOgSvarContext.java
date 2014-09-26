@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.context;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
@@ -13,11 +12,6 @@ public class SporsmalOgSvarContext {
     @Bean
     public GsakService gsakService() {
         return new GsakService();
-    }
-
-    @Bean
-    public ArenaService arenaService() {
-        return new ArenaService();
     }
 
     @Bean

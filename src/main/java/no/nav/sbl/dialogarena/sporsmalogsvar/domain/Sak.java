@@ -10,7 +10,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService.OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR;
 
 public class Sak implements Serializable, Comparable<Sak> {
 
@@ -58,13 +57,6 @@ public class Sak implements Serializable, Comparable<Sak> {
         @Override
         public boolean evaluate(Sak sak) {
             return GODKJENTE_TEMA_FOR_GENERELLE.contains(sak.temaKode);
-        }
-    };
-
-    public static final Predicate<Sak> IS_OPPFOLGINGSFAGSAK = new Predicate<Sak>() {
-        @Override
-        public boolean evaluate(Sak sak) {
-            return OPPFOLGINGSSAK_TEMA_IDENTIFIKATOR.equals(sak.temaKode) && !sak.isSakstypeForVisningGenerell();
         }
     };
 

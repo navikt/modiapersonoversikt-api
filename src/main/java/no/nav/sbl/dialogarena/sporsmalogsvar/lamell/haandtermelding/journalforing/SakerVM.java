@@ -1,10 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
@@ -40,8 +38,6 @@ public class SakerVM implements Serializable {
     @Inject
     private GsakService gsakService;
     @Inject
-    private ArenaService arenaService;
-    @Inject
     private GsakKodeverk gsakKodeverk;
     @Inject
     private StandardKodeverk standardKodeverk;
@@ -55,7 +51,6 @@ public class SakerVM implements Serializable {
 
     public final void oppdater() {
         List<Sak> sakerForBruker = gsakService.hentSakerForBruker(innboksVM.getFnr());
-        supplerMedOppfolgingssakDersomRelevant(sakerForBruker);
         on(sakerForBruker).forEach(new Closure<Sak>() {
             @Override
             public void execute(Sak sak) {
@@ -70,16 +65,6 @@ public class SakerVM implements Serializable {
         Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker = splittIGenerelleSakerOgIkkeGenerelleSaker(sakerForBruker);
         temaSakerListeFagsak = getFagsaker(generelleOgIkkeGenerelleSaker);
         temaSakerListeGenerelle = getGenerelleSaker(generelleOgIkkeGenerelleSaker);
-    }
-
-    private void supplerMedOppfolgingssakDersomRelevant(List<Sak> saker) {
-        List<Sak> oppfolgingssaker = on(saker).filter(Sak.IS_OPPFOLGINGSFAGSAK).collect();
-        if (oppfolgingssaker.isEmpty()) {
-            Optional<Sak> oppfolgingssak = arenaService.hentOppfolgingssak(innboksVM.getFnr());
-            if (oppfolgingssak.isSome()) {
-                saker.add(oppfolgingssak.get());
-            }
-        }
     }
 
     private Map<Boolean, List<Sak>> splittIGenerelleSakerOgIkkeGenerelleSaker(List<Sak> saker) {
