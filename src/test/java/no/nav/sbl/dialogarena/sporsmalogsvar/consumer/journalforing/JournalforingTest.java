@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Pdf;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Aktoer;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Arkivtemaer;
@@ -22,7 +23,6 @@ import java.util.List;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.ARKIV_FILTYPE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.DOKUMENTTYPE_NOTAT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.FORELOPIG_DOKUMENTTITTEL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.FORELOPIG_PERSONIDENTIFIKATOR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.GSAK_FAGSYSTEMKODE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.KOMMUNIKASJONSKANAL;
@@ -40,7 +40,7 @@ public class JournalforingTest {
     private class KlasseSomArverJournalforing extends Journalforing { }
 
     @Test
-    public void skalLagePersonMedRiktigeFelter() {
+    public void lagerPersonMedRiktigeFelter() {
         Person person = KlasseSomArverJournalforing.lagPerson(FNR);
 
         assertNotNull(person.getIdent());
@@ -51,7 +51,7 @@ public class JournalforingTest {
     }
 
     @Test
-    public void skalLageEksternPartMedRiktigeFelter() {
+    public void lagerEksternPartMedRiktigeFelter() {
         Person person = lagPersonMedFNRIdent();
 
         EksternPart eksternPart = KlasseSomArverJournalforing.lagEksternPart(person);
@@ -69,7 +69,7 @@ public class JournalforingTest {
     }
 
     @Test
-    public void skalLageKryssreferanseMedRiktigeFelter() {
+    public void lagerKryssreferanseMedRiktigeFelter() {
         String journalfortPostIdForTilhorendeSporsmal = "journalpostid";
 
         Kryssreferanse kryssreferanse = KlasseSomArverJournalforing.lagKryssreferanse(journalfortPostIdForTilhorendeSporsmal);
@@ -79,14 +79,14 @@ public class JournalforingTest {
     }
 
     @Test
-    public void skalLageKommunikasjonskanalerMedRiktigeFelter() {
+    public void lagerKommunikasjonskanalerMedRiktigeFelter() {
         Kommunikasjonskanaler kommunikasjonskanaler = KlasseSomArverJournalforing.lagKommunikasjonskanaler();
 
         assertThat(kommunikasjonskanaler.getValue(), is(KOMMUNIKASJONSKANAL));
     }
 
     @Test
-    public void skalLageArkivtemaMedRiktigeFelter() {
+    public void lagerArkivtemaMedRiktigeFelter() {
         Sak sak = new Sak();
         sak.temaKode = "tema";
 
@@ -96,14 +96,14 @@ public class JournalforingTest {
     }
 
     @Test
-    public void skalLageSignaturMedRiktigeFelter() {
+    public void lagerSignaturMedRiktigeFelter() {
         Signatur signatur = KlasseSomArverJournalforing.lagSignatur();
 
         assertThat(signatur.isSignert(), is(true));
     }
 
     @Test
-    public void skalLageDokumenttypeMedRiktigeFelter() {
+    public void lagerDokumenttypeMedRiktigeFelter() {
         String type = "type";
 
         Dokumenttyper dokumenttyper = KlasseSomArverJournalforing.lagDokumenttype(type);
@@ -112,38 +112,39 @@ public class JournalforingTest {
     }
 
     @Test
-    public void skalLageDokumenttypeMedKodeverksrefDersomNotatSendesInn() {
+    public void lagerDokumenttypeMedKodeverksrefDersomNotatSendesInn() {
         Dokumenttyper dokumenttyper = KlasseSomArverJournalforing.lagDokumenttype(DOKUMENTTYPE_NOTAT);
 
         assertThat(dokumenttyper.getKodeRef(), is(dokumenttyper.getKodeverksRef()));
     }
 
     @Test
-    public void skalLeggeBeskriverInnholdTilJournalfortDokumentInfo() {
+    public void leggerBeskriverInnholdTilJournalfortDokumentInfo() {
         List<DokumentInnhold> beskriverInnhold = new ArrayList<>();
         byte[] byteliste = new byte[2];
 
-        KlasseSomArverJournalforing.leggBeskriverInnholdTilJournalfortDokumentInfo(beskriverInnhold, byteliste);
+        KlasseSomArverJournalforing.leggBeskriverInnholdTilJournalfortDokumentInfo(beskriverInnhold, new Pdf("tittel", byteliste));
 
         assertThat(beskriverInnhold.size(), is(1));
         assertThat(beskriverInnhold.get(0).getFiltype().getValue(), is(ARKIV_FILTYPE));
     }
 
     @Test
-    public void skalTransformerePdfDokumentToUstrukturertInnhold() {
+    public void transformererPdfDokumentToUstrukturertInnhold() {
+        String tittel = "tittel";
         byte[] byteliste = new byte[2];
 
         UstrukturertInnhold ustrukturertInnhold =
-                KlasseSomArverJournalforing.PdfDokumentToUstrukturertInnholdConverter.INSTANCE.transform(byteliste);
+                KlasseSomArverJournalforing.PdfDokumentToUstrukturertInnholdConverter.INSTANCE.transform(new Pdf(tittel, byteliste));
 
-        assertThat(ustrukturertInnhold.getFilnavn(), is(FORELOPIG_DOKUMENTTITTEL));
+        assertThat(ustrukturertInnhold.getFilnavn(), is(tittel));
         assertThat(ustrukturertInnhold.getFiltype().getValue(), is(ARKIV_FILTYPE));
         assertThat(ustrukturertInnhold.getVariantformat().getValue(), is(VARIANSFORMAT));
         assertThat(ustrukturertInnhold.getInnhold(), is(byteliste));
     }
 
     @Test
-    public void skalTransformereSakTilJournalforingssak() {
+    public void transformererSakTilJournalforingssak() {
         Sak sak = new Sak();
         sak.saksId = "saksid";
         sak.fagsystemKode = "fagsystem";
@@ -156,7 +157,7 @@ public class JournalforingTest {
     }
 
     @Test
-    public void skalTransformereDateTimeToXmlGregorianCalendar() {
+    public void transformererDateTimeToXmlGregorianCalendar() {
         DateTime now = DateTime.now();
 
         XMLGregorianCalendar gregorianCalendar =
