@@ -140,7 +140,8 @@ public class ReferatPanel extends Panel {
                 .withTemagruppe(svarOgReferatVM.temagruppe.name())
                 .withKanal(svarOgReferatVM.kanal.name())
                 .withType(referatType(svarOgReferatVM.kanal))
-                .withFritekst(svarOgReferatVM.getFritekst());
+                .withFritekst(svarOgReferatVM.getFritekst())
+                .withSporsmalsId(null);
 
         henvendelseUtsendingService.sendSvarEllerReferat(referat);
     }

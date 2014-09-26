@@ -7,6 +7,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.joda.time.DateTime;
@@ -18,7 +19,7 @@ public class TidligereMeldingPanel extends Panel {
     public TidligereMeldingPanel(String id, String type, String temagruppe, DateTime opprettetDato, final String fritekst, boolean minimert) {
         super(id);
 
-        final URLParsingMultiLineLabel fritekstFelt = new URLParsingMultiLineLabel("fritekst", fritekst);
+        final URLParsingMultiLineLabel fritekstFelt = new URLParsingMultiLineLabel("fritekst", fritekst != null ? Model.of(fritekst) : new ResourceModel("innhold.kassert"));
         fritekstFelt.setOutputMarkupPlaceholderTag(true);
         fritekstFelt.setVisibilityAllowed(!minimert);
 
@@ -40,7 +41,7 @@ public class TidligereMeldingPanel extends Panel {
 
         add(
                 overskriftContainer,
-                new Label("temagruppe", new ResourceModel(temagruppe)),
+                new Label("temagruppe", new ResourceModel(temagruppe != null ? temagruppe : "temagruppe.kassert")),
                 new Label("dato", Datoformat.kortMedTid(opprettetDato)),
                 fritekstFelt);
     }
