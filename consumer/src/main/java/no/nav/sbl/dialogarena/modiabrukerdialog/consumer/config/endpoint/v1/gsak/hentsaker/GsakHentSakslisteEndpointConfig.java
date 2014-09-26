@@ -4,7 +4,6 @@ import no.nav.modig.modia.ping.PingResult;
 import no.nav.modig.modia.ping.Pingable;
 import no.nav.modig.security.ws.SystemSAMLOutInterceptor;
 import no.nav.sbl.dialogarena.common.cxf.CXFClient;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.SakBugfix;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.v1.Sak;
 import org.springframework.context.annotation.Bean;
@@ -29,7 +28,7 @@ public class GsakHentSakslisteEndpointConfig {
                 createEndpoint(),
                 createGsakHentSakslisteMock(),
                 GSAK_SAKSLISTE_KEY,
-                SakBugfix.class
+                Sak.class
         );
     }
 
@@ -45,13 +44,13 @@ public class GsakHentSakslisteEndpointConfig {
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
                     return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
-            }
+                }
             }
         };
     }
 
-    private static SakBugfix createEndpoint() {
-        return new CXFClient<>(SakBugfix.class)
+    private static Sak createEndpoint() {
+        return new CXFClient<>(Sak.class)
                 .address(System.getProperty("gsak.saksliste.v1.url"))
                 .wsdl("classpath:dial-nav-tjeneste-sak.wsdl")
                 .withOutInterceptor(new SystemSAMLOutInterceptor())

@@ -56,12 +56,12 @@ public class GsakHentSakslistePortTypeMock {
                     "12345678901", saksliste3);
 
     @Bean
-    public SakBugfix sakMock() {
+    public Sak sakMock() {
         return createGsakHentSakslisteMock();
     }
 
-    public static SakBugfix createGsakHentSakslisteMock() {
-        SakBugfix s = mock(SakBugfix.class);
+    public static Sak createGsakHentSakslisteMock() {
+        Sak s = mock(Sak.class);
         when(s.finnGenerellSakListe(any(WSFinnGenerellSakListeRequest.class))).thenAnswer(new Answer<WSFinnGenerellSakListeResponse>() {
             @Override
             public WSFinnGenerellSakListeResponse answer(InvocationOnMock invocation) throws Throwable {
