@@ -29,17 +29,17 @@ public class MeldingerWidgetTest extends WicketPageTest {
 
     @Test
     public void skalKonstrueresRiktig() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "1")));
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id1")));
         wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"));
     }
 
     @Test
     public void skalInneholdeRiktigAntallMeldinger() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "1"),
-                createMelding("id2", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "2"),
-                createMelding("id3", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "3"),
-                createMelding("id4", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "4")
+                createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id1"),
+                createMelding("id2", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id2"),
+                createMelding("id3", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id3"),
+                createMelding("id4", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id4")
         ));
         wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
                 .should().containComponents(4, ofType(MeldingWidgetPanel.class));
@@ -48,12 +48,12 @@ public class MeldingerWidgetTest extends WicketPageTest {
     @Test
     public void skalInneholdeMaksFemMeldinger() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "1"),
-                createMelding("id2", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "2"),
-                createMelding("id3", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "3"),
-                createMelding("id4", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "4"),
-                createMelding("id5", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "5"),
-                createMelding("id6", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "6")
+                createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id1"),
+                createMelding("id2", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id2"),
+                createMelding("id3", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id3"),
+                createMelding("id4", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id4"),
+                createMelding("id5", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id5"),
+                createMelding("id6", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id6")
         ));
         wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
                 .should().containComponents(5, ofType(MeldingWidgetPanel.class));
@@ -61,7 +61,7 @@ public class MeldingerWidgetTest extends WicketPageTest {
 
     @Test
     public void skalRegerePaaEvent() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "1")));
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id1")));
         wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
                 .sendEvent(new EventGenerator() {
                     @Override

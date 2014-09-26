@@ -23,6 +23,13 @@ public class Melding implements Serializable {
         this.opprettetDato = opprettetDato;
     }
 
+    public static final Transformer<Melding, String> ID = new Transformer<Melding, String>() {
+        @Override
+        public String transform(Melding melding) {
+            return melding.id;
+        }
+    };
+
     public static final Transformer<Melding, String> TRAAD_ID = new Transformer<Melding, String>() {
         @Override
         public String transform(Melding melding) {

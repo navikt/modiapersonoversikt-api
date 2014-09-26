@@ -28,7 +28,6 @@ import static org.joda.time.DateTime.now;
 public class JettyTestContext {
 
     private static Random idGenerator = new Random();
-    private static int behandlingsid;
 
     private static final String LANG_TEKST = "Lorem ipsum dolor sit amet, " +
             "consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut wisi enim ad " +
@@ -46,25 +45,37 @@ public class JettyTestContext {
             "minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure " +
             "dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
 
+    private static final String behandlingsId1 = randomId();
+    private static final String behandlingsId2 = randomId();
+    private static final String behandlingsId3 = randomId();
+    private static final String behandlingsId4 = randomId();
+    private static final String behandlingsId5 = randomId();
+    private static final String behandlingsId6 = randomId();
+
+    private static String randomId() {
+        return String.valueOf(idGenerator.nextInt());
+    }
+
     public static final List<XMLHenvendelse> HENVENDELSER = asList(
-            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL_SKRIFTLIG, now().minusWeeks(2), null, createXMLMeldingFraBruker("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST)),
-            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL_SKRIFTLIG, now().minusWeeks(1), null, createXMLMeldingFraBruker("INTERNASJONALT", LANG_TEKST)),
-            createXMLHenvendelse(behandlingsid, SVAR_SKRIFTLIG, now().minusDays(5), now().minusDays(4), createXMLMeldingTilBruker("INTERNASJONALT", String.valueOf(behandlingsid), KORT_TEKST)),
-            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL_SKRIFTLIG, now().minusDays(3), null, createXMLMeldingFraBruker("HJELPEMIDLER", LANG_TEKST)),
-            createXMLHenvendelse(behandlingsid, SVAR_SKRIFTLIG, now().minusHours(5), null, createXMLMeldingTilBruker("HJELPEMIDLER", String.valueOf(behandlingsid), KORT_TEKST)),
-            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL_SKRIFTLIG, now().minusMonths(4), null, createXMLMeldingFraBruker("SOSIALE_TJENESTER", LANG_TEKST)),
-            createXMLHenvendelse(behandlingsid, SVAR_SKRIFTLIG, now().minusMonths(4).plusDays(1), now().minusMonths(4).plusDays(3), createXMLMeldingTilBruker("SOSIALE_TJENESTER", String.valueOf(behandlingsid), LANG_TEKST)),
-            createXMLHenvendelse(behandlingsid, SVAR_SKRIFTLIG, now().minusDays(7), null, createXMLMeldingTilBruker("SOSIALE_TJENESTER", String.valueOf(behandlingsid), KORT_TEKST)),
-            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), REFERAT_OPPMOTE, now(), null, createXMLMeldingTilBruker("HJELPEMIDLER", "TELEFON", LANG_TEKST)),
-            createXMLHenvendelse(behandlingsid = idGenerator.nextInt(), SPORSMAL_SKRIFTLIG, now().minusDays(1), null, createXMLMeldingFraBruker("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST))
+            createXMLHenvendelse(behandlingsId1, behandlingsId1, SPORSMAL_SKRIFTLIG, now().minusWeeks(2), null, createXMLMeldingFraBruker("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST)),
+            createXMLHenvendelse(behandlingsId2, behandlingsId2, SPORSMAL_SKRIFTLIG, now().minusWeeks(1), null, createXMLMeldingFraBruker("INTERNASJONALT", LANG_TEKST)),
+            createXMLHenvendelse(randomId(), behandlingsId2, SVAR_SKRIFTLIG, now().minusDays(5), now().minusDays(4), createXMLMeldingTilBruker("INTERNASJONALT", KORT_TEKST)),
+            createXMLHenvendelse(behandlingsId3, behandlingsId3, SPORSMAL_SKRIFTLIG, now().minusDays(3), null, createXMLMeldingFraBruker("HJELPEMIDLER", LANG_TEKST)),
+            createXMLHenvendelse(randomId(), behandlingsId3, SVAR_SKRIFTLIG, now().minusHours(5), null, createXMLMeldingTilBruker("HJELPEMIDLER", KORT_TEKST)),
+            createXMLHenvendelse(behandlingsId4, behandlingsId4, SPORSMAL_SKRIFTLIG, now().minusMonths(4), null, createXMLMeldingFraBruker("SOSIALE_TJENESTER", LANG_TEKST)),
+            createXMLHenvendelse(randomId(), behandlingsId4, SVAR_SKRIFTLIG, now().minusMonths(4).plusDays(1), now().minusMonths(4).plusDays(3), createXMLMeldingTilBruker("SOSIALE_TJENESTER", LANG_TEKST)),
+            createXMLHenvendelse(randomId(), behandlingsId4, SVAR_SKRIFTLIG, now().minusDays(7), null, createXMLMeldingTilBruker("SOSIALE_TJENESTER", KORT_TEKST)),
+            createXMLHenvendelse(behandlingsId5, behandlingsId5, REFERAT_OPPMOTE, now(), null, createXMLMeldingTilBruker("HJELPEMIDLER", LANG_TEKST)),
+            createXMLHenvendelse(behandlingsId6, behandlingsId6, SPORSMAL_SKRIFTLIG, now().minusDays(1), null, createXMLMeldingFraBruker("ARBEIDSSOKER_ARBEIDSAVKLARING_SYKEMELDT", LANG_TEKST))
     );
 
-    private static XMLHenvendelse createXMLHenvendelse(int behandlingsId, XMLHenvendelseType type, DateTime opprettet, DateTime lestDato, XMLMetadata metadata) {
+    private static XMLHenvendelse createXMLHenvendelse(String behandlingsId, String behandlingskjedeId, XMLHenvendelseType type, DateTime opprettet, DateTime lestDato, XMLMetadata metadata) {
         return new XMLHenvendelse()
+                .withBehandlingsId(behandlingsId)
+                .withBehandlingskjedeId(behandlingskjedeId)
                 .withHenvendelseType(type.name())
                 .withOpprettetDato(opprettet)
                 .withLestDato(lestDato)
-                .withBehandlingsId(String.valueOf(behandlingsId))
                 .withMetadataListe(
                         new XMLMetadataListe().withMetadata(metadata));
     }
@@ -73,8 +84,8 @@ public class JettyTestContext {
         return new XMLMeldingFraBruker().withTemagruppe(temagruppe).withFritekst(tekst);
     }
 
-    private static XMLMeldingTilBruker createXMLMeldingTilBruker(String temagruppe, String sporsmalsId, String fritekst) {
-        return new XMLMeldingTilBruker().withTemagruppe(temagruppe).withSporsmalsId(sporsmalsId).withFritekst(fritekst);
+    private static XMLMeldingTilBruker createXMLMeldingTilBruker(String temagruppe, String fritekst) {
+        return new XMLMeldingTilBruker().withTemagruppe(temagruppe).withFritekst(fritekst);
     }
 
 
