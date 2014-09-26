@@ -2,9 +2,10 @@ package no.nav.nav.sbl.dialogarena.modiabrukerdialog.service;
 
 public interface StandardKodeverk {
 
-    public void lastInnNyeKodeverk();
+    void lastInnNyeKodeverk();
 
-    public String getArkivtemaNavn(String arkivtemaKode);
+    String getArkivtemaNavn(String arkivtemaKode);
 
-    public void initKodeverk();
+    void initKodeverk();
+
 }

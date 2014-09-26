@@ -7,4 +7,5 @@ import java.util.List;
 public interface EnhetService {
 
     public List<AnsattEnhet> hentAlleEnheter();
+
 }
