@@ -24,7 +24,7 @@ public class TidligereMeldingerPanel extends Panel {
                 item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getDefaultModel()))
                         .add(cssClass(item.getModelObject().getStatusIkonKlasse())));
                 item.add(new Label("opprettetDato"));
-                item.add(new Label("temagruppe", new ResourceModel(meldingVM.melding.temagruppe)));
+                item.add(new Label("temagruppe", meldingVM.melding.temagruppe != null ? new ResourceModel(meldingVM.melding.temagruppe) : new ResourceModel("temagruppe.kassert")));
                 item.add(new URLParsingMultiLineLabel("melding.fritekst"));
             }
         });

@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.modig.core.context.ModigSecurityConstants;
 import no.nav.modig.core.context.SubjectHandler;
@@ -109,9 +108,10 @@ public class TestUtils {
         return new ArrayList<>(asList(melding1VM, melding2VM, melding3VM));
     }
 
-    public static XMLHenvendelse lagXMLHenvendelse(String behandlingsId, DateTime opprettetDato, DateTime lestDato, String henvendelseType, XMLMetadata xmlMetadata) {
+    public static XMLHenvendelse lagXMLHenvendelse(String behandlingsId, String behandlingskjedeId, DateTime opprettetDato, DateTime lestDato, String henvendelseType, XMLMetadataListe XMLMetadataListe) {
         return new XMLHenvendelse()
                 .withBehandlingsId(behandlingsId)
+                .withBehandlingskjedeId(behandlingskjedeId)
                 .withOpprettetDato(opprettetDato)
                 .withLestDato(lestDato)
                 .withHenvendelseType(henvendelseType)
@@ -122,7 +122,7 @@ public class TestUtils {
                                 .withJournalpostId(JOURNALFORT_ID)
                                 .withJournalfortSaksId(JOURNALFORT_SAKSID)
                 )
-                .withMetadataListe(new XMLMetadataListe().withMetadata(xmlMetadata));
+                .withMetadataListe(XMLMetadataListe);
     }
 
     public static void innloggetBrukerEr(String userId) {

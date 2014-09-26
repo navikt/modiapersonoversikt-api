@@ -9,6 +9,8 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
@@ -37,8 +39,9 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getDefaultModel()))
                         .add(cssClass(meldingVM.getStatusIkonKlasse())));
                 item.add(new Label("opprettetDato"));
-                item.add(new Label("melding.temagruppe", new StringResourceModel("${melding.temagruppe}", item.getModel())));
-                item.add(new Label("melding.fritekst"));
+                item.add(new Label("melding.temagruppe",
+                        meldingVM.melding.temagruppe != null ? new ResourceModel(meldingVM.melding.temagruppe) : new ResourceModel("temagruppe.kassert")));
+                item.add(new Label("melding.fritekst", meldingVM.melding.fritekst != null ? new PropertyModel(meldingVM, "melding.fritekst") : new ResourceModel("innhold.kassert")));
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
                 item.add(new AjaxEventBehavior("click") {
