@@ -61,7 +61,9 @@ public class SaksoversiktService {
      */
     public List<TemaVM> hentTemaer(String fnr) {
         LOG.info("Henter tema fra Sak og Behandling til Modiasaksoversikt. Fnr: " + fnr);
-        return on(filter.filtrerSaker((on(hentSakerForAktor(hentAktorId(fnr))).collect()))).map(temaVMTransformer(filter)).collect(new SistOppdaterteBehandlingComparator());
+        List<WSSak> saker = on(hentSakerForAktor(hentAktorId(fnr))).collect();
+        PreparedIterable<TemaVM> filtrerteSaker = on(filter.filtrerSaker(saker)).map(temaVMTransformer(filter));
+        return filtrerteSaker.collect(new SistOppdaterteBehandlingComparator());
     }
 
     /**
@@ -70,7 +72,9 @@ public class SaksoversiktService {
     public Map<TemaVM, List<GenerellBehandling>> hentBehandlingerByTema(String fnr) {
         Map<TemaVM, List<GenerellBehandling>> behandlingerByTema = new HashMap<>();
         for (WSSak sak : filter.filtrerSaker(hentSakerForAktor(hentAktorId(fnr)))) {
-            behandlingerByTema.put(temaVMTransformer(filter).transform(sak), filter.filtrerBehandlinger(hentSorterteBehandlinger(fnr, sak)));
+            TemaVM tema = temaVMTransformer(filter).transform(sak);
+            List<GenerellBehandling> behandlinger = filter.filtrerBehandlinger(hentSorterteBehandlinger(fnr, sak));
+            behandlingerByTema.put(tema, behandlinger);
         }
         return behandlingerByTema;
     }
