@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbetal
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.utbetaling.UtbetalingWrapperConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.hentsaker.GsakHentSakslisteEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.gsak.ruting.GsakRutingEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.henvendelse.ArbeidOgAktivitetEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVAnsattEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVOrgEnhetEndpointConfig;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v2.henvendelse.BehandleHenvendelseEndpointConfig;
@@ -37,7 +36,6 @@ import org.springframework.context.annotation.Import;
         GsakOppgavebehandlingV3EndpointConfig.class,
         GsakHentSakslisteEndpointConfig.class,
         GsakRutingEndpointConfig.class,
-        ArbeidOgAktivitetEndpointConfig.class,
         BehandleJournalV2EndpointConfig.class,
         SakOgBehandlingEndpointConfig.class,
         AktorEndpointConfig.class,

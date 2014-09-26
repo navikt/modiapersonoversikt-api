@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.AktoerPortTypeMock;
-import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.ArbeidOgAktivitetMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleHenvendelsePortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.BehandleJournalV2PortTypeMock;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GosysNavAnsattPortTypeMock;
@@ -28,7 +27,6 @@ import org.springframework.context.annotation.Import;
         SendUtHenvendelsePortTypeMock.class,
         BehandleHenvendelsePortTypeMock.class,
         GsakHentSakslistePortTypeMock.class,
-        ArbeidOgAktivitetMock.class,
         BehandleJournalV2PortTypeMock.class,
         GsakOppgaveV3PortTypeMock.class,
         GsakOppgavebehandlingV3PortTypeMock.class,
