@@ -53,7 +53,7 @@ public class GsakHentSakslisteEndpointConfig {
     private static SakBugfix createEndpoint() {
         return new CXFClient<>(SakBugfix.class)
                 .address(System.getProperty("gsak.saksliste.v1.url"))
-                //.wsdl("classpath:nav-tjeneste-sak_SakWSEXP.wsdl")
+                .wsdl("classpath:no/nav/virksomhet/tjenester/sak/sak.wsdl")
                 .withOutInterceptor(new SystemSAMLOutInterceptor())
                 .build();
     }
