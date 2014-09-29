@@ -4,10 +4,10 @@ import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.modig.wicket.test.FluentWicketTester;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Before;
 import org.junit.Test;
@@ -31,7 +31,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {ServiceTestContext.class, InnboksTestConfig.class})
+@ContextConfiguration(classes = {ServiceTestContext.class, WicketTesterConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InnboksTest {
 

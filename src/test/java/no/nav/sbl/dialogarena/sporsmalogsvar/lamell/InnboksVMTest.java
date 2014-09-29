@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +37,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {ServiceTestContext.class, InnboksTestConfig.class})
+@ContextConfiguration(classes = {ServiceTestContext.class, WicketTesterConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class InnboksVMTest {
 

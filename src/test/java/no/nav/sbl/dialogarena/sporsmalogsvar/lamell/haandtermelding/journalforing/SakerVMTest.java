@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.ArenaService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -13,7 +14,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +50,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {JournalforingPanelVelgSakTestConfig.class, InnboksTestConfig.class})
+@ContextConfiguration(classes = {JournalforingPanelVelgSakTestConfig.class, WicketTesterConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class SakerVMTest {
 

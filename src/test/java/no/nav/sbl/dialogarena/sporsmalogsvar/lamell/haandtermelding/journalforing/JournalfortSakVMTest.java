@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketTesterConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {ServiceTestContext.class, InnboksTestConfig.class})
+@ContextConfiguration(classes = {ServiceTestContext.class, WicketTesterConfig.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class JournalfortSakVMTest {
 
