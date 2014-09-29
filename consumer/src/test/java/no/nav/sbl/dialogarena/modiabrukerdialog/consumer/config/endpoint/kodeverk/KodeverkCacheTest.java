@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk;
 
 
+import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
@@ -37,6 +38,9 @@ public class KodeverkCacheTest extends CacheTest {
     @Inject
     private KodeverkPortType kodeverk;
 
+    @Inject
+    private KodeverkClient kodeverkClient;
+
     public KodeverkCacheTest() {
         super(CACHE_NAME);
     }
@@ -50,6 +54,18 @@ public class KodeverkCacheTest extends CacheTest {
         kodeverk.hentKodeverk(request1);
         kodeverk.hentKodeverk(request2);
         kodeverk.hentKodeverk(request2);
+
+        int antallCacheinstanser = getCache().getSize();
+
+        assertThat(antallCacheinstanser, is(2));
+    }
+
+    @Test
+    public void cacheManager_harEntryForKodeverkClient_etterKallTilKodeverkClient() {
+        kodeverkClient.hentFoersteTermnavnForKode("a", "b");
+        kodeverkClient.hentFoersteTermnavnForKode("a", "b");
+        kodeverkClient.hentKodeverk("ab");
+        kodeverkClient.hentKodeverk("ab");
 
         int antallCacheinstanser = getCache().getSize();
 
