@@ -7,6 +7,7 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfo
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -53,6 +54,8 @@ public class HenvendelseBehandlingService {
     private EnforcementPoint pep;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private StandardKodeverk standardKodeverk;
 
     public List<Melding> hentMeldinger(final String fnr) {
         List<String> typer = asList(
@@ -65,6 +68,7 @@ public class HenvendelseBehandlingService {
 
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny())
                 .map(TIL_MELDING)
+                .map(journalfortTemaTilTemanavn)
                 .filter(kontorsperreTilgang)
                 .map(journalfortTemaTilgang)
                 .collect();
@@ -126,4 +130,16 @@ public class HenvendelseBehandlingService {
             return melding;
         }
     };
+
+    private final Transformer<Melding, Melding> journalfortTemaTilTemanavn = new Transformer<Melding, Melding>() {
+        @Override
+        public Melding transform(Melding melding) {
+            if (melding.journalfortTema != null) {
+                String temaNavn = standardKodeverk.getArkivtemaNavn(melding.journalfortTema);
+                melding.journalfortTemanavn = temaNavn != null ? temaNavn : melding.journalfortTema;
+            }
+            return melding;
+        }
+    };
+
 }
