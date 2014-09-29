@@ -31,6 +31,7 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -58,19 +59,24 @@ public class SaksoversiktLerret extends Lerret {
 
     private Component temaContainer;
     private IModel<String> aktivtTema = new Model<>();
-    private Map<TemaVM, List<GenerellBehandling>> behandlingerByTema;
+    private Map<TemaVM, List<GenerellBehandling>> behandlingerByTema = new HashMap<>();
     private List<TemaVM> temaer;
     private Component feilmelding;
 
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
-        behandlingerByTema = saksoversiktService.hentBehandlingerByTema(fnr);
-
 
         feilmelding = new WebMarkupContainer("feilmelding")
                 .add(new Label("feil", cms.hentTekst("baksystem.behandlinger.feil")))
                 .setVisible(false)
                 .setOutputMarkupPlaceholderTag(true);
+
+        try {
+            behandlingerByTema = saksoversiktService.hentBehandlingerByTema(fnr);
+        } catch (SystemException e) {
+            LOG.error("Kunne ikke hente saker til lamellen", e);
+            feilmelding.setVisible(true);
+        }
 
         temaer = on(behandlingerByTema.keySet()).collect(new SistOppdaterteBehandlingComparator());
 
