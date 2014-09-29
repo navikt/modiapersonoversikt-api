@@ -76,8 +76,7 @@ public class SaksoversiktService {
             List<GenerellBehandling> behandlinger = filter.filtrerBehandlinger(hentSorterteBehandlinger(fnr, sak));
             behandlingerByTema.put(tema, behandlinger);
         }
-        throw new SystemException("Klarte ikke hente aktørId", new Throwable("Hei"));
-//        return behandlingerByTema;
+        return behandlingerByTema;
     }
 
     private String hentAktorId(String fnr) {
