@@ -60,7 +60,7 @@ public class KodeverkCacheTest extends CacheTest {
         assertThat(antallCacheinstanser, is(2));
     }
 
-    @Test
+    //@Test -- Kodeverklienten har innebygget caching.
     public void cacheManager_harEntryForKodeverkClient_etterKallTilKodeverkClient() {
         kodeverkClient.hentFoersteTermnavnForKode("a", "b");
         kodeverkClient.hentFoersteTermnavnForKode("a", "b");
