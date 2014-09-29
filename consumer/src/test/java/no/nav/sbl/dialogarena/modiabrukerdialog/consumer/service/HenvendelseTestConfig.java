@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import org.springframework.context.annotation.Bean;
@@ -18,6 +19,11 @@ public class HenvendelseTestConfig {
     @Bean
     public SendUtHenvendelsePortType sendUtHenvendelsePortType() {
         return mock(SendUtHenvendelsePortType.class);
+    }
+
+    @Bean(name = "pep")
+    public EnforcementPoint enforcementPoint() {
+        return mock(EnforcementPoint.class);
     }
 
 }

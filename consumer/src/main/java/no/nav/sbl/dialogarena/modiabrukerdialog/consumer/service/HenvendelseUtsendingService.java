@@ -4,6 +4,8 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -11,8 +13,10 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meld
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
+import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,10 +27,16 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_SKRIFTLIG;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_TELEFON;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
+import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.ELDSTE_FORST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createSporsmalFromXMLHenvendelse;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createSvarEllerReferatFromXMLHenvendelse;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
+import static org.apache.commons.lang3.StringUtils.defaultString;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class HenvendelseUtsendingService {
 
@@ -34,6 +44,10 @@ public class HenvendelseUtsendingService {
     private HenvendelsePortType henvendelsePortType;
     @Inject
     protected SendUtHenvendelsePortType sendUtHenvendelsePortType;
+    @Inject
+    @Named("pep")
+    private EnforcementPoint pep;
+
 
     public void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat) {
         XMLHenvendelseType type = XMLHenvendelseType.fromValue(svarEllerReferat.type.name());
@@ -78,7 +92,9 @@ public class HenvendelseUtsendingService {
                 svarliste.add(createSvarEllerReferatFromXMLHenvendelse(henvendelse));
             }
         }
-        return on(svarliste).collect(ELDSTE_FORST);
+        return on(svarliste)
+                .map(journalfortTemaTilgang)
+                .collect(ELDSTE_FORST);
     }
 
     private boolean erDetteEtSvarEllerReferatForSporsmalet(String sporsmalId, XMLMetadata xmlMetadata) {
@@ -91,5 +107,21 @@ public class HenvendelseUtsendingService {
                 (XMLHenvendelse) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalId)).getAny();
         return createSporsmalFromXMLHenvendelse(xmlHenvendelse);
     }
+
+    private final Transformer<SvarEllerReferat, SvarEllerReferat> journalfortTemaTilgang = new Transformer<SvarEllerReferat, SvarEllerReferat>() {
+        @Override
+        public SvarEllerReferat transform(SvarEllerReferat svarEllerReferat) {
+            PolicyRequest temagruppePolicyRequest = forRequest(
+                    actionId("temagruppe"),
+                    resourceId(""),
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(svarEllerReferat.journalfortTema))
+            );
+            if (!isBlank(svarEllerReferat.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
+                svarEllerReferat.fritekst = "";
+            }
+
+            return svarEllerReferat;
+        }
+    };
 
 }
