@@ -3,6 +3,7 @@
         padding: 0;
         .flexbox;
         .flex1;
+        .col;
     }
 }
 
@@ -37,6 +38,12 @@
 }
 
 .saksoversikt {
+    .feilmelding {
+        background: #c30000;
+        padding: 20px;
+        color: #fff;
+    }
+
     .lerret {
         border-top: 1px solid #ccc;
         position: relative;
@@ -75,7 +82,7 @@
         width: 100%;
 
         .saksinformasjon-lenker {
-            position: relative;
+            position: absolute;
             left: 40%;
             padding-left: 30px;
             display: inline-block;
@@ -106,6 +113,14 @@
                     margin-right: 5px;
                 }
             }
+        }
+
+        .oppdater-innhold {
+            position: absolute;
+            right: 30px;
+
+            padding-left: 20px;
+            background: url(../svg/oppdater.svg) no-repeat left center;
         }
     }
 

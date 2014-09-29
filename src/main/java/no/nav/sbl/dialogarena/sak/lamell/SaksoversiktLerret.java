@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
+import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.events.FeedItemPayload;
@@ -8,11 +9,13 @@ import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.navigation.KeyNavigationDependentResourceReference;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;
+import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.JavaScriptContentHeaderItem;
 import org.apache.wicket.markup.head.JavaScriptReferenceHeaderItem;
@@ -25,6 +28,7 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -33,6 +37,7 @@ import java.util.Map;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class SaksoversiktLerret extends Lerret {
     // Brukes av Modia (containeren):
@@ -46,28 +51,57 @@ public class SaksoversiktLerret extends Lerret {
     @Inject
     private SaksoversiktService saksoversiktService;
 
+    @Inject
+    private BulletproofCmsService cms;
+
+    private static final Logger LOG = getLogger(SaksoversiktLerret.class);
+
     private Component temaContainer;
     private IModel<String> aktivtTema = new Model<>();
-    private Label feilmelding = (Label) new Label("feilmelding", "Feil ved kall til baksystem").setVisible(false);
     private Map<TemaVM, List<GenerellBehandling>> behandlingerByTema;
     private List<TemaVM> temaer;
+    private Component feilmelding;
 
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
         behandlingerByTema = saksoversiktService.hentBehandlingerByTema(fnr);
+
+
+        feilmelding = new WebMarkupContainer("feilmelding")
+                .add(new Label("feil", cms.hentTekst("baksystem.behandlinger.feil")))
+                .setVisible(false)
+                .setOutputMarkupPlaceholderTag(true);
+
         temaer = on(behandlingerByTema.keySet()).collect(new SistOppdaterteBehandlingComparator());
 
         WebMarkupContainer hendelserContainer = lagDetaljerContainer(fnr);
         temaContainer = lagTemaContainer();
-        add(hendelserContainer, temaContainer);
+        add(hendelserContainer, temaContainer, lagOppdaterLenke(fnr, this), feilmelding);
         aapneForsteItem();
+    }
+
+    private AjaxLink lagOppdaterLenke(final String fnr, final SaksoversiktLerret lerret) {
+        AjaxLink link = new AjaxLink("oppdater-innhold") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                try {
+                    behandlingerByTema = saksoversiktService.hentBehandlingerByTema(fnr);
+                    target.add(lerret);
+                } catch (SystemException e) {
+                    LOG.error("Kunne ikke oppdatere innhold i lamell", e);
+                    feilmelding.setVisible(true);
+                    target.add(feilmelding);
+                }
+            }
+        };
+
+        return link;
     }
 
     private WebMarkupContainer lagDetaljerContainer(String fnr) {
         WebMarkupContainer detaljerContainer = new WebMarkupContainer("detaljerContainer");
         Component behandlingerContainer = new BehandlingSakerListView("behandling-sak", temaer, fnr, this);
         detaljerContainer.add(
-                feilmelding,
                 behandlingerContainer
         );
         detaljerContainer.setOutputMarkupPlaceholderTag(true);

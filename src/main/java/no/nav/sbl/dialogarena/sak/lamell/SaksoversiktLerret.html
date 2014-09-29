@@ -5,7 +5,13 @@
             <a href="#" class="active">Siste hendelser</a>
             <a href="#" id="saksinformasjonLenke">Viktig å vite</a>
         </div>
+        <a href="#" class="oppdater-innhold" wicket:id="oppdater-innhold">
+            <span>Oppdater</span>
+        </a>
     </div>
+    <section class="feilmelding" wicket:id="feilmelding">
+        <span wicket:id="feil"></span>
+    </section>
     <div class="saker flexbox row flex1">
         <article tabindex="0" class="sak-navigering flex2" wicket:id="sakerContainer">
             <ul>
@@ -18,7 +24,6 @@
             </ul>
         </article>
         <div class="sak-informasjon flex3" wicket:id="detaljerContainer">
-            <div wicket:id="feilmelding" class="feilmelding"/>
             <ul>
                 <li wicket:id="behandling-sak" class="sakdetaljer">
                     <article class="behandling-container" wicket:id="behandlinger">
