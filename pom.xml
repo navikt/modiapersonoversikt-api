@@ -65,6 +65,7 @@
         <utbetaling.version>2.0.40</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.8</utbetaling.tjenestespesifikasjon.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
+        <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.3</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.10</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.22</dialogarena.behandlingsinformasjon.version>
@@ -333,7 +334,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>dial-nav-tjeneste-sak</artifactId>
-                <version>1.5-SNAPSHOT</version>
+                <version>1.3</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
