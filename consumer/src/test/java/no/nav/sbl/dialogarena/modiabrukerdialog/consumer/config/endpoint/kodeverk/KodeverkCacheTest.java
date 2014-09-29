@@ -18,7 +18,6 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
@@ -47,7 +46,6 @@ public class KodeverkCacheTest extends CacheTest {
         XMLHentKodeverkRequest request1 = new XMLHentKodeverkRequest().withNavn("navn1");
         XMLHentKodeverkRequest request2 = new XMLHentKodeverkRequest().withNavn("navn2");
 
-        kodeverk = mock(KodeverkPortType.class);
         kodeverk.hentKodeverk(request1);
         kodeverk.hentKodeverk(request1);
         kodeverk.hentKodeverk(request2);
