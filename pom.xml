@@ -32,7 +32,7 @@
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
         <sonar.language>java</sonar.language>
         <!-- versjoner -->
-        <wicket.version>6.17.0</wicket.version>
+        <wicket.version>6.11.0</wicket.version>
         <spring.version>3.2.4.RELEASE</spring.version>
         <modig.frontend.version>1.1.47</modig.frontend.version>
         <modig.security.version>1.0.21</modig.security.version>
