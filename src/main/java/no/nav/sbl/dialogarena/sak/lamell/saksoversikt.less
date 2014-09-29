@@ -49,9 +49,12 @@
         position: relative;
     }
 
+    li.aktiv {
+        display: block !important;
+    }
+
     .saksinformasjon {
         padding: 30px;
-
         h2 {
             font-family: modus, arial, helvetica, sans-serif;
             font-size: 1.125rem;
@@ -216,11 +219,11 @@
             .behandling {
                 padding-left: 85px;
                 padding-top: 40px;
-                background: url(../img/under_arbeid_stor.svg) no-repeat left 15px;
-
+                background: url(../img/under_arbeid_stor.svg) no-repeat left 15px  !important;
+                page-break-inside: avoid;
 
                 &.avsluttet {
-                    background-image: url(../img/hake_stor.svg);
+                    background-image: url(../img/hake_stor.svg) !important;
                 }
             }
         }
@@ -348,48 +351,72 @@
     }
 }
 
+.print-only {
+    display: none;
+}
+
 @media print {
-    .saksoversikt {
+    .sak-navigering {
+        display: none;
+    }
 
-        .content > .behandling-informasjon {
-            margin-right: 0;
+    .flexbox, .row, .lerret, .selected {
+        display: block !important;
+    }
 
-            h2 {
-                text-align: center;
-                font-size: 22px;
-                text-transform: none;
+    .sak-informasjon {
+        h2.print-only {
+            padding-left: 30px;
+            padding-top: 30px;
+        }
+    }
 
-                &:after {
-                    content: "";
-                    border-top: 1px solid #d1d1d1;
-                    display: block;
-                    margin: 30px auto;
-                    width: 30px;
-                }
+    .print-only {
+        display: block !important;
+    }
+
+    .print-hide {
+        display: none !important;
+    }
+
+    .content > .behandling-informasjon {
+        margin-right: 0;
+
+        h2 {
+            text-align: center;
+            font-size: 22px;
+            text-transform: none;
+
+            &:after {
+                content: "";
+                border-top: 1px solid #d1d1d1;
+                display: block;
+                margin: 30px auto;
+                width: 30px;
             }
+        }
 
-            .kvittering-topp {
-                text-align: center;
-                padding-bottom: 40px;
-                border-bottom: 1px solid #d1d1d1;
+        .kvittering-topp {
+            text-align: center;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #d1d1d1;
 
-                p {
-                    display: block;
-                    font-size: 17px;
-                    font-family: Modus, Arial, Helvetica, sans-serif;
-                    font-weight: 600;
-                    margin-bottom: 0;
-                }
+            p {
+                display: block;
+                font-size: 17px;
+                font-family: Modus, Arial, Helvetica, sans-serif;
+                font-weight: 600;
+                margin-bottom: 0;
             }
+        }
 
-            .kollapsbar {
-                display: block !important;
-                margin-top: 40px;
-            }
+        .kollapsbar {
+            display: block !important;
+            margin-top: 40px;
+        }
 
-            .toggle-kollapsbar, .skriv-ut {
-                display: none !important;
-            }
+        .toggle-kollapsbar, .skriv-ut {
+            display: none !important;
         }
     }
 }

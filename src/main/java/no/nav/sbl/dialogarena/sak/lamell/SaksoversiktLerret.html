@@ -1,7 +1,7 @@
 <html xmlns:wicket="http://wicket.apache.org">
 <wicket:panel>
     <div class="lamell-hode-lenker">
-        <div class="saksinformasjon-lenker">
+        <div class="saksinformasjon-lenker print-hide">
             <a href="#" class="active">Siste hendelser</a>
             <a href="#" id="saksinformasjonLenke">Viktig å vite</a>
         </div>
@@ -26,6 +26,7 @@
         <div class="sak-informasjon flex3" wicket:id="detaljerContainer">
             <ul>
                 <li wicket:id="behandling-sak" class="sakdetaljer">
+                    <h2 wicket:id="sakstema-print" class="print-only"/>
                     <article class="behandling-container" wicket:id="behandlinger">
                         <div class="aar" wicket:id="aar-container">
                             <div>
