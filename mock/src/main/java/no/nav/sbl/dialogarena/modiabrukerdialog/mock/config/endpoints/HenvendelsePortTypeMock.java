@@ -70,7 +70,7 @@ public class HenvendelsePortTypeMock {
                     createXMLMeldingFraBruker("FMLI", LANG_TEKST), valueOf(oppgaveId), now().minusDays(2), "FOR", "", ""),
 
             createXMLHenvendelse(SVAR_SKRIFTLIG, now().minusDays(2), now().minusDays(4),
-                    createXMLMeldingTilBruker("FMLI", "TELEFON", valueOf(oppgaveId), "Vi kan bekrefte at du får foreldrepenger"), null, null, "", "", ""),
+                    createXMLMeldingTilBruker("FMLI", "TELEFON", valueOf(oppgaveId), "Vi kan bekrefte at du får foreldrepenger"), null, null, null, null, null),
 
             createXMLHenvendelse(SVAR_SKRIFTLIG, now().minusDays(3), now().minusDays(4),
                     createXMLMeldingTilBruker("FMLI", "TELEFON", valueOf(oppgaveId), "Det er meget sannsynlig at du kan få foreldrepenger"),
@@ -93,10 +93,10 @@ public class HenvendelsePortTypeMock {
                     null, now().minusDays(1), "SYK", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT),
 
             createXMLHenvendelse(SPORSMAL_SKRIFTLIG, now().minusMonths(4), null,
-                    createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), null, "", "", ""),
+                    createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), null, null, null, null),
 
             createXMLHenvendelse(REFERAT_OPPMOTE, now(), null,
-                    createXMLMeldingTilBruker("ARBD", "TELEFON", valueOf(behandlingsId), "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, null, "", "", ""),
+                    createXMLMeldingTilBruker("ARBD", "TELEFON", valueOf(behandlingsId), "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, null, null, null, null),
 
             createXMLHenvendelse(SVAR_SKRIFTLIG, now().minusMonths(4).plusDays(1), now().minusMonths(4).plusDays(3),
                     createXMLMeldingTilBruker("ARBD", "TELEFON", valueOf(behandlingsId), LANG_TEKST), null, now().minusDays(3), "YRK", "", ""),
@@ -105,28 +105,30 @@ public class HenvendelsePortTypeMock {
                     createXMLMeldingTilBruker("ARBD", "TEKST", valueOf(behandlingsId), KORT_TEKST), null, now().minusDays(3), "YRK", "", ""),
 
             createXMLHenvendelse(SPORSMAL_SKRIFTLIG, now().minusDays(1), null,
-                    createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), null, "", "", "")
+                    createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), null, null, null, null)
     ));
 
     private static XMLHenvendelse createXMLHenvendelse(XMLHenvendelseType type, DateTime opprettet, DateTime lestDato, XMLMetadata metadata, String oppgaveId,
                                                        DateTime journalfortDato, String journalfortTema, String journalfortSaksId, String journalforerNavIdent) {
         behandlingsId = idGenerator.nextInt();
-        return new XMLHenvendelse()
+        XMLHenvendelse xmlHenvendelse = new XMLHenvendelse()
                 .withHenvendelseType(type.name())
                 .withOpprettetDato(opprettet)
                 .withLestDato(lestDato)
                 .withBehandlingsId(valueOf(behandlingsId))
                 .withFnr(FNR)
-                .withJournalfortInformasjon(
-                        new XMLJournalfortInformasjon()
-                                .withJournalfortDato(journalfortDato)
-                                .withJournalfortTema(journalfortTema)
-                                .withJournalfortSaksId(journalfortSaksId)
-                                .withJournalforerNavIdent(journalforerNavIdent)
-                )
                 .withOppgaveIdGsak(oppgaveId)
-                .withMetadataListe(
-                        new XMLMetadataListe().withMetadata(metadata));
+                .withMetadataListe(new XMLMetadataListe().withMetadata(metadata));
+        if (journalfortDato != null || journalfortTema != null || journalfortSaksId != null || journalforerNavIdent != null) {
+            xmlHenvendelse.withJournalfortInformasjon(
+                    new XMLJournalfortInformasjon()
+                            .withJournalfortDato(journalfortDato)
+                            .withJournalfortTema(journalfortTema)
+                            .withJournalfortSaksId(journalfortSaksId)
+                            .withJournalforerNavIdent(journalforerNavIdent)
+            );
+        }
+        return xmlHenvendelse;
     }
 
     private static XMLMeldingFraBruker createXMLMeldingFraBruker(String temagruppe, String tekst) {
