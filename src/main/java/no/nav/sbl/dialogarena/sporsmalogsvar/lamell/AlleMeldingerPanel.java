@@ -34,14 +34,15 @@ public class AlleMeldingerPanel extends Panel {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {
                 final MeldingVM meldingVM = item.getModelObject();
-                item.add(new Label("traadlengde")
-                        .setVisibilityAllowed(meldingVM.traadlengde > 2));
-                item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getDefaultModel()))
+                item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));
+                item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getModel()))
                         .add(cssClass(meldingVM.getStatusIkonKlasse())));
                 item.add(new Label("opprettetDato"));
-                item.add(new Label("melding.temagruppe",
-                        meldingVM.melding.temagruppe != null ? new ResourceModel(meldingVM.melding.temagruppe) : new ResourceModel("temagruppe.kassert")));
-                item.add(new Label("melding.fritekst", meldingVM.melding.fritekst != null ? new PropertyModel(meldingVM, "melding.fritekst") : new ResourceModel("innhold.kassert")));
+                item.add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", item.getModel())));
+                item.add(new Label("fritekst",
+                        meldingVM.melding.fritekst != null ?
+                                new PropertyModel(meldingVM, "melding.fritekst") :
+                                new ResourceModel("innhold.kassert")));
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
                 item.add(new AjaxEventBehavior("click") {

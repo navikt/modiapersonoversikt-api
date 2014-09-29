@@ -48,6 +48,10 @@ public class MeldingVM implements Serializable {
         return melding.journalfortDato != null;
     }
 
+    public String getTemagruppeKey() {
+        return melding.temagruppe != null ? melding.temagruppe : "temagruppe.kassert";
+    }
+
     public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {
         @Override
         public int compare(MeldingVM o1, MeldingVM o2) {

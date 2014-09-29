@@ -30,6 +30,10 @@ public class MeldingVM implements FeedItemVM, Serializable {
         }
     };
 
+    public String getTemagruppeKey() {
+        return melding.temagruppe != null ? melding.temagruppe : "temagruppe.kassert";
+    }
+
     public String getOpprettetDato() {
         return Datoformat.kortMedTid(melding.opprettetDato);
     }
