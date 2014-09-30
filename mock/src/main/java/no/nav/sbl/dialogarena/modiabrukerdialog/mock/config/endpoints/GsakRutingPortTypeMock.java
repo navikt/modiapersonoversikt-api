@@ -34,18 +34,6 @@ public class GsakRutingPortTypeMock {
             }
         });
         return ruting;
-//        return new Ruting() {
-//            @Override
-//            public WSFinnAnsvarligEnhetForSakResponse finnAnsvarligEnhetForSak(WSFinnAnsvarligEnhetForSakRequest request) {
-//                List<WSFinnAnsvarligEnhetForSakResponse> responser = Arrays.asList(
-//                        new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("1111").withEnhetNavn("Enhet 1"),
-//                        new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("2222").withEnhetNavn("Enhet 2"),
-//                        new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("3333").withEnhetNavn("Enhet 3"),
-//                        new WSFinnAnsvarligEnhetForSakResponse().withEnhetId("4444").withEnhetNavn("Enhet 4"));
-//
-//                return responser.get(new Random().nextInt(responser.size()));
-//            }
-//        };
     }
 
 }
