@@ -66,24 +66,33 @@ public class SaksoversiktLerret extends Lerret {
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
 
+        instansierFeilmeldingContainer();
+        hentBehandlinger(fnr);
+        temaer = on(behandlingerByTema.keySet()).collect(new SistOppdaterteBehandlingComparator());
+        temaContainer = lagTemaContainer();
+
+        add(
+                lagDetaljerContainer(fnr),
+                temaContainer,
+                lagOppdaterLenke(fnr, this),
+                feilmelding);
+        aapneForsteItem();
+    }
+
+    private void instansierFeilmeldingContainer() {
         feilmelding = new WebMarkupContainer("feilmelding")
                 .add(new Label("feil", cms.hentTekst("baksystem.behandlinger.feil")))
                 .setVisible(false)
                 .setOutputMarkupPlaceholderTag(true);
+    }
 
+    private void hentBehandlinger(String fnr) {
         try {
             behandlingerByTema = saksoversiktService.hentBehandlingerByTema(fnr);
         } catch (SystemException e) {
             LOG.error("Kunne ikke hente saker til lamellen", e);
             feilmelding.setVisible(true);
         }
-
-        temaer = on(behandlingerByTema.keySet()).collect(new SistOppdaterteBehandlingComparator());
-
-        WebMarkupContainer hendelserContainer = lagDetaljerContainer(fnr);
-        temaContainer = lagTemaContainer();
-        add(hendelserContainer, temaContainer, lagOppdaterLenke(fnr, this), feilmelding);
-        aapneForsteItem();
     }
 
     private AjaxLink lagOppdaterLenke(final String fnr, final SaksoversiktLerret lerret) {
@@ -133,7 +142,7 @@ public class SaksoversiktLerret extends Lerret {
     }
 
     private void aapneForsteItem() {
-        if(!temaer.isEmpty()) {
+        if (!temaer.isEmpty()) {
             settAktivtTema(temaer.get(0).temakode);
         }
     }
