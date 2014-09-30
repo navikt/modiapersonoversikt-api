@@ -29,7 +29,7 @@ public class JournalforingNotatTest extends TestDataJournalforing {
     }
 
     @Test
-    public void skalLageJournalforingNotatMedRiktigeFelter() {
+    public void lagerJournalforingNotatMedRiktigeFelter() {
         Journalpost journalpostNotat = JournalforingNotat.lagJournalforingNotat(
                 journalfortPostIdOptional, sak, melding, JOURNALFORENDE_ENHET_ID);
 
@@ -45,7 +45,7 @@ public class JournalforingNotatTest extends TestDataJournalforing {
     }
 
     @Test
-    public void skalSetteRiktigDokumentInfoRelasjon() {
+    public void setterRiktigDokumentInfoRelasjon() {
         Journalpost journalpostNotat = JournalforingNotat.lagJournalforingNotat(Optional.optional(journalfortPostId), sak, melding, JOURNALFORENDE_ENHET_ID);
 
         DokumentinfoRelasjon dokumentinfoRelasjon = journalpostNotat.getDokumentinfoRelasjon().get(0);
@@ -61,23 +61,25 @@ public class JournalforingNotatTest extends TestDataJournalforing {
     }
 
     @Test
-    public void skalSetteRiktigTittelNaarMeldingskanalErTelefon() {
+    public void setterRiktigTittelNaarMeldingskanalErTelefon() {
         melding.kanal = JournalforingNotat.KANAL_TYPE_TELEFON;
 
         Journalpost journalpostNotat = JournalforingNotat.lagJournalforingNotat(journalfortPostIdOptional, sak, melding, JOURNALFORENDE_ENHET_ID);
 
         JournalfoertDokumentInfo dokumentInfo = journalpostNotat.getDokumentinfoRelasjon().get(0).getJournalfoertDokument();
         assertThat(dokumentInfo.getTittel(), is(DOKUMENTTITTEL_TELEFON));
+        assertThat(dokumentInfo.getBeskriverInnhold().get(0).getFilnavn(), is(DOKUMENTTITTEL_TELEFON));
     }
 
     @Test
-    public void skalSetteRiktigTittelNaarMeldingskanalIkkeErTelefon() {
+    public void setterRiktigTittelNaarMeldingskanalIkkeErTelefon() {
         melding.kanal = "annet";
 
         Journalpost journalpostNotat = JournalforingNotat.lagJournalforingNotat(journalfortPostIdOptional, sak, melding, JOURNALFORENDE_ENHET_ID);
 
         JournalfoertDokumentInfo dokumentInfo = journalpostNotat.getDokumentinfoRelasjon().get(0).getJournalfoertDokument();
         assertThat(dokumentInfo.getTittel(), is(DOKUMENTTITTEL_OPPMOTE));
+        assertThat(dokumentInfo.getBeskriverInnhold().get(0).getFilnavn(), is(DOKUMENTTITTEL_OPPMOTE));
     }
 
 }

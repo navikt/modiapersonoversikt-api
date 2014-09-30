@@ -7,13 +7,14 @@ import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -54,6 +55,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journ
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.text.IsEmptyString.isEmptyString;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
@@ -75,6 +77,7 @@ public class HenvendelseBehandlingServiceTest {
     private static final TraadVM VALGT_TRAAD = new TraadVM(createMeldingVMer());
     private static final List<String> IDER_I_VALGT_TRAAD = asList(ID_1, ID_2, ID_3);
     private static final String NAVBRUKERS_ENHET = "Navbrukers enhet";
+    public static final String ARKIVTEMANAVN = "arkivtemanavn";
 
     @Captor
     private ArgumentCaptor<WSHentHenvendelseListeRequest> wsHentHenvendelseListeRequestArgumentCaptor;
@@ -91,35 +94,31 @@ public class HenvendelseBehandlingServiceTest {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Mock
     private PersonKjerneinfoServiceBi kjerneinfo;
+    @Mock
+    private StandardKodeverk standardKodeverk;
 
     @InjectMocks
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
     private Sak sak;
     private Melding melding;
+    private List<Object> xmlHenvendelsesListe;
 
     @Before
     public void setUp() {
-        XMLMeldingFraBruker xmlMeldingFraBruker = new XMLMeldingFraBruker()
-                .withFritekst("fritekst")
-                .withTemagruppe(TEMAGRUPPE);
-
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
-
-        List<Object> xmlHenvendelseListe = new ArrayList<>();
-        xmlHenvendelseListe.add(lagXMLHenvendelse(BEHANDLINGS_ID, BEHANDLINGS_ID, DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMetadataListe().withMetadata(xmlMeldingFraBruker)));
-
-        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
-                new WSHentHenvendelseListeResponse().withAny(xmlHenvendelseListe));
-
-        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("1231");
-
         sak = createSak(SAKS_ID, SAKSTEMA, SAKSTYPE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4));
         melding = createMelding(BEHANDLINGS_ID, Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now(), TEMAGRUPPE, BEHANDLINGS_ID);
+        xmlHenvendelsesListe = new ArrayList<>();
+        xmlHenvendelsesListe.add(createStandardXMLHenvendelse());
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(
+                new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
+        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
+        when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn("1231");
+        when(standardKodeverk.getArkivtemaNavn(anyString())).thenReturn(ARKIVTEMANAVN);
     }
 
     @Test
-    public void skalHenteMeldingerMedRiktigType() {
+    public void henterMeldingerMedRiktigType() {
         henvendelseBehandlingService.hentMeldinger(FNR);
 
         verify(henvendelsePortType).hentHenvendelseListe(wsHentHenvendelseListeRequestArgumentCaptor.capture());
@@ -135,7 +134,7 @@ public class HenvendelseBehandlingServiceTest {
     }
 
     @Test
-    public void skalTransformereResponsenTilMeldingsliste() {
+    public void transformererResponsenTilMeldingsliste() {
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
         assertThat(meldinger.size(), is(1));
@@ -143,8 +142,9 @@ public class HenvendelseBehandlingServiceTest {
     }
 
     @Test
-    public void skalSendeJournalfortInformasjonTilBehandleHenvendelse() {
+    public void senderJournalfortInformasjonTilBehandleHenvendelse() {
         innloggetBrukerEr(NAVIDENT);
+
         henvendelseBehandlingService.oppdaterJournalfortInformasjonIHenvendelse(sak, JOURNALPOST_ID, melding);
 
         verify(behandleHenvendelsePortType).oppdaterJournalfortInformasjon(anyString(), xmlJournalfortInformasjonArgumentCaptor.capture());
@@ -157,7 +157,7 @@ public class HenvendelseBehandlingServiceTest {
     }
 
     @Test
-    public void skalMerkeSomKontorsperret() {
+    public void merkerSomKontorsperret() {
         HentKjerneinformasjonResponse hentKjerneinformasjonResponse = new HentKjerneinformasjonResponse();
         hentKjerneinformasjonResponse.setPerson(
                 new Person.With().personfakta(
@@ -169,37 +169,34 @@ public class HenvendelseBehandlingServiceTest {
                         ).done()
                 ).done()
         );
-
         when(kjerneinfo.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(hentKjerneinformasjonResponse);
+
         henvendelseBehandlingService.merkSomKontorsperret("navbrukers fnr", VALGT_TRAAD);
 
         verify(behandleHenvendelsePortType).oppdaterKontorsperre(NAVBRUKERS_ENHET, IDER_I_VALGT_TRAAD);
     }
 
     @Test
-    public void skalMerkeSomFeilsendt() {
+    public void merkerSomFeilsendt() {
         henvendelseBehandlingService.merkSomFeilsendt(VALGT_TRAAD);
 
         verify(behandleHenvendelsePortType).oppdaterTilKassering(IDER_I_VALGT_TRAAD);
     }
 
     @Test
-    public void skalAlltidHenteMeldingerSomIkkeErKontorsperret() {
-        List<Object> xmlHenvendelsesListe = new ArrayList<>();
-        final XMLMeldingFraBruker fritekst = new XMLMeldingFraBruker("fritekst", TEMAGRUPPE);
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", "id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMetadataListe().withMetadata(fritekst))
+    public void henterAlltidMeldingerSomIkkeErKontorsperret() {
+        xmlHenvendelsesListe.clear();
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst"))
                 .withJournalfortInformasjon(null)
                 .withKontorsperreEnhet(null));
-        final XMLMeldingFraBruker fritekst1 = new XMLMeldingFraBruker("fritekst", TEMAGRUPPE);
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", "id2", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMetadataListe().withMetadata(fritekst1))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst"))
                 .withJournalfortInformasjon(null)
                 .withKontorsperreEnhet(null));
-        final XMLMeldingFraBruker fritekst3 = new XMLMeldingFraBruker("fritekst", TEMAGRUPPE);
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", "id4", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMetadataListe().withMetadata(fritekst3))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id4", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst"))
                 .withKontorsperreEnhet("1111"));
-
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
+
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
         assertThat(meldinger.size(), is(2));
@@ -208,19 +205,57 @@ public class HenvendelseBehandlingServiceTest {
     }
 
     @Test
-    public void skalFjerneFritekstFraJournalfortMeldingManIkkeHarTilgangTil() {
-        List<Object> xmlHenvendelsesListe = new ArrayList<>();
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", "id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
+    public void fjernerFritekstFraJournalfortMeldingManIkkeHarTilgangTil() {
+        xmlHenvendelsesListe.clear();
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst"))
                 .withJournalfortInformasjon(null));
-        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", "id2", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMetadataListe().withMetadata(new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst")))
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id2", DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst"))
                 .withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortTema("tema")));
-
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false);
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
+
         List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
 
         assertThat(meldinger.size(), is(2));
         assertThat(meldinger.get(0).fritekst, is(equalTo("fritekst")));
         assertThat(meldinger.get(1).fritekst, isEmptyString());
     }
+
+    @Test
+    public void oversetterFraJournalfortTemaTilTemanavn() {
+        xmlHenvendelsesListe.clear();
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", DateTime.now().minusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst"))
+                .withJournalfortInformasjon(new XMLJournalfortInformasjon()
+                        .withJournalfortSaksId("saksid")
+                        .withJournalforerNavIdent("journalfort av navident")
+                        .withJournalfortDato(DateTime.now())
+                        .withJournalfortTema("journalfort tema"))
+
+        );
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
+
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
+
+        assertThat(meldinger.get(0).journalfortTemanavn, is(ARKIVTEMANAVN));
+    }
+
+    @Test
+    public void oversetterIkkeFraJournalfortTemaTilTemanavnDersomJournalfortTemaErNull() {
+        xmlHenvendelsesListe.clear();
+        xmlHenvendelsesListe.add(lagXMLHenvendelse("id1", DateTime.now().minusDays(1), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMeldingFraBruker(TEMAGRUPPE, "fritekst"))
+                .withJournalfortInformasjon(null));
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse().withAny(xmlHenvendelsesListe));
+
+        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(FNR);
+
+        assertNull(meldinger.get(0).journalfortTemanavn);
+    }
+
+    private XMLHenvendelse createStandardXMLHenvendelse() {
+        return lagXMLHenvendelse(BEHANDLINGS_ID, DateTime.now(), null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(),
+                new XMLMeldingFraBruker()
+                        .withFritekst("fritekst")
+                        .withTemagruppe(TEMAGRUPPE));
+    }
+
 }

@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Pdf;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Person;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.DokumentinfoRelasjon;
@@ -25,7 +26,6 @@ public class JournalforingUtgaaende extends Journalforing {
         journalpost.setInnhold(INNHOLD_BESKRIVELSE);
         journalpost.setDokumentDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(DateTime.now()));
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));
-        // TODO sjekk om det er enhetsId som skal inn i journalforendeEnhetREF eller om det er navn
         journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
         journalpost.getKryssreferanseListe().add(lagKryssreferanse(journalfortPostId));
         journalpost.setOpprettetAvNavn(getSubjectHandler().getUid());
@@ -51,7 +51,7 @@ public class JournalforingUtgaaende extends Journalforing {
         journalfoertDokumentInfo.setSensitivitet(false);
         journalfoertDokumentInfo.setTittel(DOKUMENTTITTEL);
         leggBeskriverInnholdTilJournalfortDokumentInfo(
-                journalfoertDokumentInfo.getBeskriverInnhold(), pdf);
+                journalfoertDokumentInfo.getBeskriverInnhold(), new Pdf(DOKUMENTTITTEL, pdf));
 
         return journalfoertDokumentInfo;
     }

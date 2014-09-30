@@ -26,7 +26,7 @@ public class JournalforingInngaaendeTest extends TestDataJournalforing {
     }
 
     @Test
-    public void skalLageJournalforingInngaaendeMedRiktigeFelter() {
+    public void lagerJournalforingInngaaendeMedRiktigeFelter() {
         Journalpost journalpostInngaaende = JournalforingInngaaende.lagJournalforingSporsmal(sak, melding, JOURNALFORENDE_ENHET_ID);
 
         assertNotNull(journalpostInngaaende.getKanal());
@@ -41,7 +41,7 @@ public class JournalforingInngaaendeTest extends TestDataJournalforing {
     }
 
     @Test
-    public void skalSetteRiktigDokumentInfoRelasjon() {
+    public void setterRiktigDokumentInfoRelasjon() {
         Journalpost journalpostInngaaende = JournalforingInngaaende.lagJournalforingSporsmal(sak, melding, JOURNALFORENDE_ENHET_ID);
 
         DokumentinfoRelasjon dokumentinfoRelasjon = journalpostInngaaende.getDokumentinfoRelasjon().get(0);
@@ -54,6 +54,7 @@ public class JournalforingInngaaendeTest extends TestDataJournalforing {
         assertThat(dokumentInfo.isSensitivitet(), is(false));
         assertThat(dokumentInfo.getTittel(), is(DOKUMENTTITTEL));
         assertNotNull(dokumentInfo.getBeskriverInnhold().get(0));
+        assertThat(dokumentInfo.getBeskriverInnhold().get(0).getFilnavn(), is(DOKUMENTTITTEL));
     }
 
 }

@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Pdf;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Arkivfiltyper;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Arkivtemaer;
@@ -41,7 +42,6 @@ public abstract class Journalforing {
     public static final String INNHOLD_BESKRIVELSE = "Elektronisk kommunikasjon med NAV ";
 
     public static final String FORELOPIG_PERSONIDENTIFIKATOR = "FNR";
-    public static final String FORELOPIG_DOKUMENTTITTEL = "Dokumenttittel";
 
     public static final String GSAK_FAGSYSTEMKODE = "FS22";
 
@@ -107,26 +107,24 @@ public abstract class Journalforing {
         return dokumenttyper;
     }
 
-    protected static void leggBeskriverInnholdTilJournalfortDokumentInfo(List<DokumentInnhold> beskriverInnhold, byte[] pdf) {
+    protected static void leggBeskriverInnholdTilJournalfortDokumentInfo(List<DokumentInnhold> beskriverInnhold, Pdf pdf) {
         beskriverInnhold.add(PdfDokumentToUstrukturertInnholdConverter.INSTANCE.transform(pdf));
     }
 
-    public static class PdfDokumentToUstrukturertInnholdConverter implements Transformer<byte[], UstrukturertInnhold> {
+    public static class PdfDokumentToUstrukturertInnholdConverter implements Transformer<Pdf, UstrukturertInnhold> {
         public static final PdfDokumentToUstrukturertInnholdConverter INSTANCE = new PdfDokumentToUstrukturertInnholdConverter();
 
         @Override
-        public UstrukturertInnhold transform(byte[] pdf) {
+        public UstrukturertInnhold transform(Pdf pdf) {
             UstrukturertInnhold dokumentInnhold = new UstrukturertInnhold();
-            // TODO få inn den egentlige tittelen her
-            dokumentInnhold.setFilnavn(FORELOPIG_DOKUMENTTITTEL);
+            dokumentInnhold.setFilnavn(pdf.getDokumenttittel());
             Arkivfiltyper arkivFilTyper = new Arkivfiltyper();
             arkivFilTyper.setValue(ARKIV_FILTYPE);
             dokumentInnhold.setFiltype(arkivFilTyper);
             Variantformater variansformat = new Variantformater();
             variansformat.setValue(VARIANSFORMAT);
             dokumentInnhold.setVariantformat(variansformat);
-
-            dokumentInnhold.setInnhold(pdf);
+            dokumentInnhold.setInnhold(pdf.getPdfBytes());
             return dokumentInnhold;
         }
     }

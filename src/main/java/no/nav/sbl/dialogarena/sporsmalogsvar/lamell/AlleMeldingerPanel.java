@@ -9,8 +9,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
@@ -34,15 +32,13 @@ public class AlleMeldingerPanel extends Panel {
             @Override
             protected void populateItem(final ListItem<MeldingVM> item) {
                 final MeldingVM meldingVM = item.getModelObject();
-                item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));
-                item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getModel()))
+                item.add(new Label("traadlengde")
+                        .setVisibilityAllowed(meldingVM.traadlengde > 2));
+                item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getDefaultModel()))
                         .add(cssClass(meldingVM.getStatusIkonKlasse())));
                 item.add(new Label("opprettetDato"));
-                item.add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", item.getModel())));
-                item.add(new Label("fritekst",
-                        meldingVM.melding.fritekst != null ?
-                                new PropertyModel(meldingVM, "melding.fritekst") :
-                                new ResourceModel("innhold.kassert")));
+                item.add(new Label("melding.temagruppe", new StringResourceModel("${melding.temagruppe}", item.getModel())));
+                item.add(new Label("melding.fritekst"));
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
                 item.add(new AjaxEventBehavior("click") {

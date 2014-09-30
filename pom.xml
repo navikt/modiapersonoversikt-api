@@ -21,20 +21,20 @@
         <slf4j.version>1.7.5</slf4j.version>
         <logback.version>1.0.13</logback.version>
         <modig.scm.plugin.version>1.1.11</modig.scm.plugin.version>
-        <modig.frontend.version>1.1.60</modig.frontend.version>
+        <modig.frontend.version>1.1.47-SNAPSHOT</modig.frontend.version>
         <modig-core.version>1.0.0</modig-core.version>
         <kjerneinfo.versjon>1.0.88</kjerneinfo.versjon>
-        <dialogarena.behandlingsinformasjon.version>0.0.25</dialogarena.behandlingsinformasjon.version>
+        <dialogarena.behandlingsinformasjon.version>0.0.22</dialogarena.behandlingsinformasjon.version>
         <handlebars.version>1.1.2</handlebars.version>
         <modig.security.version>1.0.21</modig.security.version>
         <henvendelse.informasjon.v2.version>0.5</henvendelse.informasjon.v2.version>
         <send.ut.henvendelse.version>0.4</send.ut.henvendelse.version>
         <behandle.henvendelse.version>0.10</behandle.henvendelse.version>
         <gsak.oppgave.version>0.0.9</gsak.oppgave.version>
-        <arena.arbeidOgAktivitet.version>1.0.6-alpha002</arena.arbeidOgAktivitet.version>
     </properties>
 
     <dependencies>
+
         <!--Dialogarena tjenestespesifikasjon-->
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
@@ -58,12 +58,6 @@
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
             <version>${gsak.oppgave.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>arena-arbeid-og-aktivitet</artifactId>
-            <version>${arena.arbeidOgAktivitet.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -130,7 +124,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>dial-nav-tjeneste-sak</artifactId>
-            <version>1.1</version>
+            <version>1.5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -187,7 +181,8 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>modiabrukerdialog-api</artifactId>
-            <version>1.1-SNAPSHOT</version>
+            <version>1.1</version>
+            <scope>provided</scope>
         </dependency>
 
         <!--Modig-->
@@ -282,6 +277,11 @@
             <artifactId>wicket-ioc</artifactId>
             <version>${wicket.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.vaynberg.wicket.select2</groupId>
+            <artifactId>wicket-select2</artifactId>
+            <version>2.2.3</version>
         </dependency>
 
         <!--Spring-->

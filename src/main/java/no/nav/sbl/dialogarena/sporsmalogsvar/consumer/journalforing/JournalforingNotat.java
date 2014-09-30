@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Pdf;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo;
@@ -25,7 +26,6 @@ public class JournalforingNotat extends Journalforing {
         journalpost.setInnhold(INNHOLD_BESKRIVELSE);
         journalpost.setDokumentDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(DateTime.now()));
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));
-        // TODO sjekk om det er enhetsId som skal inn i journalforendeEnhetREF eller om det er navn
         journalpost.setJournalfoerendeEnhetREF(journalforendeEnhetId);
         journalpost.setOpprettetAvNavn(getSubjectHandler().getUid());
 
@@ -46,20 +46,21 @@ public class JournalforingNotat extends Journalforing {
 
     private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForNotat(byte[] pdf, Melding melding) {
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
-
+        String dokumenttittel;
+        // TODO: Få inn kodeverk slik at vi får rikitg evaluering av hva slags kanal vi har
+        if (melding.kanal.equals(KANAL_TYPE_TELEFON)) {
+            dokumenttittel = DOKUMENTTITTEL_TELEFON;
+        } else {
+            dokumenttittel = DOKUMENTTITTEL_OPPMOTE;
+        }
         journalfoertDokumentInfo.setDokumentType(lagDokumenttype(DOKUMENTTYPE_NOTAT));
         journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
         journalfoertDokumentInfo.setErOrganinternt(false);
         journalfoertDokumentInfo.setKategorikode(KATEGORIKODE);
         journalfoertDokumentInfo.setSensitivitet(false);
+        journalfoertDokumentInfo.setTittel(dokumenttittel);
         leggBeskriverInnholdTilJournalfortDokumentInfo(
-                journalfoertDokumentInfo.getBeskriverInnhold(), pdf);
-        // TODO: Få inn kodeverk slik at vi får rikitg evaluering av hva slags kanal vi har
-        if (melding.kanal.equals(KANAL_TYPE_TELEFON)) {
-            journalfoertDokumentInfo.setTittel(DOKUMENTTITTEL_TELEFON);
-        } else {
-            journalfoertDokumentInfo.setTittel(DOKUMENTTITTEL_OPPMOTE);
-        }
+                journalfoertDokumentInfo.getBeskriverInnhold(), new Pdf(dokumenttittel, pdf));
 
         return journalfoertDokumentInfo;
     }

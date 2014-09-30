@@ -7,7 +7,6 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 
@@ -22,14 +21,11 @@ public class TidligereMeldingerPanel extends Panel {
                 final MeldingVM meldingVM = item.getModelObject();
                 item.add(new JournalfortSkiller("journalfortSkiller", item.getModel()));
                 item.add(new AvsenderBilde("avsenderbilde", meldingVM));
-                item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getModel()))
+                item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getDefaultModel()))
                         .add(cssClass(item.getModelObject().getStatusIkonKlasse())));
                 item.add(new Label("opprettetDato"));
-                item.add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", item.getModel())));
-                item.add(new URLParsingMultiLineLabel("fritekst",
-                        meldingVM.melding.fritekst != null ?
-                                new PropertyModel(meldingVM, "melding.fritekst") :
-                                new ResourceModel("innhold.kassert")));
+                item.add(new Label("temagruppe", new ResourceModel(meldingVM.melding.temagruppe)));
+                item.add(new URLParsingMultiLineLabel("melding.fritekst"));
             }
         });
     }
