@@ -35,7 +35,7 @@ public class HenvendelseEndpointConfig {
     @Bean
     public HenvendelsePortType henvendelsePortType() {
         return createSwitcher(
-                createHenvendelePortType(new UserSAMLOutInterceptor()),
+                createHenvendelsePortType(new UserSAMLOutInterceptor()),
                 createHenvendelsePortTypeMock(),
                 HENVENDELSE_KEY,
                 HenvendelsePortType.class
@@ -44,7 +44,7 @@ public class HenvendelseEndpointConfig {
 
     @Bean
     public Pingable henvendelsePing() {
-        final HenvendelsePortType ws = createHenvendelePortType(new SystemSAMLOutInterceptor());
+        final HenvendelsePortType ws = createHenvendelsePortType(new SystemSAMLOutInterceptor());
         return new Pingable() {
             @Override
             public List<PingResult> ping() {
@@ -60,7 +60,7 @@ public class HenvendelseEndpointConfig {
         };
     }
 
-    private static HenvendelsePortType createHenvendelePortType(AbstractSAMLOutInterceptor interceptor) {
+    private static HenvendelsePortType createHenvendelsePortType(AbstractSAMLOutInterceptor interceptor) {
         JaxWsProxyFactoryBean proxyFactoryBean = new JaxWsProxyFactoryBean();
         proxyFactoryBean.setWsdlLocation("classpath:Henvendelse.wsdl");
         proxyFactoryBean.setAddress(System.getProperty("henvendelse.v2.url"));

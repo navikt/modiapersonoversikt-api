@@ -70,12 +70,11 @@ public class HenvendelseUtsendingServiceTest {
     public static final String OPPGAVE_ID_2 = "id2";
     public static final String OPPGAVE_ID_3 = "id3";
 
-    public static final String[] UTGAAENDE_TYPER = {
+    public static final String[] SVAR_TYPER = {
             XMLHenvendelseType.SVAR_SKRIFTLIG.name(),
             XMLHenvendelseType.SVAR_OPPMOTE.name(),
-            XMLHenvendelseType.SVAR_TELEFON.name(),
-            XMLHenvendelseType.REFERAT_OPPMOTE.name(),
-            XMLHenvendelseType.REFERAT_TELEFON.name()};
+            XMLHenvendelseType.SVAR_TELEFON.name()};
+
     public static final String JOURNALFORT_TEMA = "tema jobb";
 
     @Captor
@@ -153,7 +152,6 @@ public class HenvendelseUtsendingServiceTest {
         verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name()));
-        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(UTGAAENDE_TYPER)));
     }
 
     @Test(expected = RuntimeException.class)
@@ -192,7 +190,7 @@ public class HenvendelseUtsendingServiceTest {
 
         verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
-        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(UTGAAENDE_TYPER));
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(SVAR_TYPER));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())));
     }
 
@@ -204,7 +202,7 @@ public class HenvendelseUtsendingServiceTest {
 
         List<SvarEllerReferat> svarEllerReferatForSporsmal = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
 
-        assertThat(svarEllerReferatForSporsmal.get(0).type, is(SvarEllerReferat.Henvendelsetype.REFERAT_OPPMOTE));
+        assertThat(svarEllerReferatForSporsmal.get(0).type, is(SvarEllerReferat.Henvendelsetype.SVAR_TELEFON));
         assertThat(svarEllerReferatForSporsmal.get(1).type, is(SvarEllerReferat.Henvendelsetype.SVAR_OPPMOTE));
     }
 
@@ -240,9 +238,10 @@ public class HenvendelseUtsendingServiceTest {
     private XMLHenvendelse createXMLMeldingTilBruker(String sporsmalId) {
         return new XMLHenvendelse()
                 .withFnr("")
+                .withBehandlingskjedeId(sporsmalId)
                 .withOpprettetDato(DateTime.now())
                 .withHenvendelseType(XMLHenvendelseType.SVAR_SKRIFTLIG.name())
-                .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker().withSporsmalsId(sporsmalId).withNavident("")));
+                .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLMeldingTilBruker().withNavident("")));
     }
 
     private List<Object> createToXMLMeldingTilBrukerSomSvarerPaaSporsmalsIdMedNyesteForst(String sporsmalId) {
@@ -250,17 +249,19 @@ public class HenvendelseUtsendingServiceTest {
                 new XMLHenvendelse()
                         .withFnr("")
                         .withBehandlingsId(NYESTE_HENVENDELSE_ID)
+                        .withBehandlingskjedeId(sporsmalId)
                         .withHenvendelseType(XMLHenvendelseType.SVAR_OPPMOTE.name())
                         .withOpprettetDato(DateTime.now())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
-                                new XMLMeldingTilBruker().withSporsmalsId(sporsmalId).withNavident(""))),
+                                new XMLMeldingTilBruker().withNavident(""))),
                 new XMLHenvendelse()
                         .withFnr("")
                         .withBehandlingsId(ELDSTE_HENVENDELSE)
+                        .withBehandlingskjedeId(sporsmalId)
                         .withOpprettetDato(DateTime.now().minusDays(1))
-                        .withHenvendelseType(XMLHenvendelseType.REFERAT_OPPMOTE.name())
+                        .withHenvendelseType(XMLHenvendelseType.SVAR_TELEFON.name())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
-                                new XMLMeldingTilBruker().withSporsmalsId(sporsmalId).withNavident("")))
+                                new XMLMeldingTilBruker().withNavident("")))
         ));
     }
 

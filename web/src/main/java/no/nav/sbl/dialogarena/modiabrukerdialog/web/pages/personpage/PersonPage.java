@@ -149,7 +149,7 @@ public class PersonPage extends BasePage {
                 new TimeoutBoks("timeoutBoks", fnr)
         );
 
-        settOppRiktigPanelOgLamell();
+        settOppRiktigMeldingPanelOgLamell();
     }
 
     private void instansierFelter() {
@@ -206,7 +206,7 @@ public class PersonPage extends BasePage {
         return fantParamVerdi;
     }
 
-    private void settOppRiktigPanelOgLamell() {
+    private void settOppRiktigMeldingPanelOgLamell() {
         String henvendelseId = (String) getSession().getAttribute(HENVENDELSEID);
         String oppgaveId = (String) getSession().getAttribute(OPPGAVEID);
 

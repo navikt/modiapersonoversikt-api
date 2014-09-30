@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_OPPMOTE;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_TELEFON;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_OPPMOTE;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_SKRIFTLIG;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_TELEFON;
@@ -48,6 +46,7 @@ public class HenvendelseUtsendingService {
     @Named("pep")
     private EnforcementPoint pep;
 
+    private static final List<String> SVAR = asList(SVAR_OPPMOTE.name(), SVAR_SKRIFTLIG.name(), SVAR_TELEFON.name());
 
     public void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat) {
         XMLHenvendelseType type = XMLHenvendelseType.fromValue(svarEllerReferat.type.name());
@@ -76,7 +75,7 @@ public class HenvendelseUtsendingService {
     }
 
     public List<SvarEllerReferat> getSvarEllerReferatForSporsmal(String fnr, String sporsmalId) {
-        List<String> xmlHenvendelseTyper = asList(SVAR_SKRIFTLIG.name(), SVAR_OPPMOTE.name(), SVAR_TELEFON.name(), REFERAT_OPPMOTE.name(), REFERAT_TELEFON.name());
+        List<String> xmlHenvendelseTyper = asList(SVAR_SKRIFTLIG.name(), SVAR_OPPMOTE.name(), SVAR_TELEFON.name());
         List<Object> henvendelseliste =
                 henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
                         .withTyper(xmlHenvendelseTyper)
@@ -84,12 +83,11 @@ public class HenvendelseUtsendingService {
 
         List<SvarEllerReferat> svarliste = new ArrayList<>();
 
-        XMLHenvendelse henvendelse;
+        XMLHenvendelse xmlHenvendelse;
         for (Object o : henvendelseliste) {
-            henvendelse = (XMLHenvendelse) o;
-            XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
-            if (erDetteEtSvarEllerReferatForSporsmalet(sporsmalId, xmlMetadata)) {
-                svarliste.add(createSvarEllerReferatFromXMLHenvendelse(henvendelse));
+            xmlHenvendelse = (XMLHenvendelse) o;
+            if (erDetteEtSvarEllerReferatForSporsmalet(sporsmalId, xmlHenvendelse)) {
+                svarliste.add(createSvarEllerReferatFromXMLHenvendelse(xmlHenvendelse));
             }
         }
         return on(svarliste)
@@ -97,9 +95,8 @@ public class HenvendelseUtsendingService {
                 .collect(ELDSTE_FORST);
     }
 
-    private boolean erDetteEtSvarEllerReferatForSporsmalet(String sporsmalId, XMLMetadata xmlMetadata) {
-        return xmlMetadata instanceof XMLMeldingTilBruker &&
-                ((XMLMeldingTilBruker) xmlMetadata).getSporsmalsId() != null && ((XMLMeldingTilBruker) xmlMetadata).getSporsmalsId().equals(sporsmalId);
+    private boolean erDetteEtSvarEllerReferatForSporsmalet(String sporsmalId, XMLHenvendelse xmlHenvendelse) {
+        return SVAR.contains(xmlHenvendelse.getHenvendelseType()) && sporsmalId.equals(xmlHenvendelse.getBehandlingskjedeId());
     }
 
     public Sporsmal getSporsmal(String sporsmalId) {
