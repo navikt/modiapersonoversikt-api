@@ -41,17 +41,12 @@ public abstract class Journalforing {
     public static final String KOMMUNIKASJONSKANAL = "NAV_NO";
     public static final String INNHOLD_BESKRIVELSE = "Elektronisk kommunikasjon med NAV ";
 
-    public static final String FORELOPIG_PERSONIDENTIFIKATOR = "FNR";
-
     public static final String GSAK_FAGSYSTEMKODE = "FS22";
 
     protected static Person lagPerson(String fnr) {
         Person bruker = new Person();
         Personidenter personidenter = new Personidenter();
         personidenter.setKodeRef(personidenter.getKodeverksRef());
-        //TODO Her må man skille mellom fnr og dnr når man setter verdien til kodeverket, foreløpig hardkodet til FNR
-        personidenter.setValue(FORELOPIG_PERSONIDENTIFIKATOR);
-
         NorskIdent norskIdent = new NorskIdent();
         norskIdent.setIdent(fnr);
         norskIdent.setType(personidenter);

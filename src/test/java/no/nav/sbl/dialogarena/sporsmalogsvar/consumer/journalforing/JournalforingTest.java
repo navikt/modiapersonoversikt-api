@@ -23,7 +23,6 @@ import java.util.List;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.ARKIV_FILTYPE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.DOKUMENTTYPE_NOTAT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.FORELOPIG_PERSONIDENTIFIKATOR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.GSAK_FAGSYSTEMKODE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.KOMMUNIKASJONSKANAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.KRYSSREFERANSE_KODE;
@@ -46,7 +45,6 @@ public class JournalforingTest {
         assertNotNull(person.getIdent());
         assertNotNull(person.getIdent().getType());
         assertThat(person.getIdent().getIdent(), is(FNR));
-        assertThat(person.getIdent().getType().getValue(), is(FORELOPIG_PERSONIDENTIFIKATOR));
         assertThat(person.getIdent().getType().getKodeverksRef(), is(new Personidenter().getKodeverksRef()));
     }
 
