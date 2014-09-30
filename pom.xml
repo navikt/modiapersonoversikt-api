@@ -10,7 +10,7 @@
 
     <name>Dialogarena - modiabrukerdialog</name>
     <artifactId>modiabrukerdialog</artifactId>
-    <version>3.2</version>
+    <version>3.3-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -957,7 +957,7 @@
     <scm>
         <developerConnection>scm:git:http://stash.devillo.no/scm/dial/modiabrukerdialog.git</developerConnection>
         <url>http://stash.devillo.no:7990/projects/DIAL/repos/modiabrukerdialog/browse</url>
-        <tag>modiabrukerdialog-3.2</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <profiles>
