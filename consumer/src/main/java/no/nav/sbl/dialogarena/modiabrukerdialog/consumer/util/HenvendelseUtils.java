@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
@@ -61,13 +62,27 @@ public class HenvendelseUtils {
         XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
         if (xmlMetadata instanceof XMLMeldingTilBruker) {
             XMLMeldingTilBruker xmlMeldingTilBruker = (XMLMeldingTilBruker) xmlMetadata;
-            return svarEllerReferat
+            svarEllerReferat
                     .withTemagruppe(xmlMeldingTilBruker.getTemagruppe())
                     .withKanal(xmlMeldingTilBruker.getKanal())
                     .withFritekst(xmlMeldingTilBruker.getFritekst())
                     .withNavIdent(xmlMeldingTilBruker.getNavident());
+
+            fyllInnJournalforingsInformasjon(henvendelse, svarEllerReferat);
+            return svarEllerReferat;
         } else {
             throw new ApplicationException("Henvendelsen er ikke av typen XMlMeldingTilBruker: " + xmlMetadata);
+        }
+    }
+
+    private static void fyllInnJournalforingsInformasjon(XMLHenvendelse henvendelse, SvarEllerReferat svarEllerReferat) {
+        XMLJournalfortInformasjon journalfortInformasjon = henvendelse.getJournalfortInformasjon();
+        if (journalfortInformasjon != null) {
+            svarEllerReferat
+                    .withJournalfortTema(journalfortInformasjon.getJournalfortTema())
+                    .withJournalfortSaksId(journalfortInformasjon.getJournalfortSaksId())
+                    .withJournalfortAvNavIdent(journalfortInformasjon.getJournalforerNavIdent())
+                    .withJournalfortDato(journalfortInformasjon.getJournalfortDato());
         }
     }
 
@@ -91,9 +106,9 @@ public class HenvendelseUtils {
 
     public static final Map<XMLHenvendelseType, Henvendelsetype> HENVENDELSETYPE_MAP = new HashMap<XMLHenvendelseType, Henvendelsetype>() {
         {
-            put(XMLHenvendelseType.SVAR_SKRIFTLIG,  Henvendelsetype.SVAR_SKRIFTLIG);
-            put(XMLHenvendelseType.SVAR_OPPMOTE,    Henvendelsetype.SVAR_OPPMOTE);
-            put(XMLHenvendelseType.SVAR_TELEFON,    Henvendelsetype.SVAR_TELEFON);
+            put(XMLHenvendelseType.SVAR_SKRIFTLIG, Henvendelsetype.SVAR_SKRIFTLIG);
+            put(XMLHenvendelseType.SVAR_OPPMOTE, Henvendelsetype.SVAR_OPPMOTE);
+            put(XMLHenvendelseType.SVAR_TELEFON, Henvendelsetype.SVAR_TELEFON);
             put(XMLHenvendelseType.REFERAT_OPPMOTE, Henvendelsetype.REFERAT_OPPMOTE);
             put(XMLHenvendelseType.REFERAT_TELEFON, Henvendelsetype.REFERAT_TELEFON);
         }

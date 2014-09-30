@@ -26,8 +26,18 @@ public class AutentisertBrukerKeyGenerator extends DefaultKeyGenerator {
 
     @Override
     public Object generate(Object target, Method method, Object... params) {
-        String cacheKey = Integer.toHexString(super.generate(target, method, params).hashCode());
-        return "user: " + getSubjectHandler().getUid() + " cachekey: " + getTargetClassName(target) + "." + method.getName() + "[" + cacheKey + "]";
+        String cacheKey = Integer.toHexString(
+                super.generate(target, method, params).hashCode()
+        );
+        return "user: " + getUser() + " cachekey: " + getTargetClassName(target) + "." + method.getName() + "[" + cacheKey + "]";
+    }
+
+    private String getUser() {
+        try {
+            return getSubjectHandler().getUid();
+        } catch (Exception e) {
+            return "jetty";
+        }
     }
 
     private String getTargetClassName(Object target) {

@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk;
 
 
+import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.util.CacheTest;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.HentKodeverkHentKodeverkKodeverkIkkeFunnet;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.meldinger.XMLHentKodeverkRequest;
-import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +18,7 @@ import static java.lang.System.setProperty;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk.KodeverkV2EndpointConfig.KODEVERK_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.core.Is.is;
-import static org.springframework.test.util.MatcherAssertionErrors.assertThat;
+import static org.junit.Assert.assertThat;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
@@ -38,24 +38,38 @@ public class KodeverkCacheTest extends CacheTest {
     @Inject
     private KodeverkPortType kodeverk;
 
+    @Inject
+    private KodeverkClient kodeverkClient;
+
     public KodeverkCacheTest() {
         super(CACHE_NAME);
     }
 
     @Test
     public void cacheManager_harEntryForKodeverk_etterKallTilKodeverk() throws HentKodeverkHentKodeverkKodeverkIkkeFunnet {
-        XMLHentKodeverkRequest request1 = new XMLHentKodeverkRequest().withNavn("navn");
-        XMLHentKodeverkRequest request2 = new XMLHentKodeverkRequest().withNavn("navn");
+        XMLHentKodeverkRequest request1 = new XMLHentKodeverkRequest().withNavn("navn1");
+        XMLHentKodeverkRequest request2 = new XMLHentKodeverkRequest().withNavn("navn2");
 
-        String resp1 = kodeverk.hentKodeverk(request1).getKodeverk().getNavn();
-        String resp2 = kodeverk.hentKodeverk(request2).getKodeverk().getNavn();
+        kodeverk.hentKodeverk(request1);
+        kodeverk.hentKodeverk(request1);
+        kodeverk.hentKodeverk(request2);
+        kodeverk.hentKodeverk(request2);
 
-        assertThat(resp1, is(resp2));
+        int antallCacheinstanser = getCache().getSize();
+
+        assertThat(antallCacheinstanser, is(2));
     }
 
-    @After
-    public void shutdown() {
-        cm.getCacheManager().shutdown();
+    //@Test -- Kodeverklienten har innebygget caching.
+    public void cacheManager_harEntryForKodeverkClient_etterKallTilKodeverkClient() {
+        kodeverkClient.hentFoersteTermnavnForKode("a", "b");
+        kodeverkClient.hentFoersteTermnavnForKode("a", "b");
+        kodeverkClient.hentKodeverk("ab");
+        kodeverkClient.hentKodeverk("ab");
+
+        int antallCacheinstanser = getCache().getSize();
+
+        assertThat(antallCacheinstanser, is(2));
     }
 
 }

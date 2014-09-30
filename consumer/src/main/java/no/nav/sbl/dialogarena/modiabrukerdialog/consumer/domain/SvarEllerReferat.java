@@ -7,9 +7,11 @@ import java.util.Comparator;
 
 public class SvarEllerReferat implements Serializable {
 
-    public String sporsmalsId, fnr, navIdent, temagruppe, kanal, fritekst, kontorsperretEnhet;
+    public String sporsmalsId, fnr, navIdent, temagruppe, kanal, fritekst, kontorsperretEnhet,
+            journalfortTema, journalfortSaksId, journalfortAvNavIdent;
     public DateTime opprettetDato;
     public Henvendelsetype type;
+    public DateTime journalfortDato;
 
     public enum Henvendelsetype {
         SVAR_SKRIFTLIG, SVAR_OPPMOTE, SVAR_TELEFON, REFERAT_OPPMOTE, REFERAT_TELEFON
@@ -57,6 +59,26 @@ public class SvarEllerReferat implements Serializable {
 
     public SvarEllerReferat withOpprettetDato(DateTime opprettetDato) {
         this.opprettetDato = opprettetDato;
+        return this;
+    }
+
+    public SvarEllerReferat withJournalfortTema(String journalfortTema) {
+        this.journalfortTema = journalfortTema;
+        return this;
+    }
+
+    public SvarEllerReferat withJournalfortSaksId(String journalfortSaksId) {
+        this.journalfortSaksId = journalfortSaksId;
+        return this;
+    }
+
+    public SvarEllerReferat withJournalfortAvNavIdent(String journalfortAvNavIdent) {
+        this.journalfortAvNavIdent = journalfortAvNavIdent;
+        return this;
+    }
+
+    public SvarEllerReferat withJournalfortDato(DateTime journalfortDato) {
+        this.journalfortDato = journalfortDato;
         return this;
     }
 

@@ -17,7 +17,6 @@ import static no.nav.modig.testcertificates.TestCertificates.setupKeyAndTrustSto
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NorgEndpointFelles.NORG_KEY;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.TILLATMOCKSETUP_PROPERTY;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -45,11 +44,16 @@ public class NAVAnsattEndpointCacheTest extends CacheTest {
     public void cacheManager_harEntryForEndpointCache_etterKallTilAnsattWS() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
         ASBOGOSYSNAVAnsatt req1 = new ASBOGOSYSNAVAnsatt();
         req1.setAnsattId("1");
+        ASBOGOSYSNAVAnsatt req2 = new ASBOGOSYSNAVAnsatt();
+        req1.setAnsattId("2");
 
         ansattWS.hentNAVAnsatt(req1);
+        ansattWS.hentNAVAnsatt(req1);
+        ansattWS.hentNAVAnsatt(req2);
+        ansattWS.hentNAVAnsatt(req2);
 
         assertThat(getCache().getName(), is("endpointCache"));
-        assertThat(getCache().getKeys().size(), greaterThan(0));
+        assertThat(getCache().getKeys().size(), is(2));
     }
 
 }

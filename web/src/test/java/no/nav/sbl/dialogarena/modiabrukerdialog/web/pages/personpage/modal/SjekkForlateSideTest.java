@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal;
 
 import no.nav.modig.wicket.test.internal.Parameters;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
@@ -28,6 +29,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {
         EndpointMockContext.class,
+        ConsumerServicesMockContext.class,
         HentPersonPanelMockContext.class,
         SykepengerWidgetMockContext.class,
         SaksbehandlerInnstillingerPanelMockContext.class,

@@ -2,10 +2,13 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.modig.core.context.StaticSubjectHandler;
+import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
+import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -31,6 +34,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,6 +45,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyString;
 import static org.hamcrest.Matchers.not;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -70,11 +75,16 @@ public class HenvendelseUtsendingServiceTest {
             XMLHenvendelseType.SVAR_OPPMOTE.name(),
             XMLHenvendelseType.SVAR_TELEFON.name()};
 
+    public static final String JOURNALFORT_TEMA = "tema jobb";
+
     @Captor
     ArgumentCaptor<WSSendUtHenvendelseRequest> wsSendHenvendelseRequestCaptor;
     @Captor
     ArgumentCaptor<WSHentHenvendelseListeRequest> hentHenvendelseListeRequestCaptor;
 
+    @Inject
+    @Named("pep")
+    private EnforcementPoint pep;
     @Inject
     private HenvendelsePortType henvendelsePortType;
     @Inject
@@ -196,6 +206,19 @@ public class HenvendelseUtsendingServiceTest {
         assertThat(svarEllerReferatForSporsmal.get(1).type, is(SvarEllerReferat.Henvendelsetype.SVAR_OPPMOTE));
     }
 
+    @Test
+    public void skalHenteListeAvSvarEllerReferatMedBlankFritekstOmManIkkeHarTilgang() {
+        WSHentHenvendelseListeResponse resp =
+                new WSHentHenvendelseListeResponse().withAny(createToXMLMeldingerTilBrukerSomSvarerPaSporsmalMedJournalfortTemaGruppe(SPORSMAL_ID_1, JOURNALFORT_TEMA));
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(resp);
+        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
+
+        List<SvarEllerReferat> svarEllerReferatList = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
+
+        assertThat(svarEllerReferatList.get(0).fritekst, isEmptyString());
+        assertThat(svarEllerReferatList.get(1).fritekst, not(isEmptyString()));
+    }
+
     private WSHentHenvendelseResponse mockWSHentHenvendelseResponse() {
         return new WSHentHenvendelseResponse().withAny(
                 new XMLHenvendelse()
@@ -240,6 +263,20 @@ public class HenvendelseUtsendingServiceTest {
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
                                 new XMLMeldingTilBruker().withNavident("")))
         ));
+    }
+
+    private List<Object> createToXMLMeldingerTilBrukerSomSvarerPaSporsmalMedJournalfortTemaGruppe(String sporsmalsId, String temagruppe) {
+        List<Object> lst = createToXMLMeldingTilBrukerSomSvarerPaaSporsmalsIdMedNyesteForst(sporsmalsId);
+        for (Object obj : lst) {
+            XMLHenvendelse henvendelse = (XMLHenvendelse) obj;
+            henvendelse.withMetadataListe(new XMLMetadataListe().withMetadata(
+                    new XMLMeldingTilBruker()
+                            .withSporsmalsId(sporsmalsId)
+                            .withNavident("")
+                            .withFritekst("Fritekst")
+            )).withJournalfortInformasjon(new XMLJournalfortInformasjon().withJournalfortTema(temagruppe));
+        }
+        return lst;
     }
 
 }
