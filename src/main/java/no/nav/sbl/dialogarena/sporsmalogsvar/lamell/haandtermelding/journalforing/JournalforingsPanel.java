@@ -53,6 +53,7 @@ public class JournalforingsPanel extends AnimertPanel {
     @RunOnEvents(TRAAD_JOURNALFORT)
     @Override
     public void lukkPanel(AjaxRequestTarget target) {
+        journalforingsPanelVelgSak.reset(target);
         super.lukkPanel(target);
     }
 

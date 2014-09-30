@@ -4,34 +4,40 @@
 <head></head>
 <body>
 <wicket:panel>
-    <h2 wicket:id="sakstype" class="medium sakstype"></h2>
-    <hr class="linje"/>
-    <wicket:container wicket:id="saksgruppeliste">
-        <div class="saklisteelement">
-            <span wicket:id="temaNavn" class="temaoverskrift"></span>
-            <wicket:container wicket:id="saksliste">
-                <input wicket:id="sak" type="radio">
-                <label wicket:for="sak">
-                    <div>
-                        <span class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></span>
-                        <span wicket:id="saksId"></span>
-                    </div>
-                    <div>
+    <h2 class="medium sakstype">
+        <span wicket:id="link"><wicket:container wicket:id="sakstype"/></span>
+
+        <div wicket:id="pil" class="pil"></div>
+    </h2>
+    <div class="sakswrapper">
+        <hr class="linje"/>
+        <wicket:container wicket:id="saksgruppeliste">
+            <div class="saklisteelement">
+                <span wicket:id="temaNavn" class="temaoverskrift"></span>
+                <wicket:container wicket:id="saksliste">
+                    <input wicket:id="sak" type="radio">
+                    <label wicket:for="sak">
+                        <div>
+                            <span class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></span>
+                            <span wicket:id="saksId"></span>
+                        </div>
+                        <div>
                     <span class="saksTekst">
                         <wicket:message key="journalfor.sak.opprettetDatoTekst"/>
                     </span>
-                        <span wicket:id="opprettetDatoFormatert"/>
-                    </div>
-                    <div>
+                            <span wicket:id="opprettetDatoFormatert"></span>
+                        </div>
+                        <div>
                     <span class="saksTekst">
                         <wicket:message key="journalfor.sak.fagsystemTekst"/>
                     </span>
-                        <span wicket:id="fagsystemNavn"/>
-                    </div>
-                </label>
-            </wicket:container>
-        </div>
-    </wicket:container>
+                            <span wicket:id="fagsystemNavn"></span>
+                        </div>
+                    </label>
+                </wicket:container>
+            </div>
+        </wicket:container>
+    </div>
 </wicket:panel>
 </body>
 </html>

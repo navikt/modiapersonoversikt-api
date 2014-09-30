@@ -29,6 +29,9 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.TEMAKODE;
 
 public class SakerVM implements Serializable {
 
+    private boolean visFagsaker = true;
+    private boolean visGenerelleSaker= false;
+
     public static final String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
 
     private TemaSakerListe temaSakerListeFagsak;
@@ -65,6 +68,13 @@ public class SakerVM implements Serializable {
         Map<Boolean, List<Sak>> generelleOgIkkeGenerelleSaker = splittIGenerelleSakerOgIkkeGenerelleSaker(sakerForBruker);
         temaSakerListeFagsak = getFagsaker(generelleOgIkkeGenerelleSaker);
         temaSakerListeGenerelle = getGenerelleSaker(generelleOgIkkeGenerelleSaker);
+
+        resetVM();
+    }
+
+    public void resetVM() {
+        visFagsaker = true;
+        visGenerelleSaker= false;
     }
 
     private Map<Boolean, List<Sak>> splittIGenerelleSakerOgIkkeGenerelleSaker(List<Sak> saker) {
@@ -112,5 +122,4 @@ public class SakerVM implements Serializable {
         }
         return TEMA_UTEN_TEMAGRUPPE;
     }
-
 }

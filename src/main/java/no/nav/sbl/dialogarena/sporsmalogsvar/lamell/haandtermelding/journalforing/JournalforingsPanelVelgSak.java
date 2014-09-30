@@ -58,4 +58,9 @@ public class JournalforingsPanelVelgSak extends Panel {
         sakerVM.oppdater();
     }
 
+    public void reset(AjaxRequestTarget target) {
+        sakerVM.resetVM();
+        target.add(this);
+    }
+
 }

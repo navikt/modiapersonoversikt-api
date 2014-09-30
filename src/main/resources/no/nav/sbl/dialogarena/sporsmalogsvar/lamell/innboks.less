@@ -292,7 +292,7 @@
     .pil {
       display: inline-block;
       margin-bottom: 1px;
-      .pil(6px, @dodgerblue); // definisjon i personpage.less
+      .pil(6px, @dodgerblue); // definisjon i komponenter.less
     }
   }
 
@@ -330,6 +330,23 @@
         text-align: left;
         .sakstype {
           text-align: center;
+          cursor: pointer;
+
+          &:hover {
+            text-decoration: underline;
+          }
+        }
+        .pil {
+          display: inline-block;
+          margin-bottom: 1px;
+          .pil(8px, @modiagraaskrift); // definisjon i komponenter.less
+        }
+        &.last {
+          .sakswrapper {
+            hr:only-child {
+              display: none;
+            }
+          }
         }
       }
       label {
