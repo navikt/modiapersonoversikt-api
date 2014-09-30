@@ -2,8 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
