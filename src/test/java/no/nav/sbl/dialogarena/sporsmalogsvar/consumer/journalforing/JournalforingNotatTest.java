@@ -9,6 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static no.nav.modig.core.context.SubjectHandler.SUBJECTHANDLER_KEY;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.DOKUMENTTYPE_NOTAT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.HOVEDDOKUMENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.INNHOLD_BESKRIVELSE;
@@ -62,7 +63,7 @@ public class JournalforingNotatTest extends TestDataJournalforing {
 
     @Test
     public void setterRiktigTittelNaarMeldingskanalErTelefon() {
-        melding.kanal = JournalforingNotat.KANAL_TYPE_TELEFON;
+        melding.kanal = TELEFON.name();
 
         Journalpost journalpostNotat = JournalforingNotat.lagJournalforingNotat(journalfortPostIdOptional, sak, melding, JOURNALFORENDE_ENHET_ID);
 

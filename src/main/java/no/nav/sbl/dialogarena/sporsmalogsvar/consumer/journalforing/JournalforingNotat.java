@@ -10,10 +10,10 @@ import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernota
 import org.joda.time.DateTime;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
 
 public class JournalforingNotat extends Journalforing {
 
-    public static final String KANAL_TYPE_TELEFON = "TELEFON";
     public static final String DOKUMENTTITTEL_TELEFON = "Referat fra samtale på telefon";
     public static final String DOKUMENTTITTEL_OPPMOTE = "Referat fra samtale ved oppmøte";
     public static final String KATEGORIKODE = "REFERAT";
@@ -47,8 +47,7 @@ public class JournalforingNotat extends Journalforing {
     private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForNotat(byte[] pdf, Melding melding) {
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
         String dokumenttittel;
-        // TODO: Få inn kodeverk slik at vi får rikitg evaluering av hva slags kanal vi har
-        if (melding.kanal.equals(KANAL_TYPE_TELEFON)) {
+        if (melding.kanal.equals(TELEFON.name())) {
             dokumenttittel = DOKUMENTTITTEL_TELEFON;
         } else {
             dokumenttittel = DOKUMENTTITTEL_OPPMOTE;

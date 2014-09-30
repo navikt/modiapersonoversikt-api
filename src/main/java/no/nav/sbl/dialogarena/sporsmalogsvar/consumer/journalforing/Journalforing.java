@@ -83,7 +83,6 @@ public abstract class Journalforing {
     protected static Arkivtemaer lagArkivtema(String tema) {
         Arkivtemaer arkivtemaer = new Arkivtemaer();
         arkivtemaer.setValue(tema);
-        // TODO arkivtema har to felter knyttet til koderef, den ene Kodeverkref settes automatisk(i get-metoden), mens det andre er foreløpig satt til det samme
         arkivtemaer.setKodeRef(arkivtemaer.getKodeverksRef());
         return arkivtemaer;
     }

@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
@@ -30,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService.MODIA_SYSTEM_ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createSak;
@@ -201,7 +201,7 @@ public class JoarkJournalforingServiceTest {
     @Test
     public void skalSetteRiktigeFelterIJournalforingNotatRequest() {
         MeldingVM sporsmaal = new MeldingVM(new Melding("id", Meldingstype.SAMTALEREFERAT_OPPMOTE, DateTime.now()), 1);
-        sporsmaal.melding.kanal = JournalforingNotat.KANAL_TYPE_TELEFON;
+        sporsmaal.melding.kanal = TELEFON.name();
         traadVM = new TraadVM(new ArrayList<>(Arrays.asList(sporsmaal)));
 
         joarkJournalforingService.journalforTraad(traadVM, sak);
