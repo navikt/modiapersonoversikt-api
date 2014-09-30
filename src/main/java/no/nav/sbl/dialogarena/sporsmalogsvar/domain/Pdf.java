@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.domain;
 
+import static java.util.Arrays.copyOf;
+
 public class Pdf {
 
     private String dokumenttittel;
@@ -7,7 +9,7 @@ public class Pdf {
 
     public Pdf(String dokumenttittel, byte[] pdfBytes) {
         this.dokumenttittel = dokumenttittel;
-        this.pdfBytes = pdfBytes;
+        this.pdfBytes = copyOf(pdfBytes, pdfBytes.length);
     }
 
     public String getDokumenttittel() {
@@ -15,7 +17,7 @@ public class Pdf {
     }
 
     public byte[] getPdfBytes() {
-        return pdfBytes;
+        return copyOf(pdfBytes, pdfBytes.length);
     }
 
 }
