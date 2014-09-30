@@ -1,91 +1,20 @@
-@meldingHoyde: 85px;
-@hoydePadding: 10px;
-@borderColor: #d1d1d1;
+@skilleMargin: 0 0 3px;
 
 .widget-navigasjon.widget-meldinger {
-  & > ul > li {
-    &:hover {
-      a .melding-metadata {
-        border-right-color: #999;
-      }
-    }
+  .meldingstatus {
+    display: block;
+    margin: @skilleMargin;
   }
-  & > ul > li > a {
-      &:focus {
-          background-color: #0067C5;
-          color: #ffffff !important;
-          .melding-metadata {
-              border-right-color: #999;
-              h4,p {
-                  color: #ffffff !important;
-              }
-          }
-          .ikke-lest-av-bruker {
-              background-color: #ffffff !important;
-          }
-          .lest-av-bruker {
-              border-color: #ffffff !important;
-          }
-      }
-    padding: 0;
-    .melding-metadata {
-      height: @meldingHoyde;
-      padding: @hoydePadding 30px;
-      float: left;
-      overflow: hidden;
-      width: 80%;
-      border-right: 1px solid #d1d1d1;
-      .opprettet-dato {
-        font-family: arial, sans-serif;
-        text-transform: uppercase;
-        margin: 0;
-        color: black;
-        font-size: 0.85rem;
-      }
-      h4 {
-        font-family: Modus, arial, sans-serif;
-        margin-top: 0;
-        margin-bottom: 0.5em;
-        font-size: 1.2rem;
-      }
-      .temagruppe {
-        font-family: arial, sans-serif;
-        margin: 0;
-        font-size: 0.85rem;
-      }
-    }
-    .status-container {
-      position: relative;
-      height: @meldingHoyde;
-      padding: @hoydePadding;
-      overflow: hidden;
-      text-align: center;
-      .status {
-        position: relative;
-        top: 0;
-        height: 1em;
-        width: 1em;
-        border-radius: 50%;
-        margin: 0 auto;
-        &.ikke-besvart {
-          background-color: #eebe00;
-        }
-        &.ikke-lest-av-bruker {
-          background-color: #0067c5;
-        }
-        &.lest-av-bruker {
-          background-color: transparent;
-          border: 1px solid #0067c5;
-        }
-      }
-      p {
-        position: absolute;
-        bottom: 5px;
-        left: 0;
-        width: 100%;
-        font-size: 0.85rem;
-        line-height: 1.2em;
-      }
-    }
+  .opprettet {
+    margin: @skilleMargin;
+    text-transform: uppercase;
+    display: block;
+    font-size: 0.85rem;
+  }
+  .temagruppe {
+    display: block;
+    font-weight: bold;
+    font-size: 1.2rem;
+    font-family: Modus, arial, sans-serif
   }
 }

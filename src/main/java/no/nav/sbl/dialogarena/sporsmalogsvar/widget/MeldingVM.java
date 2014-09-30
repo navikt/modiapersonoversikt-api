@@ -10,6 +10,8 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingOverskriftKey;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingStatusTekstKey;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagStatusIkonKlasse;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding.NYESTE_FORST;
 
 public class MeldingVM implements FeedItemVM, Serializable {
@@ -29,6 +31,14 @@ public class MeldingVM implements FeedItemVM, Serializable {
             return o2.melding.opprettetDato.compareTo(o1.melding.opprettetDato);
         }
     };
+
+    public String getMeldingStatusTekstKey() {
+        return lagMeldingStatusTekstKey(melding);
+    }
+
+    public String getStatusIkonKlasse() {
+        return lagStatusIkonKlasse(melding);
+    }
 
     public String getTemagruppeKey() {
         return melding.temagruppe != null ? melding.temagruppe : "temagruppe.kassert";

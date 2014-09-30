@@ -234,23 +234,6 @@
     background: url(../img/melding_flere.svg) no-repeat right;
   }
 
-  .meldingstatus {
-    margin: 0 0 1em;
-    padding-left: 2.5em;
-    font-weight: normal;
-    line-height: 22px;
-    background-repeat: no-repeat;
-    &.sporsmal {
-      background-image: url(../img/melding_sporsmaal.svg);
-    }
-    &.svar-ikke-lest-av-bruker, &.samtalereferat-ikke-lest-av-bruker {
-      background-image: url(../img/melding_svar_sendt.svg)
-    }
-    &.svar-lest-av-bruker, &.samtalereferat-lest-av-bruker {
-      background-image: url(../img/melding_svar_lest.svg)
-    }
-  }
-
   .hoyrestilt-innhold {
     text-align: right;
   }
@@ -449,5 +432,22 @@
     margin: 1rem;
     padding: 1rem;
     border: 0.3rem solid orange;
+  }
+}
+
+.meldingstatus {
+  margin: 0 0 1em;
+  padding-left: 2.5em;
+  font-weight: normal;
+  line-height: 22px;
+  background-repeat: no-repeat;
+  &.sporsmal {
+    background-image: url(../img/melding_sporsmaal.svg);
+  }
+  &.svar-ikke-lest-av-bruker, &.samtalereferat-ikke-lest-av-bruker {
+    background-image: url(../img/melding_svar_sendt.svg)
+  }
+  &.svar-lest-av-bruker, &.samtalereferat-lest-av-bruker {
+    background-image: url(../img/melding_svar_lest.svg)
   }
 }
