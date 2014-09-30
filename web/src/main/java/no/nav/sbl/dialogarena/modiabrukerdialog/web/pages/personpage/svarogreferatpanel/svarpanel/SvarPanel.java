@@ -5,11 +5,11 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Kanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
@@ -42,6 +42,9 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 
@@ -126,7 +129,7 @@ public class SvarPanel extends Panel {
 
     private SvarOgReferatVM lagModelObjectMedKanalOgTemagruppe() {
         SvarOgReferatVM svarOgReferatVM = new SvarOgReferatVM();
-        svarOgReferatVM.kanal = SvarKanal.TEKST;
+        svarOgReferatVM.kanal = TEKST;
         svarOgReferatVM.temagruppe = getTemagruppeFraSporsmal();
         return svarOgReferatVM;
     }
@@ -153,11 +156,11 @@ public class SvarPanel extends Panel {
         public SvarForm(String id, SvarOgReferatVM svarOgReferatVM) {
             super(id, new CompoundPropertyModel<>(svarOgReferatVM));
 
-            final RadioGroup<SvarKanal> radioGroup = new RadioGroup<>("kanal");
+            final RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal");
             radioGroup.setRequired(true);
-            radioGroup.add(new ListView<SvarKanal>("kanalvalg", asList(SvarKanal.values())) {
+            radioGroup.add(new ListView<Kanal>("kanalvalg", asList(Kanal.values())) {
                 @Override
-                protected void populateItem(ListItem<SvarKanal> item) {
+                protected void populateItem(ListItem<Kanal> item) {
                     item.add(new Radio<>("kanalknapp", item.getModel()));
                     item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
                 }
@@ -204,7 +207,7 @@ public class SvarPanel extends Panel {
         private void sendOgVisKvittering(SvarOgReferatVM svarOgReferatVM, AjaxRequestTarget target) {
             sendHenvendelse(svarOgReferatVM);
             send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
-            kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey()), target,
+            kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey("svarpanel")), target,
                     visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
         }
 
@@ -225,11 +228,11 @@ public class SvarPanel extends Panel {
 
         private Henvendelsetype svarType(Kanal kanal) {
             Henvendelsetype henvendelsetype = null;
-            if (kanal == SvarKanal.TEKST) {
+            if (kanal == TEKST) {
                 henvendelsetype = Henvendelsetype.SVAR_SKRIFTLIG;
-            } else if (kanal == SvarKanal.OPPMOTE) {
+            } else if (kanal == OPPMOTE) {
                 henvendelsetype = Henvendelsetype.SVAR_OPPMOTE;
-            } else if (kanal == SvarKanal.TELEFON) {
+            } else if (kanal == TELEFON) {
                 henvendelsetype = Henvendelsetype.SVAR_TELEFON;
             }
             return henvendelsetype;

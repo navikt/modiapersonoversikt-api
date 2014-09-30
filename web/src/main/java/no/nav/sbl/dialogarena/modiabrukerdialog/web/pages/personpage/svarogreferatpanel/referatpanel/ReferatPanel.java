@@ -4,10 +4,10 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Kanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
@@ -37,9 +37,9 @@ import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_OPPMOTE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_TELEFON;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatKanal.OPPMOTE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatKanal.TELEFON;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatKanal.values;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON_OG_OPPMOTE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class ReferatPanel extends Panel {
@@ -83,9 +83,9 @@ public class ReferatPanel extends Panel {
 
         form.add(new RadioGroup<>("kanal")
                 .setRequired(true)
-                .add(new ListView<ReferatKanal>("kanalvalg", asList(values())) {
+                .add(new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
                     @Override
-                    protected void populateItem(ListItem<ReferatKanal> item) {
+                    protected void populateItem(ListItem<Kanal> item) {
                         item.add(new Radio<>("kanalknapp", item.getModel()));
                         item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
                     }
@@ -130,7 +130,7 @@ public class ReferatPanel extends Panel {
     private void sendOgVisKvittering(AjaxRequestTarget target, Form<SvarOgReferatVM> form) {
         sendHenvendelse(svarOgReferatVM);
         send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
-        kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey()), target, form);
+        kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey("referatpanel")), target, form);
     }
 
     private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) {
@@ -149,4 +149,5 @@ public class ReferatPanel extends Panel {
     private Henvendelsetype referatType(Kanal kanal) {
         return kanal == OPPMOTE ? REFERAT_OPPMOTE : REFERAT_TELEFON;
     }
+
 }

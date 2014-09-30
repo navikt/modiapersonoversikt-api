@@ -9,7 +9,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarKanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.TidligereMeldingPanel;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -33,6 +32,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withModelObject;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withTextSaying;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -111,7 +111,7 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     public void tekstligSvarErValgtSomDefault() {
         wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
-                .should().containComponent(withId("kanal").and(withModelObject(is(SvarKanal.TEKST))));
+                .should().containComponent(withId("kanal").and(withModelObject(is(TEKST))));
     }
 
     @Test

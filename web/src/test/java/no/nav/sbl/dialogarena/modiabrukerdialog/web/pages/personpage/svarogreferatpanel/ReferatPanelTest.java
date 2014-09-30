@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatKanal;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -26,6 +25,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
@@ -103,7 +103,7 @@ public class ReferatPanelTest extends WicketPageTest {
         wicket.goToPageWith(new TestReferatPanel("id", "fnr"));
 
         SvarOgReferatVM modelObject = (SvarOgReferatVM) wicket.get().component(withId("referatform").and(ofType(Form.class))).getDefaultModelObject();
-        assertThat(modelObject.kanal, is((equalTo((Kanal) ReferatKanal.TELEFON))));
+        assertThat(modelObject.kanal, is((equalTo(TELEFON))));
     }
 
     @Test
@@ -120,7 +120,7 @@ public class ReferatPanelTest extends WicketPageTest {
         TestReferatPanel referatPanel = new TestReferatPanel("id", "fnr");
         Object referatformModel = referatPanel.get("referatform").getDefaultModelObject();
         SvarOgReferatVM svarOgReferatVM = (SvarOgReferatVM) referatformModel;
-        svarOgReferatVM.kanal = ReferatKanal.TELEFON;
+        svarOgReferatVM.kanal = TELEFON;
         svarOgReferatVM.temagruppe = Temagruppe.ARBD;
         return referatPanel;
     }
