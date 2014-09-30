@@ -12,3 +12,15 @@
 .saker .behandling-informasjon {
     min-height: auto !important;
 }
+
+@media print {
+    .saksoversikt {
+        height: 0px !important;
+        display: inline-block;
+    }
+
+    .saksoversikt .lerret {
+        height: 0px !important;
+        display: inline-block;
+    }
+}
