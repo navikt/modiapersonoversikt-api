@@ -10,6 +10,8 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.commons.collections15.Closure;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.injection.Injector;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
 import java.io.Serializable;
@@ -29,10 +31,10 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.TEMAKODE;
 
 public class SakerVM implements Serializable {
 
-    private boolean visFagsaker = true;
-    private boolean visGenerelleSaker= false;
-
     public static final String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
+
+    public final IModel<Boolean> visFagsaker = Model.of(true);
+    public final IModel<Boolean> visGenerelleSaker = Model.of(false);
 
     private TemaSakerListe temaSakerListeFagsak;
     private TemaSakerListe temaSakerListeGenerelle;
@@ -69,12 +71,8 @@ public class SakerVM implements Serializable {
         temaSakerListeFagsak = getFagsaker(generelleOgIkkeGenerelleSaker);
         temaSakerListeGenerelle = getGenerelleSaker(generelleOgIkkeGenerelleSaker);
 
-        resetVM();
-    }
-
-    public void resetVM() {
-        visFagsaker = true;
-        visGenerelleSaker= false;
+        visFagsaker.setObject(true);
+        visGenerelleSaker.setObject(false);
     }
 
     private Map<Boolean, List<Sak>> splittIGenerelleSakerOgIkkeGenerelleSaker(List<Sak> saker) {

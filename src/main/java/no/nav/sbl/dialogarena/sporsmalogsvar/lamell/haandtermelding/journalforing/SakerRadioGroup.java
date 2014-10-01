@@ -15,26 +15,20 @@ public class SakerRadioGroup extends RadioGroup<Sak> {
         super(id);
         setRequired(true);
 
-        setup();
-
         add(
                 new SakerPerSakstypeRadioChoices(
                         "sakstypePanelFagsaker",
                         new PropertyModel<List<TemaSaker>>(sakerVM, "fagsakerGruppertPaaTema"),
                         FAGSAK_PROPERTY_NAVN,
-                        new PropertyModel<Boolean>(sakerVM, "visFagsaker")
+                        sakerVM.visFagsaker
                 ),
                 new SakerPerSakstypeRadioChoices(
                         "sakstypePanelGenerelle",
                         new PropertyModel<List<TemaSaker>>(sakerVM, "generelleSakerGruppertPaaTema"),
                         GENERELL_PROPERTY_NAVN,
-                        new PropertyModel<Boolean>(sakerVM, "visGenerelleSaker")
+                        sakerVM.visGenerelleSaker
                 )
         );
-    }
-
-    private void setup() {
-
     }
 
 }
