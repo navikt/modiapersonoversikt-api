@@ -133,6 +133,7 @@ public class SaksoversiktLerret extends Lerret {
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void filtrerDetaljerPaaValgtTema(AjaxRequestTarget target, FeedItemPayload payload) {
         settAktivtTema(payload.getItemId());
+        target.appendJavaScript("$(\".sak-navigering > UL > LI.aktiv > A\").focus();");
     }
 
     @SuppressWarnings("unused")
@@ -164,10 +165,7 @@ public class SaksoversiktLerret extends Lerret {
         super.renderHead(response);
         response.render(new JavaScriptContentHeaderItem("resizeElement()", "saksoversikt-ie-js", "IE"));
         response.render(JavaScriptReferenceHeaderItem.forReference(NAVIGATION_JS));
+        response.render(OnDomReadyHeaderItem.forScript("addOnClickListeners();"));
         response.render(OnDomReadyHeaderItem.forScript("new Modig.Modia.SaksoversiktView('#" + temaContainer.getMarkupId() + "','" + initial + "');"));
-        response.render(OnLoadHeaderItem.forScript("addLamellTemaOnClickListeners();"));
-        response.render(OnLoadHeaderItem.forScript("addSaksinformasjonClickListeners();"));
-        response.render(OnLoadHeaderItem.forScript("oppdaterSaksinformasjonSynlighet();"));
-        response.render(OnLoadHeaderItem.forScript("$(\".sak-navigering > UL > LI.aktiv > A\").focus();"));
     }
 }

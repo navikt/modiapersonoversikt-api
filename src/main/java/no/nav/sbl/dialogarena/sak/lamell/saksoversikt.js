@@ -3,6 +3,12 @@ function addKvitteringsPanelEvents() {
     addPrintClickEvent();
 }
 
+function addOnClickListeners() {
+    addLamellTemaOnClickListeners();
+    addSaksinformasjonClickListeners();
+    oppdaterSaksinformasjonSynlighet();
+}
+
 function addPrintClickEvent() {
     $('.saksoversikt .skriv-ut').click(function(event) {
         event.preventDefault();
