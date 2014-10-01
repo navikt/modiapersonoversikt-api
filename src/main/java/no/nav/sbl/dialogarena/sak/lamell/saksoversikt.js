@@ -1,3 +1,8 @@
+function initSaksoversikt(element, hotkey) {
+    addOnClickListeners();
+    new Modig.Modia.SaksoversiktView("#"+element, hotkey);
+}
+
 function addKvitteringsPanelEvents() {
     addExpandClickEvent();
     addPrintClickEvent();

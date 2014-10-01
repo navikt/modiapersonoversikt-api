@@ -162,9 +162,7 @@ public class SaksoversiktLerret extends Lerret {
     @Override
     public void renderHead(IHeaderResponse response) {
         super.renderHead(response);
-        response.render(new JavaScriptContentHeaderItem("resizeElement()", "saksoversikt-ie-js", "IE"));
         response.render(JavaScriptReferenceHeaderItem.forReference(NAVIGATION_JS));
-        response.render(OnDomReadyHeaderItem.forScript("addOnClickListeners();"));
-        response.render(OnDomReadyHeaderItem.forScript("new Modig.Modia.SaksoversiktView('#" + temaContainer.getMarkupId() + "','" + INITIAL + "');"));
+        response.render(OnDomReadyHeaderItem.forScript("initSaksoversikt('" + temaContainer.getMarkupId() + "','" + INITIAL + "');"));
     }
 }
