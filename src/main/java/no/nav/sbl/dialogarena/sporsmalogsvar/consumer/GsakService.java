@@ -77,7 +77,7 @@ public class GsakService {
         try {
             valgtEnhetId = Integer.parseInt(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         } catch (NumberFormatException e) {
-            logger.warn(String.format("EnhetId %s kunne ikke gjøres om til Integer", saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()));
+            logger.error(String.format("EnhetId %s kunne ikke gjøres om til Integer", saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()));
             valgtEnhetId = DEFAULT_OPPRETTET_AV_ENHET_ID;
         }
         oppgavebehandling.opprettOppgave(
