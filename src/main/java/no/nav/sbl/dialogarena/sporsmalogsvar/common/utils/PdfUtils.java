@@ -20,11 +20,22 @@ public class PdfUtils {
     public static byte[] genererPdf(Melding melding) {
         Map<String, Helper<?>> helpers = generateHelpers();
         try {
-            PDFMelding innhold = new PDFMelding(melding.fnrBruker, melding.meldingstype.name(), melding.navIdent, melding.fritekst, melding.opprettetDato);
+            PDFMelding innhold = new PDFMelding(melding);
             String html = HandleBarHtmlGenerator.fyllHtmlMalMedInnhold(innhold, "html/melding", helpers);
             return PDFFabrikk.lagPdfFil(html);
         } catch (IOException e) {
             throw new ApplicationException("Kunne ikke lage markup av melding", e);
+        }
+    }
+
+    public static byte[] genererPdfForPrint(Melding melding) {
+        Map<String, Helper<?>> helpers = generateHelpers();
+        try {
+            PDFMelding innhold = new PDFMelding(melding);
+            String html = HandleBarHtmlGenerator.fyllHtmlMalMedInnhold(innhold, "html/print", helpers);
+            return PDFFabrikk.lagPdfFil(html);
+        } catch (IOException e) {
+            throw new ApplicationException("Kunne ikke lage markup av melding for print", e);
         }
     }
 
@@ -64,15 +75,22 @@ public class PdfUtils {
     }
 
     private static final class PDFMelding {
-        public final String fnrBruker, meldingstype, navIdent, fritekst;
-        public final DateTime opprettetDato;
+        public final String fnrBruker, meldingstype, navIdent, fritekst, kanal, temagruppe, journalfortTema, kontorsperretEnhet, markertSomFeilsendtAv;
+        public final DateTime opprettetDato, journalFortDato;
 
-        private PDFMelding(String fnrBruker, String meldingstype, String navIdent, String fritekst, DateTime opprettetDato) {
-            this.fnrBruker = fnrBruker;
-            this.meldingstype = lagPDFMeldingstype(meldingstype);
-            this.navIdent = navIdent;
-            this.fritekst = fritekst;
-            this.opprettetDato = opprettetDato;
+
+        public PDFMelding(Melding melding) {
+            this.fnrBruker = melding.fnrBruker;
+            this.meldingstype = lagPDFMeldingstype(melding.meldingstype.name());
+            this.navIdent = melding.navIdent;
+            this.fritekst = melding.fritekst;
+            this.opprettetDato = melding.opprettetDato;
+            this.kanal = melding.kanal;
+            this.temagruppe = melding.temagruppe;
+            this.journalFortDato = melding.journalfortDato;
+            this.journalfortTema = melding.journalfortTema;
+            this.kontorsperretEnhet = melding.kontorsperretEnhet;
+            this.markertSomFeilsendtAv = melding.markertSomFeilsendtAv;
         }
 
         private String lagPDFMeldingstype(String meldingstype) {

@@ -1,0 +1,92 @@
+<html>
+	<head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+            <style type="text/css">
+                @page   { size: A4; margin: 3.5cm 2cm 2.5cm; @top-center { content: element(header, last-except) }; @bottom-center { content: element(footer) }; }
+                @page:first { margin: 1.5cm 2cm 2.5cm; }
+                *       { box-sizing: border-box; }
+                body    { font-family: Arial, sans-serif; font-size: 10pt; line-height: 1.4em; margin: 0; color: #3e3832; }
+                h1      { font-family: Modus, Arial, sans-serif; font-size: 24pt; }
+                h2, h3, h4, h5, h6 { font-family: Modus, Arial, sans-serif; font-size: 13pt; }
+
+                .vannmerke{border: 1px solid red; margin: 5px; float: right; padding: 5px;}
+                .vannmerke span, .info span{display:block}
+                .meldingstypeheading {padding-bottom:35px;}
+                .bold {font-weight: bold;}
+            </style>
+	</head>
+	<body>
+		<div>
+            <div class="vannmerke">
+                <span class="bold">Fnr: {{fnrBruker}}</span>
+                <span>Mottatt/Sendt: {{formaterDato opprettetDato}}</span>
+                <span>Dette er sendt elektronisk i løsning som krever nivå 4 pålogging</span>
+            </div>
+
+            {{#hvisLik meldingstype "SAMTALEREFERAT"}}
+                <h2 class="meldingstypeheading">Samtalereferat</h2>
+            {{/hvisLik}}
+
+            {{#hvisLik meldingstype "SPORSMAL"}}
+                <h2 class="meldingstypeheading">Spørsmål</h2>
+            {{/hvisLik}}
+
+            {{#hvisLik meldingstype "SVAR"}}
+                <h2 class="meldingstypeheading">Svar</h2>
+            {{/hvisLik}}
+
+            <div class="info">
+                <span class="bold">Henvendelse registrert av:</span>
+                {{#hvisLik meldingstype "SAMTALEREFERAT"}}
+                    <span>{{navIdent}}</span>
+                    <br></br>
+                    <span class="bold">Type: samtalereferat (N)</span>
+                {{/hvisLik}}
+
+                {{#hvisLik meldingstype "SPORSMAL"}}
+                    <span>{{fnrBruker}}</span>
+                    <br></br>
+                    <span class="bold">Type: innkommende henvendelse (I)</span>
+                {{/hvisLik}}
+
+                {{#hvisLik meldingstype "SVAR"}}
+                    <span>{{navIdent}}</span>
+                    <br></br>
+                    <span class="bold">Type: utgående henvendelse (U)</span>
+                {{/hvisLik}}
+
+                {{#hvisIkkeTom temagruppe}}
+                    <span class="bold">Temagruppe: {{temagruppe}}</span>
+                {{/hvisIkkeTom}}
+
+                {{#hvisIkkeTom kanal}}
+                   <span class="bold">Kanal: {{kanal}}</span>
+                {{/hvisIkkeTom}}
+
+                {{#hvisIkkeTom journalFortDato}}
+                    <span class="bold">Journalført: {{formaterDato journalFortDato}}</span>
+                {{/hvisIkkeTom}}
+
+                {{#hvisIkkeTom journalfortTema}}
+                    <span class="bold">Journalført med tema: {{journalfortTema}}</span>
+                {{/hvisIkkeTom}}
+
+                {{#hvisIkkeTom kontorsperretEnhet}}
+                    <span class="bold">Kontorsperre: {{kontorsperretEnhet}}</span>
+                {{/hvisIkkeTom}}
+
+                {{#hvisIkkeTom markertSomFeilsendtAv}}
+                    <span class="bold">Markert som feilsendt av: {{markertSomFeilsendtAv}}</span>
+                {{/hvisIkkeTom}}
+
+            </div>
+
+
+
+            <div>
+                <h3>Innhold: </h3>
+                <span>{{fritekst}}</span>
+            </div>
+		</div>
+    </body>
+</html>
