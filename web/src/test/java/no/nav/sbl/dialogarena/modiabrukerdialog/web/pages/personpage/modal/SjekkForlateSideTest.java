@@ -8,6 +8,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelM
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
+import no.nav.sbl.dialogarena.sak.config.SaksoversiktServiceConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
 import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -32,6 +33,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         ConsumerServicesMockContext.class,
         HentPersonPanelMockContext.class,
         SykepengerWidgetMockContext.class,
+        SaksoversiktServiceConfig.class,
         SaksbehandlerInnstillingerPanelMockContext.class,
         UtbetalingLamellContext.class,
         SporsmalOgSvarContext.class
