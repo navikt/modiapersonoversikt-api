@@ -24,7 +24,7 @@ public class PrintLenke extends DownloadLink {
         setDeleteAfterDownload(true);
     }
 
-    private static class PrintFilModel extends LoadableDetachableModel<File> {
+    private static final class PrintFilModel extends LoadableDetachableModel<File> {
 
         private IModel<List<MeldingVM>> model;
 
