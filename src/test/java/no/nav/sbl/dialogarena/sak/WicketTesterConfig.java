@@ -8,8 +8,10 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSok
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.protocol.http.WebApplication;
+import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
@@ -18,6 +20,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.inject.Inject;
+import java.util.Locale;
 
 import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.RETURNS_MOCKS;
@@ -32,7 +35,22 @@ public class WicketTesterConfig {
 
     @Bean
     public FluentWicketTester<? extends WebApplication> wicketTester() {
-        return new FluentWicketTester<>(new DummyApplication(applicationContext));
+        DummyApplication dummyApplication = new DummyApplication(applicationContext) {
+            @Override
+            protected void init() {
+                super.init();
+                getResourceSettings().getStringResourceLoaders().add(0, new IStringResourceLoader() {
+                    @Override public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation) {
+                        return "Mock-tekst fra CMS";
+                    }
+
+                    @Override public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
+                        return "Mock-tekst fra CMS";
+                    }
+                });
+            }
+        };
+        return new FluentWicketTester<>(dummyApplication);
     }
 
     @Bean
