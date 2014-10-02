@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
@@ -55,23 +56,6 @@ public class HenvendelseUtsendingService {
                 .withAny(xmlHenvendelse));
     }
 
-    public Sporsmal getSporsmalFromOppgaveId(String fnr, String oppgaveId) {
-        List<Object> henvendelseliste =
-                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withTyper(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name()).withFodselsnummer(fnr)).getAny();
-        XMLHenvendelse henvendelse;
-        for (Object o : henvendelseliste) {
-            henvendelse = (XMLHenvendelse) o;
-            if (erDetteEtSporsmalMedDenneGsakIden(oppgaveId, henvendelse)) {
-                return createSporsmalFromXMLHenvendelse(henvendelse);
-            }
-        }
-        throw new RuntimeException("Finner ikke spørsmål med oppgaveId " + oppgaveId);
-    }
-
-    private boolean erDetteEtSporsmalMedDenneGsakIden(String oppgaveId, XMLHenvendelse henvendelse) {
-        return oppgaveId.equals(henvendelse.getOppgaveIdGsak());
-    }
-
     public List<SvarEllerReferat> getSvarEllerReferatForSporsmal(String fnr, String sporsmalId) {
         List<String> xmlHenvendelseTyper = asList(SVAR_SKRIFTLIG.name(), SVAR_OPPMOTE.name(), SVAR_TELEFON.name());
         List<Object> henvendelseliste =
@@ -84,7 +68,7 @@ public class HenvendelseUtsendingService {
         XMLHenvendelse xmlHenvendelse;
         for (Object o : henvendelseliste) {
             xmlHenvendelse = (XMLHenvendelse) o;
-            if (erDetteEtSvarEllerReferatForSporsmalet(sporsmalId, xmlHenvendelse)) {
+            if (svarEllerReferatForSporsmalet(sporsmalId, xmlHenvendelse)) {
                 svarliste.add(createSvarEllerReferatFromXMLHenvendelse(xmlHenvendelse));
             }
         }
@@ -93,11 +77,11 @@ public class HenvendelseUtsendingService {
                 .collect(ELDSTE_FORST);
     }
 
-    private boolean erDetteEtSvarEllerReferatForSporsmalet(String sporsmalId, XMLHenvendelse xmlHenvendelse) {
+    private boolean svarEllerReferatForSporsmalet(String sporsmalId, XMLHenvendelse xmlHenvendelse) {
         return SVAR.contains(xmlHenvendelse.getHenvendelseType()) && sporsmalId.equals(xmlHenvendelse.getBehandlingskjedeId());
     }
 
-    public Sporsmal getSporsmal(String sporsmalId) {
+    public Optional<Sporsmal> getSporsmal(String sporsmalId) {
         XMLHenvendelse xmlHenvendelse =
                 (XMLHenvendelse) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalId)).getAny();
         return createSporsmalFromXMLHenvendelse(xmlHenvendelse);

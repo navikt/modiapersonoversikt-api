@@ -70,6 +70,7 @@ public class GsakOppgaveV3PortTypeMock {
     public static WSOppgave lagWSOppgave(String oppgaveId) {
         return new WSOppgave()
                 .withOppgaveId(oppgaveId)
+                .withHenvendelseId(HenvendelsePortTypeMock.behandlingsId1)
                 .withOppgavetype(new WSOppgavetype().withKode("wsOppgavetype"))
                 .withGjelder(new WSBruker().withBrukerId("***REMOVED***"))
                 .withStatus(new WSStatus().withKode("statuskode"))

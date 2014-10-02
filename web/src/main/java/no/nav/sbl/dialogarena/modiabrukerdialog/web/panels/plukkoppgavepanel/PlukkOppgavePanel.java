@@ -30,8 +30,10 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.HENVENDELSEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.OPPGAVEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_HENVENDELSEID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
@@ -57,7 +59,11 @@ public class PlukkOppgavePanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 if (brukerHarEnAnnenPlukketOppgavePaaSession()) {
-                    redirectForAaBesvareOppgave(getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR), getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR));
+                    redirectForAaBesvareOppgave(
+                            getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR),
+                            getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR),
+                            getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR)
+                    );
                     return;
                 }
 
@@ -65,7 +71,7 @@ public class PlukkOppgavePanel extends Panel {
                 if (oppgave.isSome()) {
                     lagrePlukketOppgavePaaSession(oppgave.get());
                     lagreValgtTemagruppePaaSession(valgtTemagruppe.getObject());
-                    redirectForAaBesvareOppgave(oppgave.get().fnr, oppgave.get().oppgaveId);
+                    redirectForAaBesvareOppgave(oppgave.get().fnr, oppgave.get().henvendelseId, oppgave.get().oppgaveId);
                 } else {
                     error(getString("plukkoppgave.ingenoppgaverpaatemagruppe"));
                     target.add(feedbackPanel);
@@ -95,15 +101,17 @@ public class PlukkOppgavePanel extends Panel {
         return getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR) != null && getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR) != null;
     }
 
-    private void redirectForAaBesvareOppgave(Serializable fnr, Serializable oppgaveid) {
+    private void redirectForAaBesvareOppgave(Serializable fnr, Serializable henvendelseid, Serializable oppgaveid) {
         setResponsePage(PersonPage.class,
                 new PageParameters()
                         .set("fnr", fnr)
+                        .set(HENVENDELSEID, henvendelseid)
                         .set(OPPGAVEID, oppgaveid)
         );
     }
 
     private void lagrePlukketOppgavePaaSession(Oppgave oppgave) {
+        getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, oppgave.henvendelseId);
         getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, oppgave.oppgaveId);
         getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, oppgave.fnr);
     }

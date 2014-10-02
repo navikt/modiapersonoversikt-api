@@ -12,6 +12,7 @@ import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createSporsmalFromXMLHenvendelse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -45,7 +46,7 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingFraBruker();
         XMLMeldingFraBruker xmlMeldingFraBruker = (XMLMeldingFraBruker) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
-        Sporsmal sporsmal = HenvendelseUtils.createSporsmalFromXMLHenvendelse(xmlHenvendelse);
+        Sporsmal sporsmal = createSporsmalFromXMLHenvendelse(xmlHenvendelse).get();
 
         assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
@@ -59,20 +60,13 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingFraBruker();
         xmlHenvendelse.setMetadataListe(null);
 
-        Sporsmal sporsmal = HenvendelseUtils.createSporsmalFromXMLHenvendelse(xmlHenvendelse);
+        Sporsmal sporsmal = createSporsmalFromXMLHenvendelse(xmlHenvendelse).get();
 
         assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
         assertThat(sporsmal.oppgaveId, is(xmlHenvendelse.getOppgaveIdGsak()));
         assertThat(sporsmal.temagruppe, is(nullValue()));
         assertThat(sporsmal.fritekst, is(nullValue()));
-    }
-
-    @Test(expected = ApplicationException.class)
-    public void skalKasteExeptionDersomManLagerSporsmalBasertPaaXMLHenvendelseMedNoeAnnetEnnXMLMeldingFraBruker() {
-        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.SVAR_SKRIFTLIG);
-
-        HenvendelseUtils.createSporsmalFromXMLHenvendelse(xmlHenvendelse);
     }
 
     @Test

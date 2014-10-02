@@ -61,11 +61,11 @@ public class HenvendelsePortTypeMock {
             "minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure " +
             "dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
 
-    private static String behandlingsId1 = randomId();
-    private static String behandlingsId2 = randomId();
-    private static String behandlingsId3 = randomId();
-    private static String behandlingsId4 = randomId();
-    private static String behandlingsId5 = randomId();
+    public static String behandlingsId1 = randomId();
+    public static String behandlingsId2 = randomId();
+    public static String behandlingsId3 = randomId();
+    public static String behandlingsId4 = randomId();
+    public static String behandlingsId5 = randomId();
 
     private static String randomId() {
         return valueOf(idGenerator.nextInt());

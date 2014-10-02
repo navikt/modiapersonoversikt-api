@@ -36,6 +36,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
@@ -90,8 +91,7 @@ public class PersonPageTest extends WicketPageTest {
         Sporsmal sporsmal = new Sporsmal("id", DateTime.now());
         sporsmal.temagruppe = ARBD.name();
         sporsmal.oppgaveId = "id";
-        when(henvendelseUtsendingService.getSporsmalFromOppgaveId(anyString(), anyString())).thenReturn(sporsmal);
-        when(henvendelseUtsendingService.getSporsmal(anyString())).thenReturn(sporsmal);
+        when(henvendelseUtsendingService.getSporsmal(anyString())).thenReturn(optional(sporsmal));
         when(gsakKodeverk.hentTemaListe()).thenReturn(new ArrayList<>(Arrays.asList(
                 new GsakKodeTema.Tema("kode", "tekst",
                         new ArrayList<>(Arrays.asList(new GsakKodeTema.OppgaveType("kode", "tekst", 1))),
@@ -146,16 +146,6 @@ public class PersonPageTest extends WicketPageTest {
     public void gittIngenUrlParamVisesReferatPanelOgOversiktLamell() {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(ReferatPanel.class)));
-    }
-
-    @Test
-    public void gittBareOppgaveUrlParamVisesSvarPanelOgOversiktLamell() {
-        String oppgaveid = "oppgaveid";
-
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(OPPGAVEID, oppgaveid))
-                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
-
-        verify(henvendelseUtsendingService).getSporsmalFromOppgaveId(testFnr, oppgaveid);
     }
 
     @Test

@@ -26,6 +26,7 @@ import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_HENVENDELSEID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel.TEMAGRUPPE_ATTR;
 import static org.apache.wicket.authorization.IAuthorizationStrategy.ALLOW_ALL;
@@ -56,12 +57,13 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
         Sporsmal sporsmal = new Sporsmal("sporsmal", now());
         sporsmal.temagruppe = Temagruppe.ARBD.toString();
-        when(henvendelseUtsendingService.getSporsmalFromOppgaveId(anyString(), anyString())).thenReturn(sporsmal);
+        when(henvendelseUtsendingService.getSporsmal(anyString())).thenReturn(optional(sporsmal));
     }
 
     @Test
     public void skalPlukkeOppgaveOgSetteSessionAttributes() {
-        when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(optional(new Oppgave("oppgaveId", "fnr")));
+        when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(optional(new Oppgave("oppgaveId", "fnr", "henvendelseId")));
+
 
         wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"))
                 .inForm(withId("plukkOppgaveForm"))
@@ -74,9 +76,11 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
         Serializable temagruppeAttribute = wicket.tester.getSession().getAttribute(TEMAGRUPPE_ATTR);
         Serializable fnrAttribute = wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR);
         Serializable oppgaveidAttribute = wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR);
+        Serializable henvendelseidAttribute = wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR);
         assertThat(temagruppeAttribute, is(notNullValue()));
         assertThat(fnrAttribute, is(notNullValue()));
         assertThat(oppgaveidAttribute, is(notNullValue()));
+        assertThat(henvendelseidAttribute, is(notNullValue()));
     }
 
     @Test
@@ -95,6 +99,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
         wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"));
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, "oppgaveid");
+        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, "henvendelseid");
         wicket
                 .inForm(withId("plukkOppgaveForm"))
                 .select("temagruppe", 0)

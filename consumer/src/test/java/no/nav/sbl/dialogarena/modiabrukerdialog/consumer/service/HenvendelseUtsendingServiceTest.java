@@ -18,9 +18,6 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenven
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
-import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFunnet;
-import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -66,9 +63,6 @@ public class HenvendelseUtsendingServiceTest {
 
     private final static String NYESTE_HENVENDELSE_ID = "Nyeste henvendelse";
     private final static String ELDSTE_HENVENDELSE = "Eldste henvendelse";
-    public static final String OPPGAVE_ID_1 = "id1";
-    public static final String OPPGAVE_ID_2 = "id2";
-    public static final String OPPGAVE_ID_3 = "id3";
 
     public static final String[] SVAR_TYPER = {
             XMLHenvendelseType.SVAR_SKRIFTLIG.name(),
@@ -99,12 +93,13 @@ public class HenvendelseUtsendingServiceTest {
     }
 
     @Test
-    public void skalHenteSporsmaalOgTilordneIGsak() throws HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing {
+    public void henterSporsmal() {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
 
-        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(SPORSMAL_ID_1);
+        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(SPORSMAL_ID_1).get();
 
+        verify(henvendelsePortType).hentHenvendelse(any(WSHentHenvendelseRequest.class));
         assertThat(sporsmal.id, is(SPORSMAL_ID_1));
         assertThat(sporsmal.fritekst, is(FRITEKST));
         assertThat(sporsmal.temagruppe, is(TEMAGRUPPE));
@@ -124,42 +119,6 @@ public class HenvendelseUtsendingServiceTest {
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.REFERAT_OPPMOTE.name()));
-    }
-
-    @Test
-    public void skalHenteSporsmalFraOppgaveId() {
-        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
-                new WSHentHenvendelseListeResponse().withAny(
-                        createXMLMeldingFraBruker(OPPGAVE_ID_1, "fritekst1"),
-                        createXMLMeldingFraBruker(OPPGAVE_ID_2, "fritekst2"),
-                        createXMLMeldingFraBruker(OPPGAVE_ID_3, "fritekst3")
-                );
-
-        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
-
-        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmalFromOppgaveId(FNR, OPPGAVE_ID_2);
-
-        assertThat(sporsmal.fritekst, is("fritekst2"));
-    }
-
-    @Test
-    public void skalHenteSporsmalMedRiktigTypeSpesifisert() {
-        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLMeldingFraBruker(OPPGAVE_ID_2, "fritekst1"));
-        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
-
-        henvendelseUtsendingService.getSporsmalFromOppgaveId(FNR, OPPGAVE_ID_2);
-
-        verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
-        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
-        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name()));
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void skalKasteExceptionDersomDetIkkeFinnesNoeSporsmalMedDenOppgaveIden() {
-        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLMeldingFraBruker(OPPGAVE_ID_1, "fritekst1"));
-        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
-
-        henvendelseUtsendingService.getSporsmalFromOppgaveId(FNR, "random oppgaveid");
     }
 
     @Test

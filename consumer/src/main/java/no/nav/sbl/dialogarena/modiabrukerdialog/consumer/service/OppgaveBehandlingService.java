@@ -55,7 +55,7 @@ public class OppgaveBehandlingService {
         if (oppgave.isSome()) {
             try {
                 WSOppgave tilordnet = tilordneOppgaveIGsak(oppgave.get());
-                return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId()));
+                return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId(), tilordnet.getHenvendelseId()));
             } catch (FikkIkkeTilordnet fikkIkkeTilordnet) {
                 return plukkOppgaveFraGsak(temagruppe, antallForsokIgjen - 1);
             }
