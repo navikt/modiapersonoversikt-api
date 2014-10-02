@@ -1,5 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
+import no.nav.modig.content.CmsContentRetriever;
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.errorhandling.ModiaApplicationConfigurator;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
@@ -30,11 +32,13 @@ import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
 import org.springframework.context.ApplicationContext;
@@ -51,6 +55,9 @@ public class WicketApplication extends WebApplication {
 
     @Inject
     private ApplicationContext applicationContext;
+
+    @Inject
+    private CmsContentRetriever cms;
 
     @Resource(name = "pep")
     private EnforcementPoint pep;
@@ -89,6 +96,23 @@ public class WicketApplication extends WebApplication {
 
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
 
+        getResourceSettings().getStringResourceLoaders().add(0, new IStringResourceLoader() {
+            @Override public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation) {
+                try {
+                    return cms.hentTekst(key);
+                } catch (ApplicationException e) {
+                    return null;
+                }
+            }
+
+            @Override public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
+                try {
+                    return cms.hentTekst(key);
+                } catch (ApplicationException e) {
+                    return null;
+                }
+            }
+        });
 
         new ModiaApplicationConfigurator()
                 .withExceptionHandler(true)
