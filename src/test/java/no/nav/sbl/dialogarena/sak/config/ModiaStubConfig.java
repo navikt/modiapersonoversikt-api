@@ -59,6 +59,13 @@ public class ModiaStubConfig {
                         return "default tekst fra CMS-mock";
                 }
             }
+            @Override
+            public String hentArtikkel(String key) {
+                switch(key) {
+                    default:
+                        return "default tekst fra CMS-mock";
+                }
+            }
         };
         return cmsMock;
     }

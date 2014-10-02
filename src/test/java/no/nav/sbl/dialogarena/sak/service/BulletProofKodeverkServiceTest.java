@@ -22,7 +22,7 @@ public class BulletProofKodeverkServiceTest {
     public static final String TEMANAVN_DAGPENGER = "Dagpenger";
     public static final String TEMAKODE_DAGPENGER = "DAG";
 
-    public static final String TEMAKODE_UFORE = "UFO";
+    public static final String EXCEPTION_TEMA = "UFO";
     public static final String SKJEMANUMMER_UFORE = "NAV 12-06.06";
     private static final String TITTEL = "tittel";
     private static final String SOK_TITTEL = "sok_tittel";
@@ -44,34 +44,34 @@ public class BulletProofKodeverkServiceTest {
     public void setupMocks() {
         when(lokaltKodeverk.getKode(SKJEMANUMMER_DAGPENGER, Kodeverk.Nokkel.TEMA)).thenReturn(TEMAKODE_DAGPENGER);
         when(lokaltKodeverk.getKode(SKJEMANUMMER_UFORE, Kodeverk.Nokkel.TEMA)).thenThrow(new RuntimeException());
-        when(lokaltKodeverk.getTittel(SOK_TITTEL)).thenReturn(TITTEL);
-        when(lokaltKodeverk.getTittel(EXCEPTION_TITTEL)).thenThrow(new RuntimeException());
-        when(kodeverkClient.hentFoersteTermnavnForKode(TEMAKODE_DAGPENGER, BEHANDLINGSTEMA)).thenReturn(TEMANAVN_DAGPENGER);
-        when(kodeverkClient.hentFoersteTermnavnForKode(TEMAKODE_UFORE, BEHANDLINGSTEMA)).thenThrow(new RuntimeException());
 
         when(bulletproofCmsService.hentTekst(anyString())).thenReturn("ledetekst");
     }
 
     @Test
     public void getTittel_shouldReturn_tittel() {
+        when(lokaltKodeverk.getTittel(SOK_TITTEL)).thenReturn(TITTEL);
         String tittel = kodeverkWrapper.getSkjematittelForSkjemanummer(SOK_TITTEL);
         assertThat(tittel, is(TITTEL));
     }
 
     @Test
     public void getTittel_shouldNot_throwExceptionWhenErrorOccurs() {
+        when(lokaltKodeverk.getTittel(EXCEPTION_TITTEL)).thenThrow(new RuntimeException());
         kodeverkWrapper.getSkjematittelForSkjemanummer(EXCEPTION_TITTEL);
     }
 
     @Test
     public void getTemaForTemakode_shouldReturn_tema() {
+        when(kodeverkClient.hentFoersteTermnavnForKode(TEMAKODE_DAGPENGER, BEHANDLINGSTEMA)).thenReturn(TEMANAVN_DAGPENGER);
         String tema = kodeverkWrapper.getTemanavnForTemakode(TEMAKODE_DAGPENGER, BEHANDLINGSTEMA);
         assertThat(tema, is(TEMANAVN_DAGPENGER));
     }
 
     @Test
     public void getTemanavnForTemaKode_shouldNot_throwExceptionWhenErrorOccurs() {
-        kodeverkWrapper.getTemanavnForTemakode(TEMAKODE_UFORE, BEHANDLINGSTEMA);
+        when(kodeverkClient.hentFoersteTermnavnForKode(EXCEPTION_TEMA, BEHANDLINGSTEMA)).thenThrow(new RuntimeException());
+        kodeverkWrapper.getTemanavnForTemakode(EXCEPTION_TEMA, BEHANDLINGSTEMA);
     }
 
 

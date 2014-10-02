@@ -58,7 +58,7 @@ public class SaksoversiktWidgetTest extends AbstractWicketTest {
 
     @Test
     public void skalViseMeldingNårFeilPåTjeneste() {
-        when(saksoversiktService.hentTemaer(anyString())).thenThrow(new SystemException("You messed up, Holger", new RuntimeException()));
+        when(saksoversiktService.hentTemaer(anyString())).thenThrow(new SystemException("You messed up", new RuntimeException()));
 
         SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
         wicketTester.goToPageWith(widget);
