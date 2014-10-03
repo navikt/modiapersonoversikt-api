@@ -58,7 +58,7 @@ public class PlukkOppgavePanel extends Panel {
         AjaxButton plukkOppgave = new AjaxButton("plukkOppgave") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                if (brukerHarEnAnnenPlukketOppgavePaaSession()) {
+                if (brukerHarEnAnnenPlukketOppgavePaaSession() && oppgavePaaSessionKanBehandles()) {
                     redirectForAaBesvareOppgave(
                             getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR),
                             getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR),
@@ -99,6 +99,16 @@ public class PlukkOppgavePanel extends Panel {
 
     private boolean brukerHarEnAnnenPlukketOppgavePaaSession() {
         return getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR) != null && getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR) != null;
+    }
+
+    private boolean oppgavePaaSessionKanBehandles() {
+        if (plukkOppgaveService.oppgaveErFerdigstillt((String) getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR))) {
+            getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, null);
+            getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, null);
+            getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, null);
+            return false;
+        }
+        return true;
     }
 
     private void redirectForAaBesvareOppgave(Serializable fnr, Serializable henvendelseid, Serializable oppgaveid) {

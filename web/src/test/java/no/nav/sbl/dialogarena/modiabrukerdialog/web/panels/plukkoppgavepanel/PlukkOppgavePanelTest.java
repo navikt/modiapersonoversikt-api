@@ -37,6 +37,7 @@ import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
@@ -61,9 +62,8 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     }
 
     @Test
-    public void skalPlukkeOppgaveOgSetteSessionAttributes() {
+    public void plukkerOppgaveOgSetterSessionAttributes() {
         when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(optional(new Oppgave("oppgaveId", "fnr", "henvendelseId")));
-
 
         wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"))
                 .inForm(withId("plukkOppgaveForm"))
@@ -84,7 +84,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     }
 
     @Test
-    public void skalIkkePlukkeOppgaveHvisTemagruppeIkkeErValgt() {
+    public void plukkerIkkeOppgaveHvisTemagruppeIkkeErValgt() {
         TestPlukkOppgavePanel plukkoppgave = new TestPlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)
                 .inForm(withId("plukkOppgaveForm"))
@@ -95,13 +95,13 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     }
 
     @Test
-    public void skalIkkePlukkeOppgaveHvisEnAlleredeErPlukket() {
+    public void plukkeIkkeOppgaveHvisEnAlleredeErPlukket() {
         wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"));
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, "oppgaveid");
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, "henvendelseid");
-        wicket
-                .inForm(withId("plukkOppgaveForm"))
+
+        wicket.inForm(withId("plukkOppgaveForm"))
                 .select("temagruppe", 0)
                 .submitWithAjaxButton(withId("plukkOppgave"))
                 .should().beOn(PersonPage.class)
@@ -112,7 +112,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     }
 
     @Test
-    public void skalGiFeilmeldingHvisIngenOppgaverPaaTema() {
+    public void girFeilmeldingHvisIngenOppgaverPaaTema() {
         when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(Optional.<Oppgave>none());
 
         TestPlukkOppgavePanel plukkoppgave = new TestPlukkOppgavePanel("plukkoppgave");
@@ -123,5 +123,28 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
         List<String> errorMessages = wicket.get().errorMessages();
         assertThat(errorMessages, hasItem(plukkoppgave.getString("plukkoppgave.ingenoppgaverpaatemagruppe")));
+    }
+
+    @Test
+    public void brukerIkkeOppgavePaaSesjonHvisDenErFerdigstillt() {
+        when(plukkOppgaveService.oppgaveErFerdigstillt(anyString())).thenReturn(true);
+        when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(optional(new Oppgave("oppgave2", "fnr2", "henvendelse2")));
+
+        wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"));
+        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
+        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, "oppgaveid");
+        wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, "henvendelseid");
+
+        wicket.inForm(withId("plukkOppgaveForm"))
+                .select("temagruppe", 0)
+                .submitWithAjaxButton(withId("plukkOppgave"))
+                .should().beOn(PersonPage.class)
+                .should().containComponent(ofType(SvarPanel.class))
+                .should().notContainComponent(ofType(ReferatPanel.class));
+
+        verify(plukkOppgaveService, times(1)).plukkOppgave(anyString());
+        assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR), is((Serializable) "oppgave2"));
+        assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR), is((Serializable) "fnr2"));
+        assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR), is((Serializable) "henvendelse2"));
     }
 }

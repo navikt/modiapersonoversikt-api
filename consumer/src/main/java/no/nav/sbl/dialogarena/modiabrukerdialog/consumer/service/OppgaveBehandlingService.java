@@ -25,13 +25,14 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class OppgaveBehandlingService {
 
     public static final int ENHET = 4112;
-
     public static final int ANTALL_PLUKK_FORSOK = 20;
+    public static final String KODE_OPPGAVE_FERDIGSTILLT = "F";
 
     @Inject
     private OppgavebehandlingV3 oppgavebehandlingWS;
@@ -94,6 +95,10 @@ public class OppgaveBehandlingService {
         } catch (LagreOppgaveOptimistiskLasing lagreOppgaveOptimistiskLasing) {
             throw new RuntimeException("Oppgaven kunne ikke lagres, den er for øyeblikket låst av en annen bruker.", lagreOppgaveOptimistiskLasing);
         }
+    }
+
+    public boolean oppgaveErFerdigstillt(String oppgaveid) {
+        return equalsIgnoreCase(hentOppgaveFraGsak(oppgaveid).getStatus().getKode(), KODE_OPPGAVE_FERDIGSTILLT);
     }
 
     private static String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {

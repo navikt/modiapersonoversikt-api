@@ -46,6 +46,10 @@ public class PlukkOppgaveService {
         }
     }
 
+    public boolean oppgaveErFerdigstillt(String oppgaveid) {
+        return oppgaveBehandlingService.oppgaveErFerdigstillt(oppgaveid);
+    }
+
     private Optional<Oppgave> leggTilbakeOgPlukkNyOppgave(Oppgave oppgave, String temagruppe) {
         oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId);
         return plukkOppgave(temagruppe);

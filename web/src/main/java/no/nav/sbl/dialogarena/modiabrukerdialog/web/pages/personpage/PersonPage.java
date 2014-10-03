@@ -339,6 +339,7 @@ public class PersonPage extends BasePage {
     public void slettPlukketOppgaveFraSession() {
         getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, null);
         getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, null);
+        getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, null);
     }
 
     @Override
