@@ -64,8 +64,8 @@ public class PlukkOppgaveService {
 
 
             LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep disc: " + pep.hasAccess(forRequest(resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code", brukersDiskresjonskode) )));
-            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep les: " + pep.hasAccess(forRequest(actionId("les"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));
-            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep les begrunn: " + pep.hasAccess(forRequest(actionId("lesMedBegrunnelse"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));
+            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep les: " + pep.hasAccess(forRequest(actionId("les"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet))));
+            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep les begrunn: " + pep.hasAccess(forRequest(actionId("lesMedBegrunnelse"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet))));
 
             return pep.hasAccess(forRequest(resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code", brukersDiskresjonskode)))
                     && pep.hasAccess(forRequest(actionId("les"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)))
