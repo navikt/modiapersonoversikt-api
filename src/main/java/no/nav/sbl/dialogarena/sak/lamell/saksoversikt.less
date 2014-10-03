@@ -60,17 +60,22 @@
             font-size: 1.125rem;
             font-weight: 600;
             margin-bottom: 15px;
+            margin-top: 0;
+            padding-top: 30px;
+            border-top: 1px solid #d1d1d1;
+
+            &:first-child {
+                padding-top: 0;
+                border-top: none;
+            }
         }
 
         p {
-            margin-bottom: 30px;
+            margin-bottom: 0;
             padding-bottom: 30px;
-            border-bottom: 1px solid #d1d1d1;
 
             &:last-child {
-                margin-bottom: 0;
                 padding-bottom: 10px;
-                border-bottom: none;
             }
         }
 
