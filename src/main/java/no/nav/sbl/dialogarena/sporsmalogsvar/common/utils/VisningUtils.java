@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.LEST_AV_BRUKER;
 
 public class VisningUtils {
 
@@ -31,7 +32,7 @@ public class VisningUtils {
         if (melding.meldingstype == SPORSMAL_SKRIFTLIG) {
             key = String.format("melding.status.%s", meldingstypeIkkeSpesifik);
         } else {
-            key = String.format("melding.status.%s.%s.%s", meldingstypeIkkeSpesifik, melding.kanal, melding.lest ? "lest" : "ulest");
+            key = String.format("melding.status.%s.%s.%s", meldingstypeIkkeSpesifik, melding.kanal, melding.status == LEST_AV_BRUKER ? "lest" : "ulest");
         }
         return key.toLowerCase();
     }
