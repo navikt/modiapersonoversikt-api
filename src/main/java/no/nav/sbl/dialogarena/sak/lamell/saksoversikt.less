@@ -361,11 +361,21 @@
 }
 
 @media print {
+    .saksoversikt {
+        height: 0px !important;
+        display: inline-block;
+    }
+
+    .saksoversikt .lerret {
+        height: 0px !important;
+        display: inline-block;
+    }
+
     .sak-navigering {
         display: none;
     }
 
-    .flexbox, .row, .lerret, .selected {
+    .flexbox {
         display: block !important;
     }
 
