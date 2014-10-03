@@ -63,13 +63,14 @@ public class PlukkOppgaveService {
             String brukersEnhet = defaultString(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
 
 
-            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep disc: " + pep.hasAccess(forRequest(resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code", brukersDiskresjonskode) )));
-            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep les: " + pep.hasAccess(forRequest(actionId("les"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet))));
-            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep les begrunn: " + pep.hasAccess(forRequest(actionId("lesMedBegrunnelse"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet))));
+            boolean disc = pep.hasAccess(forRequest(resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code", brukersDiskresjonskode)));
+            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep disc: " + disc);
+            boolean les = pep.hasAccess(forRequest(actionId("les"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));
+            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep les: " + les);
+            boolean lesMedBegrunnelse = pep.hasAccess(forRequest(actionId("lesMedBegrunnelse"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));
+            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep les begrunn: " + lesMedBegrunnelse);
 
-            return pep.hasAccess(forRequest(resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code", brukersDiskresjonskode)))
-                    && pep.hasAccess(forRequest(actionId("les"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)))
-                    && pep.hasAccess(forRequest(actionId("lesMedBegrunnelse"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));
+            return disc && les && lesMedBegrunnelse;
         } catch (AuthorizationException e) {
             LOG.info("Ingen tilgang til bruker fra Kjerneinfo: {}", e.getMessage());
             return false;
