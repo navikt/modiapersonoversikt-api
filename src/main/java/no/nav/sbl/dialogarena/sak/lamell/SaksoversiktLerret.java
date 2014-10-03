@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sak.lamell;
 
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.frontend.ConditionalCssResource;
-import no.nav.modig.frontend.ConditionalJavascriptResource;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.Lerret;
