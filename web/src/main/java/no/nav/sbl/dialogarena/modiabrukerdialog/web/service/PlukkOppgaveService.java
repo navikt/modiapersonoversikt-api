@@ -57,7 +57,9 @@ public class PlukkOppgaveService {
 
     private boolean saksbehandlerHarTilgangTilBruker(Oppgave oppgave) {
         try {
+            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " Henter personfakta");
             Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(new HentKjerneinformasjonRequest(oppgave.fnr)).getPerson().getPersonfakta();
+            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " har hentet personfakta");
 
             String brukersDiskresjonskode = defaultString(personfakta.getDiskresjonskode());
             String brukersEnhet = defaultString(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
@@ -72,7 +74,6 @@ public class PlukkOppgaveService {
 
             return disc && les && lesMedBegrunnelse;
         } catch (AuthorizationException e) {
-            LOG.info("Ingen tilgang til bruker fra Kjerneinfo: {}", e.getMessage());
             return false;
         }
     }
