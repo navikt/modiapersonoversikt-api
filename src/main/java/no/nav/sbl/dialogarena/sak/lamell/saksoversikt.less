@@ -1,3 +1,15 @@
+
+@grayLight: #b7b1a9;
+@grayDark: #3e3832;
+@grayMediumDark: #dadada;
+@white: #fff;
+@textColor: @grayDark;
+@blueLight: #0ca9e1;
+@blueDark: #0067cf;
+@black: #000;
+@focusBackground: @blueDark;
+@focusColor: @black;
+
 .saksoversikt.lamell {
     .lerret {
         padding: 0;
@@ -10,12 +22,12 @@
 .widget {
     .overflowitem {
         padding: 0;
-        background-color: #ffffff !important;
+        background-color: @white !important;
 
         a {
             text-decoration: none;
             text-align: center;
-            color: #0067cf !important;
+            color: @blueLight !important;
             padding: 9px !important;
         }
 
@@ -41,7 +53,7 @@
     .feilmelding {
         background: #c30000;
         padding: 20px;
-        color: #fff;
+        color: @white;
     }
 
     .lerret {
@@ -107,7 +119,7 @@
 
                 &.active {
                     text-decoration: none;
-                    color: #3e3832;
+                    color: @grayDark;
                 }
 
                 &:first-child:after {
@@ -115,7 +127,7 @@
                     position: relative;
                     top: -3px;
                     display: inline-block;
-                    border: 2px solid #3e3832;
+                    border: 2px solid @grayDark;
                     border-radius: 2px;
                     margin-left: 10px;
                     margin-right: 5px;
@@ -143,13 +155,13 @@
 
             li {
                 &.aktiv{
-                    background: #fff;
+                    background: @white;
                 }
 
                 a {
                     padding: 15px 20px;
                     border-bottom: 1px solid #ccc;
-                    color: #3e3832;
+                    color: @grayDark;
                     display: block;
 
                     .dato {
@@ -157,12 +169,12 @@
                     }
 
                     &:hover {
-                        background: #dadada;
+                        background: @grayMediumDark;
                     }
 
                     &:active,&:focus {
-                        background: #0067c5;
-                        color: #FFFFFF;
+                        background: @focusBackground;
+                        color: @focusColor;
                     }
                 }
             }
@@ -195,7 +207,7 @@
             }
 
             &.sort:before {
-                border-color: #3e3832;
+                border-color: @grayDark;
             }
 
             div {
@@ -203,7 +215,7 @@
                 text-align: center;
 
                 span {
-                    background: #fff;
+                    background: @white;
                     padding: 0 20px;
                     font-size: 1.1rem;
                     font-weight: bold;
@@ -259,7 +271,7 @@
                         content: "";
                         margin-left: 5px;
                         margin-right: 10px;
-                        border: 2px solid #3e3832;
+                        border: 2px solid @grayDark;
                         border-radius: 2px;
                         display: inline-block;
                         position: relative;
@@ -347,7 +359,7 @@
         a {
             margin: 0;
             padding: 0;
-            color: #0067cf;
+            color: @blueDark;
         }
         span {
             display: block;
