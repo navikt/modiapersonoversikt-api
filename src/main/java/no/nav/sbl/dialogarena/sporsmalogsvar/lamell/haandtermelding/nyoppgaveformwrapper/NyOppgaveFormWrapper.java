@@ -72,28 +72,26 @@ public class NyOppgaveFormWrapper extends Panel {
         };
         IChoiceRenderer<GsakKodeTema> gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
 
-        DropDownChoice<GsakKodeTema.Tema> temaDropDown = new DropDownChoice<>("tema", gsakKodeverk.hentTemaListe(), gsakKodeChoiceRenderer);
-        temaDropDown.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+        DropDownChoice<GsakKodeTema.Tema> temaDropDown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.Tema>("tema", gsakKodeverk.hentTemaListe(), gsakKodeChoiceRenderer, form) {
             @Override
-            protected void onUpdate(AjaxRequestTarget target) {
+            protected void onchange(AjaxRequestTarget target) {
                 Optional<AnsattEnhet> foreslattEnhet = gsakService.hentForeslattEnhet(innboksVM.getFnr(), form.getModelObject().tema.kode);
                 if (foreslattEnhet.isSome()) {
                     form.getModelObject().enhet = foreslattEnhet.get();
                 }
-                target.add(form);
             }
-        });
+        };
 
         WebMarkupContainer enhetContainer = new WebMarkupContainer("enhetContainer");
         enhetContainer.add(new AnsattEnhetDropdown("enhet", new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"), enheter).setRequired(true));
         enhetContainer.add(visibleIf(not(isEmptyList(enhetModel))));
 
         WebMarkupContainer typeContainer = new WebMarkupContainer("typeContainer");
-        typeContainer.add(new DropDownChoice<>("type", typeModel, gsakKodeChoiceRenderer).setRequired(true));
+        typeContainer.add(new DropDownChoiceMedFjerningAvDefault<>("type", typeModel, gsakKodeChoiceRenderer, form).setRequired(true));
         typeContainer.add(visibleIf(not(isEmptyList(typeModel))));
 
         WebMarkupContainer prioritetContainer = new WebMarkupContainer("prioritetContainer");
-        prioritetContainer.add(new DropDownChoice<>("prioritet", priModel, gsakKodeChoiceRenderer).setRequired(true));
+        prioritetContainer.add(new DropDownChoiceMedFjerningAvDefault<>("prioritet", priModel, gsakKodeChoiceRenderer, form).setRequired(true));
         prioritetContainer.add(visibleIf(not(isEmptyList(priModel))));
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
@@ -118,6 +116,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 etterSubmit(target);
                 nullstillSkjema();
             }
+
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
@@ -152,4 +151,28 @@ public class NyOppgaveFormWrapper extends Panel {
         protected abstract List<T> oppdater(GsakKodeTema.Tema tema);
     }
 
+    private static class DropDownChoiceMedFjerningAvDefault<T> extends DropDownChoice<T> {
+        protected DropDownChoiceMedFjerningAvDefault(final String id, final List<? extends T> choices, final IChoiceRenderer<? super T> renderer, final Form<NyOppgave> form) {
+            super(id, choices, renderer);
+            addChangeListener(form);
+        }
+
+        protected DropDownChoiceMedFjerningAvDefault(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer, final Form<NyOppgave> form) {
+            super(id, choices, renderer);
+            addChangeListener(form);
+        }
+
+        private void addChangeListener(final Form<NyOppgave> form) {
+            this.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+                @Override
+                protected void onUpdate(AjaxRequestTarget target) {
+                    onchange(target);
+                    target.add(form);
+                }
+            });
+        }
+
+        protected void onchange(AjaxRequestTarget target) {
+        }
+    }
 }
