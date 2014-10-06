@@ -358,6 +358,17 @@
 
         <!--Testing-->
         <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-consumer</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>personsok-consumer</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <scope>test</scope>
