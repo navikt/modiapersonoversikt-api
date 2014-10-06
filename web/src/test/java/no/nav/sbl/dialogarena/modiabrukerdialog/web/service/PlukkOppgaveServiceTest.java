@@ -24,7 +24,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -77,16 +76,6 @@ public class PlukkOppgaveServiceTest {
 
         assertThat(plukkOppgaveService.plukkOppgave("temagruppe"), is(equalTo(oppgave2)));
         verify(oppgaveBehandlingService).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
-    }
-
-    @Test
-    public void leggerIkkeTilbakeOppgaveDersomSaksbehandlerHarLesMenIkkeLesMedBegrunnelseTilgang() {
-        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr", "1"));
-
-        when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave1);
-        when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, true, false);
-
-        verify(oppgaveBehandlingService, never()).systemLeggTilbakeOppgaveIGsak(eq(oppgave1.get().oppgaveId));
     }
 
     @Test
