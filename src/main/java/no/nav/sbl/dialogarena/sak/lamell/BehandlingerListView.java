@@ -60,11 +60,10 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
         IModel<Boolean> erAvsluttet = Model.of(behandling.behandlingsStatus.equals(AVSLUTTET));
         WebMarkupContainer container = new WebMarkupContainer("behandling-container");
         container.add(hasCssClassIf("avsluttet", erAvsluttet));
-        container.add(new Label("hendelse-tittel", getTittel(behandling)));
         if (behandling instanceof Kvittering) {
-            container.add(new KvitteringsPanel("behandling", of((Kvittering)behandling), fnr));
+            container.add(new KvitteringsPanel("behandling", getTittel(behandling), of((Kvittering)behandling), fnr));
         } else { //Behandling er GenerellBehandling
-            container.add(new BehandlingsPanel("behandling", of(behandling)));
+            container.add(new BehandlingsPanel("behandling", getTittel(behandling), of(behandling)));
         }
         return container;
     }

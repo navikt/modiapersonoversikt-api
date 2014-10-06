@@ -21,6 +21,7 @@ import java.util.List;
 import static java.lang.String.format;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.sak.util.SakDateFormatter.printFullDate;
+import static no.nav.sbl.dialogarena.sak.util.SakDateFormatter.printLongDate;
 import static org.apache.wicket.model.Model.of;
 
 public class KvitteringsPanel extends Panel {
@@ -33,7 +34,7 @@ public class KvitteringsPanel extends Panel {
 
     private Logger logger = LoggerFactory.getLogger(KvitteringsPanel.class);
 
-    public KvitteringsPanel(String id, Model<Kvittering> kvitteringsModel, String fnr) {
+    public KvitteringsPanel(String id, String tittel, Model<Kvittering> kvitteringsModel, String fnr) {
         super(id, kvitteringsModel);
         Kvittering kvittering = kvitteringsModel.getObject();
 
@@ -51,6 +52,8 @@ public class KvitteringsPanel extends Panel {
         }
 
         add(
+                new Label("hendelse-tittel", tittel),
+                new Label("dato-topp", printLongDate(kvittering.behandlingDato)),
                 new Label("sendtAv", format(sendtAvString, fnr)),
                 new Label("kvitteringsinfo-bottom", cms.hentTekst("kvittering.info.bottom")).setEscapeModelStrings(false),
                 new Label("sendt-inn", sendtInnTekst),

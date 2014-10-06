@@ -19,7 +19,7 @@ public class BehandlingsPanelTest extends AbstractWicketTest {
     @Override
     protected void setup() {
         DateTime dato = new DateTime();
-        behandlingsPanel = new BehandlingsPanel("id", of(new GenerellBehandling()
+        behandlingsPanel = new BehandlingsPanel("id", "tittel", of(new GenerellBehandling()
                 .withOpprettetDato(dato)
                 .withBehandlingsDato(dato)
                 .withBehandlingStatus(OPPRETTET)

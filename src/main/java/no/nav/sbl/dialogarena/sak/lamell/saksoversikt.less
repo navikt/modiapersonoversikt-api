@@ -235,7 +235,7 @@
 
             .behandling {
                 padding-left: 85px;
-                padding-top: 40px;
+                padding-top: 30px;
                 background: url(../img/under_arbeid_stor.svg) no-repeat left 15px  !important;
                 page-break-inside: avoid;
 
@@ -247,14 +247,15 @@
     }
 
     .behandling-informasjon {
-        h2 {
-            margin-bottom: 20px;
-        }
-
         .kvittering-topp {
             p {
                 display: none;
             }
+        }
+
+        h2 {
+            margin-top: 0px;
+            margin-bottom: 20px;
         }
 
         .behandlingstid {
@@ -262,23 +263,8 @@
             margin-bottom: 30px;
         }
 
-        .behandling-datoer {
-            span {
-                font-size: 0.85rem;
-
-                &.avsluttet {
-                    &:before {
-                        content: "";
-                        margin-left: 5px;
-                        margin-right: 10px;
-                        border: 2px solid @grayDark;
-                        border-radius: 2px;
-                        display: inline-block;
-                        position: relative;
-                        top: -2px;
-                    }
-                }
-            }
+        .dato {
+            font-size: 0.80rem;
         }
 
         .toggle-kollapsbar {

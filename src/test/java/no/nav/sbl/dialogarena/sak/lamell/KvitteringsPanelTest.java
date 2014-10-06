@@ -32,7 +32,7 @@ public class KvitteringsPanelTest extends AbstractWicketTest {
                 .withBehandlingStatus(AVSLUTTET)
                 .withHenvendelseType(DOKUMENTINNSENDING)
                 .withBehandlingsDato(new DateTime());
-        kvitteringsPanel = new KvitteringsPanel("id", of(kvittering), "12");
+        kvitteringsPanel = new KvitteringsPanel("id", "tittel", of(kvittering), "12");
         wicketTester.goToPageWith(kvitteringsPanel);
     }
 
