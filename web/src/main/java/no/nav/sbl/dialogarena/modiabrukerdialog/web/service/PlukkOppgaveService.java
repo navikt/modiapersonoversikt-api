@@ -57,22 +57,20 @@ public class PlukkOppgaveService {
 
     private boolean saksbehandlerHarTilgangTilBruker(Oppgave oppgave) {
         try {
-            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " Henter personfakta");
             Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(new HentKjerneinformasjonRequest(oppgave.fnr)).getPerson().getPersonfakta();
-            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " har hentet personfakta");
 
             String brukersDiskresjonskode = defaultString(personfakta.getDiskresjonskode());
             String brukersEnhet = defaultString(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
 
+            boolean harDiskresjonskodeTilgang = pep.hasAccess(forRequest(resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code", brukersDiskresjonskode)));
+            boolean harLesTilgang = pep.hasAccess(forRequest(actionId("les"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));
 
-            boolean disc = pep.hasAccess(forRequest(resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:discretion-code", brukersDiskresjonskode)));
-            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep disc: " + disc);
-            boolean les = pep.hasAccess(forRequest(actionId("les"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));
-            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep les: " + les);
-            boolean lesMedBegrunnelse = pep.hasAccess(forRequest(actionId("lesMedBegrunnelse"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));
-            LOG.debug("OppgaveID:" + oppgave.oppgaveId + " pep les begrunn: " + lesMedBegrunnelse);
-
-            return disc && les && lesMedBegrunnelse;
+            if(harDiskresjonskodeTilgang && harLesTilgang) {
+                return true;
+            } else {
+                boolean harLesMedBegrunnelseTilgang = pep.hasAccess(forRequest(actionId("lesMedBegrunnelse"), resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", brukersEnhet)));
+                return (harDiskresjonskodeTilgang && harLesMedBegrunnelseTilgang);
+            }
         } catch (AuthorizationException e) {
             return false;
         }
