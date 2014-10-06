@@ -33,7 +33,7 @@ public class GsakKodeverkTema implements Serializable {
         private static final Transformer<Node, GsakKodeTema.Prioritet> NODE_TIL_PRIORITET = new Transformer<Node, GsakKodeTema.Prioritet>() {
             @Override
             public GsakKodeTema.Prioritet transform(Node node) {
-                return new GsakKodeTema.Prioritet(getParentNodeValue(node, KODE), getParentNodeValue(node, DEKODE));
+                return new GsakKodeTema.Prioritet(getParentNodeValue(node, KODE), getNodeValue(node, DEKODE));
             }
         };
 
