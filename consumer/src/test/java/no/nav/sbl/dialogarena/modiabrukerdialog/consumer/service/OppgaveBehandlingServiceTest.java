@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.core.context.SubjectHandler;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSBruker;
@@ -27,6 +28,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
@@ -38,6 +40,7 @@ import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.ANTALL_PLUKK_FORSOK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.ENHET;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -59,6 +62,9 @@ public class OppgaveBehandlingServiceTest {
     ArgumentCaptor<WSFerdigstillOppgaveBolkRequest> ferdigstillOppgaveBolkRequestCaptor;
     @Captor
     ArgumentCaptor<WSLagreOppgaveRequest> lagreOppgaveRequestCaptor;
+
+    @Mock
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     @Inject
     private OppgaveV3 oppgaveWS;
@@ -125,7 +131,8 @@ public class OppgaveBehandlingServiceTest {
     }
 
     @Test
-    public void skalFerdigstilleOppgaveFraGsak() {
+    public void skalFerdigstilleOppgaveFraGsak() throws HentOppgaveOppgaveIkkeFunnet {
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
         oppgaveBehandlingService.ferdigstillOppgaveIGsak(optional("1"));
         verify(oppgavebehandlingWS).ferdigstillOppgaveBolk(ferdigstillOppgaveBolkRequestCaptor.capture());
         assertThat(ferdigstillOppgaveBolkRequestCaptor.getValue().getOppgaveIdListe().get(0), is("1"));
@@ -142,7 +149,7 @@ public class OppgaveBehandlingServiceTest {
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
         assertThat(endreOppgave.getAnsvarligId(), is(""));
-        assertThat(endreOppgave.getBeskrivelse(), is(opprinneligBeskrivelse + "\n" + nyBeskrivelse));
+        assertThat(endreOppgave.getBeskrivelse(), containsString(opprinneligBeskrivelse + "\n"));
         assertThat(endreOppgave.getFagomradeKode(), is("ARBD_KNA"));
     }
 
@@ -157,7 +164,7 @@ public class OppgaveBehandlingServiceTest {
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
         assertThat(endreOppgave.getAnsvarligId(), is(""));
-        assertThat(endreOppgave.getBeskrivelse(), is(opprinneligBeskrivelse + "\n" + nyBeskrivelse));
+        assertThat(endreOppgave.getBeskrivelse(), containsString(opprinneligBeskrivelse + "\n"));
         assertThat(endreOppgave.getUnderkategoriKode(), is("FMLI_KNA"));
     }
 

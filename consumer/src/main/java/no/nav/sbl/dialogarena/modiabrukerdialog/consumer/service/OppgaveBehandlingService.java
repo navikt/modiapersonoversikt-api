@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
@@ -27,6 +28,8 @@ import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.joda.time.DateTime.now;
+import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class OppgaveBehandlingService {
 
@@ -38,6 +41,8 @@ public class OppgaveBehandlingService {
     private OppgavebehandlingV3 oppgavebehandlingWS;
     @Inject
     private OppgaveV3 oppgaveWS;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     public void tilordneOppgaveIGsak(String oppgaveId) throws FikkIkkeTilordnet {
         tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId));
@@ -67,7 +72,15 @@ public class OppgaveBehandlingService {
 
     public void ferdigstillOppgaveIGsak(Optional<String> oppgaveId) {
         if (oppgaveId.isSome()) {
-            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId.get()).withFerdigstiltAvEnhetId(ENHET));
+            try {
+                WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId.get())).getOppgave();
+                oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), "Oppgaven er ferdigstilt i Modia"));
+                lagreOppgaveIGsak(oppgave);
+
+                oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId.get()).withFerdigstiltAvEnhetId(ENHET));
+            } catch (HentOppgaveOppgaveIkkeFunnet | LagreOppgaveOptimistiskLasing e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -101,8 +114,14 @@ public class OppgaveBehandlingService {
         return equalsIgnoreCase(hentOppgaveFraGsak(oppgaveid).getStatus().getKode(), KODE_OPPGAVE_FERDIGSTILLT);
     }
 
-    private static String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {
-        return isBlank(gammelBeskrivelse) ? leggTil : gammelBeskrivelse + "\n" + leggTil;
+    private String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {
+        String header = String.format("--- %s (%s, %s) ---\n",
+                forPattern("dd.MM.yyyy HH:mm").print(now()),
+                getSubjectHandler().getUid(),
+                saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+
+        String nyBeskrivelse = header + leggTil;
+        return isBlank(gammelBeskrivelse) ? nyBeskrivelse : gammelBeskrivelse + "\n\n" + nyBeskrivelse;
     }
 
     private WSOppgave hentOppgaveFraGsak(String oppgaveId) {
