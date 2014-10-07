@@ -37,7 +37,7 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(new Label("traadlengde").setVisibilityAllowed(meldingVM.traadlengde > 2));
                 item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getModel()))
                         .add(cssClass(meldingVM.getStatusIkonKlasse())));
-                item.add(new Label("opprettetDato"));
+                item.add(new Label("avsenderTekst"));
                 item.add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", item.getModel())));
                 item.add(new Label("fritekst",
                         meldingVM.melding.fritekst != null ?

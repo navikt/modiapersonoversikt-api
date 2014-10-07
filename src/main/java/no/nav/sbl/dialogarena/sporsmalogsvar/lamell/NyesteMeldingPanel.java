@@ -25,7 +25,7 @@ public class NyesteMeldingPanel extends GenericPanel<MeldingVM> {
         add(new FeilsendtInfoPanel("feilsendtInfo", innboksVM));
         add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", getModel()))
                 .add(cssClass(new PropertyModel<String>(getModel(), "statusIkonKlasse"))));
-        add(new Label("opprettetDato"));
+        add(new Label("avsenderTekst"));
         add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", getModel())));
         add(new URLParsingMultiLineLabel("fritekst", new AbstractReadOnlyModel<String>() {
             @Override

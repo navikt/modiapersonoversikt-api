@@ -24,8 +24,9 @@ public class MeldingVM implements Serializable {
         this.traadlengde = traadLengde;
     }
 
-    public String getOpprettetDato() {
-        return Datoformat.kortMedTid(melding.opprettetDato);
+    public String getAvsenderTekst() {
+        return Datoformat.kortMedTid(melding.opprettetDato)
+                + (melding.navIdent != null ? " - " + melding.navIdent : "");
     }
 
     public String getLestDato() {
