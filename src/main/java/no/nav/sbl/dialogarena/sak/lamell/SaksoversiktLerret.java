@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sak.lamell;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.modia.events.FeedItemPayload;
-import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.navigation.KeyNavigationDependentResourceReference;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
@@ -34,7 +33,6 @@ import java.util.Map;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SaksoversiktLerret extends Lerret {
@@ -58,21 +56,31 @@ public class SaksoversiktLerret extends Lerret {
     private Map<TemaVM, List<GenerellBehandling>> behandlingerByTema = new HashMap<>();
     private List<TemaVM> temaer;
     private Component feilmelding;
+    private String fnr;
 
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
-
+        this.fnr = fnr;
         instansierFeilmeldingContainer();
-        hentBehandlinger(fnr);
-        temaer = on(behandlingerByTema.keySet()).collect(new SistOppdaterteBehandlingComparator());
+    }
+
+    @Override
+    protected void onBeforeRender() {
+        feilmelding.setVisible(false);
+        hentBehandlingerOgTemaer(fnr);
         temaContainer = lagTemaContainer();
 
-        add(
-                lagDetaljerContainer(fnr),
-                temaContainer,
-                lagOppdaterLenke(fnr, this),
-                feilmelding);
-        aapneForsteItem();
+        addOrReplace(
+            lagDetaljerContainer(fnr),
+            temaContainer,
+            lagOppdaterLenke(fnr, this),
+            feilmelding
+        );
+
+        if(getAktivtTema().getObject() == null) {
+            aapneForsteItem();
+        }
+        super.onBeforeRender();
     }
 
     private void instansierFeilmeldingContainer() {
@@ -82,9 +90,10 @@ public class SaksoversiktLerret extends Lerret {
                 .setOutputMarkupPlaceholderTag(true);
     }
 
-    private void hentBehandlinger(String fnr) {
+    private void hentBehandlingerOgTemaer(String fnr) {
         try {
             behandlingerByTema = saksoversiktService.hentBehandlingerByTema(fnr);
+            temaer = on(behandlingerByTema.keySet()).collect(new SistOppdaterteBehandlingComparator());
         } catch (SystemException e) {
             LOG.error("Kunne ikke hente saker til lamellen", e);
             feilmelding.setVisible(true);
@@ -95,26 +104,16 @@ public class SaksoversiktLerret extends Lerret {
         AjaxLink link = new AjaxLink("oppdater-innhold") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                try {
-                    behandlingerByTema = saksoversiktService.hentBehandlingerByTema(fnr);
-                    target.add(lerret);
-                } catch (SystemException e) {
-                    LOG.error("Kunne ikke oppdatere innhold i lamell", e);
-                    feilmelding.setVisible(true);
-                    target.add(feilmelding);
-                }
+                target.add(lerret);
             }
         };
-
         return link;
     }
 
     private WebMarkupContainer lagDetaljerContainer(String fnr) {
         WebMarkupContainer detaljerContainer = new WebMarkupContainer("detaljerContainer");
         Component behandlingerContainer = new BehandlingSakerListView("behandling-sak", temaer, fnr, this);
-        detaljerContainer.add(
-                behandlingerContainer
-        );
+        detaljerContainer.add(behandlingerContainer);
         detaljerContainer.setOutputMarkupPlaceholderTag(true);
         return detaljerContainer;
     }
@@ -130,12 +129,6 @@ public class SaksoversiktLerret extends Lerret {
     private void filtrerDetaljerPaaValgtTema(AjaxRequestTarget target, FeedItemPayload payload) {
         settAktivtTema(payload.getItemId());
         target.appendJavaScript("$(\".sak-navigering > UL > LI.aktiv > A\").focus();");
-    }
-
-    @SuppressWarnings("unused")
-    @RunOnEvents(WIDGET_HEADER_CLICKED)
-    private void onWidgetHeaderClicked(AjaxRequestTarget target, WidgetHeaderPayload payload) {
-        aapneForsteItem();
     }
 
     private void aapneForsteItem() {

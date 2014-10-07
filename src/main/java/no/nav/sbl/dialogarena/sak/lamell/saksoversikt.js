@@ -63,9 +63,14 @@ function addLamellTemaOnClickListeners() {
 
         $(".sak-navigering > UL > LI.aktiv").removeClass("aktiv");
         $el.parent("li").addClass("aktiv");
+        $el.trigger("updateaktivttema");
 
         visBehandling($el.context.hash.substr(1));
         $el.focus();
+    });
+
+    $("a.oppdater-innhold").click(function(event) {
+        $("a.oppdater-innhold > span").text("Oppdaterer...");
     });
 }
 
