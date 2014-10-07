@@ -29,6 +29,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonP
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import org.apache.wicket.Application;
@@ -182,7 +183,8 @@ public class WicketApplication extends WebApplication {
                         ModalErrorPanel.JS_RESOURCE,
                         UtbetalingLerret.UTBETALING_LAMELL_JS,
                         PersonPage.SELECTMENU_JS,
-                        SaksoversiktLerret.SAKSOVERSIKT_JS
+                        SaksoversiktLerret.SAKSOVERSIKT_JS,
+                        Innboks.MELDINGER_JS
                 )
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);
