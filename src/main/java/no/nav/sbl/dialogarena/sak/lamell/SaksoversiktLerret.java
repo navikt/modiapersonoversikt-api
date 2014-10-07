@@ -73,7 +73,7 @@ public class SaksoversiktLerret extends Lerret {
         addOrReplace(
             lagDetaljerContainer(fnr),
             temaContainer,
-            lagOppdaterLenke(fnr, this),
+            lagOppdaterLenke(this),
             feilmelding
         );
 
@@ -100,7 +100,7 @@ public class SaksoversiktLerret extends Lerret {
         }
     }
 
-    private AjaxLink lagOppdaterLenke(final String fnr, final SaksoversiktLerret lerret) {
+    private AjaxLink lagOppdaterLenke(final SaksoversiktLerret lerret) {
         AjaxLink link = new AjaxLink("oppdater-innhold") {
             @Override
             public void onClick(AjaxRequestTarget target) {
