@@ -50,6 +50,7 @@ public class AlleMeldingerPanel extends Panel {
                     protected void onEvent(AjaxRequestTarget target) {
                         AlleMeldingerPanel.this.innboksVM.setValgtMelding(meldingVM);
                         send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
+                        settFokusPaaValgtMelding(target);
                         target.add(AlleMeldingerPanel.this);
                     }
                 });
@@ -63,9 +64,15 @@ public class AlleMeldingerPanel extends Panel {
             innboksVM.oppdaterMeldinger();
             if (innboksVM.harTraader()) {
                 innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
+                target.appendJavaScript("Meldinger.addKeyNavigation();");
+                send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
+                settFokusPaaValgtMelding(target);
             }
             target.add(this);
         }
     }
 
+    private void settFokusPaaValgtMelding(AjaxRequestTarget target) {
+        target.appendJavaScript("Meldinger.focusOnSelectedElement();");
+    }
 }

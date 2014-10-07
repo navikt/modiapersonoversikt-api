@@ -3,24 +3,23 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
-import no.nav.modig.wicket.events.annotations.RefreshOnEvents;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-@RefreshOnEvents({MELDING_SENDT_TIL_BRUKER, TRAAD_MERKET})
 public class Innboks extends Lerret {
+
+    public static final JavaScriptResourceReference MELDINGER_JS = new JavaScriptResourceReference(Innboks.class, "meldinger.js");
 
     public static final String VALGT_MELDING_EVENT = "sos.innboks.valgt_melding";
     public static final String TRAAD_ID_PARAMETER_NAME = "henvendelseid";
@@ -72,6 +71,7 @@ public class Innboks extends Lerret {
     @Override
     public void onOpening(AjaxRequestTarget target) {
         innboksVM.oppdaterMeldinger();
+        target.appendJavaScript("Meldinger.addKeyNavigation();");
         super.onOpening(target);
     }
 
