@@ -8,10 +8,13 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.pdf.HandleBarHtmlGenerator;
 import no.nav.sbl.dialogarena.pdf.PDFFabrikk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -28,10 +31,15 @@ public class PdfUtils {
         }
     }
 
-    public static byte[] genererPdfForPrint(Melding melding) {
+    public static byte[] genererPdfForPrint(List<MeldingVM> meldinger) {
         Map<String, Helper<?>> helpers = generateHelpers();
+        List<PDFMelding> pdfMeldinger = new ArrayList<>();
         try {
-            PDFMelding innhold = new PDFMelding(melding);
+            for (MeldingVM melding : meldinger) {
+                pdfMeldinger.add(new PDFMelding(melding.melding));
+            }
+            PdfMeldingerWrapper innhold = new PdfMeldingerWrapper(pdfMeldinger);
+
             String html = HandleBarHtmlGenerator.fyllHtmlMalMedInnhold(innhold, "html/print", helpers);
             return PDFFabrikk.lagPdfFil(html);
         } catch (IOException e) {
@@ -95,6 +103,15 @@ public class PdfUtils {
 
         private String lagPDFMeldingstype(String meldingstype) {
             return meldingstype.substring(0, meldingstype.indexOf('_'));
+        }
+    }
+
+    static class PdfMeldingerWrapper {
+
+        public List<PDFMelding> pdfMeldinger;
+
+        PdfMeldingerWrapper(List<PDFMelding> pdfMeldinger) {
+            this.pdfMeldinger = pdfMeldinger;
         }
     }
 }

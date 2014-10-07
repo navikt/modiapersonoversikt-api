@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.print;
 
-import no.nav.sbl.dialogarena.pdf.PdfMerger;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import org.apache.wicket.markup.html.link.DownloadLink;
@@ -12,7 +11,6 @@ import org.apache.wicket.util.time.Duration;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PrintLenke extends DownloadLink {
@@ -48,12 +46,8 @@ public class PrintLenke extends DownloadLink {
         }
 
         private byte[] settSammenTilEnPdf() {
-            List<byte[]> pdfDokumenter = new ArrayList<>();
             List<MeldingVM> meldinger = model.getObject();
-            for (MeldingVM meldingVM : meldinger) {
-                pdfDokumenter.add(PdfUtils.genererPdfForPrint(meldingVM.melding));
-            }
-            return new PdfMerger().transform(pdfDokumenter);
+            return PdfUtils.genererPdfForPrint(meldinger);
         }
     }
 }
