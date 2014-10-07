@@ -21,6 +21,9 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 public class SakOgBehandlingFilter {
 
+    public static final String BEHANDLINGSTATUS_AVSLUTTET = "avsluttet";
+    public static final String BEHANDLINAVSLUTNINGSTATUS_OK = "ok";
+
     @Inject
     private CmsContentRetriever cms;
 
@@ -89,7 +92,10 @@ public class SakOgBehandlingFilter {
     };
 
     private static boolean erAvsluttet(WSBehandlingskjede kjede) {
-        return kjede.getSlutt() != null;
+        if (kjede.getSisteBehandlingsstatus() == null || kjede.getSisteBehandlingAvslutningsstatus() == null) {
+            return false;
+        }
+        return BEHANDLINGSTATUS_AVSLUTTET.equals(kjede.getSisteBehandlingsstatus().getValue()) && BEHANDLINAVSLUTNINGSTATUS_OK.equals(kjede.getSisteBehandlingAvslutningsstatus().getValue());
     }
 
     private static boolean erKvitteringstype(String type) {

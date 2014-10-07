@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -17,6 +18,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.OPPRETTET;
+import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.BEHANDLINGSTATUS_AVSLUTTET;
 
 public class SakOgBehandlingTransformers {
 
@@ -74,7 +76,8 @@ public class SakOgBehandlingTransformers {
     }
 
     public static boolean erAvsluttet(WSBehandlingskjede wsBehandlingskjede) {
-        return wsBehandlingskjede.getSlutt() != null;
+        WSBehandlingsstatuser sisteBehandlingsstatus = wsBehandlingskjede.getSisteBehandlingsstatus();
+        return wsBehandlingskjede.getSlutt() != null && sisteBehandlingsstatus != null && BEHANDLINGSTATUS_AVSLUTTET.equals(sisteBehandlingsstatus.getValue());
     }
 
     public static Transformer<WSSak, TemaVM> temaVMTransformer(final SakOgBehandlingFilter filter) {
