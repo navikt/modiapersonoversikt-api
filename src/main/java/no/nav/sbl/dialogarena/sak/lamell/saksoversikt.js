@@ -70,25 +70,29 @@ function addLamellTemaOnClickListeners() {
     });
 
     $("a.oppdater-innhold").click(function(event) {
+        window.updateAnimation = true;
         rotate(0);
     });
 }
 
 function stopRotation() {
-    clearTimeout(window.rotateTimer);
+    window.updateAnimation = false;
 }
 
 function rotate(index) {
-    index = (index+6)%360;
+    degPerUpdate = 6;
     var objectToRotate = $(".oppdater-innhold > IMG")[0];
-    var rotateString = "rotate(" + index + "deg)";
+    var rotateString = "rotate(" + (index++*degPerUpdate)%360 + "deg)";
     objectToRotate.style.transform = rotateString;
     objectToRotate.style.msTransform = rotateString;
     objectToRotate.style.MozTransform = rotateString;
     objectToRotate.style.WebkitTransform = rotateString;
-    window.rotateTimer = setTimeout(function() {
-        rotate(index);
-    }, 30);
+
+    if(window.updateAnimation || index*degPerUpdate < 180 ) {
+        window.rotateTimer = setTimeout(function () {
+            rotate(index);
+        }, 30);
+    }
 }
 
 function addSaksinformasjonClickListeners() {
