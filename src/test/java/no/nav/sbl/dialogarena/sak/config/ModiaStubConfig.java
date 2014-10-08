@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.sak.config;
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.common.kodeverk.KodeverkClient;
+import no.nav.sbl.dialogarena.sak.service.HenvendelseService;
+import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
@@ -36,6 +38,16 @@ public class ModiaStubConfig {
     @Bean
     public HenvendelseSoknaderPortType henvendelseSoknaderPortType() {
         return mock(HenvendelseSoknaderPortType.class);
+    }
+
+    @Bean
+    public HenvendelseService henvendelseService() {
+        return mock(HenvendelseService.class);
+    }
+
+    @Bean
+    public SakOgBehandlingService sakOgBehandlingService() {
+        return mock(SakOgBehandlingService.class);
     }
 
     @Bean
