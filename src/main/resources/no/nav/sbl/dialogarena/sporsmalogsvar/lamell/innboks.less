@@ -462,12 +462,18 @@
   line-height: 22px;
   background-repeat: no-repeat;
   &.sporsmal {
-    background-image: url(../img/melding_sporsmaal.svg);
+    background-image: url(../img/melding_sporsmaal_hoyre.svg);
   }
-  &.svar-ikke-lest-av-bruker, &.samtalereferat-ikke-lest-av-bruker {
+  &.svar-ikke-lest-av-bruker {
     background-image: url(../img/melding_svar_sendt.svg)
   }
-  &.svar-lest-av-bruker, &.samtalereferat-lest-av-bruker {
+  &.svar-lest-av-bruker {
     background-image: url(../img/melding_svar_lest.svg)
+  }
+  &.samtalereferat-ikke-lest-av-bruker {
+    background-image: url(../img/melding_referat_sendt.svg)
+  }
+  &.samtalereferat-lest-av-bruker {
+    background-image: url(../img/melding_referat_lest.svg)
   }
 }
