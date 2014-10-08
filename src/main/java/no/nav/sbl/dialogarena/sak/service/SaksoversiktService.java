@@ -7,15 +7,12 @@ import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
-import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.HentAktoerIdForIdentPersonIkkeFunnet;
 import no.nav.tjeneste.virksomhet.aktoer.v1.meldinger.HentAktoerIdForIdentRequest;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.meldinger.FinnSakOgBehandlingskjedeListeRequest;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.slf4j.Logger;
@@ -28,10 +25,7 @@ import java.util.Map;
 import java.util.Set;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
-import static no.nav.modig.lang.collections.PredicateUtils.where;
-import static no.nav.sbl.dialogarena.sak.transformers.HenvendelseTransformers.INNSENDT;
 import static no.nav.sbl.dialogarena.sak.transformers.HenvendelseTransformers.KVITTERING;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSIDER_FRA_SAK;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSKJEDER_TIL_BEHANDLINGER;
@@ -48,10 +42,10 @@ public class SaksoversiktService {
     private AktoerPortType fodselnummerAktorService;
 
     @Inject
-    private SakOgBehandling_v1PortType sakOgBehandlingPortType;
+    private HenvendelseService henvendelseService;
 
     @Inject
-    private HenvendelseSoknaderPortType henvendelseSoknaderPortType;
+    private SakOgBehandlingService sakOgBehandlingService;
 
     @Inject
     private SakOgBehandlingFilter filter;
@@ -61,7 +55,7 @@ public class SaksoversiktService {
      */
     public List<TemaVM> hentTemaer(String fnr) {
         LOG.info("Henter tema fra Sak og Behandling til Modiasaksoversikt. Fnr: " + fnr);
-        List<WSSak> saker = on(hentSakerForAktor(hentAktorId(fnr))).collect();
+        List<WSSak> saker = on(sakOgBehandlingService.hentSakerForAktor(hentAktorId(fnr))).collect();
         PreparedIterable<TemaVM> filtrerteSaker = on(filter.filtrerSaker(saker)).map(temaVMTransformer(filter));
         return filtrerteSaker.collect(new SistOppdaterteBehandlingComparator());
     }
@@ -71,7 +65,7 @@ public class SaksoversiktService {
      */
     public Map<TemaVM, List<GenerellBehandling>> hentBehandlingerByTema(String fnr) {
         Map<TemaVM, List<GenerellBehandling>> behandlingerByTema = new HashMap<>();
-        for (WSSak sak : filter.filtrerSaker(hentSakerForAktor(hentAktorId(fnr)))) {
+        for (WSSak sak : filter.filtrerSaker(sakOgBehandlingService.hentSakerForAktor(hentAktorId(fnr)))) {
             TemaVM tema = temaVMTransformer(filter).transform(sak);
             List<GenerellBehandling> behandlinger = filter.filtrerBehandlinger(hentSorterteBehandlinger(fnr, sak));
             behandlingerByTema.put(tema, behandlinger);
@@ -168,27 +162,11 @@ public class SaksoversiktService {
     }
 
     private void leggTilKvitteringHvisEksisterer(String fnr, String behandlingsId, List<Kvittering> kvitteringer) {
-        List<WSSoknad> soknader = hentInnsendteSoknader(fnr);
+        List<WSSoknad> soknader = henvendelseService.hentInnsendteSoknader(fnr);
         for (WSSoknad soknad : soknader) {
             if (soknad.getBehandlingsId().equals(behandlingsId)) {
                 kvitteringer.add(KVITTERING.transform(soknad));
             }
-        }
-    }
-
-    private List<WSSoknad> hentInnsendteSoknader(String fnr) {
-        try {
-            return on(henvendelseSoknaderPortType.hentSoknadListe(fnr)).filter(where(INNSENDT, equalTo(true))).collect();
-        } catch (Exception e) {
-            throw new SystemException("Feil ved kall til henvendelse", e);
-        }
-    }
-
-    private List<WSSak> hentSakerForAktor(String aktorId) {
-        try {
-            return sakOgBehandlingPortType.finnSakOgBehandlingskjedeListe(new FinnSakOgBehandlingskjedeListeRequest().withAktoerREF(aktorId)).getSak();
-        } catch (RuntimeException ex) {
-            throw new SystemException("Feil ved kall til sakogbehandling", ex);
         }
     }
 
