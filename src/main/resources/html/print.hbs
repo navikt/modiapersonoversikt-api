@@ -59,13 +59,15 @@
                             <span class="bold">Type: utgående henvendelse (U)</span>
                         {{/hvisLik}}
 
-                        {{#hvisIkkeTom temagruppe}}
-                            <span class="bold">Temagruppe: {{temagruppe}}</span>
-                        {{/hvisIkkeTom}}
+                        {{#hvisLik temagruppe "FMLI"}}
+                            <span class="bold">Temagruppe: Familie</span>
+                        {{/hvisLik}}
 
-                        {{#hvisIkkeTom kanal}}
-                           <span class="bold">Kanal: {{kanal}}</span>
-                        {{/hvisIkkeTom}}
+                        {{#hvisLik temagruppe "ARBD"}}
+                            <span class="bold">Temagruppe: Arbeid</span>
+                        {{/hvisLik}}
+
+                        <span class="bold">Kanal: NAV_NO</span>
 
                         {{#hvisIkkeTom journalFortDato}}
                             <span class="bold">Journalført: {{formaterDato journalFortDato}}</span>
