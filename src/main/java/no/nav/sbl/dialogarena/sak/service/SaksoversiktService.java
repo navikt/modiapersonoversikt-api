@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.service;
 
 import no.nav.modig.core.exception.SystemException;
+import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
@@ -43,7 +44,8 @@ public class SaksoversiktService {
     public List<TemaVM> hentTemaer(String fnr) {
         LOG.info("Henter tema fra Sak og Behandling til Modiasaksoversikt. Fnr: " + fnr);
         List<WSSak> saker = on(sakOgBehandlingService.hentSakerForAktor(hentAktorId(fnr))).collect();
-        return on(filter.filtrerSaker(saker)).map(temaVMTransformer(filter)).collect(new SistOppdaterteBehandlingComparator());
+        PreparedIterable<TemaVM> temaer = on(filter.filtrerSaker(saker)).map(temaVMTransformer(filter));
+        return temaer.collect(new SistOppdaterteBehandlingComparator());
     }
 
     /**
