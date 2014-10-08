@@ -10,3 +10,15 @@
 	vertical-align: top;
 	min-height: 86.5vh;
 }
+
+.personpanel > div.flexbox {
+    display: table;
+}
+
+.personpanel > div > div.row {
+    display: table-row;
+}
+
+.personpanel > div > div.row > .sidebar-venstre,.sidebar-hoyre,.main-content {
+    display: table-cell;
+}
