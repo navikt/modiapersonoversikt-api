@@ -7,6 +7,8 @@ import org.apache.wicket.model.PropertyModel;
 
 import java.util.List;
 
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+
 public class SakerRadioGroup extends RadioGroup<Sak> {
     private static final String FAGSAK_PROPERTY_NAVN = "journalfor.sakstype.tekst.fagsak";
     private static final String GENERELL_PROPERTY_NAVN = "journalfor.sakstype.tekst.generell";
@@ -29,6 +31,7 @@ public class SakerRadioGroup extends RadioGroup<Sak> {
                         sakerVM.visGenerelleSaker
                 )
         );
+        add(visibleIf(sakerVM.sakerFinnes()));
     }
 
 }

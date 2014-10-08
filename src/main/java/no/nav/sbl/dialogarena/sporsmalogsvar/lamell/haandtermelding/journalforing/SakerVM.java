@@ -10,6 +10,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.commons.collections15.Closure;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.injection.Injector;
+import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
 
@@ -73,6 +74,15 @@ public class SakerVM implements Serializable {
 
         visFagsaker.setObject(true);
         visGenerelleSaker.setObject(false);
+    }
+
+    public AbstractReadOnlyModel<Boolean> sakerFinnes() {
+        return new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return !temaSakerListeFagsak.isEmpty() || !temaSakerListeGenerelle.isEmpty();
+            }
+        };
     }
 
     private Map<Boolean, List<Sak>> splittIGenerelleSakerOgIkkeGenerelleSaker(List<Sak> saker) {
