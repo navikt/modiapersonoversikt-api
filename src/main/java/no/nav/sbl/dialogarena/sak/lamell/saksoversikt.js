@@ -70,8 +70,25 @@ function addLamellTemaOnClickListeners() {
     });
 
     $("a.oppdater-innhold").click(function(event) {
-        $("a.oppdater-innhold > span").text("Oppdaterer...");
+        rotate(0);
     });
+}
+
+function stopRotation() {
+    clearTimeout(window.rotateTimer);
+}
+
+function rotate(index) {
+    index = (index+6)%360;
+    var objectToRotate = $(".oppdater-innhold > IMG")[0];
+    var rotateString = "rotate(" + index + "deg)";
+    objectToRotate.style.transform = rotateString;
+    objectToRotate.style.msTransform = rotateString;
+    objectToRotate.style.MozTransform = rotateString;
+    objectToRotate.style.WebkitTransform = rotateString;
+    window.rotateTimer = setTimeout(function() {
+        rotate(index);
+    }, 30);
 }
 
 function addSaksinformasjonClickListeners() {
