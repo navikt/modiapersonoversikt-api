@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
-import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
@@ -8,9 +7,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
-import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter;
-import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -52,25 +48,5 @@ public class ConsumerServicesMockContext {
     @Bean
     public LokaltKodeverk lokaltKodeverk() {
         return mock(LokaltKodeverk.class);
-    }
-
-    @Bean
-    public BrukerprofilServiceBi brukerprofilServiceBi() {
-        return mock(BrukerprofilServiceBi.class);
-    }
-
-    @Bean
-    public SaksoversiktService saksoversiktService() {
-        return mock(SaksoversiktService.class);
-    }
-
-    @Bean
-    public SakOgBehandlingFilter sakOgBehandlingFilter() {
-        return mock(SakOgBehandlingFilter.class);
-    }
-
-    @Bean
-    public BulletproofCmsService bulletproofCmsService() {
-        return mock(BulletproofCmsService.class);
     }
 }

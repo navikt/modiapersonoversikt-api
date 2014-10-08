@@ -5,7 +5,6 @@ import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -24,7 +23,6 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.junit.Assert.assertEquals;
 
 @ContextConfiguration(classes = {
-        EndpointMockContext.class,
         HentPersonPanelMockContext.class,
         SaksbehandlerInnstillingerPanelMockContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
