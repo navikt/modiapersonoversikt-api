@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
 import org.joda.time.DateTime;
@@ -44,6 +45,7 @@ public class SakOgBehandlingTransformersTest {
         WSBehandlingskjede wsBehandlingskjede = createWSBehandlingskjede()
                 .withSlutt(avsluttetDato)
                 .withStart(startTid)
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
                 .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema));
         GenerellBehandling behandling = BEHANDLINGSKJEDE_TIL_BEHANDLING.transform(wsBehandlingskjede);
 

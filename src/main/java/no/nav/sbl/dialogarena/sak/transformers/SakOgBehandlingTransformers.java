@@ -6,7 +6,7 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSAvslutningsstatuser;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -71,11 +71,15 @@ public class SakOgBehandlingTransformers {
     }
 
     public static DateTime behandlingsDato(WSBehandlingskjede wsBehandlingskjede) {
-        return erAvsluttet(wsBehandlingskjede) ? wsBehandlingskjede.getSlutt() : wsBehandlingskjede.getStart();
+        return harSattSluttDato(wsBehandlingskjede) ? wsBehandlingskjede.getSlutt() : wsBehandlingskjede.getStart();
+    }
+
+    private static boolean harSattSluttDato(WSBehandlingskjede wsBehandlingskjede) {
+        return wsBehandlingskjede.getSlutt() != null;
     }
 
     public static boolean erAvsluttet(WSBehandlingskjede wsBehandlingskjede) {
-        WSAvslutningsstatuser avslutningsstatus = wsBehandlingskjede.getSisteBehandlingAvslutningsstatus();
+        WSBehandlingsstatuser avslutningsstatus = wsBehandlingskjede.getSisteBehandlingsstatus();
         return wsBehandlingskjede.getSlutt() != null && avslutningsstatus != null && "avsluttet".equals(avslutningsstatus.getValue());
     }
 

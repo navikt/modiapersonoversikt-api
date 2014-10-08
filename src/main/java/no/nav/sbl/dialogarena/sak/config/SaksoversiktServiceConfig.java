@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.config;
 
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
+import no.nav.sbl.dialogarena.sak.service.DataFletter;
 import no.nav.sbl.dialogarena.sak.service.HenvendelseService;
 import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter;
 import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingService;
@@ -38,6 +39,11 @@ public class SaksoversiktServiceConfig {
     @Bean
     public HenvendelseService henvendelseService() {
         return new HenvendelseService();
+    }
+
+    @Bean
+    public DataFletter dataFletter() {
+        return new DataFletter();
     }
 
 }
