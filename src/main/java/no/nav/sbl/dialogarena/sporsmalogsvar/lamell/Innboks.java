@@ -71,9 +71,10 @@ public class Innboks extends Lerret {
     @Override
     public void onOpening(AjaxRequestTarget target) {
         innboksVM.oppdaterMeldinger();
-        target.appendJavaScript("Meldinger.addKeyNavigation();");
-        target.appendJavaScript("Meldinger.focusOnSelectedElement();");
-        super.onOpening(target);
+        if (target != null) {
+            target.appendJavaScript("Meldinger.addKeyNavigation();");
+            target.appendJavaScript("Meldinger.focusOnSelectedElement();");
+        }
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
