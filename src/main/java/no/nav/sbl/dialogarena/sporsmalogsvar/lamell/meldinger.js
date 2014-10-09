@@ -1,23 +1,27 @@
-var Meldinger = (function() {
+var Meldinger = (function () {
+    var PIL_NED = 40;
+    var PIL_OPP = 38;
+    var ENTER = 13;
+    var TAB = 9;
 
-    var addKeyNavigation = function() {
-        $('.meldinglamell').on('keydown', '.melding', function(e) {
-            if (e.keyCode === 38) {
+    var addKeyNavigation = function () {
+        $('.meldinglamell').on('keydown', '.melding', function (e) {
+            if (e.keyCode === PIL_OPP) {
                 $(e.currentTarget).prev().focus();
-            } else if (e.keyCode === 40) {
+            } else if (e.keyCode === PIL_NED) {
                 $(e.currentTarget).next().focus();
-            } else if (e.keyCode === 13) {
+            } else if (e.keyCode === ENTER) {
                 $(e.currentTarget).click();
-            } else if (e.keyCode === 9 && e.shiftKey) {
+            } else if (e.keyCode === TAB && e.shiftKey) {
                 $('.meldinger .lamellhode ~ .close').focus();
-            } else if (e.keyCode === 9) {
+            } else if (e.keyCode === TAB) {
                 $('.haandter-meldinger a').first().focus();
             }
             e.preventDefault();
         });
     };
 
-    var focusOnSelectedElement = function() {
+    var focusOnSelectedElement = function () {
         $('.melding.valgt').focus();
     };
 
