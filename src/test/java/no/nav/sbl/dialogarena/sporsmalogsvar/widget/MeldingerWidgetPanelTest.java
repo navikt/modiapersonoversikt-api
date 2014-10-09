@@ -17,11 +17,11 @@ import static org.joda.time.DateTime.now;
 
 @ContextConfiguration(classes = MeldingWidgetTestConfig.class)
 @RunWith(SpringJUnit4ClassRunner.class)
-public class MeldingWidgetPanelTest extends WicketPageTest {
+public class MeldingerWidgetPanelTest extends WicketPageTest {
 
     @Test
     public void skalInneholdeRiktigeKomponenter() {
-        wicket.goToPageWith(new TestMeldingWidgetPanel("melding", new Model<>(new MeldingVM(asList(createMelding("id", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "1"))))))
+        wicket.goToPageWith(new TestMeldingerWidgetPanel("melding", new Model<>(new MeldingVM(asList(createMelding("id", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "1"))))))
                 .should().containComponent(withId("meldingstatus").and(ofType(Label.class)))
                 .should().containComponent(withId("opprettetDato").and(ofType(Label.class)))
                 .should().containComponent(withId("temagruppe").and(ofType(Label.class)));

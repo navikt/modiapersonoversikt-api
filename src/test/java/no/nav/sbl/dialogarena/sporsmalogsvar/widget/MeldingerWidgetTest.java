@@ -42,7 +42,7 @@ public class MeldingerWidgetTest extends WicketPageTest {
                 createMelding("id4", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id4")
         ));
         wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
-                .should().containComponents(4, ofType(MeldingWidgetPanel.class));
+                .should().containComponents(4, ofType(MeldingerWidgetPanel.class));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class MeldingerWidgetTest extends WicketPageTest {
                 createMelding("id6", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "TEMA", "id6")
         ));
         wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
-                .should().containComponents(5, ofType(MeldingWidgetPanel.class));
+                .should().containComponents(5, ofType(MeldingerWidgetPanel.class));
     }
 
     @Test

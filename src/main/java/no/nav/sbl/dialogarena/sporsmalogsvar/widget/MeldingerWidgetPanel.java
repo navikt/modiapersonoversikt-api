@@ -8,9 +8,9 @@ import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 
-public class MeldingWidgetPanel extends GenericPanel<MeldingVM> {
+public class MeldingerWidgetPanel extends GenericPanel<MeldingVM> {
 
-    public MeldingWidgetPanel(String id, IModel<MeldingVM> model) {
+    public MeldingerWidgetPanel(String id, IModel<MeldingVM> model) {
         super(id, new CompoundPropertyModel<>(model));
         setOutputMarkupId(true);
 
