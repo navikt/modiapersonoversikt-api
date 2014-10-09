@@ -50,7 +50,7 @@ function oppdaterSaksinformasjonSynlighet() {
 function addLamellTemaOnClickListeners() {
     function visBehandling(sakstema) {
         $(".sak-informasjon > ul > li").removeClass("aktiv");
-        if(sakstema != undefined) {
+        if(sakstema !== undefined) {
             $("#behandling_"+sakstema).addClass("aktiv");
         }
         oppdaterSaksinformasjonSynlighet();
