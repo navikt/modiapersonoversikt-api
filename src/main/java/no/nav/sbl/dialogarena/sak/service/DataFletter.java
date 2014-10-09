@@ -20,6 +20,7 @@ import java.util.Set;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
+import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.erKvitteringstype;
 import static no.nav.sbl.dialogarena.sak.transformers.HenvendelseTransformers.KVITTERING;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSIDER_FRA_SAK;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSKJEDER_TIL_BEHANDLINGER;
@@ -105,7 +106,15 @@ public class DataFletter {
     }
 
     private PreparedIterable<WSBehandlingskjede> behandlingskjederUtenKvitteringer(List<WSBehandlingskjede> behandlingskjeder, List<Kvittering> kvitteringerForTema) {
-        return on(behandlingskjeder).filter(not(finnesKvitteringMedSammeBehandlingsid(kvitteringerForTema)));
+        return on(behandlingskjeder).filter(not(finnesKvitteringMedSammeBehandlingsid(kvitteringerForTema))).filter(not(harKvitteringsBehandlingstype()));
+    }
+
+    private Predicate<WSBehandlingskjede> harKvitteringsBehandlingstype() {
+        return new Predicate<WSBehandlingskjede>() {
+            @Override public boolean evaluate(final WSBehandlingskjede wsBehandlingskjede) {
+                return erKvitteringstype(wsBehandlingskjede.getSisteBehandlingstype().getValue());
+            }
+        };
     }
 
     private List<Kvittering> hentKvitteringer(List<WSSoknad> soknader, List<String> behandlingsIDer) {

@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sak.service;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import org.apache.commons.collections15.Predicate;
@@ -17,6 +16,7 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.erAvsluttet;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SakOgBehandlingFilter {
@@ -55,7 +55,10 @@ public class SakOgBehandlingFilter {
     private static final Predicate<GenerellBehandling> ER_AVSLUTTET_KVITTERING = new Predicate<GenerellBehandling>() {
         @Override
         public boolean evaluate(GenerellBehandling generellBehandling) {
-            return (generellBehandling instanceof Kvittering && ((Kvittering) generellBehandling).avsluttet);
+            if (erKvitteringstype(generellBehandling.behandlingsType) && GenerellBehandling.BehandlingsStatus.AVSLUTTET.equals(generellBehandling.behandlingsStatus)) {
+                return true;
+            }
+            return false;
         }
     };
 
@@ -91,15 +94,7 @@ public class SakOgBehandlingFilter {
         }
     };
 
-    private static boolean erAvsluttet(WSBehandlingskjede kjede) {
-        if (kjede.getSisteBehandlingsstatus() == null || kjede.getSisteBehandlingAvslutningsstatus() == null) {
-            return false;
-        }
-        return BEHANDLINGSTATUS_AVSLUTTET.equals(kjede.getSisteBehandlingsstatus().getValue())
-                && BEHANDLINAVSLUTNINGSTATUS_OK.equals(kjede.getSisteBehandlingAvslutningsstatus().getValue());
-    }
-
-    private static boolean erKvitteringstype(String type) {
+    public static boolean erKvitteringstype(String type) {
         return SEND_SOKNAD_KVITTERINGSTYPE.equals(type) || DOKUMENTINNSENDING_KVITTERINGSTYPE.equals(type);
     }
 
