@@ -2,6 +2,8 @@ package no.nav.sbl.dialogarena.sak.lamell;
 
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
+import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -38,7 +40,6 @@ public class TemaListView extends PropertyListView<TemaVM> {
     }
 
     private class Temalenke extends ExternalLink {
-        public Temalenke(String id, String sakstema, String datoStreng) {
         public Temalenke(String id, final String sakstema, String datoStreng) {
             super(id, "#" + sakstema);
             add(

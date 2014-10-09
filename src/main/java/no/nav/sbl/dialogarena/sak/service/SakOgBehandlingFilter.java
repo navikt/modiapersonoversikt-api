@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
 import org.apache.commons.collections15.Predicate;
 import org.slf4j.Logger;
 
@@ -96,7 +95,8 @@ public class SakOgBehandlingFilter {
         if (kjede.getSisteBehandlingsstatus() == null || kjede.getSisteBehandlingAvslutningsstatus() == null) {
             return false;
         }
-        return BEHANDLINGSTATUS_AVSLUTTET.equals(kjede.getSisteBehandlingsstatus().getValue()) && BEHANDLINAVSLUTNINGSTATUS_OK.equals(kjede.getSisteBehandlingAvslutningsstatus().getValue());
+        return BEHANDLINGSTATUS_AVSLUTTET.equals(kjede.getSisteBehandlingsstatus().getValue())
+                && BEHANDLINAVSLUTNINGSTATUS_OK.equals(kjede.getSisteBehandlingAvslutningsstatus().getValue());
     }
 
     private static boolean erKvitteringstype(String type) {

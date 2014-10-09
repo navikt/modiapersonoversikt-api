@@ -6,7 +6,6 @@ import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -16,6 +15,8 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.BEHANDLINGSTATUS_AVSLUTTET;
+import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.BEHANDLINAVSLUTNINGSTATUS_OK;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.OPPRETTET;
 
@@ -78,9 +79,12 @@ public class SakOgBehandlingTransformers {
         return wsBehandlingskjede.getSlutt() != null;
     }
 
-    public static boolean erAvsluttet(WSBehandlingskjede wsBehandlingskjede) {
-        WSBehandlingsstatuser avslutningsstatus = wsBehandlingskjede.getSisteBehandlingsstatus();
-        return wsBehandlingskjede.getSlutt() != null && avslutningsstatus != null && "avsluttet".equals(avslutningsstatus.getValue());
+    public static boolean erAvsluttet(WSBehandlingskjede kjede) {
+        if (kjede.getSisteBehandlingsstatus() == null || kjede.getSisteBehandlingAvslutningsstatus() == null) {
+            return false;
+        }
+        return BEHANDLINGSTATUS_AVSLUTTET.equals(kjede.getSisteBehandlingsstatus().getValue())
+                && BEHANDLINAVSLUTNINGSTATUS_OK.equals(kjede.getSisteBehandlingAvslutningsstatus().getValue());
     }
 
     public static Transformer<WSSak, TemaVM> temaVMTransformer(final SakOgBehandlingFilter filter) {
