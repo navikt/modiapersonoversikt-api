@@ -17,6 +17,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.erAvsluttet;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class SakOgBehandlingFilter {
@@ -56,7 +57,7 @@ public class SakOgBehandlingFilter {
     private static final Predicate<GenerellBehandling> ER_AVSLUTTET_KVITTERING = new Predicate<GenerellBehandling>() {
         @Override
         public boolean evaluate(GenerellBehandling generellBehandling) {
-            if (erKvitteringstype(generellBehandling.behandlingsType) && GenerellBehandling.BehandlingsStatus.AVSLUTTET.equals(generellBehandling.behandlingsStatus)) {
+            if (erKvitteringstype(generellBehandling.behandlingsType) && AVSLUTTET.equals(generellBehandling.behandlingsStatus)) {
                 return true;
             }
             return false;

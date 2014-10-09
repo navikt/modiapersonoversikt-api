@@ -19,7 +19,9 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSBehandlingskjede;
+import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.DOKUMENTINNSENDING_KVITTERINGSTYPE;
 import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.SEND_SOKNAD_KVITTERINGSTYPE;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -117,7 +119,7 @@ public class SakOgBehandlingFilterTest {
                 new GenerellBehandling().withBehandlingsType("ae0047").withBehandlingsDato(now().minusDays(1)), //lovlig
                 new GenerellBehandling().withBehandlingsType("ae0034").withBehandlingsDato(now().minusDays(2)), //lovlig
                 new GenerellBehandling().withBehandlingsType("ae0014").withBehandlingsDato(now().minusDays(3)), //lovlig
-                new Kvittering().withAvsluttet(true).withBehandlingsDato(now().minusDays(5)) //kvittering, lovlig
+                new Kvittering().withBehandlingStatus(AVSLUTTET).withBehandlingsDato(now().minusDays(5)).withBehandlingsType(DOKUMENTINNSENDING_KVITTERINGSTYPE) //kvittering, lovlig
         ));
 
         List<GenerellBehandling> filtrerteBehandlinger = sakOgBehandlingFilter.filtrerBehandlinger(alleBehandlinger);

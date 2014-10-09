@@ -1,8 +1,5 @@
 package no.nav.sbl.dialogarena.sak.service;
 
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
-import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad;
@@ -30,25 +27,18 @@ import org.mockito.stubbing.Answer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSBehandlingskjede;
-import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSSak;
 import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.SEND_SOKNAD_KVITTERINGSTYPE;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseStatus.FERDIG;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseStatus.UNDER_ARBEID;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType.DOKUMENTINNSENDING;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSInnsendingsvalg.INNSENDT;
 import static no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSSoknad.Dokumentforventninger;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyListOf;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -108,63 +98,8 @@ public class SaksoversiktServiceTest {
     }
 
     @Test
-    public void hentTemaer_skalGi_likeMangeTemaSomSaker() {
-        saker.withSak(createWSSak(), createWSSak(), createWSSak());
-        assertThat(service.hentTemaer("abc").size(), equalTo(saker.getSak().size()));
-    }
-
-    @Test
-    public void hentTemaer_skalSortere_omvendtKronologisk() {
-        WSSak oldSak = createWSSakMinusYear(1);
-        WSSak newSak = createWSSakMinusYear(0);
-        saker.withSak(oldSak, newSak);
-        List<TemaVM> temaer = service.hentTemaer("abc");
-        assertTrue(temaer.get(0).sistoppdaterteBehandling.behandlingDato.isAfter(temaer.get(1).sistoppdaterteBehandling.behandlingDato));
-    }
-
-    @Test
-    public void hentBehandlingerForTemakode_skalMerge_fraBeggeBaksystemer() {
-        saker.withSak(opprettSakOgBehandlingGrunnlag());
-        henvendelseSoknader = opprettHenvendelseGrunnlag();
-        when(henvendelse.hentSoknadListe(anyString())).thenReturn(henvendelseSoknader);
-
-        List<GenerellBehandling> behandlingerFraTemaKodeDag = service.hentBehandlingerByTema("asdasdasd").get(new TemaVM().withTemaKode("DAG"));
-        Kvittering kvittering = (Kvittering) behandlingerFraTemaKodeDag.iterator().next();
-
-        assertThat(kvittering.innsendteDokumenter.size(), equalTo(4));
-    }
-
-    @Test
-    public void hentBehandlingerForTemakode_skalSortere_omvendtKronologisk() {
-        String kronotema = "kronotema";
-        WSSak sak = createWSSak().withSakstema(new WSSakstemaer().withValue(kronotema));
-        sak.withBehandlingskjede(
-                createWSBehandlingskjede().withSlutt(now().minusYears(3)),
-                createWSBehandlingskjede().withSlutt(now().minusYears(2)),
-                createWSBehandlingskjede().withSlutt(now().minusYears(1))
-        );
-        saker.withSak(sak);
-        List<GenerellBehandling> behandlinger = service.hentBehandlingerByTema("123123123").get(new TemaVM().withTemaKode(kronotema));
-        assertTrue(behandlinger.get(0).behandlingDato.isAfter(behandlinger.get(1).behandlingDato));
-    }
-
-    @Test
-    public void hentAlleBehandlingerSkalReturnereHenvendelserForAlleTema() {
-        String syk = "SYK";
-        String oms = "OMS";
-        String aap = "AAP";
-
-        saker.withSak(
-                createWSSak().withSakstema(new WSSakstemaer().withValue(syk)),
-                createWSSak().withSakstema(new WSSakstemaer().withValue(oms)),
-                createWSSak().withSakstema(new WSSakstemaer().withValue(aap)),
-                createWSSak().withSakstema(new WSSakstemaer().withValue(syk)),
-                createWSSak().withSakstema(new WSSakstemaer().withValue(aap)),
-                createWSSak().withSakstema(new WSSakstemaer().withValue(syk))
-        );
-
-        Map<TemaVM, List<GenerellBehandling>> behandlinger = service.hentBehandlingerByTema("123123123");
-        assertThat(behandlinger.keySet().size(), equalTo(3));
+    public void doStuff() {
+        //gjør en test
     }
 
     private List<WSSoknad> opprettHenvendelseGrunnlag() {
