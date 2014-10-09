@@ -34,12 +34,12 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_OPPMOTE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.OPPMOTE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON_OG_OPPMOTE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_OPPMOTE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_TELEFON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class ReferatPanel extends Panel {
@@ -74,13 +74,6 @@ public class ReferatPanel extends Panel {
         feedbackPanel.setOutputMarkupId(true);
         form.add(feedbackPanel);
 
-        form.add(new DropDownChoice<>("temagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
-            @Override
-            public Object getDisplayValue(Temagruppe object) {
-                return getString(object.name());
-            }
-        }).setRequired(true));
-
         form.add(new RadioGroup<>("kanal")
                 .setRequired(true)
                 .add(new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
@@ -90,6 +83,13 @@ public class ReferatPanel extends Panel {
                         item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
                     }
                 }));
+
+        form.add(new DropDownChoice<>("temagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
+            @Override
+            public Object getDisplayValue(Temagruppe object) {
+                return getString(object.name());
+            }
+        }).setRequired(true));
 
         form.add(new AjaxButton("send") {
             @Override
