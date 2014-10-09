@@ -38,7 +38,7 @@
                 $(event.currentTarget).trigger("click");
             }
         });
-    }
+    };
 
     SaksoversiktView.prototype.onShortcut = function onShortcut() {
         this.el.focus();

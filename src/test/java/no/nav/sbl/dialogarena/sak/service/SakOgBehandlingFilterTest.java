@@ -3,10 +3,7 @@ package no.nav.sbl.dialogarena.sak.service;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstegtyper;
-import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
 import org.joda.time.DateTime;
@@ -21,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSBehandlingskjede;
 import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.SEND_SOKNAD_KVITTERINGSTYPE;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -132,17 +130,5 @@ public class SakOgBehandlingFilterTest {
                 .withSaksId("saksId-mock")
                 .withSakstema(new WSSakstemaer().withValue("DAG").withKodeverksRef("kodeverk-ref-mock"))
                 .withOpprettet(now());
-    }
-
-    public static WSBehandlingskjede createWSBehandlingskjede() {
-        return new WSBehandlingskjede()
-                .withBehandlingskjedeId("behandlingskjedeid-mock")
-                .withBehandlingstema(new WSBehandlingstemaer().withKodeverksRef("kodeverk-ref-mock"))
-                .withBehandlingstema(new WSBehandlingstemaer().withKodeverksRef("kodeverk-tema-mock"))
-                .withStart(now())
-                .withSisteBehandlingREF("siste-behandling-ref-mock")
-                .withSisteBehandlingstype(new WSBehandlingstyper().withKodeverksRef("behandlingstype-ref-mock"))
-                .withSisteBehandlingsstegREF("siste-behandling-steg-ref-mock")
-                .withSisteBehandlingsstegtype(new WSBehandlingsstegtyper().withKodeverksRef("behandlingssteg-ref-mock"));
     }
 }

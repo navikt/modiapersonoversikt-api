@@ -105,6 +105,7 @@ public class SaksoversiktLerret extends Lerret {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 target.add(lerret);
+                target.appendJavaScript("stopRotation()");
             }
         };
         return link;
