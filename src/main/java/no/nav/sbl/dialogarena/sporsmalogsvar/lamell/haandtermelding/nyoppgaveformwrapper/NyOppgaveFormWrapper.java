@@ -30,8 +30,10 @@ import java.util.List;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyList;
 import static no.nav.modig.wicket.model.ModelUtils.not;
+import static no.nav.modig.wicket.model.ModelUtils.nullValue;
 
 public class NyOppgaveFormWrapper extends Panel {
 
@@ -52,18 +54,20 @@ public class NyOppgaveFormWrapper extends Panel {
         form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
         add(form.setOutputMarkupId(true));
 
-        IModel<List<AnsattEnhet>> enhetModel = new OppdaterbarListeModel<AnsattEnhet>(form.getModel()) {
-            @Override
-            protected List<AnsattEnhet> oppdater(GsakKodeTema.Tema tema) {
-                return enheter;
-            }
-        };
         IModel<List<GsakKodeTema.OppgaveType>> typeModel = new OppdaterbarListeModel<GsakKodeTema.OppgaveType>(form.getModel()) {
             @Override
             protected List<GsakKodeTema.OppgaveType> oppdater(GsakKodeTema.Tema tema) {
                 return tema.oppgaveTyper;
             }
         };
+
+        IModel<List<AnsattEnhet>> enhetModel = new OppdaterbarListeModel<AnsattEnhet>(form.getModel()) {
+            @Override
+            protected List<AnsattEnhet> oppdater(GsakKodeTema.Tema tema) {
+                return enheter;
+            }
+        };
+
         IModel<List<GsakKodeTema.Prioritet>> priModel = new OppdaterbarListeModel<GsakKodeTema.Prioritet>(form.getModel()) {
             @Override
             protected List<GsakKodeTema.Prioritet> oppdater(GsakKodeTema.Tema tema) {
@@ -75,32 +79,41 @@ public class NyOppgaveFormWrapper extends Panel {
         DropDownChoice<GsakKodeTema.Tema> temaDropDown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.Tema>("tema", gsakKodeverk.hentTemaListe(), gsakKodeChoiceRenderer, form) {
             @Override
             protected void onchange(AjaxRequestTarget target) {
-                Optional<AnsattEnhet> foreslattEnhet = gsakService.hentForeslattEnhet(innboksVM.getFnr(), form.getModelObject().tema.kode);
-                if (foreslattEnhet.isSome()) {
-                    form.getModelObject().enhet = foreslattEnhet.get();
-                }
+                hentForeslattEnhet(innboksVM);
+            }
+        };
+        DropDownChoiceMedFjerningAvDefault<GsakKodeTema.OppgaveType> typeDropdown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.OppgaveType>("type", typeModel, gsakKodeChoiceRenderer, form) {
+            @Override
+            protected void onchange(AjaxRequestTarget target) {
+                hentForeslattEnhet(innboksVM);
             }
         };
 
+        WebMarkupContainer typeContainer = new WebMarkupContainer("typeContainer");
+        typeContainer.add(typeDropdown.setRequired(true));
+        typeContainer.add(visibleIf(not(isEmptyList(typeModel))));
+
         WebMarkupContainer enhetContainer = new WebMarkupContainer("enhetContainer");
         enhetContainer.add(new AnsattEnhetDropdown("enhet", new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"), enheter).setRequired(true));
-        enhetContainer.add(visibleIf(not(isEmptyList(enhetModel))));
+        IModel<Boolean> visEnhetsValg = both(not(isEmptyList(enhetModel)))
+                .and(not(nullValue(new PropertyModel(form.getModelObject(), "tema"))))
+                .and(not(nullValue(new PropertyModel(form.getModelObject(), "type"))));
+        enhetContainer.add(visibleIf(visEnhetsValg));
 
-        WebMarkupContainer typeContainer = new WebMarkupContainer("typeContainer");
-        typeContainer.add(new DropDownChoiceMedFjerningAvDefault<>("type", typeModel, gsakKodeChoiceRenderer, form).setRequired(true));
-        typeContainer.add(visibleIf(not(isEmptyList(typeModel))));
 
         WebMarkupContainer prioritetContainer = new WebMarkupContainer("prioritetContainer");
         prioritetContainer.add(new DropDownChoiceMedFjerningAvDefault<>("prioritet", priModel, gsakKodeChoiceRenderer, form).setRequired(true));
-        prioritetContainer.add(visibleIf(not(isEmptyList(priModel))));
+        IModel<Boolean> visPrioritetsValg = both(not(isEmptyList(priModel)))
+                .and(not(nullValue(new PropertyModel(form.getModelObject(), "tema"))));
+        prioritetContainer.add(visibleIf(visPrioritetsValg));
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);
 
         form.add(
                 temaDropDown.setRequired(true),
-                enhetContainer,
                 typeContainer,
+                enhetContainer,
                 prioritetContainer,
                 new TextArea<String>("beskrivelse").setRequired(true),
                 feedbackPanel);
@@ -122,6 +135,17 @@ public class NyOppgaveFormWrapper extends Panel {
                 target.add(feedbackPanel);
             }
         });
+    }
+
+    private void hentForeslattEnhet(InnboksVM innboksVM) {
+        NyOppgave nyOppgave = form.getModelObject();
+        if (nyOppgave.tema == null || nyOppgave.type == null) {
+            return;
+        }
+        Optional<AnsattEnhet> foreslattEnhet = gsakService.hentForeslattEnhet(innboksVM.getFnr(), nyOppgave.tema.kode, nyOppgave.type.kode);
+        if (foreslattEnhet.isSome()) {
+            nyOppgave.enhet = foreslattEnhet.get();
+        }
     }
 
     public final void nullstillSkjema() {

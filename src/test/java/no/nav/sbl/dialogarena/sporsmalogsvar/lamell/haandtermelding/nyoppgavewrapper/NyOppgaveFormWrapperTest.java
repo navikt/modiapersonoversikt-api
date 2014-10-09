@@ -89,7 +89,7 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
 
     @Test
     public void skalSendeNyOppgaveObjektetTilGsakTjenestenForAaOppretteNy() {
-        when(gsakService.hentForeslattEnhet(anyString(), anyString())).thenReturn(optional(new AnsattEnhet("1231", "Sinsen")));
+        when(gsakService.hentForeslattEnhet(anyString(), anyString(), anyString())).thenReturn(optional(new AnsattEnhet("1231", "Sinsen")));
 
         String beskrivelse = "Dette er en beskrivelse";
         NyOppgaveFormWrapper nyOppgaveFormWrapper = new NyOppgaveFormWrapper("panel", innboksVM);

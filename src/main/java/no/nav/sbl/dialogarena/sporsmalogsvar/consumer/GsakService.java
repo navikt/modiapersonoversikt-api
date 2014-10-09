@@ -9,9 +9,9 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSBrukersok;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForSakRequest;
-import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForSakResponse;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
@@ -49,11 +49,14 @@ public class GsakService {
         return on(response.getSakListe()).map(TIL_SAK).collectIn(new ArrayList<Sak>());
     }
 
-    public Optional<AnsattEnhet> hentForeslattEnhet(String fnr, String tema) {
+    public Optional<AnsattEnhet> hentForeslattEnhet(String fnr, String tema, String type) {
         try {
-            WSFinnAnsvarligEnhetForSakResponse enhetForSakResponse = ruting.finnAnsvarligEnhetForSak(
-                    new WSFinnAnsvarligEnhetForSakRequest().withBrukersok(new WSBrukersok().withBrukerId(fnr).withFagomradeKode(tema)));
-            return optional(new AnsattEnhet(enhetForSakResponse.getEnhetId(), enhetForSakResponse.getEnhetNavn()));
+
+            WSFinnAnsvarligEnhetForOppgavetypeResponse enhetForSakResponse = ruting.finnAnsvarligEnhetForOppgavetype(
+                    new WSFinnAnsvarligEnhetForOppgavetypeRequest().withBrukerId(fnr).withFagomradeKode(tema).withOppgaveKode(type));
+
+            WSEnhet wsEnhet = enhetForSakResponse.getEnhetListe().get(0);
+            return optional(new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn()));
         } catch (Exception e) {
             return none();
         }
@@ -96,7 +99,8 @@ public class GsakService {
                                         .withOppgavetypeKode(nyOppgave.type.kode)
                                         .withPrioritetKode(nyOppgave.prioritet.kode)
                                         .withLest(false)
-                        ));
+                        )
+        );
     }
 
 }
