@@ -7,9 +7,9 @@ var Meldinger = (function () {
     var addKeyNavigation = function () {
         $('.meldinglamell').on('keydown', '.melding', function (e) {
             if (e.keyCode === PIL_OPP) {
-                $(e.currentTarget).prev().focus();
+                $(e.currentTarget).prev().click();
             } else if (e.keyCode === PIL_NED) {
-                $(e.currentTarget).next().focus();
+                $(e.currentTarget).next().click();
             } else if (e.keyCode === ENTER) {
                 $(e.currentTarget).click();
             } else if (e.keyCode === TAB && e.shiftKey) {
