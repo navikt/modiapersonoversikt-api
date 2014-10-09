@@ -11,8 +11,10 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
@@ -80,9 +82,16 @@ public class ReferatPanel extends Panel {
                 .add(new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
                     @Override
                     protected void populateItem(ListItem<Kanal> item) {
-                        item.add(titleAttribute(getString(item.getModelObject().name())));
-                        item.add(new Radio<>("kanalknapp", item.getModel()));
-                        item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
+                        String kanalType = item.getModelObject().name();
+
+                        item.add(titleAttribute(getString(kanalType)));
+
+                        Radio<Kanal> kanalKnapp = new Radio<>("kanalknapp", item.getModel());
+                        kanalKnapp.add(new AttributeAppender("aria-label", "Velg kanal, " + getString(kanalType)));
+
+                        Component kanalIkon = new WebMarkupContainer("kanalikon").add(cssClass(kanalType.toLowerCase()));
+
+                        item.add(kanalKnapp, kanalIkon);
                     }
                 }));
 
