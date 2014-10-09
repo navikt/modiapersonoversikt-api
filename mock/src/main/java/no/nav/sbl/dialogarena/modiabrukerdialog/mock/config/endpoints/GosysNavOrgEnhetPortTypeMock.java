@@ -36,7 +36,9 @@ public class GosysNavOrgEnhetPortTypeMock {
             @Override
             public ASBOGOSYSNAVEnhetListe finnNAVEnhet(ASBOGOSYSFinnNAVEnhetRequest finnNAVEnhetRequest)
                     throws FinnNAVEnhetFaultGOSYSGeneriskMsg {
-                return new ASBOGOSYSNAVEnhetListe();
+                ASBOGOSYSNAVEnhetListe enhetListe = new ASBOGOSYSNAVEnhetListe();
+                enhetListe.getNAVEnheter().addAll(NAV_ENHET_LISTE);
+                return enhetListe;
             }
 
             @Override
