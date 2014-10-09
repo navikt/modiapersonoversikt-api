@@ -73,7 +73,7 @@ public class DataFletter {
     private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede) {
         return (Kvittering) ((Kvittering) kvittering.withBehandlingsDato(behandlingsDato(wsBehandlingskjede)))
                 .withAvsluttet(wsBehandlingskjede.getSlutt() != null)
-                .withBehandlingsType(null) //setter eksplisitt for å unngå duplisering fra filteret
+                .withBehandlingsType(wsBehandlingskjede.getSisteBehandlingstype().getValue())
                 .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede));
     }
 

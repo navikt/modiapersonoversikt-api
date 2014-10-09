@@ -23,6 +23,7 @@ public class SakOgBehandlingFilter {
 
     public static final String BEHANDLINGSTATUS_AVSLUTTET = "avsluttet";
     public static final String BEHANDLINAVSLUTNINGSTATUS_OK = "ok";
+    public static final String BEHANDLINAVSLUTNINGSTATUS_JA = "ja";
 
     @Inject
     private CmsContentRetriever cms;

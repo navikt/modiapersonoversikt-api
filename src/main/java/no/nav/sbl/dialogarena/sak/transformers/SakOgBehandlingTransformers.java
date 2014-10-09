@@ -17,6 +17,7 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.BEHANDLINGSTATUS_AVSLUTTET;
 import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.BEHANDLINAVSLUTNINGSTATUS_OK;
+import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.BEHANDLINAVSLUTNINGSTATUS_JA;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.OPPRETTET;
 
@@ -84,7 +85,8 @@ public class SakOgBehandlingTransformers {
             return false;
         }
         return BEHANDLINGSTATUS_AVSLUTTET.equals(kjede.getSisteBehandlingsstatus().getValue())
-                && BEHANDLINAVSLUTNINGSTATUS_OK.equals(kjede.getSisteBehandlingAvslutningsstatus().getValue());
+                && (BEHANDLINAVSLUTNINGSTATUS_OK.equals(kjede.getSisteBehandlingAvslutningsstatus().getValue())
+                || BEHANDLINAVSLUTNINGSTATUS_JA.equals(kjede.getSisteBehandlingAvslutningsstatus().getValue()));
     }
 
     public static Transformer<WSSak, TemaVM> temaVMTransformer(final SakOgBehandlingFilter filter) {
