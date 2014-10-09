@@ -43,6 +43,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.OPPMOTE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
@@ -163,6 +164,7 @@ public class SvarPanel extends Panel {
             radioGroup.add(new ListView<Kanal>("kanalvalg", asList(Kanal.values())) {
                 @Override
                 protected void populateItem(ListItem<Kanal> item) {
+                    item.add(titleAttribute(getString(item.getModelObject().name())));
                     item.add(new Radio<>("kanalknapp", item.getModel()));
                     item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
                 }

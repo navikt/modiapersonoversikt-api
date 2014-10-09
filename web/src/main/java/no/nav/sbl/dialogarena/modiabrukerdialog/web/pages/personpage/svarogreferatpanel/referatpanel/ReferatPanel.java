@@ -33,6 +33,7 @@ import javax.inject.Inject;
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.OPPMOTE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
@@ -79,6 +80,7 @@ public class ReferatPanel extends Panel {
                 .add(new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
                     @Override
                     protected void populateItem(ListItem<Kanal> item) {
+                        item.add(titleAttribute(getString(item.getModelObject().name())));
                         item.add(new Radio<>("kanalknapp", item.getModel()));
                         item.add(new WebMarkupContainer("kanalikon").add(cssClass(item.getModelObject().name().toLowerCase())));
                     }
