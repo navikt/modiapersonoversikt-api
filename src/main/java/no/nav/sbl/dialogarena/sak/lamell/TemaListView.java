@@ -1,15 +1,11 @@
 package no.nav.sbl.dialogarena.sak.lamell;
 
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
-import org.apache.wicket.ajax.AjaxEventBehavior;
-import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.PropertyListView;
-import org.joda.time.DateTime;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -33,10 +29,8 @@ public class TemaListView extends PropertyListView<TemaVM> {
 
     @Override
     protected void populateItem(ListItem<TemaVM> item) {
-        final String sakstema = item.getModelObject().temakode;
-        GenerellBehandling sistoppdaterteBehandling = item.getModelObject().sistoppdaterteBehandling;
-        DateTime sistOppdatert = sistoppdaterteBehandling != null ? sistoppdaterteBehandling.behandlingDato : new DateTime();
-        String datoStreng = printLongDate(sistOppdatert);
+        String sakstema = item.getModelObject().temakode;
+        String datoStreng = printLongDate(item.getModelObject().sistoppdaterteBehandling.behandlingDato);
         boolean sakstemaErValgt = sakstema.equals(lerret.getAktivtTema().getObject());
 
         item.add(new Temalenke("temalenke", sakstema, datoStreng));
@@ -44,6 +38,7 @@ public class TemaListView extends PropertyListView<TemaVM> {
     }
 
     private class Temalenke extends ExternalLink {
+        public Temalenke(String id, String sakstema, String datoStreng) {
         public Temalenke(String id, final String sakstema, String datoStreng) {
             super(id, "#" + sakstema);
             add(

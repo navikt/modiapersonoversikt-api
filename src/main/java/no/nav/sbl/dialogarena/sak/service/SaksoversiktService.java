@@ -121,7 +121,8 @@ public class SaksoversiktService {
     }
 
     private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede) {
-        return (Kvittering) ((Kvittering) kvittering.withBehandlingsDato(behandlingsDato(wsBehandlingskjede)))
+        return (Kvittering) ((Kvittering) kvittering
+                .withBehandlingsDato(behandlingsDato(wsBehandlingskjede)))
                 .withAvsluttet(wsBehandlingskjede.getSlutt() != null)
                 .withBehandlingsType(null) //setter eksplisitt for å unngå duplisering fra filteret
                 .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede));

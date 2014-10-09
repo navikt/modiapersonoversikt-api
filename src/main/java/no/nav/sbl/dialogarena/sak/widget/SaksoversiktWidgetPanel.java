@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sak.widget;
 
 import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
-import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.GenericPanel;
@@ -27,8 +26,7 @@ public class SaksoversiktWidgetPanel extends GenericPanel<TemaVM> {
         super(id);
         TemaVM temaVM = model.getObject();
 
-        GenerellBehandling sistoppdaterteBehandling = temaVM.sistoppdaterteBehandling;
-        DateTime sistOppdatert = sistoppdaterteBehandling != null ? sistoppdaterteBehandling.behandlingDato : new DateTime();
+        DateTime sistOppdatert = temaVM.sistoppdaterteBehandling.behandlingDato;
         add(
                 new Label("temaTittel", kodeverk.getTemanavnForTemakode(temaVM.temakode, ARKIVTEMA)),
                 new Label("temaDato", format(cms.hentTekst("hendelse.sistoppdatert.dato"), printLongDate(sistOppdatert)))
