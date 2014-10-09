@@ -246,7 +246,7 @@
     .meldingsvalg {
       display: inline-block;
       &:not(:last-child) {
-        margin-right: 1em;
+        margin-right: 1.5em;
       }
       &.besvar span {
         background-image: url(../img/besvar_inaktiv.svg);
@@ -262,6 +262,7 @@
       }
       &.inaktiv .pil {
         .pil(6px, darkgray);
+        cursor: default;
       }
       span {
         color: darkgray;
@@ -293,6 +294,7 @@
       text-decoration: underline;
     }
     .pil {
+      cursor: pointer;
       display: inline-block;
       margin-bottom: 1px;
       .pil(6px, @dodgerblue); // definisjon i komponenter.less
