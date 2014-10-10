@@ -20,7 +20,7 @@ import java.util.Set;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.not;
-import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.erKvitteringstype;
+import static no.nav.sbl.dialogarena.sak.service.Filter.erKvitteringstype;
 import static no.nav.sbl.dialogarena.sak.transformers.HenvendelseTransformers.KVITTERING;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSIDER_FRA_SAK;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSKJEDER_TIL_BEHANDLINGER;
@@ -31,7 +31,7 @@ import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformer
 public class DataFletter {
 
     @Inject
-    private SakOgBehandlingFilter filter;
+    private Filter filter;
 
     public Map<TemaVM, List<GenerellBehandling>> hentBehandlingerByTema(List<WSSak> saker, List<WSSoknad> soknader) {
         Map<TemaVM, List<GenerellBehandling>> behandlingerByTema = new HashMap<>();

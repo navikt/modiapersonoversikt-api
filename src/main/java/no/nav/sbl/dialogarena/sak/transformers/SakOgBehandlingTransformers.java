@@ -1,7 +1,8 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sak.comparators.OmvendtKronologiskBehandlingComparator;
-import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter;
+import no.nav.sbl.dialogarena.sak.service.Filter;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
@@ -15,7 +16,7 @@ import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.BEHANDLINGSTATUS_AVSLUTTET;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVBRUTT;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.OPPRETTET;
 
@@ -67,7 +68,18 @@ public class SakOgBehandlingTransformers {
     }
 
     public static GenerellBehandling.BehandlingsStatus behandlingsStatus(WSBehandlingskjede wsBehandlingskjede) {
-        return erAvsluttet(wsBehandlingskjede) ? AVSLUTTET : OPPRETTET;
+        if (wsBehandlingskjede.getSisteBehandlingsstatus() != null) {
+            if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.AVSLUTTET)) {
+                return AVSLUTTET;
+            } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.OPPRETTET)) {
+                return OPPRETTET;
+            } else if (wsBehandlingskjede.getSisteBehandlingsstatus().getValue().equals(Filter.AVBRUTT)) {
+                return AVBRUTT;
+            } else {
+                throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
+            }
+        }
+        throw new ApplicationException("Ukjent behandlingsstatus mottatt: " + wsBehandlingskjede.getSisteBehandlingsstatus().getValue());
     }
 
     public static DateTime behandlingsDato(WSBehandlingskjede wsBehandlingskjede) {
@@ -82,10 +94,10 @@ public class SakOgBehandlingTransformers {
         if (kjede.getSisteBehandlingsstatus() == null) {
             return false;
         }
-        return BEHANDLINGSTATUS_AVSLUTTET.equals(kjede.getSisteBehandlingsstatus().getValue());
+        return Filter.AVSLUTTET.equals(kjede.getSisteBehandlingsstatus().getValue());
     }
 
-    public static Transformer<WSSak, TemaVM> temaVMTransformer(final SakOgBehandlingFilter filter) {
+    public static Transformer<WSSak, TemaVM> temaVMTransformer(final Filter filter) {
         return new Transformer<WSSak, TemaVM>() {
 
             @Override

@@ -33,7 +33,7 @@ public class SaksoversiktService {
     private SakOgBehandlingService sakOgBehandlingService;
 
     @Inject
-    private SakOgBehandlingFilter filter;
+    private Filter filter;
 
     @Inject
     private DataFletter dataFletter;

@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sak.config;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.service.DataFletter;
 import no.nav.sbl.dialogarena.sak.service.HenvendelseService;
-import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter;
+import no.nav.sbl.dialogarena.sak.service.Filter;
 import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingService;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import org.springframework.context.annotation.Bean;
@@ -27,8 +27,8 @@ public class SaksoversiktServiceConfig {
     }
 
     @Bean
-    public SakOgBehandlingFilter sakOgBehandlingFilter() {
-        return new SakOgBehandlingFilter();
+    public Filter sakOgBehandlingFilter() {
+        return new Filter();
     }
 
     @Bean

@@ -20,8 +20,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sak.mock.SakOgBehandlingMocks.createWSBehandlingskjede;
-import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.DOKUMENTINNSENDING_KVITTERINGSTYPE;
-import static no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter.SEND_SOKNAD_KVITTERINGSTYPE;
+import static no.nav.sbl.dialogarena.sak.service.Filter.DOKUMENTINNSENDING_KVITTERINGSTYPE;
+import static no.nav.sbl.dialogarena.sak.service.Filter.SEND_SOKNAD_KVITTERINGSTYPE;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -30,13 +30,13 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class SakOgBehandlingFilterTest {
+public class FilterTest {
 
     @Mock
     private CmsContentRetriever cmsContentRetriever;
 
     @InjectMocks
-    private SakOgBehandlingFilter sakOgBehandlingFilter = new SakOgBehandlingFilter();
+    private Filter filter = new Filter();
 
     @Before
     public void setup() {
@@ -61,7 +61,7 @@ public class SakOgBehandlingFilterTest {
                 )
         );
 
-        List<WSSak> filtrerteSaker = sakOgBehandlingFilter.filtrerSaker(saker);
+        List<WSSak> filtrerteSaker = filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(1));
         assertThat(filtrerteSaker.get(0).getSakstema().getValue(), is("AAP"));
     }
@@ -75,7 +75,7 @@ public class SakOgBehandlingFilterTest {
                 )
         );
 
-        List<WSSak> filtrerteSaker = sakOgBehandlingFilter.filtrerSaker(saker);
+        List<WSSak> filtrerteSaker = filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(1));
     }
 
@@ -91,7 +91,7 @@ public class SakOgBehandlingFilterTest {
                 )
         );
 
-        List<WSSak> filtrerteSaker = sakOgBehandlingFilter.filtrerSaker(saker);
+        List<WSSak> filtrerteSaker = filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(1));
         assertThat(filtrerteSaker.get(0).getBehandlingskjede().get(0).getSisteBehandlingstype().getValue(), equalTo(lovligType));
     }
@@ -111,7 +111,7 @@ public class SakOgBehandlingFilterTest {
                 )
         );
 
-        List<WSSak> filtrerteSaker = sakOgBehandlingFilter.filtrerSaker(saker);
+        List<WSSak> filtrerteSaker = filter.filtrerSaker(saker);
         assertThat(filtrerteSaker.size(), is(1));
         assertThat(filtrerteSaker.get(0).getBehandlingskjede().get(0).getSisteBehandlingstype().getValue(), equalTo(SEND_SOKNAD_KVITTERINGSTYPE));
     }
@@ -120,14 +120,14 @@ public class SakOgBehandlingFilterTest {
     public void lovligeTyperOgKvitteringer_slipperGjennomFilter() throws Exception {
         List<GenerellBehandling> alleBehandlinger = new ArrayList<>();
         alleBehandlinger.addAll(asList(
-                new GenerellBehandling().withBehandlingsType("LOL1337").withBehandlingsDato(now().minusDays(4)), //ulovlig
-                new GenerellBehandling().withBehandlingsType("ae0047").withBehandlingsDato(now().minusDays(1)), //lovlig
-                new GenerellBehandling().withBehandlingsType("ae0034").withBehandlingsDato(now().minusDays(2)), //lovlig
-                new GenerellBehandling().withBehandlingsType("ae0014").withBehandlingsDato(now().minusDays(3)), //lovlig
+                new GenerellBehandling().withBehandlingStatus(AVSLUTTET).withBehandlingsType("LOL1337").withBehandlingsDato(now().minusDays(4)), //ulovlig
+                new GenerellBehandling().withBehandlingStatus(AVSLUTTET).withBehandlingsType("ae0047").withBehandlingsDato(now().minusDays(1)), //lovlig
+                new GenerellBehandling().withBehandlingStatus(AVSLUTTET).withBehandlingsType("ae0034").withBehandlingsDato(now().minusDays(2)), //lovlig
+                new GenerellBehandling().withBehandlingStatus(AVSLUTTET).withBehandlingsType("ae0014").withBehandlingsDato(now().minusDays(3)), //lovlig
                 new Kvittering().withBehandlingStatus(AVSLUTTET).withBehandlingsDato(now().minusDays(5)).withBehandlingsType(DOKUMENTINNSENDING_KVITTERINGSTYPE) //kvittering, lovlig
         ));
 
-        List<GenerellBehandling> filtrerteBehandlinger = sakOgBehandlingFilter.filtrerBehandlinger(alleBehandlinger);
+        List<GenerellBehandling> filtrerteBehandlinger = filter.filtrerBehandlinger(alleBehandlinger);
 
         assertThat(filtrerteBehandlinger.size(), is(4));
     }

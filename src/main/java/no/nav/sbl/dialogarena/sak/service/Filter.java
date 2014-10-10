@@ -14,15 +14,16 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.erAvsluttet;
-import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
+import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus;
 import static org.slf4j.LoggerFactory.getLogger;
 
-public class SakOgBehandlingFilter {
+public class Filter {
 
-    public static final String BEHANDLINGSTATUS_AVSLUTTET = "avsluttet";
+    public static final String OPPRETTET = "opprettet";
+    public static final String AVBRUTT = "avbrutt";
+    public static final String AVSLUTTET = "avsluttet";
 
     @Inject
     private CmsContentRetriever cms;
@@ -30,7 +31,7 @@ public class SakOgBehandlingFilter {
     private static List<String> ulovligeSakstema;
     private static List<String> lovligeBehandlingstyper;
 
-    private final static Logger log = getLogger(SakOgBehandlingFilter.class);
+    private final static Logger log = getLogger(Filter.class);
     public final static String DOKUMENTINNSENDING_KVITTERINGSTYPE = "ae0001";
     public final static String SEND_SOKNAD_KVITTERINGSTYPE = "ae0002";
 
@@ -39,8 +40,7 @@ public class SakOgBehandlingFilter {
         ArrayList<GenerellBehandling> allebehandlinger = new ArrayList<>();
         allebehandlinger.addAll(on(behandlinger).filter(ER_AVSLUTTET_KVITTERING).collect());
         allebehandlinger.addAll(on(behandlinger).filter(HAR_LOVLIG_BEHANDLINGSTYPE).collect());
-        sort(allebehandlinger, new OmvendtKronologiskBehandlingComparator());
-        return allebehandlinger;
+        return on(allebehandlinger).filter(HAR_LOVLIG_BEHANDLINGSSTATUS).collect(new OmvendtKronologiskBehandlingComparator());
     }
 
     public List<WSSak> filtrerSaker(List<WSSak> saker) {
@@ -49,13 +49,38 @@ public class SakOgBehandlingFilter {
         return on(saker)
                 .filter(HAR_LOVLIG_SAKSTEMA)
                 .filter(HAR_BEHANDLINGER)
+                .filter(HAR_LOVLIG_STATUS_PAA_MINST_EN_BEHANDLING)
                 .filter(HAR_LOVLIGE_BEHANDLINGSTYPER_ELLER_KVITTERINGER).collect();
     }
+
+    private static final Predicate<? super WSSak> HAR_LOVLIG_STATUS_PAA_MINST_EN_BEHANDLING = new Predicate<WSSak>() {
+        @Override
+        public boolean evaluate(WSSak wsSak) {
+            for (WSBehandlingskjede kjede : wsSak.getBehandlingskjede()) {
+                if (kjede.getSisteBehandlingsstatus().getValue() != null &&
+                        (kjede.getSisteBehandlingsstatus().getValue().equals(OPPRETTET) || kjede.getSisteBehandlingsstatus().getValue().equals(AVSLUTTET))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+
+    private static final Predicate<GenerellBehandling> HAR_LOVLIG_BEHANDLINGSSTATUS = new Predicate<GenerellBehandling>() {
+        @Override
+        public boolean evaluate(GenerellBehandling record) {
+            BehandlingsStatus status = record.behandlingsStatus;
+            if (status.equals(BehandlingsStatus.AVSLUTTET) || status.equals(BehandlingsStatus.OPPRETTET)) {
+                return true;
+            }
+            return false;
+        }
+    };
 
     private static final Predicate<GenerellBehandling> ER_AVSLUTTET_KVITTERING = new Predicate<GenerellBehandling>() {
         @Override
         public boolean evaluate(GenerellBehandling generellBehandling) {
-            if (erKvitteringstype(generellBehandling.behandlingsType) && AVSLUTTET.equals(generellBehandling.behandlingsStatus)) {
+            if (erKvitteringstype(generellBehandling.behandlingsType) && BehandlingsStatus.AVSLUTTET.equals(generellBehandling.behandlingsStatus)) {
                 return true;
             }
             return false;

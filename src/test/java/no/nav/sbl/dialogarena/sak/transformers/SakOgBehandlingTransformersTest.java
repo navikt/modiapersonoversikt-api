@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
-import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter;
+import no.nav.sbl.dialogarena.sak.service.Filter;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
@@ -57,7 +57,7 @@ public class SakOgBehandlingTransformersTest {
 
     @Test
     public void temaVMtransformerKomplettObjektMapping() {
-        SakOgBehandlingFilter filter = mock(SakOgBehandlingFilter.class);
+        Filter filter = mock(Filter.class);
         when(filter.filtrerSaker(anyListOf(WSSak.class))).thenAnswer(new Answer<Object>() {
             @Override public Object answer(InvocationOnMock invocation) throws Throwable {
                 return invocation.getArguments()[0]; // Filtrerer ingenting og returnerer argumentet

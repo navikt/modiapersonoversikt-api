@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sak;
 
 import no.nav.modig.wicket.test.FluentWicketTester;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
-import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter;
+import no.nav.sbl.dialogarena.sak.service.Filter;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.HenvendelseSoknaderPortType;
 import no.nav.tjeneste.virksomhet.aktoer.v1.AktoerPortType;
@@ -79,8 +79,8 @@ public class WicketTesterConfig {
     }
 
     @Bean
-    public SakOgBehandlingFilter sakOgBehandlingFilter() {
-        SakOgBehandlingFilter mock = mock(SakOgBehandlingFilter.class, RETURNS_MOCKS);
+    public Filter sakOgBehandlingFilter() {
+        Filter mock = mock(Filter.class, RETURNS_MOCKS);
         when(mock.filtrerSaker(anyListOf(WSSak.class))).thenAnswer(new Answer<Object>() {
             @Override public Object answer(InvocationOnMock invocation) throws Throwable {
                 return invocation.getArguments()[0]; // Filtrerer ingenting og returnerer argumentet
