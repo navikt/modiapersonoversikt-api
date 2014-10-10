@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 public class PersonKjerneinfoServiceBiMock {
 
-    public static final String FODSELSNUMMER = "31018322148";
+    public static final String FODSELSNUMMER = "***REMOVED***";
 
     public static PersonKjerneinfoServiceBi getPersonKjerneinfoServiceBiMock() {
         PersonKjerneinfoServiceBi serviceMock = mock(PersonKjerneinfoServiceBi.class);
@@ -39,7 +39,7 @@ public class PersonKjerneinfoServiceBiMock {
 
     private static Person createPerson() {
         Person barn = new Person.With()
-                .fodselsnummer("31018322148")
+                .fodselsnummer("***REMOVED***")
                 .personfakta(new Personfakta.With()
                         .sivilstand(new Kodeverdi.With()
                                 .value("SINGEL")

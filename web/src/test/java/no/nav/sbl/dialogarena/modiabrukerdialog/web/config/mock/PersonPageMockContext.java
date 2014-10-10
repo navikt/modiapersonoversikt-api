@@ -4,7 +4,7 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
 import no.nav.sbl.dialogarena.sak.config.SaksoversiktServiceConfig;
-import no.nav.sbl.dialogarena.sak.service.SakOgBehandlingFilter;
+import no.nav.sbl.dialogarena.sak.service.Filter;
 import no.nav.sbl.dialogarena.sak.service.SaksoversiktService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
 import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
@@ -37,8 +37,8 @@ public class PersonPageMockContext {
     }
 
     @Bean
-    public SakOgBehandlingFilter sakOgBehandlingFilter() {
-        return mock(SakOgBehandlingFilter.class);
+    public Filter sakOgBehandlingFilter() {
+        return mock(Filter.class);
     }
 
     @Bean(name = "pep")
