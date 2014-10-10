@@ -42,7 +42,8 @@ public class AlleMeldingerPanel extends Panel {
                 item.add(new Label("fritekst",
                         meldingVM.melding.fritekst != null ?
                                 new PropertyModel(meldingVM, "melding.fritekst") :
-                                new ResourceModel("innhold.kassert")));
+                                new ResourceModel("innhold.kassert")
+                ));
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
                 item.add(new AjaxEventBehavior("click") {
@@ -58,13 +59,25 @@ public class AlleMeldingerPanel extends Panel {
         });
     }
 
-    @RunOnEvents({MELDING_SENDT_TIL_BRUKER, TRAAD_MERKET, TRAAD_JOURNALFORT})
-    public void oppdaterMeldinger(AjaxRequestTarget target) {
+    @RunOnEvents({MELDING_SENDT_TIL_BRUKER})
+    public void oppdaterMeldingerEtterNyMelding(AjaxRequestTarget target) {
+        oppdaterMeldinger(target, true);
+    }
+
+    @RunOnEvents({TRAAD_MERKET, TRAAD_JOURNALFORT})
+    public void oppdaterMeldingerEtterMerkingEllerJournalforing(AjaxRequestTarget target) {
+        oppdaterMeldinger(target, false);
+    }
+
+    private void oppdaterMeldinger(AjaxRequestTarget target, boolean settNyesteMeldingSomValgt) {
         if (this.isVisibleInHierarchy()) {
             innboksVM.oppdaterMeldinger();
             if (innboksVM.harTraader()) {
-                innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
+                if (settNyesteMeldingSomValgt) {
+                    innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
+                }
                 target.appendJavaScript("Meldinger.addKeyNavigation();");
+                target.appendJavaScript("console.log('Focus: ', $('.melding.valgt').attr('id'));");
                 send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
                 settFokusPaaValgtMelding(target);
             }
