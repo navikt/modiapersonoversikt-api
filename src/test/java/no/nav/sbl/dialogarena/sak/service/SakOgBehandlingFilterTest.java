@@ -4,6 +4,7 @@ import no.nav.modig.content.CmsContentRetriever;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
 import org.joda.time.DateTime;
@@ -102,7 +103,11 @@ public class SakOgBehandlingFilterTest {
                         createWSBehandlingskjede().withSisteBehandlingstype(new WSBehandlingstyper().withValue("LOL1337"))
                 ),
                 createWSSak().withSakstema(new WSSakstemaer().withValue("PEN")).withBehandlingskjede( // Lovlig, men ingen lovlige typer: Kun avsluttet kvittering
-                        createWSBehandlingskjede().withSlutt(new DateTime()).withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
+                        createWSBehandlingskjede()
+                                .withSlutt(new DateTime())
+                                .withSisteBehandlingstype(new WSBehandlingstyper().withValue(SEND_SOKNAD_KVITTERINGSTYPE))
+                                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
+
                 )
         );
 
