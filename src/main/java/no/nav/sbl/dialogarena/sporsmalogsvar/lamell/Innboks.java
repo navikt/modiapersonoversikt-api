@@ -8,8 +8,10 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
@@ -27,8 +29,6 @@ public class Innboks extends Lerret {
     public static final String VALGT_MELDING_EVENT = "sos.innboks.valgt_melding";
     public static final String TRAAD_ID_PARAMETER_NAME = "henvendelseid";
 
-    protected boolean harTilgang = true;
-
     private InnboksVM innboksVM;
 
     public Innboks(String id, String fnr) {
@@ -41,21 +41,18 @@ public class Innboks extends Lerret {
         setValgtTraadBasertPaaTraadIdSessionParameter();
 
         PropertyModel<Boolean> harTraader = new PropertyModel<>(innboksVM, "harTraader");
-        PropertyModel<Boolean> harTilgangModel = new PropertyModel<>(this, "harTilgang");
 
         AlleMeldingerPanel alleMeldingerPanel = new AlleMeldingerPanel("meldinger", innboksVM);
-        alleMeldingerPanel.add(visibleIf(both(harTraader).and(harTilgangModel)));
+        alleMeldingerPanel.add(visibleIf(both(harTraader).and(not(innboksVM.harFeilmelding()))));
 
         TraaddetaljerPanel traaddetaljerPanel = new TraaddetaljerPanel("detaljpanel", innboksVM);
-        traaddetaljerPanel.add(visibleIf(both(harTraader).and(harTilgangModel)));
+        traaddetaljerPanel.add(visibleIf(both(harTraader).and(not(innboksVM.harFeilmelding()))));
 
-        WebMarkupContainer tilbakemeldingPanel = new WebMarkupContainer("tominnboksmelding");
-        tilbakemeldingPanel.add(visibleIf(both(not(harTraader)).and(harTilgangModel)));
+        WebMarkupContainer feilmeldingPanel = new WebMarkupContainer("feilmeldingpanel");
+        feilmeldingPanel.add(new Label("feilmelding", new StringResourceModel("${feilmeldingKey}", getDefaultModel(), "")));
+        feilmeldingPanel.add(visibleIf(innboksVM.harFeilmelding()));
 
-        WebMarkupContainer ikkeTilgangPanel = new WebMarkupContainer("ikketilgang");
-        ikkeTilgangPanel.add(visibleIf(not(harTilgangModel)));
-
-        add(alleMeldingerPanel, traaddetaljerPanel, tilbakemeldingPanel, ikkeTilgangPanel);
+        add(alleMeldingerPanel, traaddetaljerPanel, feilmeldingPanel);
     }
 
     private void setValgtTraadBasertPaaTraadIdSessionParameter() {
@@ -64,8 +61,6 @@ public class Innboks extends Lerret {
             Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(traadIdParameter);
             if (meldingITraad.isSome()) {
                 innboksVM.setValgtMelding(meldingITraad.get());
-            } else {
-                harTilgang = false;
             }
             getSession().setAttribute(TRAAD_ID_PARAMETER_NAME, null);
         }

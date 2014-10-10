@@ -8,8 +8,10 @@
     <div class="meldinglamell flexbox flex1">
         <section wicket:id="meldinger" class="meldingsliste flex2"></section>
         <section wicket:id="detaljpanel" class="meldingsdetaljer flex3"></section>
-        <div wicket:id="tominnboksmelding" class="meldingserror"><wicket:message key="ingen.meldinger"/></div>
-        <div wicket:id="ikketilgang" class="meldingserror"><wicket:message key="ikke.tilgang"/></div>
+        <div wicket:id="feilmeldingpanel" class="feilmelding">
+            <div class="robust-ikon-feil-gra"></div>
+            <span wicket:id="feilmelding" class="stor"></span>
+        </div>
     </div>
 </wicket:panel>
 
