@@ -5,12 +5,12 @@
 </head>
 <body>
 <wicket:panel>
-    <section class="meldinglamell clearfix">
-        <div wicket:id="meldinger" class="meldingsliste"></div>
-        <div wicket:id="detaljpanel" class="meldingsdetaljer clearfix"></div>
+    <div class="meldinglamell flexbox flex1">
+        <section wicket:id="meldinger" class="meldingsliste flex2"></section>
+        <section wicket:id="detaljpanel" class="meldingsdetaljer flex3"></section>
         <div wicket:id="tominnboksmelding" class="meldingserror"><wicket:message key="ingen.meldinger"/></div>
         <div wicket:id="ikketilgang" class="meldingserror"><wicket:message key="ikke.tilgang"/></div>
-    </section>
+    </div>
 </wicket:panel>
 
 </body>

@@ -1,48 +1,34 @@
 @modiasvart: #333;
 @graabakgrunn: #f1f1f1;
 @rammefarge: #d1d1d1;
-@dodgerblue: #0067c5;
 @modiagraaskrift: #b7b1a9;
-@maxwidth: 1080px;
 @sidemargin: 30px;
-@toppmargin: 1em;
 
 .lamell.meldinger .lerret {
   padding: 0;
+  .flexbox;
+  .flex1;
+  .col;
 }
 
 .meldinglamell {
   position: relative;
   border-top: 1px solid @rammefarge;
   .meldingsliste {
-    width: 40%;
-    height: 100%;
-    float: left;
-    overflow: auto;
     background-color: @graabakgrunn;
-    margin: 0;
     border-right: 1px solid @rammefarge;
     .melding {
-      position: relative;
-      min-height: 100px;
-      padding: @toppmargin @sidemargin @toppmargin @sidemargin;
+      padding: 1em @sidemargin 1em @sidemargin;
       border-bottom: solid 1px @rammefarge;
+      overflow: hidden;
       header {
-        .indikator {
-          margin-bottom: 1em;
-          .indikator-tekst {
-            vertical-align: middle;
-          }
-        }
         .opprettet {
           font-family: arial, sans-serif;
           text-transform: uppercase;
           font-size: 0.85rem;
-          font-weight: normal;
           margin: 0.2em 0;
         }
         h1 {
-          max-width: 700px;
           font-weight: bold;
           margin: 0;
           font-size: 1.2em;
@@ -50,15 +36,17 @@
           -o-text-overflow: ellipsis;
           overflow: hidden;
           white-space: nowrap;
-          text-align: left;
         }
       }
       p {
-        max-width: 500px;
+        width: 100%;
         text-overflow: ellipsis;
         -o-text-overflow: ellipsis;
         overflow: hidden;
         white-space: nowrap;
+        &.tom {
+          display:none;
+        }
       }
       &.valgt {
         background-color: #fff;
@@ -70,16 +58,7 @@
   }
 
   .meldingsdetaljer {
-    background-color: #fff;
-    float: right;
-    width: 57%;
-    padding: 22px @sidemargin 0 0;
-
-    .traadcontainer {
-      max-width: @maxwidth;
-      margin: 0 auto;
-    }
-
+    padding: 22px @sidemargin 0 @sidemargin;
     .avsenderbilde-ramme {
       position: relative;
       width: 70px;
@@ -130,20 +109,6 @@
       width: 82%;
     }
 
-    &.lest {
-      background-color: @graabakgrunn;
-      &:not(.closed) {
-        background-color: #fff;
-      }
-      .nyeste-melding {
-        .header {
-          .status-indikator {
-            border: 1px solid @dodgerblue;
-            background-color: transparent;
-          }
-        }
-      }
-    }
     p {
       line-height: 1.4em;
       a {
@@ -234,10 +199,6 @@
     background: url(../img/melding_flere.svg) no-repeat right;
   }
 
-  .hoyrestilt-innhold {
-    text-align: right;
-  }
-
   .haandter-meldinger {
     position: absolute;
     top: -34px;
@@ -297,7 +258,7 @@
       cursor: pointer;
       display: inline-block;
       margin-bottom: 1px;
-      .pil(6px, @dodgerblue); // definisjon i komponenter.less
+      .pil(6px, #0067c5);
     }
   }
 
