@@ -25,7 +25,6 @@ import static no.nav.sbl.dialogarena.sak.transformers.HenvendelseTransformers.KV
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSIDER_FRA_SAK;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.BEHANDLINGSKJEDER_TIL_BEHANDLINGER;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.behandlingsDato;
-import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.behandlingsStatus;
 import static no.nav.sbl.dialogarena.sak.transformers.SakOgBehandlingTransformers.temaVMTransformer;
 
 public class DataFletter {
@@ -71,10 +70,8 @@ public class DataFletter {
     }
 
     private Kvittering beriketKvittering(Kvittering kvittering, WSBehandlingskjede wsBehandlingskjede) {
-        return (Kvittering) ((Kvittering) kvittering.withBehandlingsDato(behandlingsDato(wsBehandlingskjede)))
-                .withAvsluttet(wsBehandlingskjede.getSlutt() != null)
-                .withBehandlingsType(wsBehandlingskjede.getSisteBehandlingstype().getValue())
-                .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede));
+        return (Kvittering) kvittering.withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
+                .withBehandlingsType(wsBehandlingskjede.getSisteBehandlingstype().getValue());
     }
 
     private List<GenerellBehandling> behandlingerSomIkkeErKvitteringer(List<WSBehandlingskjede> alleBehandlingskjeder, List<Kvittering> kvitteringer) {

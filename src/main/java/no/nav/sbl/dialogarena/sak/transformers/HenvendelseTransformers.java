@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sak.transformers;
 
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Dokument;
+import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSDokumentforventning;
 import no.nav.tjeneste.domene.brukerdialog.henvendelsesoknader.v1.informasjon.WSHenvendelseType;
@@ -29,6 +30,7 @@ public class HenvendelseTransformers {
 
         @Override
         public Kvittering transform(WSSoknad wsSoknad) {
+            GenerellBehandling.BehandlingsStatus status = wsSoknad.getInnsendtDato() != null ? GenerellBehandling.BehandlingsStatus.AVSLUTTET : GenerellBehandling.BehandlingsStatus.OPPRETTET;
             return (Kvittering) new Kvittering()
                     .withBehandlingsId(wsSoknad.getBehandlingsId())
                     .withAvsluttet(INNSENDT.transform(wsSoknad))
@@ -38,7 +40,8 @@ public class HenvendelseTransformers {
                     .withBehandlingskjedeId(wsSoknad.getBehandlingsKjedeId())
                     .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
                     .withBehandlingsDato(wsSoknad.getInnsendtDato())
-                    .withHenvendelseType(HenvendelseType.valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()));
+                    .withHenvendelseType(HenvendelseType.valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()))
+                    .withBehandlingStatus(status);
         }
     };
 
