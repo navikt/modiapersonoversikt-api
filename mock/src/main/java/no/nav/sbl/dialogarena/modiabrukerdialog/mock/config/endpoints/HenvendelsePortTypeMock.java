@@ -73,22 +73,19 @@ public class HenvendelsePortTypeMock {
 
     public static final List<XMLHenvendelse> HENVENDELSER = new ArrayList<>(asList(
             createXMLHenvendelse(SPORSMAL_SKRIFTLIG, behandlingsId1, behandlingsId1, now().minusWeeks(1), null,
-                    createXMLMeldingFraBruker("FMLI", LANG_TEKST), valueOf(oppgaveId), now().minusDays(2), "FOR", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
+                    createXMLMeldingFraBruker("FMLI", LANG_TEKST), valueOf(oppgaveId), null, null, null, null),
 
             createXMLHenvendelse(SVAR_SKRIFTLIG, randomId(), behandlingsId1, now().minusDays(2), now().minusDays(4),
                     createXMLMeldingTilBruker("FMLI", "TELEFON", "Vi kan bekrefte at du får foreldrepenger"), null, null, "", "", ""),
 
             createXMLHenvendelse(SVAR_SKRIFTLIG, randomId(), behandlingsId1, now().minusDays(3), now().minusDays(4),
-                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Det er meget sannsynlig at du kan få foreldrepenger"),
-                    null, now().minusDays(2), "FOR", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
+                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Det er meget sannsynlig at du kan få foreldrepenger"), null, null, "", "", ""),
 
             createXMLHenvendelse(SVAR_SKRIFTLIG, randomId(), behandlingsId1, now().minusDays(5), now().minusDays(5),
-                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Det kan hende at du kan få foredrepenger "),
-                    null, now().minusDays(3), "FOR", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
+                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Det kan hende at du kan få foredrepenger "), null, null, "", "", ""),
 
             createXMLHenvendelse(SVAR_SKRIFTLIG, randomId(), behandlingsId1, now().minusDays(5), now().minusDays(6),
-                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Vi har hatt en samtale og det kommer frem at Test Testesen ønsker foreldrepenger "),
-                    null, now().minusDays(3), "FOR", JOURNALFORT_SAKSID_FORELDREPENGER, JOURNALFORER_NAV_IDENT),
+                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Vi har hatt en samtale og det kommer frem at Test Testesen ønsker foreldrepenger "), null, null, "", "", ""),
 
             createXMLHenvendelse(SPORSMAL_SKRIFTLIG, behandlingsId2, behandlingsId2, now().minusDays(3), null,
                     createXMLMeldingFraBruker("ARBD", LANG_TEKST),
