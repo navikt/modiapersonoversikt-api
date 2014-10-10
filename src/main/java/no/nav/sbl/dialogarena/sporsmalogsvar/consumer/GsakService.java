@@ -51,11 +51,13 @@ public class GsakService {
 
     public Optional<AnsattEnhet> hentForeslattEnhet(String fnr, String tema, String type) {
         try {
+            WSFinnAnsvarligEnhetForOppgavetypeResponse enhetForOppgaveResponse = ruting.finnAnsvarligEnhetForOppgavetype(
+                    new WSFinnAnsvarligEnhetForOppgavetypeRequest()
+                            .withBrukerId(fnr)
+                            .withFagomradeKode(tema)
+                            .withOppgaveKode(type));
 
-            WSFinnAnsvarligEnhetForOppgavetypeResponse enhetForSakResponse = ruting.finnAnsvarligEnhetForOppgavetype(
-                    new WSFinnAnsvarligEnhetForOppgavetypeRequest().withBrukerId(fnr).withFagomradeKode(tema).withOppgaveKode(type));
-
-            WSEnhet wsEnhet = enhetForSakResponse.getEnhetListe().get(0);
+            WSEnhet wsEnhet = enhetForOppgaveResponse.getEnhetListe().get(0);
             return optional(new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn()));
         } catch (Exception e) {
             return none();
