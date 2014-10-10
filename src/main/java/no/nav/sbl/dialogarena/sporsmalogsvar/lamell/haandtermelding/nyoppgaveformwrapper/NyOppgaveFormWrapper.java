@@ -76,12 +76,13 @@ public class NyOppgaveFormWrapper extends Panel {
         };
         IChoiceRenderer<GsakKodeTema> gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
 
-        DropDownChoice<GsakKodeTema.Tema> temaDropDown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.Tema>("tema", gsakKodeverk.hentTemaListe(), gsakKodeChoiceRenderer, form) {
-            @Override
-            protected void onchange(AjaxRequestTarget target) {
-                hentForeslattEnhet(innboksVM);
-            }
-        };
+        DropDownChoice<GsakKodeTema.Tema> temaDropDown =
+                new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.Tema>("tema", new PropertyModel<List<GsakKodeTema.Tema>>(gsakKodeverk, "hentTemaListe()"), gsakKodeChoiceRenderer, form) {
+                    @Override
+                    protected void onchange(AjaxRequestTarget target) {
+                        hentForeslattEnhet(innboksVM);
+                    }
+                };
         DropDownChoiceMedFjerningAvDefault<GsakKodeTema.OppgaveType> typeDropdown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.OppgaveType>("type", typeModel, gsakKodeChoiceRenderer, form) {
             @Override
             protected void onchange(AjaxRequestTarget target) {
@@ -176,24 +177,19 @@ public class NyOppgaveFormWrapper extends Panel {
     }
 
     private static class DropDownChoiceMedFjerningAvDefault<T> extends DropDownChoice<T> {
-        protected DropDownChoiceMedFjerningAvDefault(final String id, final List<? extends T> choices, final IChoiceRenderer<? super T> renderer, final Form<NyOppgave> form) {
-            super(id, choices, renderer);
-            addChangeListener(form);
-        }
-
         protected DropDownChoiceMedFjerningAvDefault(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer, final Form<NyOppgave> form) {
             super(id, choices, renderer);
-            addChangeListener(form);
+            add(changeListener(form));
         }
 
-        private void addChangeListener(final Form<NyOppgave> form) {
-            this.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+        private AjaxFormComponentUpdatingBehavior changeListener(final Form<NyOppgave> form) {
+            return new AjaxFormComponentUpdatingBehavior("onchange") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                     onchange(target);
                     target.add(form);
                 }
-            });
+            };
         }
 
         protected void onchange(AjaxRequestTarget target) {
