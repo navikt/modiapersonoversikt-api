@@ -145,7 +145,8 @@ public class WicketApplication extends WebApplication {
                 .addConditionalCss(
                         PersonPage.INTERN_IE,
                         SaksoversiktLerret.SAKSOVERSIKT_IE_CSS,
-                        BasePage.MODIA_FLEXBOX_IE_CSS
+                        BasePage.MODIA_FLEXBOX_IE_CSS,
+                        Innboks.MELDINGER_IE_CSS
                 )
                 .addConditionalJavascript(
                         PersonPage.RESPOND_JS
