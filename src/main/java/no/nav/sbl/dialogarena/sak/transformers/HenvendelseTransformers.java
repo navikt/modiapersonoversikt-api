@@ -32,7 +32,6 @@ public class HenvendelseTransformers {
         public Kvittering transform(WSSoknad wsSoknad) {
             GenerellBehandling.BehandlingsStatus status = wsSoknad.getInnsendtDato() != null ? GenerellBehandling.BehandlingsStatus.AVSLUTTET : GenerellBehandling.BehandlingsStatus.OPPRETTET;
             return (Kvittering) new Kvittering()
-                    .withBehandlingsId(wsSoknad.getBehandlingsId())
                     .withAvsluttet(INNSENDT.transform(wsSoknad))
                     .withInnsendteDokumenter(hentDokument(wsSoknad, ER_DOKUMENT_INNSENDT))
                     .withManglendeDokumenter(hentDokument(wsSoknad, not(ER_DOKUMENT_INNSENDT)))
@@ -41,7 +40,8 @@ public class HenvendelseTransformers {
                     .withSkjemanummerRef(wsSoknad.getHovedskjemaKodeverkId())
                     .withBehandlingsDato(wsSoknad.getInnsendtDato())
                     .withHenvendelseType(HenvendelseType.valueOf(WSHenvendelseType.valueOf(wsSoknad.getHenvendelseType()).name()))
-                    .withBehandlingStatus(status);
+                    .withBehandlingStatus(status)
+                    .withBehandlingsId(wsSoknad.getBehandlingsId());
         }
     };
 

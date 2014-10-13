@@ -23,7 +23,6 @@ public class KvitteringsPanelTest extends AbstractWicketTest {
     @Override
     protected void setup() {
         Kvittering kvittering = (Kvittering) new Kvittering()
-                .withBehandlingsId("1")
                 .withBehandlingskjedeId("2")
                 .withSkjemanummerRef("ref")
                 .withManglendeDokumenter(createDokumenter())
@@ -31,7 +30,8 @@ public class KvitteringsPanelTest extends AbstractWicketTest {
                 .withBehandlingsTema("tema")
                 .withBehandlingStatus(AVSLUTTET)
                 .withHenvendelseType(DOKUMENTINNSENDING)
-                .withBehandlingsDato(new DateTime());
+                .withBehandlingsDato(new DateTime())
+                .withBehandlingsId("1");
         kvitteringsPanel = new KvitteringsPanel("id", "tittel", of(kvittering), "12");
         wicketTester.goToPageWith(kvitteringsPanel);
     }

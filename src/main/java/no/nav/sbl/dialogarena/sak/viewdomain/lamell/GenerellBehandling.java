@@ -14,6 +14,7 @@ public class GenerellBehandling implements Serializable {
         public abstract String cmsKey();
     }
 
+    public String behandlingsId;
     public DateTime opprettetDato;
     public String behandlingsType;
     public DateTime behandlingDato;
@@ -24,6 +25,11 @@ public class GenerellBehandling implements Serializable {
 
     public GenerellBehandling withBehandlingsType(String type)  {
         behandlingsType = type;
+        return this;
+    }
+
+    public GenerellBehandling withBehandlingsId(String behandlingsId) {
+        this.behandlingsId = behandlingsId;
         return this;
     }
 
