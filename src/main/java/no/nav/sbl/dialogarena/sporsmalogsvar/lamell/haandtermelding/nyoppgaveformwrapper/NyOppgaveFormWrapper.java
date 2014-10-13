@@ -37,13 +37,15 @@ import static no.nav.modig.wicket.model.ModelUtils.nullValue;
 
 public class NyOppgaveFormWrapper extends Panel {
 
+    public static final String PRIORITET_NORMAL = "NORM";
+
     @Inject
     private GsakService gsakService;
     @Inject
     private GsakKodeverk gsakKodeverk;
+
     @Inject
     private EnhetService enhetService;
-
     private final Form<NyOppgave> form;
 
     public NyOppgaveFormWrapper(String id, final InnboksVM innboksVM) {
@@ -71,19 +73,22 @@ public class NyOppgaveFormWrapper extends Panel {
         IModel<List<GsakKodeTema.Prioritet>> priModel = new OppdaterbarListeModel<GsakKodeTema.Prioritet>(form.getModel()) {
             @Override
             protected List<GsakKodeTema.Prioritet> oppdater(GsakKodeTema.Tema tema) {
+                setDefaultPrioritetNormal(tema);
                 return tema.prioriteter;
             }
         };
+
+        IModel<List<GsakKodeTema.Tema>> temaModel = new PropertyModel<>(gsakKodeverk, "hentTemaListe()");
+
         IChoiceRenderer<GsakKodeTema> gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
 
-        DropDownChoice<GsakKodeTema.Tema> temaDropDown =
-                new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.Tema>("tema", new PropertyModel<List<GsakKodeTema.Tema>>(gsakKodeverk, "hentTemaListe()"), gsakKodeChoiceRenderer, form) {
-                    @Override
-                    protected void onchange(AjaxRequestTarget target) {
-                        hentForeslattEnhet(innboksVM);
-                    }
-                };
-        DropDownChoiceMedFjerningAvDefault<GsakKodeTema.OppgaveType> typeDropdown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.OppgaveType>("type", typeModel, gsakKodeChoiceRenderer, form) {
+        DropDownChoice<GsakKodeTema.Tema> temaDropDown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.Tema>("tema", temaModel, gsakKodeChoiceRenderer, form) {
+            @Override
+            protected void onchange(AjaxRequestTarget target) {
+                hentForeslattEnhet(innboksVM);
+            }
+        };
+        DropDownChoice<GsakKodeTema.OppgaveType> typeDropdown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.OppgaveType>("type", typeModel, gsakKodeChoiceRenderer, form) {
             @Override
             protected void onchange(AjaxRequestTarget target) {
                 hentForeslattEnhet(innboksVM);
@@ -136,6 +141,14 @@ public class NyOppgaveFormWrapper extends Panel {
                 target.add(feedbackPanel);
             }
         });
+    }
+
+    private void setDefaultPrioritetNormal(GsakKodeTema.Tema tema) {
+        for (GsakKodeTema.Prioritet prioritet : tema.prioriteter) {
+            if (prioritet.kode.contains(PRIORITET_NORMAL)) {
+                form.getModelObject().prioritet = prioritet;
+            }
+        }
     }
 
     private void hentForeslattEnhet(InnboksVM innboksVM) {
