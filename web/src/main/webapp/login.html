@@ -77,7 +77,7 @@
     document.getElementById("mainbutton").focus();
 
     var status = location.search.split('status=')[1];
-    var j_security = location.search.split('j_security_')[1];
+    var j_security = location.href.split('j_security_')[1];
     if (status === "fail" || j_security === "check") {
         var tr = document.createElement("tr");
         var td = document.createElement("td");
