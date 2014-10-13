@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.opprettoppgave;
+package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.NyOppgaveFormWrapper;
@@ -14,37 +14,35 @@ import org.apache.wicket.model.Model;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 
-public class OpprettOppgavePanel extends Panel {
+public class KontorsperrePanel extends Panel {
 
     public static final String OPPGAVE_OPPRETTET = "sos.oppgave.opprettet";
 
     protected final IModel<Boolean> skalOppretteOppgave = Model.of(false);
     protected final IModel<Boolean> erOppgaveOpprettet = Model.of(false);
 
-    private CheckBox opprettOppgaveCheckbox;
     private final NyOppgaveFormWrapper nyOppgaveForm;
+    private final WebMarkupContainer opprettOppgaveCheckboxWrapper;
 
-    public OpprettOppgavePanel(String id, InnboksVM innboksVM) {
+    public KontorsperrePanel(String id, InnboksVM innboksVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
-
-        final WebMarkupContainer opprettOppgaveWrapper = new WebMarkupContainer("visNyOppgaveWrapper");
-        opprettOppgaveWrapper.setOutputMarkupId(true);
 
         nyOppgaveForm = new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
                 erOppgaveOpprettet.setObject(true);
                 send(getPage(), Broadcast.DEPTH, OPPGAVE_OPPRETTET);
-                target.add(opprettOppgaveWrapper);
+                target.add(opprettOppgaveCheckboxWrapper);
             }
         };
         nyOppgaveForm.add(visibleIf(skalOppretteOppgave));
         nyOppgaveForm.setOutputMarkupPlaceholderTag(true);
 
-        WebMarkupContainer opprettOppgaveCheckboxWrapper = new WebMarkupContainer("opprettOppgaveCheckboxWrapper");
+        opprettOppgaveCheckboxWrapper = new WebMarkupContainer("opprettOppgaveCheckboxWrapper");
+        opprettOppgaveCheckboxWrapper.setOutputMarkupId(true);
 
-        opprettOppgaveCheckbox = new AjaxCheckBox("opprettOppgaveCheckbox", skalOppretteOppgave) {
+        CheckBox opprettOppgaveCheckbox = new AjaxCheckBox("opprettOppgaveCheckbox", skalOppretteOppgave) {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 target.add(nyOppgaveForm);
@@ -53,17 +51,11 @@ public class OpprettOppgavePanel extends Panel {
         opprettOppgaveCheckboxWrapper.add(opprettOppgaveCheckbox);
         opprettOppgaveCheckboxWrapper.add(visibleIf(not(erOppgaveOpprettet)));
 
-
-        opprettOppgaveWrapper.add(opprettOppgaveCheckboxWrapper, nyOppgaveForm);
-        add(opprettOppgaveWrapper);
+        add(opprettOppgaveCheckboxWrapper, nyOppgaveForm);
     }
 
     public boolean kanMerkeSomKontorsperret() {
         return !skalOppretteOppgave.getObject() || erOppgaveOpprettet.getObject();
-    }
-
-    public void tvingFremMarkupOppdateringAvCheckBox() {
-        opprettOppgaveCheckbox.modelChanged();
     }
 
     public void reset() {
@@ -71,5 +63,4 @@ public class OpprettOppgavePanel extends Panel {
         skalOppretteOppgave.setObject(false);
         nyOppgaveForm.nullstillSkjema();
     }
-
 }

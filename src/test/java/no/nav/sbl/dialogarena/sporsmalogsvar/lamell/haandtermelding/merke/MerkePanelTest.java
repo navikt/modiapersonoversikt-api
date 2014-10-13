@@ -63,7 +63,7 @@ public class MerkePanelTest extends WicketPageTest {
     @Test
     public void skalSkjuleOpprettOppgavePanelHvisIngenAvRadiovalgeneErSatt() {
         wicket.goToPageWith(merkePanel)
-                .should().containComponent(thatIsInvisible().withId("opprettOppgavePanel"));
+                .should().containComponent(thatIsInvisible().withId("kontorsperrePanel"));
     }
 
     @Test
@@ -73,7 +73,7 @@ public class MerkePanelTest extends WicketPageTest {
                 .select(MERK_TYPE_RADIOGROUP_ID, 1)
                 .andReturn()
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class))
-                .should().containComponent(thatIsVisible().withId("opprettOppgavePanel"));
+                .should().containComponent(thatIsVisible().withId("kontorsperrePanel"));
     }
 
     @Test
@@ -105,7 +105,7 @@ public class MerkePanelTest extends WicketPageTest {
                 .andReturn()
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class))
                 .inForm(PANEL_MERK_FORM_ID)
-                .check("merkType:opprettOppgavePanel:visNyOppgaveWrapper:opprettOppgaveCheckbox", true)
+                .check("merkType:kontorsperrePanel:opprettOppgaveCheckboxWrapper:opprettOppgaveCheckbox", true)
                 .submitWithAjaxButton(withId("merk"));
 
         List<String> errorMessages = wicket.get().errorMessages();

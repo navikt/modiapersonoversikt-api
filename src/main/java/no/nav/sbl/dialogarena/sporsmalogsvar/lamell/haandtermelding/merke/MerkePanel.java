@@ -4,7 +4,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.AnimertPanel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.opprettoppgave.OpprettOppgavePanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -25,7 +25,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.FEILSENDT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.KONTORSPERRET;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.opprettoppgave.OpprettOppgavePanel.OPPGAVE_OPPRETTET;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel.OPPGAVE_OPPRETTET;
 
 public class MerkePanel extends AnimertPanel {
 
@@ -34,7 +34,7 @@ public class MerkePanel extends AnimertPanel {
     @Inject
     private HenvendelseBehandlingService henvendelseService;
 
-    private final OpprettOppgavePanel opprettOppgavePanel;
+    private final KontorsperrePanel kontorsperrePanel;
     private final FeedbackPanel feedbackPanel;
     private final CompoundPropertyModel<MerkVM> merkVMModel;
 
@@ -53,20 +53,22 @@ public class MerkePanel extends AnimertPanel {
         merkRadioGroup.setRequired(true);
         merkRadioGroup.add(new Radio<>("feilsendtRadio", Model.of(FEILSENDT)));
         merkRadioGroup.add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)));
-        opprettOppgavePanel = new OpprettOppgavePanel("opprettOppgavePanel", innboksVM);
-        opprettOppgavePanel.setDefaultModel(this.getDefaultModel());
-        opprettOppgavePanel.add(visibleIf(new PropertyModel<Boolean>(merkVMModel, "kontorsperret")));
-        merkRadioGroup.add(opprettOppgavePanel);
+
+        kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM);
+        kontorsperrePanel.add(visibleIf(new PropertyModel<Boolean>(merkVMModel, "erKontorsperret()")));
+
+        merkRadioGroup.add(kontorsperrePanel);
         merkRadioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                opprettOppgavePanel.tvingFremMarkupOppdateringAvCheckBox();
-                target.add(opprettOppgavePanel);
+                target.add(kontorsperrePanel);
                 refreshFeedbackPanel(target);
             }
         });
+
         merkForm.add(merkRadioGroup);
         merkForm.add(createAjaxSubmitLink(innboksVM, merkRadioGroup));
+
         add(merkForm);
         add(new AjaxLink<Void>("avbryt") {
             @Override
@@ -80,7 +82,7 @@ public class MerkePanel extends AnimertPanel {
         return new AjaxButton("merk") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                if (merkVMModel.getObject().isKontorsperret()) {
+                if (merkVMModel.getObject().getMerkType() == KONTORSPERRET) {
                     haandterKontorsperring(target, form);
                 } else {
                     haandterFeilsendt(target);
@@ -88,7 +90,7 @@ public class MerkePanel extends AnimertPanel {
             }
 
             private void haandterKontorsperring(AjaxRequestTarget target, Form<?> form) {
-                if (opprettOppgavePanel.kanMerkeSomKontorsperret()) {
+                if (kontorsperrePanel.kanMerkeSomKontorsperret()) {
                     henvendelseService.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
                     send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
                     lukkPanel(target);
@@ -105,7 +107,7 @@ public class MerkePanel extends AnimertPanel {
 
             @Override
             protected final void onError(AjaxRequestTarget target, Form<?> form) {
-                if (merkVMModel.getObject().isKontorsperret() && !opprettOppgavePanel.kanMerkeSomKontorsperret()) {
+                if (merkVMModel.getObject().getMerkType() == KONTORSPERRET) {
                     merkRadioGroup.error(getString("kontorsperre.oppgave.opprettet.feil"));
                 }
                 refreshFeedbackPanel(target);
@@ -122,7 +124,6 @@ public class MerkePanel extends AnimertPanel {
     public final void lukkPanel(AjaxRequestTarget target) {
         super.lukkPanel(target);
         merkVMModel.setObject(new MerkVM());
-        opprettOppgavePanel.reset();
+        kontorsperrePanel.reset();
     }
-
 }

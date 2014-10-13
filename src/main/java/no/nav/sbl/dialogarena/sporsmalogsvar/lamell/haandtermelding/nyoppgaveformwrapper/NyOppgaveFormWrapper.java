@@ -66,16 +66,10 @@ public class NyOppgaveFormWrapper extends Panel {
         this.form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
 
         final FeedbackPanel feedbackPanelSuccess = new FeedbackPanel("feedbackOppgavePanel");
-        feedbackPanelSuccess.add(new AttributeModifier("class", "success"));
         feedbackPanelSuccess.setOutputMarkupId(true);
-        add(feedbackPanelSuccess);
 
-        Form oppgaveOpprettetForm = new Form("oppgaveOpprettetForm");
-        oppgaveOpprettetForm.add(feedbackPanelSuccess);
-        oppgaveOpprettetForm.add(visibleIf(oppgaveOpprettet));
-
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
-        feedbackPanel.setOutputMarkupId(true);
+        final FeedbackPanel feedbackPanelError = new FeedbackPanel("feedback");
+        feedbackPanelError.setOutputMarkupId(true);
 
         form.setOutputMarkupId(true);
         form.add(visibleIf(not(oppgaveOpprettet)));
@@ -85,7 +79,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 lagEnhetVelger(),
                 lagPrioritetVelger(),
                 new TextArea<String>("beskrivelse").setRequired(true),
-                feedbackPanel);
+                feedbackPanelError);
         form.add(new AjaxButton("opprettoppgave") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
@@ -98,18 +92,16 @@ public class NyOppgaveFormWrapper extends Panel {
                 nullstillSkjema();
                 oppgaveOpprettet.setObject(true);
                 feedbackPanelSuccess.success(getString("oppgave.opprettet.bekreftelse"));
-                target.add(feedbackPanelSuccess);
+                target.add(form, feedbackPanelSuccess);
             }
 
             @Override
             protected void onError(AjaxRequestTarget target, Form<?> form) {
-                target.add(feedbackPanel);
+                target.add(feedbackPanelError);
             }
         });
 
-
-        add(form, oppgaveOpprettetForm);
-
+        add(form, feedbackPanelSuccess);
     }
 
     public final void nullstillSkjema() {

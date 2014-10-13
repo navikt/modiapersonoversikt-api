@@ -15,8 +15,8 @@ public class MerkVM implements Serializable {
         this.merkType = merkType;
     }
 
-    public boolean isKontorsperret() {
-        return merkType != null && merkType.equals(MerkType.KONTORSPERRET);
+    public boolean erKontorsperret() {
+        return MerkType.KONTORSPERRET == merkType;
     }
 
 }
