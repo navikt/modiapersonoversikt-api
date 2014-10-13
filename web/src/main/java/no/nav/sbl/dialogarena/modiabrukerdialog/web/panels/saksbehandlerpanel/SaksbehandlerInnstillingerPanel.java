@@ -1,9 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
+import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -30,6 +33,9 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
 
     @Inject
     private AnsattService ansattService;
+
+    @Inject
+    private CmsContentRetriever cms;
 
     public String valgtEnhet;
 
@@ -65,7 +71,10 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
             }
         });
 
-        add(form);
+        Component opplaeringslenke = new Label("opplaeringslenke", cms.hentTekst("opplaeringslenke.tekst"))
+                .add(new AttributeModifier("href", cms.hentTekst("opplaeringslenke.href")));
+
+        add(form, opplaeringslenke);
     }
 
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
