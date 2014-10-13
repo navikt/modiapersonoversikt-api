@@ -41,7 +41,6 @@ public class HenvendelsePortTypeMock {
     private static final String FNR = "11111111111";
     private static final String NAVIDENT = "Z999999";
 
-    private static final String JOURNALFORT_SAKSID_FORELDREPENGER = GsakHentSakslistePortTypeMock.SAKSID_1;
     private static final String JOURNALFORT_SAKSID_HJELPEMIDLER = GsakHentSakslistePortTypeMock.SAKSID_2;
     private static final String JOURNALFORER_NAV_IDENT = "567567567";
 
