@@ -104,7 +104,7 @@ public class SvarPanel extends Panel {
                     protected void populateItem(ListItem<SvarEllerReferat> item) {
                         SvarEllerReferat svarEllerReferat = item.getModelObject();
                         String type = svarEllerReferat.type.name().substring(0, svarEllerReferat.type.name().lastIndexOf("_")).toLowerCase();
-                        item.add(new TidligereMeldingPanel("svar", type, item.getModelObject().temagruppe, item.getModelObject().opprettetDato, item.getModelObject().fritekst, true));
+                        item.add(new TidligereMeldingPanel("svar", type, svarEllerReferat.temagruppe, svarEllerReferat.opprettetDato, svarEllerReferat.fritekst, svarEllerReferat.navIdent, true));
                     }
                 }
         );
