@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper;
 
+import no.nav.modig.lang.collections.PredicateUtils;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
@@ -8,6 +9,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -29,6 +31,9 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
+import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.empty;
+import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.isEmptyList;
@@ -43,9 +48,9 @@ public class NyOppgaveFormWrapper extends Panel {
     private GsakService gsakService;
     @Inject
     private GsakKodeverk gsakKodeverk;
-
     @Inject
     private EnhetService enhetService;
+
     private final Form<NyOppgave> form;
 
     public NyOppgaveFormWrapper(String id, final InnboksVM innboksVM) {
@@ -78,7 +83,19 @@ public class NyOppgaveFormWrapper extends Panel {
             }
         };
 
-        IModel<List<GsakKodeTema.Tema>> temaModel = new PropertyModel<>(gsakKodeverk, "hentTemaListe()");
+        IModel<List<GsakKodeTema.Tema>> temaModel = new AbstractReadOnlyModel<List<GsakKodeTema.Tema>>() {
+            @Override
+            public List<GsakKodeTema.Tema> getObject() {
+                return on(gsakKodeverk.hentTemaListe()).filter(where(TEMA_OPPGAVETYPER, PredicateUtils.not(empty()))).collect();
+            }
+
+            public final Transformer<GsakKodeTema.Tema, List<GsakKodeTema.OppgaveType>> TEMA_OPPGAVETYPER = new Transformer<GsakKodeTema.Tema, List<GsakKodeTema.OppgaveType>>() {
+                @Override
+                public List<GsakKodeTema.OppgaveType> transform(GsakKodeTema.Tema tema) {
+                    return tema.oppgaveTyper;
+                }
+            };
+        };
 
         IChoiceRenderer<GsakKodeTema> gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
 
@@ -143,6 +160,13 @@ public class NyOppgaveFormWrapper extends Panel {
         });
     }
 
+    public final void nullstillSkjema() {
+        form.setModelObject(new NyOppgave());
+    }
+
+    protected void etterSubmit(AjaxRequestTarget target) {
+    }
+
     private void setDefaultPrioritetNormal(GsakKodeTema.Tema tema) {
         for (GsakKodeTema.Prioritet prioritet : tema.prioriteter) {
             if (prioritet.kode.contains(PRIORITET_NORMAL)) {
@@ -160,13 +184,6 @@ public class NyOppgaveFormWrapper extends Panel {
         if (foreslattEnhet.isSome()) {
             nyOppgave.enhet = foreslattEnhet.get();
         }
-    }
-
-    public final void nullstillSkjema() {
-        form.setModelObject(new NyOppgave());
-    }
-
-    protected void etterSubmit(AjaxRequestTarget target) {
     }
 
     private abstract static class OppdaterbarListeModel<T> extends AbstractReadOnlyModel<List<T>> {
