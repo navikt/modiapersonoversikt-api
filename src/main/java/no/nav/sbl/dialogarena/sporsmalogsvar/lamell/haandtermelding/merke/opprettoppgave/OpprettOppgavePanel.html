@@ -6,12 +6,13 @@
 <wicket:panel>
     <form>
         <div wicket:id="visNyOppgaveWrapper">
-            <input wicket:id="opprettOppgaveCheckbox" type="checkbox" id="opprett-oppgave"/>
-            <label wicket:for="opprettOppgaveCheckbox"><wicket:message key="opprett.oppgave"/></label>
+            <div wicket:id="opprettOppgaveCheckboxWrapper">
+                <input wicket:id="opprettOppgaveCheckbox" type="checkbox" id="opprett-oppgave"/>
+                <label wicket:for="opprettOppgaveCheckbox"><wicket:message key="opprett.oppgave"/></label>
+            </div>
 
             <div wicket:id="nyoppgaveForm"></div>
         </div>
-        <div wicket:id="feedbackOppgavePanel"></div>
     </form>
 </wicket:panel>
 </body>

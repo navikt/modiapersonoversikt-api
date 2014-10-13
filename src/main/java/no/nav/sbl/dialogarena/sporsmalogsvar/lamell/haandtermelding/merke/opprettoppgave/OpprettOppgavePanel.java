@@ -2,13 +2,11 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.oppre
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.NyOppgaveFormWrapper;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.CheckBox;
-import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.Model;
@@ -24,33 +22,27 @@ public class OpprettOppgavePanel extends Panel {
     protected final IModel<Boolean> erOppgaveOpprettet = Model.of(false);
 
     private CheckBox opprettOppgaveCheckbox;
+    private final NyOppgaveFormWrapper nyOppgaveForm;
 
     public OpprettOppgavePanel(String id, InnboksVM innboksVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedbackOppgavePanel");
-        feedbackPanel.add(new AttributeModifier("class", "success"));
-        feedbackPanel.setOutputMarkupId(true);
-        add(feedbackPanel);
-
         final WebMarkupContainer opprettOppgaveWrapper = new WebMarkupContainer("visNyOppgaveWrapper");
-        opprettOppgaveWrapper.add(visibleIf(not(erOppgaveOpprettet)));
         opprettOppgaveWrapper.setOutputMarkupId(true);
 
-        final NyOppgaveFormWrapper nyOppgaveForm = new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
+        nyOppgaveForm = new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
                 erOppgaveOpprettet.setObject(true);
-                success(getString("oppgave.opprettet.bekreftelse"));
-
                 send(getPage(), Broadcast.DEPTH, OPPGAVE_OPPRETTET);
-
-                target.add(opprettOppgaveWrapper, feedbackPanel);
+                target.add(opprettOppgaveWrapper);
             }
         };
         nyOppgaveForm.add(visibleIf(skalOppretteOppgave));
         nyOppgaveForm.setOutputMarkupPlaceholderTag(true);
+
+        WebMarkupContainer opprettOppgaveCheckboxWrapper = new WebMarkupContainer("opprettOppgaveCheckboxWrapper");
 
         opprettOppgaveCheckbox = new AjaxCheckBox("opprettOppgaveCheckbox", skalOppretteOppgave) {
             @Override
@@ -58,8 +50,11 @@ public class OpprettOppgavePanel extends Panel {
                 target.add(nyOppgaveForm);
             }
         };
+        opprettOppgaveCheckboxWrapper.add(opprettOppgaveCheckbox);
+        opprettOppgaveCheckboxWrapper.add(visibleIf(not(erOppgaveOpprettet)));
 
-        opprettOppgaveWrapper.add(opprettOppgaveCheckbox, nyOppgaveForm);
+
+        opprettOppgaveWrapper.add(opprettOppgaveCheckboxWrapper, nyOppgaveForm);
         add(opprettOppgaveWrapper);
     }
 
@@ -74,6 +69,7 @@ public class OpprettOppgavePanel extends Panel {
     public void reset() {
         erOppgaveOpprettet.setObject(false);
         skalOppretteOppgave.setObject(false);
+        nyOppgaveForm.nullstillSkjema();
     }
 
 }

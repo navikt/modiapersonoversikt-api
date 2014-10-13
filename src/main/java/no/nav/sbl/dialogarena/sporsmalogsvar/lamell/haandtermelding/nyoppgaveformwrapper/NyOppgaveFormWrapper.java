@@ -8,6 +8,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -23,6 +24,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 
 import javax.inject.Inject;
@@ -53,6 +55,8 @@ public class NyOppgaveFormWrapper extends Panel {
     private final IChoiceRenderer<GsakKodeTema> gsakKodeChoiceRenderer;
     private final Form<NyOppgave> form;
 
+    private final IModel<Boolean> oppgaveOpprettet = Model.of(false);
+
     public NyOppgaveFormWrapper(String id, final InnboksVM innboksVM) {
         super(id);
 
@@ -61,10 +65,20 @@ public class NyOppgaveFormWrapper extends Panel {
         this.gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
         this.form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
 
+        final FeedbackPanel feedbackPanelSuccess = new FeedbackPanel("feedbackOppgavePanel");
+        feedbackPanelSuccess.add(new AttributeModifier("class", "success"));
+        feedbackPanelSuccess.setOutputMarkupId(true);
+        add(feedbackPanelSuccess);
+
+        Form oppgaveOpprettetForm = new Form("oppgaveOpprettetForm");
+        oppgaveOpprettetForm.add(feedbackPanelSuccess);
+        oppgaveOpprettetForm.add(visibleIf(oppgaveOpprettet));
+
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);
 
         form.setOutputMarkupId(true);
+        form.add(visibleIf(not(oppgaveOpprettet)));
         form.add(
                 lagTemaVelger(),
                 lagOppgavetypeVelger(),
@@ -82,6 +96,9 @@ public class NyOppgaveFormWrapper extends Panel {
                 gsakService.opprettGsakOppgave(nyOppgave);
                 etterSubmit(target);
                 nullstillSkjema();
+                oppgaveOpprettet.setObject(true);
+                feedbackPanelSuccess.success(getString("oppgave.opprettet.bekreftelse"));
+                target.add(feedbackPanelSuccess);
             }
 
             @Override
@@ -90,10 +107,13 @@ public class NyOppgaveFormWrapper extends Panel {
             }
         });
 
-        add(form);
+
+        add(form, oppgaveOpprettetForm);
+
     }
 
     public final void nullstillSkjema() {
+        oppgaveOpprettet.setObject(false);
         form.setModelObject(new NyOppgave());
     }
 
