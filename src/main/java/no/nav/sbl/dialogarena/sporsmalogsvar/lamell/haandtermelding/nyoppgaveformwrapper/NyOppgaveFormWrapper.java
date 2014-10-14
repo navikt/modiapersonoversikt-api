@@ -131,7 +131,7 @@ public class NyOppgaveFormWrapper extends Panel {
             }
         };
 
-        DropDownChoice<GsakKodeTema.Tema> temaDropDown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.Tema>("tema", temaModel, gsakKodeChoiceRenderer, form) {
+        DropDownChoice<GsakKodeTema.Tema> temaDropDown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.Tema>("tema", temaModel, gsakKodeChoiceRenderer) {
             @Override
             protected void onchange(AjaxRequestTarget target) {
                 hentForeslattEnhet(innboksVM);
@@ -151,7 +151,7 @@ public class NyOppgaveFormWrapper extends Panel {
             }
         };
 
-        DropDownChoice<GsakKodeTema.OppgaveType> typeDropdown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.OppgaveType>("type", typeModel, gsakKodeChoiceRenderer, form) {
+        DropDownChoice<GsakKodeTema.OppgaveType> typeDropdown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.OppgaveType>("type", typeModel, gsakKodeChoiceRenderer) {
             @Override
             protected void onchange(AjaxRequestTarget target) {
                 hentForeslattEnhet(innboksVM);
@@ -246,7 +246,7 @@ public class NyOppgaveFormWrapper extends Panel {
     }
 
     private abstract static class DropDownChoiceMedFjerningAvDefault<T> extends DropDownChoice<T> {
-        protected DropDownChoiceMedFjerningAvDefault(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer, final Form<NyOppgave> form) {
+        protected DropDownChoiceMedFjerningAvDefault(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer) {
             super(id, choices, renderer);
             add(changeListener());
         }
