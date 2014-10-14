@@ -8,7 +8,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
@@ -54,6 +53,9 @@ public class NyOppgaveFormWrapper extends Panel {
     private final List<AnsattEnhet> enheter;
     private final IChoiceRenderer<GsakKodeTema> gsakKodeChoiceRenderer;
     private final Form<NyOppgave> form;
+    private final MarkupContainer typeVelger;
+    private final MarkupContainer enhetVelger;
+    private final MarkupContainer prioritetVelger;
 
     private final IModel<Boolean> oppgaveOpprettet = Model.of(false);
 
@@ -64,6 +66,9 @@ public class NyOppgaveFormWrapper extends Panel {
         this.enheter = unmodifiableList(enhetService.hentAlleEnheter());
         this.gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
         this.form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
+        this.typeVelger = lagOppgavetypeVelger();
+        this.enhetVelger = lagEnhetVelger();
+        this.prioritetVelger = lagPrioritetVelger();
 
         final FeedbackPanel feedbackPanelSuccess = new FeedbackPanel("feedbackOppgavePanel");
         feedbackPanelSuccess.setOutputMarkupId(true);
@@ -75,9 +80,9 @@ public class NyOppgaveFormWrapper extends Panel {
         form.add(visibleIf(not(oppgaveOpprettet)));
         form.add(
                 lagTemaVelger(),
-                lagOppgavetypeVelger(),
-                lagEnhetVelger(),
-                lagPrioritetVelger(),
+                typeVelger,
+                enhetVelger,
+                prioritetVelger,
                 new TextArea<String>("beskrivelse").setRequired(true),
                 feedbackPanelError);
         form.add(new AjaxButton("opprettoppgave") {
@@ -106,7 +111,7 @@ public class NyOppgaveFormWrapper extends Panel {
 
     public final void nullstillSkjema() {
         oppgaveOpprettet.setObject(false);
-        form.setModelObject(new NyOppgave());
+        form.getModelObject().nullstill();
     }
 
     protected void etterSubmit(AjaxRequestTarget target) {
@@ -130,9 +135,10 @@ public class NyOppgaveFormWrapper extends Panel {
             @Override
             protected void onchange(AjaxRequestTarget target) {
                 hentForeslattEnhet(innboksVM);
+                target.add(typeVelger, enhetVelger, prioritetVelger);
             }
         };
-        temaDropDown.setRequired(true);
+        temaDropDown.setRequired(true).setOutputMarkupPlaceholderTag(true);
 
         return temaDropDown;
     }
@@ -149,11 +155,14 @@ public class NyOppgaveFormWrapper extends Panel {
             @Override
             protected void onchange(AjaxRequestTarget target) {
                 hentForeslattEnhet(innboksVM);
+                target.add(enhetVelger);
             }
         };
         typeDropdown.setRequired(true);
 
         WebMarkupContainer typeContainer = new WebMarkupContainer("typeContainer");
+        typeContainer.setOutputMarkupPlaceholderTag(true);
+
         typeContainer.add(typeDropdown);
         typeContainer.add(visibleIf(not(isEmptyList(typeModel))));
 
@@ -161,17 +170,14 @@ public class NyOppgaveFormWrapper extends Panel {
     }
 
     private MarkupContainer lagEnhetVelger() {
-        IModel<List<AnsattEnhet>> enhetModel = new OppdaterbarListeModel<AnsattEnhet>(form.getModel()) {
-            @Override
-            protected List<AnsattEnhet> oppdater(GsakKodeTema.Tema tema) {
-                return enheter;
-            }
-        };
+        final IModel<List<AnsattEnhet>> enhetModel = new PropertyModel<>(this, "enheter");
 
         AnsattEnhetDropdown ansattEnhetDropdown = new AnsattEnhetDropdown("enhet", new PropertyModel<AnsattEnhet>(form.getModel(), "enhet"), enheter);
         ansattEnhetDropdown.setRequired(true);
 
         WebMarkupContainer enhetContainer = new WebMarkupContainer("enhetContainer");
+        enhetContainer.setOutputMarkupPlaceholderTag(true);
+
         enhetContainer.add(ansattEnhetDropdown);
         IModel<Boolean> visEnhetsValg = both(not(isEmptyList(enhetModel)))
                 .and(not(nullValue(new PropertyModel(form.getModelObject(), "tema"))))
@@ -182,33 +188,31 @@ public class NyOppgaveFormWrapper extends Panel {
     }
 
     private MarkupContainer lagPrioritetVelger() {
-        IModel<List<GsakKodeTema.Prioritet>> priModel = new OppdaterbarListeModel<GsakKodeTema.Prioritet>(form.getModel()) {
+        IModel<List<GsakKodeTema.Prioritet>> prioritetModel = new OppdaterbarListeModel<GsakKodeTema.Prioritet>(form.getModel()) {
             @Override
             protected List<GsakKodeTema.Prioritet> oppdater(GsakKodeTema.Tema tema) {
-                setDefaultPrioritetNormal(tema);
+                for (GsakKodeTema.Prioritet prioritet : tema.prioriteter) {
+                    if (prioritet.kode.startsWith(PRIORITET_NORMAL)) {
+                        form.getModelObject().prioritet = prioritet;
+                    }
+                }
                 return tema.prioriteter;
             }
         };
 
-        DropDownChoice<GsakKodeTema.Prioritet> prioritetDropdown = new DropDownChoiceMedFjerningAvDefault<>("prioritet", priModel, gsakKodeChoiceRenderer, form);
+        DropDownChoice<GsakKodeTema.Prioritet> prioritetDropdown = new DropDownChoice<>("prioritet", prioritetModel, gsakKodeChoiceRenderer);
         prioritetDropdown.setRequired(true);
 
         WebMarkupContainer prioritetContainer = new WebMarkupContainer("prioritetContainer");
+        prioritetContainer.setOutputMarkupPlaceholderTag(true);
+
         prioritetContainer.add(prioritetDropdown);
-        IModel<Boolean> visPrioritetsValg = both(not(isEmptyList(priModel)))
-                .and(not(nullValue(new PropertyModel(form.getModelObject(), "tema"))));
+        IModel<Boolean> visPrioritetsValg = both(not(isEmptyList(prioritetModel))).and(not(nullValue(new PropertyModel(form.getModelObject(), "tema"))));
         prioritetContainer.add(visibleIf(visPrioritetsValg));
 
         return prioritetContainer;
     }
 
-    private void setDefaultPrioritetNormal(GsakKodeTema.Tema tema) {
-        for (GsakKodeTema.Prioritet prioritet : tema.prioriteter) {
-            if (prioritet.kode.contains(PRIORITET_NORMAL)) {
-                form.getModelObject().prioritet = prioritet;
-            }
-        }
-    }
 
     private void hentForeslattEnhet(InnboksVM innboksVM) {
         NyOppgave nyOppgave = form.getModelObject();
@@ -241,7 +245,7 @@ public class NyOppgaveFormWrapper extends Panel {
         protected abstract List<T> oppdater(GsakKodeTema.Tema tema);
     }
 
-    private static class DropDownChoiceMedFjerningAvDefault<T> extends DropDownChoice<T> {
+    private abstract static class DropDownChoiceMedFjerningAvDefault<T> extends DropDownChoice<T> {
         protected DropDownChoiceMedFjerningAvDefault(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer, final Form<NyOppgave> form) {
             super(id, choices, renderer);
             add(changeListener(form));
@@ -252,12 +256,11 @@ public class NyOppgaveFormWrapper extends Panel {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
                     onchange(target);
-                    target.add(form);
+                    target.add(DropDownChoiceMedFjerningAvDefault.this);
                 }
             };
         }
 
-        protected void onchange(AjaxRequestTarget target) {
-        }
+        protected abstract void onchange(AjaxRequestTarget target);
     }
 }

@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavewrapper;
 
-import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
@@ -14,11 +13,11 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgaveformwrapper.NyOppgaveFormWrapper;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
+import org.apache.wicket.behavior.AbstractAjaxBehavior;
+import org.apache.wicket.behavior.Behavior;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -33,10 +32,10 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
-import static org.hamcrest.core.Is.is;
+import static org.apache.wicket.util.tester.WicketTesterHelper.findBehavior;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -52,28 +51,24 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
                     new ArrayList<>(Arrays.asList(new GsakKodeTema.OppgaveType("oppgKode", "oppgTekst", 1))),
                     new ArrayList<>(Arrays.asList(new GsakKodeTema.Prioritet("priKode", "priTekst"))))));
 
-    @Captor
-    private ArgumentCaptor<NyOppgave> nyOppgaveArgumentCaptor;
-
     @Inject
     private GsakService gsakService;
     @Inject
     private GsakKodeverk gsakKodeverk;
 
     private InnboksVM innboksVM;
-    private Melding melding;
 
     @Before
     public void setUp() {
         initMocks(this);
         innboksVM = mock(InnboksVM.class);
-        melding = createMelding("id", SPORSMAL_SKRIFTLIG, now(), "temagruppe", "id");
+        Melding melding = createMelding("id", SPORSMAL_SKRIFTLIG, now(), "temagruppe", "id");
         when(innboksVM.getValgtTraad()).thenReturn(new TraadVM(asList(new MeldingVM(melding, 1))));
         when(gsakKodeverk.hentTemaListe()).thenReturn(TEMALISTE_MOCK);
     }
 
     @Test
-    public void skalGiFeilmeldingHvisManSenderInnSkjemaUtenAAFylleInnAlleFeltene() {
+    public void girFeilmeldingHvisIkkeAlleFeltUtfyltt() {
         NyOppgaveFormWrapper nyOppgaveWrapper = new NyOppgaveFormWrapper("panel", mock(InnboksVM.class));
         wicket.goToPageWith(nyOppgaveWrapper)
                 .inForm("panel:nyoppgaveform")
@@ -88,30 +83,30 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     }
 
     @Test
-    public void skalSendeNyOppgaveObjektetTilGsakTjenestenForAaOppretteNy() {
+    public void oppretterOppgave() {
         when(gsakService.hentForeslattEnhet(anyString(), anyString(), anyString())).thenReturn(optional(new AnsattEnhet("1231", "Sinsen")));
 
-        String beskrivelse = "Dette er en beskrivelse";
-        NyOppgaveFormWrapper nyOppgaveFormWrapper = new NyOppgaveFormWrapper("panel", innboksVM);
+        wicket.goToPageWith(new NyOppgaveFormWrapper("panel", innboksVM));
 
-        wicket.goToPageWith(nyOppgaveFormWrapper)
-                .inForm("panel:nyoppgaveform")
-                .select("tema", 0)
-                .andReturn()
-                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormComponentUpdatingBehavior.class));
+        Behavior temaBehavior = findBehavior(wicket.get().component(withId("tema")), AjaxFormComponentUpdatingBehavior.class);
+        Behavior typeBehavior = findBehavior(wicket.get().component(withId("type")), AjaxFormComponentUpdatingBehavior.class);
+
+        wicket.inForm("panel:nyoppgaveform")
+                .select("tema", 0);
+        wicket.tester.executeBehavior((AbstractAjaxBehavior) temaBehavior);
+
+        wicket.inForm("panel:nyoppgaveform")
+                .select("typeContainer:type", 0);
+        wicket.tester.executeBehavior((AbstractAjaxBehavior) typeBehavior);
 
         wicket.tester.getRequest().setParameter("enhetContainer:enhet", "1231");
 
         wicket.inForm("panel:nyoppgaveform")
-                .select("typeContainer:type", 0)
                 .select("prioritetContainer:prioritet", 0)
-                .write("beskrivelse", beskrivelse)
+                .write("beskrivelse", "Beskrivelse")
                 .submitWithAjaxButton(withId("opprettoppgave"));
 
-        verify(gsakService).opprettGsakOppgave(nyOppgaveArgumentCaptor.capture());
-        NyOppgave nyOppgave = nyOppgaveArgumentCaptor.getValue();
-        assertThat(nyOppgave.beskrivelse, is(beskrivelse));
-        assertThat(nyOppgave.henvendelseId, is(melding.id));
+        verify(gsakService).opprettGsakOppgave(any(NyOppgave.class));
     }
 
 }

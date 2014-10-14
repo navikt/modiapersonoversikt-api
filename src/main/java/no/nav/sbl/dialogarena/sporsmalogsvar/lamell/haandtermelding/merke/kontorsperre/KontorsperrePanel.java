@@ -45,6 +45,7 @@ public class KontorsperrePanel extends Panel {
         CheckBox opprettOppgaveCheckbox = new AjaxCheckBox("opprettOppgaveCheckbox", skalOppretteOppgave) {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
+                nyOppgaveForm.nullstillSkjema();
                 target.add(nyOppgaveForm);
             }
         };
