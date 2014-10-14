@@ -47,7 +47,6 @@ import org.springframework.context.ApplicationContext;
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.util.Locale;
-import java.util.MissingResourceException;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockSetupErTillatt;
@@ -102,7 +101,8 @@ public class WicketApplication extends WebApplication {
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
 
         getResourceSettings().getStringResourceLoaders().add(0, new IStringResourceLoader() {
-            @Override public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation) {
+            @Override
+            public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation) {
                 try {
                     return cms.hentTekst(key);
                 } catch (Exception e) {
@@ -111,7 +111,8 @@ public class WicketApplication extends WebApplication {
                 }
             }
 
-            @Override public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
+            @Override
+            public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
                 try {
                     return cms.hentTekst(key);
                 } catch (Exception e) {
