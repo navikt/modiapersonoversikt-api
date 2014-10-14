@@ -21,7 +21,7 @@
     background-color: @graabakgrunn;
     border-right: 1px solid @rammefarge;
     .melding {
-      padding: 1em @sidemargin 1em @sidemargin;
+      padding: 1em @sidemargin 1.2em @sidemargin;
       border-bottom: solid 1px @rammefarge;
       overflow: hidden;
       header {
@@ -43,6 +43,7 @@
       }
       p {
         width: 100%;
+        margin: 0;
         text-overflow: ellipsis;
         -o-text-overflow: ellipsis;
         overflow: hidden;
@@ -131,7 +132,7 @@
 
     .tidligere-melding {
       position: relative;
-      background-color: @graabakgrunn;
+      background-color: #ffffff;
       border: 1px solid @rammefarge;
       padding: 20px;
       margin-top: -1px;
@@ -148,7 +149,7 @@
         width: 0;
       }
       &:after {
-        border-bottom-color: @graabakgrunn;
+        border-bottom-color: #ffffff;
         border-width: 13px;
         margin-left: -13px;
       }
@@ -204,7 +205,7 @@
 
   .haandter-meldinger {
     position: absolute;
-    top: -34px;
+    top: -30px;
     right: 0;
     margin-right: @sidemargin;
     .meldingsvalg {
