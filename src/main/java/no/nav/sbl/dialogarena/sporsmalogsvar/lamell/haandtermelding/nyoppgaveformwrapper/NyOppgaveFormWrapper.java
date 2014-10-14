@@ -248,10 +248,10 @@ public class NyOppgaveFormWrapper extends Panel {
     private abstract static class DropDownChoiceMedFjerningAvDefault<T> extends DropDownChoice<T> {
         protected DropDownChoiceMedFjerningAvDefault(String id, IModel<? extends List<? extends T>> choices, IChoiceRenderer<? super T> renderer, final Form<NyOppgave> form) {
             super(id, choices, renderer);
-            add(changeListener(form));
+            add(changeListener());
         }
 
-        private AjaxFormComponentUpdatingBehavior changeListener(final Form<NyOppgave> form) {
+        private AjaxFormComponentUpdatingBehavior changeListener() {
             return new AjaxFormComponentUpdatingBehavior("onchange") {
                 @Override
                 protected void onUpdate(AjaxRequestTarget target) {
