@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
 import no.nav.modig.content.CmsContentRetriever;
-import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.errorhandling.ModiaApplicationConfigurator;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
@@ -42,15 +41,18 @@ import org.apache.wicket.request.Response;
 import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
 import java.util.Locale;
+import java.util.MissingResourceException;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockSetupErTillatt;
 import static org.apache.wicket.util.time.Duration.ONE_SECOND;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class WicketApplication extends WebApplication {
 
@@ -59,6 +61,8 @@ public class WicketApplication extends WebApplication {
 
     @Inject
     private CmsContentRetriever cms;
+
+    private static final Logger log = getLogger(WicketApplication.class);
 
     @Resource(name = "pep")
     private EnforcementPoint pep;
@@ -101,7 +105,8 @@ public class WicketApplication extends WebApplication {
             @Override public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation) {
                 try {
                     return cms.hentTekst(key);
-                } catch (ApplicationException e) {
+                } catch (Exception e) {
+                    log.info("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
                     return null;
                 }
             }
@@ -109,7 +114,8 @@ public class WicketApplication extends WebApplication {
             @Override public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
                 try {
                     return cms.hentTekst(key);
-                } catch (ApplicationException e) {
+                } catch (Exception e) {
+                    log.info("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
                     return null;
                 }
             }
