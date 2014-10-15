@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
 import org.apache.wicket.markup.head.IHeaderResponse;
@@ -35,6 +36,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.Pers
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_HENVENDELSEID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
+import static org.apache.wicket.ajax.attributes.AjaxRequestAttributes.EventPropagation;
 import static org.apache.wicket.markup.head.JavaScriptHeaderItem.forReference;
 
 public class PlukkOppgavePanel extends Panel {
@@ -145,6 +147,11 @@ public class PlukkOppgavePanel extends Panel {
 
         private void lagreValgtTemagruppePaaSession(Temagruppe temagruppe) {
             getSession().setAttribute(TEMAGRUPPE_ATTR, temagruppe);
+        }
+
+        @Override
+        protected void updateAjaxAttributes(AjaxRequestAttributes attributes) {
+            attributes.setEventPropagation(EventPropagation.BUBBLE);
         }
     }
 }

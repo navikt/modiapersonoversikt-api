@@ -10,3 +10,7 @@ $(document).on('click', '.velg-temagruppe', function (e) {
     $('.temagruppe-liste').toggle();
     e.stopPropagation();
 });
+
+$(document).on('click', '.plukk-knapp', function() {
+    $('.velg-temagruppe').addClass('plukket');
+});
