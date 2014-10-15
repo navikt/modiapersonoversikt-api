@@ -30,8 +30,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class CmsEndpointConfig {
 
     public static final String DEFAULT_LOCALE = "nb";
-    private static final String INNHOLDSTEKSTER_NB_NO_REMOTE = "/app/saksoversikt/nb/tekster";
-    private static final String ARTIKLER_NB_NO_REMOTE = "/app/saksoversikt/nb/saksinformasjon";
+    private static final String INNHOLDSTEKSTER_NB_NO_REMOTE = "/app/modia-saksoversikt/nb/tekster";
+    private static final String ARTIKLER_NB_NO_REMOTE = "/app/modia-saksoversikt/nb/saksinformasjon";
     private static final String INNHOLDSTEKSTER_NB_NO_LOCAL = "content.innholdstekster";
 
     @Value("${appres.cms.url}")
