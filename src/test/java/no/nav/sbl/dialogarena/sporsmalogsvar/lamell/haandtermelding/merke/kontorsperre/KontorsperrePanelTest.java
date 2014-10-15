@@ -40,7 +40,7 @@ public class KontorsperrePanelTest extends WicketPageTest {
     public void kanIkkeMerkesSomKontorSperretNaarManSkalOppretteOppgaveOgDenIkkeErOpprettet() throws Exception {
         KontorsperrePanel oppgavePanel = lagOpprettOppgavePanel();
         oppgavePanel.skalOppretteOppgave.setObject(true);
-        oppgavePanel.erOppgaveOpprettet.setObject(false);
+        oppgavePanel.oppgaveErOpprettet.setObject(false);
         assertThat(oppgavePanel.kanMerkeSomKontorsperret(), is(false));
     }
 
@@ -48,7 +48,7 @@ public class KontorsperrePanelTest extends WicketPageTest {
     public void kanMerkesSomKontorSperretNaarManHarOppretteOppgave() throws Exception {
         KontorsperrePanel oppgavePanel = lagOpprettOppgavePanel();
         oppgavePanel.skalOppretteOppgave.setObject(true);
-        oppgavePanel.erOppgaveOpprettet.setObject(true);
+        oppgavePanel.oppgaveErOpprettet.setObject(true);
         assertThat(oppgavePanel.kanMerkeSomKontorsperret(), is(true));
     }
 

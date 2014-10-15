@@ -97,23 +97,6 @@ public class MerkePanelTest extends WicketPageTest {
     }
 
     @Test
-    public void skalViseFeilMeldingDersomManHarHuketAvForOpprettOppgaveOgProeverAaMerkeUtenAaFullfoereOppgaveopprettelse() {
-        wicket.goToPageWith(merkePanel)
-                .printComponentsTree()
-                .inForm(PANEL_MERK_FORM_ID)
-                .select(MERK_TYPE_RADIOGROUP_ID, 1)
-                .andReturn()
-                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class))
-                .inForm(PANEL_MERK_FORM_ID)
-                .check("merkType:kontorsperrePanel:opprettOppgaveCheckboxWrapper:opprettOppgaveCheckbox", true)
-                .submitWithAjaxButton(withId("merk"));
-
-        List<String> errorMessages = wicket.get().errorMessages();
-        assertThat(errorMessages.isEmpty(), is(false));
-        assertThat(errorMessages, contains(wicket.get().component(ofType(RadioGroup.class)).getString("kontorsperre.oppgave.opprettet.feil")));
-    }
-
-    @Test
     public void skalResetteMerkVMIdetManMarkererSomFeilsenddt() {
         wicket.goToPageWith(merkePanel)
                 .inForm(PANEL_MERK_FORM_ID)

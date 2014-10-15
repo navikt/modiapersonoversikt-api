@@ -22,10 +22,13 @@ import org.apache.wicket.model.PropertyModel;
 import javax.inject.Inject;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.either;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.FEILSENDT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.KONTORSPERRET;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel.OPPGAVE_OPPRETTET;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.kontorsperre.KontorsperrePanel.OPPRETT_OPPGAVE_TOGGLET;
 
 public class MerkePanel extends AnimertPanel {
 
@@ -34,12 +37,16 @@ public class MerkePanel extends AnimertPanel {
     @Inject
     private HenvendelseBehandlingService henvendelseService;
 
+    private final InnboksVM innboksVM;
     private final KontorsperrePanel kontorsperrePanel;
     private final FeedbackPanel feedbackPanel;
     private final CompoundPropertyModel<MerkVM> merkVMModel;
+    private final AjaxButton merkKnapp;
 
     public MerkePanel(String id, final InnboksVM innboksVM) {
         super(id);
+
+        this.innboksVM = innboksVM;
 
         merkVMModel = new CompoundPropertyModel<>(new MerkVM());
         final Form<MerkVM> merkForm = new Form<>("merkForm", merkVMModel);
@@ -66,8 +73,9 @@ public class MerkePanel extends AnimertPanel {
             }
         });
 
-        merkForm.add(merkRadioGroup);
-        merkForm.add(createAjaxSubmitLink(innboksVM, merkRadioGroup));
+        merkKnapp = new MerkKnapp("merk");
+
+        merkForm.add(merkRadioGroup, merkKnapp);
 
         add(merkForm);
         add(new AjaxLink<Void>("avbryt") {
@@ -78,41 +86,9 @@ public class MerkePanel extends AnimertPanel {
         });
     }
 
-    private AjaxButton createAjaxSubmitLink(final InnboksVM innboksVM, final RadioGroup<MerkType> merkRadioGroup) {
-        return new AjaxButton("merk") {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                if (merkVMModel.getObject().getMerkType() == KONTORSPERRET) {
-                    haandterKontorsperring(target, form);
-                } else {
-                    haandterFeilsendt(target);
-                }
-            }
-
-            private void haandterKontorsperring(AjaxRequestTarget target, Form<?> form) {
-                if (kontorsperrePanel.kanMerkeSomKontorsperret()) {
-                    henvendelseService.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
-                    send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
-                    lukkPanel(target);
-                } else {
-                    onError(target, form);
-                }
-            }
-
-            private void haandterFeilsendt(AjaxRequestTarget target) {
-                henvendelseService.merkSomFeilsendt(innboksVM.getValgtTraad());
-                send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
-                lukkPanel(target);
-            }
-
-            @Override
-            protected final void onError(AjaxRequestTarget target, Form<?> form) {
-                if (merkVMModel.getObject().getMerkType() == KONTORSPERRET) {
-                    merkRadioGroup.error(getString("kontorsperre.oppgave.opprettet.feil"));
-                }
-                refreshFeedbackPanel(target);
-            }
-        };
+    @RunOnEvents({OPPRETT_OPPGAVE_TOGGLET, OPPGAVE_OPPRETTET})
+    public final void refreshMerkKnapp(AjaxRequestTarget target) {
+        target.add(merkKnapp);
     }
 
     @RunOnEvents(OPPGAVE_OPPRETTET)
@@ -125,5 +101,44 @@ public class MerkePanel extends AnimertPanel {
         super.lukkPanel(target);
         merkVMModel.setObject(new MerkVM());
         kontorsperrePanel.reset();
+    }
+
+    private class MerkKnapp extends AjaxButton {
+
+        public MerkKnapp(String id) {
+            super(id);
+            add(visibleIf(either(not(kontorsperrePanel.skalOppretteOppgave)).or(kontorsperrePanel.oppgaveErOpprettet)));
+            setOutputMarkupPlaceholderTag(true);
+        }
+
+        @Override
+        protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
+            if (merkVMModel.getObject().getMerkType() == KONTORSPERRET) {
+                haandterKontorsperring(target, form);
+            } else {
+                haandterFeilsendt(target);
+            }
+        }
+
+        private void haandterKontorsperring(AjaxRequestTarget target, Form<?> form) {
+            if (kontorsperrePanel.kanMerkeSomKontorsperret()) {
+                henvendelseService.merkSomKontorsperret(innboksVM.getFnr(), innboksVM.getValgtTraad());
+                send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
+                lukkPanel(target);
+            } else {
+                onError(target, form);
+            }
+        }
+
+        private void haandterFeilsendt(AjaxRequestTarget target) {
+            henvendelseService.merkSomFeilsendt(innboksVM.getValgtTraad());
+            send(getPage(), Broadcast.DEPTH, TRAAD_MERKET);
+            lukkPanel(target);
+        }
+
+        @Override
+        protected final void onError(AjaxRequestTarget target, Form<?> form) {
+            refreshFeedbackPanel(target);
+        }
     }
 }

@@ -17,9 +17,10 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 public class KontorsperrePanel extends Panel {
 
     public static final String OPPGAVE_OPPRETTET = "sos.oppgave.opprettet";
+    public static final String OPPRETT_OPPGAVE_TOGGLET = "sos.oppgave.skalopprette";
 
-    protected final IModel<Boolean> skalOppretteOppgave = Model.of(false);
-    protected final IModel<Boolean> erOppgaveOpprettet = Model.of(false);
+    public final IModel<Boolean> skalOppretteOppgave = Model.of(false);
+    public final IModel<Boolean> oppgaveErOpprettet = Model.of(false);
 
     private final NyOppgaveFormWrapper nyOppgaveForm;
     private final WebMarkupContainer opprettOppgaveCheckboxWrapper;
@@ -31,7 +32,7 @@ public class KontorsperrePanel extends Panel {
         nyOppgaveForm = new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
-                erOppgaveOpprettet.setObject(true);
+                oppgaveErOpprettet.setObject(true);
                 send(getPage(), Broadcast.DEPTH, OPPGAVE_OPPRETTET);
                 target.add(opprettOppgaveCheckboxWrapper);
             }
@@ -46,21 +47,22 @@ public class KontorsperrePanel extends Panel {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 nyOppgaveForm.nullstillSkjema();
+                send(this, Broadcast.BUBBLE, OPPRETT_OPPGAVE_TOGGLET);
                 target.add(nyOppgaveForm);
             }
         };
         opprettOppgaveCheckboxWrapper.add(opprettOppgaveCheckbox);
-        opprettOppgaveCheckboxWrapper.add(visibleIf(not(erOppgaveOpprettet)));
+        opprettOppgaveCheckboxWrapper.add(visibleIf(not(oppgaveErOpprettet)));
 
         add(opprettOppgaveCheckboxWrapper, nyOppgaveForm);
     }
 
     public boolean kanMerkeSomKontorsperret() {
-        return !skalOppretteOppgave.getObject() || erOppgaveOpprettet.getObject();
+        return !skalOppretteOppgave.getObject() || oppgaveErOpprettet.getObject();
     }
 
     public void reset() {
-        erOppgaveOpprettet.setObject(false);
+        oppgaveErOpprettet.setObject(false);
         skalOppretteOppgave.setObject(false);
         nyOppgaveForm.nullstillSkjema();
     }
