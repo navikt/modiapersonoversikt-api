@@ -44,45 +44,21 @@ public class PlukkOppgavePanel extends Panel {
     @Inject
     private PlukkOppgaveService plukkOppgaveService;
 
+    private final IModel<Temagruppe> valgtTemagruppe;
+    private final Form<Temagruppe> form;
+
     public PlukkOppgavePanel(String id) {
         super(id);
 
+        valgtTemagruppe = new Model<>((Temagruppe) getSession().getAttribute(TEMAGRUPPE_ATTR));
+        form = new Form<>("plukkOppgaveForm", valgtTemagruppe);
+        form.setOutputMarkupId(true);
+
         add(accessRestriction(RENDER).withAttributes(actionId("plukkoppgave"), resourceId("")));
 
-        final IModel<Temagruppe> valgtTemagruppe = new Model<>((Temagruppe) getSession().getAttribute(TEMAGRUPPE_ATTR));
-        Form<Temagruppe> form = new Form<>("plukkOppgaveForm", valgtTemagruppe);
-
-        final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
+        FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
 
-        AjaxButton plukkOppgave = new AjaxButton("plukkOppgave") {
-            @Override
-            protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-                if (brukerHarEnAnnenPlukketOppgavePaaSession() && oppgavePaaSessionKanBehandles()) {
-                    redirectForAaBesvareOppgave(
-                            getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR),
-                            getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR),
-                            getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR)
-                    );
-                    return;
-                }
-
-                Optional<Oppgave> oppgave = plukkOppgaveService.plukkOppgave(valgtTemagruppe.getObject().name());
-                if (oppgave.isSome()) {
-                    lagrePlukketOppgavePaaSession(oppgave.get());
-                    lagreValgtTemagruppePaaSession(valgtTemagruppe.getObject());
-                    redirectForAaBesvareOppgave(oppgave.get().fnr, oppgave.get().henvendelseId, oppgave.get().oppgaveId);
-                } else {
-                    error(getString("plukkoppgave.ingenoppgaverpaatemagruppe"));
-                    target.add(feedbackPanel);
-                }
-            }
-
-            @Override
-            protected void onError(AjaxRequestTarget target, Form<?> form) {
-                target.add(feedbackPanel);
-            }
-        };
         RadioGroup radioGroup = new RadioGroup<>("temagruppe", valgtTemagruppe);
         radioGroup.setRequired(true);
         radioGroup.add(new ListView<Temagruppe>("temagrupper", asList(Temagruppe.values())) {
@@ -92,42 +68,13 @@ public class PlukkOppgavePanel extends Panel {
                 item.add(new Label("temagruppenavn", new ResourceModel(item.getModelObject().name())));
             }
         });
-        form.add(plukkOppgave, radioGroup, feedbackPanel);
+
+        form.add(new PlukkOppgaveKnapp("plukkOppgave"),
+                radioGroup,
+                new PlukkOppgaveKnapp("PlukkOppgaveFraTemaliste"),
+                feedbackPanel);
 
         add(form);
-    }
-
-    private boolean brukerHarEnAnnenPlukketOppgavePaaSession() {
-        return getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR) != null && getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR) != null;
-    }
-
-    private boolean oppgavePaaSessionKanBehandles() {
-        if (plukkOppgaveService.oppgaveErFerdigstillt((String) getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR))) {
-            getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, null);
-            getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, null);
-            getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, null);
-            return false;
-        }
-        return true;
-    }
-
-    private void redirectForAaBesvareOppgave(Serializable fnr, Serializable henvendelseid, Serializable oppgaveid) {
-        setResponsePage(PersonPage.class,
-                new PageParameters()
-                        .set("fnr", fnr)
-                        .set(HENVENDELSEID, henvendelseid)
-                        .set(OPPGAVEID, oppgaveid)
-        );
-    }
-
-    private void lagrePlukketOppgavePaaSession(Oppgave oppgave) {
-        getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, oppgave.henvendelseId);
-        getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, oppgave.oppgaveId);
-        getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, oppgave.fnr);
-    }
-
-    private void lagreValgtTemagruppePaaSession(Temagruppe temagruppe) {
-        getSession().setAttribute(TEMAGRUPPE_ATTR, temagruppe);
     }
 
     @Override
@@ -135,4 +82,69 @@ public class PlukkOppgavePanel extends Panel {
         response.render(forReference(new JavaScriptResourceReference(PlukkOppgavePanel.class, "plukkoppgave.js")));
     }
 
+    private class PlukkOppgaveKnapp extends AjaxButton {
+        public PlukkOppgaveKnapp(String id) {
+            super(id);
+        }
+
+        @Override
+        protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
+            if (brukerHarEnAnnenPlukketOppgavePaaSession() && oppgavePaaSessionKanBehandles()) {
+                redirectForAaBesvareOppgave(
+                        getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR),
+                        getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR),
+                        getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR)
+                );
+                return;
+            }
+
+            Optional<Oppgave> oppgave = plukkOppgaveService.plukkOppgave(valgtTemagruppe.getObject().name());
+            if (oppgave.isSome()) {
+                lagrePlukketOppgavePaaSession(oppgave.get());
+                lagreValgtTemagruppePaaSession(valgtTemagruppe.getObject());
+                redirectForAaBesvareOppgave(oppgave.get().fnr, oppgave.get().henvendelseId, oppgave.get().oppgaveId);
+            } else {
+                error(getString("plukkoppgave.ingenoppgaverpaatemagruppe"));
+                target.add(form);
+            }
+        }
+
+        @Override
+        protected void onError(AjaxRequestTarget target, Form<?> form) {
+            target.add(form);
+        }
+
+        private void redirectForAaBesvareOppgave(Serializable fnr, Serializable henvendelseid, Serializable oppgaveid) {
+            setResponsePage(PersonPage.class,
+                    new PageParameters()
+                            .set("fnr", fnr)
+                            .set(HENVENDELSEID, henvendelseid)
+                            .set(OPPGAVEID, oppgaveid)
+            );
+        }
+
+        private boolean oppgavePaaSessionKanBehandles() {
+            if (plukkOppgaveService.oppgaveErFerdigstillt((String) getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR))) {
+                getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, null);
+                getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, null);
+                getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, null);
+                return false;
+            }
+            return true;
+        }
+
+        private boolean brukerHarEnAnnenPlukketOppgavePaaSession() {
+            return getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR) != null && getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR) != null;
+        }
+
+        private void lagrePlukketOppgavePaaSession(Oppgave oppgave) {
+            getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, oppgave.henvendelseId);
+            getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, oppgave.oppgaveId);
+            getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, oppgave.fnr);
+        }
+
+        private void lagreValgtTemagruppePaaSession(Temagruppe temagruppe) {
+            getSession().setAttribute(TEMAGRUPPE_ATTR, temagruppe);
+        }
+    }
 }
