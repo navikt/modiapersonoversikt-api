@@ -208,6 +208,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
                 .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
                 .withBehandlingskjedeId("behandle" + now())
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
                 .withStart(now().minusDays(3).minusHours(2))
                 .withSlutt(now().minusDays(3).minusHours(1));
     }
