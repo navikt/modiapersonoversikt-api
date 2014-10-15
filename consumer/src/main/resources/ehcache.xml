@@ -107,4 +107,20 @@
     <cache name="aktorIdCache" maxElementsInMemory="100000"
            eternal="true"
            overflowToDisk="true"/>
+
+    <cache name="asbogosysEnhet" maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="86400"
+           timeToLiveSeconds="86400"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="asbogosysAnsatt" maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="14400"
+           timeToLiveSeconds="14400"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"/>
 </ehcache>

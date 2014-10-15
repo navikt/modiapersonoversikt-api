@@ -16,9 +16,16 @@
             <cache:cacheable method="finn*"/>
         </cache:caching>
     </cache:advice>
-    <cache:advice id="asbogosysAdvice" key-generator="asbogosyskeygenerator">
+    <cache:advice id="asbogosysEnhetAdvice" key-generator="asbogosyskeygenerator">
         <!--Cachen må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
-        <cache:caching cache="endpointCache">
+        <cache:caching cache="asbogosysEnhet">
+            <cache:cacheable method="hent*"/>
+            <cache:cacheable method="finn*"/>
+        </cache:caching>
+    </cache:advice>
+    <cache:advice id="asbogosysAnsattAdvice" key-generator="asbogosyskeygenerator">
+        <!--Cachen må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
+        <cache:caching cache="asbogosysAnsatt">
             <cache:cacheable method="hent*"/>
             <cache:cacheable method="finn*"/>
         </cache:caching>
@@ -45,8 +52,8 @@
         <!--aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkClient   )"/-->
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(rutingPortType)"/>
         <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelsePortType)"/>
-        <aop:advisor advice-ref="asbogosysAdvice" pointcut="bean(gosysNavAnsatt)"/>
-        <aop:advisor advice-ref="asbogosysAdvice" pointcut="bean(gosysNavOrgEnhet)"/>
+        <aop:advisor advice-ref="asbogosysAnsattAdvice" pointcut="bean(gosysNavAnsatt)"/>
+        <aop:advisor advice-ref="asbogosysEnhetAdvice" pointcut="bean(gosysNavOrgEnhet)"/>
     </aop:config>
 
 </beans>
