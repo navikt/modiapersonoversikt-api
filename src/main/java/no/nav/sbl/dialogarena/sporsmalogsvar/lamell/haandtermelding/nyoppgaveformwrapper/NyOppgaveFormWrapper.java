@@ -191,12 +191,17 @@ public class NyOppgaveFormWrapper extends Panel {
         IModel<List<GsakKodeTema.Prioritet>> prioritetModel = new OppdaterbarListeModel<GsakKodeTema.Prioritet>(form.getModel()) {
             @Override
             protected List<GsakKodeTema.Prioritet> oppdater(GsakKodeTema.Tema tema) {
+                settDefaultNormalPrioritetHvisMulig(tema);
+                return tema.prioriteter;
+            }
+
+            private void settDefaultNormalPrioritetHvisMulig(GsakKodeTema.Tema tema) {
                 for (GsakKodeTema.Prioritet prioritet : tema.prioriteter) {
                     if (prioritet.kode.startsWith(PRIORITET_NORMAL)) {
                         form.getModelObject().prioritet = prioritet;
+                        return;
                     }
                 }
-                return tema.prioriteter;
             }
         };
 
