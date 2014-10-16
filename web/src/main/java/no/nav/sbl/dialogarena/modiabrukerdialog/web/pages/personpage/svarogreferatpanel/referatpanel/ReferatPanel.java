@@ -13,12 +13,14 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefer
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
@@ -29,6 +31,8 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
 
@@ -56,6 +60,7 @@ public class ReferatPanel extends Panel {
     private final String fnr;
     private final KvitteringsPanel kvittering;
     private final SvarOgReferatVM svarOgReferatVM;
+    private final IModel<String> valgtKanalBeskrivelse = Model.of(lagOverskrift(null));
 
     public ReferatPanel(String id, String fnr) {
         super(id);
@@ -77,23 +82,37 @@ public class ReferatPanel extends Panel {
         feedbackPanel.setOutputMarkupId(true);
         form.add(feedbackPanel);
 
-        form.add(new RadioGroup<>("kanal")
-                .setRequired(true)
-                .add(new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
-                    @Override
-                    protected void populateItem(ListItem<Kanal> item) {
-                        String kanalType = item.getModelObject().name();
+        final RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal");
+        radioGroup.setOutputMarkupId(true);
+        radioGroup.setRequired(true);
+        radioGroup.add(new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
+            @Override
+            protected void populateItem(ListItem<Kanal> item) {
+                String kanalType = item.getModelObject().name();
 
-                        item.add(titleAttribute(getString(kanalType)));
+                item.add(titleAttribute(getString(kanalType)));
 
-                        Radio<Kanal> kanalKnapp = new Radio<>("kanalknapp", item.getModel());
-                        kanalKnapp.add(new AttributeAppender("aria-label", "Velg kanal, " + getString(kanalType)));
+                Radio<Kanal> kanalKnapp = new Radio<>("kanalknapp", item.getModel());
+                kanalKnapp.add(new AttributeAppender("aria-label", "Velg kanal, " + getString(kanalType)));
 
-                        Component kanalIkon = new WebMarkupContainer("kanalikon").add(cssClass(kanalType.toLowerCase()));
+                Component kanalIkon = new WebMarkupContainer("kanalikon").add(cssClass(kanalType.toLowerCase()));
 
-                        item.add(kanalKnapp, kanalIkon);
-                    }
-                }));
+                item.add(kanalKnapp, kanalIkon);
+            }
+        });
+        form.add(radioGroup);
+
+        final Label kanalbeskrivelse = new Label("kanalbeskrivelse", valgtKanalBeskrivelse);
+        kanalbeskrivelse.setOutputMarkupId(true);
+        form.add(kanalbeskrivelse);
+
+        radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                valgtKanalBeskrivelse.setObject(lagOverskrift(radioGroup.getConvertedInput()));
+                target.add(kanalbeskrivelse);
+            }
+        });
 
         form.add(new DropDownChoice<>("temagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
             @Override
@@ -117,6 +136,14 @@ public class ReferatPanel extends Panel {
         kvittering = new KvitteringsPanel("kvittering");
 
         add(form, kvittering);
+    }
+
+    private String lagOverskrift(Kanal kanal) {
+        String overskrift = getString("referatpanel.tekstfelt.overskrift");
+        if (kanal != null) {
+            overskrift += " " + getString(kanal.name() + ".lowercase");
+        }
+        return overskrift;
     }
 
     @Override
