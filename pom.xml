@@ -113,7 +113,7 @@
         <dependency>
             <groupId>no.nav.modig</groupId>
             <artifactId>modig-security-authorization</artifactId>
-            <version>1.0.13</version>
+            <version>${modig.security.version}</version>
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
