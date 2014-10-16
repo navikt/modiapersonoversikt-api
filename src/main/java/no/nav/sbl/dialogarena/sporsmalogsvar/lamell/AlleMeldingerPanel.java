@@ -73,11 +73,10 @@ public class AlleMeldingerPanel extends Panel {
         if (this.isVisibleInHierarchy()) {
             innboksVM.oppdaterMeldinger();
             if (innboksVM.harTraader()) {
-                if (settNyesteMeldingSomValgt) {
+                if (settNyesteMeldingSomValgt || innboksVM.getValgtTraad() == null) {
                     innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
                 }
                 target.appendJavaScript("Meldinger.addKeyNavigation();");
-                target.appendJavaScript("console.log('Focus: ', $('.melding.valgt').attr('id'));");
                 send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
                 settFokusPaaValgtMelding(target);
             }
