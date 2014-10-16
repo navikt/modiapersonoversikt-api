@@ -25,6 +25,7 @@ import java.util.Random;
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_OPPMOTE;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_TELEFON;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_SKRIFTLIG;
 import static org.joda.time.DateTime.now;
@@ -65,6 +66,7 @@ public class HenvendelsePortTypeMock {
     public static String behandlingsId3 = randomId();
     public static String behandlingsId4 = randomId();
     public static String behandlingsId5 = randomId();
+    public static String behandlingsId6 = randomId();
 
     private static String randomId() {
         return valueOf(idGenerator.nextInt());
@@ -101,6 +103,9 @@ public class HenvendelsePortTypeMock {
                     createXMLMeldingTilBruker("ARBD", "TELEFON", "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, null, "", "", ""),
 
             createXMLHenvendelse(SPORSMAL_SKRIFTLIG, behandlingsId5, behandlingsId5, now().minusDays(1), null,
+                    null, valueOf(oppgaveId++), null, "", "", ""),
+
+            createXMLHenvendelse(REFERAT_TELEFON, behandlingsId6, behandlingsId6, now().minusDays(2), null,
                     null, valueOf(oppgaveId++), null, "", "", "")
     ));
 
@@ -123,12 +128,8 @@ public class HenvendelsePortTypeMock {
                 )
                 .withOppgaveIdGsak(oppgaveId);
 
-        if (metadata == null) {
-            return xmlHenvendelse.withMetadataListe(null);
-        } else {
-            return xmlHenvendelse.withMetadataListe(
-                    new XMLMetadataListe().withMetadata(metadata));
-        }
+        return xmlHenvendelse.withMetadataListe(
+                metadata == null ? null : new XMLMetadataListe().withMetadata(metadata));
     }
 
     private static XMLMeldingFraBruker createXMLMeldingFraBruker(String temagruppe, String tekst) {
