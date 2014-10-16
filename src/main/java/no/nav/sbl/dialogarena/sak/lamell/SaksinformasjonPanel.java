@@ -17,11 +17,11 @@ public class SaksinformasjonPanel extends Panel {
 
     public SaksinformasjonPanel(String id, String temakode) {
         super(id);
+        boolean harFaktaark = cms.eksistererArtikkel("saksinformasjon." + temakode);
+        setVisible(harFaktaark);
 
-        setVisible(cms.eksistererArtikkel("saksinformasjon." + temakode));
-
-        add(
-                new Label("saksinformasjonTekst", cms.hentArtikkel("saksinformasjon." + temakode)).setEscapeModelStrings(false)
-        );
+        if(harFaktaark) {
+            add(new Label("saksinformasjonTekst", cms.hentArtikkel("saksinformasjon." + temakode)).setEscapeModelStrings(false));
+        }
     }
 }
