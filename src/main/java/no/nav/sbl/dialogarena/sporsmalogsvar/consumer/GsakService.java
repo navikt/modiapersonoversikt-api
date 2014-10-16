@@ -53,6 +53,7 @@ public class GsakService {
         try {
             WSFinnAnsvarligEnhetForOppgavetypeResponse enhetForOppgaveResponse = ruting.finnAnsvarligEnhetForOppgavetype(
                     new WSFinnAnsvarligEnhetForOppgavetypeRequest()
+                            .withAlleEnheter(true)
                             .withBrukerId(fnr)
                             .withFagomradeKode(tema)
                             .withOppgaveKode(type));
