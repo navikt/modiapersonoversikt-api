@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
@@ -24,6 +25,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.System.setProperty;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -69,6 +72,8 @@ public class GsakServiceTest {
                 .thenReturn(new WSFinnGenerellSakListeResponse().withSakListe(wsGenerellSak));
 
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(JOURNALFORENDE_ENHET);
+
+        setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
     }
 
     @Test
@@ -100,7 +105,7 @@ public class GsakServiceTest {
 
         assertThat(request.getOpprettetAvEnhetId(), is(Integer.parseInt(JOURNALFORENDE_ENHET)));
         assertThat(request.getOpprettOppgave().getAnsvarligEnhetId(), is(nyOppgave.enhet.enhetId));
-        assertThat(request.getOpprettOppgave().getBeskrivelse(), is(nyOppgave.beskrivelse));
+        assertThat(request.getOpprettOppgave().getBeskrivelse(), containsString(nyOppgave.beskrivelse));
         assertThat(request.getOpprettOppgave().getFagomradeKode(), is(nyOppgave.tema.kode));
         assertThat(request.getOpprettOppgave().getOppgavetypeKode(), is(nyOppgave.type.kode));
         assertThat(request.getOpprettOppgave().getPrioritetKode(), is(nyOppgave.prioritet.kode));

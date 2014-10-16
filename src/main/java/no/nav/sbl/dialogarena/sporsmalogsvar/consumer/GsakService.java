@@ -24,10 +24,13 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.ukedagerFraDato;
+import static org.joda.time.DateTime.now;
+import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class GsakService {
 
@@ -96,7 +99,7 @@ public class GsakService {
                                         .withAktivFra(LocalDate.now())
                                         .withAktivTil(ukedagerFraDato(nyOppgave.type.dagerFrist, LocalDate.now()))
                                         .withAnsvarligEnhetId(nyOppgave.enhet.enhetId)
-                                        .withBeskrivelse(nyOppgave.beskrivelse)
+                                        .withBeskrivelse(lagBeskrivelse(nyOppgave.beskrivelse, valgtEnhetId))
                                         .withFagomradeKode(nyOppgave.tema.kode)
                                         .withBrukerId(nyOppgave.brukerId)
                                         .withOppgavetypeKode(nyOppgave.type.kode)
@@ -104,6 +107,15 @@ public class GsakService {
                                         .withLest(false)
                         )
         );
+    }
+
+    private String lagBeskrivelse(String beskrivelse, int valgtEnhetId) {
+        String header = String.format("--- %s (%s, %s) ---\n",
+                forPattern("dd.MM.yyyy HH:mm").print(now()),
+                getSubjectHandler().getUid(),
+                valgtEnhetId);
+
+        return header + beskrivelse;
     }
 
 }
