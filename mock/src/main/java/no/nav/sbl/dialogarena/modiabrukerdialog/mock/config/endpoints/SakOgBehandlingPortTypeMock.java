@@ -4,6 +4,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
@@ -181,6 +182,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
                 .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("opprettet"))
                 .withStart(now().minusDays(5));
 
     }
@@ -192,6 +194,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
                 .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
                 .withStart(now().minusDays(3).minusHours(5))
                 .withSlutt(now());
     }
@@ -202,6 +205,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withSisteBehandlingREF(behandlingsListeRef)
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
                 .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
                 .withBehandlingskjedeId("behandle" + now())
                 .withStart(now().minusDays(3).minusHours(2))
