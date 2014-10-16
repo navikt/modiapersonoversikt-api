@@ -28,7 +28,7 @@ public class NyOppgavePanel extends AnimertPanel {
         final AjaxLink<Void> avbrytKnapp = new LukkLink("avbryt");
         avbrytKnapp.add(visibleIf(not(oppgaveOpprettet)));
 
-        add(new Label("temagruppe", new StringResourceModel("${temagruppe}", this, new PropertyModel<>(innboksVM, "valgtTraad.eldsteMelding.melding"))));
+        add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", this, new PropertyModel<>(innboksVM, "valgtTraad.eldsteMelding"))));
 
         nyOppgaveFormWrapper = new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
             @Override
