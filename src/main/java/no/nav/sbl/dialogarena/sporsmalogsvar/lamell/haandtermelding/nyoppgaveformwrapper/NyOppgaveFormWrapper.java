@@ -70,8 +70,9 @@ public class NyOppgaveFormWrapper extends Panel {
         this.enhetVelger = lagEnhetVelger();
         this.prioritetVelger = lagPrioritetVelger();
 
-        final FeedbackPanel feedbackPanelSuccess = new FeedbackPanel("feedbackOppgavePanel");
-        feedbackPanelSuccess.setOutputMarkupId(true);
+        final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackOppgavePanel");
+        feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
+        feedbackPanelSuccess.add(visibleIf(oppgaveOpprettet));
 
         final FeedbackPanel feedbackPanelError = new FeedbackPanel("feedback");
         feedbackPanelError.setOutputMarkupId(true);
@@ -96,7 +97,6 @@ public class NyOppgaveFormWrapper extends Panel {
                 etterSubmit(target);
                 nullstillSkjema();
                 oppgaveOpprettet.setObject(true);
-                feedbackPanelSuccess.success(getString("oppgave.opprettet.bekreftelse"));
                 target.add(form, feedbackPanelSuccess);
             }
 
