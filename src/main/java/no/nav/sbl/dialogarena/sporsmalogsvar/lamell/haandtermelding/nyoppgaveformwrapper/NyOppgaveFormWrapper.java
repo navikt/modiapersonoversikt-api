@@ -180,8 +180,8 @@ public class NyOppgaveFormWrapper extends Panel {
 
         enhetContainer.add(ansattEnhetDropdown);
         IModel<Boolean> visEnhetsValg = both(not(isEmptyList(enhetModel)))
-                .and(not(nullValue(new PropertyModel(form.getModelObject(), "tema"))))
-                .and(not(nullValue(new PropertyModel(form.getModelObject(), "type"))));
+                .and(not(nullValue(new PropertyModel(form.getModel(), "tema"))))
+                .and(not(nullValue(new PropertyModel(form.getModel(), "type"))));
         enhetContainer.add(visibleIf(visEnhetsValg));
 
         return enhetContainer;
