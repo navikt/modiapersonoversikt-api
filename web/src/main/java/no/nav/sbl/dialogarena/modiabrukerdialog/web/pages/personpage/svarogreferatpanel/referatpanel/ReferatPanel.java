@@ -31,8 +31,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
+import org.apache.wicket.model.StringResourceModel;
 
 import javax.inject.Inject;
 
@@ -60,7 +59,6 @@ public class ReferatPanel extends Panel {
     private final String fnr;
     private final KvitteringsPanel kvittering;
     private final SvarOgReferatVM svarOgReferatVM;
-    private final IModel<String> valgtKanalBeskrivelse = Model.of(lagOverskrift(null));
 
     public ReferatPanel(String id, String fnr) {
         super(id);
@@ -102,14 +100,13 @@ public class ReferatPanel extends Panel {
         });
         form.add(radioGroup);
 
-        final Label kanalbeskrivelse = new Label("kanalbeskrivelse", valgtKanalBeskrivelse);
+        final Label kanalbeskrivelse = new Label("kanalbeskrivelse", new StringResourceModel("${name}", radioGroup.getModel(), ""));
         kanalbeskrivelse.setOutputMarkupId(true);
         form.add(kanalbeskrivelse);
 
         radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                valgtKanalBeskrivelse.setObject(lagOverskrift(radioGroup.getConvertedInput()));
                 target.add(kanalbeskrivelse);
             }
         });
@@ -136,14 +133,6 @@ public class ReferatPanel extends Panel {
         kvittering = new KvitteringsPanel("kvittering");
 
         add(form, kvittering);
-    }
-
-    private String lagOverskrift(Kanal kanal) {
-        String overskrift = getString("referatpanel.tekstfelt.overskrift");
-        if (kanal != null) {
-            overskrift += " " + getString(kanal.name() + ".lowercase");
-        }
-        return overskrift;
     }
 
     @Override
