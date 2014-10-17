@@ -4,8 +4,10 @@
         <span wicket:id="feedback" class="feedback"></span>
 
         <div class="oppgavepanel">
-            <a wicket:id="plukkOppgave" class="plukk-oppgave plukk-knapp"><wicket:message key="plukkoppgave.hentoppgave" /></a>
-            <a class="velg-temagruppe"></a>
+            <a wicket:id="plukkOppgave" class="plukk-oppgave plukk-knapp" wicket:message="title:plukkoppgave.hentoppgave.mouseover">
+                <wicket:message key="plukkoppgave.hentoppgave" />
+            </a>
+            <a class="velg-temagruppe" wicket:message="title:plukkoppgave.temavelger.mouseover"></a>
 
             <div class="temagruppe-liste">
                 <wicket:container wicket:id="temagruppe">
@@ -14,7 +16,9 @@
                         <label wicket:for="temagruppevalg"><span wicket:id="temagruppenavn"></span></label>
                     </wicket:container>
                 </wicket:container>
-                <a wicket:id="PlukkOppgaveFraTemaliste" class="knapp-hoved-liten plukk-knapp"><wicket:message key="plukkoppgave.plukkoppgavefratemaliste" /></a>
+                <a wicket:id="PlukkOppgaveFraTemaliste" class="knapp-hoved-liten plukk-knapp" wicket:message="title:plukkoppgave.plukkoppgavefratemaliste.mouseover">
+                    <wicket:message key="plukkoppgave.plukkoppgavefratemaliste" />
+                </a>
             </div>
         </div>
     </form>
