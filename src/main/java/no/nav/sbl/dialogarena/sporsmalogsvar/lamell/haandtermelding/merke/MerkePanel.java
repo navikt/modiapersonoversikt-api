@@ -96,6 +96,11 @@ public class MerkePanel extends AnimertPanel {
         target.add(feedbackPanel);
     }
 
+    @RunOnEvents(OPPGAVE_OPPRETTET)
+    public final void focusMerkKnapp(AjaxRequestTarget target) {
+        target.appendJavaScript("$('#" + merkKnapp.getMarkupId() + "').focus();");
+    }
+
     @Override
     public final void lukkPanel(AjaxRequestTarget target) {
         super.lukkPanel(target);
