@@ -111,7 +111,7 @@ public class NyOppgaveFormWrapper extends Panel {
 
     public final void nullstillSkjema() {
         oppgaveOpprettet.setObject(false);
-        form.getModelObject().nullstill();
+        form.setModelObject(new NyOppgave());
     }
 
     protected void etterSubmit(AjaxRequestTarget target) {
@@ -212,7 +212,10 @@ public class NyOppgaveFormWrapper extends Panel {
         prioritetContainer.setOutputMarkupPlaceholderTag(true);
 
         prioritetContainer.add(prioritetDropdown);
-        IModel<Boolean> visPrioritetsValg = both(not(isEmptyList(prioritetModel))).and(not(nullValue(new PropertyModel(form.getModelObject(), "tema"))));
+        IModel<Boolean> visPrioritetsValg = both(
+                not(isEmptyList(prioritetModel)))
+                .and(not(nullValue(new PropertyModel(form.getModel(), "tema")))
+                );
         prioritetContainer.add(visibleIf(visPrioritetsValg));
 
         return prioritetContainer;

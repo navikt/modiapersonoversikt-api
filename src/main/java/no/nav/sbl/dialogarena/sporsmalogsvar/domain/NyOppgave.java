@@ -11,14 +11,4 @@ public class NyOppgave implements Serializable {
     public GsakKodeTema.Prioritet prioritet;
     public AnsattEnhet enhet;
     public String beskrivelse, henvendelseId, brukerId;
-
-    public void nullstill() {
-        tema = null;
-        type = null;
-        prioritet = null;
-        enhet = null;
-        beskrivelse = null;
-        henvendelseId = null;
-        brukerId = null;
-    }
 }
