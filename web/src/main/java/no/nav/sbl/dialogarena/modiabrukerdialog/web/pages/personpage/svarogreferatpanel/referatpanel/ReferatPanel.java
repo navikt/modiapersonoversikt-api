@@ -91,13 +91,14 @@ public class ReferatPanel extends Panel {
                 item.add(titleAttribute(getString(kanalType)));
 
                 Radio<Kanal> kanalKnapp = new Radio<>("kanalknapp", item.getModel());
-                kanalKnapp.add(new AttributeAppender("aria-label", "Velg kanal, " + getString(kanalType)));
+                kanalKnapp.add(new AttributeAppender("aria-label", getString(kanalType)));
 
                 Component kanalIkon = new WebMarkupContainer("kanalikon").add(cssClass(kanalType.toLowerCase()));
 
                 item.add(kanalKnapp, kanalIkon);
             }
         });
+
         form.add(radioGroup);
 
         final Label kanalbeskrivelse = new Label("kanalbeskrivelse", new StringResourceModel("${name}", radioGroup.getModel(), ""));

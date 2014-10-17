@@ -171,7 +171,7 @@ public class SvarPanel extends Panel {
                     item.add(titleAttribute(getString(kanalType)));
 
                     Radio<Kanal> kanalKnapp = new Radio<>("kanalknapp", item.getModel());
-                    kanalKnapp.add(new AttributeAppender("aria-label", "Velg kanal, " + getString(kanalType)));
+                    kanalKnapp.add(new AttributeAppender("aria-label", getString(kanalType)));
 
                     Component kanalIkon = new WebMarkupContainer("kanalikon").add(cssClass(kanalType.toLowerCase()));
 
