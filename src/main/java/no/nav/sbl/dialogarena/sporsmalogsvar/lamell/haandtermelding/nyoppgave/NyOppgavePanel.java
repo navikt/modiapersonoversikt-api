@@ -34,6 +34,7 @@ public class NyOppgavePanel extends AnimertPanel {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
                 oppgaveOpprettet.setObject(true);
+                target.appendJavaScript("$('#"+okKnapp.getMarkupId()+"').focus();");
                 target.add(okKnapp, avbrytKnapp);
             }
         };
