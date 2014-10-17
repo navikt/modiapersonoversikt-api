@@ -80,6 +80,7 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target) {
         animertVisningToggle(target, this);
+        target.appendJavaScript("SaksbehandlerInnstillinger.focus();");
         target.add(this);
     }
 

@@ -3,11 +3,11 @@
     <form wicket:id="plukkOppgaveForm" class="oppgaveform">
         <span wicket:id="feedback" class="feedback"></span>
 
-        <div class="oppgavepanel">
+        <div class="oppgavepanel" tabindex="0">
+            <a class="velg-temagruppe" wicket:message="title:plukkoppgave.temavelger.mouseover"></a>
             <a wicket:id="plukkOppgave" class="plukk-oppgave plukk-knapp" wicket:message="title:plukkoppgave.hentoppgave.mouseover">
                 <wicket:message key="plukkoppgave.hentoppgave" />
             </a>
-            <a class="velg-temagruppe" wicket:message="title:plukkoppgave.temavelger.mouseover"></a>
 
             <div class="temagruppe-liste">
                 <wicket:container wicket:id="temagruppe">

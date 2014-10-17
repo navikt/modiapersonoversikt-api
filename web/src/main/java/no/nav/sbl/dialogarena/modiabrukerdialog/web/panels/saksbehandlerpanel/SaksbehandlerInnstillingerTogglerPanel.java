@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.image.ContextImage;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
@@ -16,6 +17,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerp
 public class SaksbehandlerInnstillingerTogglerPanel extends Panel {
 
     public static final String SAKSBEHANDLERINNSTILLINGER_TOGGLET = "saksbehandlerinnstillinger.togglet";
+    public static final JavaScriptResourceReference SAKSBEHANDLER_INNSTILLINGER_JS = new JavaScriptResourceReference(SaksbehandlerInnstillingerTogglerPanel.class, "SaksbehandlerInnstillinger.js");
 
     private boolean ekspandert = false;
 

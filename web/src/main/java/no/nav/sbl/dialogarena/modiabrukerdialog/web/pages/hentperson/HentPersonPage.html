@@ -7,9 +7,7 @@
 		<body class="main hentperson">
 			<section wicket:id="saksbehandlerInnstillingerPanel"></section>
 			<section class="navbar menu-intern active">
-				<wicket:container wicket:id="plukkOppgave"/>
-                <div wicket:id="saksbehandlerInnstillingerToggler"></div>
-				<div id="hentPerson">
+				<div id="hentPerson" class="sokeboks">
 					<wicket:container wicket:id="searchPanel"/>
 					<button class="personsok-button" id="toggle-personsok"
 							wicket:message="aria-label:personsok.apnetekst,
@@ -20,6 +18,8 @@
 						<span class="personsok-pil"></span>
 					</button>
 				</div>
+                <div wicket:id="saksbehandlerInnstillingerToggler"></div>
+                <wicket:container wicket:id="plukkOppgave"/>
 			</section>
             <wicket:container wicket:id="sikkerhetstiltak" id="sikkerhetstiltak">[]</wicket:container>
             <wicket:container wicket:id="personsokPanel"/>

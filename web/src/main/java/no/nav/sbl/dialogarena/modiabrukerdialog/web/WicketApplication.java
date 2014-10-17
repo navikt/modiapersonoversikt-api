@@ -26,6 +26,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.LocaleFromWicke
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
@@ -192,6 +193,7 @@ public class WicketApplication extends WebApplication {
                         UtbetalingLerret.UTBETALING_LAMELL_JS,
                         PersonPage.SELECTMENU_JS,
                         SaksoversiktLerret.SAKSOVERSIKT_JS,
+                        SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
                         Innboks.MELDINGER_JS
                 )
                 .withResourcePacking(this.usesDeploymentConfig())
