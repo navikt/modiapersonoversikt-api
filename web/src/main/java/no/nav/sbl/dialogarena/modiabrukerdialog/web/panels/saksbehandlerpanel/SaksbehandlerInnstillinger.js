@@ -12,14 +12,10 @@
 })();
 
 $(document).ready(function () {
+    var ENTER = 13;
 
-    $(document).on('keydown', '.saksbehandlerinnstillinger-toggle', function (e) {
-        if (e.keyCode == 13 || e.keyCode === 32) {
-            $(e.currentTarget).click();
-        }
-    });
     $(document).on('keydown', '.saksbehandlerinnstillinger > .enhetsform > .enhetsvalg', function (e) {
-        if (e.keyCode == 13) {
+        if (e.keyCode == ENTER) {
             $(e.currentTarget).closest('.enhetsform').find('a.send').click();
             $('#foedselsnummerInput').focus();
             e.preventDefault();
