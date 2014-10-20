@@ -22,11 +22,14 @@ public class KontorsperrePanel extends Panel {
     public final IModel<Boolean> skalOppretteOppgave = Model.of(false);
 
     private final NyOppgaveFormWrapper nyOppgaveForm;
-    private final WebMarkupContainer opprettOppgaveCheckboxWrapper;
+    private final CheckBox opprettOppgaveCheckbox;
 
     public KontorsperrePanel(String id, InnboksVM innboksVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
+
+        final WebMarkupContainer opprettOppgaveCheckboxWrapper = new WebMarkupContainer("opprettOppgaveCheckboxWrapper");
+        opprettOppgaveCheckboxWrapper.setOutputMarkupId(true);
 
         nyOppgaveForm = new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
             @Override
@@ -39,10 +42,7 @@ public class KontorsperrePanel extends Panel {
         nyOppgaveForm.add(visibleIf(skalOppretteOppgave));
         nyOppgaveForm.setOutputMarkupPlaceholderTag(true);
 
-        opprettOppgaveCheckboxWrapper = new WebMarkupContainer("opprettOppgaveCheckboxWrapper");
-        opprettOppgaveCheckboxWrapper.setOutputMarkupId(true);
-
-        CheckBox opprettOppgaveCheckbox = new AjaxCheckBox("opprettOppgaveCheckbox", skalOppretteOppgave) {
+        opprettOppgaveCheckbox = new AjaxCheckBox("opprettOppgaveCheckbox", skalOppretteOppgave) {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 nyOppgaveForm.nullstillSkjema();
@@ -64,4 +64,11 @@ public class KontorsperrePanel extends Panel {
         skalOppretteOppgave.setObject(false);
         nyOppgaveForm.nullstillSkjema();
     }
+
+    @Override
+    protected void onConfigure() {
+        super.onConfigure();
+        opprettOppgaveCheckbox.modelChanged();
+    }
+
 }
