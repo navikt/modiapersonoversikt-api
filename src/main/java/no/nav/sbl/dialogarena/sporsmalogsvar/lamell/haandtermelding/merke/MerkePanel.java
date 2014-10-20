@@ -22,6 +22,7 @@ import org.apache.wicket.model.PropertyModel;
 import javax.inject.Inject;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.either;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.FEILSENDT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.KONTORSPERRET;
@@ -38,7 +39,7 @@ public class MerkePanel extends AnimertPanel {
     private final InnboksVM innboksVM;
     private final KontorsperrePanel kontorsperrePanel;
     private final FeedbackPanel feedbackPanel;
-    private final CompoundPropertyModel<MerkVM> merkVMModel;
+    private final CompoundPropertyModel<MerkVM> merkVM;
     private final AjaxButton merkKnapp;
 
     public MerkePanel(String id, final InnboksVM innboksVM) {
@@ -46,8 +47,8 @@ public class MerkePanel extends AnimertPanel {
 
         this.innboksVM = innboksVM;
 
-        merkVMModel = new CompoundPropertyModel<>(new MerkVM());
-        final Form<MerkVM> merkForm = new Form<>("merkForm", merkVMModel);
+        merkVM = new CompoundPropertyModel<>(new MerkVM());
+        Form<MerkVM> merkForm = new Form<>("merkForm", merkVM);
 
         final RadioGroup<MerkType> merkRadioGroup = new RadioGroup<>("merkType");
 
@@ -60,18 +61,18 @@ public class MerkePanel extends AnimertPanel {
         merkRadioGroup.add(new Radio<>("kontorsperretRadio", Model.of(KONTORSPERRET)));
 
         kontorsperrePanel = new KontorsperrePanel("kontorsperrePanel", innboksVM);
-        kontorsperrePanel.add(visibleIf(new PropertyModel<Boolean>(merkVMModel, "erKontorsperret()")));
+        kontorsperrePanel.add(visibleIf(new PropertyModel<Boolean>(merkVM, "erKontorsperret()")));
+
+        merkKnapp = new MerkKnapp("merk");
 
         merkRadioGroup.add(kontorsperrePanel);
         merkRadioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
-                target.add(kontorsperrePanel);
+                target.add(kontorsperrePanel, merkKnapp);
                 refreshFeedbackPanel(target);
             }
         });
-
-        merkKnapp = new MerkKnapp("merk");
 
         merkForm.add(merkRadioGroup, merkKnapp);
 
@@ -102,7 +103,7 @@ public class MerkePanel extends AnimertPanel {
     @Override
     public final void lukkPanel(AjaxRequestTarget target) {
         super.lukkPanel(target);
-        merkVMModel.setObject(new MerkVM());
+        merkVM.setObject(new MerkVM());
         kontorsperrePanel.reset();
     }
 
@@ -110,13 +111,14 @@ public class MerkePanel extends AnimertPanel {
 
         public MerkKnapp(String id) {
             super(id);
-            add(visibleIf(new PropertyModel<Boolean>(kontorsperrePanel, "kanMerkeSomKontorsperret()")));
+            add(visibleIf(either(new PropertyModel<Boolean>(kontorsperrePanel, "kanMerkeSomKontorsperret()"))
+                    .or(new PropertyModel<Boolean>(merkVM, "erFeilsendt()"))));
             setOutputMarkupPlaceholderTag(true);
         }
 
         @Override
         protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
-            if (merkVMModel.getObject().getMerkType() == KONTORSPERRET) {
+            if (merkVM.getObject().getMerkType() == KONTORSPERRET) {
                 haandterKontorsperring(target, form);
             } else {
                 haandterFeilsendt(target);

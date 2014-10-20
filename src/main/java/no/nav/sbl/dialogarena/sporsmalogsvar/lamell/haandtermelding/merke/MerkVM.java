@@ -19,4 +19,7 @@ public class MerkVM implements Serializable {
         return MerkType.KONTORSPERRET == merkType;
     }
 
+    public boolean erFeilsendt() {
+        return MerkType.FEILSENDT == merkType;
+    }
 }
