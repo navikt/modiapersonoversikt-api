@@ -5,6 +5,7 @@ import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
 import org.apache.wicket.Component;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.list.ListItem;
@@ -59,11 +60,12 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
     private Component getBehandlingContainer(GenerellBehandling behandling) {
         IModel<Boolean> erAvsluttet = Model.of(behandling.behandlingsStatus.equals(AVSLUTTET));
         WebMarkupContainer container = new WebMarkupContainer("behandling-container");
-        container.add(hasCssClassIf("avsluttet", erAvsluttet));
         container.add(new Label("behandlingsid", behandling.behandlingsId)); // Veldig nyttig for feilsøking
         if (behandling instanceof Kvittering) {
+            container.add(new AttributeAppender("class", " kvitteringbehandling"));
             container.add(new KvitteringsPanel("behandling", getTittel(behandling), of((Kvittering)behandling), fnr));
         } else { //Behandling er GenerellBehandling
+            container.add(hasCssClassIf("avsluttet", erAvsluttet));
             container.add(new BehandlingsPanel("behandling", getTittel(behandling), of(behandling)));
         }
         return container;
