@@ -57,7 +57,7 @@ public class NyOppgaveFormWrapper extends Panel {
     private final MarkupContainer enhetVelger;
     private final MarkupContainer prioritetVelger;
 
-    private final IModel<Boolean> oppgaveOpprettet = Model.of(false);
+    public final IModel<Boolean> oppgaveOpprettet = Model.of(false);
 
     public NyOppgaveFormWrapper(String id, final InnboksVM innboksVM) {
         super(id);

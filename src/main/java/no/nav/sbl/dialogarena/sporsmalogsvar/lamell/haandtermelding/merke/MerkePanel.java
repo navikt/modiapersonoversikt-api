@@ -22,8 +22,6 @@ import org.apache.wicket.model.PropertyModel;
 import javax.inject.Inject;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.modig.wicket.model.ModelUtils.either;
-import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.FEILSENDT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkVM.MerkType.KONTORSPERRET;
@@ -112,7 +110,7 @@ public class MerkePanel extends AnimertPanel {
 
         public MerkKnapp(String id) {
             super(id);
-            add(visibleIf(either(not(kontorsperrePanel.skalOppretteOppgave)).or(kontorsperrePanel.oppgaveErOpprettet)));
+            add(visibleIf(new PropertyModel<Boolean>(kontorsperrePanel, "kanMerkeSomKontorsperret()")));
             setOutputMarkupPlaceholderTag(true);
         }
 

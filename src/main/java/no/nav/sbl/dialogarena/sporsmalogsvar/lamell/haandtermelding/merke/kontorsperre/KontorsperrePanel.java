@@ -20,7 +20,6 @@ public class KontorsperrePanel extends Panel {
     public static final String OPPRETT_OPPGAVE_TOGGLET = "sos.oppgave.skalopprette";
 
     public final IModel<Boolean> skalOppretteOppgave = Model.of(false);
-    public final IModel<Boolean> oppgaveErOpprettet = Model.of(false);
 
     private final NyOppgaveFormWrapper nyOppgaveForm;
     private final WebMarkupContainer opprettOppgaveCheckboxWrapper;
@@ -32,7 +31,7 @@ public class KontorsperrePanel extends Panel {
         nyOppgaveForm = new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
-                oppgaveErOpprettet.setObject(true);
+                oppgaveOpprettet.setObject(true);
                 send(getPage(), Broadcast.DEPTH, OPPGAVE_OPPRETTET);
                 target.add(opprettOppgaveCheckboxWrapper);
             }
@@ -52,17 +51,16 @@ public class KontorsperrePanel extends Panel {
             }
         };
         opprettOppgaveCheckboxWrapper.add(opprettOppgaveCheckbox);
-        opprettOppgaveCheckboxWrapper.add(visibleIf(not(oppgaveErOpprettet)));
+        opprettOppgaveCheckboxWrapper.add(visibleIf(not(nyOppgaveForm.oppgaveOpprettet)));
 
         add(opprettOppgaveCheckboxWrapper, nyOppgaveForm);
     }
 
     public boolean kanMerkeSomKontorsperret() {
-        return !skalOppretteOppgave.getObject() || oppgaveErOpprettet.getObject();
+        return !skalOppretteOppgave.getObject() || nyOppgaveForm.oppgaveOpprettet.getObject();
     }
 
     public void reset() {
-        oppgaveErOpprettet.setObject(false);
         skalOppretteOppgave.setObject(false);
         nyOppgaveForm.nullstillSkjema();
     }

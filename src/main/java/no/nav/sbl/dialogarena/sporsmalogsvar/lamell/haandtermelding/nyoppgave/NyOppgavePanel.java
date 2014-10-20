@@ -6,8 +6,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavefor
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 
@@ -18,17 +16,13 @@ public class NyOppgavePanel extends AnimertPanel {
 
     private NyOppgaveFormWrapper nyOppgaveFormWrapper;
 
-    private final IModel<Boolean> oppgaveOpprettet = Model.of(false);
-
     public NyOppgavePanel(String id, final InnboksVM innboksVM) {
         super(id);
 
-        final AjaxLink<Void> okKnapp = new LukkLink("okKnapp");
-        okKnapp.add(visibleIf(oppgaveOpprettet));
-        final AjaxLink<Void> avbrytKnapp = new LukkLink("avbryt");
-        avbrytKnapp.add(visibleIf(not(oppgaveOpprettet)));
-
         add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", this, new PropertyModel<>(innboksVM, "valgtTraad.eldsteMelding"))));
+
+        final AjaxLink<Void> okKnapp = new LukkLink("okKnapp");
+        final AjaxLink<Void> avbrytKnapp = new LukkLink("avbryt");
 
         nyOppgaveFormWrapper = new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
             @Override
@@ -38,6 +32,9 @@ public class NyOppgavePanel extends AnimertPanel {
                 target.add(okKnapp, avbrytKnapp);
             }
         };
+
+        okKnapp.add(visibleIf(nyOppgaveFormWrapper.oppgaveOpprettet));
+        avbrytKnapp.add(visibleIf(not(nyOppgaveFormWrapper.oppgaveOpprettet)));
 
         add(nyOppgaveFormWrapper, okKnapp, avbrytKnapp);
     }
@@ -52,7 +49,6 @@ public class NyOppgavePanel extends AnimertPanel {
         @Override
         public void onClick(AjaxRequestTarget target) {
             nyOppgaveFormWrapper.nullstillSkjema();
-            oppgaveOpprettet.setObject(false);
             lukkPanel(target);
         }
     }
