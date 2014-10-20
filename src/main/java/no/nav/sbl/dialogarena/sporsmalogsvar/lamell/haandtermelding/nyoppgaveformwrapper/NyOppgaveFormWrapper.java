@@ -134,7 +134,10 @@ public class NyOppgaveFormWrapper extends Panel {
         DropDownChoice<GsakKodeTema.Tema> temaDropDown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.Tema>("tema", temaModel, gsakKodeChoiceRenderer) {
             @Override
             protected void onchange(AjaxRequestTarget target) {
-                hentForeslattEnhet(innboksVM);
+                form.getModelObject().type = null;
+                form.getModelObject().enhet = null;
+                form.getModelObject().prioritet = null;
+
                 target.add(typeVelger, enhetVelger, prioritetVelger);
             }
         };
