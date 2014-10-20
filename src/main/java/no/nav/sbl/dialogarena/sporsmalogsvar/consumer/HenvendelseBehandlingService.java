@@ -98,7 +98,9 @@ public class HenvendelseBehandlingService {
     }
 
     private String getEnhet(String fnr) {
-        Person person = kjerneinfo.hentKjerneinformasjon(new HentKjerneinformasjonRequest(fnr)).getPerson();
+        HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(fnr);
+        kjerneinfoRequest.setBegrunnet(true);
+        Person person = kjerneinfo.hentKjerneinformasjon(kjerneinfoRequest).getPerson();
         return person.getPersonfakta().getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId();
     }
 
