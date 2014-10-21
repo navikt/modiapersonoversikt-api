@@ -33,7 +33,7 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class OppgaveBehandlingService {
 
-    public static final int ENHET = 4112;
+    public static final int ENHET = 4100;
     public static final int ANTALL_PLUKK_FORSOK = 20;
     public static final String KODE_OPPGAVE_FERDIGSTILLT = "F";
 
