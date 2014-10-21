@@ -60,11 +60,12 @@ public class CmsEndpointConfig {
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
                 String name = "CMS";
+                String url = appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE;
                 try {
-                    contentRetriever().ping(new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE));
+                    contentRetriever().ping(new URI(url));
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
-                    log.error("Fikk exception fra CMS", e);
+                    log.error("Fikk exception fra CMS " + url, e);
                     return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
                 }
             }
