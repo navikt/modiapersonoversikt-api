@@ -2,15 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal;
 
 import no.nav.modig.wicket.test.internal.Parameters;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.HentPersonPanelMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SykepengerWidgetMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
-import no.nav.sbl.dialogarena.sak.config.SaksoversiktServiceConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.context.SporsmalOgSvarContext;
-import no.nav.sbl.dialogarena.utbetaling.lamell.context.UtbetalingLamellContext;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,16 +21,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {
-        EndpointMockContext.class,
-        ConsumerServicesMockContext.class,
-        HentPersonPanelMockContext.class,
-        SykepengerWidgetMockContext.class,
-        SaksoversiktServiceConfig.class,
-        SaksbehandlerInnstillingerPanelMockContext.class,
-        UtbetalingLamellContext.class,
-        SporsmalOgSvarContext.class
-})
+@ContextConfiguration(classes = {PersonPageMockContext.class})
 public class SjekkForlateSideTest extends WicketPageTest {
 
     private SjekkForlateSideAnswer answer;
