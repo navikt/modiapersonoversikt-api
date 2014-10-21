@@ -53,7 +53,10 @@ public class PlukkOppgaveService {
 
     private boolean saksbehandlerHarTilgangTilBruker(Oppgave oppgave) {
         try {
-            Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(new HentKjerneinformasjonRequest(oppgave.fnr)).getPerson().getPersonfakta();
+            HentKjerneinformasjonRequest kjerneinfoRequest = new HentKjerneinformasjonRequest(oppgave.fnr);
+            kjerneinfoRequest.setBegrunnet(true);
+
+            Personfakta personfakta = personKjerneinfoServiceBi.hentKjerneinformasjon(kjerneinfoRequest).getPerson().getPersonfakta();
 
             String brukersDiskresjonskode = defaultString(personfakta.getDiskresjonskode());
             String brukersEnhet = defaultString(personfakta.getHarAnsvarligEnhet().getOrganisasjonsenhet().getOrganisasjonselementId());
