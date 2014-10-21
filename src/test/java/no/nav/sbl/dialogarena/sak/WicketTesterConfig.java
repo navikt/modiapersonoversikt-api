@@ -45,6 +45,9 @@ public class WicketTesterConfig {
                     }
 
                     @Override public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
+                        if(key.equals("mange.saker")) {
+                            return "Vis alle {0} saker";
+                        }
                         return "Mock-tekst fra CMS";
                     }
                 });

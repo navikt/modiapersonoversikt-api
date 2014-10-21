@@ -16,7 +16,7 @@
 
     <properties>
         <spring.version>3.2.9.RELEASE</spring.version>
-        <modig.wicket.version>2.0.31</modig.wicket.version>
+        <modig.wicket.version>2.0.33</modig.wicket.version>
         <modig.core.version>1.0.1</modig.core.version>
         <wicket.version>6.17.0</wicket.version>
         <modig.frontend.version>1.1.75</modig.frontend.version>

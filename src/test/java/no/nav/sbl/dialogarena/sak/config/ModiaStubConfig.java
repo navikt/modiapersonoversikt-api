@@ -68,7 +68,7 @@ public class ModiaStubConfig {
             public String hentTekst(String key) {
                 switch(key) {
                     case "mange.saker":
-                        return "%d flere saker.";
+                        return "Vis alle {0} saker";
                     case "ingen.saker":
                         return "finnes ikke noen saker";
                     case "saker.feilet":
