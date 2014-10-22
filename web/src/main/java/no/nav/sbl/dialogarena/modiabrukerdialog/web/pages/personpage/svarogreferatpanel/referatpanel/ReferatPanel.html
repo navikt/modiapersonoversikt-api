@@ -11,24 +11,25 @@
                 <wicket:message key="referatpanel.tekstfelt.overskrift"/>
                 <span wicket:id="kanalbeskrivelse" class="lowercase">Beskrivelse av kanalen som er valgt</span>
             </h2>
+            <label wicket:id="tekstfelt-label" class="hidden"></label>
             <section wicket:id="tekstfelt" class="tekstfelt"></section>
             <section class="kanalvelger clearfix">
                 <div wicket:id="kanal">
                     <div wicket:id="kanalvalg" class="kanalvalg">
                         <input wicket:id="kanalknapp" type="radio"/>
-                        <label wicket:for="kanalknapp">
-                            <div wicket:id="kanalikon"></div>
+                        <label wicket:id="kanalknapp-label">
+                            <span wicket:id="kanalikon"></span>
+                            <span wicket:id="kanalknapp-label-tekst" class="hidden"></span>
                         </label>
                     </div>
                 </div>
             </section>
             <div class="temagruppevelger-wrapper">
+                <label class="hidden" wicket:for="temagruppe"><wicket:message key="referatform.temagruppe.null"></wicket:message></label>
                 <select wicket:id="temagruppe" class="temagruppevelger"></select>
             </div>
             <div wicket:id="feedback" class="feedback"></div>
-            <a wicket:id="send" class="send knapp-hoved" href="#">
-                <wicket:message key="referatform.knapp.send"/>
-            </a>
+            <input type="submit" wicket:id="send" class="send knapp-hoved" wicket:message="value:referatform.knapp.send" />
         </form>
     </section>
     <div wicket:id="kvittering" class="kvittering"></div>

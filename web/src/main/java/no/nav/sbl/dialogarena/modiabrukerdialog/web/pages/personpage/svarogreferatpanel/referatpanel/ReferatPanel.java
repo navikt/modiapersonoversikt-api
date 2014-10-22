@@ -69,12 +69,16 @@ public class ReferatPanel extends Panel {
         final Form<SvarOgReferatVM> form = new Form<>("referatform", new CompoundPropertyModel<>(vmMedDefaultVerdier()));
         form.setOutputMarkupPlaceholderTag(true);
 
-        form.add(new EnhancedTextArea("tekstfelt", form.getModel(),
+
+        EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", form.getModel(),
                 new EnhancedTextAreaConfigurator()
                         .withMaxCharCount(5000)
                         .withMinTextAreaHeight(250)
                         .withPlaceholderTextKey("referatform.tekstfelt.placeholder")
-        ));
+        );
+        Label tekstfeltLabel = new Label("tekstfelt-label", getString("referatpanel.tekstfelt.overskrift"));
+        tekstfeltLabel.add(new AttributeAppender("for", tekstfelt.get("text").getMarkupId()));
+        form.add(tekstfelt, tekstfeltLabel);
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
         feedbackPanel.setOutputMarkupId(true);
@@ -95,7 +99,13 @@ public class ReferatPanel extends Panel {
 
                 Component kanalIkon = new WebMarkupContainer("kanalikon").add(cssClass(kanalType.toLowerCase()));
 
-                item.add(kanalKnapp, kanalIkon);
+                WebMarkupContainer kanalknappLabel = new WebMarkupContainer("kanalknapp-label");
+                kanalknappLabel.add(new AttributeAppender("for", kanalKnapp.getMarkupId()));
+
+                Label kanalknappLabelTekst = new Label("kanalknapp-label-tekst", getString(kanalType));
+
+                kanalknappLabel.add(kanalknappLabelTekst, kanalIkon);
+                item.add(kanalKnapp, kanalknappLabel);
             }
         });
 
