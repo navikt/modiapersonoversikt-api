@@ -43,6 +43,7 @@ public class SaksoversiktWidgetTest extends AbstractWicketTest {
         when(kodeverk.getTemanavnForTemakode("AAP", BulletProofKodeverkService.ARKIVTEMA)).thenReturn("Arbeidsavklaringspæng");
 
         SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
+        widget.setMaxNumberOfFeedItems(7);
         wicketTester.goToPageWith(widget).should().containPatterns("Arbeidsavklaringspæng");
     }
 
@@ -77,7 +78,7 @@ public class SaksoversiktWidgetTest extends AbstractWicketTest {
 
         SaksoversiktWidget widget = new SaksoversiktWidget("saksoversikt", "", "");
         wicketTester.goToPageWith(widget);
-        wicketTester.should().containPatterns("Vis alle 10 saker");
+        wicketTester.should().containPatterns("Vis alle (\\d+) saker");
     }
 
     @Test
