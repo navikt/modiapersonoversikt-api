@@ -32,7 +32,7 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
     public MeldingerWidget(String id, String initial, final String fnr) {
-        super(id, initial, true);
+        super(id, initial, true, "info.mangemeldinger");
         setOutputMarkupId(true);
         setMaxNumberOfFeedItems(5);
 

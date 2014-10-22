@@ -15,6 +15,7 @@ import javax.inject.Inject;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
@@ -28,13 +29,13 @@ public class MeldingerWidgetTest extends WicketPageTest {
     private HenvendelseBehandlingService henvendelseBehandlingService;
 
     @Test
-    public void skalKonstrueresRiktig() {
+    public void konstrueresRiktig() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "ARBD", "id1")));
         wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"));
     }
 
     @Test
-    public void skalInneholdeRiktigAntallMeldinger() {
+    public void inneholderRiktigAntallMeldinger() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "ARBD", "id1"),
                 createMelding("id2", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "ARBD", "id2"),
@@ -46,7 +47,20 @@ public class MeldingerWidgetTest extends WicketPageTest {
     }
 
     @Test
-    public void skalInneholdeMaksFemMeldinger() {
+    public void inneholdeMaksFemMeldinger() {
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
+                createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "ARBD", "id1"),
+                createMelding("id2", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "ARBD", "id2"),
+                createMelding("id3", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "ARBD", "id3"),
+                createMelding("id4", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "ARBD", "id4"),
+                createMelding("id5", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "ARBD", "id5")
+        ));
+        wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
+                .should().containComponents(5, ofType(MeldingerWidgetPanel.class));
+    }
+
+    @Test
+    public void inneholdeOverflowElementHvisMerEnnFemMeldinger() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "ARBD", "id1"),
                 createMelding("id2", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "ARBD", "id2"),
@@ -56,11 +70,12 @@ public class MeldingerWidgetTest extends WicketPageTest {
                 createMelding("id6", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "ARBD", "id6")
         ));
         wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
-                .should().containComponents(5, ofType(MeldingerWidgetPanel.class));
+                .should().containComponents(4, ofType(MeldingerWidgetPanel.class))
+                .should().containComponent(withId("overflowitem"));
     }
 
     @Test
-    public void skalRegerePaaEvent() {
+    public void reagererPaaEvent() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", Meldingstype.SPORSMAL_SKRIFTLIG, now(), "ARBD", "id1")));
         wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
                 .sendEvent(new EventGenerator() {
