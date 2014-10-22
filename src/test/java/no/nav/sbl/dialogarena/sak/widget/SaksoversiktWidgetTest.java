@@ -70,7 +70,7 @@ public class SaksoversiktWidgetTest extends AbstractWicketTest {
     @Test
     public void skalViseMeldingVedForMangeSaker() {
         ArrayList<TemaVM> temaVMs = new ArrayList<>();
-        for (int x = 0; x < FeedWidget.maxNumberOfFeedItems + 3; x++) {
+        for (int x = 0; x < 10 + 3; x++) {
             temaVMs.add(new TemaVM().withTemaKode("AAP").withSistOppdaterteBehandling(new GenerellBehandling().withBehandlingsDato(DateTime.now())));
         }
 
@@ -84,7 +84,7 @@ public class SaksoversiktWidgetTest extends AbstractWicketTest {
     @Test
     public void skalIkkeViseMeldingVedAkkuratNokSaker() {
         ArrayList<TemaVM> temaVMs = new ArrayList<>();
-        for (int x = 0; x < FeedWidget.maxNumberOfFeedItems; x++) {
+        for (int x = 0; x < 10; x++) {
             temaVMs.add(new TemaVM().withTemaKode("AAP").withSistOppdaterteBehandling(new GenerellBehandling().withBehandlingsDato(DateTime.now())));
         }
 
