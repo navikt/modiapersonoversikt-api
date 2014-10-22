@@ -12,6 +12,7 @@ import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.ChoiceRenderer;
 import org.apache.wicket.markup.html.form.DropDownChoice;
@@ -165,6 +166,7 @@ public class NyOppgaveFormWrapper extends Panel {
 
         WebMarkupContainer typeContainer = new WebMarkupContainer("typeContainer");
         typeContainer.setOutputMarkupPlaceholderTag(true);
+        typeContainer.add(new AttributeAppender("for", typeDropdown.getMarkupId()));
 
         typeContainer.add(typeDropdown);
         typeContainer.add(visibleIf(not(isEmptyList(typeModel))));
@@ -186,6 +188,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 .and(not(nullValue(new PropertyModel(form.getModel(), "tema"))))
                 .and(not(nullValue(new PropertyModel(form.getModel(), "type"))));
         enhetContainer.add(visibleIf(visEnhetsValg));
+        enhetContainer.add(new AttributeAppender("for", ansattEnhetDropdown.getMarkupId()));
 
         return enhetContainer;
     }
@@ -220,6 +223,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 .and(not(nullValue(new PropertyModel(form.getModel(), "tema")))
                 );
         prioritetContainer.add(visibleIf(visPrioritetsValg));
+        prioritetContainer.add(new AttributeAppender("for", prioritetDropdown.getMarkupId()));
 
         return prioritetContainer;
     }

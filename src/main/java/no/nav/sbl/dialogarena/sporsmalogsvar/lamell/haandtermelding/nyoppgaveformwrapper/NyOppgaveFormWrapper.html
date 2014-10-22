@@ -5,7 +5,7 @@
 <body>
 <wicket:panel>
     <form wicket:id="nyoppgaveform">
-        <label>
+        <label wicket:for="tema">
             <wicket:message key="nyoppgave.form.label.tema"/>
             <select wicket:id="tema"></select>
         </label>
@@ -21,16 +21,17 @@
             <wicket:message key="nyoppgave.form.label.prioritet"/>
             <select wicket:id="prioritet"></select>
         </label>
-        <label>
+        <label wicket:for="beskrivelse">
             <wicket:message key="nyoppgave.form.label.beskrivelse"/>
             <textarea wicket:id="beskrivelse"></textarea>
         </label>
 
         <div class="robust-strek"></div>
         <div wicket:id="feedback"></div>
-        <a href="#" wicket:id="opprettoppgave" class="knapp-hoved-stor">
-            <wicket:message key="nyoppgave.form.opprett"/>
-        </a>
+        <input type="submit"
+               class="knapp-hoved-stor"
+               wicket:id="opprettoppgave"
+               wicket:message="value:nyoppgave.form.opprett" />
     </form>
     <div wicket:id="feedbackOppgavePanel" class="oppgaveOpprettetFeedback">
         <div class="robust-ikon-gront-sjekk"></div>
