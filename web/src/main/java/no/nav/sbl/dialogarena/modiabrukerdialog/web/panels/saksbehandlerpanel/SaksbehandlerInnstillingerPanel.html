@@ -4,20 +4,27 @@
 <wicket:panel>
     <div class="saksbehandlerinnstillinger">
         <a href="#" wicket:id="opplaeringslenke" class="opplaeringslenke">[...]</a>
-        <h3>
+        <h1 class="_H3">
             <wicket:message key="enhetsvalg.overskrift"/>
-        </h3>
+        </h1>
         <form wicket:id="enhetsform" class="centered enhetsform">
-            <wicket:container wicket:id="enhet">
-                <div wicket:id="enhetsvalg" class="enhetsvalg">
-                    <input wicket:id="enhetId" type="radio"/>
-                    <label wicket:for="enhetId" class="sort-skrift">
-                        <div wicket:id="enhetNavn"></div>
-                    </label>
-                </div>
-            </wicket:container>
+            <fieldset class="wcag">
+                <legend><wicket:message key="enhetsvalg.overskrift"/></legend>
+                <wicket:container wicket:id="enhet">
+                    <div wicket:id="enhetsvalg" class="enhetsvalg">
+                        <input wicket:id="enhetId" type="radio"/>
+                        <label wicket:for="enhetId" class="sort-skrift">
+                            <wicket:container wicket:id="enhetNavn"></wicket:container>
+                        </label>
+                    </div>
+                </wicket:container>
+            </fieldset>
             <div class="midtstilt-innhold">
-                <a href="#" wicket:id="velg" class="send knapp-hoved-stor" tabindex="0">velg</a>
+                <input wicket:id="velg"
+                       type="submit"
+                       class="send knapp-hoved-stor"
+                       tabindex="0"
+                       wicket:message="value:velg.knapp.tekst,aria-label:velg.knapp.aria" />
             </div>
         </form>
     </div>
