@@ -31,16 +31,18 @@
                     <div wicket:id="kanal">
                         <div wicket:id="kanalvalg" class="kanalvalg">
                             <input wicket:id="kanalknapp" type="radio"/>
-                            <label wicket:for="kanalknapp">
-                                <div wicket:id="kanalikon"></div>
+                            <label wicket:id="kanalknapp-label">
+                                <span wicket:id="kanalikon"></span>
+                                <span wicket:id="kanalknapp-label-tekst" class="hidden"></span>
                             </label>
                         </div>
                     </div>
                 </div>
                 <div wicket:id="feedback" class="feedback"></div>
-                <a wicket:id="send" class="send knapp-hoved" href="#">
-                    <wicket:message key="svarform.knapp.send"/>
-                </a>
+                <input type="submit"
+                       class="send knapp-hoved"
+                       wicket:id="send"
+                       wicket:message="value:svarform.knapp.send" />
             </form>
             <a wicket:id="leggtilbake"><span wicket:id="leggtilbaketekst"></span></a>
         </section>

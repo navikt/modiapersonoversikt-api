@@ -175,7 +175,13 @@ public class SvarPanel extends Panel {
 
                     Component kanalIkon = new WebMarkupContainer("kanalikon").add(cssClass(kanalType.toLowerCase()));
 
-                    item.add(kanalKnapp, kanalIkon);
+                    WebMarkupContainer kanalknallLabel = new WebMarkupContainer("kanalknapp-label");
+                    kanalknallLabel.add(new AttributeAppender("for", kanalKnapp.getMarkupId()));
+
+                    Label kanalknallLabelTekst = new Label("kanalknapp-label-tekst", getString(kanalType));
+
+                    kanalknallLabel.add(kanalknallLabelTekst, kanalIkon);
+                    item.add(kanalKnapp, kanalknallLabel);
                 }
             });
             add(radioGroup);
