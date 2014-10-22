@@ -53,7 +53,7 @@ public class LeggTilbakePanel extends Panel {
         final LeggTilbakeVM leggTilbakeVM = new LeggTilbakeVM();
         PropertyModel valgtAarsak = new PropertyModel(leggTilbakeVM, "valgtAarsak");
 
-        add(new Label("temagruppe", new ResourceModel(temagruppe)));
+        add(new Label("temagruppe", new ResourceModel(temagruppe, "")));
 
         Form<LeggTilbakeVM> form = new Form<>("leggtilbakeform", new CompoundPropertyModel<>(leggTilbakeVM));
 
