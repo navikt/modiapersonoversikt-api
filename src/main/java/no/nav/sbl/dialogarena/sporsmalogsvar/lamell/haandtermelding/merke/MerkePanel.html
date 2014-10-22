@@ -11,17 +11,20 @@
     <form  wicket:id="merkForm">
         <div wicket:id="merkType">
             <div>
-                <input wicket:id="feilsendtRadio" id="feilsendtRadio" type="radio" />
-                <label for="feilsendtRadio" class="medium"><wicket:message key="merke.feilsendt"/></label>
+                <input wicket:id="feilsendtRadio" type="radio" />
+                <label wicket:for="feilsendtRadio" class="medium"><wicket:message key="merke.feilsendt"/></label>
             </div>
             <div>
-                <input wicket:id="kontorsperretRadio" id="kontorsperretRadio" type="radio" />
-                <label for="kontorsperretRadio" class="medium"><wicket:message key="merke.kontorsperret"/></label>
+                <input wicket:id="kontorsperretRadio" type="radio" />
+                <label wicket:for="kontorsperretRadio" class="medium"><wicket:message key="merke.kontorsperret"/></label>
                 <div wicket:id="kontorsperrePanel"></div>
             </div>
         </div>
         <div wicket:id="feedbackMerkPanel"></div>
-        <a href="#" wicket:id="merk" class="knapp-hoved-stor"><wicket:message key="merk.sendknapp"/></a>
+        <input type="submit"
+               class="knapp-hoved-stor"
+               wicket:id="merk"
+               wicket:message="value:merk.sendknapp" />
     </form>
     <a href="#" wicket:id="avbryt" class="avbryt-knapp">Avbryt</a>
 </wicket:panel>
