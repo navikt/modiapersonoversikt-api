@@ -10,12 +10,7 @@ import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import static java.lang.String.format;
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-
 public class LeggTilbakeVM implements Serializable {
-
-    public static final String LINJESKILLER = "\n";
 
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
@@ -48,15 +43,7 @@ public class LeggTilbakeVM implements Serializable {
     }
 
     public String lagBeskrivelse(String beskrivelseStart) {
-        String navident = getSubjectHandler().getUid();
-
-        StringBuilder beskrivelseBuilder = new StringBuilder();
-        beskrivelseBuilder.append(format("- %s (%s, %s) -",
-                getFormatertTimestamp(), navident, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()));
-        beskrivelseBuilder.append(LINJESKILLER);
-        beskrivelseBuilder.append((beskrivelseStart + " " + (annenAarsakTekst == null ? "" : annenAarsakTekst)).trim());
-
-        return beskrivelseBuilder.toString();
+        return (beskrivelseStart + " " + (annenAarsakTekst == null ? "" : annenAarsakTekst)).trim();
     }
 
     public static String getFormatertTimestamp() {
