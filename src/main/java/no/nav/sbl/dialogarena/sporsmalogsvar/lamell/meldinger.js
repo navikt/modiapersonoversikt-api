@@ -5,6 +5,7 @@ var Meldinger = (function () {
 
     var addKeyNavigation = function () {
         $('.meldinglamell').on('keydown', '.melding', function (e) {
+            var eventHandled = true;
             if (e.keyCode === PIL_OPP) {
                 $(e.currentTarget).prev().click();
             } else if (e.keyCode === PIL_NED) {
@@ -13,8 +14,13 @@ var Meldinger = (function () {
                 $('.meldinger .lamellhode ~ .close').focus();
             } else if (e.keyCode === TAB) {
                 $('.haandter-meldinger a').first().focus();
+            } else {
+                eventHandled = false;
             }
-            e.preventDefault();
+            
+            if (eventHandled) {
+                e.preventDefault();
+            }
         });
     };
 

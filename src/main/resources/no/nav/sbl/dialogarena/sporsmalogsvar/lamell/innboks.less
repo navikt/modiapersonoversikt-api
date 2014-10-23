@@ -452,3 +452,14 @@
     background-image: url(../img/melding_referat_lest.svg)
   }
 }
+
+@media print {
+  .meldinger {
+    height: 0px !important;
+    display: inline-block;
+  }
+  .meldinger .lerret {
+    height: 0px !important;
+    display: inline-block;
+  }
+}
