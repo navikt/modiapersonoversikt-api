@@ -105,8 +105,9 @@
            timeToIdleSeconds="1800"/>
 
     <cache name="aktorIdCache" maxElementsInMemory="100000"
-           eternal="true"
-           overflowToDisk="true"/>
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false"/>
 
     <cache name="asbogosysEnhet" maxElementsInMemory="10000"
            eternal="false"
