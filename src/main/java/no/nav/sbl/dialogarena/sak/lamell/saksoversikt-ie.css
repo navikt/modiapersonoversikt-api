@@ -1,3 +1,9 @@
+.saker.flexbox.flex1 {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+}
+
 .saker .sak-informasjon {
     display: table-cell;
     width: 75%;
