@@ -1,5 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
@@ -43,6 +47,8 @@ public class OppgaveBehandlingService {
     private OppgaveV3 oppgaveWS;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private GOSYSNAVansatt ansattWS;
 
     public void tilordneOppgaveIGsak(String oppgaveId) throws FikkIkkeTilordnet {
         tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId));
@@ -115,13 +121,25 @@ public class OppgaveBehandlingService {
     }
 
     private String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {
-        String header = String.format("--- %s (%s, %s) ---\n",
+        String ident = getSubjectHandler().getUid();
+        String header = String.format("--- %s %s (%s, %s) ---\n",
                 forPattern("dd.MM.yyyy HH:mm").print(now()),
-                getSubjectHandler().getUid(),
+                hentAnsattNavn(ident),
+                ident,
                 saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
 
         String nyBeskrivelse = header + leggTil;
         return isBlank(gammelBeskrivelse) ? nyBeskrivelse : gammelBeskrivelse + "\n\n" + nyBeskrivelse;
+    }
+
+    private String hentAnsattNavn(String ident) {
+        try {
+            ASBOGOSYSNAVAnsatt ansattRequest = new ASBOGOSYSNAVAnsatt();
+            ansattRequest.setAnsattId(ident);
+            return ansattWS.hentNAVAnsatt(ansattRequest).getAnsattNavn();
+        } catch (HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattFaultGOSYSGeneriskfMsg e) {
+            throw new RuntimeException("Noe gikk galt ved henting av ansatt med ident " + ident, e);
+        }
     }
 
     private WSOppgave hentOppgaveFraGsak(String oppgaveId) {
