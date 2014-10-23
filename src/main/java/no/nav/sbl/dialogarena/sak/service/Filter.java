@@ -58,7 +58,8 @@ public class Filter {
         public boolean evaluate(WSSak wsSak) {
             for (WSBehandlingskjede kjede : wsSak.getBehandlingskjede()) {
                 if (kjede.getSisteBehandlingsstatus().getValue() != null &&
-                        (kjede.getSisteBehandlingsstatus().getValue().equals(OPPRETTET) || kjede.getSisteBehandlingsstatus().getValue().equals(AVSLUTTET))) {
+                        (kjede.getSisteBehandlingsstatus().getValue().equals(OPPRETTET) && !erKvitteringstype(kjede.getSisteBehandlingstype().getValue())
+                                || kjede.getSisteBehandlingsstatus().getValue().equals(AVSLUTTET))) {
                     return true;
                 }
             }
