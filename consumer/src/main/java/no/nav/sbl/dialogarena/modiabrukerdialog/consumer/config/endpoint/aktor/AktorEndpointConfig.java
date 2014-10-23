@@ -23,7 +23,7 @@ public class AktorEndpointConfig {
     private AktoerPortType aktoerPort() {
         return new CXFClient<>(AktoerPortType.class)
                 .address(aktoerUrl)
-                .wsdl("classpath:wsdl/no/nav/tjeneste/virksomhet/aktoer/v1/Aktoer.wsdl")
+                .wsdl("classpath:Aktoer.wsdl")
                 .withOutInterceptor(new SystemSAMLOutInterceptor())
                 .withHandler(new MDCOutHandler())
                 .build();
