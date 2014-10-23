@@ -1,5 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
@@ -46,6 +50,8 @@ public class GsakService {
     private Ruting ruting;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private GOSYSNAVansatt ansattWS;
 
     public List<Sak> hentSakerForBruker(String fnr) {
         WSFinnGenerellSakListeResponse response = sakWs.finnGenerellSakListe(new WSFinnGenerellSakListeRequest().withBrukerId(fnr));
@@ -110,12 +116,23 @@ public class GsakService {
     }
 
     private String lagBeskrivelse(String beskrivelse, int valgtEnhetId) {
-        String header = String.format("--- %s (%s, %s) ---\n",
+        String ident = getSubjectHandler().getUid();
+        String header = String.format("--- %s %s (%s, %s) ---\nOppgave opprettet fra Modia med beskrivelse:\n",
                 forPattern("dd.MM.yyyy HH:mm").print(now()),
-                getSubjectHandler().getUid(),
+                hentAnsattNavn(ident),
+                ident,
                 valgtEnhetId);
 
         return header + beskrivelse;
     }
 
+    private String hentAnsattNavn(String ident) {
+        try {
+            ASBOGOSYSNAVAnsatt ansattRequest = new ASBOGOSYSNAVAnsatt();
+            ansattRequest.setAnsattId(ident);
+            return ansattWS.hentNAVAnsatt(ansattRequest).getAnsattNavn();
+        } catch (HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattFaultGOSYSGeneriskfMsg e) {
+            throw new RuntimeException("Noe gikk galt ved henting av ansatt med ident " + ident, e);
+        }
+    }
 }
