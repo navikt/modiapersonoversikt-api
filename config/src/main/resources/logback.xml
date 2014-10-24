@@ -78,9 +78,6 @@
     <logger name="no.nav.modig.common.SporingsLogger" level="INFO">
         <appender-ref ref="sporinglog"/>
     </logger>
-    <logger name="no.nav.modig.security" level="DEBUG">
-        <appender-ref ref="securitylog"/>
-    </logger>
 
     <logger name="personaccess" level="warn" additivity="false">
         <appender-ref ref="personaccessappender"/>
