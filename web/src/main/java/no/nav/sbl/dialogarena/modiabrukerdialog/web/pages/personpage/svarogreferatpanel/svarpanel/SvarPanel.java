@@ -70,6 +70,7 @@ public class SvarPanel extends Panel {
     private final LeggTilbakePanel leggTilbakePanel;
     private final KvitteringsPanel kvittering;
     private final WebMarkupContainer visTraadContainer;
+    private final AjaxLink<Void> leggTilbakeKnapp;
 
     public SvarPanel(String id, String fnr, Sporsmal sporsmal, final List<SvarEllerReferat> svar, Optional<String> oppgaveId) {
         super(id);
@@ -110,23 +111,23 @@ public class SvarPanel extends Panel {
                 }
         );
 
+        leggTilbakeKnapp = new AjaxLink<Void>("leggtilbake") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                if (svar.isEmpty()) {
+                    traadContainer.setVisibilityAllowed(true);
+                    animertVisningToggle(target, svarContainer);
+                    animertVisningToggle(target, leggTilbakePanel);
+                    target.add(SvarPanel.this);
+                } else {
+                    send(SvarPanel.this, Broadcast.BUBBLE, SVAR_AVBRUTT);
+                }
+            }
+        };
+        leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("svarpanel.avbryt." + (svar.isEmpty() ? "leggtilbake" : "avbryt"))));
+
         svarContainer.setOutputMarkupId(true);
-        svarContainer.add(
-                new SvarForm("svarform", lagModelObjectMedKanalOgTemagruppe()),
-                new AjaxLink<Void>("leggtilbake") {
-                    @Override
-                    public void onClick(AjaxRequestTarget target) {
-                        if (svar.isEmpty()) {
-                            traadContainer.setVisibilityAllowed(true);
-                            animertVisningToggle(target, svarContainer);
-                            animertVisningToggle(target, leggTilbakePanel);
-                            target.add(SvarPanel.this);
-                        } else {
-                            send(SvarPanel.this, Broadcast.BUBBLE, SVAR_AVBRUTT);
-                        }
-                    }
-                }.add(new Label("leggtilbaketekst", new ResourceModel("svarpanel.avbryt." + (svar.isEmpty() ? "leggtilbake" : "avbryt"))))
-        );
+        svarContainer.add(new SvarForm("svarform", lagModelObjectMedKanalOgTemagruppe()), leggTilbakeKnapp);
 
         leggTilbakePanel.setVisibilityAllowed(false);
 
@@ -160,6 +161,7 @@ public class SvarPanel extends Panel {
     private class SvarForm extends Form<SvarOgReferatVM> {
 
         private final FeedbackPanel feedbackPanel;
+        private final AjaxButton sendKnapp;
 
         public SvarForm(String id, SvarOgReferatVM svarOgReferatVM) {
             super(id, new CompoundPropertyModel<>(svarOgReferatVM));
@@ -213,7 +215,7 @@ public class SvarPanel extends Panel {
             feedbackPanel.setOutputMarkupId(true);
             add(feedbackPanel);
 
-            add(new AjaxButton("send") {
+            sendKnapp = new AjaxButton("send") {
                 @Override
                 protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
                     sendOgVisKvittering(SvarForm.this.getModelObject(), target);
@@ -223,7 +225,8 @@ public class SvarPanel extends Panel {
                 protected void onError(AjaxRequestTarget target, Form<?> form) {
                     target.add(feedbackPanel);
                 }
-            });
+            };
+            add(sendKnapp);
         }
 
         private void sendOgVisKvittering(SvarOgReferatVM svarOgReferatVM, AjaxRequestTarget target) {
@@ -234,7 +237,9 @@ public class SvarPanel extends Panel {
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
             } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
                 error("svarform.feilmelding.oppgaveferdigstilt");
-                target.add(feedbackPanel);
+                sendKnapp.setVisibilityAllowed(false);
+                leggTilbakeKnapp.setVisibilityAllowed(false);
+                target.add(feedbackPanel, sendKnapp, leggTilbakeKnapp);
             }
         }
 
