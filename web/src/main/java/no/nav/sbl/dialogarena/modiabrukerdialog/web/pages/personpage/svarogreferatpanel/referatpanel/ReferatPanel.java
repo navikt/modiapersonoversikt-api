@@ -47,6 +47,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON_
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_OPPMOTE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_TELEFON;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class ReferatPanel extends Panel {
@@ -183,8 +184,8 @@ public class ReferatPanel extends Panel {
                     .withFritekst(svarOgReferatVM.getFritekst())
                     .withSporsmalsId(null);
             henvendelseUtsendingService.sendSvarEllerReferat(referat, Optional.<String>none());
-        } catch (HenvendelseUtsendingService.OppgaveErFerdigstillt oppgaveErFerdigstillt) {
-            throw new RuntimeException(oppgaveErFerdigstillt);
+        } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
+            throw new RuntimeException(oppgaveErFerdigstilt);
         }
     }
 

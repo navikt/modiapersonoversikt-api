@@ -126,8 +126,8 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     }
 
     @Test
-    public void brukerIkkeOppgavePaaSesjonHvisDenErFerdigstillt() {
-        when(plukkOppgaveService.oppgaveErFerdigstillt(anyString())).thenReturn(true);
+    public void brukerIkkeOppgavePaaSesjonHvisDenErFerdigstilt() {
+        when(plukkOppgaveService.oppgaveErFerdigstilt(anyString())).thenReturn(true);
         when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(optional(new Oppgave("oppgave2", "fnr2", "henvendelse2")));
 
         wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"));

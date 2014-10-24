@@ -126,7 +126,7 @@ public class PlukkOppgavePanel extends Panel {
         }
 
         private boolean oppgavePaaSessionKanBehandles() {
-            if (plukkOppgaveService.oppgaveErFerdigstillt((String) getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR))) {
+            if (plukkOppgaveService.oppgaveErFerdigstilt((String) getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR))) {
                 getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, null);
                 getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, null);
                 getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, null);

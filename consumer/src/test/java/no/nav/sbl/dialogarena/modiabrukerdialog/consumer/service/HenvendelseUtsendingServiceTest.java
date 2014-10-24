@@ -107,7 +107,7 @@ public class HenvendelseUtsendingServiceTest {
     }
 
     @Test
-    public void skalSendeSvar() throws HenvendelseUtsendingService.OppgaveErFerdigstillt {
+    public void skalSendeSvar() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         henvendelseUtsendingService.sendSvarEllerReferat(new SvarEllerReferat().withFnr(FNR).withFritekst(FRITEKST).withType(SVAR_SKRIFTLIG), Optional.<String>none());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
@@ -115,7 +115,7 @@ public class HenvendelseUtsendingServiceTest {
     }
 
     @Test
-    public void skalSendeReferat() throws HenvendelseUtsendingService.OppgaveErFerdigstillt {
+    public void skalSendeReferat() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         henvendelseUtsendingService.sendSvarEllerReferat(new SvarEllerReferat().withFnr(FNR).withFritekst(FRITEKST).withType(REFERAT_OPPMOTE), Optional.<String>none());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());

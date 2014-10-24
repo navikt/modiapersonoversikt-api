@@ -39,7 +39,7 @@ public class OppgaveBehandlingService {
 
     public static final int ENHET = 4100;
     public static final int ANTALL_PLUKK_FORSOK = 20;
-    public static final String KODE_OPPGAVE_FERDIGSTILLT = "F";
+    public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
 
     @Inject
     private OppgavebehandlingV3 oppgavebehandlingWS;
@@ -116,8 +116,8 @@ public class OppgaveBehandlingService {
         }
     }
 
-    public boolean oppgaveErFerdigstillt(String oppgaveid) {
-        return equalsIgnoreCase(hentOppgaveFraGsak(oppgaveid).getStatus().getKode(), KODE_OPPGAVE_FERDIGSTILLT);
+    public boolean oppgaveErFerdigstilt(String oppgaveid) {
+        return equalsIgnoreCase(hentOppgaveFraGsak(oppgaveid).getStatus().getKode(), KODE_OPPGAVE_FERDIGSTILT);
     }
 
     private String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {

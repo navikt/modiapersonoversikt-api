@@ -68,7 +68,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void skalSendeSvarTilHenvendelseDersomManVelgerTekstSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstillt {
+    public void skalSendeSvarTilHenvendelseDersomManVelgerTekstSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", "dette er en fritekst")
@@ -80,7 +80,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void skalSendeReferatTilHenvendelseDersomManVelgerTelefonSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstillt {
+    public void skalSendeReferatTilHenvendelseDersomManVelgerTelefonSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", "dette er en fritekst")
@@ -92,7 +92,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void skalSendeReferatTilHenvendelseDersomManVelgerOppmoteSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstillt {
+    public void skalSendeReferatTilHenvendelseDersomManVelgerOppmoteSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", "dette er en fritekst")

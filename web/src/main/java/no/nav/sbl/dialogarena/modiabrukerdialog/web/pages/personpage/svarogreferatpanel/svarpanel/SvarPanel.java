@@ -51,7 +51,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.OPPMOTE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstillt;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 
 public class SvarPanel extends Panel {
@@ -232,13 +232,13 @@ public class SvarPanel extends Panel {
                 send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
                 kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey("svarpanel")), target,
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
-            } catch (OppgaveErFerdigstillt oppgaveErFerdigstillt) {
-                error("svarform.feilmelding.oppgaveferdigstillt");
+            } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
+                error("svarform.feilmelding.oppgaveferdigstilt");
                 target.add(feedbackPanel);
             }
         }
 
-        private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) throws OppgaveErFerdigstillt {
+        private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) throws OppgaveErFerdigstilt {
             SvarEllerReferat svarEllerReferat = new SvarEllerReferat()
                     .withFnr(fnr)
                     .withNavIdent(getSubjectHandler().getUid())

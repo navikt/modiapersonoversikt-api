@@ -42,8 +42,8 @@ public class PlukkOppgaveService {
         }
     }
 
-    public boolean oppgaveErFerdigstillt(String oppgaveid) {
-        return oppgaveBehandlingService.oppgaveErFerdigstillt(oppgaveid);
+    public boolean oppgaveErFerdigstilt(String oppgaveid) {
+        return oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveid);
     }
 
     private Optional<Oppgave> leggTilbakeOgPlukkNyOppgave(Oppgave oppgave, String temagruppe) {

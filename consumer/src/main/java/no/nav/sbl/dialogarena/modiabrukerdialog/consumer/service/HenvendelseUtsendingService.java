@@ -49,9 +49,9 @@ public class HenvendelseUtsendingService {
 
     private static final List<String> SVAR = asList(SVAR_OPPMOTE.name(), SVAR_SKRIFTLIG.name(), SVAR_TELEFON.name());
 
-    public void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat, Optional<String> oppgaveId) throws OppgaveErFerdigstillt {
-        if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstillt(oppgaveId.get())) {
-            throw new OppgaveErFerdigstillt();
+    public void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat, Optional<String> oppgaveId) throws OppgaveErFerdigstilt {
+        if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
+            throw new OppgaveErFerdigstilt();
         }
 
         XMLHenvendelseType type = XMLHenvendelseType.fromValue(svarEllerReferat.type.name());
@@ -109,5 +109,5 @@ public class HenvendelseUtsendingService {
         }
     };
 
-    public static class OppgaveErFerdigstillt extends Exception {}
+    public static class OppgaveErFerdigstilt extends Exception {}
 }
