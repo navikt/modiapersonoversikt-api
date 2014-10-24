@@ -25,7 +25,7 @@ var Meldinger = (function () {
     };
 
     var focusOnSelectedElement = function () {
-        $('.melding.valgt').focus();
+        setTimeout(function(){$('.melding.valgt').focus()},0);
     };
 
     return {

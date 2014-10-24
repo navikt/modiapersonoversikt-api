@@ -19,7 +19,7 @@ public class KontorsperrePanel extends Panel {
     public static final String OPPGAVE_OPPRETTET = "sos.oppgave.opprettet";
     public static final String OPPRETT_OPPGAVE_TOGGLET = "sos.oppgave.skalopprette";
 
-    public final IModel<Boolean> skalOppretteOppgave = Model.of(false);
+    public final IModel<Boolean> skalOppretteOppgave = Model.of(true);
 
     private final NyOppgaveFormWrapper nyOppgaveForm;
     private final CheckBox opprettOppgaveCheckbox;
