@@ -40,14 +40,20 @@ public class HenvendelseUtsendingService {
     @Inject
     private HenvendelsePortType henvendelsePortType;
     @Inject
-    protected SendUtHenvendelsePortType sendUtHenvendelsePortType;
+    private SendUtHenvendelsePortType sendUtHenvendelsePortType;
+    @Inject
+    private OppgaveBehandlingService oppgaveBehandlingService;
     @Inject
     @Named("pep")
     private EnforcementPoint pep;
 
     private static final List<String> SVAR = asList(SVAR_OPPMOTE.name(), SVAR_SKRIFTLIG.name(), SVAR_TELEFON.name());
 
-    public void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat) {
+    public void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat, Optional<String> oppgaveId) throws OppgaveErFerdigstillt {
+        if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstillt(oppgaveId.get())) {
+            throw new OppgaveErFerdigstillt();
+        }
+
         XMLHenvendelseType type = XMLHenvendelseType.fromValue(svarEllerReferat.type.name());
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedMeldingTilBruker(svarEllerReferat, type);
         sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest()
@@ -103,4 +109,5 @@ public class HenvendelseUtsendingService {
         }
     };
 
+    public static class OppgaveErFerdigstillt extends Exception {}
 }

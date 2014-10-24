@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.NamedEventPayload;
@@ -172,16 +173,19 @@ public class ReferatPanel extends Panel {
     }
 
     private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) {
-        SvarEllerReferat referat = new SvarEllerReferat()
-                .withFnr(fnr)
-                .withNavIdent(getSubjectHandler().getUid())
-                .withTemagruppe(svarOgReferatVM.temagruppe.name())
-                .withKanal(svarOgReferatVM.kanal.name())
-                .withType(referatType(svarOgReferatVM.kanal))
-                .withFritekst(svarOgReferatVM.getFritekst())
-                .withSporsmalsId(null);
-
-        henvendelseUtsendingService.sendSvarEllerReferat(referat);
+        try {
+            SvarEllerReferat referat = new SvarEllerReferat()
+                    .withFnr(fnr)
+                    .withNavIdent(getSubjectHandler().getUid())
+                    .withTemagruppe(svarOgReferatVM.temagruppe.name())
+                    .withKanal(svarOgReferatVM.kanal.name())
+                    .withType(referatType(svarOgReferatVM.kanal))
+                    .withFritekst(svarOgReferatVM.getFritekst())
+                    .withSporsmalsId(null);
+            henvendelseUtsendingService.sendSvarEllerReferat(referat, Optional.<String>none());
+        } catch (HenvendelseUtsendingService.OppgaveErFerdigstillt oppgaveErFerdigstillt) {
+            throw new RuntimeException(oppgaveErFerdigstillt);
+        }
     }
 
     private Henvendelsetype referatType(Kanal kanal) {

@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
@@ -12,6 +13,7 @@ import org.apache.wicket.markup.html.form.DropDownChoice;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -26,11 +28,13 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
+import static org.hamcrest.Matchers.anything;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyObject;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
@@ -73,7 +77,8 @@ public class ReferatPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void skalSendeReferattypeTilHenvendelse() {
+    @SuppressWarnings("unchecked")
+    public void skalSendeReferattypeTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstillt {
         wicket.goToPageWith(new TestReferatPanel("id", "fnr"))
                 .inForm(withId("referatform"))
                 .write("tekstfelt:text", "dette er en fritekst")
@@ -81,7 +86,7 @@ public class ReferatPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class), any(Optional.class));
     }
 
     @Test

@@ -51,6 +51,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.OPPMOTE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstillt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 
 public class SvarPanel extends Panel {
@@ -158,6 +159,8 @@ public class SvarPanel extends Panel {
 
     private class SvarForm extends Form<SvarOgReferatVM> {
 
+        private final FeedbackPanel feedbackPanel;
+
         public SvarForm(String id, SvarOgReferatVM svarOgReferatVM) {
             super(id, new CompoundPropertyModel<>(svarOgReferatVM));
 
@@ -206,7 +209,7 @@ public class SvarPanel extends Panel {
                             .withPlaceholderTextKey("svarform.tekstfelt.placeholder")
             ));
 
-            final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
+            feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
             feedbackPanel.setOutputMarkupId(true);
             add(feedbackPanel);
 
@@ -224,13 +227,18 @@ public class SvarPanel extends Panel {
         }
 
         private void sendOgVisKvittering(SvarOgReferatVM svarOgReferatVM, AjaxRequestTarget target) {
-            sendHenvendelse(svarOgReferatVM);
-            send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
-            kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey("svarpanel")), target,
-                    visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
+            try {
+                sendHenvendelse(svarOgReferatVM);
+                send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
+                kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey("svarpanel")), target,
+                        visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
+            } catch (OppgaveErFerdigstillt oppgaveErFerdigstillt) {
+                error("svarform.feilmelding.oppgaveferdigstillt");
+                target.add(feedbackPanel);
+            }
         }
 
-        private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) {
+        private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) throws OppgaveErFerdigstillt {
             SvarEllerReferat svarEllerReferat = new SvarEllerReferat()
                     .withFnr(fnr)
                     .withNavIdent(getSubjectHandler().getUid())
@@ -241,7 +249,7 @@ public class SvarPanel extends Panel {
                     .withFritekst(svarOgReferatVM.getFritekst())
                     .withKontorsperretEnhet(sporsmal.konorsperretEnhet);
 
-            henvendelseUtsendingService.sendSvarEllerReferat(svarEllerReferat);
+            henvendelseUtsendingService.sendSvarEllerReferat(svarEllerReferat, oppgaveId);
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);
         }
 
