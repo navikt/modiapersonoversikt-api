@@ -61,7 +61,7 @@ public class KontorsperrePanel extends Panel {
     }
 
     public void reset() {
-        skalOppretteOppgave.setObject(false);
+        skalOppretteOppgave.setObject(true);
         nyOppgaveForm.nullstillSkjema();
     }
 
