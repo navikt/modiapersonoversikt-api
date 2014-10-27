@@ -7,7 +7,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingServi
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
-import org.apache.wicket.markup.html.form.RadioGroup;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,14 +14,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-import java.util.List;
 
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNull;
 import static org.mockito.Matchers.any;
@@ -51,13 +47,7 @@ public class MerkePanelTest extends WicketPageTest {
 
     @Test
     public void skalGiFeilmeldingDersomManProverAaMarkereUtenAaVelgeKontorsperretEllerFeilsendt() {
-        wicket.goToPageWith(merkePanel)
-                .inForm(PANEL_MERK_FORM_ID)
-                .submitWithAjaxButton(withId("merk"));
-
-        List<String> errorMessages = wicket.get().errorMessages();
-        assertThat(errorMessages.isEmpty(), is(false));
-        assertThat(errorMessages, contains(wicket.get().component(ofType(RadioGroup.class)).getString(MERK_TYPE_RADIOGROUP_ID + ".Required")));
+        wicket.goToPageWith(merkePanel).should().containComponent(thatIsInvisible().withId("merk"));
     }
 
     @Test
@@ -81,7 +71,12 @@ public class MerkePanelTest extends WicketPageTest {
         wicket.goToPageWith(merkePanel)
                 .inForm(PANEL_MERK_FORM_ID)
                 .select(MERK_TYPE_RADIOGROUP_ID, 1)
-                .submitWithAjaxButton(withId("merk"));
+                .andReturn()
+                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class));
+
+        wicket.tester.executeAjaxEvent(wicket.get().component(withId("opprettOppgaveCheckbox")), "click");
+
+        wicket.inForm(PANEL_MERK_FORM_ID).submitWithAjaxButton(withId("merk"));
 
         verify(henvendelseBehandlingService).merkSomKontorsperret(eq(FNR), any(TraadVM.class));
     }
@@ -91,6 +86,9 @@ public class MerkePanelTest extends WicketPageTest {
         wicket.goToPageWith(merkePanel)
                 .inForm(PANEL_MERK_FORM_ID)
                 .select(MERK_TYPE_RADIOGROUP_ID, 0)
+                .andReturn()
+                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class))
+                .inForm(PANEL_MERK_FORM_ID)
                 .submitWithAjaxButton(withId("merk"));
 
         verify(henvendelseBehandlingService).merkSomFeilsendt(any(TraadVM.class));
@@ -101,6 +99,9 @@ public class MerkePanelTest extends WicketPageTest {
         wicket.goToPageWith(merkePanel)
                 .inForm(PANEL_MERK_FORM_ID)
                 .select(MERK_TYPE_RADIOGROUP_ID, 0)
+                .andReturn()
+                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class))
+                .inForm(PANEL_MERK_FORM_ID)
                 .submitWithAjaxButton(withId("merk"));
 
         assertNull(((MerkVM) merkePanel.get("merkForm").getDefaultModelObject()).getMerkType());
