@@ -71,7 +71,6 @@ public class Innboks extends Lerret {
         innboksVM.oppdaterMeldinger();
         if (target != null) {
             target.appendJavaScript("Meldinger.addKeyNavigation();");
-            target.appendJavaScript("Meldinger.focusOnSelectedElement();");
         }
     }
 
