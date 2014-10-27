@@ -5,6 +5,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -71,8 +72,10 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
             }
         });
 
+        String href = StringEscapeUtils.unescapeHtml3(cms.hentTekst("opplaeringslenke.href"));
+
         Component opplaeringslenke = new Label("opplaeringslenke", cms.hentTekst("opplaeringslenke.tekst"))
-                .add(new AttributeModifier("href", cms.hentTekst("opplaeringslenke.href")));
+                .add(new AttributeModifier("href", href));
 
         add(form, opplaeringslenke);
     }
