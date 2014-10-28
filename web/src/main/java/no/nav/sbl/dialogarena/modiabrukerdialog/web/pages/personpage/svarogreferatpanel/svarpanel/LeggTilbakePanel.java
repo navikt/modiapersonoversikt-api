@@ -29,9 +29,8 @@ import org.apache.wicket.model.StringResourceModel;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
-import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak.ANNEN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak.FEIL_TEMAGRUPPE;
@@ -64,11 +63,11 @@ public class LeggTilbakePanel extends Panel {
                 return getString(object.name());
             }
         });
-        temagruppevelgerWrapper.add(hasCssClassIf("skjult", not(isEqualTo(valgtAarsak, FEIL_TEMAGRUPPE))));
+        temagruppevelgerWrapper.add(visibleIf(isEqualTo(valgtAarsak, FEIL_TEMAGRUPPE)));
         temagruppevelgerWrapper.add(temagruppevelger);
 
         final TextArea annenAarsak = new TextArea("annenAarsakTekst");
-        annenAarsak.add(hasCssClassIf("skjult", not(isEqualTo(valgtAarsak, ANNEN))));
+        annenAarsak.add(visibleIf(isEqualTo(valgtAarsak, ANNEN)));
 
         final RadioGroup<Aarsak> aarsaker = new RadioGroup<>("valgtAarsak");
         aarsaker.setRequired(true);

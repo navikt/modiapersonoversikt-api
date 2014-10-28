@@ -6,15 +6,21 @@
     <h4 wicket:id="temagruppe"></h4>
     <form wicket:id="leggtilbakeform">
         <div wicket:id="valgtAarsak" class="valgtAarsak">
-            <input wicket:id="feiltema" type="radio" />
-            <label wicket:for="feiltema"><wicket:message key="leggtilbake.feiltema"/></label>
+            <div class="aarsak">
+                <input wicket:id="feiltema" type="radio" />
+                <label wicket:for="feiltema"><wicket:message key="leggtilbake.feiltema"/></label>
+            </div>
             <div wicket:id="temagruppewrapper" class="temagruppevelger-wrapper">
                 <select wicket:id="nyTemagruppe" class="temagruppevelger"></select>
             </div>
-            <input wicket:id="inhabil" type="radio" />
-            <label wicket:for="inhabil"><wicket:message key="leggtilbake.inhabil"/></label>
-            <input wicket:id="annen" type="radio" />
-            <label wicket:for="annen"><wicket:message key="leggtilbake.annenaarsak"/></label>
+            <div class="aarsak">
+                <input wicket:id="inhabil" type="radio" />
+                <label wicket:for="inhabil"><wicket:message key="leggtilbake.inhabil"/></label>
+            </div>
+            <div class="aarsak">
+                <input wicket:id="annen" type="radio" />
+                <label wicket:for="annen"><wicket:message key="leggtilbake.annenaarsak"/></label>
+            </div>
             <textarea wicket:id="annenAarsakTekst"></textarea>
         </div>
         <div wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
