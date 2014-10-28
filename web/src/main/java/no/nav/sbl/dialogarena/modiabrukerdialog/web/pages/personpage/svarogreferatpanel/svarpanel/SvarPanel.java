@@ -236,7 +236,7 @@ public class SvarPanel extends Panel {
                 kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey("svarpanel")), target,
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
             } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
-                error("svarform.feilmelding.oppgaveferdigstilt");
+                error(getString("svarform.feilmelding.oppgaveferdigstilt"));
                 sendKnapp.setVisibilityAllowed(false);
                 leggTilbakeKnapp.setVisibilityAllowed(false);
                 target.add(feedbackPanel, sendKnapp, leggTilbakeKnapp);
