@@ -33,7 +33,7 @@ public class SaksoversiktWidget extends FeedWidget<TemaVM> {
     public SaksoversiktWidget(String id, String initial, String fnr) {
         super(id, initial, true, "mange.saker");
         setDefaultModel(lagLDMforTema(fnr));
-        setMaxNumberOfFeedItems(6);
+        setMaxNumberOfFeedItems(5);
     }
 
     private LoadableDetachableModel<List<? extends FeedItemVM>> lagLDMforTema(final String fnr) {
