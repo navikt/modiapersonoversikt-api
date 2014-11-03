@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static no.nav.modig.core.context.SubjectHandler.SUBJECTHANDLER_KEY;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.DOKUMENTTYPE_UTGAAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.BREVKODE_SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.HOVEDDOKUMENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.INNHOLD_BESKRIVELSE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.KATEGORI_ELEKTRONISK_DIALOG;
@@ -51,7 +51,7 @@ public class JournalforingUtgaaendeTest extends TestDataJournalforing {
         assertThat(dokumentinfoRelasjon.getTillknyttetJournalpostSomKode(), is(HOVEDDOKUMENT));
 
         JournalfoertDokumentInfo dokumentInfo = dokumentinfoRelasjon.getJournalfoertDokument();
-        assertThat(dokumentInfo.getDokumentType().getValue(), is(DOKUMENTTYPE_UTGAAENDE));
+        assertThat(dokumentInfo.getDokumentType().getValue(), is(BREVKODE_SVAR));
         assertThat(dokumentInfo.isBegrensetPartsInnsyn(), is(false));
         assertThat(dokumentInfo.getKategorikode(), is(KATEGORI_ELEKTRONISK_DIALOG));
         assertThat(dokumentInfo.isSensitivitet(), is(false));

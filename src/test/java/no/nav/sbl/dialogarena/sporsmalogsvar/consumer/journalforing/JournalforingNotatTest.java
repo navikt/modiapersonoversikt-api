@@ -10,7 +10,7 @@ import org.junit.Test;
 
 import static no.nav.modig.core.context.SubjectHandler.SUBJECTHANDLER_KEY;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.DOKUMENTTYPE_NOTAT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.BREVKODE_NOTAT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.HOVEDDOKUMENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.INNHOLD_BESKRIVELSE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat.DOKUMENTTITTEL_OPPMOTE;
@@ -53,7 +53,7 @@ public class JournalforingNotatTest extends TestDataJournalforing {
         assertThat(dokumentinfoRelasjon.getTillknyttetJournalpostSomKode(), is(HOVEDDOKUMENT));
 
         JournalfoertDokumentInfo dokumentInfo = dokumentinfoRelasjon.getJournalfoertDokument();
-        assertThat(dokumentInfo.getDokumentType().getValue(), is(DOKUMENTTYPE_NOTAT));
+        assertThat(dokumentInfo.getDokumentType().getValue(), is(BREVKODE_NOTAT));
         assertThat(dokumentInfo.isBegrensetPartsInnsyn(), is(false));
         assertThat(dokumentInfo.isErOrganinternt(), is(false));
         assertThat(dokumentInfo.getKategorikode(), is(KATEGORIKODE));

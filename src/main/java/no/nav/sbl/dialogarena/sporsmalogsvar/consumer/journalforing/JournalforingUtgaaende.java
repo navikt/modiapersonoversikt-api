@@ -45,7 +45,7 @@ public class JournalforingUtgaaende extends Journalforing {
     private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForSvar(byte[] pdf) {
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
 
-        journalfoertDokumentInfo.setDokumentType(lagDokumenttype(DOKUMENTTYPE_UTGAAENDE));
+        journalfoertDokumentInfo.setDokumentType(lagDokumenttype(BREVKODE_SVAR));
         journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
         journalfoertDokumentInfo.setKategorikode(KATEGORI_ELEKTRONISK_DIALOG);
         journalfoertDokumentInfo.setSensitivitet(false);

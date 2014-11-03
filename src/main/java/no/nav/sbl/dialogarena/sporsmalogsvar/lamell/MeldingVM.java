@@ -12,7 +12,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.la
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagStatusIkonKlasse;
 
 
-public class MeldingVM implements Serializable {
+public class    MeldingVM implements Serializable {
 
     public final Melding melding;
 

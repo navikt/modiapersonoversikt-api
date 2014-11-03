@@ -31,9 +31,9 @@ public abstract class Journalforing {
     public static final String HOVEDDOKUMENT = "HOVEDDOKUMENT";
     public static final String KATEGORI_ELEKTRONISK_DIALOG = "ELEKTRONISK_DIALOG";
 
-    public static final String DOKUMENTTYPE_INNGAAENDE = "I";
-    public static final String DOKUMENTTYPE_NOTAT = "N";
-    public static final String DOKUMENTTYPE_UTGAAENDE = "U";
+    public static final String BREVKODE_SPORSMAL = "900021";
+    public static final String BREVKODE_SVAR = "GEN_SVAR_001";
+    public static final String BREVKODE_NOTAT = "GEN_NOT_003";
 
     public static final String KRYSSREFERANSE_KODE = "SPOERSMAAL";
     public static final String ARKIV_FILTYPE = "PDF";
@@ -95,7 +95,7 @@ public abstract class Journalforing {
     protected static Dokumenttyper lagDokumenttype(String type) {
         Dokumenttyper dokumenttyper = new Dokumenttyper();
         dokumenttyper.setValue(type);
-        if (type.equals(DOKUMENTTYPE_NOTAT)) {
+        if (type.equals(BREVKODE_NOTAT)) {
             dokumenttyper.setKodeRef(dokumenttyper.getKodeverksRef());
         }
         return dokumenttyper;

@@ -45,7 +45,7 @@ public class JournalforingInngaaende extends Journalforing {
     private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForSporsmal(byte[] pdf) {
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
 
-        journalfoertDokumentInfo.setDokumentType(lagDokumenttype(DOKUMENTTYPE_INNGAAENDE));
+        journalfoertDokumentInfo.setDokumentType(lagDokumenttype(BREVKODE_SPORSMAL));
         journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
         journalfoertDokumentInfo.setKategorikode(KATEGORI_ELEKTRONISK_DIALOG);
         journalfoertDokumentInfo.setSensitivitet(false);
