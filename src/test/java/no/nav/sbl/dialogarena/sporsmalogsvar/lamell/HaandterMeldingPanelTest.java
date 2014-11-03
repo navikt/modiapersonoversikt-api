@@ -88,7 +88,8 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
     @Test
     public void skalKunneJournalforeHvisNyesteMeldingIkkeErJournalfort() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-            createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1")));
+                createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1"),
+                createMelding("melding2", SVAR_SKRIFTLIG, now(), "TEMA", "melding1")));
 
         wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
             .should().containComponent(thatIsEnabled().and(withId(JOURNALFOR_VALG_ID)));
@@ -164,7 +165,8 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
     @Test
     public void skalViseJournalforingsPanelogSkjuleNyOppgavePanelVedKlikkPaaJournalfor() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-            createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1")));
+                createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1"),
+                createMelding("melding2", SVAR_SKRIFTLIG, now(), "TEMA", "melding1")));
 
         wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
             .printComponentsTree()
@@ -180,5 +182,14 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
 
         wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
             .should().containComponent(withId(PRINT_ID));
+    }
+
+    @Test
+    public void kanIkkeKunneJournalforeHvisSporsmalIkkeErBehandlet() {
+        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
+                createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1")));
+
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+                .should().containComponent(thatIsDisabled().and(withId(JOURNALFOR_VALG_ID)));
     }
 }

@@ -47,7 +47,7 @@ public class HaandterMeldingPanel extends Panel {
 
         JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforPanel", innboksVM);
         add(journalforingsPanel);
-        add(new MeldingValgPanel("journalforingValg", both(not(erKontorsperret)).and(not(erFeilsendt)).and(not(nyesteMeldingErJournalfort)), journalforingsPanel));
+        add(new MeldingValgPanel("journalforingValg", both(not(erKontorsperret)).and(not(erFeilsendt)).and(not(nyesteMeldingErJournalfort)).and(erBehandlet), journalforingsPanel));
 
         NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyoppgavePanel", innboksVM);
         add(nyOppgavePanel);
