@@ -49,6 +49,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_OVERSIKT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.HENVENDELSEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.OPPGAVEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.SVAR_OG_REFERAT_PANEL_ID;
@@ -159,7 +160,7 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void gittBaadeHenvendelseOgOppgaveUrlParamVisesSvarPanelOgMeldingsLamell() {
+    public void medHenvendelseOgOppgaveUrlParamVisesSvarPanelOgOversiktLamell() {
         String henvendelsesId = "id 1";
         String oppgaveId = "oppg1";
         wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelsesId);
@@ -168,7 +169,7 @@ public class PersonPageTest extends WicketPageTest {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
 
-        assertThat(((PersonPage) wicket.tester.getLastRenderedPage()).startLamell, is(LAMELL_MELDINGER));
+        assertThat(((PersonPage) wicket.tester.getLastRenderedPage()).startLamell, is(LAMELL_OVERSIKT));
         verify(henvendelseUtsendingService).getSporsmal(henvendelsesId);
         verify(henvendelseUtsendingService).getSvarEllerReferatForSporsmal(testFnr, henvendelsesId);
     }

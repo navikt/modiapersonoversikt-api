@@ -72,7 +72,7 @@ public class GsakOppgaveV3PortTypeMock {
                 .withOppgaveId(oppgaveId)
                 .withHenvendelseId(HenvendelsePortTypeMock.behandlingsId1)
                 .withOppgavetype(new WSOppgavetype().withKode("wsOppgavetype"))
-                .withGjelder(new WSBruker().withBrukerId("***REMOVED***"))
+                .withGjelder(new WSBruker().withBrukerId("10108000398"))
                 .withStatus(new WSStatus().withKode("statuskode"))
                 .withFagomrade(new WSFagomrade().withKode("HJE"))
                 .withAktivFra(now().toLocalDate())
