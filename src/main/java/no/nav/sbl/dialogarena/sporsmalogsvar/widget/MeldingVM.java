@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
+import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.time.Datoformat;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -41,7 +41,7 @@ public class MeldingVM implements FeedItemVM, Serializable {
     }
 
     public String getOpprettetDato() {
-        return Datoformat.kortMedTid(melding.opprettetDato);
+        return WidgetDateFormatter.dateTime(melding.opprettetDato);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.LocalDate;
 
@@ -25,12 +25,8 @@ public class MeldingVM implements Serializable {
     }
 
     public String getAvsenderTekst() {
-        return Datoformat.kortMedTid(melding.opprettetDato)
+        return WidgetDateFormatter.dateTime(melding.opprettetDato)
                 + (melding.navIdent != null ? " - " + melding.navIdent : "");
-    }
-
-    public String getLestDato() {
-        return Datoformat.kortMedTid(melding.lestDato);
     }
 
     public String getMeldingStatusTekstKey() {
@@ -42,7 +38,7 @@ public class MeldingVM implements Serializable {
     }
 
     public String getJournalfortDatoFormatert() {
-        return melding.journalfortDato == null ? "" : Datoformat.kort(melding.journalfortDato);
+        return melding.journalfortDato == null ? "" : WidgetDateFormatter.date(melding.journalfortDato);
     }
 
     public boolean isJournalfort() {
