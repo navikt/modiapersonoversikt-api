@@ -22,7 +22,7 @@ public class NyesteMeldingPanel extends GenericPanel<MeldingVM> {
         add(avsenderbilde);
         add(new JournalfortSkiller("journalfortSkiller", getModel()));
         add(new KontorsperreInfoPanel("kontorsperretInfo", innboksVM));
-        add(new FeilsendtInfoPanel("feilsendtInfo", innboksVM));
+        add(new FeilsendtInfoPanel("feilsendtInfo", getModel()));
         add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", getModel()))
                 .add(cssClass(new PropertyModel<String>(getModel(), "statusIkonKlasse"))));
         add(new Label("avsenderTekst"));

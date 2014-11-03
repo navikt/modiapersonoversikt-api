@@ -31,12 +31,15 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_TELEFON;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
+import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.subjectAttribute;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.TIL_MELDING;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -93,7 +96,7 @@ public class HenvendelseBehandlingService {
     }
 
     public void merkSomFeilsendt(TraadVM valgtTraad) {
-        List<String> behandlingsIdListe = on(valgtTraad.getMeldinger()).map(ID).collect();
+        List<String> behandlingsIdListe = on(valgtTraad.getMeldinger()).filter(where(FEILSENDT, equalTo(false))).map(ID).collect();
         behandleHenvendelsePortType.oppdaterTilKassering(behandlingsIdListe);
     }
 

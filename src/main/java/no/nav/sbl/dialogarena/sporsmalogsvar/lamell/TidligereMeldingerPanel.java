@@ -21,6 +21,7 @@ public class TidligereMeldingerPanel extends Panel {
             protected void populateItem(final ListItem<MeldingVM> item) {
                 final MeldingVM meldingVM = item.getModelObject();
                 item.add(new JournalfortSkiller("journalfortSkiller", item.getModel()));
+                item.add(new FeilsendtInfoPanel("feilsendtInfo", item.getModel()));
                 item.add(new AvsenderBilde("avsenderbilde", meldingVM));
                 item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getModel()))
                         .add(cssClass(item.getModelObject().getStatusIkonKlasse())));

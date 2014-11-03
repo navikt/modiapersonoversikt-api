@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.apache.commons.collections15.Transformer;
@@ -8,6 +9,7 @@ import org.joda.time.LocalDate;
 import java.io.Serializable;
 import java.util.Comparator;
 
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingStatusTekstKey;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagStatusIkonKlasse;
 
@@ -49,6 +51,14 @@ public class    MeldingVM implements Serializable {
         return melding.temagruppe != null ? melding.temagruppe : "temagruppe.kassert";
     }
 
+    public Boolean erFeilsendt() {
+        return getMarkertSomFeilsendtAv().isSome();
+    }
+
+    public Optional<String> getMarkertSomFeilsendtAv() {
+        return optional(melding.markertSomFeilsendtAv);
+    }
+
     public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {
         @Override
         public int compare(MeldingVM o1, MeldingVM o2) {
@@ -67,6 +77,13 @@ public class    MeldingVM implements Serializable {
         @Override
         public String transform(MeldingVM meldingVM) {
             return meldingVM.melding.traadId;
+        }
+    };
+
+    public static final Transformer<MeldingVM, Boolean> FEILSENDT = new Transformer<MeldingVM, Boolean>() {
+        @Override
+        public Boolean transform(MeldingVM meldingVM) {
+            return meldingVM.erFeilsendt();
         }
     };
 

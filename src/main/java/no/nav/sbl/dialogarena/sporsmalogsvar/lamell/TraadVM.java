@@ -11,10 +11,13 @@ import java.util.Map;
 
 import static java.util.Map.Entry;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
+import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SAMTALEREFERAT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.JOURNALFORT_DATO;
 
 public class TraadVM implements Serializable {
@@ -67,11 +70,7 @@ public class TraadVM implements Serializable {
     }
 
     public boolean erFeilsendt() {
-        return getMarkertSomFeilsendtAv().isSome();
-    }
-
-    public Optional<String> getMarkertSomFeilsendtAv() {
-        return optional(meldinger.get(0).melding.markertSomFeilsendtAv);
+        return !on(meldinger).filter(where(FEILSENDT, equalTo(true))).isEmpty();
     }
 
     public boolean bleInitiertAvBruker() {
