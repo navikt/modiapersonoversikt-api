@@ -436,12 +436,11 @@
         position: relative;
     }
 	.enhetsform {
-		max-width: 22%;
+		max-width: 23%;
 		margin: auto;
 	}
 	.enhetsvalg {
 		text-align: left;
-		margin-left: 32px;
         label {
           padding: 5px 5px 5px 37px;
           min-height: 22px;
@@ -449,11 +448,19 @@
         }
         input[type=radio] + label {
           background-position: 5px;
+          border: 1px solid transparent;
         }
         input[type=radio]:focus + label {
           border: 1px dashed @dodgerblue;
         }
 	}
+    .linje {
+      height: 1px;
+      width: 100%;
+      background-color: #d1d1d1;
+      border: none;
+      margin: 30px 0 40px;
+    }
 	.centered {
 		text-align: center;
 	}

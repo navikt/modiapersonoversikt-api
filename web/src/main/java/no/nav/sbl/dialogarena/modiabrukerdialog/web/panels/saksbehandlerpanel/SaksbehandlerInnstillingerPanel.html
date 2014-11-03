@@ -4,10 +4,11 @@
 <wicket:panel>
     <div class="saksbehandlerinnstillinger">
         <a href="#" wicket:id="opplaeringslenke" class="opplaeringslenke">[...]</a>
-        <h1 class="_H3">
-            <wicket:message key="enhetsvalg.overskrift"/>
-        </h1>
         <form wicket:id="enhetsform" class="centered enhetsform">
+            <h1 class="_H2">
+                <wicket:message key="enhetsvalg.overskrift"/>
+            </h1>
+            <div class="robust-strek"></div>
             <fieldset class="wcag">
                 <legend><wicket:message key="enhetsvalg.overskrift"/></legend>
                 <wicket:container wicket:id="enhet">
@@ -19,6 +20,7 @@
                     </div>
                 </wicket:container>
             </fieldset>
+            <hr class="linje" />
             <div class="midtstilt-innhold">
                 <input wicket:id="velg"
                        type="submit"
