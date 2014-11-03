@@ -14,6 +14,7 @@ jQuery(document).ready(function ($) {
     Modig.shortcutListener.on({alt: true, keyCode: 116}, closeResetPerson); // F5
     Modig.shortcutListener.on({alt: true, keyCode: 117}, focusLamellHead);  // F6
     Modig.shortcutListener.on({alt: true, keyCode: 118}, closeLamellHead);  // F7
+    Modig.shortcutListener.on({alt: true, keyCode: 71}, openGosys);  // Alt+g
 
     addPrintEventListener();
 
@@ -71,6 +72,10 @@ function focusLamellHead() {
 
 function closeLamellHead() {
     $('.lamell.selected button.close').click();
+}
+
+function openGosys() {
+    $('.hiddenGosysLenkePanel').click();
 }
 
 function closeResetPerson() {

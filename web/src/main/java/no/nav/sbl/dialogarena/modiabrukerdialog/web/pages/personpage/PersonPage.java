@@ -173,7 +173,7 @@ public class PersonPage extends BasePage {
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
         svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
 
-        visittkortTabListePanel = new VisitkortTabListePanel("kjerneinfotabs", createTabs());
+        visittkortTabListePanel = new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr);
 
     }
 
