@@ -12,8 +12,8 @@
 
     <cache name="endpointCache" maxElementsInMemory="10000"
            eternal="false"
-           timeToIdleSeconds="10"
-           timeToLiveSeconds="10"
+           timeToIdleSeconds="3"
+           timeToLiveSeconds="3"
            overflowToDisk="false"
            diskPersistent="false"
            memoryStoreEvictionPolicy="LRU"/>
