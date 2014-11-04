@@ -16,6 +16,7 @@ import org.apache.wicket.model.StringResourceModel;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.INNBOKS_OPPDATERT_EVENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.VALGT_MELDING_EVENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.JournalforingsPanel.TRAAD_JOURNALFORT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
@@ -80,6 +81,7 @@ public class AlleMeldingerPanel extends Panel {
                 send(getPage(), Broadcast.DEPTH, VALGT_MELDING_EVENT);
                 settFokusPaaValgtMelding(target);
             }
+            send(getPage(), Broadcast.DEPTH, INNBOKS_OPPDATERT_EVENT);
             target.add(this);
         }
     }

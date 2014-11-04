@@ -26,6 +26,7 @@ public class Innboks extends Lerret {
     public static final JavaScriptResourceReference MELDINGER_JS = new JavaScriptResourceReference(Innboks.class, "meldinger.js");
     public static final ConditionalCssResource MELDINGER_IE_CSS = new ConditionalCssResource(new CssResourceReference(Innboks.class, "innboks-ie.css"), "screen", "IE");
 
+    public static final String INNBOKS_OPPDATERT_EVENT = "sos.innboks.oppdatert";
     public static final String VALGT_MELDING_EVENT = "sos.innboks.valgt_melding";
     public static final String TRAAD_ID_PARAMETER_NAME = "henvendelseid";
 
