@@ -13,7 +13,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 
 public class JournalforingInngaaende extends Journalforing {
 
-    public static final String DOKUMENTTITTEL = "Sporsmal fra Ditt NAV";
+    public static final String DOKUMENTTITTEL = "Spørsmål fra Ditt NAV";
 
     public static Journalpost lagJournalforingSporsmal(Sak sak, Melding melding, String journalforendeEnhetId) {
         Journalpost journalpost = new Journalpost();
