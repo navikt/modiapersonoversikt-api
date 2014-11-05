@@ -31,7 +31,7 @@ public class BehandlingSakerListView extends PropertyListView<TemaVM> {
     protected void populateItem(ListItem<TemaVM> item) {
         TemaVM sakstema = item.getModelObject();
         item.add(
-                new BehandlingerListView("behandlinger", lerret.getBehandlingerForTema(sakstema), fnr),
+                new BehandlingerListView("behandlinger", lerret.getBehandlingerForTema(sakstema), fnr, sakstema),
                 new SaksinformasjonPanel("saksinformasjonContainer", sakstema.temakode),
                 new Label("sakstema-print", kodeverk.getTemanavnForTemakode(sakstema.temakode, ARKIVTEMA))
         ).setOutputMarkupId(true).setMarkupId("behandling_" + sakstema.temakode);

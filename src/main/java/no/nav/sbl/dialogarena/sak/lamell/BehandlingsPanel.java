@@ -19,7 +19,7 @@ public class BehandlingsPanel extends Panel {
     private BulletproofCmsService cms;
 
 
-    public BehandlingsPanel(String id, String tittel, Model<GenerellBehandling> behandlingModel) {
+    public BehandlingsPanel(String id, String tittel, Model<GenerellBehandling> behandlingModel, String sakstemakode) {
         super(id, behandlingModel);
 
         GenerellBehandling behandling = behandlingModel.getObject();
@@ -33,9 +33,18 @@ public class BehandlingsPanel extends Panel {
 
         add(
                 new Label("hendelse-tittel", tittel),
-                new Label("hendelse-beskrivelse", cms.hentTekst(beskrivelsesKey)),
+                new Label("hendelse-beskrivelse", forsokAaHenteSpesifikBeskrivelseForTemakode(beskrivelsesKey, sakstemakode)),
                 new Label("dato-topp", datoToppTekst),
                 new Label("dato-bunn", datoOpprettetTekst).add(visibleIf(of(erAvsluttet)))
         );
+    }
+
+    private String forsokAaHenteSpesifikBeskrivelseForTemakode(String key, String sakstemakode) {
+        String keyMedTemaKode = key + "." + sakstemakode;
+        if (cms.eksistererTekst(keyMedTemaKode)) {
+            return cms.hentTekst(keyMedTemaKode);
+        } else {
+            return cms.hentTekst(key);
+        }
     }
 }

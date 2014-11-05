@@ -23,7 +23,7 @@ public class BehandlingsPanelTest extends AbstractWicketTest {
                 .withOpprettetDato(dato)
                 .withBehandlingsDato(dato)
                 .withBehandlingStatus(OPPRETTET)
-        ));
+        ), "ag");
         wicketTester.goToPageWith(behandlingsPanel);
     }
 

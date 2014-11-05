@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService;
 import no.nav.sbl.dialogarena.sak.service.BulletproofCmsService;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling;
 import no.nav.sbl.dialogarena.sak.viewdomain.lamell.Kvittering;
+import no.nav.sbl.dialogarena.sak.viewdomain.widget.TemaVM;
 import org.apache.wicket.Component;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -33,12 +34,14 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
     @Inject
     private BulletProofKodeverkService kodeverk;
 
+    private String sakstemakode;
     private String fnr;
 
-    public BehandlingerListView(String id, List<GenerellBehandling> behandlinger, String fnr) {
+    public BehandlingerListView(String id, List<GenerellBehandling> behandlinger, String fnr, TemaVM temaVM) {
         super(id);
         setDefaultModel(ofList(behandlinger));
         this.fnr = fnr;
+        sakstemakode = temaVM.temakode;
     }
 
     @Override
@@ -66,7 +69,7 @@ public class BehandlingerListView extends PropertyListView<GenerellBehandling> {
             container.add(new KvitteringsPanel("behandling", getTittel(behandling), of((Kvittering)behandling), fnr));
         } else { //Behandling er GenerellBehandling
             container.add(hasCssClassIf("avsluttet", erAvsluttet));
-            container.add(new BehandlingsPanel("behandling", getTittel(behandling), of(behandling)));
+            container.add(new BehandlingsPanel("behandling", getTittel(behandling), of(behandling), sakstemakode));
         }
         return container;
     }
