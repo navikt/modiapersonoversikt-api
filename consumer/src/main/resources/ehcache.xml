@@ -82,7 +82,7 @@
 		   overflowToDisk="false"
 		   diskPersistent="false"
 		   eternal="false"
-		   timeToIdleSeconds="120"
+		   timeToIdleSeconds="3600"
 		   timeToLiveSeconds="86400"
 		   memoryStoreEvictionPolicy="FIFO"/>
 
@@ -90,7 +90,7 @@
 		   overflowToDisk="false"
 		   diskPersistent="false"
 		   eternal="false"
-		   timeToIdleSeconds="120"
+		   timeToIdleSeconds="3600"
 		   timeToLiveSeconds="86400"
 		   memoryStoreEvictionPolicy="FIFO"/>
 
@@ -98,7 +98,7 @@
 		   overflowToDisk="false"
 		   diskPersistent="false"
 		   eternal="false"
-		   timeToIdleSeconds="120"
+		   timeToIdleSeconds="3600"
 		   timeToLiveSeconds="86400"
 		   memoryStoreEvictionPolicy="FIFO"/>
 
@@ -106,7 +106,7 @@
 		   overflowToDisk="false"
 		   diskPersistent="false"
 		   eternal="false"
-		   timeToIdleSeconds="120"
+		   timeToIdleSeconds="3600"
 		   timeToLiveSeconds="86400"
 		   memoryStoreEvictionPolicy="FIFO"/>
 
