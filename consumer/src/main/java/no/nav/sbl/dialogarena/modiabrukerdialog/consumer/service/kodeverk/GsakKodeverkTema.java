@@ -9,9 +9,9 @@ import org.w3c.dom.Node;
 
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 
 public class GsakKodeverkTema implements Serializable {
@@ -19,7 +19,7 @@ public class GsakKodeverkTema implements Serializable {
     public static class Parser extends GsakKodeParser {
         private static final String KODE = "kode";
         private static final String DEKODE = "dekode";
-        private static final List<String> GODKJENTE_OPPGAVETYPER = Arrays.asList("KONT_BRUK", "VURD_HENV", "VUR_KONS_YTE", "OPPINF");
+        private static final List<String> GODKJENTE_OPPGAVETYPER = asList("KONT_BRUK", "VURD_HENV", "VUR_KONS_YTE");
 
         private static final Transformer<Node, GsakKodeTema.OppgaveType> NODE_OPPGAVE_TYPE_TRANSFORMER = new Transformer<Node, GsakKodeTema.OppgaveType>() {
             @Override
