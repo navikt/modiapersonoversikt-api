@@ -71,7 +71,6 @@ public class    MeldingVM implements Serializable {
     }
 
     public String getAvsenderBildeAltKey() {
-        String imgUrl = WebApplication.get().getServletContext().getContextPath() + "/img/";
         if (SVAR.contains(melding.meldingstype)|| SAMTALEREFERAT.contains(melding.meldingstype)) {
             return "innboks.avsender.nav";
         }
