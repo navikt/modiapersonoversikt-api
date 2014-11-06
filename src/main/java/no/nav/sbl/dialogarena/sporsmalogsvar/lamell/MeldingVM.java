@@ -4,12 +4,15 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.apache.commons.collections15.Transformer;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.Comparator;
 
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SAMTALEREFERAT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingStatusTekstKey;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagStatusIkonKlasse;
 
@@ -57,6 +60,22 @@ public class    MeldingVM implements Serializable {
 
     public Optional<String> getMarkertSomFeilsendtAv() {
         return optional(melding.markertSomFeilsendtAv);
+    }
+
+    public String getAvsenderBildeUrl() {
+        String imgUrl = WebApplication.get().getServletContext().getContextPath() + "/img/";
+        if (SVAR.contains(melding.meldingstype)|| SAMTALEREFERAT.contains(melding.meldingstype)) {
+            return imgUrl + "nav-logo.svg";
+        }
+        return imgUrl + "siluett.svg";
+    }
+
+    public String getAvsenderBildeAltKey() {
+        String imgUrl = WebApplication.get().getServletContext().getContextPath() + "/img/";
+        if (SVAR.contains(melding.meldingstype)|| SAMTALEREFERAT.contains(melding.meldingstype)) {
+            return "innboks.avsender.nav";
+        }
+        return "innboks.avsender.bruker";
     }
 
     public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {

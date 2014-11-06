@@ -62,19 +62,16 @@ public class AlleMeldingerPanel extends Panel {
 
     @RunOnEvents({MELDING_SENDT_TIL_BRUKER})
     public void oppdaterMeldingerEtterNyMelding(AjaxRequestTarget target) {
-        oppdaterMeldinger(target, true);
+        innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
+        target.add(this);
     }
 
     @RunOnEvents({TRAAD_MERKET, TRAAD_JOURNALFORT})
     public void oppdaterMeldingerEtterMerkingEllerJournalforing(AjaxRequestTarget target) {
-        oppdaterMeldinger(target, false);
-    }
-
-    private void oppdaterMeldinger(AjaxRequestTarget target, boolean settNyesteMeldingSomValgt) {
         if (this.isVisibleInHierarchy()) {
             innboksVM.oppdaterMeldinger();
             if (innboksVM.harTraader()) {
-                if (settNyesteMeldingSomValgt || innboksVM.getValgtTraad() == null) {
+                if (innboksVM.getValgtTraad() == null) {
                     innboksVM.setValgtMelding(innboksVM.getNyesteMeldingINyesteTraad());
                 }
                 target.appendJavaScript("Meldinger.addKeyNavigation();");

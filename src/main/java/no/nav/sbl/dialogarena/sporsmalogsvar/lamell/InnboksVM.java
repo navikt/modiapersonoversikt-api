@@ -119,7 +119,7 @@ public class InnboksVM implements Serializable {
     }
 
     public boolean harTraader() {
-        return !this.getTraader().isEmpty();
+        return !traader.isEmpty();
     }
 
     public AbstractReadOnlyModel<Boolean> harFeilmelding() {
