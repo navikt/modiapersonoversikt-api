@@ -3,4 +3,5 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 public enum Temagruppe {
     ARBD,
     FMLI,
+    HJLPM
 }
