@@ -8,7 +8,7 @@ $(document).on('click', '.temagruppe-liste', function (e) {
 
 $(document).on('click', '.velg-temagruppe', function (e) {
     $('.temagruppe-liste').toggle()
-        .find('[role=radiogroup]').blur().focus();
+        .find('.radiogroup').focus();
     e.stopPropagation();
 });
 
@@ -34,11 +34,12 @@ $(document).on('click', '.plukk-knapp', function (e) {
 });
 window.fokusPlukkOppgaveTemagruppe = function(){
     $('.temagruppe-liste').show()
-        .find('[role=radiogroup]').blur().focus();
+        .find('.radiogroup').focus();
 }
 $(document).on('keydown', '.plukk-knapp, .velg-temagruppe', function (e) {
     var $target = $(e.currentTarget);
     if (e.keyCode == 13 || e.keyCode == 32) {
         $target.click();
+        e.preventDefault();
     }
 });
