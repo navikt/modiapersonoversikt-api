@@ -7,9 +7,8 @@ $(document).on('click', '.temagruppe-liste', function (e) {
 });
 
 $(document).on('click', '.velg-temagruppe', function (e) {
-    $('.temagruppe-liste')
-        .toggle()
-        .find('input[type=radio]').first().blur().focus();
+    $('.temagruppe-liste').toggle()
+        .find('[role=radiogroup]').blur().focus();
     e.stopPropagation();
 });
 
