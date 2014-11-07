@@ -3,7 +3,7 @@
 <body>
 <wicket:panel>
     <article class="dialogpanel">
-        <section wicket:id="leggtilbakepanel" class="leggtilbake"></section>
+        <section wicket:id="leggtilbakepanel" class="leggtilbake" aria-expanded="false" aria-live="polite" aria-atomic="true"></section>
         <section class="traadcontainer">
             <div wicket:id="vistraadcontainer" class="ekspanderingcontainer vistraad">
                 <a class="vistraadlink">Vis tidligere meldingsdetaljer</a>
@@ -44,7 +44,7 @@
                        wicket:id="send"
                        wicket:message="value:svarform.knapp.send" />
             </form>
-            <a wicket:id="leggtilbake"><span wicket:id="leggtilbaketekst"></span></a>
+            <a wicket:id="leggtilbake" role="button"><span wicket:id="leggtilbaketekst"></span></a>
         </section>
     </article>
     <div wicket:id="kvittering" class="kvittering"></div>

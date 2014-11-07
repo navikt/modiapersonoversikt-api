@@ -13,6 +13,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandli
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -47,9 +48,7 @@ import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.OPPMOTE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
@@ -118,13 +117,19 @@ public class SvarPanel extends Panel {
                     traadContainer.setVisibilityAllowed(true);
                     animertVisningToggle(target, svarContainer);
                     animertVisningToggle(target, leggTilbakePanel);
+                    leggTilbakePanel.add(AttributeModifier.replace("aria-expanded", "true"));
                     target.add(SvarPanel.this);
                 } else {
                     send(SvarPanel.this, Broadcast.BUBBLE, SVAR_AVBRUTT);
                 }
             }
         };
-        leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("svarpanel.avbryt." + (svar.isEmpty() ? "leggtilbake" : "avbryt"))));
+        if (svar.isEmpty()) {
+            leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("svarpanel.avbryt.leggtilbake")));
+            leggTilbakeKnapp.add(AttributeModifier.replace("aria-controls", leggTilbakePanel.getMarkupId()));
+        } else {
+            leggTilbakeKnapp.add(new Label("leggtilbaketekst", new ResourceModel("svarpanel.avbryt.avbryt")));
+        }
 
         svarContainer.setOutputMarkupId(true);
         svarContainer.add(new SvarForm("svarform", lagModelObjectMedKanalOgTemagruppe()), leggTilbakeKnapp);
