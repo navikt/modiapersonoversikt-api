@@ -28,7 +28,7 @@ public class SaksbehandlerInnstillingerTogglerPanel extends Panel {
 
         PropertyModel<Boolean> ekspandertModel = new PropertyModel<>(this, "ekspandert");
         WebMarkupContainer toggleWrapper = new WebMarkupContainer("toggleWrapper");
-        toggleWrapper.add(new AjaxEventBehavior("click") {
+        add(new AjaxEventBehavior("click") {
             @Override
             protected void onEvent(AjaxRequestTarget target) {
                 send(getPage(), Broadcast.DEPTH, SAKSBEHANDLERINNSTILLINGER_TOGGLET);
