@@ -14,6 +14,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.attributeIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.INNBOKS_OPPDATERT_EVENT;
@@ -25,7 +26,7 @@ public class AlleMeldingerPanel extends Panel {
 
     private InnboksVM innboksVM;
 
-    public AlleMeldingerPanel(String id, final InnboksVM innboksVM) {
+    public AlleMeldingerPanel(String id, final InnboksVM innboksVM, final String traadDetaljerMarkupId) {
         super(id, new CompoundPropertyModel<>(innboksVM));
         setOutputMarkupId(true);
 
@@ -47,6 +48,8 @@ public class AlleMeldingerPanel extends Panel {
                 ));
 
                 item.add(hasCssClassIf("valgt", innboksVM.erValgtMelding(meldingVM)));
+                item.add(attributeIf("aria-selected", "true", innboksVM.erValgtMelding(meldingVM), true));
+                item.add(attributeIf("aria-controls", traadDetaljerMarkupId, innboksVM.erValgtMelding(meldingVM), true));
                 item.add(new AjaxEventBehavior("click") {
                     @Override
                     protected void onEvent(AjaxRequestTarget target) {
