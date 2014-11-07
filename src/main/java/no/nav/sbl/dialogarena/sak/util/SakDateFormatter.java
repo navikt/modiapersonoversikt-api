@@ -32,10 +32,6 @@ public class SakDateFormatter {
                 .print(dateTime);
     }
 
-    public static String printFullDate(DateTime dateTime) {
-        return String.format("%s, kl. %s", printLongDate(dateTime), printTime(dateTime));
-    }
-
     private static void throwExceptionIfNullDate(DateTime dateTime) {
         if (dateTime == null) {
             throw new ApplicationException("Kunne ikke formatere null-dato");

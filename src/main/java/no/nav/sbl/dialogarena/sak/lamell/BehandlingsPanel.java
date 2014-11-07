@@ -8,8 +8,8 @@ import org.apache.wicket.model.Model;
 
 import javax.inject.Inject;
 
+import static no.nav.modig.modia.widget.utils.WidgetDateFormatter.date;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.sak.util.SakDateFormatter.printLongDate;
 import static no.nav.sbl.dialogarena.sak.viewdomain.lamell.GenerellBehandling.BehandlingsStatus.AVSLUTTET;
 import static org.apache.wicket.model.Model.of;
 
@@ -23,8 +23,8 @@ public class BehandlingsPanel extends Panel {
         super(id, behandlingModel);
 
         GenerellBehandling behandling = behandlingModel.getObject();
-        String opprettetDato = printLongDate(behandling.opprettetDato);
-        String avsluttetDato = printLongDate(behandling.behandlingDato);
+        String opprettetDato = date(behandling.opprettetDato);
+        String avsluttetDato = date(behandling.behandlingDato);
 
         boolean erAvsluttet = behandling.behandlingsStatus.equals(AVSLUTTET);
         String beskrivelsesKey = erAvsluttet ? "behandling.beskrivelse.avsluttet" : "behandling.beskrivelse.underArbeid";

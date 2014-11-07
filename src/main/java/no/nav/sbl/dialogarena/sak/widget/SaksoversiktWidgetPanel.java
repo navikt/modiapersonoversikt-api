@@ -11,8 +11,8 @@ import org.joda.time.DateTime;
 import javax.inject.Inject;
 
 import static java.lang.String.format;
+import static no.nav.modig.modia.widget.utils.WidgetDateFormatter.date;
 import static no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService.ARKIVTEMA;
-import static no.nav.sbl.dialogarena.sak.util.SakDateFormatter.printLongDate;
 
 public class SaksoversiktWidgetPanel extends GenericPanel<TemaVM> {
 
@@ -29,7 +29,7 @@ public class SaksoversiktWidgetPanel extends GenericPanel<TemaVM> {
         DateTime sistOppdatert = temaVM.sistoppdaterteBehandling.behandlingDato;
         add(
                 new Label("temaTittel", kodeverk.getTemanavnForTemakode(temaVM.temakode, ARKIVTEMA)),
-                new Label("temaDato", format(cms.hentTekst("hendelse.sistoppdatert.dato"), printLongDate(sistOppdatert)))
+                new Label("temaDato", format(cms.hentTekst("hendelse.sistoppdatert.dato"), date(sistOppdatert)))
         );
     }
 }

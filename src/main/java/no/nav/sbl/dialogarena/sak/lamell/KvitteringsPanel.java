@@ -19,9 +19,9 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.lang.String.format;
+import static no.nav.modig.modia.widget.utils.WidgetDateFormatter.date;
+import static no.nav.modig.modia.widget.utils.WidgetDateFormatter.dateTime;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.sak.util.SakDateFormatter.printFullDate;
-import static no.nav.sbl.dialogarena.sak.util.SakDateFormatter.printLongDate;
 import static org.apache.wicket.model.Model.of;
 
 public class KvitteringsPanel extends Panel {
@@ -41,7 +41,7 @@ public class KvitteringsPanel extends Panel {
         int antallInnsendteVedlegg = kvittering.innsendteDokumenter.size();
         int totalAntallVedlegg = antallInnsendteVedlegg + kvittering.manglendeDokumenter.size();
 
-        String dato = printFullDate(kvittering.behandlingDato);
+        String dato = dateTime((kvittering.behandlingDato));
         String sendtAvString = cms.hentTekst("kvittering.sendt.av");
 
         String sendtInnTekst;
@@ -53,7 +53,7 @@ public class KvitteringsPanel extends Panel {
 
         add(
                 new Label("hendelse-tittel", tittel),
-                new Label("dato-topp", printLongDate(kvittering.behandlingDato)),
+                new Label("dato-topp", date(kvittering.behandlingDato)),
                 new Label("sendtAv", format(sendtAvString, fnr)),
                 new Label("kvitteringsinfo-bottom", cms.hentTekst("kvittering.info.bottom")).setEscapeModelStrings(false),
                 new Label("sendt-inn", sendtInnTekst),

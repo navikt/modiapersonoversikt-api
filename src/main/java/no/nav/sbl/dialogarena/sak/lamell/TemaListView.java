@@ -12,9 +12,9 @@ import org.apache.wicket.markup.html.list.PropertyListView;
 import javax.inject.Inject;
 import java.util.List;
 
+import static no.nav.modig.modia.widget.utils.WidgetDateFormatter.date;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.sbl.dialogarena.sak.service.BulletProofKodeverkService.ARKIVTEMA;
-import static no.nav.sbl.dialogarena.sak.util.SakDateFormatter.printLongDate;
 import static org.apache.wicket.model.Model.of;
 
 public class TemaListView extends PropertyListView<TemaVM> {
@@ -32,7 +32,7 @@ public class TemaListView extends PropertyListView<TemaVM> {
     @Override
     protected void populateItem(ListItem<TemaVM> item) {
         String sakstema = item.getModelObject().temakode;
-        String datoStreng = printLongDate(item.getModelObject().sistoppdaterteBehandling.behandlingDato);
+        String datoStreng = date(item.getModelObject().sistoppdaterteBehandling.behandlingDato);
         boolean sakstemaErValgt = sakstema.equals(lerret.getAktivtTema().getObject());
 
         item.add(new Temalenke("temalenke", sakstema, datoStreng));
