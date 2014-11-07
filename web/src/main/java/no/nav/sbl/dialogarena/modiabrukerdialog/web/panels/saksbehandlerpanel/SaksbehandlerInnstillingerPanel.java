@@ -77,12 +77,16 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         Component opplaeringslenke = new Label("opplaeringslenke", cms.hentTekst("opplaeringslenke.tekst"))
                 .add(new AttributeModifier("href", href));
 
+        oppdaterAriaLabel();
         add(form, opplaeringslenke);
     }
-
+    public void oppdaterAriaLabel() {
+        add(AttributeModifier.replace("aria-expanded", isVisibilityAllowed()));
+    }
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target) {
         animertVisningToggle(target, this);
+        oppdaterAriaLabel();
         target.appendJavaScript("SaksbehandlerInnstillinger.focus();");
         target.add(this);
     }

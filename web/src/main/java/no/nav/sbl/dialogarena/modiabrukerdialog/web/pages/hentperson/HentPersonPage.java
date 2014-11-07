@@ -42,9 +42,10 @@ public class HentPersonPage extends BasePage {
 	public HentPersonPage(PageParameters pageParameters) {
         HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel");
         setupErrorText(pageParameters, hentPersonPanel);
+        SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         add(
-                new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel"),
-                new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler"),
+                saksbehandlerInnstillingerPanel,
+                new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler", saksbehandlerInnstillingerPanel.getMarkupId()),
                 hentPersonPanel,
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true)

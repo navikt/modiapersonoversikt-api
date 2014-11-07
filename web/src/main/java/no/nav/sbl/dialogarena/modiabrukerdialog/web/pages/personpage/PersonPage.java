@@ -134,6 +134,7 @@ public class PersonPage extends BasePage {
         }
 
         instansierFelter();
+        SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         add(
                 hentPersonPanel,
                 searchToggleButton,
@@ -141,8 +142,8 @@ public class PersonPage extends BasePage {
                 lamellContainer,
                 redirectPopup,
                 oppgavetilordningFeiletPopup,
-                new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel"),
-                new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler"),
+                saksbehandlerInnstillingerPanel,
+                new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler",saksbehandlerInnstillingerPanel.getMarkupId()),
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),

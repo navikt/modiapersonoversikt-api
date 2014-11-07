@@ -5,8 +5,15 @@
         var $valg = $('.saksbehandlerinnstillinger .enhetsvalg');
         $valg.find(':checked').focus();
     }
+    function delay(func, time) {
+        return function(){
+            setTimeout(function(){
+                func();
+            }, time);
+        }
+    }
 
-    SaksbehandlerInnstillinger.focus = focusValgEnhet;
+    SaksbehandlerInnstillinger.focus = delay(focusValgEnhet, 0);
 
     window.SaksbehandlerInnstillinger = SaksbehandlerInnstillinger;
 })();
