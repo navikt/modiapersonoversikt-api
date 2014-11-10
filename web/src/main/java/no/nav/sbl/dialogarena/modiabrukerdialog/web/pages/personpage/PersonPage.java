@@ -217,6 +217,7 @@ public class PersonPage extends BasePage {
             startLamell = LAMELL_MELDINGER;
         } else if (isNotBlank(henvendelseId) && isNotBlank(oppgaveId)) {
             visSvarPanelForHenvendelseId(henvendelseId, oppgaveId);
+            startLamell = LAMELL_MELDINGER;
         }
     }
 

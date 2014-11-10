@@ -160,7 +160,7 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void medHenvendelseOgOppgaveUrlParamVisesSvarPanelOgOversiktLamell() {
+    public void medHenvendelseOgOppgaveUrlParamVisesSvarPanelOgMeldingLamell() {
         String henvendelsesId = "id 1";
         String oppgaveId = "oppg1";
         wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelsesId);
@@ -169,7 +169,7 @@ public class PersonPageTest extends WicketPageTest {
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
 
-        assertThat(((PersonPage) wicket.tester.getLastRenderedPage()).startLamell, is(LAMELL_OVERSIKT));
+        assertThat(((PersonPage) wicket.tester.getLastRenderedPage()).startLamell, is(LAMELL_MELDINGER));
         verify(henvendelseUtsendingService).getSporsmal(henvendelsesId);
         verify(henvendelseUtsendingService).getSvarEllerReferatForSporsmal(testFnr, henvendelsesId);
     }
