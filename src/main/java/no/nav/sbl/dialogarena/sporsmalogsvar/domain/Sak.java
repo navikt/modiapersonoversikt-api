@@ -60,9 +60,7 @@ public class Sak implements Serializable, Comparable<Sak> {
         }
     };
 
-    public String getOpprettetDatoFormatert() {
-        return Datoformat.kortMedTid(opprettetDato);
-    }
+    public String getOpprettetDatoFormatert() { return Datoformat.kort(opprettetDato); }
 
     @Override
     public int compareTo(Sak other) {
