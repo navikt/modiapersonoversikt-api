@@ -115,7 +115,7 @@ public class PlukkOppgavePanel extends Panel {
                 redirectForAaBesvareOppgave(oppgave.get().fnr, oppgave.get().henvendelseId, oppgave.get().oppgaveId);
             } else {
                 error(getString("plukkoppgave.ingenoppgaverpaatemagruppe"));
-                target.add(feedbackPanel);
+                target.add(feedbackPanel, PlukkOppgavePanel.this.velgtemagruppeKnapp);
             }
         }
 
