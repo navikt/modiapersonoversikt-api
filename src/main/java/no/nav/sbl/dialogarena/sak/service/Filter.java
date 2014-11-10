@@ -34,6 +34,7 @@ public class Filter {
     private final static Logger log = getLogger(Filter.class);
     public final static String DOKUMENTINNSENDING_KVITTERINGSTYPE = "ae0001";
     public final static String SEND_SOKNAD_KVITTERINGSTYPE = "ae0002";
+    public final static String ULOVLIG_PREFIX = "17";
 
     public List<GenerellBehandling> filtrerBehandlinger(List<GenerellBehandling> behandlinger) {
         lovligeBehandlingstyper = asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
@@ -47,6 +48,7 @@ public class Filter {
         ulovligeSakstema = asList(cms.hentTekst("filter.ulovligesakstema").trim().split("\\s*,\\s*"));
         lovligeBehandlingstyper = asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
         return on(saker)
+                .filter(HAR_LOVLIG_PREFIX_PAA_MINST_EN_BEHANDLING)
                 .filter(HAR_LOVLIG_SAKSTEMA)
                 .filter(HAR_BEHANDLINGER)
                 .filter(HAR_LOVLIG_STATUS_PAA_MINST_EN_BEHANDLING)
@@ -113,6 +115,18 @@ public class Filter {
             for (WSBehandlingskjede kjede : wsSak.getBehandlingskjede()) {
                 String type = kjede.getSisteBehandlingstype().getValue();
                 if ((erKvitteringstype(type) && erAvsluttet(kjede)) || lovligeBehandlingstyper.contains(type)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    };
+
+    private static final Predicate<? super WSSak> HAR_LOVLIG_PREFIX_PAA_MINST_EN_BEHANDLING = new Predicate<WSSak>() {
+        @Override
+        public boolean evaluate(WSSak wsSak) {
+            for (WSBehandlingskjede kjede : wsSak.getBehandlingskjede()) {
+                if (!kjede.getSisteBehandlingREF().startsWith(ULOVLIG_PREFIX)) {
                     return true;
                 }
             }
