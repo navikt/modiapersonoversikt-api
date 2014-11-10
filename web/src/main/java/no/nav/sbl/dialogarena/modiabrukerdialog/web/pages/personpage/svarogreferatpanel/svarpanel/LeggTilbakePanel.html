@@ -24,10 +24,15 @@
             <textarea wicket:id="annenAarsakTekst"></textarea>
         </div>
         <div wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
-        <a wicket:id="leggtilbake" class="knapp-hoved" role="knapp"><wicket:message key="leggtilbake.sendknapp"/></a>
+        <a wicket:id="leggtilbake" class="knapp-hoved-stor" role="knapp"><wicket:message key="leggtilbake.sendknapp"/></a>
         <br/>
         <a wicket:id="avbryt" role="knapp"><wicket:message key="leggtilbake.avbryt"/></a>
     </form>
+    <div wicket:id="feedbackOppgavePanel" class="oppgaveOpprettetFeedback" role="alert" aria-live="rude">
+        <div class="robust-ikon-gront-sjekk"></div>
+        <p><wicket:message key="leggtilbake.bekreftelse.tekst" /></p>
+        <a wicket:id="lukkKnapp" class="knapp-hoved-stor"><wicket:message key="leggtilbake.bekreftelse.knapp" /></a>
+    </div>
 </wicket:panel>
 </body>
 </html>

@@ -11,30 +11,19 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.FormComponent;
-import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioGroup;
-import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak.ANNEN;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak.FEIL_TEMAGRUPPE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak.INHABIL;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.Aarsak.*;
 import static org.apache.wicket.event.Broadcast.BUBBLE;
 
 public class LeggTilbakePanel extends Panel {
@@ -44,6 +33,8 @@ public class LeggTilbakePanel extends Panel {
 
     @Inject
     protected OppgaveBehandlingService oppgaveBehandlingService;
+
+    private IModel<Boolean> oppgaveLagtTilbake = Model.of(false);
 
     public LeggTilbakePanel(String id, String temagruppe, final Optional<String> oppgaveId) {
         super(id);
@@ -55,6 +46,7 @@ public class LeggTilbakePanel extends Panel {
         add(new Label("temagruppe", new ResourceModel(temagruppe, "")));
 
         Form<LeggTilbakeVM> form = new Form<>("leggtilbakeform", new CompoundPropertyModel<>(leggTilbakeVM));
+        form.add(visibleIf(not(oppgaveLagtTilbake)));
 
         WebMarkupContainer temagruppevelgerWrapper = new WebMarkupContainer("temagruppewrapper");
         final DropDownChoice<Temagruppe> temagruppevelger = new DropDownChoice<>("nyTemagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
@@ -104,6 +96,17 @@ public class LeggTilbakePanel extends Panel {
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
         form.add(feedbackPanel);
 
+        final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackOppgavePanel");
+        feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
+        feedbackPanelSuccess.add(visibleIf(oppgaveLagtTilbake));
+        feedbackPanelSuccess.add(new AjaxLink("lukkKnapp") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_UTFORT);
+            }
+        });
+        add(feedbackPanelSuccess);
+
         form.add(new AjaxButton("leggtilbake") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
@@ -113,7 +116,8 @@ public class LeggTilbakePanel extends Panel {
                                 new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
                         leggTilbakeVM.lagTemagruppeTekst()
                 );
-                send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_UTFORT);
+                oppgaveLagtTilbake.setObject(true);
+                target.add(form, feedbackPanelSuccess);
             }
 
             @Override
