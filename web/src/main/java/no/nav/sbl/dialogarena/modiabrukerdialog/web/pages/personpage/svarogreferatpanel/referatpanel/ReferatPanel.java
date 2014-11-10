@@ -170,7 +170,7 @@ public class ReferatPanel extends Panel {
     private void sendOgVisKvittering(AjaxRequestTarget target, Form<SvarOgReferatVM> form) {
         sendHenvendelse(svarOgReferatVM);
         send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
-        kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey("referatpanel")), target, form);
+        kvittering.visKvittering(target, getString(svarOgReferatVM.kanal.getKvitteringKey("referatpanel")), form);
     }
 
     private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) {

@@ -238,7 +238,7 @@ public class SvarPanel extends Panel {
             try {
                 sendHenvendelse(svarOgReferatVM);
                 send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
-                kvittering.visISekunder(3, getString(svarOgReferatVM.kanal.getKvitteringKey("svarpanel")), target,
+                kvittering.visKvittering(target, getString(svarOgReferatVM.kanal.getKvitteringKey("svarpanel")),
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
             } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
                 error(getString("svarform.feilmelding.oppgaveferdigstilt"));
