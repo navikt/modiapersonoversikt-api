@@ -3,6 +3,7 @@
 <body>
 <wicket:panel>
     <h2><wicket:message key="leggtilbake.overskrift"/></h2>
+    <div class="robust-strek"></div>
     <h4 wicket:id="temagruppe"></h4>
     <form wicket:id="leggtilbakeform">
         <div wicket:id="valgtAarsak" class="valgtAarsak">
@@ -24,6 +25,9 @@
             <textarea wicket:id="annenAarsakTekst"></textarea>
         </div>
         <div wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
+
+        <hr class="linje" />
+
         <a wicket:id="leggtilbake" class="knapp-hoved-stor" role="button"><wicket:message key="leggtilbake.sendknapp"/></a>
         <br/>
         <a wicket:id="avbryt" role="button"><wicket:message key="leggtilbake.avbryt"/></a>
