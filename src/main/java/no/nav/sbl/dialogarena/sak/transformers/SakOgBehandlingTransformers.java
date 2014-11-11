@@ -43,6 +43,7 @@ public class SakOgBehandlingTransformers {
                             .withBehandlingsDato(behandlingsDato(wsBehandlingskjede))
                             .withOpprettetDato(wsBehandlingskjede.getStart())
                             .withBehandlingsType(wsBehandlingskjede.getSisteBehandlingstype().getValue())
+                            .withPrefix(wsBehandlingskjede.getSisteBehandlingREF().substring(0, 2))
                             .withBehandlingStatus(behandlingsStatus(wsBehandlingskjede));
                     WSBehandlingstemaer behandlingstema = wsBehandlingskjede.getBehandlingstema();
                     if (behandlingstema != null) {

@@ -22,6 +22,7 @@ public class GenerellBehandling implements Serializable {
     public HenvendelseType henvendelseType;
     public String behandlingstema;
     public String sakstema;
+    public String prefix;
 
     public GenerellBehandling withBehandlingsType(String type)  {
         behandlingsType = type;
@@ -60,6 +61,11 @@ public class GenerellBehandling implements Serializable {
 
     public GenerellBehandling withHenvendelseType(HenvendelseType henvendelseType) {
         this.henvendelseType = henvendelseType;
+        return this;
+    }
+
+    public GenerellBehandling withPrefix(String prefix) {
+        this.prefix = prefix;
         return this;
     }
 }

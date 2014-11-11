@@ -41,7 +41,10 @@ public class Filter {
         ArrayList<GenerellBehandling> allebehandlinger = new ArrayList<>();
         allebehandlinger.addAll(on(behandlinger).filter(ER_AVSLUTTET_KVITTERING).collect());
         allebehandlinger.addAll(on(behandlinger).filter(HAR_LOVLIG_BEHANDLINGSTYPE).collect());
-        return on(allebehandlinger).filter(HAR_LOVLIG_BEHANDLINGSSTATUS).collect(new OmvendtKronologiskBehandlingComparator());
+        return on(allebehandlinger)
+                .filter(HAR_LOVLIG_BEHANDLINGSSTATUS)
+                .filter(HAR_LOVLIG_PREFIX)
+                .collect(new OmvendtKronologiskBehandlingComparator());
     }
 
     public List<WSSak> filtrerSaker(List<WSSak> saker) {
@@ -87,6 +90,13 @@ public class Filter {
                 return true;
             }
             return false;
+        }
+    };
+
+    private static final Predicate<GenerellBehandling> HAR_LOVLIG_PREFIX = new Predicate<GenerellBehandling>() {
+        @Override
+        public boolean evaluate(GenerellBehandling behandling) {
+            return !ULOVLIG_PREFIX.equals(behandling.prefix);
         }
     };
 
