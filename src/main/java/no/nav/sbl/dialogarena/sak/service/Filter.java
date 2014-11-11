@@ -25,16 +25,16 @@ public class Filter {
     public static final String AVBRUTT = "avbrutt";
     public static final String AVSLUTTET = "avsluttet";
 
+    public final static String DOKUMENTINNSENDING_KVITTERINGSTYPE = "ae0001";
+    public final static String SEND_SOKNAD_KVITTERINGSTYPE = "ae0002";
+    public final static String ULOVLIG_PREFIX = "17";
+
     @Inject
     private CmsContentRetriever cms;
-
     private static List<String> ulovligeSakstema;
     private static List<String> lovligeBehandlingstyper;
 
     private final static Logger log = getLogger(Filter.class);
-    public final static String DOKUMENTINNSENDING_KVITTERINGSTYPE = "ae0001";
-    public final static String SEND_SOKNAD_KVITTERINGSTYPE = "ae0002";
-    public final static String ULOVLIG_PREFIX = "17";
 
     public List<GenerellBehandling> filtrerBehandlinger(List<GenerellBehandling> behandlinger) {
         lovligeBehandlingstyper = asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
@@ -56,6 +56,10 @@ public class Filter {
                 .filter(HAR_BEHANDLINGER)
                 .filter(HAR_LOVLIG_STATUS_PAA_MINST_EN_BEHANDLING)
                 .filter(HAR_LOVLIGE_BEHANDLINGSTYPER_ELLER_KVITTERINGER).collect();
+    }
+
+    public static boolean erKvitteringstype(String type) {
+        return SEND_SOKNAD_KVITTERINGSTYPE.equals(type) || DOKUMENTINNSENDING_KVITTERINGSTYPE.equals(type);
     }
 
     private static final Predicate<? super WSSak> HAR_LOVLIG_STATUS_PAA_MINST_EN_BEHANDLING = new Predicate<WSSak>() {
@@ -143,10 +147,6 @@ public class Filter {
             return false;
         }
     };
-
-    public static boolean erKvitteringstype(String type) {
-        return SEND_SOKNAD_KVITTERINGSTYPE.equals(type) || DOKUMENTINNSENDING_KVITTERINGSTYPE.equals(type);
-    }
 
     private static final Predicate<WSSak> HAR_BEHANDLINGER = new Predicate<WSSak>() {
         @Override
