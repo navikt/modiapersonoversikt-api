@@ -6,20 +6,20 @@
     <div class="robust-strek"></div>
     <h4 wicket:id="temagruppe"></h4>
     <form wicket:id="leggtilbakeform">
-        <div wicket:id="valgtAarsak" class="valgtAarsak">
+        <div wicket:id="valgtAarsak" class="valgtAarsak" role="radiogroup" tabindex="-1" wicket:message="aria-label:aria.radiogroup.tekst">
             <div class="aarsak">
-                <input wicket:id="feiltema" type="radio" />
+                <input wicket:id="feiltema" type="radio" wicket:message="aria-label:leggtilbake.feiltema"/>
                 <label wicket:for="feiltema"><wicket:message key="leggtilbake.feiltema"/></label>
                 <div wicket:id="temagruppewrapper" class="temagruppevelger-wrapper">
                     <select wicket:id="nyTemagruppe" class="temagruppevelger"></select>
                 </div>
             </div>
             <div class="aarsak">
-                <input wicket:id="inhabil" type="radio" />
+                <input wicket:id="inhabil" type="radio" wicket:message="aria-label:leggtilbake.inhabil"/>
                 <label wicket:for="inhabil"><wicket:message key="leggtilbake.inhabil"/></label>
             </div>
             <div class="aarsak">
-                <input wicket:id="annen" type="radio" />
+                <input wicket:id="annen" type="radio" wicket:message="aria-label:leggtilbake.annenaarsak" />
                 <label wicket:for="annen"><wicket:message key="leggtilbake.annenaarsak"/></label>
             </div>
             <textarea wicket:id="annenAarsakTekst"></textarea>
@@ -28,7 +28,7 @@
 
         <hr class="linje" />
 
-        <a wicket:id="leggtilbake" class="knapp-hoved-stor" role="button" tabindex="0"><wicket:message key="leggtilbake.sendknapp"/></a>
+        <a wicket:id="leggtilbake" href="#" class="knapp-hoved-stor" role="button" ><wicket:message key="leggtilbake.sendknapp"/></a>
         <br/>
         <a wicket:id="avbryt" role="button"><wicket:message key="leggtilbake.avbryt"/></a>
     </form>
