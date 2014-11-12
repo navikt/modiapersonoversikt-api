@@ -70,7 +70,7 @@
         <dialogarena.behandlingsinformasjon.version>0.0.25</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>1.2</modiabrukerdialog-api.version>
         <sporsmalogsvar.version>1.32</sporsmalogsvar.version>
-        <saksoversikt.version>1.16</saksoversikt.version>
+        <saksoversikt.version>1.17</saksoversikt.version>
     </properties>
 
     <dependencyManagement>
