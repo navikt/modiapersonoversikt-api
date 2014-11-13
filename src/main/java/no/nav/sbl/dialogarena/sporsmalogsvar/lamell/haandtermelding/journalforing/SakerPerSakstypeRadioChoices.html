@@ -4,11 +4,11 @@
 <head></head>
 <body>
 <wicket:panel>
-    <h2 class="medium sakstype">
-        <span wicket:id="link"><wicket:container wicket:id="sakstype"/></span>
+    <a wicket:id="link" class="medium sakstype" tabindex="0" role="role">
+        <span><wicket:container wicket:id="sakstype"/></span>
         <i wicket:id="pil" class="pil"></i>
-    </h2>
-    <div class="sakswrapper">
+    </a>
+    <div wicket:id="sakswrapper" class="sakswrapper">
         <hr class="linje"/>
         <wicket:container wicket:id="saksgruppeliste">
             <div class="saklisteelement">
