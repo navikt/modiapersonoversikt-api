@@ -12,6 +12,7 @@ import org.apache.wicket.model.AbstractReadOnlyModel;
 public class KvitteringsPanel extends Panel {
 
     public static final String KVITTERING_VIST = "kvittering.vist";
+    private final AjaxLink skjulKvitteringKnapp;
 
     private String kvitteringsmelding;
     private Component[] komponenter = {};
@@ -26,7 +27,7 @@ public class KvitteringsPanel extends Panel {
                 return kvitteringsmelding;
             }
         }));
-        add(new AjaxLink("skjulKvittering") {
+        skjulKvitteringKnapp = new AjaxLink("skjulKvittering") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 KvitteringsPanel.this.setVisibilityAllowed(false);
@@ -37,7 +38,8 @@ public class KvitteringsPanel extends Panel {
                 target.add(komponenter);
                 send(getPage(), Broadcast.BREADTH, new NamedEventPayload(KVITTERING_VIST));
             }
-        });
+        };
+        add(skjulKvitteringKnapp);
     }
 
     public void visKvittering(AjaxRequestTarget target, String kvitteringsmelding, final Component... komponenter) {
@@ -49,5 +51,6 @@ public class KvitteringsPanel extends Panel {
         this.setVisibilityAllowed(true);
         target.add(this);
         target.add(komponenter);
+        target.focusComponent(skjulKvitteringKnapp);
     }
 }

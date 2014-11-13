@@ -60,25 +60,14 @@ import java.util.List;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGANG;
-import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
-import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
-import static no.nav.modig.modia.events.InternalEvents.LAMELL_LINK_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
-import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
-import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_OVERSIKT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -143,7 +132,7 @@ public class PersonPage extends BasePage {
                 redirectPopup,
                 oppgavetilordningFeiletPopup,
                 saksbehandlerInnstillingerPanel,
-                new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler",saksbehandlerInnstillingerPanel.getMarkupId()),
+                new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler", saksbehandlerInnstillingerPanel.getMarkupId()),
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
@@ -182,13 +171,13 @@ public class PersonPage extends BasePage {
         List tabs = new ArrayList();
         tabs.add(new AbstractTabPanel(new Model("img/familie_ikon.svg"), "familie") {
             @Override
-            public WebMarkupContainer getPanel(String panelId ) {
+            public WebMarkupContainer getPanel(String panelId) {
                 return new PersonKjerneinfoPanel(panelId, fnr);
             }
         });
         tabs.add(new AbstractTabPanel(new Model("svg/kjerneinfo/lenker_ikon.svg"), "lenker") {
             @Override
-            public WebMarkupContainer getPanel(String panelId ) {
+            public WebMarkupContainer getPanel(String panelId) {
                 return new EksterneLenkerPanel(panelId, fnr);
             }
         });
@@ -330,7 +319,7 @@ public class PersonPage extends BasePage {
         svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svarTilSporsmal, oppgaveId));
     }
 
-    @RunOnEvents({KVITTERING_VIST, LEGG_TILBAKE_UTFORT, SVAR_AVBRUTT})
+    @RunOnEvents({KVITTERING_VIST, LEGG_TILBAKE_FERDIG, SVAR_AVBRUTT})
     public void visReferatPanel(AjaxRequestTarget target) {
         svarOgReferatPanel = svarOgReferatPanel.replaceWith(new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr));
         target.add(svarOgReferatPanel);
@@ -409,7 +398,7 @@ public class PersonPage extends BasePage {
     }
 
     private String getJsonField(String query, String field) throws JSONException {
-        JSONObject jsonObject =  new JSONObject(query);
+        JSONObject jsonObject = new JSONObject(query);
         if (jsonObject.has(field)) {
             return new JSONObject(query).getString(field);
         } else {

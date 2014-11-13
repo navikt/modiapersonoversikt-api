@@ -30,6 +30,7 @@ public class LeggTilbakePanel extends Panel {
 
     public static final String LEGG_TILBAKE_AVBRUTT = "leggtilbake.avbrutt";
     public static final String LEGG_TILBAKE_UTFORT = "leggtilbake.utfort";
+    public static final String LEGG_TILBAKE_FERDIG = "leggtilbake.ferdig";
 
     @Inject
     protected OppgaveBehandlingService oppgaveBehandlingService;
@@ -99,12 +100,13 @@ public class LeggTilbakePanel extends Panel {
         final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackOppgavePanel");
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
         feedbackPanelSuccess.add(visibleIf(oppgaveLagtTilbake));
-        feedbackPanelSuccess.add(new AjaxLink("lukkKnapp") {
+        final AjaxLink lukkKnapp = new AjaxLink("lukkKnapp") {
             @Override
             public void onClick(AjaxRequestTarget target) {
-                send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_UTFORT);
+                send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_FERDIG);
             }
-        });
+        };
+        feedbackPanelSuccess.add(lukkKnapp);
         add(feedbackPanelSuccess);
 
         form.add(new AjaxButton("leggtilbake") {
@@ -117,7 +119,10 @@ public class LeggTilbakePanel extends Panel {
                         leggTilbakeVM.lagTemagruppeTekst()
                 );
                 oppgaveLagtTilbake.setObject(true);
+                send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_UTFORT);
+
                 target.add(form, feedbackPanelSuccess);
+                target.focusComponent(lukkKnapp);
             }
 
             @Override
