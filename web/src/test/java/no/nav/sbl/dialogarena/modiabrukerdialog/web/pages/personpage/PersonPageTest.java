@@ -57,6 +57,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.Pers
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -206,7 +207,7 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void erstatterSvarOgReferatPanelMedReferatPanelVedRiktigeEvents() {
         assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(KVITTERING_VIST);
-        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(LEGG_TILBAKE_UTFORT);
+        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(LEGG_TILBAKE_FERDIG);
         assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(SVAR_AVBRUTT);
     }
 
