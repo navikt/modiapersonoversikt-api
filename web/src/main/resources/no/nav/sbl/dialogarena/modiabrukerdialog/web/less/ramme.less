@@ -35,8 +35,9 @@
 	background-color: #fff;
 	border: none;
 	font-size: 1.8rem;
-	&:hover {
+	&:hover, &:focus {
 		background-color: @blue;
+        outline: none;
 	}
 	&:active {
 		.personsok-pil {
@@ -416,8 +417,8 @@
     float: right;
     .pil(8px, #fff);
   }
-  &:focus {
-    border: 1px dashed @grayLight;
+  &:focus, &:hover {
+    outline: 1px dashed @grayLight;
   }
 }
 
@@ -496,6 +497,15 @@
 				background-position: center;
 				background-size: 30px;
                 float: left;
+                &:focus, &:hover {
+                  background-color: @blue;
+                  outline:none;
+
+                  &:after {
+                    border-top-color: @blue;
+                    outline:none;
+                  }
+                }
                 &.plukket {
                   background-image: url(../img/ajaxloader/hvit/loader_hvit_32.gif);
                 }
@@ -524,13 +534,13 @@
 				font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
 				font-size: 1.14rem;
 				font-weight: 600;
+                &:focus, &:hover {
+                  border: 1px solid @blue;
+                }
 			}
 			&:hover {
 				cursor: pointer;
 				text-decoration: none;
-            }
-            &:focus {
-              border: 1px solid @blue;
             }
         }
 		.temagruppe-liste {
