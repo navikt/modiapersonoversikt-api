@@ -119,6 +119,7 @@ public class SvarPanel extends Panel {
                     animertVisningToggle(target, leggTilbakePanel);
                     leggTilbakePanel.add(AttributeModifier.replace("aria-expanded", "true"));
                     target.add(SvarPanel.this);
+                    target.focusComponent(leggTilbakePanel.hentForsteFokusKomponent());
                 } else {
                     send(SvarPanel.this, Broadcast.BUBBLE, SVAR_AVBRUTT);
                 }
@@ -161,6 +162,7 @@ public class SvarPanel extends Panel {
         animertVisningToggle(target, svarContainer);
         animertVisningToggle(target, leggTilbakePanel);
         target.add(this);
+        target.focusComponent(leggTilbakeKnapp);
     }
 
     private class SvarForm extends Form<SvarOgReferatVM> {

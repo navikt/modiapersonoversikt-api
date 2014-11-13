@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -31,11 +32,13 @@ public class LeggTilbakePanel extends Panel {
     public static final String LEGG_TILBAKE_AVBRUTT = "leggtilbake.avbrutt";
     public static final String LEGG_TILBAKE_UTFORT = "leggtilbake.utfort";
     public static final String LEGG_TILBAKE_FERDIG = "leggtilbake.ferdig";
+    private final Radio<Aarsak> feiltema;
 
     @Inject
     protected OppgaveBehandlingService oppgaveBehandlingService;
 
     private IModel<Boolean> oppgaveLagtTilbake = Model.of(false);
+    private final RadioGroup<Aarsak> aarsaker;
 
     public LeggTilbakePanel(String id, String temagruppe, final Optional<String> oppgaveId) {
         super(id);
@@ -61,10 +64,11 @@ public class LeggTilbakePanel extends Panel {
 
         final TextArea annenAarsak = new TextArea("annenAarsakTekst");
         annenAarsak.add(visibleIf(isEqualTo(valgtAarsak, ANNEN)));
+        feiltema = new Radio<>("feiltema", Model.of(FEIL_TEMAGRUPPE));
 
-        final RadioGroup<Aarsak> aarsaker = new RadioGroup<>("valgtAarsak");
+        aarsaker = new RadioGroup<>("valgtAarsak");
         aarsaker.setRequired(true);
-        aarsaker.add(new Radio<>("feiltema", Model.of(FEIL_TEMAGRUPPE)));
+        aarsaker.add(feiltema);
         aarsaker.add(temagruppevelgerWrapper);
         aarsaker.add(new Radio<>("inhabil", Model.of(INHABIL)));
         aarsaker.add(new Radio<>("annen", Model.of(ANNEN)));
@@ -152,4 +156,7 @@ public class LeggTilbakePanel extends Panel {
         response.render(OnDomReadyHeaderItem.forScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});"));
     }
 
+    public Component hentForsteFokusKomponent() {
+        return feiltema;
+    }
 }
