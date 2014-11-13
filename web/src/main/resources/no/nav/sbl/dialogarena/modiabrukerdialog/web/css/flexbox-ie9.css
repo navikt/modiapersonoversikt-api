@@ -22,3 +22,6 @@
 .personpanel > div > div.row > .sidebar-venstre,.sidebar-hoyre,.main-content {
     display: table-cell;
 }
+.personpanel > div > div.row > .sidebar-venstre {
+    vertical-align: top;
+}
