@@ -135,98 +135,78 @@
 	.tekstfelt {
 		margin: 0 @sideMargin;
 	}
-	.temagruppevelger-wrapper {
-		margin: 0 @sideMargin;
-		position: relative;
-		.temagruppevelger {
-			width: 100%;
-		}
-		.ui-front {
-			z-index: 100;
-		}
-		.ui-menu {
-			list-style: none;
-			padding: 0;
-			margin: 0;
-			display: block;
-			outline: none;
-			.ui-menu-item {
-				position: relative;
-				margin: 0;
-				padding: 0.5em 2.3em;
-				cursor: pointer;
-				min-height: 0;
-                color: white;
+    .temagruppevelger-wrapper {
+      margin: 0 @sideMargin;
+      position: relative;
+      .temagruppevelger {
+        width: 100%;
+      }
+      .ui-front {
+        z-index: 100;
+      }
+      .ui-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: block;
+        outline: none;
+        .ui-menu-item {
+          position: relative;
+          margin: 0;
+          padding: 0.5em 1em;
+          cursor: pointer;
+          min-height: 0;
+        }
+        .ui-state-focus, .ui-state-active {
+          background-color: #0067c5;
+          color: #fff;
+        }
+      }
+      .ui-selectmenu-menu {
+        padding: 0;
+        margin: 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: none;
+        background-color: #fff;
+        box-shadow: 0 5px 8px 0 #cccccc;
+      }
+      .ui-selectmenu-open {
+        display: block;
+      }
+      .ui-selectmenu-button {
+        display: inline-block;
+        overflow: hidden;
+        position: relative;
+        cursor: pointer;
+        font-weight: bold;
+        background-color: #fff;
+        border: 1px solid #cccccc;
+        span {
+          &.ui-icon {
+            position: absolute;
+            height: 0;
+            width: 0;
+            border: 8px solid transparent;
+            border-top-color: #0067c5;
+            right: 1em;
+            top: 12px;
+          }
+          &.ui-selectmenu-text {
+            padding: 0.5em 1em;
+            display: block;
+            line-height: 1.4;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+          }
+        }
+      }
+    }
+    .aarsak.feiltema .temagruppevelger-wrapper {
 
-                &:first-child {
-                  color: #b7b1a9;
-                }
-			}
-			.ui-state-focus, .ui-state-active {
-              color: #00a9e0;
-              background-color: #333;
-              padding: 0.5em 1.1em;
-
-              &:first-child {
-                padding: 0.5em 2.3em;
-              }
-              &:not(:first-child) {
-                &:before {
-                  content: '';
-                  width: 6px;
-                  height: 6px;
-                  border-radius: 3px;
-                  display: inline-block;
-                  background-color: #00a9e0;
-                  margin-right: 10px;
-                  margin-bottom: 1px;
-                }
-              }
-			}
-		}
-		.ui-selectmenu-menu {
-			padding: 0;
-			margin: 0;
-			position: absolute;
-			top: 0;
-			left: 0;
-			display: none;
-			background-color: #fff;
-			box-shadow: 0 5px 8px 0 #cccccc;
-		}
-		.ui-selectmenu-open {
-			display: block;
-		}
-		.ui-selectmenu-button {
-            outline: none !important;
-			display: inline-block;
-			overflow: hidden;
-			position: relative;
-			cursor: pointer;
-			font-weight: bold;
-			background-color: #fff;
-			border: 1px solid #cccccc;
-			span {
-				&.ui-icon {
-					position: absolute;
-					height: 0;
-					width: 0;
-					border: 8px solid transparent;
-					border-top-color: #0067c5;
-					right: 1em;
-					top: 12px;
-				}
-				&.ui-selectmenu-text {
-					padding: 0.5em 2.3em;
-					display: block;
-					line-height: 1.4;
-					overflow: hidden;
-					text-overflow: ellipsis;
-					white-space: nowrap;
-				}
-			}
-		}
-	}
+    }
 	.feedback {
 		margin: 0 @sideMargin;
 	}
@@ -271,28 +251,71 @@
 	.knapp-hoved-stor {
 		color: #fff;
 	}
-	.temagruppevelger-wrapper {
-		margin: 0px 0 0 5px;
-        .ui-selectmenu-button {
-          background-color: #333333;
-          color: white;
-          border: 0;
-
-          span.ui-icon {
-            border-top-color: #00a9e0;
+    .temagruppevelger-wrapper {
+      margin: 0px 0 0 5px;
+      .ui-selectmenu-menu {
+        box-shadow: none;
+        >ul {
+          border: 1px solid #999;
+          li {
+            background-color: #333;
+            color: #b7b1a0;
           }
         }
-		.ui-selectmenu-menu {
-			box-shadow: none;
-            >ul {
-              border: 1px solid #999;
-              li {
-                background-color: #333;
-                color: #b7b1a9;
-              }
+      }
+      .ui-menu {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: block;
+        outline: none;
+        .ui-menu-item {
+          position: relative;
+          margin: 0;
+          padding: 0.5em 2.3em;
+          cursor: pointer;
+          min-height: 0;
+          color: white;
+
+          &:first-child {
+            color: #b7b1a9;
+          }
+        }
+        .ui-state-focus, .ui-state-active {
+          color: #00a9e0;
+          background-color: #333;
+          padding: 0.5em 1.1em;
+
+          &:first-child {
+            padding: 0.5em 2.3em;
+          }
+          &:not(:first-child) {
+            &:before {
+              content: '';
+              width: 6px;
+              height: 6px;
+              border-radius: 3px;
+              display: inline-block;
+              background-color: #00a9e0;
+              margin-right: 10px;
+              margin-bottom: 1px;
             }
-		}
-	}
+          }
+        }
+      }
+      .ui-selectmenu-button {
+        background-color: #333;
+        color: white;
+        border: 0;
+        outline: none !important;
+        span.ui-selectmenu-text {
+          padding: 0.5em 2.3em;
+        }
+        span.ui-icon {
+          border-top-color: #00a9e0;
+        }
+      }
+    }
     .aarsak {
       margin: 0 auto;
       width: 50%;
