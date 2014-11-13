@@ -153,13 +153,35 @@
 			.ui-menu-item {
 				position: relative;
 				margin: 0;
-				padding: 0.5em 1em;
+				padding: 0.5em 2.3em;
 				cursor: pointer;
 				min-height: 0;
+                color: white;
+
+                &:first-child {
+                  color: #b7b1a9;
+                }
 			}
 			.ui-state-focus, .ui-state-active {
-				background-color: #0067c5;
-				color: #fff;
+              color: #00a9e0;
+              background-color: #333;
+              padding: 0.5em 1.1em;
+
+              &:first-child {
+                padding: 0.5em 2.3em;
+              }
+              &:not(:first-child) {
+                &:before {
+                  content: '';
+                  width: 6px;
+                  height: 6px;
+                  border-radius: 3px;
+                  display: inline-block;
+                  background-color: #00a9e0;
+                  margin-right: 10px;
+                  margin-bottom: 1px;
+                }
+              }
 			}
 		}
 		.ui-selectmenu-menu {
@@ -176,6 +198,7 @@
 			display: block;
 		}
 		.ui-selectmenu-button {
+            outline: none !important;
 			display: inline-block;
 			overflow: hidden;
 			position: relative;
@@ -194,7 +217,7 @@
 					top: 12px;
 				}
 				&.ui-selectmenu-text {
-					padding: 0.5em 1em;
+					padding: 0.5em 2.3em;
 					display: block;
 					line-height: 1.4;
 					overflow: hidden;
@@ -224,8 +247,14 @@
 	h2, h4, p {
 		color: @modiagraaskrift;
 	}
+    h4 {
+      font-family: Modus, Arial, Helvetica, sans-serif;
+      font-size: 17px;
+      margin-bottom: 11px;
+    }
     hr {
       margin-bottom: 20px;
+      margin-top: 33px;
     }
 	a {
 		display: inline-block;
@@ -243,11 +272,15 @@
 		color: #fff;
 	}
 	.temagruppevelger-wrapper {
-		margin: 0px 0 0 22px;
+		margin: 0px 0 0 5px;
         .ui-selectmenu-button {
           background-color: #333333;
-          color: #b7b1a9;
-          border: 1px solid #999;
+          color: white;
+          border: 0;
+
+          span.ui-icon {
+            border-top-color: #00a9e0;
+          }
         }
 		.ui-selectmenu-menu {
 			box-shadow: none;
@@ -265,6 +298,7 @@
       width: 50%;
       text-align: left;
       input[type=radio] + label{
+        margin-top: 7px;
         padding: 5px 5px 5px 37px;
         min-height: 22px;
         line-height: 22px;
@@ -273,14 +307,37 @@
       input[type=radio]:focus + label {
         border: 1px dashed #00a9e0;
       }
+      &.feiltema label {
+        margin-bottom: 0px;
+      }
+    }
+    .oppgaveOpprettetFeedback {
+        padding-top: 20px;
+
+        .robust-ikon-gront-sjekk {
+          background-image: url(../img/hake_stor02.svg);
+          padding-top: 70px;
+        }
+        >p {
+          font-size: 1.8rem;
+          font-family: Modus, Arial, Helvetica, sans-serif;
+          font-weight: normal;
+        }
     }
 }
 
 .kvittering {
-	margin-top: 200px;
+	margin-top: 100px;
 	text-align: center;
     h2 {
       margin-bottom: 30px;
+      font-size: 1.8rem;
+      font-weight: normal;
+      padding: 0 30px;
+    }
+    .robust-ikon-gront-sjekk {
+      padding-top: 70px;
+      background-image: url(../img/hake_stor02.svg);
     }
 }
 
