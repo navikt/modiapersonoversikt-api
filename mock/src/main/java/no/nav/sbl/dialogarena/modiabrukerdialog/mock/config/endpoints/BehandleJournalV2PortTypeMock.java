@@ -122,7 +122,7 @@ public class BehandleJournalV2PortTypeMock {
         logger.info("Pdf lagret til disk: " + pathname);
     }
 
-    @SuppressFBWarnings("findbugs:RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
+    @SuppressFBWarnings("RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     private static File createFile(String pathname) throws IOException {
         File file = new File(pathname);
         if (!file.exists()) {
