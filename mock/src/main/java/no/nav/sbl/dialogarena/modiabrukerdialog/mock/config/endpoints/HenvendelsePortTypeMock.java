@@ -116,7 +116,7 @@ public class HenvendelsePortTypeMock {
                 .withJournalfortSaksId(journalfortSaksId)
                 .withJournalforerNavIdent(journalforerNavIdent);
     }
-    @SuppressFBWarnings("com.puppycrawl.tools.checkstyle.checks.sizes.ParameterNumberCheck")
+    @SuppressWarnings("com.puppycrawl.tools.checkstyle.checks.sizes.ParameterNumberCheck")
     private static XMLHenvendelse createXMLHenvendelse(XMLHenvendelseType type, String behandlingsId, String behandlingskjedeId, DateTime opprettet, DateTime lestDato, XMLMetadata metadata,
                                                        String oppgaveId, XMLJournalfortInformasjon journalfortInformasjon) {
 
