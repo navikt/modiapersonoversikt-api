@@ -11,6 +11,7 @@ import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
+import static no.nav.modig.wicket.conditional.ConditionalUtils.attributeIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
@@ -36,11 +37,13 @@ public class SaksbehandlerInnstillingerTogglerPanel extends Panel {
             }
         });
         toggleWrapper.add(AttributeAppender.append("aria-controls", panelId));
+        toggleWrapper.add(attributeIf("aria-pressed", "true", ekspandertModel, true));
+        toggleWrapper.add(attributeIf("aria-pressed", "false", not(ekspandertModel), true));
 
         toggleWrapper.add(new ContextImage("togglebilde", "img/modiaLogo.svg"));
         toggleWrapper.add(new WebMarkupContainer("togglepil")
-                .add(hasCssClassIf("ned", ekspandertModel))
-                .add(hasCssClassIf("opp", not(ekspandertModel))));
+                .add(hasCssClassIf("ned", not(ekspandertModel)))
+                .add(hasCssClassIf("opp", ekspandertModel)));
 
 
         add(toggleWrapper);
