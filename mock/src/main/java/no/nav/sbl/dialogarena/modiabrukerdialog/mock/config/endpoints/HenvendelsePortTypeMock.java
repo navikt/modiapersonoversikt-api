@@ -1,13 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
@@ -25,10 +18,7 @@ import java.util.Random;
 
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_OPPMOTE;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_TELEFON;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_SKRIFTLIG;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -79,7 +69,7 @@ public class HenvendelsePortTypeMock {
                     .withHenvendelseType(SPORSMAL_SKRIFTLIG.name()),
 
             createXMLHenvendelse(randomId(), BEHANDLINGS_ID1, now().minusDays(2), now().minusDays(4),
-                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Vi kan bekrefte at du får foreldrepenger"), null,createXMLJourfortInformasjon( null, "", "", ""))
+                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Vi kan bekrefte at du får foreldrepenger"), null, createXMLJourfortInformasjon(null, "", "", ""))
                     .withHenvendelseType(SVAR_SKRIFTLIG.name()),
 
             createXMLHenvendelse(randomId(), BEHANDLINGS_ID1, now().minusDays(3), now().minusDays(4),
@@ -119,13 +109,15 @@ public class HenvendelsePortTypeMock {
             createXMLHenvendelse(BEHANDLINGS_ID6, BEHANDLINGS_ID6, now().minusDays(2), null,
                     null, valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", "")).withHenvendelseType(REFERAT_TELEFON.name())
     ));
-    private static XMLJournalfortInformasjon createXMLJourfortInformasjon(DateTime journalfortDato, String journalfortTema, String journalfortSaksId, String journalforerNavIdent){
+
+    private static XMLJournalfortInformasjon createXMLJourfortInformasjon(DateTime journalfortDato, String journalfortTema, String journalfortSaksId, String journalforerNavIdent) {
         return new XMLJournalfortInformasjon()
                 .withJournalfortDato(journalfortDato)
                 .withJournalfortTema(journalfortTema)
                 .withJournalfortSaksId(journalfortSaksId)
                 .withJournalforerNavIdent(journalforerNavIdent);
     }
+
     private static XMLHenvendelse createXMLHenvendelse(String behandlingsId, String behandlingskjedeId, DateTime opprettet, DateTime lestDato, XMLMetadata metadata,
                                                        String oppgaveId, XMLJournalfortInformasjon journalfortInformasjon) {
 
