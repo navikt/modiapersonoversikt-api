@@ -74,40 +74,50 @@ public class HenvendelsePortTypeMock {
     }
 
     public static final List<XMLHenvendelse> HENVENDELSER = new ArrayList<>(asList(
-            createXMLHenvendelse(SPORSMAL_SKRIFTLIG, BEHANDLINGS_ID1, BEHANDLINGS_ID1, now().minusWeeks(1), null,
-                    createXMLMeldingFraBruker("FMLI", LANG_TEKST), valueOf(oppgaveId), createXMLJourfortInformasjon(null, null, null, null)),
+            createXMLHenvendelse(BEHANDLINGS_ID1, BEHANDLINGS_ID1, now().minusWeeks(1), null,
+                    createXMLMeldingFraBruker("FMLI", LANG_TEKST), valueOf(oppgaveId), createXMLJourfortInformasjon(null, null, null, null))
+                    .withHenvendelseType(SPORSMAL_SKRIFTLIG.name()),
 
-            createXMLHenvendelse(SVAR_SKRIFTLIG, randomId(), BEHANDLINGS_ID1, now().minusDays(2), now().minusDays(4),
-                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Vi kan bekrefte at du får foreldrepenger"), null,createXMLJourfortInformasjon( null, "", "", "")),
+            createXMLHenvendelse(randomId(), BEHANDLINGS_ID1, now().minusDays(2), now().minusDays(4),
+                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Vi kan bekrefte at du får foreldrepenger"), null,createXMLJourfortInformasjon( null, "", "", ""))
+                    .withHenvendelseType(SVAR_SKRIFTLIG.name()),
 
-            createXMLHenvendelse(SVAR_SKRIFTLIG, randomId(), BEHANDLINGS_ID1, now().minusDays(3), now().minusDays(4),
-                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Det er meget sannsynlig at du kan få foreldrepenger"), null, createXMLJourfortInformasjon(null, "", "", "")),
+            createXMLHenvendelse(randomId(), BEHANDLINGS_ID1, now().minusDays(3), now().minusDays(4),
+                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Det er meget sannsynlig at du kan få foreldrepenger"), null, createXMLJourfortInformasjon(null, "", "", ""))
+                    .withHenvendelseType(SVAR_SKRIFTLIG.name()),
 
-            createXMLHenvendelse(SVAR_SKRIFTLIG, randomId(), BEHANDLINGS_ID1, now().minusDays(5), now().minusDays(5),
-                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Det kan hende at du kan få foredrepenger "), null, createXMLJourfortInformasjon(null, "", "", "")),
+            createXMLHenvendelse(randomId(), BEHANDLINGS_ID1, now().minusDays(5), now().minusDays(5),
+                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Det kan hende at du kan få foredrepenger "), null, createXMLJourfortInformasjon(null, "", "", ""))
+                    .withHenvendelseType(SVAR_SKRIFTLIG.name()),
 
-            createXMLHenvendelse(SVAR_SKRIFTLIG, randomId(), BEHANDLINGS_ID1, now().minusDays(5), now().minusDays(6),
-                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Vi har hatt en samtale og det kommer frem at Test Testesen ønsker foreldrepenger "), null, createXMLJourfortInformasjon(null, "", "", "")),
+            createXMLHenvendelse(randomId(), BEHANDLINGS_ID1, now().minusDays(5), now().minusDays(6),
+                    createXMLMeldingTilBruker("FMLI", "TELEFON", "Vi har hatt en samtale og det kommer frem at Test Testesen ønsker foreldrepenger "), null, createXMLJourfortInformasjon(null, "", "", ""))
+                    .withHenvendelseType(SVAR_SKRIFTLIG.name()),
 
-            createXMLHenvendelse(SPORSMAL_SKRIFTLIG, BEHANDLINGS_ID2, BEHANDLINGS_ID2, now().minusDays(3), null,
+            createXMLHenvendelse(BEHANDLINGS_ID2, BEHANDLINGS_ID2, now().minusDays(3), null,
                     createXMLMeldingFraBruker("ARBD", LANG_TEKST),
-                    valueOf(oppgaveId++), createXMLJourfortInformasjon(now().minusDays(1), "SYK", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT)),
+                    valueOf(oppgaveId++), createXMLJourfortInformasjon(now().minusDays(1), "SYK", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT))
+                    .withHenvendelseType(SPORSMAL_SKRIFTLIG.name()),
 
-            createXMLHenvendelse(SVAR_SKRIFTLIG, randomId(), BEHANDLINGS_ID2, now().minusHours(5), null,
+            createXMLHenvendelse(randomId(), BEHANDLINGS_ID2, now().minusHours(5), null,
                     createXMLMeldingTilBruker("ARBD", "TEKST", KORT_TEKST),
-                    null, createXMLJourfortInformasjon(now().minusDays(1), "SYK", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT)),
+                    null, createXMLJourfortInformasjon(now().minusDays(1), "SYK", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT))
+                    .withHenvendelseType(SVAR_SKRIFTLIG.name()),
 
-            createXMLHenvendelse(SPORSMAL_SKRIFTLIG, BEHANDLINGS_ID3, BEHANDLINGS_ID3, now().minusMonths(4), null,
-                    createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", "")),
+            createXMLHenvendelse(BEHANDLINGS_ID3, BEHANDLINGS_ID3, now().minusMonths(4), null,
+                    createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", ""))
+                    .withHenvendelseType(SPORSMAL_SKRIFTLIG.name()),
 
-            createXMLHenvendelse(REFERAT_OPPMOTE, BEHANDLINGS_ID4, BEHANDLINGS_ID4, now(), null,
-                    createXMLMeldingTilBruker("ARBD", "TELEFON", "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, createXMLJourfortInformasjon(null, "", "", "")),
+            createXMLHenvendelse(BEHANDLINGS_ID4, BEHANDLINGS_ID4, now(), null,
+                    createXMLMeldingTilBruker("ARBD", "TELEFON", "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, createXMLJourfortInformasjon(null, "", "", ""))
+                    .withHenvendelseType(REFERAT_OPPMOTE.name()),
 
-            createXMLHenvendelse(SPORSMAL_SKRIFTLIG, BEHANDLINGS_ID5, BEHANDLINGS_ID5, now().minusDays(1), null,
-                    null, valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", "")),
-
-            createXMLHenvendelse(REFERAT_TELEFON, BEHANDLINGS_ID6, BEHANDLINGS_ID6, now().minusDays(2), null,
+            createXMLHenvendelse(BEHANDLINGS_ID5, BEHANDLINGS_ID5, now().minusDays(1), null,
                     null, valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", ""))
+                    .withHenvendelseType(SPORSMAL_SKRIFTLIG.name()),
+
+            createXMLHenvendelse(BEHANDLINGS_ID6, BEHANDLINGS_ID6, now().minusDays(2), null,
+                    null, valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", "")).withHenvendelseType(REFERAT_TELEFON.name())
     ));
     private static XMLJournalfortInformasjon createXMLJourfortInformasjon(DateTime journalfortDato, String journalfortTema, String journalfortSaksId, String journalforerNavIdent){
         return new XMLJournalfortInformasjon()
@@ -116,12 +126,10 @@ public class HenvendelsePortTypeMock {
                 .withJournalfortSaksId(journalfortSaksId)
                 .withJournalforerNavIdent(journalforerNavIdent);
     }
-    @SuppressWarnings("com.puppycrawl.tools.checkstyle.checks.sizes.ParameterNumberCheck")
-    private static XMLHenvendelse createXMLHenvendelse(XMLHenvendelseType type, String behandlingsId, String behandlingskjedeId, DateTime opprettet, DateTime lestDato, XMLMetadata metadata,
+    private static XMLHenvendelse createXMLHenvendelse(String behandlingsId, String behandlingskjedeId, DateTime opprettet, DateTime lestDato, XMLMetadata metadata,
                                                        String oppgaveId, XMLJournalfortInformasjon journalfortInformasjon) {
 
         XMLHenvendelse xmlHenvendelse = new XMLHenvendelse()
-                .withHenvendelseType(type.name())
                 .withBehandlingsId(behandlingsId)
                 .withBehandlingskjedeId(behandlingskjedeId)
                 .withOpprettetDato(opprettet)
