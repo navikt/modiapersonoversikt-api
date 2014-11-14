@@ -57,6 +57,7 @@ public class GsakOppgaveV3PortTypeMock {
                     .thenReturn(new WSFinnFerdigstiltOppgaveListeResponse());
 
         } catch (HentOppgaveOppgaveIkkeFunnet ignored) {
+            throw new RuntimeException(ignored);
         }
 
         return v3;
@@ -69,7 +70,7 @@ public class GsakOppgaveV3PortTypeMock {
     public static WSOppgave lagWSOppgave(String oppgaveId) {
         return new WSOppgave()
                 .withOppgaveId(oppgaveId)
-                .withHenvendelseId(HenvendelsePortTypeMock.behandlingsId1)
+                .withHenvendelseId(HenvendelsePortTypeMock.BEHANDLINGS_ID1)
                 .withOppgavetype(new WSOppgavetype().withKode("wsOppgavetype"))
                 .withGjelder(new WSBruker().withBrukerId("10108000398"))
                 .withStatus(new WSStatus().withKode("statuskode"))
