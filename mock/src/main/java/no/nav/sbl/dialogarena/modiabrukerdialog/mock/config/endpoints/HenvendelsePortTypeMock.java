@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
@@ -115,6 +116,7 @@ public class HenvendelsePortTypeMock {
                 .withJournalfortSaksId(journalfortSaksId)
                 .withJournalforerNavIdent(journalforerNavIdent);
     }
+    @SuppressFBWarnings("checkstyle:com.puppycrawl.tools.checkstyle.checks.sizes.ParameterNumberCheck ")
     private static XMLHenvendelse createXMLHenvendelse(XMLHenvendelseType type, String behandlingsId, String behandlingskjedeId, DateTime opprettet, DateTime lestDato, XMLMetadata metadata,
                                                        String oppgaveId, XMLJournalfortInformasjon journalfortInformasjon) {
 

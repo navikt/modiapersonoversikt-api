@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.FerdigstillDokumentopplastingFerdigstillDokumentopplastingjournalpostIkkeFunnet;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.LagreVedleggPaaJournalpostLagreVedleggPaaJournalpostjournalpostIkkeFunnet;
@@ -121,6 +122,7 @@ public class BehandleJournalV2PortTypeMock {
         logger.info("Pdf lagret til disk: " + pathname);
     }
 
+    @SuppressFBWarnings("findbugs:RV_RETURN_VALUE_IGNORED_BAD_PRACTICE")
     private static File createFile(String pathname) throws IOException {
         File file = new File(pathname);
         if (!file.exists()) {
