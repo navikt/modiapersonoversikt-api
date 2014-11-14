@@ -68,11 +68,11 @@ public class LeggTilbakePanel extends Panel {
 
         aarsaker = new RadioGroup<>("valgtAarsak");
         aarsaker.setRequired(true);
-        aarsaker.add(feiltema);
-        aarsaker.add(temagruppevelgerWrapper);
-        aarsaker.add(new Radio<>("inhabil", Model.of(INHABIL)));
-        aarsaker.add(new Radio<>("annen", Model.of(ANNEN)));
-        aarsaker.add(annenAarsak);
+        aarsaker.add(feiltema,
+                temagruppevelgerWrapper,
+                new Radio<>("inhabil", Model.of(INHABIL)),
+                new Radio<>("annen", Model.of(ANNEN)),
+                annenAarsak);
 
         form.add(aarsaker);
 
@@ -96,14 +96,11 @@ public class LeggTilbakePanel extends Panel {
                 target.add(LeggTilbakePanel.this);
             }
         });
-
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
-        feedbackPanel.setOutputMarkupPlaceholderTag(true);
-        form.add(feedbackPanel);
+        form.add(feedbackPanel.setOutputMarkupPlaceholderTag(true));
 
         final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackOppgavePanel");
-        feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
-        feedbackPanelSuccess.add(visibleIf(oppgaveLagtTilbake));
+        feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true).add(visibleIf(oppgaveLagtTilbake));
         final AjaxLink lukkKnapp = new AjaxLink("lukkKnapp") {
             @Override
             public void onClick(AjaxRequestTarget target) {
@@ -119,7 +116,7 @@ public class LeggTilbakePanel extends Panel {
                 oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
                         oppgaveId,
                         leggTilbakeVM.lagBeskrivelse(
-                                new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
+                            new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
                         leggTilbakeVM.lagTemagruppeTekst()
                 );
                 oppgaveLagtTilbake.setObject(true);
@@ -141,7 +138,6 @@ public class LeggTilbakePanel extends Panel {
                 send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_AVBRUTT);
             }
         });
-
         add(form);
     }
 

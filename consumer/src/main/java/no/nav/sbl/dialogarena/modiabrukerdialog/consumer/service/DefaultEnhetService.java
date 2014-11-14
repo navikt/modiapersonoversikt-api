@@ -43,7 +43,6 @@ public class DefaultEnhetService implements EnhetService {
 
             return on(enhetWS.finnNAVEnhet(enhetRequest).getNAVEnheter()).map(TIL_ANSATTENHET).collect();
         } catch (FinnNAVEnhetFaultGOSYSGeneriskMsg finnNAVEnhetFaultGOSYSGeneriskMsg) {
-            finnNAVEnhetFaultGOSYSGeneriskMsg.printStackTrace();
             return emptyList();
         }
     }

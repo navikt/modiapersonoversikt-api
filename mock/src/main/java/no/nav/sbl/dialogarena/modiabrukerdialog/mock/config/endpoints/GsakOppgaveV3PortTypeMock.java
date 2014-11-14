@@ -47,7 +47,7 @@ public class GsakOppgaveV3PortTypeMock {
             when(v3.hentOppgave(any(WSHentOppgaveRequest.class)))
                     .thenAnswer(new Answer<WSHentOppgaveResponse>() {
                         @Override
-                        public WSHentOppgaveResponse answer(InvocationOnMock invocation) throws Throwable {
+                        public WSHentOppgaveResponse answer(InvocationOnMock invocation) {
                             WSHentOppgaveRequest req = (WSHentOppgaveRequest) invocation.getArguments()[0];
                             return new WSHentOppgaveResponse().withOppgave(lagWSOppgave(req.getOppgaveId()));
                         }
@@ -56,8 +56,7 @@ public class GsakOppgaveV3PortTypeMock {
             when(v3.finnFerdigstiltOppgaveListe(any(WSFinnFerdigstiltOppgaveListeRequest.class)))
                     .thenReturn(new WSFinnFerdigstiltOppgaveListeResponse());
 
-        } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
-            hentOppgaveOppgaveIkkeFunnet.printStackTrace();
+        } catch (HentOppgaveOppgaveIkkeFunnet ignored) {
         }
 
         return v3;

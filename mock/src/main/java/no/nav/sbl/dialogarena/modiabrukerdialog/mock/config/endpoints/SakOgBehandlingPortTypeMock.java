@@ -55,7 +55,7 @@ public class SakOgBehandlingPortTypeMock {
         // Bruker thenAnswer slik at antall saker (ANTALLSAKER_PROPERTY) kan justeres under kjøring fra mocksetup
         when(mock.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenAnswer(new Answer<Object>() {
             @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
+            public Object answer(InvocationOnMock invocation) {
                 return finnSakOgBehandlingskjedeListe();
             }
         });

@@ -64,7 +64,7 @@ public class GsakHentSakslistePortTypeMock {
         Sak s = mock(Sak.class);
         when(s.finnGenerellSakListe(any(WSFinnGenerellSakListeRequest.class))).thenAnswer(new Answer<WSFinnGenerellSakListeResponse>() {
             @Override
-            public WSFinnGenerellSakListeResponse answer(InvocationOnMock invocation) throws Throwable {
+            public WSFinnGenerellSakListeResponse answer(InvocationOnMock invocation) {
                 String user = ((WSFinnGenerellSakListeRequest) invocation.getArguments()[0]).getBrukerId();
                 return new WSFinnGenerellSakListeResponse().withSakListe(sakslisteForBruker(user));
             }

@@ -61,12 +61,12 @@ public class HenvendelsePortTypeMock {
             "minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis autem vel eum iriure " +
             "dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan et iusto";
 
-    public static String behandlingsId1 = randomId();
-    public static String behandlingsId2 = randomId();
-    public static String behandlingsId3 = randomId();
-    public static String behandlingsId4 = randomId();
-    public static String behandlingsId5 = randomId();
-    public static String behandlingsId6 = randomId();
+    public static final String behandlingsId1 = randomId();
+    public static final String behandlingsId2 = randomId();
+    public static final String behandlingsId3 = randomId();
+    public static final String behandlingsId4 = randomId();
+    public static final String behandlingsId5 = randomId();
+    public static final String behandlingsId6 = randomId();
 
     private static String randomId() {
         return valueOf(idGenerator.nextInt());
@@ -160,7 +160,7 @@ public class HenvendelsePortTypeMock {
         HenvendelsePortType mockI = mock(HenvendelsePortType.class);
         when(mockI.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenAnswer(new Answer<WSHentHenvendelseResponse>() {
             @Override
-            public WSHentHenvendelseResponse answer(InvocationOnMock invocation) throws Throwable {
+            public WSHentHenvendelseResponse answer(InvocationOnMock invocation) {
                 WSHentHenvendelseRequest req = (WSHentHenvendelseRequest) invocation.getArguments()[0];
                 return new WSHentHenvendelseResponse().withAny(hentHenvendelseMedBehandlingsId(req));
             }

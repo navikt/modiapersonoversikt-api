@@ -47,7 +47,6 @@ public class PlukkOppgavePanel extends Panel {
     private PlukkOppgaveService plukkOppgaveService;
 
     private final IModel<Temagruppe> valgtTemagruppe;
-    private final Form<Temagruppe> form;
     private final AriaFeedbackPanel feedbackPanel;
     private final Label velgtemagruppeKnapp;
 
@@ -55,7 +54,7 @@ public class PlukkOppgavePanel extends Panel {
         super(id);
 
         valgtTemagruppe = new Model<>((Temagruppe) getSession().getAttribute(TEMAGRUPPE_ATTR));
-        form = new Form<>("plukkOppgaveForm", valgtTemagruppe);
+        Form<Temagruppe> form = new Form<>("plukkOppgaveForm", valgtTemagruppe);
         form.setOutputMarkupId(true);
 
         add(accessRestriction(RENDER).withAttributes(actionId("plukkoppgave"), resourceId("")));

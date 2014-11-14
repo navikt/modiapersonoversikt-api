@@ -32,13 +32,13 @@ public class GsakRutingPortTypeMock {
 
         when(ruting.finnAnsvarligEnhetForSak(any(WSFinnAnsvarligEnhetForSakRequest.class))).thenAnswer(new Answer<WSFinnAnsvarligEnhetForSakResponse>() {
             @Override
-            public WSFinnAnsvarligEnhetForSakResponse answer(InvocationOnMock invocation) throws Throwable {
+            public WSFinnAnsvarligEnhetForSakResponse answer(InvocationOnMock invocation) {
                 return responser.get(new Random().nextInt(responser.size()));
             }
         });
         when(ruting.finnAnsvarligEnhetForOppgavetype(any(WSFinnAnsvarligEnhetForOppgavetypeRequest.class))).thenAnswer(new Answer<WSFinnAnsvarligEnhetForOppgavetypeResponse>() {
             @Override
-            public WSFinnAnsvarligEnhetForOppgavetypeResponse answer(InvocationOnMock invocation) throws Throwable {
+            public WSFinnAnsvarligEnhetForOppgavetypeResponse answer(InvocationOnMock invocation) {
                 WSFinnAnsvarligEnhetForSakResponse enhet = responser.get(new Random().nextInt(responser.size()));
                 WSFinnAnsvarligEnhetForOppgavetypeResponse response = new WSFinnAnsvarligEnhetForOppgavetypeResponse();
                 response.getEnhetListe().add(new WSEnhet().withEnhetId(enhet.getEnhetId()).withEnhetNavn(enhet.getEnhetNavn()));

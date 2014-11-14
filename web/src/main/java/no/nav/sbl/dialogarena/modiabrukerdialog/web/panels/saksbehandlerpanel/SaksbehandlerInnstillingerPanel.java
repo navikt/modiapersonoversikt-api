@@ -80,7 +80,7 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         oppdaterAriaLabel();
         add(form, opplaeringslenke);
     }
-    public void oppdaterAriaLabel() {
+    public final void oppdaterAriaLabel() {
         add(AttributeModifier.replace("aria-expanded", isVisibilityAllowed()));
     }
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
