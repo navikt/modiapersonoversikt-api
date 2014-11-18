@@ -10,7 +10,7 @@
             <div class="aarsak feiltema">
                 <input wicket:id="feiltema" type="radio" wicket:message="aria-label:leggtilbake.feiltema"/>
                 <label wicket:for="feiltema"><wicket:message key="leggtilbake.feiltema"/></label>
-                <div wicket:id="temagruppewrapper" class="temagruppevelger-wrapper">
+                <div wicket:id="nyTemagruppeSkjuler" class="nyTemagruppeSkjuler">
                     <select wicket:id="nyTemagruppe" class="temagruppevelger"></select>
                 </div>
             </div>
@@ -24,6 +24,7 @@
             </div>
             <textarea wicket:id="annenAarsakTekst"></textarea>
         </div>
+        <div wicket:id="temagruppewrapper-dropdown" class="temagruppevelger-wrapper"></div>
         <div wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
 
         <hr class="linje" />
