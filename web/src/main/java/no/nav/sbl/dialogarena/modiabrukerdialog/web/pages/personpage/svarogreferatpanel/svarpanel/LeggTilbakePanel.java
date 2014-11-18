@@ -45,22 +45,15 @@ public class LeggTilbakePanel extends Panel {
         setOutputMarkupPlaceholderTag(true);
 
         final LeggTilbakeVM leggTilbakeVM = new LeggTilbakeVM();
-        PropertyModel valgtAarsak = new PropertyModel(leggTilbakeVM, "valgtAarsak");
+        PropertyModel<Aarsak> valgtAarsak = new PropertyModel<>(leggTilbakeVM, "valgtAarsak");
 
         add(new Label("temagruppe", new ResourceModel(temagruppe, "")));
 
         Form<LeggTilbakeVM> form = new Form<>("leggtilbakeform", new CompoundPropertyModel<>(leggTilbakeVM));
         form.add(visibleIf(not(oppgaveLagtTilbake)));
-        WebMarkupContainer nyTemagruppeSkjuler = new WebMarkupContainer("nyTemagruppeSkjuler");
-        WebMarkupContainer temagruppevelgerWrapper = new WebMarkupContainer("temagruppewrapper");
-        final DropDownChoice<Temagruppe> temagruppevelger = new DropDownChoice<>("nyTemagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
-            @Override
-            public Object getDisplayValue(Temagruppe object) {
-                return getString(object.name());
-            }
-        });
-        nyTemagruppeSkjuler.add(visibleIf(isEqualTo(valgtAarsak, FEIL_TEMAGRUPPE)));
-        nyTemagruppeSkjuler.add(temagruppevelger);
+
+        final DropDownChoice<Temagruppe> temagruppevelger = lagFeiltemagruppeKomponenter(valgtAarsak);
+        final WebMarkupContainer temagruppevelgerDropdown = new WebMarkupContainer("temagruppewrapper-dropdown");
 
         final TextArea annenAarsak = new TextArea("annenAarsakTekst");
         annenAarsak.add(visibleIf(isEqualTo(valgtAarsak, ANNEN)));
@@ -69,12 +62,11 @@ public class LeggTilbakePanel extends Panel {
         aarsaker = new RadioGroup<>("valgtAarsak");
         aarsaker.setRequired(true);
         aarsaker.add(feiltema,
-                nyTemagruppeSkjuler,
+                temagruppevelger.getParent(),
                 new Radio<>("inhabil", Model.of(INHABIL)),
                 new Radio<>("annen", Model.of(ANNEN)),
                 annenAarsak);
-
-        form.add(aarsaker, temagruppevelgerWrapper);
+        form.add(aarsaker, temagruppevelgerDropdown);
 
         aarsaker.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
@@ -114,8 +106,7 @@ public class LeggTilbakePanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
-                        oppgaveId,
-                        leggTilbakeVM.lagBeskrivelse(
+                        oppgaveId, leggTilbakeVM.lagBeskrivelse(
                             new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
                         leggTilbakeVM.lagTemagruppeTekst()
                 );
@@ -141,6 +132,20 @@ public class LeggTilbakePanel extends Panel {
             }
         });
         add(form);
+    }
+
+    private DropDownChoice<Temagruppe> lagFeiltemagruppeKomponenter(PropertyModel<Aarsak> valgtAarsak) {
+        WebMarkupContainer nyTemagruppeSkjuler = new WebMarkupContainer("nyTemagruppeSkjuler");
+        final DropDownChoice<Temagruppe> temagruppevelger = new DropDownChoice<>("nyTemagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
+            @Override
+            public Object getDisplayValue(Temagruppe object) {
+                return getString(object.name());
+            }
+        });
+        nyTemagruppeSkjuler.add(visibleIf(isEqualTo(valgtAarsak, FEIL_TEMAGRUPPE)));
+        nyTemagruppeSkjuler.add(temagruppevelger);
+
+        return temagruppevelger;
     }
 
     private static void setRequired(boolean required, FormComponent... formComponents) {
