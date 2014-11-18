@@ -51,7 +51,7 @@ public class LeggTilbakePanel extends Panel {
 
         Form<LeggTilbakeVM> form = new Form<>("leggtilbakeform", new CompoundPropertyModel<>(leggTilbakeVM));
         form.add(visibleIf(not(oppgaveLagtTilbake)));
-
+        WebMarkupContainer nyTemagruppeSkjuler = new WebMarkupContainer("nyTemagruppeSkjuler");
         WebMarkupContainer temagruppevelgerWrapper = new WebMarkupContainer("temagruppewrapper");
         final DropDownChoice<Temagruppe> temagruppevelger = new DropDownChoice<>("nyTemagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
             @Override
@@ -59,8 +59,8 @@ public class LeggTilbakePanel extends Panel {
                 return getString(object.name());
             }
         });
-        temagruppevelgerWrapper.add(visibleIf(isEqualTo(valgtAarsak, FEIL_TEMAGRUPPE)));
-        temagruppevelgerWrapper.add(temagruppevelger);
+        nyTemagruppeSkjuler.add(visibleIf(isEqualTo(valgtAarsak, FEIL_TEMAGRUPPE)));
+        nyTemagruppeSkjuler.add(temagruppevelger);
 
         final TextArea annenAarsak = new TextArea("annenAarsakTekst");
         annenAarsak.add(visibleIf(isEqualTo(valgtAarsak, ANNEN)));
@@ -69,12 +69,12 @@ public class LeggTilbakePanel extends Panel {
         aarsaker = new RadioGroup<>("valgtAarsak");
         aarsaker.setRequired(true);
         aarsaker.add(feiltema,
-                temagruppevelgerWrapper,
+                nyTemagruppeSkjuler,
                 new Radio<>("inhabil", Model.of(INHABIL)),
                 new Radio<>("annen", Model.of(ANNEN)),
                 annenAarsak);
 
-        form.add(aarsaker);
+        form.add(aarsaker, temagruppevelgerWrapper);
 
         aarsaker.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
@@ -135,6 +135,8 @@ public class LeggTilbakePanel extends Panel {
         form.add(new AjaxLink<Void>("avbryt") {
             @Override
             public void onClick(AjaxRequestTarget target) {
+                aarsaker.getModel().setObject(null);
+                target.add(LeggTilbakePanel.this);
                 send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_AVBRUTT);
             }
         });
