@@ -61,6 +61,8 @@ public class SaksoversiktLerret extends Lerret {
     public SaksoversiktLerret(String id, String fnr) {
         super(id);
         this.fnr = fnr;
+        add(new Label("se-saker-label", cms.hentTekst("detaljer.tittel")),
+            new Label("viktig-aa-vite-label", cms.hentTekst("saksinformasjon.tittel")));
         instansierFeilmeldingContainer();
     }
 
@@ -77,7 +79,7 @@ public class SaksoversiktLerret extends Lerret {
             feilmelding
         );
 
-        if(getAktivtTema().getObject() == null) {
+        if (getAktivtTema().getObject() == null) {
             aapneForsteItem();
         }
         super.onBeforeRender();
@@ -108,6 +110,7 @@ public class SaksoversiktLerret extends Lerret {
                 target.appendJavaScript("stopRotation()");
             }
         };
+        link.add(new Label("oppdater-label", cms.hentTekst("saksoversikt.oppdater.saker")));
         return link;
     }
 
