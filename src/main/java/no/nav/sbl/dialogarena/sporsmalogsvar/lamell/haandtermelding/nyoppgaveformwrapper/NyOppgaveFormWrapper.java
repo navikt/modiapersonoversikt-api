@@ -8,36 +8,26 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import org.apache.commons.collections15.Predicate;
 import org.apache.wicket.MarkupContainer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormComponentUpdatingBehavior;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.IChoiceRenderer;
-import org.apache.wicket.markup.html.form.TextArea;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.Model;
-import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
+import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.modig.wicket.model.ModelUtils.both;
-import static no.nav.modig.wicket.model.ModelUtils.isEmptyList;
-import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.modig.wicket.model.ModelUtils.nullValue;
+import static no.nav.modig.wicket.model.ModelUtils.*;
 
 public class NyOppgaveFormWrapper extends Panel {
 
@@ -64,7 +54,7 @@ public class NyOppgaveFormWrapper extends Panel {
         super(id);
 
         this.innboksVM = innboksVM;
-        this.enheter = unmodifiableList(enhetService.hentAlleEnheter());
+        this.enheter = on(enhetService.hentAlleEnheter()).filter(GYLDIG_ENHET).collect();
         this.gsakKodeChoiceRenderer = new ChoiceRenderer<>("tekst", "kode");
         this.form = new Form<>("nyoppgaveform", new CompoundPropertyModel<>(new NyOppgave()));
         this.typeVelger = lagOppgavetypeVelger();
@@ -278,4 +268,11 @@ public class NyOppgaveFormWrapper extends Panel {
 
         protected abstract void onchange(AjaxRequestTarget target);
     }
+
+    private static final Predicate<AnsattEnhet> GYLDIG_ENHET = new Predicate<AnsattEnhet>() {
+        @Override
+        public boolean evaluate(AnsattEnhet ansattEnhet) {
+            return Integer.valueOf(ansattEnhet.enhetId) > 100 && !ansattEnhet.enhetNavn.toLowerCase().contains("avviklet");
+        }
+    };
 }
