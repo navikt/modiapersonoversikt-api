@@ -272,7 +272,7 @@ public class NyOppgaveFormWrapper extends Panel {
     private static final Predicate<AnsattEnhet> GYLDIG_ENHET = new Predicate<AnsattEnhet>() {
         @Override
         public boolean evaluate(AnsattEnhet ansattEnhet) {
-            return Integer.valueOf(ansattEnhet.enhetId) > 100 && !ansattEnhet.enhetNavn.toLowerCase().contains("avviklet");
+            return Integer.valueOf(ansattEnhet.enhetId) >= 100 && !ansattEnhet.enhetNavn.toLowerCase().contains("avviklet");
         }
     };
 }
