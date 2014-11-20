@@ -31,6 +31,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Collections.emptyList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static org.slf4j.LoggerFactory.getLogger;
@@ -99,6 +100,9 @@ public class SaksoversiktLerret extends Lerret {
         } catch (SystemException e) {
             LOG.error("Kunne ikke hente saker til lamellen", e);
             feilmelding.setVisible(true);
+            if (temaer == null) {
+                temaer = emptyList();
+            }
         }
     }
 
