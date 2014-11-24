@@ -89,10 +89,11 @@ public class GsakService {
 
     public void opprettGsakOppgave(NyOppgave nyOppgave) {
         int valgtEnhetId;
+        String valgtEnhetIdString = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
         try {
-            valgtEnhetId = Integer.parseInt(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+            valgtEnhetId = Integer.parseInt(valgtEnhetIdString);
         } catch (NumberFormatException e) {
-            logger.error(String.format("EnhetId %s kunne ikke gjøres om til Integer", saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()));
+            logger.error(String.format("EnhetId %s kunne ikke gjøres om til Integer", valgtEnhetIdString));
             valgtEnhetId = DEFAULT_OPPRETTET_AV_ENHET_ID;
         }
         oppgavebehandling.opprettOppgave(
@@ -105,7 +106,7 @@ public class GsakService {
                                         .withAktivFra(LocalDate.now())
                                         .withAktivTil(ukedagerFraDato(nyOppgave.type.dagerFrist, LocalDate.now()))
                                         .withAnsvarligEnhetId(nyOppgave.enhet.enhetId)
-                                        .withBeskrivelse(lagBeskrivelse(nyOppgave.beskrivelse, valgtEnhetId))
+                                        .withBeskrivelse(lagBeskrivelse(nyOppgave.beskrivelse, valgtEnhetIdString))
                                         .withFagomradeKode(nyOppgave.tema.kode)
                                         .withBrukerId(nyOppgave.brukerId)
                                         .withOppgavetypeKode(nyOppgave.type.kode)
@@ -115,7 +116,7 @@ public class GsakService {
         );
     }
 
-    private String lagBeskrivelse(String beskrivelse, int valgtEnhetId) {
+    private String lagBeskrivelse(String beskrivelse, String valgtEnhetId) {
         String ident = getSubjectHandler().getUid();
         String header = String.format("--- %s %s (%s, %s) ---\nOppgave opprettet fra Modia med beskrivelse:\n",
                 forPattern("dd.MM.yyyy HH:mm").print(now()),
