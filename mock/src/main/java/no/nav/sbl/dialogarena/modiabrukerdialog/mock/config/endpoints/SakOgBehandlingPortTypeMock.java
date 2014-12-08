@@ -4,6 +4,7 @@ import no.nav.tjeneste.virksomhet.sakogbehandling.v1.SakOgBehandling_v1PortType;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSBehandlingskjede;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.finnsakogbehandlingskjedeliste.WSSak;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingskjedetyper;
+import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingsstatuser;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstemaer;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSBehandlingstyper;
 import no.nav.tjeneste.virksomhet.sakogbehandling.v1.informasjon.sakogbehandling.WSSakstemaer;
@@ -54,7 +55,7 @@ public class SakOgBehandlingPortTypeMock {
         // Bruker thenAnswer slik at antall saker (ANTALLSAKER_PROPERTY) kan justeres under kjøring fra mocksetup
         when(mock.finnSakOgBehandlingskjedeListe(any(FinnSakOgBehandlingskjedeListeRequest.class))).thenAnswer(new Answer<Object>() {
             @Override
-            public Object answer(InvocationOnMock invocation) throws Throwable {
+            public Object answer(InvocationOnMock invocation) {
                 return finnSakOgBehandlingskjedeListe();
             }
         });
@@ -181,6 +182,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
                 .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("opprettet"))
                 .withStart(now().minusDays(5));
 
     }
@@ -192,6 +194,7 @@ public class SakOgBehandlingPortTypeMock {
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
                 .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
                 .withStart(now().minusDays(3).minusHours(5))
                 .withSlutt(now());
     }
@@ -202,8 +205,10 @@ public class SakOgBehandlingPortTypeMock {
                 .withSisteBehandlingREF(behandlingsListeRef)
                 .withBehandlingskjedetype(new WSBehandlingskjedetyper().withValue(behandlingstema))
                 .withSisteBehandlingstype(new WSBehandlingstyper().withValue("ae0014"))
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
                 .withBehandlingstema(new WSBehandlingstemaer().withValue(behandlingstema))
                 .withBehandlingskjedeId("behandle" + now())
+                .withSisteBehandlingsstatus(new WSBehandlingsstatuser().withValue("avsluttet"))
                 .withStart(now().minusDays(3).minusHours(2))
                 .withSlutt(now().minusDays(3).minusHours(1));
     }

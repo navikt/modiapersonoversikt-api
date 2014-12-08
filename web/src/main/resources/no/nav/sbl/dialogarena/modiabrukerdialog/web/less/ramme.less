@@ -35,8 +35,9 @@
 	background-color: #fff;
 	border: none;
 	font-size: 1.8rem;
-	&:hover {
+	&:hover, &:focus {
 		background-color: @blue;
+        outline: none;
 	}
 	&:active {
 		.personsok-pil {
@@ -64,9 +65,10 @@
 	background: transparent url(../img/nullstill_bruker.svg) no-repeat right center;
 	background-size: 66px;
 	color: transparent;
-	&:hover {
+	&:hover,&:focus {
 		background: transparent url(../img/nullstill_bruker_hover.svg) no-repeat right center;
 		background-size: 66px;
+        outline: none;
 	}
 }
 
@@ -416,6 +418,9 @@
     float: right;
     .pil(8px, #fff);
   }
+  &:focus, &:hover {
+    outline: 1px dashed @grayLight;
+  }
 }
 
 .saksbehandlerinnstillinger {
@@ -426,14 +431,38 @@
 	-webkit-box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
 	-moz-box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
 	box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
+    .opplaeringslenke {
+        float: left;
+        margin-left: 3em;
+        top: 20px;
+        position: relative;
+    }
 	.enhetsform {
-		max-width: 22%;
+		max-width: 23%;
 		margin: auto;
 	}
 	.enhetsvalg {
 		text-align: left;
-		margin-left: 32px;
+        label {
+          padding: 5px 5px 5px 37px;
+          min-height: 22px;
+          line-height: 22px;
+        }
+        input[type=radio] + label {
+          background-position: 5px;
+          border: 1px solid transparent;
+        }
+        input[type=radio]:focus + label {
+          border: 1px dashed @dodgerblue;
+        }
 	}
+    .linje {
+      height: 1px;
+      width: 100%;
+      background-color: #d1d1d1;
+      border: none;
+      margin: 30px 0 40px;
+    }
 	.centered {
 		text-align: center;
 	}
@@ -451,7 +480,7 @@
 		position: relative;
 		float: right;
 		width: 16rem;
-		> a {
+		> a,input {
 			height: 56px;
 			line-height: 56px;
 			float: right;
@@ -468,6 +497,19 @@
 				background-repeat: no-repeat;
 				background-position: center;
 				background-size: 30px;
+                float: left;
+                &:focus, &:hover {
+                  background-color: @blue;
+                  outline:none;
+
+                  &:after {
+                    border-top-color: @blue;
+                    outline:none;
+                  }
+                }
+                &.plukket {
+                  background-image: url(../img/ajaxloader/hvit/loader_hvit_32.gif);
+                }
 				&:before, &:after {
 					position: absolute;
 					top: 100%;
@@ -493,12 +535,15 @@
 				font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
 				font-size: 1.14rem;
 				font-weight: 600;
+                &:focus, &:hover {
+                  border: 1px solid @blue;
+                }
 			}
 			&:hover {
 				cursor: pointer;
 				text-decoration: none;
-			}
-		}
+            }
+        }
 		.temagruppe-liste {
 			display: none;
 			position: absolute;
@@ -507,8 +552,11 @@
 			-webkit-box-shadow: 0px 5px 10px 0px rgba(50, 50, 50, 0.3);
 			-moz-box-shadow: 0px 5px 10px 0px rgba(50, 50, 50, 0.3);
 			box-shadow: 0px 5px 10px 0px rgba(50, 50, 50, 0.3);
-			padding: 20px 1.4rem 10px;
+			padding: 20px 1.4rem;
 			width: 100%;
+            input[type="radio"]:focus + label {
+              border: 1px dashed #00a9e0;
+            }
 			label {
 				overflow: hidden;
 				width: 100%;
@@ -518,6 +566,9 @@
 				}
 			}
 		}
+        .radiogroup:focus {
+            border: 1px dashed @blue;
+        }
 	}
 	.feedback .feedbackPanel {
 		position: absolute;
@@ -930,4 +981,16 @@
 			}
 		}
 	}
+}
+
+fieldset.wcag {
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  > legend {
+    color: transparent;
+    width: 0px;
+    height: 0px;
+  }
 }

@@ -36,6 +36,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
@@ -48,6 +49,7 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_OVERSIKT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.HENVENDELSEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.OPPGAVEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.SVAR_OG_REFERAT_PANEL_ID;
@@ -55,6 +57,7 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.Pers
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -90,8 +93,7 @@ public class PersonPageTest extends WicketPageTest {
         Sporsmal sporsmal = new Sporsmal("id", DateTime.now());
         sporsmal.temagruppe = ARBD.name();
         sporsmal.oppgaveId = "id";
-        when(henvendelseUtsendingService.getSporsmalFromOppgaveId(anyString(), anyString())).thenReturn(sporsmal);
-        when(henvendelseUtsendingService.getSporsmal(anyString())).thenReturn(sporsmal);
+        when(henvendelseUtsendingService.getSporsmal(anyString())).thenReturn(optional(sporsmal));
         when(gsakKodeverk.hentTemaListe()).thenReturn(new ArrayList<>(Arrays.asList(
                 new GsakKodeTema.Tema("kode", "tekst",
                         new ArrayList<>(Arrays.asList(new GsakKodeTema.OppgaveType("kode", "tekst", 1))),
@@ -149,16 +151,6 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void gittBareOppgaveUrlParamVisesSvarPanelOgOversiktLamell() {
-        String oppgaveid = "oppgaveid";
-
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(OPPGAVEID, oppgaveid))
-                .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
-
-        verify(henvendelseUtsendingService).getSporsmalFromOppgaveId(testFnr, oppgaveid);
-    }
-
-    @Test
     public void gittBareHenvendelseUrlParamVisesMeldingsLamell() {
         String henvendelsesId = "id 1";
         wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelsesId);
@@ -169,7 +161,7 @@ public class PersonPageTest extends WicketPageTest {
     }
 
     @Test
-    public void gittBaadeHenvendelseOgOppgaveUrlParamVisesSvarPanelOgMeldingsLamell() {
+    public void medHenvendelseOgOppgaveUrlParamVisesSvarPanelOgMeldingLamell() {
         String henvendelsesId = "id 1";
         String oppgaveId = "oppg1";
         wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelsesId);
@@ -215,7 +207,7 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void erstatterSvarOgReferatPanelMedReferatPanelVedRiktigeEvents() {
         assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(KVITTERING_VIST);
-        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(LEGG_TILBAKE_UTFORT);
+        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(LEGG_TILBAKE_FERDIG);
         assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(SVAR_AVBRUTT);
     }
 

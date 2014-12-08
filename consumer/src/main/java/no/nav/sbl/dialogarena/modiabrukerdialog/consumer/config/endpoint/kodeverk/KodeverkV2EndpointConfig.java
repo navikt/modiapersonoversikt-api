@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.kodeverk;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.modig.modia.ping.PingResult;
+import no.nav.modig.modia.ping.Pingable;
 import no.nav.sbl.dialogarena.common.integrasjon.features.TimeoutFeature;
 import no.nav.sbl.dialogarena.common.kodeverk.CachingKodeverkClient;
 import no.nav.sbl.dialogarena.common.kodeverk.DefaultKodeverkClient;
@@ -17,7 +19,12 @@ import org.springframework.context.annotation.Configuration;
 import java.io.File;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.List;
 
+import static java.lang.System.currentTimeMillis;
+import static java.util.Arrays.asList;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_FAIL;
+import static no.nav.modig.modia.ping.PingResult.ServiceResult.SERVICE_OK;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.EndpointsConfig.MODIA_CONNECTION_TIMEOUT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.EndpointsConfig.MODIA_RECEIVE_TIMEOUT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.InstanceSwitcher.createSwitcher;
@@ -43,6 +50,23 @@ public class KodeverkV2EndpointConfig {
         KodeverkClient prod = lagKodeverkClient();
         KodeverkClient mock = KodeverkV2PortTypeMock.kodeverkClient();
         return createSwitcher(prod, mock, KODEVERK_KEY, KodeverkClient.class);
+    }
+
+    @Bean
+    public Pingable pingKodeverk() {
+        return new Pingable() {
+            @Override
+            public List<PingResult> ping() {
+                long start = currentTimeMillis();
+                String name = "KODEVERK_V2";
+                try {
+                    lagKodeverkPortType().ping();
+                    return asList(new PingResult(name, SERVICE_OK, currentTimeMillis() - start));
+                } catch (Exception e) {
+                    return asList(new PingResult(name, SERVICE_FAIL, currentTimeMillis() - start));
+                }
+            }
+        };
     }
 
     private KodeverkPortType lagKodeverkPortType() {

@@ -1,24 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import org.apache.wicket.injection.Injector;
-import org.joda.time.DateTime;
 
-import javax.inject.Inject;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
-import java.util.Locale;
-
-import static java.lang.String.format;
-import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 
 public class LeggTilbakeVM implements Serializable {
-
-    public static final String LINJESKILLER = "\n";
-
-    @Inject
-    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     public LeggTilbakeVM() {
         Injector.get().inject(this);
@@ -48,19 +35,7 @@ public class LeggTilbakeVM implements Serializable {
     }
 
     public String lagBeskrivelse(String beskrivelseStart) {
-        String navident = getSubjectHandler().getUid();
-
-        StringBuilder beskrivelseBuilder = new StringBuilder();
-        beskrivelseBuilder.append(format("- %s (%s, %s) -",
-                getFormatertTimestamp(), navident, saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()));
-        beskrivelseBuilder.append(LINJESKILLER);
-        beskrivelseBuilder.append((beskrivelseStart + " " + (annenAarsakTekst == null ? "" : annenAarsakTekst)).trim());
-
-        return beskrivelseBuilder.toString();
-    }
-
-    public static String getFormatertTimestamp() {
-        return new SimpleDateFormat("dd.MM.yyyy HH:mm", new Locale("nb", "no")).format(DateTime.now().toDate());
+        return (beskrivelseStart + " " + (annenAarsakTekst == null ? "" : annenAarsakTekst)).trim();
     }
 
     public String lagTemagruppeTekst() {

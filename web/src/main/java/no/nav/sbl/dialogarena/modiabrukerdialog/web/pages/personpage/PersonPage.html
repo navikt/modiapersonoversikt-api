@@ -6,11 +6,9 @@
 	<wicket:extend>
 		<body>
 			<div wicket:id="redirectModal">[]</div>
-			<section wicket:id="saksbehandlerInnstillingerPanel"></section>
+			<section wicket:id="saksbehandlerInnstillingerPanel" aria-expanded="false"></section>
 			<section class="personpanel clearfix">
 				<section class="navbar menu-intern active">
-					<wicket:container wicket:id="plukkOppgave"/>
-                    <div wicket:id="saksbehandlerInnstillingerToggler"></div>
                     <div class="sokeboks clearfix">
 						<wicket:container wicket:id="searchPanel"/>
 						<button wicket:id="toggle-sok" class="personsok-button" id="toggle-personsok"
@@ -25,6 +23,8 @@
 					title:hentperson.nullstillbruker" wicket:id="nullstill">[]
 						</button>
 					</div>
+                    <div wicket:id="saksbehandlerInnstillingerToggler"></div>
+                    <wicket:container wicket:id="plukkOppgave"/>
 				</section>
 				<div class="flexbox col">
 					<div class="flexbox row flex1">

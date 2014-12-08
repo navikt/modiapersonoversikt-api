@@ -17,6 +17,10 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.
 
 public class TidligereMeldingPanel extends Panel {
     public TidligereMeldingPanel(String id, String type, String temagruppe, DateTime opprettetDato, final String fritekst, boolean minimert) {
+        this(id, type, temagruppe, opprettetDato, fritekst, "", minimert);
+    }
+
+    public TidligereMeldingPanel(String id, String type, String temagruppe, DateTime opprettetDato, final String fritekst, String avsender, boolean minimert) {
         super(id);
 
         final URLParsingMultiLineLabel fritekstFelt = new URLParsingMultiLineLabel("fritekst", fritekst != null ? Model.of(fritekst) : new ResourceModel("innhold.kassert"));
@@ -41,6 +45,7 @@ public class TidligereMeldingPanel extends Panel {
 
         add(
                 overskriftContainer,
+                new Label("avsender", avsender),
                 new Label("temagruppe", new ResourceModel(temagruppe != null ? temagruppe : "temagruppe.kassert")),
                 new Label("dato", Datoformat.kortMedTid(opprettetDato)),
                 fritekstFelt);

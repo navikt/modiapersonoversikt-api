@@ -12,8 +12,8 @@
 
     <cache name="endpointCache" maxElementsInMemory="10000"
            eternal="false"
-           timeToIdleSeconds="10"
-           timeToLiveSeconds="10"
+           timeToIdleSeconds="3"
+           timeToLiveSeconds="3"
            overflowToDisk="false"
            diskPersistent="false"
            memoryStoreEvictionPolicy="LRU"/>
@@ -67,6 +67,7 @@
            diskPersistent="false"
            diskExpiryThreadIntervalSeconds="120"
            memoryStoreEvictionPolicy="LRU"/>
+
     <cache name="hentSykmeldingsperioderCache" maxElementsInMemory="100"
            eternal="false"
            timeToIdleSeconds="300"
@@ -76,10 +77,39 @@
            diskPersistent="false"
            diskExpiryThreadIntervalSeconds="120"
            memoryStoreEvictionPolicy="LRU"/>
-    <cache name="pip.role" maxElementsInMemory="100" overflowToDisk="false" eternal="true"/>
-    <cache name="pip.localenhet" maxElementsInMemory="100" overflowToDisk="false" eternal="true"/>
-    <cache name="pip.fylkesenhet" maxElementsInMemory="100" overflowToDisk="false" eternal="true"/>
-    <cache name="pdp.decision" maxElementsInMemory="100" overflowToDisk="false" eternal="true"/>
+
+    <cache name="pip.role" maxElementsInMemory="25000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   eternal="false"
+		   timeToIdleSeconds="3600"
+		   timeToLiveSeconds="86400"
+		   memoryStoreEvictionPolicy="FIFO"/>
+
+    <cache name="pip.localenhet" maxElementsInMemory="25000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   eternal="false"
+		   timeToIdleSeconds="3600"
+		   timeToLiveSeconds="86400"
+		   memoryStoreEvictionPolicy="FIFO"/>
+
+    <cache name="pip.fylkesenhet" maxElementsInMemory="25000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   eternal="false"
+		   timeToIdleSeconds="3600"
+		   timeToLiveSeconds="86400"
+		   memoryStoreEvictionPolicy="FIFO"/>
+
+    <cache name="pdp.decision" maxElementsInMemory="25000"
+		   overflowToDisk="false"
+		   diskPersistent="false"
+		   eternal="false"
+		   timeToIdleSeconds="3600"
+		   timeToLiveSeconds="86400"
+		   memoryStoreEvictionPolicy="FIFO"/>
+
     <cache name="kodeverkCache" maxElementsInMemory="100"
            eternal="false"
            timeToIdleSeconds="3600"
@@ -105,6 +135,23 @@
            timeToIdleSeconds="1800"/>
 
     <cache name="aktorIdCache" maxElementsInMemory="100000"
-           eternal="true"
-           overflowToDisk="true"/>
+           eternal="false"
+           diskPersistent="false"
+           overflowToDisk="false"/>
+
+    <cache name="asbogosysEnhet" maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="86400"
+           timeToLiveSeconds="86400"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"/>
+
+    <cache name="asbogosysAnsatt" maxElementsInMemory="10000"
+           eternal="false"
+           timeToIdleSeconds="14400"
+           timeToLiveSeconds="14400"
+           overflowToDisk="false"
+           diskPersistent="false"
+           memoryStoreEvictionPolicy="LRU"/>
 </ehcache>

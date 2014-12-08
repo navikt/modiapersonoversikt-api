@@ -20,8 +20,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
-import static java.lang.String.format;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakeVM.LINJESKILLER;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.when;
@@ -56,7 +54,7 @@ public class LeggTilbakeVMTest {
         String beskrivelseStart = "arsak";
         String beskrivelse = new LeggTilbakeVM().lagBeskrivelse(beskrivelseStart);
 
-        assertThat(beskrivelse, is(format("- %s (%s, %s) -%s%s", LeggTilbakeVM.getFormatertTimestamp(), NAVIDENT, ENHET, LINJESKILLER, beskrivelseStart)));
+        assertThat(beskrivelse, is(beskrivelseStart));
     }
 
     public static void innloggetBrukerEr(String userId) {

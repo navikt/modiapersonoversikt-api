@@ -2,8 +2,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
@@ -23,9 +25,7 @@ import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHe
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_SKRIFTLIG;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_TELEFON;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.ELDSTE_FORST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createSporsmalFromXMLHenvendelse;
@@ -39,37 +39,28 @@ public class HenvendelseUtsendingService {
     @Inject
     private HenvendelsePortType henvendelsePortType;
     @Inject
-    protected SendUtHenvendelsePortType sendUtHenvendelsePortType;
+    private SendUtHenvendelsePortType sendUtHenvendelsePortType;
+    @Inject
+    private OppgaveBehandlingService oppgaveBehandlingService;
     @Inject
     @Named("pep")
     private EnforcementPoint pep;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private static final List<String> SVAR = asList(SVAR_OPPMOTE.name(), SVAR_SKRIFTLIG.name(), SVAR_TELEFON.name());
 
-    public void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat) {
+    public void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat, Optional<String> oppgaveId) throws OppgaveErFerdigstilt {
+        if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
+            throw new OppgaveErFerdigstilt();
+        }
+
         XMLHenvendelseType type = XMLHenvendelseType.fromValue(svarEllerReferat.type.name());
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedMeldingTilBruker(svarEllerReferat, type);
         sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest()
                 .withType(type.name())
                 .withFodselsnummer(svarEllerReferat.fnr)
                 .withAny(xmlHenvendelse));
-    }
-
-    public Sporsmal getSporsmalFromOppgaveId(String fnr, String oppgaveId) {
-        List<Object> henvendelseliste =
-                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withTyper(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name()).withFodselsnummer(fnr)).getAny();
-        XMLHenvendelse henvendelse;
-        for (Object o : henvendelseliste) {
-            henvendelse = (XMLHenvendelse) o;
-            if (erDetteEtSporsmalMedDenneGsakIden(oppgaveId, henvendelse)) {
-                return createSporsmalFromXMLHenvendelse(henvendelse);
-            }
-        }
-        throw new RuntimeException("Finner ikke spørsmål med oppgaveId " + oppgaveId);
-    }
-
-    private boolean erDetteEtSporsmalMedDenneGsakIden(String oppgaveId, XMLHenvendelse henvendelse) {
-        return oppgaveId.equals(henvendelse.getOppgaveIdGsak());
     }
 
     public List<SvarEllerReferat> getSvarEllerReferatForSporsmal(String fnr, String sporsmalId) {
@@ -84,7 +75,7 @@ public class HenvendelseUtsendingService {
         XMLHenvendelse xmlHenvendelse;
         for (Object o : henvendelseliste) {
             xmlHenvendelse = (XMLHenvendelse) o;
-            if (erDetteEtSvarEllerReferatForSporsmalet(sporsmalId, xmlHenvendelse)) {
+            if (svarEllerReferatForSporsmalet(sporsmalId, xmlHenvendelse)) {
                 svarliste.add(createSvarEllerReferatFromXMLHenvendelse(xmlHenvendelse));
             }
         }
@@ -93,13 +84,23 @@ public class HenvendelseUtsendingService {
                 .collect(ELDSTE_FORST);
     }
 
-    private boolean erDetteEtSvarEllerReferatForSporsmalet(String sporsmalId, XMLHenvendelse xmlHenvendelse) {
+    private boolean svarEllerReferatForSporsmalet(String sporsmalId, XMLHenvendelse xmlHenvendelse) {
         return SVAR.contains(xmlHenvendelse.getHenvendelseType()) && sporsmalId.equals(xmlHenvendelse.getBehandlingskjedeId());
     }
 
-    public Sporsmal getSporsmal(String sporsmalId) {
+    public Optional<Sporsmal> getSporsmal(String sporsmalId) {
         XMLHenvendelse xmlHenvendelse =
                 (XMLHenvendelse) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalId)).getAny();
+
+        String kontorsperreEnhet = xmlHenvendelse.getKontorsperreEnhet();
+        if (kontorsperreEnhet != null) {
+            pep.assertAccess(forRequest(
+                    actionId("kontorsperre"),
+                    resourceId(""),
+                    subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())),
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(kontorsperreEnhet))));
+        }
+
         return createSporsmalFromXMLHenvendelse(xmlHenvendelse);
     }
 
@@ -119,4 +120,6 @@ public class HenvendelseUtsendingService {
         }
     };
 
+    public static class OppgaveErFerdigstilt extends Exception {
+    }
 }

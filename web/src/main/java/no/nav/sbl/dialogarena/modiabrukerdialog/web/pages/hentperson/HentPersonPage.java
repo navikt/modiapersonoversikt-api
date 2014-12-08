@@ -42,9 +42,10 @@ public class HentPersonPage extends BasePage {
 	public HentPersonPage(PageParameters pageParameters) {
         HentPersonPanel hentPersonPanel = new HentPersonPanel("searchPanel");
         setupErrorText(pageParameters, hentPersonPanel);
+        SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         add(
-                new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel"),
-                new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler"),
+                saksbehandlerInnstillingerPanel,
+                new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler", saksbehandlerInnstillingerPanel.getMarkupId()),
                 hentPersonPanel,
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true)
@@ -71,7 +72,7 @@ public class HentPersonPage extends BasePage {
 
     @Override
     public void renderHead(IHeaderResponse response) {
-        response.render(forScript("jQuery('#foedselsnummerInput').focus()"));
+        response.render(forScript("jQuery('#foedselsnummerInput').focus();SaksbehandlerInnstillinger.focus();"));
     }
 
     public boolean isVersioned() {
@@ -80,7 +81,7 @@ public class HentPersonPage extends BasePage {
 
     @RunOnEvents(FODSELSNUMMER_FUNNET)
     public void refreshKjerneinfo(AjaxRequestTarget target, String query) {
-        throw new RestartResponseException(PersonPage.class, new PageParameters().set("fnr", query));
+        throw new RestartResponseException(PersonPage.class, new PageParameters().set(FNR, query));
     }
 
 	@RunOnEvents(GOTO_HENT_PERSONPAGE)

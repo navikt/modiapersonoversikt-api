@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web;
 
+import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.errorhandling.ModiaApplicationConfigurator;
 import no.nav.modig.frontend.FrontendConfigurator;
 import no.nav.modig.frontend.MetaTag;
@@ -25,18 +26,23 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.utils.LocaleFromWicke
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.mocksetup.MockSetupPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import org.apache.wicket.Application;
+import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.Session;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.apache.wicket.request.Request;
 import org.apache.wicket.request.Response;
+import org.apache.wicket.resource.loader.IStringResourceLoader;
 import org.apache.wicket.settings.IMarkupSettings;
 import org.apache.wicket.spring.injection.annot.SpringComponentInjector;
+import org.slf4j.Logger;
 import org.springframework.context.ApplicationContext;
 
 import javax.annotation.Resource;
@@ -46,11 +52,17 @@ import java.util.Locale;
 import static no.nav.modig.frontend.FrontendModules.MODIA;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockSetupErTillatt;
 import static org.apache.wicket.util.time.Duration.ONE_SECOND;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class WicketApplication extends WebApplication {
 
     @Inject
     private ApplicationContext applicationContext;
+
+    @Inject
+    private CmsContentRetriever cms;
+
+    private static final Logger log = getLogger(WicketApplication.class);
 
     @Resource(name = "pep")
     private EnforcementPoint pep;
@@ -89,6 +101,27 @@ public class WicketApplication extends WebApplication {
 
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
 
+        getResourceSettings().getStringResourceLoaders().add(0, new IStringResourceLoader() {
+            @Override
+            public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation) {
+                try {
+                    return cms.hentTekst(key);
+                } catch (Exception e) {
+                    log.info("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
+                    return null;
+                }
+            }
+
+            @Override
+            public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
+                try {
+                    return cms.hentTekst(key);
+                } catch (Exception e) {
+                    log.info("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
+                    return null;
+                }
+            }
+        });
 
         new ModiaApplicationConfigurator()
                 .withExceptionHandler(true)
@@ -120,11 +153,11 @@ public class WicketApplication extends WebApplication {
                 .addConditionalCss(
                         PersonPage.INTERN_IE,
                         SaksoversiktLerret.SAKSOVERSIKT_IE_CSS,
-                        BasePage.MODIA_FLEXBOX_IE_CSS
+                        BasePage.MODIA_FLEXBOX_IE_CSS,
+                        Innboks.MELDINGER_IE_CSS
                 )
                 .addConditionalJavascript(
-                        PersonPage.RESPOND_JS,
-                        SaksoversiktLerret.SAKSOVERSIKT_IE_JS
+                        PersonPage.RESPOND_JS
                 )
                 .addLess(
                         BasePage.MODIA_COMMON_LESS,
@@ -159,7 +192,9 @@ public class WicketApplication extends WebApplication {
                         ModalErrorPanel.JS_RESOURCE,
                         UtbetalingLerret.UTBETALING_LAMELL_JS,
                         PersonPage.SELECTMENU_JS,
-                        SaksoversiktLerret.SAKSOVERSIKT_JS
+                        SaksoversiktLerret.SAKSOVERSIKT_JS,
+                        SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLER_INNSTILLINGER_JS,
+                        Innboks.MELDINGER_JS
                 )
                 .withResourcePacking(this.usesDeploymentConfig())
                 .configure(this);

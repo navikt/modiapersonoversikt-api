@@ -59,6 +59,10 @@
             <groupId>no.nav</groupId>
             <artifactId>personsok-result</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>personsok-consumer</artifactId>
+        </dependency>
 
         <!--Kontrakter-->
         <dependency>
@@ -102,6 +106,10 @@
         <dependency>
             <groupId>no.nav</groupId>
             <artifactId>brukerprofil-panel</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-consumer</artifactId>
         </dependency>
 
         <!--Dialogarena-->

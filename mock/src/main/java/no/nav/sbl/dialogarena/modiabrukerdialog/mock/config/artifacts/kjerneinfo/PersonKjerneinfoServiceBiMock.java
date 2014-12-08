@@ -39,7 +39,7 @@ public class PersonKjerneinfoServiceBiMock {
 
     private static Person createPerson() {
         Person barn = new Person.With()
-                .fodselsnummer("01019912345")
+                .fodselsnummer("***REMOVED***")
                 .personfakta(new Personfakta.With()
                         .sivilstand(new Kodeverdi.With()
                                 .value("SINGEL")

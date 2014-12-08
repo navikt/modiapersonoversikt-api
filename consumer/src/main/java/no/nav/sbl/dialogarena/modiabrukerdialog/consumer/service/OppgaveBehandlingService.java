@@ -1,6 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
@@ -25,18 +30,25 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.joda.time.DateTime.now;
+import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class OppgaveBehandlingService {
 
-    public static final int ENHET = 4112;
-
+    public static final int ENHET = 4100;
     public static final int ANTALL_PLUKK_FORSOK = 20;
+    public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
 
     @Inject
     private OppgavebehandlingV3 oppgavebehandlingWS;
     @Inject
     private OppgaveV3 oppgaveWS;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private GOSYSNAVansatt ansattWS;
 
     public void tilordneOppgaveIGsak(String oppgaveId) throws FikkIkkeTilordnet {
         tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId));
@@ -55,7 +67,7 @@ public class OppgaveBehandlingService {
         if (oppgave.isSome()) {
             try {
                 WSOppgave tilordnet = tilordneOppgaveIGsak(oppgave.get());
-                return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId()));
+                return optional(new Oppgave(tilordnet.getOppgaveId(), tilordnet.getGjelder().getBrukerId(), tilordnet.getHenvendelseId()));
             } catch (FikkIkkeTilordnet fikkIkkeTilordnet) {
                 return plukkOppgaveFraGsak(temagruppe, antallForsokIgjen - 1);
             }
@@ -66,7 +78,15 @@ public class OppgaveBehandlingService {
 
     public void ferdigstillOppgaveIGsak(Optional<String> oppgaveId) {
         if (oppgaveId.isSome()) {
-            oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId.get()).withFerdigstiltAvEnhetId(ENHET));
+            try {
+                WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId.get())).getOppgave();
+                oppgave.withBeskrivelse(leggTilBeskrivelse(oppgave.getBeskrivelse(), "Oppgaven er ferdigstilt i Modia"));
+                lagreOppgaveIGsak(oppgave);
+
+                oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId.get()).withFerdigstiltAvEnhetId(ENHET));
+            } catch (HentOppgaveOppgaveIkkeFunnet | LagreOppgaveOptimistiskLasing e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 
@@ -96,8 +116,30 @@ public class OppgaveBehandlingService {
         }
     }
 
-    private static String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {
-        return isBlank(gammelBeskrivelse) ? leggTil : gammelBeskrivelse + "\n" + leggTil;
+    public boolean oppgaveErFerdigstilt(String oppgaveid) {
+        return equalsIgnoreCase(hentOppgaveFraGsak(oppgaveid).getStatus().getKode(), KODE_OPPGAVE_FERDIGSTILT);
+    }
+
+    private String leggTilBeskrivelse(String gammelBeskrivelse, String leggTil) {
+        String ident = getSubjectHandler().getUid();
+        String header = String.format("--- %s %s (%s, %s) ---\n",
+                forPattern("dd.MM.yyyy HH:mm").print(now()),
+                hentAnsattNavn(ident),
+                ident,
+                saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
+
+        String nyBeskrivelse = header + leggTil;
+        return isBlank(gammelBeskrivelse) ? nyBeskrivelse : gammelBeskrivelse + "\n\n" + nyBeskrivelse;
+    }
+
+    private String hentAnsattNavn(String ident) {
+        try {
+            ASBOGOSYSNAVAnsatt ansattRequest = new ASBOGOSYSNAVAnsatt();
+            ansattRequest.setAnsattId(ident);
+            return ansattWS.hentNAVAnsatt(ansattRequest).getAnsattNavn();
+        } catch (HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattFaultGOSYSGeneriskfMsg e) {
+            throw new RuntimeException("Noe gikk galt ved henting av ansatt med ident " + ident, e);
+        }
     }
 
     private WSOppgave hentOppgaveFraGsak(String oppgaveId) {

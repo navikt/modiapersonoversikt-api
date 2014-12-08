@@ -60,28 +60,18 @@ import java.util.List;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.FNR_CHANGED;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_IKKE_TILGANG;
-import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
-import static no.nav.modig.modia.events.InternalEvents.HENTPERSON_FODSELSNUMMER_IKKE_TILGANG;
-import static no.nav.modig.modia.events.InternalEvents.LAMELL_LINK_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
-import static no.nav.modig.modia.events.InternalEvents.PERSONSOK_FNR_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
-import static no.nav.modig.modia.events.InternalEvents.WIDGET_HEADER_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.WIDGET_LINK_CLICKED;
+import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_OVERSIKT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
 import static org.apache.wicket.extensions.ajax.markup.html.modal.ModalWindow.CloseButtonCallback;
@@ -93,6 +83,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class PersonPage extends BasePage {
 
+    public static final String VALGT_OPPGAVE_HENVENDELSEID_ATTR = "valgt-oppgave-henvendelseid";
     public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
     public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
     public static final String SVAR_OG_REFERAT_PANEL_ID = "svarOgReferatPanel";
@@ -104,8 +95,8 @@ public class PersonPage extends BasePage {
     public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(SvarOgReferatVM.class, "jquery-ui-selectmenu.min.js");
     private static final Logger logger = getLogger(PersonPage.class);
     private final String fnr;
-	public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
-	public static final String ERROR = "error";
+    public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
+    public static final String ERROR = "error";
 
     @Inject
     protected HenvendelseUtsendingService henvendelseUtsendingService;
@@ -120,7 +111,7 @@ public class PersonPage extends BasePage {
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
     private Component svarOgReferatPanel;
-	private VisitkortTabListePanel visitkortTabListePanel;
+    private VisitkortTabListePanel visittkortTabListePanel;
     protected String startLamell = LAMELL_OVERSIKT;
 
     public PersonPage(PageParameters pageParameters) {
@@ -132,6 +123,7 @@ public class PersonPage extends BasePage {
         }
 
         instansierFelter();
+        SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
         add(
                 hentPersonPanel,
                 searchToggleButton,
@@ -139,12 +131,12 @@ public class PersonPage extends BasePage {
                 lamellContainer,
                 redirectPopup,
                 oppgavetilordningFeiletPopup,
-                new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel"),
-                new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler"),
+                saksbehandlerInnstillingerPanel,
+                new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler", saksbehandlerInnstillingerPanel.getMarkupId()),
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
-				visitkortTabListePanel,
+                visittkortTabListePanel,
                 svarOgReferatPanel,
                 new TimeoutBoks("timeoutBoks", fnr)
         );
@@ -171,29 +163,29 @@ public class PersonPage extends BasePage {
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
         svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
 
-		visitkortTabListePanel = new VisitkortTabListePanel("kjerneinfotabs", createTabs());
+        visittkortTabListePanel = new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr);
 
     }
 
-	private List createTabs() {
-		List tabs = new ArrayList();
-		tabs.add(new AbstractTabPanel(new Model("img/familie_ikon.svg"), "familie") {
-			@Override
-			public WebMarkupContainer getPanel(String panelId ) {
-				return new PersonKjerneinfoPanel(panelId, fnr);
-			}
-		});
-		tabs.add(new AbstractTabPanel(new Model("svg/kjerneinfo/lenker_ikon.svg"), "lenker") {
-			@Override
-			public WebMarkupContainer getPanel(String panelId ) {
-				return new EksterneLenkerPanel(panelId, fnr);
-			}
-		});
+    private List createTabs() {
+        List tabs = new ArrayList();
+        tabs.add(new AbstractTabPanel(new Model("img/familie_ikon.svg"), "familie") {
+            @Override
+            public WebMarkupContainer getPanel(String panelId) {
+                return new PersonKjerneinfoPanel(panelId, fnr);
+            }
+        });
+        tabs.add(new AbstractTabPanel(new Model("svg/kjerneinfo/lenker_ikon.svg"), "lenker") {
+            @Override
+            public WebMarkupContainer getPanel(String panelId) {
+                return new EksterneLenkerPanel(panelId, fnr);
+            }
+        });
 
-		return tabs;
-	}
+        return tabs;
+    }
 
-	private boolean flyttUrlParametereTilSession(PageParameters pageParameters, String... params) {
+    private boolean flyttUrlParametereTilSession(PageParameters pageParameters, String... params) {
         boolean fantParamVerdi = false;
         for (String param : params) {
             StringValue paramVerdi = pageParameters.get(param);
@@ -210,12 +202,10 @@ public class PersonPage extends BasePage {
         String henvendelseId = (String) getSession().getAttribute(HENVENDELSEID);
         String oppgaveId = (String) getSession().getAttribute(OPPGAVEID);
 
-        if (isBlank(henvendelseId) && isNotBlank(oppgaveId)) {
-            visSvarPanelBasertPaaOppgaveIdForSporsmal(oppgaveId);
-        } else if (isNotBlank(henvendelseId) && isBlank(oppgaveId)) {
+        if (isNotBlank(henvendelseId) && isBlank(oppgaveId)) {
             startLamell = LAMELL_MELDINGER;
         } else if (isNotBlank(henvendelseId) && isNotBlank(oppgaveId)) {
-            visSvarPanelBasertPaaHenvendelsesId(henvendelseId, oppgaveId);
+            visSvarPanelForHenvendelseId(henvendelseId, oppgaveId);
             startLamell = LAMELL_MELDINGER;
         }
     }
@@ -233,17 +223,17 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(GOTO_HENT_PERSONPAGE)
     public void gotoHentPersonPage(AjaxRequestTarget target, String query) throws JSONException {
-		String errorText = getErrorText(query);
-		String sikkerhetstiltak = getSikkerhetsTiltakBeskrivelse(query);
+        String errorText = getErrorText(query);
+        String sikkerhetstiltak = getSikkerhetsTiltakBeskrivelse(query);
 
-		PageParameters pageParameters = new PageParameters();
-		if (!StringUtils.isEmpty(sikkerhetstiltak)) {
-			pageParameters.set(ERROR, errorText).set(SIKKERHETSTILTAK, sikkerhetstiltak);
-		} else {
-			pageParameters.set(ERROR, errorText);
-		}
+        PageParameters pageParameters = new PageParameters();
+        if (!StringUtils.isEmpty(sikkerhetstiltak)) {
+            pageParameters.set(ERROR, errorText).set(SIKKERHETSTILTAK, sikkerhetstiltak);
+        } else {
+            pageParameters.set(ERROR, errorText);
+        }
 
-		throw new RestartResponseException(HentPersonPage.class, pageParameters);
+        throw new RestartResponseException(HentPersonPage.class, pageParameters);
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
@@ -296,21 +286,17 @@ public class PersonPage extends BasePage {
         send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
     }
 
-    private void visSvarPanelBasertPaaOppgaveIdForSporsmal(String oppgaveId) {
+    private void visSvarPanelForHenvendelseId(String henvendelseId, String oppgaveId) {
         getSession().setAttribute(OPPGAVEID, null);
-        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmalFromOppgaveId(fnr, oppgaveId);
-        erstattReferatPanelMedSvarPanel(sporsmal, henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, sporsmal.id), optional(oppgaveId));
-    }
-
-    private void visSvarPanelBasertPaaHenvendelsesId(String henvendelseId, String oppgaveId) {
-        getSession().setAttribute(OPPGAVEID, null);
-        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(henvendelseId);
-        erstattReferatPanelMedSvarPanel(sporsmal, henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, henvendelseId), optional(oppgaveId));
+        Optional<Sporsmal> sporsmal = henvendelseUtsendingService.getSporsmal(henvendelseId);
+        if (sporsmal.isSome()) {
+            erstattReferatPanelMedSvarPanel(sporsmal.get(), henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, henvendelseId), optional(oppgaveId));
+        }
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void visSvarPanelBasertPaaSporsmalId(AjaxRequestTarget target, String sporsmalId) {
-        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(sporsmalId);
+        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(sporsmalId).get();
         List<SvarEllerReferat> svar = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, sporsmalId);
         Optional<String> oppgaveId = none();
         if (sporsmaletIkkeErBesvartTidligere(svar)) {
@@ -325,15 +311,15 @@ public class PersonPage extends BasePage {
         target.add(svarOgReferatPanel);
     }
 
-    private void erstattReferatPanelMedSvarPanel(Sporsmal sporsmal, List<SvarEllerReferat> svarTilSporsmal, Optional<String> oppgaveId) {
-        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svarTilSporsmal, oppgaveId));
-    }
-
     private boolean sporsmaletIkkeErBesvartTidligere(List<SvarEllerReferat> svar) {
         return svar.isEmpty();
     }
 
-    @RunOnEvents({KVITTERING_VIST, LEGG_TILBAKE_UTFORT, SVAR_AVBRUTT})
+    private void erstattReferatPanelMedSvarPanel(Sporsmal sporsmal, List<SvarEllerReferat> svarTilSporsmal, Optional<String> oppgaveId) {
+        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svarTilSporsmal, oppgaveId));
+    }
+
+    @RunOnEvents({KVITTERING_VIST, LEGG_TILBAKE_FERDIG, SVAR_AVBRUTT})
     public void visReferatPanel(AjaxRequestTarget target) {
         svarOgReferatPanel = svarOgReferatPanel.replaceWith(new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr));
         target.add(svarOgReferatPanel);
@@ -343,6 +329,7 @@ public class PersonPage extends BasePage {
     public void slettPlukketOppgaveFraSession() {
         getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, null);
         getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, null);
+        getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, null);
     }
 
     @Override
@@ -402,24 +389,20 @@ public class PersonPage extends BasePage {
         }
     }
 
-    public static Boolean isNotBlank(String s) {
-        return !isBlank(s);
+    protected String getSikkerhetsTiltakBeskrivelse(String query) throws JSONException {
+        return getJsonField(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
     }
 
-	protected String getSikkerhetsTiltakBeskrivelse(String query) throws JSONException {
-		return getJsonField(query, HentPersonPanel.JSON_SIKKERHETTILTAKS_BESKRIVELSE);
-	}
+    protected String getErrorText(String query) throws JSONException {
+        return getJsonField(query, HentPersonPanel.JSON_ERROR_TEXT);
+    }
 
-	protected String getErrorText(String query) throws JSONException {
-		return getJsonField(query, HentPersonPanel.JSON_ERROR_TEXT);
-	}
-
-	private String getJsonField(String query, String field) throws JSONException {
-		JSONObject jsonObject =  new JSONObject(query);
-		if (jsonObject.has(field)) {
-			return new JSONObject(query).getString(field);
-		} else {
-			return null;
-		}
-	}
+    private String getJsonField(String query, String field) throws JSONException {
+        JSONObject jsonObject = new JSONObject(query);
+        if (jsonObject.has(field)) {
+            return new JSONObject(query).getString(field);
+        } else {
+            return null;
+        }
+    }
 }

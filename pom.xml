@@ -32,17 +32,16 @@
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco-ut.exec</sonar.jacoco.reportPath>
         <sonar.language>java</sonar.language>
         <!-- versjoner -->
-        <wicket.version>6.11.0</wicket.version>
-        <spring.version>3.2.4.RELEASE</spring.version>
-        <modig.frontend.version>1.1.60</modig.frontend.version>
+        <wicket.version>6.17.0</wicket.version>
+        <spring.version>3.2.9.RELEASE</spring.version>
+        <modig.frontend.version>1.1.93</modig.frontend.version>
         <modig.security.version>1.0.21</modig.security.version>
         <modig.log.version>1.1.2</modig.log.version>
         <spring.security.version>3.1.0.RELEASE</spring.security.version>
         <modig.wicket.test.version>1.0.0</modig.wicket.test.version>
-        <modig.wicket.version>2.0.28</modig.wicket.version>
+        <modig.wicket.version>2.0.42</modig.wicket.version>
         <modig.fitnesse.version>1.0.0-alpha.1</modig.fitnesse.version>
         <modig.lang.version>2.0.2</modig.lang.version>
-        <modig.frontend.wicket.version>1.0.33</modig.frontend.wicket.version>
         <modig.core.version>1.0.1</modig.core.version>
         <modig.log.version>1.1.2</modig.log.version>
         <hamcrest.version>1.3</hamcrest.version>
@@ -60,7 +59,7 @@
 
         <!-- Modia-komponenter-->
         <personsok.version>1.0.82</personsok.version>
-		<kjerneinfo.versjon>1.0.93</kjerneinfo.versjon>
+		<kjerneinfo.versjon>1.0.99</kjerneinfo.versjon>
         <soknader.liste.version>2.0.12</soknader.liste.version>
         <utbetaling.version>2.0.40</utbetaling.version>
         <utbetaling.tjenestespesifikasjon.version>1.0.8</utbetaling.tjenestespesifikasjon.version>
@@ -70,8 +69,8 @@
         <behandle.henvendelse.version>0.10</behandle.henvendelse.version>
         <dialogarena.behandlingsinformasjon.version>0.0.25</dialogarena.behandlingsinformasjon.version>
         <modiabrukerdialog-api.version>1.2</modiabrukerdialog-api.version>
-        <saksoversikt.version>1.3</saksoversikt.version>
-        <sporsmalogsvar.version>1.23</sporsmalogsvar.version>
+        <sporsmalogsvar.version>1.35</sporsmalogsvar.version>
+        <saksoversikt.version>1.20</saksoversikt.version>
     </properties>
 
     <dependencyManagement>
@@ -311,7 +310,7 @@
             <dependency>
                 <groupId>no.nav.tjenester.fim</groupId>
                 <artifactId>nav-fim-behandleJournal-v2-tjenestespesifikasjon</artifactId>
-                <version>2.0.0-alpha009</version>
+                <version>2.0.0</version>
                 <classifier>jaxws</classifier>
             </dependency>
 
@@ -319,7 +318,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>gsak-oppgave-tjenestespesifikasjon</artifactId>
-                <version>0.0.9</version>
+                <version>0.0.12</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -334,12 +333,12 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>dial-nav-tjeneste-sak</artifactId>
-                <version>1.5</version>
+                <version>1.6</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>sakogbehandling-tjenestespesifikasjon</artifactId>
-                <version>1.0.12</version>
+                <version>1.0.14</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -417,7 +416,7 @@
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
                 <artifactId>common-time</artifactId>
-                <version>2.4</version>
+                <version>2.5</version>
             </dependency>
             <dependency>
                 <groupId>no.nav.sbl.dialogarena</groupId>
@@ -563,6 +562,11 @@
                 <artifactId>modig-testcertificates</artifactId>
                 <version>1.1.0</version>
                 <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.google.code.findbugs</groupId>
+                <artifactId>annotations</artifactId>
+                <version>3.0.0</version>
             </dependency>
 
             <!--Wicket-->
@@ -950,6 +954,21 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <!-- for å synke innhold mot Enonic kjør: mvn modig-content:sync -Denonic.username=XXX -Denonic.password=XXX -Denonic.url=http://<ip-adresse til admin-node>:8080   Se "Serveroversikt Enonic" på Confluence for IP-adresser -->
+                <groupId>no.nav.modig</groupId>
+                <artifactId>modig-content-maven-plugin</artifactId>
+                <version>1.1.1</version>
+                <configuration>
+                    <propertiesFilesRoot>${project.basedir}/web/src/main/resources/content</propertiesFilesRoot>
+                    <propertiesFiler>
+                        <nb-app>innholdstekster_nb.properties</nb-app>
+                    </propertiesFiler>
+                    <menyPunktPaths>
+                        <nb-app>/site/18/app/saksoversikt/nb/tekster</nb-app>
+                    </menyPunktPaths>
+                </configuration>
             </plugin>
         </plugins>
     </build>

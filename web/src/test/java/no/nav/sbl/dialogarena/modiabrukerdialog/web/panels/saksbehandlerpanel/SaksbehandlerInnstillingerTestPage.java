@@ -5,7 +5,8 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 public class SaksbehandlerInnstillingerTestPage extends BasePage {
 
     public SaksbehandlerInnstillingerTestPage() {
-        add(new SaksbehandlerInnstillingerPanel("saksbehandlerinnstillinger"));
-        add(new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerinnstillingertoggler"));
+        SaksbehandlerInnstillingerPanel saksbehandlerinnstillinger = new SaksbehandlerInnstillingerPanel("saksbehandlerinnstillinger");
+        add(saksbehandlerinnstillinger);
+        add(new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerinnstillingertoggler", saksbehandlerinnstillinger.getMarkupId()));
     }
 }

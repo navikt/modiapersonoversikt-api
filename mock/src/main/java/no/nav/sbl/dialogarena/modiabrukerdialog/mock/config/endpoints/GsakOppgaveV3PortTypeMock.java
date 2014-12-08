@@ -47,7 +47,7 @@ public class GsakOppgaveV3PortTypeMock {
             when(v3.hentOppgave(any(WSHentOppgaveRequest.class)))
                     .thenAnswer(new Answer<WSHentOppgaveResponse>() {
                         @Override
-                        public WSHentOppgaveResponse answer(InvocationOnMock invocation) throws Throwable {
+                        public WSHentOppgaveResponse answer(InvocationOnMock invocation) {
                             WSHentOppgaveRequest req = (WSHentOppgaveRequest) invocation.getArguments()[0];
                             return new WSHentOppgaveResponse().withOppgave(lagWSOppgave(req.getOppgaveId()));
                         }
@@ -56,8 +56,8 @@ public class GsakOppgaveV3PortTypeMock {
             when(v3.finnFerdigstiltOppgaveListe(any(WSFinnFerdigstiltOppgaveListeRequest.class)))
                     .thenReturn(new WSFinnFerdigstiltOppgaveListeResponse());
 
-        } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
-            hentOppgaveOppgaveIkkeFunnet.printStackTrace();
+        } catch (HentOppgaveOppgaveIkkeFunnet ignored) {
+            throw new RuntimeException(ignored);
         }
 
         return v3;
@@ -70,8 +70,9 @@ public class GsakOppgaveV3PortTypeMock {
     public static WSOppgave lagWSOppgave(String oppgaveId) {
         return new WSOppgave()
                 .withOppgaveId(oppgaveId)
+                .withHenvendelseId(HenvendelsePortTypeMock.BEHANDLINGS_ID1)
                 .withOppgavetype(new WSOppgavetype().withKode("wsOppgavetype"))
-                .withGjelder(new WSBruker().withBrukerId("***REMOVED***"))
+                .withGjelder(new WSBruker().withBrukerId("10108000398"))
                 .withStatus(new WSStatus().withKode("statuskode"))
                 .withFagomrade(new WSFagomrade().withKode("HJE"))
                 .withAktivFra(now().toLocalDate())

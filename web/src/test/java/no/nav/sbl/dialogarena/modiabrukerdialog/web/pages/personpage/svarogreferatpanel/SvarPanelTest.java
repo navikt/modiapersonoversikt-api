@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
@@ -66,36 +67,39 @@ public class SvarPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void skalSendeSvarTilHenvendelseDersomManVelgerTekstSomKanal() {
+    @SuppressWarnings("unchecked")
+    public void skalSendeSvarTilHenvendelseDersomManVelgerTekstSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class), any(Optional.class));
     }
 
     @Test
-    public void skalSendeReferatTilHenvendelseDersomManVelgerTelefonSomKanal() {
+    @SuppressWarnings("unchecked")
+    public void skalSendeReferatTilHenvendelseDersomManVelgerTelefonSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .select("kanal", 1)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class), any(Optional.class));
     }
 
     @Test
-    public void skalSendeReferatTilHenvendelseDersomManVelgerOppmoteSomKanal() {
+    @SuppressWarnings("unchecked")
+    public void skalSendeReferatTilHenvendelseDersomManVelgerOppmoteSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .select("kanal", 2)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class), any(Optional.class));
     }
 
     @Test

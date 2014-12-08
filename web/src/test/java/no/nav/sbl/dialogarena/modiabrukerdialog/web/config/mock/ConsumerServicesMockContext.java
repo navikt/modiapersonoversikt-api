@@ -49,5 +49,4 @@ public class ConsumerServicesMockContext {
     public LokaltKodeverk lokaltKodeverk() {
         return mock(LokaltKodeverk.class);
     }
-
 }

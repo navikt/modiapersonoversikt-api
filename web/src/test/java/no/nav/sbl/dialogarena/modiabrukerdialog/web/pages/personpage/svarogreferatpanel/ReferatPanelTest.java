@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
@@ -73,7 +74,8 @@ public class ReferatPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void skalSendeReferattypeTilHenvendelse() {
+    @SuppressWarnings("unchecked")
+    public void skalSendeReferattypeTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         wicket.goToPageWith(new TestReferatPanel("id", "fnr"))
                 .inForm(withId("referatform"))
                 .write("tekstfelt:text", "dette er en fritekst")
@@ -81,7 +83,7 @@ public class ReferatPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class), any(Optional.class));
     }
 
     @Test

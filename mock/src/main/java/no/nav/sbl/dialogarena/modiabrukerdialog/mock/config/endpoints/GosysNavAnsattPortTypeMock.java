@@ -72,8 +72,8 @@ public class GosysNavAnsattPortTypeMock {
                 try {
                     ansatt.getEnheter()
                             .addAll(hentNAVAnsattEnhetListe(null).getNAVEnheter());
-                } catch (HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg ex) {
-                    ex.printStackTrace();
+                } catch (HentNAVAnsattEnhetListeFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattEnhetListeFaultGOSYSGeneriskMsg ignored) {
+                    throw new RuntimeException(ignored);
                 }
                 return ansatt;
             }

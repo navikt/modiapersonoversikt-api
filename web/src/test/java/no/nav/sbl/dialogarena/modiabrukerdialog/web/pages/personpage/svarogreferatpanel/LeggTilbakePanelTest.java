@@ -63,7 +63,7 @@ public class LeggTilbakePanelTest extends WicketPageTest {
                 .andReturn()
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxFormChoiceComponentUpdatingBehavior.class))
                 .inForm(ofType(Form.class))
-                .select("valgtAarsak:temagruppewrapper:nyTemagruppe", 1)
+                .select("valgtAarsak:nyTemagruppeSkjuler:nyTemagruppe", 1)
                 .submitWithAjaxButton(withId("leggtilbake"));
 
         List<String> errorMessages = wicket.get().errorMessages();

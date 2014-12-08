@@ -8,12 +8,15 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTi
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static no.nav.modig.lang.option.Optional.none;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
 import static org.joda.time.DateTime.now;
 
@@ -21,7 +24,7 @@ public class HenvendelseUtils {
 
     public static final String KONTAKT_NAV_SAKSTEMA = "KNA";
 
-    public static Sporsmal createSporsmalFromXMLHenvendelse(XMLHenvendelse henvendelse) {
+    public static Optional<Sporsmal> createSporsmalFromXMLHenvendelse(XMLHenvendelse henvendelse) {
         Sporsmal sporsmal = new Sporsmal(henvendelse.getBehandlingsId(), henvendelse.getOpprettetDato());
         sporsmal.konorsperretEnhet = henvendelse.getKontorsperreEnhet();
         sporsmal.oppgaveId = henvendelse.getOppgaveIdGsak();
@@ -29,7 +32,7 @@ public class HenvendelseUtils {
         if (henvendelse.getMetadataListe() == null) {
             sporsmal.temagruppe = null;
             sporsmal.fritekst = null;
-            return sporsmal;
+            return optional(sporsmal);
         }
 
         XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
@@ -37,9 +40,9 @@ public class HenvendelseUtils {
             XMLMeldingFraBruker xmlMeldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
             sporsmal.temagruppe = xmlMeldingFraBruker.getTemagruppe();
             sporsmal.fritekst = xmlMeldingFraBruker.getFritekst();
-            return sporsmal;
+            return optional(sporsmal);
         } else {
-            throw new ApplicationException("Henvendelsen er ikke av typen XMLMeldingFraBruker: " + xmlMetadata);
+            return none();
         }
     }
 

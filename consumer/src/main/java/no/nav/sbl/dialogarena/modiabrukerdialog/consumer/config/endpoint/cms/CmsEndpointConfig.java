@@ -30,8 +30,8 @@ import static org.slf4j.LoggerFactory.getLogger;
 public class CmsEndpointConfig {
 
     public static final String DEFAULT_LOCALE = "nb";
-    private static final String INNHOLDSTEKSTER_NB_NO_REMOTE = "/app/saksoversikt/nb/tekster";
-    private static final String ARTIKLER_NB_NO_REMOTE = "/app/saksoversikt/nb/saksinformasjon";
+    private static final String INNHOLDSTEKSTER_NB_NO_REMOTE = "/app/modia-saksoversikt/nb/tekster";
+    private static final String ARTIKLER_NB_NO_REMOTE = "/app/modia-saksoversikt/nb/saksinformasjon";
     private static final String INNHOLDSTEKSTER_NB_NO_LOCAL = "content.innholdstekster";
 
     @Value("${appres.cms.url}")
@@ -60,11 +60,12 @@ public class CmsEndpointConfig {
             public List<PingResult> ping() {
                 long start = System.currentTimeMillis();
                 String name = "CMS";
+                String url = appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE;
                 try {
-                    contentRetriever().ping(new URI(appresUrl + INNHOLDSTEKSTER_NB_NO_REMOTE));
+                    contentRetriever().ping(new URI(url));
                     return asList(new PingResult(name, SERVICE_OK, System.currentTimeMillis() - start));
                 } catch (Exception e) {
-                    log.error("Fikk exception fra CMS", e);
+                    log.error("Fikk exception fra CMS " + url, e);
                     return asList(new PingResult(name, SERVICE_FAIL, System.currentTimeMillis() - start));
                 }
             }

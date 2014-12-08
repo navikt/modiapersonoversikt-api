@@ -26,7 +26,7 @@ import static org.hamcrest.core.Is.is;
         NAVOrgEnhetEndpointConfig.class
 })
 public class NAVOrgEnhetEndpointCacheTest extends CacheTest {
-    public static final String CACHE_NAME = "endpointCache";
+    public static final String CACHE_NAME = "asbogosysEnhet";
 
     @Inject
     private GOSYSNAVOrgEnhet enhetWS;
@@ -54,7 +54,7 @@ public class NAVOrgEnhetEndpointCacheTest extends CacheTest {
         enhetWS.hentNAVEnhet(enhet2);
         enhetWS.hentNAVEnhet(enhet2);
 
-        assertThat(getCache().getName(), is("endpointCache"));
+        assertThat(getCache().getName(), is("asbogosysEnhet"));
         assertThat(getCache().getKeys().size(), is(2));
     }
 }

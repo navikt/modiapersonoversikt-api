@@ -2,20 +2,20 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 import no.nav.modig.wicket.events.NamedEventPayload;
 import org.apache.wicket.Component;
-import org.apache.wicket.ajax.AbstractAjaxTimerBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.AbstractReadOnlyModel;
-import org.apache.wicket.util.time.Duration;
 
 public class KvitteringsPanel extends Panel {
 
     public static final String KVITTERING_VIST = "kvittering.vist";
+    private final AjaxLink skjulKvitteringKnapp;
 
     private String kvitteringsmelding;
-    private AbstractAjaxTimerBehavior timeout;
+    private Component[] komponenter = {};
 
     public KvitteringsPanel(String id) {
         super(id);
@@ -27,34 +27,30 @@ public class KvitteringsPanel extends Panel {
                 return kvitteringsmelding;
             }
         }));
+        skjulKvitteringKnapp = new AjaxLink("skjulKvittering") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                KvitteringsPanel.this.setVisibilityAllowed(false);
+                for (Component component : komponenter) {
+                    component.setVisibilityAllowed(true);
+                }
+                target.add(KvitteringsPanel.this);
+                target.add(komponenter);
+                send(getPage(), Broadcast.BREADTH, new NamedEventPayload(KVITTERING_VIST));
+            }
+        };
+        add(skjulKvitteringKnapp);
     }
 
-    public void visISekunder(int sekunder, String kvitteringsmelding, AjaxRequestTarget target, final Component... components) {
+    public void visKvittering(AjaxRequestTarget target, String kvitteringsmelding, final Component... komponenter) {
         this.kvitteringsmelding = kvitteringsmelding;
-        for (Component component : components) {
-            component.setVisibilityAllowed(false);
+        this.komponenter = komponenter;
+        for (Component komponent : komponenter) {
+            komponent.setVisibilityAllowed(false);
         }
         this.setVisibilityAllowed(true);
         target.add(this);
-        target.add(components);
-
-        if (timeout == null) {
-            timeout = new AbstractAjaxTimerBehavior(Duration.seconds(sekunder)) {
-                @Override
-                protected void onTimer(AjaxRequestTarget target) {
-                    KvitteringsPanel.this.setVisibilityAllowed(false);
-                    for (Component component : components) {
-                        component.setVisibilityAllowed(true);
-                    }
-                    target.add(getComponent());
-                    target.add(components);
-                    stop(target);
-                    send(getPage(), Broadcast.BREADTH, new NamedEventPayload(KVITTERING_VIST));
-                }
-            };
-            add(timeout);
-        } else {
-            timeout.restart(target);
-        }
+        target.add(komponenter);
+        target.focusComponent(skjulKvitteringKnapp);
     }
 }

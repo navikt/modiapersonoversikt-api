@@ -1,9 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
+import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.apache.wicket.AttributeModifier;
+import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
@@ -30,6 +34,9 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
 
     @Inject
     private AnsattService ansattService;
+
+    @Inject
+    private CmsContentRetriever cms;
 
     public String valgtEnhet;
 
@@ -65,12 +72,22 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
             }
         });
 
-        add(form);
-    }
+        String href = StringEscapeUtils.unescapeHtml3(cms.hentTekst("opplaeringslenke.href"));
 
+        Component opplaeringslenke = new Label("opplaeringslenke", cms.hentTekst("opplaeringslenke.tekst"))
+                .add(new AttributeModifier("href", href));
+
+        oppdaterAriaLabel();
+        add(form, opplaeringslenke);
+    }
+    public final void oppdaterAriaLabel() {
+        add(AttributeModifier.replace("aria-expanded", isVisibilityAllowed()));
+    }
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target) {
         animertVisningToggle(target, this);
+        oppdaterAriaLabel();
+        target.appendJavaScript("SaksbehandlerInnstillinger.focus();");
         target.add(this);
     }
 

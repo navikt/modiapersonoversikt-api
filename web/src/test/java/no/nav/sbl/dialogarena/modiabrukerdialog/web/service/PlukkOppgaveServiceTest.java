@@ -58,7 +58,7 @@ public class PlukkOppgaveServiceTest {
 
     @Test
     public void girOppgaveHvisSaksbehandlerHarTilgang() {
-        Optional<Oppgave> oppgave = optional(new Oppgave("oppgaveId", "fnr"));
+        Optional<Oppgave> oppgave = optional(new Oppgave("oppgaveId", "fnr", "henvendelseId"));
 
         when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true);
@@ -68,8 +68,8 @@ public class PlukkOppgaveServiceTest {
 
     @Test
     public void leggerTilbakeOppgaveOgPlukkerNyHvisSaksbehandlerIkkeHarTilgang() {
-        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr"));
-        Optional<Oppgave> oppgave2 = optional(new Oppgave("2", "fnr"));
+        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr", "1"));
+        Optional<Oppgave> oppgave2 = optional(new Oppgave("2", "fnr", "2"));
 
         when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave1, oppgave2);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(false, false, false, true);
@@ -80,7 +80,7 @@ public class PlukkOppgaveServiceTest {
 
     @Test
     public void leggerTilbakeHvisIkkeTilgangTilSamtligePep() {
-        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr"));
+        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr", "henvendelseId"));
 
         when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave1, Optional.<Oppgave>none());
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
@@ -91,7 +91,7 @@ public class PlukkOppgaveServiceTest {
 
     @Test
     public void leggerTilbakeHvisIkkeTilgangFraKjerneinfo() {
-        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr"));
+        Optional<Oppgave> oppgave1 = optional(new Oppgave("1", "fnr", "henvendelseId"));
 
         when(oppgaveBehandlingService.plukkOppgaveFraGsak(anyString())).thenReturn(oppgave1, Optional.<Oppgave>none());
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenThrow(new AuthorizationException(""));
