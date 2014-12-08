@@ -1,21 +1,18 @@
 /* Stiler for den generelle layouten og oppsettet i MODIA */
 .main-content {
 	position: relative;
-	float: left;
-	margin-left: @sidebarWidth;
-	width: @mainContentWidth;
-	height: 100%;
-	display: table-cell;
+	min-height: 100%;
+	margin: 0 auto;
 }
 
 .navbar {
 	margin-bottom: 0;
-	height: 140px;
+	height: @navbarHeight;
 	padding: 40px 30px 40px 30px;
-	z-index: 1030;
+	z-index: 1010;
 	background-color: @modiaBackground;
 	white-space: no-wrap;
-    position: relative;
+	position: relative;
 	FORM {
 		margin: 0;
 	}
@@ -29,36 +26,20 @@
 	min-width: 37rem;
 }
 
-.oppgave-panel {
-	float: right;
-	.oppgave-header {
-		height: auto; //101px;
-	}
-	.hent-oppgave, .oppgavevalg {
-		float: left;
-	}
-}
-
 .personsok-button {
 	margin: 0 0 0 20px;
 	width: 66px;
 	height: 66px;
 	border-radius: 66px;
 	text-align: center;
-	background-color: @grayLight;
-	background-image: none;
+	background-color: #fff;
 	border: none;
 	font-size: 1.8rem;
-	&:hover {
+	&:hover, &:focus {
 		background-color: @blue;
-		background-image: none;
-		border: none;
+        outline: none;
 	}
 	&:active {
-		background-color: @grayLight;
-		background-image: none;
-		border: none;
-		box-shadow: none;
 		.personsok-pil {
 			border-top: none;
 			border-left: 7px solid transparent;
@@ -66,14 +47,14 @@
 			border-bottom: 7px solid @modiaBackground;
 		}
 	}
-    .personsok-pil {
-      display: block;
-      width: 0;
-      margin: 0 auto;
-      border-left: 7px solid transparent;
-      border-right: 7px solid transparent;
-      border-top: 7px solid @modiaBackground;
-    }
+	.personsok-pil {
+		display: block;
+		width: 0;
+		margin: 0 auto;
+		border-left: 7px solid transparent;
+		border-right: 7px solid transparent;
+		border-top: 7px solid @modiaBackground;
+	}
 }
 
 .nullstill-button {
@@ -84,9 +65,10 @@
 	background: transparent url(../img/nullstill_bruker.svg) no-repeat right center;
 	background-size: 66px;
 	color: transparent;
-	&:hover {
+	&:hover,&:focus {
 		background: transparent url(../img/nullstill_bruker_hover.svg) no-repeat right center;
 		background-size: 66px;
+        outline: none;
 	}
 }
 
@@ -108,14 +90,14 @@
 	}
 	#submitFodselsnummer {
 		margin: 0;
-		height: 46px;
+		height: 40px;
 		padding: 4px;
 		position: absolute;
-		right: 5px;
-		top: 9px;
+		right: 12px;
+		top: 12px;
 		text-align: center;
 	}
-	INPUT[type=button]:hover, INPUT[type=button].hover, INPUT[type=button]:active, SUBMIT:hover, SUBMIT:active {
+	INPUT[type=button]:hover, INPUT[type=button].hover, INPUT[type=button]:active, INPUT[type=submit]:hover, INPUT[type=submit]:active {
 		right: 1rem;
 		position: absolute;
 	}
@@ -153,10 +135,10 @@
 	background-color: @modiaBackground;
 	color: @white;
 	line-height: 1.2em;
-	z-index: 3000;
+	z-index: 1000;
 	border-top: 1px solid @black;
 	border-right: 1px solid @black;
-    border-left: 1px solid @black;
+	border-left: 1px solid @black;
 	box-shadow: 0px 8px 6px -6px #555;
 	-webkit-box-shadow: -0px 8px 6px -6px #555;
 	-moz-box-shadow: 0px 8px 6px -6px #555;
@@ -189,16 +171,16 @@
 				width: 6rem;
 			}
 			LABEL.husbokstav {
-                width: 6rem;
+				width: 6rem;
 			}
 			LABEL.postnummer {
-                width: 6rem;
+				width: 6rem;
 			}
 			LABEL.kontonummer {
 				width: 48%;
 				margin-bottom: 40px;
-                float: left;
-                clear: left;
+				float: left;
+				clear: left;
 			}
 		}
 		.begrenssoket {
@@ -418,17 +400,202 @@
 	}
 }
 
+.saksbehandlerinnstillinger-toggle {
+  position: absolute;
+  z-index: 1020;
+  width: 240px;
+  left: 0;
+  right: 0;
+  margin: 0 auto;
+  :hover {
+    cursor: pointer;
+  }
+  .togglebilde {
+    width: 85%;
+  }
+  .pil {
+    margin-top: 25px;
+    float: right;
+    .pil(8px, #fff);
+  }
+  &:focus, &:hover {
+    outline: 1px dashed @grayLight;
+  }
+}
+
+.saksbehandlerinnstillinger {
+	text-align: center;
+	background-color: @graabakgrunn;
+	color: #000000;
+    padding: 2em 0;
+	-webkit-box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
+	-moz-box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
+	box-shadow: inset 0px -5px 20px rgba(50, 50, 50, 0.5);
+    .opplaeringslenke {
+        float: left;
+        margin-left: 3em;
+        top: 20px;
+        position: relative;
+    }
+	.enhetsform {
+		max-width: 23%;
+		margin: auto;
+	}
+	.enhetsvalg {
+		text-align: left;
+        label {
+          padding: 5px 5px 5px 37px;
+          min-height: 22px;
+          line-height: 22px;
+        }
+        input[type=radio] + label {
+          background-position: 5px;
+          border: 1px solid transparent;
+        }
+        input[type=radio]:focus + label {
+          border: 1px dashed @dodgerblue;
+        }
+	}
+    .linje {
+      height: 1px;
+      width: 100%;
+      background-color: #d1d1d1;
+      border: none;
+      margin: 30px 0 40px;
+    }
+	.centered {
+		text-align: center;
+	}
+	.sort-skrift {
+		color: #000000;
+	}
+	label {
+		width: auto;
+	}
+}
+
+.oppgaveform {
+	position: relative;
+	.oppgavepanel {
+		position: relative;
+		float: right;
+		width: 16rem;
+		> a,input {
+			height: 56px;
+			line-height: 56px;
+			float: right;
+			background-color: white;
+			border: 1px solid black;
+			text-transform: uppercase;
+			color: #333333;
+			font-size: 1.3rem;
+			text-align: center;
+			&.velg-temagruppe {
+				width: 26%;
+				position: relative;
+				background-image: url(../img/radio_ikon.svg);
+				background-repeat: no-repeat;
+				background-position: center;
+				background-size: 30px;
+                float: left;
+                &:focus, &:hover {
+                  background-color: @blue;
+                  outline:none;
+
+                  &:after {
+                    border-top-color: @blue;
+                    outline:none;
+                  }
+                }
+                &.plukket {
+                  background-image: url(../img/ajaxloader/hvit/loader_hvit_32.gif);
+                }
+				&:before, &:after {
+					position: absolute;
+					top: 100%;
+					left: 50%;
+					border: solid transparent;
+					content: " ";
+					height: 0;
+					width: 0;
+				}
+				&:after {
+					border-top-color: white;
+					border-width: 10px;
+					margin-left: -10px;
+				}
+				&:before {
+					border-top-color: black;
+					border-width: 11px;
+					margin-left: -11px;
+				}
+			}
+			&.plukk-oppgave {
+				width: 74%;
+				font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+				font-size: 1.14rem;
+				font-weight: 600;
+                &:focus, &:hover {
+                  border: 1px solid @blue;
+                }
+			}
+			&:hover {
+				cursor: pointer;
+				text-decoration: none;
+            }
+        }
+		.temagruppe-liste {
+			display: none;
+			position: absolute;
+			top: 68px;
+			background-color: white;
+			-webkit-box-shadow: 0px 5px 10px 0px rgba(50, 50, 50, 0.3);
+			-moz-box-shadow: 0px 5px 10px 0px rgba(50, 50, 50, 0.3);
+			box-shadow: 0px 5px 10px 0px rgba(50, 50, 50, 0.3);
+			padding: 20px 1.4rem;
+			width: 100%;
+            input[type="radio"]:focus + label {
+              border: 1px dashed #00a9e0;
+            }
+			label {
+				overflow: hidden;
+				width: 100%;
+				margin: 5px 0;
+				span {
+					color: black;
+				}
+			}
+		}
+        .radiogroup:focus {
+            border: 1px dashed @blue;
+        }
+	}
+	.feedback .feedbackPanel {
+		position: absolute;
+		top: -1.3rem;
+		right: 0;
+		color: @errorTextLight;
+		font-size: @fontSizeMini;
+		background: transparent;
+		padding: 0;
+		margin: 0;
+		li:before {
+			content: " ";
+		}
+	}
+}
+
 /* Generell styling til lamell-stacken (ej innholdet i en lerret) */
 .lameller {
 	min-height: 100%;
-	margin-bottom: 128px;
 	position: relative;
 	background-color: @white;
 	.lamell {
 		position: relative;
 		&.bunn {
+            box-shadow: 0px 3px 25px #999;
 			position: fixed;
-            width: @mainContentWidth;
+			width: @mainContentWidth;
 			> HEADER {
 				height: 64px;
 				background-image: -webkit-linear-gradient(bottom, #e5e5e3 1px, #F1F1EF 14px);
@@ -449,20 +616,15 @@
 			position: absolute;
 			right: 30px;
 			top: 15px;
-			padding: 2px;
 			width: 26px;
-			height: 25px;
-			overflow: hidden;
-			text-align: center;
+			height: 26px;
 			color: transparent;
-			background: transparent url(../img/kryss_blaa.png) no-repeat center center;
-			border: 1px solid #ccc;
+			background: url(../img/kryss.svg) no-repeat center center;
+            background-size: contain;
 		}
 		.close:focus, .close:hover {
-			border-color: @blue;
-			background: @blue url(../img/kryss_hvit.png) no-repeat center center;
-			color: transparent;
-			outline: none;
+			background: url(../img/kryss_hover.svg) no-repeat center center;
+            background-size: contain;
 		}
 		.error-panel {
 			padding: 30px 30px 40px 30px;
@@ -483,7 +645,6 @@
 			background-color: @bodyBackground;
 			H1 {
 				margin: 0 auto auto 30px;
-
 				line-height: 59px;
 				font-size: 1.8rem;
 			}
@@ -688,7 +849,6 @@
 
 	.navbar {
 		position: relative;
-		height: 100px;
 		FORM {
 			.taskbox, NAV.menu {
 				width: 26.7%;
@@ -715,7 +875,6 @@
 		height: auto;
 		top: 100px;
 		overflow-x: hidden;
-		z-index: 2500;
 		.visittkort, .visittkort.active {
 			margin: 0 0 0 15px;
 			padding: 15px 15px 15px 65px;
@@ -822,4 +981,16 @@
 			}
 		}
 	}
+}
+
+fieldset.wcag {
+  margin: 0;
+  padding: 0;
+  border: 0;
+
+  > legend {
+    color: transparent;
+    width: 0px;
+    height: 0px;
+  }
 }

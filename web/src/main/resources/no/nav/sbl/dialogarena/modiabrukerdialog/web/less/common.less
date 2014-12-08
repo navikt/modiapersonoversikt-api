@@ -1,6 +1,6 @@
 /* Generelle mixins, variabler, typografi og stiler som bruker av andre stilregler */
-@sidebarWidth: 24%;
-@mainContentWidth: 100% - (@sidebarWidth * 2);
+@navbarHeight: 140px;
+@mainContentWidth: 50%;
 @sidebarYtrePadding: 15px;
 
 /* Mixins */
@@ -17,6 +17,7 @@ HTML {
 	overflow-y: auto;
 	height: 100%;
 	background: @white;
+	font-size: 14px;
 }
 
 BODY {
@@ -104,91 +105,24 @@ UL.feedbackPanel {
 /* Spesifikke sider */
 
 .hentperson.main {
-	background-color: @modiaBackground;
-	position: absolute;
-	width: 100%;
-	.modia-logo {
-		width: 170px;
-		display: block;
-		margin: 0 auto 220px auto;
-	}
-	#hentPerson {
-		position: relative;
-		margin-left: 40px;
-	}
-	.hent-oppgave {
-		display: block;
-		margin-left: -8rem;
-	}
-	.search-intern {
-		position: relative;
-		padding-right: 80px;
-		margin: 0 auto 0 auto;
-		float: none;
-		clear: both;
-		overflow: visible;
-		width: auto;
-		INPUT[type=text] {
-			height: auto;
-			padding: 16px 70px 16px 20px;
-			font-size: 2.14rem;
-		}
-		INPUT[type=button], SUBMIT, INPUT[type=image], #submitFodselsnummer {
-			height: 48px;
-			right: 90px;
-			top: 14px;
-			@media (max-width: 959px) {
-				margin-top: 0;
-			}
-		}
-		LABEL.errorJS, SPAN.errorJS {
-			position: absolute;
-			font-size: 15.04px !important;
-			bottom: -20px;
-			left: 0;
-			width: auto;
-		}
-		SPAN.feedbackPanelERROR {
-			color: @errorTextLight;
-			background: transparent;
-			font-size: 15.04px !important;
-			white-space: nowrap;
-			content: "" !important;
-			position: absolute;
-			left: 0;
-			bottom: 0.5em;
-		}
-	}
+	background-color: @modiasvart;
 	.navbar {
-		height: auto;
 		position: relative;
-		display: block;
-		padding: 0;
-		width: 400px;
-		margin: 5% auto 0 auto;
-		z-index: 5000;
-		background-color: @modiaBackground;
+		border-bottom: 1px solid #000;
 	}
-    .personsok-button {
-      position: absolute;
-      margin-bottom: 3px;
-      right: 0;
-      left: auto;
-      bottom: 0;
-      z-index: 5001;
-    }
-	.personsok {
-		margin: 0 15%;
+	.modia-logo {
+		width: 15rem;
+		display: block;
+		margin: 10rem auto;
 	}
 	#personsok {
-		padding-top: 80px;
 		box-shadow: none;
-		-webkit-box-shadow: none;
+		border: none;
 	}
-	#personsokResult {
-		margin-left: 15%;
-		margin-right: 15%;
-	}
+}
+
+.personpanel {
+  position: relative;
 }
 
 /* Individuelle lameller */
@@ -409,7 +343,8 @@ UL.feedbackPanel {
 				float: left;
 			}
 			LABEL.poststed {
-				width: 16.5%: float: left;
+				width: 16.5%;
+				float: left;
 			}
 			/* Begrense inputs til adresse uten label */
 			INPUT[aria-label*=adresse] {
@@ -493,7 +428,7 @@ UL.feedbackPanel {
 		.liste {
 			float: right;
 			margin: 2rem 0 0 3.8%;
-            width: 47.93617021276595%;
+			width: 47.93617021276595%;
 		}
 		.arbeidssituasjon {
 			clear: left;
@@ -576,11 +511,6 @@ UL.feedbackPanel {
 
 /* Sidebars */
 [class*=sidebar-] {
-	position: absolute;
-	top: 0;
-	padding-top: 140px;
-	width: @sidebarWidth;
-	min-height: 100%;
 	z-index: 1;
 }
 
@@ -589,7 +519,6 @@ UL.feedbackPanel {
 	color: #b7b1a9;
 	background: @modiaBackground;
 	padding-bottom: 20px;
-	left: 0;
 	> * {
 		margin: 0 30px;
 	}
@@ -612,8 +541,7 @@ UL.feedbackPanel {
 		margin: 0;
 		padding: 15px @sidebarYtrePadding 5px 0;
 		min-height: 266px;
-		background-repeat: no-repeat;
-		background-position: 27px 30px;
+		background: no-repeat 27px 30px;
 		background-color: inherit;
 		background-size: 64px;
 		color: @grayLight;
@@ -631,12 +559,12 @@ UL.feedbackPanel {
 		&.kvinne {
 			background-image: url(../img/kvinne.svg);
 			.left {
-              .label {
-                color: #ff61b3;
-              }
-              .year {
-                color: #ec288d;
-              }
+				.label {
+					color: #ff61b3;
+				}
+				.year {
+					color: #ec288d;
+				}
 			}
 		;
 		}
@@ -669,6 +597,9 @@ UL.feedbackPanel {
 		.right {
 			padding-left: 80px;
 		}
+        #visittkortinfo {
+          padding: 15px 15px 30px 30px;
+        }
 	}
 	table {
 		border-collapse: collapse;
@@ -707,34 +638,42 @@ UL.feedbackPanel {
 	}
 	.kjerneinfo {
 		margin: 0;
-        padding-right: @sidebarYtrePadding;
-        border-top: 1px solid #000;
-      .tabs {
-            float: left;
-            div {
+		padding-right: @sidebarYtrePadding;
+		border-top: 1px solid #000;
+		.tab-row {
+			float: left;
+            ul {
+              display: inline;
+              padding: 0px;
+            }
+			li {
 				color: #fff;
-				padding-top: 71px;
-				width: 90px;
+				width: 110px;
 				height: 102px;
-				font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
-				font-size: 0.7rem;
-				text-transform: uppercase;
-				letter-spacing: 1px;
-				text-align: center;
-                background-repeat: no-repeat;
-                background-position: 35px 18px;
                 padding-left: 26px;
-				&.valgt {
-					background-color: #333;
-				}
-				&.familie {
-					background-image: url(../img/familie_ikon.svg);
+                padding-top: 18px;
+                border-right: 1px solid #000;
+                border-bottom: 1px solid #000;
+                &.selected {
+                  border-right: none;
+                }
+                div {
+                  font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
+                  font-size: 0.7rem;
+                  text-transform: uppercase;
+                  letter-spacing: 1px;
+                  padding-left: 5px;
+                  padding-top: 5px;
                 }
 			}
 		}
 		.tab-info {
-            padding-left: 110px;
-            padding-top: 30px;
+          padding: 30px 0 0 140px;
+          .gosyspersonoversiktLinkIkon {
+            a {
+              color: @blue;
+              }
+          }
 			.info {
 				.barn {
 					display: table;
@@ -743,7 +682,7 @@ UL.feedbackPanel {
 						float: left;
 						text-align: center;
 						margin-right: 15px;
-                        min-width: 40px;
+						min-width: 40px;
 						SPAN {
 							display: block;
 							font-family: Modus, "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -759,7 +698,7 @@ UL.feedbackPanel {
 						}
 					}
 					UL {
-                        display: inherit;
+						display: inherit;
 						list-style: none;
 						padding: 0;
 						margin: 0;
@@ -777,12 +716,12 @@ UL.feedbackPanel {
 					}
 					&.girl {
 						.barnAlder {
-                          .alderEnhet {
-                            color: #ff61b3;
-                          }
-                          .alder {
-                            color: #ec288d;
-                          }
+							.alderEnhet {
+								color: #ff61b3;
+							}
+							.alder {
+								color: #ec288d;
+							}
 						}
 					}
 				}
@@ -794,5 +733,7 @@ UL.feedbackPanel {
 [class*=sidebar-hoyre] {
 	background-color: #f7f7f7;
 	border-left: 2px solid #a5a5a5;
-	right: 0;
+}
+.hidden {
+  display: none;
 }

@@ -1,0 +1,31 @@
+<html xmlns:wicket="http://wicket.apache.org">
+<wicket:panel>
+    <form wicket:id="plukkOppgaveForm" class="oppgaveform">
+        <span wicket:id="feedback" class="feedback" role="alert" aria-live="assertive" aria-atomic="true"></span>
+
+        <div class="oppgavepanel">
+            <a class="velg-temagruppe" wicket:message="title:plukkoppgave.temavelger.mouseover" tabindex="0" wicket:id="velg-temagruppe-knapp"></a>
+            <input type="submit"
+                   class="plukk-oppgave plukk-knapp"
+                   wicket:id="plukkOppgave"
+                   wicket:message="value:plukkoppgave.hentoppgave,title:plukkoppgave.hentoppgave.mouseover"
+                   tabindex="0"
+                    />
+
+            <div class="temagruppe-liste">
+                <div wicket:id="temagruppe" role="radiogroup" class="radiogroup" tabindex="-1" wicket:message="aria-label:plukkoppgave.temavelger.mouseover">
+                    <wicket:container wicket:id="temagrupper">
+                        <input wicket:id="temagruppevalg" type="radio">
+                        <label wicket:for="temagruppevalg"><span wicket:id="temagruppenavn"></span></label>
+                    </wicket:container>
+                </div>
+
+                <a wicket:id="PlukkOppgaveFraTemaliste" class="knapp-hoved-liten plukk-knapp"
+                   wicket:message="title:plukkoppgave.plukkoppgavefratemaliste.mouseover" tabindex="0" role="button">
+                    <wicket:message key="plukkoppgave.plukkoppgavefratemaliste"/>
+                </a>
+            </div>
+        </div>
+    </form>
+</wicket:panel>
+</html>

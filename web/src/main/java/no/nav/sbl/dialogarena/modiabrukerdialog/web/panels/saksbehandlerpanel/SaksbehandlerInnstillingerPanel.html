@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:wicket="http://wicket.apache.org">
+<body>
+<wicket:panel>
+    <div class="saksbehandlerinnstillinger">
+        <a href="#" wicket:id="opplaeringslenke" class="opplaeringslenke">[...]</a>
+        <form wicket:id="enhetsform" class="centered enhetsform">
+            <h1 class="_H2">
+                <wicket:message key="enhetsvalg.overskrift"/>
+            </h1>
+            <div class="robust-strek"></div>
+            <fieldset class="wcag">
+                <legend><wicket:message key="enhetsvalg.overskrift"/></legend>
+                <wicket:container wicket:id="enhet">
+                    <div wicket:id="enhetsvalg" class="enhetsvalg">
+                        <input wicket:id="enhetId" type="radio"/>
+                        <label wicket:for="enhetId" class="sort-skrift">
+                            <wicket:container wicket:id="enhetNavn"></wicket:container>
+                        </label>
+                    </div>
+                </wicket:container>
+            </fieldset>
+            <hr class="linje" />
+            <div class="midtstilt-innhold">
+                <input wicket:id="velg"
+                       type="submit"
+                       class="send knapp-hoved-stor"
+                       tabindex="0"
+                       wicket:message="value:velg.knapp.tekst,aria-label:velg.knapp.aria" />
+            </div>
+        </form>
+    </div>
+</wicket:panel>
+</body>
+</html>

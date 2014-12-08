@@ -3,27 +3,20 @@ jQuery(document).ready(function ($) {
 
     createTabHandler("modiabrukerdialog");
 
-    resizeSidebar();
-
-    function resizeSidebar(){
-        var $venstre = $('.sidebar-venstre');
-        var $hoyre = $('.sidebar-hoyre');
-        var height = $venstre.outerHeight() > $hoyre.outerHeight() ? $venstre.outerHeight() : $hoyre.outerHeight();
-        $venstre.outerHeight(height);
-        $hoyre.outerHeight(height);
-    }
-
     if ($('.main-content .lamell').length === 1) {
         $('.main-content .lamell').first().find('.lamellhode').hide();
     }
 
-    $('#toggle-personsok').on('click', checkIfToggleAvansertSok);
-    Modig.shortcutListener.on({key: 'A'}, checkIfToggleAvansertSok);
+    $('#toggle-personsok').on('click', toggleAvansertSok);
+    Modig.shortcutListener.on({key: 'A'}, toggleAvansertSok);
 
     Modig.shortcutListener.on({alt: true, keyCode: 114}, focusSearchField); // F3
     Modig.shortcutListener.on({alt: true, keyCode: 116}, closeResetPerson); // F5
     Modig.shortcutListener.on({alt: true, keyCode: 117}, focusLamellHead);  // F6
     Modig.shortcutListener.on({alt: true, keyCode: 118}, closeLamellHead);  // F7
+    Modig.shortcutListener.on({alt: true, keyCode: 71}, openGosys);  // Alt+g
+
+    addPrintEventListener();
 
     $('body').on('click', '.lamell .lamellhode > a', function () {
         if ($('.main > .personsok').is(':visible')) {
@@ -53,10 +46,10 @@ jQuery(document).ready(function ($) {
     if (submitFodselsnummer.length > 0) {
         var scaling = 0.8;
         var height = submitFodselsnummer.innerHeight();
-        var posDiff = (height*(1-scaling)/2);
+        var posDiff = (height * (1 - scaling) / 2);
         var top = submitFodselsnummer.position().top + posDiff + "px";
         var left = submitFodselsnummer.position().left + posDiff + "px";
-        height = height*scaling;
+        height = height * scaling;
 
         Modig.ajaxLoader.register({
             urlPattern: /searchPanel-hentPersonForm-submitFodselsnummer/,
@@ -81,46 +74,12 @@ function closeLamellHead() {
     $('.lamell.selected button.close').click();
 }
 
+function openGosys() {
+    $('.hiddenGosysLenkePanel').click();
+}
+
 function closeResetPerson() {
     $('.nullstill-button').click();
-}
-
-function movePersonsok() {
-    var navbar = $('.navbar');
-    var logo = $('.modia-logo');
-    var nullstill = $('INPUT[name=nullstillSok]');
-    var error = $('.feedbackPanelERROR');
-    error.remove();
-
-    if (navbar[0].style.marginTop == '1%') {
-        toggleAvansertSok();
-        navbar.animate({marginTop: '8%'}, 300, 'linear');
-        navbar.css('marginBottom', '0');
-        logo.css('display', 'block');
-        // Nullstiller søket
-        nullstill.click();
-    } else {
-        if ($('.main').hasClass('hentperson')) {
-            navbar.animate({marginTop: '1%'}, 400, 'linear', toggleAvansertSok);
-            navbar.css('marginBottom', '1.1%');
-        } else {
-            if ($('#personsokPanel').is(':visible')) {
-                toggleAvansertSok();
-            } else {
-                $('#personsok').slideDown(400);
-
-            }
-        }
-        logo.css('display', 'none');
-    }
-}
-
-function checkIfToggleAvansertSok() {
-    if (!$('#toggle-personsok').hasClass('personsok-movable')) {
-        toggleAvansertSok();
-    } else {
-        movePersonsok();
-    }
 }
 
 function toggleAvansertSok() {
@@ -303,3 +262,54 @@ function createTabHandler(application) {
 
     init();
 }
+
+function prepareElementForPrint(element, additionalClass) {
+    if (additionalClass) {
+        $('.print').addClass(additionalClass);
+    }
+    $('.print .content').append(element.clone());
+}
+
+function addPrintEventListener() {
+    var called = 0; // Chrome kjører listeneren 2 ganger, men vi vil bare kjøre beforePrint første gang og afterPrint siste gang de kjører
+    var print = $('.print');
+    var printContent = print.find('.content');
+
+    function afterPrint() {
+        if (window.chrome) {
+            if (called === 0) {
+                called = called + 1;
+                return;
+            }
+            called = 0;
+        }
+        printContent.empty();
+        print.attr('class', 'print');
+    }
+
+    function beforePrint() {
+        if (window.chrome && called === 0) {
+            return;
+        }
+        var selectedLamell = $('.lamell.selected');
+        if (printContent.children().length === 0 && !selectedLamell.hasClass('oversikt')) {
+            prepareElementForPrint(selectedLamell);
+        }
+    }
+
+    if (window.onafterprint === undefined) {
+        var mediaQueryList = window.matchMedia('print');
+        mediaQueryList.addListener(function (mql) {
+            if (mql.matches) {
+                beforePrint();
+            } else {
+                afterPrint();
+            }
+
+        });
+    } else {
+        window.onafterprint = afterPrint;
+        window.onbeforeprint = beforePrint;
+    }
+}
+

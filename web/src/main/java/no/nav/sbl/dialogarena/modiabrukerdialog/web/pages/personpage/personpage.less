@@ -1,11 +1,11 @@
 ///// OVERSTYRING AV MODIG-FRONTENDs MODIA STYLING /////
 
-@grayLight:             #b7b1a9;
-@grayDark:              #3e3832;
-@white:                 #fff;
-@textColor:             @grayDark;
-@blue:                  #0ca9e1;
-@black:                 #000;
+@grayLight: #b7b1a9;
+@grayDark: #3e3832;
+@white: #fff;
+@textColor: @grayDark;
+@blue: #0ca9e1;
+@black: #000;
 
 body {
   position: relative;
@@ -29,6 +29,17 @@ body {
 
 #foedselsnummerInput {
   line-height: 2.1rem;
+}
+
+.sikkerhetstiltakPerson {
+  background-color: #ffde44;
+  width: 450px;
+  font-size: 1em;
+  color: black;
+  padding-top: 5px;
+  padding-left: 30px;
+  padding-bottom: 5px;
+  font-weight: bold;
 }
 
 .informasjonsboks {
@@ -89,12 +100,14 @@ body > .print {
 
   body > .print {
     display: block;
-    padding: 1rem 2rem;
+      margin: 0 40px;
+
     > img {
       display: block;
       height: 50px;
-      margin: 0 auto 200px;
+      margin: 0 auto 30px;
     }
+
     > .dato-utskrift {
       font-family: Arial, Helvetica, sans-serif;
       text-transform: uppercase;
@@ -102,13 +115,14 @@ body > .print {
       color: #3e3832;
       font-size: 0.857rem;
     }
+
     > .fnr {
       font-family: Modus, Arial, Helvetica, sans-serif;
       font-size: 1.21rem;
       font-weight: 600;
     }
+
     .content {
-      margin-top: 4rem;
       .ikke-print {
         display: none !important;
       }

@@ -19,5 +19,6 @@ public final class LocaleFromWicketSession implements Factory<Locale> {
         return get().getLocale();
     }
 
-    private LocaleFromWicketSession() { }
+    private LocaleFromWicketSession() {
+    }
 }

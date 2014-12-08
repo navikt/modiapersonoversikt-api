@@ -11,6 +11,8 @@ import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.modia.lamell.LerretFactory;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.oversikt.OversiktLerret;
+import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import no.nav.sykmeldingsperioder.SykmeldingsperiodePanel;
 import no.nav.sykmeldingsperioder.foreldrepenger.ForeldrepengerPanel;
@@ -44,6 +46,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
     public static final String LAMELL_SYKEPENGER = "sykepenger";
     public static final String LAMELL_OVERSIKT = "oversikt";
     public static final String LAMELL_BRUKERPROFIL = "brukerprofil";
+    public static final String LAMELL_SAKSOVERSIKT = "saksoversikt";
+    public static final String LAMELL_MELDINGER = "meldinger";
     public static final String PANEL = "panel";
 
     private String fnrFromRequest;
@@ -123,6 +127,8 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         lamellFactories.add(createOversiktLamell(fnrFromRequest));
         lamellFactories.add(createKontrakterLamell(fnrFromRequest));
         lamellFactories.add(createBrukerprofilLamell(fnrFromRequest));
+        lamellFactories.add(createSaksoversiktLamell(fnrFromRequest));
+        lamellFactories.add(createMeldingerLamell(fnrFromRequest));
 
         if (visUtbetalinger()) {
             lamellFactories.add(createUtbetalingLamell(fnrFromRequest));
@@ -163,6 +169,24 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             @Override
             public Lerret createLerret(String id) {
                 return new UtbetalingLerret(id, fnrFromRequest);
+            }
+        });
+    }
+
+    private static LamellFactory createSaksoversiktLamell(final String fnrFromRequest) {
+        return newLamellFactory(LAMELL_SAKSOVERSIKT, "S", true, new LerretFactory() {
+            @Override
+            public Lerret createLerret(String id) {
+                return new SaksoversiktLerret(id, fnrFromRequest);
+            }
+        });
+    }
+
+    private static LamellFactory createMeldingerLamell(final String fnrFromRequest) {
+        return newLamellFactory(LAMELL_MELDINGER, "M", new LerretFactory() {
+            @Override
+            public Lerret createLerret(String id) {
+                return new Innboks(id, fnrFromRequest);
             }
         });
     }

@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config;
 
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifacts.ArtifactsConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoints.EndpointsConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.services.ServicesConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.artifact.ArtifactsConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.EndpointsConfig;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service.ServiceConfig;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
@@ -13,7 +13,7 @@ import static org.slf4j.bridge.SLF4JBridgeHandler.removeHandlersForRootLogger;
 @Import({
         ArtifactsConfig.class,
         EndpointsConfig.class,
-        ServicesConfig.class
+        ServiceConfig.class
 })
 public class ConsumerContext {
 

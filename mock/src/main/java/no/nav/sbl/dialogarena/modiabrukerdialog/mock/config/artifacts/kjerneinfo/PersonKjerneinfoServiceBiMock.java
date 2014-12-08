@@ -8,7 +8,9 @@ import no.nav.kjerneinfo.domain.person.Adresse;
 import no.nav.kjerneinfo.domain.person.Person;
 import no.nav.kjerneinfo.domain.person.Personfakta;
 import no.nav.kjerneinfo.domain.person.Personnavn;
+import no.nav.kjerneinfo.domain.person.fakta.AnsvarligEnhet;
 import no.nav.kjerneinfo.domain.person.fakta.Familierelasjon;
+import no.nav.kjerneinfo.domain.person.fakta.Organisasjonsenhet;
 
 import java.util.Arrays;
 
@@ -29,7 +31,7 @@ public class PersonKjerneinfoServiceBiMock {
         return serviceMock;
     }
 
-    private static HentKjerneinformasjonResponse createPersonResponse() {
+    public static HentKjerneinformasjonResponse createPersonResponse() {
         HentKjerneinformasjonResponse mockReturnValue = new HentKjerneinformasjonResponse();
         mockReturnValue.setPerson(createPerson());
         return mockReturnValue;
@@ -37,7 +39,7 @@ public class PersonKjerneinfoServiceBiMock {
 
     private static Person createPerson() {
         Person barn = new Person.With()
-                .fodselsnummer("01019912345")
+                .fodselsnummer("***REMOVED***")
                 .personfakta(new Personfakta.With()
                         .sivilstand(new Kodeverdi.With()
                                 .value("SINGEL")
@@ -72,6 +74,11 @@ public class PersonKjerneinfoServiceBiMock {
                                 .gatenavn("Testgata")
                                 .postnummer("1337")
                                 .poststed("Test").done())
+                        .harAnsvarligEnhet(new AnsvarligEnhet.With()
+                                .organisasjonsenhet(new Organisasjonsenhet.With()
+                                        .organisasjonselementId("1234")
+                                        .done())
+                                .done())
                         .familierelasjoner(Arrays.asList(familierelasjon))
                         .done())
                 .done();

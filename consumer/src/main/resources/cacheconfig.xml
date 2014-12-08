@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <bean id="userkeygenerator"
+          class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.AutentisertBrukerKeyGenerator"/>
+    <bean id="asbogosyskeygenerator"
+          class="no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache.ASBOGOSYSNAVKeyGenerator"/>
+
+    <cache:advice id="shortlivedAdvice" key-generator="userkeygenerator">
+        <!--Cachen må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
+        <cache:caching cache="endpointCache">
+            <cache:cacheable method="hent*"/>
+            <cache:cacheable method="finn*"/>
+        </cache:caching>
+    </cache:advice>
+    <cache:advice id="asbogosysEnhetAdvice" key-generator="asbogosyskeygenerator">
+        <!--Cachen må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
+        <cache:caching cache="asbogosysEnhet">
+            <cache:cacheable method="hent*"/>
+            <cache:cacheable method="finn*"/>
+        </cache:caching>
+    </cache:advice>
+    <cache:advice id="asbogosysAnsattAdvice" key-generator="asbogosyskeygenerator">
+        <!--Cachen må være en in-memory cache, e.g overflowToDisk og diskPersistent == false -->
+        <cache:caching cache="asbogosysAnsatt">
+            <cache:cacheable method="hent*"/>
+            <cache:cacheable method="finn*"/>
+        </cache:caching>
+    </cache:advice>
+    <cache:advice id="aktorAdvice" key-generator="userkeygenerator">
+        <cache:caching cache="aktorIdCache">
+            <cache:cacheable method="hent*"/>
+        </cache:caching>
+    </cache:advice>
+    <cache:advice id="kodeverkAdvice" key-generator="userkeygenerator">
+        <cache:caching cache="kodeverkCache">
+            <cache:cacheable method="hent*"/>
+            <cache:cacheable method="finn*"/>
+        </cache:caching>
+    </cache:advice>
+    <!--kodeverkCache-->
+
+    <aop:config>
+        <aop:advisor advice-ref="aktorAdvice" pointcut="bean(aktoerPortType)"/>
+        <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelseSoknaderPortType)"/>
+        <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakOgBehandlingPortType)"/>
+        <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(sakEndpoint)"/>
+        <aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkPortTypeV2)"/>
+        <!--aop:advisor advice-ref="kodeverkAdvice" pointcut="bean(kodeverkClient   )"/-->
+        <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(rutingPortType)"/>
+        <aop:advisor advice-ref="shortlivedAdvice" pointcut="bean(henvendelsePortType)"/>
+        <aop:advisor advice-ref="asbogosysAnsattAdvice" pointcut="bean(gosysNavAnsatt)"/>
+        <aop:advisor advice-ref="asbogosysEnhetAdvice" pointcut="bean(gosysNavOrgEnhet)"/>
+    </aop:config>
+
+</beans>

@@ -1,0 +1,27 @@
+.flexbox .flex1 {
+	display: table-cell;
+	width: 25%;
+	min-height: 86.5vh;
+}
+
+.flexbox .flex2 {
+	display: table-cell;
+	width: 50%;
+	vertical-align: top;
+	min-height: 86.5vh;
+}
+
+.personpanel > div.flexbox {
+    display: table;
+}
+
+.personpanel > div > div.row {
+    display: table-row;
+}
+
+.personpanel > div > div.row > .sidebar-venstre,.sidebar-hoyre,.main-content {
+    display: table-cell;
+}
+.personpanel > div > div.row > .sidebar-venstre {
+    vertical-align: top;
+}

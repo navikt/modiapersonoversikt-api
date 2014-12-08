@@ -5,22 +5,24 @@
 	</wicket:head>
 	<wicket:extend>
 		<body class="main hentperson">
+			<section wicket:id="saksbehandlerInnstillingerPanel" aria-expanded="false"></section>
 			<section class="navbar menu-intern active">
-				<img class="modia-logo" wicket:id="modia-logo"/>
-				<div id="hentPerson">
-                    <label class="ledetekst" for="foedselsnummerInput"><wicket:message key="personsok.ledetekst">[]</wicket:message></label>
+				<div id="hentPerson" class="sokeboks">
 					<wicket:container wicket:id="searchPanel"/>
-                    <button class="personsok-button personsok-movable" id="toggle-personsok"
-                            wicket:message="aria-label:personsok.apnetekst,
+					<button class="personsok-button" id="toggle-personsok"
+							wicket:message="aria-label:personsok.apnetekst,
                             title:personsok.apnetekst,
                             data-apne:personsok.apnetekst,
                             data-lukke:personsok.lukketekst">
-                        A
-                        <span class="personsok-pil"></span>
-                    </button>
+						A
+						<span class="personsok-pil"></span>
+					</button>
 				</div>
+                <div wicket:id="saksbehandlerInnstillingerToggler"></div>
+                <wicket:container wicket:id="plukkOppgave"/>
 			</section>
-			<wicket:container wicket:id="personsokPanel"/>
+            <wicket:container wicket:id="sikkerhetstiltak" id="sikkerhetstiltak">[]</wicket:container>
+            <wicket:container wicket:id="personsokPanel"/>
 		</body>
 	</wicket:extend>
 </html>

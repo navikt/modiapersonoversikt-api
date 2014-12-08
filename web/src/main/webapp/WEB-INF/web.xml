@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" version="3.0">
     <display-name>modiabrukerdialog</display-name>
     <session-config>
         <session-timeout>60</session-timeout>
@@ -19,10 +19,10 @@
         <param-name>contextConfigLocation</param-name>
         <param-value>no.nav.sbl.dialogarena.modiabrukerdialog.web.config.ModiaApplicationContext</param-value>
     </context-param>
-	<context-param>
-		<param-name>configuration</param-name>
-		<param-value>deployment</param-value>
-	</context-param>
+    <context-param>
+        <param-name>configuration</param-name>
+        <param-value>deployment</param-value>
+    </context-param>
 
     <!-- exposes the request to current thread -->
     <listener>
@@ -46,12 +46,16 @@
             <web-resource-name>Selftest</web-resource-name>
             <url-pattern>/internal/selftest</url-pattern>
         </web-resource-collection>
+        <web-resource-collection>
+            <web-resource-name>isAlive</web-resource-name>
+            <url-pattern>/internal/isAlive</url-pattern>
+        </web-resource-collection>
     </security-constraint>
     <login-config>
         <auth-method>FORM</auth-method>
         <form-login-config>
-        	<form-login-page>/login.html</form-login-page>
-        	<form-error-page>/login.html</form-error-page>
+            <form-login-page>/login.html</form-login-page>
+            <form-error-page>/login.html?status=fail</form-error-page>
         </form-login-config>
     </login-config>
     <security-role>
