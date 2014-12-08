@@ -1,18 +1,23 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.lang.option.Optional;
+import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.time.Datoformat;
 import org.apache.commons.collections15.Transformer;
+import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
 import java.util.Comparator;
 
+import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SAMTALEREFERAT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingStatusTekstKey;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagStatusIkonKlasse;
 
 
-public class MeldingVM implements Serializable {
+public class    MeldingVM implements Serializable {
 
     public final Melding melding;
 
@@ -24,12 +29,9 @@ public class MeldingVM implements Serializable {
         this.traadlengde = traadLengde;
     }
 
-    public String getOpprettetDato() {
-        return Datoformat.kortMedTid(melding.opprettetDato);
-    }
-
-    public String getLestDato() {
-        return Datoformat.kortMedTid(melding.lestDato);
+    public String getAvsenderTekst() {
+        return WidgetDateFormatter.dateTime(melding.opprettetDato)
+                + (melding.navIdent != null ? " - " + melding.navIdent : "");
     }
 
     public String getMeldingStatusTekstKey() {
@@ -41,7 +43,7 @@ public class MeldingVM implements Serializable {
     }
 
     public String getJournalfortDatoFormatert() {
-        return melding.journalfortDato == null ? "" : Datoformat.kort(melding.journalfortDato);
+        return melding.journalfortDato == null ? "" : WidgetDateFormatter.date(melding.journalfortDato);
     }
 
     public boolean isJournalfort() {
@@ -50,6 +52,29 @@ public class MeldingVM implements Serializable {
 
     public String getTemagruppeKey() {
         return melding.temagruppe != null ? melding.temagruppe : "temagruppe.kassert";
+    }
+
+    public Boolean erFeilsendt() {
+        return getMarkertSomFeilsendtAv().isSome();
+    }
+
+    public Optional<String> getMarkertSomFeilsendtAv() {
+        return optional(melding.markertSomFeilsendtAv);
+    }
+
+    public String getAvsenderBildeUrl() {
+        String imgUrl = WebApplication.get().getServletContext().getContextPath() + "/img/";
+        if (SVAR.contains(melding.meldingstype)|| SAMTALEREFERAT.contains(melding.meldingstype)) {
+            return imgUrl + "nav-logo.svg";
+        }
+        return imgUrl + "siluett.svg";
+    }
+
+    public String getAvsenderBildeAltKey() {
+        if (SVAR.contains(melding.meldingstype)|| SAMTALEREFERAT.contains(melding.meldingstype)) {
+            return "innboks.avsender.nav";
+        }
+        return "innboks.avsender.bruker";
     }
 
     public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {
@@ -70,6 +95,13 @@ public class MeldingVM implements Serializable {
         @Override
         public String transform(MeldingVM meldingVM) {
             return meldingVM.melding.traadId;
+        }
+    };
+
+    public static final Transformer<MeldingVM, Boolean> FEILSENDT = new Transformer<MeldingVM, Boolean>() {
+        @Override
+        public Boolean transform(MeldingVM meldingVM) {
+            return meldingVM.erFeilsendt();
         }
     };
 

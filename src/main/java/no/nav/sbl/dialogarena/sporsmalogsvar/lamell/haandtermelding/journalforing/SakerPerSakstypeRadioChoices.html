@@ -4,12 +4,11 @@
 <head></head>
 <body>
 <wicket:panel>
-    <h2 class="medium sakstype">
-        <span wicket:id="link"><wicket:container wicket:id="sakstype"/></span>
-
-        <div wicket:id="pil" class="pil"></div>
-    </h2>
-    <div class="sakswrapper">
+    <a wicket:id="link" class="medium sakstype" tabindex="0" role="role">
+        <span><wicket:container wicket:id="sakstype"/></span>
+        <i wicket:id="pil" class="pil"></i>
+    </a>
+    <div wicket:id="sakswrapper" class="sakswrapper">
         <hr class="linje"/>
         <wicket:container wicket:id="saksgruppeliste">
             <div class="saklisteelement">
@@ -17,22 +16,18 @@
                 <wicket:container wicket:id="saksliste">
                     <input wicket:id="sak" type="radio">
                     <label wicket:for="sak">
-                        <div>
+                        <span>
                             <span class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></span>
                             <span wicket:id="saksId"></span>
-                        </div>
-                        <div>
-                    <span class="saksTekst">
-                        <wicket:message key="journalfor.sak.opprettetDatoTekst"/>
-                    </span>
+                        </span>
+                        <span>
+                            <span class="saksTekst"><wicket:message key="journalfor.sak.opprettetDatoTekst"/></span>
                             <span wicket:id="opprettetDatoFormatert"></span>
-                        </div>
-                        <div>
-                    <span class="saksTekst">
-                        <wicket:message key="journalfor.sak.fagsystemTekst"/>
-                    </span>
+                        </span>
+                        <span>
+                            <span class="saksTekst"><wicket:message key="journalfor.sak.fagsystemTekst"/></span>
                             <span wicket:id="fagsystemNavn"></span>
-                        </div>
+                        </span>
                     </label>
                 </wicket:container>
             </div>

@@ -18,17 +18,17 @@ public class TidligereMeldingerPanel extends Panel {
         super(id, new CompoundPropertyModel<>(innboksVM));
         add(new PropertyListView<MeldingVM>("valgtTraad.tidligereMeldinger") {
             @Override
-            protected void populateItem(final ListItem<MeldingVM> item) {
-                final MeldingVM meldingVM = item.getModelObject();
+            protected void populateItem(ListItem<MeldingVM> item) {
                 item.add(new JournalfortSkiller("journalfortSkiller", item.getModel()));
-                item.add(new AvsenderBilde("avsenderbilde", meldingVM));
+                item.add(new FeilsendtInfoPanel("feilsendtInfo", item.getModel()));
+                item.add(new AvsenderBilde("avsenderbilde", item.getModel()));
                 item.add(new Label("meldingstatus", new StringResourceModel("${meldingStatusTekstKey}", item.getModel()))
                         .add(cssClass(item.getModelObject().getStatusIkonKlasse())));
-                item.add(new Label("opprettetDato"));
+                item.add(new Label("avsenderTekst"));
                 item.add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", item.getModel())));
                 item.add(new URLParsingMultiLineLabel("fritekst",
-                        meldingVM.melding.fritekst != null ?
-                                new PropertyModel(meldingVM, "melding.fritekst") :
+                        item.getModelObject().melding.fritekst != null ?
+                                new PropertyModel(item.getModel(), "melding.fritekst") :
                                 new ResourceModel("innhold.kassert")));
             }
         });

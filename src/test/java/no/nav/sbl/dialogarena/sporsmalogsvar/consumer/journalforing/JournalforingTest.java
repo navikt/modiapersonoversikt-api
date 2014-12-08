@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.ARKIV_FILTYPE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.DOKUMENTTYPE_NOTAT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.BREVKODE_NOTAT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.GSAK_FAGSYSTEMKODE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.KOMMUNIKASJONSKANAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.KRYSSREFERANSE_KODE;
@@ -111,7 +111,7 @@ public class JournalforingTest {
 
     @Test
     public void lagerDokumenttypeMedKodeverksrefDersomNotatSendesInn() {
-        Dokumenttyper dokumenttyper = KlasseSomArverJournalforing.lagDokumenttype(DOKUMENTTYPE_NOTAT);
+        Dokumenttyper dokumenttyper = KlasseSomArverJournalforing.lagDokumenttype(BREVKODE_NOTAT);
 
         assertThat(dokumenttyper.getKodeRef(), is(dokumenttyper.getKodeverksRef()));
     }

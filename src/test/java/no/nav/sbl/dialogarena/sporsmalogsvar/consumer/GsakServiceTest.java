@@ -1,5 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
+import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
+import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
@@ -24,6 +29,8 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.lang.System.setProperty;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -50,6 +57,8 @@ public class GsakServiceTest {
     private no.nav.virksomhet.tjenester.sak.v1.Sak sakWs;
     @Mock
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Mock
+    private GOSYSNAVansatt ansattWS;
 
     @InjectMocks
     private GsakService gsakService;
@@ -57,7 +66,7 @@ public class GsakServiceTest {
     private WSGenerellSak wsGenerellSak;
 
     @Before
-    public void setUp() {
+    public void setUp() throws HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
         wsGenerellSak = new WSGenerellSak()
                 .withSakId(SAK_ID)
                 .withFagomradeKode(TEMA)
@@ -69,6 +78,10 @@ public class GsakServiceTest {
                 .thenReturn(new WSFinnGenerellSakListeResponse().withSakListe(wsGenerellSak));
 
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(JOURNALFORENDE_ENHET);
+
+        when(ansattWS.hentNAVAnsatt(any(ASBOGOSYSNAVAnsatt.class))).thenReturn(new ASBOGOSYSNAVAnsatt());
+
+        setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
     }
 
     @Test
@@ -100,7 +113,7 @@ public class GsakServiceTest {
 
         assertThat(request.getOpprettetAvEnhetId(), is(Integer.parseInt(JOURNALFORENDE_ENHET)));
         assertThat(request.getOpprettOppgave().getAnsvarligEnhetId(), is(nyOppgave.enhet.enhetId));
-        assertThat(request.getOpprettOppgave().getBeskrivelse(), is(nyOppgave.beskrivelse));
+        assertThat(request.getOpprettOppgave().getBeskrivelse(), containsString(nyOppgave.beskrivelse));
         assertThat(request.getOpprettOppgave().getFagomradeKode(), is(nyOppgave.tema.kode));
         assertThat(request.getOpprettOppgave().getOppgavetypeKode(), is(nyOppgave.type.kode));
         assertThat(request.getOpprettOppgave().getPrioritetKode(), is(nyOppgave.prioritet.kode));

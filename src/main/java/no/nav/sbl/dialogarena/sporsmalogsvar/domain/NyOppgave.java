@@ -10,6 +10,5 @@ public class NyOppgave implements Serializable {
     public GsakKodeTema.OppgaveType type;
     public GsakKodeTema.Prioritet prioritet;
     public AnsattEnhet enhet;
-    public String beskrivelse, henvendelseId;
-    public String brukerId;
+    public String beskrivelse, henvendelseId, brukerId;
 }

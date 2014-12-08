@@ -1,0 +1,16 @@
+.meldinglamell .meldingsdetaljer {
+    display: table-cell;
+    width: 60%;
+    vertical-align: top;
+    min-height: 86.5vh;
+}
+
+.meldinglamell .meldingsliste {
+    width: 40% !important;
+}
+
+.meldinglamell {
+    display: table !important;
+    table-layout: fixed;
+    width: 100% !important;
+}

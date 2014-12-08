@@ -6,13 +6,16 @@
 <wicket:panel>
     <div class="haandter-meldinger">
         <div class="meldingsvalg besvar">
-            <a href="#" wicket:id="besvar">Besvar</a>
+            <a href="#" wicket:id="besvar" role="button">Besvar</a>
         </div>
         <div wicket:id="journalforingValg" class="meldingsvalg journalfor">
         </div>
         <div wicket:id="nyoppgaveValg" class="meldingsvalg nyoppgave">
         </div>
         <div wicket:id="merkeValg" class="meldingsvalg merke">
+        </div>
+        <div class="meldingsvalg print">
+            <a href="#" wicket:id="print" role="button"><wicket:message key="print.lenke" /></a>
         </div>
     </div>
     <section wicket:id="journalforPanel" class="haandtermeldingpanel journalforing"></section>

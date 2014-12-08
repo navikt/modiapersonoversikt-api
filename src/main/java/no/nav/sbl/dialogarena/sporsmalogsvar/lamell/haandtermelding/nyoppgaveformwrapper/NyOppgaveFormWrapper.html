@@ -5,33 +5,38 @@
 <body>
 <wicket:panel>
     <form wicket:id="nyoppgaveform">
-        <label>
+        <label wicket:for="tema">
             <wicket:message key="nyoppgave.form.label.tema"/>
             <select wicket:id="tema"></select>
-        </label>
-        <label wicket:id="enhetContainer">
-            <wicket:message key="nyoppgave.form.label.tilenhet"/>
-            <input wicket:id="enhet" type="hidden" />
         </label>
         <label wicket:id="typeContainer">
             <wicket:message key="nyoppgave.form.label.oppgavetype"/>
             <select wicket:id="type"></select>
         </label>
+        <label wicket:id="enhetContainer">
+            <wicket:message key="nyoppgave.form.label.tilenhet"/>
+            <input wicket:id="enhet" type="hidden" />
+        </label>
         <label wicket:id="prioritetContainer">
             <wicket:message key="nyoppgave.form.label.prioritet"/>
             <select wicket:id="prioritet"></select>
         </label>
-        <label>
+        <label wicket:for="beskrivelse">
             <wicket:message key="nyoppgave.form.label.beskrivelse"/>
             <textarea wicket:id="beskrivelse"></textarea>
         </label>
 
-        <div class="robust-strek"></div>
-        <div wicket:id="feedback"></div>
-        <a wicket:id="opprettoppgave" class="knapp-hoved-stor">
-            <wicket:message key="nyoppgave.form.opprett"/>
-        </a>
+        <hr class="linje" />
+        <div wicket:id="feedback" role="alert" aria-live="assertive" aria-atomic="true"></div>
+        <input type="submit"
+               class="knapp-hoved-stor"
+               wicket:id="opprettoppgave"
+               wicket:message="value:nyoppgave.form.opprett" />
     </form>
+    <div wicket:id="feedbackOppgavePanel" class="oppgaveOpprettetFeedback" role="alert" aria-live="rude">
+        <div class="robust-ikon-gront-sjekk"></div>
+        <span><wicket:message key="oppgave.opprettet.bekreftelse" /></span>
+    </div>
 </wicket:panel>
 </body>
 </html>

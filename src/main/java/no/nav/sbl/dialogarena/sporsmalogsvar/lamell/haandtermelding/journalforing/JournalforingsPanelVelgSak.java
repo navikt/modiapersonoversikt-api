@@ -7,13 +7,17 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.feedback.ContainerFeedbackMessageFilter;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.ResourceModel;
 
 import javax.inject.Inject;
 
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.JournalforingsPanel.TRAAD_JOURNALFORT;
 
 public class JournalforingsPanelVelgSak extends Panel {
@@ -35,7 +39,9 @@ public class JournalforingsPanelVelgSak extends Panel {
                 feedbackPanel,
                 new SakerRadioGroup("valgtTraad.journalfortSak", sakerVM),
                 getSubmitLenke(innboksVM, feedbackPanel));
+        form.add(visibleIf(sakerVM.sakerFinnes()));
         add(form);
+        add(new Label("ingenSaker", new ResourceModel("journalfor.ingensaker")).add(visibleIf(not(sakerVM.sakerFinnes()))));
     }
 
     private AjaxButton getSubmitLenke(final InnboksVM innboksVM, final FeedbackPanel feedbackPanel) {

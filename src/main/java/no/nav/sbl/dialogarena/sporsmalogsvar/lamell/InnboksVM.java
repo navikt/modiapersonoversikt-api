@@ -7,6 +7,7 @@ import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.injection.Injector;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 import org.apache.wicket.model.IModel;
+import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.io.Serializable;
@@ -22,8 +23,12 @@ import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.TRAAD_ID;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.slf4j.LoggerFactory.getLogger;
 
 public class InnboksVM implements Serializable {
+
+    private static final Logger log = getLogger(InnboksVM.class);
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
@@ -31,7 +36,7 @@ public class InnboksVM implements Serializable {
     private Map<String, TraadVM> traader = new HashMap<>();
     private List<MeldingVM> nyesteMeldingerITraad = new ArrayList<>();
     private Optional<MeldingVM> valgtMelding;
-    private String fnr;
+    private String fnr, feilmeldingKey;
 
     public InnboksVM(String fnr) {
         Injector.get().inject(this);
@@ -46,18 +51,30 @@ public class InnboksVM implements Serializable {
 
     public final void oppdaterMeldinger() {
         traader.clear();
-        List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(fnr);
+        feilmeldingKey = "";
+        try {
+            List<Melding> meldinger = henvendelseBehandlingService.hentMeldinger(fnr);
 
-        Map<String, List<Melding>> meldingTraader = skillUtTraader(meldinger);
-        for (Map.Entry<String, List<Melding>> meldingTraad : meldingTraader.entrySet()) {
-            traader.put(meldingTraad.getKey(), new TraadVM(TIL_MELDINGVM_TRAAD.transform(meldingTraad.getValue())));
-        }
-        nyesteMeldingerITraad = on(traader.values()).map(new Transformer<TraadVM, MeldingVM>() {
-            @Override
-            public MeldingVM transform(TraadVM traadVM) {
-                return traadVM.getNyesteMelding();
+            if (meldinger.isEmpty()) {
+                feilmeldingKey = "innboks.feilmelding.ingenmeldinger";
+                return;
             }
-        }).collect(MeldingVM.NYESTE_FORST);
+
+            Map<String, List<Melding>> meldingTraader = skillUtTraader(meldinger);
+            for (Map.Entry<String, List<Melding>> meldingTraad : meldingTraader.entrySet()) {
+                traader.put(meldingTraad.getKey(), new TraadVM(TIL_MELDINGVM_TRAAD.transform(meldingTraad.getValue())));
+            }
+            nyesteMeldingerITraad = on(traader.values()).map(new Transformer<TraadVM, MeldingVM>() {
+                @Override
+                public MeldingVM transform(TraadVM traadVM) {
+                    return traadVM.getNyesteMelding();
+                }
+            }).collect(MeldingVM.NYESTE_FORST);
+
+        } catch (Exception e) {
+            log.warn("Feilet ved henting av henvendelser for fnr {}", fnr, e);
+            feilmeldingKey = "innboks.feilmelding.feilet";
+        }
     }
 
     public int getTraadLengde(String id) {
@@ -69,7 +86,11 @@ public class InnboksVM implements Serializable {
     }
 
     public Optional<MeldingVM> getNyesteMeldingITraad(String traadId) {
-        return on(nyesteMeldingerITraad).filter(where(TRAAD_ID, equalTo(traadId))).head();
+        Optional<MeldingVM> meldingVM = on(nyesteMeldingerITraad).filter(where(TRAAD_ID, equalTo(traadId))).head();
+        if (!meldingVM.isSome()) {
+            feilmeldingKey = "innboks.feilmelding.ingentilgang";
+        }
+        return meldingVM;
     }
 
     public void setValgtMelding(MeldingVM meldingVM) {
@@ -98,7 +119,16 @@ public class InnboksVM implements Serializable {
     }
 
     public boolean harTraader() {
-        return !this.getTraader().isEmpty();
+        return !traader.isEmpty();
+    }
+
+    public AbstractReadOnlyModel<Boolean> harFeilmelding() {
+        return new AbstractReadOnlyModel<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return isNotBlank(feilmeldingKey);
+            }
+        };
     }
 
     private static final Transformer<List<Melding>, List<MeldingVM>> TIL_MELDINGVM_TRAAD = new Transformer<List<Melding>, List<MeldingVM>>() {

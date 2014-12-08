@@ -14,7 +14,6 @@ public class Melding implements Serializable {
     public String fritekst, temagruppe, kanal, traadId, navIdent, journalfortSaksId, journalfortTema, journalfortTemanavn,
             journalfortAvNavIdent, fnrBruker, kontorsperretEnhet, markertSomFeilsendtAv;
     public DateTime lestDato, journalfortDato;
-    public boolean lest;
     public Status status;
 
     public Melding(String id, Meldingstype meldingstype, DateTime opprettetDato) {

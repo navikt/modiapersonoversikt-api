@@ -52,7 +52,7 @@ public class JournalforingNotat extends Journalforing {
         } else {
             dokumenttittel = DOKUMENTTITTEL_OPPMOTE;
         }
-        journalfoertDokumentInfo.setDokumentType(lagDokumenttype(DOKUMENTTYPE_NOTAT));
+        journalfoertDokumentInfo.setDokumentType(lagDokumenttype(BREVKODE_NOTAT));
         journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
         journalfoertDokumentInfo.setErOrganinternt(false);
         journalfoertDokumentInfo.setKategorikode(KATEGORIKODE);

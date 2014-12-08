@@ -5,12 +5,14 @@
 </head>
 <body>
 <wicket:panel>
-    <section class="meldinglamell clearfix">
-        <div wicket:id="meldinger" id="meldinger" class="meldingsliste"></div>
-        <div wicket:id="detaljpanel" id="detaljpanel" class="meldingsdetaljer clearfix"></div>
-        <div wicket:id="tominnboksmelding" id="ingenmeldinger" class="meldingserror"><wicket:message key="ingen.meldinger"/></div>
-        <div wicket:id="ikketilgang" id="ikketilgang" class="meldingserror"><wicket:message key="ikke.tilgang"/></div>
-    </section>
+    <div class="meldinglamell flexbox flex1">
+        <section wicket:id="meldinger" class="meldingsliste flex2" role="tablist"></section>
+        <section wicket:id="detaljpanel" class="meldingsdetaljer flex3" role="tabpanel" aria-atomic="true" aria-live="polite"></section>
+        <div wicket:id="feilmeldingpanel" class="feilmelding">
+            <div class="robust-ikon-feil-gra"></div>
+            <span wicket:id="feilmelding" class="stor"></span>
+        </div>
+    </div>
 </wicket:panel>
 
 </body>

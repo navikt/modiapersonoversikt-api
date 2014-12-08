@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RefreshOnEvents;
+import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
@@ -22,32 +23,38 @@ import static org.apache.wicket.event.Broadcast.BREADTH;
 @RefreshOnEvents({PANEL_LUKKET, VALGT_MELDING_EVENT})
 public class MeldingValgPanel extends Panel {
 
+    private final AnimertPanel tilknyttetPanel;
+
     public MeldingValgPanel(String id, IModel<Boolean> enabled, final AnimertPanel tilknyttetPanel) {
         super(id);
         setOutputMarkupId(true);
 
-        add(
-                enabledIf(enabled),
-                hasCssClassIf("inaktiv", not(enabled))
-        );
+        this.tilknyttetPanel = tilknyttetPanel;
 
-        add(
-                new AjaxLink("link") {
-                    @Override
-                    public void onClick(AjaxRequestTarget target) {
-                        send(MeldingValgPanel.this.getParent(), BREADTH, new NamedEventPayload(PANEL_TOGGLET, tilknyttetPanel.getClass()));
-                        target.add(MeldingValgPanel.this);
-                    }
-                }.add(new Label("linkTekst", new ResourceModel(id + ".linkTekst")))
-        );
+        add(enabledIf(enabled), hasCssClassIf("inaktiv", not(enabled)));
 
-        WebMarkupContainer pil = new WebMarkupContainer("pil");
+        add(new AjaxLink("link") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                onclick(target);
+            }
+        }.add(new Label("linkTekst", new ResourceModel(id + ".linkTekst"))));
+
         IModel<Boolean> panelErSynlig = new PropertyModel<>(tilknyttetPanel, "visibilityAllowed");
-        pil.add(
-                hasCssClassIf("opp", panelErSynlig),
-                hasCssClassIf("ned", not(panelErSynlig))
-        );
-
+        WebMarkupContainer pil = new WebMarkupContainer("pil");
+        pil.add(hasCssClassIf("opp", panelErSynlig),
+                hasCssClassIf("ned", not(panelErSynlig)),
+                new AjaxEventBehavior("click") {
+                    @Override
+                    protected void onEvent(AjaxRequestTarget target) {
+                        onclick(target);
+                    }
+                });
         add(pil);
+    }
+
+    private void onclick(AjaxRequestTarget target) {
+        send(MeldingValgPanel.this.getParent(), BREADTH, new NamedEventPayload(PANEL_TOGGLET, tilknyttetPanel.getClass()));
+        target.add(MeldingValgPanel.this);
     }
 }

@@ -1,31 +1,36 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
+import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
-import no.nav.modig.wicket.events.annotations.RefreshOnEvents;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import org.apache.wicket.ajax.AjaxRequestTarget;
+import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.model.CompoundPropertyModel;
 import org.apache.wicket.model.PropertyModel;
+import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.request.resource.CssResourceReference;
+import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel.TRAAD_MERKET;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-@RefreshOnEvents({MELDING_SENDT_TIL_BRUKER, TRAAD_MERKET})
 public class Innboks extends Lerret {
 
+    public static final JavaScriptResourceReference MELDINGER_JS = new JavaScriptResourceReference(Innboks.class, "meldinger.js");
+    public static final ConditionalCssResource MELDINGER_IE_CSS = new ConditionalCssResource(new CssResourceReference(Innboks.class, "innboks-ie.css"), "screen", "IE");
+
+    public static final String INNBOKS_OPPDATERT_EVENT = "sos.innboks.oppdatert";
     public static final String VALGT_MELDING_EVENT = "sos.innboks.valgt_melding";
     public static final String TRAAD_ID_PARAMETER_NAME = "henvendelseid";
-
-    protected boolean harTilgang = true;
 
     private InnboksVM innboksVM;
 
@@ -39,21 +44,20 @@ public class Innboks extends Lerret {
         setValgtTraadBasertPaaTraadIdSessionParameter();
 
         PropertyModel<Boolean> harTraader = new PropertyModel<>(innboksVM, "harTraader");
-        PropertyModel<Boolean> harTilgangModel = new PropertyModel<>(this, "harTilgang");
-
-        AlleMeldingerPanel alleMeldingerPanel = new AlleMeldingerPanel("meldinger", innboksVM);
-        alleMeldingerPanel.add(visibleIf(both(harTraader).and(harTilgangModel)));
 
         TraaddetaljerPanel traaddetaljerPanel = new TraaddetaljerPanel("detaljpanel", innboksVM);
-        traaddetaljerPanel.add(visibleIf(both(harTraader).and(harTilgangModel)));
+        traaddetaljerPanel.setOutputMarkupId(true);
+        traaddetaljerPanel.add(visibleIf(both(harTraader).and(not(innboksVM.harFeilmelding()))));
 
-        WebMarkupContainer tilbakemeldingPanel = new WebMarkupContainer("tominnboksmelding");
-        tilbakemeldingPanel.add(visibleIf(both(not(harTraader)).and(harTilgangModel)));
+        AlleMeldingerPanel alleMeldingerPanel = new AlleMeldingerPanel("meldinger", innboksVM, traaddetaljerPanel.getMarkupId());
+        alleMeldingerPanel.add(visibleIf(both(harTraader).and(not(innboksVM.harFeilmelding()))));
 
-        WebMarkupContainer ikkeTilgangPanel = new WebMarkupContainer("ikketilgang");
-        ikkeTilgangPanel.add(visibleIf(not(harTilgangModel)));
 
-        add(alleMeldingerPanel, traaddetaljerPanel, tilbakemeldingPanel, ikkeTilgangPanel);
+        WebMarkupContainer feilmeldingPanel = new WebMarkupContainer("feilmeldingpanel");
+        feilmeldingPanel.add(new Label("feilmelding", new StringResourceModel("${feilmeldingKey}", getDefaultModel(), "")));
+        feilmeldingPanel.add(visibleIf(innboksVM.harFeilmelding()));
+
+        add(alleMeldingerPanel, traaddetaljerPanel, feilmeldingPanel);
     }
 
     private void setValgtTraadBasertPaaTraadIdSessionParameter() {
@@ -62,8 +66,6 @@ public class Innboks extends Lerret {
             Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(traadIdParameter);
             if (meldingITraad.isSome()) {
                 innboksVM.setValgtMelding(meldingITraad.get());
-            } else {
-                harTilgang = false;
             }
             getSession().setAttribute(TRAAD_ID_PARAMETER_NAME, null);
         }
@@ -72,12 +74,21 @@ public class Innboks extends Lerret {
     @Override
     public void onOpening(AjaxRequestTarget target) {
         innboksVM.oppdaterMeldinger();
-        super.onOpening(target);
+        if (target != null) {
+            target.appendJavaScript("Meldinger.addKeyNavigation();");
+        }
     }
 
     @RunOnEvents(FEED_ITEM_CLICKED)
     public void feedItemClicked(AjaxRequestTarget target, IEvent<?> event, FeedItemPayload feedItemPayload) {
         innboksVM.setValgtMelding(feedItemPayload.getItemId());
+        target.add(this);
+    }
+
+    @RunOnEvents(MELDING_SENDT_TIL_BRUKER)
+    public void oppdatertInnboks(AjaxRequestTarget target) {
+        innboksVM.oppdaterMeldinger();
+        send(getPage(), Broadcast.DEPTH, INNBOKS_OPPDATERT_EVENT);
         target.add(this);
     }
 

@@ -4,6 +4,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
+import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.Radio;
@@ -16,6 +17,7 @@ import org.apache.wicket.model.ResourceModel;
 
 import java.util.List;
 
+import static no.nav.modig.wicket.conditional.ConditionalUtils.attributeIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
@@ -26,15 +28,27 @@ public class SakerPerSakstypeRadioChoices extends Panel {
         super(id);
         setOutputMarkupId(true);
 
-        add(new AjaxLink("link") {
+        AjaxLink link = new AjaxLink("link") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 open.setObject(!open.getObject());
                 target.add(SakerPerSakstypeRadioChoices.this);
             }
-        }.add(new Label("sakstype", new ResourceModel(sakstypePropertyKey))));
+        };
+        link.add(new Label("sakstype", new ResourceModel(sakstypePropertyKey)));
 
-        add(new PropertyListView<TemaSaker>("saksgruppeliste", model) {
+        WebMarkupContainer pil = new WebMarkupContainer("pil");
+        pil.add(
+                hasCssClassIf("opp", open),
+                hasCssClassIf("ned", not(open))
+        );
+        link.add(pil);
+
+        link.add(attributeIf("aria-pressed", "true", open, true));
+        link.add(attributeIf("aria-pressed", "false", not(open), true));
+
+        WebMarkupContainer sakswrapper = new WebMarkupContainer("sakswrapper");
+        sakswrapper.add(new PropertyListView<TemaSaker>("saksgruppeliste", model) {
             @Override
             protected void populateItem(ListItem<TemaSaker> item) {
                 item.add(new Label("temaNavn"));
@@ -50,11 +64,7 @@ public class SakerPerSakstypeRadioChoices extends Panel {
             }
         }.add(visibleIf(open)));
 
-        WebMarkupContainer pil = new WebMarkupContainer("pil");
-        pil.add(
-                hasCssClassIf("opp", open),
-                hasCssClassIf("ned", not(open))
-        );
-        add(pil);
+        link.add(AttributeAppender.append("aria-controls", sakswrapper.getMarkupId()));
+        add(link, sakswrapper);
     }
 }

@@ -2,14 +2,18 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.JournalforingsPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgave.NyOppgavePanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.print.PrintLenke;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
+
+import java.util.List;
 
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
@@ -43,7 +47,7 @@ public class HaandterMeldingPanel extends Panel {
 
         JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforPanel", innboksVM);
         add(journalforingsPanel);
-        add(new MeldingValgPanel("journalforingValg", both(not(erKontorsperret)).and(not(erFeilsendt)).and(not(nyesteMeldingErJournalfort)), journalforingsPanel));
+        add(new MeldingValgPanel("journalforingValg", both(not(erKontorsperret)).and(not(erFeilsendt)).and(not(nyesteMeldingErJournalfort)).and(erBehandlet), journalforingsPanel));
 
         NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyoppgavePanel", innboksVM);
         add(nyOppgavePanel);
@@ -52,6 +56,10 @@ public class HaandterMeldingPanel extends Panel {
         MerkePanel merkePanel = new MerkePanel("merkePanel", innboksVM);
         add(merkePanel);
         add(new MeldingValgPanel("merkeValg", both(not(eldsteMeldingErJournalfort)).and(erBehandlet), merkePanel));
-    }
 
+        PrintLenke printLenke = new PrintLenke("print", new PropertyModel<List<MeldingVM>>(innboksVM, "valgtTraad.meldinger"));
+        add(printLenke);
+
+    }
 }
+

@@ -1,15 +1,14 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
+import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.time.Datoformat;
 
 import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingOverskriftKey;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingStatusTekstKey;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagStatusIkonKlasse;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding.NYESTE_FORST;
@@ -18,11 +17,8 @@ public class MeldingVM implements FeedItemVM, Serializable {
 
     public final Melding melding;
 
-    public final String avsender;
-
     public MeldingVM(List<Melding> traad) {
         this.melding = on(traad).collect(NYESTE_FORST).get(0);
-        this.avsender = lagMeldingOverskriftKey(melding);
     }
 
     public static final Comparator<MeldingVM> NYESTE_OVERST = new Comparator<MeldingVM>() {
@@ -45,7 +41,7 @@ public class MeldingVM implements FeedItemVM, Serializable {
     }
 
     public String getOpprettetDato() {
-        return Datoformat.kortMedTid(melding.opprettetDato);
+        return WidgetDateFormatter.dateTime(melding.opprettetDato);
     }
 
     @Override

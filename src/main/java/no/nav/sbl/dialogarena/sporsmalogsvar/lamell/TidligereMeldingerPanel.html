@@ -6,6 +6,7 @@
 <wicket:panel>
     <wicket:container wicket:id="valgtTraad.tidligereMeldinger">
         <div wicket:id="journalfortSkiller" class="traad-info journalfort-skiller"></div>
+        <wicket:container wicket:id="feilsendtInfo"/>
         <article class="tidligere-melding">
             <div class="clearfix">
                 <div class="venstre-kolonne">
@@ -15,8 +16,8 @@
                 </div>
                 <div class="hoyre-kolonne">
                     <div class="header">
-                        <h4 wicket:id="meldingstatus" class="meldingstatus"></h4>
-                        <h4 wicket:id="opprettetDato" class="dato"></h4>
+                        <p wicket:id="meldingstatus" class="meldingstatus"></p>
+                        <p wicket:id="avsenderTekst" class="dato"></p>
 
                         <h2 wicket:id="temagruppe" class="medium temagruppe"></h2>
                     </div>

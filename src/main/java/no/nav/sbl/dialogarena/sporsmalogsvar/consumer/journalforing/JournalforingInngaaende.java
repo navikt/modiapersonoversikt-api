@@ -13,7 +13,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 
 public class JournalforingInngaaende extends Journalforing {
 
-    public static final String DOKUMENTTITTEL = "Sporsmal fra Ditt NAV";
+    public static final String DOKUMENTTITTEL = "Spørsmål fra Ditt NAV";
 
     public static Journalpost lagJournalforingSporsmal(Sak sak, Melding melding, String journalforendeEnhetId) {
         Journalpost journalpost = new Journalpost();
@@ -45,7 +45,7 @@ public class JournalforingInngaaende extends Journalforing {
     private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForSporsmal(byte[] pdf) {
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
 
-        journalfoertDokumentInfo.setDokumentType(lagDokumenttype(DOKUMENTTYPE_INNGAAENDE));
+        journalfoertDokumentInfo.setDokumentType(lagDokumenttype(BREVKODE_SPORSMAL));
         journalfoertDokumentInfo.setBegrensetPartsInnsyn(false);
         journalfoertDokumentInfo.setKategorikode(KATEGORI_ELEKTRONISK_DIALOG);
         journalfoertDokumentInfo.setSensitivitet(false);
