@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head></head>
+<body>
+<wicket:panel>
+    <div class="haandter-meldinger">
+        <div class="meldingsvalg besvar">
+            <a href="#" wicket:id="besvar" role="button">Besvar</a>
+        </div>
+        <div wicket:id="journalforingValg" class="meldingsvalg journalfor">
+        </div>
+        <div wicket:id="nyoppgaveValg" class="meldingsvalg nyoppgave">
+        </div>
+        <div wicket:id="merkeValg" class="meldingsvalg merke">
+        </div>
+        <div class="meldingsvalg print">
+            <a href="#" wicket:id="print" role="button"><wicket:message key="print.lenke" /></a>
+        </div>
+    </div>
+    <section wicket:id="journalforPanel" class="haandtermeldingpanel journalforing"></section>
+    <section wicket:id="nyoppgavePanel" class="haandtermeldingpanel nyoppgave"></section>
+    <section wicket:id="merkePanel" class="haandtermeldingpanel merke"></section>
+</wicket:panel>
+</body>
+</html>

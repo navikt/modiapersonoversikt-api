@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head></head>
+<body>
+<wicket:panel>
+    <h2><wicket:message key="journalforingEnkeltSak.overskrift"/></h2>
+    <div class="robust-strek"></div>
+    <div class="sakliste">
+        <h2 wicket:id="sakstype" class="medium sakstype"></h2>
+        <hr class="linje"/>
+        <span wicket:id="temaNavn" class="temaoverskrift"></span>
+        <label>
+            <span>
+                <span class="saksTekst"><wicket:message key="journalfor.sak.saksIdTekst"/></span>
+                <span wicket:id="saksId"/>
+            </span>
+            <span>
+                <span class="saksTekst"><wicket:message key="journalfor.sak.opprettetDatoTekst"/></span>
+                <span wicket:id="opprettetDatoFormatert"/>
+            </span>
+            <span>
+                <span class="saksTekst"><wicket:message key="journalfor.sak.fagsystemTekst"/></span>
+                <span class="verdi"><div wicket:id="fagsystemNavn"/></span>
+            </span>
+        </label>
+    </div>
+    <hr class="linje"/>
+    <a href="#" wicket:id="journalforTraad" class="send knapp-hoved-stor">Journalfør</a>
+</wicket:panel>
+</body>
+</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head>
+</head>
+<body>
+<wicket:panel>
+    <div class="meldinglamell flexbox flex1">
+        <section wicket:id="meldinger" class="meldingsliste flex2" role="tablist"></section>
+        <section wicket:id="detaljpanel" class="meldingsdetaljer flex3" role="tabpanel" aria-atomic="true" aria-live="polite"></section>
+        <div wicket:id="feilmeldingpanel" class="feilmelding">
+            <div class="robust-ikon-feil-gra"></div>
+            <span wicket:id="feilmelding" class="stor"></span>
+        </div>
+    </div>
+</wicket:panel>
+
+</body>
+</html>

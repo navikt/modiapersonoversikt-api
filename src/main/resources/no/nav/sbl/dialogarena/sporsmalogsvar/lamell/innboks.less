@@ -1,0 +1,483 @@
+@modiasvart: #333;
+@graabakgrunn: #f1f1f1;
+@rammefarge: #d1d1d1;
+@modiagraaskrift: #b7b1a9;
+@sidemargin: 30px;
+
+.lamell.meldinger .lerret {
+  padding: 0;
+  .flexbox;
+  .flex1;
+  .col;
+}
+
+.meldinglamell {
+  a.knapp-hoved-stor {
+    color: white;
+  }
+  position: relative;
+  border-top: 1px solid @rammefarge;
+  .meldingsliste {
+    background-color: @graabakgrunn;
+    border-right: 1px solid @rammefarge;
+    .melding {
+      padding: 1em @sidemargin 1.2em @sidemargin;
+      border-bottom: solid 1px @rammefarge;
+      overflow: hidden;
+      header {
+        .opprettet {
+          font-family: arial, sans-serif;
+          font-size: 0.85rem;
+          margin: 0.2em 0;
+        }
+        h1 {
+          font-weight: bold;
+          margin: 0;
+          font-size: 1.2em;
+          text-overflow: ellipsis;
+          -o-text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+        }
+      }
+      >p {
+        width: 100%;
+        margin: 0;
+        text-overflow: ellipsis;
+        -o-text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+        &.tom {
+          display: none;
+        }
+      }
+      &.valgt {
+        background-color: #fff;
+      }
+      &:not(.valgt) {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .meldingsdetaljer {
+    padding: 22px @sidemargin 0 @sidemargin;
+    .avsenderbilde-ramme {
+      position: relative;
+      width: 70px;
+      height: 70px;
+      border: 1px solid @rammefarge;
+      background-color: #fff;
+      &.lite {
+        width: 55px;
+        height: 55px;
+      }
+      img {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 90%;
+        height: 90%;
+        margin: auto;
+      }
+    }
+
+    .header {
+      line-height: 1.2em;
+      margin-bottom: 1em;
+
+      p {
+        line-height: 22px;
+      }
+    }
+
+    .dato {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      font-size: 0.85rem;
+      font-weight: normal;
+    }
+
+    .temagruppe {
+      margin: 0;
+      text-transform: capitalize;
+    }
+
+    .venstre-kolonne {
+      float: left;
+      width: 10%;
+    }
+
+    .hoyre-kolonne {
+      float: right;
+      width: 82%;
+    }
+
+    p {
+      line-height: 1.4em;
+      a {
+        text-decoration: underline;
+      }
+    }
+    .nyeste-melding {
+      margin-bottom: 2em;
+      overflow: hidden;
+      .header {
+        .temagruppe {
+          display: inline-block;
+          vertical-align: middle;
+        }
+      }
+    }
+
+    .tidligere-melding {
+      position: relative;
+      background-color: #ffffff;
+      border: 1px solid @rammefarge;
+      padding: 20px;
+      margin-top: -1px;
+      p:last-child {
+        margin-bottom: 0;
+      }
+      &:before, &:after {
+        position: absolute;
+        bottom: 100%;
+        left: 5%;
+        border: solid transparent;
+        content: " ";
+        height: 0;
+        width: 0;
+      }
+      &:after {
+        border-bottom-color: #ffffff;
+        border-width: 13px;
+        margin-left: -13px;
+      }
+      &:before {
+        border-bottom-color: @rammefarge;
+        border-width: 14px;
+        margin-left: -14px;
+      }
+      .venstre-kolonne {
+        width: 15%;
+      }
+      .hoyre-kolonne {
+        width: 85%;
+        overflow: hidden;
+      }
+    }
+    .traad-info {
+      background-color: #333333;
+      margin-bottom: 16px;
+      padding: 10px;
+      color: @modiagraaskrift;
+      font-size: 0.75rem;
+      .ikon {
+        padding-right: 1.4rem;
+      }
+      &.journalfort-skiller {
+        margin-top: 15px;
+        .ikon {
+          background: url(../img/journalfore_graa.svg) no-repeat;
+        }
+        .skillestrek {
+          margin: 0 5px;
+        }
+        &.nyeste {
+          margin-top: 0;
+        }
+      }
+      &.kontorsperret-info, &.feilsendt-info {
+        .ikon {
+          background: url(../img/merk_ikon_graa.svg) no-repeat;
+        }
+      }
+    }
+  }
+
+  .traadlengde {
+    float: right;
+    padding-right: 2em;
+    line-height: 21px;
+    font-weight: bold;
+    background: url(../img/melding_flere.svg) no-repeat right;
+  }
+
+  .haandter-meldinger {
+    position: absolute;
+    top: -30px;
+    right: 0;
+    margin-right: @sidemargin;
+    .meldingsvalg {
+      display: inline-block;
+      &:not(:last-child) {
+        margin-right: 1.5em;
+      }
+      &.besvar span {
+        background-image: url(../img/besvar_inaktiv.svg);
+      }
+      &.journalfor span {
+        background-image: url(../img/journalfore_inaktiv.svg);
+      }
+      &.nyoppgave span {
+        background-image: url(../img/ny_oppgave_inaktiv.svg);
+      }
+      &.merke span {
+        background-image: url(../img/merk_ikon_inaktiv.svg);
+      }
+      &.inaktiv .pil {
+        .pil(6px, darkgray);
+        cursor: default;
+      }
+      span {
+        color: darkgray;
+        em {
+          font-style: normal;
+        }
+      }
+      &.besvar a {
+        background-image: url(../img/besvar.svg);
+      }
+      &.journalfor a {
+        background-image: url(../img/journalfore_blaa.svg);
+      }
+      &.nyoppgave a {
+        background-image: url(../img/ny_oppgave.svg);
+      }
+      &.merke a {
+        background-image: url(../img/merk_ikon.svg);
+      }
+      &.print a {
+        background-image: url(../img/print_blaa.svg);
+      }
+      a, span {
+        background-repeat: no-repeat;
+        padding-left: 1.3em;
+      }
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .pil {
+      cursor: pointer;
+      display: inline-block;
+      margin-bottom: 1px;
+      .pil(6px, #0067c5);
+    }
+  }
+
+  .haandtermeldingpanel {
+    margin-bottom: 20px;
+    background-color: @modiasvart;
+    color: @modiagraaskrift;
+    padding: 30px;
+    display: none;
+    text-align: center;
+    h2 {
+      color: #b7b1a9;
+      margin: 0 0 15px;
+    }
+    .avbryt-knapp {
+      color: #20a9e1;
+      display: block;
+      margin-top: 1em;
+    }
+    &.journalforing {
+      .robust-strek {
+        padding-bottom: 4px !important;
+      }
+      .temaoverskrift {
+        display: block;
+        color: #ffffff;
+        margin-bottom: 5px;
+      }
+      .sakliste {
+        margin-top: 20px;
+        text-align: left;
+        .sakstype {
+          text-align: center;
+          cursor: pointer;
+          color: white;
+          display: block;
+
+          &:hover,&:focus {
+            outline: none;
+            text-decoration: underline;
+          }
+        }
+        .pil {
+          display: inline-block;
+          margin-bottom: 1px;
+          .pil(8px, @blue); // definisjon i komponenter.less
+        }
+        .saklisteelement > label > span {
+          display: inline-block;
+          margin: 0;
+        }
+        &.last {
+          .sakswrapper {
+            hr:only-child {
+              display: none;
+            }
+          }
+        }
+      }
+      label {
+        color: @modiagraaskrift;
+        width: 100%;
+        margin-top: 6px;
+        margin-bottom: 10px;
+        div {
+          display: inline-block;
+        }
+        span {
+          display: block;
+          margin: 0 3rem 0 0;
+        }
+        .saksTekst {
+          text-transform: uppercase;
+        }
+        &:focus, &:hover {
+          color: white;
+        }
+      }
+      form {
+        text-align: center;
+        input[type="radio"] + label {
+          background: url(../img/radio_svart_bg.svg) 0 0 no-repeat;
+        }
+        input[type="radio"]:checked + label {
+          background: url(../img/radio_svart_valgt.svg) 0 0 no-repeat;
+          font-weight: normal;
+          color: #ffffff;
+        }
+        input[type="radio"]:focus + label {
+          color: white;
+        }
+      }
+      .send {
+        color: #fff;
+        margin-top: 20px;
+      }
+    }
+    &.nyoppgave {
+      .ny-oppgave-form;
+    }
+    &.merke {
+      form {
+        .user-select(none);
+      }
+      a.knapp-hoved-stor {
+        margin: 15px 0;
+        color: #ffffff;
+      }
+      .temagruppe {
+        margin-top: 30px;
+      }
+      .ny-oppgave-form;
+    }
+    div.success ul.feedbackPanel {
+      background-color: #0fba47;
+    }
+
+    .ny-oppgave-form {
+      .temagruppe {
+        margin-top: 30px;
+      }
+      form {
+        text-align: center;
+        label, select, textarea, .enhetvalg {
+          display: block;
+          width: 100%;
+        }
+        label {
+          text-align: left;
+          &:last-of-type {
+            margin-bottom: 0px;
+          }
+        }
+        textarea {
+          resize: none;
+          height: 150px;
+        }
+        a {
+          margin: 0 auto;
+          text-align: center;
+          &.knapp-hoved-stor {
+            margin: 15px 0;
+            color: #ffffff;
+          }
+        }
+        .enhetvalg a {
+          height: 34px;
+          line-height: 34px;
+          text-align: left;
+          text-transform: none;
+          border-radius: 0;
+          -moz-border-radius: 0;
+          -webkit-border-radius: 0;
+          background-image: none;
+          span {
+            font-size: 1rem !important;
+          }
+        }
+        .linje {
+          margin-top: 40px;
+          margin-bottom: 40px !important;
+        }
+      }
+      .oppgaveOpprettetFeedback {
+        margin: 2rem 0;
+      }
+    }
+  }
+  .feilmelding {
+    width: 100%;
+    margin-top: 150px;
+    text-align: center;
+    color: #b7b1a9;
+  }
+}
+
+.meldingstatus {
+  margin: 0 0 1em;
+  padding-left: 2.5em;
+  font-weight: normal;
+  line-height: 22px;
+  background-repeat: no-repeat;
+  &.sporsmal {
+    background-image: url(../img/melding_sporsmaal_hoyre.svg);
+  }
+  &.svar-ikke-lest-av-bruker {
+    background-image: url(../img/melding_svar_sendt.svg)
+  }
+  &.svar-lest-av-bruker {
+    background-image: url(../img/melding_svar_lest.svg)
+  }
+  &.samtalereferat-ikke-lest-av-bruker {
+    background-image: url(../img/melding_referat_sendt.svg)
+  }
+  &.samtalereferat-lest-av-bruker {
+    background-image: url(../img/melding_referat_lest.svg)
+  }
+}
+hr.linje {
+  width: 100%;
+  height: 1px;
+  border: none;
+  background-color: #675c53;
+  margin-bottom: 20px;
+}
+
+@media print {
+  .meldinger {
+    height: 0px !important;
+    display: inline-block;
+  }
+  .meldinger .lerret {
+    height: 0px !important;
+    display: inline-block;
+  }
+}

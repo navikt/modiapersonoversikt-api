@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head></head>
+<body>
+<wicket:panel>
+    <h2>
+        <wicket:message key="nyoppgave.overskrift"/>
+    </h2>
+    <div class="robust-strek"></div>
+    <h2 wicket:id="temagruppe" class="medium temagruppe"></h2>
+
+    <wicket:container wicket:id="nyoppgaveForm"></wicket:container>
+
+    <a href="#" wicket:id="okKnapp" class="knapp-hoved-stor">
+        <wicket:message key="nyoppgave.ok"/>
+    </a>
+    <a wicket:id="avbryt" class="avbryt-knapp">
+        <wicket:message key="nyoppgave.avbryt"/>
+    </a>
+</wicket:panel>
+</body>
+</html>

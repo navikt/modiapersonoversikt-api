@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head></head>
+<body>
+<wicket:panel>
+    <div wicket:id="journalfortSkiller" class="traad-info journalfort-skiller nyeste"></div>
+    <wicket:container wicket:id="kontorsperretInfo"/>
+    <wicket:container wicket:id="feilsendtInfo"/>
+    <article class="nyeste-melding clearfix">
+        <div class="venstre-kolonne">
+            <div class="avsenderbilde-ramme">
+                <img wicket:id="avsenderbilde"/>
+            </div>
+        </div>
+        <div class="hoyre-kolonne">
+            <div class="header">
+                <p wicket:id="meldingstatus" class="meldingstatus"></p>
+                <p wicket:id="avsenderTekst" class="dato"></p>
+                <h2 wicket:id="temagruppe" class="medium temagruppe"></h2>
+            </div>
+            <wicket:container wicket:id="fritekst"/>
+        </div>
+    </article>
+</wicket:panel>
+</body>
+</html>
