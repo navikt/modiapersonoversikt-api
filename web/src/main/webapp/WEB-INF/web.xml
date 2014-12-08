@@ -43,11 +43,9 @@
     </security-constraint>
     <security-constraint>
         <web-resource-collection>
-            <web-resource-name>Selftest</web-resource-name>
+            <web-resource-name>Public</web-resource-name>
+            <url-pattern>/img/*</url-pattern>
             <url-pattern>/internal/selftest</url-pattern>
-        </web-resource-collection>
-        <web-resource-collection>
-            <web-resource-name>isAlive</web-resource-name>
             <url-pattern>/internal/isAlive</url-pattern>
         </web-resource-collection>
     </security-constraint>
