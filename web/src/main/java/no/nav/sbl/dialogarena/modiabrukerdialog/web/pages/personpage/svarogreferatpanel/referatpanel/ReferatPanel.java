@@ -54,7 +54,6 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
-
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
@@ -71,21 +70,15 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
 
         PropertyModel<Modus> modusModel = new PropertyModel<>(getModel(), "modus");
 
-
         final Form<HenvendelseVM> form = new Form<>("referatform", getModel());
         form.setOutputMarkupPlaceholderTag(true);
 
         form.add(new RadioChoice<>("velgModus", modusModel, asList(Modus.values()))
                 .setSuffix("")
-                .setChoiceRenderer(new IChoiceRenderer<Modus>() {
+                .setChoiceRenderer(new ChoiceRenderer<Modus>() {
                     @Override
                     public Object getDisplayValue(Modus object) {
                         return getString(object.name() + ".tab");
-                    }
-
-                    @Override
-                    public String getIdValue(Modus object, int index) {
-                        return object.toString();
                     }
                 })
                 .add(new AjaxFormChoiceComponentUpdatingBehavior() {
@@ -122,10 +115,11 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         form.add(tekstfelt, tekstfeltLabel);
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback");
+        modusKomponenter.add(feedbackPanel);
         feedbackPanel.setOutputMarkupId(true);
         form.add(feedbackPanel);
 
-        final RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal");
+        RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal");
         modusKomponenter.add(radioGroup);
         radioGroup.setOutputMarkupPlaceholderTag(true);
         radioGroup.setRequired(true);
@@ -151,7 +145,6 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
                 item.add(kanalKnapp, kanalknappLabel);
             }
         });
-
         radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
@@ -160,7 +153,6 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         });
 
         form.add(radioGroup);
-
 
         form.add(new DropDownChoice<>("temagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
             @Override
