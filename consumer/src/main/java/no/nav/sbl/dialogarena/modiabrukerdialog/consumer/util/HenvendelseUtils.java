@@ -1,61 +1,56 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype;
 import static org.joda.time.DateTime.now;
 
 public class HenvendelseUtils {
 
     public static final String KONTAKT_NAV_SAKSTEMA = "KNA";
 
-    public static Optional<Sporsmal> createSporsmalFromXMLHenvendelse(XMLHenvendelse henvendelse) {
-        Sporsmal sporsmal = new Sporsmal(henvendelse.getBehandlingsId(), henvendelse.getOpprettetDato());
-        sporsmal.konorsperretEnhet = henvendelse.getKontorsperreEnhet();
-        sporsmal.oppgaveId = henvendelse.getOppgaveIdGsak();
+    public static Optional<Henvendelse> lagInngaendeHenvendelseFraXMLHenvendelse(XMLHenvendelse henvendelse) {
+        Henvendelse inngaende = new Henvendelse()
+                .withId(henvendelse.getBehandlingsId())
+                .withOpprettetDato(henvendelse.getOpprettetDato())
+                .withKontorsperretEnhet(henvendelse.getKontorsperreEnhet())
+                .withOppgaveId(henvendelse.getOppgaveIdGsak());
 
         if (henvendelse.getMetadataListe() == null) {
-            sporsmal.temagruppe = null;
-            sporsmal.fritekst = null;
-            return optional(sporsmal);
+            inngaende.temagruppe = null;
+            inngaende.fritekst = null;
+            return optional(inngaende);
         }
 
         XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
         if (xmlMetadata instanceof XMLMeldingFraBruker) {
             XMLMeldingFraBruker xmlMeldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
-            sporsmal.temagruppe = xmlMeldingFraBruker.getTemagruppe();
-            sporsmal.fritekst = xmlMeldingFraBruker.getFritekst();
-            return optional(sporsmal);
+            inngaende.temagruppe = xmlMeldingFraBruker.getTemagruppe();
+            inngaende.fritekst = xmlMeldingFraBruker.getFritekst();
+            return optional(inngaende);
         } else {
             return none();
         }
     }
 
-    public static SvarEllerReferat createSvarEllerReferatFromXMLHenvendelse(XMLHenvendelse henvendelse) {
-        SvarEllerReferat svarEllerReferat = new SvarEllerReferat()
+    public static Henvendelse lagUtgaendeHenvendelseFraXMLHenvendelse(XMLHenvendelse henvendelse) {
+        Henvendelse utgaende = new Henvendelse()
                 .withType(HENVENDELSETYPE_MAP.get(XMLHenvendelseType.fromValue(henvendelse.getHenvendelseType())))
                 .withFnr(henvendelse.getFnr())
                 .withOpprettetDato(henvendelse.getOpprettetDato())
-                .withSporsmalsId(henvendelse.getBehandlingskjedeId())
+                .withTraadId(henvendelse.getBehandlingskjedeId())
                 .withKontorsperretEnhet(henvendelse.getKontorsperreEnhet());
 
         if (henvendelse.getMetadataListe() == null) {
-            return svarEllerReferat
+            return utgaende
                     .withTemagruppe(null)
                     .withKanal(null)
                     .withFritekst(null)
@@ -65,23 +60,23 @@ public class HenvendelseUtils {
         XMLMetadata xmlMetadata = henvendelse.getMetadataListe().getMetadata().get(0);
         if (xmlMetadata instanceof XMLMeldingTilBruker) {
             XMLMeldingTilBruker xmlMeldingTilBruker = (XMLMeldingTilBruker) xmlMetadata;
-            svarEllerReferat
+            utgaende
                     .withTemagruppe(xmlMeldingTilBruker.getTemagruppe())
                     .withKanal(xmlMeldingTilBruker.getKanal())
                     .withFritekst(xmlMeldingTilBruker.getFritekst())
                     .withNavIdent(xmlMeldingTilBruker.getNavident());
 
-            fyllInnJournalforingsInformasjon(henvendelse, svarEllerReferat);
-            return svarEllerReferat;
+            fyllInnJournalforingsInformasjon(henvendelse, utgaende);
+            return utgaende;
         } else {
             throw new ApplicationException("Henvendelsen er ikke av typen XMlMeldingTilBruker: " + xmlMetadata);
         }
     }
 
-    private static void fyllInnJournalforingsInformasjon(XMLHenvendelse henvendelse, SvarEllerReferat svarEllerReferat) {
+    private static void fyllInnJournalforingsInformasjon(XMLHenvendelse henvendelse, Henvendelse utgaende) {
         XMLJournalfortInformasjon journalfortInformasjon = henvendelse.getJournalfortInformasjon();
         if (journalfortInformasjon != null) {
-            svarEllerReferat
+            utgaende
                     .withJournalfortTema(journalfortInformasjon.getJournalfortTema())
                     .withJournalfortSaksId(journalfortInformasjon.getJournalfortSaksId())
                     .withJournalfortAvNavIdent(journalfortInformasjon.getJournalforerNavIdent())
@@ -89,21 +84,21 @@ public class HenvendelseUtils {
         }
     }
 
-    public static XMLHenvendelse createXMLHenvendelseMedMeldingTilBruker(SvarEllerReferat svarEllerReferat, XMLHenvendelseType type) {
+    public static XMLHenvendelse createXMLHenvendelseMedMeldingTilBruker(Henvendelse henvendelse, XMLHenvendelseType type) {
         return new XMLHenvendelse()
                 .withHenvendelseType(type.name())
-                .withFnr(svarEllerReferat.fnr)
+                .withFnr(henvendelse.fnr)
                 .withOpprettetDato(now())
                 .withAvsluttetDato(now())
                 .withTema(KONTAKT_NAV_SAKSTEMA)
-                .withBehandlingskjedeId(svarEllerReferat.sporsmalsId)
-                .withKontorsperreEnhet(svarEllerReferat.kontorsperretEnhet)
+                .withBehandlingskjedeId(henvendelse.traadId)
+                .withKontorsperreEnhet(henvendelse.kontorsperretEnhet)
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
                         new XMLMeldingTilBruker()
-                                .withTemagruppe(svarEllerReferat.temagruppe)
-                                .withKanal(svarEllerReferat.kanal)
-                                .withFritekst(svarEllerReferat.fritekst)
-                                .withNavident(svarEllerReferat.navIdent)
+                                .withTemagruppe(henvendelse.temagruppe)
+                                .withKanal(henvendelse.kanal)
+                                .withFritekst(henvendelse.fritekst)
+                                .withNavident(henvendelse.navIdent)
                 ));
     }
 

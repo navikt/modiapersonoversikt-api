@@ -7,7 +7,7 @@ import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM.Modus;
@@ -44,9 +44,9 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_OPPMOTE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_TELEFON;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.REFERAT_OPPMOTE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.REFERAT_TELEFON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
@@ -213,14 +213,14 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
 
     private void sendReferat() {
         try {
-            SvarEllerReferat referat = new SvarEllerReferat()
+            Henvendelse referat = new Henvendelse()
                     .withFnr(fnr)
                     .withNavIdent(getSubjectHandler().getUid())
                     .withTemagruppe(getModelObject().temagruppe.name())
                     .withKanal(getModelObject().kanal.name())
                     .withType(referatType(getModelObject().kanal))
                     .withFritekst(getModelObject().getFritekst())
-                    .withSporsmalsId(null);
+                    .withTraadId(null);
             henvendelseUtsendingService.sendSvarEllerReferat(referat, Optional.<String>none());
         } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
             throw new RuntimeException(oppgaveErFerdigstilt);

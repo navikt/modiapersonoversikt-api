@@ -3,8 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
@@ -27,12 +26,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withModelObject;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withTextSaying;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
@@ -75,7 +69,7 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class), any(Optional.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(Henvendelse.class), any(Optional.class));
     }
 
     @Test
@@ -87,7 +81,7 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 1)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class), any(Optional.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(Henvendelse.class), any(Optional.class));
     }
 
     @Test
@@ -99,7 +93,7 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 2)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class), any(Optional.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(Henvendelse.class), any(Optional.class));
     }
 
     @Test
@@ -143,7 +137,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void skalIkkeViseTraadToggleLenkeHvisIngenSvarFinnes() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal(), Collections.<SvarEllerReferat>emptyList()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal(), Collections.<Henvendelse>emptyList()))
                 .should().containComponent(thatIsInvisible().and(withId("vistraadcontainer")));
     }
 
@@ -157,7 +151,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void skalViseLeggTilbakePanel() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal(), Collections.<SvarEllerReferat>emptyList()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal(), Collections.<Henvendelse>emptyList()))
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")))
                 .click().link(withId("leggtilbake"))
                 .should().containComponent(thatIsVisible().and(withId("leggtilbakepanel")));
@@ -165,7 +159,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void leggTilbakeLenkeSkalHaTekstenLeggTilbake() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal(), Collections.<SvarEllerReferat>emptyList()));
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal(), Collections.<Henvendelse>emptyList()));
 
         Label leggtilbaketekst = wicket.get().component(withId("leggtilbaketekst").and(ofType(Label.class)));
         String labeltekst = (String) leggtilbaketekst.getDefaultModelObject();
@@ -185,14 +179,14 @@ public class SvarPanelTest extends WicketPageTest {
         assertThat(labeltekst, is(equalTo(leggTilbakePropertyTekst)));
     }
 
-    private Sporsmal lagSporsmal() {
-        Sporsmal sporsmal = new Sporsmal("id", now());
+    private Henvendelse lagSporsmal() {
+        Henvendelse sporsmal = new Henvendelse().withId("id").withOpprettetDato(now());
         sporsmal.temagruppe = Temagruppe.FMLI.name();
         return sporsmal;
     }
 
-    private List<SvarEllerReferat> lagSvar() {
-        return asList(new SvarEllerReferat().withOpprettetDato(now()).withType(SvarEllerReferat.Henvendelsetype.SVAR_SKRIFTLIG).withFritekst("fritekst").withTemagruppe(Temagruppe.FMLI.name()));
+    private List<Henvendelse> lagSvar() {
+        return asList(new Henvendelse().withOpprettetDato(now()).withType(Henvendelse.Henvendelsetype.SVAR_SKRIFTLIG).withFritekst("fritekst").withTemagruppe(Temagruppe.FMLI.name()));
     }
 
 }

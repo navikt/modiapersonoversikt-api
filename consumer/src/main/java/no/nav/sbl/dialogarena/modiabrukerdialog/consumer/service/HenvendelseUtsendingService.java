@@ -6,8 +6,7 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -21,16 +20,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_OPPMOTE;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_SKRIFTLIG;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_TELEFON;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.ELDSTE_FORST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createSporsmalFromXMLHenvendelse;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createSvarEllerReferatFromXMLHenvendelse;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.ELDSTE_FORST;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.*;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -50,33 +45,33 @@ public class HenvendelseUtsendingService {
 
     private static final List<String> SVAR = asList(SVAR_OPPMOTE.name(), SVAR_SKRIFTLIG.name(), SVAR_TELEFON.name());
 
-    public void sendSvarEllerReferat(SvarEllerReferat svarEllerReferat, Optional<String> oppgaveId) throws OppgaveErFerdigstilt {
+    public void sendSvarEllerReferat(Henvendelse henvendelse, Optional<String> oppgaveId) throws OppgaveErFerdigstilt {
         if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             throw new OppgaveErFerdigstilt();
         }
 
-        XMLHenvendelseType type = XMLHenvendelseType.fromValue(svarEllerReferat.type.name());
-        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedMeldingTilBruker(svarEllerReferat, type);
+        XMLHenvendelseType type = XMLHenvendelseType.fromValue(henvendelse.type.name());
+        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedMeldingTilBruker(henvendelse, type);
         sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest()
                 .withType(type.name())
-                .withFodselsnummer(svarEllerReferat.fnr)
+                .withFodselsnummer(henvendelse.fnr)
                 .withAny(xmlHenvendelse));
     }
 
-    public List<SvarEllerReferat> getSvarEllerReferatForSporsmal(String fnr, String sporsmalId) {
+    public List<Henvendelse> getSvarEllerReferatForSporsmal(String fnr, String sporsmalId) {
         List<String> xmlHenvendelseTyper = asList(SVAR_SKRIFTLIG.name(), SVAR_OPPMOTE.name(), SVAR_TELEFON.name());
         List<Object> henvendelseliste =
                 henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
                         .withTyper(xmlHenvendelseTyper)
                         .withFodselsnummer(fnr)).getAny();
 
-        List<SvarEllerReferat> svarliste = new ArrayList<>();
+        List<Henvendelse> svarliste = new ArrayList<>();
 
         XMLHenvendelse xmlHenvendelse;
         for (Object o : henvendelseliste) {
             xmlHenvendelse = (XMLHenvendelse) o;
             if (svarEllerReferatForSporsmalet(sporsmalId, xmlHenvendelse)) {
-                svarliste.add(createSvarEllerReferatFromXMLHenvendelse(xmlHenvendelse));
+                svarliste.add(lagUtgaendeHenvendelseFraXMLHenvendelse(xmlHenvendelse));
             }
         }
         return on(svarliste)
@@ -88,7 +83,7 @@ public class HenvendelseUtsendingService {
         return SVAR.contains(xmlHenvendelse.getHenvendelseType()) && sporsmalId.equals(xmlHenvendelse.getBehandlingskjedeId());
     }
 
-    public Optional<Sporsmal> getSporsmal(String sporsmalId) {
+    public Optional<Henvendelse> getSporsmal(String sporsmalId) {
         XMLHenvendelse xmlHenvendelse =
                 (XMLHenvendelse) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalId)).getAny();
 
@@ -101,22 +96,22 @@ public class HenvendelseUtsendingService {
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(kontorsperreEnhet))));
         }
 
-        return createSporsmalFromXMLHenvendelse(xmlHenvendelse);
+        return lagInngaendeHenvendelseFraXMLHenvendelse(xmlHenvendelse);
     }
 
-    private final Transformer<SvarEllerReferat, SvarEllerReferat> journalfortTemaTilgang = new Transformer<SvarEllerReferat, SvarEllerReferat>() {
+    private final Transformer<Henvendelse, Henvendelse> journalfortTemaTilgang = new Transformer<Henvendelse, Henvendelse>() {
         @Override
-        public SvarEllerReferat transform(SvarEllerReferat svarEllerReferat) {
+        public Henvendelse transform(Henvendelse henvendelse) {
             PolicyRequest temagruppePolicyRequest = forRequest(
                     actionId("temagruppe"),
                     resourceId(""),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(svarEllerReferat.journalfortTema))
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(henvendelse.journalfortTema))
             );
-            if (!isBlank(svarEllerReferat.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                svarEllerReferat.fritekst = "";
+            if (!isBlank(henvendelse.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
+                henvendelse.fritekst = "";
             }
 
-            return svarEllerReferat;
+            return henvendelse;
         }
     };
 

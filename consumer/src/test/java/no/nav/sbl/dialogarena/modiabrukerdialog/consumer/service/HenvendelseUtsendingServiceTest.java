@@ -1,17 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -37,14 +31,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_OPPMOTE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.SVAR_SKRIFTLIG;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.hasSize;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyString;
-import static org.hamcrest.Matchers.not;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.REFERAT_OPPMOTE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.SVAR_SKRIFTLIG;
+import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
@@ -98,7 +87,7 @@ public class HenvendelseUtsendingServiceTest {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
 
-        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(SPORSMAL_ID_1).get();
+        Henvendelse sporsmal = henvendelseUtsendingService.getSporsmal(SPORSMAL_ID_1).get();
 
         verify(henvendelsePortType).hentHenvendelse(any(WSHentHenvendelseRequest.class));
         assertThat(sporsmal.id, is(SPORSMAL_ID_1));
@@ -108,7 +97,7 @@ public class HenvendelseUtsendingServiceTest {
 
     @Test
     public void skalSendeSvar() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        henvendelseUtsendingService.sendSvarEllerReferat(new SvarEllerReferat().withFnr(FNR).withFritekst(FRITEKST).withType(SVAR_SKRIFTLIG), Optional.<String>none());
+        henvendelseUtsendingService.sendSvarEllerReferat(new Henvendelse().withFnr(FNR).withFritekst(FRITEKST).withType(SVAR_SKRIFTLIG), Optional.<String>none());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.SVAR_SKRIFTLIG.name()));
@@ -116,7 +105,7 @@ public class HenvendelseUtsendingServiceTest {
 
     @Test
     public void skalSendeReferat() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        henvendelseUtsendingService.sendSvarEllerReferat(new SvarEllerReferat().withFnr(FNR).withFritekst(FRITEKST).withType(REFERAT_OPPMOTE), Optional.<String>none());
+        henvendelseUtsendingService.sendSvarEllerReferat(new Henvendelse().withFnr(FNR).withFritekst(FRITEKST).withType(REFERAT_OPPMOTE), Optional.<String>none());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.REFERAT_OPPMOTE.name()));
@@ -133,11 +122,11 @@ public class HenvendelseUtsendingServiceTest {
                 );
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        List<SvarEllerReferat> svarliste = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
+        List<Henvendelse> svarliste = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
 
         assertThat(svarliste, hasSize(2));
-        assertThat(svarliste.get(0).sporsmalsId, is(SPORSMAL_ID_1));
-        assertThat(svarliste.get(1).sporsmalsId, is(SPORSMAL_ID_1));
+        assertThat(svarliste.get(0).traadId, is(SPORSMAL_ID_1));
+        assertThat(svarliste.get(1).traadId, is(SPORSMAL_ID_1));
     }
 
     @Test
@@ -160,10 +149,10 @@ public class HenvendelseUtsendingServiceTest {
                 new WSHentHenvendelseListeResponse().withAny(createToXMLMeldingTilBrukerSomSvarerPaaSporsmalsIdMedNyesteForst(SPORSMAL_ID_1));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        List<SvarEllerReferat> svarEllerReferatForSporsmal = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
+        List<Henvendelse> henvendelseForSporsmal = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
 
-        assertThat(svarEllerReferatForSporsmal.get(0).type, is(SvarEllerReferat.Henvendelsetype.SVAR_TELEFON));
-        assertThat(svarEllerReferatForSporsmal.get(1).type, is(SvarEllerReferat.Henvendelsetype.SVAR_OPPMOTE));
+        assertThat(henvendelseForSporsmal.get(0).type, is(Henvendelse.Henvendelsetype.SVAR_TELEFON));
+        assertThat(henvendelseForSporsmal.get(1).type, is(Henvendelse.Henvendelsetype.SVAR_OPPMOTE));
     }
 
     @Test
@@ -173,10 +162,10 @@ public class HenvendelseUtsendingServiceTest {
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(resp);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
 
-        List<SvarEllerReferat> svarEllerReferatList = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
+        List<Henvendelse> henvendelseList = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
 
-        assertThat(svarEllerReferatList.get(0).fritekst, isEmptyString());
-        assertThat(svarEllerReferatList.get(1).fritekst, not(isEmptyString()));
+        assertThat(henvendelseList.get(0).fritekst, isEmptyString());
+        assertThat(henvendelseList.get(1).fritekst, not(isEmptyString()));
     }
 
     private WSHentHenvendelseResponse mockWSHentHenvendelseResponse() {

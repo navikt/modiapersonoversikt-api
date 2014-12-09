@@ -16,8 +16,7 @@ import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
@@ -288,7 +287,7 @@ public class PersonPage extends BasePage {
 
     private void visSvarPanelForHenvendelseId(String henvendelseId, String oppgaveId) {
         getSession().setAttribute(OPPGAVEID, null);
-        Optional<Sporsmal> sporsmal = henvendelseUtsendingService.getSporsmal(henvendelseId);
+        Optional<Henvendelse> sporsmal = henvendelseUtsendingService.getSporsmal(henvendelseId);
         if (sporsmal.isSome()) {
             erstattReferatPanelMedSvarPanel(sporsmal.get(), henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, henvendelseId), optional(oppgaveId));
         }
@@ -296,8 +295,8 @@ public class PersonPage extends BasePage {
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void visSvarPanelBasertPaaSporsmalId(AjaxRequestTarget target, String sporsmalId) {
-        Sporsmal sporsmal = henvendelseUtsendingService.getSporsmal(sporsmalId).get();
-        List<SvarEllerReferat> svar = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, sporsmalId);
+        Henvendelse sporsmal = henvendelseUtsendingService.getSporsmal(sporsmalId).get();
+        List<Henvendelse> svar = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, sporsmalId);
         Optional<String> oppgaveId = none();
         if (sporsmaletIkkeErBesvartTidligere(svar)) {
             try {
@@ -311,11 +310,11 @@ public class PersonPage extends BasePage {
         target.add(svarOgReferatPanel);
     }
 
-    private boolean sporsmaletIkkeErBesvartTidligere(List<SvarEllerReferat> svar) {
+    private boolean sporsmaletIkkeErBesvartTidligere(List<Henvendelse> svar) {
         return svar.isEmpty();
     }
 
-    private void erstattReferatPanelMedSvarPanel(Sporsmal sporsmal, List<SvarEllerReferat> svarTilSporsmal, Optional<String> oppgaveId) {
+    private void erstattReferatPanelMedSvarPanel(Henvendelse sporsmal, List<Henvendelse> svarTilSporsmal, Optional<String> oppgaveId) {
         svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svarTilSporsmal, oppgaveId));
     }
 

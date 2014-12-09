@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
@@ -83,7 +83,7 @@ public class ReferatPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(SvarEllerReferat.class), any(Optional.class));
+        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(Henvendelse.class), any(Optional.class));
     }
 
     @Test

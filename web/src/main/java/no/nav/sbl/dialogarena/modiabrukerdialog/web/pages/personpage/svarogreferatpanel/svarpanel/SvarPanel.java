@@ -6,12 +6,11 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurat
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -49,7 +48,7 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 
@@ -64,14 +63,14 @@ public class SvarPanel extends Panel {
 
     private final String fnr;
     private final Optional<String> oppgaveId;
-    private final Sporsmal sporsmal;
+    private final Henvendelse sporsmal;
     private final WebMarkupContainer traadContainer, svarContainer;
     private final LeggTilbakePanel leggTilbakePanel;
     private final KvitteringsPanel kvittering;
     private final WebMarkupContainer visTraadContainer;
     private final AjaxLink<Void> leggTilbakeKnapp;
 
-    public SvarPanel(String id, String fnr, Sporsmal sporsmal, final List<SvarEllerReferat> svar, Optional<String> oppgaveId) {
+    public SvarPanel(String id, String fnr, Henvendelse sporsmal, final List<Henvendelse> svar, Optional<String> oppgaveId) {
         super(id);
         this.fnr = fnr;
         this.oppgaveId = oppgaveId;
@@ -100,12 +99,12 @@ public class SvarPanel extends Panel {
         traadContainer.setVisibilityAllowed(svar.isEmpty());
         traadContainer.add(
                 new TidligereMeldingPanel("sporsmal", "sporsmal", sporsmal.temagruppe, sporsmal.opprettetDato, sporsmal.fritekst, !svar.isEmpty()),
-                new ListView<SvarEllerReferat>("svarliste", svar) {
+                new ListView<Henvendelse>("svarliste", svar) {
                     @Override
-                    protected void populateItem(ListItem<SvarEllerReferat> item) {
-                        SvarEllerReferat svarEllerReferat = item.getModelObject();
-                        String type = svarEllerReferat.type.name().substring(0, svarEllerReferat.type.name().lastIndexOf("_")).toLowerCase();
-                        item.add(new TidligereMeldingPanel("svar", type, svarEllerReferat.temagruppe, svarEllerReferat.opprettetDato, svarEllerReferat.fritekst, svarEllerReferat.navIdent, true));
+                    protected void populateItem(ListItem<Henvendelse> item) {
+                        Henvendelse henvendelse = item.getModelObject();
+                        String type = henvendelse.type.name().substring(0, henvendelse.type.name().lastIndexOf("_")).toLowerCase();
+                        item.add(new TidligereMeldingPanel("svar", type, henvendelse.temagruppe, henvendelse.opprettetDato, henvendelse.fritekst, henvendelse.navIdent, true));
                     }
                 }
         );
@@ -251,17 +250,17 @@ public class SvarPanel extends Panel {
         }
 
         private void sendHenvendelse(HenvendelseVM henvendelseVM) throws OppgaveErFerdigstilt {
-            SvarEllerReferat svarEllerReferat = new SvarEllerReferat()
+            Henvendelse henvendelse = new Henvendelse()
                     .withFnr(fnr)
                     .withNavIdent(getSubjectHandler().getUid())
-                    .withSporsmalsId(sporsmal.id)
+                    .withTraadId(sporsmal.id)
                     .withTemagruppe(henvendelseVM.temagruppe.name())
                     .withKanal(henvendelseVM.kanal.name())
                     .withType(svarType(henvendelseVM.kanal))
                     .withFritekst(henvendelseVM.getFritekst())
-                    .withKontorsperretEnhet(sporsmal.konorsperretEnhet);
+                    .withKontorsperretEnhet(sporsmal.kontorsperretEnhet);
 
-            henvendelseUtsendingService.sendSvarEllerReferat(svarEllerReferat, oppgaveId);
+            henvendelseUtsendingService.sendSvarEllerReferat(henvendelse, oppgaveId);
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);
         }
 

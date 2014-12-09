@@ -9,8 +9,7 @@ import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Sporsmal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -24,7 +23,6 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,22 +37,14 @@ import java.util.Arrays;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
-import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
-import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
+import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_OVERSIKT;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.HENVENDELSEID;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.OPPGAVEID;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.SVAR_OG_REFERAT_PANEL_ID;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
@@ -62,16 +52,10 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svar
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.joda.time.DateTime.now;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -90,7 +74,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        Sporsmal sporsmal = new Sporsmal("id", DateTime.now());
+        Henvendelse sporsmal = new Henvendelse().withId("id").withOpprettetDato(now());
         sporsmal.temagruppe = ARBD.name();
         sporsmal.oppgaveId = "id";
         when(henvendelseUtsendingService.getSporsmal(anyString())).thenReturn(optional(sporsmal));
@@ -177,7 +161,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void erstatterReferatPanelMedSvarPanelVedEventetSVAR_PAA_MELDING() {
-        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new SvarEllerReferat())));
+        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Henvendelse())));
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING))
@@ -186,7 +170,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void tilordnerIkkeOppgaveIGsakDersomSporsmaaletTidligereErBesvartVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
-        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new SvarEllerReferat())));
+        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Henvendelse())));
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
@@ -196,7 +180,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void tilordnerOppgaveIGsakDersomSporsmaaletIkkeTidligereErBesvartVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
-        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<SvarEllerReferat>());
+        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<Henvendelse>());
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
