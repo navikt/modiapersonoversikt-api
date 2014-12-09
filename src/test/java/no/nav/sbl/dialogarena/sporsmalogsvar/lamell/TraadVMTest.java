@@ -81,7 +81,7 @@ public class TraadVMTest {
     }
 
     @Test
-    public void gittMeldingstypeIkkeSpørsmålIEldsteMeldingReturnererBleInitiertAvBrukerFalse() {
+    public void gittMeldingstypeIkkeSporsmalIEldsteMeldingReturnererBleInitiertAvBrukerFalse() {
         MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_4), 4);
         traadVM.getMeldinger().add(eldsteMeldingVM);
 
@@ -89,7 +89,7 @@ public class TraadVMTest {
     }
 
     @Test
-    public void gittMeldingstypeSpørsmålIEldsteMeldingReturnererBleInitiertAvBrukerTrue() {
+    public void gittMeldingstypeSporsmalIEldsteMeldingReturnererBleInitiertAvBrukerTrue() {
         MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, Meldingstype.SPORSMAL_SKRIFTLIG, DATE_4), 4);
         traadVM.getMeldinger().add(eldsteMeldingVM);
 
