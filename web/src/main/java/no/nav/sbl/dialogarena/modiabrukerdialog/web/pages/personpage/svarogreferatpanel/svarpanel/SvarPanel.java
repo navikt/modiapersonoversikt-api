@@ -11,7 +11,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -140,11 +140,11 @@ public class SvarPanel extends Panel {
         add(visTraadContainer, traadContainer, svarContainer, leggTilbakePanel, kvittering);
     }
 
-    private SvarOgReferatVM lagModelObjectMedKanalOgTemagruppe() {
-        SvarOgReferatVM svarOgReferatVM = new SvarOgReferatVM();
-        svarOgReferatVM.kanal = TEKST;
-        svarOgReferatVM.temagruppe = getTemagruppeFraSporsmal();
-        return svarOgReferatVM;
+    private HenvendelseVM lagModelObjectMedKanalOgTemagruppe() {
+        HenvendelseVM henvendelseVM = new HenvendelseVM();
+        henvendelseVM.kanal = TEKST;
+        henvendelseVM.temagruppe = getTemagruppeFraSporsmal();
+        return henvendelseVM;
     }
 
     //Denne er midlertidig mens vi venter på full integrasjon med kodeverk
@@ -165,13 +165,13 @@ public class SvarPanel extends Panel {
         target.focusComponent(leggTilbakeKnapp);
     }
 
-    private class SvarForm extends Form<SvarOgReferatVM> {
+    private class SvarForm extends Form<HenvendelseVM> {
 
         private final FeedbackPanel feedbackPanel;
         private final AjaxButton sendKnapp;
 
-        public SvarForm(String id, SvarOgReferatVM svarOgReferatVM) {
-            super(id, new CompoundPropertyModel<>(svarOgReferatVM));
+        public SvarForm(String id, HenvendelseVM henvendelseVM) {
+            super(id, new CompoundPropertyModel<>(henvendelseVM));
 
             final RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal");
             radioGroup.setRequired(true);
@@ -236,11 +236,11 @@ public class SvarPanel extends Panel {
             add(sendKnapp);
         }
 
-        private void sendOgVisKvittering(SvarOgReferatVM svarOgReferatVM, AjaxRequestTarget target) {
+        private void sendOgVisKvittering(HenvendelseVM henvendelseVM, AjaxRequestTarget target) {
             try {
-                sendHenvendelse(svarOgReferatVM);
+                sendHenvendelse(henvendelseVM);
                 send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
-                kvittering.visKvittering(target, getString(svarOgReferatVM.kanal.getKvitteringKey("svarpanel")),
+                kvittering.visKvittering(target, getString(henvendelseVM.kanal.getKvitteringKey("svarpanel")),
                         visTraadContainer, traadContainer, svarContainer, leggTilbakePanel);
             } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
                 error(getString("svarform.feilmelding.oppgaveferdigstilt"));
@@ -250,15 +250,15 @@ public class SvarPanel extends Panel {
             }
         }
 
-        private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) throws OppgaveErFerdigstilt {
+        private void sendHenvendelse(HenvendelseVM henvendelseVM) throws OppgaveErFerdigstilt {
             SvarEllerReferat svarEllerReferat = new SvarEllerReferat()
                     .withFnr(fnr)
                     .withNavIdent(getSubjectHandler().getUid())
                     .withSporsmalsId(sporsmal.id)
-                    .withTemagruppe(svarOgReferatVM.temagruppe.name())
-                    .withKanal(svarOgReferatVM.kanal.name())
-                    .withType(svarType(svarOgReferatVM.kanal))
-                    .withFritekst(svarOgReferatVM.getFritekst())
+                    .withTemagruppe(henvendelseVM.temagruppe.name())
+                    .withKanal(henvendelseVM.kanal.name())
+                    .withType(svarType(henvendelseVM.kanal))
+                    .withFritekst(henvendelseVM.getFritekst())
                     .withKontorsperretEnhet(sporsmal.konorsperretEnhet);
 
             henvendelseUtsendingService.sendSvarEllerReferat(svarEllerReferat, oppgaveId);

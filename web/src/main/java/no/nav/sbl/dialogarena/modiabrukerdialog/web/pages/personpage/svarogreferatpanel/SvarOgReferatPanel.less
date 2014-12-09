@@ -12,6 +12,29 @@
 	.traadcontainer {
 		margin: 30px 0 0;
 	}
+    .modusVelger {
+      width: 100%;
+      border-bottom: 1px solid #cbcbcb;
+      input {
+        display: none;
+      }
+      input + label {
+        width: 50%;
+        margin: 0;
+        padding: 1rem;
+        color: #3e3832;
+        font-size: 1rem;
+        text-transform: none;
+        background: none;
+        &:not(:last-child) {
+          border-right: 1px solid #cbcbcb;
+        }
+      }
+      input:checked + label {
+        background: #dadada none;
+        font-weight: bold;
+      }
+    }
 	.vistraad {
 		.ekspanderingspil {
 			top: 4px;

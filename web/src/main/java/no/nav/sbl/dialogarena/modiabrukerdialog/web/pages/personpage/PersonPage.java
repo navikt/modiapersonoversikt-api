@@ -27,7 +27,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.Oppga
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout.TimeoutBoks;
@@ -91,8 +91,8 @@ public class PersonPage extends BasePage {
     public static final String HENVENDELSEID = "henvendelseid";
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
-    public static final PackageResourceReference SVAR_OG_REFERATPANEL_LESS = new PackageResourceReference(SvarOgReferatVM.class, "SvarOgReferatPanel.less");
-    public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(SvarOgReferatVM.class, "jquery-ui-selectmenu.min.js");
+    public static final PackageResourceReference SVAR_OG_REFERATPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "SvarOgReferatPanel.less");
+    public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(HenvendelseVM.class, "jquery-ui-selectmenu.min.js");
     private static final Logger logger = getLogger(PersonPage.class);
     private final String fnr;
     public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";

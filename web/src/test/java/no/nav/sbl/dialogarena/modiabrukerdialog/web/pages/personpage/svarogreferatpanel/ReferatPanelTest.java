@@ -104,7 +104,7 @@ public class ReferatPanelTest extends WicketPageTest {
 
         wicket.goToPageWith(new TestReferatPanel("id", "fnr"));
 
-        SvarOgReferatVM modelObject = (SvarOgReferatVM) wicket.get().component(withId("referatform").and(ofType(Form.class))).getDefaultModelObject();
+        HenvendelseVM modelObject = (HenvendelseVM) wicket.get().component(withId("referatform").and(ofType(Form.class))).getDefaultModelObject();
         assertThat(modelObject.kanal, is((equalTo(TELEFON))));
     }
 
@@ -114,16 +114,16 @@ public class ReferatPanelTest extends WicketPageTest {
 
         wicket.goToPageWith(new TestReferatPanel("id", "fnr"));
 
-        SvarOgReferatVM modelObject = (SvarOgReferatVM) wicket.get().component(withId("referatform").and(ofType(Form.class))).getDefaultModelObject();
+        HenvendelseVM modelObject = (HenvendelseVM) wicket.get().component(withId("referatform").and(ofType(Form.class))).getDefaultModelObject();
         assertThat(modelObject.kanal, is(equalTo(null)));
     }
 
     protected TestReferatPanel lagReferatPanelMedKanalSatt() {
         TestReferatPanel referatPanel = new TestReferatPanel("id", "fnr");
         Object referatformModel = referatPanel.get("referatform").getDefaultModelObject();
-        SvarOgReferatVM svarOgReferatVM = (SvarOgReferatVM) referatformModel;
-        svarOgReferatVM.kanal = TELEFON;
-        svarOgReferatVM.temagruppe = Temagruppe.ARBD;
+        HenvendelseVM henvendelseVM = (HenvendelseVM) referatformModel;
+        henvendelseVM.kanal = TELEFON;
+        henvendelseVM.temagruppe = Temagruppe.ARBD;
         return referatPanel;
     }
 

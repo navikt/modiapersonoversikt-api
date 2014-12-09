@@ -9,8 +9,9 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM.Modus;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.SvarOgReferatVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -22,35 +23,34 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.ChoiceRenderer;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
-import org.apache.wicket.markup.html.panel.Panel;
+import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.OPPMOTE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON_OG_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_OPPMOTE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.SvarEllerReferat.Henvendelsetype.REFERAT_TELEFON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
-public class ReferatPanel extends Panel {
+public class ReferatPanel extends GenericPanel<HenvendelseVM> {
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
@@ -60,17 +60,56 @@ public class ReferatPanel extends Panel {
 
     private final String fnr;
     private final KvitteringsPanel kvittering;
-    private final SvarOgReferatVM svarOgReferatVM;
+    private final List<Component> modusKomponenter = new ArrayList<>();
 
     public ReferatPanel(String id, String fnr) {
-        super(id);
+        super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
         this.fnr = fnr;
         setOutputMarkupPlaceholderTag(true);
 
-        this.svarOgReferatVM = new SvarOgReferatVM();
-        final Form<SvarOgReferatVM> form = new Form<>("referatform", new CompoundPropertyModel<>(vmMedDefaultVerdier()));
+        settOppModellMedDefaultVerdier();
+
+        PropertyModel<Modus> modusModel = new PropertyModel<>(getModel(), "modus");
+
+
+        final Form<HenvendelseVM> form = new Form<>("referatform", getModel());
         form.setOutputMarkupPlaceholderTag(true);
 
+        form.add(new RadioChoice<>("velgModus", modusModel, asList(Modus.values()))
+                .setSuffix("")
+                .setChoiceRenderer(new IChoiceRenderer<Modus>() {
+                    @Override
+                    public Object getDisplayValue(Modus object) {
+                        return getString(object.name() + ".tab");
+                    }
+
+                    @Override
+                    public String getIdValue(Modus object, int index) {
+                        return object.toString();
+                    }
+                })
+                .add(new AjaxFormChoiceComponentUpdatingBehavior() {
+                    @Override
+                    protected void onUpdate(AjaxRequestTarget target) {
+                        target.add(modusKomponenter.toArray(new Component[modusKomponenter.size()]));
+                    }
+                }));
+
+        Label overskrift = new Label("overskrift", new StringResourceModel("${modus}.overskrift", getModel()));
+        overskrift.setOutputMarkupId(true);
+        modusKomponenter.add(overskrift);
+        form.add(overskrift);
+
+        Label tekstfeltOverskrift = new Label("tekstfeltOverskrift", new StringResourceModel("${modus}.tekstfelt", getModel()));
+        tekstfeltOverskrift.setOutputMarkupId(true);
+        modusKomponenter.add(tekstfeltOverskrift);
+        form.add(tekstfeltOverskrift);
+
+        final Label kanalbeskrivelse = new Label("kanalbeskrivelse", new StringResourceModel("${kanal}", getModel(), ""));
+        kanalbeskrivelse.setOutputMarkupPlaceholderTag(true);
+        modusKomponenter.add(kanalbeskrivelse);
+        kanalbeskrivelse.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
+        form.add(kanalbeskrivelse);
 
         EnhancedTextArea tekstfelt = new EnhancedTextArea("tekstfelt", form.getModel(),
                 new EnhancedTextAreaConfigurator()
@@ -78,7 +117,7 @@ public class ReferatPanel extends Panel {
                         .withMinTextAreaHeight(250)
                         .withPlaceholderTextKey("referatform.tekstfelt.placeholder")
         );
-        Label tekstfeltLabel = new Label("tekstfelt-label", getString("referatpanel.tekstfelt.overskrift"));
+        Label tekstfeltLabel = new Label("tekstfelt-label", new StringResourceModel("${modus}.overskrift", getModel()));
         tekstfeltLabel.add(new AttributeAppender("for", tekstfelt.get("text").getMarkupId()));
         form.add(tekstfelt, tekstfeltLabel);
 
@@ -87,8 +126,10 @@ public class ReferatPanel extends Panel {
         form.add(feedbackPanel);
 
         final RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal");
-        radioGroup.setOutputMarkupId(true);
+        modusKomponenter.add(radioGroup);
+        radioGroup.setOutputMarkupPlaceholderTag(true);
         radioGroup.setRequired(true);
+        radioGroup.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
         radioGroup.add(new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
             @Override
             protected void populateItem(ListItem<Kanal> item) {
@@ -111,18 +152,15 @@ public class ReferatPanel extends Panel {
             }
         });
 
-        form.add(radioGroup);
-
-        final Label kanalbeskrivelse = new Label("kanalbeskrivelse", new StringResourceModel("${name}", radioGroup.getModel(), ""));
-        kanalbeskrivelse.setOutputMarkupId(true);
-        form.add(kanalbeskrivelse);
-
         radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 target.add(kanalbeskrivelse);
             }
         });
+
+        form.add(radioGroup);
+
 
         form.add(new DropDownChoice<>("temagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
             @Override
@@ -156,32 +194,40 @@ public class ReferatPanel extends Panel {
 
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_VALGT)
     public void oppdaterReferatVM(AjaxRequestTarget target) {
-        vmMedDefaultVerdier();
+        settOppModellMedDefaultVerdier();
         target.add(this);
     }
 
-    private SvarOgReferatVM vmMedDefaultVerdier() {
+    private void settOppModellMedDefaultVerdier() {
+        getModelObject().modus = Modus.REFERAT;
+
         if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {
-            svarOgReferatVM.kanal = TELEFON;
+            getModelObject().kanal = TELEFON;
         }
-        return svarOgReferatVM;
     }
 
-    private void sendOgVisKvittering(AjaxRequestTarget target, Form<SvarOgReferatVM> form) {
-        sendHenvendelse(svarOgReferatVM);
+    private void sendOgVisKvittering(AjaxRequestTarget target, Form<HenvendelseVM> form) {
+        switch (getModelObject().modus) {
+            case REFERAT:
+                sendReferat();
+                kvittering.visKvittering(target, getString(getModelObject().kanal.getKvitteringKey("referatpanel")), form);
+                break;
+            case SPORSMAL:
+                break;
+        }
+
         send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
-        kvittering.visKvittering(target, getString(svarOgReferatVM.kanal.getKvitteringKey("referatpanel")), form);
     }
 
-    private void sendHenvendelse(SvarOgReferatVM svarOgReferatVM) {
+    private void sendReferat() {
         try {
             SvarEllerReferat referat = new SvarEllerReferat()
                     .withFnr(fnr)
                     .withNavIdent(getSubjectHandler().getUid())
-                    .withTemagruppe(svarOgReferatVM.temagruppe.name())
-                    .withKanal(svarOgReferatVM.kanal.name())
-                    .withType(referatType(svarOgReferatVM.kanal))
-                    .withFritekst(svarOgReferatVM.getFritekst())
+                    .withTemagruppe(getModelObject().temagruppe.name())
+                    .withKanal(getModelObject().kanal.name())
+                    .withType(referatType(getModelObject().kanal))
+                    .withFritekst(getModelObject().getFritekst())
                     .withSporsmalsId(null);
             henvendelseUtsendingService.sendSvarEllerReferat(referat, Optional.<String>none());
         } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
