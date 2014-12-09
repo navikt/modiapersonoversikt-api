@@ -221,7 +221,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
                     .withType(referatType(getModelObject().kanal))
                     .withFritekst(getModelObject().getFritekst())
                     .withTraadId(null);
-            henvendelseUtsendingService.sendSvarEllerReferat(referat, Optional.<String>none());
+            henvendelseUtsendingService.sendHenvendelse(referat, Optional.<String>none());
         } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
             throw new RuntimeException(oppgaveErFerdigstilt);
         }

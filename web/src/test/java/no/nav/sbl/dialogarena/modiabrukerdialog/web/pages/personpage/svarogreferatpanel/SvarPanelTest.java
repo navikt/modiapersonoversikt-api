@@ -69,7 +69,7 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(Henvendelse.class), any(Optional.class));
+        verify(henvendelseUtsendingService).sendHenvendelse(any(Henvendelse.class), any(Optional.class));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 1)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(Henvendelse.class), any(Optional.class));
+        verify(henvendelseUtsendingService).sendHenvendelse(any(Henvendelse.class), any(Optional.class));
     }
 
     @Test
@@ -93,7 +93,7 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 2)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendSvarEllerReferat(any(Henvendelse.class), any(Optional.class));
+        verify(henvendelseUtsendingService).sendHenvendelse(any(Henvendelse.class), any(Optional.class));
     }
 
     @Test

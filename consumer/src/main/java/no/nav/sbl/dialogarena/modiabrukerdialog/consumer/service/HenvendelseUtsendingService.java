@@ -45,7 +45,7 @@ public class HenvendelseUtsendingService {
 
     private static final List<String> SVAR = asList(SVAR_OPPMOTE.name(), SVAR_SKRIFTLIG.name(), SVAR_TELEFON.name());
 
-    public void sendSvarEllerReferat(Henvendelse henvendelse, Optional<String> oppgaveId) throws OppgaveErFerdigstilt {
+    public void sendHenvendelse(Henvendelse henvendelse, Optional<String> oppgaveId) throws OppgaveErFerdigstilt {
         if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             throw new OppgaveErFerdigstilt();
         }
@@ -58,11 +58,10 @@ public class HenvendelseUtsendingService {
                 .withAny(xmlHenvendelse));
     }
 
-    public List<Henvendelse> getSvarEllerReferatForSporsmal(String fnr, String sporsmalId) {
-        List<String> xmlHenvendelseTyper = asList(SVAR_SKRIFTLIG.name(), SVAR_OPPMOTE.name(), SVAR_TELEFON.name());
+    public List<Henvendelse> hentHenvendelserTilTraad(String fnr, String traadId) {
         List<Object> henvendelseliste =
                 henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
-                        .withTyper(xmlHenvendelseTyper)
+                        .withTyper(SVAR)
                         .withFodselsnummer(fnr)).getAny();
 
         List<Henvendelse> svarliste = new ArrayList<>();
@@ -70,7 +69,7 @@ public class HenvendelseUtsendingService {
         XMLHenvendelse xmlHenvendelse;
         for (Object o : henvendelseliste) {
             xmlHenvendelse = (XMLHenvendelse) o;
-            if (svarEllerReferatForSporsmalet(sporsmalId, xmlHenvendelse)) {
+            if (henvendelseTilTraad(traadId, xmlHenvendelse)) {
                 svarliste.add(lagUtgaendeHenvendelseFraXMLHenvendelse(xmlHenvendelse));
             }
         }
@@ -79,13 +78,13 @@ public class HenvendelseUtsendingService {
                 .collect(ELDSTE_FORST);
     }
 
-    private boolean svarEllerReferatForSporsmalet(String sporsmalId, XMLHenvendelse xmlHenvendelse) {
-        return SVAR.contains(xmlHenvendelse.getHenvendelseType()) && sporsmalId.equals(xmlHenvendelse.getBehandlingskjedeId());
+    private boolean henvendelseTilTraad(String traadId, XMLHenvendelse xmlHenvendelse) {
+        return SVAR.contains(xmlHenvendelse.getHenvendelseType()) && traadId.equals(xmlHenvendelse.getBehandlingskjedeId());
     }
 
-    public Optional<Henvendelse> getSporsmal(String sporsmalId) {
+    public Optional<Henvendelse> getSporsmal(String traadId) {
         XMLHenvendelse xmlHenvendelse =
-                (XMLHenvendelse) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(sporsmalId)).getAny();
+                (XMLHenvendelse) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(traadId)).getAny();
 
         String kontorsperreEnhet = xmlHenvendelse.getKontorsperreEnhet();
         if (kontorsperreEnhet != null) {

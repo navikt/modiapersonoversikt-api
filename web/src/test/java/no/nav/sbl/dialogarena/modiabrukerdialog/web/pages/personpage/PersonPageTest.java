@@ -156,12 +156,12 @@ public class PersonPageTest extends WicketPageTest {
 
         assertThat(((PersonPage) wicket.tester.getLastRenderedPage()).startLamell, is(LAMELL_MELDINGER));
         verify(henvendelseUtsendingService).getSporsmal(henvendelsesId);
-        verify(henvendelseUtsendingService).getSvarEllerReferatForSporsmal(testFnr, henvendelsesId);
+        verify(henvendelseUtsendingService).hentHenvendelserTilTraad(testFnr, henvendelsesId);
     }
 
     @Test
     public void erstatterReferatPanelMedSvarPanelVedEventetSVAR_PAA_MELDING() {
-        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Henvendelse())));
+        when(henvendelseUtsendingService.hentHenvendelserTilTraad(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Henvendelse())));
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING))
@@ -170,7 +170,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void tilordnerIkkeOppgaveIGsakDersomSporsmaaletTidligereErBesvartVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
-        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Henvendelse())));
+        when(henvendelseUtsendingService.hentHenvendelserTilTraad(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Henvendelse())));
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
@@ -180,7 +180,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void tilordnerOppgaveIGsakDersomSporsmaaletIkkeTidligereErBesvartVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
-        when(henvendelseUtsendingService.getSvarEllerReferatForSporsmal(anyString(), anyString())).thenReturn(new ArrayList<Henvendelse>());
+        when(henvendelseUtsendingService.hentHenvendelserTilTraad(anyString(), anyString())).thenReturn(new ArrayList<Henvendelse>());
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));

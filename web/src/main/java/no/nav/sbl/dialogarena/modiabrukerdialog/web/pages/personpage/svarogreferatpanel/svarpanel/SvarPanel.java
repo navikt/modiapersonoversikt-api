@@ -260,7 +260,7 @@ public class SvarPanel extends Panel {
                     .withFritekst(henvendelseVM.getFritekst())
                     .withKontorsperretEnhet(sporsmal.kontorsperretEnhet);
 
-            henvendelseUtsendingService.sendSvarEllerReferat(henvendelse, oppgaveId);
+            henvendelseUtsendingService.sendHenvendelse(henvendelse, oppgaveId);
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);
         }
 

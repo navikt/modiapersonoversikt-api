@@ -97,7 +97,7 @@ public class HenvendelseUtsendingServiceTest {
 
     @Test
     public void skalSendeSvar() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        henvendelseUtsendingService.sendSvarEllerReferat(new Henvendelse().withFnr(FNR).withFritekst(FRITEKST).withType(SVAR_SKRIFTLIG), Optional.<String>none());
+        henvendelseUtsendingService.sendHenvendelse(new Henvendelse().withFnr(FNR).withFritekst(FRITEKST).withType(SVAR_SKRIFTLIG), Optional.<String>none());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.SVAR_SKRIFTLIG.name()));
@@ -105,7 +105,7 @@ public class HenvendelseUtsendingServiceTest {
 
     @Test
     public void skalSendeReferat() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        henvendelseUtsendingService.sendSvarEllerReferat(new Henvendelse().withFnr(FNR).withFritekst(FRITEKST).withType(REFERAT_OPPMOTE), Optional.<String>none());
+        henvendelseUtsendingService.sendHenvendelse(new Henvendelse().withFnr(FNR).withFritekst(FRITEKST).withType(REFERAT_OPPMOTE), Optional.<String>none());
 
         verify(sendUtHenvendelsePortType).sendUtHenvendelse(wsSendHenvendelseRequestCaptor.capture());
         assertThat(wsSendHenvendelseRequestCaptor.getValue().getType(), is(XMLHenvendelseType.REFERAT_OPPMOTE.name()));
@@ -122,7 +122,7 @@ public class HenvendelseUtsendingServiceTest {
                 );
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        List<Henvendelse> svarliste = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
+        List<Henvendelse> svarliste = henvendelseUtsendingService.hentHenvendelserTilTraad(FNR, SPORSMAL_ID_1);
 
         assertThat(svarliste, hasSize(2));
         assertThat(svarliste.get(0).traadId, is(SPORSMAL_ID_1));
@@ -135,11 +135,11 @@ public class HenvendelseUtsendingServiceTest {
                 new WSHentHenvendelseListeResponse().withAny(createXMLMeldingTilBruker(SPORSMAL_ID_1));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
+        henvendelseUtsendingService.hentHenvendelserTilTraad(FNR, SPORSMAL_ID_1);
 
         verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
-        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), contains(SVAR_TYPER));
+        assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), containsInAnyOrder(SVAR_TYPER));
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), not(contains(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())));
     }
 
@@ -149,7 +149,7 @@ public class HenvendelseUtsendingServiceTest {
                 new WSHentHenvendelseListeResponse().withAny(createToXMLMeldingTilBrukerSomSvarerPaaSporsmalsIdMedNyesteForst(SPORSMAL_ID_1));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        List<Henvendelse> henvendelseForSporsmal = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
+        List<Henvendelse> henvendelseForSporsmal = henvendelseUtsendingService.hentHenvendelserTilTraad(FNR, SPORSMAL_ID_1);
 
         assertThat(henvendelseForSporsmal.get(0).type, is(Henvendelse.Henvendelsetype.SVAR_TELEFON));
         assertThat(henvendelseForSporsmal.get(1).type, is(Henvendelse.Henvendelsetype.SVAR_OPPMOTE));
@@ -162,7 +162,7 @@ public class HenvendelseUtsendingServiceTest {
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(resp);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
 
-        List<Henvendelse> henvendelseList = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(FNR, SPORSMAL_ID_1);
+        List<Henvendelse> henvendelseList = henvendelseUtsendingService.hentHenvendelserTilTraad(FNR, SPORSMAL_ID_1);
 
         assertThat(henvendelseList.get(0).fritekst, isEmptyString());
         assertThat(henvendelseList.get(1).fritekst, not(isEmptyString()));

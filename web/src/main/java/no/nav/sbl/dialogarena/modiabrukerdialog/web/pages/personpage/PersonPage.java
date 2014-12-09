@@ -289,14 +289,14 @@ public class PersonPage extends BasePage {
         getSession().setAttribute(OPPGAVEID, null);
         Optional<Henvendelse> sporsmal = henvendelseUtsendingService.getSporsmal(henvendelseId);
         if (sporsmal.isSome()) {
-            erstattReferatPanelMedSvarPanel(sporsmal.get(), henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, henvendelseId), optional(oppgaveId));
+            erstattReferatPanelMedSvarPanel(sporsmal.get(), henvendelseUtsendingService.hentHenvendelserTilTraad(fnr, henvendelseId), optional(oppgaveId));
         }
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
-    public void visSvarPanelBasertPaaSporsmalId(AjaxRequestTarget target, String sporsmalId) {
-        Henvendelse sporsmal = henvendelseUtsendingService.getSporsmal(sporsmalId).get();
-        List<Henvendelse> svar = henvendelseUtsendingService.getSvarEllerReferatForSporsmal(fnr, sporsmalId);
+    public void visSvarPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
+        Henvendelse sporsmal = henvendelseUtsendingService.getSporsmal(traadId).get();
+        List<Henvendelse> svar = henvendelseUtsendingService.hentHenvendelserTilTraad(fnr, traadId);
         Optional<String> oppgaveId = none();
         if (sporsmaletIkkeErBesvartTidligere(svar)) {
             try {
