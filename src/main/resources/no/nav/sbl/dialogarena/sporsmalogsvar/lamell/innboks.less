@@ -40,7 +40,7 @@
           white-space: nowrap;
         }
       }
-      >p {
+      > p {
         width: 100%;
         margin: 0;
         text-overflow: ellipsis;
@@ -302,7 +302,7 @@
           color: white;
           display: block;
 
-          &:hover,&:focus {
+          &:hover, &:focus {
             outline: none;
             text-decoration: underline;
           }
@@ -450,6 +450,12 @@
   &.sporsmal {
     background-image: url(../img/melding_sporsmaal_hoyre.svg);
   }
+  &.svar {
+    background-image: url(../img/melding_svar_lest.svg)
+  }
+  &.sporsmal-ikke-lest-av-bruker {
+    background-image: url(../img/melding_sporsmaal_hoyre.svg);
+  }
   &.svar-ikke-lest-av-bruker {
     background-image: url(../img/melding_svar_sendt.svg)
   }
@@ -463,6 +469,7 @@
     background-image: url(../img/melding_referat_lest.svg)
   }
 }
+
 hr.linje {
   width: 100%;
   height: 1px;
@@ -476,6 +483,7 @@ hr.linje {
     height: 0px !important;
     display: inline-block;
   }
+
   .meldinger .lerret {
     height: 0px !important;
     display: inline-block;
