@@ -111,6 +111,10 @@
             <groupId>no.nav</groupId>
             <artifactId>brukerprofil-consumer</artifactId>
         </dependency>
+        <dependency>
+            <groupId>no.nav</groupId>
+            <artifactId>brukerprofil-domain</artifactId>
+        </dependency>
 
         <!--Dialogarena-->
         <dependency>
