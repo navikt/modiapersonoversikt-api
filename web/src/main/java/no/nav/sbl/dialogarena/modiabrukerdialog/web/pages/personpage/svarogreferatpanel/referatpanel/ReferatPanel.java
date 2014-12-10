@@ -1,6 +1,5 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.NamedEventPayload;
@@ -45,9 +44,7 @@ import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.REFERAT_OPPMOTE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.REFERAT_TELEFON;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class ReferatPanel extends GenericPanel<HenvendelseVM> {
@@ -207,6 +204,8 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
                 kvittering.visKvittering(target, getString(getModelObject().kanal.getKvitteringKey("referatpanel")), form);
                 break;
             case SPORSMAL:
+                sendSporsmal();
+                kvittering.visKvittering(target, "Spørsmål sendt til bruker", form);
                 break;
         }
 
@@ -214,19 +213,25 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private void sendReferat() {
-        try {
-            Henvendelse referat = new Henvendelse()
-                    .withFnr(fnr)
-                    .withNavIdent(getSubjectHandler().getUid())
-                    .withTemagruppe(getModelObject().temagruppe.name())
-                    .withKanal(getModelObject().kanal.name())
-                    .withType(referatType(getModelObject().kanal))
-                    .withFritekst(getModelObject().getFritekst())
-                    .withTraadId(null);
-            henvendelseUtsendingService.sendHenvendelse(referat, Optional.<String>none());
-        } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
-            throw new RuntimeException(oppgaveErFerdigstilt);
-        }
+        Henvendelse referat = felles()
+                .withKanal(getModelObject().kanal.name())
+                .withType(referatType(getModelObject().kanal));
+        henvendelseUtsendingService.sendHenvendelse(referat);
+    }
+
+    private void sendSporsmal() {
+        Henvendelse sporsmal = felles()
+                .withKanal(Kanal.TEKST.name())
+                .withType(SPORSMAL_MODIA_UTGAAENDE);
+        henvendelseUtsendingService.sendHenvendelse(sporsmal);
+    }
+
+    private Henvendelse felles() {
+        return new Henvendelse()
+                .withFnr(fnr)
+                .withNavIdent(getSubjectHandler().getUid())
+                .withTemagruppe(getModelObject().temagruppe.name())
+                .withFritekst(getModelObject().getFritekst());
     }
 
     private Henvendelsetype referatType(Kanal kanal) {

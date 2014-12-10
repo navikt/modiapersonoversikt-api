@@ -44,6 +44,14 @@ public class HenvendelseUtsendingService {
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
+    public void sendHenvendelse(Henvendelse henvendelse) {
+        try {
+            sendHenvendelse(henvendelse, Optional.<String>none());
+        } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
+            throw new RuntimeException(oppgaveErFerdigstilt);
+        }
+    }
+
     public void sendHenvendelse(Henvendelse henvendelse, Optional<String> oppgaveId) throws OppgaveErFerdigstilt {
         if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             throw new OppgaveErFerdigstilt();

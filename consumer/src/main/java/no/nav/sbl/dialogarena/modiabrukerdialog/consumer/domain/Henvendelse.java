@@ -13,7 +13,7 @@ public class Henvendelse implements Serializable {
     public Henvendelsetype type;
 
     public enum Henvendelsetype {
-        SVAR_SKRIFTLIG, SVAR_OPPMOTE, SVAR_TELEFON, REFERAT_OPPMOTE, REFERAT_TELEFON, SPORSMAL_SKRIFTLIG
+        SVAR_SKRIFTLIG, SVAR_OPPMOTE, SVAR_TELEFON, REFERAT_OPPMOTE, REFERAT_TELEFON, SPORSMAL_SKRIFTLIG, SPORSMAL_MODIA_UTGAAENDE, SVAR_SBL_INNGAAENDE
     }
 
     public Henvendelse withId(String id) {
