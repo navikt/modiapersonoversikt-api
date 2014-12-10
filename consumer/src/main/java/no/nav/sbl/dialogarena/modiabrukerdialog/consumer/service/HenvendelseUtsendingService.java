@@ -11,24 +11,24 @@ import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.Send
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
 import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.ArrayList;
 import java.util.List;
 
-import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
+import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.modig.lang.collections.TransformerUtils.castTo;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.ELDSTE_FORST;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.TIL_HENVENDELSE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.lagHenvendelseFraXMLHenvendelse;
 import static org.apache.commons.lang3.StringUtils.defaultString;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class HenvendelseUtsendingService {
 
@@ -44,8 +44,6 @@ public class HenvendelseUtsendingService {
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
-    private static final List<String> SVAR = asList(SVAR_OPPMOTE.name(), SVAR_SKRIFTLIG.name(), SVAR_TELEFON.name());
-
     public void sendHenvendelse(Henvendelse henvendelse, Optional<String> oppgaveId) throws OppgaveErFerdigstilt {
         if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             throw new OppgaveErFerdigstilt();
@@ -60,52 +58,43 @@ public class HenvendelseUtsendingService {
     }
 
     public List<Henvendelse> hentTraad(String fnr, String traadId) {
-        List<Henvendelse> traad = new ArrayList<>();
+        List<Henvendelse> henvendelser =
+                on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
+                        .withTyper(
+                                SPORSMAL_SKRIFTLIG.name(),
+                                SVAR_SKRIFTLIG.name(),
+                                SVAR_OPPMOTE.name(),
+                                SVAR_TELEFON.name(),
+                                REFERAT_OPPMOTE.name(),
+                                REFERAT_TELEFON.name(),
+                                SPORSMAL_MODIA_UTGAAENDE.name(),
+                                SVAR_SBL_INNGAAENDE.name())
+                        .withFodselsnummer(fnr))
+                        .getAny())
+                        .map(castTo(XMLHenvendelse.class))
+                        .filter(where(BEHANDLINGSKJEDE_ID, equalTo(traadId)))
+                        .map(TIL_HENVENDELSE)
+                        .map(journalfortTemaTilgang)
+                        .collect(ELDSTE_FORST);
 
-        XMLHenvendelse xmlHenvendelse =
-                (XMLHenvendelse) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(traadId)).getAny();
-
-        String kontorsperreEnhet = xmlHenvendelse.getKontorsperreEnhet();
-        if (kontorsperreEnhet != null) {
+        Henvendelse sporsmal = henvendelser.get(0);
+        if (sporsmal.kontorsperretEnhet != null) {
             pep.assertAccess(forRequest(
                     actionId("kontorsperre"),
                     resourceId(""),
                     subjectAttribute("urn:nav:ikt:tilgangskontroll:xacml:subject:localenhet", defaultString(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet())),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(kontorsperreEnhet))));
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(sporsmal.kontorsperretEnhet))));
         }
 
-        Optional<Henvendelse> henvendelse = lagHenvendelseFraXMLHenvendelse(xmlHenvendelse);
-        if (henvendelse.isSome()) {
-            traad.add(henvendelse.get());
-            traad.addAll(hentHenvendelserTilTraad(fnr, traadId));
+        return henvendelser;
+    }
+
+    private static final Transformer<XMLHenvendelse, String> BEHANDLINGSKJEDE_ID = new Transformer<XMLHenvendelse, String>() {
+        @Override
+        public String transform(XMLHenvendelse xmlHenvendelse) {
+            return xmlHenvendelse.getBehandlingskjedeId();
         }
-
-        return on(traad).collect(ELDSTE_FORST);
-    }
-
-    private List<Henvendelse> hentHenvendelserTilTraad(String fnr, String traadId) {
-        List<Object> henvendelseliste =
-                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
-                        .withTyper(SVAR)
-                        .withFodselsnummer(fnr)).getAny();
-
-        List<Henvendelse> svarliste = new ArrayList<>();
-
-        XMLHenvendelse xmlHenvendelse;
-        for (Object o : henvendelseliste) {
-            xmlHenvendelse = (XMLHenvendelse) o;
-            if (henvendelseTilTraad(traadId, xmlHenvendelse)) {
-                svarliste.add(lagHenvendelseFraXMLHenvendelse(xmlHenvendelse).get());
-            }
-        }
-        return on(svarliste)
-                .map(journalfortTemaTilgang)
-                .collect();
-    }
-
-    private boolean henvendelseTilTraad(String traadId, XMLHenvendelse xmlHenvendelse) {
-        return SVAR.contains(xmlHenvendelse.getHenvendelseType()) && traadId.equals(xmlHenvendelse.getBehandlingskjedeId());
-    }
+    };
 
     private final Transformer<Henvendelse, Henvendelse> journalfortTemaTilgang = new Transformer<Henvendelse, Henvendelse>() {
         @Override
@@ -115,7 +104,7 @@ public class HenvendelseUtsendingService {
                     resourceId(""),
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(henvendelse.journalfortTema))
             );
-            if (!isBlank(henvendelse.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
+            if (isNotBlank(henvendelse.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
                 henvendelse.fritekst = "";
             }
 

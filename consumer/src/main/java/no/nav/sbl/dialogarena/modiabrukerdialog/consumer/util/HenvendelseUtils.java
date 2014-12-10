@@ -1,14 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
+import org.apache.commons.collections15.Transformer;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype;
 import static org.joda.time.DateTime.now;
 
@@ -16,50 +14,53 @@ public class HenvendelseUtils {
 
     public static final String KONTAKT_NAV_SAKSTEMA = "KNA";
 
-    public static Optional<Henvendelse> lagHenvendelseFraXMLHenvendelse(XMLHenvendelse xmlHenvendelse) {
-        Henvendelse henvendelse = new Henvendelse()
-                .withId(xmlHenvendelse.getBehandlingsId())
-                .withType(HENVENDELSETYPE_MAP.get(XMLHenvendelseType.fromValue(xmlHenvendelse.getHenvendelseType())))
-                .withFnr(xmlHenvendelse.getFnr())
-                .withOpprettetDato(xmlHenvendelse.getOpprettetDato())
-                .withTraadId(xmlHenvendelse.getBehandlingskjedeId())
-                .withKontorsperretEnhet(xmlHenvendelse.getKontorsperreEnhet())
-                .withOppgaveId(xmlHenvendelse.getOppgaveIdGsak());
-
-        if (xmlHenvendelse.getMetadataListe() == null) {
-            return optional(henvendelse
-                    .withTemagruppe(null)
-                    .withKanal(null)
-                    .withFritekst(null)
-                    .withNavIdent(null));
-        }
-
-        XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
-        if (xmlMetadata instanceof XMLMeldingTilBruker) {
-            XMLMeldingTilBruker xmlMeldingTilBruker = (XMLMeldingTilBruker) xmlMetadata;
-            henvendelse
-                    .withTemagruppe(xmlMeldingTilBruker.getTemagruppe())
-                    .withKanal(xmlMeldingTilBruker.getKanal())
-                    .withFritekst(xmlMeldingTilBruker.getFritekst())
-                    .withNavIdent(xmlMeldingTilBruker.getNavident());
+    public static final Transformer<XMLHenvendelse, Henvendelse> TIL_HENVENDELSE = new Transformer<XMLHenvendelse, Henvendelse>() {
+        @Override
+        public Henvendelse transform(XMLHenvendelse xmlHenvendelse) {
+            Henvendelse henvendelse = new Henvendelse()
+                    .withId(xmlHenvendelse.getBehandlingsId())
+                    .withType(HENVENDELSETYPE_MAP.get(XMLHenvendelseType.fromValue(xmlHenvendelse.getHenvendelseType())))
+                    .withFnr(xmlHenvendelse.getFnr())
+                    .withOpprettetDato(xmlHenvendelse.getOpprettetDato())
+                    .withTraadId(xmlHenvendelse.getBehandlingskjedeId())
+                    .withKontorsperretEnhet(xmlHenvendelse.getKontorsperreEnhet())
+                    .withOppgaveId(xmlHenvendelse.getOppgaveIdGsak());
 
             fyllInnJournalforingsInformasjon(xmlHenvendelse, henvendelse);
-        } else if (xmlMetadata instanceof XMLMeldingFraBruker) {
-            XMLMeldingFraBruker xmlMeldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
-            henvendelse
-                    .withTemagruppe(xmlMeldingFraBruker.getTemagruppe())
-                    .withFritekst(xmlMeldingFraBruker.getFritekst());
-        } else {
-            return none();
+
+            if (xmlHenvendelse.getMetadataListe() == null) {
+                return henvendelse
+                        .withTemagruppe(null)
+                        .withKanal(null)
+                        .withFritekst(null)
+                        .withNavIdent(null);
+            }
+
+            XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
+            if (xmlMetadata instanceof XMLMeldingTilBruker) {
+                XMLMeldingTilBruker xmlMeldingTilBruker = (XMLMeldingTilBruker) xmlMetadata;
+                henvendelse
+                        .withTemagruppe(xmlMeldingTilBruker.getTemagruppe())
+                        .withKanal(xmlMeldingTilBruker.getKanal())
+                        .withFritekst(xmlMeldingTilBruker.getFritekst())
+                        .withNavIdent(xmlMeldingTilBruker.getNavident());
+            } else if (xmlMetadata instanceof XMLMeldingFraBruker) {
+                XMLMeldingFraBruker xmlMeldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
+                henvendelse
+                        .withTemagruppe(xmlMeldingFraBruker.getTemagruppe())
+                        .withFritekst(xmlMeldingFraBruker.getFritekst());
+            } else {
+                throw new RuntimeException("XMLMetadata er av en ukjent type: " + xmlMetadata);
+            }
+
+            return henvendelse;
         }
+    };
 
-        return optional(henvendelse);
-    }
-
-    private static void fyllInnJournalforingsInformasjon(XMLHenvendelse henvendelse, Henvendelse utgaende) {
-        XMLJournalfortInformasjon journalfortInformasjon = henvendelse.getJournalfortInformasjon();
+    private static void fyllInnJournalforingsInformasjon(XMLHenvendelse xmlHenvendelse, Henvendelse henvendelse) {
+        XMLJournalfortInformasjon journalfortInformasjon = xmlHenvendelse.getJournalfortInformasjon();
         if (journalfortInformasjon != null) {
-            utgaende
+            henvendelse
                     .withJournalfortTema(journalfortInformasjon.getJournalfortTema())
                     .withJournalfortSaksId(journalfortInformasjon.getJournalfortSaksId())
                     .withJournalfortAvNavIdent(journalfortInformasjon.getJournalforerNavIdent())

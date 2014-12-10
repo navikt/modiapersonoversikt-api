@@ -39,6 +39,7 @@ import org.apache.wicket.model.ResourceModel;
 import org.apache.wicket.model.StringResourceModel;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -76,7 +77,7 @@ public class SvarPanel extends Panel {
         this.fnr = fnr;
         this.oppgaveId = oppgaveId;
         this.sporsmal = traad.get(0);
-        this.svar = traad.subList(1, traad.size());
+        this.svar = new ArrayList<>(traad.subList(1, traad.size()));
         setOutputMarkupId(true);
 
         visTraadContainer = new WebMarkupContainer("vistraadcontainer");
