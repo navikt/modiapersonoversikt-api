@@ -88,6 +88,8 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
                     }
                 }));
 
+        form.add(new EpostVarselPanel("epostVarsel", fnr));
+
         Label overskrift = new Label("overskrift", new StringResourceModel("${modus}.overskrift", getModel()));
         overskrift.setOutputMarkupId(true);
         modusKomponenter.add(overskrift);
