@@ -59,7 +59,9 @@ public class HenvendelseBehandlingService {
                 SVAR_OPPMOTE.name(),
                 SVAR_TELEFON.name(),
                 REFERAT_OPPMOTE.name(),
-                REFERAT_TELEFON.name());
+                REFERAT_TELEFON.name(),
+                SPORSMAL_MODIA_UTGAAENDE.name(),
+                SVAR_SBL_INNGAAENDE.name());
 
         return on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest().withFodselsnummer(fnr).withTyper(typer)).getAny())
                 .map(TIL_MELDING)

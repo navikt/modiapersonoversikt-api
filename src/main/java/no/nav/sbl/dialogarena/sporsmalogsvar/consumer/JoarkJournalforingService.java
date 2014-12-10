@@ -7,27 +7,26 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforin
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingUtgaaende;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerInngaaendeHenvendelseRequest;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerInngaaendeHenvendelseResponse;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerNotatRequest;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerNotatResponse;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerUtgaaendeHenvendelseRequest;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerUtgaaendeHenvendelseResponse;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.*;
 
 import javax.inject.Inject;
+import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SVAR;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 
 public class JoarkJournalforingService {
 
     public static final String MODIA_SYSTEM_ID = "BD06";
+    private static final List<Meldingstype> INNGANEDE = asList(Meldingstype.SVAR_SBL_INNGAAENDE, Meldingstype.SPORSMAL_SKRIFTLIG);
+    private static final List<Meldingstype> UTGAENDE = asList(Meldingstype.SVAR_SKRIFTLIG, Meldingstype.SVAR_OPPMOTE, Meldingstype.SVAR_TELEFON, Meldingstype.SPORSMAL_MODIA_UTGAAENDE);
+    private static final List<Meldingstype> NOTAT = asList(Meldingstype.SAMTALEREFERAT_OPPMOTE, Meldingstype.SAMTALEREFERAT_TELEFON);
 
     @Inject
     private BehandleJournalV2 behandleJournalV2;
@@ -55,13 +54,15 @@ public class JoarkJournalforingService {
     }
 
     private String behandleJournalforing(Melding melding, Sak sak, String journalpostIdEldsteMelding) {
-        if (melding.meldingstype.equals(SPORSMAL_SKRIFTLIG)) {
+        if (INNGANEDE.contains(melding.meldingstype)) {
             return behandleJournalSporsmal(melding, sak);
-        } else if (SVAR.contains(melding.meldingstype)) {
+        } else if (UTGAENDE.contains(melding.meldingstype)) {
             return (behandleJournalSvar(melding, sak, journalpostIdEldsteMelding));
-        } else {
+        } else if (NOTAT.contains(melding.meldingstype)) {
             return (behandleJournalSamtalereferat(melding, sak, optional(journalpostIdEldsteMelding)));
         }
+
+        throw new RuntimeException("Meldingen har ingen kjent meldingstype: " + melding.meldingstype);
     }
 
     private String behandleJournalSporsmal(Melding melding, Sak sak) {

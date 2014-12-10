@@ -11,13 +11,12 @@ import java.io.Serializable;
 import java.util.Comparator;
 
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SAMTALEREFERAT;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SVAR;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.FRA_NAV;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingStatusTekstKey;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagStatusIkonKlasse;
 
 
-public class    MeldingVM implements Serializable {
+public class MeldingVM implements Serializable {
 
     public final Melding melding;
 
@@ -64,14 +63,14 @@ public class    MeldingVM implements Serializable {
 
     public String getAvsenderBildeUrl() {
         String imgUrl = WebApplication.get().getServletContext().getContextPath() + "/img/";
-        if (SVAR.contains(melding.meldingstype)|| SAMTALEREFERAT.contains(melding.meldingstype)) {
+        if (FRA_NAV.contains(melding.meldingstype)) {
             return imgUrl + "nav-logo.svg";
         }
         return imgUrl + "siluett.svg";
     }
 
     public String getAvsenderBildeAltKey() {
-        if (SVAR.contains(melding.meldingstype)|| SAMTALEREFERAT.contains(melding.meldingstype)) {
+        if (FRA_NAV.contains(melding.meldingstype)) {
             return "innboks.avsender.nav";
         }
         return "innboks.avsender.bruker";

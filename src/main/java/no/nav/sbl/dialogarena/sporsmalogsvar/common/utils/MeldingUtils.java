@@ -1,11 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadata;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
@@ -25,9 +20,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding.ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding.TRAAD_ID;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.IKKE_BESVART;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.IKKE_LEST_AV_BRUKER;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.LEST_AV_BRUKER;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.*;
 
 public class MeldingUtils {
 
@@ -112,9 +105,9 @@ public class MeldingUtils {
         public Status transform(XMLHenvendelse info) {
             Meldingstype meldingstype = MELDINGSTYPE_MAP.get(XMLHenvendelseType.fromValue(info.getHenvendelseType()));
 
-            if (meldingstype == Meldingstype.SPORSMAL_SKRIFTLIG) {
+            if (FRA_BRUKER.contains(meldingstype)) {
                 return IKKE_BESVART;
-            } else if (SVAR.contains(meldingstype) || SAMTALEREFERAT.contains(meldingstype)) {
+            } else if (FRA_NAV.contains(meldingstype)) {
                 DateTime lestDato = info.getLestDato();
                 if (lestDato != null) {
                     return LEST_AV_BRUKER;
@@ -135,11 +128,13 @@ public class MeldingUtils {
             put(XMLHenvendelseType.SVAR_TELEFON, Meldingstype.SVAR_TELEFON);
             put(XMLHenvendelseType.REFERAT_OPPMOTE, Meldingstype.SAMTALEREFERAT_OPPMOTE);
             put(XMLHenvendelseType.REFERAT_TELEFON, Meldingstype.SAMTALEREFERAT_TELEFON);
+            put(XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE, Meldingstype.SPORSMAL_MODIA_UTGAAENDE);
+            put(XMLHenvendelseType.SVAR_SBL_INNGAAENDE, Meldingstype.SVAR_SBL_INNGAAENDE);
         }
     };
 
-    public static final List<Meldingstype> SVAR = asList(Meldingstype.SVAR_SKRIFTLIG, Meldingstype.SVAR_OPPMOTE, Meldingstype.SVAR_TELEFON);
-    public static final List<Meldingstype> SAMTALEREFERAT = asList(Meldingstype.SAMTALEREFERAT_OPPMOTE, Meldingstype.SAMTALEREFERAT_TELEFON);
+    public static final List<Meldingstype> FRA_BRUKER = asList(Meldingstype.SPORSMAL_SKRIFTLIG, Meldingstype.SVAR_SBL_INNGAAENDE);
+    public static final List<Meldingstype> FRA_NAV = asList(Meldingstype.SVAR_SKRIFTLIG, Meldingstype.SVAR_OPPMOTE, Meldingstype.SVAR_TELEFON, Meldingstype.SAMTALEREFERAT_OPPMOTE, Meldingstype.SAMTALEREFERAT_TELEFON, Meldingstype.SPORSMAL_MODIA_UTGAAENDE);
 
     private static Map<String, List<Melding>> lagMap(List<Map.Entry<String, List<Melding>>> entries) {
         HashMap<String, List<Melding>> map = new HashMap<>();

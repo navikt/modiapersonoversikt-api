@@ -15,7 +15,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SAMTALEREFERAT;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.FRA_NAV;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.JOURNALFORT_DATO;
@@ -58,7 +58,7 @@ public class TraadVM implements Serializable {
     }
 
     public boolean erBehandlet() {
-        return meldinger.size() > 1 || SAMTALEREFERAT.contains(getEldsteMelding().melding.meldingstype);
+        return meldinger.size() > 1 || FRA_NAV.contains(getEldsteMelding().melding.meldingstype);
     }
 
     public boolean erKontorsperret() {
