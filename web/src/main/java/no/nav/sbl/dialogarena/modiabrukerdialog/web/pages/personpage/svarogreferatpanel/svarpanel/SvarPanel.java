@@ -64,17 +64,19 @@ public class SvarPanel extends Panel {
     private final String fnr;
     private final Optional<String> oppgaveId;
     private final Henvendelse sporsmal;
+    private final List<Henvendelse> svar;
     private final WebMarkupContainer traadContainer, svarContainer;
     private final LeggTilbakePanel leggTilbakePanel;
     private final KvitteringsPanel kvittering;
     private final WebMarkupContainer visTraadContainer;
     private final AjaxLink<Void> leggTilbakeKnapp;
 
-    public SvarPanel(String id, String fnr, Henvendelse sporsmal, final List<Henvendelse> svar, Optional<String> oppgaveId) {
+    public SvarPanel(String id, String fnr, final List<Henvendelse> traad, Optional<String> oppgaveId) {
         super(id);
         this.fnr = fnr;
         this.oppgaveId = oppgaveId;
-        this.sporsmal = sporsmal;
+        this.sporsmal = traad.get(0);
+        this.svar = traad.subList(1, traad.size());
         setOutputMarkupId(true);
 
         visTraadContainer = new WebMarkupContainer("vistraadcontainer");

@@ -22,6 +22,7 @@ import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
@@ -53,7 +54,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
         Henvendelse sporsmal = new Henvendelse().withId("sporsmal").withOpprettetDato(now());
         sporsmal.temagruppe = Temagruppe.ARBD.toString();
-        when(henvendelseUtsendingService.getSporsmal(anyString())).thenReturn(optional(sporsmal));
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(sporsmal));
     }
 
     @Test

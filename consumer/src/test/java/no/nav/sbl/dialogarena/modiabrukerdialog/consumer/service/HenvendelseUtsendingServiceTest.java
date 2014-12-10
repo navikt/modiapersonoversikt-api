@@ -31,8 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.REFERAT_OPPMOTE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.SVAR_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.*;
 import static org.hamcrest.Matchers.*;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
@@ -47,7 +46,7 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 public class HenvendelseUtsendingServiceTest {
 
     private final static String FNR = "fnr";
-    private final static String SPORSMAL_ID_1 = "id";
+    private final static String TRAAD_ID = "id";
     private final static String FRITEKST = "fritekst";
     private final static String TEMAGRUPPE = "temagruppe";
 
@@ -86,11 +85,12 @@ public class HenvendelseUtsendingServiceTest {
     public void henterSporsmal() {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
         when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(mockWSHentHenvendelseResponse());
+        when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(new WSHentHenvendelseListeResponse());
 
-        Henvendelse sporsmal = henvendelseUtsendingService.getSporsmal(SPORSMAL_ID_1).get();
+        Henvendelse sporsmal = henvendelseUtsendingService.hentTraad("fnr", TRAAD_ID).get(0);
 
         verify(henvendelsePortType).hentHenvendelse(any(WSHentHenvendelseRequest.class));
-        assertThat(sporsmal.id, is(SPORSMAL_ID_1));
+        assertThat(sporsmal.id, is(TRAAD_ID));
         assertThat(sporsmal.fritekst, is(FRITEKST));
         assertThat(sporsmal.temagruppe, is(TEMAGRUPPE));
     }
@@ -115,27 +115,29 @@ public class HenvendelseUtsendingServiceTest {
     public void skalHenteSvarlisteTilhorendeSporsmal() {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
                 new WSHentHenvendelseListeResponse().withAny(
-                        createXMLMeldingTilBruker(SPORSMAL_ID_1),
-                        createXMLMeldingTilBruker(SPORSMAL_ID_1),
+                        createXMLMeldingTilBruker(TRAAD_ID),
+                        createXMLMeldingTilBruker(TRAAD_ID),
                         createXMLMeldingTilBruker("annenId"),
                         createXMLMeldingTilBruker("endaEnAnnenId")
                 );
+        when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(new WSHentHenvendelseResponse().withAny(createXMLMeldingFraBruker("", "")));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        List<Henvendelse> svarliste = henvendelseUtsendingService.hentHenvendelserTilTraad(FNR, SPORSMAL_ID_1);
+        List<Henvendelse> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
 
-        assertThat(svarliste, hasSize(2));
-        assertThat(svarliste.get(0).traadId, is(SPORSMAL_ID_1));
-        assertThat(svarliste.get(1).traadId, is(SPORSMAL_ID_1));
+        assertThat(traad, hasSize(3));
+        assertThat(traad.get(1).traadId, is(TRAAD_ID));
+        assertThat(traad.get(2).traadId, is(TRAAD_ID));
     }
 
     @Test
     public void skalHenteSvarlisteMedRiktigTypeSpesifisert() {
-        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
-                new WSHentHenvendelseListeResponse().withAny(createXMLMeldingTilBruker(SPORSMAL_ID_1));
+        WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse = new WSHentHenvendelseListeResponse().withAny(createXMLMeldingTilBruker(TRAAD_ID));
+
+        when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(new WSHentHenvendelseResponse().withAny(createXMLMeldingFraBruker("", "")));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        henvendelseUtsendingService.hentHenvendelserTilTraad(FNR, SPORSMAL_ID_1);
+        henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
 
         verify(henvendelsePortType).hentHenvendelseListe(hentHenvendelseListeRequestCaptor.capture());
         assertThat(hentHenvendelseListeRequestCaptor.getValue().getTyper(), is(not(empty())));
@@ -146,32 +148,38 @@ public class HenvendelseUtsendingServiceTest {
     @Test
     public void skalHenteSortertListeAvSvarEllerReferatForSporsmalMedEldsteForst() {
         WSHentHenvendelseListeResponse wsHentHenvendelseListeResponse =
-                new WSHentHenvendelseListeResponse().withAny(createToXMLMeldingTilBrukerSomSvarerPaaSporsmalsIdMedNyesteForst(SPORSMAL_ID_1));
+                new WSHentHenvendelseListeResponse().withAny(createToXMLMeldingTilBrukerSomSvarerPaaSporsmalsIdMedNyesteForst(TRAAD_ID));
+
+        when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(new WSHentHenvendelseResponse().withAny(createXMLMeldingFraBruker("", "")));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(wsHentHenvendelseListeResponse);
 
-        List<Henvendelse> henvendelseForSporsmal = henvendelseUtsendingService.hentHenvendelserTilTraad(FNR, SPORSMAL_ID_1);
+        List<Henvendelse> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
 
-        assertThat(henvendelseForSporsmal.get(0).type, is(Henvendelse.Henvendelsetype.SVAR_TELEFON));
-        assertThat(henvendelseForSporsmal.get(1).type, is(Henvendelse.Henvendelsetype.SVAR_OPPMOTE));
+        assertThat(traad, hasSize(3));
+        assertThat(traad.get(1).type, is(SVAR_TELEFON));
+        assertThat(traad.get(2).type, is(SVAR_OPPMOTE));
     }
 
     @Test
     public void skalHenteListeAvSvarEllerReferatMedBlankFritekstOmManIkkeHarTilgang() {
         WSHentHenvendelseListeResponse resp =
-                new WSHentHenvendelseListeResponse().withAny(createToXMLMeldingerTilBrukerSomSvarerPaSporsmalMedJournalfortTemaGruppe(SPORSMAL_ID_1, JOURNALFORT_TEMA));
+                new WSHentHenvendelseListeResponse().withAny(createToXMLMeldingerTilBrukerSomSvarerPaSporsmalMedJournalfortTemaGruppe(TRAAD_ID, JOURNALFORT_TEMA));
+
+        when(henvendelsePortType.hentHenvendelse(any(WSHentHenvendelseRequest.class))).thenReturn(new WSHentHenvendelseResponse().withAny(createXMLMeldingFraBruker("", "")));
         when(henvendelsePortType.hentHenvendelseListe(any(WSHentHenvendelseListeRequest.class))).thenReturn(resp);
         when(pep.hasAccess(any(PolicyRequest.class))).thenReturn(true, false);
 
-        List<Henvendelse> henvendelseList = henvendelseUtsendingService.hentHenvendelserTilTraad(FNR, SPORSMAL_ID_1);
+        List<Henvendelse> traad = henvendelseUtsendingService.hentTraad(FNR, TRAAD_ID);
 
-        assertThat(henvendelseList.get(0).fritekst, isEmptyString());
-        assertThat(henvendelseList.get(1).fritekst, not(isEmptyString()));
+        assertThat(traad, hasSize(3));
+        assertThat(traad.get(1).fritekst, isEmptyString());
+        assertThat(traad.get(2).fritekst, not(isEmptyString()));
     }
 
     private WSHentHenvendelseResponse mockWSHentHenvendelseResponse() {
         return new WSHentHenvendelseResponse().withAny(
                 new XMLHenvendelse()
-                        .withBehandlingsId(SPORSMAL_ID_1)
+                        .withBehandlingsId(TRAAD_ID)
                         .withOpprettetDato(now())
                         .withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name())
                         .withMetadataListe(new XMLMetadataListe().withMetadata(
@@ -180,8 +188,13 @@ public class HenvendelseUtsendingServiceTest {
     }
 
     private XMLHenvendelse createXMLMeldingFraBruker(String oppgaveId, String fritekst) {
-        return new XMLHenvendelse().withOppgaveIdGsak(oppgaveId).withMetadataListe(new XMLMetadataListe()
-                .withMetadata(new XMLMeldingFraBruker().withFritekst(fritekst)));
+        return new XMLHenvendelse()
+                .withOppgaveIdGsak(oppgaveId)
+                .withOpprettetDato(now().minusDays(2))
+                .withHenvendelseType(XMLHenvendelseType.SPORSMAL_SKRIFTLIG.value())
+                .withMetadataListe(new XMLMetadataListe()
+                        .withMetadata(new XMLMeldingFraBruker()
+                                .withFritekst(fritekst)));
     }
 
     private XMLHenvendelse createXMLMeldingTilBruker(String sporsmalId) {

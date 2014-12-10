@@ -22,7 +22,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -48,7 +47,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void inneholderSporsmaalsspefikkeKomponenter() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
                 .should().containComponent(withId("temagruppe").and(ofType(Label.class)))
                 .should().containComponent(withId("sporsmal").and(ofType(TidligereMeldingPanel.class)))
                 .should().containComponent(withId("svarliste").and(ofType(ListView.class)))
@@ -63,7 +62,7 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void skalSendeSvarTilHenvendelseDersomManVelgerTekstSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .select("kanal", 0)
@@ -75,7 +74,7 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void skalSendeReferatTilHenvendelseDersomManVelgerTelefonSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .select("kanal", 1)
@@ -87,7 +86,7 @@ public class SvarPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void skalSendeReferatTilHenvendelseDersomManVelgerOppmoteSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .select("kanal", 2)
@@ -98,7 +97,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void girFeedbackOmPaakrevdeKomponenter() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
                 .inForm(withId("svarform"))
                 .submitWithAjaxButton(withId("send"));
 
@@ -108,20 +107,20 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void tekstligSvarErValgtSomDefault() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
                 .should().containComponent(withId("kanal").and(withModelObject(is(TEKST))));
     }
 
     @Test
     public void viserTemagruppenFraSporsmalet() {
-        TestSvarPanel svarPanel = new TestSvarPanel("id", "fnr", lagSporsmal());
+        TestSvarPanel svarPanel = new TestSvarPanel("id", "fnr", asList(lagSporsmal()));
         wicket.goToPageWith(svarPanel)
                 .should().containComponent(withId("temagruppe").and(withTextSaying(svarPanel.getString(Temagruppe.FMLI.name()))));
     }
 
     @Test
     public void viserKvitteringNaarManSenderInn() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", "dette er en fritekst")
                 .submitWithAjaxButton(withId("send"))
@@ -131,19 +130,19 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void skalViseTraadToggleLenkeHvisSvarFinnes() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal(), lagSvar()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal(), lagSvar())))
                 .should().containComponent(thatIsVisible().and(withId("vistraadcontainer")));
     }
 
     @Test
     public void skalIkkeViseTraadToggleLenkeHvisIngenSvarFinnes() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal(), Collections.<Henvendelse>emptyList()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
                 .should().containComponent(thatIsInvisible().and(withId("vistraadcontainer")));
     }
 
     @Test
     public void skalToggleVisningAvTraad() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal(), lagSvar()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal(), lagSvar())))
                 .should().containComponent(thatIsInvisible().and(withId("traadcontainer")))
                 .onComponent(withId("vistraadcontainer")).executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsVisible().and(withId("traadcontainer")));
@@ -151,7 +150,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void skalViseLeggTilbakePanel() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal(), Collections.<Henvendelse>emptyList()))
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")))
                 .click().link(withId("leggtilbake"))
                 .should().containComponent(thatIsVisible().and(withId("leggtilbakepanel")));
@@ -159,7 +158,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void leggTilbakeLenkeSkalHaTekstenLeggTilbake() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal(), Collections.<Henvendelse>emptyList()));
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())));
 
         Label leggtilbaketekst = wicket.get().component(withId("leggtilbaketekst").and(ofType(Label.class)));
         String labeltekst = (String) leggtilbaketekst.getDefaultModelObject();
@@ -170,7 +169,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void leggTilbakeLenkeSkalHaTekstenAvbryt() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", lagSporsmal(), lagSvar()));
+        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())));
 
         Label leggtilbaketekst = wicket.get().component(withId("leggtilbaketekst").and(ofType(Label.class)));
         String labeltekst = (String) leggtilbaketekst.getDefaultModelObject();
@@ -185,8 +184,8 @@ public class SvarPanelTest extends WicketPageTest {
         return sporsmal;
     }
 
-    private List<Henvendelse> lagSvar() {
-        return asList(new Henvendelse().withOpprettetDato(now()).withType(Henvendelse.Henvendelsetype.SVAR_SKRIFTLIG).withFritekst("fritekst").withTemagruppe(Temagruppe.FMLI.name()));
+    private Henvendelse lagSvar() {
+        return new Henvendelse().withOpprettetDato(now()).withType(Henvendelse.Henvendelsetype.SVAR_SKRIFTLIG).withFritekst("fritekst").withTemagruppe(Temagruppe.FMLI.name());
     }
 
 }

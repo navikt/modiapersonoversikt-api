@@ -287,35 +287,31 @@ public class PersonPage extends BasePage {
 
     private void visSvarPanelForHenvendelseId(String henvendelseId, String oppgaveId) {
         getSession().setAttribute(OPPGAVEID, null);
-        Optional<Henvendelse> sporsmal = henvendelseUtsendingService.getSporsmal(henvendelseId);
-        if (sporsmal.isSome()) {
-            erstattReferatPanelMedSvarPanel(sporsmal.get(), henvendelseUtsendingService.hentHenvendelserTilTraad(fnr, henvendelseId), optional(oppgaveId));
+        List<Henvendelse> traad = henvendelseUtsendingService.hentTraad(fnr, henvendelseId);
+        if (!traad.isEmpty()) {
+            erstattReferatPanelMedSvarPanel(traad, optional(oppgaveId));
         }
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void visSvarPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
-        Henvendelse sporsmal = henvendelseUtsendingService.getSporsmal(traadId).get();
-        List<Henvendelse> svar = henvendelseUtsendingService.hentHenvendelserTilTraad(fnr, traadId);
+        List<Henvendelse> traad = henvendelseUtsendingService.hentTraad(fnr, traadId);
         Optional<String> oppgaveId = none();
-        if (sporsmaletIkkeErBesvartTidligere(svar)) {
+        if (traad.size() <= 1) {
             try {
-                oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmal.oppgaveId);
-                oppgaveId = optional(sporsmal.oppgaveId);
+                String sporsmalOppgaveId = traad.get(0).oppgaveId;
+                oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmalOppgaveId);
+                oppgaveId = optional(sporsmalOppgaveId);
             } catch (FikkIkkeTilordnet fikkIkkeTilordnet) {
                 oppgavetilordningFeiletPopup.vis(target);
             }
         }
-        erstattReferatPanelMedSvarPanel(sporsmal, svar, oppgaveId);
+        erstattReferatPanelMedSvarPanel(traad, oppgaveId);
         target.add(svarOgReferatPanel);
     }
 
-    private boolean sporsmaletIkkeErBesvartTidligere(List<Henvendelse> svar) {
-        return svar.isEmpty();
-    }
-
-    private void erstattReferatPanelMedSvarPanel(Henvendelse sporsmal, List<Henvendelse> svarTilSporsmal, Optional<String> oppgaveId) {
-        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, sporsmal, svarTilSporsmal, oppgaveId));
+    private void erstattReferatPanelMedSvarPanel(List<Henvendelse> traad, Optional<String> oppgaveId) {
+        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, traad, oppgaveId));
     }
 
     @RunOnEvents({KVITTERING_VIST, LEGG_TILBAKE_FERDIG, SVAR_AVBRUTT})

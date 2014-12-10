@@ -1,13 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
-import no.nav.modig.core.exception.ApplicationException;
+import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.lagInngaendeHenvendelseFraXMLHenvendelse;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.lagHenvendelseFraXMLHenvendelse;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -41,7 +41,7 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingFraBruker();
         XMLMeldingFraBruker xmlMeldingFraBruker = (XMLMeldingFraBruker) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
-        Henvendelse sporsmal = lagInngaendeHenvendelseFraXMLHenvendelse(xmlHenvendelse).get();
+        Henvendelse sporsmal = lagHenvendelseFraXMLHenvendelse(xmlHenvendelse).get();
 
         assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
@@ -55,7 +55,7 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingFraBruker();
         xmlHenvendelse.setMetadataListe(null);
 
-        Henvendelse sporsmal = lagInngaendeHenvendelseFraXMLHenvendelse(xmlHenvendelse).get();
+        Henvendelse sporsmal = lagHenvendelseFraXMLHenvendelse(xmlHenvendelse).get();
 
         assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
@@ -69,7 +69,7 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.REFERAT_OPPMOTE);
         XMLMeldingTilBruker xmlMeldingTilBruker = (XMLMeldingTilBruker) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
-        Henvendelse referat = HenvendelseUtils.lagUtgaendeHenvendelseFraXMLHenvendelse(xmlHenvendelse);
+        Henvendelse referat = lagHenvendelseFraXMLHenvendelse(xmlHenvendelse).get();
 
         assertThat(referat.fnr, is(xmlHenvendelse.getFnr()));
         assertThat(referat.type, is(Henvendelse.Henvendelsetype.REFERAT_OPPMOTE));
@@ -86,7 +86,7 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.SVAR_SKRIFTLIG);
         XMLMeldingTilBruker xmlMeldingTilBruker = (XMLMeldingTilBruker) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
-        Henvendelse svar = HenvendelseUtils.lagUtgaendeHenvendelseFraXMLHenvendelse(xmlHenvendelse);
+        Henvendelse svar = lagHenvendelseFraXMLHenvendelse(xmlHenvendelse).get();
 
         assertThat(svar.fnr, is(xmlHenvendelse.getFnr()));
         assertThat(svar.type, is(Henvendelse.Henvendelsetype.SVAR_SKRIFTLIG));
@@ -103,7 +103,7 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.SVAR_SKRIFTLIG);
         xmlHenvendelse.setMetadataListe(null);
 
-        Henvendelse svar = HenvendelseUtils.lagUtgaendeHenvendelseFraXMLHenvendelse(xmlHenvendelse);
+        Henvendelse svar = lagHenvendelseFraXMLHenvendelse(xmlHenvendelse).get();
 
         assertThat(svar.fnr, is(xmlHenvendelse.getFnr()));
         assertThat(svar.type, is(Henvendelse.Henvendelsetype.SVAR_SKRIFTLIG));
@@ -120,7 +120,7 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.SVAR_SKRIFTLIG);
         xmlHenvendelse.setMetadataListe(null);
 
-        Henvendelse svar = HenvendelseUtils.lagUtgaendeHenvendelseFraXMLHenvendelse(xmlHenvendelse);
+        Henvendelse svar = lagHenvendelseFraXMLHenvendelse(xmlHenvendelse).get();
 
         assertThat(svar.fnr, is(xmlHenvendelse.getFnr()));
         assertThat(svar.type, is(Henvendelse.Henvendelsetype.SVAR_SKRIFTLIG));
@@ -132,11 +132,11 @@ public class HenvendelseUtilsTest {
         assertThat(svar.navIdent, is(nullValue()));
     }
 
-    @Test(expected = ApplicationException.class)
-    public void skalKasteExceptionDersomManLagerSvarEllerReferatFromXMLHenvendelseMedNoeAnnetEnnXMLMeldingTilBruker() {
-        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingFraBruker();
+    @Test
+    public void girNoneVedUkjentType() {
+        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedUkjentType();
 
-        HenvendelseUtils.lagUtgaendeHenvendelseFraXMLHenvendelse(xmlHenvendelse);
+        assertThat(lagHenvendelseFraXMLHenvendelse(xmlHenvendelse), is(Optional.<Henvendelse>none()));
     }
 
     private Henvendelse createSvarEllerReferat() {
@@ -175,6 +175,18 @@ public class HenvendelseUtilsTest {
                                 .withFritekst("fritekst")
                                 .withNavident("navident")
                 ));
+    }
+
+    private XMLHenvendelse createXMLHenvendelseMedUkjentType() {
+        return new XMLHenvendelse()
+                .withBehandlingsId("behandlingsid")
+                .withHenvendelseType(SPORSMAL_SKRIFTLIG.name())
+                .withOpprettetDato(DateTime.now())
+                .withOppgaveIdGsak("oppgaveidgsak")
+                .withMetadataListe(new XMLMetadataListe().withMetadata(new XMLUkjentType()));
+    }
+
+    private static class XMLUkjentType extends XMLMetadata {
     }
 
 }

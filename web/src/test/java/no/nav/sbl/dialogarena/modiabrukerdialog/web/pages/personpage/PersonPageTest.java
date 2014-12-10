@@ -32,9 +32,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-import static no.nav.modig.lang.option.Optional.optional;
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
@@ -74,14 +73,11 @@ public class PersonPageTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        Henvendelse sporsmal = new Henvendelse().withId("id").withOpprettetDato(now());
-        sporsmal.temagruppe = ARBD.name();
-        sporsmal.oppgaveId = "id";
-        when(henvendelseUtsendingService.getSporsmal(anyString())).thenReturn(optional(sporsmal));
-        when(gsakKodeverk.hentTemaListe()).thenReturn(new ArrayList<>(Arrays.asList(
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(lagHenvendelse()));
+        when(gsakKodeverk.hentTemaListe()).thenReturn(new ArrayList<>(asList(
                 new GsakKodeTema.Tema("kode", "tekst",
-                        new ArrayList<>(Arrays.asList(new GsakKodeTema.OppgaveType("kode", "tekst", 1))),
-                        new ArrayList<>(Arrays.asList(new GsakKodeTema.Prioritet("kode", "tekst")))))));
+                        new ArrayList<>(asList(new GsakKodeTema.OppgaveType("kode", "tekst", 1))),
+                        new ArrayList<>(asList(new GsakKodeTema.Prioritet("kode", "tekst")))))));
     }
 
     @Test
@@ -155,14 +151,11 @@ public class PersonPageTest extends WicketPageTest {
                 .should().containComponent(both(withId(SVAR_OG_REFERAT_PANEL_ID)).and(ofType(SvarPanel.class)));
 
         assertThat(((PersonPage) wicket.tester.getLastRenderedPage()).startLamell, is(LAMELL_MELDINGER));
-        verify(henvendelseUtsendingService).getSporsmal(henvendelsesId);
-        verify(henvendelseUtsendingService).hentHenvendelserTilTraad(testFnr, henvendelsesId);
+        verify(henvendelseUtsendingService).hentTraad(anyString(), eq(henvendelsesId));
     }
 
     @Test
     public void erstatterReferatPanelMedSvarPanelVedEventetSVAR_PAA_MELDING() {
-        when(henvendelseUtsendingService.hentHenvendelserTilTraad(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Henvendelse())));
-
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING))
                 .should().inAjaxResponse().haveComponents(ofType(SvarPanel.class));
@@ -170,7 +163,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void tilordnerIkkeOppgaveIGsakDersomSporsmaaletTidligereErBesvartVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
-        when(henvendelseUtsendingService.hentHenvendelserTilTraad(anyString(), anyString())).thenReturn(new ArrayList<>(Arrays.asList(new Henvendelse())));
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(lagHenvendelse(), lagHenvendelse()));
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
@@ -180,8 +173,6 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void tilordnerOppgaveIGsakDersomSporsmaaletIkkeTidligereErBesvartVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
-        when(henvendelseUtsendingService.hentHenvendelserTilTraad(anyString(), anyString())).thenReturn(new ArrayList<Henvendelse>());
-
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
 
@@ -285,6 +276,10 @@ public class PersonPageTest extends WicketPageTest {
                 return new NamedEventPayload(eventNavn, payload);
             }
         };
+    }
+
+    private Henvendelse lagHenvendelse() {
+        return new Henvendelse().withId("id").withOpprettetDato(now()).withTemagruppe(ARBD.name()).withOppgaveId("id");
     }
 
 }

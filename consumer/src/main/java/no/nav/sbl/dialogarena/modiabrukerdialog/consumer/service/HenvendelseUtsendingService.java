@@ -25,7 +25,8 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.ELDSTE_FORST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.lagHenvendelseFraXMLHenvendelse;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
@@ -58,31 +59,9 @@ public class HenvendelseUtsendingService {
                 .withAny(xmlHenvendelse));
     }
 
-    public List<Henvendelse> hentHenvendelserTilTraad(String fnr, String traadId) {
-        List<Object> henvendelseliste =
-                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
-                        .withTyper(SVAR)
-                        .withFodselsnummer(fnr)).getAny();
+    public List<Henvendelse> hentTraad(String fnr, String traadId) {
+        List<Henvendelse> traad = new ArrayList<>();
 
-        List<Henvendelse> svarliste = new ArrayList<>();
-
-        XMLHenvendelse xmlHenvendelse;
-        for (Object o : henvendelseliste) {
-            xmlHenvendelse = (XMLHenvendelse) o;
-            if (henvendelseTilTraad(traadId, xmlHenvendelse)) {
-                svarliste.add(lagUtgaendeHenvendelseFraXMLHenvendelse(xmlHenvendelse));
-            }
-        }
-        return on(svarliste)
-                .map(journalfortTemaTilgang)
-                .collect(ELDSTE_FORST);
-    }
-
-    private boolean henvendelseTilTraad(String traadId, XMLHenvendelse xmlHenvendelse) {
-        return SVAR.contains(xmlHenvendelse.getHenvendelseType()) && traadId.equals(xmlHenvendelse.getBehandlingskjedeId());
-    }
-
-    public Optional<Henvendelse> getSporsmal(String traadId) {
         XMLHenvendelse xmlHenvendelse =
                 (XMLHenvendelse) henvendelsePortType.hentHenvendelse(new WSHentHenvendelseRequest().withBehandlingsId(traadId)).getAny();
 
@@ -95,7 +74,37 @@ public class HenvendelseUtsendingService {
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(kontorsperreEnhet))));
         }
 
-        return lagInngaendeHenvendelseFraXMLHenvendelse(xmlHenvendelse);
+        Optional<Henvendelse> henvendelse = lagHenvendelseFraXMLHenvendelse(xmlHenvendelse);
+        if (henvendelse.isSome()) {
+            traad.add(henvendelse.get());
+            traad.addAll(hentHenvendelserTilTraad(fnr, traadId));
+        }
+
+        return on(traad).collect(ELDSTE_FORST);
+    }
+
+    private List<Henvendelse> hentHenvendelserTilTraad(String fnr, String traadId) {
+        List<Object> henvendelseliste =
+                henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
+                        .withTyper(SVAR)
+                        .withFodselsnummer(fnr)).getAny();
+
+        List<Henvendelse> svarliste = new ArrayList<>();
+
+        XMLHenvendelse xmlHenvendelse;
+        for (Object o : henvendelseliste) {
+            xmlHenvendelse = (XMLHenvendelse) o;
+            if (henvendelseTilTraad(traadId, xmlHenvendelse)) {
+                svarliste.add(lagHenvendelseFraXMLHenvendelse(xmlHenvendelse).get());
+            }
+        }
+        return on(svarliste)
+                .map(journalfortTemaTilgang)
+                .collect();
+    }
+
+    private boolean henvendelseTilTraad(String traadId, XMLHenvendelse xmlHenvendelse) {
+        return SVAR.contains(xmlHenvendelse.getHenvendelseType()) && traadId.equals(xmlHenvendelse.getBehandlingskjedeId());
     }
 
     private final Transformer<Henvendelse, Henvendelse> journalfortTemaTilgang = new Transformer<Henvendelse, Henvendelse>() {

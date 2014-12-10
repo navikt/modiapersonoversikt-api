@@ -8,11 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TestSvarPanel extends SvarPanel {
-    public TestSvarPanel(String id, String fnr, Henvendelse sporsmal) {
-        this(id, fnr, sporsmal, new ArrayList<Henvendelse>());
-    }
-
-    public TestSvarPanel(String id, String fnr, Henvendelse sporsmal, List<Henvendelse> svar) {
-        super(id, fnr, sporsmal, svar, Optional.<String>none());
+    public TestSvarPanel(String id, String fnr, List<Henvendelse> traad) {
+        super(id, fnr, traad, Optional.<String>none());
     }
 }
