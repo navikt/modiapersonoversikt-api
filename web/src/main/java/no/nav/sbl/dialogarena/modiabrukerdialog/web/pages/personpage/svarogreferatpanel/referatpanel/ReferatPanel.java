@@ -28,6 +28,7 @@ import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
 import org.apache.wicket.model.CompoundPropertyModel;
+import org.apache.wicket.model.IModel;
 import org.apache.wicket.model.PropertyModel;
 import org.apache.wicket.model.StringResourceModel;
 
@@ -118,39 +119,13 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         feedbackPanel.setOutputMarkupId(true);
         form.add(feedbackPanel);
 
-        RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal");
-        modusKomponenter.add(radioGroup);
-        radioGroup.setOutputMarkupPlaceholderTag(true);
-        radioGroup.setRequired(true);
-        radioGroup.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
-        radioGroup.add(new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
-            @Override
-            protected void populateItem(ListItem<Kanal> item) {
-                String kanalType = item.getModelObject().name();
-
-                item.add(titleAttribute(getString(kanalType)));
-
-                Radio<Kanal> kanalKnapp = new Radio<>("kanalknapp", item.getModel());
-                kanalKnapp.add(new AttributeAppender("aria-label", getString(kanalType)));
-
-                Component kanalIkon = new WebMarkupContainer("kanalikon").add(cssClass(kanalType.toLowerCase()));
-
-                WebMarkupContainer kanalknappLabel = new WebMarkupContainer("kanalknapp-label");
-                kanalknappLabel.add(new AttributeAppender("for", kanalKnapp.getMarkupId()));
-
-                Label kanalknappLabelTekst = new Label("kanalknapp-label-tekst", getString(kanalType));
-
-                kanalknappLabel.add(kanalknappLabelTekst, kanalIkon);
-                item.add(kanalKnapp, kanalknappLabel);
-            }
-        });
+        RadioGroup<Kanal> radioGroup = lagKanalVelger(modusModel);
         radioGroup.add(new AjaxFormChoiceComponentUpdatingBehavior() {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 target.add(kanalbeskrivelse);
             }
         });
-
         form.add(radioGroup);
 
         form.add(new DropDownChoice<>("temagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
@@ -195,6 +170,37 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {
             getModelObject().kanal = TELEFON;
         }
+    }
+
+    private RadioGroup<Kanal> lagKanalVelger(IModel<Modus> modusModel) {
+        RadioGroup<Kanal> radioGroup = new RadioGroup<>("kanal");
+        modusKomponenter.add(radioGroup);
+        radioGroup.setOutputMarkupPlaceholderTag(true);
+        radioGroup.setRequired(true);
+        radioGroup.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
+        radioGroup.add(new ListView<Kanal>("kanalvalg", TELEFON_OG_OPPMOTE) {
+            @Override
+            protected void populateItem(ListItem<Kanal> item) {
+                String kanalType = item.getModelObject().name();
+
+                item.add(titleAttribute(getString(kanalType)));
+
+                Radio<Kanal> kanalKnapp = new Radio<>("kanalknapp", item.getModel());
+                kanalKnapp.add(new AttributeAppender("aria-label", getString(kanalType)));
+
+                Component kanalIkon = new WebMarkupContainer("kanalikon").add(cssClass(kanalType.toLowerCase()));
+
+                WebMarkupContainer kanalknappLabel = new WebMarkupContainer("kanalknapp-label");
+                kanalknappLabel.add(new AttributeAppender("for", kanalKnapp.getMarkupId()));
+
+                Label kanalknappLabelTekst = new Label("kanalknapp-label-tekst", getString(kanalType));
+
+                kanalknappLabel.add(kanalknappLabelTekst, kanalIkon);
+                item.add(kanalKnapp, kanalknappLabel);
+            }
+        });
+
+        return radioGroup;
     }
 
     private void sendOgVisKvittering(AjaxRequestTarget target, Form<HenvendelseVM> form) {
