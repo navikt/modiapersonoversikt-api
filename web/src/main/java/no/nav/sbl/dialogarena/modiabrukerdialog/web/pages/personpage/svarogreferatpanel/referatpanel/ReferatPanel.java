@@ -205,7 +205,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
                 break;
             case SPORSMAL:
                 sendSporsmal();
-                kvittering.visKvittering(target, "Spørsmål sendt til bruker", form);
+                kvittering.visKvittering(target, getString("referatpanel.sporsmal.kvittering.bekreftelse"), form);
                 break;
         }
 
