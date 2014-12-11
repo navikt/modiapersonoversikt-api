@@ -92,6 +92,63 @@ public class TraadVMTest {
     }
 
     @Test
+    public void erBehandletDersomTraadenHarFlereMeldinger() {
+        assertThat(traadVM.erBehandlet(), is(true));
+    }
+
+    @Test
+    public void erBehandletDersomTraadensMeldingErFraNav() {
+        MeldingVM meldingFraNav = new MeldingVM(new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4), 4);
+        traadVM.getMeldinger().clear();
+        traadVM.getMeldinger().add(meldingFraNav);
+
+        assertThat(traadVM.erBehandlet(), is(true));
+    }
+
+    @Test
+    public void erIkkeBehandletDersomTraadensMeldingErFraBruker() {
+        MeldingVM meldingTilNav = new MeldingVM(new Melding(ID_4, SPORSMAL_SKRIFTLIG, DATE_4), 4);
+        traadVM.getMeldinger().clear();
+        traadVM.getMeldinger().add(meldingTilNav);
+
+        assertThat(traadVM.erBehandlet(), is(false));
+    }
+
+    @Test
+    public void traadenErIkkeKontorsperretDersomEldsteMeldingIkkeErKontorsperret() {
+        MeldingVM meldingVM = new MeldingVM(new Melding(ID_4, SPORSMAL_SKRIFTLIG, DATE_4), 4);
+        traadVM.getMeldinger().clear();
+        traadVM.getMeldinger().add(meldingVM);
+
+        assertThat(traadVM.erKontorsperret(), is(false));
+    }
+
+    @Test
+    public void traadenErKontorsperretDersomEldsteMeldingErKontorsperret() {
+        MeldingVM meldingVM = new MeldingVM(new Melding(ID_4, SPORSMAL_SKRIFTLIG, DATE_4), 4);
+        meldingVM.melding.kontorsperretEnhet = "enhetId";
+        traadVM.getMeldinger().clear();
+        traadVM.getMeldinger().add(meldingVM);
+
+        assertThat(traadVM.erKontorsperret(), is(true));
+    }
+
+    @Test
+    public void erIkkeFeilsendtDersomIngenAvMeldingeneErFeilsendt() {
+        assertThat(traadVM.erFeilsendt(), is(false));
+    }
+
+    @Test
+    public void erFeilsendtDersomEnAvMeldingeneErFeilsendt() {
+        MeldingVM meldingVM = new MeldingVM(new Melding(ID_4, SPORSMAL_SKRIFTLIG, DATE_4), 4);
+        meldingVM.melding.markertSomFeilsendtAv = "feilSendtAv";
+        traadVM.getMeldinger().clear();
+        traadVM.getMeldinger().add(meldingVM);
+
+        assertThat(traadVM.erFeilsendt(), is(true));
+    }
+
+    @Test
     public void settFlaggPaaDenNyesteMeldingenInneforEnJournalfortgruppe() {
         Melding melding1 = createMeldingMedJournalfortDato(ID_1, SAMTALEREFERAT_OPPMOTE, DATE_1, TEMAGRUPPE_1, "Traad Id", DateTime.now());
         Melding melding2 = createMeldingMedJournalfortDato(ID_2, SAMTALEREFERAT_OPPMOTE, DATE_2, TEMAGRUPPE_1, "Traad Id", DateTime.now());
