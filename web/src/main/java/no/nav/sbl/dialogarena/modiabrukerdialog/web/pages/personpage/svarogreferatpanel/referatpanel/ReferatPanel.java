@@ -15,6 +15,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefer
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
+import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.behavior.AttributeAppender;
 import org.apache.wicket.event.Broadcast;
@@ -151,6 +152,14 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
             }
         });
 
+        form.add(new AjaxLink<Void>("avbryt") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                settOppModellMedDefaultVerdier();
+                target.add(ReferatPanel.this);
+            }
+        });
+
         kvittering = new KvitteringsPanel("kvittering");
 
         add(form, kvittering);
@@ -170,7 +179,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
 
     private void settOppModellMedDefaultVerdier() {
         getModelObject().modus = Modus.REFERAT;
-
+        getModelObject().kanal = null;
         if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {
             getModelObject().kanal = TELEFON;
         }
