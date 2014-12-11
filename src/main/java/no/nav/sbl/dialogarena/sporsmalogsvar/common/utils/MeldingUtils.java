@@ -20,6 +20,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding.ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding.TRAAD_ID;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.*;
 
 public class MeldingUtils {
@@ -72,15 +73,15 @@ public class MeldingUtils {
 
             XMLMetadata xmlMetadata = xmlHenvendelse.getMetadataListe().getMetadata().get(0);
             if (xmlMetadata instanceof XMLMeldingFraBruker) {
-                XMLMeldingFraBruker sporsmal = (XMLMeldingFraBruker) xmlMetadata;
-                melding.temagruppe = sporsmal.getTemagruppe();
-                melding.fritekst = sporsmal.getFritekst();
+                XMLMeldingFraBruker meldingFraBruker = (XMLMeldingFraBruker) xmlMetadata;
+                melding.temagruppe = meldingFraBruker.getTemagruppe();
+                melding.fritekst = meldingFraBruker.getFritekst();
             } else if (xmlMetadata instanceof XMLMeldingTilBruker) {
-                XMLMeldingTilBruker svarEllerReferat = (XMLMeldingTilBruker) xmlMetadata;
-                melding.temagruppe = svarEllerReferat.getTemagruppe();
-                melding.fritekst = svarEllerReferat.getFritekst();
-                melding.kanal = svarEllerReferat.getKanal();
-                melding.navIdent = svarEllerReferat.getNavident();
+                XMLMeldingTilBruker meldingTilBruker = (XMLMeldingTilBruker) xmlMetadata;
+                melding.temagruppe = meldingTilBruker.getTemagruppe();
+                melding.fritekst = meldingTilBruker.getFritekst();
+                melding.kanal = meldingTilBruker.getKanal();
+                melding.navIdent = meldingTilBruker.getNavident();
             }
             return melding;
         }
@@ -122,19 +123,19 @@ public class MeldingUtils {
 
     public static final Map<XMLHenvendelseType, Meldingstype> MELDINGSTYPE_MAP = new HashMap<XMLHenvendelseType, Meldingstype>() {
         {
-            put(XMLHenvendelseType.SPORSMAL_SKRIFTLIG, Meldingstype.SPORSMAL_SKRIFTLIG);
-            put(XMLHenvendelseType.SVAR_SKRIFTLIG, Meldingstype.SVAR_SKRIFTLIG);
-            put(XMLHenvendelseType.SVAR_OPPMOTE, Meldingstype.SVAR_OPPMOTE);
-            put(XMLHenvendelseType.SVAR_TELEFON, Meldingstype.SVAR_TELEFON);
-            put(XMLHenvendelseType.REFERAT_OPPMOTE, Meldingstype.SAMTALEREFERAT_OPPMOTE);
-            put(XMLHenvendelseType.REFERAT_TELEFON, Meldingstype.SAMTALEREFERAT_TELEFON);
-            put(XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE, Meldingstype.SPORSMAL_MODIA_UTGAAENDE);
-            put(XMLHenvendelseType.SVAR_SBL_INNGAAENDE, Meldingstype.SVAR_SBL_INNGAAENDE);
+            put(XMLHenvendelseType.SPORSMAL_SKRIFTLIG, SPORSMAL_SKRIFTLIG);
+            put(XMLHenvendelseType.SVAR_SKRIFTLIG, SVAR_SKRIFTLIG);
+            put(XMLHenvendelseType.SVAR_OPPMOTE, SVAR_OPPMOTE);
+            put(XMLHenvendelseType.SVAR_TELEFON, SVAR_TELEFON);
+            put(XMLHenvendelseType.REFERAT_OPPMOTE, SAMTALEREFERAT_OPPMOTE);
+            put(XMLHenvendelseType.REFERAT_TELEFON, SAMTALEREFERAT_TELEFON);
+            put(XMLHenvendelseType.SPORSMAL_MODIA_UTGAAENDE, SPORSMAL_MODIA_UTGAAENDE);
+            put(XMLHenvendelseType.SVAR_SBL_INNGAAENDE, SVAR_SBL_INNGAAENDE);
         }
     };
 
-    public static final List<Meldingstype> FRA_BRUKER = asList(Meldingstype.SPORSMAL_SKRIFTLIG, Meldingstype.SVAR_SBL_INNGAAENDE);
-    public static final List<Meldingstype> FRA_NAV = asList(Meldingstype.SVAR_SKRIFTLIG, Meldingstype.SVAR_OPPMOTE, Meldingstype.SVAR_TELEFON, Meldingstype.SAMTALEREFERAT_OPPMOTE, Meldingstype.SAMTALEREFERAT_TELEFON, Meldingstype.SPORSMAL_MODIA_UTGAAENDE);
+    public static final List<Meldingstype> FRA_BRUKER = asList(SPORSMAL_SKRIFTLIG, SVAR_SBL_INNGAAENDE);
+    public static final List<Meldingstype> FRA_NAV = asList(SVAR_SKRIFTLIG, SVAR_OPPMOTE, SVAR_TELEFON, SAMTALEREFERAT_OPPMOTE, SAMTALEREFERAT_TELEFON, SPORSMAL_MODIA_UTGAAENDE);
 
     private static Map<String, List<Melding>> lagMap(List<Map.Entry<String, List<Melding>>> entries) {
         HashMap<String, List<Melding>> map = new HashMap<>();
