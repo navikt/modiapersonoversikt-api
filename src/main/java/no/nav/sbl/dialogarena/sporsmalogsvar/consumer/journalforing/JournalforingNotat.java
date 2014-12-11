@@ -1,12 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Pdf;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.Journalpost;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.*;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Person;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.*;
 import org.joda.time.DateTime;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -22,7 +19,8 @@ public class JournalforingNotat extends Journalforing {
         Journalpost journalpost = new Journalpost();
         journalpost.setSignatur(lagSignatur());
         journalpost.setArkivtema(lagArkivtema(sak.temaKode));
-        journalpost.getForBruker().add(lagPerson(melding.fnrBruker));
+        Person bruker = lagPerson(melding.fnrBruker);
+        journalpost.getForBruker().add(bruker);
         journalpost.setInnhold(INNHOLD_BESKRIVELSE);
         journalpost.setDokumentDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(DateTime.now()));
         journalpost.setGjelderSak(SakToJournalforingSak.INSTANCE.transform(sak));

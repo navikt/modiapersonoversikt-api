@@ -1,13 +1,13 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.DokumentinfoRelasjon;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.JournalfoertDokumentInfo;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.Journalpost;
+import no.nav.modig.lang.option.Optional;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerutgaaendehenvendelse.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import static no.nav.modig.core.context.SubjectHandler.SUBJECTHANDLER_KEY;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.BREVKODE_SVAR;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.HOVEDDOKUMENT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.INNHOLD_BESKRIVELSE;
@@ -26,8 +26,8 @@ public class JournalforingUtgaaendeTest extends TestDataJournalforing {
 
     @Test
     public void lagerJournalforingUtgaaendeMedRiktigeFelter() {
-        Journalpost journalpostUtgaaende = JournalforingUtgaaende.lagJournalforingSvar(
-                journalfortPostId, sak, melding, JOURNALFORENDE_ENHET_ID);
+        Journalpost journalpostUtgaaende = JournalforingUtgaaende.lagJournalforingUtgaaende(
+                optional(journalfortPostId), sak, melding, JOURNALFORENDE_ENHET_ID);
 
         assertNotNull(journalpostUtgaaende.getKanal());
         assertNotNull(journalpostUtgaaende.getSignatur());
@@ -43,9 +43,17 @@ public class JournalforingUtgaaendeTest extends TestDataJournalforing {
     }
 
     @Test
+    public void lagerJournalforingUtgaaendeUtenKryssreferanseDersomJournalfortPostIdErTom() {
+        Journalpost journalpostUtgaaende = JournalforingUtgaaende.lagJournalforingUtgaaende(
+                Optional.<String>none(), sak, melding, JOURNALFORENDE_ENHET_ID);
+
+        assertThat(journalpostUtgaaende.getKryssreferanseListe().isEmpty(), is(true));
+    }
+
+    @Test
     public void setterRiktigDokumentInfoRelasjon() {
-        Journalpost journalpostUtgaaende = JournalforingUtgaaende.lagJournalforingSvar(
-                journalfortPostId, sak, melding, JOURNALFORENDE_ENHET_ID);
+        Journalpost journalpostUtgaaende = JournalforingUtgaaende.lagJournalforingUtgaaende(
+                Optional.<String>none(), sak, melding, JOURNALFORENDE_ENHET_ID);
 
         DokumentinfoRelasjon dokumentinfoRelasjon = journalpostUtgaaende.getDokumentinfoRelasjon().get(0);
         assertThat(dokumentinfoRelasjon.getTillknyttetJournalpostSomKode(), is(HOVEDDOKUMENT));

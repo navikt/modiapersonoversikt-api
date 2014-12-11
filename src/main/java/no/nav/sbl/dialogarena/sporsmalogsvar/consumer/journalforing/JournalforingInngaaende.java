@@ -1,21 +1,18 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Pdf;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.*;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.Person;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.DokumentinfoRelasjon;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.JournalfoertDokumentInfo;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.Journalpost;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoerinngaaendehenvendelse.*;
 import org.joda.time.DateTime;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 
 public class JournalforingInngaaende extends Journalforing {
 
-    public static final String DOKUMENTTITTEL = "Spørsmål fra Ditt NAV";
+    public static final String DOKUMENTTITTEL = "Henvendelse fra Ditt NAV";
 
-    public static Journalpost lagJournalforingSporsmal(Sak sak, Melding melding, String journalforendeEnhetId) {
+    public static Journalpost lagJournalforingInngaaende(Optional<String> journalfortPostId, Sak sak, Melding melding, String journalforendeEnhetId) {
         Journalpost journalpost = new Journalpost();
         journalpost.setKanal(lagKommunikasjonskanaler());
         journalpost.setSignatur(lagSignatur());
@@ -30,6 +27,10 @@ public class JournalforingInngaaende extends Journalforing {
         journalpost.setOpprettetAvNavn(getSubjectHandler().getUid());
         journalpost.setMottattDato(DateTimeToXmlGregorianCalendarConverter.INSTANCE.transform(melding.opprettetDato));
 
+        if (journalfortPostId.isSome()) {
+            journalpost.getKryssreferanseListe().add(lagKryssreferanse(journalfortPostId.get()));
+        }
+
         lagRelasjon(melding, journalpost);
         return journalpost;
     }
@@ -37,12 +38,12 @@ public class JournalforingInngaaende extends Journalforing {
     private static void lagRelasjon(Melding melding, Journalpost journalpost) {
         DokumentinfoRelasjon dokumentinfoRelasjon = new DokumentinfoRelasjon();
         dokumentinfoRelasjon.setJournalfoertDokument(
-                lagJournalfoertDokumentInfoForSporsmal(lagPdfInnhold(melding)));
+                lagJournalfoertDokumentInfoForInngaaende(lagPdfInnhold(melding)));
         dokumentinfoRelasjon.setTillknyttetJournalpostSomKode(HOVEDDOKUMENT);
         journalpost.getDokumentinfoRelasjon().add(dokumentinfoRelasjon);
     }
 
-    private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForSporsmal(byte[] pdf) {
+    private static JournalfoertDokumentInfo lagJournalfoertDokumentInfoForInngaaende(byte[] pdf) {
         JournalfoertDokumentInfo journalfoertDokumentInfo = new JournalfoertDokumentInfo();
 
         journalfoertDokumentInfo.setDokumentType(lagDokumenttype(BREVKODE_SPORSMAL));

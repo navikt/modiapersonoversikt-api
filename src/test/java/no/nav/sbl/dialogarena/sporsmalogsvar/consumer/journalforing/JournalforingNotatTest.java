@@ -2,13 +2,12 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 
 import no.nav.modig.core.context.ThreadLocalSubjectHandler;
 import no.nav.modig.lang.option.Optional;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.DokumentinfoRelasjon;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.JournalfoertDokumentInfo;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.Journalpost;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.journalfoernotat.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import static no.nav.modig.core.context.SubjectHandler.SUBJECTHANDLER_KEY;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.BREVKODE_NOTAT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.Journalforing.HOVEDDOKUMENT;
@@ -22,7 +21,7 @@ import static org.junit.Assert.assertThat;
 
 public class JournalforingNotatTest extends TestDataJournalforing {
 
-    private static final Optional<String> journalfortPostIdOptional = Optional.optional(journalfortPostId);
+    private static final Optional<String> journalfortPostIdOptional = optional(journalfortPostId);
 
     @Before
     public void init() {
@@ -46,8 +45,17 @@ public class JournalforingNotatTest extends TestDataJournalforing {
     }
 
     @Test
+    public void lagerJournalforingNotatUtenKryssreferanseDersomJournalfortPostIdErTom() {
+        Journalpost journalpostNotat = JournalforingNotat.lagJournalforingNotat(
+                Optional.<String>none(), sak, melding, JOURNALFORENDE_ENHET_ID);
+
+        assertThat(journalpostNotat.getKryssreferanseListe().isEmpty(), is(true));
+    }
+
+    @Test
     public void setterRiktigDokumentInfoRelasjon() {
-        Journalpost journalpostNotat = JournalforingNotat.lagJournalforingNotat(Optional.optional(journalfortPostId), sak, melding, JOURNALFORENDE_ENHET_ID);
+        Journalpost journalpostNotat = JournalforingNotat.lagJournalforingNotat(
+                Optional.<String>none(), sak, melding, JOURNALFORENDE_ENHET_ID);
 
         DokumentinfoRelasjon dokumentinfoRelasjon = journalpostNotat.getDokumentinfoRelasjon().get(0);
         assertThat(dokumentinfoRelasjon.getTillknyttetJournalpostSomKode(), is(HOVEDDOKUMENT));
