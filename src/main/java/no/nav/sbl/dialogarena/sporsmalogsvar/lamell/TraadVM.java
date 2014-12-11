@@ -5,9 +5,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Map.Entry;
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -16,7 +14,7 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.FRA_NAV;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.SPORSMAL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.FEILSENDT;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.JOURNALFORT_DATO;
 
@@ -73,8 +71,8 @@ public class TraadVM implements Serializable {
         return !on(meldinger).filter(where(FEILSENDT, equalTo(true))).isEmpty();
     }
 
-    public boolean bleInitiertAvBruker() {
-        return getEldsteMelding().melding.meldingstype == SPORSMAL_SKRIFTLIG;
+    public boolean bleInitiertAvEtSporsmal() {
+        return SPORSMAL.contains(getEldsteMelding().melding.meldingstype);
     }
 
     public static List<MeldingVM> grupperMeldingerPaaJournalfortdato(List<MeldingVM> meldinger) {

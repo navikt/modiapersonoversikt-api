@@ -34,7 +34,7 @@ public class HaandterMeldingPanel extends Panel {
         IModel<Boolean> nyesteMeldingErJournalfort = new PropertyModel<>(getDefaultModel(), "nyesteMelding.journalfort");
         IModel<Boolean> eldsteMeldingErJournalfort = new PropertyModel<>(getDefaultModel(), "eldsteMelding.journalfort");
         IModel<Boolean> erBehandlet = new PropertyModel<>(getDefaultModel(), "erBehandlet()");
-        IModel<Boolean> bleInitiertAvBruker = new PropertyModel<>(getDefaultModel(), "bleInitiertAvBruker()");
+        IModel<Boolean> bleInitiertAvBruker = new PropertyModel<>(getDefaultModel(), "bleInitiertAvEtSporsmal()");
 
         add(
                 new AjaxLink<InnboksVM>("besvar") {

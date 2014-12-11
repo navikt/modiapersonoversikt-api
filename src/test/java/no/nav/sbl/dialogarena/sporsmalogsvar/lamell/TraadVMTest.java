@@ -1,33 +1,20 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM.grupperMeldingerPaaJournalfortdato;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.DATE_1;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.DATE_2;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.DATE_3;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.DATE_4;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_1;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_2;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_3;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_4;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.TEMAGRUPPE_1;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.TRAAD_LENGDE;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMeldingMedJournalfortDato;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMeldingVMer;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.*;
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 public class TraadVMTest {
 
@@ -82,26 +69,34 @@ public class TraadVMTest {
 
     @Test
     public void gittMeldingstypeIkkeSporsmalIEldsteMeldingReturnererBleInitiertAvBrukerFalse() {
-        MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_4), 4);
+        MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, SAMTALEREFERAT_OPPMOTE, DATE_4), 4);
         traadVM.getMeldinger().add(eldsteMeldingVM);
 
-        assertFalse(traadVM.bleInitiertAvBruker());
+        assertThat(traadVM.bleInitiertAvEtSporsmal(), is(false));
     }
 
     @Test
-    public void gittMeldingstypeSporsmalIEldsteMeldingReturnererBleInitiertAvBrukerTrue() {
-        MeldingVM eldsteMeldingVM = new MeldingVM(new Melding(ID_4, Meldingstype.SPORSMAL_SKRIFTLIG, DATE_4), 4);
-        traadVM.getMeldinger().add(eldsteMeldingVM);
+    public void gittMeldingstypeSporsmalSkriftligIEldsteMeldingReturnererBleInitiertAvEtSporsmal() {
+        MeldingVM eldsteMeldingVMSporsmalSkriftlig = new MeldingVM(new Melding(ID_4, SPORSMAL_SKRIFTLIG, DATE_4), 4);
+        traadVM.getMeldinger().add(eldsteMeldingVMSporsmalSkriftlig);
 
-        assertTrue(traadVM.bleInitiertAvBruker());
+        assertThat(traadVM.bleInitiertAvEtSporsmal(), is(true));
+    }
+
+    @Test
+    public void gittMeldingstypeSporsmalModiaUtgaaendeIEldsteMeldingReturnererBleInitiertAvEtSporsmal() {
+        MeldingVM eldsteMeldingVMSporsmalModiaUtgaaende = new MeldingVM(new Melding(ID_4, SPORSMAL_MODIA_UTGAAENDE, DATE_4), 4);
+        traadVM.getMeldinger().add(eldsteMeldingVMSporsmalModiaUtgaaende);
+
+        assertThat(traadVM.bleInitiertAvEtSporsmal(), is(true));
     }
 
     @Test
     public void settFlaggPaaDenNyesteMeldingenInneforEnJournalfortgruppe() {
-        Melding melding1 = createMeldingMedJournalfortDato(ID_1, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_1, TEMAGRUPPE_1, "Traad Id", DateTime.now());
-        Melding melding2 = createMeldingMedJournalfortDato(ID_2, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_2, TEMAGRUPPE_1, "Traad Id", DateTime.now());
-        Melding melding3 = createMeldingMedJournalfortDato(ID_3, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_3, TEMAGRUPPE_1, "Traad Id", DateTime.now().minusDays(2));
-        Melding melding4 = createMeldingMedJournalfortDato(ID_4, Meldingstype.SAMTALEREFERAT_OPPMOTE, DATE_4, TEMAGRUPPE_1, "Traad Id", DateTime.now().minusDays(2));
+        Melding melding1 = createMeldingMedJournalfortDato(ID_1, SAMTALEREFERAT_OPPMOTE, DATE_1, TEMAGRUPPE_1, "Traad Id", DateTime.now());
+        Melding melding2 = createMeldingMedJournalfortDato(ID_2, SAMTALEREFERAT_OPPMOTE, DATE_2, TEMAGRUPPE_1, "Traad Id", DateTime.now());
+        Melding melding3 = createMeldingMedJournalfortDato(ID_3, SAMTALEREFERAT_OPPMOTE, DATE_3, TEMAGRUPPE_1, "Traad Id", DateTime.now().minusDays(2));
+        Melding melding4 = createMeldingMedJournalfortDato(ID_4, SAMTALEREFERAT_OPPMOTE, DATE_4, TEMAGRUPPE_1, "Traad Id", DateTime.now().minusDays(2));
         List<MeldingVM> meldinger = new ArrayList<>(Arrays.asList(
                 new MeldingVM(melding1, 4),
                 new MeldingVM(melding2, 4),
@@ -110,9 +105,9 @@ public class TraadVMTest {
 
         for (MeldingVM meldingVM : grupperMeldingerPaaJournalfortdato(meldinger)) {
             if (meldingVM.melding.id.equals(ID_1) || meldingVM.melding.id.equals(ID_3)) {
-                assertTrue(meldingVM.nyesteMeldingISinJournalfortgruppe);
+                assertThat(meldingVM.nyesteMeldingISinJournalfortgruppe, is(true));
             } else {
-                assertFalse(meldingVM.nyesteMeldingISinJournalfortgruppe);
+                assertThat(meldingVM.nyesteMeldingISinJournalfortgruppe, is(false));
             }
         }
 
