@@ -141,18 +141,6 @@
         </dependency>
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
-            <artifactId>common-jetty</artifactId>
-            <version>1.0.16</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.jetty.orbit</groupId>
-                    <artifactId>javax.servlet</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-pdf-generering</artifactId>
             <version>0.1</version>
             <exclusions>
@@ -355,13 +343,6 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-jaas</artifactId>
-            <version>9.0.4.v20130625</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>
