@@ -72,21 +72,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         final Form<HenvendelseVM> form = new Form<>("referatform", getModel());
         form.setOutputMarkupPlaceholderTag(true);
 
-        form.add(new RadioChoice<>("velgModus", modusModel, asList(Modus.values()))
-                .setSuffix("")
-                .setChoiceRenderer(new ChoiceRenderer<Modus>() {
-                    @Override
-                    public Object getDisplayValue(Modus object) {
-                        return getString(object.name() + ".tab");
-                    }
-                })
-                .add(new AjaxFormChoiceComponentUpdatingBehavior() {
-                    @Override
-                    protected void onUpdate(AjaxRequestTarget target) {
-                        target.add(modusKomponenter.toArray(new Component[modusKomponenter.size()]));
-                        target.appendJavaScript("$('.tekstfelt textarea').focus()");
-                    }
-                }));
+        form.add(lagModusVelger(modusModel));
 
         Component epostVarsel = new EpostVarselPanel("epostVarsel", fnr).add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
         epostVarsel.setOutputMarkupPlaceholderTag(true);
@@ -214,6 +200,25 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         });
 
         return radioGroup;
+    }
+
+    private Component lagModusVelger(PropertyModel<Modus> modusModel) {
+        RadioChoice<Modus> velger = new RadioChoice<>("velgModus", modusModel, asList(Modus.values()));
+        velger.setSuffix("");
+        velger.setChoiceRenderer(new ChoiceRenderer<Modus>() {
+            @Override
+            public Object getDisplayValue(Modus object) {
+                return getString(object.name() + ".tab");
+            }
+        });
+        velger.add(new AjaxFormChoiceComponentUpdatingBehavior() {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                target.add(modusKomponenter.toArray(new Component[modusKomponenter.size()]));
+                target.appendJavaScript("$('.tekstfelt textarea').focus()");
+            }
+        });
+        return velger;
     }
 
     private void sendOgVisKvittering(AjaxRequestTarget target, Form<HenvendelseVM> form) {
