@@ -7,6 +7,8 @@ import org.apache.wicket.markup.html.panel.Panel;
 
 import javax.inject.Inject;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
 public class EpostVarselPanel extends Panel {
 
     @Inject
@@ -20,7 +22,7 @@ public class EpostVarselPanel extends Panel {
     private boolean harEpost(String fnr) {
         try {
             BrukerprofilResponse response = brukerprofil.hentKontaktinformasjonOgPreferanser(new BrukerprofilRequest(fnr));
-            return response.getBruker().getEpostAdresse().getIdentifikator() != null;
+            return isNotBlank(response.getBruker().getEpostAdresse().getIdentifikator());
         } catch (Exception e) {
             return false;
         }
