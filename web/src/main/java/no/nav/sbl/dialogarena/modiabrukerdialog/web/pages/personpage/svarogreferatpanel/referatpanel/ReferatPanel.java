@@ -8,10 +8,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM.Modus;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -28,10 +26,7 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -246,7 +241,8 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
     private void sendSporsmal() {
         Henvendelse sporsmal = felles()
                 .withKanal(Kanal.TEKST.name())
-                .withType(SPORSMAL_MODIA_UTGAAENDE);
+                .withType(SPORSMAL_MODIA_UTGAAENDE)
+                .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         henvendelseUtsendingService.sendHenvendelse(sporsmal);
     }
 
@@ -255,7 +251,8 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
                 .withTemagruppe(getModelObject().temagruppe.name())
-                .withFritekst(getModelObject().getFritekst());
+                .withFritekst(getModelObject().getFritekst())
+                .withEksternAktor(getSubjectHandler().getUid());
     }
 
     private Henvendelsetype referatType(Kanal kanal) {

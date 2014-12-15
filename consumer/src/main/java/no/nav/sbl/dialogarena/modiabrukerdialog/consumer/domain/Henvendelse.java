@@ -8,7 +8,7 @@ import java.util.Comparator;
 public class Henvendelse implements Serializable {
 
     public String id, traadId, fnr, navIdent, oppgaveId, temagruppe, kanal, fritekst, kontorsperretEnhet,
-            journalfortTema, journalfortSaksId, journalfortAvNavIdent;
+            journalfortTema, journalfortSaksId, journalfortAvNavIdent, eksternAktor, tilknyttetEnhet;
     public DateTime opprettetDato, journalfortDato;
     public Henvendelsetype type;
 
@@ -88,6 +88,16 @@ public class Henvendelse implements Serializable {
 
     public Henvendelse withJournalfortDato(DateTime journalfortDato) {
         this.journalfortDato = journalfortDato;
+        return this;
+    }
+
+    public Henvendelse withEksternAktor(String eksternAktor) {
+        this.eksternAktor = eksternAktor;
+        return this;
+    }
+
+    public Henvendelse withTilknyttetEnhet(String tilknyttetEnhet) {
+        this.tilknyttetEnhet = tilknyttetEnhet;
         return this;
     }
 

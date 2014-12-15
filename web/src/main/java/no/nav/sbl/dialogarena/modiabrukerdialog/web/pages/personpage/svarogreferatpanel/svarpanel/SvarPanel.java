@@ -9,9 +9,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.*;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxEventBehavior;
@@ -26,17 +24,12 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.Radio;
-import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.Panel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.ResourceModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
@@ -261,7 +254,8 @@ public class SvarPanel extends Panel {
                     .withKanal(henvendelseVM.kanal.name())
                     .withType(svarType(henvendelseVM.kanal))
                     .withFritekst(henvendelseVM.getFritekst())
-                    .withKontorsperretEnhet(sporsmal.kontorsperretEnhet);
+                    .withKontorsperretEnhet(sporsmal.kontorsperretEnhet)
+                    .withEksternAktor(getSubjectHandler().getUid());
 
             henvendelseUtsendingService.sendHenvendelse(henvendelse, oppgaveId);
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);

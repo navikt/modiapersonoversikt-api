@@ -24,7 +24,9 @@ public class HenvendelseUtils {
                     .withOpprettetDato(xmlHenvendelse.getOpprettetDato())
                     .withTraadId(xmlHenvendelse.getBehandlingskjedeId())
                     .withKontorsperretEnhet(xmlHenvendelse.getKontorsperreEnhet())
-                    .withOppgaveId(xmlHenvendelse.getOppgaveIdGsak());
+                    .withOppgaveId(xmlHenvendelse.getOppgaveIdGsak())
+                    .withEksternAktor(xmlHenvendelse.getEksternAktor())
+                    .withTilknyttetEnhet(xmlHenvendelse.getTilknyttetEnhet());
 
             fyllInnJournalforingsInformasjon(xmlHenvendelse, henvendelse);
 
@@ -77,6 +79,8 @@ public class HenvendelseUtils {
                 .withTema(KONTAKT_NAV_SAKSTEMA)
                 .withBehandlingskjedeId(henvendelse.traadId)
                 .withKontorsperreEnhet(henvendelse.kontorsperretEnhet)
+                .withEksternAktor(henvendelse.eksternAktor)
+                .withTilknyttetEnhet(henvendelse.tilknyttetEnhet)
                 .withMetadataListe(new XMLMetadataListe().withMetadata(
                         new XMLMeldingTilBruker()
                                 .withTemagruppe(henvendelse.temagruppe)

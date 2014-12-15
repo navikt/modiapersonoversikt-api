@@ -2,23 +2,21 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseListeResponse;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseRequest;
-import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.WSHentHenvendelseResponse;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.meldinger.*;
 import org.joda.time.DateTime;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_OPPMOTE;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_TELEFON;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_SKRIFTLIG;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -127,6 +125,7 @@ public class HenvendelsePortTypeMock {
                 .withOpprettetDato(opprettet)
                 .withLestDato(lestDato)
                 .withFnr(FNR)
+                .withEksternAktor(NAVIDENT)
                 .withJournalfortInformasjon(journalfortInformasjon)
                 .withOppgaveIdGsak(oppgaveId);
 
