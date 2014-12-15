@@ -74,7 +74,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
 
         form.add(lagModusVelger(modusModel));
 
-        Component epostVarsel = new EpostVarselPanel("epostVarsel", fnr).add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
+        Component epostVarsel = new EpostVarselPanel("epostVarsel", modusModel, fnr);
         epostVarsel.setOutputMarkupPlaceholderTag(true);
         modusKomponenter.add(epostVarsel);
         form.add(epostVarsel);
