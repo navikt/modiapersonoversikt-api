@@ -3,8 +3,10 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
@@ -15,8 +17,10 @@ import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.list.ListView;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -25,8 +29,12 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.SVAR_OPPMOTE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.SVAR_SKRIFTLIG;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.SVAR_TELEFON;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -42,12 +50,30 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
         EndpointMockContext.class})
 public class SvarPanelTest extends WicketPageTest {
 
+    public static final String FNR = "fnr";
+    public static final String SPORSMAL_ID = "id";
+    public static final String TEMAGRUPPE = Temagruppe.FMLI.name();
+    public static final String FRITEKST = "fritekst";
+    @Captor
+    private ArgumentCaptor<Henvendelse> henvendelseArgumentCaptor;
+
     @Inject
     protected HenvendelseUtsendingService henvendelseUtsendingService;
+    @Inject
+    protected OppgaveBehandlingService oppgaveBehandlingService;
+
+    @InjectMocks
+    private TestSvarPanel testSvarPanel;
+
+    @Before
+    public void setUp() {
+        testSvarPanel = new TestSvarPanel("id", FNR, asList(lagSporsmal()));
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void inneholderSporsmaalsspefikkeKomponenter() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
+        wicket.goToPageWith(testSvarPanel)
                 .should().containComponent(withId("temagruppe").and(ofType(Label.class)))
                 .should().containComponent(withId("sporsmal").and(ofType(TidligereMeldingPanel.class)))
                 .should().containComponent(withId("svarliste").and(ofType(ListView.class)))
@@ -61,43 +87,69 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void skalSendeSvarTilHenvendelseDersomManVelgerTekstSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
+    public void senderHenvendelseMedRiktigeFelterTilHenvendelseUtsendingService() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+        wicket.goToPageWith(testSvarPanel)
                 .inForm(withId("svarform"))
-                .write("tekstfelt:text", "dette er en fritekst")
+                .write("tekstfelt:text", FRITEKST)
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendHenvendelse(any(Henvendelse.class), any(Optional.class));
+        verify(henvendelseUtsendingService).sendHenvendelse(henvendelseArgumentCaptor.capture(), any(Optional.class));
+        Henvendelse henvendelse = henvendelseArgumentCaptor.getValue();
+        assertThat(henvendelse.fnr, is(FNR));
+        assertThat(henvendelse.navIdent, is(getSubjectHandler().getUid()));
+        assertThat(henvendelse.traadId, is(SPORSMAL_ID));
+        assertThat(henvendelse.temagruppe, is(TEMAGRUPPE));
+        assertThat(henvendelse.kanal, is(Kanal.TEKST.name()));
+        assertThat(henvendelse.fritekst, is(FRITEKST));
+        assertThat(henvendelse.eksternAktor, is(getSubjectHandler().getUid()));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void skalSendeReferatTilHenvendelseDersomManVelgerTelefonSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
+    public void senderSvarTilHenvendelseDersomManVelgerTekstSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+        wicket.goToPageWith(testSvarPanel)
                 .inForm(withId("svarform"))
-                .write("tekstfelt:text", "dette er en fritekst")
+                .write("tekstfelt:text", FRITEKST)
+                .select("kanal", 0)
+                .submitWithAjaxButton(withId("send"));
+
+        verify(henvendelseUtsendingService).sendHenvendelse(henvendelseArgumentCaptor.capture(), any(Optional.class));
+        Henvendelse henvendelse = henvendelseArgumentCaptor.getValue();
+        assertThat(henvendelse.type, is(SVAR_SKRIFTLIG));
+    }
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void senderReferatTilHenvendelseDersomManVelgerTelefonSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+        wicket.goToPageWith(testSvarPanel)
+                .inForm(withId("svarform"))
+                .write("tekstfelt:text", FRITEKST)
                 .select("kanal", 1)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendHenvendelse(any(Henvendelse.class), any(Optional.class));
+        verify(henvendelseUtsendingService).sendHenvendelse(henvendelseArgumentCaptor.capture(), any(Optional.class));
+        Henvendelse henvendelse = henvendelseArgumentCaptor.getValue();
+        assertThat(henvendelse.type, is(SVAR_TELEFON));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void skalSendeReferatTilHenvendelseDersomManVelgerOppmoteSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
+    public void senderReferatTilHenvendelseDersomManVelgerOppmoteSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+        wicket.goToPageWith(testSvarPanel)
                 .inForm(withId("svarform"))
-                .write("tekstfelt:text", "dette er en fritekst")
+                .write("tekstfelt:text", FRITEKST)
                 .select("kanal", 2)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendHenvendelse(any(Henvendelse.class), any(Optional.class));
+        verify(henvendelseUtsendingService).sendHenvendelse(henvendelseArgumentCaptor.capture(), any(Optional.class));
+        Henvendelse henvendelse = henvendelseArgumentCaptor.getValue();
+        assertThat(henvendelse.type, is(SVAR_OPPMOTE));
     }
 
     @Test
     public void girFeedbackOmPaakrevdeKomponenter() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
+        wicket.goToPageWith(testSvarPanel)
                 .inForm(withId("svarform"))
                 .submitWithAjaxButton(withId("send"));
 
@@ -107,58 +159,57 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void tekstligSvarErValgtSomDefault() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
+        wicket.goToPageWith(testSvarPanel)
                 .should().containComponent(withId("kanal").and(withModelObject(is(TEKST))));
     }
 
     @Test
     public void viserTemagruppenFraSporsmalet() {
-        TestSvarPanel svarPanel = new TestSvarPanel("id", "fnr", asList(lagSporsmal()));
-        wicket.goToPageWith(svarPanel)
-                .should().containComponent(withId("temagruppe").and(withTextSaying(svarPanel.getString(Temagruppe.FMLI.name()))));
+        wicket.goToPageWith(testSvarPanel)
+                .should().containComponent(withId("temagruppe").and(withTextSaying(testSvarPanel.getString(TEMAGRUPPE))));
     }
 
     @Test
     public void viserKvitteringNaarManSenderInn() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
+        wicket.goToPageWith(testSvarPanel)
                 .inForm(withId("svarform"))
-                .write("tekstfelt:text", "dette er en fritekst")
+                .write("tekstfelt:text", FRITEKST)
                 .submitWithAjaxButton(withId("send"))
                 .should().containComponent(thatIsInvisible().withId("svarform"))
                 .should().containComponent(thatIsVisible().ofType(KvitteringsPanel.class));
     }
 
     @Test
-    public void skalViseTraadToggleLenkeHvisSvarFinnes() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal(), lagSvar())))
+    public void viserTraadToggleLenkeHvisSvarFinnes() {
+        wicket.goToPageWith(new TestSvarPanel(SPORSMAL_ID, FNR, asList(lagSporsmal(), lagSvar())))
                 .should().containComponent(thatIsVisible().and(withId("vistraadcontainer")));
     }
 
     @Test
-    public void skalIkkeViseTraadToggleLenkeHvisIngenSvarFinnes() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
+    public void viserIkkeTraadToggleLenkeHvisIngenSvarFinnes() {
+        wicket.goToPageWith(testSvarPanel)
                 .should().containComponent(thatIsInvisible().and(withId("vistraadcontainer")));
     }
 
     @Test
-    public void skalToggleVisningAvTraad() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal(), lagSvar())))
+    public void togglerVisningAvTraad() {
+        wicket.goToPageWith(new TestSvarPanel(SPORSMAL_ID, FNR, asList(lagSporsmal(), lagSvar())))
                 .should().containComponent(thatIsInvisible().and(withId("traadcontainer")))
                 .onComponent(withId("vistraadcontainer")).executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsVisible().and(withId("traadcontainer")));
     }
 
     @Test
-    public void skalViseLeggTilbakePanel() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())))
+    public void viserLeggTilbakePanel() {
+        wicket.goToPageWith(testSvarPanel)
                 .should().containComponent(thatIsInvisible().and(withId("leggtilbakepanel")))
                 .click().link(withId("leggtilbake"))
                 .should().containComponent(thatIsVisible().and(withId("leggtilbakepanel")));
     }
 
     @Test
-    public void leggTilbakeLenkeSkalHaTekstenLeggTilbake() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())));
+    public void leggTilbakeLenkeHarTekstenLeggTilbake() {
+        wicket.goToPageWith(testSvarPanel);
 
         Label leggtilbaketekst = wicket.get().component(withId("leggtilbaketekst").and(ofType(Label.class)));
         String labeltekst = (String) leggtilbaketekst.getDefaultModelObject();
@@ -168,8 +219,8 @@ public class SvarPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void leggTilbakeLenkeSkalHaTekstenAvbryt() {
-        wicket.goToPageWith(new TestSvarPanel("id", "fnr", asList(lagSporsmal())));
+    public void leggTilbakeLenkeHarTekstenAvbryt() {
+        wicket.goToPageWith(testSvarPanel);
 
         Label leggtilbaketekst = wicket.get().component(withId("leggtilbaketekst").and(ofType(Label.class)));
         String labeltekst = (String) leggtilbaketekst.getDefaultModelObject();
@@ -179,13 +230,13 @@ public class SvarPanelTest extends WicketPageTest {
     }
 
     private Henvendelse lagSporsmal() {
-        Henvendelse sporsmal = new Henvendelse().withId("id").withOpprettetDato(now());
-        sporsmal.temagruppe = Temagruppe.FMLI.name();
+        Henvendelse sporsmal = new Henvendelse().withId(SPORSMAL_ID).withOpprettetDato(now());
+        sporsmal.temagruppe = TEMAGRUPPE;
         return sporsmal;
     }
 
     private Henvendelse lagSvar() {
-        return new Henvendelse().withOpprettetDato(now()).withType(Henvendelse.Henvendelsetype.SVAR_SKRIFTLIG).withFritekst("fritekst").withTemagruppe(Temagruppe.FMLI.name());
+        return new Henvendelse().withOpprettetDato(now()).withType(SVAR_SKRIFTLIG).withFritekst("fritekst").withTemagruppe(TEMAGRUPPE);
     }
 
 }

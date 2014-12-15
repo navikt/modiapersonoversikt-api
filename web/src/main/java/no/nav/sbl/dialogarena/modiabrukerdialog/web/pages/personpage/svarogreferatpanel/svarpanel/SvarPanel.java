@@ -53,7 +53,7 @@ public class SvarPanel extends Panel {
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
-    protected OppgaveBehandlingService oppgaveBehandlingService;
+    private OppgaveBehandlingService oppgaveBehandlingService;
 
     private final String fnr;
     private final Optional<String> oppgaveId;
