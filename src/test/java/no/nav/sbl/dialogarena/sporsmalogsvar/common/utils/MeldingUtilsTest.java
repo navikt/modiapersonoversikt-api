@@ -1,10 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingFraBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMeldingTilBruker;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -103,7 +99,7 @@ public class MeldingUtilsTest {
                 .withFritekst(FRITEKST)
                 .withTemagruppe(TEMAGRUPPE);
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), new XMLMetadataListe().withMetadata(xmlMeldingFraBruker)));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, new XMLMetadataListe().withMetadata(xmlMeldingFraBruker)));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -118,7 +114,7 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medSporsmalMedKassertInnhold() {
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, null, XMLHenvendelseType.SPORSMAL_SKRIFTLIG.name(), null, null));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -135,7 +131,7 @@ public class MeldingUtilsTest {
     public void testTilMeldingTransformer_medSvar() {
         XMLMeldingTilBruker meldingTilBruker = createMeldingTilBruker();
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_2, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), new XMLMetadataListe().withMetadata(meldingTilBruker)));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_2, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), NAVIDENT, new XMLMetadataListe().withMetadata(meldingTilBruker)));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_2)));
@@ -145,6 +141,7 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortDato, is(JOURNALFORT_DATO));
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
+        assertThat(melding.eksternAktor, is(NAVIDENT));
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.kanal, is(equalTo(KANAL)));
@@ -154,7 +151,7 @@ public class MeldingUtilsTest {
     @Test
     public void testTilMeldingTransformer_medSvarMedKassertInnhold() {
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_2, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), null));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_2, OPPRETTET_DATO, LEST_DATO, XMLHenvendelseType.SVAR_SKRIFTLIG.name(), NAVIDENT, null));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_2)));
@@ -164,6 +161,7 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortDato, is(JOURNALFORT_DATO));
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
+        assertThat(melding.eksternAktor, is(NAVIDENT));
         assertThat(melding.fritekst, is(nullValue()));
         assertThat(melding.temagruppe, is(nullValue()));
         assertThat(melding.kanal, is(nullValue()));
@@ -174,7 +172,7 @@ public class MeldingUtilsTest {
     public void testTilMeldingTransformer_medReferat() {
         XMLMeldingTilBruker xmlMeldingTilBruker = createMeldingTilBruker();
 
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), new XMLMetadataListe().withMetadata(xmlMeldingTilBruker)));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), NAVIDENT, new XMLMetadataListe().withMetadata(xmlMeldingTilBruker)));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -184,6 +182,7 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortDato, is(JOURNALFORT_DATO));
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
+        assertThat(melding.eksternAktor, is(NAVIDENT));
         assertThat(melding.fritekst, is(equalTo(FRITEKST)));
         assertThat(melding.temagruppe, is(equalTo(TEMAGRUPPE)));
         assertThat(melding.kanal, is(equalTo(KANAL)));
@@ -192,7 +191,7 @@ public class MeldingUtilsTest {
 
     @Test
     public void testTilMeldingTransformer_medReferatMedKassertInnhold() {
-        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), null));
+        Melding melding = TIL_MELDING.transform(lagXMLHenvendelse(ID_1, ID_1, OPPRETTET_DATO, LEST_DATO, REFERAT_OPPMOTE.name(), NAVIDENT, null));
 
         assertThat(melding.id, is(equalTo(ID_1)));
         assertThat(melding.traadId, is(equalTo(ID_1)));
@@ -202,6 +201,7 @@ public class MeldingUtilsTest {
         assertThat(melding.journalfortDato, is(JOURNALFORT_DATO));
         assertThat(melding.journalfortSaksId, is(JOURNALFORT_SAKSID));
         assertThat(melding.journalfortTema, is(JOURNALFORT_TEMA));
+        assertThat(melding.eksternAktor, is(NAVIDENT));
         assertThat(melding.fritekst, is(nullValue()));
         assertThat(melding.temagruppe, is(nullValue()));
         assertThat(melding.kanal, is(nullValue()));

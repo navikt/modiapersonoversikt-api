@@ -1,17 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelse;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLJournalfortInformasjon;
-import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLMetadataListe;
-import no.nav.modig.core.context.ModigSecurityConstants;
-import no.nav.modig.core.context.SubjectHandler;
-import no.nav.modig.core.context.SubjectHandlerUtils;
-import no.nav.modig.core.context.ThreadLocalSubjectHandler;
+import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
+import no.nav.modig.core.context.*;
 import no.nav.modig.core.domain.IdentType;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.*;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import org.joda.time.DateTime;
 
@@ -108,13 +100,14 @@ public class TestUtils {
         return new ArrayList<>(asList(melding1VM, melding2VM, melding3VM));
     }
 
-    public static XMLHenvendelse lagXMLHenvendelse(String behandlingsId, String behandlingskjedeId, DateTime opprettetDato, DateTime lestDato, String henvendelseType, XMLMetadataListe XMLMetadataListe) {
+    public static XMLHenvendelse lagXMLHenvendelse(String behandlingsId, String behandlingskjedeId, DateTime opprettetDato, DateTime lestDato, String henvendelseType, String eksternAktor, XMLMetadataListe XMLMetadataListe) {
         return new XMLHenvendelse()
                 .withBehandlingsId(behandlingsId)
                 .withBehandlingskjedeId(behandlingskjedeId)
                 .withOpprettetDato(opprettetDato)
                 .withLestDato(lestDato)
                 .withHenvendelseType(henvendelseType)
+                .withEksternAktor(eksternAktor)
                 .withJournalfortInformasjon(
                         new XMLJournalfortInformasjon()
                                 .withJournalfortDato(JOURNALFORT_DATO)

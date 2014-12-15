@@ -2,16 +2,12 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.*;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
@@ -61,6 +57,7 @@ public class MeldingUtils {
             melding.status = STATUS.transform(xmlHenvendelse);
             melding.kontorsperretEnhet = xmlHenvendelse.getKontorsperreEnhet();
             melding.markertSomFeilsendtAv = xmlHenvendelse.getMarkertSomFeilsendtAv();
+            melding.eksternAktor = xmlHenvendelse.getEksternAktor();
             fyllInnJournalforingsInformasjon(xmlHenvendelse, melding);
 
             if (innholdErKassert(xmlHenvendelse)) {

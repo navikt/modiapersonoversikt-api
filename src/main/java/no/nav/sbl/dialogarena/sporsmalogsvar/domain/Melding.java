@@ -12,7 +12,7 @@ public class Melding implements Serializable {
     public final Meldingstype meldingstype;
     public final DateTime opprettetDato;
     public String fritekst, temagruppe, kanal, traadId, navIdent, journalfortSaksId, journalfortTema, journalfortTemanavn,
-            journalfortAvNavIdent, fnrBruker, kontorsperretEnhet, markertSomFeilsendtAv;
+            journalfortAvNavIdent, fnrBruker, kontorsperretEnhet, markertSomFeilsendtAv, eksternAktor;
     public DateTime lestDato, journalfortDato;
     public Status status;
 
