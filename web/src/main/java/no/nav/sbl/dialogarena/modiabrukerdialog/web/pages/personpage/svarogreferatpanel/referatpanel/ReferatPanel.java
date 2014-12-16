@@ -77,7 +77,9 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         Label overskrift = new Label("overskrift", new StringResourceModel("${modus}.overskrift", getModel()));
         overskrift.setOutputMarkupId(true);
         modusKomponenter.add(overskrift);
+
         form.add(overskrift);
+        form.add(new Label("navIdent", getSubjectHandler().getUid()));
 
         Label tekstfeltOverskrift = new Label("tekstfeltOverskrift", new StringResourceModel("${modus}.tekstfelt", getModel()));
         tekstfeltOverskrift.setOutputMarkupId(true);
