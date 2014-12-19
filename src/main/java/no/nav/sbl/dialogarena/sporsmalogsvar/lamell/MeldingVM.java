@@ -18,6 +18,11 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.la
 
 public class MeldingVM implements Serializable {
 
+    public static final String TEMAGRUPPE_KASSERT = "temagruppe.kassert";
+    public static final String NAV_LOGO_SVG = "nav-logo.svg";
+    public static final String BRUKER_LOGO_SVG = "siluett.svg";
+    public static final String NAV_AVSENDER_BILDE_ALT_KEY = "innboks.avsender.nav";
+    public static final String BRUKER_AVSENDER_BILDE_ALT_KEY = "innboks.avsender.bruker";
     public final Melding melding;
 
     public final int traadlengde;
@@ -50,7 +55,7 @@ public class MeldingVM implements Serializable {
     }
 
     public String getTemagruppeKey() {
-        return melding.temagruppe != null ? melding.temagruppe : "temagruppe.kassert";
+        return melding.temagruppe != null ? melding.temagruppe : TEMAGRUPPE_KASSERT;
     }
 
     public Boolean erFeilsendt() {
@@ -64,16 +69,16 @@ public class MeldingVM implements Serializable {
     public String getAvsenderBildeUrl() {
         String imgUrl = WebApplication.get().getServletContext().getContextPath() + "/img/";
         if (FRA_NAV.contains(melding.meldingstype)) {
-            return imgUrl + "nav-logo.svg";
+            return imgUrl + NAV_LOGO_SVG;
         }
-        return imgUrl + "siluett.svg";
+        return imgUrl + BRUKER_LOGO_SVG;
     }
 
     public String getAvsenderBildeAltKey() {
         if (FRA_NAV.contains(melding.meldingstype)) {
-            return "innboks.avsender.nav";
+            return NAV_AVSENDER_BILDE_ALT_KEY;
         }
-        return "innboks.avsender.bruker";
+        return BRUKER_AVSENDER_BILDE_ALT_KEY;
     }
 
     public static final Comparator<MeldingVM> NYESTE_FORST = new Comparator<MeldingVM>() {

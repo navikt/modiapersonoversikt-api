@@ -1,0 +1,124 @@
+package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
+
+import no.nav.modig.lang.option.Optional;
+import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
+import org.apache.wicket.util.tester.WicketTester;
+import org.joda.time.DateTime;
+import org.junit.Before;
+import org.junit.Test;
+
+import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.FRA_NAV;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingStatusTekstKey;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagStatusIkonKlasse;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.*;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.ID_1;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.TEMAGRUPPE_1;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.Is.is;
+
+public class MeldingVMTest extends WicketTester {
+
+    public static final DateTime OPPRETTET_DATO = DateTime.now();
+    public static final String NAV_IDENT = "navIdent";
+    private MeldingVM meldingVM;
+
+    @Before
+    public void setUp() {
+        Melding melding = createMelding(ID_1, Meldingstype.SPORSMAL_SKRIFTLIG, OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        meldingVM = new MeldingVM(melding, 1);
+    }
+
+    @Test
+    public void henterAvsenderTekstBasertPaaDatoOgNavident() {
+        String avsenderTekst = meldingVM.getAvsenderTekst();
+
+        assertThat(avsenderTekst, is(WidgetDateFormatter.dateTime(OPPRETTET_DATO)));
+
+        meldingVM.melding.navIdent = NAV_IDENT;
+        avsenderTekst = meldingVM.getAvsenderTekst();
+
+        assertThat(avsenderTekst.contains(" - " + NAV_IDENT), is(true));
+    }
+
+    @Test
+    public void lagerStatusTekstKey() {
+        assertThat(meldingVM.getMeldingStatusTekstKey(), is(lagMeldingStatusTekstKey(meldingVM.melding)));
+    }
+
+    @Test
+    public void lagerStatusIkonKlasse() {
+        assertThat(meldingVM.getStatusIkonKlasse(), is(lagStatusIkonKlasse(meldingVM.melding)));
+    }
+
+    @Test
+    public void formattererJournalfortDato() {
+        String formatert = meldingVM.getJournalfortDatoFormatert();
+
+        assertThat(formatert.isEmpty(), is(true));
+
+        meldingVM.melding.journalfortDato = DateTime.now();
+        formatert = meldingVM.getJournalfortDatoFormatert();
+
+        assertThat(formatert, is(WidgetDateFormatter.date(meldingVM.melding.journalfortDato)));
+    }
+
+    @Test
+    public void sjekkerOmMeldingErJournalfort() {
+        assertThat(meldingVM.isJournalfort(), is(false));
+
+        meldingVM.melding.journalfortDato = DateTime.now();
+
+        assertThat(meldingVM.isJournalfort(), is(true));
+    }
+
+    @Test
+    public void henterTemagruppeKey() {
+        assertThat(meldingVM.getTemagruppeKey(), is(meldingVM.melding.temagruppe));
+
+        meldingVM.melding.temagruppe = null;
+
+        assertThat(meldingVM.getTemagruppeKey(), is(TEMAGRUPPE_KASSERT));
+    }
+
+    @Test
+    public void sjekkerOmMeldingErMarkertSomFeilsendt() {
+        assertThat(meldingVM.erFeilsendt(), is(false));
+
+        meldingVM.melding.markertSomFeilsendtAv = NAV_IDENT;
+
+        assertThat(meldingVM.erFeilsendt(), is(true));
+    }
+
+    @Test
+    public void henterMarkertSomFeilsendtAv() {
+        assertThat(meldingVM.getMarkertSomFeilsendtAv(), is(Optional.<String>none()));
+
+        meldingVM.melding.markertSomFeilsendtAv = NAV_IDENT;
+
+        assertThat(meldingVM.getMarkertSomFeilsendtAv(), is(optional(NAV_IDENT)));
+    }
+
+    @Test
+    public void henterAvsenderBildeUrl() {
+        assertThat(meldingVM.getAvsenderBildeUrl().contains(BRUKER_LOGO_SVG), is(true));
+
+        Melding melding = createMelding(ID_1, FRA_NAV.get(0), OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        meldingVM = new MeldingVM(melding, 1);
+
+        assertThat(meldingVM.getAvsenderBildeUrl().contains(NAV_LOGO_SVG), is(true));
+    }
+
+    @Test
+    public void henterAvsenderBilderAltKey() {
+        assertThat(meldingVM.getAvsenderBildeAltKey(), is(BRUKER_AVSENDER_BILDE_ALT_KEY));
+
+        Melding melding = createMelding(ID_1, FRA_NAV.get(0), OPPRETTET_DATO, TEMAGRUPPE_1, ID_1);
+        meldingVM = new MeldingVM(melding, 1);
+
+        assertThat(meldingVM.getAvsenderBildeAltKey(), is(NAV_AVSENDER_BILDE_ALT_KEY));
+    }
+}

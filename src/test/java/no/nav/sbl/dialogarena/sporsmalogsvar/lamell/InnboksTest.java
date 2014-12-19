@@ -53,24 +53,24 @@ public class InnboksTest {
     }
 
     @Test
-    public void skalInneholdeRiktigeKomponenter() {
+    public void inneholderRiktigeKomponenter() {
         wicket.goToPageWith(new TestInnboks("innboks", "fnr"))
                 .should().containComponent(ofType(AlleMeldingerPanel.class))
                 .should().containComponent(ofType(TraaddetaljerPanel.class));
     }
 
     @Test
-    public void skalVelgeTraadMedNyesteMeldingSomDefault() {
-        TestInnboks innboks = new TestInnboks("innboks", "fnr");
-        wicket.goToPageWith(innboks);
+    public void velgerTraadMedNyesteMeldingSomDefault() {
+        TestInnboks testInnboks = new TestInnboks("innboks", "fnr");
+        wicket.goToPageWith(testInnboks);
 
-        assertThat(((InnboksVM) innboks.getDefaultModelObject()).getValgtTraad().getNyesteMelding().melding.id, is(NYESTE_MELDING_ID_TRAAD1));
+        assertThat(getValgtTraad(testInnboks).getNyesteMelding().melding.id, is(NYESTE_MELDING_ID_TRAAD1));
     }
 
     @Test
-    public void skalSetteValgtMeldingVedEvent() {
-        TestInnboks innboks = new TestInnboks("innboks", "fnr");
-        wicket.goToPageWith(innboks);
+    public void setterValgtMeldingVedEvent() {
+        TestInnboks testInnboks = new TestInnboks("innboks", "fnr");
+        wicket.goToPageWith(testInnboks);
 
         wicket.sendEvent(new EventGenerator() {
             @Override
@@ -79,16 +79,21 @@ public class InnboksTest {
             }
         }).should().inAjaxResponse().haveComponents(ofType(Innboks.class));
 
-        assertThat(((InnboksVM) innboks.getDefaultModelObject()).getValgtTraad().getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
+        assertThat(getValgtTraad(testInnboks).getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
     }
 
     @Test
-    public void skalSetteTraadSomErReferertISessionTilValgtTraadIInnboks() {
+    public void setterTraadSomErReferertISessionTilValgtTraadIInnboks() {
         wicket.tester.getSession().setAttribute(TRAAD_ID_PARAMETER_NAME, ENESTE_MELDING_ID_TRAAD2);
 
-        TestInnboks innboks = new TestInnboks("innboks", "fnr");
-        wicket.goToPageWith(innboks);
+        TestInnboks testInnboks = new TestInnboks("innboks", "fnr");
+        wicket.goToPageWith(testInnboks);
 
-        assertThat(((InnboksVM) innboks.getDefaultModelObject()).getValgtTraad().getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
+        assertThat(getValgtTraad(testInnboks).getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
     }
+
+    private TraadVM getValgtTraad(TestInnboks testInnboks) {
+        return ((InnboksVM) testInnboks.getDefaultModelObject()).getValgtTraad();
+    }
+
 }
