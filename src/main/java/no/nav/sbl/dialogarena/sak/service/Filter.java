@@ -51,30 +51,15 @@ public class Filter {
         ulovligeSakstema = asList(cms.hentTekst("filter.ulovligesakstema").trim().split("\\s*,\\s*"));
         lovligeBehandlingstyper = asList(cms.hentTekst("filter.lovligebehandlingstyper").trim().split("\\s*,\\s*"));
         return on(saker)
-                .filter(HAR_LOVLIG_PREFIX_PAA_MINST_EN_BEHANDLING)
                 .filter(HAR_LOVLIG_SAKSTEMA)
                 .filter(HAR_BEHANDLINGER)
-                .filter(HAR_LOVLIG_STATUS_PAA_MINST_EN_BEHANDLING)
-                .filter(HAR_LOVLIGE_BEHANDLINGSTYPER_ELLER_KVITTERINGER).collect();
+                .filter(HAR_MINST_EN_LOVLIG_BEHANDLING)
+                .collect();
     }
 
     public static boolean erKvitteringstype(String type) {
         return SEND_SOKNAD_KVITTERINGSTYPE.equals(type) || DOKUMENTINNSENDING_KVITTERINGSTYPE.equals(type);
     }
-
-    private static final Predicate<? super WSSak> HAR_LOVLIG_STATUS_PAA_MINST_EN_BEHANDLING = new Predicate<WSSak>() {
-        @Override
-        public boolean evaluate(WSSak wsSak) {
-            for (WSBehandlingskjede kjede : wsSak.getBehandlingskjede()) {
-                if (kjede.getSisteBehandlingsstatus().getValue() != null &&
-                        (kjede.getSisteBehandlingsstatus().getValue().equals(OPPRETTET) && !erKvitteringstype(kjede.getSisteBehandlingstype().getValue())
-                                || kjede.getSisteBehandlingsstatus().getValue().equals(AVSLUTTET))) {
-                    return true;
-                }
-            }
-            return false;
-        }
-    };
 
     private static final Predicate<GenerellBehandling> HAR_LOVLIG_BEHANDLINGSSTATUS = new Predicate<GenerellBehandling>() {
         @Override
@@ -123,12 +108,13 @@ public class Filter {
         }
     };
 
-    private static final Predicate<WSSak> HAR_LOVLIGE_BEHANDLINGSTYPER_ELLER_KVITTERINGER = new Predicate<WSSak>() {
+    private static final Predicate<WSSak> HAR_MINST_EN_LOVLIG_BEHANDLING = new Predicate<WSSak>() {
         @Override
         public boolean evaluate(WSSak wsSak) {
             for (WSBehandlingskjede kjede : wsSak.getBehandlingskjede()) {
-                String type = kjede.getSisteBehandlingstype().getValue();
-                if ((erKvitteringstype(type) && erAvsluttet(kjede)) || lovligeBehandlingstyper.contains(type)) {
+                if (HAR_LOVLIG_PREFIX_PAA_BEHANDLING.evaluate(kjede)
+                        && HAR_LOVLIG_STATUS_PAA_BEHANDLING.evaluate(kjede)
+                        && HAR_LOVLIG_BEHANDLINGSTYPE_ELLER_AVSLUTTET_KVITTERING.evaluate(kjede)) {
                     return true;
                 }
             }
@@ -136,15 +122,33 @@ public class Filter {
         }
     };
 
-    private static final Predicate<? super WSSak> HAR_LOVLIG_PREFIX_PAA_MINST_EN_BEHANDLING = new Predicate<WSSak>() {
+    private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_BEHANDLINGSTYPE_ELLER_AVSLUTTET_KVITTERING = new Predicate<WSBehandlingskjede>() {
         @Override
-        public boolean evaluate(WSSak wsSak) {
-            for (WSBehandlingskjede kjede : wsSak.getBehandlingskjede()) {
-                if (!kjede.getSisteBehandlingREF().startsWith(ULOVLIG_PREFIX)) {
-                    return true;
-                }
+        public boolean evaluate(WSBehandlingskjede kjede) {
+            String type = kjede.getSisteBehandlingstype().getValue();
+            if ((erKvitteringstype(type) && erAvsluttet(kjede)) || lovligeBehandlingstyper.contains(type)) {
+                return true;
             }
             return false;
+        }
+    };
+
+    private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_STATUS_PAA_BEHANDLING = new Predicate<WSBehandlingskjede>() {
+        @Override
+        public boolean evaluate(WSBehandlingskjede kjede) {
+            if (kjede.getSisteBehandlingsstatus().getValue() != null &&
+                    (kjede.getSisteBehandlingsstatus().getValue().equals(OPPRETTET) && !erKvitteringstype(kjede.getSisteBehandlingstype().getValue())
+                            || kjede.getSisteBehandlingsstatus().getValue().equals(AVSLUTTET))) {
+                return true;
+            }
+            return false;
+        }
+    };
+
+    private static final Predicate<WSBehandlingskjede> HAR_LOVLIG_PREFIX_PAA_BEHANDLING = new Predicate<WSBehandlingskjede>() {
+        @Override
+        public boolean evaluate(WSBehandlingskjede kjede) {
+            return !kjede.getSisteBehandlingREF().startsWith(ULOVLIG_PREFIX);
         }
     };
 
