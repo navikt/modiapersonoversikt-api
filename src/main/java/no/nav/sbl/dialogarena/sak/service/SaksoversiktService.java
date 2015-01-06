@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sak.service;
 
+import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.modig.lang.collections.iter.PreparedIterable;
 import no.nav.sbl.dialogarena.sak.comparators.SistOppdaterteBehandlingComparator;
@@ -45,7 +46,11 @@ public class SaksoversiktService {
         LOG.info("Henter tema fra Sak og Behandling til Modiasaksoversikt. Fnr: " + fnr);
         List<WSSak> saker = on(sakOgBehandlingService.hentSakerForAktor(hentAktorId(fnr))).collect();
         PreparedIterable<TemaVM> temaer = on(filter.filtrerSaker(saker)).map(temaVMTransformer(filter));
-        return temaer.collect(new SistOppdaterteBehandlingComparator());
+        try {
+            return temaer.collect(new SistOppdaterteBehandlingComparator());
+        } catch (NullPointerException npe) {
+            throw new ApplicationException("Nullpointer i service, antar comparator", npe);
+        }
     }
 
     /**
