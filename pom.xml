@@ -60,7 +60,7 @@
         <dependency>
             <groupId>no.nav.sbl.dialogarena</groupId>
             <artifactId>common-lokalt-kodeverk</artifactId>
-            <version>1.0.40</version>
+            <version>1.1.2</version>
             <exclusions>
                 <exclusion>
                     <groupId>cglib</groupId>
