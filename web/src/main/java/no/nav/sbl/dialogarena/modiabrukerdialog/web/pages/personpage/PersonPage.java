@@ -60,6 +60,8 @@ import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.HENVENDELSEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.OPPGAVEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_OVERSIKT;
@@ -86,8 +88,6 @@ public class PersonPage extends BasePage {
     public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
     public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
     public static final String SVAR_OG_REFERAT_PANEL_ID = "svarOgReferatPanel";
-    public static final String OPPGAVEID = "oppgaveid";
-    public static final String HENVENDELSEID = "henvendelseid";
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
     public static final PackageResourceReference SVAR_OG_REFERATPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "SvarOgReferatPanel.less");
