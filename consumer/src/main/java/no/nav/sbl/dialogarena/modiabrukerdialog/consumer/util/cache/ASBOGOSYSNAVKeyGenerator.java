@@ -29,6 +29,7 @@ public class ASBOGOSYSNAVKeyGenerator extends AutentisertBrukerKeyGenerator {
         return super.generate(target, method, getCacheKey(target, method, params));
     }
 
+    // CHECKSTYLE:OFF
     private Object getCacheKey(Object target, Method method, Object... params) {
         Object param0 = params[0];
         if (param0 instanceof ASBOGOSYSNavEnhet) {
@@ -54,4 +55,6 @@ public class ASBOGOSYSNAVKeyGenerator extends AutentisertBrukerKeyGenerator {
             return super.generate(target, method, params);
         }
     }
+    // CHECKSTYLE:ON
+
 }
