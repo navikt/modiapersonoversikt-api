@@ -7,6 +7,7 @@ import org.apache.commons.collections15.Transformer;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Klasse for å lage cachekey som også tar høyde for
@@ -36,7 +37,7 @@ public class ASBOGOSYSNAVKeyGenerator extends AutentisertBrukerKeyGenerator {
         return super.generate(target, method, params);
     }
 
-    private static HashMap<Class, Transformer> asbogosysCachekeyMapper = new HashMap<Class, Transformer>() {{
+    private static Map<Class, Transformer> asbogosysCachekeyMapper = new HashMap<Class, Transformer>() {{
         put(ASBOGOSYSNavEnhet.class, new Transformer<ASBOGOSYSNavEnhet, Object>() {
             @Override
             public Object transform(ASBOGOSYSNavEnhet obj) {
