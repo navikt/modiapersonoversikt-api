@@ -21,7 +21,7 @@ import javax.inject.Inject;
 import static java.util.Arrays.asList;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks.TRAAD_ID_PARAMETER_NAME;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.HENVENDELSEID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.Is.is;
@@ -84,7 +84,7 @@ public class InnboksTest {
 
     @Test
     public void setterTraadSomErReferertISessionTilValgtTraadIInnboks() {
-        wicket.tester.getSession().setAttribute(TRAAD_ID_PARAMETER_NAME, ENESTE_MELDING_ID_TRAAD2);
+        wicket.tester.getSession().setAttribute(HENVENDELSEID, ENESTE_MELDING_ID_TRAAD2);
 
         TestInnboks testInnboks = new TestInnboks("innboks", "fnr");
         wicket.goToPageWith(testInnboks);

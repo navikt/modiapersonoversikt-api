@@ -21,6 +21,7 @@ import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.HENVENDELSEID;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class Innboks extends Lerret {
@@ -30,7 +31,6 @@ public class Innboks extends Lerret {
 
     public static final String INNBOKS_OPPDATERT_EVENT = "sos.innboks.oppdatert";
     public static final String VALGT_MELDING_EVENT = "sos.innboks.valgt_melding";
-    public static final String TRAAD_ID_PARAMETER_NAME = "henvendelseid";
 
     private InnboksVM innboksVM;
 
@@ -61,13 +61,13 @@ public class Innboks extends Lerret {
     }
 
     private void setValgtTraadBasertPaaTraadIdSessionParameter() {
-        String traadIdParameter = ((String) getSession().getAttribute(TRAAD_ID_PARAMETER_NAME));
+        String traadIdParameter = ((String) getSession().getAttribute(HENVENDELSEID));
         if (!isBlank(traadIdParameter)) {
             Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(traadIdParameter);
             if (meldingITraad.isSome()) {
                 innboksVM.setValgtMelding(meldingITraad.get());
             }
-            getSession().setAttribute(TRAAD_ID_PARAMETER_NAME, null);
+            getSession().setAttribute(HENVENDELSEID, null);
         }
     }
 
