@@ -19,7 +19,7 @@ import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.enabledIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
-import static org.apache.wicket.event.Broadcast.EXACT;
+import static org.apache.wicket.event.Broadcast.BREADTH;
 
 public class HaandterMeldingPanel extends Panel {
 
@@ -40,7 +40,7 @@ public class HaandterMeldingPanel extends Panel {
                 new AjaxLink<InnboksVM>("besvar") {
                     @Override
                     public void onClick(AjaxRequestTarget target) {
-                        send(getPage(), EXACT, new NamedEventPayload(SVAR_PAA_MELDING, innboksVM.getValgtTraad().getEldsteMelding().melding.id));
+                        send(getPage(), BREADTH, new NamedEventPayload(SVAR_PAA_MELDING, innboksVM.getValgtTraad().getEldsteMelding().melding.id));
                     }
                 }.add(enabledIf(bleInitiertAvBruker))
         );
