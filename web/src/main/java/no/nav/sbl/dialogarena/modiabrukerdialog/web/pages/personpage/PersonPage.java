@@ -9,32 +9,25 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.visittkort.VisittkortPanel;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.frontend.ConditionalCssResource;
 import no.nav.modig.frontend.ConditionalJavascriptResource;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.events.LamellPayload;
 import no.nav.modig.modia.events.WidgetHeaderPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.BasePage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.hentperson.HentPersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.OppgavetilordningFeilet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSide;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.DialogPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.ReferatPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.timeout.TimeoutBoks;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.wicket.Component;
 import org.apache.wicket.Page;
 import org.apache.wicket.RestartResponseException;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -42,6 +35,7 @@ import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.ajax.json.JSONObject;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.IEvent;
+import org.apache.wicket.extensions.markup.html.tabs.AbstractTab;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Button;
 import org.apache.wicket.model.Model;
@@ -52,26 +46,18 @@ import org.apache.wicket.request.resource.PackageResourceReference;
 import org.apache.wicket.util.string.StringValue;
 import org.slf4j.Logger;
 
-import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
-import static no.nav.modig.lang.option.Optional.none;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.HENVENDELSEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.OPPGAVEID;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_OVERSIKT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.DEPTH;
@@ -87,30 +73,23 @@ public class PersonPage extends BasePage {
     public static final String VALGT_OPPGAVE_HENVENDELSEID_ATTR = "valgt-oppgave-henvendelseid";
     public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
     public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
-    public static final String SVAR_OG_REFERAT_PANEL_ID = "svarOgReferatPanel";
     public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
     public static final PackageResourceReference SVAR_OG_REFERATPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "SvarOgReferatPanel.less");
     public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(HenvendelseVM.class, "jquery-ui-selectmenu.min.js");
-    private static final Logger logger = getLogger(PersonPage.class);
-    private final String fnr;
     public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
     public static final String ERROR = "error";
 
-    @Inject
-    protected HenvendelseUtsendingService henvendelseUtsendingService;
-    @Inject
-    protected OppgaveBehandlingService oppgaveBehandlingService;
+    private static final Logger logger = getLogger(PersonPage.class);
+
+    private final String fnr;
 
     private SjekkForlateSideAnswer answer;
     private RedirectModalWindow redirectPopup;
-    private OppgavetilordningFeilet oppgavetilordningFeiletPopup;
     private LamellContainer lamellContainer;
     private HentPersonPanel hentPersonPanel;
     private Button searchToggleButton;
     private NullstillLink nullstillLink;
-    private Component svarOgReferatPanel;
-    private VisitkortTabListePanel visittkortTabListePanel;
     protected String startLamell = LAMELL_OVERSIKT;
 
     public PersonPage(PageParameters pageParameters) {
@@ -129,24 +108,22 @@ public class PersonPage extends BasePage {
                 nullstillLink,
                 lamellContainer,
                 redirectPopup,
-                oppgavetilordningFeiletPopup,
                 saksbehandlerInnstillingerPanel,
                 new SaksbehandlerInnstillingerTogglerPanel("saksbehandlerInnstillingerToggler", saksbehandlerInnstillingerPanel.getMarkupId()),
                 new PlukkOppgavePanel("plukkOppgave"),
                 new PersonsokPanel("personsokPanel").setVisible(true),
                 new VisittkortPanel("visittkort", fnr).setVisible(true),
-                visittkortTabListePanel,
-                svarOgReferatPanel,
+                new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr),
+                new DialogPanel("dialogPanel", fnr),
                 new TimeoutBoks("timeoutBoks", fnr)
         );
 
-        settOppRiktigMeldingPanelOgLamell();
+        settOppStartLamell();
     }
 
     private void instansierFelter() {
         answer = new SjekkForlateSideAnswer();
         redirectPopup = createRedirectModalWindow("redirectModal");
-        oppgavetilordningFeiletPopup = new OppgavetilordningFeilet("oppgavetilordningModal");
         lamellContainer = new LamellContainer("lameller", fnr) {
             @Override
             protected void onInitialize() {
@@ -160,21 +137,17 @@ public class PersonPage extends BasePage {
         hentPersonPanel = (HentPersonPanel) new HentPersonPanel("searchPanel").setOutputMarkupPlaceholderTag(true);
         searchToggleButton = (Button) new Button("toggle-sok").setOutputMarkupPlaceholderTag(true);
         nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
-        svarOgReferatPanel = new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr);
-
-        visittkortTabListePanel = new VisitkortTabListePanel("kjerneinfotabs", createTabs(), fnr);
-
     }
 
-    private List createTabs() {
-        List tabs = new ArrayList();
-        tabs.add(new AbstractTabPanel(new Model("img/familie_ikon.svg"), "familie") {
+    private List<AbstractTab> createTabs() {
+        List<AbstractTab> tabs = new ArrayList<>();
+        tabs.add(new AbstractTabPanel(new Model<>("img/familie_ikon.svg"), "familie") {
             @Override
             public WebMarkupContainer getPanel(String panelId) {
                 return new PersonKjerneinfoPanel(panelId, fnr);
             }
         });
-        tabs.add(new AbstractTabPanel(new Model("svg/kjerneinfo/lenker_ikon.svg"), "lenker") {
+        tabs.add(new AbstractTabPanel(new Model<>("svg/kjerneinfo/lenker_ikon.svg"), "lenker") {
             @Override
             public WebMarkupContainer getPanel(String panelId) {
                 return new EksterneLenkerPanel(panelId, fnr);
@@ -197,14 +170,8 @@ public class PersonPage extends BasePage {
         return fantParamVerdi;
     }
 
-    private void settOppRiktigMeldingPanelOgLamell() {
-        String henvendelseId = (String) getSession().getAttribute(HENVENDELSEID);
-        String oppgaveId = (String) getSession().getAttribute(OPPGAVEID);
-
-        if (isNotBlank(henvendelseId) && isBlank(oppgaveId)) {
-            startLamell = LAMELL_MELDINGER;
-        } else if (isNotBlank(henvendelseId) && isNotBlank(oppgaveId)) {
-            visSvarPanelForHenvendelseId(henvendelseId, oppgaveId);
+    private void settOppStartLamell() {
+        if (isNotBlank((String) getSession().getAttribute(HENVENDELSEID))) {
             startLamell = LAMELL_MELDINGER;
         }
     }
@@ -283,41 +250,6 @@ public class PersonPage extends BasePage {
     @RunOnEvents(HENTPERSON_FODSELSNUMMER_IKKE_TILGANG)
     public void personsokIkkeTilgang(AjaxRequestTarget target, String query) {
         send(getPage(), BREADTH, new NamedEventPayload(FODSELSNUMMER_IKKE_TILGANG, query));
-    }
-
-    private void visSvarPanelForHenvendelseId(String henvendelseId, String oppgaveId) {
-        getSession().setAttribute(OPPGAVEID, null);
-        List<Henvendelse> traad = henvendelseUtsendingService.hentTraad(fnr, henvendelseId);
-        if (!traad.isEmpty()) {
-            erstattReferatPanelMedSvarPanel(traad, optional(oppgaveId));
-        }
-    }
-
-    @RunOnEvents(SVAR_PAA_MELDING)
-    public void visSvarPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
-        List<Henvendelse> traad = henvendelseUtsendingService.hentTraad(fnr, traadId);
-        Optional<String> oppgaveId = none();
-        if (traad.size() <= 1) {
-            try {
-                String sporsmalOppgaveId = traad.get(0).oppgaveId;
-                oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmalOppgaveId);
-                oppgaveId = optional(sporsmalOppgaveId);
-            } catch (FikkIkkeTilordnet fikkIkkeTilordnet) {
-                oppgavetilordningFeiletPopup.vis(target);
-            }
-        }
-        erstattReferatPanelMedSvarPanel(traad, oppgaveId);
-        target.add(svarOgReferatPanel);
-    }
-
-    private void erstattReferatPanelMedSvarPanel(List<Henvendelse> traad, Optional<String> oppgaveId) {
-        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new SvarPanel(SVAR_OG_REFERAT_PANEL_ID, fnr, traad, oppgaveId));
-    }
-
-    @RunOnEvents({KVITTERING_VIST, LEGG_TILBAKE_FERDIG, SVAR_AVBRUTT})
-    public void visReferatPanel(AjaxRequestTarget target) {
-        svarOgReferatPanel = svarOgReferatPanel.replaceWith(new ReferatPanel(SVAR_OG_REFERAT_PANEL_ID, fnr));
-        target.add(svarOgReferatPanel);
     }
 
     @RunOnEvents({MELDING_SENDT_TIL_BRUKER, LEGG_TILBAKE_UTFORT})
