@@ -7,6 +7,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSFinnNAVEnhetR
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentNAVEnhetListeRequest;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentSpesialEnhetTilPersonRequest;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.lang.reflect.Method;
 
@@ -29,7 +30,7 @@ public class ASBOGOSYSNAVKeyGenerator extends AutentisertBrukerKeyGenerator {
         return super.generate(target, method, getCacheKey(target, method, params));
     }
 
-    // CHECKSTYLE:OFF
+    @SuppressFBWarnings("squid:MethodCyclomaticComplexity")
     private Object getCacheKey(Object target, Method method, Object... params) {
         Object param0 = params[0];
         if (param0 instanceof ASBOGOSYSNavEnhet) {
@@ -55,6 +56,4 @@ public class ASBOGOSYSNAVKeyGenerator extends AutentisertBrukerKeyGenerator {
             return super.generate(target, method, params);
         }
     }
-    // CHECKSTYLE:ON
-
 }
