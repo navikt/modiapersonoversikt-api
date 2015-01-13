@@ -2,14 +2,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.cache;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSHentNAVAnsattFagomradeListeRequest;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSFinnArenaNAVEnhetListeRequest;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSFinnNAVEnhetRequest;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentNAVEnhetListeRequest;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSHentSpesialEnhetTilPersonRequest;
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
-import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.*;
+import org.apache.commons.collections15.Transformer;
 
 import java.lang.reflect.Method;
+import java.util.HashMap;
 
 /**
  * Klasse for å lage cachekey som også tar høyde for
@@ -30,30 +27,63 @@ public class ASBOGOSYSNAVKeyGenerator extends AutentisertBrukerKeyGenerator {
         return super.generate(target, method, getCacheKey(target, method, params));
     }
 
-    @SuppressFBWarnings("squid:MethodCyclomaticComplexity")
     private Object getCacheKey(Object target, Method method, Object... params) {
         Object param0 = params[0];
-        if (param0 instanceof ASBOGOSYSNavEnhet) {
-            return ASBOGOSYSNavEnhet.class.cast(param0).getEnhetsId();
-        } else if (param0 instanceof ASBOGOSYSHentSpesialEnhetTilPersonRequest) {
-            return ASBOGOSYSHentSpesialEnhetTilPersonRequest.class.cast(param0).getFnr();
-        } else if (param0 instanceof ASBOGOSYSHentNAVEnhetListeRequest) {
-            ASBOGOSYSHentNAVEnhetListeRequest req = ASBOGOSYSHentNAVEnhetListeRequest.class.cast(param0);
-            return req.getTypeOrganiserer() + req.getTypeOrganisertUnder() + req.getNAVEnhet();
-        } else if (param0 instanceof ASBOGOSYSFinnNAVEnhetRequest) {
-            ASBOGOSYSFinnNAVEnhetRequest req = ASBOGOSYSFinnNAVEnhetRequest.class.cast(param0);
-            return req.getTypeEnhet() + req.getFagomradeKode();
-        } else if (param0 instanceof ASBOGOSYSFinnArenaNAVEnhetListeRequest) {
-            ASBOGOSYSFinnArenaNAVEnhetListeRequest req = ASBOGOSYSFinnArenaNAVEnhetListeRequest.class.cast(param0);
-            return req.getEnhetIdSokeStreng() + req.getEnhetNavnSokeStreng() + req.getMaxantall();
-        } else if (param0 instanceof ASBOGOSYSHentNAVAnsattFagomradeListeRequest) {
-            ASBOGOSYSHentNAVAnsattFagomradeListeRequest req = ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class.cast(param0);
-            return req.getEnhetsId() + req.getAnsattId();
-        } else if (param0 instanceof ASBOGOSYSNAVAnsatt) {
-            ASBOGOSYSNAVAnsatt req = ASBOGOSYSNAVAnsatt.class.cast(param0);
-            return req.getAnsattId() + req.getAnsattNavn() + req.getEnheter().toString();
-        } else {
-            return super.generate(target, method, params);
+        Transformer transformer = asbogosysCachekeyMapper.get(param0.getClass());
+        if (transformer != null) {
+            return transformer.transform(param0);
         }
+        return super.generate(target, method, params);
     }
+
+    private static HashMap<Class, Transformer> asbogosysCachekeyMapper = new HashMap<Class, Transformer>() {{
+        put(ASBOGOSYSNavEnhet.class, new Transformer<ASBOGOSYSNavEnhet, Object>() {
+            @Override
+            public Object transform(ASBOGOSYSNavEnhet obj) {
+                return obj.getEnhetsId();
+            }
+        });
+
+        put(ASBOGOSYSHentSpesialEnhetTilPersonRequest.class, new Transformer<ASBOGOSYSHentSpesialEnhetTilPersonRequest, Object>() {
+            @Override
+            public Object transform(ASBOGOSYSHentSpesialEnhetTilPersonRequest obj) {
+                return obj.getFnr();
+            }
+        });
+
+        put(ASBOGOSYSHentNAVEnhetListeRequest.class, new Transformer<ASBOGOSYSHentNAVEnhetListeRequest, Object>() {
+            @Override
+            public Object transform(ASBOGOSYSHentNAVEnhetListeRequest obj) {
+                return obj.getTypeOrganiserer() + obj.getTypeOrganisertUnder() + obj.getNAVEnhet();
+            }
+        });
+
+        put(ASBOGOSYSFinnNAVEnhetRequest.class, new Transformer<ASBOGOSYSFinnNAVEnhetRequest, Object>() {
+            @Override
+            public Object transform(ASBOGOSYSFinnNAVEnhetRequest obj) {
+                return obj.getTypeEnhet() + obj.getFagomradeKode();
+            }
+        });
+
+        put(ASBOGOSYSFinnArenaNAVEnhetListeRequest.class, new Transformer<ASBOGOSYSFinnArenaNAVEnhetListeRequest, Object>() {
+            @Override
+            public Object transform(ASBOGOSYSFinnArenaNAVEnhetListeRequest obj) {
+                return obj.getEnhetIdSokeStreng() + obj.getEnhetNavnSokeStreng() + obj.getMaxantall();
+            }
+        });
+
+        put(ASBOGOSYSHentNAVAnsattFagomradeListeRequest.class, new Transformer<ASBOGOSYSHentNAVAnsattFagomradeListeRequest, Object>() {
+            @Override
+            public Object transform(ASBOGOSYSHentNAVAnsattFagomradeListeRequest obj) {
+                return obj.getEnhetsId() + obj.getAnsattId();
+            }
+        });
+
+        put(ASBOGOSYSNAVAnsatt.class, new Transformer<ASBOGOSYSNAVAnsatt, Object>() {
+            @Override
+            public Object transform(ASBOGOSYSNAVAnsatt obj) {
+                return obj.getAnsattId() + obj.getAnsattNavn() + obj.getEnheter().toString();
+            }
+        });
+    }};
 }
