@@ -3,7 +3,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.core.context.*;
 import no.nav.modig.core.domain.IdentType;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.*;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import org.joda.time.DateTime;
 

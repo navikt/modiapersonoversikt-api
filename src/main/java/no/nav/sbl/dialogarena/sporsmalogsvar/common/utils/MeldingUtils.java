@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.*;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -14,10 +14,12 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding.ID;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding.TRAAD_ID;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.*;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Status.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding.ID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding.TRAAD_ID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Status.IKKE_BESVART;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Status.IKKE_LEST_AV_BRUKER;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Status.LEST_AV_BRUKER;
 
 public class MeldingUtils {
 

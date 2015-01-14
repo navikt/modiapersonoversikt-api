@@ -1,35 +1,26 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerInngaaendeHenvendelseRequest;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerInngaaendeHenvendelseResponse;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerNotatRequest;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerNotatResponse;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerUtgaaendeHenvendelseRequest;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.JournalfoerUtgaaendeHenvendelseResponse;
+import no.nav.tjeneste.virksomhet.behandlejournal.v2.meldinger.*;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService.MODIA_SYSTEM_ID;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createSak;
@@ -113,7 +104,7 @@ public class JoarkJournalforingServiceTest {
 
     @Test
     public void sjekkAtRiktigJournalforHenvendelseKallBlirUtfortGittTraadMedKunEttReferat() {
-        meldinger = new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT_OPPMOTE, 1, KANAL_TELEFON)));
+        meldinger = new ArrayList<>(asList(createMeldingVM(SAMTALEREFERAT_OPPMOTE, 1, KANAL_TELEFON)));
         traadVM = new TraadVM(meldinger);
 
         joarkJournalforingService.journalforTraad(traadVM, sak);
@@ -200,7 +191,7 @@ public class JoarkJournalforingServiceTest {
 
     @Test
     public void skalSetteRiktigeFelterIJournalforingNotatRequest() {
-        MeldingVM sporsmaal = new MeldingVM(new Melding("id", Meldingstype.SAMTALEREFERAT_OPPMOTE, DateTime.now()), 1);
+        MeldingVM sporsmaal = new MeldingVM(new Melding("id", SAMTALEREFERAT_OPPMOTE, DateTime.now()), 1);
         sporsmaal.melding.kanal = TELEFON.name();
         traadVM = new TraadVM(new ArrayList<>(Arrays.asList(sporsmaal)));
 
@@ -216,7 +207,7 @@ public class JoarkJournalforingServiceTest {
     }
 
     private ArrayList<MeldingVM> createMeldingListeMedEttSporsmaalOgEttSamtalereferat() {
-        return new ArrayList<>(asList(createMeldingVM(Meldingstype.SAMTALEREFERAT_OPPMOTE, 2, KANAL_TELEFON),
+        return new ArrayList<>(asList(createMeldingVM(SAMTALEREFERAT_OPPMOTE, 2, KANAL_TELEFON),
                 createMeldingVM(Meldingstype.SPORSMAL_SKRIFTLIG, 2, "")));
     }
 

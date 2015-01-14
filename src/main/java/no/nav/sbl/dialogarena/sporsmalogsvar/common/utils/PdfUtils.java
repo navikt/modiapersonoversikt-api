@@ -1,22 +1,16 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 
-import com.github.jknack.handlebars.Context;
-import com.github.jknack.handlebars.Helper;
-import com.github.jknack.handlebars.Options;
+import com.github.jknack.handlebars.*;
 import no.nav.modig.core.exception.ApplicationException;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.sbl.dialogarena.pdf.HandleBarHtmlGenerator;
 import no.nav.sbl.dialogarena.pdf.PDFFabrikk;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 
 public class PdfUtils {
 

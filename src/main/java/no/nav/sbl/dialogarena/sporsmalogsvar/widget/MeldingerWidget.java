@@ -5,13 +5,11 @@ import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.modig.modia.widget.panels.ErrorListing;
 import no.nav.modig.modia.widget.panels.GenericListing;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Melding;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.LoadableDetachableModel;
+import org.apache.wicket.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,7 +42,7 @@ public class MeldingerWidget extends FeedWidget<MeldingVM> {
                     return meldinger.isEmpty() ?
                             asList(new GenericListing(getString("info.ingenmeldinger"))) :
                             on(skillUtTraader(meldinger).values()).map(TIL_MELDINGVM).collect(NYESTE_OVERST);
-                } catch(Exception e) {
+                } catch (Exception e) {
                     log.warn("Feilet ved henting av henvendelser for fnr {}", fnr, e);
                     return asList(new ErrorListing(getString("info.feil")));
                 }

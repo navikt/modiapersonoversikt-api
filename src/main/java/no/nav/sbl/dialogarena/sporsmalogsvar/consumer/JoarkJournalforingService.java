@@ -2,8 +2,10 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.modig.lang.option.Optional;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.*;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
@@ -15,10 +17,10 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingInngaaende.lagJournalforingInngaaende;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingNotat.lagJournalforingNotat;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing.JournalforingUtgaaende.lagJournalforingUtgaaende;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Meldingstype.*;
 
 public class JoarkJournalforingService {
 
