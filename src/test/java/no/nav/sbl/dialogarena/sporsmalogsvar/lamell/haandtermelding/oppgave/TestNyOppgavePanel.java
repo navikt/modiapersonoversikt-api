@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgave;
+package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 
