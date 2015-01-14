@@ -134,21 +134,15 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void gittBareHenvendelseUrlParamVisesMeldingsLamell() {
-        String henvendelsesId = "id 1";
-        wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelsesId);
-
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(HENVENDELSEID, "id 1"))
                 .should().containComponent(withId(LAMELL_MELDINGER));
     }
 
     @Test
     public void medHenvendelseOgOppgaveUrlParamVisesSvarPanelOgMeldingLamell() {
         String henvendelsesId = "id 1";
-        String oppgaveId = "oppg1";
-        wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelsesId);
-        wicket.tester.getSession().setAttribute(OPPGAVEID, oppgaveId);
 
-        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr).param(HENVENDELSEID, henvendelsesId).param(OPPGAVEID, "oppg1"))
                 .should().containComponent(ofType(SvarPanel.class))
                 .should().containComponent(withId(LAMELL_MELDINGER));
 

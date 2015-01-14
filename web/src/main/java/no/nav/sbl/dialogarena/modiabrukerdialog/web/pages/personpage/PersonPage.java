@@ -49,6 +49,7 @@ import org.slf4j.Logger;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
 import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.HENVENDELSEID;
@@ -71,6 +72,8 @@ public class PersonPage extends BasePage {
 
     private static final Logger logger = getLogger(PersonPage.class);
 
+    private static final List<String> URL_TIL_SESSION_PARAMETERE = asList(HENVENDELSEID, OPPGAVEID);
+
     public static final String VALGT_OPPGAVE_HENVENDELSEID_ATTR = "valgt-oppgave-henvendelseid";
     public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
     public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
@@ -87,8 +90,8 @@ public class PersonPage extends BasePage {
     private RedirectModalWindow redirectPopup;
 
     public PersonPage(PageParameters pageParameters) {
-        fnr = pageParameters.get("fnr").toString(null);
-        boolean parametereBleFunnetOgFlyttet = flyttUrlParametereTilSession(pageParameters, HENVENDELSEID, OPPGAVEID);
+        fnr = pageParameters.get("fnr").toString();
+        boolean parametereBleFunnetOgFlyttet = flyttURLParametereTilSession(pageParameters);
         if (parametereBleFunnetOgFlyttet) {
             setResponsePage(this.getClass(), pageParameters);
             return;
@@ -118,6 +121,8 @@ public class PersonPage extends BasePage {
         if (isNotBlank((String) getSession().getAttribute(HENVENDELSEID))) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
         }
+
+        fjernURLParamatereFraSession();
     }
 
     private List<AbstractTab> createTabs() {
@@ -138,9 +143,9 @@ public class PersonPage extends BasePage {
         return tabs;
     }
 
-    private boolean flyttUrlParametereTilSession(PageParameters pageParameters, String... params) {
+    private boolean flyttURLParametereTilSession(PageParameters pageParameters) {
         boolean fantParamVerdi = false;
-        for (String param : params) {
+        for (String param : URL_TIL_SESSION_PARAMETERE) {
             StringValue paramVerdi = pageParameters.get(param);
             if (!paramVerdi.isEmpty()) {
                 getSession().setAttribute(param, paramVerdi.toString());
@@ -149,6 +154,12 @@ public class PersonPage extends BasePage {
             }
         }
         return fantParamVerdi;
+    }
+
+    private void fjernURLParamatereFraSession() {
+        for (String param : URL_TIL_SESSION_PARAMETERE) {
+            getSession().setAttribute(param, null);
+        }
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET)

@@ -55,7 +55,6 @@ public class DialogPanel extends Panel {
         String oppgaveId = (String) getSession().getAttribute(OPPGAVEID);
 
         if (isNotBlank(henvendelseId) && isNotBlank(oppgaveId)) {
-            getSession().setAttribute(OPPGAVEID, null);
             List<Henvendelse> traad = henvendelseUtsendingService.hentTraad(fnr, henvendelseId);
             if (!traad.isEmpty()) {
                 erstattReferatPanelMedSvarPanel(traad, optional(oppgaveId));
