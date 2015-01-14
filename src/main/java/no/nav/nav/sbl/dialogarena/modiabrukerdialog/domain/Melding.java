@@ -14,6 +14,9 @@ public class Melding implements Serializable {
     public Meldingstype meldingstype;
     public Status status;
 
+    public Melding() {
+    }
+
     public Melding(String id, Meldingstype meldingstype, DateTime opprettetDato) {
         this.id = id;
         this.meldingstype = meldingstype;
@@ -77,6 +80,11 @@ public class Melding implements Serializable {
 
     public Melding withJournalfortTemaNavn(String journalfortTemanavn) {
         this.journalfortTemanavn = journalfortTemanavn;
+        return this;
+    }
+
+    public Melding withJournalfortTema(String journalfortTema){
+        this.journalfortTema = journalfortTema;
         return this;
     }
 
