@@ -67,7 +67,6 @@ public class Innboks extends Lerret {
             if (meldingITraad.isSome()) {
                 innboksVM.setValgtMelding(meldingITraad.get());
             }
-            getSession().setAttribute(HENVENDELSEID, null);
         }
     }
 
