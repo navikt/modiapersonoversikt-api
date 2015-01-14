@@ -1,12 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.TIL_HENVENDELSE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.TIL_Melding;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -17,12 +18,12 @@ public class HenvendelseUtilsTest {
     @Test
     public void skalLageXMLHenvendelseObjektMedMeldingTilBruker() {
         XMLHenvendelseType svartype = XMLHenvendelseType.SVAR_SKRIFTLIG;
-        Henvendelse svar = createSvarEllerReferat();
+        Melding svar = createSvarEllerReferat();
 
         XMLHenvendelse xmlHenvendelse = HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker(svar, svartype);
 
         assertThat(xmlHenvendelse.getHenvendelseType(), is(svartype.name()));
-        assertThat(xmlHenvendelse.getFnr(), is(svar.fnr));
+        assertThat(xmlHenvendelse.getFnr(), is(svar.fnrBruker));
         assertNotNull(xmlHenvendelse.getOpprettetDato());
         assertNotNull(xmlHenvendelse.getAvsluttetDato());
 
@@ -40,7 +41,7 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingFraBruker();
         XMLMeldingFraBruker xmlMeldingFraBruker = (XMLMeldingFraBruker) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
-        Henvendelse sporsmal = TIL_HENVENDELSE.transform(xmlHenvendelse);
+        Melding sporsmal = TIL_Melding.transform(xmlHenvendelse);
 
         assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
@@ -54,10 +55,10 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.REFERAT_OPPMOTE);
         XMLMeldingTilBruker xmlMeldingTilBruker = (XMLMeldingTilBruker) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
-        Henvendelse referat = TIL_HENVENDELSE.transform(xmlHenvendelse);
+        Melding referat = TIL_Melding.transform(xmlHenvendelse);
 
-        assertThat(referat.fnr, is(xmlHenvendelse.getFnr()));
-        assertThat(referat.type, is(Henvendelse.Henvendelsetype.REFERAT_OPPMOTE));
+        assertThat(referat.fnrBruker, is(xmlHenvendelse.getFnr()));
+        assertThat(referat.meldingstype, is(SAMTALEREFERAT_OPPMOTE));
         assertThat(referat.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
         assertThat(referat.traadId, is(xmlHenvendelse.getBehandlingskjedeId()));
         assertThat(referat.temagruppe, is(xmlMeldingTilBruker.getTemagruppe()));
@@ -71,7 +72,7 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingFraBruker();
         xmlHenvendelse.setMetadataListe(null);
 
-        Henvendelse sporsmal = TIL_HENVENDELSE.transform(xmlHenvendelse);
+        Melding sporsmal = TIL_Melding.transform(xmlHenvendelse);
 
         assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
@@ -84,11 +85,11 @@ public class HenvendelseUtilsTest {
     public void kasterExceptionVedUkjentType() {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedUkjentType();
 
-        TIL_HENVENDELSE.transform(xmlHenvendelse);
+        TIL_Melding.transform(xmlHenvendelse);
     }
 
-    private Henvendelse createSvarEllerReferat() {
-        return new Henvendelse()
+    private Melding createSvarEllerReferat() {
+        return new Melding()
                 .withFnr("fnr")
                 .withTraadId("sporsmalid")
                 .withTemagruppe("temagruppe")

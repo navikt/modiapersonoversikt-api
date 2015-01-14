@@ -4,9 +4,8 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM.Modus;
@@ -39,9 +38,10 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON_OG_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class ReferatPanel extends GenericPanel<HenvendelseVM> {
@@ -234,22 +234,22 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private void sendReferat() {
-        Henvendelse referat = felles()
+        Melding referat = felles()
                 .withKanal(getModelObject().kanal.name())
                 .withType(referatType(getModelObject().kanal));
         henvendelseUtsendingService.sendHenvendelse(referat);
     }
 
     private void sendSporsmal() {
-        Henvendelse sporsmal = felles()
+        Melding sporsmal = felles()
                 .withKanal(Kanal.TEKST.name())
                 .withType(SPORSMAL_MODIA_UTGAAENDE)
                 .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
         henvendelseUtsendingService.sendHenvendelse(sporsmal);
     }
 
-    private Henvendelse felles() {
-        return new Henvendelse()
+    private Melding felles() {
+        return new Melding()
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
                 .withTemagruppe(getModelObject().temagruppe.name())
@@ -257,8 +257,8 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
                 .withEksternAktor(getSubjectHandler().getUid());
     }
 
-    private Henvendelsetype referatType(Kanal kanal) {
-        return kanal == OPPMOTE ? REFERAT_OPPMOTE : REFERAT_TELEFON;
+    private Meldingstype referatType(Kanal kanal) {
+        return kanal == OPPMOTE ? Meldingstype.SAMTALEREFERAT_OPPMOTE : Meldingstype.SAMTALEREFERAT_TELEFON;
     }
 
 }

@@ -7,9 +7,9 @@ import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
 import no.nav.personsok.PersonsokPanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -37,7 +37,10 @@ import java.util.ArrayList;
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.reflect.Reflect.on;
 import static no.nav.modig.modia.constants.ModiaConstants.HENT_PERSON_BEGRUNNET;
-import static no.nav.modig.modia.events.InternalEvents.*;
+import static no.nav.modig.modia.events.InternalEvents.FODSELSNUMMER_FUNNET_MED_BEGRUNNElSE;
+import static no.nav.modig.modia.events.InternalEvents.GOTO_HENT_PERSONPAGE;
+import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
+import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.modig.wicket.test.FluentWicketTester.with;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
@@ -53,7 +56,10 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svar
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
@@ -74,7 +80,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(lagHenvendelse()));
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(lagMelding()));
         when(gsakKodeverk.hentTemaListe()).thenReturn(new ArrayList<>(asList(
                 new GsakKodeTema.Tema("kode", "tekst",
                         new ArrayList<>(asList(new GsakKodeTema.OppgaveType("kode", "tekst", 1))),
@@ -158,7 +164,7 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void tilordnerIkkeOppgaveIGsakDersomSporsmaaletTidligereErBesvartVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
-        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(lagHenvendelse(), lagHenvendelse()));
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(lagMelding(), lagMelding()));
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
@@ -273,8 +279,8 @@ public class PersonPageTest extends WicketPageTest {
         };
     }
 
-    private Henvendelse lagHenvendelse() {
-        return new Henvendelse().withId("id").withOpprettetDato(now()).withTemagruppe(ARBD.name()).withOppgaveId("id");
+    private Melding lagMelding() {
+        return new Melding().withId("id").withOpprettetDato(now()).withTemagruppe(ARBD.name()).withOppgaveId("id");
     }
 
 }

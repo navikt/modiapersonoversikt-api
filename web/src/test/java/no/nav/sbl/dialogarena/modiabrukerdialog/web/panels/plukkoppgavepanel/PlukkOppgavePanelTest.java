@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -26,7 +26,9 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_HENVENDELSEID_ATTR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel.TEMAGRUPPE_ATTR;
 import static org.apache.wicket.authorization.IAuthorizationStrategy.ALLOW_ALL;
 import static org.hamcrest.CoreMatchers.is;
@@ -35,7 +37,10 @@ import static org.hamcrest.Matchers.hasItem;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -52,7 +57,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     public void setUp() {
         wicket.tester.getApplication().getSecuritySettings().setAuthorizationStrategy(ALLOW_ALL);
 
-        Henvendelse sporsmal = new Henvendelse().withId("sporsmal").withOpprettetDato(now());
+        Melding sporsmal = new Melding().withId("sporsmal").withOpprettetDato(now());
         sporsmal.temagruppe = Temagruppe.ARBD.toString();
         when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(sporsmal));
     }

@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
@@ -21,13 +21,19 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.REFERAT_TELEFON;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.SPORSMAL_MODIA_UTGAAENDE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -45,7 +51,7 @@ public class ReferatPanelTest extends WicketPageTest {
     public static final String FRITEKST = "fritekst";
 
     @Captor
-    private ArgumentCaptor<Henvendelse> henvendelseArgumentCaptor;
+    private ArgumentCaptor<Melding> meldingArgumentCaptor;
 
     @Inject
     protected HenvendelseUtsendingService henvendelseUtsendingService;
@@ -93,17 +99,17 @@ public class ReferatPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendHenvendelse(henvendelseArgumentCaptor.capture());
+        verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture());
 
-        Henvendelse henvendelse = henvendelseArgumentCaptor.getValue();
-        assertThat(henvendelse.kanal, is(TELEFON.name()));
-        assertThat(henvendelse.type, is(REFERAT_TELEFON));
-        assertThat(henvendelse.fnr, is(FNR));
-        assertThat(henvendelse.navIdent, is(getSubjectHandler().getUid()));
-        assertThat(henvendelse.temagruppe, is(ARBD.name()));
-        assertThat(henvendelse.fritekst, is(FRITEKST));
-        assertThat(henvendelse.eksternAktor, is(getSubjectHandler().getUid()));
-        assertThat(henvendelse.tilknyttetEnhet, is(nullValue()));
+        Melding melding = meldingArgumentCaptor.getValue();
+        assertThat(melding.kanal, is(TELEFON.name()));
+        assertThat(melding.meldingstype, is(SAMTALEREFERAT_TELEFON));
+        assertThat(melding.fnrBruker, is(FNR));
+        assertThat(melding.navIdent, is(getSubjectHandler().getUid()));
+        assertThat(melding.temagruppe, is(ARBD.name()));
+        assertThat(melding.fritekst, is(FRITEKST));
+        assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
+        assertThat(melding.tilknyttetEnhet, is(nullValue()));
     }
 
     @Test
@@ -121,17 +127,17 @@ public class ReferatPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendHenvendelse(henvendelseArgumentCaptor.capture());
+        verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture());
 
-        Henvendelse henvendelse = henvendelseArgumentCaptor.getValue();
-        assertThat(henvendelse.kanal, is(TEKST.name()));
-        assertThat(henvendelse.type, is(SPORSMAL_MODIA_UTGAAENDE));
-        assertThat(henvendelse.tilknyttetEnhet, is(VALGT_ENHET));
-        assertThat(henvendelse.fnr, is(FNR));
-        assertThat(henvendelse.navIdent, is(getSubjectHandler().getUid()));
-        assertThat(henvendelse.temagruppe, is(ARBD.name()));
-        assertThat(henvendelse.fritekst, is(FRITEKST));
-        assertThat(henvendelse.eksternAktor, is(getSubjectHandler().getUid()));
+        Melding melding = meldingArgumentCaptor.getValue();
+        assertThat(melding.kanal, is(TEKST.name()));
+        assertThat(melding.meldingstype, is(SPORSMAL_MODIA_UTGAAENDE));
+        assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
+        assertThat(melding.fnrBruker, is(FNR));
+        assertThat(melding.navIdent, is(getSubjectHandler().getUid()));
+        assertThat(melding.temagruppe, is(ARBD.name()));
+        assertThat(melding.fritekst, is(FRITEKST));
+        assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
     }
 
     @Test

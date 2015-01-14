@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.OppgavetilordningFeilet;
@@ -55,20 +55,20 @@ public class DialogPanel extends Panel {
         String oppgaveId = (String) getSession().getAttribute(OPPGAVEID);
 
         if (isNotBlank(henvendelseId) && isNotBlank(oppgaveId)) {
-            List<Henvendelse> traad = henvendelseUtsendingService.hentTraad(fnr, henvendelseId);
+            List<Melding> traad = henvendelseUtsendingService.hentTraad(fnr, henvendelseId);
             if (!traad.isEmpty()) {
                 erstattReferatPanelMedSvarPanel(traad, optional(oppgaveId));
             }
         }
     }
 
-    private void erstattReferatPanelMedSvarPanel(List<Henvendelse> traad, Optional<String> oppgaveId) {
+    private void erstattReferatPanelMedSvarPanel(List<Melding> traad, Optional<String> oppgaveId) {
         aktivtPanel = aktivtPanel.replaceWith(new SvarPanel(AKTIVT_PANEL_ID, fnr, traad, oppgaveId));
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void visSvarPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
-        List<Henvendelse> traad = henvendelseUtsendingService.hentTraad(fnr, traadId);
+        List<Melding> traad = henvendelseUtsendingService.hentTraad(fnr, traadId);
         Optional<String> oppgaveId = none();
         if (traad.size() <= 1) {
             try {

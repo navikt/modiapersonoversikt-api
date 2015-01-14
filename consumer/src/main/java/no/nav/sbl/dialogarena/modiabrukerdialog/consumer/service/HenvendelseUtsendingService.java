@@ -5,8 +5,8 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendel
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.SendUtHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.senduthenvendelse.meldinger.WSSendUtHenvendelseRequest;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -22,11 +22,15 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.TransformerUtils.castTo;
-import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.*;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceAttribute;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
+import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.subjectAttribute;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.ELDSTE_FORST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.TIL_HENVENDELSE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding.ELDSTE_FORST;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.TIL_Melding;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.getXMLHenvendelseTypeBasertPaaMeldingstype;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -44,29 +48,29 @@ public class HenvendelseUtsendingService {
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
-    public void sendHenvendelse(Henvendelse henvendelse) {
+    public void sendHenvendelse(Melding melding) {
         try {
-            sendHenvendelse(henvendelse, Optional.<String>none());
+            sendHenvendelse(melding, Optional.<String>none());
         } catch (OppgaveErFerdigstilt oppgaveErFerdigstilt) {
             throw new RuntimeException(oppgaveErFerdigstilt);
         }
     }
 
-    public void sendHenvendelse(Henvendelse henvendelse, Optional<String> oppgaveId) throws OppgaveErFerdigstilt {
+    public void sendHenvendelse(Melding melding, Optional<String> oppgaveId) throws OppgaveErFerdigstilt {
         if (oppgaveId.isSome() && oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveId.get())) {
             throw new OppgaveErFerdigstilt();
         }
 
-        XMLHenvendelseType type = XMLHenvendelseType.fromValue(henvendelse.type.name());
-        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedMeldingTilBruker(henvendelse, type);
+        XMLHenvendelseType type = getXMLHenvendelseTypeBasertPaaMeldingstype(melding.meldingstype);
+        XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedMeldingTilBruker(melding, type);
         sendUtHenvendelsePortType.sendUtHenvendelse(new WSSendUtHenvendelseRequest()
                 .withType(type.name())
-                .withFodselsnummer(henvendelse.fnr)
+                .withFodselsnummer(melding.fnrBruker)
                 .withAny(xmlHenvendelse));
     }
 
-    public List<Henvendelse> hentTraad(String fnr, String traadId) {
-        List<Henvendelse> henvendelser =
+    public List<Melding> hentTraad(String fnr, String traadId) {
+        List<Melding> meldinger =
                 on(henvendelsePortType.hentHenvendelseListe(new WSHentHenvendelseListeRequest()
                         .withTyper(
                                 SPORSMAL_SKRIFTLIG.name(),
@@ -81,11 +85,11 @@ public class HenvendelseUtsendingService {
                         .getAny())
                         .map(castTo(XMLHenvendelse.class))
                         .filter(where(BEHANDLINGSKJEDE_ID, equalTo(traadId)))
-                        .map(TIL_HENVENDELSE)
+                        .map(TIL_Melding)
                         .map(journalfortTemaTilgang)
                         .collect(ELDSTE_FORST);
 
-        Henvendelse sporsmal = henvendelser.get(0);
+        Melding sporsmal = meldinger.get(0);
         if (sporsmal.kontorsperretEnhet != null) {
             pep.assertAccess(forRequest(
                     actionId("kontorsperre"),
@@ -94,7 +98,7 @@ public class HenvendelseUtsendingService {
                     resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:ansvarlig-enhet", defaultString(sporsmal.kontorsperretEnhet))));
         }
 
-        return henvendelser;
+        return meldinger;
     }
 
     private static final Transformer<XMLHenvendelse, String> BEHANDLINGSKJEDE_ID = new Transformer<XMLHenvendelse, String>() {
@@ -104,19 +108,19 @@ public class HenvendelseUtsendingService {
         }
     };
 
-    private final Transformer<Henvendelse, Henvendelse> journalfortTemaTilgang = new Transformer<Henvendelse, Henvendelse>() {
+    private final Transformer<Melding, Melding> journalfortTemaTilgang = new Transformer<Melding, Melding>() {
         @Override
-        public Henvendelse transform(Henvendelse henvendelse) {
+        public Melding transform(Melding melding) {
             PolicyRequest temagruppePolicyRequest = forRequest(
                     actionId("temagruppe"),
                     resourceId(""),
-                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(henvendelse.journalfortTema))
+                    resourceAttribute("urn:nav:ikt:tilgangskontroll:xacml:resource:tema", defaultString(melding.journalfortTema))
             );
-            if (isNotBlank(henvendelse.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
-                henvendelse.fritekst = "";
+            if (isNotBlank(melding.journalfortTema) && !pep.hasAccess(temagruppePolicyRequest)) {
+                melding.fritekst = "";
             }
 
-            return henvendelse;
+            return melding;
         }
     };
 

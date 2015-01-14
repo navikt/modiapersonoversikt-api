@@ -3,8 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -32,9 +31,9 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.SVAR_OPPMOTE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.SVAR_SKRIFTLIG;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype.SVAR_TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SVAR_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SVAR_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SVAR_TELEFON;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -55,7 +54,7 @@ public class SvarPanelTest extends WicketPageTest {
     public static final String TEMAGRUPPE = Temagruppe.FMLI.name();
     public static final String FRITEKST = "fritekst";
     @Captor
-    private ArgumentCaptor<Henvendelse> henvendelseArgumentCaptor;
+    private ArgumentCaptor<Melding> meldingArgumentCaptor;
 
     @Inject
     protected HenvendelseUtsendingService henvendelseUtsendingService;
@@ -94,15 +93,15 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendHenvendelse(henvendelseArgumentCaptor.capture(), any(Optional.class));
-        Henvendelse henvendelse = henvendelseArgumentCaptor.getValue();
-        assertThat(henvendelse.fnr, is(FNR));
-        assertThat(henvendelse.navIdent, is(getSubjectHandler().getUid()));
-        assertThat(henvendelse.traadId, is(SPORSMAL_ID));
-        assertThat(henvendelse.temagruppe, is(TEMAGRUPPE));
-        assertThat(henvendelse.kanal, is(Kanal.TEKST.name()));
-        assertThat(henvendelse.fritekst, is(FRITEKST));
-        assertThat(henvendelse.eksternAktor, is(getSubjectHandler().getUid()));
+        verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class));
+        Melding melding = meldingArgumentCaptor.getValue();
+        assertThat(melding.fnrBruker, is(FNR));
+        assertThat(melding.navIdent, is(getSubjectHandler().getUid()));
+        assertThat(melding.traadId, is(SPORSMAL_ID));
+        assertThat(melding.temagruppe, is(TEMAGRUPPE));
+        assertThat(melding.kanal, is(Kanal.TEKST.name()));
+        assertThat(melding.fritekst, is(FRITEKST));
+        assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
     }
 
     @Test
@@ -114,9 +113,9 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendHenvendelse(henvendelseArgumentCaptor.capture(), any(Optional.class));
-        Henvendelse henvendelse = henvendelseArgumentCaptor.getValue();
-        assertThat(henvendelse.type, is(SVAR_SKRIFTLIG));
+        verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class));
+        Melding melding = meldingArgumentCaptor.getValue();
+        assertThat(melding.meldingstype, is(SVAR_SKRIFTLIG));
     }
 
     @Test
@@ -128,9 +127,9 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 1)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendHenvendelse(henvendelseArgumentCaptor.capture(), any(Optional.class));
-        Henvendelse henvendelse = henvendelseArgumentCaptor.getValue();
-        assertThat(henvendelse.type, is(SVAR_TELEFON));
+        verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class));
+        Melding melding = meldingArgumentCaptor.getValue();
+        assertThat(melding.meldingstype, is(SVAR_TELEFON));
     }
 
     @Test
@@ -142,9 +141,9 @@ public class SvarPanelTest extends WicketPageTest {
                 .select("kanal", 2)
                 .submitWithAjaxButton(withId("send"));
 
-        verify(henvendelseUtsendingService).sendHenvendelse(henvendelseArgumentCaptor.capture(), any(Optional.class));
-        Henvendelse henvendelse = henvendelseArgumentCaptor.getValue();
-        assertThat(henvendelse.type, is(SVAR_OPPMOTE));
+        verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class));
+        Melding melding = meldingArgumentCaptor.getValue();
+        assertThat(melding.meldingstype, is(SVAR_OPPMOTE));
     }
 
     @Test
@@ -229,14 +228,14 @@ public class SvarPanelTest extends WicketPageTest {
         assertThat(labeltekst, is(equalTo(leggTilbakePropertyTekst)));
     }
 
-    private Henvendelse lagSporsmal() {
-        Henvendelse sporsmal = new Henvendelse().withId(SPORSMAL_ID).withOpprettetDato(now());
+    private Melding lagSporsmal() {
+        Melding sporsmal = new Melding().withId(SPORSMAL_ID).withOpprettetDato(now());
         sporsmal.temagruppe = TEMAGRUPPE;
         return sporsmal;
     }
 
-    private Henvendelse lagSvar() {
-        return new Henvendelse().withOpprettetDato(now()).withType(SVAR_SKRIFTLIG).withFritekst("fritekst").withTemagruppe(TEMAGRUPPE);
+    private Melding lagSvar() {
+        return new Melding().withOpprettetDato(now()).withType(SVAR_SKRIFTLIG).withFritekst("fritekst").withTemagruppe(TEMAGRUPPE);
     }
 
 }

@@ -5,8 +5,7 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.*;
@@ -41,8 +40,12 @@ import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.*;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Henvendelse.Henvendelsetype;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SVAR_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SVAR_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SVAR_TELEFON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
 
@@ -57,15 +60,15 @@ public class SvarPanel extends Panel {
 
     private final String fnr;
     private final Optional<String> oppgaveId;
-    private final Henvendelse sporsmal;
-    private final List<Henvendelse> svar;
+    private final Melding sporsmal;
+    private final List<Melding> svar;
     private final WebMarkupContainer traadContainer, svarContainer;
     private final LeggTilbakePanel leggTilbakePanel;
     private final KvitteringsPanel kvittering;
     private final WebMarkupContainer visTraadContainer;
     private final AjaxLink<Void> leggTilbakeKnapp;
 
-    public SvarPanel(String id, String fnr, final List<Henvendelse> traad, Optional<String> oppgaveId) {
+    public SvarPanel(String id, String fnr, final List<Melding> traad, Optional<String> oppgaveId) {
         super(id);
         this.fnr = fnr;
         this.oppgaveId = oppgaveId;
@@ -95,12 +98,12 @@ public class SvarPanel extends Panel {
         traadContainer.setVisibilityAllowed(svar.isEmpty());
         traadContainer.add(
                 new TidligereMeldingPanel("sporsmal", "sporsmal", sporsmal.temagruppe, sporsmal.opprettetDato, sporsmal.fritekst, !svar.isEmpty()),
-                new ListView<Henvendelse>("svarliste", svar) {
+                new ListView<Melding>("svarliste", svar) {
                     @Override
-                    protected void populateItem(ListItem<Henvendelse> item) {
-                        Henvendelse henvendelse = item.getModelObject();
-                        String type = henvendelse.type.name().substring(0, henvendelse.type.name().lastIndexOf("_")).toLowerCase();
-                        item.add(new TidligereMeldingPanel("svar", type, henvendelse.temagruppe, henvendelse.opprettetDato, henvendelse.fritekst, henvendelse.navIdent, true));
+                    protected void populateItem(ListItem<Melding> item) {
+                        Melding melding = item.getModelObject();
+                        String type = melding.meldingstype.name().substring(0, melding.meldingstype.name().lastIndexOf("_")).toLowerCase();
+                        item.add(new TidligereMeldingPanel("svar", type, melding.temagruppe, melding.opprettetDato, melding.fritekst, melding.navIdent, true));
                     }
                 }
         );
@@ -246,7 +249,7 @@ public class SvarPanel extends Panel {
         }
 
         private void sendHenvendelse(HenvendelseVM henvendelseVM) throws OppgaveErFerdigstilt {
-            Henvendelse henvendelse = new Henvendelse()
+            Melding melding = new Melding()
                     .withFnr(fnr)
                     .withNavIdent(getSubjectHandler().getUid())
                     .withTraadId(sporsmal.id)
@@ -257,20 +260,20 @@ public class SvarPanel extends Panel {
                     .withKontorsperretEnhet(sporsmal.kontorsperretEnhet)
                     .withEksternAktor(getSubjectHandler().getUid());
 
-            henvendelseUtsendingService.sendHenvendelse(henvendelse, oppgaveId);
+            henvendelseUtsendingService.sendHenvendelse(melding, oppgaveId);
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);
         }
 
-        private Henvendelsetype svarType(Kanal kanal) {
-            Henvendelsetype henvendelsetype = null;
+        private Meldingstype svarType(Kanal kanal) {
+            Meldingstype meldingstype = null;
             if (kanal == TEKST) {
-                henvendelsetype = Henvendelsetype.SVAR_SKRIFTLIG;
+                meldingstype = SVAR_SKRIFTLIG;
             } else if (kanal == OPPMOTE) {
-                henvendelsetype = Henvendelsetype.SVAR_OPPMOTE;
+                meldingstype = SVAR_OPPMOTE;
             } else if (kanal == TELEFON) {
-                henvendelsetype = Henvendelsetype.SVAR_TELEFON;
+                meldingstype = SVAR_TELEFON;
             }
-            return henvendelsetype;
+            return meldingstype;
         }
 
         @Override
