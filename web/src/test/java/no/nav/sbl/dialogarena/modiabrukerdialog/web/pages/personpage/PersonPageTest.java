@@ -52,8 +52,6 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svar
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
@@ -139,9 +137,8 @@ public class PersonPageTest extends WicketPageTest {
         String henvendelsesId = "id 1";
         wicket.tester.getSession().setAttribute(HENVENDELSEID, henvendelsesId);
 
-        PersonPage page = wicket.tester.startPage(PersonPage.class);
-
-        assertThat(page.startLamell, is(LAMELL_MELDINGER));
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
+                .should().containComponent(withId(LAMELL_MELDINGER));
     }
 
     @Test
@@ -152,9 +149,9 @@ public class PersonPageTest extends WicketPageTest {
         wicket.tester.getSession().setAttribute(OPPGAVEID, oppgaveId);
 
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
-                .should().containComponent(ofType(SvarPanel.class));
+                .should().containComponent(ofType(SvarPanel.class))
+                .should().containComponent(withId(LAMELL_MELDINGER));
 
-        assertThat(((PersonPage) wicket.tester.getLastRenderedPage()).startLamell, is(LAMELL_MELDINGER));
         verify(henvendelseUtsendingService).hentTraad(anyString(), eq(henvendelsesId));
     }
 

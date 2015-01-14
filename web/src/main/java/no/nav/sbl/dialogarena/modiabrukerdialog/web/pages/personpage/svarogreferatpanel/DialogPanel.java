@@ -30,9 +30,9 @@ public class DialogPanel extends Panel {
     private static final String AKTIVT_PANEL_ID = "aktivtPanel";
 
     @Inject
-    protected HenvendelseUtsendingService henvendelseUtsendingService;
+    private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
-    protected OppgaveBehandlingService oppgaveBehandlingService;
+    private OppgaveBehandlingService oppgaveBehandlingService;
 
     private Component aktivtPanel;
     private OppgavetilordningFeilet oppgavetilordningFeiletModal;

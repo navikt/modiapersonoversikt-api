@@ -54,7 +54,6 @@ import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.HENVENDELSEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.OPPGAVEID;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_OVERSIKT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.RedirectModalWindow.getJavascriptSaveButtonFocus;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.SjekkForlateSideAnswer.AnswerType.DISCARD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
@@ -70,27 +69,22 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 public class PersonPage extends BasePage {
 
+    private static final Logger logger = getLogger(PersonPage.class);
+
     public static final String VALGT_OPPGAVE_HENVENDELSEID_ATTR = "valgt-oppgave-henvendelseid";
     public static final String VALGT_OPPGAVE_ID_ATTR = "valgt-oppgave-id";
     public static final String VALGT_OPPGAVE_FNR_ATTR = "valgt-oppgave-fnr";
-    public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
+    public static final String ERROR = "error";
+    public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
     public static final ConditionalCssResource INTERN_IE = new ConditionalCssResource(new CssResourceReference(PersonPage.class, "personpage_ie.css"), "screen", "lt IE 10");
     public static final PackageResourceReference SVAR_OG_REFERATPANEL_LESS = new PackageResourceReference(HenvendelseVM.class, "SvarOgReferatPanel.less");
     public static final JavaScriptResourceReference SELECTMENU_JS = new JavaScriptResourceReference(HenvendelseVM.class, "jquery-ui-selectmenu.min.js");
-    public static final String SIKKERHETSTILTAK = "sikkerhetstiltak";
-    public static final String ERROR = "error";
-
-    private static final Logger logger = getLogger(PersonPage.class);
+    public static final ConditionalJavascriptResource RESPOND_JS = new ConditionalJavascriptResource(new PackageResourceReference(PersonPage.class, "respond.min.js"), "lt IE 9");
 
     private final String fnr;
 
-    private SjekkForlateSideAnswer answer;
-    private RedirectModalWindow redirectPopup;
     private LamellContainer lamellContainer;
-    private HentPersonPanel hentPersonPanel;
-    private Button searchToggleButton;
-    private NullstillLink nullstillLink;
-    protected String startLamell = LAMELL_OVERSIKT;
+    private RedirectModalWindow redirectPopup;
 
     public PersonPage(PageParameters pageParameters) {
         fnr = pageParameters.get("fnr").toString(null);
@@ -100,12 +94,15 @@ public class PersonPage extends BasePage {
             return;
         }
 
-        instansierFelter();
+        redirectPopup = createRedirectModalWindow("redirectModal");
+        lamellContainer = new LamellContainer("lameller", fnr);
+
         SaksbehandlerInnstillingerPanel saksbehandlerInnstillingerPanel = new SaksbehandlerInnstillingerPanel("saksbehandlerInnstillingerPanel");
+
         add(
-                hentPersonPanel,
-                searchToggleButton,
-                nullstillLink,
+                new HentPersonPanel("searchPanel"),
+                new Button("toggle-sok"),
+                new NullstillLink("nullstill"),
                 lamellContainer,
                 redirectPopup,
                 saksbehandlerInnstillingerPanel,
@@ -118,25 +115,9 @@ public class PersonPage extends BasePage {
                 new TimeoutBoks("timeoutBoks", fnr)
         );
 
-        settOppStartLamell();
-    }
-
-    private void instansierFelter() {
-        answer = new SjekkForlateSideAnswer();
-        redirectPopup = createRedirectModalWindow("redirectModal");
-        lamellContainer = new LamellContainer("lameller", fnr) {
-            @Override
-            protected void onInitialize() {
-                super.onInitialize();
-                String lamell = PersonPage.this.startLamell;
-                if (!lamell.equals(LAMELL_OVERSIKT)) {
-                    goToLamell(lamell);
-                }
-            }
-        };
-        hentPersonPanel = (HentPersonPanel) new HentPersonPanel("searchPanel").setOutputMarkupPlaceholderTag(true);
-        searchToggleButton = (Button) new Button("toggle-sok").setOutputMarkupPlaceholderTag(true);
-        nullstillLink = (NullstillLink) new NullstillLink("nullstill").setOutputMarkupPlaceholderTag(true);
+        if (isNotBlank((String) getSession().getAttribute(HENVENDELSEID))) {
+            lamellContainer.setStartLamell(LAMELL_MELDINGER);
+        }
     }
 
     private List<AbstractTab> createTabs() {
@@ -168,12 +149,6 @@ public class PersonPage extends BasePage {
             }
         }
         return fantParamVerdi;
-    }
-
-    private void settOppStartLamell() {
-        if (isNotBlank((String) getSession().getAttribute(HENVENDELSEID))) {
-            startLamell = LAMELL_MELDINGER;
-        }
     }
 
     @RunOnEvents(FODSELSNUMMER_FUNNET)
@@ -265,12 +240,28 @@ public class PersonPage extends BasePage {
     }
 
     private RedirectModalWindow createRedirectModalWindow(String id) {
-        RedirectModalWindow modiaModalWindow = new RedirectModalWindow(id);
+        final SjekkForlateSideAnswer answer = new SjekkForlateSideAnswer();
+
+        final RedirectModalWindow modiaModalWindow = new RedirectModalWindow(id);
         modiaModalWindow.setInitialHeight(280);
         modiaModalWindow.setInitialWidth(600);
-        modiaModalWindow.setContent(new SjekkForlateSide(modiaModalWindow.getContentId(), modiaModalWindow, this.answer));
-        modiaModalWindow.setWindowClosedCallback(createWindowClosedCallback(modiaModalWindow));
-        modiaModalWindow.setCloseButtonCallback(createCloseButtonCallback());
+        modiaModalWindow.setContent(new SjekkForlateSide(modiaModalWindow.getContentId(), modiaModalWindow, answer));
+        modiaModalWindow.setWindowClosedCallback(new WindowClosedCallback() {
+            @Override
+            public void onClose(AjaxRequestTarget ajaxRequestTarget) {
+                if (answer.is(DISCARD)) {
+                    modiaModalWindow.redirect();
+                }
+                ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
+            }
+        });
+        modiaModalWindow.setCloseButtonCallback(new CloseButtonCallback() {
+            @Override
+            public boolean onCloseButtonClicked(AjaxRequestTarget ajaxRequestTarget) {
+                ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
+                return true;
+            }
+        });
         return modiaModalWindow;
     }
 
@@ -281,28 +272,6 @@ public class PersonPage extends BasePage {
         } else {
             redirectPopup.redirect();
         }
-    }
-
-    private WindowClosedCallback createWindowClosedCallback(final RedirectModalWindow modalWindow) {
-        return new WindowClosedCallback() {
-            @Override
-            public void onClose(AjaxRequestTarget ajaxRequestTarget) {
-                if (answer.is(DISCARD)) {
-                    modalWindow.redirect();
-                }
-                ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
-            }
-        };
-    }
-
-    private CloseButtonCallback createCloseButtonCallback() {
-        return new CloseButtonCallback() {
-            @Override
-            public boolean onCloseButtonClicked(AjaxRequestTarget ajaxRequestTarget) {
-                ajaxRequestTarget.appendJavaScript(getJavascriptSaveButtonFocus());
-                return true;
-            }
-        };
     }
 
     private class NullstillLink extends AjaxLink<Void> {
