@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import org.apache.wicket.injection.Injector;
 
 import javax.inject.Inject;
 import java.io.Serializable;
@@ -18,9 +17,9 @@ public class JournalfortSakVM implements Serializable {
     @Inject
     private GsakService gsakService;
 
-    public JournalfortSakVM(InnboksVM innboksVM) {
+    public JournalfortSakVM(InnboksVM innboksVM, GsakService gsakService) {
         this.innboksVM = innboksVM;
-        Injector.get().inject(this);
+        this.gsakService = gsakService;
     }
 
     public final void oppdater() {

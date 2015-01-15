@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
@@ -21,13 +22,16 @@ public class JournalforingsPanelEnkeltSak extends Panel {
     @Inject
     private JoarkJournalforingService joarkJournalforingService;
 
+    @Inject
+    private GsakService gsakService;
+
     private JournalfortSakVM journalfortSakVM;
 
     public JournalforingsPanelEnkeltSak(String id, final InnboksVM innboksVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        journalfortSakVM = new JournalfortSakVM(innboksVM);
+        journalfortSakVM = new JournalfortSakVM(innboksVM, gsakService);
         setDefaultModel(new CompoundPropertyModel<Object>(new PropertyModel<Sak>(journalfortSakVM, "sak")));
 
         add(

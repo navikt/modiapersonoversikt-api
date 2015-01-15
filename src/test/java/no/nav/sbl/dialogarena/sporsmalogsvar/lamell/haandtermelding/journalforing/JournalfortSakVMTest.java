@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.*;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.joda.time.DateTime;
@@ -12,6 +13,8 @@ import org.mockito.Mock;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import javax.inject.Inject;
 
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.SAKS_ID_3;
@@ -30,6 +33,9 @@ public class JournalfortSakVMTest {
     @Mock
     private InnboksVM innboksVM;
 
+    @Inject
+    private GsakService gsakService;
+
     @Before
     public void setUp() {
         TraadVM traadVM = mock(TraadVM.class);
@@ -41,7 +47,7 @@ public class JournalfortSakVMTest {
 
     @Test
     public void sjekkAtGetSakMetodenReturnererKorrektSakBasertPaJournalforingsId() {
-        JournalfortSakVM journalfortSakVM = new JournalfortSakVM(innboksVM);
+        JournalfortSakVM journalfortSakVM = new JournalfortSakVM(innboksVM, gsakService);
         journalfortSakVM.oppdater();
 
         assertThat(journalfortSakVM.getSak().saksId, is(SAKS_ID_3));
