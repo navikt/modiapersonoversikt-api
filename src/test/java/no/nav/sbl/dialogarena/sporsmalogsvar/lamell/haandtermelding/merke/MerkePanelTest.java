@@ -40,7 +40,7 @@ public class MerkePanelTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-        InnboksVM innboksVM = new InnboksVM(FNR);
+        InnboksVM innboksVM = new InnboksVM(FNR, henvendelseBehandlingService);
         merkePanel = new MerkePanel("panel", innboksVM);
         merkePanel.setVisibilityAllowed(true);
     }

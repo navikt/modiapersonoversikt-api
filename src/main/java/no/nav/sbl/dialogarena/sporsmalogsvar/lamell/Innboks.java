@@ -5,6 +5,7 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.event.IEvent;
@@ -16,6 +17,8 @@ import org.apache.wicket.model.StringResourceModel;
 import org.apache.wicket.request.resource.CssResourceReference;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
+import javax.inject.Inject;
+
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
@@ -25,6 +28,9 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParamete
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class Innboks extends Lerret {
+
+    @Inject
+    HenvendelseBehandlingService henvendelseBehandlingService;
 
     public static final JavaScriptResourceReference MELDINGER_JS = new JavaScriptResourceReference(Innboks.class, "meldinger.js");
     public static final ConditionalCssResource MELDINGER_IE_CSS = new ConditionalCssResource(new CssResourceReference(Innboks.class, "innboks-ie.css"), "screen", "IE");
@@ -38,7 +44,7 @@ public class Innboks extends Lerret {
         super(id);
         setOutputMarkupId(true);
 
-        this.innboksVM = new InnboksVM(fnr);
+        this.innboksVM = henvendelseBehandlingService.hentInnboks(fnr);
         setDefaultModel(new CompoundPropertyModel<Object>(innboksVM));
 
         setValgtTraadBasertPaaTraadIdSessionParameter();

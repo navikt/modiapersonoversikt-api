@@ -11,6 +11,8 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -51,6 +53,12 @@ public class InnboksTest {
                 createMelding(ELDSTE_MELDING_ID_TRAAD1, SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(NYESTE_MELDING_ID_TRAAD1, SVAR_SKRIFTLIG, now(), "TEMA", ELDSTE_MELDING_ID_TRAAD1),
                 createMelding(ENESTE_MELDING_ID_TRAAD2, SPORSMAL_SKRIFTLIG, now().minusDays(2), "TEMA", ENESTE_MELDING_ID_TRAAD2)));
+        when(henvendelseBehandlingService.hentInnboks(anyString())).thenAnswer(new Answer<InnboksVM>(){
+            @Override
+            public InnboksVM answer(InvocationOnMock invocation) throws Throwable {
+                return new InnboksVM(((String) invocation.getArguments()[0]), henvendelseBehandlingService);
+            }
+        });
     }
 
     @Test

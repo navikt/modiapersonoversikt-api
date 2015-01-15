@@ -47,7 +47,7 @@ public class InnboksVMTest {
     public void setUp() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(createMeldingerIToTraader());
 
-        innboksVM = new InnboksVM("fnr");
+        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
     }
 
     @Test
@@ -114,7 +114,7 @@ public class InnboksVMTest {
     @Test
     public void skalFungereUtenMeldinger() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(Collections.<Melding>emptyList());
-        innboksVM = new InnboksVM("fnr");
+        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
 
         assertThat(innboksVM.getTraader().size(), is(0));
         assertThat(innboksVM.getValgtTraad().getMeldinger().size(), is(0));
@@ -126,7 +126,7 @@ public class InnboksVMTest {
         String traadId = "traadId";
 
         when(henvendelseBehandlingService.hentMeldinger(fnr)).thenReturn(asList(createMelding(traadId, SPORSMAL_SKRIFTLIG, DateTime.now(), "temagruppe", traadId)));
-        innboksVM = new InnboksVM(fnr);
+        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
 
         Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad(traadId);
         assertTrue(nyesteMeldingITraad.isSome());
@@ -135,7 +135,7 @@ public class InnboksVMTest {
     @Test
     public void henterNyesteMeldingITraadMedUkjentTraadId() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(Collections.<Melding>emptyList());
-        innboksVM = new InnboksVM("fnr");
+        innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
 
         Optional<MeldingVM> nyesteMeldingITraad = innboksVM.getNyesteMeldingITraad("traadId");
         assertFalse(nyesteMeldingITraad.isSome());

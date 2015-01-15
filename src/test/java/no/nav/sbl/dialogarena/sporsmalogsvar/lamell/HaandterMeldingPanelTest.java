@@ -16,9 +16,7 @@ import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SVAR_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.*;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMeldingMedJournalfortDato;
 import static org.joda.time.DateTime.now;
@@ -45,7 +43,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsEnabled().and(withId(BESVAR_ID)));
     }
 
@@ -54,7 +52,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SAMTALEREFERAT_OPPMOTE, now().minusDays(1), "TEMA", "melding1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsDisabled().and(withId(BESVAR_ID)));
     }
 
@@ -64,7 +62,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
                 createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1"),
                 createMelding("melding2", SVAR_SKRIFTLIG, now(), "TEMA", "melding1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsEnabled().and(withId(BESVAR_ID)));
     }
 
@@ -75,7 +73,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 melding));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsEnabled().and(withId(BESVAR_ID)));
     }
 
@@ -85,7 +83,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
                 createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1"),
                 createMelding("melding2", SVAR_SKRIFTLIG, now(), "TEMA", "melding1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsEnabled().and(withId(JOURNALFOR_VALG_ID)));
     }
 
@@ -94,7 +92,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMeldingMedJournalfortDato("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1", now())));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsDisabled().and(withId(JOURNALFOR_VALG_ID)));
     }
 
@@ -105,7 +103,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 melding));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsDisabled().and(withId(JOURNALFOR_VALG_ID)));
     }
 
@@ -116,7 +114,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 melding));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsDisabled().and(withId(JOURNALFOR_VALG_ID)));
     }
 
@@ -125,7 +123,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SAMTALEREFERAT_OPPMOTE, now().minusDays(1), "TEMA", "melding1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsEnabled().and(withId(NYOPPGAVE_VALG_ID)));
     }
 
@@ -134,7 +132,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsDisabled().and(withId(NYOPPGAVE_VALG_ID)));
     }
 
@@ -143,7 +141,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMeldingMedJournalfortDato("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1", now())));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsDisabled().and(withId(MERKE_VALG_ID)));
     }
 
@@ -152,7 +150,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsDisabled().and(withId(MERKE_VALG_ID)));
     }
 
@@ -162,7 +160,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
                 createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1"),
                 createMelding("melding2", SVAR_SKRIFTLIG, now(), "TEMA", "melding1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .printComponentsTree()
                 .click().link(containedInComponent(withId(JOURNALFOR_VALG_ID)))
                 .should().containComponent(thatIsVisible().and(ofType(JournalforingsPanel.class)))
@@ -174,7 +172,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(withId(PRINT_ID));
     }
 
@@ -183,7 +181,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1")));
 
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr")))
+        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
                 .should().containComponent(thatIsDisabled().and(withId(JOURNALFOR_VALG_ID)));
     }
 }
