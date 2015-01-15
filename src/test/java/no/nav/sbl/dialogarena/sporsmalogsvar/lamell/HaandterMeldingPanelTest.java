@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.JournalforingsPanel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave.NyOppgavePanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave.OppgavePanel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -166,7 +166,7 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
                 .printComponentsTree()
                 .click().link(containedInComponent(withId(JOURNALFOR_VALG_ID)))
                 .should().containComponent(thatIsVisible().and(ofType(JournalforingsPanel.class)))
-                .should().containComponent(thatIsInvisible().and(ofType(NyOppgavePanel.class)));
+                .should().containComponent(thatIsInvisible().and(ofType(OppgavePanel.class)));
     }
 
     @Test

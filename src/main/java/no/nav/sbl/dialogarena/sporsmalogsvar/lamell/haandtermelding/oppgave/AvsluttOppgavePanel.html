@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns:wicket="http://wicket.apache.org">
+<head></head>
+<body>
+<wicket:panel>
+    <form wicket:id="form">
+        <label wicket:for="beskrivelse">
+            <wicket:message key="avsluttoppgave.form.label.beskrivelse"/>
+            <textarea wicket:id="beskrivelse"></textarea>
+        </label>
+        <hr class="linje"/>
+        <input type="submit"
+               class="knapp-hoved-stor"
+               wicket:id="avsluttoppgave"
+               wicket:message="value:avsluttoppgave.form.avslutt"/>
+    </form>
+</wicket:panel>
+</body>
+</html>

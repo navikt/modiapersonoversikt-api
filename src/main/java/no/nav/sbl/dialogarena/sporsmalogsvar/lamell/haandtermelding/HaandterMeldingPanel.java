@@ -5,7 +5,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.JournalforingsPanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.merke.MerkePanel;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave.NyOppgavePanel;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave.OppgavePanel;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.print.PrintLenke;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
@@ -49,9 +49,9 @@ public class HaandterMeldingPanel extends Panel {
         add(journalforingsPanel);
         add(new MeldingValgPanel("journalforingValg", both(not(erKontorsperret)).and(not(erFeilsendt)).and(not(nyesteMeldingErJournalfort)).and(erBehandlet), journalforingsPanel));
 
-        NyOppgavePanel nyOppgavePanel = new NyOppgavePanel("nyoppgavePanel", innboksVM);
-        add(nyOppgavePanel);
-        add(new MeldingValgPanel("nyoppgaveValg", erBehandlet, nyOppgavePanel));
+        OppgavePanel oppgavePanel = new OppgavePanel("nyoppgavePanel", innboksVM);
+        add(oppgavePanel);
+        add(new MeldingValgPanel("nyoppgaveValg", erBehandlet, oppgavePanel));
 
         MerkePanel merkePanel = new MerkePanel("merkePanel", innboksVM);
         add(merkePanel);

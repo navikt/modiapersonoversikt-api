@@ -40,7 +40,6 @@ public class KontorsperrePanel extends Panel {
             }
         };
         nyOppgaveForm.add(visibleIf(skalOppretteOppgave));
-        nyOppgaveForm.setOutputMarkupPlaceholderTag(true);
 
         opprettOppgaveCheckbox = new AjaxCheckBox("opprettOppgaveCheckbox", skalOppretteOppgave) {
             @Override

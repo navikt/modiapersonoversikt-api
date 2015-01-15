@@ -28,7 +28,7 @@ import static org.mockito.Mockito.when;
 
 @ContextConfiguration(classes = {ServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class NyOppgavePanelTest extends WicketPageTest {
+public class OppgavePanelTest extends WicketPageTest {
 
     private Melding melding;
     private InnboksVM innboksVM = mock(InnboksVM.class);
@@ -45,7 +45,7 @@ public class NyOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void skalKjoereOppNyOppgavePanelMedRiktigeFelterOgTyper() {
-        wicket.goToPageWith(new TestNyOppgavePanel("panel", innboksVM))
+        wicket.goToPageWith(new TestOppgavePanel("panel", innboksVM))
                 .should().containLabelsSaying(melding.temagruppe)
                 .should().containComponent(both(ofType(Form.class).and(withId("nyoppgaveform"))))
                 .should().containComponent(both(ofType(FeedbackPanel.class).and(withId("feedback"))))
@@ -55,7 +55,7 @@ public class NyOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void skalLukkePaneletIdetManAvbryter() {
-        TestNyOppgavePanel nyOppgavePanel = new TestNyOppgavePanel("panel", innboksVM);
+        TestOppgavePanel nyOppgavePanel = new TestOppgavePanel("panel", innboksVM);
         wicket.goToPageWith(nyOppgavePanel)
                 .should().containComponent(thatIsVisible().and(withId("panel")))
                 .click().link(withId("avbryt"));

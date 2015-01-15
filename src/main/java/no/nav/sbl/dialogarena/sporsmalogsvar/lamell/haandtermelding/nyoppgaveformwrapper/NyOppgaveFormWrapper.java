@@ -52,6 +52,7 @@ public class NyOppgaveFormWrapper extends Panel {
 
     public NyOppgaveFormWrapper(String id, final InnboksVM innboksVM) {
         super(id);
+        setOutputMarkupPlaceholderTag(true);
 
         this.innboksVM = innboksVM;
         this.enheter = on(enhetService.hentAlleEnheter()).filter(GYLDIG_ENHET).collect();
@@ -148,7 +149,7 @@ public class NyOppgaveFormWrapper extends Panel {
         DropDownChoice<GsakKodeTema.OppgaveType> typeDropdown = new DropDownChoiceMedFjerningAvDefault<GsakKodeTema.OppgaveType>("type", typeModel, gsakKodeChoiceRenderer) {
             @Override
             protected void onchange(AjaxRequestTarget target) {
-                hentForeslattEnhet(innboksVM);
+                hentForeslattEnhet();
                 target.add(enhetVelger);
             }
         };
@@ -219,7 +220,7 @@ public class NyOppgaveFormWrapper extends Panel {
     }
 
 
-    private void hentForeslattEnhet(InnboksVM innboksVM) {
+    private void hentForeslattEnhet() {
         NyOppgave nyOppgave = form.getModelObject();
         if (nyOppgave.tema == null || nyOppgave.type == null) {
             return;
