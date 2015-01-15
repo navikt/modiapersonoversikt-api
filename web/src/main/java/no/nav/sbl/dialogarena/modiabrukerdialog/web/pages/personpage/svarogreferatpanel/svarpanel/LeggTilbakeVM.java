@@ -1,14 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel;
 
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe;
-import org.apache.wicket.injection.Injector;
 
 import java.io.Serializable;
 
 public class LeggTilbakeVM implements Serializable {
 
     public LeggTilbakeVM() {
-        Injector.get().inject(this);
     }
 
     public Aarsak valgtAarsak;
