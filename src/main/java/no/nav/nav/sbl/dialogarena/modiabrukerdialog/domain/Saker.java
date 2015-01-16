@@ -1,6 +1,8 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain;
 
-public class Saker {
+import java.io.Serializable;
+
+public class Saker implements Serializable {
     private SakerListe sakerListeFagsak;
     private SakerListe sakerListeGenerelle;
 
@@ -20,7 +22,7 @@ public class Saker {
         return sakerListeGenerelle;
     }
 
-    public boolean sakerFinnes(){
+    public boolean sakerFinnes() {
         return (sakerListeFagsak != null || sakerListeGenerelle != null)
                 && (!getSakerListeFagsak().isEmpty() || !getSakerListeGenerelle().isEmpty());
     }
