@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;

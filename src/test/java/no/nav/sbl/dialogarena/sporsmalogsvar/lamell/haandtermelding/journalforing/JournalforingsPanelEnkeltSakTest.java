@@ -1,11 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.*;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.joda.time.DateTime;
@@ -34,7 +32,6 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
-
     @Inject
     private GsakService gsakService;
     @Inject

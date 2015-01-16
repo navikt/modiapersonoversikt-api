@@ -16,7 +16,9 @@ import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SVAR_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMeldingMedJournalfortDato;
 import static org.joda.time.DateTime.now;
@@ -161,7 +163,6 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
                 createMelding("melding2", SVAR_SKRIFTLIG, now(), "TEMA", "melding1")));
 
         wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
-                .printComponentsTree()
                 .click().link(containedInComponent(withId(JOURNALFOR_VALG_ID)))
                 .should().containComponent(thatIsVisible().and(ofType(JournalforingsPanel.class)))
                 .should().containComponent(thatIsInvisible().and(ofType(OppgavePanel.class)));

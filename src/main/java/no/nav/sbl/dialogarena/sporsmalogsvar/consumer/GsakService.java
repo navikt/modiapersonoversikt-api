@@ -6,9 +6,9 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGe
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;

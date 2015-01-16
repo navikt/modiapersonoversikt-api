@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.SakerForTema;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;

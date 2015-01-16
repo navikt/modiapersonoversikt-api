@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -21,7 +21,6 @@ public class JournalforingsPanelEnkeltSak extends Panel {
 
     @Inject
     private JoarkJournalforingService joarkJournalforingService;
-
     @Inject
     private GsakService gsakService;
 

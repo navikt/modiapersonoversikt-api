@@ -4,7 +4,7 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.junit.Before;
@@ -30,7 +30,6 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
-
     @Inject
     private JoarkJournalforingService joarkJournalforingService;
 
@@ -38,7 +37,6 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
 
     @Before
     public void setUp() {
-
         innboksVM = new InnboksVM(FODSELSNR, henvendelseBehandlingService);
     }
 

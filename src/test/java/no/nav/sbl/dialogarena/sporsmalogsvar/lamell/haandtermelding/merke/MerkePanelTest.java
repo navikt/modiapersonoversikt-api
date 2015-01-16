@@ -27,8 +27,8 @@ import static org.mockito.Mockito.verify;
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MerkePanelTest extends WicketPageTest {
 
-    public static final String PANEL_MERK_FORM_ID = "panel:merkForm";
-    public static final String MERK_TYPE_RADIOGROUP_ID = "merkType";
+    private static final String PANEL_MERK_FORM_ID = "panel:merkForm";
+    private static final String MERK_TYPE_RADIOGROUP_ID = "merkType";
     private static final String FNR = "fnr";
 
     @Inject

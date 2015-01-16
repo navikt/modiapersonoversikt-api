@@ -14,7 +14,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -32,7 +32,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.SAKSTYPE_GENERELL;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak.SAKSTYPE_GENERELL;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.*;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.core.Is.is;

@@ -1,20 +1,16 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 
-import javax.inject.Inject;
 import java.io.Serializable;
 import java.util.List;
 
 public class JournalfortSakVM implements Serializable {
 
     private Sak sak;
-
     private InnboksVM innboksVM;
-
-    @Inject
     private GsakService gsakService;
 
     public JournalfortSakVM(InnboksVM innboksVM, GsakService gsakService) {

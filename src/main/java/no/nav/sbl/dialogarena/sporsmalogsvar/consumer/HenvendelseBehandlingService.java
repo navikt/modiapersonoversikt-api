@@ -9,7 +9,7 @@ import no.nav.modig.security.tilgangskontroll.policy.request.PolicyRequest;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;

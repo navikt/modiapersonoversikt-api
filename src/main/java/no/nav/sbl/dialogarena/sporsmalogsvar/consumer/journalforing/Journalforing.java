@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer.journalforing;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Pdf;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.informasjon.behandlejournal.*;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
