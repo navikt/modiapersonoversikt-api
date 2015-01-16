@@ -65,7 +65,7 @@ public class OppgavePanel extends AnimertPanel {
         };
         nyOppgaveFormWrapper.add(visibleIf(either(isEqualTo(oppgaveValgModel, OPPRETT)).or(not(oppgaveKanAvsluttes))));
 
-        avsluttOppgavePanel = new AvsluttOppgavePanel("avsluttOppgaveForm");
+        avsluttOppgavePanel = new AvsluttOppgavePanel("avsluttOppgaveForm", innboksVM.getSessionOppgaveId());
         avsluttOppgavePanel.add(visibleIf(both(isEqualTo(oppgaveValgModel, AVSLUTT)).and(oppgaveKanAvsluttes)));
 
         okKnapp.add(visibleIf(nyOppgaveFormWrapper.oppgaveOpprettet));
