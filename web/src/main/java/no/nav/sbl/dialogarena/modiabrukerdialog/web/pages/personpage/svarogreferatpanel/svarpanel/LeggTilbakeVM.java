@@ -6,9 +6,6 @@ import java.io.Serializable;
 
 public class LeggTilbakeVM implements Serializable {
 
-    public LeggTilbakeVM() {
-    }
-
     public Aarsak valgtAarsak;
     public Temagruppe nyTemagruppe;
     public String annenAarsakTekst;
