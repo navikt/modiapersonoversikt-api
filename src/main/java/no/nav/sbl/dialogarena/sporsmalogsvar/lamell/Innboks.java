@@ -5,6 +5,7 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
@@ -25,18 +26,20 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.HENVENDELSEID;
-import static org.apache.commons.lang3.StringUtils.isBlank;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.OPPGAVEID;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 public class Innboks extends Lerret {
 
-    @Inject
-    HenvendelseBehandlingService henvendelseBehandlingService;
-
     public static final JavaScriptResourceReference MELDINGER_JS = new JavaScriptResourceReference(Innboks.class, "meldinger.js");
     public static final ConditionalCssResource MELDINGER_IE_CSS = new ConditionalCssResource(new CssResourceReference(Innboks.class, "innboks-ie.css"), "screen", "IE");
-
     public static final String INNBOKS_OPPDATERT_EVENT = "sos.innboks.oppdatert";
     public static final String VALGT_MELDING_EVENT = "sos.innboks.valgt_melding";
+
+    @Inject
+    private GsakService gsakService;
+    @Inject
+    private HenvendelseBehandlingService henvendelseBehandlingService;
 
     private InnboksVM innboksVM;
 
@@ -47,7 +50,7 @@ public class Innboks extends Lerret {
         this.innboksVM = new InnboksVM(fnr, henvendelseBehandlingService);
         setDefaultModel(new CompoundPropertyModel<Object>(innboksVM));
 
-        setValgtTraadBasertPaaTraadIdSessionParameter();
+        haandterSessionParametere();
 
         PropertyModel<Boolean> harTraader = new PropertyModel<>(innboksVM, "harTraader");
 
@@ -66,13 +69,19 @@ public class Innboks extends Lerret {
         add(alleMeldingerPanel, traaddetaljerPanel, feilmeldingPanel);
     }
 
-    private void setValgtTraadBasertPaaTraadIdSessionParameter() {
-        String traadIdParameter = ((String) getSession().getAttribute(HENVENDELSEID));
-        if (!isBlank(traadIdParameter)) {
+    private void haandterSessionParametere() {
+        String traadIdParameter = (String) getSession().getAttribute(HENVENDELSEID);
+        if (isNotBlank(traadIdParameter)) {
+            innboksVM.setSessionHenvendelseId(traadIdParameter);
             Optional<MeldingVM> meldingITraad = innboksVM.getNyesteMeldingITraad(traadIdParameter);
             if (meldingITraad.isSome()) {
                 innboksVM.setValgtMelding(meldingITraad.get());
             }
+        }
+
+        String oppgaveIdParameter = (String) getSession().getAttribute(OPPGAVEID);
+        if (isNotBlank(oppgaveIdParameter) && gsakService.oppgaveKanManuelltAvsluttes(oppgaveIdParameter)) {
+            innboksVM.setSessionOppgaveId(oppgaveIdParameter);
         }
     }
 

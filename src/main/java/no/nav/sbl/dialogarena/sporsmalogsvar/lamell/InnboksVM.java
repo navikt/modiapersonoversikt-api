@@ -17,6 +17,7 @@ import java.util.Map;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.PredicateUtils.equalTo;
 import static no.nav.modig.lang.collections.PredicateUtils.where;
+import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.skillUtTraader;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM.ID;
@@ -34,6 +35,7 @@ public class InnboksVM implements Serializable {
     private List<MeldingVM> nyesteMeldingerITraad = new ArrayList<>();
     private Optional<MeldingVM> valgtMelding;
     private String fnr, feilmeldingKey;
+    private Optional<String> sessionOppgaveId = none(), sessionHenvendelseId = none();
 
     public InnboksVM(String fnr, HenvendelseBehandlingService henvendelseBehandlingService) {
         this.fnr = fnr;
@@ -140,4 +142,19 @@ public class InnboksVM implements Serializable {
         }
     };
 
+    public Optional<String> getSessionOppgaveId() {
+        return sessionOppgaveId;
+    }
+
+    public void setSessionOppgaveId(String sessionOppgaveId) {
+        this.sessionOppgaveId = optional(sessionOppgaveId);
+    }
+
+    public Optional<String> getSessionHenvendelseId() {
+        return sessionHenvendelseId;
+    }
+
+    public void setSessionHenvendelseId(String sessionHenvendelseId) {
+        this.sessionHenvendelseId = optional(sessionHenvendelseId);
+    }
 }

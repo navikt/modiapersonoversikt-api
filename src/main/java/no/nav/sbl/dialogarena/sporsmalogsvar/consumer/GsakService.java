@@ -9,6 +9,10 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
+import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
+import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
+import no.nav.tjeneste.virksomhet.oppgave.v3.meldinger.WSHentOppgaveRequest;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSOpprettOppgaveRequest;
@@ -42,6 +46,8 @@ public class GsakService {
     public static final int DEFAULT_OPPRETTET_AV_ENHET_ID = 2820;
     public static final String HENVENDELSESTYPE_KODE = "BESVAR_KNA";
 
+    @Inject
+    private OppgaveV3 oppgaveWS;
     @Inject
     private OppgavebehandlingV3 oppgavebehandling;
     @Inject
@@ -86,6 +92,18 @@ public class GsakService {
             return sak;
         }
     };
+
+    public boolean oppgaveKanManuelltAvsluttes(String oppgaveId) {
+        return !hentOppgave(oppgaveId).getFagomrade().getKode().equals("KNA");
+    }
+
+    public WSOppgave hentOppgave(String oppgaveId) {
+        try {
+            return oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId)).getOppgave();
+        } catch (HentOppgaveOppgaveIkkeFunnet hentOppgaveOppgaveIkkeFunnet) {
+            throw new RuntimeException("Fant ikke oppgave med id: " + oppgaveId, hentOppgaveOppgaveIkkeFunnet);
+        }
+    }
 
     public void opprettGsakOppgave(NyOppgave nyOppgave) {
         int valgtEnhetId;
