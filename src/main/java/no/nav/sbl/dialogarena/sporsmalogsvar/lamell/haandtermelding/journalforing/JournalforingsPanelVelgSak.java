@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -24,6 +25,8 @@ public class JournalforingsPanelVelgSak extends Panel {
 
     @Inject
     private JoarkJournalforingService joarkJournalforingService;
+    @Inject
+    private SakerService sakerService;
 
     private SakerVM sakerVM;
 
@@ -33,7 +36,7 @@ public class JournalforingsPanelVelgSak extends Panel {
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
-        sakerVM = new SakerVM(innboksVM);
+        sakerVM = new SakerVM(innboksVM, sakerService);
         Form<InnboksVM> form = new Form<>("plukkSakForm", new CompoundPropertyModel<>(innboksVM));
         form.add(
                 feedbackPanel,

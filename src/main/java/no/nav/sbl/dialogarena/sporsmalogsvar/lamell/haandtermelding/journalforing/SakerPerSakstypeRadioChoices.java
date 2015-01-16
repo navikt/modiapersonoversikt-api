@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.TemaSaker;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.SakerForTema;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;
@@ -24,7 +24,7 @@ import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class SakerPerSakstypeRadioChoices extends Panel {
 
-    public SakerPerSakstypeRadioChoices(String id, PropertyModel<List<TemaSaker>> model, final String sakstypePropertyKey, final IModel<Boolean> open) {
+    public SakerPerSakstypeRadioChoices(String id, PropertyModel<List<SakerForTema>> model, final String sakstypePropertyKey, final IModel<Boolean> open) {
         super(id);
         setOutputMarkupId(true);
 
@@ -48,9 +48,9 @@ public class SakerPerSakstypeRadioChoices extends Panel {
         link.add(attributeIf("aria-pressed", "false", not(open), true));
 
         WebMarkupContainer sakswrapper = new WebMarkupContainer("sakswrapper");
-        sakswrapper.add(new PropertyListView<TemaSaker>("saksgruppeliste", model) {
+        sakswrapper.add(new PropertyListView<SakerForTema>("saksgruppeliste", model) {
             @Override
-            protected void populateItem(ListItem<TemaSaker> item) {
+            protected void populateItem(ListItem<SakerForTema> item) {
                 item.add(new Label("temaNavn"));
                 item.add(new PropertyListView<Sak>("saksliste") {
                     @Override

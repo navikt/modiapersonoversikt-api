@@ -4,12 +4,11 @@ import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.core.context.*;
 import no.nav.modig.core.domain.IdentType;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.*;
-import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
+import no.nav.sbl.dialogarena.sporsmalogsvar.domain.*;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import org.joda.time.DateTime;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
@@ -36,6 +35,8 @@ public class TestUtils {
     public final static String TEMAGRUPPE_1 = "Arbeidssøker";
     public final static String TEMAGRUPPE_2 = "Barnebidrag";
     public final static String TEMAGRUPPE_3 = "Familie og barn";
+
+    private static final String SAKSTYPE_FAG = "Fag";
 
     public final static int TRAAD_LENGDE = 3;
 
@@ -69,6 +70,21 @@ public class TestUtils {
 
         sak.opprettetDato = opprettet;
         return sak;
+    }
+
+    public static Saker createMockSaker() {
+        List<Sak> generelleSakerTema1 = new ArrayList<>(Arrays.asList(
+                createSak(SAKS_ID_1, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4)),
+                createSak(SAKS_ID_2, TEMA_1, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_GENERELL, DateTime.now().minusDays(4))));
+        SakerForTema sakerforTemaGenerelle = new SakerForTema(TEMA_1, "navn", "temagruppe", generelleSakerTema1);
+        SakerListe sakerListeGenerelle = new SakerListe(Arrays.asList(sakerforTemaGenerelle));
+
+        List<Sak> fagSakerTema2 = new ArrayList<>(Arrays.asList(
+                createSak(SAKS_ID_3, TEMA_2, GODKJENT_FAGSYSTEM_FOR_GENERELLE, SAKSTYPE_FAG, DateTime.now().minusDays(4))));
+        SakerForTema sakerforTemaFagsaker = new SakerForTema(TEMA_2, "navn", "temagruppe", fagSakerTema2);
+        SakerListe sakerListeFagsaker = new SakerListe(Arrays.asList(sakerforTemaFagsaker));
+
+        return new Saker(sakerListeFagsaker, sakerListeGenerelle);
     }
 
     public static Melding createMelding(String id, Meldingstype type, DateTime opprettetDato, String temagruppe, String traadId) {
