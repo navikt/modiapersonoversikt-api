@@ -44,7 +44,7 @@ public class Innboks extends Lerret {
         super(id);
         setOutputMarkupId(true);
 
-        this.innboksVM = henvendelseBehandlingService.hentInnboks(fnr);
+        this.innboksVM = new InnboksVM(fnr, henvendelseBehandlingService);
         setDefaultModel(new CompoundPropertyModel<Object>(innboksVM));
 
         setValgtTraadBasertPaaTraadIdSessionParameter();

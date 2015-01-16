@@ -10,7 +10,6 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.Sak;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
@@ -52,10 +51,6 @@ public class HenvendelseBehandlingService {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private StandardKodeverk standardKodeverk;
-
-    public InnboksVM hentInnboks(final String fnr) {
-        return new InnboksVM(fnr, this);
-    }
 
     public List<Melding> hentMeldinger(final String fnr) {
         List<String> typer = asList(

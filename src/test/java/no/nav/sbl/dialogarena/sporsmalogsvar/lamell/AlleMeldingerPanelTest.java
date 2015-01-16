@@ -8,8 +8,6 @@ import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -38,22 +36,16 @@ public class AlleMeldingerPanelTest extends WicketPageTest {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
                 createMelding("id1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "id1"),
                 createMelding("id2", SPORSMAL_SKRIFTLIG, now().minusDays(2), "TEMA", "id2")));
-        when(henvendelseBehandlingService.hentInnboks(anyString())).thenAnswer(new Answer<InnboksVM>(){
-            @Override
-            public InnboksVM answer(InvocationOnMock invocation) throws Throwable {
-                return new InnboksVM(((String) invocation.getArguments()[0]), henvendelseBehandlingService);
-            }
-        });
     }
 
     @Test
     public void starterAlleMeldingerPanelUtenFeil() {
-        wicket.goToPageWith(new TestAlleMeldingerPanel("id", henvendelseBehandlingService.hentInnboks("fnr"), ""));
+        wicket.goToPageWith(new TestAlleMeldingerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService), ""));
     }
 
     @Test
     public void setterValgtMeldingDersomManTrykkerPaaDen() {
-        InnboksVM innboksVM = henvendelseBehandlingService.hentInnboks("fnr");
+        InnboksVM innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
         innboksVM.setValgtMelding("id1");
 
         wicket.goToPageWith(new TestAlleMeldingerPanel("id", innboksVM, ""))
