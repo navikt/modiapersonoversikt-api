@@ -1,9 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.*;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.Form;
@@ -11,13 +14,12 @@ import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
 import static org.hamcrest.core.Is.is;
@@ -25,9 +27,11 @@ import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
 @ContextConfiguration(classes = {ServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
+@DirtiesContext(classMode = AFTER_CLASS)
 public class OppgavePanelTest extends WicketPageTest {
 
     private Melding melding;
@@ -40,6 +44,7 @@ public class OppgavePanelTest extends WicketPageTest {
         melding = createMelding(eldsteMeldingId, SPORSMAL_SKRIFTLIG, now(), "temagruppe", eldsteMeldingId);
         MeldingVM meldingVM = new MeldingVM(melding, 1);
         when(innboksVM.getValgtTraad()).thenReturn(traadVM);
+        when(innboksVM.getSessionHenvendelseId()).thenReturn(Optional.<String>none());
         when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
     }
 
