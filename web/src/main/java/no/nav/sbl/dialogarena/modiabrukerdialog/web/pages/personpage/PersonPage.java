@@ -121,7 +121,11 @@ public class PersonPage extends BasePage {
         if (isNotBlank((String) getSession().getAttribute(HENVENDELSEID))) {
             lamellContainer.setStartLamell(LAMELL_MELDINGER);
         }
+    }
 
+    @Override
+    protected void onAfterRender() {
+        super.onAfterRender();
         fjernURLParamatereFraSession();
     }
 
