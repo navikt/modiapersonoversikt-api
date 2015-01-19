@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultSaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
@@ -20,10 +20,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 

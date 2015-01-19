@@ -1,10 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.LokaltKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import org.springframework.context.annotation.Bean;

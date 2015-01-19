@@ -1,12 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import no.nav.modig.wicket.services.HealthCheckService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.LokaltKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.*;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultEnhetService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultSaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
@@ -37,7 +33,7 @@ public class ServiceConfig {
 
     @Bean
     public AnsattService ansattService() {
-        return new AnsattService();
+        return new AnsattServiceImpl();
     }
 
     @Bean

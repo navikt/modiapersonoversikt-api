@@ -1,9 +1,10 @@
 package no.nav.sbl.modiabrukerdialog.pip.journalforing.config;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.endpoint.v1.norg.NAVAnsattEndpointConfig;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultSaksbehandlerInnstillingerService;
 import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.DefaultJournalfortTemaAttributeLocatorDelegate;
 import no.nav.sbl.modiabrukerdialog.pip.journalforing.support.JournalfortTemaAttributeLocatorDelegate;
@@ -27,7 +28,7 @@ public class JournalfortTemaPipConfig {
 
     @Bean
     public AnsattService ansattService() {
-        return new AnsattService();
+        return new AnsattServiceImpl();
     }
 
     @Bean

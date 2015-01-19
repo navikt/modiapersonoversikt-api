@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
@@ -80,9 +80,11 @@ public class SaksbehandlerInnstillingerPanel extends Panel {
         oppdaterAriaLabel();
         add(form, opplaeringslenke);
     }
+
     public final void oppdaterAriaLabel() {
         add(AttributeModifier.replace("aria-expanded", isVisibilityAllowed()));
     }
+
     @RunOnEvents(SAKSBEHANDLERINNSTILLINGER_TOGGLET)
     private void toggleSaksbehandlerPanel(AjaxRequestTarget target) {
         animertVisningToggle(target, this);

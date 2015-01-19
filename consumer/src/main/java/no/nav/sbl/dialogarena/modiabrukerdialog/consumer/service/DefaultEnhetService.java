@@ -13,7 +13,7 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattService.TIL_ANSATTENHET;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl.TIL_ANSATTENHET;
 
 public class DefaultEnhetService implements EnhetService {
 

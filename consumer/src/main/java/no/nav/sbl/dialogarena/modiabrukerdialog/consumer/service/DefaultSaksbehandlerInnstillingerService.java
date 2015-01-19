@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import org.apache.wicket.util.cookies.CookieUtils;
 

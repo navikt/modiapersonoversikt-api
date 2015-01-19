@@ -4,6 +4,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
 import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;
@@ -12,7 +13,7 @@ import java.util.List;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 
-public class AnsattService {
+public class AnsattServiceImpl implements AnsattService {
 
     @Inject
     private GOSYSNAVansatt ansattWS;
