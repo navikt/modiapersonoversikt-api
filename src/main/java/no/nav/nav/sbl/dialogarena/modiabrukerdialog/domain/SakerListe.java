@@ -15,11 +15,10 @@ public class SakerListe extends ArrayList<SakerForTema> {
     public List<SakerForTema> sorter(String valgtTraadSinTemagruppe) {
         List<SakerForTema> sakerForTema = new ArrayList<>(this);
 
-        List<SakerForTema> valgteSakerForTema = new ArrayList<>(
-                on(sakerForTema)
+        List<SakerForTema> valgteSakerForTema = on(sakerForTema)
                 .filter(where(SakerForTema.TEMAGRUPPE, equalTo(valgtTraadSinTemagruppe)))
-                .collect()
-        );
+                .collectIn(new ArrayList<SakerForTema>());
+
         sakerForTema.removeAll(valgteSakerForTema);
 
         Collections.sort(valgteSakerForTema);
