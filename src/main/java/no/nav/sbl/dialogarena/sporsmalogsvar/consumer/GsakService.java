@@ -1,12 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
-import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGeneriskfMsg;
-import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
@@ -59,7 +56,7 @@ public class GsakService {
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
-    private GOSYSNAVansatt ansattWS;
+    private AnsattService ansattWS;
 
     public List<Sak> hentSakerForBruker(String fnr) {
         WSFinnGenerellSakListeResponse response = sakWs.finnGenerellSakListe(new WSFinnGenerellSakListeRequest().withBrukerId(fnr));
@@ -166,7 +163,7 @@ public class GsakService {
         String ident = getSubjectHandler().getUid();
         String header = String.format("--- %s %s (%s, %s) ---\n",
                 forPattern("dd.MM.yyyy HH:mm").print(now()),
-                hentAnsattNavn(ident),
+                ansattWS.hentAnsattNavn(ident),
                 ident,
                 valgtEnhetId);
 
@@ -183,16 +180,6 @@ public class GsakService {
 
         } catch (LagreOppgaveOppgaveIkkeFunnet lagreOppgaveOppgaveIkkeFunnet) {
             throw new RuntimeException("Oppgaven ble ikke funnet ved tilordning til saksbehandler", lagreOppgaveOppgaveIkkeFunnet);
-        }
-    }
-
-    private String hentAnsattNavn(String ident) {
-        try {
-            ASBOGOSYSNAVAnsatt ansattRequest = new ASBOGOSYSNAVAnsatt();
-            ansattRequest.setAnsattId(ident);
-            return ansattWS.hentNAVAnsatt(ansattRequest).getAnsattNavn();
-        } catch (HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg | HentNAVAnsattFaultGOSYSGeneriskfMsg e) {
-            throw new RuntimeException("Noe gikk galt ved henting av ansatt med ident " + ident, e);
         }
     }
 

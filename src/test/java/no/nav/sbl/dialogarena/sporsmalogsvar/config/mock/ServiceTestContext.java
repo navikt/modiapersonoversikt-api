@@ -106,6 +106,11 @@ public class ServiceTestContext {
     }
 
     @Bean
+    public AnsattService ansattService() {
+        return mock(AnsattService.class);
+    }
+
+    @Bean
     public GOSYSNAVansatt GOSYSNAVansatt() {
         return mock(GOSYSNAVansatt.class);
     }
