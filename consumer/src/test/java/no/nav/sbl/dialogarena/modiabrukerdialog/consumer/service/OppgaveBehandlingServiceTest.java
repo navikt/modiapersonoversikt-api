@@ -49,6 +49,7 @@ import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -70,7 +71,7 @@ public class OppgaveBehandlingServiceTest {
     @Mock
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Mock
-    private GOSYSNAVansatt ansattWS;
+    private AnsattService ansattWS;
 
     @Inject
     private OppgaveV3 oppgaveWS;
@@ -139,7 +140,7 @@ public class OppgaveBehandlingServiceTest {
     @Test
     public void skalFerdigstilleOppgaveFraGsak() throws HentOppgaveOppgaveIkkeFunnet, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponse());
-        when(ansattWS.hentNAVAnsatt(any(ASBOGOSYSNAVAnsatt.class))).thenReturn(new ASBOGOSYSNAVAnsatt());
+        when(ansattWS.hentAnsattNavn(anyString())).thenReturn("");
 
         oppgaveBehandlingService.ferdigstillOppgaveIGsak(optional("1"));
         verify(oppgavebehandlingWS).ferdigstillOppgaveBolk(ferdigstillOppgaveBolkRequestCaptor.capture());
@@ -150,7 +151,7 @@ public class OppgaveBehandlingServiceTest {
     public void skalLeggeTilbakeOppgaveIGsakUtenEndretTemagruppe()
             throws LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
-        when(ansattWS.hentNAVAnsatt(any(ASBOGOSYSNAVAnsatt.class))).thenReturn(new ASBOGOSYSNAVAnsatt());
+        when(ansattWS.hentAnsattNavn(anyString())).thenReturn("");
 
         String nyBeskrivelse = "nyBeskrivelse";
         String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
@@ -167,7 +168,7 @@ public class OppgaveBehandlingServiceTest {
     public void skalLeggeTilbakeOppgaveIGsakMedEndretTemagruppe()
             throws LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
-        when(ansattWS.hentNAVAnsatt(any(ASBOGOSYSNAVAnsatt.class))).thenReturn(new ASBOGOSYSNAVAnsatt());
+        when(ansattWS.hentAnsattNavn(anyString())).thenReturn("");
 
         String nyBeskrivelse = "nyBeskrivelse";
         String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
