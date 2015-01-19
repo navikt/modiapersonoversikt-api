@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Saker;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.*;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
