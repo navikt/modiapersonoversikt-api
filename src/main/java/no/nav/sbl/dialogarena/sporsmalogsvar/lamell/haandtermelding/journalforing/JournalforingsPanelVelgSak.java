@@ -36,6 +36,7 @@ public class JournalforingsPanelVelgSak extends Panel {
 
         final FeedbackPanel feedbackPanel = new FeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
+
         sakerVM = new SakerVM(innboksVM, sakerService);
         Form<InnboksVM> form = new Form<>("plukkSakForm", new CompoundPropertyModel<>(innboksVM));
         form.add(
