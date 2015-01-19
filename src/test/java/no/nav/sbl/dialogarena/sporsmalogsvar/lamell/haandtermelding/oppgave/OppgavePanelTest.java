@@ -18,6 +18,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import static java.util.Arrays.asList;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.CombinableMatcher.both;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
@@ -67,4 +69,24 @@ public class OppgavePanelTest extends WicketPageTest {
 
         assertThat(nyOppgavePanel.isVisibilityAllowed(), is(false));
     }
+
+    @Test
+    public void viserAvsluttValgHvisValgtTraadErISession() {
+        when(innboksVM.getSessionHenvendelseId()).thenReturn(optional("id"));
+        when(innboksVM.getSessionOppgaveId()).thenReturn(optional("1"));
+
+        TraadVM traadVM = mock(TraadVM.class);
+        MeldingVM meldingVM = new MeldingVM(melding, 1);
+        when(traadVM.getMeldinger()).thenReturn(asList(meldingVM));
+        when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
+
+        when(innboksVM.getValgtTraad()).thenReturn(traadVM);
+
+        wicket.goToPageWith(new TestOppgavePanel("panel", innboksVM))
+                .should().containComponent(thatIsVisible().and(withId("oppgaveValg")))
+                .should().containComponent(thatIsVisible().and(withId("nyoppgaveForm")))
+                .should().containComponent(thatIsInvisible().and(withId("avsluttOppgaveForm")));
+    }
+
+
 }
