@@ -9,6 +9,7 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstil
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM.Modus;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.journalforing.JournalforingsPanel;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -77,6 +78,11 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         Label overskrift = new Label("overskrift", new StringResourceModel("${modus}.overskrift", getModel()));
         overskrift.setOutputMarkupId(true);
         modusKomponenter.add(overskrift);
+
+        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", fnr, getModel());
+        journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
+        modusKomponenter.add(journalforingsPanel);
+        form.add(journalforingsPanel);
 
         form.add(overskrift);
         form.add(new Label("navIdent", getSubjectHandler().getUid()));
@@ -222,6 +228,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         switch (getModelObject().modus) {
             case REFERAT:
                 sendReferat();
+                //TODO: Journalfør spørsmål
                 kvittering.visKvittering(target, getString(getModelObject().kanal.getKvitteringKey("referatpanel")), form);
                 break;
             case SPORSMAL:
