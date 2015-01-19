@@ -42,6 +42,11 @@ public class ConsumerServicesMockContext {
     }
 
     @Bean
+    public SakerService sakerService() {
+        return mock(SakerService.class);
+    }
+
+    @Bean
     public LokaltKodeverk lokaltKodeverk() {
         return mock(LokaltKodeverk.class);
     }

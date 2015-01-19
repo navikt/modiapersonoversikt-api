@@ -2,11 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import no.nav.modig.wicket.services.HealthCheckService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.*;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.AnsattServiceImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultEnhetService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultSaksbehandlerInnstillingerService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.GsakKodeverkFraFil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.LokaltKodeverkImpl;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.StandardKodeverkImpl;
@@ -64,6 +60,11 @@ public class ServiceConfig {
     @Bean
     public LokaltKodeverk lokaltKodeverk() {
         return new LokaltKodeverkImpl();
+    }
+
+    @Bean
+    public SakerService sakerService() {
+        return new SakerServiceImpl();
     }
 
 }
