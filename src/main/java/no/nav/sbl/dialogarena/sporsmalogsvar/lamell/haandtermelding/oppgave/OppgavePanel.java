@@ -26,21 +26,28 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppga
 
 public class OppgavePanel extends AnimertPanel {
 
-    public static enum OppgaveValg {OPPRETT, AVSLUTT}
+    public static enum OppgaveValg {OPPRETT, AVSLUTT;}
 
     private NyOppgaveFormWrapper nyOppgaveFormWrapper;
     private AvsluttOppgavePanel avsluttOppgavePanel;
+    private final OppgaveValgRadioChoice oppgaveValg;
+    private final AjaxLink<Void> okKnapp;
+    private final AjaxLink<Void> avbrytKnapp;
+    private final AjaxLink nyOppgaveKnapp;
+
+    private IModel<Boolean> oppgaveBehandlet = Model.of(false);
 
     public OppgavePanel(String id, final InnboksVM innboksVM) {
         super(id);
 
         add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", this, new PropertyModel<>(innboksVM, "valgtTraad.eldsteMelding"))));
 
-        final AjaxLink<Void> okKnapp = new LukkLink("okKnapp");
-        final AjaxLink<Void> avbrytKnapp = new LukkLink("avbryt");
+        okKnapp = new LukkLink("okKnapp");
+        okKnapp.add(visibleIf(oppgaveBehandlet));
+        avbrytKnapp = new LukkLink("avbryt");
+        avbrytKnapp.add(visibleIf(not(oppgaveBehandlet)));
 
-
-        IModel<OppgaveValg> oppgaveValgModel = Model.of(OPPRETT);
+        final IModel<OppgaveValg> oppgaveValgModel = Model.of(OPPRETT);
         IModel<Boolean> oppgaveKanAvsluttes = new AbstractReadOnlyModel<Boolean>() {
             @Override
             public Boolean getObject() {
@@ -53,25 +60,46 @@ public class OppgavePanel extends AnimertPanel {
             }
         };
 
-        add(new OppgaveValgRadioChoice("oppgaveValg", oppgaveValgModel, asList(OppgaveValg.values())).add(visibleIf(oppgaveKanAvsluttes)));
+        oppgaveValg = new OppgaveValgRadioChoice("oppgaveValg", oppgaveValgModel, asList(OppgaveValg.values()));
+        add(oppgaveValg.add(visibleIf(both(oppgaveKanAvsluttes).and(not(oppgaveBehandlet)))));
 
         nyOppgaveFormWrapper = new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
-                oppgaveOpprettet.setObject(true);
-                target.appendJavaScript("$('#" + okKnapp.getMarkupId() + "').focus();");
-                target.add(okKnapp, avbrytKnapp);
+                avsluttOppgaveBehandling(target);
             }
         };
         nyOppgaveFormWrapper.add(visibleIf(either(isEqualTo(oppgaveValgModel, OPPRETT)).or(not(oppgaveKanAvsluttes))));
 
-        avsluttOppgavePanel = new AvsluttOppgavePanel("avsluttOppgaveForm", innboksVM.getSessionOppgaveId());
+        avsluttOppgavePanel = new AvsluttOppgavePanel("avsluttOppgaveForm", innboksVM.getSessionOppgaveId()) {
+            @Override
+            protected void etterSubmit(AjaxRequestTarget target) {
+                innboksVM.setSessionOppgaveId(null);
+                avsluttOppgaveBehandling(target);
+            }
+        };
         avsluttOppgavePanel.add(visibleIf(both(isEqualTo(oppgaveValgModel, AVSLUTT)).and(oppgaveKanAvsluttes)));
 
-        okKnapp.add(visibleIf(nyOppgaveFormWrapper.oppgaveOpprettet));
-        avbrytKnapp.add(visibleIf(not(nyOppgaveFormWrapper.oppgaveOpprettet)));
+        nyOppgaveKnapp = new AjaxLink("nyOppgaveKnapp") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                oppgaveValgModel.setObject(OPPRETT);
+                oppgaveBehandlet.setObject(false);
+                nyOppgaveFormWrapper.nullstillSkjema();
 
-        add(nyOppgaveFormWrapper, avsluttOppgavePanel, okKnapp, avbrytKnapp);
+                target.add(this, okKnapp, avbrytKnapp, oppgaveValg, nyOppgaveFormWrapper, avsluttOppgavePanel);
+            }
+        };
+        nyOppgaveKnapp.setOutputMarkupPlaceholderTag(true);
+        nyOppgaveKnapp.add(visibleIf(oppgaveBehandlet));
+
+        add(nyOppgaveFormWrapper, avsluttOppgavePanel, okKnapp, avbrytKnapp, nyOppgaveKnapp);
+    }
+
+    private void avsluttOppgaveBehandling(AjaxRequestTarget target) {
+        oppgaveBehandlet.setObject(true);
+        target.appendJavaScript("$('#" + okKnapp.getMarkupId() + "').focus();");
+        target.add(oppgaveValg, okKnapp, avbrytKnapp, nyOppgaveKnapp);
     }
 
     private class LukkLink extends AjaxLink<Void> {
@@ -83,6 +111,8 @@ public class OppgavePanel extends AnimertPanel {
 
         @Override
         public void onClick(AjaxRequestTarget target) {
+            oppgaveBehandlet.setObject(false);
+
             nyOppgaveFormWrapper.nullstillSkjema();
             lukkPanel(target);
         }
@@ -92,6 +122,7 @@ public class OppgavePanel extends AnimertPanel {
 
         public OppgaveValgRadioChoice(String id, IModel<OppgaveValg> model, List<? extends OppgaveValg> choices) {
             super(id, model, choices);
+            setOutputMarkupPlaceholderTag(true);
 
             setChoiceRenderer(new IChoiceRenderer<OppgaveValg>() {
                 @Override

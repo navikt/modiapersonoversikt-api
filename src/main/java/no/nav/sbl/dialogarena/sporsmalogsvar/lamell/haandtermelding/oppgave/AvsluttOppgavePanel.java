@@ -6,6 +6,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
+import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.TextArea;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -14,6 +15,8 @@ import org.apache.wicket.model.Model;
 import javax.inject.Inject;
 
 import static java.lang.String.format;
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class AvsluttOppgavePanel extends Panel {
 
@@ -21,10 +24,15 @@ public class AvsluttOppgavePanel extends Panel {
     private GsakService gsakService;
 
     private final TextArea<String> beskrivelseFelt;
+    private final Model<Boolean> oppgaveAvsluttet = Model.of(false);
 
     public AvsluttOppgavePanel(String id, final Optional<String> oppgaveId) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
+
+        final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackAvsluttOppgave");
+        feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
+        feedbackPanelSuccess.add(visibleIf(oppgaveAvsluttet));
 
         beskrivelseFelt = new TextArea<>("beskrivelse", new Model<String>());
         add(new Form("form")
@@ -33,12 +41,23 @@ public class AvsluttOppgavePanel extends Panel {
                     @Override
                     protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                         gsakService.ferdigstillGsakOppgave(oppgaveId, beskrivelseFelt.getModelObject());
+
+                        oppgaveAvsluttet.setObject(true);
+                        etterSubmit(target);
+                        target.add(form, feedbackPanelSuccess);
                     }
-                }));
+                })
+                .add(visibleIf(not(oppgaveAvsluttet)))
+                .setOutputMarkupId(true));
+
+        add(feedbackPanelSuccess);
     }
 
     @Override
     public void renderHead(IHeaderResponse response) {
         response.render(OnDomReadyHeaderItem.forScript(format("$('#%s').val('%s');", beskrivelseFelt.getMarkupId(), getString("avsluttoppgave.standardbeskrivelse"))));
+    }
+
+    protected void etterSubmit(AjaxRequestTarget target) {
     }
 }

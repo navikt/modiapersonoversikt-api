@@ -34,7 +34,6 @@ public class KontorsperrePanel extends Panel {
         nyOppgaveForm = new NyOppgaveFormWrapper("nyoppgaveForm", innboksVM) {
             @Override
             protected void etterSubmit(AjaxRequestTarget target) {
-                oppgaveOpprettet.setObject(true);
                 send(getPage(), Broadcast.DEPTH, OPPGAVE_OPPRETTET);
                 target.add(opprettOppgaveCheckboxWrapper);
             }
