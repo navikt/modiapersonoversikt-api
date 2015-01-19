@@ -5,6 +5,8 @@ import java.util.Map;
 
 public interface LokaltKodeverk {
 
-    Map<String, List<String>> hentTemagruppeTemaMapping();
+    public Map<String, List<String>> hentTemagruppeTemaMapping();
+    public Map<String, String> hentTemaTemagruppeMapping();
+    public String hentTemagruppeForTema(String tema);
 
 }
