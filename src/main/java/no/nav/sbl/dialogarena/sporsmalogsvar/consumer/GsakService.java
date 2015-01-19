@@ -76,7 +76,7 @@ public class GsakService {
         }
     }
 
-    public void ferdigstillGsakOppgave(Optional<String> oppgaveId, String beskrivelse) {
+    public void ferdigstillGsakOppgave(Optional<String> oppgaveId, String beskrivelse) throws LagreOppgaveOptimistiskLasing {
         if (oppgaveId.isSome()) {
             try {
                 WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId.get())).getOppgave();
@@ -89,7 +89,7 @@ public class GsakService {
                 lagreGsakOppgave(oppgave, valgtEnhetId);
 
                 oppgavebehandlingWS.ferdigstillOppgaveBolk(new WSFerdigstillOppgaveBolkRequest().withOppgaveIdListe(oppgaveId.get()).withFerdigstiltAvEnhetId(valgtEnhetId));
-            } catch (HentOppgaveOppgaveIkkeFunnet | LagreOppgaveOptimistiskLasing | NumberFormatException e) {
+            } catch (HentOppgaveOppgaveIkkeFunnet | NumberFormatException e) {
                 throw new RuntimeException(e);
             }
         }
