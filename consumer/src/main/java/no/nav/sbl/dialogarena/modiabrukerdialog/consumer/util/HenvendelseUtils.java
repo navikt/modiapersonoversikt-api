@@ -14,7 +14,7 @@ public class HenvendelseUtils {
 
     public static final String KONTAKT_NAV_SAKSTEMA = "KNA";
 
-    public static final Transformer<XMLHenvendelse, Melding> TIL_Melding = new Transformer<XMLHenvendelse, Melding>() {
+    public static final Transformer<XMLHenvendelse, Melding> TIL_MELDING = new Transformer<XMLHenvendelse, Melding>() {
         @Override
         public Melding transform(XMLHenvendelse xmlHenvendelse) {
             Melding melding = new Melding()

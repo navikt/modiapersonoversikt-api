@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.TIL_Melding;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.TIL_MELDING;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
@@ -41,7 +41,7 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingFraBruker();
         XMLMeldingFraBruker xmlMeldingFraBruker = (XMLMeldingFraBruker) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
-        Melding sporsmal = TIL_Melding.transform(xmlHenvendelse);
+        Melding sporsmal = TIL_MELDING.transform(xmlHenvendelse);
 
         assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
@@ -55,7 +55,7 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingTilBruker(XMLHenvendelseType.REFERAT_OPPMOTE);
         XMLMeldingTilBruker xmlMeldingTilBruker = (XMLMeldingTilBruker) xmlHenvendelse.getMetadataListe().getMetadata().get(0);
 
-        Melding referat = TIL_Melding.transform(xmlHenvendelse);
+        Melding referat = TIL_MELDING.transform(xmlHenvendelse);
 
         assertThat(referat.fnrBruker, is(xmlHenvendelse.getFnr()));
         assertThat(referat.meldingstype, is(SAMTALEREFERAT_OPPMOTE));
@@ -72,7 +72,7 @@ public class HenvendelseUtilsTest {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedXmlMeldingFraBruker();
         xmlHenvendelse.setMetadataListe(null);
 
-        Melding sporsmal = TIL_Melding.transform(xmlHenvendelse);
+        Melding sporsmal = TIL_MELDING.transform(xmlHenvendelse);
 
         assertThat(sporsmal.id, is(xmlHenvendelse.getBehandlingsId()));
         assertThat(sporsmal.opprettetDato, is(xmlHenvendelse.getOpprettetDato()));
@@ -85,7 +85,7 @@ public class HenvendelseUtilsTest {
     public void kasterExceptionVedUkjentType() {
         XMLHenvendelse xmlHenvendelse = createXMLHenvendelseMedUkjentType();
 
-        TIL_Melding.transform(xmlHenvendelse);
+        TIL_MELDING.transform(xmlHenvendelse);
     }
 
     private Melding createSvarEllerReferat() {

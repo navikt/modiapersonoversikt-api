@@ -28,7 +28,7 @@ import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resour
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.subjectAttribute;
 import static no.nav.modig.security.tilgangskontroll.utils.RequestUtils.forRequest;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding.ELDSTE_FORST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.TIL_Melding;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.TIL_MELDING;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.createXMLHenvendelseMedMeldingTilBruker;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.getXMLHenvendelseTypeBasertPaaMeldingstype;
 import static org.apache.commons.lang3.StringUtils.defaultString;
@@ -85,7 +85,7 @@ public class HenvendelseUtsendingService {
                         .getAny())
                         .map(castTo(XMLHenvendelse.class))
                         .filter(where(BEHANDLINGSKJEDE_ID, equalTo(traadId)))
-                        .map(TIL_Melding)
+                        .map(TIL_MELDING)
                         .map(journalfortTemaTilgang)
                         .collect(ELDSTE_FORST);
 
