@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 
 import java.io.Serializable;
@@ -11,15 +11,15 @@ public class JournalfortSakVM implements Serializable {
 
     private Sak sak;
     private InnboksVM innboksVM;
-    private GsakService gsakService;
+    private SakerService sakerService;
 
-    public JournalfortSakVM(InnboksVM innboksVM, GsakService gsakService) {
+    public JournalfortSakVM(InnboksVM innboksVM, SakerService sakerService) {
         this.innboksVM = innboksVM;
-        this.gsakService = gsakService;
+        this.sakerService = sakerService;
     }
 
     public final void oppdater() {
-        List<Sak> sakerForBruker = gsakService.hentSakerForBruker(innboksVM.getFnr());
+        List<Sak> sakerForBruker = sakerService.hentListeAvSaker(innboksVM.getFnr());
         String journalfortSaksId = innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortSaksId;
 
         sak = finnJournalfortSakHvisDenEksisterer(sakerForBruker, journalfortSaksId);

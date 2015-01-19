@@ -3,7 +3,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.*;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.joda.time.DateTime;
@@ -33,8 +34,6 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
     @Inject
-    private GsakService gsakService;
-    @Inject
     private JoarkJournalforingService joarkJournalforingService;
 
     private InnboksVM innboksVM;
@@ -42,7 +41,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
     @Before
     public void setUp() {
         innboksVM = new InnboksVM(FODSELSNR, henvendelseBehandlingService);
-        List<Sak> sakerForBruker = gsakService.hentSakerForBruker(innboksVM.getFnr());
+        List<Sak> sakerForBruker = TestUtils.createMockSaksliste();
         sakerForBruker.get(0).opprettetDato = DateTime.now();
         sakerForBruker.get(0).saksId = JOURNALFORT_SAKSID;
         innboksVM.getValgtTraad().getEldsteMelding().melding.journalfortSaksId = JOURNALFORT_SAKSID;

@@ -6,7 +6,9 @@ import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.*;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.*;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
 import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
@@ -20,7 +22,6 @@ import org.springframework.context.annotation.Configuration;
 
 import static java.util.Arrays.asList;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMockSaker;
-import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMockSaksliste;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.opprettMeldingEksempel;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -51,9 +52,7 @@ public class ServiceTestContext {
 
     @Bean
     public GsakService gsakService() {
-        GsakService gsakService = mock(GsakService.class);
-        when(gsakService.hentSakerForBruker(anyString())).thenReturn(createMockSaksliste());
-        return gsakService;
+        return mock(GsakService.class);
     }
 
     @Bean

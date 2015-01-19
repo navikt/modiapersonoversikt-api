@@ -1,8 +1,9 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -18,10 +19,12 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
+import static java.util.Arrays.asList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.SAKS_ID_3;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -36,7 +39,7 @@ public class JournalfortSakVMTest {
     private InnboksVM innboksVM;
 
     @Inject
-    private GsakService gsakService;
+    private SakerService sakerService;
 
     @Before
     public void setUp() {
@@ -45,11 +48,16 @@ public class JournalfortSakVMTest {
         when(innboksVM.getValgtTraad()).thenReturn(traadVM);
         MeldingVM eldsteMeldingVM = opprettMeldingVMogSetJournalfortSaksId(SAKS_ID_3);
         when(traadVM.getEldsteMelding()).thenReturn(eldsteMeldingVM);
+
+        Sak sak = new Sak();
+        sak.saksId = SAKS_ID_3;
+
+        when(sakerService.hentListeAvSaker(anyString())).thenReturn(asList(sak));
     }
 
     @Test
     public void sjekkAtGetSakMetodenReturnererKorrektSakBasertPaJournalforingsId() {
-        JournalfortSakVM journalfortSakVM = new JournalfortSakVM(innboksVM, gsakService);
+        JournalfortSakVM journalfortSakVM = new JournalfortSakVM(innboksVM, sakerService);
         journalfortSakVM.oppdater();
 
         assertThat(journalfortSakVM.getSak().saksId, is(SAKS_ID_3));

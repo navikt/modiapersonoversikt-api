@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SakerService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -22,7 +22,7 @@ public class JournalforingsPanelEnkeltSak extends Panel {
     @Inject
     private JoarkJournalforingService joarkJournalforingService;
     @Inject
-    private GsakService gsakService;
+    private SakerService sakerService;
 
     private JournalfortSakVM journalfortSakVM;
 
@@ -30,7 +30,7 @@ public class JournalforingsPanelEnkeltSak extends Panel {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        journalfortSakVM = new JournalfortSakVM(innboksVM, gsakService);
+        journalfortSakVM = new JournalfortSakVM(innboksVM, sakerService);
         setDefaultModel(new CompoundPropertyModel<Object>(new PropertyModel<Sak>(journalfortSakVM, "sak")));
 
         add(

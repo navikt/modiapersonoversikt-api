@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
@@ -14,24 +13,17 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOppgaveIkkeFu
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.*;
-import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
 import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
 import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
-import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
-import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.ukedagerFraDato;
@@ -50,18 +42,11 @@ public class GsakService {
     @Inject
     private OppgavebehandlingV3 oppgavebehandlingWS;
     @Inject
-    private no.nav.virksomhet.tjenester.sak.v1.Sak sakWs;
-    @Inject
     private Ruting ruting;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private AnsattService ansattWS;
-
-    public List<Sak> hentSakerForBruker(String fnr) {
-        WSFinnGenerellSakListeResponse response = sakWs.finnGenerellSakListe(new WSFinnGenerellSakListeRequest().withBrukerId(fnr));
-        return on(response.getSakListe()).map(TIL_SAK).collectIn(new ArrayList<Sak>());
-    }
 
     public Optional<AnsattEnhet> hentForeslattEnhet(String fnr, String tema, String type) {
         try {
@@ -78,19 +63,6 @@ public class GsakService {
             return none();
         }
     }
-
-    public static final Transformer<WSGenerellSak, Sak> TIL_SAK = new Transformer<WSGenerellSak, Sak>() {
-        @Override
-        public Sak transform(WSGenerellSak wsGenerellSak) {
-            Sak sak = new Sak();
-            sak.opprettetDato = wsGenerellSak.getEndringsinfo().getOpprettetDato();
-            sak.saksId = wsGenerellSak.getSakId();
-            sak.temaKode = wsGenerellSak.getFagomradeKode();
-            sak.sakstype = wsGenerellSak.getSakstypeKode();
-            sak.fagsystemKode = wsGenerellSak.getFagsystemKode();
-            return sak;
-        }
-    };
 
     public boolean oppgaveKanManuelltAvsluttes(String oppgaveId) {
         return !hentOppgave(oppgaveId).getFagomrade().getKode().equals("KNA");
