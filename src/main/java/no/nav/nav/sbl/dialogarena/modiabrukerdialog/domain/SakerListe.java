@@ -12,6 +12,11 @@ public class SakerListe extends ArrayList<SakerForTema> {
         super(saker);
     }
 
+    public List<SakerForTema> sorter(){
+        Collections.sort(this);
+        return this;
+    }
+
     public List<SakerForTema> sorter(String valgtTraadSinTemagruppe) {
         List<SakerForTema> sakerForTema = new ArrayList<>(this);
 
