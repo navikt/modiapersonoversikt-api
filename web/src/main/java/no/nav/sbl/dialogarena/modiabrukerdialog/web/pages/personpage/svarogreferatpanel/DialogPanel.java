@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.OppgavetilordningFeilet;
@@ -15,11 +16,14 @@ import org.apache.wicket.markup.html.panel.Panel;
 import javax.inject.Inject;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.HENVENDELSEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.OPPGAVEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
@@ -56,7 +60,7 @@ public class DialogPanel extends Panel {
 
         if (isNotBlank(henvendelseId) && isNotBlank(oppgaveId)) {
             List<Melding> traad = henvendelseUtsendingService.hentTraad(fnr, henvendelseId);
-            if (!traad.isEmpty()) {
+            if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
                 erstattReferatPanelMedSvarPanel(traad, optional(oppgaveId));
             }
         }
@@ -64,6 +68,11 @@ public class DialogPanel extends Panel {
 
     private void erstattReferatPanelMedSvarPanel(List<Melding> traad, Optional<String> oppgaveId) {
         aktivtPanel = aktivtPanel.replaceWith(new SvarPanel(AKTIVT_PANEL_ID, fnr, traad, oppgaveId));
+    }
+
+    private boolean erEnkeltstaaendeSamtalereferat(List<Melding> traad) {
+        List<Meldingstype> samtalereferat = asList(SAMTALEREFERAT_OPPMOTE, SAMTALEREFERAT_TELEFON);
+        return traad.size() == 1 && samtalereferat.contains(traad.get(0).meldingstype);
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
