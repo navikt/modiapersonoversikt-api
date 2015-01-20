@@ -29,6 +29,11 @@ public class BehandleHenvendelsePortTypeMock {
             }
 
             @Override
+            public void knyttBehandlingskjedeTilSak(String behandlingskjedeId, String saksId, String temakode) {
+
+            }
+
+            @Override
             public void oppdaterOppgaveOpprettetInformasjon(XMLOppgaveOpprettetInformasjon oppdaterOppgaveOpprettetInformasjon) {
             }
 
