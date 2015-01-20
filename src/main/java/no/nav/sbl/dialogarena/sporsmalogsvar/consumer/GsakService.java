@@ -27,6 +27,7 @@ import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.DateUtils.ukedagerFraDato;
+import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.joda.time.DateTime.now;
 import static org.joda.time.format.DateTimeFormat.forPattern;
@@ -34,8 +35,11 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 public class GsakService {
 
     private static final Logger logger = LoggerFactory.getLogger(GsakService.class);
+
     public static final int DEFAULT_OPPRETTET_AV_ENHET_ID = 2820;
     public static final String HENVENDELSESTYPE_KODE = "BESVAR_KNA";
+    public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
+    public static final String KODE_KONTAKT_NAV = "KNA";
 
     @Inject
     private OppgaveV3 oppgaveWS;
@@ -65,7 +69,12 @@ public class GsakService {
     }
 
     public boolean oppgaveKanManuelltAvsluttes(String oppgaveId) {
-        return !hentOppgave(oppgaveId).getFagomrade().getKode().equals("KNA");
+        WSOppgave wsOppgave = hentOppgave(oppgaveId);
+
+        boolean kontaktNav = equalsIgnoreCase(wsOppgave.getFagomrade().getKode(), KODE_KONTAKT_NAV);
+        boolean ferdigstilt = equalsIgnoreCase(wsOppgave.getStatus().getKode(), KODE_OPPGAVE_FERDIGSTILT);
+
+        return !kontaktNav && !ferdigstilt;
     }
 
     public WSOppgave hentOppgave(String oppgaveId) {
