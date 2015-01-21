@@ -40,6 +40,7 @@ public class AvsluttOppgavePanel extends Panel {
         feedbackPanelError.setOutputMarkupId(true);
 
         beskrivelseFelt = new TextArea<>("beskrivelse", new Model<String>());
+        beskrivelseFelt.setRequired(true);
         add(new Form("form")
                 .add(beskrivelseFelt)
                 .add(new AjaxButton("avsluttoppgave") {
@@ -52,11 +53,16 @@ public class AvsluttOppgavePanel extends Panel {
                             target.add(form, feedbackPanelSuccess);
                         } catch (LagreOppgaveOptimistiskLasing e) {
                             error(getString("avsluttoppgave.feil.opptimistisklaasing"));
-                            target.add(feedbackPanelError);
+                            onError(target, form);
                         } catch (Exception e) {
                             error(getString("avsluttoppgave.feil.teknisk"));
-                            target.add(feedbackPanelError);
+                            onError(target, form);
                         }
+                    }
+
+                    @Override
+                    protected void onError(AjaxRequestTarget target, Form<?> form) {
+                        target.add(feedbackPanelError);
                     }
                 })
                 .add(feedbackPanelError)
