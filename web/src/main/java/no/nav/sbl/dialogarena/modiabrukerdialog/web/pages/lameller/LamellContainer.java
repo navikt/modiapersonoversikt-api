@@ -130,6 +130,21 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
         });
     }
 
+    private void gotoAndSendToLamell(String lamellId, Object payload) {
+        if (hasFactory(lamellId)) {
+            goToLamell(lamellId);
+            sendToLamell(lamellId, payload);
+        } else {
+            ApplicationException exc = new ApplicationException("Ukjent lamellId <" + lamellId + "> klikket");
+            logger.warn("ukjent lamellId: {}", lamellId, exc);
+            throw exc;
+        }
+    }
+
+    public void setStartLamell(String startLamell) {
+        this.startLamell = optional(startLamell);
+    }
+
     private static boolean canHaveMoreThanOneLamell(String type) {
         return SYKEPENGER.equalsIgnoreCase(type) || FORELDREPENGER.equalsIgnoreCase(type);
     }
@@ -209,19 +224,4 @@ public class LamellContainer extends TokenLamellPanel implements Serializable {
             return lamell.isModified();
         }
     };
-
-    private void gotoAndSendToLamell(String lamellId, Object payload) {
-        if (hasFactory(lamellId)) {
-            goToLamell(lamellId);
-            sendToLamell(lamellId, payload);
-        } else {
-            ApplicationException exc = new ApplicationException("Ukjent lamellId <" + lamellId + "> klikket");
-            logger.warn("ukjent lamellId: {}", lamellId, exc);
-            throw exc;
-        }
-    }
-
-    public void setStartLamell(String startLamell) {
-        this.startLamell = optional(startLamell);
-    }
 }
