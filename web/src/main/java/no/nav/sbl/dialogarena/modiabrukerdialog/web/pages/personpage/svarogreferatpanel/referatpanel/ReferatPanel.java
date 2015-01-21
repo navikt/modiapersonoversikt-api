@@ -189,6 +189,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
     private void settOppModellMedDefaultVerdier() {
         getModelObject().modus = Modus.REFERAT;
         getModelObject().kanal = null;
+        getModelObject().valgtSak = null;
         if (saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()) {
             getModelObject().kanal = TELEFON;
         }
@@ -255,7 +256,6 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
                 kvittering.visKvittering(target, getString("referatpanel.sporsmal.kvittering.bekreftelse"), form);
                 break;
         }
-
         send(getPage(), Broadcast.BREADTH, new NamedEventPayload(MELDING_SENDT_TIL_BRUKER));
     }
 

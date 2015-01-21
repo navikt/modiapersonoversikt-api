@@ -5,41 +5,48 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefer
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.WebMarkupContainer;
+import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
 
+import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
+import static no.nav.modig.wicket.model.ModelUtils.not;
+
 public class JournalforingsPanel extends Panel {
 
-    public static final String JOURNALFORING_VELG_SAK_PANEL_TOGGLET = "events.local.journalforing.velg.sak.panel.togglet";
-
-    private final JournalforingsPanelVelgSak velgSakPanel;
-    private final WebMarkupContainer valgtSakContainer;
+    public static final String SAK_VALGT = "events.local.journalforing.sak.valgt";
 
     public JournalforingsPanel(String id, String fnr, IModel<HenvendelseVM> henvendelseVM) {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        velgSakPanel = new JournalforingsPanelVelgSak("velgSak", fnr, henvendelseVM);
-
-        valgtSakContainer = new WebMarkupContainer("valgtSakContainer");
-        valgtSakContainer.setOutputMarkupPlaceholderTag(true);
+        final VelgSakPanel velgSakPanel = new VelgSakPanel("velgSak", fnr, henvendelseVM);
 
         AjaxLink valgtSakLenke = new AjaxLink("valgtSakLenke") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 velgSakPanel.togglePanel(target);
-                toggleValgtSak(target);
+                target.add(this);
             }
         };
 
-        valgtSakContainer.add(valgtSakLenke);
-        add(valgtSakContainer, velgSakPanel);
+        WebMarkupContainer ingenSakValgt = new WebMarkupContainer("ingenSakValgt");
+        ingenSakValgt.add(visibleIf(not(henvendelseVM.getObject().sakErSatt())));
+
+        WebMarkupContainer sakValgt = new WebMarkupContainer("sakValgt");
+        sakValgt.add(visibleIf(henvendelseVM.getObject().sakErSatt()));
+        sakValgt.add(new Label("valgtSaksDatoFormatert"));
+        sakValgt.add(new Label("valgtSak.temaNavn"));
+        sakValgt.add(new Label("valgtSak.saksId"));
+
+        valgtSakLenke.add(ingenSakValgt, sakValgt);
+
+        add(valgtSakLenke, velgSakPanel);
     }
 
-    @RunOnEvents({JOURNALFORING_VELG_SAK_PANEL_TOGGLET})
-    public void toggleValgtSak(AjaxRequestTarget target) {
-        valgtSakContainer.setVisibilityAllowed(!valgtSakContainer.isVisibilityAllowed());
-        target.add(valgtSakContainer);
+    @RunOnEvents(SAK_VALGT)
+    public void oppdaterPanel(AjaxRequestTarget target){
+        target.add(this);
     }
 
 }

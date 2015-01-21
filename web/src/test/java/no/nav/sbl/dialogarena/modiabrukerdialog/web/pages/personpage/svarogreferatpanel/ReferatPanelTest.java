@@ -9,7 +9,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.journalforing.JournalforingsPanelVelgSak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.journalforing.VelgSakPanel;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
 import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
@@ -191,21 +191,21 @@ public class ReferatPanelTest extends WicketPageTest {
     }
 
     @Test
-    public void viserJournalforingPanelForSporsmalVelgSakDersomManKlikkerValgtSakLenke() {
+    public void viserVelgSakPanelForSporsmalDersomManKlikkerValgtSakLenke() {
         testReferatPanel = new TestReferatPanel("id", FNR);
         MockitoAnnotations.initMocks(this);
 
         settISporsmalsModus();
 
         wicket.goToPageWith(testReferatPanel)
-                .should().containComponent(thatIsInvisible().and(ofType(JournalforingsPanelVelgSak.class)))
+                .should().containComponent(thatIsInvisible().and(ofType(VelgSakPanel.class)))
                 .click().link(withId("valgtSakLenke"))
-                .should().containComponent(thatIsInvisible().and(withId("valgtSakLenke")))
-                .should().containComponent(thatIsVisible().and(ofType(JournalforingsPanelVelgSak.class)));
+                .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
+                .should().containComponent(thatIsVisible().and(ofType(VelgSakPanel.class)));
     }
 
     @Test
-    public void skjulerJournalforingPanelVelgSakForSporsmalDersomManKlikkerAvbryt() {
+    public void skjulerVelgSakPanelForSporsmalDersomManKlikkerAvbryt() {
         testReferatPanel = new TestReferatPanel("id", FNR);
         MockitoAnnotations.initMocks(this);
 
@@ -215,11 +215,11 @@ public class ReferatPanelTest extends WicketPageTest {
                 .click().link(withId("valgtSakLenke"))
                 .click().link(withId("avbrytJournalforing"))
                 .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
-                .should().containComponent(thatIsInvisible().and(ofType(JournalforingsPanelVelgSak.class)));
+                .should().containComponent(thatIsInvisible().and(ofType(VelgSakPanel.class)));
     }
 
     @Test
-    public void skjulerJournalforingPanelVelgSakForSporsmalDersomManKlikkerVelgerSak() {
+    public void skjulerVelgSakPanelForSporsmalDersomManKlikkerVelgerSak() {
         testReferatPanel = new TestReferatPanel("id", FNR);
         MockitoAnnotations.initMocks(this);
 
@@ -231,7 +231,7 @@ public class ReferatPanelTest extends WicketPageTest {
                 .select("valgtSak", 0)
                 .submitWithAjaxButton(withId("velgSak"))
                 .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
-                .should().containComponent(thatIsInvisible().and(ofType(JournalforingsPanelVelgSak.class)));
+                .should().containComponent(thatIsInvisible().and(ofType(VelgSakPanel.class)));
     }
 
     private void settISporsmalsModus() {
