@@ -385,9 +385,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <!-- Må være compile scope grunnet avhengighet til mock-modul -->
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <scope>test</scope>
         </dependency>
 
     </dependencies>
