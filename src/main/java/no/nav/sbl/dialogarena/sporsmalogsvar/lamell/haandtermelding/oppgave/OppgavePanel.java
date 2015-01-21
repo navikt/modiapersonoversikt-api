@@ -26,7 +26,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppga
 
 public class OppgavePanel extends AnimertPanel {
 
-    public static enum OppgaveValg {OPPRETT, AVSLUTT;}
+    public static enum OppgaveValg {OPPRETT, AVSLUTT}
 
     private NyOppgaveFormWrapper nyOppgaveFormWrapper;
     private AvsluttOppgavePanel avsluttOppgavePanel;
@@ -40,7 +40,7 @@ public class OppgavePanel extends AnimertPanel {
     public OppgavePanel(String id, final InnboksVM innboksVM) {
         super(id);
 
-        add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", this, new PropertyModel<>(innboksVM, "valgtTraad.eldsteMelding"))));
+        add(new Label("temagruppe", new StringResourceModel("${temagruppeKey}", this, new PropertyModel<MeldingVM>(innboksVM, "valgtTraad.eldsteMelding"))));
 
         okKnapp = new LukkLink("okKnapp");
         okKnapp.add(visibleIf(oppgaveBehandlet));
