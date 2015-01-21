@@ -131,13 +131,10 @@ public class ReferatPanelTest extends WicketPageTest {
         testReferatPanel = new TestReferatPanel("id", FNR);
         MockitoAnnotations.initMocks(this);
 
-
-        wicket.goToPageWith(testReferatPanel);
-        Form<HenvendelseVM> referatform = (Form<HenvendelseVM>) wicket.tester.getComponentFromLastRenderedPage("id:referatform");
         Sak sak = new Sak();
         sak.saksId = "saks_id";
         sak.temaKode = "temakode";
-        referatform.getModelObject().valgtSak = sak;
+        testReferatPanel.getModelObject().valgtSak = sak;
 
         wicket.goToPageWith(testReferatPanel)
                 .inForm(withId("referatform"))
