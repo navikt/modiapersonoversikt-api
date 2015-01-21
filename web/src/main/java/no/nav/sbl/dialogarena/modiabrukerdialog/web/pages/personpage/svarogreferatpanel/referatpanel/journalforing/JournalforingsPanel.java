@@ -23,6 +23,7 @@ public class JournalforingsPanel extends Panel {
 
         valgtSakContainer = new WebMarkupContainer("valgtSakContainer");
         valgtSakContainer.setOutputMarkupPlaceholderTag(true);
+
         AjaxLink valgtSakLenke = new AjaxLink("valgtSakLenke") {
             @Override
             public void onClick(AjaxRequestTarget target) {
@@ -30,15 +31,15 @@ public class JournalforingsPanel extends Panel {
                 toggleValgtSak(target);
             }
         };
-        valgtSakContainer.add(valgtSakLenke);
 
+        valgtSakContainer.add(valgtSakLenke);
         add(valgtSakContainer, velgSakPanel);
     }
 
     @RunOnEvents({JOURNALFORING_VELG_SAK_PANEL_TOGGLET})
     public void toggleValgtSak(AjaxRequestTarget target) {
         valgtSakContainer.setVisibilityAllowed(!valgtSakContainer.isVisibilityAllowed());
-        target.add(this);
+        target.add(valgtSakContainer);
     }
 
 }

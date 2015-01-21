@@ -71,7 +71,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
 
         settOppModellMedDefaultVerdier();
 
-        PropertyModel<Modus> modusModel = new PropertyModel<>(getModel(), "modus");
+        final PropertyModel<Modus> modusModel = new PropertyModel<>(getModel(), "modus");
 
         final Form<HenvendelseVM> form = new Form<>("referatform", getModel());
         form.setOutputMarkupPlaceholderTag(true);
@@ -140,7 +140,12 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         form.add(new AjaxButton("send") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
-                sendOgVisKvittering(target, form);
+                if(modusModel.getObject().equals(Modus.SPORSMAL) && form.getModelObject().valgtSak == null){
+                    error(getString("valgtSak.Required"));
+                    onError(target, form);
+                } else {
+                    sendOgVisKvittering(target, form);
+                }
             }
 
             @Override

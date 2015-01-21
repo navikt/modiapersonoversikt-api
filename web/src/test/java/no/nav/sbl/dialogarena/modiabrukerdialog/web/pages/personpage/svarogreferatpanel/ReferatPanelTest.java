@@ -1,24 +1,21 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.journalforing.JournalforingsPanelVelgSak;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.annotation.DirtiesContext;
@@ -29,15 +26,24 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
-import static org.hamcrest.Matchers.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.TestUtils.createMockSaker;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
@@ -68,9 +74,19 @@ public class ReferatPanelTest extends WicketPageTest {
     protected HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private SakerService sakerService;
 
     @InjectMocks
     private TestReferatPanel testReferatPanel;
+
+    private Saker saker;
+
+    @Before
+    public void setUp() {
+        saker = createMockSaker();
+        when(sakerService.hentSaker(anyString())).thenReturn(saker);
+    }
 
     @Test
     public void inneholderReferatspesifikkeKomponenter() {
@@ -99,7 +115,7 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void skalSendeReferattypeMedRiktigeVerdierTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+    public void senderReferattypeMedRiktigeVerdierTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         testReferatPanel = new TestReferatPanel("id", FNR);
         MockitoAnnotations.initMocks(this);
 
@@ -125,16 +141,13 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void skalSendeSporsmaltypeMedRiktigeVerdierTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+    public void senderSporsmaltypeMedRiktigeVerdierTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
         when(henvendelseUtsendingService.sendHenvendelse(any(Melding.class))).then(RETURNER_SAMME_MELDING);
         testReferatPanel = new TestReferatPanel("id", FNR);
         MockitoAnnotations.initMocks(this);
 
-        Sak sak = new Sak();
-        sak.saksId = "saks_id";
-        sak.temaKode = "temakode";
-        testReferatPanel.getModelObject().valgtSak = sak;
+        testReferatPanel.getModelObject().valgtSak = saker.getSakerListeFagsak().get(0).saksliste.get(0);
 
         wicket.goToPageWith(testReferatPanel)
                 .inForm(withId("referatform"))
@@ -155,6 +168,73 @@ public class ReferatPanelTest extends WicketPageTest {
         assertThat(melding.temagruppe, is(ARBD.name()));
         assertThat(melding.fritekst, is(FRITEKST));
         assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
+    }
+
+    @Test
+    public void girFeilmeldingDersomManSenderSporsmalUtenValgtJournalforingssak() {
+        testReferatPanel = new TestReferatPanel("id", FNR);
+        MockitoAnnotations.initMocks(this);
+
+        settISporsmalsModus();
+
+        wicket.goToPageWith(testReferatPanel)
+                .inForm(withId("referatform"))
+                    .select("velgModus", 1)
+                    .write("tekstfelt:text", FRITEKST)
+                    .select("temagruppe", 0)
+                    .submitWithAjaxButton(withId("send"))
+                .should().containComponent(thatIsVisible().withId("referatform"))
+                .should().containComponent(thatIsInvisible().ofType(KvitteringsPanel.class));
+
+        verify(henvendelseUtsendingService, never()).sendHenvendelse(any(Melding.class));
+    }
+
+    @Test
+    public void viserJournalforingPanelForSporsmalVelgSakDersomManKlikkerValgtSakLenke() {
+        testReferatPanel = new TestReferatPanel("id", FNR);
+        MockitoAnnotations.initMocks(this);
+
+        settISporsmalsModus();
+
+        wicket.goToPageWith(testReferatPanel)
+                .should().containComponent(thatIsInvisible().and(ofType(JournalforingsPanelVelgSak.class)))
+                .click().link(withId("valgtSakLenke"))
+                .should().containComponent(thatIsInvisible().and(withId("valgtSakLenke")))
+                .should().containComponent(thatIsVisible().and(ofType(JournalforingsPanelVelgSak.class)));
+    }
+
+    @Test
+    public void skjulerJournalforingPanelVelgSakForSporsmalDersomManKlikkerAvbryt() {
+        testReferatPanel = new TestReferatPanel("id", FNR);
+        MockitoAnnotations.initMocks(this);
+
+        settISporsmalsModus();
+
+        wicket.goToPageWith(testReferatPanel)
+                .click().link(withId("valgtSakLenke"))
+                .click().link(withId("avbrytJournalforing"))
+                .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
+                .should().containComponent(thatIsInvisible().and(ofType(JournalforingsPanelVelgSak.class)));
+    }
+
+    @Test
+    public void skjulerJournalforingPanelVelgSakForSporsmalDersomManKlikkerVelgerSak() {
+        testReferatPanel = new TestReferatPanel("id", FNR);
+        MockitoAnnotations.initMocks(this);
+
+        settISporsmalsModus();
+
+        wicket.goToPageWith(testReferatPanel)
+                .click().link(withId("valgtSakLenke"))
+                .inForm(withId("plukkSakForm"))
+                    .select("valgtSak", 0)
+                    .submitWithAjaxButton(withId("velgSak"))
+                .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
+                .should().containComponent(thatIsInvisible().and(ofType(JournalforingsPanelVelgSak.class)));
+    }
+
+    private void settISporsmalsModus() {
+        testReferatPanel.getModelObject().modus = HenvendelseVM.Modus.SPORSMAL;
     }
 
     @Test
