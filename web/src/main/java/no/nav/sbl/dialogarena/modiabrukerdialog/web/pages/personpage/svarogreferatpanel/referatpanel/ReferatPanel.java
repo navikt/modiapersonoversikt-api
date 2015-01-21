@@ -263,7 +263,12 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         sporsmal = henvendelseUtsendingService.sendHenvendelse(sporsmal);
         HenvendelseVM henvendelseVM = getModelObject();
 
-        behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(sporsmal.traadId, henvendelseVM.valgtSak.saksId, henvendelseVM.valgtSak.temaKode);
+        behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
+                sporsmal.traadId,
+                henvendelseVM.valgtSak.saksId,
+                henvendelseVM.valgtSak.temaKode,
+                saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()
+        );
     }
 
     private Melding felles() {

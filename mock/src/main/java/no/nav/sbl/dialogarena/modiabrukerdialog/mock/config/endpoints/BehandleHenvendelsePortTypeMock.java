@@ -29,7 +29,7 @@ public class BehandleHenvendelsePortTypeMock {
             }
 
             @Override
-            public void knyttBehandlingskjedeTilSak(String behandlingskjedeId, String saksId, String temakode) {
+            public void knyttBehandlingskjedeTilSak(String behandlingskjedeId, String saksId, String temakode, String journalforendeEnhet) {
 
             }
 
