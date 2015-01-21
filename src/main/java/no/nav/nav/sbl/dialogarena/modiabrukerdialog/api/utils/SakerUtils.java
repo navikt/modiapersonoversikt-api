@@ -1,5 +1,6 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
 import org.apache.commons.collections15.Closure;
