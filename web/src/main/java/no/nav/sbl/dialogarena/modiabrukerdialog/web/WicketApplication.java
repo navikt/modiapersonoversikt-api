@@ -156,9 +156,6 @@ public class WicketApplication extends WebApplication {
                         BasePage.MODIA_FLEXBOX_IE_CSS,
                         Innboks.MELDINGER_IE_CSS
                 )
-                .addConditionalJavascript(
-                        PersonPage.RESPOND_JS
-                )
                 .addLess(
                         BasePage.MODIA_COMMON_LESS,
                         BasePage.MODIA_KOMPONENTER_LESS,
