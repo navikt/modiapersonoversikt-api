@@ -30,7 +30,7 @@ public class AvsluttOppgavePanelTest extends WicketPageTest {
     private GsakService gsakService;
 
     @Test
-    public void avslutterOppgave() throws LagreOppgaveOptimistiskLasing {
+    public void avslutterOppgave() throws LagreOppgaveOptimistiskLasing, GsakService.OppgaveErFerdigstilt {
         Optional<String> oppgaveId = optional("1");
         String tekst = "tekst";
         wicket.goToPageWith(new TestAvsluttOppgavePanel("id", oppgaveId))
@@ -43,7 +43,7 @@ public class AvsluttOppgavePanelTest extends WicketPageTest {
     }
 
     @Test
-    public void viserFeilmeldingHvisFerdigstillingFeiler() throws LagreOppgaveOptimistiskLasing {
+    public void viserFeilmeldingHvisFerdigstillingFeiler() throws LagreOppgaveOptimistiskLasing, GsakService.OppgaveErFerdigstilt {
         doThrow(new RuntimeException()).when(gsakService).ferdigstillGsakOppgave(Matchers.<Optional<String>>any(), anyString());
 
         wicket.goToPageWith(new TestAvsluttOppgavePanel("id", optional("1")))

@@ -72,9 +72,13 @@ public class GsakService {
         WSOppgave wsOppgave = hentOppgave(oppgaveId);
 
         boolean kontaktNav = equalsIgnoreCase(wsOppgave.getFagomrade().getKode(), KODE_KONTAKT_NAV);
-        boolean ferdigstilt = equalsIgnoreCase(wsOppgave.getStatus().getKode(), KODE_OPPGAVE_FERDIGSTILT);
+        boolean ferdigstilt = oppgaveErFerdigstilt(wsOppgave);
 
         return !kontaktNav && !ferdigstilt;
+    }
+
+    private boolean oppgaveErFerdigstilt(WSOppgave wsOppgave) {
+        return equalsIgnoreCase(wsOppgave.getStatus().getKode(), KODE_OPPGAVE_FERDIGSTILT);
     }
 
     public WSOppgave hentOppgave(String oppgaveId) {
@@ -85,10 +89,14 @@ public class GsakService {
         }
     }
 
-    public void ferdigstillGsakOppgave(Optional<String> oppgaveId, String beskrivelse) throws LagreOppgaveOptimistiskLasing {
+    public void ferdigstillGsakOppgave(Optional<String> oppgaveId, String beskrivelse) throws LagreOppgaveOptimistiskLasing, OppgaveErFerdigstilt {
         if (oppgaveId.isSome()) {
             try {
                 WSOppgave oppgave = oppgaveWS.hentOppgave(new WSHentOppgaveRequest().withOppgaveId(oppgaveId.get())).getOppgave();
+
+                if (oppgaveErFerdigstilt(oppgave)) {
+                    throw new OppgaveErFerdigstilt(new Throwable("Oppgaven er allerede ferdigstilt"));
+                }
 
                 String nyBeskrivelse = "Oppgaven er ferdigstilt i Modia med beskrivelse:\n" + beskrivelse;
                 String valgtEnhetIdString = saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
@@ -184,5 +192,11 @@ public class GsakService {
                 .withVersjon(wsOppgave.getVersjon())
                 .withSaksnummer(wsOppgave.getSaksnummer())
                 .withLest(wsOppgave.isLest());
+    }
+
+    public static class OppgaveErFerdigstilt extends Exception {
+        public OppgaveErFerdigstilt(Throwable cause) {
+            super(cause);
+        }
     }
 }

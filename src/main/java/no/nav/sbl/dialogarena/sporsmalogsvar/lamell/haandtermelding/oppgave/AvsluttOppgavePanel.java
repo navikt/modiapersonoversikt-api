@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService.OppgaveErFerdigstilt;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
@@ -53,6 +54,9 @@ public class AvsluttOppgavePanel extends Panel {
                             target.add(form, feedbackPanelSuccess);
                         } catch (LagreOppgaveOptimistiskLasing e) {
                             error(getString("avsluttoppgave.feil.opptimistisklaasing"));
+                            onError(target, form);
+                        } catch (OppgaveErFerdigstilt e) {
+                            error(getString("avsluttoppgave.feil.oppgaveferdigstilt"));
                             onError(target, form);
                         } catch (Exception e) {
                             error(getString("avsluttoppgave.feil.teknisk"));
