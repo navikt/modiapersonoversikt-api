@@ -11,12 +11,17 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServices
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.journalforing.VelgSakPanel;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.form.*;
+import org.apache.wicket.markup.html.form.DropDownChoice;
+import org.apache.wicket.markup.html.form.Form;
+import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.annotation.DirtiesContext;
@@ -27,26 +32,18 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.TestUtils.createMockSaker;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -148,14 +145,14 @@ public class ReferatPanelTest extends WicketPageTest {
         testReferatPanel = new TestReferatPanel("id", FNR);
         MockitoAnnotations.initMocks(this);
 
+        settISporsmalsModus();
+
         testReferatPanel.getModelObject().valgtSak = saker.getSakerListeFagsak().get(0).saksliste.get(0);
 
         wicket.goToPageWith(testReferatPanel)
                 .inForm(withId("referatform"))
                 .select("velgModus", 1)
                 .write("tekstfelt:text", FRITEKST)
-                .select("temagruppe", 0)
-                .select("kanal", 0)
                 .submitWithAjaxButton(withId("send"));
 
         verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture());
@@ -166,7 +163,7 @@ public class ReferatPanelTest extends WicketPageTest {
         assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
         assertThat(melding.fnrBruker, is(FNR));
         assertThat(melding.navIdent, is(getSubjectHandler().getUid()));
-        assertThat(melding.temagruppe, is(ARBD.name()));
+        assertThat(melding.temagruppe, is("OVRG"));
         assertThat(melding.fritekst, is(FRITEKST));
         assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
     }

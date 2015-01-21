@@ -7,6 +7,7 @@ import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM;
@@ -59,6 +60,8 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
     protected BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Inject
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
+    @Inject
+    private LokaltKodeverk lokaltKodeverk;
 
     private final String fnr;
     private final KvitteringsPanel kvittering;
@@ -130,12 +133,16 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         });
         form.add(radioGroup);
 
-        form.add(new DropDownChoice<>("temagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
+        DropDownChoice<Temagruppe> temagruppeVelger = new DropDownChoice<>("temagruppe", asList(Temagruppe.values()), new ChoiceRenderer<Temagruppe>() {
             @Override
             public Object getDisplayValue(Temagruppe object) {
                 return getString(object.name());
             }
-        }).setRequired(true));
+        });
+        form.add(temagruppeVelger.setRequired(true));
+        temagruppeVelger.setOutputMarkupPlaceholderTag(true);
+        modusKomponenter.add(temagruppeVelger);
+        temagruppeVelger.add(visibleIf(isEqualTo(modusModel, Modus.REFERAT)));
 
         form.add(getSubmitKnapp(modusModel, form, feedbackPanel));
         form.add(getAvbrytKnapp());
@@ -240,6 +247,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
             protected void onUpdate(AjaxRequestTarget target) {
                 target.add(modusKomponenter.toArray(new Component[modusKomponenter.size()]));
                 target.appendJavaScript("$('.tekstfelt textarea').focus()");
+                target.appendJavaScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});");
             }
         });
         return velger;
@@ -262,18 +270,20 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
     private void sendReferat() {
         Melding referat = felles()
                 .withKanal(getModelObject().kanal.name())
+                .withTemagruppe(getModelObject().temagruppe.name())
                 .withType(referatType(getModelObject().kanal));
         henvendelseUtsendingService.sendHenvendelse(referat);
     }
 
     private void sendSporsmal() {
+        HenvendelseVM henvendelseVM = getModelObject();
         Melding sporsmal = felles()
                 .withKanal(Kanal.TEKST.name())
                 .withType(SPORSMAL_MODIA_UTGAAENDE)
+                .withTemagruppe(lokaltKodeverk.hentTemagruppeForTema(henvendelseVM.valgtSak.temaKode))
                 .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
 
         sporsmal = henvendelseUtsendingService.sendHenvendelse(sporsmal);
-        HenvendelseVM henvendelseVM = getModelObject();
 
         behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
                 sporsmal.traadId,
@@ -287,7 +297,6 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         return new Melding()
                 .withFnr(fnr)
                 .withNavIdent(getSubjectHandler().getUid())
-                .withTemagruppe(getModelObject().temagruppe.name())
                 .withFritekst(getModelObject().getFritekst())
                 .withEksternAktor(getSubjectHandler().getUid());
     }
