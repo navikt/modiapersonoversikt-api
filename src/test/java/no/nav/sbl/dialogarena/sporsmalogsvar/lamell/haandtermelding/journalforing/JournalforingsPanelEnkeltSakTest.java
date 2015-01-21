@@ -4,9 +4,8 @@ import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,7 +18,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
@@ -34,7 +33,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
     @Inject
-    private JoarkJournalforingService joarkJournalforingService;
+    private BehandleHenvendelsePortType behandleHenvendelsePortType;
 
     private InnboksVM innboksVM;
 
@@ -54,11 +53,13 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
 
     @Test
     public void skalJournalforeVedSubmit() {
+        JournalforingsPanelEnkeltSak journalforingsPanel = new JournalforingsPanelEnkeltSak("panel", innboksVM);
+        journalforingsPanel.oppdater();
         wicket
-                .goToPageWith(new JournalforingsPanelEnkeltSak("panel", innboksVM))
+                .goToPageWith(journalforingsPanel)
                 .click().link(withId("journalforTraad"));
 
-        verify(joarkJournalforingService).journalforTraad(any(TraadVM.class), any(Sak.class));
+        verify(behandleHenvendelsePortType).knyttBehandlingskjedeTilSak(anyString(), anyString(), anyString());
     }
 
 }

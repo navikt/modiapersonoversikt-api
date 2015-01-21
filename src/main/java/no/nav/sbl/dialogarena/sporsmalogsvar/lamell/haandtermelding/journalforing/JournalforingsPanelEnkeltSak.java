@@ -1,10 +1,11 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SakerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.JoarkJournalforingService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
+import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.event.Broadcast;
@@ -20,7 +21,7 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journ
 public class JournalforingsPanelEnkeltSak extends Panel {
 
     @Inject
-    private JoarkJournalforingService joarkJournalforingService;
+    private BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Inject
     private SakerService sakerService;
 
@@ -48,7 +49,10 @@ public class JournalforingsPanelEnkeltSak extends Panel {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 TraadVM valgtTraadVM = innboksVM.getValgtTraad();
-                joarkJournalforingService.journalforTraad(valgtTraadVM, journalfortSakVM.getSak());
+                Melding melding = valgtTraadVM.getEldsteMelding().melding;
+                Sak sak = journalfortSakVM.getSak();
+
+                behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(melding.traadId, sak.saksId, sak.temaKode);
                 send(getPage(), Broadcast.DEPTH, TRAAD_JOURNALFORT);
             }
         };
