@@ -137,7 +137,16 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
             }
         }).setRequired(true));
 
-        form.add(new AjaxButton("send") {
+        form.add(getSubmitKnapp(modusModel, form, feedbackPanel));
+        form.add(getAvbrytKnapp());
+
+        kvittering = new KvitteringsPanel("kvittering");
+
+        add(form, kvittering);
+    }
+
+    private AjaxButton getSubmitKnapp(final PropertyModel<Modus> modusModel, final Form<HenvendelseVM> form, final FeedbackPanel feedbackPanel) {
+        return new AjaxButton("send") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
                 if(modusModel.getObject().equals(Modus.SPORSMAL) && form.getModelObject().valgtSak == null){
@@ -152,19 +161,17 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
             }
-        });
+        };
+    }
 
-        form.add(new AjaxLink<Void>("avbryt") {
+    private AjaxLink<Void> getAvbrytKnapp() {
+        return new AjaxLink<Void>("avbryt") {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 settOppModellMedDefaultVerdier();
                 target.add(ReferatPanel.this);
             }
-        });
-
-        kvittering = new KvitteringsPanel("kvittering");
-
-        add(form, kvittering);
+        };
     }
 
     @Override
