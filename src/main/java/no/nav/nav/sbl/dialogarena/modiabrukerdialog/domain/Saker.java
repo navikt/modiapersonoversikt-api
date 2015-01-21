@@ -23,7 +23,14 @@ public class Saker implements Serializable {
     }
 
     public boolean sakerFinnes() {
-        return (getSakerListeFagsak() != null && !getSakerListeFagsak().isEmpty()) ||
-                (getSakerListeGenerelle() != null && !getSakerListeGenerelle().isEmpty());
+        return fagsakerFinnes() || generelleSakerFinnes();
+    }
+
+    private boolean fagsakerFinnes() {
+        return getSakerListeFagsak() != null && !getSakerListeFagsak().isEmpty();
+    }
+
+    private boolean generelleSakerFinnes() {
+        return getSakerListeGenerelle() != null && !getSakerListeGenerelle().isEmpty();
     }
 }
