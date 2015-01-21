@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
@@ -20,7 +20,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.SAKS_ID_3;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;

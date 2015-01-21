@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavefo
 import com.vaynberg.wicket.select2.Response;
 import com.vaynberg.wicket.select2.Select2Choice;
 import com.vaynberg.wicket.select2.TextChoiceProvider;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import org.apache.wicket.model.IModel;
 
 import java.util.ArrayList;

@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Status.LEST_AV_BRUKER;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Status.LEST_AV_BRUKER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.FRA_BRUKER;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.MeldingUtils.FRA_NAV;
 

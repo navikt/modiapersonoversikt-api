@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.protocol.http.WebApplication;
 import org.joda.time.LocalDate;

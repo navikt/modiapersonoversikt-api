@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 import com.github.jknack.handlebars.*;
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.sbl.dialogarena.pdf.HandleBarHtmlGenerator;
 import no.nav.sbl.dialogarena.pdf.PDFFabrikk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;

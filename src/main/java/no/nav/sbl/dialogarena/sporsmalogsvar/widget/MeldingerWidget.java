@@ -5,7 +5,7 @@ import no.nav.modig.modia.widget.FeedWidget;
 import no.nav.modig.modia.widget.panels.ErrorListing;
 import no.nav.modig.modia.widget.panels.GenericListing;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import org.apache.commons.collections15.Transformer;
 import org.apache.wicket.ajax.AjaxRequestTarget;

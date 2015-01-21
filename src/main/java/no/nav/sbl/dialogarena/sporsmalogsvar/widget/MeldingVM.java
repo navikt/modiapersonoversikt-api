@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
 import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 
 import java.io.Serializable;
 import java.util.Comparator;
@@ -11,7 +11,7 @@ import java.util.List;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagMeldingStatusTekstKey;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.VisningUtils.lagStatusIkonKlasse;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding.NYESTE_FORST;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding.NYESTE_FORST;
 
 public class MeldingVM implements FeedItemVM, Serializable {
 

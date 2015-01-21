@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Saker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.SakerForTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import org.apache.wicket.model.*;
 

@@ -1,10 +1,10 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.*;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.joda.time.DateTime;

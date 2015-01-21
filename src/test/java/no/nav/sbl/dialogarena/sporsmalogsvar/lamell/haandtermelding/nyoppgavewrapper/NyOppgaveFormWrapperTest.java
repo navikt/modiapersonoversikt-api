@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavewrapper;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.*;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
@@ -24,7 +23,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMelding;
 import static org.apache.wicket.util.tester.WicketTesterHelper.findBehavior;
 import static org.joda.time.DateTime.now;

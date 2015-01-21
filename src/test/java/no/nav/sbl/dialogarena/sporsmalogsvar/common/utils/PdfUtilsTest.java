@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
 import org.joda.time.DateTime;
 import org.junit.Assert;
 import org.junit.Test;

@@ -3,16 +3,15 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
 import no.nav.modig.core.context.*;
 import no.nav.modig.core.domain.IdentType;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.*;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import org.joda.time.DateTime;
 
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak.SAKSTYPE_GENERELL;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.SAKSTYPE_GENERELL;
 
 public class TestUtils {
 
