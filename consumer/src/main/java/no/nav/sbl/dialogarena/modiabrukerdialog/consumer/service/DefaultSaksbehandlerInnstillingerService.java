@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import org.apache.wicket.util.cookies.CookieUtils;
 
 import javax.inject.Inject;
@@ -9,7 +9,7 @@ import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet.ENHET_ID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet.ENHET_ID;
 
 
 public class DefaultSaksbehandlerInnstillingerService implements SaksbehandlerInnstillingerService {

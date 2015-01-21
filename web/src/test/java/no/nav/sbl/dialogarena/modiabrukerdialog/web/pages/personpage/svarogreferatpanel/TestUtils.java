@@ -1,13 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.*;
 import org.joda.time.DateTime;
 
 import java.util.*;
 
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak.SAKSTYPE_GENERELL;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENTE_TEMA_FOR_GENERELLE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.SAKSTYPE_GENERELL;
 
 public class TestUtils {
 

@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.LokaltKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
 
 import java.util.HashMap;
 import java.util.List;

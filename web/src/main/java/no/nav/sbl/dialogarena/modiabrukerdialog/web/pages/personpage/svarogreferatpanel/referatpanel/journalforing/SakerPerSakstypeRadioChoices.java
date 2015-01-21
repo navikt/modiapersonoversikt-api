@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.journalforing;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.behavior.AttributeAppender;

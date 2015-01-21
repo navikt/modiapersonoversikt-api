@@ -3,7 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 import no.nav.brukerprofil.consumer.BrukerprofilServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.EnhetService;
 import no.nav.personsok.consumer.fim.personsok.PersonsokServiceBi;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import no.nav.sbl.dialogarena.sak.config.SaksoversiktServiceConfig;

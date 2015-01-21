@@ -4,8 +4,8 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGe
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.core.context.SubjectHandler;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*;

@@ -2,9 +2,9 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
 import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;

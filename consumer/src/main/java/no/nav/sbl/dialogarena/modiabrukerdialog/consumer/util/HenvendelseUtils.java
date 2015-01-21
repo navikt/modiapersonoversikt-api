@@ -1,13 +1,13 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
 import org.apache.commons.collections15.Transformer;
 
 import java.util.*;
 
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
 import static org.joda.time.DateTime.now;
 
 public class HenvendelseUtils {

@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultSaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;

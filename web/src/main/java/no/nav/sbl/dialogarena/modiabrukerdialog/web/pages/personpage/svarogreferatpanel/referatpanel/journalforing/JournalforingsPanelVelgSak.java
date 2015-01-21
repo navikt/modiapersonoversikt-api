@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.journalforing;
 
 import no.nav.modig.wicket.events.NamedEventPayload;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.markup.html.AjaxLink;

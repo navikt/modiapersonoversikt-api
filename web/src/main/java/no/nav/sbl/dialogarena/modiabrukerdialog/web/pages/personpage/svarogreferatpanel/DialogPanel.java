@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.OppgavetilordningFeilet;
@@ -20,10 +20,10 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.modia.events.InternalEvents.SVAR_PAA_MELDING;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.HENVENDELSEID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.constants.URLParametere.OPPGAVEID;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;

@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navansatt.ASBOGOSYSNAVAnsatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSNavEnhet;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.*;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
 import org.apache.commons.collections15.Transformer;
 
 import javax.inject.Inject;

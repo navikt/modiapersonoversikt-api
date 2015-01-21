@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.referatpanel.journalforing;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.SakerForTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
 import org.apache.wicket.markup.html.form.RadioGroup;
 import org.apache.wicket.model.PropertyModel;
 

@@ -1,11 +1,11 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Saker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.GsakKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.LokaltKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.StandardKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSEndringsinfo;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
@@ -23,8 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak.SAKSTYPE_GENERELL;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.SAKSTYPE_GENERELL;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;

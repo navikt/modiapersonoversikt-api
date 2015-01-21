@@ -1,9 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.*;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SakerService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
@@ -30,10 +29,10 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TELEFON;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.TestUtils.createMockSaker;
 import static org.hamcrest.Matchers.equalTo;

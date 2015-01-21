@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Saker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
@@ -13,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.utils.SakerUtils.leggTilFagsystemnavnOgTemanavn;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.leggTilFagsystemnavnOgTemanavn;
 
 public class SakerServiceImpl implements SakerService {
 

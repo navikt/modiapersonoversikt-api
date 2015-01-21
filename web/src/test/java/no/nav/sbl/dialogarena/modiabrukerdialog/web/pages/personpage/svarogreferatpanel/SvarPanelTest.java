@@ -3,7 +3,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
@@ -30,10 +29,10 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.TEKST;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SVAR_OPPMOTE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SVAR_SKRIFTLIG;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SVAR_TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_TELEFON;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;

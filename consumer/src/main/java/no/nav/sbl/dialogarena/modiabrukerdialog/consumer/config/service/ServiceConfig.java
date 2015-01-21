@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import no.nav.modig.wicket.services.HealthCheckService;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.GsakKodeverkFraFil;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.LokaltKodeverkImpl;

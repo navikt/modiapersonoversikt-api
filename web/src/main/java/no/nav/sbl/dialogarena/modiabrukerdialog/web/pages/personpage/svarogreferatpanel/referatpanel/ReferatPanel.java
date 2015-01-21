@@ -4,10 +4,10 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel.HenvendelseVM.Modus;
@@ -47,8 +47,8 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Kanal.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class ReferatPanel extends GenericPanel<HenvendelseVM> {

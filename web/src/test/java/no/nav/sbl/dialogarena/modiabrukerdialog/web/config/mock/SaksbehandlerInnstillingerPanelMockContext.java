@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.AnsattService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultSaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.mock.config.endpoints.GosysNavAnsattPortTypeMock;
 import org.springframework.context.annotation.Bean;

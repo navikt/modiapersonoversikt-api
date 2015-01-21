@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;

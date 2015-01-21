@@ -1,12 +1,12 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util;
 
 import no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.*;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
 import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.HenvendelseUtils.TIL_MELDING;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;

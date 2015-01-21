@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk;
 
 import no.nav.modig.core.exception.ApplicationException;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.GsakKodeTema;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
 import org.apache.commons.collections15.Predicate;
 import org.apache.commons.collections15.Transformer;
 import org.w3c.dom.Document;

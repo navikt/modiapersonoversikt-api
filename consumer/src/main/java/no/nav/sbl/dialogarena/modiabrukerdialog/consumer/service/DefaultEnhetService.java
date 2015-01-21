@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 import _0._0.nav_cons_sak_gosys_3.no.nav.asbo.navorgenhet.ASBOGOSYSFinnNAVEnhetRequest;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.FinnNAVEnhetFaultGOSYSGeneriskMsg;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.AnsattEnhet;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.EnhetService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.EnhetService;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
