@@ -55,7 +55,7 @@ public class JournalforingsPanelVelgSakTest extends WicketPageTest {
                 .select("valgtTraad.journalfortSak", 0)
                 .submitWithAjaxButton(withId("journalforTraad"));
 
-        verify(behandleHenvendelsePortType).knyttBehandlingskjedeTilSak(anyString(), anyString(), anyString());
+        verify(behandleHenvendelsePortType).knyttBehandlingskjedeTilSak(anyString(), anyString(), anyString(), anyString());
     }
 
     @Test

@@ -59,7 +59,7 @@ public class JournalforingsPanelEnkeltSakTest extends WicketPageTest {
                 .goToPageWith(journalforingsPanel)
                 .click().link(withId("journalforTraad"));
 
-        verify(behandleHenvendelsePortType).knyttBehandlingskjedeTilSak(anyString(), anyString(), anyString());
+        verify(behandleHenvendelsePortType).knyttBehandlingskjedeTilSak(anyString(), anyString(), anyString(), anyString());
     }
 
 }

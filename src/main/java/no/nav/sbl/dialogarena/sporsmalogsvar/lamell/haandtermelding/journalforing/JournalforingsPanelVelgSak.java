@@ -3,6 +3,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SakerService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
@@ -29,6 +30,8 @@ public class JournalforingsPanelVelgSak extends Panel {
     private BehandleHenvendelsePortType behandleHenvendelsePortType;
     @Inject
     private SakerService sakerService;
+    @Inject
+    private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
 
     private SakerVM sakerVM;
 
@@ -58,7 +61,12 @@ public class JournalforingsPanelVelgSak extends Panel {
                 Melding melding = valgtTraadVM.getEldsteMelding().melding;
                 Sak sak = valgtTraadVM.journalfortSak;
 
-                behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(melding.traadId, sak.saksId, sak.temaKode);
+                behandleHenvendelsePortType.knyttBehandlingskjedeTilSak(
+                        melding.traadId,
+                        sak.saksId,
+                        sak.temaKode,
+                        saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()
+                );
                 send(getPage(), Broadcast.DEPTH, TRAAD_JOURNALFORT);
             }
 
