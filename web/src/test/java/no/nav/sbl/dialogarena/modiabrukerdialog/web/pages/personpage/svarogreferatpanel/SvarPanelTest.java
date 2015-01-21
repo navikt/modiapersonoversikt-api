@@ -3,6 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogrefe
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;

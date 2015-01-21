@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
 import org.joda.time.DateTime;
 
 import java.util.*;

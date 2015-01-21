@@ -1,10 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.config.service;
 
 import no.nav.modig.wicket.services.HealthCheckService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.*;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.GsakKodeverkFraFil;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.LokaltKodeverkImpl;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.StandardKodeverkImpl;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;

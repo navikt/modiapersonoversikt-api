@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.svarogreferatpanel;
 
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
@@ -178,10 +180,10 @@ public class ReferatPanelTest extends WicketPageTest {
 
         wicket.goToPageWith(testReferatPanel)
                 .inForm(withId("referatform"))
-                    .select("velgModus", 1)
-                    .write("tekstfelt:text", FRITEKST)
-                    .select("temagruppe", 0)
-                    .submitWithAjaxButton(withId("send"))
+                .select("velgModus", 1)
+                .write("tekstfelt:text", FRITEKST)
+                .select("temagruppe", 0)
+                .submitWithAjaxButton(withId("send"))
                 .should().containComponent(thatIsVisible().withId("referatform"))
                 .should().containComponent(thatIsInvisible().ofType(KvitteringsPanel.class));
 
@@ -226,8 +228,8 @@ public class ReferatPanelTest extends WicketPageTest {
         wicket.goToPageWith(testReferatPanel)
                 .click().link(withId("valgtSakLenke"))
                 .inForm(withId("plukkSakForm"))
-                    .select("valgtSak", 0)
-                    .submitWithAjaxButton(withId("velgSak"))
+                .select("valgtSak", 0)
+                .submitWithAjaxButton(withId("velgSak"))
                 .should().containComponent(thatIsVisible().and(withId("valgtSakLenke")))
                 .should().containComponent(thatIsInvisible().and(ofType(JournalforingsPanelVelgSak.class)));
     }

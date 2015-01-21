@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
 import no.nav.virksomhet.gjennomforing.sak.v1.WSGenerellSak;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeRequest;
 import no.nav.virksomhet.tjenester.sak.meldinger.v1.WSFinnGenerellSakListeResponse;
