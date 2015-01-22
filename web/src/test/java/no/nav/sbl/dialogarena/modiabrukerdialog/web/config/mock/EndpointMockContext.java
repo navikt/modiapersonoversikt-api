@@ -17,7 +17,6 @@ import org.springframework.context.annotation.Import;
         SendUtHenvendelsePortTypeMock.class,
         BehandleHenvendelsePortTypeMock.class,
         GsakHentSakslistePortTypeMock.class,
-        BehandleJournalV2PortTypeMock.class,
         GsakOppgaveV3PortTypeMock.class,
         GsakOppgavebehandlingV3PortTypeMock.class,
         GsakRutingPortTypeMock.class,
