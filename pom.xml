@@ -67,14 +67,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Tjenestespesifikasjon -->
-        <dependency>
-            <groupId>no.nav.tjenester.fim</groupId>
-            <artifactId>nav-fim-behandleJournal-v2-tjenestespesifikasjon</artifactId>
-            <version>2.0.0</version>
-            <classifier>jaxws</classifier>
-        </dependency>
-
         <!-- Kjerneinfo -->
         <dependency>
             <groupId>no.nav</groupId>

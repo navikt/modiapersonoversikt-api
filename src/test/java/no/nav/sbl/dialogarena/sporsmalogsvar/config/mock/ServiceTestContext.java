@@ -10,7 +10,6 @@ import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v2.henvendelse.HenvendelsePortType;
-import no.nav.tjeneste.virksomhet.behandlejournal.v2.binding.BehandleJournalV2;
 import no.nav.tjeneste.virksomhet.kodeverk.v2.KodeverkPortType;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
@@ -76,11 +75,6 @@ public class ServiceTestContext {
     @Bean
     public BehandleHenvendelsePortType behandleHenvendelsePortType() {
         return mock(BehandleHenvendelsePortType.class);
-    }
-
-    @Bean
-    public BehandleJournalV2 behandleJournalV2() {
-        return mock(BehandleJournalV2.class);
     }
 
     @Bean
