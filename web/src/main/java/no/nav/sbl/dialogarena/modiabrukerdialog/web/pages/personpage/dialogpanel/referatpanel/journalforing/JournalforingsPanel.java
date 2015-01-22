@@ -8,6 +8,7 @@ import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.panel.Panel;
 import org.apache.wicket.model.IModel;
+import org.apache.wicket.model.Model;
 
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.not;
@@ -20,16 +21,6 @@ public class JournalforingsPanel extends Panel {
         super(id);
         setOutputMarkupPlaceholderTag(true);
 
-        final VelgSakPanel velgSakPanel = new VelgSakPanel("velgSak", fnr, henvendelseVM);
-
-        AjaxLink valgtSakLenke = new AjaxLink("valgtSakLenke") {
-            @Override
-            public void onClick(AjaxRequestTarget target) {
-                velgSakPanel.togglePanel(target);
-                target.add(this);
-            }
-        };
-
         WebMarkupContainer ingenSakValgt = new WebMarkupContainer("ingenSakValgt");
         ingenSakValgt.add(visibleIf(not(henvendelseVM.getObject().sakErSatt())));
 
@@ -39,13 +30,27 @@ public class JournalforingsPanel extends Panel {
         sakValgt.add(new Label("valgtSak.temaNavn"));
         sakValgt.add(new Label("valgtSak.saksId"));
 
-        valgtSakLenke.add(ingenSakValgt, sakValgt);
+        final VelgSakPanel velgSakPanel = new VelgSakPanel("velgSak", fnr, henvendelseVM);
+
+        AjaxLink valgtSakLenke = new AjaxLink("valgtSakLenke") {
+            @Override
+            public void onClick(AjaxRequestTarget target) {
+                velgSakPanel.togglePanel(target);
+            }
+        };
+        IModel<Boolean> velgSakPanelOpen = new Model<Boolean>() {
+            @Override
+            public Boolean getObject() {
+                return velgSakPanel.isVisibilityAllowed();
+            }
+        };
+        valgtSakLenke.add(ingenSakValgt, sakValgt, new PilOppNed("pilVelgSaker", valgtSakLenke, velgSakPanelOpen));
 
         add(valgtSakLenke, velgSakPanel);
     }
 
     @RunOnEvents(SAK_VALGT)
-    public void oppdaterPanel(AjaxRequestTarget target){
+    public void oppdaterPanel(AjaxRequestTarget target) {
         target.add(this);
     }
 

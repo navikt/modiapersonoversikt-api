@@ -15,10 +15,7 @@ import org.apache.wicket.model.*;
 
 import java.util.List;
 
-import static no.nav.modig.wicket.conditional.ConditionalUtils.attributeIf;
-import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.modig.wicket.model.ModelUtils.not;
 
 public class SakerPerSakstypeRadioChoices extends Panel {
 
@@ -33,17 +30,9 @@ public class SakerPerSakstypeRadioChoices extends Panel {
                 target.add(SakerPerSakstypeRadioChoices.this);
             }
         };
-        link.add(new Label("sakstype", new ResourceModel(sakstypePropertyKey)));
-
-        WebMarkupContainer pil = new WebMarkupContainer("pil");
-        pil.add(
-                hasCssClassIf("opp", open),
-                hasCssClassIf("ned", not(open))
-        );
-        link.add(pil);
-
-        link.add(attributeIf("aria-pressed", "true", open, true));
-        link.add(attributeIf("aria-pressed", "false", not(open), true));
+        link.add(
+                new Label("sakstype", new ResourceModel(sakstypePropertyKey)),
+                new PilOppNed("pilSaker", link, open));
 
         WebMarkupContainer sakswrapper = new WebMarkupContainer("sakswrapper");
         sakswrapper.add(new PropertyListView<SakerForTema>("saksgruppeliste", model) {

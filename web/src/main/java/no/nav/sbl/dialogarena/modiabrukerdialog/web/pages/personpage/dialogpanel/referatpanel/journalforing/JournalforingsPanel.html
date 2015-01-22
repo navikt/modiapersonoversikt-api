@@ -4,21 +4,20 @@
 <head></head>
 <body>
 <wicket:panel>
-    <div>
+    <div class="sak-info">
         <a href="#" wicket:id="valgtSakLenke">
-            <div wicket:id="ingenSakValgt">
-                <h2>Velg sak</h2>
+            <div wicket:id="ingenSakValgt" class="venstrestilt">Velg sak</div>
+            <div wicket:id="sakValgt" class="midtstilt">
+                <span wicket:id="valgtSaksDatoFormatert"></span>
+                <span class = "skillestrek">|</span>
+                <span wicket:id="valgtSak.temaNavn"></span>
+                <span class = "skillestrek">|</span>
+                <span wicket:id="valgtSak.saksId"></span>
             </div>
-            <div wicket:id="sakValgt">
-                <h3>
-                    <span wicket:id="valgtSaksDatoFormatert"></span>
-                    <span wicket:id="valgtSak.temaNavn"></span>
-                    <span wicket:id="valgtSak.saksId"></span>
-                </h3>
-            </div>
+            <div class="hoyrestilt"><i wicket:id="pilVelgSaker" class="pil"></i></div>
         </a>
     </div>
-    <div wicket:id="velgSak"></div>
+    <div wicket:id="velgSak" class="velg-sak"></div>
 </wicket:panel>
 </body>
 </html>

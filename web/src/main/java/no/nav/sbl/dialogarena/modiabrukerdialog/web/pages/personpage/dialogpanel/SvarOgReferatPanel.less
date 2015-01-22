@@ -290,7 +290,7 @@
           color: white;
 
           &:first-child {
-            color: #b7b1a9;
+            color: @modiagraaskrift;
           }
         }
         .ui-state-focus, .ui-state-active {
@@ -380,13 +380,128 @@
   text-transform: lowercase;
 }
 
-.journalforing {
+.journalforingSporsmal {
   background-color: #333333;
-  color: #b7b1a9;
+  color: @modiagraaskrift;
   margin-left: 30px;
   margin-right: 30px;
-  h2, h3 {
-    color: #b7b1a9;
+  padding: 7px 20px;
+  min-height: 30px;
+  h2 {
+    color: @modiagraaskrift;
+    margin-top: 12px;
   }
-}
+  .avbryt-knapp {
+    color: #20a9e1;
+    display: block;
+    margin-top: 1em;
+    padding-bottom: 20px;
+    text-decoration: none;
+  }
+  .pil {
+    display: inline-block;
+    margin-bottom: 1px;
+    .pil(8px, @blue); // definisjon i common.less
+  }
+  .sak-info {
+    background: url(../img/journalfore_graa.svg) 0 0 no-repeat;
+    min-height: 15px;
+    .skillestrek {
+      margin: 0 5px;
+    }
+    a {
+      text-decoration: none;
+      color: @modiagraaskrift;
+    }
+    .venstrestilt {
+      padding-left: 25px;
+      text-align: left;
+      float: left;
+      width: 80%;
+    }
+    .midtstilt {
+      text-align: center;
+      float: left;
+      width: 80%;
+    }
+    .hoyrestilt {
+      text-align: right;
+      float: right;
+      width: 20%;
+    }
+  }
+  .velg-sak {
+    display: none;
+  }
+  .robust-strek {
+    padding-bottom: 4px !important;
+  }
+  .temaoverskrift {
+    display: block;
+    color: #ffffff;
+    margin-bottom: 5px;
+  }
+  .sakliste {
+    margin-top: 20px;
+    text-align: left;
+    .sakstype {
+      text-align: center;
+      cursor: pointer;
+      color: white;
+      display: block;
+      &:hover, &:focus {
+        outline: none;
+        text-decoration: underline;
+      }
+    }
+    .saklisteelement > label > span {
+      display: inline-block;
+      margin: 0;
+    }
+    &.last {
+      .sakswrapper {
+        hr:only-child {
+          display: none;
+        }
+      }
+    }
+  }
+  label {
+    color: @modiagraaskrift;
+    width: 100%;
+    margin-top: 6px;
+    margin-bottom: 10px;
+    div {
+      display: inline-block;
+    }
+    span {
+      display: block;
+      margin: 0 1rem 0 0;
+    }
+    .saksTekst {
+      text-transform: uppercase;
+    }
+    &:focus, &:hover {
+      color: white;
+    }
+  }
+  form {
+    text-align: center;
+    input[type="radio"] + label {
+      background: url(../img/radio_svart_bg.svg) 0 0 no-repeat;
+    }
+    input[type="radio"]:checked + label {
+      background: url(../img/radio_svart_valgt.svg) 0 0 no-repeat;
+      font-weight: normal;
+      color: #ffffff;
+    }
+    input[type="radio"]:focus + label {
+      color: white;
+    }
+  }
+  .send {
+    color: #fff;
+    margin: 20px 0 0 0;
+  }
 
+}

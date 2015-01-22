@@ -80,13 +80,13 @@ public class VelgSakPanel extends Panel {
     }
 
     public void togglePanel(AjaxRequestTarget target) {
-        if (!isVisibilityAllowed()) {
+        if (isVisibilityAllowed()) {
+            target.prependJavaScript(format("lukket|$('#%s').slideUp(lukket)", this.getMarkupId()));
+            this.setVisibilityAllowed(false);
+        } else {
             sakerVM.oppdater();
             target.appendJavaScript(format("$('#%s').slideDown()", this.getMarkupId()));
             this.setVisibilityAllowed(true);
-        } else {
-            this.setVisibilityAllowed(false);
-            target.prependJavaScript(format("lukket|$('#%s').slideUp(lukket)", this.getMarkupId()));
         }
         target.add(this);
     }
