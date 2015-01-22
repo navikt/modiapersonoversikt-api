@@ -2,11 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSMottaker;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling;
 import org.joda.time.Interval;
 
 import java.util.ArrayList;
