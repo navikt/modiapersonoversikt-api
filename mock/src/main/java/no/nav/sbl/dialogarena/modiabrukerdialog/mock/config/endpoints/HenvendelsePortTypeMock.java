@@ -92,8 +92,8 @@ public class HenvendelsePortTypeMock {
                     null, createXMLJourfortInformasjon(now().minusDays(1), "SYK", JOURNALFORT_SAKSID_HJELPEMIDLER, JOURNALFORER_NAV_IDENT))
                     .withHenvendelseType(SVAR_SKRIFTLIG.name()),
 
-            createXMLHenvendelse(BEHANDLINGS_ID3, BEHANDLINGS_ID3, now().minusMonths(4), null,
-                    createXMLMeldingFraBruker("ARBD", LANG_TEKST), valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", ""))
+            createXMLHenvendelse(BEHANDLINGS_ID3, BEHANDLINGS_ID3, now().minusMinutes(5), null,
+                    createXMLMeldingFraBruker("ORT_HJE", LANG_TEKST), valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", ""))
                     .withHenvendelseType(SPORSMAL_SKRIFTLIG.name()),
 
             createXMLHenvendelse(BEHANDLINGS_ID4, BEHANDLINGS_ID4, now(), null,

@@ -3,4 +3,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 public enum Temagruppe {
     ARBD,
     FMLI,
+    HJLPM,
+    BIL,
+    ORT_HJE
 }
