@@ -136,6 +136,7 @@ public class GsakService {
                                         .withAnsvarligEnhetId(nyOppgave.enhet.enhetId)
                                         .withBeskrivelse(leggTilBeskrivelse(beskrivelse, valgtEnhetIdString))
                                         .withFagomradeKode(nyOppgave.tema.kode)
+                                        .withUnderkategoriKode(nyOppgave.underkategori.kode)
                                         .withBrukerId(nyOppgave.brukerId)
                                         .withOppgavetypeKode(nyOppgave.type.kode)
                                         .withPrioritetKode(nyOppgave.prioritet.kode)

@@ -83,6 +83,7 @@ public class GsakServiceTest {
         nyOppgave.prioritet = new GsakKodeTema.Prioritet("tema", "");
         nyOppgave.type = new GsakKodeTema.OppgaveType("type", "", 0);
         nyOppgave.tema = new GsakKodeTema.Tema("tema", "", asList(nyOppgave.type), asList(nyOppgave.prioritet), asList(new GsakKodeTema.Underkategori("", "")));
+        nyOppgave.underkategori = new GsakKodeTema.Underkategori("underkategori", "");
         nyOppgave.henvendelseId = "henvendelseId";
         nyOppgave.brukerId = "12345612345";
         return nyOppgave;
