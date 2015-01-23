@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.nyoppgavewrapper;
 
+import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
@@ -82,8 +83,9 @@ public class NyOppgaveFormWrapperTest extends WicketPageTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     public void oppretterOppgave() {
-        when(gsakService.hentForeslattEnhet(anyString(), anyString(), anyString())).thenReturn(optional(new AnsattEnhet("1231", "Sinsen")));
+        when(gsakService.hentForeslattEnhet(anyString(), anyString(), anyString(), any(Optional.class))).thenReturn(optional(new AnsattEnhet("1231", "Sinsen")));
 
         wicket.goToPageWith(new NyOppgaveFormWrapper("panel", innboksVM));
 

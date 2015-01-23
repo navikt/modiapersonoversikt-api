@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.consumer;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.domain.NyOppgave;
@@ -52,14 +53,19 @@ public class GsakService {
     @Inject
     private AnsattService ansattWS;
 
-    public Optional<AnsattEnhet> hentForeslattEnhet(String fnr, String tema, String type) {
+    public Optional<AnsattEnhet> hentForeslattEnhet(String fnr, String tema, String type, Optional<GsakKodeTema.Underkategori> underkategori) {
         try {
-            WSFinnAnsvarligEnhetForOppgavetypeResponse enhetForOppgaveResponse = ruting.finnAnsvarligEnhetForOppgavetype(
-                    new WSFinnAnsvarligEnhetForOppgavetypeRequest()
-                            .withAlleEnheter(true)
-                            .withBrukerId(fnr)
-                            .withFagomradeKode(tema)
-                            .withOppgaveKode(type));
+            WSFinnAnsvarligEnhetForOppgavetypeRequest request = new WSFinnAnsvarligEnhetForOppgavetypeRequest()
+                    .withAlleEnheter(true)
+                    .withBrukerId(fnr)
+                    .withFagomradeKode(tema)
+                    .withOppgaveKode(type);
+
+            if (underkategori.isSome() && !isBlank(underkategori.get().kode)) {
+                request.withGjelderKode(underkategori.get().kode);
+            }
+
+            WSFinnAnsvarligEnhetForOppgavetypeResponse enhetForOppgaveResponse = ruting.finnAnsvarligEnhetForOppgavetype(request);
 
             WSEnhet wsEnhet = enhetForOppgaveResponse.getEnhetListe().get(0);
             return optional(new AnsattEnhet(wsEnhet.getEnhetId(), wsEnhet.getEnhetNavn()));

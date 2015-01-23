@@ -26,6 +26,7 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.*;
 
@@ -145,8 +146,14 @@ public class NyOppgaveFormWrapper extends Panel {
                 return tema.underkategorier;
             }
         };
-
         DropDownChoice<GsakKodeTema.Underkategori> underkategoriDropdown = new DropDownChoice<>("underkategori", underkategoriModel, gsakKodeChoiceRenderer);
+        underkategoriDropdown.add(new AjaxFormComponentUpdatingBehavior("onchange") {
+            @Override
+            protected void onUpdate(AjaxRequestTarget target) {
+                hentForeslattEnhet();
+                target.add(enhetVelger);
+            }
+        });
 
         WebMarkupContainer underkategoriContainer = new WebMarkupContainer("underkategoriContainer");
         underkategoriContainer.setOutputMarkupPlaceholderTag(true);
@@ -249,7 +256,7 @@ public class NyOppgaveFormWrapper extends Panel {
         if (nyOppgave.tema == null || nyOppgave.type == null) {
             return;
         }
-        Optional<AnsattEnhet> foreslattEnhet = gsakService.hentForeslattEnhet(innboksVM.getFnr(), nyOppgave.tema.kode, nyOppgave.type.kode);
+        Optional<AnsattEnhet> foreslattEnhet = gsakService.hentForeslattEnhet(innboksVM.getFnr(), nyOppgave.tema.kode, nyOppgave.type.kode, optional(nyOppgave.underkategori));
         if (foreslattEnhet.isSome()) {
             nyOppgave.enhet = foreslattEnhet.get();
         }
