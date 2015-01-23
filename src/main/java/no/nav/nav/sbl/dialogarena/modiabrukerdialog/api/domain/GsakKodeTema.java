@@ -24,11 +24,13 @@ public abstract class GsakKodeTema implements Serializable {
     public static class Tema extends GsakKodeTema implements Serializable {
         public final List<OppgaveType> oppgaveTyper;
         public final List<Prioritet> prioriteter;
+        public final List<Underkategori> underkategorier;
 
-        public Tema(String kode, String tekst, List<OppgaveType> oppgaveTyper, List<Prioritet> prioritets) {
+        public Tema(String kode, String tekst, List<OppgaveType> oppgaveTyper, List<Prioritet> prioriteter, List<Underkategori> underkategorier) {
             super(kode, tekst);
             this.oppgaveTyper = unmodifiableList(oppgaveTyper);
-            this.prioriteter = unmodifiableList(prioritets);
+            this.prioriteter = unmodifiableList(prioriteter);
+            this.underkategorier = unmodifiableList(underkategorier);
         }
 
         @Override
@@ -62,6 +64,13 @@ public abstract class GsakKodeTema implements Serializable {
     public static class Prioritet extends GsakKodeTema implements Serializable {
 
         public Prioritet(String kode, String tekst) {
+            super(kode, tekst);
+        }
+    }
+
+    public static class Underkategori extends GsakKodeTema implements Serializable {
+
+        public Underkategori(String kode, String tekst) {
             super(kode, tekst);
         }
     }
