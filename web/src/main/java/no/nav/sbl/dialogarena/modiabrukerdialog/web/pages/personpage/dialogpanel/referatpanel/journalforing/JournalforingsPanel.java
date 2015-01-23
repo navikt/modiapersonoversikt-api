@@ -36,6 +36,7 @@ public class JournalforingsPanel extends Panel {
             @Override
             public void onClick(AjaxRequestTarget target) {
                 velgSakPanel.togglePanel(target);
+                target.add(this);
             }
         };
         IModel<Boolean> velgSakPanelOpen = new Model<Boolean>() {

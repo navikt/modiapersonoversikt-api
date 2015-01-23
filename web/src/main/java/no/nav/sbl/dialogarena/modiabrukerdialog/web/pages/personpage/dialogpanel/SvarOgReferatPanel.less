@@ -48,9 +48,9 @@
 	}
 	.traadoverskrift {
 		.ekspanderingspil {
-			border-top-color: #333333;
+			border-top-color: @modiasvart;
 			&.ekspandert {
-				border-bottom-color: #333333;
+				border-bottom-color: @modiasvart;
 			}
 		}
 	}
@@ -241,7 +241,7 @@
 	padding: @sideMargin;
 	border-top: 1px solid black;
 	text-align: center;
-	background-color: #333333;
+	background-color: @modiasvart;
     >div.robust-strek {
       padding-bottom: 1px;
       margin-bottom: 22px !important;
@@ -282,7 +282,7 @@
         >ul {
           border: 1px solid #999;
           li {
-            background-color: #333;
+            background-color: @modiasvart;
             color: #b7b1a0;
           }
         }
@@ -298,7 +298,7 @@
         }
         .ui-state-focus, .ui-state-active {
           color: #00a9e0;
-          background-color: #333;
+          background-color: @modiasvart;
           padding: 0.5em 1.1em;
 
           &:first-child {
@@ -319,7 +319,7 @@
         }
       }
       .ui-selectmenu-button {
-        background-color: #333;
+        background-color: @modiasvart;
         color: white;
         border: 0;
         outline: none !important;
@@ -384,36 +384,31 @@
 }
 
 .journalforingSporsmal {
-  background-color: #333333;
-  color: @modiagraaskrift;
   margin: 0 30px;
-  .pil {
-    display: inline-block;
-    margin-bottom: 1px;
-    .pil(8px, @blue); // definisjon i common.less
-  }
   .sak-info, .velg-sak {
     padding: 7px 20px;
   }
   .sak-info {
-    min-height: 30px;
+    border: 1px solid #cccccc;
+    .clear {
+      clear: both;
+    }
+    .pil {
+      display: inline-block;
+      margin-bottom: 1px;
+      .pil(8px, #3e3832); // definisjon i common.less
+    }
     .skillestrek {
       margin: 0 5px;
     }
     a {
       text-decoration: none;
-      color: @modiagraaskrift;
+      color: #3e3832;
     }
     .venstrestilt {
-      background: url(../img/journalfore_graa.svg) 0 0 no-repeat;
+      background: url(../img/journalfore_svart.svg) 0 0 no-repeat;
       padding-left: 25px;
       text-align: left;
-      float: left;
-      width: 80%;
-    }
-    .midtstilt {
-      background: url(../img/journalfore_graa.svg) 0 0 no-repeat;
-      text-align: center;
       float: left;
       width: 80%;
     }
@@ -424,6 +419,8 @@
     }
   }
   .velg-sak {
+    background-color: @modiasvart;
+    color: @modiagraaskrift;
     display: none;
     margin-bottom: 20px;
     text-align: center;
@@ -433,6 +430,11 @@
     }
     form input + label {
       margin: 0;
+    }
+    .pil {
+      display: inline-block;
+      margin-bottom: 1px;
+      .pil(8px, @blue); // definisjon i common.less
     }
     .avbryt-knapp {
       color: #20a9e1;
