@@ -19,9 +19,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.util.Arrays;
-
 import static java.lang.System.setProperty;
+import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -83,7 +82,7 @@ public class GsakServiceTest {
         nyOppgave.enhet = new AnsattEnhet("enhetId", "enhetNavn");
         nyOppgave.prioritet = new GsakKodeTema.Prioritet("tema", "");
         nyOppgave.type = new GsakKodeTema.OppgaveType("type", "", 0);
-        nyOppgave.tema = new GsakKodeTema.Tema("tema", "", Arrays.asList(nyOppgave.type), Arrays.asList(nyOppgave.prioritet));
+        nyOppgave.tema = new GsakKodeTema.Tema("tema", "", asList(nyOppgave.type), asList(nyOppgave.prioritet), asList(new GsakKodeTema.Underkategori("", "")));
         nyOppgave.henvendelseId = "henvendelseId";
         nyOppgave.brukerId = "12345612345";
         return nyOppgave;
