@@ -44,9 +44,7 @@ public class NyOppgaveFormWrapper extends Panel {
     private final List<AnsattEnhet> enheter;
     private final IChoiceRenderer<GsakKodeTema> gsakKodeChoiceRenderer;
     private final Form<NyOppgave> form;
-    private final MarkupContainer typeVelger;
-    private final MarkupContainer enhetVelger;
-    private final MarkupContainer prioritetVelger;
+    private final MarkupContainer typeVelger, enhetVelger, prioritetVelger, underkategoriVelger;
 
     public final IModel<Boolean> oppgaveOpprettet = Model.of(false);
 
@@ -61,6 +59,7 @@ public class NyOppgaveFormWrapper extends Panel {
         this.typeVelger = lagOppgavetypeVelger();
         this.enhetVelger = lagEnhetVelger();
         this.prioritetVelger = lagPrioritetVelger();
+        this.underkategoriVelger = lagUnderkategoriVelger();
 
         final WebMarkupContainer feedbackPanelSuccess = new WebMarkupContainer("feedbackOppgavePanel");
         feedbackPanelSuccess.setOutputMarkupPlaceholderTag(true);
@@ -76,6 +75,7 @@ public class NyOppgaveFormWrapper extends Panel {
                 typeVelger,
                 enhetVelger,
                 prioritetVelger,
+                underkategoriVelger,
                 new TextArea<String>("beskrivelse").setRequired(true),
                 feedbackPanelError);
         form.add(new AjaxButton("opprettoppgave") {
@@ -130,12 +130,36 @@ public class NyOppgaveFormWrapper extends Panel {
                 form.getModelObject().enhet = null;
                 form.getModelObject().prioritet = null;
 
-                target.add(typeVelger, enhetVelger, prioritetVelger);
+                target.add(typeVelger, enhetVelger, prioritetVelger, underkategoriVelger);
             }
         };
         temaDropDown.setRequired(true).setOutputMarkupPlaceholderTag(true);
 
         return temaDropDown;
+    }
+
+    private MarkupContainer lagUnderkategoriVelger() {
+        IModel<List<GsakKodeTema.Underkategori>> underkategoriModel = new OppdaterbarListeModel<GsakKodeTema.Underkategori>(form.getModel()) {
+            @Override
+            protected List<GsakKodeTema.Underkategori> oppdater(GsakKodeTema.Tema tema) {
+                return tema.underkategorier;
+            }
+        };
+
+        DropDownChoice<GsakKodeTema.Underkategori> underkategoriDropdown = new DropDownChoice<>("underkategori", underkategoriModel, gsakKodeChoiceRenderer);
+
+        WebMarkupContainer underkategoriContainer = new WebMarkupContainer("underkategoriContainer");
+        underkategoriContainer.setOutputMarkupPlaceholderTag(true);
+        underkategoriContainer.add(new AttributeAppender("for", underkategoriDropdown.getMarkupId()));
+        underkategoriContainer.add(underkategoriDropdown);
+
+        IModel<Boolean> visUnderkategoriValg = both(
+                not(isEmptyList(underkategoriModel)))
+                .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema")))
+                );
+        underkategoriContainer.add(visibleIf(visUnderkategoriValg));
+
+        return underkategoriContainer;
     }
 
     private MarkupContainer lagOppgavetypeVelger() {
@@ -176,8 +200,8 @@ public class NyOppgaveFormWrapper extends Panel {
 
         enhetContainer.add(ansattEnhetDropdown);
         IModel<Boolean> visEnhetsValg = both(not(isEmptyList(enhetModel)))
-                .and(not(nullValue(new PropertyModel(form.getModel(), "tema"))))
-                .and(not(nullValue(new PropertyModel(form.getModel(), "type"))));
+                .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema"))))
+                .and(not(nullValue(new PropertyModel<GsakKodeTema.OppgaveType>(form.getModel(), "type"))));
         enhetContainer.add(visibleIf(visEnhetsValg));
         enhetContainer.add(new AttributeAppender("for", ansattEnhetDropdown.getMarkupId()));
 
@@ -211,7 +235,7 @@ public class NyOppgaveFormWrapper extends Panel {
         prioritetContainer.add(prioritetDropdown);
         IModel<Boolean> visPrioritetsValg = both(
                 not(isEmptyList(prioritetModel)))
-                .and(not(nullValue(new PropertyModel(form.getModel(), "tema")))
+                .and(not(nullValue(new PropertyModel<GsakKodeTema.Tema>(form.getModel(), "tema")))
                 );
         prioritetContainer.add(visibleIf(visPrioritetsValg));
         prioritetContainer.add(new AttributeAppender("for", prioritetDropdown.getMarkupId()));
