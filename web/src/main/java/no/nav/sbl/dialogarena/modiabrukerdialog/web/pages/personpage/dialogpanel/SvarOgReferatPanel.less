@@ -15,9 +15,7 @@
     .modusVelger {
       width: 100%;
       border-bottom: 1px solid #cbcbcb;
-      input {
-        display: none;
-      }
+
       input + label {
         width: 50%;
         margin: 0;
@@ -26,6 +24,7 @@
         font-size: 1rem;
         text-transform: none;
         background: none;
+        border: 1px solid transparent;
         &:not(:last-child) {
           border-right: 1px solid #cbcbcb;
         }
@@ -33,6 +32,11 @@
       input:checked + label {
         background: #dadada none;
         font-weight: bold;
+      }
+      input:focus, input:hover {
+        + label {
+          border: 1px solid @modiaaquablaa;
+        }
       }
     }
     .warn {
@@ -390,6 +394,7 @@
   }
   .sak-info {
     border: 1px solid #cccccc;
+    color: #333333;
     .clear {
       clear: both;
     }

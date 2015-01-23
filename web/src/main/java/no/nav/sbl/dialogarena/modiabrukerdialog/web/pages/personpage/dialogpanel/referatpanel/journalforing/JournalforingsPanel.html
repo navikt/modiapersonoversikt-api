@@ -4,8 +4,8 @@
 <head></head>
 <body>
 <wicket:panel>
-    <div class="sak-info">
-        <a href="#" wicket:id="valgtSakLenke">
+    <a href="#" wicket:id="valgtSakLenke" class="sak-info-link">
+        <div class="sak-info">
             <div wicket:id="ingenSakValgt" class="venstrestilt">Velg sak</div>
             <div wicket:id="sakValgt" class="venstrestilt">
                 <span wicket:id="valgtSaksDatoFormatert"></span>
@@ -16,8 +16,8 @@
             </div>
             <div class="hoyrestilt"><i wicket:id="pilVelgSaker" class="pil"></i></div>
             <div class="clear"></div>
-        </a>
-    </div>
+        </div>
+    </a>
     <div wicket:id="velgSak" class="velg-sak"></div>
 </wicket:panel>
 </body>

@@ -246,7 +246,6 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
             @Override
             protected void onUpdate(AjaxRequestTarget target) {
                 target.add(modusKomponenter.toArray(new Component[modusKomponenter.size()]));
-                target.appendJavaScript("$('.tekstfelt textarea').focus()");
                 target.appendJavaScript("$('.temagruppevelger').selectmenu({appendTo:'.temagruppevelger-wrapper'});");
             }
         });
