@@ -12,13 +12,15 @@ import static no.nav.modig.lang.option.Optional.optional;
 
 public class LokaltKodeverkImpl implements LokaltKodeverk {
 
+    public static final String DEFAULT_TEMAGRUPPE = "OVRG";
+
     public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
         {
-            put("ARBD", asList("DAG", "AAP", "FOS", "IND", "OPP", "SYK", "SYM", "VEN", "YRK"));
-            put("FMLI", asList("FOR", "BAR", "BID", "ENF", "GRA", "GRU", "KON", "OMS"));
-            put("HJLPM", asList("BIL", "HEL", "HJE", "MOB"));
-            put("OVRG", asList("FUL", "MED", "SER", "TRK", "AGR"));
-            put("PENS", asList("PEN", "UFO"));
+            put("ARBD", asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "VEN", "YRA", "YRK"));
+            put("FMLI", asList("BAR", "BID", "ENF", "FOR", "GRA", "GRU", "KON", "OMS"));
+            put("HJLPM", asList("BIL", "HEL", "HJE"));
+            put("OVRG", asList("AAR", "AGR", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "SER", "SIK", "STO", "TRK", "TRY"));
+            put("PENS", asList("PEN", "SUP", "UFO"));
         }
     };
 
@@ -43,7 +45,7 @@ public class LokaltKodeverkImpl implements LokaltKodeverk {
     }
 
     public String hentTemagruppeForTema(String tema) {
-        return optional(TEMA_TEMAGRUPPE_MAPPING.get(tema)).getOrElse("ARBD");
+        return optional(TEMA_TEMAGRUPPE_MAPPING.get(tema)).getOrElse(DEFAULT_TEMAGRUPPE);
     }
 
 }

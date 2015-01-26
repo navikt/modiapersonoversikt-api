@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.LokaltKodeverkImpl.DEFAULT_TEMAGRUPPE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -16,7 +17,7 @@ public class LokaltKodeverkImplTest {
 
     @Test
     public void temaUtenTemagruppeSkalReturnereARBD() {
-        assertThat(kodeverk.hentTemagruppeForTema("NOE SOM IKKE FINNES"), is("ARBD"));
+        assertThat(kodeverk.hentTemagruppeForTema("NOE SOM IKKE FINNES"), is(DEFAULT_TEMAGRUPPE));
     }
 
     @Test
