@@ -2,13 +2,16 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ARBD;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.BIL;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.FMLI;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.HJLPM;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ORT_HJE;
 
 public class LokaltKodeverkImpl implements LokaltKodeverk {
 
@@ -16,9 +19,11 @@ public class LokaltKodeverkImpl implements LokaltKodeverk {
 
     public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
         {
-            put("ARBD", asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "VEN", "YRA", "YRK"));
-            put("FMLI", asList("BAR", "BID", "ENF", "FOR", "GRA", "GRU", "KON", "OMS"));
-            put("HJLPM", asList("BIL", "HEL", "HJE"));
+            put(ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "VEN", "YRA", "YRK"));
+            put(FMLI.name(), asList("BAR", "BID", "ENF", "FOR", "GRA", "GRU", "KON", "OMS"));
+            put(HJLPM.name(), asList("HJE"));
+            put(BIL.name(), asList("BIL"));
+            put(ORT_HJE.name(), asList("HEL"));
             put("OVRG", asList("AAR", "AGR", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "SER", "SIK", "STO", "TRK", "TRY"));
             put("PENS", asList("PEN", "SUP", "UFO"));
         }
