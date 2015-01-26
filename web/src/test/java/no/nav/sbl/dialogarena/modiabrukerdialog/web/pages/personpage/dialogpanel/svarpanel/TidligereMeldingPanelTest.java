@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.Temagruppe.FMLI;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.FMLI;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TidligereMeldingPanelTest extends WicketPageTest {

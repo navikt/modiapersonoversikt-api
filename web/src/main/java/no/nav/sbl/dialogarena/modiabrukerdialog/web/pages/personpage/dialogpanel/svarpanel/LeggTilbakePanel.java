@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -108,7 +108,7 @@ public class LeggTilbakePanel extends Panel {
                 oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
                         oppgaveId, leggTilbakeVM.lagBeskrivelse(
                             new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
-                        leggTilbakeVM.lagTemagruppeTekst()
+                        leggTilbakeVM.nyTemagruppe
                 );
                 oppgaveLagtTilbake.setObject(true);
                 send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_UTFORT);

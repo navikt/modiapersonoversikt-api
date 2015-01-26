@@ -7,6 +7,7 @@ import no.nav.modig.core.exception.AuthorizationException;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.security.tilgangskontroll.policy.pep.EnforcementPoint;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 
 import javax.annotation.Resource;
@@ -29,7 +30,7 @@ public class PlukkOppgaveService {
     @Resource(name = "pep")
     private EnforcementPoint pep;
 
-    public Optional<Oppgave> plukkOppgave(String temagruppe) {
+    public Optional<Oppgave> plukkOppgave(Temagruppe temagruppe) {
         Optional<Oppgave> oppgave = oppgaveBehandlingService.plukkOppgaveFraGsak(temagruppe);
         if (oppgave.isSome()) {
             if (saksbehandlerHarTilgangTilBruker(oppgave.get())) {
@@ -46,7 +47,7 @@ public class PlukkOppgaveService {
         return oppgaveBehandlingService.oppgaveErFerdigstilt(oppgaveid);
     }
 
-    private Optional<Oppgave> leggTilbakeOgPlukkNyOppgave(Oppgave oppgave, String temagruppe) {
+    private Optional<Oppgave> leggTilbakeOgPlukkNyOppgave(Oppgave oppgave, Temagruppe temagruppe) {
         oppgaveBehandlingService.systemLeggTilbakeOppgaveIGsak(oppgave.oppgaveId);
         return plukkOppgave(temagruppe);
     }

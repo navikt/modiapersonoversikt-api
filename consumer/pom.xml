@@ -27,13 +27,6 @@
             <artifactId>modiabrukerdialog-mock</artifactId>
             <version>${project.version}</version>
         </dependency>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>modiabrukerdialog-config</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-            <type>test-jar</type>
-        </dependency>
 
         <!--Personsok-->
         <dependency>

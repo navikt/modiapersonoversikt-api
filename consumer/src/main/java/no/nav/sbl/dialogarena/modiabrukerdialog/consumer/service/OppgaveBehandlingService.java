@@ -4,6 +4,7 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.WSOppgave;
@@ -18,11 +19,12 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveR
 
 import javax.inject.Inject;
 
-import static java.lang.String.valueOf;
+import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.option.Optional.none;
 import static no.nav.modig.lang.option.Optional.optional;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.*;
 import static org.apache.commons.lang3.StringUtils.equalsIgnoreCase;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.joda.time.DateTime.now;
@@ -30,7 +32,7 @@ import static org.joda.time.format.DateTimeFormat.forPattern;
 
 public class OppgaveBehandlingService {
 
-    public static final int ENHET = 4100;
+    public static final Integer ENHET = 4100;
     public static final int ANTALL_PLUKK_FORSOK = 20;
     public static final String KODE_OPPGAVE_FERDIGSTILT = "F";
 
@@ -47,11 +49,11 @@ public class OppgaveBehandlingService {
         tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId));
     }
 
-    public Optional<Oppgave> plukkOppgaveFraGsak(String temagruppe) {
+    public Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe) {
         return plukkOppgaveFraGsak(temagruppe, ANTALL_PLUKK_FORSOK);
     }
 
-    private Optional<Oppgave> plukkOppgaveFraGsak(String temagruppe, int antallForsokIgjen) {
+    private Optional<Oppgave> plukkOppgaveFraGsak(Temagruppe temagruppe, int antallForsokIgjen) {
         if (antallForsokIgjen <= 0) {
             return none();
         }
@@ -83,13 +85,13 @@ public class OppgaveBehandlingService {
         }
     }
 
-    public void leggTilbakeOppgaveIGsak(Optional<String> oppgaveId, String beskrivelse, String temagruppe) {
+    public void leggTilbakeOppgaveIGsak(Optional<String> oppgaveId, String beskrivelse, Temagruppe temagruppe) {
         if (oppgaveId.isSome()) {
             try {
                 WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId.get());
                 wsOppgave.withAnsvarligId("");
                 wsOppgave.withBeskrivelse(leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse));
-                if (!isBlank(temagruppe)) {
+                if (temagruppe != null) {
                     wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe)));
                 }
 
@@ -155,17 +157,17 @@ public class OppgaveBehandlingService {
         }
     }
 
-    private Optional<WSOppgave> finnEldsteIkkeTilordnedeOppgave(String temagruppe) {
+    private Optional<WSOppgave> finnEldsteIkkeTilordnedeOppgave(Temagruppe temagruppe) {
         return on(oppgaveWS.finnOppgaveListe(
                 new WSFinnOppgaveListeRequest()
                         .withFilter(new WSFinnOppgaveListeFilter()
-                                .withOpprettetEnhetId(valueOf(ENHET))
+                                .withOpprettetEnhetId(enhetForPlukk(temagruppe))
                                 .withOppgavetypeKodeListe("SPM_OG_SVR")
                                 .withUnderkategoriKode(underkategoriKode(temagruppe))
                                 .withMaxAntallSvar(0)
                                 .withUfordelte(true))
                         .withSok(new WSFinnOppgaveListeSok()
-                                .withAnsvarligEnhetId(valueOf(ENHET))
+                                .withAnsvarligEnhetId(ENHET.toString())
                                 .withFagomradeKodeListe("KNA"))
                         .withSorteringKode(new WSFinnOppgaveListeSortering()
                                 .withSorteringKode("STIGENDE")
@@ -175,7 +177,15 @@ public class OppgaveBehandlingService {
                 .head();
     }
 
-    private static String underkategoriKode(String temagruppe) {
+    private String enhetForPlukk(Temagruppe temagruppe) {
+        if (asList(ARBD, FMLI, ORT_HJE).contains(temagruppe)) {
+            return ENHET.toString();
+        } else {
+            return saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet();
+        }
+    }
+
+    private static String underkategoriKode(Temagruppe temagruppe) {
         return temagruppe + "_KNA";
     }
 

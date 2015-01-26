@@ -6,6 +6,7 @@ import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.core.context.SubjectHandler;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.tjeneste.virksomhet.oppgave.v3.HentOppgaveOppgaveIkkeFunnet;
 import no.nav.tjeneste.virksomhet.oppgave.v3.OppgaveV3;
 import no.nav.tjeneste.virksomhet.oppgave.v3.informasjon.oppgave.*;
@@ -90,7 +91,7 @@ public class OppgaveBehandlingServiceTest {
         finnOppgaveListeResponse.getOppgaveListe().add(lagWSOppgave());
         when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
 
-        oppgaveBehandlingService.plukkOppgaveFraGsak("ARBD");
+        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD);
         verify(oppgaveWS).finnOppgaveListe(finnOppgaveListeRequestCaptor.capture());
         assertThat(finnOppgaveListeRequestCaptor.getValue().getSok().getFagomradeKodeListe().get(0), is("KNA"));
         assertThat(finnOppgaveListeRequestCaptor.getValue().getFilter().getMaxAntallSvar(), is(0));
@@ -104,7 +105,7 @@ public class OppgaveBehandlingServiceTest {
         when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
         doThrow(LagreOppgaveOptimistiskLasing.class).doNothing().when(oppgavebehandlingWS).lagreOppgave(any(WSLagreOppgaveRequest.class));
 
-        oppgaveBehandlingService.plukkOppgaveFraGsak("");
+        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD);
         verify(oppgaveWS, times(2)).finnOppgaveListe(any(WSFinnOppgaveListeRequest.class));
         verify(oppgavebehandlingWS, times(2)).lagreOppgave(any(WSLagreOppgaveRequest.class));
     }
@@ -116,7 +117,7 @@ public class OppgaveBehandlingServiceTest {
         when(oppgaveWS.finnOppgaveListe(any(WSFinnOppgaveListeRequest.class))).thenReturn(finnOppgaveListeResponse);
         doThrow(LagreOppgaveOptimistiskLasing.class).when(oppgavebehandlingWS).lagreOppgave(any(WSLagreOppgaveRequest.class));
 
-        oppgaveBehandlingService.plukkOppgaveFraGsak("");
+        oppgaveBehandlingService.plukkOppgaveFraGsak(Temagruppe.ARBD);
         verify(oppgaveWS, times(ANTALL_PLUKK_FORSOK)).finnOppgaveListe(any(WSFinnOppgaveListeRequest.class));
         verify(oppgavebehandlingWS, times(ANTALL_PLUKK_FORSOK)).lagreOppgave(any(WSLagreOppgaveRequest.class));
     }
@@ -156,7 +157,7 @@ public class OppgaveBehandlingServiceTest {
 
         String nyBeskrivelse = "nyBeskrivelse";
         String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), nyBeskrivelse, "FMLI");
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), nyBeskrivelse, Temagruppe.FMLI);
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();

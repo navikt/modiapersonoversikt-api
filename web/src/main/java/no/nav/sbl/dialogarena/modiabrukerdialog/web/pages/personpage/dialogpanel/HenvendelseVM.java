@@ -4,6 +4,7 @@ import no.nav.modig.modia.widget.utils.WidgetDateFormatter;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaModel;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import org.apache.wicket.model.AbstractReadOnlyModel;
 
 public class HenvendelseVM extends EnhancedTextAreaModel {

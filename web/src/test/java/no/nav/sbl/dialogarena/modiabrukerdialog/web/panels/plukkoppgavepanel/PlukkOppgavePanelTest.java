@@ -3,11 +3,11 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PlukkOppgavePanelMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.ReferatPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.SvarPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
@@ -26,9 +26,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_HENVENDELSEID_ATTR;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel.TEMAGRUPPE_ATTR;
 import static org.apache.wicket.authorization.IAuthorizationStrategy.ALLOW_ALL;
 import static org.hamcrest.CoreMatchers.is;
@@ -36,11 +34,9 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.Matchers.hasItem;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -64,7 +60,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void plukkerOppgaveOgSetterSessionAttributes() {
-        when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(optional(new Oppgave("oppgaveId", "fnr", "henvendelseId")));
+        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class))).thenReturn(optional(new Oppgave("oppgaveId", "fnr", "henvendelseId")));
 
         wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"))
                 .inForm(withId("plukkOppgaveForm"))
@@ -109,12 +105,12 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
                 .should().containComponent(ofType(SvarPanel.class))
                 .should().notContainComponent(ofType(ReferatPanel.class));
 
-        verify(plukkOppgaveService, never()).plukkOppgave(anyString());
+        verify(plukkOppgaveService, never()).plukkOppgave(any(Temagruppe.class));
     }
 
     @Test
     public void girFeilmeldingHvisIngenOppgaverPaaTema() {
-        when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(Optional.<Oppgave>none());
+        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class))).thenReturn(Optional.<Oppgave>none());
 
         TestPlukkOppgavePanel plukkoppgave = new TestPlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)
@@ -129,7 +125,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     @Test
     public void brukerIkkeOppgavePaaSesjonHvisDenErFerdigstilt() {
         when(plukkOppgaveService.oppgaveErFerdigstilt(anyString())).thenReturn(true);
-        when(plukkOppgaveService.plukkOppgave(anyString())).thenReturn(optional(new Oppgave("oppgave2", "fnr2", "henvendelse2")));
+        when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class))).thenReturn(optional(new Oppgave("oppgave2", "fnr2", "henvendelse2")));
 
         wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"));
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
@@ -143,7 +139,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
                 .should().containComponent(ofType(SvarPanel.class))
                 .should().notContainComponent(ofType(ReferatPanel.class));
 
-        verify(plukkOppgaveService, times(1)).plukkOppgave(anyString());
+        verify(plukkOppgaveService, times(1)).plukkOppgave(any(Temagruppe.class));
         assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_ID_ATTR), is((Serializable) "oppgave2"));
         assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_FNR_ATTR), is((Serializable) "fnr2"));
         assertThat(wicket.tester.getSession().getAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR), is((Serializable) "henvendelse2"));
