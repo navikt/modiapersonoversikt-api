@@ -63,18 +63,10 @@ public class SakerUtils {
                 return new SakerForTema()
                         .withTemaKode(entry.getKey())
                         .withTemaNavn(entry.getValue().get(0).temaNavn)
-                        .withTemagruppe(finnTemaetsGruppe(entry.getKey(), lokaltKodeverk))
+                        .withTemagruppe(lokaltKodeverk.hentTemagruppeForTema(entry.getKey(), TEMA_UTEN_TEMAGRUPPE))
                         .withSaksliste(entry.getValue());
             }
         }).collectIn(new ArrayList<SakerForTema>());
     }
 
-    private static String finnTemaetsGruppe(String tema, LokaltKodeverk lokaltKodeverk) {
-        for (Map.Entry<String, List<String>> temaEntry : lokaltKodeverk.hentTemagruppeTemaMapping().entrySet()) {
-            if (temaEntry.getValue().contains(tema)) {
-                return temaEntry.getKey();
-            }
-        }
-        return TEMA_UTEN_TEMAGRUPPE;
-    }
 }

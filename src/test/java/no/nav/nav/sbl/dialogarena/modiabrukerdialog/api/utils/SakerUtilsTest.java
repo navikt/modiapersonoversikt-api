@@ -11,17 +11,21 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.stubbing.Answer;
 
 import java.util.*;
 
 import static java.util.Arrays.asList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.TEMA_UTEN_TEMAGRUPPE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
 import static org.hamcrest.number.OrderingComparison.lessThan;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -42,7 +46,6 @@ public class SakerUtilsTest {
     };
     private static final List<String> EKSEMPLER_PAA_GODKJENTE_TEMAER_FOR_GENERELLE = new ArrayList<>(Arrays.asList("FUL", "SER", "SIK", "VEN"));
 
-
     @Mock
     private LokaltKodeverk lokaltKodeverk;
     @Mock
@@ -62,7 +65,19 @@ public class SakerUtilsTest {
         saksliste = createSakslisteBasertPaTemaMap();
         alleTemagrupper = getAlleEksisterendeTemagrupper();
 
-        when(lokaltKodeverk.hentTemagruppeTemaMapping()).thenReturn(TEMAGRUPPE_TEMA_MAPPING);
+        when(lokaltKodeverk.hentTemagruppeForTema(anyString(), anyString())).thenAnswer(new Answer<String>() {
+            @Override
+            public String answer(InvocationOnMock invocation) throws Throwable {
+                Object[] args = invocation.getArguments();
+                String tema = (String) args[0];
+                for (Map.Entry<String, List<String>> temaEntry : TEMAGRUPPE_TEMA_MAPPING.entrySet()) {
+                    if (temaEntry.getValue().contains(tema)) {
+                        return temaEntry.getKey();
+                    }
+                }
+                return TEMA_UTEN_TEMAGRUPPE;
+            }
+        });
         when(gsakKodeverk.hentFagsystemMapping()).thenReturn(KODEVERK_MOCK_MAP);
         when(standardKodeverk.getArkivtemaNavn(KODEVERK_TEMAKODE)).thenReturn(KODEVERK_TEMANAVN);
     }
