@@ -15,8 +15,6 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagrupp
 
 public class LokaltKodeverkImpl implements LokaltKodeverk {
 
-    public static final String DEFAULT_TEMAGRUPPE = "OVRG";
-
     public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
         {
             put(ARBD.name(), asList("AAP", "DAG", "FOS", "IND", "MOB", "OPP", "REH", "SAK", "SAP", "SYK", "SYM", "VEN", "YRA", "YRK"));
@@ -41,16 +39,16 @@ public class LokaltKodeverkImpl implements LokaltKodeverk {
     }
 
     @Override
-    public Map<String, List<String>> hentTemagruppeTemaMapping() {
-        return TEMAGRUPPE_TEMA_MAPPING;
+    public String hentTemagruppeForTema(String tema, String defaultVerdi) {
+        return optional(TEMA_TEMAGRUPPE_MAPPING.get(tema)).getOrElse(defaultVerdi);
     }
 
     public Map<String, String> hentTemaTemagruppeMapping() {
         return TEMA_TEMAGRUPPE_MAPPING;
     }
 
-    public String hentTemagruppeForTema(String tema) {
-        return optional(TEMA_TEMAGRUPPE_MAPPING.get(tema)).getOrElse(DEFAULT_TEMAGRUPPE);
+    public Map<String, List<String>> hentTemagruppeTemaMapping() {
+        return TEMAGRUPPE_TEMA_MAPPING;
     }
 
 }

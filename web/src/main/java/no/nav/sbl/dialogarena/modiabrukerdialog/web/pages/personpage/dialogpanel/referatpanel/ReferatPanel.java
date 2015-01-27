@@ -55,6 +55,8 @@ import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerp
 
 public class ReferatPanel extends GenericPanel<HenvendelseVM> {
 
+    public static final String DEFAULT_TEMAGRUPPE = "OVRG";
+
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
@@ -280,7 +282,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         Melding sporsmal = felles()
                 .withKanal(Kanal.TEKST.name())
                 .withType(SPORSMAL_MODIA_UTGAAENDE)
-                .withTemagruppe(lokaltKodeverk.hentTemagruppeForTema(henvendelseVM.valgtSak.temaKode))
+                .withTemagruppe(lokaltKodeverk.hentTemagruppeForTema(henvendelseVM.valgtSak.temaKode, DEFAULT_TEMAGRUPPE))
                 .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
 
         sporsmal = henvendelseUtsendingService.sendHenvendelse(sporsmal);

@@ -9,26 +9,27 @@ import java.util.Map.Entry;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ORT_HJE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk.LokaltKodeverkImpl.DEFAULT_TEMAGRUPPE;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 public class LokaltKodeverkImplTest {
 
+    public static final String DEFAULT_TEMAGRUPPE = "Default";
+
     LokaltKodeverkImpl kodeverk = new LokaltKodeverkImpl();
 
     @Test
-    public void temaUtenTemagruppeSkalReturnereARBD() {
-        assertThat(kodeverk.hentTemagruppeForTema("NOE SOM IKKE FINNES"), is(DEFAULT_TEMAGRUPPE));
+    public void temaUtenTemagruppeSkalReturnereDefault() {
+        assertThat(kodeverk.hentTemagruppeForTema("NOE SOM IKKE FINNES", DEFAULT_TEMAGRUPPE), is(DEFAULT_TEMAGRUPPE));
     }
 
     @Test
     public void temaTilTemagruppeTest() {
-        assertThat(kodeverk.hentTemagruppeForTema("AAP"), is(ARBD.name()));
-        assertThat(kodeverk.hentTemagruppeForTema("FOS"), is(ARBD.name()));
-        assertThat(kodeverk.hentTemagruppeForTema("TRK"), is("OVRG"));
-        assertThat(kodeverk.hentTemagruppeForTema("UFO"), is("PENS"));
-        assertThat(kodeverk.hentTemagruppeForTema("HEL"), is(ORT_HJE.name()));
+        assertThat(kodeverk.hentTemagruppeForTema("AAP", DEFAULT_TEMAGRUPPE), is(ARBD.name()));
+        assertThat(kodeverk.hentTemagruppeForTema("FOS", DEFAULT_TEMAGRUPPE), is(ARBD.name()));
+        assertThat(kodeverk.hentTemagruppeForTema("TRK", DEFAULT_TEMAGRUPPE), is("OVRG"));
+        assertThat(kodeverk.hentTemagruppeForTema("UFO", DEFAULT_TEMAGRUPPE), is("PENS"));
+        assertThat(kodeverk.hentTemagruppeForTema("HEL", DEFAULT_TEMAGRUPPE), is(ORT_HJE.name()));
     }
 
     @Test
