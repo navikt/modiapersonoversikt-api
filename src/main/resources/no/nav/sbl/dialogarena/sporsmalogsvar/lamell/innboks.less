@@ -62,112 +62,89 @@
 
   .meldingsdetaljer {
     padding: 22px @sidemargin 0 @sidemargin;
-    .avsenderbilde-ramme {
-      position: relative;
-      width: 70px;
-      height: 70px;
-      border: 1px solid @rammefarge;
-      background-color: #fff;
-      &.lite {
-        width: 55px;
-        height: 55px;
+    .melding {
+      p, h3 {
+        line-height: 1.35rem;
       }
-      img {
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        width: 90%;
-        height: 90%;
-        margin: auto;
+      margin-bottom: 30px;
+      .avsenderBilde {
+        margin-top: 20px;
+        width: 10%;
+        height: 34px;
+        &.inngaaende {
+          float: left;
+        }
+        &.utgaaende {
+          float: right;
+        }
       }
-    }
-
-    .header {
-      line-height: 1.2em;
-      margin-bottom: 1em;
-
-      p {
-        line-height: 22px;
+      .meldingData {
+        width: 85%;
+        position: relative;
+        padding: 15px 25px;
+        h2 {
+          font-size: 1.25rem;
+          font-weight: 600;
+          margin: 0;
+        }
+        h3 {
+          font-size: 1rem;
+          font-weight: normal;
+          font-family: Arial, Helvetica, sans-serif;
+          text-transform: none;
+          margin: 0;
+        }
+        &:before, &:after {
+          position: absolute;
+          top: 40px;
+          border: solid transparent;
+          content: " ";
+          height: 0;
+          width: 0;
+        }
+        &:after {
+          border-width: 13px;
+          margin-top: -13px;
+        }
+        &:before {
+          border-width: 14px;
+          margin-top: -14px;
+        }
       }
-    }
 
-    .dato {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      font-size: 0.85rem;
-      font-weight: normal;
-    }
-
-    .temagruppe {
-      margin: 0;
-      text-transform: capitalize;
-    }
-
-    .venstre-kolonne {
-      float: left;
-      width: 10%;
-    }
-
-    .hoyre-kolonne {
-      float: right;
-      width: 82%;
-    }
-
-    p {
-      line-height: 1.4em;
-      a {
-        text-decoration: underline;
+      &.inngaaende {
+        .meldingData {
+          float: right;
+          background-color: #e6e6dd;
+          &:before, &:after {
+            right: 100%;
+          }
+          &:after {
+            border-right-color: #e5e5dc;
+          }
+          &:before {
+            border-right-color: #e5e5dc;
+          }
+        }
       }
-    }
-    .nyeste-melding {
-      margin-bottom: 2em;
-      overflow: hidden;
-      .header {
-        .temagruppe {
-          display: inline-block;
-          vertical-align: middle;
+      &.utgaaende {
+        .meldingData {
+          float: left;
+          background-color: #ffffff;
+          border: 1px solid @rammefarge;
+          &:before, &:after {
+            left: 100%;
+          }
+          &:after {
+            border-left-color: #ffffff;
+          }
+          &:before {
+            border-left-color: @rammefarge;
+          }
         }
       }
     }
 
-    .tidligere-melding {
-      position: relative;
-      background-color: #ffffff;
-      border: 1px solid @rammefarge;
-      padding: 20px;
-      margin-top: -1px;
-      p:last-child {
-        margin-bottom: 0;
-      }
-      &:before, &:after {
-        position: absolute;
-        bottom: 100%;
-        left: 5%;
-        border: solid transparent;
-        content: " ";
-        height: 0;
-        width: 0;
-      }
-      &:after {
-        border-bottom-color: #ffffff;
-        border-width: 13px;
-        margin-left: -13px;
-      }
-      &:before {
-        border-bottom-color: @rammefarge;
-        border-width: 14px;
-        margin-left: -14px;
-      }
-      .venstre-kolonne {
-        width: 15%;
-      }
-      .hoyre-kolonne {
-        width: 85%;
-        overflow: hidden;
-      }
-    }
     .traad-info {
       background-color: #333333;
       margin-bottom: 16px;

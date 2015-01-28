@@ -15,7 +15,7 @@ public class TraaddetaljerPanel extends Panel {
         setOutputMarkupId(true);
 
         add(new HaandterMeldingPanel("haandterMelding", innboksVM));
-        add(new NyesteMeldingPanel("nyesteMelding", innboksVM));
-        add(new TidligereMeldingerPanel("tidligereMeldinger", innboksVM));
+        add(new KontorsperreInfoPanel("kontorsperretInfo", innboksVM));
+        add(new TraadPanel("traad", innboksVM));
     }
 }

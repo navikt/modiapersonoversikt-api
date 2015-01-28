@@ -20,7 +20,7 @@ public class MeldingVM implements Serializable {
 
     public static final String TEMAGRUPPE_KASSERT = "temagruppe.kassert";
     public static final String NAV_LOGO_SVG = "nav-logo.svg";
-    public static final String BRUKER_LOGO_SVG = "siluett.svg";
+    public static final String BRUKER_LOGO_SVG = "personligoppmote.svg";
     public static final String NAV_AVSENDER_BILDE_ALT_KEY = "innboks.avsender.nav";
     public static final String BRUKER_AVSENDER_BILDE_ALT_KEY = "innboks.avsender.bruker";
     public final Melding melding;
