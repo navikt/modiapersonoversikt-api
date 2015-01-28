@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 
@@ -47,7 +47,7 @@ public class UtbetalingVM {
         return utbetaling.getKontonr();
     }
 
-    public List<Underytelse> getUnderytelser() {
+    public List<UnderytelseGammel> getUnderytelser() {
         return utbetaling.getUnderytelser();
     }
 

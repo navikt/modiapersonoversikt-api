@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.MaanedOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
@@ -32,11 +32,11 @@ public class MaanedsPanelTest extends AbstractWicketTest {
         List<Utbetaling> utbetalinger = asList(
                 utbetalingBuilder.withUtbetalingsDato(now())
                         .withPeriode(new Interval(now().minusDays(5), now()))
-                        .withUnderytelser(asList(new Underytelse("Tittel", "Spesifikasjon", optional(3d), 200.0, optional(1.0))))
+                        .withUnderytelser(asList(new UnderytelseGammel("Tittel", "Spesifikasjon", optional(3d), 200.0, optional(1.0))))
                         .build(),
                 utbetalingBuilder.withUtbetalingsDato(now().minusDays(4))
                         .withPeriode(new Interval(now().minusDays(10), now()))
-                        .withUnderytelser(asList(new Underytelse("Tittel2", "Spesifikasjon2", optional(5d), 700.0, optional(2.0))))
+                        .withUnderytelser(asList(new UnderytelseGammel("Tittel2", "Spesifikasjon2", optional(5d), 700.0, optional(2.0))))
                         .build());
 
         MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", utbetalinger);

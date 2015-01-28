@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
@@ -23,7 +23,7 @@ public class DetaljPanel extends Panel {
     public DetaljPanel(String id, UtbetalingVM utbetalingVM) {
         super(id);
         setMarkupId("detaljpanel-" + utbetalingVM.getUtbetalingId());
-        List<Underytelse> underytelser = utbetalingVM.getUnderytelser();
+        List<UnderytelseGammel> underytelser = utbetalingVM.getUnderytelser();
         IModel<String> melding = Model.of(utbetalingVM.getMelding());
         add(
                 new Label("mottakernavn", utbetalingVM.getMottakerNavn()),
@@ -35,20 +35,20 @@ public class DetaljPanel extends Panel {
         );
     }
 
-    private ListView createSpesifikasjoner(List<Underytelse> underytelser) {
-        return new ListView<Underytelse>("spesifikasjoner", underytelser) {
+    private ListView createSpesifikasjoner(List<UnderytelseGammel> underytelser) {
+        return new ListView<UnderytelseGammel>("spesifikasjoner", underytelser) {
             @Override
-            protected void populateItem(ListItem<Underytelse> item) {
+            protected void populateItem(ListItem<UnderytelseGammel> item) {
                 Model<String> spesifikasjon = Model.of(item.getModelObject().getSpesifikasjon());
                 item.add(new Label("spesifikasjon", spesifikasjon).add(visibleIf(not(isEmptyString(spesifikasjon)))));
             }
         };
     }
 
-    private ListView createUnderytelsesrader(List<Underytelse> underytelser) {
-        return new ListView<Underytelse>("underytelser", underytelser) {
+    private ListView createUnderytelsesrader(List<UnderytelseGammel> underytelser) {
+        return new ListView<UnderytelseGammel>("underytelser", underytelser) {
             @Override
-            protected void populateItem(ListItem<Underytelse> item) {
+            protected void populateItem(ListItem<UnderytelseGammel> item) {
                 Optional<Double> sats = item.getModelObject().getSats();
                 Optional<Double> antall = item.getModelObject().getAntall();
                 item.add(

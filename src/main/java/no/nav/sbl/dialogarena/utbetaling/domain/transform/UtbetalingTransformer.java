@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling;
 import org.joda.time.Interval;
@@ -16,8 +16,8 @@ import static java.util.Collections.sort;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_COMPARE_BELOP;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_SKATT_NEDERST;
+import static no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel.UNDERYTELSE_COMPARE_BELOP;
+import static no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel.UNDERYTELSE_SKATT_NEDERST;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static org.apache.commons.lang3.StringUtils.join;
@@ -48,14 +48,14 @@ public class UtbetalingTransformer {
                     .withHovedytelse(getHovedytelseBeskrivelse(wsUtbetaling));
 
             Set<String> meldinger = new LinkedHashSet<>();
-            List<Underytelse> underytelser = new ArrayList<>();
+            List<UnderytelseGammel> underytelser = new ArrayList<>();
             for (WSBilag wsBilag : wsUtbetaling.getBilagListe()) {
 
                 meldinger.add(transformerMelding(wsBilag));
 
                 for (WSPosteringsdetaljer wsPosteringsdetalj : wsBilag.getPosteringsdetaljerListe()) {
 
-                    underytelser.add(new Underytelse(
+                    underytelser.add(new UnderytelseGammel(
                             transformerUnderbeskrivelse(wsPosteringsdetalj.getKontoBeskrUnder(), wsPosteringsdetalj.getKontoBeskrHoved()),
                             optional(wsPosteringsdetalj.getSpesifikasjon()).getOrElse(""),
                             optional(wsPosteringsdetalj.getAntall()),
@@ -66,8 +66,8 @@ public class UtbetalingTransformer {
 
             utbetalingBuilder.withMelding(join(meldinger, "\n"));
 
-            double brutto = on(underytelser).map(Underytelse.UTBETALT_BELOP).reduce(sumDouble);
-            double trekk = on(underytelser).map(Underytelse.TREKK_BELOP).reduce(sumDouble);
+            double brutto = on(underytelser).map(UnderytelseGammel.UTBETALT_BELOP).reduce(sumDouble);
+            double trekk = on(underytelser).map(UnderytelseGammel.TREKK_BELOP).reduce(sumDouble);
             utbetalingBuilder.withBrutto(brutto);
             utbetalingBuilder.withTrekk(trekk);
             utbetalingBuilder.withUtbetalt(brutto + trekk);

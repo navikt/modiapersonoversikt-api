@@ -1,136 +1,47 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.modig.lang.collections.iter.ReduceFunction;
-import no.nav.modig.lang.option.Optional;
-import org.apache.commons.collections15.Transformer;
+public class Underytelse {
+    private String ytelsesType;
+    private Double satsBeloep;
+    private String satsType;
+    private Integer satsAntall;
+    private Double ytelseBeloep;
+    private Underytelse() {}
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+    public class UnderytelseBuilder {
+        private Underytelse underytelse;
 
-import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
-import static org.apache.commons.lang3.StringUtils.join;
+        public UnderytelseBuilder() {
+            this.underytelse = new Underytelse();
+        }
 
-public class Underytelse implements Serializable {
+        public UnderytelseBuilder withYtelsesType(String ytelsesKomponentType) {
+            this.underytelse.ytelsesType = ytelsesKomponentType;
+            return this;
+        }
 
-    private String tittel;
-    private double belop;
-    private Optional<Double> antall;
-    private Optional<Double> sats;
-    private String spesifikasjon;
+        public UnderytelseBuilder withSatsBeloep(Double satsBeloep) {
+            this.underytelse.satsBeloep = satsBeloep;
+            return this;
+        }
 
-    public Underytelse(String tittel, String spesifikasjon, Optional<Double> antall, double belop, Optional<Double> sats) {
-        this.tittel = tittel;
-        this.belop = belop;
-        this.antall = antall;
-        this.sats = sats;
-        this.spesifikasjon = spesifikasjon;
+        public UnderytelseBuilder withSatsType(String satsType) {
+            this.underytelse.satsType = satsType;
+            return this;
+        }
+
+        public UnderytelseBuilder withSatsAntall(Integer satsAntall) {
+            this.underytelse.satsAntall = satsAntall;
+            return this;
+        }
+
+        public UnderytelseBuilder withYtelseBeloep(Double ytelseBeloep) {
+            this.underytelse.ytelseBeloep = ytelseBeloep;
+            return this;
+        }
+
+        public Underytelse build() {
+            return this.underytelse;
+        }
     }
-
-    public String getTittel() {
-        return tittel;
-    }
-
-    public String getSpesifikasjon() {
-        return spesifikasjon;
-    }
-
-    public Optional<Double> getAntall() {
-        return antall;
-    }
-
-    public double getBelop() {
-        return belop;
-    }
-
-    public Optional<Double> getSats() {
-        return sats;
-    }
-
-    public static final Transformer<Underytelse, Double> UTBETALT_BELOP = new Transformer<Underytelse, Double>() {
-        @Override
-        public Double transform(Underytelse underytelse) {
-            double underytelseBelop = underytelse.getBelop();
-            return underytelseBelop >= 0 ? underytelseBelop : 0;
-        }
-    };
-    public static final Transformer<Underytelse, Double> TREKK_BELOP = new Transformer<Underytelse, Double>() {
-        @Override
-        public Double transform(Underytelse underytelse) {
-            double underytelseBelop = underytelse.getBelop();
-            return underytelseBelop < 0 ? underytelseBelop : 0;
-        }
-    };
-    public static final Transformer<Underytelse, String> UNDERYTELSE_TITTEL = new Transformer<Underytelse, String>() {
-        @Override
-        public String transform(Underytelse underytelse) {
-            return underytelse.getTittel();
-        }
-    };
-    public static final Transformer<Underytelse, Double> UNDERYTELSE_BELOP = new Transformer<Underytelse, Double>() {
-        @Override
-        public Double transform(Underytelse underytelse) {
-            return underytelse.getBelop();
-        }
-    };
-    public static final Transformer<Underytelse, String> UNDERYTELSE_SPESIFIKASJON = new Transformer<Underytelse, String>() {
-        @Override
-        public String transform(Underytelse underytelse) {
-            return underytelse.getSpesifikasjon();
-        }
-    };
-
-    /**
-     * Sorterer basert på beløpet, slik at negative tall havner nedenfor de positive
-     */
-    public static final Comparator<Underytelse> UNDERYTELSE_COMPARE_BELOP = new Comparator<Underytelse>() {
-        @Override
-        public int compare(Underytelse o1, Underytelse o2) {
-            return Double.compare(o2.getBelop(), o1.getBelop());
-        }
-    };
-
-    /**
-     * Sorterer underytelser med tittel som inneholder "skatt", og er negativt, nederst.
-     */
-    public static final Comparator<Underytelse> UNDERYTELSE_SKATT_NEDERST = new Comparator<Underytelse>(){
-        private static final String SKATT = "skatt";
-
-        @Override
-        public int compare(Underytelse o1, Underytelse o2) {
-            if (o1.getTittel().toLowerCase().contains(SKATT) && o1.getBelop() <= 0) {
-                return 1;
-            } else if (o2.getTittel().toLowerCase().contains(SKATT) && o2.getBelop() <= 0) {
-                return -1;
-            }
-            return 0;
-        }
-    };
-
-    public static final ReduceFunction<List<Underytelse>, List<Underytelse>> SUM_UNDERYTELSER = new ReduceFunction<List<Underytelse>, List<Underytelse>>() {
-        @Override
-        public List<Underytelse> reduce(List<Underytelse> accumulator, List<Underytelse> ytelser) {
-            if (ytelser.isEmpty()) {
-                return accumulator;
-            }
-
-            Double sum = on(ytelser).map(UNDERYTELSE_BELOP).reduce(sumDouble);
-
-            Set<String> spesifikasjoner = on(ytelser).map(Underytelse.UNDERYTELSE_SPESIFIKASJON).collectIn(new HashSet<String>());
-            String spesifikasjonsMelding = join(spesifikasjoner, ". ");
-
-            Underytelse ytelse = ytelser.get(0);
-            accumulator.add(new Underytelse(ytelse.getTittel(), spesifikasjonsMelding, ytelse.getAntall(), sum, ytelse.getSats()));
-            return accumulator;
-        }
-
-        @Override
-        public List<Underytelse> identity() {
-            return new ArrayList<>();
-        }
-    };
 }

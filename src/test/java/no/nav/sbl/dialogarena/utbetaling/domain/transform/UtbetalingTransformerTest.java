@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData;
 import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
@@ -43,7 +43,7 @@ public class UtbetalingTransformerTest {
 
         assertThat(utbetalinger.get(0).getMelding(), is("Dette er bilagsmelding 1\nDette er bilagsmelding 2"));
 
-        List<Underytelse> underytelser1 = utbetalinger.get(0).getUnderytelser();
+        List<UnderytelseGammel> underytelser1 = utbetalinger.get(0).getUnderytelser();
         assertThat(underytelser1.size(), is(4));
         assertThat(underytelser1.get(0).getTittel(), is(GRUNNBELOP));
         assertThat(underytelser1.get(0).getBelop(), is(greaterThanOrEqualTo(0D)));
@@ -57,7 +57,7 @@ public class UtbetalingTransformerTest {
 
         assertThat(utbetalinger.get(1).getMelding(), is("bilag2"));
 
-        List<Underytelse> underytelser2 = utbetalinger.get(1).getUnderytelser();
+        List<UnderytelseGammel> underytelser2 = utbetalinger.get(1).getUnderytelser();
         assertThat(underytelser2.size(), is(5));
         assertThat(underytelser2.get(0).getTittel(), is(TILLEGGSYTELSE));
         assertThat(underytelser2.get(0).getBelop(), is(greaterThanOrEqualTo(0D)));
