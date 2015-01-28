@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.junit.Before;
@@ -22,8 +22,9 @@ import static org.hamcrest.core.Is.is;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode = AFTER_CLASS)
 @ContextConfiguration(classes = {ServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class AlleMeldingerPanelTest extends WicketPageTest {
@@ -40,7 +41,7 @@ public class AlleMeldingerPanelTest extends WicketPageTest {
 
     @Test
     public void starterAlleMeldingerPanelUtenFeil() {
-        wicket.goToPageWith(new TestAlleMeldingerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService), ""));
+        wicket.goToPageWith(new AlleMeldingerPanel("id", new InnboksVM("fnr", henvendelseBehandlingService), ""));
     }
 
     @Test
@@ -48,7 +49,7 @@ public class AlleMeldingerPanelTest extends WicketPageTest {
         InnboksVM innboksVM = new InnboksVM("fnr", henvendelseBehandlingService);
         innboksVM.setValgtMelding("id1");
 
-        wicket.goToPageWith(new TestAlleMeldingerPanel("id", innboksVM, ""))
+        wicket.goToPageWith(new AlleMeldingerPanel("id", innboksVM, ""))
                 .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class));
 
         assertThat(innboksVM.getValgtTraad().getNyesteMelding().melding.id, is("id2"));

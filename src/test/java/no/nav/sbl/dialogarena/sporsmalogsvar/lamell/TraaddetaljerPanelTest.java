@@ -2,11 +2,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import org.apache.wicket.Component;
-import org.apache.wicket.resource.loader.IStringResourceLoader;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.annotation.DirtiesContext;
@@ -14,8 +11,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
-import java.util.List;
-import java.util.Locale;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
@@ -24,8 +19,9 @@ import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journ
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
+@DirtiesContext(classMode = AFTER_CLASS)
 @ContextConfiguration(classes = {ServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
 public class TraaddetaljerPanelTest extends WicketPageTest {
@@ -34,23 +30,6 @@ public class TraaddetaljerPanelTest extends WicketPageTest {
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
-
-    @Before
-    public void setup() {
-        List<IStringResourceLoader> stringResourceLoaders = wicket.tester.getApplication().getResourceSettings().getStringResourceLoaders();
-        stringResourceLoaders.clear();
-        stringResourceLoaders.add(new IStringResourceLoader() {
-            @Override
-            public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation) {
-                return "";
-            }
-
-            @Override
-            public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
-                return "";
-            }
-        });
-    }
 
     @Test
     public void skalKunneBesvareTraadInitiertAvBruker() {

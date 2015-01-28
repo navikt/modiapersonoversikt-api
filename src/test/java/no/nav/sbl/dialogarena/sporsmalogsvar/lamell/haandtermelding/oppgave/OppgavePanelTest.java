@@ -2,8 +2,8 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave;
 
 import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
@@ -52,8 +52,7 @@ public class OppgavePanelTest extends WicketPageTest {
 
     @Test
     public void skalKjoereOppNyOppgavePanelMedRiktigeFelterOgTyper() {
-        wicket.goToPageWith(new TestOppgavePanel("panel", innboksVM))
-                .should().containLabelsSaying(melding.temagruppe)
+        wicket.goToPageWith(new OppgavePanel("panel", innboksVM))
                 .should().containComponent(both(ofType(Form.class).and(withId("nyoppgaveform"))))
                 .should().containComponent(both(ofType(FeedbackPanel.class).and(withId("feedback"))))
                 .should().containComponent(both(ofType(AjaxButton.class).and(withId("opprettoppgave"))))
@@ -62,7 +61,8 @@ public class OppgavePanelTest extends WicketPageTest {
 
     @Test
     public void skalLukkePaneletIdetManAvbryter() {
-        TestOppgavePanel nyOppgavePanel = new TestOppgavePanel("panel", innboksVM);
+        OppgavePanel nyOppgavePanel = new OppgavePanel("panel", innboksVM);
+        nyOppgavePanel.setVisibilityAllowed(true);
         wicket.goToPageWith(nyOppgavePanel)
                 .should().containComponent(thatIsVisible().and(withId("panel")))
                 .click().link(withId("avbryt"));
@@ -82,7 +82,7 @@ public class OppgavePanelTest extends WicketPageTest {
 
         when(innboksVM.getValgtTraad()).thenReturn(traadVM);
 
-        wicket.goToPageWith(new TestOppgavePanel("panel", innboksVM))
+        wicket.goToPageWith(new OppgavePanel("panel", innboksVM).setVisibilityAllowed(true))
                 .should().containComponent(thatIsVisible().and(withId("oppgaveValg")))
                 .should().containComponent(thatIsVisible().and(withId("nyoppgaveForm")))
                 .should().containComponent(thatIsInvisible().and(withId("avsluttOppgaveForm")));

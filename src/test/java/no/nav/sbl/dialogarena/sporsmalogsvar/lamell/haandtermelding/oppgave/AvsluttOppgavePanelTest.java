@@ -1,8 +1,8 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.oppgave;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.LagreOppgaveOptimistiskLasing;
 import org.junit.Test;
@@ -33,7 +33,7 @@ public class AvsluttOppgavePanelTest extends WicketPageTest {
     public void avslutterOppgave() throws LagreOppgaveOptimistiskLasing, GsakService.OppgaveErFerdigstilt {
         Optional<String> oppgaveId = optional("1");
         String tekst = "tekst";
-        wicket.goToPageWith(new TestAvsluttOppgavePanel("id", oppgaveId))
+        wicket.goToPageWith(new AvsluttOppgavePanel("id", oppgaveId))
                 .inForm(withId("form"))
                 .write("beskrivelse", tekst)
                 .submitWithAjaxButton(withId("avsluttoppgave"))
@@ -46,7 +46,7 @@ public class AvsluttOppgavePanelTest extends WicketPageTest {
     public void viserFeilmeldingHvisFerdigstillingFeiler() throws LagreOppgaveOptimistiskLasing, GsakService.OppgaveErFerdigstilt {
         doThrow(new RuntimeException()).when(gsakService).ferdigstillGsakOppgave(Matchers.<Optional<String>>any(), anyString());
 
-        wicket.goToPageWith(new TestAvsluttOppgavePanel("id", optional("1")))
+        wicket.goToPageWith(new AvsluttOppgavePanel("id", optional("1")))
                 .inForm(withId("form"))
                 .submitWithAjaxButton(withId("avsluttoppgave"))
                 .should().containComponent(thatIsVisible().and(withId("feedbackError")));

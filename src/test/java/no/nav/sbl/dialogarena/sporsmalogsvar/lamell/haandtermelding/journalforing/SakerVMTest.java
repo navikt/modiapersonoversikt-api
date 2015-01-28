@@ -2,52 +2,36 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalfori
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.JournalforingPanelVelgSakTestConfig;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.*;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SakerService;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.InnboksVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
+import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.TraadVM;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.inject.Inject;
-
+import static no.nav.sbl.dialogarena.sporsmalogsvar.lamell.haandtermelding.journalforing.TestUtils.createMockSaker;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
+import static org.mockito.Mockito.*;
 
-@DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {JournalforingPanelVelgSakTestConfig.class, InnboksTestConfig.class})
-@RunWith(SpringJUnit4ClassRunner.class)
 public class SakerVMTest {
 
-
     private final InnboksVM innboksVM = mock(InnboksVM.class);
-
     private final TraadVM traadVM = mock(TraadVM.class);
+    private SakerService sakerService = mock(SakerService.class);
 
-    @Inject
-    private SakerService sakerService;
-
-    private MeldingVM meldingVM;
     private SakerVM sakerVM;
 
     @Before
     public void setUp() {
-        meldingVM = opprettMeldingVM("temagruppe");
+        MeldingVM meldingVM = opprettMeldingVM("temagruppe");
 
         when(innboksVM.getValgtTraad()).thenReturn(traadVM);
         when(traadVM.getEldsteMelding()).thenReturn(meldingVM);
+        when(sakerService.hentSaker(anyString())).thenReturn(createMockSaker());
 
         sakerVM = new SakerVM(innboksVM, sakerService);
     }

@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.widget;
 
 import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Test;
@@ -21,7 +22,7 @@ import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
-@ContextConfiguration(classes = MeldingWidgetTestConfig.class)
+@ContextConfiguration(classes = ServiceTestContext.class)
 @RunWith(SpringJUnit4ClassRunner.class)
 public class MeldingerWidgetTest extends WicketPageTest {
 
@@ -31,7 +32,7 @@ public class MeldingerWidgetTest extends WicketPageTest {
     @Test
     public void konstrueresRiktig() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", SPORSMAL_SKRIFTLIG, now(), "ARBD", "id1")));
-        wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"));
+        wicket.goToPageWith(new MeldingerWidget("meldinger", "M", "fnr"));
     }
 
     @Test
@@ -42,7 +43,7 @@ public class MeldingerWidgetTest extends WicketPageTest {
                 createMelding("id3", SPORSMAL_SKRIFTLIG, now(), "ARBD", "id3"),
                 createMelding("id4", SPORSMAL_SKRIFTLIG, now(), "ARBD", "id4")
         ));
-        wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
+        wicket.goToPageWith(new MeldingerWidget("meldinger", "M", "fnr"))
                 .should().containComponents(4, ofType(MeldingerWidgetPanel.class));
     }
 
@@ -55,7 +56,7 @@ public class MeldingerWidgetTest extends WicketPageTest {
                 createMelding("id4", SPORSMAL_SKRIFTLIG, now(), "ARBD", "id4"),
                 createMelding("id5", SPORSMAL_SKRIFTLIG, now(), "ARBD", "id5")
         ));
-        wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
+        wicket.goToPageWith(new MeldingerWidget("meldinger", "M", "fnr"))
                 .should().containComponents(5, ofType(MeldingerWidgetPanel.class));
     }
 
@@ -69,7 +70,7 @@ public class MeldingerWidgetTest extends WicketPageTest {
                 createMelding("id5", SPORSMAL_SKRIFTLIG, now(), "ARBD", "id5"),
                 createMelding("id6", SPORSMAL_SKRIFTLIG, now(), "ARBD", "id6")
         ));
-        wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
+        wicket.goToPageWith(new MeldingerWidget("meldinger", "M", "fnr"))
                 .should().containComponents(4, ofType(MeldingerWidgetPanel.class))
                 .should().containComponent(withId("overflowitem"));
     }
@@ -77,7 +78,7 @@ public class MeldingerWidgetTest extends WicketPageTest {
     @Test
     public void reagererPaaEvent() {
         when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(createMelding("id1", SPORSMAL_SKRIFTLIG, now(), "ARBD", "id1")));
-        wicket.goToPageWith(new TestMeldingerWidget("meldinger", "M", "fnr"))
+        wicket.goToPageWith(new MeldingerWidget("meldinger", "M", "fnr"))
                 .sendEvent(new EventGenerator() {
                     @Override
                     public Object createEvent(AjaxRequestTarget target) {

@@ -3,10 +3,9 @@ package no.nav.sbl.dialogarena.sporsmalogsvar.lamell;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
-import no.nav.modig.wicket.test.FluentWicketTester;
-import no.nav.sbl.dialogarena.sporsmalogsvar.config.mock.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.ServiceTestContext;
+import no.nav.sbl.dialogarena.sporsmalogsvar.config.WicketPageTest;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
-import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.config.InnboksTestConfig;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,9 +31,9 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
-@ContextConfiguration(classes = {ServiceTestContext.class, InnboksTestConfig.class})
+@ContextConfiguration(classes = {ServiceTestContext.class})
 @RunWith(SpringJUnit4ClassRunner.class)
-public class InnboksTest {
+public class InnboksTest extends WicketPageTest {
 
     private static final String ELDSTE_MELDING_ID_TRAAD1 = "eldsteIdTraad1";
     private static final String NYESTE_MELDING_ID_TRAAD1 = "nyesteIdTraad1";
@@ -42,8 +41,6 @@ public class InnboksTest {
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
-    @Inject
-    private FluentWicketTester wicket;
 
     @Before
     public void setUp() {
@@ -55,14 +52,14 @@ public class InnboksTest {
 
     @Test
     public void inneholderRiktigeKomponenter() {
-        wicket.goToPageWith(new TestInnboks("innboks", "fnr"))
+        wicket.goToPageWith(new Innboks("innboks", "fnr"))
                 .should().containComponent(ofType(AlleMeldingerPanel.class))
                 .should().containComponent(ofType(TraaddetaljerPanel.class));
     }
 
     @Test
     public void velgerTraadMedNyesteMeldingSomDefault() {
-        TestInnboks testInnboks = new TestInnboks("innboks", "fnr");
+        Innboks testInnboks = new Innboks("innboks", "fnr");
         wicket.goToPageWith(testInnboks);
 
         assertThat(getValgtTraad(testInnboks).getNyesteMelding().melding.id, is(NYESTE_MELDING_ID_TRAAD1));
@@ -70,7 +67,7 @@ public class InnboksTest {
 
     @Test
     public void setterValgtMeldingVedEvent() {
-        TestInnboks testInnboks = new TestInnboks("innboks", "fnr");
+        Innboks testInnboks = new Innboks("innboks", "fnr");
         wicket.goToPageWith(testInnboks);
 
         wicket.sendEvent(new EventGenerator() {
@@ -87,13 +84,13 @@ public class InnboksTest {
     public void setterTraadSomErReferertISessionTilValgtTraadIInnboks() {
         wicket.tester.getSession().setAttribute(HENVENDELSEID, ENESTE_MELDING_ID_TRAAD2);
 
-        TestInnboks testInnboks = new TestInnboks("innboks", "fnr");
+        Innboks testInnboks = new Innboks("innboks", "fnr");
         wicket.goToPageWith(testInnboks);
 
         assertThat(getValgtTraad(testInnboks).getNyesteMelding().melding.id, is(ENESTE_MELDING_ID_TRAAD2));
     }
 
-    private TraadVM getValgtTraad(TestInnboks testInnboks) {
+    private TraadVM getValgtTraad(Innboks testInnboks) {
         return ((InnboksVM) testInnboks.getDefaultModelObject()).getValgtTraad();
     }
 

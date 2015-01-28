@@ -1,4 +1,4 @@
-package no.nav.sbl.dialogarena.sporsmalogsvar.config.mock;
+package no.nav.sbl.dialogarena.sporsmalogsvar.config;
 
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.GOSYSNAVansatt;
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navorgenhet.GOSYSNAVOrgEnhet;
