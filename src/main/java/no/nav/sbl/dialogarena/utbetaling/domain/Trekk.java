@@ -7,6 +7,18 @@ public class Trekk {
     private String kreditor;
     private Trekk() { }
 
+    public String getTrekksType() {
+        return trekksType;
+    }
+
+    public Double getTrekkBeloep() {
+        return trekkBeloep;
+    }
+
+    public String getKreditor() {
+        return kreditor;
+    }
+
     public class TrekkBuilder {
         private Trekk trekk;
 

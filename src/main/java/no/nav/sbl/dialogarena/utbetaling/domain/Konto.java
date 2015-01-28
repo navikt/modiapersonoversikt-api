@@ -5,6 +5,14 @@ public class Konto {
     private String kontotype;
     private Konto() { }
 
+    public String getKontonummer() {
+        return kontonummer;
+    }
+
+    public String getKontotype() {
+        return kontotype;
+    }
+
     public class KontoBuilder {
         private Konto konto;
 
