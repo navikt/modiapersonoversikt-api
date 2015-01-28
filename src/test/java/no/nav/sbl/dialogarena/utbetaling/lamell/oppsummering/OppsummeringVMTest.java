@@ -1,7 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 import no.nav.sbl.dialogarena.time.Datoformat;
-import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -55,9 +55,9 @@ public class OppsummeringVMTest {
 
     @Test
     public void testTransformer_LikeYtelser_BlirSlaattSammen() throws Exception {
-        Underytelse ytelse1 = new Underytelse("Grunnbeløp", "", optional(0d), 1000.0, optional(0D));
-        Underytelse ytelse2 = new Underytelse("Tillegg", "", optional(0d), 500.0, optional(0D));
-        Underytelse ytelse3 = new Underytelse("Skatt", "", optional(0d), -200.0, optional(0D));
+        UnderytelseGammel ytelse1 = new UnderytelseGammel("Grunnbeløp", "", optional(0d), 1000.0, optional(0D));
+        UnderytelseGammel ytelse2 = new UnderytelseGammel("Tillegg", "", optional(0d), 500.0, optional(0D));
+        UnderytelseGammel ytelse3 = new UnderytelseGammel("Skatt", "", optional(0d), -200.0, optional(0D));
         Utbetaling dagpenger = new UtbetalingBuilder(ID).withHovedytelse("Dagpenger").withUtbetalingsDato(now()).withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse1, ytelse3)).build();
         Utbetaling dagpenger1 = new UtbetalingBuilder(ID).withHovedytelse("Dagpenger").withUtbetalingsDato(now()).withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse2, ytelse3)).build();
         Utbetaling dagpenger2 = new UtbetalingBuilder(ID).withHovedytelse("Helseprodukter").withUtbetalingsDato(now()).withPeriode(new Interval(now(), now())).withUnderytelser(asList(ytelse2)).build();
@@ -86,10 +86,10 @@ public class OppsummeringVMTest {
     @Test
     public void testTransformer_LikeTitlerOgForskjelligeAntall_BlirSlaattSammen() throws Exception {
 
-        Underytelse ytelse1 = new Underytelse("Grønn", "", optional(1d), 100.0, optional(0D));
-        Underytelse ytelse2 = new Underytelse("Grønn", "", optional(2d), 200.0, optional(0D));
-        Underytelse ytelse3 = new Underytelse("Grønn", "", optional(3d), 300.0, optional(0D));
-        List<Underytelse> underytelser = asList(ytelse1, ytelse2, ytelse3);
+        UnderytelseGammel ytelse1 = new UnderytelseGammel("Grønn", "", optional(1d), 100.0, optional(0D));
+        UnderytelseGammel ytelse2 = new UnderytelseGammel("Grønn", "", optional(2d), 200.0, optional(0D));
+        UnderytelseGammel ytelse3 = new UnderytelseGammel("Grønn", "", optional(3d), 300.0, optional(0D));
+        List<UnderytelseGammel> underytelser = asList(ytelse1, ytelse2, ytelse3);
         Utbetaling utbetaling = new UtbetalingBuilder(ID).withHovedytelse("Våren").withUnderytelser(underytelser).withUtbetalingsDato(now()).withPeriode(new Interval(now().minusDays(14), now())).build();
         List<Utbetaling> utbetalinger = asList(utbetaling);
 
@@ -104,7 +104,7 @@ public class OppsummeringVMTest {
 
     private Utbetaling getUtbetaling(DateTime dato) {
         return new UtbetalingBuilder(ID).withHovedytelse("Kjeks")
-                .withUnderytelser(asList(new Underytelse("", "", optional(0d), 0, optional(0D))))
+                .withUnderytelser(asList(new UnderytelseGammel("", "", optional(0d), 0, optional(0D))))
                 .withUtbetalingsDato(dato)
                 .withPeriode(new Interval(dato.minusDays(14), dato))
                 .build();

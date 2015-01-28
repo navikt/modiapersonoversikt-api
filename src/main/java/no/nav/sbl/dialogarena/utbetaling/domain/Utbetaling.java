@@ -32,7 +32,7 @@ public final class Utbetaling implements Serializable {
     private double brutto;
     private double trekk;
     private double utbetalt;
-    private List<Underytelse> underytelser;
+    private List<UnderytelseGammel> underytelser;
     private Utbetaling() {}
 
     public static LocalDate defaultStartDato() {
@@ -103,7 +103,7 @@ public final class Utbetaling implements Serializable {
         return utbetalt;
     }
 
-    public List<Underytelse> getUnderytelser() {
+    public List<UnderytelseGammel> getUnderytelser() {
         return underytelser;
     }
 
@@ -177,7 +177,7 @@ public final class Utbetaling implements Serializable {
             return this;
         }
 
-        public UtbetalingBuilder withUnderytelser(List<Underytelse> underytelser) {
+        public UtbetalingBuilder withUnderytelser(List<UnderytelseGammel> underytelser) {
             this.utbetaling.underytelser.addAll(underytelser);
             return this;
         }
@@ -222,9 +222,9 @@ public final class Utbetaling implements Serializable {
         }
     };
 
-    public static final Transformer<Utbetaling, List<Underytelse>> UNDERYTELSER = new Transformer<Utbetaling, List<Underytelse>>() {
+    public static final Transformer<Utbetaling, List<UnderytelseGammel>> UNDERYTELSER = new Transformer<Utbetaling, List<UnderytelseGammel>>() {
         @Override
-        public List<Underytelse> transform(Utbetaling utbetaling) {
+        public List<UnderytelseGammel> transform(Utbetaling utbetaling) {
             return utbetaling.getUnderytelser();
         }
     };

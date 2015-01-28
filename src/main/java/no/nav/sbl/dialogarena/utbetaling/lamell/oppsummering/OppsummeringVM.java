@@ -2,7 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 
 import no.nav.sbl.dialogarena.time.Datoformat;
-import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -21,12 +21,12 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.modig.lang.collections.TransformerUtils.first;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.SUM_UNDERYTELSER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.TREKK_BELOP;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_COMPARE_BELOP;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_SKATT_NEDERST;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_TITTEL;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UTBETALT_BELOP;
+import static no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel.SUM_UNDERYTELSER;
+import static no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel.TREKK_BELOP;
+import static no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel.UNDERYTELSE_COMPARE_BELOP;
+import static no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel.UNDERYTELSE_SKATT_NEDERST;
+import static no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel.UNDERYTELSE_TITTEL;
+import static no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel.UTBETALT_BELOP;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.PERIODE;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UNDERYTELSER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.END;
@@ -60,9 +60,9 @@ public class OppsummeringVM implements Serializable {
     private static List<HovedYtelseVM> lagHovetytelseVMer(List<Utbetaling> utbetalinger) {
         List<HovedYtelseVM> hovedYtelseVMs = new ArrayList<>();
         for (List<Utbetaling> sammen : grupperPaaHovedytelseOgPeriode(utbetalinger)) {
-            Map<String, List<Underytelse>> indekserteUnderytelser = on(sammen).flatmap(UNDERYTELSER).reduce(indexBy(UNDERYTELSE_TITTEL));
+            Map<String, List<UnderytelseGammel>> indekserteUnderytelser = on(sammen).flatmap(UNDERYTELSER).reduce(indexBy(UNDERYTELSE_TITTEL));
 
-            List<Underytelse> sammenlagteUnderytelser = on(indekserteUnderytelser.values()).reduce(SUM_UNDERYTELSER);
+            List<UnderytelseGammel> sammenlagteUnderytelser = on(indekserteUnderytelser.values()).reduce(SUM_UNDERYTELSER);
             sort(sammenlagteUnderytelser, UNDERYTELSE_COMPARE_BELOP);
             sort(sammenlagteUnderytelser, UNDERYTELSE_SKATT_NEDERST);
 
