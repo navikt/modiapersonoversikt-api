@@ -31,7 +31,6 @@ import static org.mockito.Mockito.when;
 public class HaandterMeldingPanelTest extends WicketPageTest {
 
     private static final String HAANDTERMELDINGER_ID = "haandtermeldinger";
-    private static final String BESVAR_ID = "besvar";
     private static final String NYOPPGAVE_VALG_ID = "nyoppgaveValg";
     private static final String JOURNALFOR_VALG_ID = "journalforingValg";
     private static final String MERKE_VALG_ID = "merkeValg";
@@ -39,45 +38,6 @@ public class HaandterMeldingPanelTest extends WicketPageTest {
 
     @Inject
     private HenvendelseBehandlingService henvendelseBehandlingService;
-
-    @Test
-    public void skalKunneBesvareTraadInitiertAvBruker() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1")));
-
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
-                .should().containComponent(thatIsEnabled().and(withId(BESVAR_ID)));
-    }
-
-    @Test
-    public void skalIkkeKunneBesvareTraadInitiertAvSaksbehandler() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("melding1", SAMTALEREFERAT_OPPMOTE, now().minusDays(1), "TEMA", "melding1")));
-
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
-                .should().containComponent(thatIsDisabled().and(withId(BESVAR_ID)));
-    }
-
-    @Test
-    public void skalKunneBesvareTraadInitiertAvBrukerMedTidligereSvar() {
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1"),
-                createMelding("melding2", SVAR_SKRIFTLIG, now(), "TEMA", "melding1")));
-
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
-                .should().containComponent(thatIsEnabled().and(withId(BESVAR_ID)));
-    }
-
-    @Test
-    public void skalKunneBesvareTraadSomErMarkertSomKontorsperret() {
-        Melding melding = createMelding("melding1", SPORSMAL_SKRIFTLIG, now().minusDays(1), "TEMA", "melding1");
-        melding.kontorsperretEnhet = "kontorsperretEnhet";
-        when(henvendelseBehandlingService.hentMeldinger(anyString())).thenReturn(asList(
-                melding));
-
-        wicket.goToPageWith(new TestHaandterMeldingPanel(HAANDTERMELDINGER_ID, new InnboksVM("fnr", henvendelseBehandlingService)))
-                .should().containComponent(thatIsEnabled().and(withId(BESVAR_ID)));
-    }
 
     @Test
     public void skalKunneJournalforeHvisNyesteMeldingIkkeErJournalfort() {
