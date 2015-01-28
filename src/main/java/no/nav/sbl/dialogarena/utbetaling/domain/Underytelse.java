@@ -8,6 +8,26 @@ public class Underytelse {
     private Double ytelseBeloep;
     private Underytelse() {}
 
+    public String getYtelsesType() {
+        return ytelsesType;
+    }
+
+    public Double getSatsBeloep() {
+        return satsBeloep;
+    }
+
+    public String getSatsType() {
+        return satsType;
+    }
+
+    public Integer getSatsAntall() {
+        return satsAntall;
+    }
+
+    public Double getYtelseBeloep() {
+        return ytelseBeloep;
+    }
+
     public class UnderytelseBuilder {
         private Underytelse underytelse;
 

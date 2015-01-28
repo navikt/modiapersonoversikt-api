@@ -37,6 +37,86 @@ public class Hovedytelse {
         this.skattListe = new ArrayList<>();
     }
 
+    public DateTime getPosteringsDato() {
+        return posteringsDato;
+    }
+
+    public Aktoer getUtbetaltTil() {
+        return utbetaltTil;
+    }
+
+    public Double getUtbetalingNettopBeloep() {
+        return utbetalingNettopBeloep;
+    }
+
+    public String getUtbetalingsmelding() {
+        return utbetalingsmelding;
+    }
+
+    public DateTime getUtbetalingsDato() {
+        return utbetalingsDato;
+    }
+
+    public DateTime getForfallsDato() {
+        return forfallsDato;
+    }
+
+    public Konto getUtbetaltTilKonto() {
+        return utbetaltTilKonto;
+    }
+
+    public String getUtbetalingsmetode() {
+        return utbetalingsmetode;
+    }
+
+    public String getUtbetalingsstatus() {
+        return utbetalingsstatus;
+    }
+
+    public String getYtelsesType() {
+        return ytelsesType;
+    }
+
+    public Interval getYtelsesperiode() {
+        return ytelsesperiode;
+    }
+
+    public List<Underytelse> getUnderytelseListe() {
+        return underytelseListe;
+    }
+
+    public Double getSumUnderytelser() {
+        return sumUnderytelser;
+    }
+
+    public List<Trekk> getTrekkListe() {
+        return trekkListe;
+    }
+
+    public List<Double> getSkattListe() {
+        return skattListe;
+    }
+
+    public Double getSumSkatt() {
+        return sumSkatt;
+    }
+
+    public Double getNettoBeloep() {
+        return nettoBeloep;
+    }
+
+    public String getBilagsnummer() {
+        return bilagsnummer;
+    }
+
+    public Aktoer getRettighetshaver() {
+        return rettighetshaver;
+    }
+
+    public Aktoer getRefundertForOrg() {
+        return refundertForOrg;
+    }
+
     public class HovedytelseBuilder {
         private Hovedytelse hovedytelse;
 
