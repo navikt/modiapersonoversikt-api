@@ -60,8 +60,33 @@
     }
   }
 
-  .meldingsdetaljer {
+  .traadDetaljer {
     padding: 22px @sidemargin 0 @sidemargin;
+    .nyMelding {
+      text-align: right;
+      margin-bottom: 30px;
+      a {
+        position: relative;
+        padding: 10px;
+        margin-right: 20px;
+        border-radius: 17px;
+        background-color: #d5d5d5;
+        vertical-align: sub;
+        &:after {
+          position: absolute;
+          bottom: 8px;
+          content: " ";
+          height: 0;
+          width: 0;
+          border: 10px solid transparent;
+          left: 96%;
+          border-left-color: #d5d5d5;
+        }
+      }
+      img {
+        height: 34px;
+      }
+    }
     .melding {
       p, h3 {
         line-height: 1.35rem;
@@ -191,9 +216,6 @@
       &:not(:last-child) {
         margin-right: 1.5em;
       }
-      &.besvar span {
-        background-image: url(../img/besvar_inaktiv.svg);
-      }
       &.journalfor span {
         background-image: url(../img/journalfore_inaktiv.svg);
       }
@@ -212,9 +234,6 @@
         em {
           font-style: normal;
         }
-      }
-      &.besvar a {
-        background-image: url(../img/besvar.svg);
       }
       &.journalfor a {
         background-image: url(../img/journalfore_blaa.svg);
