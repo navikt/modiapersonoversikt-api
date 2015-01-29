@@ -65,21 +65,25 @@
     .nyMelding {
       text-align: right;
       margin-bottom: 30px;
-      a {
+      .besvarBoble {
+        display: inline-block;
         position: relative;
+        min-width: 100px;
+        height: 36px;
         padding: 10px;
         margin-right: 20px;
         border-radius: 17px;
         background-color: #d5d5d5;
-        vertical-align: sub;
+        vertical-align: top;
+        text-align: center;
         &:after {
           position: absolute;
-          bottom: 8px;
+          bottom: 6px;
           content: " ";
           height: 0;
           width: 0;
-          border: 10px solid transparent;
-          left: 96%;
+          border: 12px solid transparent;
+          left: 95%;
           border-left-color: #d5d5d5;
         }
       }
@@ -198,9 +202,18 @@
     }
   }
 
+  .besvarIndikator {
+    float: right;
+    width: 35px;
+    height: 20px;
+    border-radius: 10px;
+    background-color: #d5d5d5;
+  }
+
   .traadlengde {
     float: right;
     padding-right: 2em;
+    margin-left: 6px;
     line-height: 21px;
     font-weight: bold;
     background: url(../img/melding_flere.svg) no-repeat right;

@@ -5,6 +5,7 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.GsakService;
 import no.nav.sbl.dialogarena.sporsmalogsvar.consumer.HenvendelseBehandlingService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
@@ -20,8 +21,7 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 
 import javax.inject.Inject;
 
-import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
-import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
+import static no.nav.modig.modia.events.InternalEvents.*;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.both;
 import static no.nav.modig.wicket.model.ModelUtils.not;
@@ -82,6 +82,10 @@ public class Innboks extends Lerret {
         if (isNotBlank(oppgaveIdParameter) && gsakService.oppgaveKanManuelltAvsluttes(oppgaveIdParameter)) {
             innboksVM.setSessionOppgaveId(oppgaveIdParameter);
         }
+
+        if (isNotBlank(oppgaveIdParameter) && isNotBlank(traadIdParameter)) {
+            innboksVM.traadBesvares = traadIdParameter;
+        }
     }
 
     @Override
@@ -102,6 +106,18 @@ public class Innboks extends Lerret {
     public void oppdatertInnboks(AjaxRequestTarget target) {
         innboksVM.oppdaterMeldinger();
         send(getPage(), Broadcast.DEPTH, INNBOKS_OPPDATERT_EVENT);
+        target.add(this);
+    }
+
+    @RunOnEvents(SVAR_PAA_MELDING)
+    public void setBesvarModus(AjaxRequestTarget target, String traadId) {
+        innboksVM.traadBesvares = traadId;
+        target.add(this);
+    }
+
+    @RunOnEvents({Events.SporsmalOgSvar.SVAR_AVBRUTT, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT})
+    public void unsetBesvartModus(AjaxRequestTarget target) {
+        innboksVM.traadBesvares = null;
         target.add(this);
     }
 

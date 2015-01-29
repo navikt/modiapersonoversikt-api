@@ -36,6 +36,7 @@ public class InnboksVM implements Serializable {
     private Optional<MeldingVM> valgtMelding;
     private String fnr, feilmeldingKey;
     private Optional<String> sessionOppgaveId = none(), sessionHenvendelseId = none();
+    public String traadBesvares;
 
     public InnboksVM(String fnr, HenvendelseBehandlingService henvendelseBehandlingService) {
         this.fnr = fnr;
