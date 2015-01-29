@@ -20,10 +20,10 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
-import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingVM.TIL_UTBETALINGVM;
-import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingVM.UtbetalingVMComparator;
+import static no.nav.sbl.dialogarena.utbetaling.widget.HovedytelseVM.TIL_HOVEDYTELSEVM;
+import static no.nav.sbl.dialogarena.utbetaling.widget.HovedytelseVM.UtbetalingVMComparator;
 
-public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
+public class UtbetalingWidget extends FeedWidget<HovedytelseVM> {
 
     private static final Logger LOG = LoggerFactory.getLogger(UtbetalingWidget.class);
     private static final int MAX_NUMBER_OF_UTBETALINGER = 6;
@@ -41,9 +41,9 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
         setDefaultModel(new ListModel<>(asList(new GenericListing(new HentUtbetalingerPanel(this)))));
     }
 
-    private List<UtbetalingVM> transformUtbetalingToVM(List<Utbetaling> utbetalinger) {
-        List<UtbetalingVM> utbetalingVMs = on(utbetalinger).map(TIL_UTBETALINGVM).collect(new UtbetalingVMComparator());
-        return on(utbetalingVMs).take(MAX_NUMBER_OF_UTBETALINGER).collect();
+    private List<HovedytelseVM> transformUtbetalingToVM(List<Utbetaling> utbetalinger) {
+        List<HovedytelseVM> hovedytelseVMs = on(utbetalinger).map(TIL_HOVEDYTELSEVM).collect(new UtbetalingVMComparator());
+        return on(hovedytelseVMs).take(MAX_NUMBER_OF_UTBETALINGER).collect();
     }
 
     public void hentUtbetalinger() {
@@ -61,7 +61,7 @@ public class UtbetalingWidget extends FeedWidget<UtbetalingVM> {
     }
 
     @Override
-    public UtbetalingWidgetPanel newFeedPanel(String id, IModel<UtbetalingVM> model) {
+    public UtbetalingWidgetPanel newFeedPanel(String id, IModel<HovedytelseVM> model) {
         return new UtbetalingWidgetPanel(id, model);
     }
 

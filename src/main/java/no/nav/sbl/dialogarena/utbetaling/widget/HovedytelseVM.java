@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
@@ -13,56 +14,56 @@ import java.util.Locale;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
 
 
-public class UtbetalingVM implements FeedItemVM, Serializable {
+public class HovedytelseVM implements FeedItemVM, Serializable {
 
-    public static final Transformer<Utbetaling, UtbetalingVM> TIL_UTBETALINGVM = new Transformer<Utbetaling, UtbetalingVM>() {
+    public static final Transformer<Hovedytelse, HovedytelseVM> TIL_HOVEDYTELSEVM = new Transformer<Hovedytelse, HovedytelseVM>() {
         @Override
-        public UtbetalingVM transform(Utbetaling utbetaling) {
-            return new UtbetalingVM(utbetaling);
+        public HovedytelseVM transform(Hovedytelse hovedytelse) {
+            return new HovedytelseVM(hovedytelse);
         }
     };
 
-    private Utbetaling utbetaling;
+    private Hovedytelse hovedytelse;
 
-    public UtbetalingVM(Utbetaling utbetaling) {
-        this.utbetaling = utbetaling;
+    public HovedytelseVM(Hovedytelse hovedytelse) {
+        this.hovedytelse = hovedytelse;
     }
 
     public DateTime getUtbetalingsDato() {
-        return utbetaling.getUtbetalingsdato();
+        return hovedytelse.getUtbetalingsDato();
     }
 
     public String getBeskrivelse() {
-        return utbetaling.getHovedytelse();
+        return hovedytelse.getYtelsesType();
     }
 
     public String getBelop() {
-        return formaterBelop(utbetaling.getUtbetalt());
+        return formaterBelop(hovedytelse.getYtelseNettoBeloep());
     }
 
     public String getValuta() {
-        String valuta = utbetaling.getValuta();
+        String valuta = hovedytelse.getValuta();
         return (valuta != null && !valuta.isEmpty() ? valuta : "kr");
     }
 
     public String getStatus() {
-        return utbetaling.getStatus();
+        return hovedytelse.getStatus();
     }
 
     public DateTime getStartDato() {
-        return utbetaling.getPeriode().getStart();
+        return hovedytelse.getPeriode().getStart();
     }
 
     public DateTime getSluttDato() {
-        return utbetaling.getPeriode().getEnd();
+        return hovedytelse.getPeriode().getEnd();
     }
 
     public String getUtbetalingId(){
-        return utbetaling.getUtbetalingId();
+        return hovedytelse.getUtbetalingId();
     }
 
     public Mottaktertype getMottakertype() {
-        return utbetaling.getMottakertype();
+        return hovedytelse.getMottakertype();
     }
 
     @Override
@@ -85,19 +86,19 @@ public class UtbetalingVM implements FeedItemVM, Serializable {
     /**
      * Sorterer i omvendt kronologisk rekkefølge på utbetalingsdato
      */
-    public static class UtbetalingVMComparator implements Comparator<UtbetalingVM> {
+    public static class UtbetalingVMComparator implements Comparator<HovedytelseVM> {
         @Override
-        public int compare(UtbetalingVM utbetalingVM1, UtbetalingVM utbetalingVM2) {
-            if (utbetalingVM1.getUtbetalingsDato() == null && utbetalingVM2.getUtbetalingsDato() == null) {
+        public int compare(HovedytelseVM hovedytelseVM1, HovedytelseVM hovedytelseVM2) {
+            if (hovedytelseVM1.getUtbetalingsDato() == null && hovedytelseVM2.getUtbetalingsDato() == null) {
                 return 0;
             }
-            if (utbetalingVM1.getUtbetalingsDato() == null) {
+            if (hovedytelseVM1.getUtbetalingsDato() == null) {
                 return -1;
             }
-            if (utbetalingVM2.getUtbetalingsDato() == null) {
+            if (hovedytelseVM2.getUtbetalingsDato() == null) {
                 return 1;
             }
-            return utbetalingVM2.getUtbetalingsDato().compareTo(utbetalingVM1.getUtbetalingsDato());
+            return hovedytelseVM2.getUtbetalingsDato().compareTo(hovedytelseVM1.getUtbetalingsDato());
         }
     }
 }

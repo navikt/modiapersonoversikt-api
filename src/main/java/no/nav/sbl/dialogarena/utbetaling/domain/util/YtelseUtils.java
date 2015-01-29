@@ -1,7 +1,12 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
 import no.nav.modig.lang.collections.iter.ReduceFunction;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.Mottakertype;
+import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSAktoer;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSPerson;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -139,4 +144,11 @@ public class YtelseUtils {
             return new ArrayList<>();
         }
     };
+
+    public static final Mottakertype mottakertypeForAktoer(WSAktoer wsAktoer) {
+        if(wsAktoer instanceof WSPerson) {
+            return Mottakertype.BRUKER;
+        }
+        return Mottakertype.ANNEN_MOTTAKER;
+    }
 }

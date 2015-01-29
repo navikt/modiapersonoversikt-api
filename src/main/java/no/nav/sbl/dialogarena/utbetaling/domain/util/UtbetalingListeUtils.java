@@ -2,6 +2,7 @@ package no.nav.sbl.dialogarena.utbetaling.domain.util;
 
 import no.nav.modig.lang.collections.iter.ReduceFunction;
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.apache.commons.collections15.Predicate;
 import org.joda.time.Interval;
@@ -112,7 +113,7 @@ public class UtbetalingListeUtils {
         }
     }
 
-    private static void leggTilNoklerForAarOgMaaned(Map<Integer, Map<Integer, List<Utbetaling>>> aarsMap, int aar, int maaned) {
+    private static void leggTilNoklerForAarOgMaaned(Map<Integer, Map<Integer, List<Hovedytelse>>> aarsMap, int aar, int maaned) {
         if (!aarsMap.containsKey(aar)) {
             aarsMap.put(aar, new LinkedHashMap<Integer, List<Utbetaling>>());
         }

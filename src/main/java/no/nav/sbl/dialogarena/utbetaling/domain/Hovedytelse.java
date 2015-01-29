@@ -1,231 +1,32 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-import no.nav.sbl.dialogarena.utbetaling.Aktoer;
+import no.nav.sbl.dialogarena.common.records.Key;
+import no.nav.sbl.dialogarena.common.records.Record;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class Hovedytelse {
+public interface Hovedytelse {
+    public Key<DateTime> posteringsdato = new Key<>("POSTERINGS_DATO");
+    public Key<Record<Aktoer>> utbetaltTil = new Key<>("UTBETALT_TIL");
+    public Key<Mottakertype> mottakertype = new Key<>("MOTTAKER_TYPE");
+    public Key<String> utbetalingsmelding = new Key<>("UTBETALING_MELDING");
+    public Key<DateTime> utbetalingsDato = new Key<>("UTBETALING_DATO");
+    public Key<DateTime> forfallsDato = new Key<>("FORFALL_DATO");
+    public Key<Record<Konto>> utbetaltTilKonto = new Key<>("UTBETALT_TIL_KONTO");
+    public Key<String> utbetalingsmetode = new Key<>("UTBETALING_METODE");
+    public Key<String> utbetalingsstatus = new Key<>("UTBETALING_STATUS");
 
-    private DateTime posteringsDato;
-    private Aktoer utbetaltTil;
-    private Double utbetalingNettopBeloep;
-    private String utbetalingsmelding;
-    private DateTime utbetalingsDato;
-    private DateTime forfallsDato;
-    private Konto utbetaltTilKonto;
-    private String utbetalingsmetode;
-    private String utbetalingsstatus;
-
-    private String ytelsesType;
-    private Interval ytelsesperiode;
-    private List<Underytelse> underytelseListe;
-    private Double sumUnderytelser;
-    private List<Trekk> trekkListe;
-    private List<Double> skattListe;
-    private Double sumSkatt;
-    private Double nettoBeloep;
-    private String bilagsnummer;
-    private Aktoer rettighetshaver;
-    private Aktoer refundertForOrg;
-
-    private Hovedytelse() {
-        this.underytelseListe = new ArrayList<>();
-        this.trekkListe = new ArrayList<>();
-        this.skattListe = new ArrayList<>();
-    }
-
-    public DateTime getPosteringsDato() {
-        return posteringsDato;
-    }
-
-    public Aktoer getUtbetaltTil() {
-        return utbetaltTil;
-    }
-
-    public Double getUtbetalingNettopBeloep() {
-        return utbetalingNettopBeloep;
-    }
-
-    public String getUtbetalingsmelding() {
-        return utbetalingsmelding;
-    }
-
-    public DateTime getUtbetalingsDato() {
-        return utbetalingsDato;
-    }
-
-    public DateTime getForfallsDato() {
-        return forfallsDato;
-    }
-
-    public Konto getUtbetaltTilKonto() {
-        return utbetaltTilKonto;
-    }
-
-    public String getUtbetalingsmetode() {
-        return utbetalingsmetode;
-    }
-
-    public String getUtbetalingsstatus() {
-        return utbetalingsstatus;
-    }
-
-    public String getYtelsesType() {
-        return ytelsesType;
-    }
-
-    public Interval getYtelsesperiode() {
-        return ytelsesperiode;
-    }
-
-    public List<Underytelse> getUnderytelseListe() {
-        return underytelseListe;
-    }
-
-    public Double getSumUnderytelser() {
-        return sumUnderytelser;
-    }
-
-    public List<Trekk> getTrekkListe() {
-        return trekkListe;
-    }
-
-    public List<Double> getSkattListe() {
-        return skattListe;
-    }
-
-    public Double getSumSkatt() {
-        return sumSkatt;
-    }
-
-    public Double getNettoBeloep() {
-        return nettoBeloep;
-    }
-
-    public String getBilagsnummer() {
-        return bilagsnummer;
-    }
-
-    public Aktoer getRettighetshaver() {
-        return rettighetshaver;
-    }
-
-    public Aktoer getRefundertForOrg() {
-        return refundertForOrg;
-    }
-
-    public class HovedytelseBuilder {
-        private Hovedytelse hovedytelse;
-
-        public HovedytelseBuilder() {
-            this.hovedytelse = new Hovedytelse();
-        }
-
-        public HovedytelseBuilder withPosteringsDato(DateTime posteringsDato) {
-            this.hovedytelse.posteringsDato = posteringsDato;
-            return this;
-        }
-
-        public HovedytelseBuilder withUtbetaltTil(Aktoer utbetaltTil) {
-            this.hovedytelse.utbetaltTil = utbetaltTil;
-            return this;
-        }
-
-        public HovedytelseBuilder withUtbetalingNettoBeloep(Double utbetalingNettoBeloep) {
-            this.hovedytelse.utbetalingNettopBeloep = utbetalingNettoBeloep;
-            return this;
-        }
-
-        public HovedytelseBuilder withUtbetalingsmelding(String utbetalingsmelding) {
-            this.hovedytelse.utbetalingsmelding = utbetalingsmelding;
-            return this;
-        }
-
-        public HovedytelseBuilder withUtbetalingsDato(DateTime utbetalingsDato) {
-            this.hovedytelse.utbetalingsDato = utbetalingsDato;
-            return this;
-        }
-
-        public HovedytelseBuilder withForfallsDato(DateTime forfallsDato) {
-            this.hovedytelse.forfallsDato = forfallsDato;
-            return this;
-        }
-
-        public HovedytelseBuilder withUtbetaltTilKonto(Konto utbetaltTilKonto) {
-            this.hovedytelse.utbetaltTilKonto = utbetaltTilKonto;
-            return this;
-        }
-
-        public HovedytelseBuilder withUtbetalingsstatus(String utbetalingsstatus) {
-            this.hovedytelse.utbetalingsstatus = utbetalingsstatus;
-            return this;
-        }
-
-        public HovedytelseBuilder withUtbetalingsmetode(String utbetalingsmetode) {
-            this.hovedytelse.utbetalingsmetode = utbetalingsmetode;
-            return this;
-        }
-
-        public HovedytelseBuilder withYtelsestype(String ytelsestype) {
-            this.hovedytelse.ytelsesType = ytelsestype;
-            return this;
-        }
-
-        public HovedytelseBuilder withYtelsePeriode(Interval ytelsePeriode) {
-            this.hovedytelse.ytelsesperiode = ytelsePeriode;
-            return this;
-        }
-
-        public HovedytelseBuilder withUnderytelseListe(List<Underytelse> underytelseListe) {
-            this.hovedytelse.underytelseListe = underytelseListe;
-            return this;
-        }
-
-        public HovedytelseBuilder withSumUnderytelser(Double sumUnderytelser) {
-            this.hovedytelse.sumUnderytelser= sumUnderytelser;
-            return this;
-        }
-
-        public HovedytelseBuilder withTrekkliste(List<Trekk> trekkliste) {
-            this.hovedytelse.trekkListe = trekkliste;
-            return this;
-        }
-
-        public HovedytelseBuilder withSkatteListe(List<Double> skatteListe) {
-            this.hovedytelse.skattListe = skatteListe;
-            return this;
-        }
-
-        public HovedytelseBuilder withSumSkatt(Double sumSkatt) {
-            this.hovedytelse.sumSkatt = sumSkatt;
-            return this;
-        }
-
-        public HovedytelseBuilder withNettoBeloep(Double nettoBeloep) {
-            this.hovedytelse.nettoBeloep = nettoBeloep;
-            return this;
-        }
-
-        public HovedytelseBuilder withBilagsnummer(String bilagsnummer) {
-            this.hovedytelse.bilagsnummer = bilagsnummer;
-            return this;
-        }
-
-        public HovedytelseBuilder withRettighetshaver(Aktoer rettighetshaver) {
-            this.hovedytelse.rettighetshaver = rettighetshaver;
-            return this;
-        }
-
-        public HovedytelseBuilder withRefundertForOrg(Aktoer organisasjon) {
-            this.hovedytelse.refundertForOrg = organisasjon;
-            return this;
-        }
-
-        public Hovedytelse build() {
-            return this.hovedytelse;
-        }
-    }
+    public Key<String> ytelsesType = new Key<>("YTELSE_TYPE");
+    public Key<Interval> ytelsesperiode = new Key<>("YTELSE_PERIODE");
+    public Key<List<Record<Underytelse>>> underytelseListe = new Key<>("UNDERYTELSE_LISTE");
+    public Key<Double> sumUnderytelser = new Key<>("SUM_UNDERYTELSER");
+    public Key<List<Record<Trekk>>> trekkListe = new Key<>("TREKK_LISTE");
+    public Key<List<Double>> skattListe = new Key<>("SKATT_LISTE");
+    public Key<Double> sumSkatt = new Key<>("SUM_SKATT");
+    public Key<Double> ytelseNettoBeloep = new Key<>("YTELSE_NETTO_BELOEP");
+    public Key<String> bilagsnummer = new Key<>("BILAGSNUMMER");
+    public Key<Record<Aktoer>> rettighetshaver = new Key<>("RETTIGHETSHAVER");
+    public Key<Record<Aktoer>> refundertForOrg = new Key<>("REFUNDERT_FOR_ORG");
 }
