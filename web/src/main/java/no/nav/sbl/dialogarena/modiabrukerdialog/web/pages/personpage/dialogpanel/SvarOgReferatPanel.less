@@ -17,25 +17,12 @@
     border-bottom: 1px solid #cbcbcb;
 
     input + label {
-      width: 50%;
-      margin: 0;
-      padding: 1rem;
+      display: block;
+      margin: 0 auto;
       color: #3e3832;
-      font-size: 1rem;
-      text-transform: none;
-      background: none;
-      border: 1px solid transparent;
-      &:not(:last-child) {
-        border-right: 1px solid #cbcbcb;
-      }
-    }
-    input:checked + label {
-      background: #dadada none;
-      font-weight: bold;
-    }
-    input:focus, input:hover {
-      + label {
-        border: 1px solid @modiaaquablaa;
+      width: 12em;
+      &:first-of-type {
+        margin-top: 10px;
       }
     }
   }
