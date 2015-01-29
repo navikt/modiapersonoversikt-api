@@ -150,7 +150,7 @@ public class SvarPanel extends Panel {
 
     //Denne er midlertidig mens vi venter på full integrasjon med kodeverk
     private Temagruppe getTemagruppeFraSporsmal() {
-        for (Temagruppe temagruppe : Temagruppe.values()) {
+        for (Temagruppe temagruppe : Temagruppe.INNGAAENDE) {
             if (temagruppe.name().equals(sporsmal.temagruppe)) {
                 return temagruppe;
             }

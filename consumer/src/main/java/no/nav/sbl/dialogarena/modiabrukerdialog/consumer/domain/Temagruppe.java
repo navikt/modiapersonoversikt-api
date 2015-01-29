@@ -9,8 +9,10 @@ public enum Temagruppe {
     FMLI,
     HJLPM,
     BIL,
-    ORT_HJE;
+    ORT_HJE,
+    OVRG;
 
-    public static final List<Temagruppe> UTGAAENDE_TEMAGRUPPER = asList(ARBD, FMLI, HJLPM);
+    public static final List<Temagruppe> INNGAAENDE = asList(ARBD, FMLI, HJLPM, BIL, ORT_HJE);
+    public static final List<Temagruppe> UTGAAENDE = asList(ARBD, FMLI, HJLPM, OVRG);
 }
 

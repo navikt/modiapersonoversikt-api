@@ -3,8 +3,8 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.errorhandling.aria.AriaFeedbackPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Oppgave;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.service.PlukkOppgaveService;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.attributes.AjaxRequestAttributes;
@@ -27,7 +27,6 @@ import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import javax.inject.Inject;
 import java.io.Serializable;
 
-import static java.util.Arrays.asList;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.actionId;
 import static no.nav.modig.security.tilgangskontroll.utils.AttributeUtils.resourceId;
 import static no.nav.modig.security.tilgangskontroll.utils.WicketAutorizationUtils.accessRestriction;
@@ -51,11 +50,11 @@ public class PlukkOppgavePanel extends Panel {
     public PlukkOppgavePanel(String id) {
         super(id);
 
+        add(accessRestriction(RENDER).withAttributes(actionId("plukkoppgave"), resourceId("")));
+
         valgtTemagruppe = new Model<>((Temagruppe) getSession().getAttribute(TEMAGRUPPE_ATTR));
         Form<Temagruppe> form = new Form<>("plukkOppgaveForm", valgtTemagruppe);
         form.setOutputMarkupId(true);
-
-        add(accessRestriction(RENDER).withAttributes(actionId("plukkoppgave"), resourceId("")));
 
         feedbackPanel = new AriaFeedbackPanel("feedback", new ContainerFeedbackMessageFilter(this));
         feedbackPanel.setOutputMarkupPlaceholderTag(true);
@@ -68,7 +67,7 @@ public class PlukkOppgavePanel extends Panel {
         radioGroup.setRequired(true);
         radioGroup.setOutputMarkupPlaceholderTag(true);
 
-        radioGroup.add(new ListView<Temagruppe>("temagrupper", asList(Temagruppe.values())) {
+        radioGroup.add(new ListView<Temagruppe>("temagrupper", Temagruppe.INNGAAENDE) {
             @Override
             protected void populateItem(ListItem<Temagruppe> item) {
                 item.add(new Radio<>("temagruppevalg", item.getModel()));
