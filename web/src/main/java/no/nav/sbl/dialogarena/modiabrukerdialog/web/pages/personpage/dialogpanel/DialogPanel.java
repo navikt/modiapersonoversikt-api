@@ -73,9 +73,10 @@ public class DialogPanel extends Panel {
         }
         HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fodselsnummer);
         HentKjerneinformasjonResponse response = personKjerneinfoServiceBi.hentKjerneinformasjon(request);
-        try {
+        if(response != null && response.getPerson() != null && response.getPerson().getPersonfakta() != null
+                && response.getPerson().getPersonfakta().getPersonnavn() != null){
             return response.getPerson().getPersonfakta().getPersonnavn().getFornavn();
-        } catch (NullPointerException e) {
+        } else {
             return null;
         }
     }
