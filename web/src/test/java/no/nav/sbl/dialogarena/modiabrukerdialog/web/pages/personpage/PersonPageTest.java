@@ -6,6 +6,7 @@ import no.nav.kjerneinfo.web.pages.kjerneinfo.panel.tab.VisitkortTabListePanel;
 import no.nav.modig.modia.lamell.TokenLamellPanel;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.test.EventGenerator;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
@@ -43,15 +44,13 @@ import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.HENVENDELSEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.FikkIkkeTilordnet;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.lameller.LamellContainer.LAMELL_MELDINGER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel.KVITTERING_VIST;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_UTFORT;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.SvarPanel.SVAR_AVBRUTT;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
@@ -179,7 +178,7 @@ public class PersonPageTest extends WicketPageTest {
     public void erstatterSvarOgReferatPanelMedReferatPanelVedRiktigeEvents() {
         assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(KVITTERING_VIST);
         assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(LEGG_TILBAKE_FERDIG);
-        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(SVAR_AVBRUTT);
+        assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(Events.SporsmalOgSvar.SVAR_AVBRUTT);
     }
 
     private void assertErstatterSvarOgReferatPanelMedReferatPanelVedEvent(String event) {
@@ -191,7 +190,7 @@ public class PersonPageTest extends WicketPageTest {
     @Test
     public void sletterPlukketOppgaveFraSessionVedRiktigeEvents() {
         assertSletterPlukketOppgaveFraSessionVedEvent(MELDING_SENDT_TIL_BRUKER);
-        assertSletterPlukketOppgaveFraSessionVedEvent(LEGG_TILBAKE_UTFORT);
+        assertSletterPlukketOppgaveFraSessionVedEvent(Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT);
     }
 
     private void assertSletterPlukketOppgaveFraSessionVedEvent(String event) {

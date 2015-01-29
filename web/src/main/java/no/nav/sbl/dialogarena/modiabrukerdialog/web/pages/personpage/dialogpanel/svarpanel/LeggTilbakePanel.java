@@ -1,8 +1,9 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -25,12 +26,12 @@ import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.model.ModelUtils.not;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.LeggTilbakeVM.Aarsak;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.LeggTilbakeVM.Aarsak.*;
+import static org.apache.wicket.event.Broadcast.BREADTH;
 import static org.apache.wicket.event.Broadcast.BUBBLE;
 
 public class LeggTilbakePanel extends Panel {
 
     public static final String LEGG_TILBAKE_AVBRUTT = "leggtilbake.avbrutt";
-    public static final String LEGG_TILBAKE_UTFORT = "leggtilbake.utfort";
     public static final String LEGG_TILBAKE_FERDIG = "leggtilbake.ferdig";
     private final Radio<Aarsak> feiltema;
 
@@ -107,11 +108,11 @@ public class LeggTilbakePanel extends Panel {
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
                         oppgaveId, leggTilbakeVM.lagBeskrivelse(
-                            new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
+                                new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
                         leggTilbakeVM.nyTemagruppe
                 );
                 oppgaveLagtTilbake.setObject(true);
-                send(LeggTilbakePanel.this, BUBBLE, LEGG_TILBAKE_UTFORT);
+                send(getPage(), BREADTH, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT);
 
                 target.add(form, feedbackPanelSuccess);
                 target.focusComponent(lukkKnapp);
