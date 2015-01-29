@@ -105,7 +105,7 @@ public class SvarPanel extends Panel {
                     @Override
                     protected void populateItem(ListItem<Melding> item) {
                         Melding melding = item.getModelObject();
-                        String type = melding.meldingstype.name().substring(0, melding.meldingstype.name().lastIndexOf("_")).toLowerCase();
+                        String type = melding.meldingstype.name().substring(0, melding.meldingstype.name().indexOf("_")).toLowerCase();
                         item.add(new TidligereMeldingPanel("svar", type, melding.temagruppe, melding.opprettetDato, melding.fritekst, melding.navIdent, true));
                     }
                 }
