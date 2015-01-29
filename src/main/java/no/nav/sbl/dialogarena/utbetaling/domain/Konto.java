@@ -1,37 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-public class Konto {
-    private String kontonummer;
-    private String kontotype;
-    private Konto() { }
+import no.nav.sbl.dialogarena.common.records.Key;
 
-    public String getKontonummer() {
-        return kontonummer;
-    }
-
-    public String getKontotype() {
-        return kontotype;
-    }
-
-    public class KontoBuilder {
-        private Konto konto;
-
-        public KontoBuilder() {
-            this.konto = new Konto();
-        }
-
-        public KontoBuilder withKontonummer(String kontonummer) {
-            this.konto.kontonummer = kontonummer;
-            return this;
-        }
-
-        public KontoBuilder withKontotype(String kontotype) {
-            this.konto.kontotype = kontotype;
-            return this;
-        }
-
-        public Konto build() {
-            return this.konto;
-        }
-    }
+public interface Konto {
+    public Key<String> kontonummer = new Key<>("KONTONUMMER");
+    public Key<String> kontotype = new Key<>("KONTOTYPE");
 }

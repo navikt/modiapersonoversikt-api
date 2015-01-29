@@ -1,67 +1,11 @@
 package no.nav.sbl.dialogarena.utbetaling.domain;
 
-public class Underytelse {
-    private String ytelsesType;
-    private Double satsBeloep;
-    private String satsType;
-    private Integer satsAntall;
-    private Double ytelseBeloep;
-    private Underytelse() {}
+import no.nav.sbl.dialogarena.common.records.Key;
 
-    public String getYtelsesType() {
-        return ytelsesType;
-    }
-
-    public Double getSatsBeloep() {
-        return satsBeloep;
-    }
-
-    public String getSatsType() {
-        return satsType;
-    }
-
-    public Integer getSatsAntall() {
-        return satsAntall;
-    }
-
-    public Double getYtelseBeloep() {
-        return ytelseBeloep;
-    }
-
-    public class UnderytelseBuilder {
-        private Underytelse underytelse;
-
-        public UnderytelseBuilder() {
-            this.underytelse = new Underytelse();
-        }
-
-        public UnderytelseBuilder withYtelsesType(String ytelsesKomponentType) {
-            this.underytelse.ytelsesType = ytelsesKomponentType;
-            return this;
-        }
-
-        public UnderytelseBuilder withSatsBeloep(Double satsBeloep) {
-            this.underytelse.satsBeloep = satsBeloep;
-            return this;
-        }
-
-        public UnderytelseBuilder withSatsType(String satsType) {
-            this.underytelse.satsType = satsType;
-            return this;
-        }
-
-        public UnderytelseBuilder withSatsAntall(Integer satsAntall) {
-            this.underytelse.satsAntall = satsAntall;
-            return this;
-        }
-
-        public UnderytelseBuilder withYtelseBeloep(Double ytelseBeloep) {
-            this.underytelse.ytelseBeloep = ytelseBeloep;
-            return this;
-        }
-
-        public Underytelse build() {
-            return this.underytelse;
-        }
-    }
+public interface Underytelse {
+    public Key<String> ytelsesType = new Key<>("YTELSE_TYPE");
+    public Key<Double> satsBeloep = new Key<>("SATS_BELOEP");
+    public Key<String> satsType = new Key<>("SATS_TYPE");
+    public Key<Double> satsAntall = new Key<>("SATS_ANTALL");
+    public Key<Double> ytelseBeloep = new Key<>("YTELSE_BELOEP");
 }

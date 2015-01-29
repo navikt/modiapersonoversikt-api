@@ -12,14 +12,14 @@ import java.util.Locale;
 import static java.util.Arrays.asList;
 import static java.util.Collections.sort;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.getBuilder;
-import static no.nav.sbl.dialogarena.utbetaling.widget.UtbetalingVM.UtbetalingVMComparator;
+import static no.nav.sbl.dialogarena.utbetaling.widget.HovedytelseVM.UtbetalingVMComparator;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 
-public class UtbetalingVMTest {
+public class HovedytelseVMTest {
 
     private static final String ID = "id";
 
@@ -32,7 +32,7 @@ public class UtbetalingVMTest {
     public void belopFormateres_medGruppering_medKomma_medToDesimaler() throws Exception {
         double belop = 67856565.6;
         Utbetaling utbetaling = getBuilder(ID).withUtbetalt(belop).build();
-        UtbetalingVM vm = new UtbetalingVM(utbetaling);
+        HovedytelseVM vm = new HovedytelseVM(utbetaling);
 
         String belop1 = vm.getBelop();
 
@@ -44,47 +44,47 @@ public class UtbetalingVMTest {
     @Test
     public void transformerWorksCorrectly(){
         Utbetaling utbetaling = getBuilder(ID).withPeriode(new Interval(now().minusDays(7), now())).build();
-        UtbetalingVM utbetalingVM = UtbetalingVM.TIL_UTBETALINGVM.transform(utbetaling);
-        assertThat(utbetaling.getPeriode().getStart(), is(equalTo(utbetalingVM.getStartDato())));
+        HovedytelseVM hovedytelseVM = HovedytelseVM.TIL_HOVEDYTELSEVM.transform(utbetaling);
+        assertThat(utbetaling.getPeriode().getStart(), is(equalTo(hovedytelseVM.getStartDato())));
     }
 
 
     @Test
     public void shouldSortereNyesteUtbetalingForst() {
-        UtbetalingVM utbetalingVM2Jan = lagUtbetalingVM(new DateTime(2013, 1, 2, 0, 0));
-        UtbetalingVM utbetalingVM1Jan = lagUtbetalingVM(new DateTime(2013, 1, 1, 0, 0));
-        UtbetalingVM utbetalingVM3Jan = lagUtbetalingVM(new DateTime(2013, 1, 3, 0, 0));
-        List<UtbetalingVM> utbetalinger = asList(utbetalingVM2Jan, utbetalingVM1Jan, utbetalingVM3Jan);
+        HovedytelseVM hovedytelseVM2Jan = lagUtbetalingVM(new DateTime(2013, 1, 2, 0, 0));
+        HovedytelseVM hovedytelseVM1Jan = lagUtbetalingVM(new DateTime(2013, 1, 1, 0, 0));
+        HovedytelseVM hovedytelseVM3Jan = lagUtbetalingVM(new DateTime(2013, 1, 3, 0, 0));
+        List<HovedytelseVM> utbetalinger = asList(hovedytelseVM2Jan, hovedytelseVM1Jan, hovedytelseVM3Jan);
         sort(utbetalinger, new UtbetalingVMComparator());
 
-        assertThat(utbetalinger, contains(utbetalingVM3Jan, utbetalingVM2Jan, utbetalingVM1Jan));
+        assertThat(utbetalinger, contains(hovedytelseVM3Jan, hovedytelseVM2Jan, hovedytelseVM1Jan));
     }
 
     @Test
     public void shouldSortereUtbetalingerUtenUtbetalingsdatoForst() {
-        UtbetalingVM utbetalingVM2Jan = lagUtbetalingVM(new DateTime(2013, 1, 2, 0, 0));
-        UtbetalingVM utbetalingVM3Jan = lagUtbetalingVM(new DateTime(2013, 1, 3, 0, 0));
-        UtbetalingVM utbetalingVMUtenUtbetalingsdato = lagUtbetalingVM(null);
+        HovedytelseVM hovedytelseVM2Jan = lagUtbetalingVM(new DateTime(2013, 1, 2, 0, 0));
+        HovedytelseVM hovedytelseVM3Jan = lagUtbetalingVM(new DateTime(2013, 1, 3, 0, 0));
+        HovedytelseVM hovedytelseVMUtenUtbetalingsdato = lagUtbetalingVM(null);
 
-        List<UtbetalingVM> utbetalinger = asList(utbetalingVM2Jan, utbetalingVMUtenUtbetalingsdato, utbetalingVM3Jan);
+        List<HovedytelseVM> utbetalinger = asList(hovedytelseVM2Jan, hovedytelseVMUtenUtbetalingsdato, hovedytelseVM3Jan);
         sort(utbetalinger, new UtbetalingVMComparator());
 
-        assertThat(utbetalinger, contains(utbetalingVMUtenUtbetalingsdato, utbetalingVM3Jan, utbetalingVM2Jan));
+        assertThat(utbetalinger, contains(hovedytelseVMUtenUtbetalingsdato, hovedytelseVM3Jan, hovedytelseVM2Jan));
     }
 
     @Test
     public void shouldHandtereManglendeUtbetalingsdato() {
-        UtbetalingVM utbetalingVMUtenUtbetalingsdato1 = lagUtbetalingVM(null);
-        UtbetalingVM utbetalingVMUtenUtbetalingsdato2 = lagUtbetalingVM(null);
+        HovedytelseVM hovedytelseVMUtenUtbetalingsdato1 = lagUtbetalingVM(null);
+        HovedytelseVM hovedytelseVMUtenUtbetalingsdato2 = lagUtbetalingVM(null);
 
-        List<UtbetalingVM> utbetalinger = asList(utbetalingVMUtenUtbetalingsdato1, utbetalingVMUtenUtbetalingsdato2);
+        List<HovedytelseVM> utbetalinger = asList(hovedytelseVMUtenUtbetalingsdato1, hovedytelseVMUtenUtbetalingsdato2);
         sort(utbetalinger, new UtbetalingVMComparator());
 
-        assertThat(utbetalinger, contains(utbetalingVMUtenUtbetalingsdato1, utbetalingVMUtenUtbetalingsdato2));
+        assertThat(utbetalinger, contains(hovedytelseVMUtenUtbetalingsdato1, hovedytelseVMUtenUtbetalingsdato2));
     }
 
-    private UtbetalingVM lagUtbetalingVM(DateTime utbetalingsDato) {
-        return new UtbetalingVM(
+    private HovedytelseVM lagUtbetalingVM(DateTime utbetalingsDato) {
+        return new HovedytelseVM(
                 Utbetaling.getBuilder(ID)
                         .withValuta("kr")
                         .withMottakerId("***REMOVED***")

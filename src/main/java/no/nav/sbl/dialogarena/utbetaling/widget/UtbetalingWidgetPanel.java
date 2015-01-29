@@ -12,33 +12,33 @@ import org.joda.time.DateTime;
 
 import static no.nav.sbl.dialogarena.time.Datoformat.kortUtenLiteral;
 
-public class UtbetalingWidgetPanel extends GenericPanel<UtbetalingVM> {
+public class UtbetalingWidgetPanel extends GenericPanel<HovedytelseVM> {
 
-    public UtbetalingWidgetPanel(String id, IModel<UtbetalingVM> model) {
+    public UtbetalingWidgetPanel(String id, IModel<HovedytelseVM> model) {
         super(id, model);
         setOutputMarkupId(true);
-        UtbetalingVM utbetalingVM = model.getObject();
+        HovedytelseVM hovedytelseVM = model.getObject();
 
         add(
-                createUtbetalingsDatoLabel(utbetalingVM),
-                new Label("beskrivelse", utbetalingVM.getBeskrivelse()),
-                createPeriodeLabel(utbetalingVM),
-                new Label("belop", utbetalingVM.getBelop()),
-                new Label("valuta", utbetalingVM.getValuta()),
+                createUtbetalingsDatoLabel(hovedytelseVM),
+                new Label("beskrivelse", hovedytelseVM.getBeskrivelse()),
+                createPeriodeLabel(hovedytelseVM),
+                new Label("belop", hovedytelseVM.getBelop()),
+                new Label("valuta", "utbetaling.valuta"),
                 new WebMarkupContainer("mottakerIndikator")
-                        .add(new AttributeAppender("class", utbetalingVM.getMottakertype()).setSeparator(" ")),
-                new Label("statusTekst", utbetalingVM.getStatus())
+                        .add(new AttributeAppender("class", hovedytelseVM.getMottakertype()).setSeparator(" ")),
+                new Label("statusTekst", hovedytelseVM.getStatus())
         );
     }
 
-    private Label createUtbetalingsDatoLabel(UtbetalingVM utbetalingVM) {
-        return new Label("utbetalingsDato", getDatoModel(utbetalingVM.getUtbetalingsDato(), "utbetalingdato.mangler"));
+    private Label createUtbetalingsDatoLabel(HovedytelseVM hovedytelseVM) {
+        return new Label("utbetalingsDato", getDatoModel(hovedytelseVM.getUtbetalingsDato(), "utbetalingdato.mangler"));
     }
 
-    private Label createPeriodeLabel(UtbetalingVM utbetalingVM) {
+    private Label createPeriodeLabel(HovedytelseVM hovedytelseVM) {
         IModel<String> periodeModel = getPeriodeModel(
-                getDatoModel(utbetalingVM.getStartDato(), "startdato.mangler"),
-                getDatoModel(utbetalingVM.getSluttDato(), "sluttdato.mangler"));
+                getDatoModel(hovedytelseVM.getStartDato(), "startdato.mangler"),
+                getDatoModel(hovedytelseVM.getSluttDato(), "sluttdato.mangler"));
         return new Label("periode", periodeModel);
     }
 

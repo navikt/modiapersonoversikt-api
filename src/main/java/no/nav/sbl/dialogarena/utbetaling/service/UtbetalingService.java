@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import javax.inject.Inject;
 import java.util.List;
 
-import static no.nav.sbl.dialogarena.utbetaling.domain.transform.UtbetalingTransformer.lagUtbetalinger;
+import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.createHovedytelser;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class UtbetalingService {
@@ -24,7 +24,7 @@ public class UtbetalingService {
     private UtbetalingV1 utbetalingV1;
 
     public List<Utbetaling> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-        return lagUtbetalinger(getWSUtbetalinger(fnr, startDato, sluttDato), fnr);
+        return createHovedytelser(getWSUtbetalinger(fnr, startDato, sluttDato), fnr);
     }
 
     public void ping() {
