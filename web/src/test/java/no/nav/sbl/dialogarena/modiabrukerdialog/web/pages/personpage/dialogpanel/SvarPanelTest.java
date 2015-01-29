@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
 
+import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
@@ -11,8 +12,7 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandli
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.LeggTilbakePanel;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.TidligereMeldingPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.*;
 import org.apache.wicket.ajax.AjaxEventBehavior;
 import org.apache.wicket.ajax.markup.html.AjaxLink;
 import org.apache.wicket.markup.html.basic.Label;
@@ -41,7 +41,9 @@ import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -52,9 +54,10 @@ import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER
 public class SvarPanelTest extends WicketPageTest {
 
     public static final String FNR = "fnr";
+    public static final String FORNAVN = "fornavn";
     public static final String SPORSMAL_ID = "id";
-    public static final String TEMAGRUPPE = Temagruppe.FMLI.name();
     public static final String FRITEKST = "fritekst";
+    public static final String TEMAGRUPPE = Temagruppe.FMLI.name();
     @Captor
     private ArgumentCaptor<Melding> meldingArgumentCaptor;
 
@@ -62,13 +65,18 @@ public class SvarPanelTest extends WicketPageTest {
     protected HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     protected OppgaveBehandlingService oppgaveBehandlingService;
+    @Inject
+    private CmsContentRetriever cmsContentRetriever;
 
     @InjectMocks
-    private TestSvarPanel testSvarPanel;
+    private SvarPanel testSvarPanel;
+
+    private GrunnInfo grunnInfo;
 
     @Before
     public void setUp() {
-        testSvarPanel = new TestSvarPanel("id", FNR, asList(lagSporsmal()));
+        grunnInfo = new GrunnInfo(FNR, FORNAVN);
+        testSvarPanel = new SvarPanel("id", grunnInfo, asList(lagSporsmal()), Optional.<String>none());
         MockitoAnnotations.initMocks(this);
     }
 
@@ -182,7 +190,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void viserTraadToggleLenkeHvisSvarFinnes() {
-        wicket.goToPageWith(new TestSvarPanel(SPORSMAL_ID, FNR, asList(lagSporsmal(), lagSvar())))
+        wicket.goToPageWith(new SvarPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmal(), lagSvar()), Optional.<String>none()))
                 .should().containComponent(thatIsVisible().and(withId("vistraadcontainer")));
     }
 
@@ -194,7 +202,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     public void togglerVisningAvTraad() {
-        wicket.goToPageWith(new TestSvarPanel(SPORSMAL_ID, FNR, asList(lagSporsmal(), lagSvar())))
+        wicket.goToPageWith(new SvarPanel(SPORSMAL_ID, grunnInfo, asList(lagSporsmal(), lagSvar()), Optional.<String>none()))
                 .should().containComponent(thatIsInvisible().and(withId("traadcontainer")))
                 .onComponent(withId("vistraadcontainer")).executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsVisible().and(withId("traadcontainer")));
@@ -228,6 +236,14 @@ public class SvarPanelTest extends WicketPageTest {
         String leggTilbakePropertyTekst = leggtilbaketekst.getString("svarpanel.avbryt.avbryt");
 
         assertThat(labeltekst, is(equalTo(leggTilbakePropertyTekst)));
+    }
+
+    @Test
+    public void skalViseFornavnISubmitKnapp() {
+        when(cmsContentRetriever.hentTekst(anyString())).thenReturn("Tekst fra mock-cms %s");
+
+        wicket.goToPageWith(new SvarPanel("id", grunnInfo, asList(lagSporsmal()), Optional.<String>none()))
+                .should().containPatterns(FORNAVN);
     }
 
     private Melding lagSporsmal() {

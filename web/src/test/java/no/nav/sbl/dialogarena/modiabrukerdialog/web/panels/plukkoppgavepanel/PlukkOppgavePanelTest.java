@@ -26,7 +26,9 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_FNR_ATTR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_HENVENDELSEID_ATTR;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.PersonPage.VALGT_OPPGAVE_ID_ATTR;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.plukkoppgavepanel.PlukkOppgavePanel.TEMAGRUPPE_ATTR;
 import static org.apache.wicket.authorization.IAuthorizationStrategy.ALLOW_ALL;
 import static org.hamcrest.CoreMatchers.is;
@@ -36,7 +38,10 @@ import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -62,7 +67,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     public void plukkerOppgaveOgSetterSessionAttributes() {
         when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class))).thenReturn(optional(new Oppgave("oppgaveId", "fnr", "henvendelseId")));
 
-        wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"))
+        wicket.goToPageWith(new PlukkOppgavePanel("plukkoppgave"))
                 .inForm(withId("plukkOppgaveForm"))
                 .select("temagruppe", 0)
                 .submitWithAjaxButton(withId("plukkOppgave"))
@@ -82,7 +87,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void plukkerIkkeOppgaveHvisTemagruppeIkkeErValgt() {
-        TestPlukkOppgavePanel plukkoppgave = new TestPlukkOppgavePanel("plukkoppgave");
+        PlukkOppgavePanel plukkoppgave = new PlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)
                 .inForm(withId("plukkOppgaveForm"))
                 .submitWithAjaxButton(withId("plukkOppgave"));
@@ -93,7 +98,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
 
     @Test
     public void plukkeIkkeOppgaveHvisEnAlleredeErPlukket() {
-        wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"));
+        wicket.goToPageWith(new PlukkOppgavePanel("plukkoppgave"));
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, "oppgaveid");
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, "henvendelseid");
@@ -112,7 +117,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
     public void girFeilmeldingHvisIngenOppgaverPaaTema() {
         when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class))).thenReturn(Optional.<Oppgave>none());
 
-        TestPlukkOppgavePanel plukkoppgave = new TestPlukkOppgavePanel("plukkoppgave");
+        PlukkOppgavePanel plukkoppgave = new PlukkOppgavePanel("plukkoppgave");
         wicket.goToPageWith(plukkoppgave)
                 .inForm(withId("plukkOppgaveForm"))
                 .select("temagruppe", 0)
@@ -127,7 +132,7 @@ public class PlukkOppgavePanelTest extends WicketPageTest {
         when(plukkOppgaveService.oppgaveErFerdigstilt(anyString())).thenReturn(true);
         when(plukkOppgaveService.plukkOppgave(any(Temagruppe.class))).thenReturn(optional(new Oppgave("oppgave2", "fnr2", "henvendelse2")));
 
-        wicket.goToPageWith(new TestPlukkOppgavePanel("plukkoppgave"));
+        wicket.goToPageWith(new PlukkOppgavePanel("plukkoppgave"));
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_FNR_ATTR, "fnr");
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_ID_ATTR, "oppgaveid");
         wicket.tester.getSession().setAttribute(VALGT_OPPGAVE_HENVENDELSEID_ATTR, "henvendelseid");

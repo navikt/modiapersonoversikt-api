@@ -35,6 +35,7 @@ import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
@@ -59,7 +60,7 @@ public class SvarPanel extends Panel {
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
 
-    private final String fnr;
+    private final GrunnInfo grunnInfo;
     private final Optional<String> oppgaveId;
     private final Melding sporsmal;
     private final List<Melding> svar;
@@ -69,9 +70,9 @@ public class SvarPanel extends Panel {
     private final WebMarkupContainer visTraadContainer;
     private final AjaxLink<Void> leggTilbakeKnapp;
 
-    public SvarPanel(String id, String fnr, final List<Melding> traad, Optional<String> oppgaveId) {
+    public SvarPanel(String id, GrunnInfo grunnInfo, final List<Melding> traad, Optional<String> oppgaveId) {
         super(id);
-        this.fnr = fnr;
+        this.grunnInfo = grunnInfo;
         this.oppgaveId = oppgaveId;
         this.sporsmal = traad.get(0);
         this.svar = new ArrayList<>(traad.subList(1, traad.size()));
@@ -232,6 +233,12 @@ public class SvarPanel extends Panel {
                     target.add(feedbackPanel);
                 }
             };
+            sendKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
+                @Override
+                public Object getObject() {
+                    return format(getString("svarform.knapp.send"), grunnInfo.getFornavn());
+                }
+            }));
             add(sendKnapp);
         }
 
@@ -251,7 +258,7 @@ public class SvarPanel extends Panel {
 
         private void sendHenvendelse(HenvendelseVM henvendelseVM) throws OppgaveErFerdigstilt {
             Melding melding = new Melding()
-                    .withFnr(fnr)
+                    .withFnr(grunnInfo.fnr)
                     .withNavIdent(getSubjectHandler().getUid())
                     .withTraadId(sporsmal.id)
                     .withTemagruppe(henvendelseVM.temagruppe.name())

@@ -21,20 +21,20 @@ public class TidligereMeldingPanelTest extends WicketPageTest {
 
     @Test
     public void skalAapnesMedFritekstUsynlig() {
-        wicket.goToPageWith(new TestTidligereMeldingPanel(ID, TYPE, FMLI.name(), DateTime.now(), "fritekst", true))
+        wicket.goToPageWith(new TidligereMeldingPanel(ID, TYPE, FMLI.name(), DateTime.now(), "fritekst", true))
                 .should().containComponent(thatIsInvisible().withId("fritekst"));
     }
 
     @Test
     public void skalAapnesMedFritekstSynlig() {
-        wicket.goToPageWith(new TestTidligereMeldingPanel(ID, TYPE, FMLI.name(), DateTime.now(), "fritekst", false))
+        wicket.goToPageWith(new TidligereMeldingPanel(ID, TYPE, FMLI.name(), DateTime.now(), "fritekst", false))
                 .should().containComponent(thatIsVisible().withId("fritekst"));
     }
 
     @Test
     public void skalToggleFritekstSynligVedKlikkPaaOverskriftContainer() {
 
-        wicket.goToPageWith(new TestTidligereMeldingPanel(ID, TYPE, FMLI.name(), DateTime.now(), "fritekst", false))
+        wicket.goToPageWith(new TidligereMeldingPanel(ID, TYPE, FMLI.name(), DateTime.now(), "fritekst", false))
                 .should().containComponent(thatIsVisible().withId("fritekst"))
                 .onComponent(withId("overskriftContainer")).executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
                 .should().containComponent(thatIsInvisible().withId("fritekst"));

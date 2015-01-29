@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.modig.content.CmsContentRetriever;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
@@ -9,19 +10,15 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtse
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.ConsumerServicesMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.EndpointMockContext;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.ReferatPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.journalforing.VelgSakPanel;
 import org.apache.wicket.ajax.markup.html.form.AjaxButton;
-import org.apache.wicket.markup.html.form.DropDownChoice;
-import org.apache.wicket.markup.html.form.Form;
-import org.apache.wicket.markup.html.form.RadioGroup;
+import org.apache.wicket.markup.html.form.*;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
+import org.mockito.*;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 import org.springframework.test.annotation.DirtiesContext;
@@ -32,18 +29,26 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
-import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsInvisible;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.thatIsVisible;
+import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ARBD;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.TestUtils.createMockSaker;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -55,6 +60,7 @@ public class ReferatPanelTest extends WicketPageTest {
 
     public static final String VALGT_ENHET = "valgtEnhet";
     public static final String FNR = "fnr";
+    public static final String FORNAVN = "fornavn";
     public static final String FRITEKST = "fritekst";
     private static final Answer<Melding> RETURNER_SAMME_MELDING = new Answer<Melding>() {
         @Override
@@ -74,21 +80,25 @@ public class ReferatPanelTest extends WicketPageTest {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private SakerService sakerService;
+    @Inject
+    private CmsContentRetriever cmsContentRetriever;
 
     @InjectMocks
-    private TestReferatPanel testReferatPanel;
+    private ReferatPanel testReferatPanel;
 
     private Saker saker;
+    private GrunnInfo grunnInfo;
 
     @Before
     public void setUp() {
         saker = createMockSaker();
+        grunnInfo = new GrunnInfo(FNR, FORNAVN);
         when(sakerService.hentSaker(anyString())).thenReturn(saker);
     }
 
     @Test
     public void inneholderReferatspesifikkeKomponenter() {
-        testReferatPanel = new TestReferatPanel("id", FNR);
+        testReferatPanel = new ReferatPanel("id", grunnInfo);
         wicket.goToPageWith(testReferatPanel)
                 .should().containComponent(withId("temagruppe").and(ofType(DropDownChoice.class)))
                 .should().containComponent(withId("kanal").and(ofType(RadioGroup.class)))
@@ -101,7 +111,7 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     public void girFeedbackOmPaakrevdeKomponenter() {
-        testReferatPanel = new TestReferatPanel("id", FNR);
+        testReferatPanel = new ReferatPanel("id", grunnInfo);
         wicket.goToPageWith(testReferatPanel)
                 .inForm(withId("referatform"))
                 .submitWithAjaxButton(withId("send"));
@@ -114,7 +124,7 @@ public class ReferatPanelTest extends WicketPageTest {
     @Test
     @SuppressWarnings("unchecked")
     public void senderReferattypeMedRiktigeVerdierTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
-        testReferatPanel = new TestReferatPanel("id", FNR);
+        testReferatPanel = new ReferatPanel("id", grunnInfo);
         MockitoAnnotations.initMocks(this);
 
         wicket.goToPageWith(testReferatPanel)
@@ -142,7 +152,7 @@ public class ReferatPanelTest extends WicketPageTest {
     public void senderSporsmaltypeMedRiktigeVerdierTilHenvendelse() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         when(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet()).thenReturn(VALGT_ENHET);
         when(henvendelseUtsendingService.sendHenvendelse(any(Melding.class))).then(RETURNER_SAMME_MELDING);
-        testReferatPanel = new TestReferatPanel("id", FNR);
+        testReferatPanel = new ReferatPanel("id", grunnInfo);
         MockitoAnnotations.initMocks(this);
 
         settISporsmalsModus();
@@ -170,7 +180,7 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     public void girFeilmeldingDersomManSenderSporsmalUtenValgtJournalforingssak() {
-        testReferatPanel = new TestReferatPanel("id", FNR);
+        testReferatPanel = new ReferatPanel("id", grunnInfo);
         MockitoAnnotations.initMocks(this);
 
         settISporsmalsModus();
@@ -189,7 +199,7 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     public void viserVelgSakPanelForSporsmalDersomManKlikkerValgtSakLenke() {
-        testReferatPanel = new TestReferatPanel("id", FNR);
+        testReferatPanel = new ReferatPanel("id", grunnInfo);
         MockitoAnnotations.initMocks(this);
 
         settISporsmalsModus();
@@ -203,7 +213,7 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     public void skjulerVelgSakPanelForSporsmalDersomManKlikkerAvbryt() {
-        testReferatPanel = new TestReferatPanel("id", FNR);
+        testReferatPanel = new ReferatPanel("id", grunnInfo);
         MockitoAnnotations.initMocks(this);
 
         settISporsmalsModus();
@@ -217,7 +227,7 @@ public class ReferatPanelTest extends WicketPageTest {
 
     @Test
     public void skjulerVelgSakPanelForSporsmalDersomManKlikkerVelgerSak() {
-        testReferatPanel = new TestReferatPanel("id", FNR);
+        testReferatPanel = new ReferatPanel("id", grunnInfo);
         MockitoAnnotations.initMocks(this);
 
         settISporsmalsModus();
@@ -251,7 +261,7 @@ public class ReferatPanelTest extends WicketPageTest {
     public void telefonSomDefaultKanalHvisSaksbehandlerErTilknyttetKontaktsenter() {
         when(saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()).thenReturn(true);
 
-        wicket.goToPageWith(new TestReferatPanel("id", FNR));
+        wicket.goToPageWith(new ReferatPanel("id", grunnInfo));
 
         HenvendelseVM modelObject = (HenvendelseVM) wicket.get().component(withId("referatform").and(ofType(Form.class))).getDefaultModelObject();
         assertThat(modelObject.kanal, is((equalTo(TELEFON))));
@@ -261,14 +271,22 @@ public class ReferatPanelTest extends WicketPageTest {
     public void ingenDefaultKanalHvisSaksbehandlerIkkeErTilknyttetKontaktsenter() {
         when(saksbehandlerInnstillingerService.valgtEnhetErKontaktsenter()).thenReturn(false);
 
-        wicket.goToPageWith(new TestReferatPanel("id", FNR));
+        wicket.goToPageWith(new ReferatPanel("id", grunnInfo));
 
         HenvendelseVM modelObject = (HenvendelseVM) wicket.get().component(withId("referatform").and(ofType(Form.class))).getDefaultModelObject();
         assertThat(modelObject.kanal, is(equalTo(null)));
     }
 
-    protected TestReferatPanel lagReferatPanelMedKanalSatt() {
-        testReferatPanel = new TestReferatPanel("id", FNR);
+    @Test
+    public void skalViseFornavnISubmitKnapp() {
+        when(cmsContentRetriever.hentTekst(anyString())).thenReturn("Tekst fra mock-cms %s");
+
+        wicket.goToPageWith(new ReferatPanel("id", grunnInfo))
+                .should().containPatterns(FORNAVN);
+    }
+
+    protected ReferatPanel lagReferatPanelMedKanalSatt() {
+        testReferatPanel = new ReferatPanel("id", grunnInfo);
         Object referatformModel = testReferatPanel.get("referatform").getDefaultModelObject();
         HenvendelseVM henvendelseVM = (HenvendelseVM) referatformModel;
         henvendelseVM.kanal = TELEFON;

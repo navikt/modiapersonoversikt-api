@@ -1,14 +1,17 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel;
 
+import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
+import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.OppgavetilordningFeilet;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.ReferatPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.SvarPanel;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.modal.OppgavetilordningFeilet;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.markup.html.panel.Panel;
@@ -37,16 +40,18 @@ public class DialogPanel extends Panel {
     private HenvendelseUtsendingService henvendelseUtsendingService;
     @Inject
     private OppgaveBehandlingService oppgaveBehandlingService;
+    @Inject
+    private PersonKjerneinfoServiceBi personKjerneinfoServiceBi;
 
     private Component aktivtPanel;
     private OppgavetilordningFeilet oppgavetilordningFeiletModal;
-    private String fnr;
+    private GrunnInfo grunnInfo;
 
     public DialogPanel(String id, String fnr) {
         super(id);
-        this.fnr = fnr;
+        settOppGrunnInfo(fnr);
 
-        aktivtPanel = new ReferatPanel(AKTIVT_PANEL_ID, fnr);
+        aktivtPanel = new ReferatPanel(AKTIVT_PANEL_ID, grunnInfo);
         oppgavetilordningFeiletModal = new OppgavetilordningFeilet("oppgavetilordningModal");
 
         add(aktivtPanel, oppgavetilordningFeiletModal);
@@ -54,12 +59,33 @@ public class DialogPanel extends Panel {
         settOppRiktigMeldingPanel();
     }
 
+    private void settOppGrunnInfo(String fnr) {
+        String fornavn = getFornavn(fnr);
+        grunnInfo = new GrunnInfo(fnr, fornavn);
+    }
+
+    private String getFornavn(String fnr) {
+        String fodselsnummer;
+        if (fnr == null) {
+            fodselsnummer = "";
+        } else {
+            fodselsnummer = fnr.replaceAll("[^\\d]", "");
+        }
+        HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fodselsnummer);
+        HentKjerneinformasjonResponse response = personKjerneinfoServiceBi.hentKjerneinformasjon(request);
+        try {
+            return response.getPerson().getPersonfakta().getPersonnavn().getFornavn();
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
     private void settOppRiktigMeldingPanel() {
         String henvendelseId = (String) getSession().getAttribute(HENVENDELSEID);
         String oppgaveId = (String) getSession().getAttribute(OPPGAVEID);
 
         if (isNotBlank(henvendelseId) && isNotBlank(oppgaveId)) {
-            List<Melding> traad = henvendelseUtsendingService.hentTraad(fnr, henvendelseId);
+            List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.fnr, henvendelseId);
             if (!traad.isEmpty() && !erEnkeltstaaendeSamtalereferat(traad)) {
                 erstattReferatPanelMedSvarPanel(traad, optional(oppgaveId));
             }
@@ -67,7 +93,7 @@ public class DialogPanel extends Panel {
     }
 
     private void erstattReferatPanelMedSvarPanel(List<Melding> traad, Optional<String> oppgaveId) {
-        aktivtPanel = aktivtPanel.replaceWith(new SvarPanel(AKTIVT_PANEL_ID, fnr, traad, oppgaveId));
+        aktivtPanel = aktivtPanel.replaceWith(new SvarPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgaveId));
     }
 
     private boolean erEnkeltstaaendeSamtalereferat(List<Melding> traad) {
@@ -77,7 +103,7 @@ public class DialogPanel extends Panel {
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void visSvarPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
-        List<Melding> traad = henvendelseUtsendingService.hentTraad(fnr, traadId);
+        List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.fnr, traadId);
         Optional<String> oppgaveId = none();
         if (traad.size() <= 1) {
             try {
@@ -94,7 +120,11 @@ public class DialogPanel extends Panel {
 
     @RunOnEvents({KVITTERING_VIST, LEGG_TILBAKE_FERDIG, SVAR_AVBRUTT})
     public void visReferatPanel(AjaxRequestTarget target) {
-        aktivtPanel = aktivtPanel.replaceWith(new ReferatPanel(AKTIVT_PANEL_ID, fnr));
+        aktivtPanel = aktivtPanel.replaceWith(new ReferatPanel(AKTIVT_PANEL_ID, grunnInfo));
         target.add(aktivtPanel);
+    }
+
+    public GrunnInfo getGrunnInfo() {
+        return grunnInfo;
     }
 }

@@ -4,18 +4,16 @@ import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextArea;
 import no.nav.modig.wicket.component.enhancedtextarea.EnhancedTextAreaConfigurator;
 import no.nav.modig.wicket.events.NamedEventPayload;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM;
+import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.*;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.HenvendelseVM.Modus;
-import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.referatpanel.journalforing.JournalforingsPanel;
 import no.nav.tjeneste.domene.brukerdialog.henvendelse.v1.behandlehenvendelse.BehandleHenvendelsePortType;
+import org.apache.wicket.AttributeModifier;
 import org.apache.wicket.Component;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.form.AjaxFormChoiceComponentUpdatingBehavior;
@@ -32,15 +30,13 @@ import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 import org.apache.wicket.markup.html.panel.FeedbackPanel;
 import org.apache.wicket.markup.html.panel.GenericPanel;
-import org.apache.wicket.model.CompoundPropertyModel;
-import org.apache.wicket.model.IModel;
-import org.apache.wicket.model.PropertyModel;
-import org.apache.wicket.model.StringResourceModel;
+import org.apache.wicket.model.*;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
@@ -48,7 +44,9 @@ import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.OPPMOTE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELEFON_OG_OPPMOTE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.UTGAAENDE_TEMAGRUPPER;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
@@ -66,13 +64,13 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
     @Inject
     private LokaltKodeverk lokaltKodeverk;
 
-    private final String fnr;
+    private final GrunnInfo grunnInfo;
     private final KvitteringsPanel kvittering;
     private final List<Component> modusKomponenter = new ArrayList<>();
 
-    public ReferatPanel(String id, String fnr) {
+    public ReferatPanel(String id, GrunnInfo grunnInfo) {
         super(id, new CompoundPropertyModel<>(new HenvendelseVM()));
-        this.fnr = fnr;
+        this.grunnInfo = grunnInfo;
         setOutputMarkupPlaceholderTag(true);
 
         settOppModellMedDefaultVerdier();
@@ -84,7 +82,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
 
         form.add(lagModusVelger(modusModel));
 
-        Component epostVarsel = new EpostVarselPanel("epostVarsel", modusModel, fnr);
+        Component epostVarsel = new EpostVarselPanel("epostVarsel", modusModel, grunnInfo.fnr);
         epostVarsel.setOutputMarkupPlaceholderTag(true);
         modusKomponenter.add(epostVarsel);
         form.add(epostVarsel);
@@ -93,7 +91,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         overskrift.setOutputMarkupId(true);
         modusKomponenter.add(overskrift);
 
-        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", fnr, getModel());
+        JournalforingsPanel journalforingsPanel = new JournalforingsPanel("journalforing", grunnInfo.fnr, getModel());
         journalforingsPanel.add(visibleIf(isEqualTo(modusModel, Modus.SPORSMAL)));
         modusKomponenter.add(journalforingsPanel);
         form.add(journalforingsPanel);
@@ -156,7 +154,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
     }
 
     private AjaxButton getSubmitKnapp(final PropertyModel<Modus> modusModel, final Form<HenvendelseVM> form, final FeedbackPanel feedbackPanel) {
-        return new AjaxButton("send") {
+        AjaxButton submitKnapp = new AjaxButton("send") {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> submitForm) {
                 if (modusModel.getObject().equals(Modus.SPORSMAL) && form.getModelObject().valgtSak == null) {
@@ -171,7 +169,15 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
             protected void onError(AjaxRequestTarget target, Form<?> form) {
                 target.add(feedbackPanel);
             }
+
         };
+        submitKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
+            @Override
+            public Object getObject() {
+                return format(getString("referatform.knapp.send"), grunnInfo.getFornavn());
+            }
+        }));
+        return submitKnapp;
     }
 
     private AjaxLink<Void> getAvbrytKnapp() {
@@ -297,7 +303,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
 
     private Melding felles() {
         return new Melding()
-                .withFnr(fnr)
+                .withFnr(grunnInfo.fnr)
                 .withNavIdent(getSubjectHandler().getUid())
                 .withFritekst(getModelObject().getFritekst())
                 .withEksternAktor(getSubjectHandler().getUid());
