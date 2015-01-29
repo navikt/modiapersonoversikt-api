@@ -1,14 +1,15 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel;
 
 import no.nav.modig.core.context.StaticSubjectHandler;
-import no.nav.modig.wicket.test.matcher.BehaviorMatchers;
+import no.nav.modig.wicket.events.NamedEventPayload;
+import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.AnsattEnhet;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.DefaultSaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.KjerneinfoPepMockContext;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.SaksbehandlerInnstillingerPanelMockContext;
-import org.apache.wicket.ajax.AjaxEventBehavior;
+import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerTogglerPanel.SAKSBEHANDLERINNSTILLINGER_TOGGLET;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_CLASS;
 
@@ -37,9 +39,17 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
     @Inject
     private AnsattService ansattService;
 
+    private EventGenerator saksbehandlerInnstillingerToggletEvent;
+
     @Before
     public void setUp() {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
+        saksbehandlerInnstillingerToggletEvent = new EventGenerator() {
+            @Override
+            public Object createEvent(AjaxRequestTarget target) {
+                return new NamedEventPayload(SAKSBEHANDLERINNSTILLINGER_TOGGLET);
+            }
+        };
     }
 
     @Test
@@ -53,7 +63,7 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
         when(saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert()).thenReturn(true);
 
         wicket
-                .goTo(SaksbehandlerInnstillingerTestPage.class)
+                .goToPageWith(SaksbehandlerInnstillingerPanel.class)
                 .should().containComponent(thatIsVisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
     }
 
@@ -63,20 +73,18 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
         when(saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert()).thenReturn(true);
 
         wicket
-                .goTo(SaksbehandlerInnstillingerTestPage.class)
+                .goToPageWith(SaksbehandlerInnstillingerPanel.class)
                 .should().containComponent(thatIsInvisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
     }
 
     @Test
     public void saksbehandlerPanelTogglesVedKlikkPaToggler() {
         wicket
-                .goTo(SaksbehandlerInnstillingerTestPage.class)
+                .goToPageWith(SaksbehandlerInnstillingerPanel.class)
                 .should().containComponent(thatIsInvisible().and(ofType(SaksbehandlerInnstillingerPanel.class)))
-                .onComponent(ofType(SaksbehandlerInnstillingerTogglerPanel.class))
-                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
+                .sendEvent(saksbehandlerInnstillingerToggletEvent)
                 .should().containComponent(thatIsVisible().and(ofType(SaksbehandlerInnstillingerPanel.class)))
-                .onComponent(ofType(SaksbehandlerInnstillingerTogglerPanel.class))
-                .executeAjaxBehaviors(BehaviorMatchers.ofType(AjaxEventBehavior.class))
+                .sendEvent(saksbehandlerInnstillingerToggletEvent)
                 .should().containComponent(thatIsInvisible().and(ofType(SaksbehandlerInnstillingerPanel.class)));
     }
 
@@ -86,7 +94,7 @@ public class SaksbehandlerInnstillingerPanelTest extends WicketPageTest {
         when(saksbehandlerInnstillingerService.saksbehandlerInnstillingerErUtdatert()).thenReturn(true);
 
         wicket
-                .goTo(SaksbehandlerInnstillingerTestPage.class)
+                .goToPageWith(SaksbehandlerInnstillingerPanel.class)
                 .inForm(withId("enhetsform"))
                 .select("enhet", 1)
                 .submitWithAjaxButton(withId("velg"))
