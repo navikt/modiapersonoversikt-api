@@ -4,6 +4,7 @@ import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSGe
 import _0._0.nav_cons_sak_gosys_3.no.nav.inf.navansatt.HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg;
 import no.nav.modig.core.context.StaticSubjectHandler;
 import no.nav.modig.core.context.SubjectHandler;
+import no.nav.modig.lang.option.Optional;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.AnsattService;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.SaksbehandlerInnstillingerService;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
@@ -20,16 +21,24 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeResponse;
+import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.inject.Inject;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService.*;
 import static org.hamcrest.Matchers.containsString;
@@ -39,6 +48,7 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
+import static org.mockito.MockitoAnnotations.initMocks;
 import static org.springframework.test.annotation.DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD;
 
 @DirtiesContext(classMode = AFTER_EACH_TEST_METHOD)
@@ -57,6 +67,8 @@ public class OppgaveBehandlingServiceTest {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Mock
     private AnsattService ansattWS;
+    @Mock
+    private Ruting rutingWS;
 
     @Inject
     private OppgaveV3 oppgaveWS;
@@ -69,7 +81,7 @@ public class OppgaveBehandlingServiceTest {
     @Before
     public void init() {
         System.setProperty(StaticSubjectHandler.SUBJECTHANDLER_KEY, StaticSubjectHandler.class.getName());
-        MockitoAnnotations.initMocks(this);
+        initMocks(this);
     }
 
     @Test
@@ -135,35 +147,44 @@ public class OppgaveBehandlingServiceTest {
     @Test
     public void skalLeggeTilbakeOppgaveIGsakUtenEndretTemagruppe()
             throws LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
-        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
+
+        WSHentOppgaveResponse hentOppgaveResponse = mockHentOppgaveResponseMedTilordning();
+        when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(hentOppgaveResponse);
         when(ansattWS.hentAnsattNavn(anyString())).thenReturn("");
 
         String nyBeskrivelse = "nyBeskrivelse";
-        String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), nyBeskrivelse, null);
+        String opprinneligBeskrivelse = hentOppgaveResponse.getOppgave().getBeskrivelse();
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), nyBeskrivelse, Optional.<Temagruppe>none());
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
         assertThat(endreOppgave.getAnsvarligId(), is(""));
         assertThat(endreOppgave.getBeskrivelse(), containsString(opprinneligBeskrivelse + "\n"));
         assertThat(endreOppgave.getFagomradeKode(), is("ARBD_KNA"));
+        assertThat(endreOppgave.getAnsvarligEnhetId(), is(hentOppgaveResponse.getOppgave().getAnsvarligEnhetId()));
     }
 
     @Test
     public void skalLeggeTilbakeOppgaveIGsakMedEndretTemagruppe()
             throws LagreOppgaveOppgaveIkkeFunnet, HentOppgaveOppgaveIkkeFunnet, LagreOppgaveOptimistiskLasing, HentNAVAnsattFaultGOSYSGeneriskfMsg, HentNAVAnsattFaultGOSYSNAVAnsattIkkeFunnetMsg {
+
         when(oppgaveWS.hentOppgave(any(WSHentOppgaveRequest.class))).thenReturn(mockHentOppgaveResponseMedTilordning());
         when(ansattWS.hentAnsattNavn(anyString())).thenReturn("");
 
+        String nyEnhet = "4100";
+        when(rutingWS.finnAnsvarligEnhetForOppgavetype(any(WSFinnAnsvarligEnhetForOppgavetypeRequest.class)))
+                .thenReturn(new WSFinnAnsvarligEnhetForOppgavetypeResponse().withEnhetListe(asList(new WSEnhet().withEnhetId(nyEnhet))));
+
         String nyBeskrivelse = "nyBeskrivelse";
         String opprinneligBeskrivelse = mockHentOppgaveResponseMedTilordning().getOppgave().getBeskrivelse();
-        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), nyBeskrivelse, Temagruppe.FMLI);
+        oppgaveBehandlingService.leggTilbakeOppgaveIGsak(optional("1"), nyBeskrivelse, optional(Temagruppe.FMLI));
 
         verify(oppgavebehandlingWS).lagreOppgave(lagreOppgaveRequestCaptor.capture());
         WSEndreOppgave endreOppgave = lagreOppgaveRequestCaptor.getValue().getEndreOppgave();
         assertThat(endreOppgave.getAnsvarligId(), is(""));
         assertThat(endreOppgave.getBeskrivelse(), containsString(opprinneligBeskrivelse + "\n"));
         assertThat(endreOppgave.getUnderkategoriKode(), is("FMLI_KNA"));
+        assertThat(endreOppgave.getAnsvarligEnhetId(), is(nyEnhet));
     }
 
     @Test

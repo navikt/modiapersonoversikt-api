@@ -21,6 +21,7 @@ import org.apache.wicket.model.*;
 import javax.inject.Inject;
 
 import static java.util.Arrays.asList;
+import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.model.ModelUtils.not;
@@ -107,9 +108,10 @@ public class LeggTilbakePanel extends Panel {
             @Override
             protected void onSubmit(AjaxRequestTarget target, Form<?> form) {
                 oppgaveBehandlingService.leggTilbakeOppgaveIGsak(
-                        oppgaveId, leggTilbakeVM.lagBeskrivelse(
+                        oppgaveId,
+                        leggTilbakeVM.lagBeskrivelse(
                                 new StringResourceModel(leggTilbakeVM.getBeskrivelseKey(), LeggTilbakePanel.this, null).getString()),
-                        leggTilbakeVM.nyTemagruppe
+                        optional(leggTilbakeVM.nyTemagruppe)
                 );
                 oppgaveLagtTilbake.setObject(true);
                 send(getPage(), BREADTH, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT);

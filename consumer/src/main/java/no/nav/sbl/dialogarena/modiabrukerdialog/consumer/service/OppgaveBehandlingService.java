@@ -16,8 +16,12 @@ import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.OppgavebehandlingV3;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSEndreOppgave;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSFerdigstillOppgaveBolkRequest;
 import no.nav.tjeneste.virksomhet.oppgavebehandling.v3.meldinger.WSLagreOppgaveRequest;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSEnhet;
+import no.nav.virksomhet.tjenester.ruting.meldinger.v1.WSFinnAnsvarligEnhetForOppgavetypeRequest;
+import no.nav.virksomhet.tjenester.ruting.v1.Ruting;
 
 import javax.inject.Inject;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
@@ -44,6 +48,8 @@ public class OppgaveBehandlingService {
     private SaksbehandlerInnstillingerService saksbehandlerInnstillingerService;
     @Inject
     private AnsattService ansattWS;
+    @Inject
+    private Ruting ruting;
 
     public void tilordneOppgaveIGsak(String oppgaveId) throws FikkIkkeTilordnet {
         tilordneOppgaveIGsak(hentOppgaveFraGsak(oppgaveId));
@@ -85,14 +91,23 @@ public class OppgaveBehandlingService {
         }
     }
 
-    public void leggTilbakeOppgaveIGsak(Optional<String> oppgaveId, String beskrivelse, Temagruppe temagruppe) {
+    public void leggTilbakeOppgaveIGsak(Optional<String> oppgaveId, String beskrivelse, Optional<Temagruppe> temagruppe) {
         if (oppgaveId.isSome()) {
             try {
                 WSOppgave wsOppgave = hentOppgaveFraGsak(oppgaveId.get());
                 wsOppgave.withAnsvarligId("");
                 wsOppgave.withBeskrivelse(leggTilBeskrivelse(wsOppgave.getBeskrivelse(), beskrivelse));
-                if (temagruppe != null) {
-                    wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe)));
+                if (temagruppe.isSome()) {
+                    List<WSEnhet> enhetListe = ruting.finnAnsvarligEnhetForOppgavetype(
+                            new WSFinnAnsvarligEnhetForOppgavetypeRequest()
+                                    .withBrukerId(wsOppgave.getGjelder().getBrukerId())
+                                    .withOppgaveKode(wsOppgave.getOppgavetype().getKode())
+                                    .withFagomradeKode(wsOppgave.getFagomrade().getKode())
+                                    .withGjelderKode(underkategoriKode(temagruppe.get())))
+                            .getEnhetListe();
+
+                    wsOppgave.withAnsvarligEnhetId(enhetListe.isEmpty() ? wsOppgave.getAnsvarligEnhetId() : enhetListe.get(0).getEnhetId());
+                    wsOppgave.withUnderkategori(new WSUnderkategori().withKode(underkategoriKode(temagruppe.get())));
                 }
 
                 lagreOppgaveIGsak(wsOppgave);
