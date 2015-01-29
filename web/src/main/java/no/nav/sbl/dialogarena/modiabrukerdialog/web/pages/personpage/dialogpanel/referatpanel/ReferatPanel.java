@@ -176,7 +176,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         submitKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
             @Override
             public Object getObject() {
-                return format(getString("referatform.knapp.send"), grunnInfo.getFornavn());
+                return format(getString("referatform.knapp.send"), grunnInfo.fornavn);
             }
         }));
         return submitKnapp;

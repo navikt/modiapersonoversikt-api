@@ -237,7 +237,7 @@ public class SvarPanel extends Panel {
             sendKnapp.add(new AttributeModifier("value", new AbstractReadOnlyModel() {
                 @Override
                 public Object getObject() {
-                    return format(getString("svarform.knapp.send"), grunnInfo.getFornavn());
+                    return format(getString("svarform.knapp.send"), grunnInfo.fornavn);
                 }
             }));
             add(sendKnapp);

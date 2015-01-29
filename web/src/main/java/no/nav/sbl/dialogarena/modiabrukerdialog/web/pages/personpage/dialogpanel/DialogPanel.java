@@ -2,7 +2,6 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
-import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
 import no.nav.modig.lang.option.Optional;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
@@ -28,6 +27,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLPara
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.FALLBACK_FORNAVN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -49,8 +49,8 @@ public class DialogPanel extends Panel {
 
     public DialogPanel(String id, String fnr) {
         super(id);
-        settOppGrunnInfo(fnr);
 
+        grunnInfo = new GrunnInfo(fnr, getFornavn(fnr).getOrElse(FALLBACK_FORNAVN));
         aktivtPanel = new ReferatPanel(AKTIVT_PANEL_ID, grunnInfo);
         oppgavetilordningFeiletModal = new OppgavetilordningFeilet("oppgavetilordningModal");
 
@@ -59,25 +59,12 @@ public class DialogPanel extends Panel {
         settOppRiktigMeldingPanel();
     }
 
-    private void settOppGrunnInfo(String fnr) {
-        String fornavn = getFornavn(fnr);
-        grunnInfo = new GrunnInfo(fnr, fornavn);
-    }
-
-    private String getFornavn(String fnr) {
-        String fodselsnummer;
-        if (fnr == null) {
-            fodselsnummer = "";
-        } else {
-            fodselsnummer = fnr.replaceAll("[^\\d]", "");
-        }
-        HentKjerneinformasjonRequest request = new HentKjerneinformasjonRequest(fodselsnummer);
-        HentKjerneinformasjonResponse response = personKjerneinfoServiceBi.hentKjerneinformasjon(request);
-        if(response != null && response.getPerson() != null && response.getPerson().getPersonfakta() != null
-                && response.getPerson().getPersonfakta().getPersonnavn() != null){
-            return response.getPerson().getPersonfakta().getPersonnavn().getFornavn();
-        } else {
-            return null;
+    private Optional<String> getFornavn(String fnr) {
+        try {
+            return optional(personKjerneinfoServiceBi.hentKjerneinformasjon(new HentKjerneinformasjonRequest(fnr))
+                    .getPerson().getPersonfakta().getPersonnavn().getFornavn());
+        } catch (Exception e) {
+            return none();
         }
     }
 
@@ -123,9 +110,5 @@ public class DialogPanel extends Panel {
     public void visReferatPanel(AjaxRequestTarget target) {
         aktivtPanel = aktivtPanel.replaceWith(new ReferatPanel(AKTIVT_PANEL_ID, grunnInfo));
         target.add(aktivtPanel);
-    }
-
-    public GrunnInfo getGrunnInfo() {
-        return grunnInfo;
     }
 }

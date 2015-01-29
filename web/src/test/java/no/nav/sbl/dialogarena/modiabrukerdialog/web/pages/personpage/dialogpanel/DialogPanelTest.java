@@ -3,11 +3,14 @@ package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpane
 import no.nav.kjerneinfo.consumer.fim.person.PersonKjerneinfoServiceBi;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonRequest;
 import no.nav.kjerneinfo.consumer.fim.person.to.HentKjerneinformasjonResponse;
-import no.nav.kjerneinfo.domain.person.*;
+import no.nav.kjerneinfo.domain.person.Person;
+import no.nav.kjerneinfo.domain.person.Personfakta;
+import no.nav.kjerneinfo.domain.person.Personnavn;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.WicketPageTest;
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.config.mock.PersonPageMockContext;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.internal.util.reflection.Whitebox;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -42,7 +45,10 @@ public class DialogPanelTest extends WicketPageTest {
         response.setPerson(new Person());
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(response);
         DialogPanel dialogPanel = new DialogPanel("id", FNR);
-        assertThat(dialogPanel.getGrunnInfo().getFornavn().equals(FALLBACK_FORNAVN), is(true));
+
+        GrunnInfo grunnInfo = (GrunnInfo) Whitebox.getInternalState(dialogPanel, "grunnInfo");
+
+        assertThat(grunnInfo.fornavn.equals(FALLBACK_FORNAVN), is(true));
     }
 
     @Test
@@ -51,7 +57,10 @@ public class DialogPanelTest extends WicketPageTest {
         HentKjerneinformasjonResponse response = createHentKjerneinformasjonResponse(fornavn);
         when(personKjerneinfoServiceBi.hentKjerneinformasjon(any(HentKjerneinformasjonRequest.class))).thenReturn(response);
         DialogPanel dialogPanel = new DialogPanel("id", FNR);
-        assertThat(dialogPanel.getGrunnInfo().getFornavn().equals(fornavn), is(true));
+
+        GrunnInfo grunnInfo = (GrunnInfo) Whitebox.getInternalState(dialogPanel, "grunnInfo");
+
+        assertThat(grunnInfo.fornavn.equals(fornavn), is(true));
     }
 
     private HentKjerneinformasjonResponse createHentKjerneinformasjonResponse(String fornavn) {
