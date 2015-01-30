@@ -2,11 +2,11 @@ package no.nav.sbl.dialogarena.utbetaling.lamell;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
-import no.nav.modig.lang.option.Optional;
 import no.nav.modig.modia.events.FeedItemPayload;
 import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
@@ -26,26 +26,22 @@ import org.apache.wicket.model.Model;
 import org.apache.wicket.request.resource.JavaScriptResourceReference;
 import org.apache.wicket.request.resource.PackageResourceReference;
 import org.joda.time.DateTime;
-import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.*;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
-import static no.nav.sbl.dialogarena.utbetaling.util.IntervalUtils.getUncachedInterval;
 
 public final class UtbetalingLerret extends Lerret {
 
@@ -60,12 +56,12 @@ public final class UtbetalingLerret extends Lerret {
     @Inject
     private UtbetalingService service;
 
-    private UtbetalingsResultat resultatCache;
     private FilterParametere filterParametere;
     private TotalOppsummeringPanel totalOppsummeringPanel;
     private WebMarkupContainer utbetalingslisteContainer;
     private UtbetalingerMessagePanel ingenutbetalinger;
     private UtbetalingerMessagePanel feilmelding;
+    private String fnr;
 
     public UtbetalingLerret(String id, String fnr) {
         super(id);
@@ -92,17 +88,17 @@ public final class UtbetalingLerret extends Lerret {
     }
 
     private void instansierFelter(String fnr) {
+        this.fnr = fnr;
         ingenutbetalinger = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("ingenutbetalinger", "feil.utbetalinger.ingen-utbetalinger", "-ikon-stjerne")
                 .setOutputMarkupPlaceholderTag(true);
 
         feilmelding = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("feilmelding", FEILMELDING_DEFAULT_KEY, "-ikon-feil")
                 .setOutputMarkupPlaceholderTag(true).setVisibilityAllowed(false);
 
-        List<Utbetaling> utbetalinger = hentUtbetalingsListe(fnr, defaultStartDato(), defaultSluttDato());
-        resultatCache = new UtbetalingsResultat(fnr, defaultStartDato(), defaultSluttDato(), utbetalinger);
-        filterParametere = new FilterParametere(hentYtelser(resultatCache.utbetalinger));
+        List<Record<Hovedytelse>> ytelser = hentHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
+        filterParametere = new FilterParametere(ytelseBeskrivelser(hentHovedytelseListe()));
 
-        List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
+        List<Record<Hovedytelse>> synligeUtbetalinger = on(hentHovedytelseListe()).filter(filterParametere).collect();
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
         utbetalingslisteContainer = (WebMarkupContainer) new WebMarkupContainer("utbetalingslisteContainer")
                 .add(createMaanedsPanelListe())
@@ -111,7 +107,11 @@ public final class UtbetalingLerret extends Lerret {
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
     }
 
-    private List<Utbetaling> hentUtbetalingsListe(String fnr, LocalDate startDato, LocalDate sluttDato) {
+    private List<Record<Hovedytelse>> hentHovedytelseListe() {
+        return hentHovedytelseListe(fnr, filterParametere.getStartDato(), filterParametere.getSluttDato());
+    }
+
+    private List<Record<Hovedytelse>> hentHovedytelseListe(String fnr, LocalDate startDato, LocalDate sluttDato) {
         try {
             return service.hentUtbetalinger(fnr, startDato, sluttDato);
         } catch (ApplicationException | SystemException e) {
@@ -132,15 +132,15 @@ public final class UtbetalingLerret extends Lerret {
         return (FilterFormPanel) new FilterFormPanel("filterFormPanel", filterParametere).setOutputMarkupId(true);
     }
 
-    private TotalOppsummeringPanel createTotalOppsummeringPanel(List<Utbetaling> liste) {
+    private TotalOppsummeringPanel createTotalOppsummeringPanel(List<Record<Hovedytelse>> liste) {
         return new TotalOppsummeringPanel("totalOppsummeringPanel", new OppsummeringVM(liste, filterParametere.getStartDato(), filterParametere.getSluttDato()));
     }
 
-    private ListView<List<Utbetaling>> createMaanedsPanelListe() {
-        List<List<Utbetaling>> maanedsListe = splittUtbetalingerPerMaaned(on(resultatCache.utbetalinger).filter(filterParametere).collectIn(new ArrayList<Utbetaling>()));
-        return new ListView<List<Utbetaling>>("maanedsPaneler", maanedsListe) {
+    private ListView<List<Record<Hovedytelse>>> createMaanedsPanelListe() {
+        List<List<Record<Hovedytelse>>> maanedsListe = splittUtbetalingerPerMaaned(on(hentHovedytelseListe()).filter(filterParametere).collectIn(new ArrayList<Record<Hovedytelse>>()));
+        return new ListView<List<Record<Hovedytelse>>>("maanedsPaneler", maanedsListe) {
             @Override
-            protected void populateItem(ListItem<List<Utbetaling>> item) {
+            protected void populateItem(ListItem<List<Record<Hovedytelse>>> item) {
                 item.add(new MaanedsPanel("maanedsPanel", item.getModelObject()));
                 item.add(visibleIf(new Model<>(!item.getModelObject().isEmpty())));
             }
@@ -157,10 +157,14 @@ public final class UtbetalingLerret extends Lerret {
     @RunOnEvents(FILTER_ENDRET)
     private void oppdaterUtbetalingsliste(AjaxRequestTarget target) {
         feilmelding.setVisibilityAllowed(false);
-        oppdaterCacheOmNodvendig();
-        oppdaterYtelser();
+        DateTime filterStart = filterParametere.getStartDato().toDateTimeAtStartOfDay();
+        DateTime filterSlutt = filterParametere.getSluttDato().toDateTimeAtStartOfDay();
 
-        List<Utbetaling> synligeUtbetalinger = on(resultatCache.utbetalinger).filter(filterParametere).collect();
+
+        List<Record<Hovedytelse>> hovedytelser = hentHovedytelseListe(fnr, filterStart.toLocalDate(), filterSlutt.toLocalDate());
+        oppdaterYtelser(hovedytelser);
+
+        List<Record<Hovedytelse>> synligeUtbetalinger = on(hovedytelser).filter(filterParametere).collect();
         oppdaterUtbetalingsvisning(synligeUtbetalinger);
         endreSynligeKomponenter(!synligeUtbetalinger.isEmpty());
 
@@ -171,40 +175,19 @@ public final class UtbetalingLerret extends Lerret {
     @SuppressWarnings("unused")
     @RunOnEvents(FEED_ITEM_CLICKED)
     private void ekspanderValgtDetaljPanel(AjaxRequestTarget target, FeedItemPayload payload) {
-        filterParametere = new FilterParametere(hentYtelser(resultatCache.utbetalinger));
+        filterParametere = new FilterParametere(ytelseBeskrivelser(hentHovedytelseListe()));
         addOrReplace(createFilterFormPanel());
         oppdaterUtbetalingsliste(target);
         String detaljPanelID = "detaljpanel-" + payload.getItemId();
         target.appendJavaScript("Utbetalinger.haandterDetaljPanelVisning('"+detaljPanelID + "');");
     }
 
-    protected void oppdaterCacheOmNodvendig() {
-        DateTime filterStart = filterParametere.getStartDato().toDateTimeAtStartOfDay();
-        DateTime filterSlutt = filterParametere.getSluttDato().toDateTimeAtStartOfDay();
-
-        Optional<Interval> interval = getUncachedInterval(new Interval(filterStart, filterSlutt), resultatCache.intervaller);
-
-        if (interval.isSome()) {
-            resultatCache = oppdaterCache(resultatCache, interval.get());
-        }
-    }
-
-    protected UtbetalingsResultat oppdaterCache(UtbetalingsResultat resultatCache, Interval interval) {
-        Set<Utbetaling> unikeUtbetalinger = new HashSet<>(resultatCache.utbetalinger);
-        unikeUtbetalinger.addAll(hentUtbetalingsListe(resultatCache.fnr, interval.getStart().toLocalDate(), interval.getEnd().toLocalDate()));
-        resultatCache.utbetalinger = new ArrayList<>(unikeUtbetalinger);
-
-        resultatCache.intervaller.add(interval);
-
-        return resultatCache;
-    }
-
-    protected void oppdaterYtelser() {
-        filterParametere.setYtelser(hentYtelser(hentHovedytelserFraPeriode(resultatCache.utbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato())));
+    protected void oppdaterYtelser(List<Record<Hovedytelse>> hovedytelser) {
+        filterParametere.setYtelser(ytelseBeskrivelser(hentHovedytelserFraPeriode(hovedytelser, filterParametere.getStartDato(), filterParametere.getSluttDato())));
         send(getPage(), Broadcast.DEPTH, HOVEDYTELSER_ENDRET);
     }
 
-    protected void oppdaterUtbetalingsvisning(List<Utbetaling> synligeUtbetalinger) {
+    protected void oppdaterUtbetalingsvisning(List<Record<Hovedytelse>> synligeUtbetalinger) {
         totalOppsummeringPanel.setDefaultModelObject(new OppsummeringVM(synligeUtbetalinger, filterParametere.getStartDato(), filterParametere.getSluttDato()));
         utbetalingslisteContainer.addOrReplace(createMaanedsPanelListe());
     }

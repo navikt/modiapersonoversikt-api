@@ -2,14 +2,12 @@ package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.*;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 
 import java.util.List;
 
 import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.sbl.dialogarena.time.Datoformat.KORT_UTEN_LITERAL;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
 public class UtbetalingVM {
@@ -25,7 +23,7 @@ public class UtbetalingVM {
     }
 
     public String getStatus() {
-        return ytelse.getStatus();
+        return ytelse.get(Hovedytelse.utbetalingsstatus);
     }
 
     public String getBeskrivelse() {
@@ -57,27 +55,27 @@ public class UtbetalingVM {
     }
 
     public String getPeriodeMedKortDato() {
-        return optional(ytelse.getPeriode().getStart()).map(KORT_UTEN_LITERAL).getOrElse("") + " - "
-                + optional(ytelse.getPeriode().getEnd()).map(KORT_UTEN_LITERAL).getOrElse("");
+        return optional(ytelse.get(Hovedytelse.ytelsesperiode).getStart()).map(KORT_UTEN_LITERAL).getOrElse("") + " - "
+                + optional(ytelse.get(Hovedytelse.ytelsesperiode).getEnd()).map(KORT_UTEN_LITERAL).getOrElse("");
     }
 
-    public String getBruttoBelopMedValuta() {
-        return getBelopString(ytelse.getBrutto());
+    public String getBruttoBelop() {
+        return getBelopString(ytelse.get(Hovedytelse.ytelseBruttoBeloep));
     }
 
-    public String getTrekkMedValuta() {
-        return getBelopString(ytelse.getTrekk());
+    public String getTrekk() {
+        return getBelopString(ytelse.get(Hovedytelse.sumTrekk));
     }
 
-    public String getBelopMedValuta() {
-        return getBelopString(ytelse.getUtbetalt());
+    public String getBelop() {
+        return getBelopString(ytelse.get(Hovedytelse.ytelseNettoBeloep));
     }
 
     public DateTime getStartDato() {
-        return ytelse.getPeriode().getStart();
+        return ytelse.get(Hovedytelse.ytelsesperiode).getStart();
     }
 
     public DateTime getSluttDato() {
-        return ytelse.getPeriode().getEnd();
+        return ytelse.get(Hovedytelse.ytelsesperiode).getEnd();
     }
 }
