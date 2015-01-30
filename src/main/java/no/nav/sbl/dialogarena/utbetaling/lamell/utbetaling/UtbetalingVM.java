@@ -1,6 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
+import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.utbetaling.domain.*;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import org.joda.time.DateTime;
 
@@ -13,70 +14,70 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopS
 
 public class UtbetalingVM {
 
-    private Utbetaling utbetaling;
+    private transient Record<Hovedytelse> ytelse;
 
-    public UtbetalingVM(Utbetaling utbetaling) {
-        this.utbetaling = utbetaling;
+    public UtbetalingVM(Record<Hovedytelse> ytelse) {
+        this.ytelse = ytelse;
     }
 
     public String getUtbetalingId() {
-        return utbetaling.getUtbetalingId();
+        return ytelse.get(Hovedytelse.id).toString();
     }
 
     public String getStatus() {
-        return utbetaling.getStatus();
+        return ytelse.getStatus();
     }
 
     public String getBeskrivelse() {
-        return utbetaling.getHovedytelse();
+        return ytelse.get(Hovedytelse.ytelse);
     }
 
     public String getMelding() {
-        return utbetaling.getMelding();
+        return ytelse.get(Hovedytelse.utbetalingsmelding);
     }
 
     public String getMottakerNavn() {
-        return utbetaling.getMottakernavn();
+        return ytelse.get(Hovedytelse.utbetaltTil).get(Aktoer.navn);
     }
 
-    public Mottaktertype getMottakertype() {
-        return utbetaling.getMottakertype();
+    public Mottakertype getMottakertype() {
+        return ytelse.get(Hovedytelse.mottakertype);
     }
 
     public String getKontonr() {
-        return utbetaling.getKontonr();
+        return ytelse.get(Hovedytelse.utbetaltTilKonto).get(Konto.kontonummer);
     }
 
-    public List<UnderytelseGammel> getUnderytelser() {
-        return utbetaling.getUnderytelser();
+    public List<Record<Underytelse>> getUnderytelser() {
+        return ytelse.get(Hovedytelse.underytelseListe);
     }
 
     public String getKortUtbetalingsDato() {
-        return optional(utbetaling.getUtbetalingsdato()).map(KORT_UTEN_LITERAL).getOrElse("Ingen utbetalingsdato");
+        return optional(ytelse.get(Hovedytelse.utbetalingsDato)).map(KORT_UTEN_LITERAL).getOrElse("Ingen utbetalingsdato");
     }
 
     public String getPeriodeMedKortDato() {
-        return optional(utbetaling.getPeriode().getStart()).map(KORT_UTEN_LITERAL).getOrElse("") + " - "
-                + optional(utbetaling.getPeriode().getEnd()).map(KORT_UTEN_LITERAL).getOrElse("");
+        return optional(ytelse.getPeriode().getStart()).map(KORT_UTEN_LITERAL).getOrElse("") + " - "
+                + optional(ytelse.getPeriode().getEnd()).map(KORT_UTEN_LITERAL).getOrElse("");
     }
 
     public String getBruttoBelopMedValuta() {
-        return getBelopString(utbetaling.getBrutto());
+        return getBelopString(ytelse.getBrutto());
     }
 
     public String getTrekkMedValuta() {
-        return getBelopString(utbetaling.getTrekk());
+        return getBelopString(ytelse.getTrekk());
     }
 
     public String getBelopMedValuta() {
-        return getBelopString(utbetaling.getUtbetalt());
+        return getBelopString(ytelse.getUtbetalt());
     }
 
     public DateTime getStartDato() {
-        return utbetaling.getPeriode().getStart();
+        return ytelse.getPeriode().getStart();
     }
 
     public DateTime getSluttDato() {
-        return utbetaling.getPeriode().getEnd();
+        return ytelse.getPeriode().getEnd();
     }
 }

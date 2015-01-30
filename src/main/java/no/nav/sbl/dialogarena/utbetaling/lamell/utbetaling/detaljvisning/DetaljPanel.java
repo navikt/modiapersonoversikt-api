@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning;
 
 import no.nav.modig.lang.option.Optional;
+import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import org.apache.wicket.markup.html.basic.Label;
@@ -23,7 +25,7 @@ public class DetaljPanel extends Panel {
     public DetaljPanel(String id, UtbetalingVM utbetalingVM) {
         super(id);
         setMarkupId("detaljpanel-" + utbetalingVM.getUtbetalingId());
-        List<UnderytelseGammel> underytelser = utbetalingVM.getUnderytelser();
+        List<Record<Underytelse>> underytelser = utbetalingVM.getUnderytelser();
         IModel<String> melding = Model.of(utbetalingVM.getMelding());
         add(
                 new Label("mottakernavn", utbetalingVM.getMottakerNavn()),
@@ -35,27 +37,27 @@ public class DetaljPanel extends Panel {
         );
     }
 
-    private ListView createSpesifikasjoner(List<UnderytelseGammel> underytelser) {
-        return new ListView<UnderytelseGammel>("spesifikasjoner", underytelser) {
+    private ListView createSpesifikasjoner(List<Record<Underytelse>> underytelser) {
+        return new ListView<Record<Underytelse>>("spesifikasjoner", underytelser) {
             @Override
-            protected void populateItem(ListItem<UnderytelseGammel> item) {
+            protected void populateItem(ListItem<Record<Underytelse>> item) {
                 Model<String> spesifikasjon = Model.of(item.getModelObject().getSpesifikasjon());
                 item.add(new Label("spesifikasjon", spesifikasjon).add(visibleIf(not(isEmptyString(spesifikasjon)))));
             }
         };
     }
 
-    private ListView createUnderytelsesrader(List<UnderytelseGammel> underytelser) {
-        return new ListView<UnderytelseGammel>("underytelser", underytelser) {
+    private ListView createUnderytelsesrader(List<Record<Underytelse>> underytelser) {
+        return new ListView<Record<Underytelse>>("underytelser", underytelser) {
             @Override
-            protected void populateItem(ListItem<UnderytelseGammel> item) {
-                Optional<Double> sats = item.getModelObject().getSats();
-                Optional<Double> antall = item.getModelObject().getAntall();
+            protected void populateItem(ListItem<Record<Underytelse>> item) {
+                Double sats = item.getModelObject().get(Underytelse.satsAntall);
+                Double antall = item.getModelObject().get(Underytelse.satsAntall);
                 item.add(
-                    new Label("underytelse", item.getModelObject().getTittel()),
-                    new Label("sats", sats.isSome() ? sats.get() : ""),
-                    new Label("antall", antall.isSome() ? antall.get() : ""),
-                    new Label("belop", getBelopString(item.getModelObject().getBelop()))
+                    new Label("underytelse", item.getModelObject().get(Underytelse.ytelsesType)),
+                    new Label("sats", sats != null ? sats : ""),
+                    new Label("antall", antall != null ? antall : ""),
+                    new Label("belop", getBelopString(item.getModelObject().get(Underytelse.ytelseBeloep)))
                 );
             }
         };
