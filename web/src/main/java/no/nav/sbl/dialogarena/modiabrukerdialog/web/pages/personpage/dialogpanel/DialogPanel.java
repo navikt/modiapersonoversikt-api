@@ -27,6 +27,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLPara
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.URLParametere.OPPGAVEID;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_OPPMOTE;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.GrunnInfo.FALLBACK_FORNAVN;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.KvitteringsPanel.KVITTERING_VIST;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.LeggTilbakePanel.LEGG_TILBAKE_FERDIG;
@@ -84,16 +85,20 @@ public class DialogPanel extends Panel {
         aktivtPanel = aktivtPanel.replaceWith(new SvarPanel(AKTIVT_PANEL_ID, grunnInfo, traad, oppgaveId));
     }
 
-    private boolean erEnkeltstaaendeSamtalereferat(List<Melding> traad) {
+    private static boolean erEnkeltstaaendeSamtalereferat(List<Melding> traad) {
         List<Meldingstype> samtalereferat = asList(SAMTALEREFERAT_OPPMOTE, SAMTALEREFERAT_TELEFON);
         return traad.size() == 1 && samtalereferat.contains(traad.get(0).meldingstype);
+    }
+
+    private static boolean erEnkeltstaaendeSporsmalFraBruker(List<Melding> traad) {
+        return traad.size() == 1 && traad.get(0).meldingstype == SPORSMAL_SKRIFTLIG;
     }
 
     @RunOnEvents(SVAR_PAA_MELDING)
     public void visSvarPanelBasertPaaTraadId(AjaxRequestTarget target, String traadId) {
         List<Melding> traad = henvendelseUtsendingService.hentTraad(grunnInfo.fnr, traadId);
         Optional<String> oppgaveId = none();
-        if (traad.size() <= 1) {
+        if (erEnkeltstaaendeSporsmalFraBruker(traad)) {
             try {
                 String sporsmalOppgaveId = traad.get(0).oppgaveId;
                 oppgaveBehandlingService.tilordneOppgaveIGsak(sporsmalOppgaveId);

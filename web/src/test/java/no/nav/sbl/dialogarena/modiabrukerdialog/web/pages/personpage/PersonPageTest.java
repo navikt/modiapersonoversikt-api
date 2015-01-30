@@ -9,6 +9,7 @@ import no.nav.modig.wicket.test.EventGenerator;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.GsakKodeTema;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
 import no.nav.personsok.PersonsokPanel;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService;
@@ -25,6 +26,7 @@ import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.ajax.json.JSONException;
 import org.apache.wicket.markup.html.link.AbstractLink;
 import org.apache.wicket.request.mapper.parameter.PageParameters;
+import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -168,10 +170,24 @@ public class PersonPageTest extends WicketPageTest {
 
     @Test
     public void tilordnerOppgaveIGsakDersomSporsmaaletIkkeTidligereErBesvartVedEventetSVAR_PAA_MELDING() throws FikkIkkeTilordnet {
+        Melding spsm = new Melding("id", Meldingstype.SPORSMAL_SKRIFTLIG, DateTime.now());
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(spsm));
+
         wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
                 .sendEvent(createEvent(SVAR_PAA_MELDING));
 
         verify(oppgaveBehandlingService).tilordneOppgaveIGsak(anyString());
+    }
+
+    @Test
+    public void tilordnerIkkeOppgaveDersomNAVBesvarerEgetSporsmal() throws FikkIkkeTilordnet {
+        Melding spsm = new Melding("id", Meldingstype.SPORSMAL_MODIA_UTGAAENDE, DateTime.now());
+        when(henvendelseUtsendingService.hentTraad(anyString(), anyString())).thenReturn(asList(spsm));
+
+        wicket.goTo(PersonPage.class, with().param("fnr", testFnr))
+                .sendEvent(createEvent(SVAR_PAA_MELDING));
+
+        verify(oppgaveBehandlingService, never()).tilordneOppgaveIGsak(anyString());
     }
 
     @Test
