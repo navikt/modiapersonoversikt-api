@@ -1,18 +1,19 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 
-import no.nav.modig.lang.collections.ComparatorUtils;
 import no.nav.modig.lang.collections.iter.ReduceFunction;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 import static java.util.Collections.reverseOrder;
 import static java.util.Collections.sort;
@@ -21,7 +22,6 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.modig.lang.collections.TransformerUtils.first;
-import static no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel.*;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.END;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.START;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.grupperPaaHovedytelseOgPeriode;
@@ -62,7 +62,7 @@ public class OppsummeringVM implements Serializable {
             sammenlagteUnderytelser = on(sammenlagteUnderytelser).collect(reverseOrder(compareWith(Underytelse.ytelseBeloep)));
 
             Double brutto = on(sammenlagteUnderytelser).map(Underytelse.ytelseBeloep).reduce(sumDouble);
-            Double trekk = on(sammenlagteUnderytelser).map(TREKK_BELOP).reduce(sumDouble);
+            Double trekk = on(sammen).map(Hovedytelse.sumTrekk).reduce(sumDouble);
             Double utbetalt = brutto + trekk;
 
             DateTime startPeriode = on(sammen).collect(compareWith(first(Hovedytelse.ytelsesperiode).then(START))).get(0).get(Hovedytelse.ytelsesperiode).getStart();
@@ -125,7 +125,7 @@ public class OppsummeringVM implements Serializable {
         }
 
         @Override
-        public List<UnderytelseGammel> identity() {
+        public List<Record<Underytelse>> identity() {
             return new ArrayList<>();
         }
     };
