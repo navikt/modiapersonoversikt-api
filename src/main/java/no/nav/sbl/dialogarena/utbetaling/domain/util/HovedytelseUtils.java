@@ -5,7 +5,6 @@ import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import org.apache.commons.collections15.Predicate;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
@@ -22,13 +21,14 @@ import static no.nav.modig.lang.collections.TransformerUtils.first;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.utbetalingsDato;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.ytelse;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.*;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.UtbetalingComparator.UTBETALING_DAG_YTELSE;
 
 /**
  * Hjelpefunksjoner for å jobbe med Hovedytelser.
  */
 public class HovedytelseUtils {
 
-    public static Set<String> hentYtelser(List<Record<Hovedytelse>> hovedytelser) {
+    public static Set<String> ytelseBeskrivelser(List<Record<Hovedytelse>> hovedytelser) {
         return on(hovedytelser).map(ytelse).collectIn(new HashSet<String>());
     }
 
@@ -37,25 +37,24 @@ public class HovedytelseUtils {
         return on(hovedytelser).filter(where(Hovedytelse.utbetalingsDato, isWithinRange(intervall))).collect();
     }
 
-    public static Map<YearMonth, List<Record<Hovedytelse>>> splittUtbetalingerPerMaaned(List<Record<Hovedytelse>> hovedytelser) {
-        return on(hovedytelser).reduce(toYearMonthMap());
+    public static List<List<Record<Hovedytelse>>> splittUtbetalingerPerMaaned(List<Record<Hovedytelse>> hovedytelser) {
+        List<Record<Hovedytelse>> hovedytelserSortert = on(hovedytelser).collect(UTBETALING_DAG_YTELSE);
+        Map<Integer, Map<Integer, List<Record<Hovedytelse>>>> aarsMap = new LinkedHashMap<>();
+        leggTilUtbetalingerIAarsMap(hovedytelserSortert, aarsMap);
+        return trekkUtUtbetalingerPerMaaned(aarsMap);
     }
 
+    public static List<List<Record<Hovedytelse>>> grupperPaaHovedytelseOgPeriode(Iterable<Record<Hovedytelse>> utbetalinger) {
+        List<List<Record<Hovedytelse>>> resultat = new ArrayList<>();
 
-    public static final Transformer<List<Record<Hovedytelse>>, List<List<Record<Hovedytelse>>>> groupedByHovedytelseAndPeriode = new Transformer<List<Record<Hovedytelse>>, List<List<Record<Hovedytelse>>>>() {
-        @Override
-        public List<List<Record<Hovedytelse>>> transform(List<Record<Hovedytelse>> hovedytelser) {
-            List<List<Record<Hovedytelse>>> resultat = new ArrayList<>();
-
-            Collection<List<Record<?>>> gruppertEtterHovedytelse = on(hovedytelser).reduce(indexBy(Hovedytelse.ytelse)).values();
-            for (List<Record<?>> sammeHovedytelse : gruppertEtterHovedytelse) {
-                sort(sammeHovedytelse, compareWith(first(Hovedytelse.ytelsesperiode).then(START)));
-                resultat.addAll(on(sammeHovedytelse).reduce(SPLITT_PAA_PERIODE));
-            }
-
-            return resultat;
+        Collection<List<Record<?>>> gruppertEtterHovedytelse = on(utbetalinger).reduce(indexBy(Hovedytelse.ytelse)).values();
+        for (List<Record<?>> sammeHovedytelse : gruppertEtterHovedytelse) {
+            sort(sammeHovedytelse, compareWith(first(Hovedytelse.ytelsesperiode).then(START)));
+            resultat.addAll(on(sammeHovedytelse).reduce(SPLITT_PAA_PERIODE));
         }
-    };
+
+        return resultat;
+    }
 
     private static final ReduceFunction<Record<?>, List<List<Record<Hovedytelse>>>> SPLITT_PAA_PERIODE = new ReduceFunction<Record<?>, List<List<Record<Hovedytelse>>>>() {
         @Override

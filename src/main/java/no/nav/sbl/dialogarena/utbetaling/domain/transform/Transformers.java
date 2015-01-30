@@ -71,7 +71,7 @@ public class Transformers {
             List<Record<Hovedytelse>> hovedytelser = new ArrayList<>();
             for(WSYtelse wsYtelse : wsUtbetaling.getYtelseListe()) {
                 Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
-                        .with(id, UUID.randomUUID())
+                        .with(id, wsYtelse.hashCode())
                         .with(mottakertype, mottakertypeForAktoer(wsUtbetaling.getUtbetaltTil()))
                         .with(posteringsdato, wsUtbetaling.getPosteringsdato())
                         .with(utbetaltTil, createAktoer(wsUtbetaling.getUtbetaltTil()))
@@ -83,7 +83,6 @@ public class Transformers {
                         .with(utbetalingsstatus, wsUtbetaling.getUtbetalingsstatus().getValue())
                         .with(ytelse, wsYtelse.getYtelsestype().getValue())
                         .with(ytelsesperiode, createPeriode(wsYtelse.getYtelsesperiode()))
-                        .with(ytelseperiode_start, wsYtelse.getYtelsesperiode().getTom())
                         .with(underytelseListe, createUnderytelser(wsYtelse.getYtelseskomponentListe()))
                         .with(sumUnderytelser, wsYtelse.getSumYtelseskomponenter())
                         .with(trekkListe, createTrekkliste(wsYtelse.getTrekkListe()))
