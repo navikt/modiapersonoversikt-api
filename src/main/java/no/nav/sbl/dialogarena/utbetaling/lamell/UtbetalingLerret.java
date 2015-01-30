@@ -14,7 +14,6 @@ import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.TotalOppsummeringPa
 import no.nav.sbl.dialogarena.utbetaling.lamell.unntak.UtbetalingerMessagePanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned.MaanedsPanel;
 import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingService;
-import no.nav.sbl.dialogarena.utbetaling.service.UtbetalingsResultat;
 import org.apache.wicket.ajax.AjaxRequestTarget;
 import org.apache.wicket.event.Broadcast;
 import org.apache.wicket.markup.ComponentTag;

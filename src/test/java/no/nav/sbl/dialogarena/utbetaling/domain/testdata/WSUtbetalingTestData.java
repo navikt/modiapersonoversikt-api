@@ -1,12 +1,5 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.testdata;
 
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSBilag;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSMelding;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSMottaker;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSPeriode;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSPosteringsdetaljer;
-import no.nav.virksomhet.okonomi.utbetaling.v2.WSUtbetaling;
-import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
