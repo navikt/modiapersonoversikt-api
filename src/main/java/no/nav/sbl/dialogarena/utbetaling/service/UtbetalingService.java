@@ -2,7 +2,10 @@ package no.nav.sbl.dialogarena.utbetaling.service;
 
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
+import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
@@ -23,8 +26,8 @@ public class UtbetalingService {
     @Inject
     private UtbetalingV1 utbetalingV1;
 
-    public List<Utbetaling> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-        return createHovedytelser(getWSUtbetalinger(fnr, startDato, sluttDato), fnr);
+    public List<Record<Hovedytelse>> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
+        return Transformers.HOVEDYTELSE_TRANSFORMERcreateHovedytelser(getWSUtbetalinger(fnr, startDato, sluttDato), fnr);
     }
 
     public void ping() {

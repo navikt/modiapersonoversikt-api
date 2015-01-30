@@ -1,8 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.widget;
 
 import no.nav.modig.modia.model.FeedItemVM;
+import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 
@@ -11,59 +12,53 @@ import java.text.NumberFormat;
 import java.util.Comparator;
 import java.util.Locale;
 
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
 
 
 public class HovedytelseVM implements FeedItemVM, Serializable {
 
-    public static final Transformer<Hovedytelse, HovedytelseVM> TIL_HOVEDYTELSEVM = new Transformer<Hovedytelse, HovedytelseVM>() {
+    public static final Transformer<Record<Hovedytelse>, HovedytelseVM> TIL_HOVEDYTELSEVM = new Transformer<Record<Hovedytelse>, HovedytelseVM>() {
         @Override
-        public HovedytelseVM transform(Hovedytelse hovedytelse) {
+        public HovedytelseVM transform(Record<Hovedytelse> hovedytelse) {
             return new HovedytelseVM(hovedytelse);
         }
     };
 
-    private Hovedytelse hovedytelse;
+    private transient Record<Hovedytelse> hovedytelse;
 
-    public HovedytelseVM(Hovedytelse hovedytelse) {
+    public HovedytelseVM(Record<Hovedytelse> hovedytelse) {
         this.hovedytelse = hovedytelse;
     }
 
     public DateTime getUtbetalingsDato() {
-        return hovedytelse.getUtbetalingsDato();
+        return hovedytelse.get(Hovedytelse.utbetalingsDato);
     }
 
     public String getBeskrivelse() {
-        return hovedytelse.getYtelsesType();
+        return hovedytelse.get(Hovedytelse.ytelse);
     }
 
     public String getBelop() {
-        return formaterBelop(hovedytelse.getYtelseNettoBeloep());
-    }
-
-    public String getValuta() {
-        String valuta = hovedytelse.getValuta();
-        return (valuta != null && !valuta.isEmpty() ? valuta : "kr");
+        return formaterBelop(hovedytelse.get(Hovedytelse.ytelseNettoBeloep));
     }
 
     public String getStatus() {
-        return hovedytelse.getStatus();
+        return hovedytelse.get(Hovedytelse.utbetalingsstatus);
     }
 
     public DateTime getStartDato() {
-        return hovedytelse.getPeriode().getStart();
+        return hovedytelse.get(Hovedytelse.ytelsesperiode).getStart();
     }
 
     public DateTime getSluttDato() {
-        return hovedytelse.getPeriode().getEnd();
+        return hovedytelse.get(Hovedytelse.ytelsesperiode).getEnd();
     }
 
     public String getUtbetalingId(){
-        return hovedytelse.getUtbetalingId();
+        return hovedytelse.get(Hovedytelse.id).toString();
     }
 
-    public Mottaktertype getMottakertype() {
-        return hovedytelse.getMottakertype();
+    public Mottakertype getMottakertype() {
+        return hovedytelse.get(Hovedytelse.mottakertype);
     }
 
     @Override

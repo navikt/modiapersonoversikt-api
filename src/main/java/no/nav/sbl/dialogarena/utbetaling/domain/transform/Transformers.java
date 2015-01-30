@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 import static java.util.Collections.reverseOrder;
 import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
@@ -69,7 +70,8 @@ public class Transformers {
         public List<Record<Hovedytelse>> transform(WSUtbetaling wsUtbetaling) {
             List<Record<Hovedytelse>> hovedytelser = new ArrayList<>();
             for(WSYtelse wsYtelse : wsUtbetaling.getYtelseListe()) {
-                hovedytelser.add(new Record<Hovedytelse>()
+                Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
+                        .with(id, UUID.randomUUID())
                         .with(mottakertype, mottakertypeForAktoer(wsUtbetaling.getUtbetaltTil()))
                         .with(posteringsdato, wsUtbetaling.getPosteringsdato())
                         .with(utbetaltTil, createAktoer(wsUtbetaling.getUtbetaltTil()))
@@ -79,21 +81,48 @@ public class Transformers {
                         .with(utbetaltTilKonto, createKonto(wsUtbetaling.getUtbetaltTilKonto()))
                         .with(utbetalingsmetode, wsUtbetaling.getUtbetalingsmetode().getValue())
                         .with(utbetalingsstatus, wsUtbetaling.getUtbetalingsstatus().getValue())
-                        .with(ytelsesType, wsYtelse.getYtelsestype().getValue())
+                        .with(ytelse, wsYtelse.getYtelsestype().getValue())
                         .with(ytelsesperiode, createPeriode(wsYtelse.getYtelsesperiode()))
+                        .with(ytelseperiode_start, wsYtelse.getYtelsesperiode().getTom())
                         .with(underytelseListe, createUnderytelser(wsYtelse.getYtelseskomponentListe()))
                         .with(sumUnderytelser, wsYtelse.getSumYtelseskomponenter())
                         .with(trekkListe, createTrekkliste(wsYtelse.getTrekkListe()))
+                        .with(sumTrekk, wsYtelse.getSumTrekk())
                         .with(skattListe, createSkatteListe(wsYtelse.getSkattListe()))
                         .with(sumSkatt, wsYtelse.getSumSkatt())
                         .with(ytelseNettoBeloep, wsYtelse.getYtelseNettobeloep())
                         .with(bilagsnummer, wsYtelse.getBilagsnummer())
                         .with(rettighetshaver, createAktoer(wsYtelse.getRettighetshaver()))
-                        .with(refundertForOrg, createAktoer(wsYtelse.getRefundertForOrg())));
+                        .with(refundertForOrg, createAktoer(wsYtelse.getRefundertForOrg()));
+
+                hovedytelse.with(ytelseBruttoBeloep, aggregateBruttoBeloep(hovedytelse));
+
+                hovedytelser.add(hovedytelse);
             }
+
             return hovedytelser;
         }
     };
+
+    private static Double aggregateBruttoBeloep(Record<Hovedytelse> hovedytelse) {
+        Double netto = hovedytelse.get(Hovedytelse.ytelseNettoBeloep);
+        Double trekk = hovedytelse.get(Hovedytelse.sumTrekk);
+        Double skatt = hovedytelse.get(Hovedytelse.sumSkatt);
+
+        if(netto == null) {
+            netto = 0.0;
+        }
+
+        if(trekk == null) {
+            trekk = 0.0;
+        }
+
+        if(skatt == null) {
+            skatt = 0.0;
+        }
+
+        return netto + trekk + skatt;
+    }
 
     private static List<Double> createSkatteListe(List<WSSkatt> skattListe) {
         return on(skattListe).map(SKATT_TRANSFORMER).collect();
