@@ -1,9 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning;
 
-import no.nav.modig.lang.option.Optional;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingVM;
 import org.apache.wicket.markup.html.basic.Label;
 import org.apache.wicket.markup.html.basic.MultiLineLabel;
@@ -32,19 +30,8 @@ public class DetaljPanel extends Panel {
                 new Label("konto", utbetalingVM.getKontonr()),
                 new Label("ytelsesinfo", utbetalingVM.getBeskrivelse()),
                 createUnderytelsesrader(underytelser),
-                createSpesifikasjoner(underytelser),
                 new MultiLineLabel("bilagsmelding", melding).add(visibleIf(not(isEmptyString(melding))))
         );
-    }
-
-    private ListView createSpesifikasjoner(List<Record<Underytelse>> underytelser) {
-        return new ListView<Record<Underytelse>>("spesifikasjoner", underytelser) {
-            @Override
-            protected void populateItem(ListItem<Record<Underytelse>> item) {
-                Model<String> spesifikasjon = Model.of(item.getModelObject().getSpesifikasjon());
-                item.add(new Label("spesifikasjon", spesifikasjon).add(visibleIf(not(isEmptyString(spesifikasjon)))));
-            }
-        };
     }
 
     private ListView createUnderytelsesrader(List<Record<Underytelse>> underytelser) {
