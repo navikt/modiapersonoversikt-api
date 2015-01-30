@@ -28,6 +28,7 @@ import org.apache.wicket.markup.head.IHeaderResponse;
 import org.apache.wicket.markup.head.OnDomReadyHeaderItem;
 import org.apache.wicket.markup.html.WebMarkupContainer;
 import org.apache.wicket.markup.html.basic.Label;
+import org.apache.wicket.markup.html.form.CheckBox;
 import org.apache.wicket.markup.html.form.Form;
 import org.apache.wicket.markup.html.form.Radio;
 import org.apache.wicket.markup.html.form.RadioGroup;
@@ -48,7 +49,7 @@ import static no.nav.modig.modia.events.InternalEvents.MELDING_SENDT_TIL_BRUKER;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.hasCssClassIf;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.titleAttribute;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.*;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.HenvendelseUtsendingService.OppgaveErFerdigstilt;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.util.AnimasjonsUtils.animertVisningToggle;
@@ -148,7 +149,6 @@ public class SvarPanel extends Panel {
         return henvendelseVM;
     }
 
-    //Denne er midlertidig mens vi venter på full integrasjon med kodeverk
     private Temagruppe getTemagruppeFraSporsmal() {
         for (Temagruppe temagruppe : Temagruppe.INNGAAENDE) {
             if (temagruppe.name().equals(sporsmal.temagruppe)) {
@@ -198,6 +198,8 @@ public class SvarPanel extends Panel {
                 }
             });
             add(radioGroup);
+
+            add(new CheckBox("brukerKanSvare").setOutputMarkupId(true));
 
             final Label kanalbeskrivelse = new Label("kanalbeskrivelse", new StringResourceModel("${name}.beskrivelse", radioGroup.getModel()));
             kanalbeskrivelse.setOutputMarkupId(true);
@@ -264,7 +266,7 @@ public class SvarPanel extends Panel {
                     .withTraadId(sporsmal.id)
                     .withTemagruppe(henvendelseVM.temagruppe.name())
                     .withKanal(henvendelseVM.kanal.name())
-                    .withType(svarType(henvendelseVM.kanal))
+                    .withType(meldingstype(henvendelseVM.kanal, henvendelseVM.brukerKanSvare))
                     .withFritekst(henvendelseVM.getFritekst())
                     .withKontorsperretEnhet(sporsmal.kontorsperretEnhet)
                     .withEksternAktor(getSubjectHandler().getUid());
@@ -273,16 +275,22 @@ public class SvarPanel extends Panel {
             oppgaveBehandlingService.ferdigstillOppgaveIGsak(oppgaveId);
         }
 
-        private Meldingstype svarType(Kanal kanal) {
-            Meldingstype meldingstype = null;
-            if (kanal == TEKST) {
-                meldingstype = SVAR_SKRIFTLIG;
-            } else if (kanal == OPPMOTE) {
-                meldingstype = SVAR_OPPMOTE;
-            } else if (kanal == TELEFON) {
-                meldingstype = SVAR_TELEFON;
+        private Meldingstype meldingstype(Kanal kanal, boolean brukerKanSvare) {
+
+            if (brukerKanSvare) {
+                return SPORSMAL_MODIA_UTGAAENDE;
+            } else {
+                switch (kanal) {
+                    case TEKST:
+                        return SVAR_SKRIFTLIG;
+                    case OPPMOTE:
+                        return SVAR_OPPMOTE;
+                    case TELEFON:
+                        return SVAR_TELEFON;
+                }
             }
-            return meldingstype;
+
+            throw new RuntimeException("Fant ikke passende meldingstype");
         }
 
         @Override

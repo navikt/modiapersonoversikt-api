@@ -33,9 +33,7 @@ import static java.util.Arrays.asList;
 import static no.nav.modig.core.context.SubjectHandler.getSubjectHandler;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TEKST;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_OPPMOTE;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_SKRIFTLIG;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_TELEFON;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
@@ -116,7 +114,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void senderSvarTilHenvendelseDersomManVelgerTekstSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+    public void senderSvarDersomManVelgerTekstSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         wicket.goToPageWith(testSvarPanel)
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", FRITEKST)
@@ -130,7 +128,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void senderReferatTilHenvendelseDersomManVelgerTelefonSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+    public void senderReferatDersomManVelgerTelefonSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         wicket.goToPageWith(testSvarPanel)
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", FRITEKST)
@@ -144,7 +142,7 @@ public class SvarPanelTest extends WicketPageTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void senderReferatTilHenvendelseDersomManVelgerOppmoteSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+    public void senderReferatDersomManVelgerOppmoteSomKanal() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
         wicket.goToPageWith(testSvarPanel)
                 .inForm(withId("svarform"))
                 .write("tekstfelt:text", FRITEKST)
@@ -154,6 +152,22 @@ public class SvarPanelTest extends WicketPageTest {
         verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class));
         Melding melding = meldingArgumentCaptor.getValue();
         assertThat(melding.meldingstype, is(SVAR_OPPMOTE));
+    }
+
+
+    @Test
+    @SuppressWarnings("unchecked")
+    public void senderSporsmalDersomManVelgerBrukerKanSvare() throws HenvendelseUtsendingService.OppgaveErFerdigstilt {
+        wicket.goToPageWith(testSvarPanel)
+                .inForm(withId("svarform"))
+                .write("tekstfelt:text", FRITEKST)
+                .select("kanal", 2)
+                .check("brukerKanSvare", true)
+                .submitWithAjaxButton(withId("send"));
+
+        verify(henvendelseUtsendingService).sendHenvendelse(meldingArgumentCaptor.capture(), any(Optional.class));
+        Melding melding = meldingArgumentCaptor.getValue();
+        assertThat(melding.meldingstype, is(SPORSMAL_MODIA_UTGAAENDE));
     }
 
     @Test

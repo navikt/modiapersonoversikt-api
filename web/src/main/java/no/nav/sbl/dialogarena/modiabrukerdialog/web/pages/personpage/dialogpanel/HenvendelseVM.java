@@ -12,6 +12,7 @@ public class HenvendelseVM extends EnhancedTextAreaModel {
     public Temagruppe temagruppe;
     public Modus modus;
     public Sak valgtSak;
+    public boolean brukerKanSvare = false;
 
     public String getFritekst() {
         return text;
