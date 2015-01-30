@@ -1,8 +1,7 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.transform;
 
+import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
 import no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling;
 import org.apache.commons.collections15.Transformer;
@@ -19,7 +18,6 @@ import static no.nav.modig.lang.collections.PredicateUtils.where;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.sbl.dialogarena.utbetaling.domain.testdata.WSUtbetalingTestData.*;
 import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.HOVEDYTELSE_TRANSFORMER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.createHovedytelser;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
@@ -41,34 +39,20 @@ public class TransformersTest {
     @Test
     public void testLagUtbetalinger() throws Exception {
 
-        List<Hovedytelse> hovedytelser = on(wsUtbetalinger).flatmap(HOVEDYTELSE_TRANSFORMER).collect();
+        List<Record<Hovedytelse>> hovedytelser = on(wsUtbetalinger).flatmap(HOVEDYTELSE_TRANSFORMER).collect();
 
-        Transformer<Hovedytelse, String> utbetalingsmelding = new Transformer<Hovedytelse, String>() {
-            @Override
-            public String transform(Hovedytelse hovedytelse) {
-                return hovedytelse.getUtbetalingsmelding();
-            }
-        };
-
-        Transformer<Hovedytelse, Double> sumSkatt = new Transformer<Hovedytelse, Double>() {
-            @Override
-            public Double transform(Hovedytelse hovedytelse) {
-                return hovedytelse.getSumSkatt();
-            }
-        };
-
-        on(hovedytelser).map(sumSkatt).reduce(sumDouble);
+        on(hovedytelser).map(Hovedytelse.sumSkatt).reduce(sumDouble);
 
 
-        on(hovedytelser).filter(where(utbetalingsmelding, equalTo("hei"))).collect(compareWith(utbetalingsmelding));
+        on(hovedytelser).filter(where(Hovedytelse.utbetalingsmelding, equalTo("hei"))).collect(compareWith(Hovedytelse.utbetalingsmelding));
 
 
-        List<Utbetaling> utbetalinger = createHovedytelser(wsUtbetalinger, "fnr");
+        List<Record<Hovedytelse>> utbetalinger = createHovedytelser(wsUtbetalinger, "fnr");
 
         assertThat(utbetalinger.size(), is(2));
 
 
-        assertThat(utbetalinger.get(0).getMelding(), is("Dette er bilagsmelding 1\nDette er bilagsmelding 2"));
+        assertThat(utbetalinger.get(0).get(Hovedytelse.utbetalingsmelding), is("Dette er bilagsmelding 1\nDette er bilagsmelding 2"));
 
         List<UnderytelseGammel> underytelser1 = utbetalinger.get(0).getUnderytelser();
         assertThat(underytelser1.size(), is(4));
