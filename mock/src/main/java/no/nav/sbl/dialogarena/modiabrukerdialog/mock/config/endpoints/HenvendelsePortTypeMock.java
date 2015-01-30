@@ -13,10 +13,7 @@ import java.util.*;
 
 import static java.lang.String.valueOf;
 import static java.util.Arrays.asList;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_OPPMOTE;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.REFERAT_TELEFON;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SPORSMAL_SKRIFTLIG;
-import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.SVAR_SKRIFTLIG;
+import static no.nav.melding.domene.brukerdialog.behandlingsinformasjon.v1.XMLHenvendelseType.*;
 import static org.joda.time.DateTime.now;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
@@ -97,8 +94,8 @@ public class HenvendelsePortTypeMock {
                     .withHenvendelseType(SPORSMAL_SKRIFTLIG.name()),
 
             createXMLHenvendelse(BEHANDLINGS_ID4, BEHANDLINGS_ID4, now(), null,
-                    createXMLMeldingTilBruker("ARBD", "TELEFON", "Test Testesen er utålmodig på å få utbetalt dagpengene sine"), null, createXMLJourfortInformasjon(null, "", "", ""))
-                    .withHenvendelseType(REFERAT_OPPMOTE.name()),
+                    createXMLMeldingTilBruker("ARBD", "TEKST", KORT_TEKST), null, createXMLJourfortInformasjon(DateTime.now(), "DAG", "1234", "z999999"))
+                    .withHenvendelseType(SPORSMAL_MODIA_UTGAAENDE.name()),
 
             createXMLHenvendelse(BEHANDLINGS_ID5, BEHANDLINGS_ID5, now().minusDays(1), null,
                     null, valueOf(oppgaveId++), createXMLJourfortInformasjon(null, "", "", ""))
