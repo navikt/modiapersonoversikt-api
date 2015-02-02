@@ -30,7 +30,6 @@ import no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.Sa
 import no.nav.sbl.dialogarena.modiabrukerdialog.web.selftest.SelfTestPage;
 import no.nav.sbl.dialogarena.sak.lamell.SaksoversiktLerret;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.Innboks;
-import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.lamell.UtbetalingLerret;
 import org.apache.wicket.Application;
 import org.apache.wicket.Component;
@@ -51,6 +50,7 @@ import java.util.Locale;
 
 import static no.nav.modig.frontend.FrontendModules.MODIA;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.util.MockUtil.mockSetupErTillatt;
+import static no.nav.sbl.dialogarena.time.Datoformat.brukLocaleFra;
 import static org.apache.wicket.util.time.Duration.ONE_SECOND;
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -90,7 +90,6 @@ public class WicketApplication extends WebApplication {
 
         configureFrontend();
 
-        // Innstillinger vi bør ha
         getRequestCycleSettings().setResponseRequestEncoding("UTF-8");
 
         setMarkupSettings();
@@ -101,27 +100,7 @@ public class WicketApplication extends WebApplication {
 
         Application.get().getRequestLoggerSettings().setRequestLoggerEnabled(true);
 
-        getResourceSettings().getStringResourceLoaders().add(0, new IStringResourceLoader() {
-            @Override
-            public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation) {
-                try {
-                    return cms.hentTekst(key);
-                } catch (Exception e) {
-                    log.info("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
-                    return null;
-                }
-            }
-
-            @Override
-            public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
-                try {
-                    return cms.hentTekst(key);
-                } catch (Exception e) {
-                    log.info("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
-                    return null;
-                }
-            }
-        });
+        configureCmsResourceLoader();
 
         new ModiaApplicationConfigurator()
                 .withExceptionHandler(true)
@@ -131,7 +110,30 @@ public class WicketApplication extends WebApplication {
 
         setSpringComponentInjector();
 
-        Datoformat.brukLocaleFra(LocaleFromWicketSession.INSTANCE);
+        brukLocaleFra(LocaleFromWicketSession.INSTANCE);
+    }
+
+    private void configureCmsResourceLoader() {
+        getResourceSettings().getStringResourceLoaders().add(0, new IStringResourceLoader() {
+            @Override
+            public String loadStringResource(Class<?> clazz, String key, Locale locale, String style, String variation) {
+                return hentTekstFraCms(key);
+            }
+
+            @Override
+            public String loadStringResource(Component component, String key, Locale locale, String style, String variation) {
+                return hentTekstFraCms(key);
+            }
+
+            private String hentTekstFraCms(String key) {
+                try {
+                    return cms.hentTekst(key);
+                } catch (Exception e) {
+                    log.warn("Fant ikke " + key + " i cms. Defaulter til properties-fil. " + e.getMessage());
+                    return null;
+                }
+            }
+        });
     }
 
     private void setMarkupSettings() {
