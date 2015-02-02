@@ -14,8 +14,6 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
 
 public class SakerUtils {
 
-    public static final String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
-
     public static void leggTilFagsystemnavnOgTemanavn(List<Sak> sakerForBruker, final Map<String, String> fagsystemMapping, final StandardKodeverk standardKodeverk) {
         on(sakerForBruker).forEach(new Closure<Sak>() {
             @Override
@@ -63,7 +61,7 @@ public class SakerUtils {
                 return new SakerForTema()
                         .withTemaKode(entry.getKey())
                         .withTemaNavn(entry.getValue().get(0).temaNavn)
-                        .withTemagruppe(lokaltKodeverk.hentTemagruppeForTema(entry.getKey(), TEMA_UTEN_TEMAGRUPPE))
+                        .withTemagruppe(lokaltKodeverk.hentTemagruppeForTema(entry.getKey()))
                         .withSaksliste(entry.getValue());
             }
         }).collectIn(new ArrayList<SakerForTema>());

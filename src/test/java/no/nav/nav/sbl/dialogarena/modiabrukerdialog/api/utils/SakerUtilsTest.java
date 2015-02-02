@@ -1,11 +1,7 @@
 package no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils;
 
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Saker;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.SakerForTema;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.GsakKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.StandardKodeverk;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.*;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.*;
 import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,8 +14,9 @@ import org.mockito.stubbing.Answer;
 import java.util.*;
 
 import static java.util.Arrays.asList;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.*;
-import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.TEMA_UTEN_TEMAGRUPPE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENTE_FAGSYSTEMER_FOR_FAGSAKER;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.GODKJENT_FAGSYSTEM_FOR_GENERELLE;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Sak.SAKSTYPE_GENERELL;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.utils.SakerUtils.hentGenerelleOgIkkeGenerelleSaker;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.number.OrderingComparison.greaterThanOrEqualTo;
@@ -30,6 +27,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SakerUtilsTest {
+    private static final String TEMA_UTEN_TEMAGRUPPE = "Ukjent";
     private static final String SAKSTYPE_FAG = "Fag";
     private static final String KODEVERK_TEMAKODE = "Tema kode";
     private static final String KODEVERK_TEMANAVN = "Tema navn";
@@ -65,7 +63,7 @@ public class SakerUtilsTest {
         saksliste = createSakslisteBasertPaTemaMap();
         alleTemagrupper = getAlleEksisterendeTemagrupper();
 
-        when(lokaltKodeverk.hentTemagruppeForTema(anyString(), anyString())).thenAnswer(new Answer<String>() {
+        when(lokaltKodeverk.hentTemagruppeForTema(anyString())).thenAnswer(new Answer<String>() {
             @Override
             public String answer(InvocationOnMock invocation) throws Throwable {
                 Object[] args = invocation.getArguments();
@@ -76,6 +74,7 @@ public class SakerUtilsTest {
                     }
                 }
                 return TEMA_UTEN_TEMAGRUPPE;
+
             }
         });
         when(gsakKodeverk.hentFagsystemMapping()).thenReturn(KODEVERK_MOCK_MAP);
