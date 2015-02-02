@@ -1,7 +1,6 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel;
 
 import no.nav.modig.lang.option.Optional;
-import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.OppgaveBehandlingService;
 import org.apache.wicket.Component;
@@ -24,6 +23,7 @@ import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.model.ModelUtils.not;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.constants.Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.LeggTilbakeVM.Aarsak;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.svarpanel.LeggTilbakeVM.Aarsak.*;
 import static org.apache.wicket.event.Broadcast.BREADTH;
@@ -113,7 +113,7 @@ public class LeggTilbakePanel extends Panel {
                         optional(leggTilbakeVM.nyTemagruppe)
                 );
                 oppgaveLagtTilbake.setObject(true);
-                send(getPage(), BREADTH, Events.SporsmalOgSvar.LEGG_TILBAKE_UTFORT);
+                send(getPage(), BREADTH, LEGG_TILBAKE_UTFORT);
 
                 target.add(form, feedbackPanelSuccess);
                 target.focusComponent(lukkKnapp);
