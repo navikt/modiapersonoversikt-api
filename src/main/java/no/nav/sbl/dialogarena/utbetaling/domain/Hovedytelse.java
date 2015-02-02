@@ -8,7 +8,7 @@ import org.joda.time.Interval;
 import java.util.List;
 
 public interface Hovedytelse {
-    Key<Integer> id = new Key<>("ID");
+    Key<String> id = new Key<>("ID");
 
     Key<DateTime> posteringsdato = new Key<>("POSTERINGS_DATO");
     Key<Record<Aktoer>> utbetaltTil = new Key<>("UTBETALT_TIL");
@@ -33,4 +33,5 @@ public interface Hovedytelse {
     Key<String> bilagsnummer = new Key<>("BILAGSNUMMER");
     Key<Record<Aktoer>> rettighetshaver = new Key<>("RETTIGHETSHAVER");
     Key<Record<Aktoer>> refundertForOrg = new Key<>("REFUNDERT_FOR_ORG");
+
 }
