@@ -18,6 +18,7 @@ import java.util.*;
 import static java.util.Arrays.asList;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_SBL_INNGAAENDE;
+import static no.nav.sbl.dialogarena.sporsmalogsvar.common.utils.PdfUtils.MeldingsTypeMapping.SAMTALEREFERAT;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class PdfUtils {
@@ -84,7 +85,7 @@ public class PdfUtils {
         }
     }
 
-    private static final class PDFMelding {
+    protected static final class PDFMelding {
         public final String fnrBruker, meldingstype, typeBeskrivelse, temagruppeBeskrivelse, avBruker, fritekst, journalfortTema, kontorsperretEnhet, markertSomFeilsendtAv;
         public final DateTime opprettetDato, journalFortDato;
 
@@ -114,7 +115,7 @@ public class PdfUtils {
         private String lagTypeBeskrivelse(Melding melding) {
             MeldingsTypeMapping typeMapping = getMeldingsTypeMapping(melding);
 
-            if (typeMapping == MeldingsTypeMapping.SAMTALEREFERAT) {
+            if (typeMapping == SAMTALEREFERAT) {
                 return "Type: samtalereferat (N)";
             }
             if (erMeldingInngaaende(melding.meldingstype)) {
