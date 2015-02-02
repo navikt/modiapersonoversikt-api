@@ -11,15 +11,16 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.UUID;
 
 import static java.util.Collections.reverseOrder;
 import static no.nav.modig.lang.collections.ComparatorUtils.compareWith;
 import static no.nav.modig.lang.collections.IterUtils.on;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.*;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.aktoerId;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Aktoer.navn;
 import static no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse.*;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Konto.*;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Trekk.*;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Konto.kontonummer;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Konto.kontotype;
+import static no.nav.sbl.dialogarena.utbetaling.domain.Trekk.kreditor;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.mottakertypeForAktoer;
 
 /**
@@ -71,7 +72,7 @@ public class Transformers {
             List<Record<Hovedytelse>> hovedytelser = new ArrayList<>();
             for(WSYtelse wsYtelse : wsUtbetaling.getYtelseListe()) {
                 Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
-                        .with(id, wsYtelse.hashCode())
+                        .with(id, String.valueOf(wsYtelse.hashCode()))
                         .with(mottakertype, mottakertypeForAktoer(wsUtbetaling.getUtbetaltTil()))
                         .with(posteringsdato, wsUtbetaling.getPosteringsdato())
                         .with(utbetaltTil, createAktoer(wsUtbetaling.getUtbetaltTil()))

@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,16 +11,11 @@ import org.junit.Test;
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.getBuilder;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
 import static org.hamcrest.Matchers.is;
 import static org.joda.time.DateTime.now;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class FilterParametereTest {
 
@@ -35,74 +32,74 @@ public class FilterParametereTest {
 
     @Test
     public void filtrererBortUtbetalingUtenforDatointervall() {
-        Utbetaling utbetaling = getBuilder(ID)
-                .withUtbetalingsDato(now().minusYears(2))
-                .withMottakertype(Mottaktertype.BRUKER)
-                .withHovedytelse(DAGPENGER)
-                .build();
+        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
+                .with(Hovedytelse.id, ID)
+                .with(Hovedytelse.utbetalingsDato, now().minusYears(2))
+                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER)
+                .with(Hovedytelse.ytelse, DAGPENGER);
 
-        assertFalse(filterparams.evaluate(utbetaling));
+        assertFalse(filterparams.evaluate(ytelse));
     }
 
     @Test
     public void filtrererBortUtbetalingForAnnenMottakertype() {
-        Utbetaling utbetaling = getBuilder(ID)
-                .withUtbetalingsDato(now())
-                .withMottakertype(Mottaktertype.ANNEN_MOTTAKER)
-                .withHovedytelse(DAGPENGER)
-                .build();
+        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
+                .with(Hovedytelse.id, ID)
+                .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.mottakertype, Mottakertype.ANNEN_MOTTAKER)
+                .with(Hovedytelse.ytelse, DAGPENGER);
 
-        filterparams.toggleMottaker(Mottaktertype.ANNEN_MOTTAKER);
+        filterparams.toggleMottaker(Mottakertype.ANNEN_MOTTAKER);
 
-        assertFalse(filterparams.evaluate(utbetaling));
+        assertFalse(filterparams.evaluate(ytelse));
     }
 
     @Test
     public void skalBeholdeYtelsenHvisUtbetalingenInneholderEnYtelseManVilHa() {
-        Utbetaling utbetaling = getBuilder(ID)
-                .withUtbetalingsDato(now())
-                .withMottakertype(Mottaktertype.BRUKER)
-                .withHovedytelse(DAGPENGER)
-                .build();
+        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
+                .with(Hovedytelse.id, ID)
+                .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER);
 
         filterparams.leggTilOnsketYtelse(BARNETRYGD);
 
-        assertTrue(filterparams.evaluate(utbetaling));
+        assertTrue(filterparams.evaluate(ytelse));
     }
 
     @Test
     public void skalIkkeBeholdeYtelsenHvisAlleUtbetalingerErUonskede() {
-        Utbetaling utbetaling = getBuilder(ID)
-                .withUtbetalingsDato(now())
-                .withMottakertype(Mottaktertype.BRUKER)
-                .withHovedytelse(DAGPENGER)
-                .build();
+        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
+                .with(Hovedytelse.id, ID)
+                .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER)
+                .with(Hovedytelse.ytelse, DAGPENGER);
 
         filterparams.velgEnYtelse(BARNETRYGD);
 
-        assertFalse(filterparams.evaluate(utbetaling));
+        assertFalse(filterparams.evaluate(ytelse));
     }
 
     @Test
     public void skalViseAlleUtbetalingerHvisAlleYtelserErValgtOgNyeYtelserBlirSatt() {
         filterparams = new FilterParametere(new HashSet<String>());
-        Utbetaling utbetaling = getBuilder(ID)
-                .withUtbetalingsDato(now())
-                .withMottakertype(Mottaktertype.BRUKER)
-                .withHovedytelse(DAGPENGER)
-                .build();
-        filterparams.setYtelser(new HashSet<>(asList(utbetaling.getHovedytelse())));
 
-        assertThat(filterparams.evaluate(utbetaling), is(true));
+        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
+                .with(Hovedytelse.id, ID)
+                .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER)
+                .with(Hovedytelse.ytelse, DAGPENGER);
+        filterparams.setYtelser(new HashSet<>(asList(ytelse.get(Hovedytelse.ytelse))));
+
+        assertThat(filterparams.evaluate(ytelse), is(true));
     }
 
     @Test
     public void skalToggleVerdiBasertPaaMottaker() {
-        assertThat(filterparams.viseMottaker(Mottaktertype.BRUKER), is(true));
-        filterparams.toggleMottaker(Mottaktertype.BRUKER);
-        assertThat(filterparams.viseMottaker(Mottaktertype.BRUKER), is(false));
-        filterparams.toggleMottaker(Mottaktertype.BRUKER);
-        assertThat(filterparams.viseMottaker(Mottaktertype.BRUKER), is(true));
+        assertThat(filterparams.viseMottaker(Mottakertype.BRUKER.BRUKER), is(true));
+        filterparams.toggleMottaker(Mottakertype.BRUKER);
+        assertThat(filterparams.viseMottaker(Mottakertype.BRUKER), is(false));
+        filterparams.toggleMottaker(Mottakertype.BRUKER);
+        assertThat(filterparams.viseMottaker(Mottakertype.BRUKER), is(true));
     }
 
     @Test
@@ -127,25 +124,26 @@ public class FilterParametereTest {
 
     @Test
     public void skalToggleAlleYtelserSomOnsket() {
-        UtbetalingBuilder utbetalingBuilder = getBuilder(ID)
-                .withUtbetalingsDato(now())
-                .withMottakertype(Mottaktertype.BRUKER);
+        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
+                .with(Hovedytelse.id, ID)
+                .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER);
 
         filterparams.toggleAlleYtelser(true);
 
-        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(DAGPENGER).build()), is(true));
-        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(BARNETRYGD).build()), is(true));
+        assertThat(filterparams.evaluate(ytelse.with(Hovedytelse.ytelse, DAGPENGER)), is(true));
+        assertThat(filterparams.evaluate(ytelse.with(Hovedytelse.ytelse ,BARNETRYGD)), is(true));
     }
 
     @Test
     public void skalToggleAlleYtelserSomUonsket() {
-        UtbetalingBuilder utbetalingBuilder = getBuilder(ID)
-                .withUtbetalingsDato(now())
-                .withMottakertype(Mottaktertype.BRUKER);
-
+        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
+                .with(Hovedytelse.id, ID)
+                .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER);
 
         filterparams.toggleAlleYtelser(false);
-        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(DAGPENGER).build()), is(false));
-        assertThat(filterparams.evaluate(utbetalingBuilder.withHovedytelse(BARNETRYGD).build()), is(false));
+        assertThat(filterparams.evaluate(ytelse.with(Hovedytelse.ytelse, DAGPENGER)), is(false));
+        assertThat(filterparams.evaluate(ytelse.with(Hovedytelse.ytelse, BARNETRYGD)), is(false));
     }
 }

@@ -4,7 +4,6 @@ import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
-import org.joda.time.YearMonth;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.junit.Before;
@@ -12,7 +11,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import static java.util.Arrays.asList;
@@ -83,14 +81,14 @@ public class HovedytelseUtilsTest {
 
     @Test
     public void splittUtbetalingerPerMaaned_splittetIRiktigAntallMaaneder() {
-        Map<YearMonth, List<Record<Hovedytelse>>> maanedsMap = splittUtbetalingerPerMaaned(hovedytelseListe);
+        List<List<Record<Hovedytelse>>> maanedsMap = splittUtbetalingerPerMaaned(hovedytelseListe);
 
         assertThat(maanedsMap.size(), is(3));
     }
 
     @Test
     public void splittUtbetalingerPerMaaned_hverMaanedHarRiktigAntallUtbetalinger() {
-        Map<YearMonth, List<Record<Hovedytelse>>> maanedsMap = splittUtbetalingerPerMaaned(hovedytelseListe);
+        List<List<Record<Hovedytelse>>> maanedsMap = splittUtbetalingerPerMaaned(hovedytelseListe);
 
         assertThat(maanedsMap.get(0).size(), is(1));
         assertThat(maanedsMap.get(1).size(), is(1));
@@ -99,7 +97,7 @@ public class HovedytelseUtilsTest {
 
     @Test
     public void splittUtbetalingerPerMaaned_inneholderRiktigUtbetalingPerMaaned() {
-        Map<YearMonth, List<Record<Hovedytelse>>> maanedsMap  = splittUtbetalingerPerMaaned(hovedytelseListe);
+        List<List<Record<Hovedytelse>>> maanedsMap  = splittUtbetalingerPerMaaned(hovedytelseListe);
 
         assertThat(maanedsMap.get(0).get(0).get(Hovedytelse.utbetalingsmelding), is(SEP_2012_NR1));
         assertThat(maanedsMap.get(1).get(0).get(Hovedytelse.utbetalingsmelding), is(MAR_2012_NR1));

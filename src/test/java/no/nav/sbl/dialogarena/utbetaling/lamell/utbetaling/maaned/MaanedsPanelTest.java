@@ -1,7 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.UnderytelseGammel;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.MaanedOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
 import no.nav.sbl.dialogarena.utbetaling.wickettest.AbstractWicketTest;
@@ -13,9 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static no.nav.modig.lang.option.Optional.optional;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static org.joda.time.DateTime.now;
 
 public class MaanedsPanelTest extends AbstractWicketTest {
@@ -28,16 +27,27 @@ public class MaanedsPanelTest extends AbstractWicketTest {
 
     @Test
     public void testMaanedsPanelMedUtbetalinger() {
-        UtbetalingBuilder utbetalingBuilder = new UtbetalingBuilder(ID);
-        List<Utbetaling> utbetalinger = asList(
-                utbetalingBuilder.withUtbetalingsDato(now())
-                        .withPeriode(new Interval(now().minusDays(5), now()))
-                        .withUnderytelser(asList(new UnderytelseGammel("Tittel", "Spesifikasjon", optional(3d), 200.0, optional(1.0))))
-                        .build(),
-                utbetalingBuilder.withUtbetalingsDato(now().minusDays(4))
-                        .withPeriode(new Interval(now().minusDays(10), now()))
-                        .withUnderytelser(asList(new UnderytelseGammel("Tittel2", "Spesifikasjon2", optional(5d), 700.0, optional(2.0))))
-                        .build());
+        Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
+                .with(Hovedytelse.id, ID);
+
+        List<Record<Hovedytelse>> utbetalinger = asList(
+                hovedytelse
+                        .with(Hovedytelse.utbetalingsDato, now())
+                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(5), now()))
+                        .with(Hovedytelse.underytelseListe, asList(new Record<Underytelse>()
+                            .with(Underytelse.ytelsesType, "Tittel")
+                            .with(Underytelse.satsAntall, 3d)
+                            .with(Underytelse.ytelseBeloep, 200.0)
+                            .with(Underytelse.satsAntall, 1.0))),
+                hovedytelse
+                        .with(Hovedytelse.utbetalingsDato, now().minusDays(4))
+                        .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(10), now()))
+                        .with(Hovedytelse.underytelseListe, asList(new Record<Underytelse>()
+                                .with(Underytelse.ytelsesType, "Tittel2")
+                                .with(Underytelse.satsAntall, 5d)
+                                .with(Underytelse.ytelseBeloep, 700.0)
+                                .with(Underytelse.satsAntall, 2.0)))
+        );
 
         MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", utbetalinger);
         wicketTester.goToPageWith(maanedsPanel);
@@ -49,7 +59,7 @@ public class MaanedsPanelTest extends AbstractWicketTest {
 
     @Test
     public void testMaanedsPanelUtenUtbetalinger() {
-        MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", new ArrayList<Utbetaling>());
+        MaanedsPanel maanedsPanel = new MaanedsPanel("maanedsPanel", new ArrayList<Record<Hovedytelse>>());
         wicketTester.goToPageWith(maanedsPanel);
 
         wicketTester.should().containComponent(ofType(MaanedOppsummeringPanel.class))
