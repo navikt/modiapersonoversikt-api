@@ -1,19 +1,18 @@
 package no.nav.sbl.dialogarena.modiabrukerdialog.consumer.service.kodeverk;
 
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.service.LokaltKodeverk;
+import no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe;
 
 import java.util.*;
 import java.util.Map.Entry;
 
 import static java.util.Arrays.asList;
 import static no.nav.modig.lang.option.Optional.optional;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ARBD;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.BIL;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.FMLI;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.HJLPM;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ORT_HJE;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.*;
 
 public class LokaltKodeverkImpl implements LokaltKodeverk {
+
+    public static final Temagruppe TEMA_UTEN_TEMAGRUPPE = Temagruppe.OVRG;
 
     public static final Map<String, List<String>> TEMAGRUPPE_TEMA_MAPPING = new HashMap<String, List<String>>() {
         {
@@ -22,7 +21,7 @@ public class LokaltKodeverkImpl implements LokaltKodeverk {
             put(HJLPM.name(), asList("HJE"));
             put(BIL.name(), asList("BIL"));
             put(ORT_HJE.name(), asList("HEL"));
-            put("OVRG", asList("AAR", "AGR", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "SER", "SIK", "STO", "TRK", "TRY"));
+            put(OVRG.name(), asList("AAR", "AGR", "FEI", "FUL", "GEN", "KLA", "KNA", "KTR", "MED", "SER", "SIK", "STO", "TRK", "TRY"));
             put("PENS", asList("PEN", "SUP", "UFO"));
         }
     };
@@ -39,8 +38,8 @@ public class LokaltKodeverkImpl implements LokaltKodeverk {
     }
 
     @Override
-    public String hentTemagruppeForTema(String tema, String defaultVerdi) {
-        return optional(TEMA_TEMAGRUPPE_MAPPING.get(tema)).getOrElse(defaultVerdi);
+    public String hentTemagruppeForTema(String tema) {
+        return optional(TEMA_TEMAGRUPPE_MAPPING.get(tema)).getOrElse(TEMA_UTEN_TEMAGRUPPE.name());
     }
 
     public Map<String, String> hentTemaTemagruppeMapping() {

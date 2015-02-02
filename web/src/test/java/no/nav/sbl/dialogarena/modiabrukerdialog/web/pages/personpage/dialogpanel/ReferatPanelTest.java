@@ -38,6 +38,7 @@ import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.TELE
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SAMTALEREFERAT_TELEFON;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.ARBD;
+import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.OVRG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.pages.personpage.dialogpanel.TestUtils.createMockSaker;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
@@ -173,7 +174,7 @@ public class ReferatPanelTest extends WicketPageTest {
         assertThat(melding.tilknyttetEnhet, is(VALGT_ENHET));
         assertThat(melding.fnrBruker, is(FNR));
         assertThat(melding.navIdent, is(getSubjectHandler().getUid()));
-        assertThat(melding.temagruppe, is("OVRG"));
+        assertThat(melding.temagruppe, is(OVRG.name()));
         assertThat(melding.fritekst, is(FRITEKST));
         assertThat(melding.eksternAktor, is(getSubjectHandler().getUid()));
     }

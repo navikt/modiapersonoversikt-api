@@ -50,12 +50,9 @@ import static no.nav.modig.wicket.model.ModelUtils.isEqualTo;
 import static no.nav.modig.wicket.shortcuts.Shortcuts.cssClass;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Kanal.*;
 import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_MODIA_UTGAAENDE;
-import static no.nav.sbl.dialogarena.modiabrukerdialog.consumer.domain.Temagruppe.OVRG;
 import static no.nav.sbl.dialogarena.modiabrukerdialog.web.panels.saksbehandlerpanel.SaksbehandlerInnstillingerPanel.SAKSBEHANDLERINNSTILLINGER_VALGT;
 
 public class ReferatPanel extends GenericPanel<HenvendelseVM> {
-
-    public static final Temagruppe DEFAULT_TEMAGRUPPE = OVRG;
 
     @Inject
     private HenvendelseUtsendingService henvendelseUtsendingService;
@@ -290,7 +287,7 @@ public class ReferatPanel extends GenericPanel<HenvendelseVM> {
         Melding sporsmal = felles()
                 .withKanal(Kanal.TEKST.name())
                 .withType(SPORSMAL_MODIA_UTGAAENDE)
-                .withTemagruppe(lokaltKodeverk.hentTemagruppeForTema(henvendelseVM.valgtSak.temaKode, DEFAULT_TEMAGRUPPE.name()))
+                .withTemagruppe(lokaltKodeverk.hentTemagruppeForTema(henvendelseVM.valgtSak.temaKode))
                 .withTilknyttetEnhet(saksbehandlerInnstillingerService.getSaksbehandlerValgtEnhet());
 
         sporsmal = henvendelseUtsendingService.sendHenvendelse(sporsmal);
