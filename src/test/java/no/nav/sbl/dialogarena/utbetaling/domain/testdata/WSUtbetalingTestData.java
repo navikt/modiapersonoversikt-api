@@ -1,6 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.domain.testdata;
 
-import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.WSUtbetaling;
+import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
 import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static org.joda.time.DateTime.now;
 
 
 public class WSUtbetalingTestData {
@@ -27,7 +28,7 @@ public class WSUtbetalingTestData {
     public static final String DAGPENGER = "Dagpenger";
     public static final String FORELDREPENGER = "Foreldrepenger";
     public static final String VALUTA = "NOK";
-    public static final DateTime forsteDesember = new DateTime(2013, 12, 1, 12, 0);
+    public static final DateTime forsteDesember = new DateTime(2014, 12, 1, 12, 0);
     public static final String SPESIFIKASJON = "";
     public static final String SPESIFIKASJON_1 = "Ekstra detaljinfo";
     public static final String UFORE = "UFØRE";
@@ -69,8 +70,48 @@ public class WSUtbetalingTestData {
         utbetaling
                 .withUtbetalingNettobeloep((2 * belop + trekk))
                 .withUtbetalingsmelding("Dette er bilagsmelding1, Dette er bilagsmelding 2")
-                .withUtbetalingsdato(forsteDesember);
+                .withYtelseListe(createUnderytelse("Arbeidsavklaringspenger", 1000.0, "Grunnlag"))
+                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
+                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
+                .withUtbetalingsdato(now());
         return utbetaling;
+    }
+
+    private static WSBankkonto createKonto(String kontonummer) {
+        return new WSBankkonto()
+                .withKontonummer(kontonummer)
+                .withKontotype(new WSBankkontotyper().withValue("Privat"));
+    }
+
+    private static WSAktoer createPersonAktoer(String aktoerNavn) {
+        return new WSPerson()
+                .withAktoerId("***REMOVED***")
+                .withNavn(aktoerNavn);
+    }
+
+    private static WSYtelse createUnderytelse(String ytelseType, Double sumYtelseKomponenter, String komponentType) {
+        return createUnderytelse(ytelseType, now().minusMonths(1), now(), sumYtelseKomponenter, komponentType);
+    }
+
+    private static WSYtelse createUnderytelse(String ytelseType, DateTime fom, DateTime tom, Double sumYtelsekomponenter, String komponentType) {
+        return new WSYtelse()
+                .withSkattListe(new WSSkatt().withSkattebeloep(10.0))
+                .withSumSkatt(10.0)
+                .withTrekkListe(new WSTrekk().withTrekkbeloep(5.0).withTrekkstype(new WSTrekktyper().withValue("Tvunget trekk")).withKreditor("Kreditor AS"))
+                .withSumTrekk(5.0)
+                .withYtelseskomponentListe(createYtelseKomponent(komponentType))
+                .withSumYtelseskomponenter(sumYtelsekomponenter)
+                .withYtelsestype(new WSYtelsestyper().withValue(ytelseType))
+                .withYtelsesperiode(new WSPeriode().withFom(fom).withTom(tom));
+    }
+
+    private static WSYtelseskomponent createYtelseKomponent(String komponentType) {
+        return new WSYtelseskomponent()
+                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue(komponentType))
+                .withSatsantall(1.0)
+                .withSatsbeloep(100D)
+                .withSatstype(new WSSatstyper().withValue("Trekk"));
+
     }
 
     public static WSUtbetaling createUtbetaling2() {
@@ -81,7 +122,10 @@ public class WSUtbetalingTestData {
         utbetaling
                 .withUtbetalingNettobeloep((2 * belop0 + trekk))
                 .withUtbetalingsmelding("bilag2")
-                .withUtbetalingsdato(forsteDesember);
+                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
+                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
+                .withYtelseListe(createUnderytelse("Sykepenger", 1000.0, "Grunnlag"))
+                .withUtbetalingsdato(now());
 
         return utbetaling;
     }
@@ -93,7 +137,10 @@ public class WSUtbetalingTestData {
         utbetaling
                 .withUtbetalingNettobeloep((2 * BELOP + trekk))
                 .withUtbetalingsmelding("bilag1")
-                .withUtbetalingsdato(forsteDesember);
+                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
+                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
+                .withYtelseListe(createUnderytelse("Dagpenger", 10200.0, "Grunnlag"))
+                .withUtbetalingsdato(now().minusMonths(1));
         return utbetaling;
     }
 
@@ -102,7 +149,10 @@ public class WSUtbetalingTestData {
         utbetaling
                 .withUtbetalingNettobeloep(BELOP)
                 .withUtbetalingsmelding("bilag2")
-                .withUtbetalingsdato(forsteDesember);
+                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
+                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
+                .withYtelseListe(createUnderytelse("Sykepenger", 2002.0, "Grunnlag"))
+                .withUtbetalingsdato(now().minusMonths(1));
         return utbetaling;
     }
 
@@ -111,7 +161,10 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling
                 .withUtbetalingNettobeloep(trekk)
-                .withUtbetalingsdato(forsteDesember);
+                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
+                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
+                .withYtelseListe(createUnderytelse("Sykepenger", 1000.0, "Grunnlag"))
+                .withUtbetalingsdato(now().minusMonths(1).minusDays(1));
         return utbetaling;
     }
 
@@ -121,7 +174,10 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling
                 .withUtbetalingNettobeloep((2 * belop + trekk))
-                .withUtbetalingsdato(forsteDesember);
+                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
+                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
+                .withYtelseListe(createUnderytelse("Arbeidsavklaringspenger", 1000.0, "Grunnlag"))
+                .withUtbetalingsdato(now().minusMonths(2).minusDays(2));
         return utbetaling;
     }
     public static WSUtbetaling createUtbetaling7() {
@@ -130,8 +186,11 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling
                 .withUtbetalingNettobeloep((2 * belop + trekk))
+                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
+                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
+                .withYtelseListe(createUnderytelse("Dagpenger", 1000.0, "Grunnlag"))
                 .withUtbetalingsmelding("bilag22")
-                .withUtbetalingsdato(forsteDesember);
+                .withUtbetalingsdato(now().minusMonths(2));
         return utbetaling;
     }
     public static WSUtbetaling createUtbetaling8() {
@@ -139,8 +198,11 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling
                 .withUtbetalingNettobeloep(utbetalt)
+                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
+                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
+                .withYtelseListe(createUnderytelse("Arbeidsavklaringspenger", 1000.0, "Grunnlag"))
                 .withUtbetalingsmelding("bilag2")
-                .withUtbetalingsdato(forsteDesember);
+                .withUtbetalingsdato(now().minusMonths(2).minusDays(10));
         return utbetaling;
     }
 
@@ -149,8 +211,11 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling
                 .withUtbetalingNettobeloep(utbetalt)
+                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
+                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
+                .withYtelseListe(createUnderytelse("AAP", 1000.0, "Grunnlag"))
                 .withUtbetalingsmelding("bilag1")
-                .withUtbetalingsdato(forsteDesember);
+                .withUtbetalingsdato(now().minusMonths(4));
         return utbetaling;
     }
 
@@ -159,8 +224,11 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling
                 .withUtbetalingNettobeloep(utbetalt)
+                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
+                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
+                .withYtelseListe(createUnderytelse("Dagpenger", 200.0, "Etterbetalt"))
                 .withUtbetalingsmelding("bilag0")
-                .withUtbetalingsdato(forsteDesember);
+                .withUtbetalingsdato(now().minusMonths(4).plusDays(1));
         return utbetaling;
     }
 
@@ -169,6 +237,9 @@ public class WSUtbetalingTestData {
         WSUtbetaling utbetaling = new WSUtbetaling();
         utbetaling
                 .withUtbetalingNettobeloep(utbetalt)
+                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
+                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
+                .withYtelseListe(createUnderytelse("Arbeidsavklaringspenger", 1000.0, "Grunnlag"), createUnderytelse("Dagpenger", 200.0, "Etterbetalt"))
                 .withUtbetalingsmelding("bilag1")
                 .withUtbetalingsdato(forsteDesember);
         return utbetaling;

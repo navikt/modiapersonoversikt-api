@@ -82,32 +82,6 @@ public class OppsummeringVM implements Serializable {
         return Datoformat.kortUtenLiteral(startDato.toDateTimeAtStartOfDay()) + " - " +
                 Datoformat.kortUtenLiteral(sluttDato.toDateTimeAtCurrentTime());
     }
-//
-//    /**
-//     * Sorterer basert på beløpet, slik at negative tall havner nedenfor de positive
-//     */
-//    public static final Comparator<UnderytelseGammel> UNDERYTELSE_COMPARE_BELOP = new Comparator<UnderytelseGammel>() {
-//        @Override
-//        public int compare(UnderytelseGammel o1, UnderytelseGammel o2) {
-//            return Double.compare(o2.getBelop(), o1.getBelop());
-//        }
-//    };
-//
-//    /**
-//     * Sorterer underytelser med tittel som inneholder "skatt", og er negativt, nederst.
-//     */
-//    public static final Comparator<UnderytelseGammel> UNDERYTELSE_SKATT_NEDERST = new Comparator<UnderytelseGammel>(){
-//        private static final String SKATT = "skatt";
-//
-//        @Override
-//        public int compare(UnderytelseGammel o1, UnderytelseGammel o2) {
-//            if (o1.getTittel().toLowerCase().contains(SKATT) && o1.getBelop() <= 0) {
-//                return 1;
-//            } else if (o2.getTittel().toLowerCase().contains(SKATT) && o2.getBelop() <= 0) {
-//                return -1;
-//            }
-//            return 0;
-//        }
 
 
     public static ReduceFunction<List<Record<?>>, List<Record<Underytelse>>> toTotalOfUnderytelser = new ReduceFunction<List<Record<?>>, List<Record<Underytelse>>>() {

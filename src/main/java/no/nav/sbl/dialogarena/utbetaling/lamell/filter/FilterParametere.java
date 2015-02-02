@@ -131,5 +131,4 @@ public class FilterParametere implements Serializable, Predicate<Record<Hovedyte
     private boolean filtrerPaaYtelser(Record<Hovedytelse> utbetaling) {
         return onskedeYtelser.contains(utbetaling.get(Hovedytelse.ytelse));
     }
-
 }
