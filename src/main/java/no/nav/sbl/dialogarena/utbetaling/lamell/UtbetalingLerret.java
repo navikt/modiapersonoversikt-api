@@ -31,14 +31,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.*;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 
@@ -94,8 +93,8 @@ public final class UtbetalingLerret extends Lerret {
         feilmelding = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("feilmelding", FEILMELDING_DEFAULT_KEY, "-ikon-feil")
                 .setOutputMarkupPlaceholderTag(true).setVisibilityAllowed(false);
 
-        List<Record<Hovedytelse>> ytelser = hentHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
-        filterParametere = new FilterParametere(ytelseBeskrivelser(hentHovedytelseListe()));
+//        List<Record<Hovedytelse>> ytelser = hentHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
+        filterParametere = new FilterParametere(new HashSet<String>());
 
         List<Record<Hovedytelse>> synligeUtbetalinger = on(hentHovedytelseListe()).filter(filterParametere).collect();
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
