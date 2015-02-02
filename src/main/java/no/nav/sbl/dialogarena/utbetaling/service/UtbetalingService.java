@@ -4,7 +4,6 @@ import no.nav.modig.core.exception.ApplicationException;
 import no.nav.modig.core.exception.SystemException;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.HentUtbetalingsinformasjonPeriodeIkkeGyldig;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.UtbetalingV1;
 import no.nav.tjeneste.virksomhet.utbetaling.v1.informasjon.*;
@@ -16,6 +15,7 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
+import static no.nav.sbl.dialogarena.utbetaling.domain.transform.Transformers.toHovedytelse;
 import static org.slf4j.LoggerFactory.getLogger;
 
 public class UtbetalingService {
@@ -26,7 +26,7 @@ public class UtbetalingService {
     private UtbetalingV1 utbetalingV1;
 
     public List<Record<Hovedytelse>> hentUtbetalinger(String fnr, LocalDate startDato, LocalDate sluttDato) {
-        return on(getWSUtbetalinger(fnr, startDato, sluttDato)).flatmap(Transformers.HOVEDYTELSE_TRANSFORMER).collect();
+        return on(getWSUtbetalinger(fnr, startDato, sluttDato)).flatmap(toHovedytelse).collect();
     }
 
     public void ping() {

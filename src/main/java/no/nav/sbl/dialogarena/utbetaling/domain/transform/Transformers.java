@@ -66,39 +66,40 @@ public class Transformers {
     };
 
 
-    public static Transformer<WSUtbetaling, List<Record<Hovedytelse>>> HOVEDYTELSE_TRANSFORMER = new Transformer<WSUtbetaling, List<Record<Hovedytelse>>>() {
+    public static Transformer<WSUtbetaling, List<Record<Hovedytelse>>> toHovedytelse = new Transformer<WSUtbetaling, List<Record<Hovedytelse>>>() {
         @Override
         public List<Record<Hovedytelse>> transform(WSUtbetaling wsUtbetaling) {
             List<Record<Hovedytelse>> hovedytelser = new ArrayList<>();
+
             for(WSYtelse wsYtelse : wsUtbetaling.getYtelseListe()) {
                 Record<Hovedytelse> hovedytelse = new Record<Hovedytelse>()
-                        .with(id, String.valueOf(wsYtelse.hashCode()))
-                        .with(mottakertype, mottakertypeForAktoer(wsUtbetaling.getUtbetaltTil()))
-                        .with(posteringsdato, wsUtbetaling.getPosteringsdato())
-                        .with(utbetaltTil, createAktoer(wsUtbetaling.getUtbetaltTil()))
-                        .with(utbetalingsmelding, wsUtbetaling.getUtbetalingsmelding())
-                        .with(utbetalingsDato, wsUtbetaling.getUtbetalingsdato())
-                        .with(forfallsDato, wsUtbetaling.getForfallsdato())
-                        .with(utbetaltTilKonto, createKonto(wsUtbetaling.getUtbetaltTilKonto()))
-                        .with(utbetalingsmetode, wsUtbetaling.getUtbetalingsmetode().getValue())
-                        .with(utbetalingsstatus, wsUtbetaling.getUtbetalingsstatus().getValue())
-                        .with(ytelse, wsYtelse.getYtelsestype().getValue())
-                        .with(ytelsesperiode, createPeriode(wsYtelse.getYtelsesperiode()))
-                        .with(underytelseListe, createUnderytelser(wsYtelse.getYtelseskomponentListe()))
-                        .with(sumUnderytelser, wsYtelse.getSumYtelseskomponenter())
-                        .with(trekkListe, createTrekkliste(wsYtelse.getTrekkListe()))
-                        .with(sumTrekk, wsYtelse.getSumTrekk())
-                        .with(skattListe, createSkatteListe(wsYtelse.getSkattListe()))
-                        .with(sumSkatt, wsYtelse.getSumSkatt())
-                        .with(ytelseNettoBeloep, wsYtelse.getYtelseNettobeloep())
-                        .with(bilagsnummer, wsYtelse.getBilagsnummer())
-                        .with(rettighetshaver, createAktoer(wsYtelse.getRettighetshaver()))
-                        .with(refundertForOrg, createAktoer(wsYtelse.getRefundertForOrg()));
+                    .with(mottakertype, mottakertypeForAktoer(wsUtbetaling.getUtbetaltTil()))
+                    .with(posteringsdato, wsUtbetaling.getPosteringsdato())
+                    .with(utbetaltTil, createAktoer(wsUtbetaling.getUtbetaltTil()))
+                    .with(utbetalingsmelding, wsUtbetaling.getUtbetalingsmelding())
+                    .with(utbetalingsDato, wsUtbetaling.getUtbetalingsdato())
+                    .with(forfallsDato, wsUtbetaling.getForfallsdato())
+                    .with(utbetaltTilKonto, createKonto(wsUtbetaling.getUtbetaltTilKonto()))
+                    .with(utbetalingsmetode, wsUtbetaling.getUtbetalingsmetode() != null ? wsUtbetaling.getUtbetalingsmetode().getValue() : "")
+                    .with(utbetalingsstatus, wsUtbetaling.getUtbetalingsstatus() != null ? wsUtbetaling.getUtbetalingsstatus().getValue() : "")
+                    .with(id, String.valueOf(wsYtelse.hashCode()))
+                    .with(ytelse, wsYtelse.getYtelsestype() != null ? wsYtelse.getYtelsestype().getValue() : "")
+                    .with(ytelsesperiode, createPeriode(wsYtelse.getYtelsesperiode()))
+                    .with(underytelseListe, createUnderytelser(wsYtelse.getYtelseskomponentListe()))
+                    .with(sumUnderytelser, wsYtelse.getSumYtelseskomponenter())
+                    .with(trekkListe, createTrekkliste(wsYtelse.getTrekkListe()))
+                    .with(sumTrekk, wsYtelse.getSumTrekk())
+                    .with(skattListe, createSkatteListe(wsYtelse.getSkattListe()))
+                    .with(sumSkatt, wsYtelse.getSumSkatt())
+                    .with(ytelseNettoBeloep, wsYtelse.getYtelseNettobeloep())
+                    .with(bilagsnummer, wsYtelse.getBilagsnummer())
+                    .with(rettighetshaver, createAktoer(wsYtelse.getRettighetshaver()))
+                    .with(refundertForOrg, createAktoer(wsYtelse.getRefundertForOrg()));
 
-                hovedytelse.with(ytelseBruttoBeloep, aggregateBruttoBeloep(hovedytelse));
+                    hovedytelse = hovedytelse.with(ytelseBruttoBeloep, aggregateBruttoBeloep(hovedytelse));
 
-                hovedytelser.add(hovedytelse);
-            }
+                    hovedytelser.add(hovedytelse);
+                }
 
             return hovedytelser;
         }
@@ -125,14 +126,23 @@ public class Transformers {
     }
 
     private static List<Double> createSkatteListe(List<WSSkatt> skattListe) {
+        if(skattListe == null) {
+            return new ArrayList<>();
+        }
         return on(skattListe).map(SKATT_TRANSFORMER).collect();
     }
 
     private static List<Record<Trekk>> createTrekkliste(List<WSTrekk> trekkListe) {
+        if(trekkListe == null) {
+            return new ArrayList<>();
+        }
         return on(trekkListe).map(TREKK_TRANSFORMER).collect();
     }
 
     private static List<Record<Underytelse>> createUnderytelser(List<WSYtelseskomponent> ytelseskomponentListe) {
+        if(ytelseskomponentListe == null) {
+            return new ArrayList<>();
+        }
         return on(ytelseskomponentListe).map(UNDERYTELSE_TRANSFORMER).collect(reverseOrder(compareWith(Underytelse.ytelseBeloep)));
     }
 
@@ -145,12 +155,18 @@ public class Transformers {
     }
 
     private static Record<Konto> createKonto(WSBankkonto utbetaltTilKonto) {
+        if(utbetaltTilKonto == null) {
+            return null;
+        }
         return new Record<Konto>()
                 .with(kontonummer, utbetaltTilKonto.getKontonummer())
                 .with(kontotype, utbetaltTilKonto.getKontotype().getValue());
     }
 
     private static Record<Aktoer> createAktoer(WSAktoer utbetaltTil) {
+        if(utbetaltTil == null) {
+            return null;
+        }
         return new Record<Aktoer>()
                 .with(aktoerId, utbetaltTil.getAktoerId())
                 .with(navn, utbetaltTil.getNavn());

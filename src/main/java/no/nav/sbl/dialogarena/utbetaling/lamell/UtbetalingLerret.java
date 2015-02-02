@@ -7,6 +7,7 @@ import no.nav.modig.modia.lamell.Lerret;
 import no.nav.modig.wicket.events.annotations.RunOnEvents;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterFormPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.OppsummeringVM;
@@ -31,13 +32,14 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.modia.events.InternalEvents.FEED_ITEM_CLICKED;
 import static no.nav.modig.wicket.conditional.ConditionalUtils.visibleIf;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.*;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.FILTER_ENDRET;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.filter.FilterParametere.HOVEDYTELSER_ENDRET;
 
@@ -93,10 +95,10 @@ public final class UtbetalingLerret extends Lerret {
         feilmelding = (UtbetalingerMessagePanel) new UtbetalingerMessagePanel("feilmelding", FEILMELDING_DEFAULT_KEY, "-ikon-feil")
                 .setOutputMarkupPlaceholderTag(true).setVisibilityAllowed(false);
 
-//        List<Record<Hovedytelse>> ytelser = hentHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
-        filterParametere = new FilterParametere(new HashSet<String>());
+        List<Record<Hovedytelse>> ytelser = hentHovedytelseListe(fnr, defaultStartDato(), defaultSluttDato());
+        filterParametere = new FilterParametere(HovedytelseUtils.ytelseBeskrivelser(ytelser));
 
-        List<Record<Hovedytelse>> synligeUtbetalinger = on(hentHovedytelseListe()).filter(filterParametere).collect();
+        List<Record<Hovedytelse>> synligeUtbetalinger = on(ytelser).filter(filterParametere).collect();
         totalOppsummeringPanel = createTotalOppsummeringPanel(synligeUtbetalinger);
         utbetalingslisteContainer = (WebMarkupContainer) new WebMarkupContainer("utbetalingslisteContainer")
                 .add(createMaanedsPanelListe())
