@@ -26,46 +26,17 @@
                         <span>Mottatt/Sendt: {{formaterDato opprettetDato}}</span>
                         <span>Dette er sendt elektronisk i løsning som krever nivå 4 pålogging</span>
                     </div>
-
-                    {{#hvisLik meldingstype "SAMTALEREFERAT"}}
-                        <h2 class="meldingstypeheading">Samtalereferat</h2>
-                    {{/hvisLik}}
-
-                    {{#hvisLik meldingstype "SPORSMAL"}}
-                        <h2 class="meldingstypeheading">Spørsmål</h2>
-                    {{/hvisLik}}
-
-                    {{#hvisLik meldingstype "SVAR"}}
-                        <h2 class="meldingstypeheading">Svar</h2>
-                    {{/hvisLik}}
+                    <h2 class="meldingstypeheading">{{meldingstype}}</h2>
 
                     <div class="info">
                         <span class="bold">Henvendelse registrert av:</span>
-                        {{#hvisLik meldingstype "SAMTALEREFERAT"}}
-                            <span>{{navIdent}}</span>
-                            <br></br>
-                            <span class="bold">Type: samtalereferat (N)</span>
-                        {{/hvisLik}}
+                        <span>{{avBruker}}</span>
+                        <br></br>
+                        <span class="bold">{{typeBeskrivelse}}</span>
 
-                        {{#hvisLik meldingstype "SPORSMAL"}}
-                            <span>{{fnrBruker}}</span>
-                            <br></br>
-                            <span class="bold">Type: innkommende henvendelse (I)</span>
-                        {{/hvisLik}}
-
-                        {{#hvisLik meldingstype "SVAR"}}
-                            <span>{{navIdent}}</span>
-                            <br></br>
-                            <span class="bold">Type: utgående henvendelse (U)</span>
-                        {{/hvisLik}}
-
-                        {{#hvisLik temagruppe "FMLI"}}
-                            <span class="bold">Temagruppe: Familie</span>
-                        {{/hvisLik}}
-
-                        {{#hvisLik temagruppe "ARBD"}}
-                            <span class="bold">Temagruppe: Arbeid</span>
-                        {{/hvisLik}}
+                        {{#hvisIkkeTom temagruppeBeskrivelse}}
+                            <span class="bold">{{temagruppeBeskrivelse}}</span>
+                        {{/hvisIkkeTom}}
 
                         <span class="bold">Kanal: NAV_NO</span>
 

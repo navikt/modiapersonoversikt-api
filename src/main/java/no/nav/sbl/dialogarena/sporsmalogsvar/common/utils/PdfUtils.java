@@ -1,9 +1,12 @@
 package no.nav.sbl.dialogarena.sporsmalogsvar.common.utils;
 
 
-import com.github.jknack.handlebars.*;
+import com.github.jknack.handlebars.Context;
+import com.github.jknack.handlebars.Helper;
+import com.github.jknack.handlebars.Options;
 import no.nav.modig.core.exception.ApplicationException;
 import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Melding;
+import no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype;
 import no.nav.sbl.dialogarena.pdf.HandleBarHtmlGenerator;
 import no.nav.sbl.dialogarena.pdf.PDFFabrikk;
 import no.nav.sbl.dialogarena.sporsmalogsvar.lamell.MeldingVM;
@@ -11,6 +14,11 @@ import org.joda.time.DateTime;
 
 import java.io.IOException;
 import java.util.*;
+
+import static java.util.Arrays.asList;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SPORSMAL_SKRIFTLIG;
+import static no.nav.nav.sbl.dialogarena.modiabrukerdialog.api.domain.Meldingstype.SVAR_SBL_INNGAAENDE;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 
 public class PdfUtils {
 
@@ -77,27 +85,57 @@ public class PdfUtils {
     }
 
     private static final class PDFMelding {
-        public final String fnrBruker, meldingstype, navIdent, fritekst, kanal, temagruppe, journalfortTema, kontorsperretEnhet, markertSomFeilsendtAv;
+        public final String fnrBruker, meldingstype, typeBeskrivelse, temagruppeBeskrivelse, avBruker, fritekst, journalfortTema, kontorsperretEnhet, markertSomFeilsendtAv;
         public final DateTime opprettetDato, journalFortDato;
 
 
         public PDFMelding(Melding melding) {
             this.fnrBruker = melding.fnrBruker;
-            this.meldingstype = lagPDFMeldingstype(melding.meldingstype.name());
-            this.navIdent = melding.navIdent;
+            this.meldingstype = lagPDFMeldingstype(melding);
+            this.avBruker = erMeldingInngaaende(melding.meldingstype) ? melding.fnrBruker : melding.navIdent;
+            this.typeBeskrivelse = lagTypeBeskrivelse(melding);
+            this.temagruppeBeskrivelse = lagTemagruppeBeskrivelse(melding.temagruppe);
             this.fritekst = melding.fritekst;
             this.opprettetDato = melding.opprettetDato;
-            this.kanal = melding.kanal;
-            this.temagruppe = melding.temagruppe;
             this.journalFortDato = melding.journalfortDato;
             this.journalfortTema = melding.journalfortTema;
             this.kontorsperretEnhet = melding.kontorsperretEnhet;
             this.markertSomFeilsendtAv = melding.markertSomFeilsendtAv;
         }
 
-        private String lagPDFMeldingstype(String meldingstype) {
-            return meldingstype.substring(0, meldingstype.indexOf('_'));
+        private String lagPDFMeldingstype(Melding melding) {
+            return getMeldingsTypeMapping(melding).beskrivendeNavn;
         }
+
+        private boolean erMeldingInngaaende(Meldingstype meldingstype) {
+            return asList(SPORSMAL_SKRIFTLIG, SVAR_SBL_INNGAAENDE).contains(meldingstype);
+        }
+
+        private String lagTypeBeskrivelse(Melding melding) {
+            MeldingsTypeMapping typeMapping = getMeldingsTypeMapping(melding);
+
+            if (typeMapping == MeldingsTypeMapping.SAMTALEREFERAT) {
+                return "Type: samtalereferat (N)";
+            }
+            if (erMeldingInngaaende(melding.meldingstype)) {
+                return "Type: innkommende henvendelse (I)";
+            } else {
+                return "Type: utgående henvendelse (U)";
+            }
+        }
+
+        private String lagTemagruppeBeskrivelse(String temagruppe) {
+            if (isBlank(temagruppe)) {
+                return "";
+            }
+            return "Temagruppe: " + TemagruppeMapping.valueOf(temagruppe).beskrivendeNavn;
+        }
+    }
+
+    private static MeldingsTypeMapping getMeldingsTypeMapping(Melding melding) {
+        String meldingstype = melding.meldingstype.name();
+        String type = meldingstype.substring(0, meldingstype.indexOf('_'));
+        return MeldingsTypeMapping.valueOf(type);
     }
 
     static class PdfMeldingerWrapper {
@@ -106,6 +144,33 @@ public class PdfUtils {
 
         PdfMeldingerWrapper(List<PDFMelding> pdfMeldinger) {
             this.pdfMeldinger = pdfMeldinger;
+        }
+    }
+
+    static enum TemagruppeMapping {
+        ARBD("Arbeid"),
+        FMLI("Familie"),
+        HJLPM("Hjelpemidler"),
+        BIL("Hjelpemidler Bil"),
+        ORT_HJE("Helsetjenester og ortopediske hjelpemidler"),
+        OVRG("Øvrig");
+
+        public final String beskrivendeNavn;
+
+        TemagruppeMapping(String beskrivendeNavn) {
+            this.beskrivendeNavn = beskrivendeNavn;
+        }
+    }
+
+    static enum MeldingsTypeMapping {
+        SAMTALEREFERAT("Samtalereferat"),
+        SPORSMAL("Spørsmål"),
+        SVAR("Svar");
+
+        public final String beskrivendeNavn;
+
+        MeldingsTypeMapping(String beskrivendeNavn) {
+            this.beskrivendeNavn = beskrivendeNavn;
         }
     }
 }
