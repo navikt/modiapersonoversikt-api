@@ -15,10 +15,9 @@ import static org.joda.time.DateTime.now;
 public class WSUtbetalingTestData {
 
     public static List<WSUtbetaling> getWsUtbetalinger(String fNr, DateTime startDato, DateTime sluttDato) {
-        List<WSUtbetaling> utbetalinger = asList(
-            createOlaNordmannUtbetaling(),
-            createOsloKommuneUtbetaling()
-        );
+        List<WSUtbetaling> utbetalinger = new ArrayList<>();
+        utbetalinger.add(createOlaNordmannUtbetaling());
+        utbetalinger.add(createOsloKommuneUtbetaling());
         utbetalinger.addAll(createKariNordmannUtbetaling());
 
         final Interval periode = new Interval(startDato, sluttDato);
@@ -72,7 +71,7 @@ public class WSUtbetalingTestData {
                         new WSYtelse()
                                 .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
                                 .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
-                                .withYtelsesperiode(new WSPeriode().withFom(now().plusMonths(1)).withTom(now().minusYears(1).plusMonths(2)))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(1)).withTom(now().minusYears(1).plusMonths(2)))
                                 .withYtelseskomponentListe(
                                         new WSYtelseskomponent()
                                                 .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
@@ -88,7 +87,7 @@ public class WSUtbetalingTestData {
                         new WSYtelse()
                                 .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
                                 .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
-                                .withYtelsesperiode(new WSPeriode().withFom(now().plusMonths(3)).withTom(now().minusYears(1).plusMonths(4)))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).plusMonths(3)).withTom(now().minusYears(1).plusMonths(4)))
                                 .withYtelseskomponentListe(
                                         new WSYtelseskomponent()
                                                 .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
