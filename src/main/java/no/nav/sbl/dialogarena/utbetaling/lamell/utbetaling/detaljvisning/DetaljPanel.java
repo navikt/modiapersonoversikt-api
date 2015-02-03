@@ -24,7 +24,6 @@ public class DetaljPanel extends Panel {
     public DetaljPanel(String id, UtbetalingVM utbetalingVM) {
         super(id);
         setMarkupId("detaljpanel-" + utbetalingVM.getUtbetalingId());
-        List<Record<Underytelse>> underytelser = utbetalingVM.getUnderytelser();
         IModel<String> melding = Model.of(utbetalingVM.getMelding());
 
         List<YtelseVM> ytelseVMer = new ArrayList<>();
