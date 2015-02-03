@@ -87,7 +87,11 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
         return getUtbetalingId();
     }
 
-    private String formaterBelop(double nettoBelop) {
+    private String formaterBelop(Double nettoBelop) {
+        if(nettoBelop == null) {
+            return "";
+        }
+        
         NumberFormat nf = NumberFormat.getNumberInstance(Locale.getDefault());
         nf.setGroupingUsed(true);
         nf.setMinimumFractionDigits(2);
