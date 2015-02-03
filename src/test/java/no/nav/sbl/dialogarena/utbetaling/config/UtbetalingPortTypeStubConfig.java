@@ -24,7 +24,11 @@ public class UtbetalingPortTypeStubConfig {
 
             @Override
             public WSHentUtbetalingsinformasjonResponse hentUtbetalingsinformasjon(WSHentUtbetalingsinformasjonRequest request) throws HentUtbetalingsinformasjonPeriodeIkkeGyldig {
-                return new WSHentUtbetalingsinformasjonResponse().withUtbetalingListe(getWsUtbetalinger(FNR, request.getPeriode().getFom(), request.getPeriode().getTom()));
+                String ident = request.getId().getIdent();
+                if(ident == null) {
+                    ident = FNR;
+                }
+                return new WSHentUtbetalingsinformasjonResponse().withUtbetalingListe(getWsUtbetalinger(ident, request.getPeriode().getFom(), request.getPeriode().getTom()));
             }
         };
     }
