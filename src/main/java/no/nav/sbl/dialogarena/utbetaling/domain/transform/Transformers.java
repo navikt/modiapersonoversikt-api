@@ -57,9 +57,9 @@ public class Transformers {
         @Override
         public Record<Underytelse> transform(WSYtelseskomponent wsYtelseskomponent) {
             return new Record<Underytelse>()
-                    .with(Underytelse.ytelsesType, wsYtelseskomponent.getYtelseskomponentstype().getValue())
+                    .with(Underytelse.ytelsesType, wsYtelseskomponent.getYtelseskomponentstype() != null ? wsYtelseskomponent.getYtelseskomponentstype().getValue() : "")
                     .with(Underytelse.satsBeloep, wsYtelseskomponent.getSatsbeloep())
-                    .with(Underytelse.satsType, wsYtelseskomponent.getSatstype().getValue())
+                    .with(Underytelse.satsType, wsYtelseskomponent.getSatstype() != null ? wsYtelseskomponent.getSatstype().getValue() : "")
                     .with(Underytelse.satsAntall, wsYtelseskomponent.getSatsantall())
                     .with(Underytelse.ytelseBeloep, wsYtelseskomponent.getYtelseskomponentBeloep());
         }

@@ -43,7 +43,10 @@ public class UtbetalingVM {
     }
 
     public String getKontonr() {
-        return ytelse.get(Hovedytelse.utbetaltTilKonto).get(Konto.kontonummer);
+        if(ytelse.get(Hovedytelse.utbetaltTilKonto).get(Konto.kontonummer) != null) {
+            return ytelse.get(Hovedytelse.utbetaltTilKonto).get(Konto.kontonummer);
+        }
+        return ytelse.get(Hovedytelse.utbetaltTilKonto).get(Konto.kontotype);
     }
 
     public List<Record<Underytelse>> getUnderytelser() {

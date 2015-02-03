@@ -5,52 +5,21 @@ import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
+import static java.util.Arrays.asList;
 import static no.nav.modig.lang.collections.IterUtils.on;
 import static org.joda.time.DateTime.now;
 
 
 public class WSUtbetalingTestData {
 
-    public static final String KONTO_NR = "***REMOVED***";
-    public static final String NAVN = "Kjell Olsen";
-    public static final String UTBETALT = "UTBETALT";
-    public static final String MOTTATT_KONTOFORER = "MOTTATT KONTOFØRER";
-    public static final String STATUS_KODE = "0018";
-    public static final Double BELOP = 1000.0;
-    public static final Double SKATTE_PROSENT = -0.35;
-    public static final String GRUNNBELOP = "Grunnbeløp";
-    public static final String FORSKUDDSTREKK_SKATT = "Forskuddstrekk skatt";
-    public static final String FORSKUDDSTREKK = "Forskuddstrekk";
-    public static final String SKATT = "Skatt";
-    public static final String DAGPENGER = "Dagpenger";
-    public static final String FORELDREPENGER = "Foreldrepenger";
-    public static final String VALUTA = "NOK";
-    public static final DateTime forsteDesember = new DateTime(2014, 12, 1, 12, 0);
-    public static final String SPESIFIKASJON = "";
-    public static final String SPESIFIKASJON_1 = "Ekstra detaljinfo";
-    public static final String UFORE = "UFØRE";
-    public static final String TILLEGGSYTELSE = "TILLEGGSYTELSE";
-    public static final String TILLEGGSYTELSE_TILBAKEBETALT = "Tilleggsytelse tilbakebetalt";
-    public static final String YTELSE = "YTELSE";
-    private static String fnr;
-
     public static List<WSUtbetaling> getWsUtbetalinger(String fNr, DateTime startDato, DateTime sluttDato) {
-        fnr = fNr;
-        List<WSUtbetaling> utbetalinger = new ArrayList<>();
-        utbetalinger.add(createUtbetaling1());
-        utbetalinger.add(createUtbetaling2());
-        utbetalinger.add(createUtbetaling3());
-        utbetalinger.add(createUtbetaling4());
-        utbetalinger.add(createUtbetaling5());
-        utbetalinger.add(createUtbetaling6());
-        utbetalinger.add(createUtbetaling7());
-        utbetalinger.add(createUtbetaling8());
-        utbetalinger.add(createUtbetaling9());
-        utbetalinger.add(createUtbetaling10());
-        utbetalinger.add(createUtbetaling11());
+        List<WSUtbetaling> utbetalinger = asList(
+            createOlaNordmannUtbetaling(),
+            createOsloKommuneUtbetaling()
+        );
+        utbetalinger.addAll(createKariNordmannUtbetaling());
 
         final Interval periode = new Interval(startDato, sluttDato);
         Predicate<WSUtbetaling> innenPeriode = new Predicate<WSUtbetaling>() {
@@ -61,187 +30,178 @@ public class WSUtbetalingTestData {
         return on(utbetalinger).filter(innenPeriode).collect();
     }
 
-    public static WSUtbetaling createUtbetaling1() {
-        double trekk = BELOP * SKATTE_PROSENT;
-        Double belop = BELOP;
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-
-        utbetaling
-                .withUtbetalingNettobeloep((2 * belop + trekk))
-                .withUtbetalingsmelding("Dette er bilagsmelding1, Dette er bilagsmelding 2")
-                .withYtelseListe(createUnderytelse("Arbeidsavklaringspenger", 1000.0, "Grunnlag"))
-                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
-                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
-                .withUtbetalingsdato(now());
-        return utbetaling;
+    private static List<WSUtbetaling> createKariNordmannUtbetaling() {
+        return asList(new WSUtbetaling()
+                .withPosteringsdato(now().minusYears(1))
+                .withUtbetaltTil(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                .withUtbetalingNettobeloep(19724.00)
+                .withUtbetalingsmelding("Alderspensjon med 3 mnd etterbetaling")
+                .withYtelseListe(
+                        new WSYtelse()
+                                .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                                .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).minusMonths(1)).withTom(now().minusYears(1)))
+                                .withYtelseskomponentListe(
+                                        new WSYtelseskomponent()
+                                                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
+                                                .withYtelseskomponentBeloep(5200.00),
+                                        new WSYtelseskomponent()
+                                                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
+                                                .withYtelseskomponentBeloep(1456.00))
+                                .withSumYtelseskomponenter(6656.00)
+                                .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                                .withSumTrekk(-1500.00)
+                                .withYtelseNettobeloep(5156.00)
+                                .withBilagsnummer("***REMOVED***"),
+                        new WSYtelse()
+                                .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                                .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1)).withTom(now().minusYears(1).plusMonths(1)))
+                                .withYtelseskomponentListe(
+                                        new WSYtelseskomponent()
+                                                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
+                                                .withYtelseskomponentBeloep(5200.00),
+                                        new WSYtelseskomponent()
+                                                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
+                                                .withYtelseskomponentBeloep(1456.00))
+                                .withSumYtelseskomponenter(6656.00)
+                                .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                                .withSumTrekk(-1500.00)
+                                .withYtelseNettobeloep(5156.00)
+                                .withBilagsnummer("***REMOVED***"),
+                        new WSYtelse()
+                                .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                                .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().plusMonths(1)).withTom(now().minusYears(1).plusMonths(2)))
+                                .withYtelseskomponentListe(
+                                        new WSYtelseskomponent()
+                                                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
+                                                .withYtelseskomponentBeloep(5200.00),
+                                        new WSYtelseskomponent()
+                                                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
+                                                .withYtelseskomponentBeloep(1456.00))
+                                .withSumYtelseskomponenter(6656.00)
+                                .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                                .withSumTrekk(-1500.00)
+                                .withYtelseNettobeloep(5156.00)
+                                .withBilagsnummer("***REMOVED***"),
+                        new WSYtelse()
+                                .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                                .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                                .withYtelsesperiode(new WSPeriode().withFom(now().plusMonths(3)).withTom(now().minusYears(1).plusMonths(4)))
+                                .withYtelseskomponentListe(
+                                        new WSYtelseskomponent()
+                                                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
+                                                .withYtelseskomponentBeloep(5200.00),
+                                        new WSYtelseskomponent()
+                                                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
+                                                .withYtelseskomponentBeloep(1456.00))
+                                .withSumYtelseskomponenter(6656.00)
+                                .withTrekkListe(new WSTrekk().withTrekkstype(new WSTrekktyper().withValue("Kreditorsjekk")).withTrekkbeloep(-900.00).withKreditor("***REMOVED***"))
+                                .withSumTrekk(-900.00)
+                                .withSkattListe(new WSSkatt().withSkattebeloep(-1500.00))
+                                .withSumTrekk(-1500.00)
+                                .withYtelseNettobeloep(4256.00)
+                                .withBilagsnummer("***REMOVED***"))
+                .withUtbetalingsdato(now().minusYears(1).plusMonths(2))
+                .withForfallsdato(now().minusYears(1).plusMonths(2))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("***REMOVED******REMOVED***896").withKontotype(new WSBankkontotyper().withValue("Konto - Utland")))
+                .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Bankkonto"))
+                .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Utbetalt")),
+        new WSUtbetaling()
+            .withPosteringsdato(now().minusYears(1).minusMonths(2))
+                .withUtbetaltTil(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                .withUtbetalingNettobeloep(4389.00)
+                .withUtbetalingsmelding("Alderspensjon for desember")
+                .withYtelseListe(
+                        new WSYtelse()
+                        .withYtelsestype(new WSYtelsestyper().withValue("Alderspensjon"))
+                        .withRettighetshaver(new WSPerson().withAktoerId("33333333333").withNavn("Kari Nordmann Utbetaling 3"))
+                        .withYtelsesperiode(new WSPeriode().withFom(now().minusYears(1).minusMonths(3)).withTom(now().minusYears(1).minusMonths(2)))
+                        .withYtelseskomponentListe(
+                                new WSYtelseskomponent()
+                                    .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Grunnpensjon"))
+                                    .withYtelseskomponentBeloep(5200.00),
+                                new WSYtelseskomponent()
+                                    .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Særtillegg"))
+                                    .withYtelseskomponentBeloep(1456.00))
+                        .withSumYtelseskomponenter(6656.00)
+                        .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
+                        .withSumSkatt(-2267.00)
+                        .withYtelseNettobeloep(4389.00)
+                        .withBilagsnummer("***REMOVED***"))
+                .withForfallsdato(now().minusYears(1).minusMonths(2))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontonummer("***REMOVED******REMOVED***896").withKontotype(new WSBankkontotyper().withValue("Konto - Utland")))
+                .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Bankkonto"))
+                .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Under saksbehandling"))
+        );
     }
 
-    private static WSBankkonto createKonto(String kontonummer) {
-        return new WSBankkonto()
-                .withKontonummer(kontonummer)
-                .withKontotype(new WSBankkontotyper().withValue("Privat"));
+    private static WSUtbetaling createOsloKommuneUtbetaling() {
+        return new WSUtbetaling()
+                .withPosteringsdato(now().minusDays(19))
+                .withUtbetaltTil(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("Oslo kommune Utbetaling 4"))
+                .withUtbetalingNettobeloep(11833.00)
+                .withUtbetalingsmelding("Sykepenger")
+                .withYtelseListe(
+                        new WSYtelse()
+                        .withYtelsestype(new WSYtelsestyper().withValue("Sykepenger"))
+                        .withRettighetshaver(new WSPerson().withAktoerId("***REMOVED***").withNavn("Per Pettersen Eksempel 4"))
+                        .withRefundertForOrg(new WSOrganisasjon().withAktoerId("***REMOVED***").withNavn("Plan- og bygningsetaten"))
+                        .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(2).minusDays(15)).withTom(now().minusMonths(1).minusDays(15)))
+                        .withYtelseskomponentListe(
+                                new WSYtelseskomponent()
+                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Sykepenger, arbeidstakere"))
+                                        .withYtelseskomponentBeloep(15000.00))
+                        .withSumYtelseskomponenter(15000.00)
+                        .withTrekkListe(
+                                new WSTrekk()
+                                        .withTrekkstype(new WSTrekktyper().withValue("Kreditortrekk"))
+                                        .withTrekkbeloep(-900.00)
+                                        .withKreditor("***REMOVED***"))
+                        .withSumTrekk(-900.00)
+                        .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
+                        .withSumSkatt(-2267.00)
+                        .withYtelseNettobeloep(11833.00)
+                        .withBilagsnummer("***REMOVED***"))
+                .withUtbetalingsdato(now().minusMonths(2))
+                .withUtbetaltTilKonto(new WSBankkonto().withKontotype(new WSBankkontotyper().withValue("Konto - Norge")).withKontonummer("22222222222"))
+                .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Bankkonto"))
+                .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Utbetalt"))
+
+                ;
     }
 
-    private static WSAktoer createPersonAktoer(String aktoerNavn) {
-        return new WSPerson()
-                .withAktoerId("***REMOVED***")
-                .withNavn(aktoerNavn);
-    }
-
-    private static WSYtelse createUnderytelse(String ytelseType, Double sumYtelseKomponenter, String komponentType) {
-        return createUnderytelse(ytelseType, now().minusMonths(1), now(), sumYtelseKomponenter, komponentType);
-    }
-
-    private static WSYtelse createUnderytelse(String ytelseType, DateTime fom, DateTime tom, Double sumYtelsekomponenter, String komponentType) {
-        return new WSYtelse()
-                .withSkattListe(new WSSkatt().withSkattebeloep(10.0))
-                .withSumSkatt(10.0)
-                .withTrekkListe(new WSTrekk().withTrekkbeloep(5.0).withTrekkstype(new WSTrekktyper().withValue("Tvunget trekk")).withKreditor("Kreditor AS"))
-                .withSumTrekk(5.0)
-                .withYtelseskomponentListe(createYtelseKomponent(komponentType))
-                .withSumYtelseskomponenter(sumYtelsekomponenter)
-                .withYtelsestype(new WSYtelsestyper().withValue(ytelseType))
-                .withYtelsesperiode(new WSPeriode().withFom(fom).withTom(tom));
-    }
-
-    private static WSYtelseskomponent createYtelseKomponent(String komponentType) {
-        return new WSYtelseskomponent()
-                .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue(komponentType))
-                .withSatsantall(1.0)
-                .withSatsbeloep(100D)
-                .withSatstype(new WSSatstyper().withValue("Trekk"));
-
-    }
-
-    public static WSUtbetaling createUtbetaling2() {
-        double belop0 = BELOP * 1.5;
-        double trekk = SKATTE_PROSENT * BELOP * 2;
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling
-                .withUtbetalingNettobeloep((2 * belop0 + trekk))
-                .withUtbetalingsmelding("bilag2")
-                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
-                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
-                .withYtelseListe(createUnderytelse("Sykepenger", 1000.0, "Grunnlag"))
-                .withUtbetalingsdato(now());
-
-        return utbetaling;
-    }
-
-    public static WSUtbetaling createUtbetaling3() {
-        double trekk = SKATTE_PROSENT * BELOP;
-
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling
-                .withUtbetalingNettobeloep((2 * BELOP + trekk))
-                .withUtbetalingsmelding("bilag1")
-                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
-                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
-                .withYtelseListe(createUnderytelse("Dagpenger", 10200.0, "Grunnlag"))
-                .withUtbetalingsdato(now().minusMonths(1));
-        return utbetaling;
-    }
-
-    public static WSUtbetaling createUtbetaling4() {
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling
-                .withUtbetalingNettobeloep(BELOP)
-                .withUtbetalingsmelding("bilag2")
-                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
-                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
-                .withYtelseListe(createUnderytelse("Sykepenger", 2002.0, "Grunnlag"))
-                .withUtbetalingsdato(now().minusMonths(1));
-        return utbetaling;
-    }
-
-    public static WSUtbetaling createUtbetaling5() {
-        double trekk = SKATTE_PROSENT * BELOP;
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling
-                .withUtbetalingNettobeloep(trekk)
-                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
-                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
-                .withYtelseListe(createUnderytelse("Sykepenger", 1000.0, "Grunnlag"))
-                .withUtbetalingsdato(now().minusMonths(1).minusDays(1));
-        return utbetaling;
-    }
-
-    public static WSUtbetaling createUtbetaling6() {
-        double trekk = SKATTE_PROSENT * BELOP;
-        Double belop = BELOP * 3;
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling
-                .withUtbetalingNettobeloep((2 * belop + trekk))
-                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
-                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
-                .withYtelseListe(createUnderytelse("Arbeidsavklaringspenger", 1000.0, "Grunnlag"))
-                .withUtbetalingsdato(now().minusMonths(2).minusDays(2));
-        return utbetaling;
-    }
-    public static WSUtbetaling createUtbetaling7() {
-        double trekk = SKATTE_PROSENT * BELOP;
-        Double belop = BELOP;
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling
-                .withUtbetalingNettobeloep((2 * belop + trekk))
-                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
-                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
-                .withYtelseListe(createUnderytelse("Dagpenger", 1000.0, "Grunnlag"))
-                .withUtbetalingsmelding("bilag22")
-                .withUtbetalingsdato(now().minusMonths(2));
-        return utbetaling;
-    }
-    public static WSUtbetaling createUtbetaling8() {
-        double utbetalt = BELOP * 0.7;
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling
-                .withUtbetalingNettobeloep(utbetalt)
-                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
-                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
-                .withYtelseListe(createUnderytelse("Arbeidsavklaringspenger", 1000.0, "Grunnlag"))
-                .withUtbetalingsmelding("bilag2")
-                .withUtbetalingsdato(now().minusMonths(2).minusDays(10));
-        return utbetaling;
-    }
-
-    public static WSUtbetaling createUtbetaling9() {
-        double utbetalt = BELOP * 0.7;
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling
-                .withUtbetalingNettobeloep(utbetalt)
-                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
-                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
-                .withYtelseListe(createUnderytelse("AAP", 1000.0, "Grunnlag"))
-                .withUtbetalingsmelding("bilag1")
-                .withUtbetalingsdato(now().minusMonths(4));
-        return utbetaling;
-    }
-
-    public static WSUtbetaling createUtbetaling10() {
-        double utbetalt = BELOP * 0.87;
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling
-                .withUtbetalingNettobeloep(utbetalt)
-                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
-                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
-                .withYtelseListe(createUnderytelse("Dagpenger", 200.0, "Etterbetalt"))
-                .withUtbetalingsmelding("bilag0")
-                .withUtbetalingsdato(now().minusMonths(4).plusDays(1));
-        return utbetaling;
-    }
-
-    public static WSUtbetaling createUtbetaling11() {
-        double utbetalt = BELOP * 0.45;
-        WSUtbetaling utbetaling = new WSUtbetaling();
-        utbetaling
-                .withUtbetalingNettobeloep(utbetalt)
-                .withUtbetaltTil(createPersonAktoer("Ola Normann"))
-                .withUtbetaltTilKonto(createKonto("***REMOVED***"))
-                .withYtelseListe(createUnderytelse("Arbeidsavklaringspenger", 1000.0, "Grunnlag"), createUnderytelse("Dagpenger", 200.0, "Etterbetalt"))
-                .withUtbetalingsmelding("bilag1")
-                .withUtbetalingsdato(forsteDesember);
-        return utbetaling;
+    private static WSUtbetaling createOlaNordmannUtbetaling() {
+        return new WSUtbetaling()
+                        .withPosteringsdato(now().minusMonths(1))
+                        .withUtbetaltTil(new WSPerson()
+                                .withAktoerId("22222222222")
+                                .withNavn("Ola Nordmann Utbetaling 2"))
+                        .withUtbetalingNettobeloep(19152.75)
+                        .withUtbetalingsmelding("Utbetalt dagpenger")
+                        .withYtelseListe(
+                                new WSYtelse()
+                                        .withYtelsestype(new WSYtelsestyper().withValue("Dagpenger"))
+                                        .withRettighetshaver(new WSPerson()
+                                                .withAktoerId("22222222222")
+                                                .withNavn("Ola Nordmann Utbetaling 2"))
+                                        .withYtelsesperiode(new WSPeriode().withFom(now().minusMonths(3)).withTom(now().minusMonths(2)))
+                                        .withYtelseskomponentListe(
+                                                new WSYtelseskomponent()
+                                                        .withYtelseskomponentstype(new WSYtelseskomponentstyper().withValue("Dagpenger"))
+                                                        .withSatsbeloep(389.45)
+                                                        .withSatstype(new WSSatstyper().withValue("DAG"))
+                                                        .withSatsantall(55.0)
+                                                        .withYtelseskomponentBeloep(21419.75))
+                                        .withSumYtelseskomponenter(21419.75)
+                                        .withSkattListe(new WSSkatt().withSkattebeloep(-2267.00))
+                                        .withSumSkatt(-2267.00)
+                                        .withYtelseNettobeloep(19152.75)
+                                        .withBilagsnummer("30742-5731"))
+                        .withForfallsdato(now().minusMonths(1).plusDays(14))
+                        .withUtbetaltTilKonto(new WSBankkonto().withKontotype(new WSBankkontotyper().withValue("Utbetalingskort - Norge")))
+                        .withUtbetalingsmetode(new WSUtbetalingsmetodetyper().withValue("Utbetalingskort"))
+                        .withUtbetalingsstatus(new WSUtbetalingsstatustyper().withValue("Sendt kontofører, avventer forfallsdato"));
     }
 }
