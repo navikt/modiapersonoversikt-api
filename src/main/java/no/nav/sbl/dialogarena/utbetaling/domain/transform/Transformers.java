@@ -101,6 +101,7 @@ public class Transformers {
                     hovedytelser.add(hovedytelse);
                 }
 
+
             return hovedytelser;
         }
     };

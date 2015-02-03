@@ -77,6 +77,9 @@ public class OppsummeringVMTest {
                 .with(Hovedytelse.ytelsesperiode, new Interval(now(), now()))
                 .with(Hovedytelse.underytelseListe, asList(ytelse1))
                 .with(Hovedytelse.sumSkatt, skattTrekkListe.get(0))
+                .with(Hovedytelse.ytelseNettoBeloep, 0d)
+                .with(Hovedytelse.sumTrekk, 0d)
+                .with(Hovedytelse.ytelseBruttoBeloep, 0d)
                 .with(Hovedytelse.skattListe, skattTrekkListe);
 
         Record<Hovedytelse> dagpenger1 = new Record<Hovedytelse>()
@@ -86,12 +89,18 @@ public class OppsummeringVMTest {
                 .with(Hovedytelse.ytelsesperiode, new Interval(now(), now()))
                 .with(Hovedytelse.underytelseListe, asList(ytelse2))
                 .with(Hovedytelse.skattListe, skattTrekkListe)
+                .with(Hovedytelse.ytelseNettoBeloep, 0d)
+                .with(Hovedytelse.sumTrekk, 0d)
+                .with(Hovedytelse.ytelseBruttoBeloep, 0d)
                 .with(Hovedytelse.sumSkatt, skattTrekkListe.get(0));
 
         Record<Hovedytelse> dagpenger2 = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
                 .with(Hovedytelse.ytelse, "Helseprodukter")
                 .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.ytelseNettoBeloep, 0d)
+                .with(Hovedytelse.sumTrekk, 0d)
+                .with(Hovedytelse.ytelseBruttoBeloep, 0d)
                 .with(Hovedytelse.ytelsesperiode, new Interval(now(), now()))
                 .with(Hovedytelse.underytelseListe, asList(ytelse2));
 
@@ -103,13 +112,11 @@ public class OppsummeringVMTest {
         List<Double> belop = asList(1000.0, 500.0, -400.0);
         assertThat(vm.hovedytelser.size(), is(2));
         assertThat(vm.hovedytelser.get(0).getHovedYtelsesBeskrivelse(), is("Dagpenger"));
-        assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().size(), is(3));
+        assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().size(), is(2));
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getBelop(), is(belop.get(0)));
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(0).getUnderYtelsesBeskrivelse(), is(navn.get(0)));
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(1).getBelop(), is(belop.get(1)));
         assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(1).getUnderYtelsesBeskrivelse(), is(navn.get(1)));
-        assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(2).getBelop(), is(belop.get(2)));
-        assertThat(vm.hovedytelser.get(0).getUnderYtelsesBeskrivelser().get(2).getUnderYtelsesBeskrivelse(), is(navn.get(2)));
         assertThat(vm.hovedytelser.get(1).getHovedYtelsesBeskrivelse(), is("Helseprodukter"));
         assertThat(vm.hovedytelser.get(1).getUnderYtelsesBeskrivelser().size(), is(1));
         assertThat(vm.hovedytelser.get(1).getUnderYtelsesBeskrivelser().get(0).getUnderYtelsesBeskrivelse(), is(navn.get(1)));
@@ -143,6 +150,9 @@ public class OppsummeringVMTest {
                 .with(Hovedytelse.ytelse, "Våren")
                 .with(Hovedytelse.underytelseListe, underytelser)
                 .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.ytelseNettoBeloep, 0d)
+                .with(Hovedytelse.sumTrekk, 0d)
+                .with(Hovedytelse.ytelseBruttoBeloep, 0d)
                 .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(14), now()));
 
         List<Record<Hovedytelse>> utbetalinger = asList(hovedytelse);
@@ -162,6 +172,9 @@ public class OppsummeringVMTest {
                 .with(Hovedytelse.ytelse, "Kjeks")
                 .with(Hovedytelse.underytelseListe, asList(getUnderytelse()))
                 .with(Hovedytelse.utbetalingsDato, dato)
+                .with(Hovedytelse.ytelseNettoBeloep, 0d)
+                .with(Hovedytelse.sumTrekk, 0d)
+                .with(Hovedytelse.ytelseBruttoBeloep, 0d)
                 .with(Hovedytelse.ytelsesperiode, new Interval(dato.minusDays(14), dato));
     }
 
