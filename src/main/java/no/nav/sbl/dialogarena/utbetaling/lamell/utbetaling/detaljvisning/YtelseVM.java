@@ -1,8 +1,10 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.detaljvisning;
 
+import java.io.Serializable;
+
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 
-public class YtelseVM {
+public class YtelseVM implements Serializable {
 
     private final String ytelse;
     private final String sats;
