@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Collections.reverseOrder;
@@ -29,21 +28,14 @@ import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.mottaker
 public class Transformers {
     private static final Logger LOGGER = LoggerFactory.getLogger(Transformers.class);
 
-    public static Comparator<Record<Underytelse>> UNDERYTELSE_DESC_BELOP = new Comparator<Record<Underytelse>>() {
-        @Override
-        public int compare(Record<Underytelse> o1, Record<Underytelse> o2) {
-            return o2.get(Underytelse.ytelseBeloep).compareTo(o1.get(Underytelse.ytelseBeloep));
-        }
-    };
-
-    public static Transformer<WSSkatt, Double> SKATT_TRANSFORMER = new Transformer<WSSkatt, Double>() {
+    public static final Transformer<WSSkatt, Double> SKATT_TRANSFORMER = new Transformer<WSSkatt, Double>() {
         @Override
         public Double transform(WSSkatt wsSkatt) {
             return wsSkatt.getSkattebeloep();
         }
     };
 
-    public static Transformer<WSTrekk, Record<Trekk>> TREKK_TRANSFORMER = new Transformer<WSTrekk, Record<Trekk>>() {
+    public static final Transformer<WSTrekk, Record<Trekk>> TREKK_TRANSFORMER = new Transformer<WSTrekk, Record<Trekk>>() {
         @Override
         public Record<Trekk> transform(WSTrekk wsTrekk) {
             return new Record<Trekk>()
@@ -53,7 +45,7 @@ public class Transformers {
         }
     };
 
-    public static Transformer<WSYtelseskomponent, Record<Underytelse>> UNDERYTELSE_TRANSFORMER = new Transformer<WSYtelseskomponent, Record<Underytelse>>() {
+    public static final Transformer<WSYtelseskomponent, Record<Underytelse>> UNDERYTELSE_TRANSFORMER = new Transformer<WSYtelseskomponent, Record<Underytelse>>() {
         @Override
         public Record<Underytelse> transform(WSYtelseskomponent wsYtelseskomponent) {
             return new Record<Underytelse>()
@@ -66,7 +58,7 @@ public class Transformers {
     };
 
 
-    public static Transformer<WSUtbetaling, List<Record<Hovedytelse>>> toHovedytelse = new Transformer<WSUtbetaling, List<Record<Hovedytelse>>>() {
+    public static final Transformer<WSUtbetaling, List<Record<Hovedytelse>>> TO_HOVEDYTELSE = new Transformer<WSUtbetaling, List<Record<Hovedytelse>>>() {
         @Override
         public List<Record<Hovedytelse>> transform(WSUtbetaling wsUtbetaling) {
             List<Record<Hovedytelse>> hovedytelser = new ArrayList<>();
@@ -124,8 +116,8 @@ public class Transformers {
 
     private static Double aggregateBruttoBeloep(Record<Hovedytelse> hovedytelse) {
         Double netto = hovedytelse.get(Hovedytelse.ytelseNettoBeloep);
-        Double trekk = -hovedytelse.get(Hovedytelse.sumTrekk);
-        Double skatt = -hovedytelse.get(Hovedytelse.sumSkatt);
+        Double trekk = hovedytelse.get(Hovedytelse.sumTrekk);
+        Double skatt = hovedytelse.get(Hovedytelse.sumSkatt);
 
 
         if(netto == null) {
@@ -140,7 +132,7 @@ public class Transformers {
             skatt = 0.0;
         }
 
-        return netto + trekk + skatt;
+        return netto + (-trekk) + (-skatt);
     }
 
     private static List<Double> createSkatteListe(List<WSSkatt> skattListe) {

@@ -8,7 +8,6 @@ import org.apache.commons.collections15.Predicate;
 import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
-import org.joda.time.YearMonth;
 
 import java.util.*;
 
@@ -115,35 +114,6 @@ public class HovedytelseUtils {
             }
         }
         return utbetalingerSplittetPaaMaaned;
-    }
-
-
-    private static ReduceFunction<Record<Hovedytelse>, Map<YearMonth, List<Record<Hovedytelse>>>> toYearMonthMap() {
-        return new ReduceFunction<Record<Hovedytelse>, Map<YearMonth, List<Record<Hovedytelse>>>>() {
-            @Override
-            public Map<YearMonth, List<Record<Hovedytelse>>> reduce(Map<YearMonth, List<Record<Hovedytelse>>> accumulator, Record<Hovedytelse> newHovedytelse) {
-                int year = newHovedytelse.get(Hovedytelse.utbetalingsDato).getYear();
-                int monthOfYear = newHovedytelse.get(Hovedytelse.utbetalingsDato).getMonthOfYear();
-                YearMonth yearMonth = new YearMonth(year, monthOfYear);
-
-                if(accumulator.containsKey(yearMonth)) {
-                    List<Record<Hovedytelse>> tempRecord = accumulator.get(year);
-                    tempRecord.add(newHovedytelse);
-                    accumulator.put(yearMonth, tempRecord);
-                } else {
-                    ArrayList<Record<Hovedytelse>> hovedytelseListe = new ArrayList<>();
-                    hovedytelseListe.add(newHovedytelse);
-                    accumulator.put(yearMonth, hovedytelseListe);
-                }
-
-                return accumulator;
-            }
-
-            @Override
-            public Map<YearMonth, List<Record<Hovedytelse>>> identity() {
-                return new HashMap<>();
-            }
-        };
     }
 
     private static Predicate<DateTime> isWithinRange(final Interval intervall) {

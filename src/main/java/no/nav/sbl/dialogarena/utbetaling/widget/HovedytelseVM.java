@@ -6,6 +6,7 @@ import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
+import org.joda.time.Interval;
 
 import java.io.Serializable;
 import java.text.NumberFormat;
@@ -23,42 +24,57 @@ public class HovedytelseVM implements FeedItemVM, Serializable {
         }
     };
 
-    private transient Record<Hovedytelse> hovedytelse;
+
+    private String beskrivelse;
+    private DateTime utbetalingsDato;
+    private String belop;
+    private String status;
+    private Interval periode;
+    private DateTime sluttDato;
+    private String utbetalingId;
+    private Mottakertype mottakertype;
+
 
     public HovedytelseVM(Record<Hovedytelse> hovedytelse) {
-        this.hovedytelse = hovedytelse;
+        this.beskrivelse = hovedytelse.get(Hovedytelse.ytelse);
+        this.utbetalingsDato = hovedytelse.get(Hovedytelse.utbetalingsDato);
+        this.belop = formaterBelop(hovedytelse.get(Hovedytelse.ytelseNettoBeloep));
+        this.status = hovedytelse.get(Hovedytelse.utbetalingsstatus);
+        this.periode = hovedytelse.get(Hovedytelse.ytelsesperiode);
+        this.utbetalingId = hovedytelse.get(Hovedytelse.id).toString();
+        this.mottakertype = hovedytelse.get(Hovedytelse.mottakertype);
     }
 
     public DateTime getUtbetalingsDato() {
-        return hovedytelse.get(Hovedytelse.utbetalingsDato);
+        return utbetalingsDato;
     }
 
     public String getBeskrivelse() {
-        return hovedytelse.get(Hovedytelse.ytelse);
+        return beskrivelse;
     }
 
     public String getBelop() {
-        return formaterBelop(hovedytelse.get(Hovedytelse.ytelseNettoBeloep));
+        return belop;
     }
 
     public String getStatus() {
-        return hovedytelse.get(Hovedytelse.utbetalingsstatus);
+        return status;
     }
 
     public DateTime getStartDato() {
-        return hovedytelse.get(Hovedytelse.ytelsesperiode).getStart();
+        return periode.getStart();
     }
 
     public DateTime getSluttDato() {
-        return hovedytelse.get(Hovedytelse.ytelsesperiode).getEnd();
+        return periode.getEnd();
     }
 
     public String getUtbetalingId(){
-        return hovedytelse.get(Hovedytelse.id).toString();
+        return utbetalingId;
     }
 
     public Mottakertype getMottakertype() {
-        return hovedytelse.get(Hovedytelse.mottakertype);
+        return mottakertype;
     }
 
     @Override
