@@ -5,7 +5,6 @@ import no.nav.modig.lang.collections.iter.ReduceFunction;
 import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.time.Datoformat;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.Trekk;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
@@ -32,14 +31,12 @@ import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.HovedYtelseV
 
 public class OppsummeringVM implements Serializable {
 
-    public transient List<Record<Hovedytelse>> utbetalinger;
     public LocalDate sluttDato;
     public LocalDate startDato;
     public List<HovedYtelseVM> hovedytelser;
     public String utbetalt, trekk, brutto;
 
     public OppsummeringVM(List<Record<Hovedytelse>> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
-        this.utbetalinger = hovedytelser;
         this.sluttDato = sluttDato;
         this.startDato = startDato;
         this.utbetalt = getBelopString(on(hovedytelser).map(Hovedytelse.ytelseNettoBeloep).reduce(sumDouble));
@@ -68,9 +65,6 @@ public class OppsummeringVM implements Serializable {
 
             DateTime startPeriode = on(sammen).collect(compareWith(first(Hovedytelse.ytelsesperiode).then(START))).get(0).get(Hovedytelse.ytelsesperiode).getStart();
             DateTime sluttPeriode = on(sammen).collect(reverseOrder(compareWith(first(Hovedytelse.ytelsesperiode).then(END)))).get(0).get(Hovedytelse.ytelsesperiode).getEnd();
-
-            List<Record<Trekk>> trekkListe = on(sammen).flatmap(Hovedytelse.trekkListe).collect();
-            List<Double> skatteListe = on(sammen).flatmap(Hovedytelse.skattListe).collect();
 
             hovedYtelseVMs.add(new HovedYtelseVM(sammen.get(0).get(Hovedytelse.ytelse), sammenlagteUnderytelser, brutto, trekk, utbetalt, startPeriode, sluttPeriode));
         }
