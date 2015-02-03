@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.maaned;
 
 import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.utbetaling.domain.Aktoer;
 import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.Konto;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.MaanedOppsummeringPanel;
 import no.nav.sbl.dialogarena.utbetaling.lamell.utbetaling.UtbetalingPanel;
@@ -34,13 +36,23 @@ public class MaanedsPanelTest extends AbstractWicketTest {
                 hovedytelse
                         .with(Hovedytelse.utbetalingsDato, now())
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(5), now()))
+                        .with(Hovedytelse.ytelseBruttoBeloep, 0d)
+                        .with(Hovedytelse.ytelseNettoBeloep, 0d)
+                        .with(Hovedytelse.sumTrekk, 0d)
+                        .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.navn, "Ola Nordmann"))
+                        .with(Hovedytelse.utbetaltTilKonto, new Record<Konto>().with(Konto.kontonummer, "1112233"))
                         .with(Hovedytelse.underytelseListe, asList(new Record<Underytelse>()
-                            .with(Underytelse.ytelsesType, "Tittel")
-                            .with(Underytelse.satsAntall, 3d)
-                            .with(Underytelse.ytelseBeloep, 200.0)
-                            .with(Underytelse.satsAntall, 1.0))),
+                                .with(Underytelse.ytelsesType, "Tittel")
+                                .with(Underytelse.satsAntall, 3d)
+                                .with(Underytelse.ytelseBeloep, 200.0)
+                                .with(Underytelse.satsAntall, 1.0))),
                 hovedytelse
                         .with(Hovedytelse.utbetalingsDato, now().minusDays(4))
+                        .with(Hovedytelse.ytelseBruttoBeloep, 0d)
+                        .with(Hovedytelse.ytelseNettoBeloep, 0d)
+                        .with(Hovedytelse.sumTrekk, 0d)
+                        .with(Hovedytelse.utbetaltTilKonto, new Record<Konto>().with(Konto.kontonummer, "1112233"))
+                        .with(Hovedytelse.utbetaltTil, new Record<Aktoer>().with(Aktoer.navn, "Ola Nordmann"))
                         .with(Hovedytelse.ytelsesperiode, new Interval(now().minusDays(10), now()))
                         .with(Hovedytelse.underytelseListe, asList(new Record<Underytelse>()
                                 .with(Underytelse.ytelsesType, "Tittel2")

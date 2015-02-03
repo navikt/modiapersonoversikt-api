@@ -59,6 +59,7 @@ public class FilterParametereTest {
         Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
                 .with(Hovedytelse.id, ID)
                 .with(Hovedytelse.utbetalingsDato, now())
+                .with(Hovedytelse.ytelse, BARNETRYGD)
                 .with(Hovedytelse.mottakertype, Mottakertype.BRUKER);
 
         filterparams.leggTilOnsketYtelse(BARNETRYGD);
