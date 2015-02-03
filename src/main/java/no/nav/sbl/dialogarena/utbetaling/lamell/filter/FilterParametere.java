@@ -1,6 +1,8 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import org.apache.commons.collections15.Predicate;
 import org.joda.time.LocalDate;
 
@@ -10,12 +12,10 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.Mottaktertype;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultSluttDato;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.defaultStartDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultSluttDato;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.YtelseUtils.defaultStartDato;
 
-
-public class FilterParametere implements Serializable, Predicate<Utbetaling> {
+public class FilterParametere implements Serializable, Predicate<Record<Hovedytelse>> {
 
     public static final String FILTER_ENDRET = "filterParametere.endret";
     public static final String HOVEDYTELSER_ENDRET = "hovedytelser.endret";
@@ -23,7 +23,7 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     private LocalDate startDato;
     private LocalDate sluttDato;
 
-    private Map<Mottaktertype, Boolean> mottakere;
+    private Map<Mottakertype, Boolean> mottakere;
 
     private boolean alleYtelserValgt;
 
@@ -35,8 +35,8 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         this.sluttDato = defaultSluttDato();
 
         this.mottakere = new HashMap<>();
-        this.mottakere.put(Mottaktertype.ANNEN_MOTTAKER, true);
-        this.mottakere.put(Mottaktertype.BRUKER, true);
+        this.mottakere.put(Mottakertype.ANNEN_MOTTAKER, true);
+        this.mottakere.put(Mottakertype.BRUKER, true);
 
         this.alleYtelserValgt = true;
         this.alleYtelser = hovedYtelser;
@@ -78,11 +78,11 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         alleYtelser = hovedYtelser;
     }
 
-    public void toggleMottaker(Mottaktertype mottaker) {
+    public void toggleMottaker(Mottakertype mottaker) {
         mottakere.put(mottaker, !viseMottaker(mottaker));
     }
 
-    public boolean viseMottaker(Mottaktertype mottakerkode) {
+    public boolean viseMottaker(Mottakertype mottakerkode) {
         if (mottakere.containsKey(mottakerkode)) {
             return mottakere.get(mottakerkode);
         }
@@ -115,10 +115,10 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
     }
 
     @Override
-    public boolean evaluate(Utbetaling utbetaling) {
-        boolean innenforDatoer = filtrerPaaDatoer(utbetaling.getUtbetalingsdato().toLocalDate());
-        boolean mottakerSkalVises = viseMottaker(utbetaling.getMottakertype());
-        boolean harYtelse = filtrerPaaYtelser(utbetaling);
+    public boolean evaluate(Record<Hovedytelse> hovedytelse) {
+        boolean innenforDatoer = filtrerPaaDatoer(hovedytelse.get(Hovedytelse.utbetalingsDato).toLocalDate());
+        boolean mottakerSkalVises = viseMottaker(hovedytelse.get(Hovedytelse.mottakertype));
+        boolean harYtelse = filtrerPaaYtelser(hovedytelse);
         return innenforDatoer
                 && mottakerSkalVises
                 && harYtelse;
@@ -128,8 +128,7 @@ public class FilterParametere implements Serializable, Predicate<Utbetaling> {
         return utbetalingsDato.isAfter(startDato.minusDays(1)) && utbetalingsDato.isBefore(sluttDato.plusDays(1));
     }
 
-    private boolean filtrerPaaYtelser(Utbetaling utbetaling) {
-        return onskedeYtelser.contains(utbetaling.getHovedytelse());
+    private boolean filtrerPaaYtelser(Record<Hovedytelse> utbetaling) {
+        return onskedeYtelser.contains(utbetaling.get(Hovedytelse.ytelse));
     }
-
 }

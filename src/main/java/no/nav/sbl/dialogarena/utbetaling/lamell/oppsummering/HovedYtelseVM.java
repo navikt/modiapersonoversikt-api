@@ -1,5 +1,6 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
+import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
 import org.joda.time.DateTime;
 
@@ -21,7 +22,7 @@ public class HovedYtelseVM implements Serializable {
     private final DateTime startPeriode;
     private final DateTime sluttPeriode;
 
-    public HovedYtelseVM(String beskrivelse, List<Underytelse> underytelser, Double brutto, Double trekk, Double utbetalt, DateTime startPeriode, DateTime sluttPeriode) {
+    public HovedYtelseVM(String beskrivelse, List<Record<Underytelse>> underytelser, Double brutto, Double trekk, Double utbetalt, DateTime startPeriode, DateTime sluttPeriode) {
         hovedYtelsesBeskrivelse = beskrivelse;
         this.brutto = brutto;
         this.trekk = trekk;
@@ -29,8 +30,8 @@ public class HovedYtelseVM implements Serializable {
         this.startPeriode = startPeriode;
         this.sluttPeriode = sluttPeriode;
         underYtelsesBeskrivelser = new ArrayList<>();
-        for (Underytelse underytelse : underytelser) {
-            underYtelsesBeskrivelser.add(new UnderYtelseVM(underytelse.getTittel(), underytelse.getBelop()));
+        for (Record<Underytelse> underytelse : underytelser) {
+            underYtelsesBeskrivelser.add(new UnderYtelseVM(underytelse.get(Underytelse.ytelsesType), underytelse.get(Underytelse.ytelseBeloep)));
         }
     }
 

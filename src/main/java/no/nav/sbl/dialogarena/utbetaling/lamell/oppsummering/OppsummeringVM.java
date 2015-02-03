@@ -1,10 +1,11 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering;
 
 
+import no.nav.modig.lang.collections.iter.ReduceFunction;
+import no.nav.sbl.dialogarena.common.records.Record;
 import no.nav.sbl.dialogarena.time.Datoformat;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
 import no.nav.sbl.dialogarena.utbetaling.domain.Underytelse;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
-import org.apache.commons.collections15.Transformer;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
@@ -21,59 +22,51 @@ import static no.nav.modig.lang.collections.IterUtils.on;
 import static no.nav.modig.lang.collections.ReduceUtils.indexBy;
 import static no.nav.modig.lang.collections.ReduceUtils.sumDouble;
 import static no.nav.modig.lang.collections.TransformerUtils.first;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.SUM_UNDERYTELSER;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.TREKK_BELOP;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_COMPARE_BELOP;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_SKATT_NEDERST;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UNDERYTELSE_TITTEL;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Underytelse.UTBETALT_BELOP;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.PERIODE;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UNDERYTELSER;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.END;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.DateUtils.START;
-import static no.nav.sbl.dialogarena.utbetaling.domain.util.UtbetalingListeUtils.grupperPaaHovedytelseOgPeriode;
+import static no.nav.sbl.dialogarena.utbetaling.domain.util.HovedytelseUtils.grupperPaaHovedytelseOgPeriode;
 import static no.nav.sbl.dialogarena.utbetaling.domain.util.ValutaUtil.getBelopString;
 import static no.nav.sbl.dialogarena.utbetaling.lamell.oppsummering.HovedYtelseVM.HovedYtelseComparator.HOVEDYTELSE_NAVN;
 
 
 public class OppsummeringVM implements Serializable {
 
-    public List<Utbetaling> utbetalinger;
     public LocalDate sluttDato;
     public LocalDate startDato;
     public List<HovedYtelseVM> hovedytelser;
     public String utbetalt, trekk, brutto;
 
-    public OppsummeringVM(List<Utbetaling> utbetalinger, LocalDate startDato, LocalDate sluttDato) {
-        this.utbetalinger = utbetalinger;
+    public OppsummeringVM(List<Record<Hovedytelse>> hovedytelser, LocalDate startDato, LocalDate sluttDato) {
         this.sluttDato = sluttDato;
         this.startDato = startDato;
-        this.utbetalt = getBelopString(on(utbetalinger).map(NETTO).reduce(sumDouble));
-        this.trekk = getBelopString(on(utbetalinger).map(BEREGNET_TREKK).reduce(sumDouble));
-        this.brutto = getBelopString(on(utbetalinger).map(BRUTTO).reduce(sumDouble));
-        this.hovedytelser = lagHovetytelseVMer(utbetalinger);
+        this.utbetalt = getBelopString(on(hovedytelser).map(Hovedytelse.ytelseNettoBeloep).reduce(sumDouble));
+        this.trekk = getBelopString(on(hovedytelser).map(Hovedytelse.aggregertTrekkBeloep).reduce(sumDouble));
+        this.brutto = getBelopString(on(hovedytelser).map(Hovedytelse.aggregertBruttoBeloep).reduce(sumDouble));
+        this.hovedytelser = lagHovetytelseVMer(hovedytelser);
     }
 
     /**
      * Slå sammen alle ytelsene i utbetalinger når de har samme hovedytelse og underytelse-tittel
      */
-    private static List<HovedYtelseVM> lagHovetytelseVMer(List<Utbetaling> utbetalinger) {
+    private static List<HovedYtelseVM> lagHovetytelseVMer(List<Record<Hovedytelse>> ytelser) {
         List<HovedYtelseVM> hovedYtelseVMs = new ArrayList<>();
-        for (List<Utbetaling> sammen : grupperPaaHovedytelseOgPeriode(utbetalinger)) {
-            Map<String, List<Underytelse>> indekserteUnderytelser = on(sammen).flatmap(UNDERYTELSER).reduce(indexBy(UNDERYTELSE_TITTEL));
+        for (List<Record<Hovedytelse>> sammen : grupperPaaHovedytelseOgPeriode(ytelser)) {
 
-            List<Underytelse> sammenlagteUnderytelser = on(indekserteUnderytelser.values()).reduce(SUM_UNDERYTELSER);
-            sort(sammenlagteUnderytelser, UNDERYTELSE_COMPARE_BELOP);
-            sort(sammenlagteUnderytelser, UNDERYTELSE_SKATT_NEDERST);
+            Map<String, List<Record<?>>> indekserteUnderytelser = on(sammen).flatmap(Hovedytelse.underytelseListe).reduce(indexBy(Underytelse.ytelsesType));
 
-            Double brutto = on(sammenlagteUnderytelser).map(UTBETALT_BELOP).reduce(sumDouble);
-            Double trekk = on(sammenlagteUnderytelser).map(TREKK_BELOP).reduce(sumDouble);
+
+
+            List<Record<Underytelse>> sammenlagteUnderytelser = on(indekserteUnderytelser.values()).reduce(toTotalOfUnderytelser);
+            sammenlagteUnderytelser = on(sammenlagteUnderytelser).collect(reverseOrder(compareWith(Underytelse.ytelseBeloep)));
+
+            Double brutto = on(sammenlagteUnderytelser).map(Underytelse.ytelseBeloep).reduce(sumDouble);
+            Double trekk = on(sammen).map(Hovedytelse.aggregertTrekkBeloep).reduce(sumDouble);
             Double utbetalt = brutto + trekk;
 
-            DateTime startPeriode = on(sammen).collect(compareWith(first(PERIODE).then(START))).get(0).getPeriode().getStart();
-            DateTime sluttPeriode = on(sammen).collect(reverseOrder(compareWith(first(PERIODE).then(END)))).get(0).getPeriode().getEnd();
+            DateTime startPeriode = on(sammen).collect(compareWith(first(Hovedytelse.ytelsesperiode).then(START))).get(0).get(Hovedytelse.ytelsesperiode).getStart();
+            DateTime sluttPeriode = on(sammen).collect(reverseOrder(compareWith(first(Hovedytelse.ytelsesperiode).then(END)))).get(0).get(Hovedytelse.ytelsesperiode).getEnd();
 
-            hovedYtelseVMs.add(new HovedYtelseVM(sammen.get(0).getHovedytelse(), sammenlagteUnderytelser, brutto, trekk, utbetalt, startPeriode, sluttPeriode));
+            hovedYtelseVMs.add(new HovedYtelseVM(sammen.get(0).get(Hovedytelse.ytelse), sammenlagteUnderytelser, brutto, trekk, utbetalt, startPeriode, sluttPeriode));
         }
         sort(hovedYtelseVMs, HOVEDYTELSE_NAVN);
         return hovedYtelseVMs;
@@ -89,24 +82,23 @@ public class OppsummeringVM implements Serializable {
     }
 
 
-    private static final Transformer<Utbetaling, Double> BRUTTO = new Transformer<Utbetaling, Double>() {
+    public static ReduceFunction<List<Record<?>>, List<Record<Underytelse>>> toTotalOfUnderytelser = new ReduceFunction<List<Record<?>>, List<Record<Underytelse>>>() {
         @Override
-        public Double transform(Utbetaling utbetaling) {
-            return utbetaling.getBrutto();
+        public List<Record<Underytelse>> reduce(List<Record<Underytelse>> accumulator, List<Record<?>> ytelser) {
+            if (ytelser.isEmpty()) {
+                return accumulator;
+            }
+            Double sum = on(ytelser).map(Underytelse.ytelseBeloep).reduce(sumDouble);
+            Record<Underytelse> summertUnderytelse = (Record<Underytelse>) ytelser.get(0)
+                    .with(Underytelse.ytelseBeloep, sum);
+
+            accumulator.add(summertUnderytelse);
+            return accumulator;
         }
-    };
-    private static final Transformer<Utbetaling, Double> NETTO = new Transformer<Utbetaling, Double>() {
+
         @Override
-        public Double transform(Utbetaling utbetaling) {
-            return utbetaling.getUtbetalt();
-        }
-    };
-    private static final Transformer<Utbetaling, Double> BEREGNET_TREKK = new Transformer<Utbetaling, Double>() {
-        @Override
-        public Double transform(Utbetaling utbetaling) {
-            return utbetaling.getTrekk() == 0.0 ?
-                    utbetaling.getBrutto() - utbetaling.getUtbetalt() :
-                    utbetaling.getTrekk();
+        public List<Record<Underytelse>> identity() {
+            return new ArrayList<>();
         }
     };
 }

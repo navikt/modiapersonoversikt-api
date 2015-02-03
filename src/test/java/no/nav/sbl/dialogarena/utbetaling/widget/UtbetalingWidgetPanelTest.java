@@ -12,7 +12,7 @@ public class UtbetalingWidgetPanelTest extends AbstractWicketTest{
 
     @Override
     protected void setup() {
-        UtbetalingWidgetPanel utbetalingWidgetPanel = new UtbetalingWidgetPanel("panel", new Model<>(mock(UtbetalingVM.class)));
+        UtbetalingWidgetPanel utbetalingWidgetPanel = new UtbetalingWidgetPanel("panel", new Model<>(mock(HovedytelseVM.class)));
         wicketTester.goToPageWith(utbetalingWidgetPanel);
     }
 

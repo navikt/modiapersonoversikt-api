@@ -1,7 +1,9 @@
 package no.nav.sbl.dialogarena.utbetaling.lamell.filter;
 
 import no.nav.modig.wicket.component.daterangepicker.DateRangePicker;
-import no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling;
+import no.nav.sbl.dialogarena.common.records.Record;
+import no.nav.sbl.dialogarena.utbetaling.domain.Hovedytelse;
+import no.nav.sbl.dialogarena.utbetaling.domain.Mottakertype;
 import no.nav.sbl.dialogarena.utbetaling.wickettest.AbstractWicketTest;
 import org.apache.wicket.ajax.markup.html.form.AjaxCheckBox;
 import org.apache.wicket.markup.html.form.Form;
@@ -13,7 +15,6 @@ import java.util.Set;
 import static java.util.Arrays.asList;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.ofType;
 import static no.nav.modig.wicket.test.matcher.ComponentMatchers.withId;
-import static no.nav.sbl.dialogarena.utbetaling.domain.Utbetaling.UtbetalingBuilder;
 import static org.joda.time.DateTime.now;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -50,26 +51,26 @@ public class FilterFormPanelTest extends AbstractWicketTest{
 
     @Test
     public void testYtelseFilterBryter() {
-        Utbetaling utbetaling = new UtbetalingBuilder(ID)
-                .withHovedytelse(DAGPENGER)
-                .withMottakertype(Utbetaling.Mottaktertype.BRUKER)
-                .withUtbetalingsDato(now())
-                .build();
+        Record<Hovedytelse> ytelse = new Record<Hovedytelse>()
+                .with(Hovedytelse.id, ID)
+                .with(Hovedytelse.ytelse, DAGPENGER)
+                .with(Hovedytelse.mottakertype, Mottakertype.BRUKER)
+                .with(Hovedytelse.utbetalingsDato, now());
 
-        assertTrue(filterParametre.evaluate(utbetaling));
+        assertTrue(filterParametre.evaluate(ytelse));
 
-        utbetalingEvaluererTrueOmYtelsenBlirValgt(utbetaling);
-        utbetalingEvaluererFalseOmYtelseIkkeErValgt(utbetaling);
-        utbetalingEvaluererTrueOmYtelsenBlirValgt(utbetaling);
+        utbetalingEvaluererTrueOmYtelsenBlirValgt(ytelse);
+        utbetalingEvaluererFalseOmYtelseIkkeErValgt(ytelse);
+        utbetalingEvaluererTrueOmYtelsenBlirValgt(ytelse);
     }
 
-    private void utbetalingEvaluererTrueOmYtelsenBlirValgt(Utbetaling utbetaling) {
+    private void utbetalingEvaluererTrueOmYtelsenBlirValgt(Record<Hovedytelse> ytelse) {
         wicketTester.click().ajaxCheckbox(withId("visYtelse"));
-        assertTrue(filterParametre.evaluate(utbetaling));
+        assertTrue(filterParametre.evaluate(ytelse));
     }
 
-    private void utbetalingEvaluererFalseOmYtelseIkkeErValgt(Utbetaling utbetaling) {
+    private void utbetalingEvaluererFalseOmYtelseIkkeErValgt(Record<Hovedytelse> ytelse) {
         wicketTester.click().ajaxCheckbox(withId("visYtelse"));
-        assertFalse(filterParametre.evaluate(utbetaling));
+        assertFalse(filterParametre.evaluate(ytelse));
     }
 }
