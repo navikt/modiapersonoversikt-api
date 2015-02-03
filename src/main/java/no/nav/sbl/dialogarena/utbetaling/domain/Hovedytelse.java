@@ -29,9 +29,10 @@ public interface Hovedytelse {
     Key<List<Double>> skattListe = new Key<>("SKATT_LISTE");
     Key<Double> sumSkatt = new Key<>("SUM_SKATT");
     Key<Double> ytelseNettoBeloep = new Key<>("YTELSE_NETTO_BELOEP");
-    Key<Double> ytelseBruttoBeloep = new Key<>("YTELSE_BRUTTO_BELOEP");
     Key<String> bilagsnummer = new Key<>("BILAGSNUMMER");
     Key<Record<Aktoer>> rettighetshaver = new Key<>("RETTIGHETSHAVER");
     Key<Record<Aktoer>> refundertForOrg = new Key<>("REFUNDERT_FOR_ORG");
 
+    Key<Double> aggregertBruttoBeloep = new Key<>("AGGREGERT_BRUTTO_BELOEP");
+    Key<Double> aggregertTrekkBeloep = new Key<>("AGGREGERT_TREKK_BELOEP");
 }
