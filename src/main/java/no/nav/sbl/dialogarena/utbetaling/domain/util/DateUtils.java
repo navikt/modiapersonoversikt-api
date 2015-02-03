@@ -6,7 +6,7 @@ import org.joda.time.DateTime;
 import org.joda.time.Interval;
 import org.joda.time.LocalDate;
 
-public class DateUtils {
+public final class DateUtils {
 
     private DateUtils() {}
 
